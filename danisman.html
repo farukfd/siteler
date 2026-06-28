@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı</title>
+<meta name="description" content="Yetki belgeli butik emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy, ücretsiz mülk değer analizi ve ProX AI danışman.">
+<meta name="keywords" content="lüks konut danışmanı, özel portföy, yalı, penthouse, butik emlak, ücretsiz mülk analizi, gizli satış">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<!-- ============ ProX SaaS API ÇEKİRDEĞİ (additive, single-file) ============ -->
+<script>
+window.EMLAK_API_BASE = "https://www.emlakekspertizi.com";
+window.EMLAK_TENANT = { id:"consultant", tenant_id:"consultant", tenant_key:"prox_consultant_a383eb07bb544ce3db7323150370bb46", domain:location.hostname, sector:"real_estate_consultant", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"PRO", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"consultant", legalMode:"standard" };
+window.EMLAK_PACKAGES = {
+  BASIC:["canUseMarketAnalysis","canUsePriceEstimate","canUseLeadCRM","canUseSvgGraphics"],
+  PRO:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent"],
+  BUSINESS:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent","canUseAdvancedProX","canUseCustomDomain","canUseBlogAutomation","canUsePremiumTheme"],
+  ENTERPRISE:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent","canUseAdvancedProX","canUseCustomDomain","canUseBlogAutomation","canUsePremiumTheme","canUseWhiteLabelFull"]
+};
+window.EMLAK_TENANT.enabledFeatures = window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode] || window.EMLAK_PACKAGES.PRO;
+window.hasFeature = function(f){ return window.EMLAK_TENANT.enabledFeatures.indexOf(f)!==-1; };
+window.requireFeature = function(f){ if(window.hasFeature(f)) return true; var m="Bu özellik mevcut paketinizde aktif değildir. Kurumsal paketinizi yükseltin."; if(typeof toast==="function")toast(m); else alert(m); return false; };
+async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ const res=await fetch(window.EMLAK_API_BASE+path,{method,mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id,"X-Tenant-Key":window.EMLAK_TENANT.tenant_key,...headers},body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
+function proxFallback(path,options={}){ return { fallback:true, message:"API baglantisi yok. Demo/fallback veri kullaniliyor.", path, data:(window.EMLAK_FALLBACK?window.EMLAK_FALLBACK(path,options):null) }; }
+async function submitLead(lead){ lead=lead||{}; var payload={ sourcePage:lead.sourcePage||"danisman", formType:lead.formType||"contact", name:lead.name||"", phone:lead.phone||"", email:lead.email||"", message:lead.message||"", extra:lead.extra||{ location:lead.location||"", requestedService:lead.requestedService||"", sector:window.EMLAK_TENANT.sector } }; try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:payload}); if(r&&r.fallback)throw new Error("fallback"); if(r&&r.success===false)throw new Error("lead reddedildi"); return {ok:true,online:(r&&r.online!==false),data:r}; }catch(e){ try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(Object.assign({id:"lead_"+Date.now(),createdAt:new Date().toISOString()},payload));localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:payload}; } }
+window.injectSchema=function(o){try{var s=document.createElement("script");s.type="application/ld+json";s.text=JSON.stringify(o);document.head.appendChild(s);}catch(e){}};
+/* Canlı paket/özellik senkronu — theme.accent ile CSS REPAINT EDILMEZ (siyah/altın korunur). */
+async function proxBootstrap(){ try{ var r=await proxApi("/api/v1/tenant/bootstrap",{method:"GET"}); if(!r||r.fallback||r.success===false)return false; if(r.package)window.EMLAK_TENANT.packageCode=r.package; if(Array.isArray(r.enabled_features)&&r.enabled_features.length)window.EMLAK_TENANT.enabledFeatures=r.enabled_features; else if(window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode])window.EMLAK_TENANT.enabledFeatures=window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode]; return true; }catch(e){ return false; } }
+window.proxBootstrap=proxBootstrap;
+</script>
+
+<!-- ============ SEO · canonical / OpenGraph / Twitter ============ -->
+<link rel="canonical" href="https://www.emlakekspertizi.com/danisman">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı">
+<meta property="og:title" content="Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı">
+<meta property="og:description" content="Yetki belgeli butik emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy, ücretsiz mülk değer analizi ve ProX AI danışman.">
+<meta property="og:url" content="https://www.emlakekspertizi.com/danisman">
+<meta property="og:locale" content="tr_TR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı">
+<meta name="twitter:description" content="Yetki belgeli butik emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy, ücretsiz mülk değer analizi ve ProX AI danışman.">
+
+<!-- ============ JSON-LD · Person + ProfessionalService ============ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "name": "Selin Meridyen",
+      "jobTitle": "Lüks Konut & Portföy Danışmanı",
+      "worksFor": { "@type": "Organization", "name": "Selin Meridyen Danışmanlık" },
+      "areaServed": "İstanbul",
+      "knowsAbout": ["lüks konut", "özel portföy", "gayrimenkul danışmanlığı", "yatırım analizi"]
+    },
+    {
+      "@type": "ProfessionalService",
+      "name": "Selin Meridyen · Lüks Konut & Özel Portföy Danışmanlığı",
+      "description": "Yetki belgeli butik emlak danışmanlığı; güncel lüks ilanlar, davet usulü VIP portföy ve ücretsiz mülk değer analizi.",
+      "areaServed": { "@type": "City", "name": "İstanbul" },
+      "serviceType": "Lüks gayrimenkul danışmanlığı",
+      "provider": { "@type": "Person", "name": "Selin Meridyen" }
+    }
+  ]
+}
+</script>
+<style>
+:root{
+  --accent:#b4975a; --accent-2:#111111;
+  --gold:#b4975a; --gold-soft:#d8c39a; --gold-deep:#8a6f3c;
+  --ink:#0a0a0b; --panel:#101012; --panel-2:#16161a;
+  --line:rgba(180,151,90,.18); --line-soft:rgba(255,255,255,.07);
+  --white:#f6f3ec; --muted:#a39f95; --muted-2:#7c786f;
+  --grad-gold:linear-gradient(135deg,#d8c39a,#b4975a 55%,#8a6f3c);
+  --serif:'Playfair Display',Georgia,serif;
+  --serif-2:'Cormorant Garamond',Georgia,serif;
+  --body:'Jost',system-ui,-apple-system,sans-serif;
+  --shadow:0 40px 90px -42px rgba(0,0,0,.85);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--white);font-family:var(--body);font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body.lock{overflow:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:1200px;margin:0 auto;padding:0 28px}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:700;line-height:1.12;margin:0;letter-spacing:-.01em}
+.eyebrow{font-family:var(--body);font-weight:500;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.gold{color:var(--gold)}
+.serif-it{font-family:var(--serif-2);font-style:italic;font-weight:500}
+section{position:relative}
+.sec-pad{padding:108px 0}
+@media(max-width:760px){.sec-pad{padding:72px 0}.wrap{padding:0 20px}}
+.sec-h{max-width:760px;margin:0 auto 56px;text-align:center}
+.sec-h h2{font-size:clamp(28px,4.4vw,46px)}
+.sec-h p{color:var(--muted);font-size:17px;margin:16px 0 0;font-weight:300}
+.divider-orn{display:flex;align-items:center;justify-content:center;gap:14px;margin:0 auto 22px;color:var(--gold)}
+.divider-orn:before,.divider-orn:after{content:"";height:1px;width:46px;background:linear-gradient(90deg,transparent,var(--gold))}
+.divider-orn:after{background:linear-gradient(90deg,var(--gold),transparent)}
+.divider-orn span{font-size:11px;letter-spacing:.3em}
+
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--body);font-weight:500;font-size:14px;letter-spacing:.04em;padding:14px 26px;border-radius:2px;cursor:pointer;border:1px solid transparent;transition:.25s}
+.btn-gold{background:var(--grad-gold);color:#1a140a;font-weight:600;box-shadow:0 18px 40px -20px rgba(180,151,90,.6)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 24px 50px -20px rgba(180,151,90,.8)}
+.btn-line{background:transparent;border-color:var(--gold);color:var(--gold)}
+.btn-line:hover{background:rgba(180,151,90,.1)}
+
+/* ---------- Nav (tek sabit chrome) ---------- */
+header.nav{position:fixed;top:0;left:0;right:0;z-index:400;transition:.35s;padding:20px 0}
+header.nav.scrolled{background:rgba(8,8,9,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft);padding:13px 0}
+.nav-in{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:13px;cursor:pointer}
+.brand .mark{width:42px;height:42px;border:1px solid var(--gold);display:grid;place-items:center;font-family:var(--serif);font-weight:800;font-size:20px;color:var(--gold);position:relative;overflow:hidden}
+.brand .mark:after{content:"";position:absolute;inset:4px;border:1px solid rgba(180,151,90,.3)}
+.brand .mark.has-img:after{display:none}
+.brand .mark img{width:100%;height:100%;object-fit:contain;padding:3px}
+.brand b{font-family:var(--serif);font-size:19px;font-weight:700;letter-spacing:.02em;display:block;line-height:1}
+.brand small{font-size:10.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:400}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a.lnk{font-size:13.5px;letter-spacing:.08em;color:var(--white);font-weight:400;position:relative;padding:4px 0;opacity:.85;transition:.2s;cursor:pointer}
+.nav-links a.lnk:after{content:"";position:absolute;left:0;bottom:-2px;height:1px;width:0;background:var(--gold);transition:.28s}
+.nav-links a.lnk:hover,.nav-links a.lnk.act{opacity:1;color:var(--gold)}
+.nav-links a.lnk:hover:after,.nav-links a.lnk.act:after{width:100%}
+.nav-cta{display:flex;align-items:center;gap:14px}
+.nav-wa{width:40px;height:40px;border:1px solid var(--line);display:grid;place-items:center;color:var(--gold);transition:.25s}
+.nav-wa:hover{background:rgba(180,151,90,.12);border-color:var(--gold)}
+.burger{display:none;background:none;border:0;cursor:pointer;flex-direction:column;gap:5px;padding:6px}
+.burger span{width:24px;height:1.5px;background:var(--gold);display:block;transition:.3s}
+@media(max-width:1040px){
+  .nav-links{position:fixed;inset:0 0 0 auto;width:min(82vw,360px);background:#0c0c0e;flex-direction:column;justify-content:center;gap:26px;transform:translateX(100%);transition:.4s;border-left:1px solid var(--line);padding:40px;z-index:401}
+  .nav-links.open{transform:none}
+  .nav-links a.lnk{font-size:18px}
+  .burger{display:flex}
+}
+@media(max-width:560px){.nav-cta .btn{display:none}}
+
+/* ---------- Hero ---------- */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;isolation:isolate}
+.hero-bg{position:absolute;inset:0;z-index:-2;background:
+   radial-gradient(120% 90% at 78% 18%,rgba(180,151,90,.22),transparent 52%),
+   radial-gradient(80% 80% at 12% 88%,rgba(180,151,90,.08),transparent 60%),
+   linear-gradient(160deg,#070708 0%,#0d0c0a 46%,#070708 100%)}
+.hero-arch{position:absolute;right:-2%;bottom:0;width:min(54%,720px);z-index:-1;opacity:.5;color:var(--gold)}
+@media(max-width:880px){.hero-arch{opacity:.2;width:90%}}
+.hero-in{padding-top:120px;max-width:900px}
+.hero .eyebrow{animation:rise .9s .1s both}
+.hero h1{font-size:clamp(40px,7.4vw,84px);font-weight:800;line-height:1.04;letter-spacing:-.02em;animation:rise 1s .22s both}
+.hero h1 em{font-family:var(--serif-2);font-style:italic;font-weight:500;color:var(--gold);display:block}
+.hero .lede{font-size:clamp(16px,2.1vw,20px);color:var(--muted);max-width:580px;margin:26px 0 38px;font-weight:300;animation:rise 1s .4s both}
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap;animation:rise 1s .55s both}
+.hero-scroll{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);color:var(--gold);font-size:11px;letter-spacing:.3em;text-transform:uppercase;opacity:.7;display:flex;flex-direction:column;align-items:center;gap:10px;animation:rise 1s .8s both}
+.hero-scroll i{width:1px;height:38px;background:linear-gradient(var(--gold),transparent);display:block;animation:scrollpulse 2s infinite}
+@keyframes scrollpulse{0%,100%{transform:scaleY(.5);opacity:.4;transform-origin:top}50%{transform:scaleY(1);opacity:1;transform-origin:top}}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+
+/* ---------- Trust ---------- */
+.trust{border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);background:#0a0a0b}
+.trust-in{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-soft)}
+.trust .t{background:var(--ink);padding:34px 22px;text-align:center}
+.trust .t b{font-family:var(--serif);font-size:34px;color:var(--gold);display:block;line-height:1}
+.trust .t span{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:10px;display:block}
+@media(max-width:760px){.trust-in{grid-template-columns:1fr 1fr}}
+
+/* ---------- About ---------- */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+@media(max-width:880px){.about-grid{grid-template-columns:1fr;gap:44px}}
+.about-portrait{position:relative;aspect-ratio:4/5;border:1px solid var(--line);background:radial-gradient(80% 60% at 50% 20%,rgba(180,151,90,.2),transparent 60%),linear-gradient(160deg,#16140f,#0a0a0b);display:grid;place-items:center;overflow:hidden}
+.about-portrait .frame{position:absolute;inset:14px;border:1px solid rgba(180,151,90,.3)}
+.about-portrait svg{width:62%;color:var(--gold);opacity:.85}
+.about-portrait .sig{position:absolute;left:0;right:0;bottom:22px;text-align:center;font-family:var(--serif-2);font-style:italic;font-size:26px;color:var(--gold-soft)}
+.about h2{font-size:clamp(28px,4vw,42px);margin-bottom:8px}
+.about .role{color:var(--gold);letter-spacing:.2em;text-transform:uppercase;font-size:12px;margin:18px 0 24px}
+.about p{color:var(--muted);font-size:16px;margin:0 0 18px}
+.about .quote{font-family:var(--serif-2);font-style:italic;font-size:23px;color:var(--white);border-left:2px solid var(--gold);padding-left:20px;margin:26px 0}
+.about-meta{display:flex;gap:34px;margin-top:28px;flex-wrap:wrap}
+.about-meta div b{font-family:var(--serif);font-size:24px;color:var(--gold);display:block}
+.about-meta div span{font-size:12px;color:var(--muted);letter-spacing:.08em}
+
+/* ---------- Cards (İlanlar + VIP ortak) ---------- */
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+@media(max-width:980px){.card-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.card-grid{grid-template-columns:1fr}}
+.vcard{position:relative;background:var(--panel);border:1px solid var(--line);overflow:hidden;transition:.4s;cursor:pointer}
+.vcard:before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(115deg,transparent 30%,rgba(216,195,154,.22) 48%,transparent 62%);background-size:240% 100%;background-position:-120% 0}
+.vcard:hover{transform:translateY(-8px);border-color:var(--gold);box-shadow:0 40px 80px -40px rgba(180,151,90,.55)}
+.vcard:hover:before{background-position:120% 0;transition:background-position 1.1s ease}
+.vcard-img{aspect-ratio:16/11;position:relative;display:grid;place-items:center;overflow:hidden;border-bottom:1px solid var(--line)}
+.vcard-img svg{width:46%;color:var(--gold);opacity:.55;transition:.4s}
+.vcard:hover .vcard-img svg{opacity:.9;transform:scale(1.06)}
+.vcard-img .glow{position:absolute;inset:0;background:radial-gradient(60% 60% at 50% 40%,rgba(180,151,90,.18),transparent 70%);opacity:.6;transition:.4s}
+.vcard:hover .vcard-img .glow{opacity:1}
+.vcard-tag{position:absolute;top:14px;left:14px;z-index:4;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#1a140a;background:var(--grad-gold);padding:6px 11px;font-weight:600}
+.vcard-lock{position:absolute;top:14px;right:14px;z-index:4;font-size:11px;letter-spacing:.05em;color:var(--gold-soft);background:rgba(0,0,0,.55);border:1px solid var(--line);padding:6px 10px;display:flex;align-items:center;gap:6px;backdrop-filter:blur(4px)}
+.vcard-body{padding:22px}
+.vcard-body h3{font-size:21px;margin-bottom:6px}
+.vcard-loc{color:var(--gold);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:7px}
+.vcard-spec{display:flex;gap:18px;flex-wrap:wrap;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);padding:14px 0;margin-bottom:16px}
+.vcard-spec div{font-size:13px;color:var(--muted)}
+.vcard-spec div b{display:block;font-family:var(--serif);color:var(--white);font-size:17px;font-weight:600}
+.vcard-ft{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.vcard-price{font-family:var(--serif);font-size:18px;color:var(--gold-soft)}
+.vcard-price .per{font-family:var(--body);font-size:12px;color:var(--muted)}
+.vcard-price span{display:block;font-family:var(--body);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);margin-top:2px}
+.vcard-go{font-size:11.5px;letter-spacing:.08em;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:7px;transition:.25s;white-space:nowrap}
+.vcard:hover .vcard-go{gap:11px}
+.vault-note{text-align:center;margin-top:40px;color:var(--muted-2);font-size:13.5px}
+.vault-note b{color:var(--gold)}
+.vault{background:linear-gradient(180deg,#070708,#0c0b09 60%,#070708)}
+
+/* ---------- Process ---------- */
+.proc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0}
+@media(max-width:900px){.proc-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.proc-grid{grid-template-columns:1fr}}
+.proc{padding:30px 24px;border:1px solid var(--line-soft);margin-left:-1px;margin-top:-1px;transition:.3s}
+.proc:hover{background:var(--panel);border-color:var(--line)}
+.proc .no{font-family:var(--serif);font-size:13px;color:var(--gold);letter-spacing:.2em;margin-bottom:18px}
+.proc h4{font-size:19px;margin-bottom:10px}
+.proc p{font-size:13.5px;color:var(--muted);margin:0}
+
+/* ---------- Analiz CTA band ---------- */
+.analiz{background:linear-gradient(135deg,#100f0c,#0a0a0b)}
+.analiz-band{border:1px solid var(--line);background:radial-gradient(90% 120% at 85% 10%,rgba(180,151,90,.16),transparent 55%),#0c0b09;padding:54px 50px;display:flex;align-items:center;justify-content:space-between;gap:34px;flex-wrap:wrap}
+.analiz-band h3{font-size:clamp(24px,3.2vw,34px);max-width:560px}
+.analiz-band p{color:var(--muted);margin:12px 0 0;max-width:520px;font-size:15px}
+
+/* ---------- Appointment / Ücretsiz Analiz ---------- */
+.appt-card{max-width:1000px;margin:0 auto;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow)}
+.appt-head{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line)}
+@media(max-width:760px){.appt-head{grid-template-columns:1fr}}
+.appt-head .info{padding:40px}
+.appt-head .info h3{font-size:28px;margin:14px 0}
+.appt-head .info p{color:var(--muted);font-size:14.5px;margin:0 0 22px}
+.appt-head .info ul{list-style:none;padding:0;margin:0}
+.appt-head .info li{font-size:13.5px;color:var(--muted);padding:8px 0 8px 26px;position:relative}
+.appt-head .info li:before{content:"✦";position:absolute;left:0;color:var(--gold)}
+.appt-head .vis{background:radial-gradient(80% 80% at 70% 20%,rgba(180,151,90,.18),transparent 60%),linear-gradient(160deg,#14120d,#0a0a0b);display:grid;place-items:center;padding:30px}
+.appt-head .vis svg{width:54%;color:var(--gold);opacity:.7}
+.appt-body{padding:38px 40px}
+@media(max-width:760px){.appt-head .info,.appt-body{padding:28px 24px}}
+.appt-step-h{font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin:0 0 16px;display:flex;align-items:center;gap:10px}
+.appt-step-h b{width:22px;height:22px;border:1px solid var(--gold);display:grid;place-items:center;font-family:var(--serif);font-size:12px;border-radius:50%}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:30px}
+@media(max-width:620px){.days{grid-template-columns:repeat(4,1fr)}}
+.day{border:1px solid var(--line-soft);background:#0c0c0e;padding:12px 6px;text-align:center;cursor:pointer;transition:.2s}
+.day:hover{border-color:var(--gold)}
+.day.sel{background:var(--grad-gold);border-color:transparent}
+.day.sel .dw,.day.sel .dn,.day.sel .dm{color:#1a140a}
+.day.off{opacity:.25;pointer-events:none}
+.day .dw{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block}
+.day .dn{font-family:var(--serif);font-size:22px;color:var(--white);display:block;line-height:1.3}
+.day .dm{font-size:10.5px;color:var(--muted);display:block}
+.slots{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:30px}
+.slot{border:1px solid var(--line-soft);background:#0c0c0e;padding:10px 16px;font-size:13px;cursor:pointer;transition:.2s;letter-spacing:.04em}
+.slot:hover{border-color:var(--gold);color:var(--gold)}
+.slot.sel{background:var(--grad-gold);border-color:transparent;color:#1a140a;font-weight:600}
+.appt-form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:620px){.appt-form{grid-template-columns:1fr}}
+.fld{display:flex;flex-direction:column;gap:7px}
+.fld.full{grid-column:1/-1}
+.fld label{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.fld input,.fld select,.fld textarea{background:#0c0c0e;border:1px solid var(--line-soft);color:var(--white);padding:13px 14px;font-family:var(--body);font-size:14px;outline:none;border-radius:0}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--gold)}
+.appt-summary{margin-top:22px;padding:16px 18px;border:1px dashed var(--line);background:rgba(180,151,90,.05);font-size:13.5px;color:var(--gold-soft);min-height:20px}
+.appt-summary b{color:var(--gold)}
+
+/* ---------- ProX ---------- */
+.prox{background:#070708}
+.prox-card{max-width:880px;margin:0 auto;border:1px solid var(--line);background:linear-gradient(160deg,#100f0c,#0a0a0b);padding:40px}
+@media(max-width:620px){.prox-card{padding:26px}}
+.prox-h{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.prox-h .av{width:46px;height:46px;border-radius:50%;background:var(--grad-gold);display:grid;place-items:center;color:#1a140a;font-family:var(--serif);font-weight:800;flex:none}
+.prox-h b{font-family:var(--serif);font-size:20px;display:block}
+.prox-h span{font-size:12px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase}
+.prox-sub{color:var(--muted);font-size:14px;margin:0 0 22px}
+.prox-log{min-height:90px;max-height:340px;overflow:auto;display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
+.pm{max-width:88%;padding:13px 16px;font-size:14px;line-height:1.62;border:1px solid var(--line-soft)}
+.pm.u{align-self:flex-end;background:rgba(180,151,90,.1);border-color:var(--line);color:var(--white)}
+.pm.a{align-self:flex-start;background:#0d0d0f;color:var(--gold-soft)}
+.pm.a b{color:var(--gold)}
+.pm .pm-list{margin:10px 0 4px;padding:0;list-style:none;border-top:1px solid var(--line-soft);padding-top:10px}
+.pm .pm-list li{padding:5px 0 5px 16px;position:relative;color:var(--white);font-size:13.5px}
+.pm .pm-list li:before{content:"◆";position:absolute;left:0;color:var(--gold);font-size:9px;top:8px}
+.pm .pm-list li em{color:var(--gold-soft);font-style:normal;font-family:var(--serif)}
+.pm-cta{margin-top:12px;background:var(--grad-gold);color:#1a140a;border:0;padding:10px 16px;font-family:var(--body);font-weight:600;font-size:13px;cursor:pointer;transition:.2s}
+.pm-cta:hover{transform:translateY(-1px)}
+.prox-in{display:flex;gap:10px}
+.prox-in input{flex:1;background:#0c0c0e;border:1px solid var(--line-soft);color:var(--white);padding:14px 16px;font-family:var(--body);font-size:14px;outline:none}
+.prox-in input:focus{border-color:var(--gold)}
+.prox-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.prox-chips button{background:transparent;border:1px solid var(--line-soft);color:var(--muted);font-family:var(--body);font-size:12px;padding:7px 13px;cursor:pointer;transition:.2s}
+.prox-chips button:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ---------- Contact ---------- */
+.contact-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
+@media(max-width:880px){.contact-grid{grid-template-columns:1fr;gap:40px}}
+.contact .row{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--line-soft)}
+.contact .row .ic{width:42px;height:42px;border:1px solid var(--line);display:grid;place-items:center;color:var(--gold);flex:none}
+.contact .row b{display:block;font-family:var(--serif);font-size:17px}
+.contact .row span{color:var(--muted);font-size:14px}
+.contact-cta{background:var(--panel);border:1px solid var(--line);padding:42px;text-align:center}
+.contact-cta h3{font-size:26px;margin-bottom:12px}
+.contact-cta p{color:var(--muted);font-size:14.5px;margin:0 0 24px}
+
+/* ---------- Footer ---------- */
+footer{background:#060607;border-top:1px solid var(--line);padding:64px 0 30px}
+.fcols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:42px}
+@media(max-width:820px){.fcols{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.fcols{grid-template-columns:1fr}}
+.fcols p{color:var(--muted);font-size:13.5px;margin:16px 0 0;max-width:320px}
+.fcols h4{font-family:var(--body);font-weight:500;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.fcols ul{list-style:none;padding:0;margin:0}
+.fcols li{margin-bottom:11px}
+.fcols a{color:var(--muted);font-size:13.5px;transition:.2s;cursor:pointer}
+.fcols a:hover{color:var(--gold)}
+.fbot{border-top:1px solid var(--line-soft);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;color:var(--muted-2);font-size:12px}
+
+/* ---------- Dynamic page overlay ---------- */
+#pageOverlay{position:fixed;inset:0;z-index:300;background:var(--ink);overflow-y:auto;overflow-x:hidden;display:none}
+#pageOverlay.on{display:block}
+.pov-band{padding:148px 0 56px;background:radial-gradient(110% 90% at 80% 10%,rgba(180,151,90,.18),transparent 55%),linear-gradient(160deg,#0c0b09,#070708);border-bottom:1px solid var(--line-soft);text-align:center}
+.pov-band h1{font-size:clamp(32px,5vw,58px);font-weight:800}
+.pov-band h1 em{font-family:var(--serif-2);font-style:italic;color:var(--gold);font-weight:500}
+.pov-band p{color:var(--muted);max-width:660px;margin:18px auto 0;font-size:16px}
+
+/* ---------- Admin Login Gate ---------- */
+.adgate{position:fixed;inset:0;z-index:600;display:none;align-items:center;justify-content:center;padding:20px}
+.adgate.on{display:flex}
+.adgate-ov{position:absolute;inset:0;background:rgba(4,4,5,.8);backdrop-filter:blur(9px)}
+.adgate-card{position:relative;width:100%;max-width:392px;background:linear-gradient(160deg,#121009,#0b0b0c);border:1px solid var(--line);padding:38px 32px 28px;box-shadow:var(--shadow);animation:rise .4s ease}
+.adgate-card:before{content:"";position:absolute;inset:8px;border:1px solid rgba(180,151,90,.16);pointer-events:none}
+.adgate-lock{width:56px;height:56px;border:1px solid var(--gold);display:grid;place-items:center;color:var(--gold);margin-bottom:18px}
+.adgate-card h3{font-size:22px;margin-bottom:6px}
+.adgate-card .sub{font-size:13px;color:var(--muted);margin:0 0 22px}
+.adgate-f{position:relative;margin-bottom:14px}
+.adgate-f input{width:100%;background:#0c0c0e;border:1px solid var(--line-soft);padding:14px 44px 14px 14px;color:var(--white);font-size:15px;font-family:var(--body);outline:none;letter-spacing:.06em}
+.adgate-f input:focus{border-color:var(--gold)}
+.adgate-f .eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--muted);cursor:pointer;font-size:15px;padding:6px}
+.adgate-go{width:100%;justify-content:center}
+.adgate-err{font-size:12.5px;color:#e7a17a;margin:11px 2px 0;min-height:16px}
+.adgate.shake .adgate-card{animation:adshake .42s}
+@keyframes adshake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}
+.adgate-x{position:absolute;top:14px;right:14px;background:none;border:0;color:var(--muted-2);font-size:18px;cursor:pointer;z-index:2}
+.adgate-foot{display:flex;align-items:center;gap:7px;margin-top:18px;font-size:11px;color:var(--muted-2);border-top:1px solid var(--line-soft);padding-top:14px}
+
+/* ---------- Tenant Admin ---------- */
+.sta-modal{position:fixed;inset:0;z-index:580;display:none;align-items:center;justify-content:center;padding:20px}
+.sta-modal.on{display:flex}
+.sta-ov{position:absolute;inset:0;background:rgba(4,4,5,.8);backdrop-filter:blur(8px)}
+.sta-card{position:relative;width:100%;max-width:720px;max-height:90vh;overflow:auto;background:#0b0b0c;border:1px solid var(--line);box-shadow:var(--shadow)}
+.sta-hd{position:sticky;top:0;background:#0b0b0c;display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line);z-index:2}
+.sta-hd b{font-family:var(--serif);font-size:18px}
+.sta-hd button{background:none;border:0;color:var(--muted);font-size:18px;cursor:pointer}
+.sta-tabs{display:flex;gap:4px;flex-wrap:wrap;padding:14px 24px 0}
+.sta-tabs button{background:transparent;border:1px solid var(--line-soft);color:var(--muted);font-family:var(--body);font-size:13px;padding:9px 14px;cursor:pointer;transition:.2s}
+.sta-tabs button.act{background:var(--grad-gold);border-color:transparent;color:#1a140a;font-weight:600}
+.sta-body{padding:22px 24px}
+.sta-pane h4{font-family:var(--serif);font-size:18px;margin-bottom:6px}
+.sta-pane .sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+.sta-f{margin-bottom:14px}
+.sta-f label{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.sta-f input,.sta-f select,.sta-f textarea{width:100%;background:#0c0c0e;border:1px solid var(--line-soft);color:var(--white);padding:12px 13px;font-family:var(--body);font-size:14px;outline:none}
+.sta-f input[type=file]{padding:9px;cursor:pointer}
+.sta-f input:focus,.sta-f select:focus,.sta-f textarea:focus{border-color:var(--gold)}
+.sta-row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.sta-row2{grid-template-columns:1fr}}
+.sta-go{margin-top:6px}
+.logo-prev{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.logo-prev .box{width:60px;height:60px;border:1px solid var(--line);display:grid;place-items:center;color:var(--gold);font-family:var(--serif);font-weight:800;overflow:hidden}
+.logo-prev .box img{width:100%;height:100%;object-fit:contain;padding:4px}
+.logo-prev span{font-size:12px;color:var(--muted)}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:#0c0c0e;border:1px solid var(--gold);color:var(--white);padding:14px 22px;font-size:14px;z-index:700;opacity:0;transition:.35s;box-shadow:var(--shadow);max-width:90vw}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast b{color:var(--gold)}
+::selection{background:rgba(180,151,90,.3);color:#fff}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:var(--gold-deep)}::-webkit-scrollbar-track{background:#0a0a0b}
+</style>
+</head>
+<body>
+
+<!-- ============ TEK SABİT NAV (her sayfada birebir aynı) ============ -->
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <div class="brand" onclick="goHome()">
+      <span class="mark" id="brandMark">M</span>
+      <span><b id="brandName">Selin Meridyen</b><small>Lüks Portföy Danışmanı</small></span>
+    </div>
+    <nav class="nav-links" id="navLinks">
+      <a class="lnk" data-k="ilanlar" onclick="navGo('ilanlar')">İlanlar</a>
+      <a class="lnk" data-k="vip" onclick="navGo('vip')">VIP Portföy</a>
+      <a class="lnk" data-k="surec" onclick="navGo('surec')">Süreç</a>
+      <a class="lnk" data-k="randevu" onclick="navGo('randevu')">Randevu</a>
+      <a class="lnk" data-k="iletisim" onclick="navGo('iletisim')">İletişim</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="nav-wa" href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.21 8.21 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.4-8.24 8.4Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z"/></svg>
+      </a>
+      <a class="btn btn-gold" onclick="navGo('randevu')">Ücretsiz Analiz</a>
+      <button class="burger" id="burger" onclick="toggleNav()" aria-label="Menü"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ DİNAMİK SAYFA OVERLAY ============ -->
+<div id="pageOverlay"></div>
+
+<!-- ============ ANA SAYFA ============ -->
+<div id="homeView">
+
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <svg class="hero-arch" viewBox="0 0 600 600" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round">
+    <path d="M120 560V250l180-120 180 120v310" opacity=".7"/><path d="M120 250 300 130 480 250"/>
+    <path d="M170 560V330h70v230M360 560V330h70v230"/><path d="M270 560V440h60v120"/>
+    <path d="M180 300h40M380 300h40M180 360h40M380 360h40M180 420h40M380 420h40" opacity=".6"/>
+    <path d="M60 560h480"/><circle cx="300" cy="92" r="26" opacity=".5"/>
+  </svg>
+  <div class="wrap hero-in">
+    <div class="eyebrow">Butik Emlak Danışmanlığı · Yetki Belgeli</div>
+    <h1>Mülkünüz Bir Değerdir.<em>Onu Doğru İsimle Taçlandırın.</em></h1>
+    <p class="lede">Güncel lüks ilanlardan davet usulü gizli VIP portföye; doğru konumlandırma, tam gizlilik ve kusursuz müzakere ile mülkünüzü hak ettiği değere taşırım.</p>
+    <div class="hero-cta">
+      <a class="btn btn-gold" onclick="navGo('ilanlar')">Güncel İlanları Gör</a>
+      <a class="btn btn-line" onclick="navGo('randevu')">Ücretsiz Analiz</a>
+    </div>
+  </div>
+  <div class="hero-scroll">Keşfet<i></i></div>
+</section>
+
+<section class="trust">
+  <div class="wrap" style="padding:0"><div class="trust-in">
+    <div class="t"><b>18+</b><span>Yıl Tecrübe</span></div>
+    <div class="t"><b>₺7,4 Mr</b><span>Aracılık Edilen Değer</span></div>
+    <div class="t"><b>%100</b><span>Yetki Belgeli Portföy</span></div>
+    <div class="t"><b>Gizli</b><span>Adres & Kimlik Mahremiyeti</span></div>
+  </div></div>
+</section>
+
+<section class="about sec-pad" id="hakkimda">
+  <div class="wrap about-grid">
+    <div class="about-portrait">
+      <div class="frame"></div>
+      <svg viewBox="0 0 200 240" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="100" cy="78" r="40"/><path d="M40 220c0-44 27-74 60-74s60 30 60 74"/><path d="M70 120c10 14 50 14 60 0" opacity=".5"/></svg>
+      <div class="sig">Selin Meridyen</div>
+    </div>
+    <div class="about">
+      <div class="eyebrow">Kişisel Temsil</div>
+      <h2>Mülkünüzü bir portföy numarasına değil, bir <span class="serif-it gold">imzaya</span> emanet edin.</h2>
+      <div class="role">Kıdemli Lüks Konut & Portföy Danışmanı</div>
+      <p>Her mülk, doğru alıcısıyla buluşmayı hak eder. Açık portföyümde şeffaf, tam bilgili güncel ilanlar; özel portföyümde ise yalnızca yetki belgeli, mahremiyeti korunan ayrıcalıklı mülkler yer alır.</p>
+      <div class="quote">“Doğru danışman, fiyatı savunmaz; değeri görünür kılar.”</div>
+      <div class="about-meta">
+        <div><b>Davet Usulü</b><span>Seçili alıcı havuzu</span></div>
+        <div><b>Tam Gizlilik</b><span>Adres & kimlik koruması</span></div>
+        <div><b>Tek Muhatap</b><span>Baştan sona aynı isim</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GÜNCEL İLANLAR (ön yüz, tam şeffaf) -->
+<section class="sec-pad" id="ilanlar">
+  <div class="wrap">
+    <div class="sec-h">
+      <div class="eyebrow" style="display:block">Güncel İlanlar</div>
+      <h2>Açık portföy · tam şeffaf bilgi</h2>
+      <p>Fiyat, oda, metrekare ve bölge bilgisi açıkça paylaşılan güncel lüks ilanlar. Detaylı bilgi ve ücretsiz değer analizi için bana ulaşın.</p>
+    </div>
+    <div class="card-grid" id="homeListings"></div>
+    <div style="text-align:center;margin-top:40px"><a class="btn btn-line" onclick="navGo('ilanlar')">Tüm İlanları Aç</a></div>
+  </div>
+</section>
+
+<!-- VIP PORTFÖY (gizemli, adres gizli) -->
+<section class="vault sec-pad" id="vault">
+  <div class="wrap">
+    <div class="sec-h">
+      <div class="divider-orn"><span>RÉSERVÉ</span></div>
+      <div class="eyebrow" style="display:block">Kişisel VIP Portföyüm</div>
+      <h2>Herkese açık olmayan, davet usulü mülkler</h2>
+      <p>Yalnızca cadde/sokak ismi ve başlangıç değeri paylaşılır; tam adres ve kimlik bilgileri mahremiyet gereği yalnızca ön analiz sonrası açıklanır.</p>
+    </div>
+    <div class="card-grid" id="vaultGrid"></div>
+    <div class="vault-note">🔒 Tüm kayıtlarda <b>adres gizliliği</b> esastır · Net konum ve detaylar yalnızca <b>ücretsiz analiz görüşmesinde</b> paylaşılır.</div>
+  </div>
+</section>
+
+<!-- SÜREÇ -->
+<section class="sec-pad" id="surec">
+  <div class="wrap">
+    <div class="sec-h"><div class="eyebrow" style="display:block">Süreç & Temsil</div><h2>Mülkünüzü değere taşıyan beş aşama</h2></div>
+    <div class="proc-grid">
+      <div class="proc"><div class="no">01</div><h4>Değer Analizi</h4><p>Mülkün gerçek pazar konumunu analiz eder, hedef alıcı profilini ve fiyat stratejisini birlikte belirleriz.</p></div>
+      <div class="proc"><div class="no">02</div><h4>Sahneleme</h4><p>Profesyonel görsel, mimari sunum dosyası ve mahremiyeti koruyan tanıtım materyali hazırlanır.</p></div>
+      <div class="proc"><div class="no">03</div><h4>Konumlandırma</h4><p>Açık ilan ya da davet usulü gizli pazarlama; mülkün niteliğine göre doğru kanal seçilir.</p></div>
+      <div class="proc"><div class="no">04</div><h4>Müzakere</h4><p>Tek muhatap olarak tüm görüşmeleri yürütür, teklifleri değerinizi koruyacak şekilde müzakere ederim.</p></div>
+      <div class="proc"><div class="no">05</div><h4>Kusursuz Kapanış</h4><p>Tapu, hukuki ve mali süreçler uçtan uca koordine edilir; devir gününe kadar yanınızdayım.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ÜCRETSİZ ANALİZ CTA BAND -->
+<section class="analiz sec-pad">
+  <div class="wrap"><div class="analiz-band">
+    <div>
+      <div class="eyebrow" style="display:block">Ücretsiz Mülk Değer Analizi</div>
+      <h3>Mülkünüzün gerçek değerini birlikte keşfedelim.</h3>
+      <p>Bağlayıcı olmayan, gizli bir ön değer analizi için randevu oluşturun; doğru fiyat ve doğru strateji ile başlayın.</p>
+      <svg role="img" aria-label="Referans ve güven mührü" viewBox="0 0 120 40" width="120" height="40" style="margin-top:14px;color:var(--gold);max-width:100%;height:auto" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="20" cy="20" r="13" opacity=".85"/><path d="M20 13v7l4.5 3" opacity=".6"/><path d="M14.5 20l3.5 3.5 7-7" stroke-width="1.8"/>
+        <path d="M44 14h62M44 26h44" opacity=".35"/><path d="M44 20h54" opacity=".55"/>
+        <path d="M108 12l2.4 4.8 5.3.8-3.8 3.7.9 5.3-4.8-2.5-4.8 2.5.9-5.3-3.8-3.7 5.3-.8L108 12Z" fill="currentColor" opacity=".9" stroke="none"/>
+      </svg>
+    </div>
+    <a class="btn btn-gold" onclick="navGo('randevu')">Ücretsiz Analiz Randevusu</a>
+  </div></div>
+</section>
+
+<!-- PROX AI -->
+<section class="prox sec-pad">
+  <div class="wrap"><div class="prox-card">
+    <div class="prox-h"><div class="av">Px</div><div><b>ProX AI · Danışman Konsiyerj</b><span>Lüks Konut & Yatırım Uzmanı</span></div></div>
+    <p class="prox-sub">Bir bölge, mülk tipi veya yatırım sorun; portföyümü sizin için tarayıp prim potansiyelini anlatayım, ardından ücretsiz analiz randevunuzu planlayalım.</p>
+    <div class="prox-log" id="proxLog"></div>
+    <div class="prox-in">
+      <input id="proxIn" placeholder="Örn: Levent’te penthouse var mı? Yatırımlık ne önerirsiniz?" onkeydown="if(event.key==='Enter')proxSend()">
+      <button class="btn btn-gold" onclick="proxSend()">Gönder</button>
+    </div>
+    <div class="prox-chips">
+      <button onclick="proxQuick('Levent’te penthouse var mı?')">Levent penthouse</button>
+      <button onclick="proxQuick('Yatırımlık prim potansiyeli yüksek ne önerirsiniz?')">Prim potansiyeli</button>
+      <button onclick="proxQuick('Boğaz’da yalı portföyünüz var mı?')">Boğaz yalısı</button>
+      <button onclick="proxQuick('Mülkümü gizlilikle nasıl satarsınız?')">Gizli satış</button>
+    </div>
+  </div></div>
+</section>
+
+<!-- İLETİŞİM -->
+<section class="sec-pad" id="iletisim"><div class="wrap" id="homeContact"></div></section>
+
+<div id="siteFooter"></div>
+</div><!-- /homeView -->
+
+<script>
+/* =====================================================================
+   SELİN MERİDYEN · Lüks Danışman Platformu (bağımsız sektör sitesi)
+   emlakekspertizi.com ProX SaaS çekirdeği (izole kopya)
+   ===================================================================== */
+
+/* ---------- Çift Katmanlı SaaS Yapılandırması ---------- */
+const SAAS_CONFIG={
+  tenantId:'meridyen-danisman',
+  tenantName:'Selin Meridyen Danışmanlık',
+  tenantType:'Danışman',
+  advisorName:'Selin Meridyen',
+  systemSettings:{
+    brandName:'Selin Meridyen',
+    accent:'#b4975a', accent2:'#111111', accentSoft:'#d8c39a',
+    logoUrl:'', faviconUrl:'',
+    metaTitle:'Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı',
+    metaDescription:'Yetki belgeli butik emlak danışmanlığı; güncel lüks ilanlar, davet usulü VIP portföy ve ücretsiz mülk değer analizi.',
+    metaKeywords:'lüks konut danışmanı, özel portföy, yalı, penthouse, butik emlak, ücretsiz mülk analizi',
+    googleAnalytics:'', googleSiteVerification:'', googleMapsKey:''
+  },
+  tenantSettings:{ customPrompt:'' },
+  proxAiPrompts:{
+    persona:'Sen, üst segment gayrimenkulde 18 yıllık tecrübeli, son derece elit, vizyoner ve güven veren bir lüks konut broker’ısın (Selin Meridyen). Üslubun zarif, sakin ve danışan odaklıdır; agresif satış yapmaz, değeri görünür kılarsın. Kullanıcı bir bölge/mülk/yatırım sorduğunda hafızandaki portföyü tarar, uygun mülkleri ve prim (değer artışı) potansiyelini anlatır, kesin fiyat vaadi vermez ve her görüşmeyi nazikçe ücretsiz analiz randevusuna yönlendirirsin.'
+  }
+};
+function saasResolve(key){const t=SAAS_CONFIG.tenantSettings,s=SAAS_CONFIG.systemSettings;if(t&&t[key]!=null&&t[key]!=='')return t[key];return s?s[key]:undefined;}
+function initSaaSTheme(){const r=document.documentElement.style;const a=saasResolve('accent'),a2=saasResolve('accent2'),as=saasResolve('accentSoft');if(a){r.setProperty('--accent',a);r.setProperty('--gold',a);}if(a2)r.setProperty('--accent-2',a2);if(as)r.setProperty('--gold-soft',as);}
+function applySaaSSettings(){
+  const title=saasResolve('metaTitle');if(title)document.title=title;
+  const setMeta=(name,val)=>{if(val==null)return;let m=document.querySelector('meta[name="'+name+'"]');if(!m){m=document.createElement('meta');m.name=name;document.head.appendChild(m);}m.content=val;};
+  setMeta('description',saasResolve('metaDescription'));
+  setMeta('keywords',saasResolve('metaKeywords'));
+  const gsc=saasResolve('googleSiteVerification');if(gsc)setMeta('google-site-verification',gsc.replace('google-site-verification=',''));
+  const fav=saasResolve('faviconUrl');
+  if(fav){let l=document.querySelector('link[rel="icon"]');if(!l){l=document.createElement('link');l.rel='icon';document.head.appendChild(l);}l.href=fav;}
+  const ga=saasResolve('googleAnalytics');
+  if(ga&&!window.__gaLoaded){window.__gaLoaded=true;const s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+ga;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config',ga);}
+  /* marka adı */
+  const bn=saasResolve('brandName');if(bn){const e=document.getElementById('brandName');if(e)e.textContent=bn;}
+  /* logo görseli */
+  const logo=saasResolve('logoUrl');const mark=document.getElementById('brandMark');
+  if(mark){if(logo){mark.classList.add('has-img');mark.innerHTML='<img src="'+logo+'" alt="logo">';}else{mark.classList.remove('has-img');mark.textContent=(bn||'M').trim().charAt(0).toUpperCase();}}
+}
+
+/* ---------- Toast ---------- */
+let _toastT;function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t);}t.innerHTML=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(()=>t.classList.remove('on'),3600);}
+
+/* ---------- Format ---------- */
+function fmt(n){return '₺'+Number(n).toLocaleString('tr-TR');}
+
+/* ---------- Nav / Chrome ---------- */
+function toggleNav(){document.getElementById('navLinks').classList.toggle('open');}
+function closeNav(){document.getElementById('navLinks').classList.remove('open');}
+function setActiveNav(k){document.querySelectorAll('#navLinks .lnk').forEach(a=>a.classList.toggle('act',a.dataset.k===k));}
+window.addEventListener('scroll',()=>{if(!document.getElementById('pageOverlay').classList.contains('on'))document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);});
+
+const _PIN='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.4"/></svg>';
+const _ARR='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+const _LCK='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+
+/* =====================================================================
+   VERİ KATMANI — Güncel İlanlar (açık) + VIP Portföy (gizli)
+   ===================================================================== */
+const _VIP_SVG={
+  yali:'<svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 120h168"/><path d="M40 120V66l60-30 60 30v54"/><path d="M40 66 100 36l60 30" opacity=".6"/><rect x="62" y="80" width="22" height="22"/><rect x="116" y="80" width="22" height="22"/><path d="M90 120v-24h20v24"/></svg>',
+  penthouse:'<svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M50 124V40h100v84"/><path d="M50 40 100 16l50 24" opacity=".6"/><path d="M66 60h20M114 60h20M66 86h20M114 86h20"/><path d="M88 124v-26h24v26"/><path d="M30 124h140"/></svg>',
+  villa:'<svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M28 122h144"/><path d="M48 122V70h60v52"/><path d="M48 70 78 48l30 22" opacity=".6"/><rect x="62" y="84" width="16" height="16"/><path d="M108 122V86h44v36"/><path d="M108 86 130 70l22 16" opacity=".6"/></svg>',
+  rezidans:'<svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M70 124V28h60v96"/><path d="M84 44h12M104 44h12M84 64h12M104 64h12M84 84h12M104 84h12"/><path d="M40 124V64h30v60M130 124V64h30v60" opacity=".55"/><path d="M28 124h144"/></svg>',
+  loft:'<svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M44 122V54h112v68"/><path d="M44 54 100 28l56 26" opacity=".6"/><path d="M64 76h32v46H64z"/><path d="M112 76h28M112 96h28"/><path d="M28 122h144"/></svg>',
+  arsa:'<svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M30 110 80 40l60 18 30-20" opacity=".7"/><path d="M30 110h140"/><path d="M50 110V92M90 110V86M130 110V96" opacity=".5"/><path d="M150 40v40M140 50h20"/></svg>'
+};
+/* Açık ilanlar — tam şeffaf (fiyat/oda/m²/bölge) */
+const LISTINGS=[
+  {tip:'penthouse',durum:'Satılık',baslik:'Levent Çift Kat Penthouse',bolge:'Beşiktaş · Levent',m2:320,oda:'4+1',kat:'18–19',fiyat:48500000},
+  {tip:'rezidans',durum:'Satılık',baslik:'Maslak Marka Rezidans',bolge:'Sarıyer · Maslak',m2:185,oda:'3+1',kat:'24',fiyat:22000000},
+  {tip:'villa',durum:'Satılık',baslik:'Zekeriyaköy Havuzlu Villa',bolge:'Sarıyer · Zekeriyaköy',m2:540,oda:'6+2',kat:'3 katlı',fiyat:65000000},
+  {tip:'rezidans',durum:'Satılık',baslik:'Nişantaşı Tasarım Daire',bolge:'Şişli · Nişantaşı',m2:260,oda:'4+1',kat:'7',fiyat:31000000},
+  {tip:'loft',durum:'Kiralık',baslik:'Cihangir Manzaralı Loft',bolge:'Beyoğlu · Cihangir',m2:130,oda:'2+1',kat:'6',fiyat:185000,kira:true},
+  {tip:'villa',durum:'Satılık',baslik:'Bahçeşehir Müstakil Villa',bolge:'Başakşehir · Bahçeşehir',m2:410,oda:'5+1',kat:'2 katlı',fiyat:27000000}
+];
+/* VIP — adres gizli, yalnız cadde/sokak + başlangıç fiyatı */
+const VIP_PORTFOLIO=[
+  {tip:'yali',tag:'Boğaz Yalısı',baslik:'Tarihî Restore Yalı',cadde:'Kuruçeşme Cad.',bolge:'Sarıyer',m2:'820 m²',oda:'7+2',ozet:'Özel iskele',baslangic:285000000},
+  {tip:'penthouse',tag:'Penthouse',baslik:'Çatı Dubleks Penthouse',cadde:'Abdi İpekçi Cad.',bolge:'Şişli',m2:'410 m²',oda:'5+1',ozet:'360° şehir',baslangic:96000000},
+  {tip:'villa',tag:'Müstakil Villa',baslik:'Havuzlu Tasarım Villa',cadde:'Tepeüstü Sok.',bolge:'Beykoz',m2:'640 m²',oda:'6+2',ozet:'Akıllı ev',baslangic:140000000},
+  {tip:'rezidans',tag:'Branded Residence',baslik:'Otel Konseptli Rezidans',cadde:'Sahil Yolu',bolge:'Beşiktaş',m2:'285 m²',oda:'4+1',ozet:'Concierge',baslangic:78000000},
+  {tip:'yali',tag:'Yalı Dairesi',baslik:'Su Üstü Yalı Katı',cadde:'Beylerbeyi Sahil Cad.',bolge:'Üsküdar',m2:'320 m²',oda:'4+1',ozet:'Özel rıhtım',baslangic:120000000},
+  {tip:'arsa',tag:'Yatırım Arsası',baslik:'Deniz Manzaralı İmarlı Arsa',cadde:'Bağ Sok.',bolge:'Çeşme · Alaçatı',m2:'4.200 m²',oda:'İmarlı',ozet:'Villa imarı',baslangic:92000000}
+];
+/* Bölgesel prim (değer artışı) ipuçları — ProX için */
+const PRIM={'Levent':'%13–15','Maslak':'%11–13','Zekeriyaköy':'%9–11','Nişantaşı':'%10–12','Cihangir':'%8–10','Bahçeşehir':'%7–9','Sarıyer':'%12–14','Beykoz':'%9–11','Beşiktaş':'%11–13','Üsküdar':'%9–11','Çeşme':'%12–15','Alaçatı':'%12–15','Boğaz':'%14–16'};
+
+function listingCardsHTML(){return LISTINGS.map(l=>{
+  const price=l.kira?fmt(l.fiyat)+' <span class="per">/ay</span>':fmt(l.fiyat);
+  const nm=l.baslik.replace(/'/g,'’');
+  return '<article class="vcard" onclick="leadFor(\''+nm+'\')">'
+   +'<div class="vcard-img"><div class="glow"></div><span class="vcard-tag">'+l.durum+'</span>'+(_VIP_SVG[l.tip]||_VIP_SVG.villa)+'</div>'
+   +'<div class="vcard-body"><h3>'+l.baslik+'</h3>'
+   +'<div class="vcard-loc">'+_PIN+l.bolge+'</div>'
+   +'<div class="vcard-spec"><div><b>'+l.m2+' m²</b>Alan</div><div><b>'+l.oda+'</b>Oda</div><div><b>'+l.kat+'</b>Kat</div></div>'
+   +'<div class="vcard-ft"><div class="vcard-price">'+price+'<span>'+l.durum+'</span></div><div class="vcard-go">Ücretsiz Analiz'+_ARR+'</div></div>'
+   +'</div></article>';
+}).join('');}
+
+function vipCardsHTML(){return VIP_PORTFOLIO.map(p=>{
+  const nm=p.baslik.replace(/'/g,'’');
+  return '<article class="vcard" onclick="leadFor(\''+nm+'\')">'
+   +'<div class="vcard-img"><div class="glow"></div><span class="vcard-tag">'+p.tag+'</span><span class="vcard-lock">'+_LCK+' No Gizli</span>'+(_VIP_SVG[p.tip]||'')+'</div>'
+   +'<div class="vcard-body"><h3>'+p.baslik+'</h3>'
+   +'<div class="vcard-loc">'+_PIN+p.cadde+' · '+p.bolge+'</div>'
+   +'<div class="vcard-spec"><div><b>'+p.m2+'</b>Alan</div><div><b>'+p.oda+'</b>Tip</div><div><b>'+p.ozet+'</b>Ayrıcalık</div></div>'
+   +'<div class="vcard-ft"><div class="vcard-price">'+fmt(p.baslangic)+'<span>Başlangıç · Yetki Belgeli</span></div><div class="vcard-go">Ücretsiz Analiz'+_ARR+'</div></div>'
+   +'</div></article>';
+}).join('');}
+
+function contactHTML(){return '<div class="contact-grid contact">'
+  +'<div><div class="eyebrow">İletişim</div><h2 style="font-size:clamp(28px,4vw,42px);margin-bottom:24px">Tek bir görüşme, doğru başlangıçtır.</h2>'
+  +'<div class="row"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.6 2.6.6 2.6.6 2.6a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6"/></svg></div><div><b>Doğrudan Hat</b><span>+90 532 000 00 00 · WhatsApp randevulu</span></div></div>'
+  +'<div class="row"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></div><div><b>E-posta</b><span>ozel@selinmeridyen.com</span></div></div>'
+  +'<div class="row"><div class="ic">'+_PIN+'</div><div><b>Ofis</b><span>Bebek · İstanbul (yalnızca randevulu)</span></div></div>'
+  +'<div class="row"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg></div><div><b>Çalışma İlkesi</b><span>Şeffaf ilan · gizli portföy · tek muhatap</span></div></div></div>'
+  +'<div class="contact-cta"><div class="eyebrow" style="display:block">Ücretsiz Analiz</div><h3>Mülkünüzü konuşalım</h3><p>Bağlayıcı olmayan, gizli bir ön değer analizi için randevu oluşturun.</p><a class="btn btn-gold" onclick="contactLead()" style="width:100%;justify-content:center">Randevu Oluştur</a></div>'
+  +'</div>';}
+
+function apptModuleHTML(){return '<div class="appt-card">'
+  +'<div class="appt-head"><div class="info"><div class="eyebrow">Ücretsiz Mülk Değer Analizi</div><h3>Randevunuzu planlayın</h3><p>Size en uygun günü ve saati seçin; mülkünüzün değerini gizlilik içinde, ücretsiz olarak birlikte değerlendirelim.</p><ul><li>Bağlayıcı olmayan ön değer analizi</li><li>Yüz yüze veya özel video görüşme</li><li>Tam gizlilik · doğru fiyat stratejisi</li></ul></div>'
+  +'<div class="vis"><svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="30" y="44" width="140" height="124" rx="4"/><path d="M30 78h140M64 30v28M136 30v28"/><path d="M54 100h20M90 100h20M126 100h20M54 126h20M90 126h20M126 126h20" opacity=".6"/><circle cx="100" cy="126" r="11" stroke="var(--gold)"/></svg></div></div>'
+  +'<div class="appt-body"><div class="appt-step-h"><b>1</b> Gün seçin</div><div class="days" id="apptDays"></div>'
+  +'<div class="appt-step-h"><b>2</b> Saat seçin</div><div class="slots" id="apptSlots"></div>'
+  +'<div class="appt-step-h"><b>3</b> İletişim bilgileriniz</div>'
+  +'<div class="appt-form"><div class="fld"><label>Ad Soyad</label><input id="ap_ad" placeholder="Adınız Soyadınız"></div><div class="fld"><label>Telefon</label><input id="ap_tel" placeholder="05xx xxx xx xx"></div><div class="fld full"><label>Mülk / ilgilendiğiniz portföy</label><input id="ap_not" placeholder="Örn. Levent penthouse, satılık dairem..."></div></div>'
+  +'<div class="appt-summary" id="apptSummary">Lütfen bir gün ve saat seçin.</div>'
+  +'<button class="btn btn-gold" style="margin-top:20px;width:100%;justify-content:center" onclick="apptSubmit()">Ücretsiz Analiz Talebini Gönder</button></div></div>';}
+
+/* ---------- footer (tek kaynak, her sayfada birebir aynı) ---------- */
+function footerHTML(){return '<footer><div class="wrap"><div class="fcols">'
+  +'<div><div class="brand" onclick="goHome()"><span class="mark">'+(saasResolve('brandName')||'M').trim().charAt(0)+'</span><span><b>'+(saasResolve('brandName')||'Selin Meridyen')+'</b><small>Lüks Portföy Danışmanı</small></span></div><p>Yetki belgeli butik emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy ve ücretsiz mülk değer analizi.</p></div>'
+  +'<div><h4>Keşfet</h4><ul><li><a onclick="navGo(\'ilanlar\')">İlanlar</a></li><li><a onclick="navGo(\'vip\')">VIP Portföy</a></li><li><a onclick="navGo(\'surec\')">Süreç</a></li><li><a onclick="navGo(\'randevu\')">Ücretsiz Analiz</a></li></ul></div>'
+  +'<div><h4>Kurumsal</h4><ul><li><a onclick="goHome()">Ana Sayfa</a></li><li><a onclick="navGo(\'iletisim\')">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>'
+  +'<div><h4>Yasal</h4><ul><li><a>KVKK Aydınlatma</a></li><li><a>Gizlilik Politikası</a></li><li><a onclick="openAdminGate()">Yönetim Paneli</a></li></ul></div>'
+  +'</div><div class="fbot"><span>© 2026 Selin Meridyen · Lüks Konut & Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span><span>emlakekspertizi.com kurumsal altyapısıyla üretilmiştir.</span></div></div></footer>';}
+
+/* =====================================================================
+   DİNAMİK SAYFA ROUTER (overlay — üst+alt menü birebir tutarlı)
+   ===================================================================== */
+const PAGES={
+  ilanlar:{eyebrow:'Güncel İlanlar',title:'Açık Portföy',em:'tam şeffaf bilgi',desc:'Fiyat, oda, metrekare ve bölge bilgisi açıkça paylaşılan güncel lüks ilanlar. Beğendiğiniz mülk için ücretsiz değer analizi talep edin.',
+    body:()=>'<section class="sec-pad"><div class="wrap"><div class="card-grid">'+listingCardsHTML()+'</div><div class="vault-note" style="margin-top:36px">Tüm ilanlar yetki belgelidir · detaylı bilgi ve yerinde değerlendirme için <b>ücretsiz analiz</b> alın.</div></div></section>'},
+  vip:{eyebrow:'Kişisel VIP Portföyüm',title:'Davet Usulü',em:'gizli özel portföy',desc:'Yalnızca cadde/sokak ismi ve başlangıç değeri paylaşılır. Tam adres, kimlik ve net fiyat mahremiyet gereği yalnızca ön analiz sonrası açıklanır.',
+    body:()=>'<section class="vault sec-pad"><div class="wrap"><div class="card-grid">'+vipCardsHTML()+'</div><div class="vault-note" style="margin-top:36px">🔒 <b>Adres gizliliği</b> tüm kayıtlarda esastır · net konum yalnızca <b>ücretsiz analiz görüşmesinde</b> paylaşılır.</div></div></section>'},
+  surec:{eyebrow:'Süreç & Temsil',title:'Beş Aşamada',em:'değere taşıma',desc:'Mülkünüzü doğru alıcıyla, değerini koruyarak buluşturan uçtan uca temsil süreci.',
+    body:()=>'<section class="sec-pad"><div class="wrap"><div class="proc-grid">'
+      +'<div class="proc"><div class="no">01</div><h4>Değer Analizi</h4><p>Konum, eşsiz nitelikler ve hedef alıcı profili analiz edilir; doğru fiyat stratejisi kurulur.</p></div>'
+      +'<div class="proc"><div class="no">02</div><h4>Sahneleme</h4><p>Profesyonel görsel, mimari sunum dosyası ve mahremiyeti koruyan tanıtım hazırlanır.</p></div>'
+      +'<div class="proc"><div class="no">03</div><h4>Konumlandırma</h4><p>Açık ilan ya da davet usulü gizli pazarlama; mülkün niteliğine göre doğru kanal seçilir.</p></div>'
+      +'<div class="proc"><div class="no">04</div><h4>Müzakere</h4><p>Tek muhatap olarak tüm görüşmeler yürütülür, teklifler değeri koruyacak şekilde müzakere edilir.</p></div>'
+      +'<div class="proc"><div class="no">05</div><h4>Kusursuz Kapanış</h4><p>Tapu, hukuki ve mali süreçler koordine edilir; devir gününe kadar yanınızdayım.</p></div>'
+      +'</div><div style="text-align:center;margin-top:46px"><a class="btn btn-gold" onclick="navGo(\'randevu\')">Ücretsiz Analiz ile Başla</a></div></div></section>'},
+  randevu:{eyebrow:'Ücretsiz Analiz',title:'Mülk Değer',em:'analizi randevusu',desc:'Bağlayıcı olmayan, gizli bir ön değer analizi için size en uygun gün ve saati seçin.',
+    body:()=>'<section class="sec-pad"><div class="wrap">'+apptModuleHTML()+'</div></section>'},
+  iletisim:{eyebrow:'İletişim',title:'Bağlantı',em:'kuralım',desc:'Doğrudan hat, e-posta ve randevulu ofis görüşmesi.',
+    body:()=>'<section class="sec-pad"><div class="wrap">'+contactHTML()+'</div></section>'}
+};
+function openPage(key,opts){
+  const p=PAGES[key];if(!p)return;
+  const ov=document.getElementById('pageOverlay');
+  ov.innerHTML='<div class="pov-band"><div class="wrap"><div class="eyebrow">'+p.eyebrow+'</div><h1>'+p.title+' <em>'+p.em+'</em></h1><p>'+p.desc+'</p></div></div>'+p.body()+footerHTML();
+  ov.classList.add('on');ov.scrollTop=0;
+  document.body.classList.add('lock');
+  document.getElementById('homeView').style.display='none';
+  document.getElementById('nav').classList.add('scrolled');
+  setActiveNav(key);
+  if(key==='randevu'){buildDays();buildSlots();if(opts&&opts.note){const n=document.getElementById('ap_not');if(n)n.value=opts.note;}}
+}
+function closePage(){const ov=document.getElementById('pageOverlay');ov.classList.remove('on');ov.innerHTML='';document.body.classList.remove('lock');document.getElementById('homeView').style.display='';document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);setActiveNav(null);}
+function goHome(){closeNav();closePage();window.scrollTo(0,0);}
+function navGo(k){closeNav();openPage(k);}
+function contactLead(){if(typeof submitLead==='function')submitLead({sourcePage:'danisman',formType:'contact',name:'',phone:'',email:'',location:'',message:'İletişim bölümünden randevu talebi',requestedService:'Ücretsiz Analiz'});navGo('randevu');}
+function leadFor(name){if(typeof submitLead==='function')submitLead({sourcePage:'danisman',formType:'vip',name:'',phone:'',email:'',location:name,message:name+' (ücretsiz analiz talebi)',requestedService:'Ücretsiz Analiz'});openPage('randevu',{note:name+' (ücretsiz analiz talebi)'});toast('🔍 <b>'+name+'</b> için ücretsiz analiz randevusuna yönlendirildiniz.');}
+
+/* =====================================================================
+   AKILLI RANDEVU (takvim tabanlı)
+   ===================================================================== */
+const _apptState={day:null,slot:null};
+const _SLOTS=['10:00','11:30','13:30','15:00','16:30','18:00'];
+const _DW=['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'];
+const _MN=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+function buildDays(){const host=document.getElementById('apptDays');if(!host)return;_apptState.day=null;_apptState.slot=null;const today=new Date();let html='';
+  for(let i=1;i<=14;i++){const d=new Date(today.getFullYear(),today.getMonth(),today.getDate()+i);const wd=d.getDay();const off=(wd===0);
+    html+='<div class="day'+(off?' off':'')+'" data-lbl="'+d.getDate()+' '+_MN[d.getMonth()]+' '+_DW[wd]+'" onclick="pickDay(this)"><span class="dw">'+_DW[wd]+'</span><span class="dn">'+d.getDate()+'</span><span class="dm">'+_MN[d.getMonth()]+'</span></div>';}
+  host.innerHTML=html;}
+function buildSlots(){const h=document.getElementById('apptSlots');if(h)h.innerHTML=_SLOTS.map(s=>'<div class="slot" data-s="'+s+'" onclick="pickSlot(this)">'+s+'</div>').join('');}
+function pickDay(el){document.querySelectorAll('#apptDays .day').forEach(d=>d.classList.remove('sel'));el.classList.add('sel');_apptState.day=el.dataset.lbl;updateApptSummary();}
+function pickSlot(el){document.querySelectorAll('#apptSlots .slot').forEach(s=>s.classList.remove('sel'));el.classList.add('sel');_apptState.slot=el.dataset.s;updateApptSummary();}
+function updateApptSummary(){const s=document.getElementById('apptSummary');if(!s)return;if(_apptState.day&&_apptState.slot)s.innerHTML='Seçiminiz: <b>'+_apptState.day+'</b> · saat <b>'+_apptState.slot+'</b> — ücretsiz değer analizi.';else if(_apptState.day)s.innerHTML='<b>'+_apptState.day+'</b> seçildi. Lütfen bir saat seçin.';else s.textContent='Lütfen bir gün ve saat seçin.';}
+function apptSubmit(){const ad=(document.getElementById('ap_ad')||{}).value?document.getElementById('ap_ad').value.trim():'';const tel=(document.getElementById('ap_tel')||{}).value?document.getElementById('ap_tel').value.trim():'';
+  if(!_apptState.day||!_apptState.slot){toast('⚠ Lütfen bir gün ve saat seçin.');return;}
+  if(!ad||!tel){toast('⚠ Lütfen ad ve telefon bilgisi girin.');return;}
+  const not=(document.getElementById('ap_not')||{}).value||'';
+  if(typeof submitLead==='function')submitLead({sourcePage:'danisman',formType:'randevu',name:ad,phone:tel,email:'',location:'',message:'Randevu: '+_apptState.day+' '+_apptState.slot+(not?(' · '+not):''),requestedService:'Ücretsiz Analiz'});
+  toast('✦ Teşekkürler <b>'+ad+'</b> — ücretsiz analiz randevunuz <b>'+_apptState.day+' / '+_apptState.slot+'</b> için alındı.');
+  const s=document.getElementById('apptSummary');if(s)s.innerHTML='✓ Talebiniz iletildi: <b>'+_apptState.day+' · '+_apptState.slot+'</b>. Onay için sizi arayacağız.';}
+
+/* =====================================================================
+   ProX AI — Conversion Engine (portföy tarar + prim + randevuya yönlendirir)
+   ===================================================================== */
+function _norm(s){return (s||'').toLocaleLowerCase('tr');}
+function proxScan(t){
+  const pub=LISTINGS.map(l=>({n:l.baslik,b:l.bolge,f:(l.kira?fmt(l.fiyat)+'/ay':fmt(l.fiyat)),tip:l.tip,gizli:false}));
+  const vip=VIP_PORTFOLIO.map(v=>({n:v.baslik,b:v.cadde+' · '+v.bolge,f:'Başlangıç '+fmt(v.baslangic),tip:v.tip,gizli:true}));
+  const all=pub.concat(vip);
+  const hits=all.filter(x=>{
+    if(t.includes(x.tip))return true;
+    return _norm(x.b).split(/[ ·]+/).some(w=>w.length>3&&t.includes(w)) || t.includes(_norm(x.n).split(' ')[0]);
+  });
+  return hits.slice(0,3);
+}
+function _primFor(t){for(const k in PRIM){if(t.includes(_norm(k)))return {b:k,p:PRIM[k]};}return null;}
+function _proxReply(q){
+  const t=_norm(q);
+  const cta=' Dilerseniz hemen ücretsiz bir <b>değer analizi randevusu</b> oluşturalım; rakamları ve stratejiyi size özel netleştirelim.';
+  /* portföy/yatırım sorgusu → tara + prim + dönüşüm */
+  const wantsScan=/(penthouse|yalı|yali|villa|rezidans|arsa|loft|daire|konut|portföy|portfoy|yatırım|yatirim|prim|levent|maslak|nişantaşı|nisantasi|cihangir|boğaz|bogaz|çeşme|cesme|beykoz|beşiktaş|besiktas|sarıyer|sariyer|bahçeşehir|bahcesehir|öner|oner|var mı|tavsiye)/.test(t);
+  if(wantsScan){
+    const hits=proxScan(t);
+    if(hits.length){
+      let html='Portföyümü sizin için taradım — öne çıkan seçenekler:';
+      html+='<ul class="pm-list">'+hits.map(h=>'<li><em>'+h.n+'</em> · '+h.b+' — '+h.f+(h.gizli?' <span style="color:var(--muted-2)">(adres gizli)</span>':'')+'</li>').join('')+'</ul>';
+      const pr=_primFor(t);
+      if(pr)html+='Bu bölgede (<b>'+pr.b+'</b>) son dönem yıllık değer artışı <b>'+pr.p+'</b> bandında seyretti; doğru zamanlama ve konumlandırmayla prim potansiyeli güçlü.';
+      else html+='Bu segmentte doğru konumlandırma, mülkü piyasada eritmeden değerini koruyarak güçlü bir prim potansiyeli sunar.';
+      return html+cta;
+    }
+    return 'Tam aradığınız profili portföyümde birebir göremedim; ancak ağımdaki davet usulü mülkler arasında size uygun bir eşleşme bulabilirim.'+cta;
+  }
+  if(/(gizli|mahrem|adres|ifşa|deşifre)/.test(t))
+    return 'Gizlilik çalışmamın temelidir. Mülkünüz ilan panolarına açılmadan; yalnızca seçili ve önceden değerlendirilmiş alıcı havuzuna, adres ve kimlik paylaşılmadan sunulur. Detaylar yalnızca ciddi alıcıyla, onayınızla açıklanır.'+cta;
+  if(/(değer|fiyat|kaça|ne kadar|kıymet|ekspertiz|analiz)/.test(t))
+    return 'Değeri bir rakamla başlatmam; önce mülkün konumunu, eşsiz niteliklerini ve doğru alıcı profilini analiz ederim. Bu yüzden ilk adım her zaman yerinde, ücretsiz bir değer analizidir.'+cta;
+  if(/(komisyon|ücret|hizmet|kapsam)/.test(t))
+    return 'Hizmetim uçtan uca temsildir: değer analizi ve strateji, profesyonel sahneleme, doğru kanaldan pazarlama, tek elden müzakere ve tapuya kadar kusursuz kapanış. Şeffaf koşulları ön görüşmede netleştiririz.'+cta;
+  if(/(sat|satmak|satıl|elden çıkar)/.test(t))
+    return 'Mülkünüzü en doğru alıcıyla, değerini koruyarak buluşturmak için buradayım. Doğru fiyat konumlandırması ve güçlü müzakere ile başlayalım.'+cta;
+  if(/(randevu|görüş|buluş|ne zaman|takvim)/.test(t)){setTimeout(()=>{},0);return 'Memnuniyetle. Size en uygun günü ve saati randevu modülünden seçebilirsiniz — görüşmemiz bağlayıcı değildir ve tamamen size özeldir.'+cta;}
+  if(/(merhaba|selam|iyi günler|nasıl)/.test(t))
+    return 'Hoş geldiniz, memnun oldum. Bir bölge ya da mülk tipi söyleyin; portföyümü tarayıp size en uygun seçenekleri ve prim potansiyelini paylaşayım.';
+  return 'Çok değerli bir soru. Mülkünüzün niteliğine ve beklentinize göre size özel bir yol haritası çıkarırım; genel-geçer değil, kişiye özel.'+cta;
+}
+function _proxPush(role,html){const l=document.getElementById('proxLog');if(!l)return;let extra='';if(role==='a')extra='<div><button class="pm-cta" onclick="proxToAnaliz()">📅 Ücretsiz Analiz Randevusu Al</button></div>';l.insertAdjacentHTML('beforeend','<div class="pm '+role+'">'+(role==='a'?'<b>Selin Meridyen — ProX:</b> ':'')+html+extra+'</div>');l.scrollTop=l.scrollHeight;}
+/* Canlı ProX: /prox/ai (answer) + yatırım/portföy sorularında /prox/analyze. Boş/başarısız → yerel _proxReply.
+   Sağlayıcı adı ASLA gösterilmez/loglanmaz — yalnızca "ProX". Değer SADECE API'den gelir. */
+function _proxAnalyzeHTML(a){
+  if(!a||a.success===false)return '';
+  var has=(a.strongest_value!=null)||(a.range&&(a.range.min_value!=null||a.range.max_value!=null))||a.karar_ozeti;
+  if(!has)return '';
+  var html='<ul class="pm-list">';
+  if(a.strongest_value!=null)html+='<li><em>En güçlü değer</em> · '+fmt(a.strongest_value)+'</li>';
+  if(a.range&&(a.range.min_value!=null||a.range.max_value!=null))html+='<li><em>Değer aralığı</em> · '+fmt(a.range.min_value)+' – '+fmt(a.range.max_value)+(a.range.spread_pct!=null?(' (±%'+a.range.spread_pct+')'):'')+'</li>';
+  if(a.confidence_band||a.confidence!=null)html+='<li><em>Güven</em> · '+(a.confidence_band||a.confidence)+'</li>';
+  html+='</ul>';
+  if(a.karar_ozeti)html+='<div style="margin-top:6px">'+a.karar_ozeti+'</div>';
+  if(a.risk_ozeti)html+='<div style="margin-top:4px;color:var(--muted)">'+a.risk_ozeti+'</div>';
+  return html;
+}
+/* Serbest metinden bilinen ilan/portföy bölgesini yakala → /prox/analyze için yapısal alanlar (il/ilçe/mahalle/m2/oda/tip). Eşleşme yoksa null. */
+function _proxMatchListing(t){
+  var all=LISTINGS.concat(VIP_PORTFOLIO);
+  for(var i=0;i<all.length;i++){ var x=all[i]; var parts=_norm((x.bolge||'')+' '+(x.cadde||'')).split(/[ ·]+/).filter(function(w){return w.length>3;});
+    for(var j=0;j<parts.length;j++){ if(t.indexOf(parts[j])!==-1){
+      var seg=(x.bolge||'').split('·').map(function(s){return s.trim();});
+      var m2=typeof x.m2==='number'?x.m2:parseInt(String(x.m2).replace(/[^0-9]/g,''),10)||null;
+      return { il:'İstanbul', ilce:seg[0]||'', mahalle:seg[1]||seg[0]||'', m2:m2, oda:x.oda||'', tip:'konut' };
+    } }
+  }
+  return null;
+}
+async function _proxResolveReply(q){
+  try{
+    const t=_norm(q);
+    const wantsAnalyze=/(yatırım|yatirim|prim|değer|deger|fiyat|kaça|ne kadar|kıymet|kiymet|getiri)/.test(t);
+    const ai=await proxApi("/api/v1/tenant/prox/ai",{method:"POST",body:{prompt:q,context:"persona=consultant; sector="+window.EMLAK_TENANT.sector}});
+    var answer=(ai&&!ai.fallback&&ai.success!==false&&ai.answer)?ai.answer:'';
+    var analyzeHTML='';
+    if(wantsAnalyze){
+      var prop=_proxMatchListing(t);
+      if(prop&&prop.m2){ try{ const an=await proxApi("/api/v1/tenant/prox/analyze",{method:"POST",body:prop}); if(an&&!an.fallback)analyzeHTML=_proxAnalyzeHTML(an); }catch(_){ } }
+    }
+    if(answer)return answer.replace(/\n/g,'<br>')+(analyzeHTML?('<div style="margin-top:10px;border-top:1px solid var(--line-soft);padding-top:10px">'+analyzeHTML+'</div>'):'');
+    if(analyzeHTML)return _proxReply(q)+'<div style="margin-top:10px;border-top:1px solid var(--line-soft);padding-top:10px">'+analyzeHTML+'</div>';
+    return _proxReply(q);
+  }catch(e){ return _proxReply(q); }
+}
+function proxSend(){const i=document.getElementById('proxIn');if(!i)return;const q=i.value.trim();if(!q)return;_proxPush('u',q.replace(/</g,'&lt;'));i.value='';setTimeout(function(){_proxResolveReply(q).then(function(html){_proxPush('a',html);});},440);}
+function proxQuick(q){const i=document.getElementById('proxIn');if(i)i.value=q;proxSend();}
+function proxToAnaliz(){navGo('randevu');}
+function proxAiQuery(q){const base=SAAS_CONFIG.proxAiPrompts.persona;const custom=saasResolve('customPrompt');console.log('[ProX persona]',(base+(custom?(' Ek ton: '+custom):'')).slice(0,90)+'…');return _proxReply(q);}
+window.proxAiQuery=proxAiQuery;
+
+/* =====================================================================
+   ŞİFRELİ GİRİŞ KAPISI (Admin Login Gate)
+   ===================================================================== */
+const _ADMIN_PASS='ekspertiz2026';
+function _adGateHost(){let el=document.getElementById('adGate');if(el)return el;el=document.createElement('div');el.id='adGate';el.className='adgate';
+  el.innerHTML='<div class="adgate-ov" onclick="closeAdminGate()"></div><div class="adgate-card">'
+   +'<button class="adgate-x" onclick="closeAdminGate()" aria-label="Kapat">✕</button>'
+   +'<div class="adgate-lock"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="16" r="1.4"/></svg></div>'
+   +'<h3>Yönetim Paneli Girişi</h3><div class="sub">Bu alan yalnızca yetkili danışmana özeldir. Devam etmek için kurumsal erişim şifrenizi girin.</div>'
+   +'<div class="adgate-f"><input id="adPass" type="password" placeholder="Erişim şifresi" autocomplete="off" onkeydown="if(event.key===\'Enter\')adminLogin()"><button class="eye" type="button" onclick="_adToggleEye()" aria-label="Göster">👁</button></div>'
+   +'<button class="btn btn-gold adgate-go" onclick="adminLogin()">Güvenli Giriş →</button>'
+   +'<div class="adgate-err" id="adErr"></div>'
+   +'<div class="adgate-foot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/></svg> KVKK uyumlu · oturum şifrelenir · erişim kayıt altına alınır</div></div>';
+  document.body.appendChild(el);return el;}
+function openAdminGate(){const el=_adGateHost();el.classList.add('on');const i=document.getElementById('adPass');if(i){i.value='';setTimeout(()=>i.focus(),60);}const er=document.getElementById('adErr');if(er)er.textContent='';}
+function closeAdminGate(){const e=document.getElementById('adGate');if(e)e.classList.remove('on');}
+function _adToggleEye(){const i=document.getElementById('adPass');if(i)i.type=i.type==='password'?'text':'password';}
+function adminLogin(){const i=document.getElementById('adPass'),er=document.getElementById('adErr'),g=document.getElementById('adGate');if(!i)return;
+  if(i.value===_ADMIN_PASS){if(er)er.textContent='';closeAdminGate();openSaasAdmin();toast('✓ Yönetim paneline güvenli giriş yapıldı.');}
+  else{if(er)er.textContent='⚠ Hatalı şifre. Erişim reddedildi.';if(g){g.classList.add('shake');setTimeout(()=>g.classList.remove('shake'),460);}if(i){i.value='';i.focus();}}}
+window.openAdminGate=openAdminGate;window.closeAdminGate=closeAdminGate;window.adminLogin=adminLogin;window._adToggleEye=_adToggleEye;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();closeSaasAdmin();}});
+
+/* =====================================================================
+   YÖNETİM PANELİ (#saasTenantAdmin) — tam fonksiyonlu
+   ===================================================================== */
+function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='sta-modal';
+  el.innerHTML='<div class="sta-ov" onclick="closeSaasAdmin()"></div><div class="sta-card"><div class="sta-hd"><b>ProX SaaS · '+SAAS_CONFIG.tenantName+'</b><button onclick="closeSaasAdmin()">✕</button></div>'
+   +'<div class="sta-tabs"><button class="act" data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
+   /* MARKA & LOGO */
+   +'<div class="sta-pane" data-p="marka"><h4>Marka, Logo & Tema</h4><p class="sub">Logo/favicon yükleyin veya URL girin; altın/şampanya tema tonunu ayarlayın.</p>'
+     +'<div class="logo-prev"><div class="box" id="adLogoPrev">M</div><span>Mevcut logo önizleme</span></div>'
+     +'<div class="sta-f"><label>Marka Adı (logo yazısı)</label><input id="sl_brand" placeholder="Selin Meridyen"></div>'
+     +'<div class="sta-row2"><div class="sta-f"><label>Logo Yükle (dosya)</label><input type="file" accept="image/*" id="sl_logo_file" onchange="saasUploadImg(this,\'logoUrl\')"></div><div class="sta-f"><label>veya Logo URL</label><input id="sl_logo_url" placeholder="https://.../logo.png"></div></div>'
+     +'<div class="sta-row2"><div class="sta-f"><label>Favicon Yükle (dosya)</label><input type="file" accept="image/*" id="sl_fav_file" onchange="saasUploadImg(this,\'faviconUrl\')"></div><div class="sta-f"><label>veya Favicon URL</label><input id="sl_fav_url" placeholder="https://.../favicon.png"></div></div>'
+     +'<div class="sta-row2"><div class="sta-f"><label>Altın Ton (accent)</label><input id="sl_accent" placeholder="#b4975a"></div><div class="sta-f"><label>Şampanya (soft)</label><input id="sl_soft" placeholder="#d8c39a"></div></div>'
+     +'<button class="btn btn-gold sta-go" onclick="saasApplyBrand()">Uygula</button></div>'
+   /* GOOGLE & SEO */
+   +'<div class="sta-pane" data-p="seo" hidden><h4>Google & SEO</h4><p class="sub">Analytics, Search Console ve meta etiketleri; yenilenmeden uygulanır.</p>'
+     +'<div class="sta-row2"><div class="sta-f"><label>Google Analytics (GA4)</label><input id="sg_ga" placeholder="G-XXXXXXX"></div><div class="sta-f"><label>Search Console Doğrulama</label><input id="sg_gsc" placeholder="google-site-verification=..."></div></div>'
+     +'<div class="sta-f"><label>Google Maps API Key</label><input id="sg_maps" placeholder="AIza..."></div>'
+     +'<div class="sta-f"><label>Meta Başlık (title)</label><input id="sm_title" placeholder="Selin Meridyen · Lüks Konut Danışmanı"></div>'
+     +'<div class="sta-f"><label>Meta Açıklama</label><textarea id="sm_desc" rows="2"></textarea></div>'
+     +'<div class="sta-f"><label>Meta Anahtar Kelimeler (keywords)</label><input id="sm_kw" placeholder="lüks konut, özel portföy, yalı..."></div>'
+     +'<button class="btn btn-gold sta-go" onclick="saasSaveSEO()">Kaydet & Uygula</button></div>'
+   /* PROX */
+   +'<div class="sta-pane" data-p="prox" hidden><h4>ProX AI — Danışman Promptu</h4><p class="sub">Lüks broker personasına eklenir / düzenlenir. Conversion motoru bu tonu kullanır.</p>'
+     +'<div class="sta-f"><label>Ana Persona (sistem)</label><textarea id="sp_base" rows="4" readonly></textarea></div>'
+     +'<div class="sta-f"><label>Kuruma Özel Ek Ton (override)</label><textarea id="sp_custom" rows="3" placeholder="Örn: Boğaz hattı yalıları ve marka rezidanslarda uzmanız..."></textarea></div>'
+     +'<button class="btn btn-gold sta-go" onclick="saasSaveProxPrompt()">Kaydet</button></div>'
+   /* PORTFOY */
+   +'<div class="sta-pane" data-p="portfoy" hidden><h4>Portföy Özeti</h4><p class="sub">Açık ilanlar ve VIP portföy durumu (merkezden senkronize edilir).</p>'
+     +'<div class="sta-row2"><div class="sta-f"><label>Açık İlan</label><input value="'+LISTINGS.length+' güncel ilan" readonly></div><div class="sta-f"><label>VIP Portföy</label><input value="'+VIP_PORTFOLIO.length+' yetki belgeli (adres gizli)" readonly></div></div>'
+     +'<p class="sub" style="margin-top:10px">Detaylı portföy CRUD ve lead yönetimi emlakekspertizi.com merkezi panelinden yapılır.</p></div>'
+   +'</div></div>';
+  document.body.appendChild(el);return el;}
+function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||'';};
+  set('sl_brand',saasResolve('brandName'));set('sl_accent',saasResolve('accent'));set('sl_soft',saasResolve('accentSoft'));
+  set('sg_ga',saasResolve('googleAnalytics'));set('sg_gsc',saasResolve('googleSiteVerification'));set('sg_maps',saasResolve('googleMapsKey'));
+  set('sm_title',saasResolve('metaTitle'));set('sm_desc',saasResolve('metaDescription'));set('sm_kw',saasResolve('metaKeywords'));
+  set('sp_base',SAAS_CONFIG.proxAiPrompts.persona);set('sp_custom',SAAS_CONFIG.tenantSettings.customPrompt);
+  _refreshLogoPrev();
+}
+function closeSaasAdmin(){const e=document.getElementById('saasTenantAdmin');if(e)e.classList.remove('on');}
+function staTab(b){const m=b.closest('.sta-modal');m.querySelectorAll('.sta-tabs button').forEach(x=>x.classList.toggle('act',x===b));const t=b.dataset.t;m.querySelectorAll('.sta-pane').forEach(p=>p.hidden=(p.dataset.p!==t));}
+function _v(id){const e=document.getElementById(id);return e?e.value.trim():'';}
+function _refreshLogoPrev(){const box=document.getElementById('adLogoPrev');if(!box)return;const logo=saasResolve('logoUrl');if(logo)box.innerHTML='<img src="'+logo+'" alt="logo">';else box.textContent=(saasResolve('brandName')||'M').trim().charAt(0);}
+function saasUploadImg(input,key){const f=input.files&&input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{SAAS_CONFIG.tenantSettings[key]=e.target.result;applySaaSSettings();_refreshLogoPrev();toast((key==='logoUrl'?'Logo':'Favicon')+' yüklendi & uygulandı.');};r.readAsDataURL(f);}
+function saasApplyBrand(){const t=SAAS_CONFIG.tenantSettings;const br=_v('sl_brand'),lu=_v('sl_logo_url'),fu=_v('sl_fav_url'),ac=_v('sl_accent'),sf=_v('sl_soft');
+  if(br)t.brandName=br;if(lu)t.logoUrl=lu;if(fu)t.faviconUrl=fu;if(ac)t.accent=ac;if(sf)t.accentSoft=sf;
+  initSaaSTheme();applySaaSSettings();_refreshLogoPrev();toast('Marka, logo & tema uygulandı.');}
+function saasSaveSEO(){const t=SAAS_CONFIG.tenantSettings;t.googleAnalytics=_v('sg_ga');t.googleSiteVerification=_v('sg_gsc');t.googleMapsKey=_v('sg_maps');t.metaTitle=_v('sm_title')||t.metaTitle;t.metaDescription=_v('sm_desc');t.metaKeywords=_v('sm_kw');applySaaSSettings();toast('Google & SEO ayarları uygulandı.');}
+function saasSaveProxPrompt(){SAAS_CONFIG.tenantSettings.customPrompt=_v('sp_custom');toast('ProX danışman tonu kaydedildi.');}
+window.openSaasAdmin=openSaasAdmin;window.closeSaasAdmin=closeSaasAdmin;window.staTab=staTab;window.saasUploadImg=saasUploadImg;window.saasApplyBrand=saasApplyBrand;window.saasSaveSEO=saasSaveSEO;window.saasSaveProxPrompt=saasSaveProxPrompt;
+window.toggleNav=toggleNav;window.closeNav=closeNav;window.goHome=goHome;window.navGo=navGo;window.openPage=openPage;window.closePage=closePage;window.leadFor=leadFor;window.contactLead=contactLead;
+window.pickDay=pickDay;window.pickSlot=pickSlot;window.apptSubmit=apptSubmit;window.proxSend=proxSend;window.proxQuick=proxQuick;window.proxToAnaliz=proxToAnaliz;
+
+/* ---------- INIT ---------- */
+window.addEventListener('load',function(){try{
+  initSaaSTheme();applySaaSSettings();
+  document.getElementById('homeListings').innerHTML=listingCardsHTML();
+  document.getElementById('vaultGrid').innerHTML=vipCardsHTML();
+  document.getElementById('homeContact').innerHTML=contactHTML();
+  document.getElementById('siteFooter').innerHTML=footerHTML();
+  _proxPush('a','Hoş geldiniz. Bir bölge ya da mülk tipi söyleyin — portföyümü tarayıp size en uygun seçenekleri ve prim potansiyelini paylaşayım.');
+  /* Canlı paket/özellik senkronu — yalnızca paket & özellik listesi; CSS rengi (siyah/altın) REPAINT EDILMEZ. */
+  if(typeof proxBootstrap==='function')proxBootstrap();
+  /* Ön yüzde harici yönetim butonu YOK — giriş yalnızca Footer › Yönetim Paneli › şifreli kapı (ekspertiz2026) ile. */
+}catch(e){console.warn('init',e);}});
+</script>
+</body>
+</html>

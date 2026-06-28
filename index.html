@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridyen · Site Seçimi</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--accent:#ff7a2f;--accent2:#ffb070;--bg:#0e0f13;--surface:#181a20;--line:#262932;--ink:#f0eee9;--muted:#9aa0ab}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(1200px 600px at 50% -10%,#1c2030,#0e0f13);color:var(--ink);font-family:'Inter',system-ui,sans-serif;padding:32px}
+  .wrap{max-width:880px;width:100%}
+  h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,5vw,44px);margin:0 0 8px;letter-spacing:-.02em}
+  .logo{display:inline-flex;align-items:center;gap:10px;font-weight:700;margin-bottom:22px}
+  .logo .mark{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#1a1205;font-weight:800;font-size:20px}
+  p.sub{color:var(--muted);font-size:17px;margin:0 0 34px}
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  @media(max-width:560px){.cards{grid-template-columns:1fr}}
+  a.card{display:block;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px;transition:.2s}
+  a.card:hover{transform:translateY(-4px);border-color:var(--accent)}
+  .tag{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+  .card h2{font-family:'Space Grotesk',sans-serif;font-size:24px;margin:10px 0 6px}
+  .card p{color:var(--muted);font-size:15px;margin:0 0 16px;line-height:1.55}
+  .go{font-weight:600;color:var(--accent)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <span class="logo"><span class="mark">M</span> Meridyen</span>
+    <h1>Hangi siteyi açmak istersiniz?</h1>
+    <p class="sub">emlakekspertizi.com SaaS — aynı marka çatısı, <b style="color:var(--ink)">bağımsız sektör platformları</b>. Geliştirme için birini seçin.</p>
+    <div class="cards">
+      <a class="card" href="gayrimenkul.html">
+        <span class="tag">Gayrimenkul · Özel Portföy</span>
+        <h2>Meridyen Gayrimenkul</h2>
+        <p>Satılık & kiralık konut, ofis ve arsa; özel portföy, bölge analizi ve Mülk Pusulası.</p>
+        <span class="go">Aç →</span>
+      </a>
+      <a class="card" href="insaat.html">
+        <span class="tag">İnşaat</span>
+        <h2>Meridyen Yapı</h2>
+        <p>Anahtar teslim inşaat, kentsel dönüşüm, kat karşılığı, tadilat — kurumsal inşaat platformu.</p>
+        <span class="go">Aç →</span>
+      </a>
+      <a class="card" href="degerleme.html">
+        <span class="tag">SPK Lisanslı Değerleme</span>
+        <h2>Meridyen Değerleme</h2>
+        <p>Gayrimenkul, makine-ekipman, fabrika ve enerji santrali; UDES uyumlu resmî değerleme.</p>
+        <span class="go">Aç →</span>
+      </a>
+      <a class="card" href="danisman.html">
+        <span class="tag">Bireysel Premium Danışman</span>
+        <h2>Selin Meridyen</h2>
+        <p>Lüks konut, yalı, penthouse; davet usulü VIP özel portföy, gizli satış ve randevulu sunum.</p>
+        <span class="go">Aç →</span>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

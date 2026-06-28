@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridyen Değerleme · SPK Lisanslı Gayrimenkul Değerleme A.Ş.</title>
+<meta name="description" content="SPK lisanslı, BDDK yetkili, UDES uyumlu bağımsız değerleme kuruluşu. Gayrimenkul, makine-ekipman, fabrika ve enerji santrali değerleme hizmetleri.">
+<meta name="theme-color" content="#1e3a8a">
+
+<!-- ===== emlakekspertizi.com ProX SaaS · API-first çekirdek (valuation_strict) ===== -->
+<script>
+window.EMLAK_API_BASE = "https://www.emlakekspertizi.com";
+window.EMLAK_TENANT = { id:"valuation", tenant_id:"valuation", tenant_key:"prox_valuation_0efa73eb541b39b44b3e20dd6de24a71", domain:location.hostname, sector:"valuation_company", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"BUSINESS", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"valuation", legalMode:"valuation_strict" };
+window.EMLAK_PACKAGES = {
+  BASIC:["canUseMarketAnalysis","canUsePriceEstimate","canUseLeadCRM","canUseSvgGraphics"],
+  PRO:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent"],
+  BUSINESS:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent","canUseAdvancedProX","canUseCustomDomain","canUseBlogAutomation","canUsePremiumTheme"],
+  ENTERPRISE:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent","canUseAdvancedProX","canUseCustomDomain","canUseBlogAutomation","canUsePremiumTheme","canUseWhiteLabelFull"]
+};
+window.EMLAK_TENANT.enabledFeatures = window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode] || window.EMLAK_PACKAGES.PRO;
+window.hasFeature = function(f){ return window.EMLAK_TENANT.enabledFeatures.indexOf(f)!==-1; };
+window.requireFeature = function(f){ if(window.hasFeature(f)) return true; var m="Bu özellik mevcut paketinizde aktif değildir. Kurumsal paketinizi yükseltin."; if(typeof toast==="function")toast(m); else alert(m); return false; };
+async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ const res=await fetch(window.EMLAK_API_BASE+path,{method,mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id,"X-Tenant-Key":window.EMLAK_TENANT.tenant_key,...headers},body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
+function proxFallback(path,options={}){ return { fallback:true, message:"API baglantisi yok. Demo/fallback veri kullaniliyor.", path, data:(window.EMLAK_FALLBACK?window.EMLAK_FALLBACK(path,options):null) }; }
+async function submitLead(lead){ var p=Object.assign({id:"lead_"+Date.now(),tenantId:window.EMLAK_TENANT.id,tenant_id:window.EMLAK_TENANT.tenant_id,sector:window.EMLAK_TENANT.sector,createdAt:new Date().toISOString(),status:"new"},lead); try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:p}); if(r&&r.fallback)throw new Error("fallback"); return {ok:true,online:true,data:r}; }catch(e){ try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(p);localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:p}; } }
+window.injectSchema=function(o){try{var s=document.createElement("script");s.type="application/ld+json";s.text=JSON.stringify(o);document.head.appendChild(s);}catch(e){}};
+</script>
+
+<!-- ===== SEO: canonical · OpenGraph · Twitter ===== -->
+<link rel="canonical" href="https://www.meridyendegerleme.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Meridyen Değerleme">
+<meta property="og:title" content="Meridyen Değerleme · SPK Lisanslı Gayrimenkul Değerleme A.Ş.">
+<meta property="og:description" content="SPK lisanslı, BDDK yetkili, UDES uyumlu bağımsız değerleme kuruluşu. Gayrimenkul, makine-ekipman, fabrika ve enerji santrali değerleme hizmetleri.">
+<meta property="og:url" content="https://www.meridyendegerleme.com/">
+<meta property="og:locale" content="tr_TR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Meridyen Değerleme · SPK Lisanslı Gayrimenkul Değerleme A.Ş.">
+<meta name="twitter:description" content="SPK lisanslı, BDDK yetkili, UDES uyumlu bağımsız değerleme kuruluşu. Gayrimenkul, makine-ekipman, fabrika ve enerji santrali değerleme hizmetleri.">
+
+<!-- ===== JSON-LD: ProfessionalService + Organization ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://www.meridyendegerleme.com/#service",
+      "name": "Meridyen Gayrimenkul Değerleme A.Ş.",
+      "description": "SPK lisanslı, BDDK yetkili, UDES/IVS uyumlu bağımsız gayrimenkul değerleme kuruluşu. Maliyet, emsal karşılaştırma ve gelir kapitalizasyonu yöntemleriyle resmî değerleme raporları.",
+      "url": "https://www.meridyendegerleme.com/",
+      "areaServed": { "@type": "Country", "name": "Türkiye" },
+      "serviceType": [
+        "Gayrimenkul değerleme",
+        "Makine ve teçhizat değerleme",
+        "Fabrika ve tesis değerleme",
+        "Enerji santrali (GES/RES) değerleme"
+      ],
+      "knowsAbout": ["SPK değerleme mevzuatı", "UDES/IVS standartları", "emsal analizi", "varlık sınıflandırması", "risk analizi"],
+      "provider": { "@id": "https://www.meridyendegerleme.com/#org" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://www.meridyendegerleme.com/#org",
+      "name": "Meridyen Gayrimenkul Değerleme A.Ş.",
+      "legalName": "Meridyen Gayrimenkul Değerleme A.Ş.",
+      "url": "https://www.meridyendegerleme.com/",
+      "description": "Sermaye Piyasası Kurulu (SPK) lisanslı, BDDK yetkili bağımsız gayrimenkul değerleme kuruluşu.",
+      "areaServed": { "@type": "Country", "name": "Türkiye" },
+      "address": { "@type": "PostalAddress", "addressLocality": "Konak", "addressRegion": "İzmir", "addressCountry": "TR" }
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#1e3a8a;        /* Lacivert — kurumsal güven */
+  --accent-2:#334155;      /* Antrasit */
+  --ink:#0f172a; --ink-2:#334155; --muted:#64748b;
+  --surface:#f1f5f9; --line:#e2e8f0; --bg:#fff;
+  --head:'Sora'; --body:'Inter';
+  --grad-cta:linear-gradient(135deg,#1e3a8a,#334155);
+  --radius:14px; --maxw:1180px;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--body),system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--head),var(--body),sans-serif;margin:0;line-height:1.15;letter-spacing:-.02em;color:var(--ink)}
+a{color:inherit;text-decoration:none} img{max-width:100%;display:block}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14.5px;padding:12px 20px;border-radius:11px;cursor:pointer;border:0;font-family:var(--body);transition:.18s}
+.btn-primary{background:var(--grad-cta);color:#fff}.btn-primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-line{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
+section{padding:64px 0}
+.sec-h{max-width:680px;margin:0 auto 36px;text-align:center}
+.sec-h h2{font-size:clamp(24px,3.2vw,34px);margin:.35em 0 .3em}
+.sec-h p{color:var(--muted);font-size:16px;margin:0}
+/* header */
+header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+header .bar{display:flex;align-items:center;justify-content:space-between;height:70px;gap:18px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--head);font-weight:800;font-size:19px;color:var(--ink)}
+.logo .mark{width:38px;height:38px;border-radius:10px;background:var(--grad-cta);display:grid;place-items:center;color:#fff;font-size:18px;font-weight:800}
+.logo .lo2{color:var(--accent)}
+nav.main{display:flex;gap:4px}
+nav.main a{padding:9px 13px;font-weight:600;font-size:14.5px;color:var(--ink-2);border-radius:9px;transition:.15s;cursor:pointer}
+nav.main a:hover{color:var(--accent);background:var(--surface)}
+.nav-cta{display:flex;align-items:center;gap:10px}
+.burger{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:8px}
+.burger span{width:22px;height:2px;background:var(--ink)}
+@media(max-width:980px){nav.main{display:none}.burger{display:flex}.nav-cta .hide-sm{display:none}}
+/* hero */
+.hero{position:relative;overflow:hidden;color:#fff;background:linear-gradient(135deg,#0b1220 0%,#1e3a8a 60%,#334155 100%);padding:74px 0 66px}
+.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(720px 360px at 85% -10%,rgba(255,255,255,.10),transparent 60%),linear-gradient(transparent 70%,rgba(0,0,0,.25));pointer-events:none}
+.hero .in{position:relative;max-width:780px}
+.hero .eyebrow{color:#bcd0ff}
+.hero h1{color:#fff;font-size:clamp(30px,4.4vw,48px);margin:.4em 0 .4em;max-width:18ch}
+.hero h1 span{color:#93b4ff}
+.hero p{color:#cdd8ea;font-size:17px;max-width:60ch;margin:0 0 26px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+.hero .btn-line{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.24);color:#fff}
+.hstats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:38px;max-width:820px}
+@media(max-width:620px){.hstats{grid-template-columns:repeat(2,1fr)}}
+.hstats .s{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:13px;padding:15px}
+.hstats .v{font-family:var(--head);font-size:21px;font-weight:800;color:#fff}
+.hstats .l{font-size:12px;color:#9fb3d4;margin-top:3px}
+/* hizmet kartları */
+.svc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media(max-width:760px){.svc-grid{grid-template-columns:1fr}}
+.svc{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:0 14px 36px -28px rgba(15,23,42,.4);transition:.18s}
+.svc:hover{transform:translateY(-3px);border-color:var(--accent)}
+.svc .ic{width:50px;height:50px;border-radius:13px;background:rgba(30,58,138,.1);color:var(--accent);display:grid;place-items:center;margin-bottom:14px}
+.svc h3{font-size:19px;margin:0 0 8px}
+.svc p{color:var(--ink-2);font-size:14.5px;margin:0 0 12px;line-height:1.6}
+.svc ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;line-height:1.7}
+/* metodoloji */
+.method{background:var(--surface)}
+.m-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px}
+@media(max-width:760px){.m-grid{grid-template-columns:1fr}}
+.m-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px}
+.m-card .n{font-family:var(--head);font-size:13px;font-weight:800;color:var(--accent);letter-spacing:.1em}
+.m-card h4{font-size:17px;margin:6px 0 6px}
+.m-card p{color:var(--ink-2);font-size:14px;margin:0;line-height:1.6}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;position:relative}
+@media(max-width:760px){.steps{grid-template-columns:1fr 1fr}}@media(max-width:440px){.steps{grid-template-columns:1fr}}
+.step{text-align:center}
+.step .dot{width:54px;height:54px;border-radius:50%;background:#fff;border:2px solid var(--accent);color:var(--accent);display:grid;place-items:center;margin:0 auto 12px;font-family:var(--head);font-weight:800;font-size:18px}
+.step h4{font-size:15.5px;margin:0 0 5px}.step p{font-size:13px;color:var(--ink-2);margin:0;line-height:1.5}
+/* lisans */
+.lic-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center}
+@media(max-width:820px){.lic-grid{grid-template-columns:1fr}}
+.lic-badges{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lic-b{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px}
+.lic-b b{display:block;font-family:var(--head);font-size:15px;color:var(--accent)}
+.lic-b span{font-size:12.5px;color:var(--muted)}
+.lic-txt p{color:var(--ink-2);font-size:15px;line-height:1.7;margin:0 0 14px}
+.lic-txt li{color:var(--ink-2);font-size:14.5px;margin-bottom:7px}
+/* form */
+.report{background:linear-gradient(135deg,#0b1220,#1e3a8a)}
+.report .sec-h h2,.report .sec-h p{color:#fff}.report .sec-h p{color:#cdd8ea}
+.rep-card{max-width:760px;margin:0 auto;background:#fff;border-radius:18px;padding:30px;box-shadow:0 30px 70px -34px rgba(0,0,0,.6)}
+.rep-card h3{font-size:20px;margin:0 0 4px}.rep-card .sub{color:var(--muted);font-size:13.5px;margin:0 0 18px}
+.rf-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.rf-grid{grid-template-columns:1fr}}
+.rf{margin-bottom:12px}
+.rf label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-2);margin-bottom:5px}
+.rf input,.rf select,.rf textarea{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:11px;font-size:14px;font-family:var(--body);outline:none;background:#fff;color:var(--ink);resize:vertical}
+.rf input:focus,.rf select:focus,.rf textarea:focus{border-color:var(--accent)}
+.rf-kvkk{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:var(--muted);line-height:1.45;margin:6px 0 14px;cursor:pointer}
+.rf-kvkk input{width:auto;margin-top:2px;accent-color:var(--accent)}
+/* iletişim */
+.ilet-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:760px){.ilet-grid{grid-template-columns:1fr}}
+.ilet .row{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px}
+.ilet .row .ic{width:42px;height:42px;border-radius:11px;background:var(--surface);color:var(--accent);display:grid;place-items:center;flex:none}
+.ilet b{display:block;font-size:14.5px}.ilet span{color:var(--muted);font-size:13.5px}
+/* footer */
+footer{background:#0b1220;color:#cdd8ea;padding:46px 0 26px}
+.fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:30px}
+@media(max-width:760px){.fcols{grid-template-columns:1fr 1fr}}
+footer .logo{color:#fff}footer h4{color:#fff;font-size:14px;margin:0 0 12px}
+footer ul{list-style:none;margin:0;padding:0}footer li{margin-bottom:8px}
+footer a{color:#cdd8ea;font-size:14px}footer a:hover{color:#fff}
+.fbot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.12);margin-top:30px;padding-top:18px;font-size:12.5px;color:#9fb3d4}
+.fp{font-size:12px;color:#7f93b4;margin-top:10px}
+/* mobile nav */
+.mnav{position:fixed;inset:0;z-index:120;background:rgba(11,18,32,.5);backdrop-filter:blur(4px);display:none}
+.mnav.open{display:block}
+.mnav .panel{position:absolute;top:0;right:0;height:100%;width:min(86vw,330px);background:#fff;padding:22px;display:flex;flex-direction:column;gap:6px;box-shadow:-20px 0 60px -20px rgba(0,0,0,.4)}
+.mnav .panel a{padding:13px 12px;font-weight:600;border-radius:10px;color:var(--ink);border-bottom:1px solid var(--line)}
+/* ProX + admin paneli (ortak desen) */
+.prox-panel{position:fixed;right:16px;bottom:16px;z-index:250;width:min(380px,92vw);max-height:74vh;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 30px 70px -28px rgba(0,0,0,.5);opacity:0;transform:translateY(10px);transition:.25s}
+.prox-panel.on{opacity:1;transform:none}
+.prox-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;background:var(--grad-cta);color:#fff}.prox-hd b{font-size:13.5px}.prox-hd button{background:rgba(255,255,255,.16);border:0;color:#fff;width:26px;height:26px;border-radius:7px;cursor:pointer}
+.prox-body{padding:15px;overflow:auto}
+.prox-q{font-size:13px;font-weight:700;background:var(--surface);border-radius:9px;padding:8px 11px;margin-bottom:9px}
+.prox-a{font-size:14px;line-height:1.55;color:var(--ink-2)}
+.rep-track{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.rep-track .h{background:var(--grad-cta);color:#fff;padding:12px 14px}
+.rep-track .h b{font-size:14px}.rep-track .h span{display:block;font-size:11.5px;opacity:.85}
+.rep-track .rows{padding:12px 14px}
+.rep-track .r{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.rep-track .r:last-child{border-bottom:0}.rep-track .r b{color:var(--ink)}
+.rep-track .st{display:inline-block;font-size:11px;font-weight:700;color:#b45309;background:#fef3c7;padding:2px 9px;border-radius:99px}
+.saas-admin-btn{position:fixed;left:16px;bottom:16px;z-index:200;background:var(--grad-cta);color:#fff;border:0;border-radius:99px;padding:11px 16px;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 14px 30px -14px rgba(0,0,0,.5);font-family:var(--body)}
+.sta-modal{position:fixed;inset:0;z-index:240;display:none}.sta-modal.on{display:block}
+.sta-ov{position:absolute;inset:0;background:rgba(8,12,20,.62);backdrop-filter:blur(3px)}
+.sta-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,94vw);max-height:90vh;display:flex;flex-direction:column;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.6)}
+.sta-hd{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;background:var(--grad-cta);color:#fff}.sta-hd b{font-size:15px}.sta-hd button{background:rgba(255,255,255,.16);border:0;color:#fff;width:30px;height:30px;border-radius:8px;cursor:pointer}
+.sta-tabs{display:flex;gap:6px;padding:12px 16px 0;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.sta-tabs button{border:1px solid var(--line);background:#fff;border-radius:9px 9px 0 0;padding:9px 14px;font-size:13px;font-weight:700;color:#555;cursor:pointer}.sta-tabs button.act{background:var(--accent);border-color:var(--accent);color:#fff}
+.sta-body{padding:18px;overflow:auto}.sta-pane h4{margin:0 0 4px}.sta-pane .sub{font-size:12.5px;color:#777;margin:0 0 12px}
+.sta-f{margin-bottom:10px}.sta-f label{display:block;font-size:12.5px;font-weight:700;color:#444;margin-bottom:5px}
+.sta-f input,.sta-f select,.sta-f textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;font-size:14px;font-family:var(--body);outline:none}
+.sta-go{background:var(--grad-cta);color:#fff;border:0;font-weight:700;font-size:14px;padding:11px 18px;border-radius:10px;cursor:pointer;margin-top:4px}
+.sta-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:520px){.sta-row2{grid-template-columns:1fr}}
+.toastbox{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:13px 20px;border-radius:12px;font-size:14px;z-index:300;opacity:0;transition:.3s;pointer-events:none;box-shadow:0 18px 40px -18px rgba(0,0,0,.5)}
+.toastbox.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== Faz 16: Premium görsel mimari ===== */
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes mfade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes drawln{to{stroke-dashoffset:0}}
+@keyframes glowpulse{0%,100%{filter:drop-shadow(0 0 2px rgba(147,180,255,.35))}50%{filter:drop-shadow(0 0 11px rgba(147,180,255,.85))}}
+.amx{max-width:1000px;margin:0 auto}
+.amx-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:22px}
+.amx-tabs button{border:1px solid var(--line);background:#fff;color:var(--ink-2);font-weight:700;font-size:14px;padding:11px 18px;border-radius:11px;cursor:pointer;transition:.18s;font-family:var(--body)}
+.amx-tabs button:hover{border-color:var(--accent);color:var(--accent)}
+.amx-tabs button.act{background:var(--grad-cta);border-color:transparent;color:#fff;box-shadow:0 12px 26px -14px rgba(30,58,138,.6)}
+.amx-panel{background:linear-gradient(135deg,#0b1220,#1e3a8a);border-radius:20px;padding:30px;color:#fff;box-shadow:0 28px 60px -30px rgba(11,18,32,.7);overflow:hidden}
+.amx-in{display:grid;grid-template-columns:.85fr 1.15fr;gap:28px;align-items:center;animation:mfade .42s ease}
+@media(max-width:760px){.amx-in{grid-template-columns:1fr}}
+.amx-art{display:grid;place-items:center;min-height:200px;position:relative}
+.amx-art:before{content:"";position:absolute;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(147,180,255,.22),transparent 65%)}
+.amx-art svg{width:78%;max-width:270px;color:#93b4ff;position:relative;animation:glowpulse 3.6s ease-in-out infinite}
+.amx-tx h3{font-size:23px;color:#fff;margin:0 0 8px}
+.amx-badge{display:inline-block;font-size:12px;font-weight:700;background:rgba(147,180,255,.16);color:#bcd0ff;border:1px solid rgba(147,180,255,.3);padding:5px 11px;border-radius:99px;margin-bottom:14px}
+.amx-tx ul{list-style:none;margin:0 0 16px;padding:0}
+.amx-tx li{position:relative;padding-left:22px;font-size:14px;color:#dbe6f7;margin-bottom:8px}
+.amx-tx li:before{content:"▹";position:absolute;left:0;color:#93b4ff}
+.amx-mev{border-top:1px solid rgba(255,255,255,.14);padding-top:14px}
+.amx-mev b{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#93b4ff;margin-bottom:8px}
+.amx-mev .chip{display:inline-block;font-size:12px;color:#cdd8ea;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);padding:6px 11px;border-radius:8px;margin:0 6px 6px 0}
+/* Faz 17 — zengin varlık içeriği */
+.amx-in.rich{grid-template-columns:.7fr 1.3fr;align-items:start}
+.amx-art.sticky{position:sticky;top:90px}
+.amx-lead{font-size:14.5px;line-height:1.7;color:#e4edfb;margin:2px 0 18px}
+.amx-secs{display:grid;gap:14px;margin-bottom:18px}
+.amx-sec{background:rgba(255,255,255,.04);border:1px solid rgba(147,180,255,.16);border-left:3px solid #93b4ff;border-radius:12px;padding:14px 16px}
+.amx-sec h5{margin:0 0 6px;font-size:14.5px;color:#fff;font-family:var(--head);letter-spacing:.01em}
+.amx-sec p{margin:0;font-size:13.3px;line-height:1.68;color:#c9d6ec}
+.amx-tbl{width:100%;border-collapse:collapse;margin:4px 0 18px;font-size:13px}
+.amx-tbl caption{text-align:left;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#93b4ff;margin-bottom:8px;font-weight:700}
+.amx-tbl th,.amx-tbl td{text-align:left;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.1);vertical-align:top}
+.amx-tbl th{color:#bcd0ff;font-weight:700;white-space:nowrap;width:38%}
+.amx-tbl td{color:#cdd8ea;line-height:1.6}
+.amx-tbl tr:last-child th,.amx-tbl tr:last-child td{border-bottom:0}
+/* Faz 17 — metodoloji zengin metin */
+.mth-info .mth-std{list-style:none;margin:12px 0 0;padding:12px 0 0;border-top:1px dashed var(--line)}
+.mth-info .mth-std li{position:relative;padding-left:20px;font-size:13px;line-height:1.55;color:var(--ink-2);margin-bottom:7px}
+.mth-info .mth-std li:before{content:"§";position:absolute;left:0;color:var(--accent);font-weight:800}
+/* Faz 17 — Kurumsal Şifreli Giriş Kapısı (Admin Login Gate) */
+.adgate{position:fixed;inset:0;z-index:600;display:none;align-items:center;justify-content:center;padding:20px}
+.adgate.on{display:flex}
+.adgate-ov{position:absolute;inset:0;background:rgba(7,12,24,.74);backdrop-filter:blur(8px)}
+.adgate-card{position:relative;width:100%;max-width:392px;background:linear-gradient(160deg,#0d1730,#15233f);border:1px solid rgba(147,180,255,.22);border-radius:20px;padding:34px 30px 28px;color:#fff;box-shadow:0 40px 90px -38px rgba(0,0,0,.8);animation:mfade .34s ease}
+.adgate-lock{width:54px;height:54px;border-radius:15px;background:rgba(147,180,255,.14);border:1px solid rgba(147,180,255,.3);display:grid;place-items:center;color:#93b4ff;margin-bottom:16px}
+.adgate-card h3{margin:0 0 5px;font-size:20px;font-family:var(--head)}
+.adgate-card .sub{font-size:13px;color:#9fb3d4;margin:0 0 20px;line-height:1.55}
+.adgate-f{position:relative;margin-bottom:14px}
+.adgate-f input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(147,180,255,.24);border-radius:11px;padding:13px 44px 13px 14px;color:#fff;font-size:15px;font-family:var(--body);outline:none;transition:.18s;letter-spacing:.04em}
+.adgate-f input:focus{border-color:#93b4ff;background:rgba(255,255,255,.09)}
+.adgate-f .eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;color:#9fb3d4;cursor:pointer;padding:6px;font-size:15px}
+.adgate-go{width:100%;justify-content:center;background:var(--grad-cta);color:#fff;border:0;border-radius:11px;padding:13px;font-weight:700;font-size:15px;cursor:pointer;font-family:var(--body)}
+.adgate-err{font-size:12.5px;color:#fca5a5;margin:10px 2px 0;min-height:16px;transition:.2s}
+.adgate.shake .adgate-card{animation:adshake .4s}
+@keyframes adshake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}
+.adgate-x{position:absolute;top:14px;right:14px;background:none;border:0;color:#7d93b8;font-size:18px;cursor:pointer}
+.adgate-foot{display:flex;align-items:center;gap:7px;margin-top:18px;font-size:11.5px;color:#7d93b8;border-top:1px solid rgba(255,255,255,.08);padding-top:14px}
+.mth{max-width:1000px;margin:0 auto}
+.mth-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:640px){.mth-tabs{grid-template-columns:1fr}}
+.mth-tabs button{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:700;font-size:15px;padding:15px 18px;border-radius:14px;cursor:pointer;transition:.18s;font-family:var(--head)}
+.mth-tabs button b{width:30px;height:30px;border-radius:8px;background:var(--surface);color:var(--accent);display:grid;place-items:center;font-size:13px;flex:none}
+.mth-tabs button:hover{border-color:var(--accent);transform:translateY(-2px)}
+.mth-tabs button.act{border-color:var(--accent);box-shadow:0 16px 34px -18px rgba(30,58,138,.5)}
+.mth-tabs button.act b{background:var(--grad-cta);color:#fff}
+.mth-stage{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:center;box-shadow:0 18px 44px -28px rgba(15,23,42,.4);min-height:236px}
+@media(max-width:760px){.mth-stage{grid-template-columns:1fr}}
+.mth-chart{position:relative;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,#0b1220,#1e3a8a)}
+.mth-chart:after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(147,180,255,.18) 50%,transparent 65%);background-size:200% 100%;animation:shimmer 2.4s linear infinite;pointer-events:none}
+.mth-chart svg{display:block;width:100%;height:auto}
+.mth-chart .ln{stroke-dasharray:700;stroke-dashoffset:700;animation:drawln 1.5s ease forwards}
+.mth-info .t{font-family:var(--head);font-size:20px;font-weight:800;margin:0 0 6px;color:var(--ink)}
+.mth-info .badge{display:inline-block;font-size:11.5px;font-weight:700;color:var(--accent);background:rgba(30,58,138,.1);padding:4px 10px;border-radius:99px;margin-bottom:10px}
+.mth-info p{color:var(--ink-2);font-size:14.5px;line-height:1.6;margin:0 0 12px}
+.mth-info .formul{font-family:ui-monospace,monospace;font-size:12.5px;color:var(--accent-2);background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:9px 12px}
+.rep-2col{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:start;max-width:980px;margin:0 auto}
+@media(max-width:860px){.rep-2col{grid-template-columns:1fr}}
+.rep-dash{background:#0b1220;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:22px;color:#cdd8ea}
+.rd-h{display:flex;align-items:center;gap:9px;font-family:var(--head);font-weight:800;color:#fff;font-size:15px;margin-bottom:18px}
+.rd-dot{width:9px;height:9px;border-radius:50%;background:#34d399;animation:glowpulse 2s infinite}
+.rd-step{display:flex;gap:13px;align-items:flex-start;padding-bottom:18px;position:relative;opacity:.45;transition:.4s}
+.rd-step:not(:last-child):before{content:"";position:absolute;left:15px;top:30px;bottom:0;width:2px;background:rgba(255,255,255,.12)}
+.rd-step.on{opacity:1}.rd-step.on:not(:last-child):before{background:#93b4ff}
+.rd-ic{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:800;font-size:13px;background:rgba(255,255,255,.08);color:#9fb3d4;border:1px solid rgba(255,255,255,.16);transition:.4s}
+.rd-step.on .rd-ic{background:var(--grad-cta);color:#fff;border-color:transparent;box-shadow:0 0 14px rgba(147,180,255,.7)}
+.rd-tx b{display:block;font-size:14px;color:#fff}.rd-tx span{font-size:12px;color:#8ea3c4}
+.rd-logh{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7f93b4;margin:6px 0 8px}
+.rd-log{background:#070b14;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;height:120px;overflow:auto;font-family:ui-monospace,monospace;font-size:11.5px;line-height:1.7}
+.rd-l{color:#9fe6c0;animation:mfade .25s ease}.rd-l.muted{color:#5f7088}.rd-l .ts{color:#5f7088}
+.ssa-modal{position:fixed;inset:0;z-index:300;display:none}.ssa-modal.on{display:block}
+.ssa-ov{position:absolute;inset:0;background:rgba(4,8,16,.7);backdrop-filter:blur(4px)}
+.ssa-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(940px,96vw);max-height:90vh;display:flex;flex-direction:column;background:#0b1220;color:#e6edf7;border:1px solid rgba(255,255,255,.12);border-radius:18px;overflow:hidden;box-shadow:0 50px 100px -40px #000}
+.ssa-hd{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:linear-gradient(135deg,#1e3a8a,#0b1220);border-bottom:1px solid rgba(255,255,255,.1)}
+.ssa-hd b{font-family:var(--head);font-size:15px}.ssa-hd .sub{font-size:11.5px;color:#8ea3c4}
+.ssa-hd button{background:rgba(255,255,255,.12);border:0;color:#fff;width:30px;height:30px;border-radius:8px;cursor:pointer}
+.ssa-body{padding:14px 18px;overflow:auto}
+.ssa-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.ssa-tbl th,.ssa-tbl td{padding:10px 9px;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);vertical-align:middle}
+.ssa-tbl th{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#8ea3c4}
+.ssa-tbl select{background:#070b14;border:1px solid rgba(255,255,255,.14);color:#e6edf7;border-radius:8px;padding:7px 8px;font-size:12px;font-family:var(--body);width:100%}
+.ssa-dom{font-family:ui-monospace,monospace;color:#93b4ff;font-size:12px}
+.ssa-sw{width:20px;height:20px;border-radius:6px;display:inline-block;border:1px solid rgba(255,255,255,.25);vertical-align:middle}
+.ssa-ft{padding:13px 18px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ssa-ft .note{font-size:11.5px;color:#8ea3c4}
+.ssa-btn{position:fixed;left:16px;bottom:62px;z-index:200;background:#0b1220;color:#93b4ff;border:1px solid rgba(147,180,255,.4);border-radius:99px;padding:9px 14px;font-weight:700;font-size:12px;cursor:pointer;font-family:var(--body)}
+</style>
+</head>
+<body>
+
+<header><div class="wrap bar">
+  <a class="logo" href="#"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Değerleme</span></span></a>
+  <nav class="main" id="navMain"></nav>
+  <div class="nav-cta" id="navCta"></div>
+</div></header>
+
+<div class="mnav" id="mnav" onclick="if(event.target.id==='mnav')this.classList.remove('open')"><div class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-family:var(--head)">Menü</b><button style="background:none;border:0;font-size:24px;cursor:pointer;color:var(--muted)" onclick="document.getElementById('mnav').classList.remove('open')">✕</button></div>
+  <div id="mnavLinks"></div>
+  <button class="btn btn-primary" style="margin-top:14px" onclick="document.getElementById('mnav').classList.remove('open');document.getElementById('rapor').scrollIntoView({behavior:'smooth'})">Resmi Rapor Talep Et</button>
+</div></div>
+
+<!-- HERO -->
+<section class="hero"><div class="wrap in">
+  <div class="eyebrow">SPK Lisanslı · BDDK Yetkili · UDES Uyumlu Bağımsız Değerleme Kuruluşu</div>
+  <h1>Varlıklarınıza, uluslararası standartlarda <span>resmi ve bağımsız</span> değer tespiti</h1>
+  <p>Gayrimenkulden makine-ekipmana, fabrikadan enerji santrallerine; maliyet, emsal karşılaştırma ve gelir kapitalizasyonu yöntemleriyle, mevzuata tam uyumlu lisanslı değerleme raporları.</p>
+  <div class="hero-cta">
+    <button class="btn btn-primary" onclick="document.getElementById('rapor').scrollIntoView({behavior:'smooth'})">Resmi Rapor Talep Et</button>
+    <a class="btn btn-line" href="#metodoloji">Süreç &amp; Metodoloji</a>
+  </div>
+  <div class="hstats">
+    <div class="s"><div class="v">DD-2024-0142</div><div class="l">SPK Lisans No</div></div>
+    <div class="s"><div class="v">12.000+</div><div class="l">Tamamlanan resmi rapor</div></div>
+    <div class="s"><div class="v">81 il</div><div class="l">Saha kapsama alanı</div></div>
+    <div class="s"><div class="v">UDES / IVS</div><div class="l">Uluslararası standart</div></div>
+  </div>
+</div></section>
+
+<!-- HİZMETLER -->
+<section id="hizmetler"><div class="wrap">
+  <div class="sec-h"><div class="eyebrow">Değerleme Hizmetleri</div><h2>Çok disiplinli ekspertiz sınıfları</h2><p>Farklı varlık türleri için ayrı uzmanlık; her biri ilgili mevzuat ve standartlara uygun.</p></div>
+  <div class="amx">
+    <div class="amx-tabs">
+      <button class="act" data-a="gayrimenkul" onclick="renderAsset('gayrimenkul',this)">Gayrimenkul</button>
+      <button data-a="makine" onclick="renderAsset('makine',this)">Makine-Teçhizat</button>
+      <button data-a="fabrika" onclick="renderAsset('fabrika',this)">Fabrika / Tesis</button>
+      <button data-a="enerji" onclick="renderAsset('enerji',this)">Enerji Santralleri</button>
+    </div>
+    <div class="amx-panel" id="assetPanel"></div>
+  </div>
+</div></section>
+
+<!-- METODOLOJİ -->
+<section class="method" id="metodoloji"><div class="wrap">
+  <div class="sec-h"><div class="eyebrow">Süreç &amp; Metodoloji</div><h2>Bilimsel, tarafsız ve izlenebilir değerleme</h2><p>Uluslararası Değerleme Standartları (UDES/IVS) çerçevesinde üç temel yöntem.</p></div>
+  <div class="mth">
+    <div class="mth-tabs">
+      <button class="act" data-m="maliyet" onmouseenter="renderMethod('maliyet')" onclick="renderMethod('maliyet',this)"><b>01</b> Maliyet Yöntemi</button>
+      <button data-m="emsal" onmouseenter="renderMethod('emsal')" onclick="renderMethod('emsal',this)"><b>02</b> Emsal Karşılaştırma</button>
+      <button data-m="gelir" onmouseenter="renderMethod('gelir')" onclick="renderMethod('gelir',this)"><b>03</b> Gelir Kapitalizasyonu</button>
+    </div>
+    <div class="mth-stage" id="methodStage"></div>
+  </div>
+</div></section>
+
+<!-- LİSANS & MEVZUAT -->
+<section id="lisans"><div class="wrap">
+  <div class="sec-h"><div class="eyebrow">Lisans &amp; Mevzuat</div><h2>Yetki, bağımsızlık ve yasal güvence</h2></div>
+  <div class="lic-grid">
+    <div class="lic-txt">
+      <p>Kuruluşumuz, Sermaye Piyasası Kurulu (SPK) tarafından lisanslandırılmış, BDDK değerleme listesinde yer alan bağımsız bir gayrimenkul değerleme şirketidir. Tüm raporlarımız Uluslararası Değerleme Standartları (UDES/IVS) ve ilgili Türk mevzuatına uygun olarak, tarafsızlık ve gizlilik ilkeleriyle hazırlanır.</p>
+      <ul>
+        <li>✔ Bağımsız ve tarafsız değerleme (çıkar çatışmasından arınmış)</li>
+        <li>✔ Yasal geçerli; banka, mahkeme ve resmî kurum işlemlerine uygun</li>
+        <li>✔ Lisanslı eksper kadrosu ve denetlenebilir metodoloji</li>
+        <li>✔ KVKK uyumlu veri işleme ve raporlama</li>
+      </ul>
+    </div>
+    <div class="lic-badges">
+      <div class="lic-b"><b>SPK</b><span>Sermaye Piyasası Kurulu lisansı</span></div>
+      <div class="lic-b"><b>BDDK</b><span>Değerleme kuruluşu listesi</span></div>
+      <div class="lic-b"><b>UDES / IVS</b><span>Uluslararası Değerleme Standartları</span></div>
+      <div class="lic-b"><b>KGK / TDUB</b><span>Denetim & meslek birliği</span></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- RESMİ RAPOR TALEP -->
+<section class="report" id="rapor"><div class="wrap">
+  <div class="sec-h"><div class="eyebrow" style="color:#bcd0ff">Resmi Rapor Talebi</div><h2>Lisanslı değerleme raporu talep edin</h2><p>Varlık türünüzü ve değerleme amacınızı seçin; uzman ekibimiz resmî süreci başlatsın.</p></div>
+  <div class="rep-2col"><div class="rep-card">
+    <h3>Değerleme Talep Formu</h3><div class="sub">Bilgileriniz KVKK kapsamında gizlilikle işlenir; yalnızca resmî değerleme süreci için kullanılır.</div>
+    <div class="rf-grid">
+      <div class="rf"><label>Ad Soyad / Kurum *</label><input id="dg_ad" placeholder="Kişi veya şirket adı"></div>
+      <div class="rf"><label>Telefon *</label><input id="dg_tel" placeholder="05xx xxx xx xx"></div>
+    </div>
+    <div class="rf"><label>E-posta</label><input id="dg_mail" placeholder="ornek@kurum.com"></div>
+    <div class="rf-grid">
+      <div class="rf"><label>Varlık Türü *</label><select id="dg_asset"><option value="">Seçiniz…</option><option>Konut</option><option>Arsa</option><option>İş Makinesi</option><option>Üretim Hattı</option><option>Fabrika</option><option>Akaryakıt İstasyonu</option><option>Enerji Santrali (GES/RES)</option></select></div>
+      <div class="rf"><label>Değerleme Amacı *</label><select id="dg_purpose"><option value="">Seçiniz…</option><option>Bankaya Yönelik</option><option>Miras Paylaşımı</option><option>Yasal Dava</option><option>Kurumsal Varlık Güncelleme</option></select></div>
+    </div>
+    <div class="rf"><label>Açıklama (opsiyonel)</label><textarea id="dg_not" rows="2" placeholder="Varlığa dair kısa bilgi (konum, kapasite, vb.)"></textarea></div>
+    <label class="rf-kvkk"><input type="checkbox" id="dg_kvkk"> <span>Kişisel verilerimin resmî değerleme süreci kapsamında işlenmesini kabul ediyorum (KVKK).</span></label>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="degReportSubmit()">Resmi Rapor Talep Et</button>
+  </div>
+  <div class="rep-dash">
+    <div class="rd-h"><span class="rd-dot"></span> Canlı Raporlama Zaman Çizelgesi</div>
+    <div class="rd-timeline" id="rdTimeline">
+      <div class="rd-step" data-s="0"><div class="rd-ic">1</div><div class="rd-tx"><b>Resmi Talep Alındı</b><span>Varlık & amaç kaydı</span></div></div>
+      <div class="rd-step" data-s="1"><div class="rd-ic">2</div><div class="rd-tx"><b>Merkez API Doğrulama</b><span>/api/v1/tenant/bootstrap · lisans & amortisman</span></div></div>
+      <div class="rd-step" data-s="2"><div class="rd-ic">3</div><div class="rd-tx"><b>ProX Analiz Motoru</b><span>UDES yöntem seçimi & hesaplama</span></div></div>
+      <div class="rd-step" data-s="3"><div class="rd-ic">4</div><div class="rd-tx"><b>Lisanslı Rapor Hazır</b><span>Resmî rapor numarası üretildi</span></div></div>
+    </div>
+    <div class="rd-logh">ProX AI · canlı log</div>
+    <div class="rd-log" id="rdLog"><div class="rd-l muted">Form gönderildiğinde süreç burada canlı akar…</div></div>
+  </div>
+  </div>
+</div></section>
+
+<!-- İLETİŞİM -->
+<section id="iletisim"><div class="wrap">
+  <div class="sec-h"><div class="eyebrow">İletişim</div><h2>Kurumsal iletişim</h2></div>
+  <div class="ilet-grid">
+    <div class="ilet">
+      <div class="row"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg></div><div><b>Genel Müdürlük</b><span>Alsancak Mah. ... Cad. No:00, Konak / İzmir</span></div></div>
+      <div class="row"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.6 2.6.6 2.6.6 2.6a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6"/></svg></div><div><b>Telefon</b><span><a href="tel:+902320000000">+90 232 000 00 00</a></span></div></div>
+      <div class="row"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></div><div><b>E-posta</b><span>info@meridyendegerleme.com</span></div></div>
+    </div>
+    <div class="ilet">
+      <div class="row"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><div><b>Çalışma İlkemiz</b><span>Bağımsızlık, tarafsızlık, gizlilik ve mevzuata tam uyum.</span></div></div>
+      <div class="row"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg></div><div><b>Çalışma Saatleri</b><span>Hafta içi 09:00–18:00</span></div></div>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="fcols">
+    <div>
+      <div class="logo"><span class="mark">M</span><span>Meridyen<span class="lo2"> Değerleme</span></span></div>
+      <p style="color:#cdd8ea;font-size:14px;margin:12px 0 0">SPK lisanslı, BDDK yetkili bağımsız gayrimenkul ve varlık değerleme kuruluşu. UDES/IVS uyumlu resmî raporlama.</p>
+      <p class="fp">emlakekspertizi.com kurumsal değerleme altyapısıyla üretilmiştir.</p>
+    </div>
+    <div><h4>Hizmetler</h4><ul><li><a href="#hizmetler">Gayrimenkul Değerleme</a></li><li><a href="#hizmetler">Makine & Ekipman</a></li><li><a href="#hizmetler">Fabrika & Tesis</a></li><li><a href="#hizmetler">Enerji Santralleri</a></li></ul></div>
+    <div><h4>Kurumsal</h4><ul><li><a href="#metodoloji">Süreç & Metodoloji</a></li><li><a href="#lisans">Lisans & Mevzuat</a></li><li><a href="#iletisim">İletişim</a></li></ul></div>
+    <div><h4>Yasal</h4><ul><li><a href="#">KVKK Aydınlatma Metni</a></li><li><a href="#">Gizlilik Politikası</a></li><li><a href="#" onclick="openAdminGate();return false">Yönetim Paneli</a></li></ul></div>
+  </div>
+  <div class="fbot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142 · Tüm hakları saklıdır.</span><span>Bağımsız · Tarafsız · Gizlilik esaslı</span></div>
+</div></footer>
+
+<div class="toastbox" id="toastbox"></div>
+
+<script>
+/* ============================================================
+   Meridyen Değerleme — SPK Lisanslı Platform (bağımsız proje)
+   emlakekspertizi.com ProX SaaS çekirdeği · yasal/teknik dil
+   ============================================================ */
+const SAAS_CONFIG={
+  tenantId:'meridyen-degerleme',
+  tenantName:'Meridyen Değerleme A.Ş.',
+  tenantType:'Değerleme',
+  themeColor:'Lacivert',
+  whatsapp:'905000000000',
+  licenseNo:'DD-2024-0142',
+  systemSettings:{
+    logoUrl:'', faviconUrl:'', googleAnalytics:'', googleMapsKey:'', googleSiteVerification:'',
+    metaTitle:'', metaDescription:'', metaKeywords:'', contactPhone:'', customPrompt:'',
+    allowTenantOverride:{ themeColor:true, logoUrl:true, faviconUrl:true, contactPhone:true,
+      googleAnalytics:true, googleMapsKey:true, googleSiteVerification:true, metaTitle:true, metaDescription:true, metaKeywords:true, customPrompt:true }
+  },
+  tenantSettings:{ themeColor:'', logoUrl:'', faviconUrl:'', contactPhone:'', googleAnalytics:'', googleMapsKey:'', googleSiteVerification:'', metaTitle:'', metaDescription:'', metaKeywords:'', customPrompt:'' },
+  /* ProX AI — UDES & SPK mevzuatına uygun resmî uzman promptu */
+  proxAiPrompts:{
+    degerleme:'Sen UDES (Uluslararası Değerleme Standartları) ve SPK mevzuatına uygun çalışan, SPK lisanslı bir değerleme uzmanısın. Yalnızca maliyet, emsal karşılaştırma ve gelir kapitalizasyonu yöntemlerine göre bilimsel, tarafsız ve resmî bir dille yanıt verirsin. Pazarlama ve satış dili kullanmazsın; yalnızca resmî, teknik ve mevzuata uygun ifadeler tercih edersin.',
+    makine:'Makine/ekipman değerlemesinde maliyet yöntemi ve amortisman/yıpranma esaslı, teknik ve resmî dille yanıt ver.',
+    default:'Sen emlakekspertizi.com ProX değerleme asistanısın; resmî ve teknik dil kullanırsın.'
+  }
+};
+const SAAS_THEMES={
+  'Lacivert':{accent:'#1e3a8a',accent2:'#334155'},
+  'Antrasit':{accent:'#334155',accent2:'#0f172a'},
+  'Bordo':{accent:'#7f1d1d',accent2:'#334155'},
+  'Yeşil':{accent:'#14532d',accent2:'#334155'},
+  'Mor':{accent:'#4c1d95',accent2:'#334155'}
+};
+/* --- ortak SaaS çekirdeği --- */
+function saasResolve(key){const sys=SAAS_CONFIG.systemSettings||{},ten=SAAS_CONFIG.tenantSettings||{},allow=sys.allowTenantOverride||{};if(allow[key]&&ten[key]!=null&&ten[key]!=='')return ten[key];return (sys[key]!=null&&sys[key]!=='')?sys[key]:undefined;}
+function initSaaSTheme(){const c=(saasResolve('themeColor'))||SAAS_CONFIG.themeColor;const t=SAAS_THEMES[c]||SAAS_THEMES['Lacivert'],s=document.documentElement.style;s.setProperty('--accent',t.accent);s.setProperty('--accent-2',t.accent2);s.setProperty('--grad-cta','linear-gradient(135deg,'+t.accent+','+t.accent2+')');}
+window.saasSetTheme=function(n){SAAS_CONFIG.themeColor=n;initSaaSTheme();};
+function _saasMeta(name,val,prop){if(val==null||val==='')return;const sel=prop?('meta[property="'+name+'"]'):('meta[name="'+name+'"]');let m=document.head.querySelector(sel);if(!m){m=document.createElement('meta');prop?m.setAttribute('property',name):m.setAttribute('name',name);document.head.appendChild(m);}m.setAttribute('content',val);}
+function _saasLink(rel,href){if(!href)return;let l=document.head.querySelector('link[rel="'+rel+'"]');if(!l){l=document.createElement('link');l.setAttribute('rel',rel);document.head.appendChild(l);}l.setAttribute('href',href);}
+function applySaaSSettings(){try{initSaaSTheme();
+  const title=saasResolve('metaTitle');if(title){document.title=title;_saasMeta('og:title',title,true);}
+  const desc=saasResolve('metaDescription');if(desc){_saasMeta('description',desc);_saasMeta('og:description',desc,true);}
+  const kw=saasResolve('metaKeywords');if(kw)_saasMeta('keywords',kw);
+  const gsv=saasResolve('googleSiteVerification');if(gsv)_saasMeta('google-site-verification',(''+gsv).replace(/^google-site-verification=/,''));
+  const fav=saasResolve('faviconUrl');if(fav){_saasLink('icon',fav);_saasLink('apple-touch-icon',fav);}
+  const logo=saasResolve('logoUrl');if(logo)document.querySelectorAll('.logo .mark').forEach(mk=>{mk.innerHTML='<img class="logo-img" src="'+logo+'" alt="logo" style="width:100%;height:100%;object-fit:contain;border-radius:inherit">';});
+  const ga=saasResolve('googleAnalytics');if(ga&&!document.getElementById('saas-gtag')){const s=document.createElement('script');s.id='saas-gtag';s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+ga;document.head.appendChild(s);const s2=document.createElement('script');s2.text='window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","'+ga+'");';document.head.appendChild(s2);console.log('[SaaS] GA enjekte: '+ga);}
+  const phone=saasResolve('contactPhone');if(phone)document.querySelectorAll('a[href^="tel:"]').forEach(a=>a.href='tel:'+(''+phone).replace(/[^0-9+]/g,''));
+}catch(e){console.warn('applySaaSSettings',e);}}
+window.applySaaSSettings=applySaaSSettings;
+/* --- standart menü (değerleme şeması) --- */
+const DEG_NAV=[['Kurumsal','#lisans'],['Değerleme Hizmetleri','#hizmetler'],['Süreç & Metodoloji','#metodoloji'],['Lisans & Mevzuat','#lisans'],['İletişim','#iletisim']];
+function mountChrome(){
+  const n=document.getElementById('navMain');if(n)n.innerHTML=DEG_NAV.map(x=>'<a href="'+x[1]+'">'+x[0]+'</a>').join('');
+  const ml=document.getElementById('mnavLinks');if(ml)ml.innerHTML=DEG_NAV.map(x=>'<a href="'+x[1]+'" onclick="document.getElementById(\'mnav\').classList.remove(\'open\')">'+x[0]+'</a>').join('');
+  const wa=(saasResolve('whatsapp'))||SAAS_CONFIG.whatsapp||'905000000000';
+  const c=document.getElementById('navCta');if(c)c.innerHTML='<a class="btn btn-line btn-sm hide-sm" href="https://wa.me/'+wa+'" target="_blank" rel="noopener noreferrer">WhatsApp</a><button class="btn btn-primary btn-sm" onclick="document.getElementById(\'rapor\').scrollIntoView({behavior:\'smooth\'})">Resmi Rapor Talep Et</button><button class="burger" onclick="document.getElementById(\'mnav\').classList.add(\'open\')" aria-label="Menü"><span></span><span></span><span></span></button>';
+}
+/* --- toast --- */
+function toast(m){const t=document.getElementById('toastbox');if(!t)return;t.textContent=m;t.classList.add('on');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('on'),3200);}
+/* --- ProX AI (resmî/teknik) --- */
+function _proxOut(){let el=document.getElementById('proxPanel');if(!el){el=document.createElement('div');el.id='proxPanel';el.className='prox-panel';el.innerHTML='<div class="prox-hd"><b>ProX Değerleme Asistanı</b><button onclick="this.closest(\'.prox-panel\').remove()">✕</button></div><div class="prox-body" id="proxAiOut"></div>';document.body.appendChild(el);}el.classList.add('on');return document.getElementById('proxAiOut');}
+function _proxSimulate(msg,ctx){const m=(msg||'').toLocaleLowerCase('tr');
+  if(/makine|ekipman|üretim|amortis/.test(m)) return 'Makine ve ekipmanlarda esas yöntem maliyet yöntemidir: yeniden edinim bedelinden fiziksel yıpranma ve fonksiyonel/ekonomik eskime düşülerek net değer bulunur. Amortisman endeksi merkez verisiyle güncellenir.';
+  if(/fabrika|tesis|entegre/.test(m)) return 'Entegre tesislerde arsa, bina ve makine bütünleşik ele alınır; işletme değeri için gelir kapitalizasyonu, fiziki varlıklar için maliyet yöntemi birlikte uygulanır.';
+  if(/akaryakıt|istasyon|ges|res|enerji|santral/.test(m)) return 'Akaryakıt istasyonu ve GES/RES yatırımlarında gelir kapitalizasyonu önceliklidir; lisans değeri, üretim/satış projeksiyonu ve geri ödeme süresi analiz edilir.';
+  if(/emsal|gayrimenkul|konut|arsa/.test(m)) return 'Gayrimenkullerde birincil yöntem emsal karşılaştırmadır; yakın tarihli benzer işlemler düzeltme katsayılarıyla normalize edilir, gerektiğinde gelir yöntemiyle desteklenir.';
+  return 'UDES çerçevesinde maliyet, emsal karşılaştırma ve gelir kapitalizasyonu yöntemleriyle tarafsız değer tespiti yaparız. Varlık türünü belirtin; uygun yöntemi açıklayayım.';}
+async function proxAiQuery(userMessage,contextType){const ctx=contextType||'degerleme';
+  const base=(SAAS_CONFIG.proxAiPrompts&&(SAAS_CONFIG.proxAiPrompts[ctx]||SAAS_CONFIG.proxAiPrompts.default))||'';
+  const custom=saasResolve('customPrompt')||'';const prompt=base+(custom?' '+custom:'');
+  /* ⚠️ Sağlayıcı adı asla görünmez/loglanmaz — yalnızca "ProX". */
+  console.log('[ProX AI →] '+SAAS_CONFIG.tenantName+' · ctx='+ctx+' · soru: '+userMessage);
+  let answer;
+  try{
+    /* Merkez /prox/ai gövdesi yalnızca {prompt} bekler; resmî persona promptu + soru birleştirilir. */
+    const r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{prompt:(prompt?prompt+'\n\n':'')+userMessage}});
+    if(!r||r.fallback||r.success!==true)throw new Error('fallback');
+    answer=r.answer||_proxSimulate(userMessage,ctx);
+  }catch(e){
+    await new Promise(r=>setTimeout(r,300));answer=_proxSimulate(userMessage,ctx);
+  }
+  console.log('[ProX AI ←] '+answer);
+  const out=_proxOut();if(out)out.innerHTML='<div class="prox-q">'+_esc(userMessage)+'</div><div class="prox-a">'+_esc(answer)+'</div>';return answer;}
+window.proxAiQuery=proxAiQuery;
+/* --- Resmî rapor: merkez API (/api/v1/tenant/bootstrap) köprüsü + takip kartı --- */
+function _bootstrapSimulated(){
+  /* emlakekspertizi.com merkez API fallback — makine/ekipman amortisman endeksleri + yasal veri */
+  return {endpoint:'/api/v1/tenant/bootstrap',license:{spk:SAAS_CONFIG.licenseNo,bddk:true,udes:'IVS 2025'},
+    amortisman:{'İş Makinesi':'%9/yıl','Üretim Hattı':'%7/yıl','Fabrika':'%2,5/yıl (bina)','Akaryakıt İstasyonu':'%4/yıl','Enerji Santrali (GES/RES)':'%3,5/yıl'},
+    yasal:['SPK Değerleme Tebliği','UDES/IVS 2025','KVKK']};
+}
+async function _fetchBootstrap(){
+  /* Önce gerçek merkez /bootstrap; başarısızsa yerel simülasyon verisi. */
+  const sim=_bootstrapSimulated();
+  try{
+    const r=await proxApi('/api/v1/tenant/bootstrap');
+    if(!r||r.fallback||r.success!==true)throw new Error('fallback');
+    /* Paket & özellik yetkileri: olmayan premium aksiyonlar (PDF vb.) otomatik kapanır. */
+    if(r.package){window.EMLAK_TENANT.packageCode=r.package;}
+    /* Paket koduna göre canUse* taban listesi. */
+    var feats=window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode]?window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode].slice():[];
+    /* Merkez endpoint-adlı enabled_features → canUse* eşlemesi (kavşak: API izni yoksa kapat). */
+    if(Array.isArray(r.enabled_features)){
+      var EP_MAP={pdf:'canUsePdfReports',prox_analyze:'canUseMarketAnalysis',prox_ai:'canUseAdvancedProX',lead:'canUseLeadCRM'};
+      Object.keys(EP_MAP).forEach(function(ep){
+        var flag=EP_MAP[ep];var idx=feats.indexOf(flag);
+        if(r.enabled_features.indexOf(ep)===-1 && idx!==-1)feats.splice(idx,1);
+      });
+    }
+    if(feats.length)window.EMLAK_TENANT.enabledFeatures=feats;
+    /* ⚠️ theme.accent ile CSS rengi REPAINT EDİLMEZ — lacivert/antrasit kimliği korunur. */
+    /* Merkez yanıtı amortisman/yasal alanlarını taşımıyorsa yerel simülasyonla doldurulur. */
+    return {endpoint:'/api/v1/tenant/bootstrap',
+      license:r.license||sim.license,
+      amortisman:r.amortisman||sim.amortisman,
+      yasal:r.yasal||sim.yasal,
+      online:true};
+  }catch(e){
+    await new Promise(r=>setTimeout(r,260));
+    return Object.assign(sim,{online:false});
+  }
+}
+function _degMethodFor(asset){asset=asset||'';if(/makine|üretim|hat/i.test(asset))return 'Maliyet Yöntemi (amortisman esaslı)';if(/fabrika|tesis/i.test(asset))return 'Maliyet + Gelir Kapitalizasyonu (bütünleşik)';if(/akaryakıt|santral|ges|res|enerji/i.test(asset))return 'Gelir Kapitalizasyonu';return 'Emsal Karşılaştırma + Gelir Yöntemi';}
+/* Varlık türünü merkez /prox/analyze parametrelerine (kategori vb.) eşler. */
+function _degAnalyzeBody(asset,purpose){
+  return {persona:'valuation',kategori:asset||'',durum:purpose||'',
+    il:'',ilce:'',mahalle:'',brut_m2:0,attrs:{},sector:window.EMLAK_TENANT.sector};
+}
+/* Varlık Matrisi · değerleme motoru: SADECE merkez /prox/analyze değer üretir.
+   ⚠️ Değer hiçbir koşulda YZ ile üretilmez; API yoksa yalnızca yöntem önerisi (yerel) gösterilir. */
+async function _degAnalyze(asset,purpose){
+  try{
+    const r=await proxApi('/api/v1/tenant/prox/analyze',{method:'POST',body:_degAnalyzeBody(asset,purpose)});
+    if(!r||r.fallback||r.success!==true)throw new Error('fallback');
+    return {
+      online:true,
+      method:r.method||_degMethodFor(asset),
+      value:(r.strongest_value!=null?r.strongest_value:null),
+      base_m2:(r.base_m2!=null?r.base_m2:null),
+      strongest_m2:(r.strongest_m2!=null?r.strongest_m2:null),
+      range:r.range||null,
+      confidence:(r.confidence!=null?r.confidence:null),
+      confidence_band:r.confidence_band||'',
+      piyasa_yonu:r.piyasa_yonu||'',
+      karar_ozeti:r.karar_ozeti||'',
+      risk_ozeti:r.risk_ozeti||'',
+      eksik_bilgi:Array.isArray(r.eksik_bilgi)?r.eksik_bilgi:[]
+    };
+  }catch(e){
+    /* Çevrimdışı: yalnızca yöntem önerisi; DEĞER ÜRETİLMEZ. */
+    return {online:false,method:_degMethodFor(asset),value:null,range:null,
+      confidence:null,confidence_band:'',piyasa_yonu:'',karar_ozeti:'',risk_ozeti:'',eksik_bilgi:[]};
+  }
+}
+/* Para biçimi (TRY) — yalnızca API'den gelen sayılar için. */
+function _degTRY(n){try{return new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',maximumFractionDigits:0}).format(n);}catch(e){return (''+n)+' ₺';}}
+function _esc(s){return (''+(s==null?'':s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+async function saasGenerateOfficialReport(assetType,purpose){
+  const boot=await _fetchBootstrap();
+  const no='DGR-2026-'+String(Math.floor((Date.now()%100000))).padStart(5,'0');
+  const an=await _degAnalyze(assetType,purpose);
+  const method=an.method;
+  const amort=boot.amortisman[assetType]||'—';
+  console.log('Resmi Değerleme Raporu başlatıldı: '+no+' · '+(assetType||'-')+' · '+(purpose||'-')+' · Yöntem: '+method+' · Yasal: '+boot.yasal.join(', '));
+  /* ⚠️ Değer satırları YALNIZCA merkez /prox/analyze döndürdüğünde gösterilir (değer = API). */
+  let valRows='';
+  if(an.online && an.value!=null){
+    valRows+='<div class="r"><span>Takdir Edilen Değer (en güçlü)</span><b>'+_esc(_degTRY(an.value))+'</b></div>';
+    if(an.range && an.range.min_value!=null && an.range.max_value!=null){
+      valRows+='<div class="r"><span>Değer Aralığı (bant)</span><b>'+_esc(_degTRY(an.range.min_value))+' – '+_esc(_degTRY(an.range.max_value))+(an.range.spread_pct!=null?' · ±'+_esc(an.range.spread_pct)+'%':'')+'</b></div>';
+    }
+    if(an.confidence!=null||an.confidence_band){valRows+='<div class="r"><span>Güven Düzeyi</span><b>'+_esc(an.confidence_band||'')+(an.confidence!=null?' ('+_esc(an.confidence)+'%)':'')+'</b></div>';}
+    if(an.piyasa_yonu){valRows+='<div class="r"><span>Piyasa Yönü</span><b>'+_esc(an.piyasa_yonu)+'</b></div>';}
+  }
+  let summ='';
+  if(an.karar_ozeti)summ+='<div class="r" style="display:block"><span>Karar Özeti</span><div style="color:var(--ink);font-weight:600;margin-top:4px">'+_esc(an.karar_ozeti)+'</div></div>';
+  if(an.risk_ozeti)summ+='<div class="r" style="display:block"><span>Risk Özeti</span><div style="color:var(--ink);font-weight:600;margin-top:4px">'+_esc(an.risk_ozeti)+'</div></div>';
+  let hint='';
+  if(an.eksik_bilgi && an.eksik_bilgi.length){
+    var labels=an.eksik_bilgi.map(function(x){return (x&&typeof x==='object')?(x.label||x.key||''):x;}).filter(Boolean);
+    if(labels.length)hint='<div style="padding:10px 14px;font-size:12.5px;color:var(--accent-2);background:var(--surface);border-top:1px solid var(--line)">ℹ Daha hassas bir sonuç için: '+_esc(labels.join(', '))+'.</div>';
+  }
+  const out=_proxOut();
+  if(out)out.innerHTML='<div class="rep-track"><div class="h"><b>📋 Resmi Değerleme Rapor Takibi</b><span>'+no+' · '+boot.license.spk+'</span></div><div class="rows">'
+    +'<div class="r"><span>Varlık Türü</span><b>'+_esc(assetType||'-')+'</b></div>'
+    +'<div class="r"><span>Değerleme Amacı</span><b>'+_esc(purpose||'-')+'</b></div>'
+    +'<div class="r"><span>Uygulanacak Yöntem</span><b>'+_esc(method)+'</b></div>'
+    +valRows
+    +summ
+    +'<div class="r"><span>Amortisman Endeksi</span><b>'+_esc(amort)+'</b></div>'
+    +'<div class="r"><span>Yasal Dayanak</span><b>'+_esc(boot.yasal.join(' · '))+'</b></div>'
+    +'<div class="r"><span>Standart</span><b>'+_esc(boot.license.udes)+'</b></div>'
+    +'<div class="r"><span>Durum</span><span class="st">Hazırlanıyor</span></div>'
+    +'<div class="r"><span>Tahmini Teslim</span><b>3–5 iş günü</b></div></div>'
+    +hint
+    +'<div style="padding:0 14px 14px"><button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saasDownloadOfficialPdf(\''+no+'\',\''+(assetType||'').replace(/[\\\\\']/g,'')+'\',\''+(purpose||'').replace(/[\\\\\']/g,'')+'\')">⬇ Resmî Rapor PDF</button></div></div>';
+  toast('📋 Resmi rapor süreci başlatıldı: '+no);
+  return {no,assetType,purpose,method,analyze:an,bootstrap:boot};
+}
+window.saasGenerateOfficialReport=saasGenerateOfficialReport;
+/* Resmî PDF rapor: önce paket yetkisi, sonra merkez PDF servisi; fallback yerel metin raporu. */
+function _b64ToBlob(b64,type){const bin=atob(b64);const len=bin.length;const buf=new Uint8Array(len);for(let i=0;i<len;i++)buf[i]=bin.charCodeAt(i);return new Blob([buf],{type:type||'application/pdf'});}
+async function saasDownloadOfficialPdf(no,assetType,purpose){
+  if(typeof requireFeature==='function' && !requireFeature('canUsePdfReports'))return;
+  try{
+    /* Merkez /pdf/generate gövdesi: {title, pages:[{id,html}], css}. */
+    const pageHtml='<h1>Resmî Değerleme Raporu</h1>'
+      +'<p>Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: '+_esc(SAAS_CONFIG.licenseNo)+'</p>'
+      +'<table><tr><th>Rapor No</th><td>'+_esc(no||'-')+'</td></tr>'
+      +'<tr><th>Varlık Türü</th><td>'+_esc(assetType||'-')+'</td></tr>'
+      +'<tr><th>Değerleme Amacı</th><td>'+_esc(purpose||'-')+'</td></tr>'
+      +'<tr><th>Uygulanacak Yöntem</th><td>'+_esc(_degMethodFor(assetType))+'</td></tr>'
+      +'<tr><th>Standart</th><td>UDES/IVS 2025</td></tr></table>';
+    const css='body{font-family:Inter,Arial,sans-serif;color:#0f172a;padding:40px;line-height:1.6}h1{color:#1e3a8a;font-size:20px}table{border-collapse:collapse;width:100%;margin-top:18px}td,th{border:1px solid #e2e8f0;padding:10px;text-align:left;font-size:14px}th{background:#f1f5f9;color:#1e3a8a;width:38%}';
+    const r=await proxApi('/api/v1/tenant/pdf/generate',{method:'POST',body:{title:'Resmî Değerleme Raporu '+(no||''),pages:[{id:no||'rapor',html:pageHtml}],css:css}});
+    if(!r||r.fallback||r.success!==true||!r.pdf_base64)throw new Error('fallback');
+    const blob=_b64ToBlob(r.pdf_base64,'application/pdf');
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=(no||'rapor')+'.pdf';document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),4000);
+    if(typeof toast==='function')toast('⬇ Resmî rapor PDF indiriliyor: '+no+(r.page_count?(' · '+r.page_count+' sayfa'):''));
+    return {ok:true,online:true};
+  }catch(e){
+    /* Yerel fallback: tarayıcı yazdırma diyaloğu ile resmî rapor taslağı üretimi. */
+    try{
+      const w=window.open('','_blank','noopener,noreferrer');
+      if(w){w.document.write('<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>'+(no||'Rapor')+'</title><style>body{font-family:Inter,Arial,sans-serif;color:#0f172a;padding:40px;line-height:1.6}h1{color:#1e3a8a;font-size:20px}table{border-collapse:collapse;width:100%;margin-top:18px}td,th{border:1px solid #e2e8f0;padding:10px;text-align:left;font-size:14px}th{background:#f1f5f9;color:#1e3a8a;width:38%}</style></head><body><h1>Resmî Değerleme Raporu (Taslak)</h1><p>Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: '+SAAS_CONFIG.licenseNo+'</p><table><tr><th>Rapor No</th><td>'+(no||'-')+'</td></tr><tr><th>Varlık Türü</th><td>'+(assetType||'-')+'</td></tr><tr><th>Değerleme Amacı</th><td>'+(purpose||'-')+'</td></tr><tr><th>Uygulanacak Yöntem</th><td>'+_degMethodFor(assetType)+'</td></tr><tr><th>Standart</th><td>UDES/IVS 2025</td></tr></table><p style="margin-top:24px;font-size:12px;color:#64748b">Bu belge, merkez PDF servisine erişilemediğinde üretilen yerel taslaktır; resmî nüsha lisanslı eksper onayıyla düzenlenir.</p><script>window.onload=function(){setTimeout(function(){window.print();},300);};<\/script></body></html>');
+        w.document.close();
+      }
+      if(typeof toast==='function')toast('⬇ Yerel rapor taslağı hazırlandı (yazdır/PDF).');
+    }catch(_){ if(typeof toast==='function')toast('PDF üretilemedi.'); }
+    return {ok:true,online:false};
+  }
+}
+window.saasDownloadOfficialPdf=saasDownloadOfficialPdf;
+function degReportSubmit(){const v=id=>{const e=document.getElementById(id);return e?e.value.trim():'';};
+  const ad=v('dg_ad'),tel=v('dg_tel'),mail=v('dg_mail'),note=v('dg_not'),asset=v('dg_asset'),purpose=v('dg_purpose');
+  if(!ad||!tel){toast('Lütfen ad/kurum ve telefon girin.');return;}
+  if(!asset||!purpose){toast('Lütfen varlık türü ve değerleme amacını seçin.');return;}
+  if(!document.getElementById('dg_kvkk').checked){toast('Lütfen KVKK onayını işaretleyin.');return;}
+  console.log('[Resmi Rapor Talebi] '+ad+' - '+tel+' - Varlık: '+asset+' - Amaç: '+purpose);
+  /* Lead'i merkez CRM /lead'e gönder (gerçek gövde şekli); çevrimdışıysa localStorage fallback. */
+  if(typeof submitLead==='function'){
+    try{submitLead({sourcePage:'degerleme',formType:'resmi_rapor',name:ad,phone:tel,email:mail,message:note,
+      extra:{requestedService:asset,purpose:purpose,kvkk:true}});}catch(_){}
+  }
+  if(typeof runReportTimeline==='function'){runReportTimeline(asset,purpose);}else{saasGenerateOfficialReport(asset,purpose);}
+  ['dg_ad','dg_tel','dg_mail','dg_not'].forEach(i=>{const e=document.getElementById(i);if(e)e.value='';});
+  const k=document.getElementById('dg_kvkk');if(k)k.checked=false;
+}
+window.degReportSubmit=degReportSubmit;
+/* --- Bayi admin paneli (#saasTenantAdmin) --- */
+function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='sta-modal';
+  el.innerHTML='<div class="sta-ov" onclick="closeSaasAdmin()"></div><div class="sta-card"><div class="sta-hd"><b>⚡ ProX SaaS · '+SAAS_CONFIG.tenantName+'</b><button onclick="closeSaasAdmin()">✕</button></div>'
+   +'<div class="sta-tabs"><button class="act" data-t="tema" onclick="staTab(this)">Tema & Logo</button><button data-t="google" onclick="staTab(this)">Google & Meta</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="rapor" onclick="staTab(this)">Resmi Rapor</button></div><div class="sta-body">'
+   +'<div class="sta-pane" data-p="tema"><h4>Logo & Tema</h4><p class="sub">Kurumsal logo ve favicon; tema lacivert/antrasit ailesinde.</p><div class="sta-f"><label>Logo URL</label><input id="sl_logo" placeholder="https://.../logo.png"></div><div class="sta-f"><label>Favicon URL</label><input id="sl_favicon" placeholder="https://.../favicon.png"></div><div class="sta-f"><label>Tema</label><select id="sl_theme" onchange="saasSetTheme(this.value)"><option>Lacivert</option><option>Antrasit</option><option>Bordo</option><option>Yeşil</option><option>Mor</option></select></div><button class="sta-go" onclick="saasApplyLogo()">Uygula</button></div>'
+   +'<div class="sta-pane" data-p="google" hidden><h4>Google & Meta</h4><p class="sub">Arama sonuçları + analytics; yenilenmeden uygulanır.</p><div class="sta-row2"><div class="sta-f"><label>Google Analytics (GA4)</label><input id="sg_ga" placeholder="G-XXXX"></div><div class="sta-f"><label>Search Console Doğrulama</label><input id="sg_gsc" placeholder="google-site-verification=..."></div></div><div class="sta-f"><label>Google Maps API Key</label><input id="sg_maps" placeholder="AIza..."></div><div class="sta-f"><label>Meta Başlık</label><input id="sm_title"></div><div class="sta-f"><label>Meta Açıklama</label><input id="sm_desc"></div><div class="sta-f"><label>Meta Anahtar Kelimeler</label><input id="sm_kw" placeholder="değerleme, ekspertiz, ..."></div><button class="sta-go" onclick="saasSaveGoogle()">Kaydet & Uygula</button></div>'
+   +'<div class="sta-pane" data-p="prox" hidden><h4>ProX AI — Kuruma Özel Prompt</h4><p class="sub">UDES/SPK resmî promptuna eklenir. Örn: "Endüstriyel tesis değerlemesinde uzmanız."</p><textarea id="sp_custom" rows="3" placeholder="Endüstriyel tesis uzmanıyız..."></textarea><button class="sta-go" onclick="saasSaveProxPrompt()" style="margin-top:8px">Kaydet</button></div>'
+   +'<div class="sta-pane" data-p="rapor" hidden><h4>Resmi Rapor Üretici</h4><p class="sub">Merkez API (/api/v1/tenant/bootstrap) amortisman & yasal verisiyle.</p><div class="sta-row2"><div class="sta-f"><label>Varlık Türü</label><select id="sr_asset"><option>Konut</option><option>Arsa</option><option>İş Makinesi</option><option>Üretim Hattı</option><option>Fabrika</option><option>Akaryakıt İstasyonu</option><option>Enerji Santrali (GES/RES)</option></select></div><div class="sta-f"><label>Amaç</label><select id="sr_purpose"><option>Bankaya Yönelik</option><option>Miras Paylaşımı</option><option>Yasal Dava</option><option>Kurumsal Varlık Güncelleme</option></select></div></div><button class="sta-go" onclick="saasReportFromAdmin()">📋 Resmi Rapor Süreci Başlat</button></div>'
+   +'</div></div>';
+  document.body.appendChild(el);return el;}
+function openSaasAdmin(){_saasAdminHost().classList.add('on');}
+function closeSaasAdmin(){const e=document.getElementById('saasTenantAdmin');if(e)e.classList.remove('on');}
+function staTab(b){const m=b.closest('.sta-modal');m.querySelectorAll('.sta-tabs button').forEach(x=>x.classList.toggle('act',x===b));const t=b.dataset.t;m.querySelectorAll('.sta-pane').forEach(p=>p.hidden=(p.dataset.p!==t));}
+function saasSaveGoogle(){const v=id=>{const e=document.getElementById(id);return e?e.value.trim():'';};const t=SAAS_CONFIG.tenantSettings;t.googleAnalytics=v('sg_ga');t.googleSiteVerification=v('sg_gsc');t.googleMapsKey=v('sg_maps');t.metaTitle=v('sm_title');t.metaDescription=v('sm_desc');t.metaKeywords=v('sm_kw');applySaaSSettings();toast('Google & Meta uygulandı.');}
+function saasApplyLogo(){const v=id=>{const e=document.getElementById(id);return e?e.value.trim():'';};const t=SAAS_CONFIG.tenantSettings;const logo=v('sl_logo'),fav=v('sl_favicon');if(logo)t.logoUrl=logo;if(fav)t.faviconUrl=fav;applySaaSSettings();toast('Logo & favicon uygulandı.');}
+function saasSaveProxPrompt(){const e=document.getElementById('sp_custom');SAAS_CONFIG.tenantSettings.customPrompt=e?e.value.trim():'';toast('Kuruma özel ProX promptu kaydedildi.');}
+function saasReportFromAdmin(){const a=document.getElementById('sr_asset'),p=document.getElementById('sr_purpose');saasGenerateOfficialReport(a?a.value:'',p?p.value:'');}
+window.openSaasAdmin=openSaasAdmin;window.closeSaasAdmin=closeSaasAdmin;window.staTab=staTab;window.saasSaveGoogle=saasSaveGoogle;window.saasApplyLogo=saasApplyLogo;window.saasSaveProxPrompt=saasSaveProxPrompt;window.saasReportFromAdmin=saasReportFromAdmin;
+
+/* ===== Faz 16: Varlık Matrisi · Metodoloji SVG · Canlı Timeline · Merkez SuperAdmin ===== */
+const _ASSET_SVG={
+ gayrimenkul:'<svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 140h160"/><path d="M40 140V60l40-26 40 26v80"/><rect x="58" y="78" width="16" height="16"/><rect x="86" y="78" width="16" height="16"/><rect x="72" y="108" width="18" height="32"/><path d="M128 140V70h44v70"/><path d="M138 82h8M158 82h8M138 100h8M158 100h8M138 118h8M158 118h8"/></svg>',
+ makine:'<svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="78" cy="78" r="30"/><circle cx="78" cy="78" r="9"/><path d="M78 36v-9M78 129v-9M120 78h9M27 78h9M108 48l7-7M41 115l7-7M108 108l7 7M41 41l7 7"/><circle cx="148" cy="112" r="17"/><circle cx="148" cy="112" r="5"/></svg>',
+ fabrika:'<svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 140h168"/><path d="M40 140V78l34 20V78l34 20V64h44v76"/><path d="M120 82h10M120 102h10M150 82h10M150 102h10M150 122h10"/><path d="M52 56c0-8 8-8 8-16M70 56c0-8 8-8 8-16" opacity=".7"/></svg>',
+ enerji:'<svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="56" cy="50" r="15"/><path d="M56 24v-9M56 85v-9M82 50h9M21 50h9M75 31l6-6M31 75l6-6M75 69l6 6M31 25l6 6"/><path d="M120 140l14-66h26l14 66z"/><path d="M127 112h46M120 140h68"/><path d="M147 74V42M147 42l-15-11M147 42l15-11"/></svg>'
+};
+const ASSETS={
+ gayrimenkul:{t:'Gayrimenkul Değerleme',y:'Emsal Karşılaştırma + Gelir',
+  lead:'Konut, ticari, arsa ve karma mülklerin pazar değeri; tapu, imar ve hukuki durum tespitiyle birlikte, SPK ve UDES/IVS çerçevesinde tarafsız olarak belirlenir. Banka teminatı, resmî kurum işlemleri ve mali tablo amaçlı raporlama yapılır.',
+  secs:[
+   {h:'Hukuki & İmar Durumu Tespiti',b:'Tapu kütüğü, kadastral durum, imar planı (KAKS/TAKS, fonksiyon), yapı ruhsatı ve iskân (yapı kullanma izni) incelenir; cins tashihi, kat irtifakı/mülkiyeti ve takyidatlar (ipotek, haciz, şerh) değere yansıtılır.'},
+   {h:'Pazar Değeri Esası — IVS 104',b:'Değer, IVS 104 uyarınca “istekli alıcı ile istekli satıcı arasında, muvazaasız ve makul pazarlama sonrası” oluşacak Pazar Değeri olarak tanımlanır; en verimli ve en iyi kullanım (highest & best use) analizi yapılır.'},
+   {h:'Yöntem Bileşimi',b:'Konut ve arsada emsal karşılaştırma; gelir getiren ticari mülklerde gelir kapitalizasyonu; özgün/yeni yapılarda maliyet yöntemi tek raporda harmanlanır ve sonuçlar uzlaştırılır (reconciliation).'}
+  ],
+  mev:['SPK III-62.1 Değerleme Faaliyeti','SPK III-62.3 Değerleme Standartları','IVS 104 — Değer Esasları','IVS 400 — Gayrimenkul Hakları','TDUB / SPK Lisanslı Değerleme Uzmanı']},
+ makine:{t:'Makine & Teçhizat Ekspertizi',y:'Maliyet (amortisman esaslı)',
+  lead:'İş makineleri, CNC tezgâhları, komple üretim hatları ve teçhizatın değeri; esas olarak maliyet yaklaşımıyla, yeniden edinim/ikame bedelinden fiziksel yıpranma ile fonksiyonel ve ekonomik eskime düşülerek tespit edilir. İkinci el piyasa ve leasing/teminat değeri çapraz kontrol edilir.',
+  secs:[
+   {h:'Faydalı Ömür & Ekonomik Ömür Analizi',b:'VUK 333 sıra no’lu Genel Tebliğ ekindeki faydalı ömür ve amortisman oranları esas alınır; fiili çalışma saati, bakım geçmişi, yedek parça temini ve teknolojik güncellik dikkate alınarak kalan ekonomik ömür düzeltilir.'},
+   {h:'IVS 300 — Makine ve Teçhizat Standardı',b:'Değerleme; “yerinde / kurulu (in-situ)” ile “sökülmüş / taşınmış (ex-situ)” değer ayrımına, kurulum-montaj, nakliye ve devreye alma maliyetlerine göre yapılır. Devam eden kullanım mı tasfiye mi olduğu (premise of value) raporda açıkça beyan edilir.'},
+   {h:'Fabrika Envanter & Sayım Teknikleri',b:'Sabit kıymet sayımında demirbaş etiketleme (RFID/asset tagging), seri no eşleştirme, çift ekip körlemesine sayım ve muhasebe sabit kıymet defteriyle mutabakat uygulanır; atıl, hurda ve fazla kıymetler ayrıştırılır.'}
+  ],
+  tbl:{cap:'Amortisman (Yıpranma) Yöntemleri',rows:[
+   ['Doğrusal (Normal) Yöntem','Maliyet, faydalı ömre eşit dilimlerle itfa edilir: Yıllık Amortisman = (Edinim Bedeli − Hurda Değeri) / Faydalı Ömür. İstikrarlı yıpranan ekipmanda kullanılır.'],
+   ['Azalan Bakiyeler (Hızlandırılmış)','Net defter değerine, normal oranın iki katı sabit oran uygulanır. İlk yıllarda yüksek amortisman; hızlı değer kaybeden teknolojik/elektronik teçhizatın gerçek yıpranmasını yansıtır.'],
+   ['Fonksiyonel & Ekonomik Eskime','Teknolojik gerileme (fonksiyonel) ve pazar/talep daralması (ekonomik) ayrıca düşülür; sadece fiziksel yıpranma yeterli sayılmaz.']
+  ]},
+  mev:['IVS 300 — Makine & Teçhizat','IVS 105 — Değerleme Yaklaşımları','VUK 333 — Faydalı Ömür & Amortisman','TMS/TFRS 16 — Maddi Duran Varlıklar']},
+ fabrika:{t:'Fabrika & Entegre Tesis',y:'Maliyet + Gelir (bütünleşik)',
+  lead:'Arsa, bina, altyapı ve üretim makinelerinden oluşan entegre tesisler; bileşen bazında maliyet yaklaşımı ile işletmenin nakit akışına dayalı gelir yaklaşımı birlikte kullanılarak bütünleşik biçimde değerlenir. Birleşme/devir ve finansman işlemleri için işletme değeri ayrıştırması yapılır.',
+  secs:[
+   {h:'Bileşen Tahsisi (Arsa + Bina + Makine)',b:'Toplam tesis değeri; arsa (emsal), yapı ve altyapı (maliyet), makine-teçhizat (IVS 300) ve maddi olmayan unsurlar olarak ayrıştırılır. Bütünleşik kullanım priminin değere etkisi gösterilir.'},
+   {h:'İşletme Değeri & İNA/DCF',b:'IVS 200 kapsamında, tesisin gelecekteki net nakit akışları (FAVÖK − yatırım harcamaları − işletme sermayesi) ağırlıklı ortalama sermaye maliyetiyle (WACC) iskonto edilir; sürdürülebilir kapasite ve doluluk varsayımları raporlanır.'},
+   {h:'Satın Alma Bedeli Tahsisi (PPA)',b:'Birleşme/devirde TFRS 3 uyarınca; özdeşleştirilebilir maddi/maddi olmayan varlıklar gerçeğe uygun değerle ölçülür, kalan tutar şerefiye (goodwill) olarak tahsis edilir.'}
+  ],
+  mev:['IVS 200 — İşletme & İşletme Payları','IVS 105 — Gelir Yaklaşımı (İNA)','TFRS 3 — İşletme Birleşmeleri / PPA','TFRS 13 — Gerçeğe Uygun Değer Ölçümü','KGK denetim uyumu']},
+ enerji:{t:'Tesis & Enerji Santralleri (GES/RES)',y:'Gelir Kapitalizasyonu',
+  lead:'Akaryakıt istasyonları, güneş (GES) ve rüzgâr (RES) santralleri; gayrimenkul dışı maddi duran varlık (MDV) bileşenleri, lisans hakları ve gelir üretme kapasitesiyle birlikte değerlenir. Esas yaklaşım, üretim/satış gelirinin kapitalize edilmesidir.',
+  secs:[
+   {h:'GES/RES Lisanslama Süreçleri',b:'EPDK nezdinde önlisans ve üretim lisansı süreci, bağlantı anlaşması ve çağrı mektubu, YEKDEM/teşvik durumu ve arazi tahsisi (mülkiyet/irtifak hakkı) lisans değerini doğrudan belirler. Kurulu güç (MWp/MWe), kapasite faktörü ve yıllık üretim (MWh) projeksiyonu modellenir.'},
+   {h:'Akaryakıt İstasyonu & İntifa Hakları',b:'İstasyonların büyük kısmı dağıtım şirketleri lehine tesis edilmiş intifa / üst hakkı altındadır; değerlemede intifa süresi ve yıllık bedeli, bayilik sözleşmesi, EPDK bayilik lisansı ve akaryakıt satış litrajı (ciro) ile tapu şerhleri incelenir.'},
+   {h:'Gayrimenkul Dışı MDV Değerlemesi',b:'Arazi/bina dışındaki pompalar, tanklar, panel-inverter, türbin, trafo ve mekanik üniteler TMS 16 ve IVS 300 çerçevesinde ayrıştırılır; gerektiğinde işletme değeri içinde tahsis (allocation) yöntemiyle raporlanır.'}
+  ],
+  mev:['EPDK Lisans Yönetmelikleri (Üretim)','YEKDEM / Yenilenebilir Teşvik Mevzuatı','IVS 200 + IVS 105 — Gelir Yaklaşımı','IVS 300 — MDV / Teçhizat','TMS 16 — Maddi Duran Varlıklar']}
+};
+function renderAsset(key,btn){const a=ASSETS[key];if(!a)return;
+ document.querySelectorAll('.amx-tabs button').forEach(b=>b.classList.toggle('act',btn?(b===btn):(b.dataset.a===key)));
+ const p=document.getElementById('assetPanel');if(!p)return;
+ const secs=(a.secs||[]).map(s=>'<div class="amx-sec"><h5>'+s.h+'</h5><p>'+s.b+'</p></div>').join('');
+ const tbl=a.tbl?'<table class="amx-tbl"><caption>'+a.tbl.cap+'</caption><tbody>'+a.tbl.rows.map(r=>'<tr><th>'+r[0]+'</th><td>'+r[1]+'</td></tr>').join('')+'</tbody></table>':'';
+ const mev='<div class="amx-mev"><b>İlgili Mevzuat & Standartlar</b>'+a.mev.map(m=>'<span class="chip">'+m+'</span>').join('')+'</div>';
+ p.innerHTML='<div class="amx-in rich"><div class="amx-art sticky">'+(_ASSET_SVG[key]||'')+'</div><div class="amx-tx"><h3>'+a.t+'</h3><span class="amx-badge">Birincil yöntem · '+a.y+'</span><p class="amx-lead">'+a.lead+'</p><div class="amx-secs">'+secs+'</div>'+tbl+mev+'</div></div>';}
+const _METH={
+ maliyet:{t:'Maliyet Yöntemi (Cost Approach)',b:'Amortisman eğrisi',p:'IVS 105 Maliyet Yaklaşımı uyarınca; bir varlığın değeri, eşdeğer faydayı sağlayacak ikame/yeniden inşa bedelinden, fiziksel yıpranma ile fonksiyonel ve ekonomik eskimenin düşülmesiyle bulunur. Makine-teçhizat, özel amaçlı yapılar ve pazarda emsali bulunmayan varlıklarda esastır.',f:'Değer = İkame (Yeniden Edinim) Bedeli − Birikmiş Yıpranma & Eskime',std:['IVS 105/60 — Maliyet (İkame Maliyeti) Yaklaşımı','IVS 300 — Makine ve teçhizatta birincil yöntem','VUK 333 — Faydalı ömür & amortisman oranları','TMS 16 — Maddi duran varlık ölçümü'],svg:'<svg viewBox="0 0 300 170" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Maliyet yöntemi amortisman eğrisi: edinim bedelinden net değere doğru azalan yıpranma grafiği"><defs><linearGradient id="mthCostFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#93b4ff" stop-opacity=".34"/><stop offset="100%" stop-color="#93b4ff" stop-opacity="0"/></linearGradient></defs><g stroke="rgba(147,180,255,.25)"><line x1="34" y1="18" x2="34" y2="140"/><line x1="34" y1="140" x2="282" y2="140"/></g><path d="M34 32 C 92 60, 150 106, 282 132 L282 140 L34 140 Z" fill="url(#mthCostFill)" stroke="none"/><path class="ln" d="M34 32 C 92 60, 150 106, 282 132" fill="none" stroke="#93b4ff" stroke-width="3.2" stroke-linecap="round"/><g fill="#93b4ff"><circle cx="34" cy="32" r="4"/><circle cx="158" cy="92" r="4"/><circle cx="282" cy="132" r="4"/></g><text x="42" y="28" fill="#cdd8ea" font-size="11">Edinim bedeli</text><text x="176" y="126" fill="#9fe6c0" font-size="11">Net değer</text></svg>'},
+ emsal:{t:'Emsal Karşılaştırma (Market Approach)',b:'Emsal dağılımı',p:'IVS 105 Pazar Yaklaşımı uyarınca; yakın tarihli, benzer ve gerçekleşmiş işlemler konum, alan, yaş, cephe ve donanım farkları için düzeltme katsayılarıyla normalize edilerek konu varlığa uyarlanır. Konut, arsa ve aktif pazarı olan gayrimenkullerde birincil yöntemdir.',f:'Değer = Σ(Emsal Birim Fiyatı × Düzeltme Katsayısı) / n',std:['IVS 105/20 — Pazar (Emsal) Yaklaşımı','IVS 104 — Pazar Değeri esası','SPK III-62.3 — Karşılaştırılabilir veri zorunluluğu','IVS 400 — Gayrimenkul haklarında uygulanış'],svg:'<svg viewBox="0 0 300 170"><g stroke="rgba(147,180,255,.25)"><line x1="34" y1="18" x2="34" y2="140"/><line x1="34" y1="140" x2="282" y2="140"/></g><line x1="34" y1="86" x2="282" y2="86" stroke="#34d399" stroke-width="2" stroke-dasharray="5 6"/><g fill="#93b4ff"><circle cx="74" cy="68" r="5"/><circle cx="114" cy="98" r="5"/><circle cx="154" cy="78" r="5"/><circle cx="194" cy="100" r="5"/><circle cx="234" cy="72" r="5"/></g><circle cx="154" cy="86" r="9" fill="none" stroke="#fff" stroke-width="2"/><text x="190" y="80" fill="#9fe6c0" font-size="11">Ortalama</text></svg>'},
+ gelir:{t:'Gelir Kapitalizasyonu (Income Approach)',b:'Nakit akış diyagramı',p:'IVS 105 Gelir Yaklaşımı uyarınca; varlığın gelecekte üreteceği net nakit akışları, riski yansıtan kapitalizasyon/iskonto oranıyla bugünkü değere indirgenir. Doğrudan kapitalizasyon ile indirgenmiş nakit akışı (İNA/DCF) teknikleri kullanılır; gelir getiren ticari mülk, tesis ve enerji santrallerinde uygulanır.',f:'Değer = Net Faaliyet Geliri (NOI) / Kapitalizasyon Oranı',std:['IVS 105/40 — Gelir Yaklaşımı (Doğrudan kap. & İNA)','IVS 200 — İşletme ve tesis değerlemesinde esas','BDDK — Teminat amaçlı gelir esaslı değerleme','TFRS 13 — Gerçeğe uygun değer hiyerarşisi'],svg:'<svg viewBox="0 0 300 170"><g stroke="rgba(147,180,255,.25)"><line x1="34" y1="18" x2="34" y2="140"/><line x1="34" y1="140" x2="282" y2="140"/></g><g fill="#93b4ff">'+[60,82,102,116,126].map((h,i)=>'<rect x="'+(52+i*46)+'" y="'+(140-h)+'" width="30" height="'+h+'" rx="3"/>').join('')+'</g><path class="ln" d="M67 80 L113 58 L159 38 L205 24 L251 14" fill="none" stroke="#9fe6c0" stroke-width="2.6"/><text x="150" y="20" fill="#9fe6c0" font-size="11">Kümülatif getiri</text></svg>'}
+};
+function renderMethod(key,btn){const m=_METH[key];if(!m)return;
+ document.querySelectorAll('.mth-tabs button').forEach(b=>b.classList.toggle('act',btn?(b===btn):(b.dataset.m===key)));
+ const s=document.getElementById('methodStage');if(!s)return;
+ const std=(m.std||[]).length?'<ul class="mth-std">'+m.std.map(x=>'<li>'+x+'</li>').join('')+'</ul>':'';
+ s.innerHTML='<div class="mth-chart">'+m.svg+'</div><div class="mth-info"><div class="badge">'+m.b+'</div><div class="t">'+m.t+'</div><p>'+m.p+'</p><div class="formul">'+m.f+'</div>'+std+'</div>';}
+function _rdLog(msg,muted){const l=document.getElementById('rdLog');if(!l)return;const mu=l.querySelector('.muted');if(mu)l.innerHTML='';l.insertAdjacentHTML('beforeend','<div class="rd-l'+(muted?' muted':'')+'"><span class="ts">› </span>'+msg+'</div>');l.scrollTop=l.scrollHeight;}
+function runReportTimeline(asset,purpose){
+ const steps=document.querySelectorAll('#rdTimeline .rd-step');steps.forEach(s=>s.classList.remove('on'));
+ const log=document.getElementById('rdLog');if(log)log.innerHTML='';
+ const seq=[
+  ()=>{steps[0]&&steps[0].classList.add('on');_rdLog('Resmî talep alındı — '+(asset||'-')+' · '+(purpose||'-'));},
+  ()=>{steps[1]&&steps[1].classList.add('on');_rdLog('GET /api/v1/tenant/bootstrap … lisans & amortisman endeksi');},
+  ()=>{_rdLog('Merkez yanıt: SPK '+SAAS_CONFIG.licenseNo+' · UDES/IVS 2025 ✓');},
+  ()=>{steps[2]&&steps[2].classList.add('on');_rdLog('ProX motoru: '+_degMethodFor(asset)+' seçildi');},
+  ()=>{_rdLog('Hesaplama tamam · tarafsızlık & gizlilik kontrolü ✓');},
+  ()=>{steps[3]&&steps[3].classList.add('on');_rdLog('Lisanslı rapor üretildi → takip kartı açılıyor');saasGenerateOfficialReport(asset,purpose);}
+ ];
+ seq.forEach((fn,i)=>setTimeout(fn,i*650));
+}
+/* Merkez SuperAdmin */
+const SAAS_TENANTS=[
+ {dom:'meridyengm.com',paket:'Emlak',renk:'#34a853',il:'İl geneli',prompt:'Emlak Danışman v3'},
+ {dom:'danisman.meridyen.com',paket:'Danışman',renk:'#2563eb',il:'Yalnızca 1 ilçe',prompt:'Bireysel Danışman v2'},
+ {dom:'meridyenyapi.com',paket:'İnşaat',renk:'#ff7a2f',il:'İl geneli',prompt:'Proje/Fizibilite v3'},
+ {dom:'meridyendegerleme.com',paket:'Değerleme',renk:'#1e3a8a',il:'81 il · Tam yetki',prompt:'UDES/SPK Resmî v4'}
+];
+function _ssaSel(i,field,opts,cur){return '<select onchange="SAAS_TENANTS['+i+'].'+field+'=this.value">'+opts.map(o=>'<option'+(o===cur?' selected':'')+'>'+o+'</option>').join('')+'</select>';}
+function _ssaHost(){let el=document.getElementById('saasSuperAdmin');if(el)return el;el=document.createElement('div');el.id='saasSuperAdmin';el.className='ssa-modal';
+ el.innerHTML='<div class="ssa-ov" onclick="closeSuperAdmin()"></div><div class="ssa-card"><div class="ssa-hd"><div><b>🛰️ emlakekspertizi.com · Merkezi Yönetim (SuperAdmin)</b><div class="sub">White-label domain · paket · veri yetkisi · ProX şablon kontrolü</div></div><button onclick="closeSuperAdmin()">✕</button></div><div class="ssa-body"><table class="ssa-tbl"><thead><tr><th>Domain</th><th>Paket Türü</th><th>Renk</th><th>İl/İlçe API Yetkisi</th><th>ProX Ana Şablon</th></tr></thead><tbody>'
+ +SAAS_TENANTS.map((t,i)=>'<tr><td class="ssa-dom">'+t.dom+'</td>'
+   +'<td>'+_ssaSel(i,'paket',['Emlak','Danışman','İnşaat','Değerleme'],t.paket)+'</td>'
+   +'<td><span class="ssa-sw" style="background:'+t.renk+'"></span></td>'
+   +'<td>'+_ssaSel(i,'il',['Yalnızca 1 ilçe','İl geneli','81 il · Tam yetki'],t.il)+'</td>'
+   +'<td>'+_ssaSel(i,'prompt',['Emlak Danışman v3','Bireysel Danışman v2','Proje/Fizibilite v3','UDES/SPK Resmî v4'],t.prompt)+'</td></tr>').join('')
+ +'</tbody></table></div><div class="ssa-ft"><span class="note">Simülasyon · değişiklikler <code>/api/v1/tenant/*</code> ile white-label sitelere işlenir.</span><button class="sta-go" onclick="ssaPush()">Değişiklikleri Yayınla</button></div></div>';
+ document.body.appendChild(el);return el;}
+function openSuperAdmin(){_ssaHost().classList.add('on');}
+function closeSuperAdmin(){const e=document.getElementById('saasSuperAdmin');if(e)e.classList.remove('on');}
+function ssaPush(){console.log('[Merkez → white-label] Yayınlanan yapılandırma:',JSON.parse(JSON.stringify(SAAS_TENANTS)));toast('🛰️ Yapılandırma '+SAAS_TENANTS.length+' white-label domaine yayınlandı.');}
+window.renderAsset=renderAsset;window.renderMethod=renderMethod;window.runReportTimeline=runReportTimeline;window.openSuperAdmin=openSuperAdmin;window.closeSuperAdmin=closeSuperAdmin;window.ssaPush=ssaPush;
+document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&(e.key==='M'||e.key==='m')){e.preventDefault();openSuperAdmin();}});
+
+/* ===== Faz 17: Kurumsal Şifreli Giriş Kapısı (Admin Login Gate) ===== */
+const _ADMIN_PASS='ekspertiz2026';
+function _adGateHost(){let el=document.getElementById('adGate');if(el)return el;el=document.createElement('div');el.id='adGate';el.className='adgate';
+ el.innerHTML='<div class="adgate-ov" onclick="closeAdminGate()"></div><div class="adgate-card">'
+  +'<button class="adgate-x" onclick="closeAdminGate()" aria-label="Kapat">✕</button>'
+  +'<div class="adgate-lock"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="16" r="1.4"/></svg></div>'
+  +'<h3>Yönetim Paneli Girişi</h3><div class="sub">Bu alan yetkili personele özeldir. Devam etmek için kurumsal erişim şifrenizi girin.</div>'
+  +'<div class="adgate-f"><input id="adPass" type="password" placeholder="Erişim şifresi" autocomplete="off" onkeydown="if(event.key===\'Enter\')degLogin()"><button class="eye" type="button" onclick="_adToggleEye()" aria-label="Şifreyi göster">👁</button></div>'
+  +'<button class="adgate-go" onclick="degLogin()">Güvenli Giriş →</button>'
+  +'<div class="adgate-err" id="adErr"></div>'
+  +'<div class="adgate-foot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/></svg> KVKK uyumlu · oturum şifrelenir · erişim kayıt altına alınır</div>'
+  +'</div>';
+ document.body.appendChild(el);return el;}
+function openAdminGate(){const el=_adGateHost();el.classList.add('on');const i=document.getElementById('adPass');if(i){i.value='';setTimeout(()=>i.focus(),60);}const er=document.getElementById('adErr');if(er)er.textContent='';}
+function closeAdminGate(){const e=document.getElementById('adGate');if(e)e.classList.remove('on');}
+function _adToggleEye(){const i=document.getElementById('adPass');if(i)i.type=i.type==='password'?'text':'password';}
+function degLogin(){const i=document.getElementById('adPass'),er=document.getElementById('adErr'),g=document.getElementById('adGate');
+ if(!i)return;
+ if(i.value===_ADMIN_PASS){if(er)er.textContent='';closeAdminGate();if(typeof openSaasAdmin==='function')openSaasAdmin();if(typeof toast==='function')toast('✓ Yönetim paneline güvenli giriş yapıldı.');}
+ else{if(er)er.textContent='⚠ Hatalı şifre. Erişim reddedildi.';if(g){g.classList.add('shake');setTimeout(()=>g.classList.remove('shake'),450);}if(i){i.value='';i.focus();}}}
+window.openAdminGate=openAdminGate;window.closeAdminGate=closeAdminGate;window.degLogin=degLogin;window._adToggleEye=_adToggleEye;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();}});
+
+window.addEventListener('load',function(){try{initSaaSTheme();mountChrome();applySaaSSettings();
+  renderAsset('gayrimenkul');renderMethod('maliyet');
+  /* Ön yüzde harici buton YOK — yönetim yalnızca Footer › Yönetim Paneli › şifreli giriş ile.
+     SuperAdmin yalnızca gizli kısayol (Ctrl+Shift+M) ile erişilir. */
+}catch(e){console.warn('SaaS init',e);}});
+</script>
+</body>
+</html>
