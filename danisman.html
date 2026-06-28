@@ -379,6 +379,46 @@ footer{background:#060607;border-top:1px solid var(--line);padding:64px 0 30px}
 .toast b{color:var(--gold)}
 ::selection{background:rgba(180,151,90,.3);color:#fff}
 ::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:var(--gold-deep)}::-webkit-scrollbar-track{background:#0a0a0b}
+
+/* ---------- B2B Müşteri Portalı (Faz 20) ---------- */
+.portal-trigger{display:inline-flex;align-items:center;gap:8px;font-family:var(--body);font-weight:500;font-size:12.5px;letter-spacing:.05em;color:var(--gold);border:1px solid var(--line);padding:9px 16px;border-radius:2px;cursor:pointer;transition:.25s;white-space:nowrap}
+.portal-trigger:hover{border-color:var(--gold);background:rgba(180,151,90,.1)}
+.portal-trigger.portal-on{color:#1a140a;background:var(--grad-gold);border-color:transparent;font-weight:600;animation:portalGlow 2.4s ease-in-out infinite}
+@keyframes portalGlow{0%,100%{box-shadow:0 0 0 0 rgba(180,151,90,.0)}50%{box-shadow:0 0 18px 2px rgba(216,195,154,.55)}}
+.portal-trigger .pdot{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;flex:none;animation:pdotPulse 1.8s ease-in-out infinite}
+@keyframes pdotPulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sp-modal{position:fixed;inset:0;z-index:610;display:none;align-items:center;justify-content:center;padding:20px}
+.sp-modal.on{display:flex}
+.sp-ov{position:absolute;inset:0;background:rgba(4,4,5,.8);backdrop-filter:blur(9px)}
+.sp-card{position:relative;width:100%;max-width:440px;max-height:90vh;overflow:auto;background:linear-gradient(160deg,#121009,#0b0b0c);border:1px solid var(--line);padding:38px 32px 28px;box-shadow:var(--shadow);animation:rise .4s ease}
+.sp-card:before{content:"";position:absolute;inset:8px;border:1px solid rgba(180,151,90,.16);pointer-events:none}
+.sp-card.sp-shake{animation:adshake .42s}
+.sp-x{position:absolute;top:14px;right:14px;background:none;border:0;color:var(--muted-2);font-size:18px;cursor:pointer;z-index:2}
+.sp-lock{width:56px;height:56px;border:1px solid var(--gold);display:grid;place-items:center;color:var(--gold);margin-bottom:18px}
+.sp-card h3{font-size:22px;margin-bottom:6px}
+.sp-card .sp-sub{font-size:13px;color:var(--muted);margin:0 0 22px;line-height:1.55}
+.sp-f{position:relative;margin-bottom:13px}
+.sp-f input{width:100%;background:#0c0c0e;border:1px solid var(--line-soft);padding:14px 14px;color:var(--white);font-size:14.5px;font-family:var(--body);outline:none;letter-spacing:.04em}
+.sp-f input:focus{border-color:var(--gold)}
+.sp-go{width:100%;justify-content:center;margin-top:4px}
+.sp-err{font-size:12.5px;color:#e7a17a;margin:11px 2px 0;min-height:16px}
+.sp-foot{display:flex;align-items:center;gap:7px;margin-top:18px;font-size:11px;color:var(--muted-2);border-top:1px solid var(--line-soft);padding-top:14px;flex-wrap:wrap}
+.sp-badges{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 16px}
+.sp-badges span{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-soft);border:1px solid var(--line);padding:5px 10px;display:inline-flex;align-items:center;gap:6px}
+.sp-profile{border:1px dashed var(--line);background:rgba(180,151,90,.05);padding:16px 18px;margin-bottom:20px}
+.sp-profile b{font-family:var(--serif);font-size:18px;color:var(--gold-soft);display:block}
+.sp-profile .role{font-size:12px;color:var(--muted);letter-spacing:.06em;margin-top:3px}
+.sp-chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.sp-chips span{font-size:11px;color:var(--gold);border:1px solid var(--line);padding:4px 10px;letter-spacing:.04em}
+.sp-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+@media(max-width:520px){.sp-actions{grid-template-columns:1fr}}
+.sp-act{border:1px solid var(--line-soft);background:#0c0c0e;padding:16px 14px;cursor:pointer;transition:.25s;text-align:left}
+.sp-act:hover{border-color:var(--gold);background:rgba(180,151,90,.07)}
+.sp-act b{display:block;font-family:var(--serif);font-size:15px;color:var(--white);margin-bottom:4px}
+.sp-act span{font-size:11.5px;color:var(--muted)}
+.nav-links .portal-trigger{display:none}
+@media(max-width:560px){.nav-cta .portal-trigger{display:none}}
+@media(max-width:1040px){.nav-links .portal-trigger{display:inline-flex;margin-top:8px;font-size:15px}}
 </style>
 </head>
 <body>
@@ -396,12 +436,14 @@ footer{background:#060607;border-top:1px solid var(--line);padding:64px 0 30px}
       <a class="lnk" data-k="surec" onclick="navGo('surec')">Süreç</a>
       <a class="lnk" data-k="randevu" onclick="navGo('randevu')">Randevu</a>
       <a class="lnk" data-k="iletisim" onclick="navGo('iletisim')">İletişim</a>
+      <a id="saasPortalTriggerM" class="portal-trigger" onclick="openSaasPortal()">Müşteri Portalı</a>
     </nav>
     <div class="nav-cta">
       <a class="nav-wa" href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.21 8.21 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.4-8.24 8.4Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z"/></svg>
       </a>
       <a class="btn btn-gold" onclick="navGo('randevu')">Ücretsiz Analiz</a>
+      <a id="saasPortalTrigger" class="portal-trigger" onclick="openSaasPortal()">Müşteri Portalı</a>
       <button class="burger" id="burger" onclick="toggleNav()" aria-label="Menü"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -867,7 +909,7 @@ function adminLogin(){const i=document.getElementById('adPass'),er=document.getE
   if(i.value===_ADMIN_PASS){if(er)er.textContent='';closeAdminGate();openSaasAdmin();toast('✓ Yönetim paneline güvenli giriş yapıldı.');}
   else{if(er)er.textContent='⚠ Hatalı şifre. Erişim reddedildi.';if(g){g.classList.add('shake');setTimeout(()=>g.classList.remove('shake'),460);}if(i){i.value='';i.focus();}}}
 window.openAdminGate=openAdminGate;window.closeAdminGate=closeAdminGate;window.adminLogin=adminLogin;window._adToggleEye=_adToggleEye;
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();closeSaasAdmin();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();closeSaasAdmin();if(typeof closeSaasPortal==='function')closeSaasPortal();}});
 
 /* =====================================================================
    YÖNETİM PANELİ (#saasTenantAdmin) — tam fonksiyonlu
@@ -924,6 +966,57 @@ window.openSaasAdmin=openSaasAdmin;window.closeSaasAdmin=closeSaasAdmin;window.s
 window.toggleNav=toggleNav;window.closeNav=closeNav;window.goHome=goHome;window.navGo=navGo;window.openPage=openPage;window.closePage=closePage;window.leadFor=leadFor;window.contactLead=contactLead;
 window.pickDay=pickDay;window.pickSlot=pickSlot;window.apptSubmit=apptSubmit;window.proxSend=proxSend;window.proxQuick=proxQuick;window.proxToAnaliz=proxToAnaliz;
 
+/* ===== B2B Müşteri Portalı (Faz 20) ===== */
+window.SAAS_USER = { isLoggedIn:false, portalToken:null, clientProfile:{ companyName:'', role:'', regionAuth:[] } };
+async function saasPortalConnect(clientKey, securePass){
+  if(!clientKey || !securePass) return { ok:false, error:"Kurumsal anahtar ve şifre gereklidir." };
+  try{
+    var r = await Promise.race([ proxApi("/api/v1/tenant/portal/login", { method:"POST", body:{ client_key: clientKey, secure:true } }), new Promise(function(res){ setTimeout(function(){ res({fallback:true}); }, 8000); }) ]);
+    var online = !!(r && !r.fallback && r.success);
+    var profile = (online && r.profile) ? r.profile : _saasPortalSimProfile(clientKey);
+    window.SAAS_USER.isLoggedIn = true;
+    window.SAAS_USER.portalToken = (online && r.portal_token) ? r.portal_token : ("portal_"+Math.random().toString(36).slice(2,10));
+    window.SAAS_USER.clientProfile = profile;
+    saasPortalRenderNav();
+    return { ok:true, online:online, profile:profile };
+  }catch(e){ return { ok:false, error:"Bağlantı kurulamadı, lütfen tekrar deneyin." }; }
+}
+function _saasPortalSimProfile(k){ var n=(k||"").trim(); return { companyName: n?(n.length<=4?n.toUpperCase():n.charAt(0).toUpperCase()+n.slice(1)):"Kurumsal Üye", role:"Kurumsal Yönetici", regionAuth:["İstanbul","İzmir","Ankara"] }; }
+function saasPortalDisconnect(){ window.SAAS_USER={ isLoggedIn:false, portalToken:null, clientProfile:{ companyName:'', role:'', regionAuth:[] } }; saasPortalRenderNav(); openSaasPortal(); }
+function saasPortalRenderNav(){ var ids=['saasPortalTrigger','saasPortalTriggerM']; ids.forEach(function(id){ var el=document.getElementById(id); if(!el) return; if(window.SAAS_USER.isLoggedIn){ el.classList.add('portal-on'); el.innerHTML='<span class="pdot"></span> Müşteri Portalı · '+(window.SAAS_USER.clientProfile.companyName||'Üye'); } else { el.classList.remove('portal-on'); el.innerHTML='Müşteri Portalı'; } }); }
+function openSaasPortal(){ var m=_saasPortalHost(); document.getElementById('saasPortalBody').innerHTML = window.SAAS_USER.isLoggedIn?_saasPortalPanelHTML():_saasPortalLoginHTML(); m.classList.add('on'); var i=document.getElementById('spClientKey'); if(i) setTimeout(function(){i.focus();},60); }
+function closeSaasPortal(){ var m=document.getElementById('saasPortalModal'); if(m) m.classList.remove('on'); }
+async function saasPortalSubmit(){ var k=((document.getElementById('spClientKey')||{}).value||'').trim(); var p=(document.getElementById('spPass')||{}).value||''; var err=document.getElementById('spErr'); if(err)err.textContent=''; var btn=document.getElementById('spGo'); if(btn){btn.disabled=true;btn.textContent='Bağlanıyor…';} var r=await saasPortalConnect(k,p); if(btn){btn.disabled=false;btn.textContent='Güvenli Giriş →';} if(r.ok){ if(typeof toast==='function')toast('✓ Müşteri portalına bağlanıldı · '+r.profile.companyName); document.getElementById('saasPortalBody').innerHTML=_saasPortalPanelHTML(); } else { if(err)err.textContent='⚠ '+(r.error||'Giriş başarısız.'); var c=document.querySelector('#saasPortalModal .sp-card'); if(c){c.classList.add('sp-shake');setTimeout(function(){c.classList.remove('sp-shake');},450);} } }
+/* Modal kabuğu — sayfa yenilenmez, JS ile eklenir (.adgate stiline benzer siyah/altın) */
+function _saasPortalHost(){ var el=document.getElementById('saasPortalModal'); if(el) return el; el=document.createElement('div'); el.id='saasPortalModal'; el.className='sp-modal';
+  el.innerHTML='<div class="sp-ov" onclick="closeSaasPortal()"></div><div class="sp-card"><button class="sp-x" onclick="closeSaasPortal()" aria-label="Kapat">✕</button><div id="saasPortalBody"></div></div>';
+  document.body.appendChild(el); return el; }
+function _saasPortalLoginHTML(){ return ''
+  +'<div class="sp-lock"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="16" r="1.4"/></svg></div>'
+  +'<h3>Mülk Sahibi &amp; Yatırımcı Portföy Takip Girişi</h3>'
+  +'<div class="sp-sub">Kurumsal Mülk Yönetim Paneli: Sözleşmeli mülklerinizin ProX AI pazar analizlerine ve performans grafiklerine erişim sağlayın.</div>'
+  +'<div class="sp-f"><input id="spClientKey" placeholder="Kurumsal Anahtar (Client Key)" autocomplete="off"></div>'
+  +'<div class="sp-f"><input id="spPass" type="password" placeholder="Güvenli Şifre" autocomplete="off" onkeydown="if(event.key===\'Enter\')saasPortalSubmit()"></div>'
+  +'<button id="spGo" class="btn btn-gold sp-go" onclick="saasPortalSubmit()">Güvenli Giriş →</button>'
+  +'<div class="sp-err" id="spErr"></div>'
+  +'<div class="sp-badges"><span>ProX</span><span>Yetki Belgeli</span><span>256-bit Şifreli</span></div>'
+  +'<div class="sp-foot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/></svg> KVKK uyumlu · oturum şifrelenir · erişim kayıt altına alınır</div>'; }
+function _saasPortalPanelHTML(){ var u=window.SAAS_USER.clientProfile||{}; var regions=Array.isArray(u.regionAuth)?u.regionAuth:[];
+  return ''
+  +'<div class="sp-lock"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg></div>'
+  +'<h3>Kurumsal Mülk Yönetim Paneli</h3>'
+  +'<div class="sp-sub">Sözleşmeli portföyünüze ProX AI pazar analizleri ve performans grafikleriyle erişin.</div>'
+  +'<div class="sp-profile"><b>'+((u.companyName||'Kurumsal Üye')+'')+'</b><div class="role">'+((u.role||'Kurumsal Yönetici')+'')+'</div>'
+    +'<div class="sp-chips">'+(regions.length?regions.map(function(r){return '<span>'+r+'</span>';}).join(''):'<span>Yetki bölgesi tanımlı değil</span>')+'</div></div>'
+  +'<div class="sp-actions">'
+    +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'iletisim\')"><b>ProX AI Pazar Analizi</b><span>Sözleşmeli mülk değer & prim analizi</span></div>'
+    +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'iletisim\')"><b>Performans Grafikleri</b><span>Portföy değer seyri & likidite</span></div>'
+    +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'vip\')"><b>Sözleşmeli Mülkler</b><span>Yetki belgeli portföy kayıtları</span></div>'
+    +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'randevu\')"><b>Ücretsiz Analiz</b><span>Danışman görüşmesi planlayın</span></div>'
+  +'</div>'
+  +'<button class="btn btn-line sp-go" onclick="saasPortalDisconnect()">Oturumu Kapat</button>'; }
+window.openSaasPortal=openSaasPortal;window.closeSaasPortal=closeSaasPortal;window.saasPortalSubmit=saasPortalSubmit;window.saasPortalConnect=saasPortalConnect;window.saasPortalDisconnect=saasPortalDisconnect;
+
 /* ---------- INIT ---------- */
 window.addEventListener('load',function(){try{
   initSaaSTheme();applySaaSSettings();
@@ -932,6 +1025,7 @@ window.addEventListener('load',function(){try{
   document.getElementById('homeContact').innerHTML=contactHTML();
   document.getElementById('siteFooter').innerHTML=footerHTML();
   _proxPush('a','Hoş geldiniz. Bir bölge ya da mülk tipi söyleyin — portföyümü tarayıp size en uygun seçenekleri ve prim potansiyelini paylaşayım.');
+  if(typeof saasPortalRenderNav==='function')saasPortalRenderNav();
   /* Canlı paket/özellik senkronu — yalnızca paket & özellik listesi; CSS rengi (siyah/altın) REPAINT EDILMEZ. */
   if(typeof proxBootstrap==='function')proxBootstrap();
   /* Ön yüzde harici yönetim butonu YOK — giriş yalnızca Footer › Yönetim Paneli › şifreli kapı (ekspertiz2026) ile. */

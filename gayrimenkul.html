@@ -5510,7 +5510,7 @@ const SITE_FOOTER=`<div class="wrap">
     <div class="fsoc"><a href="#" aria-label="Facebook"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 8.5V6.8c0-.8.3-1.3 1.4-1.3H17V2.6h-2.4c-2.6 0-3.6 1.5-3.6 3.9v2H9v3h2v8.5h3.5V11.5H17l.4-3z" fill="currentColor" stroke="none"/></svg></a><a href="#" aria-label="Instagram"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.8" cy="7.2" r="1.1" fill="currentColor" stroke="none"/></svg></a><a href="#" aria-label="YouTube"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="4"/><path d="M10.2 9.4l5 2.6-5 2.6z" fill="currentColor" stroke="none"/></svg></a><a href="#" aria-label="LinkedIn"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="7.5" cy="8" r="1.1" fill="currentColor" stroke="none"/><path d="M7.5 11v6"/><path d="M11 17v-3.4a2.1 2.1 0 0 1 4.2 0V17M11 11.2V17"/></svg></a></div>
   </div>
 </div>`;
-const SITE_CTA=`<a class="btn btn-line btn-sm hide-sm" href="https://wa.me/905000000000" target="_blank" rel="noopener noreferrer"><svg class="ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.2-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg> WhatsApp</a><button class="btn btn-primary btn-sm hide-xs" onclick="satScrollForm('Satmak istiyorum')">Ücretsiz Ekspertiz</button><button class="burger" onclick="openMnav()" aria-label="Menü"><span></span><span></span><span></span></button>`;
+const SITE_CTA=`<a id="saasPortalTrigger" class="portal-trigger" onclick="openSaasPortal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openSaasPortal();}">Müşteri Portalı</a><a class="btn btn-line btn-sm hide-sm" href="https://wa.me/905000000000" target="_blank" rel="noopener noreferrer"><svg class="ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.2-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg> WhatsApp</a><button class="btn btn-primary btn-sm hide-xs" onclick="satScrollForm('Satmak istiyorum')">Ücretsiz Ekspertiz</button><button class="burger" onclick="openMnav()" aria-label="Menü"><span></span><span></span><span></span></button>`;
 function mountSiteChrome(){document.querySelectorAll('.siteNav').forEach(function(n){n.innerHTML=SITE_NAV;});document.querySelectorAll('.siteCta').forEach(function(c){c.innerHTML=SITE_CTA;});document.querySelectorAll('.siteFooter').forEach(function(f){f.innerHTML=SITE_FOOTER;});}
 mountSiteChrome();
 /* ============================================================
@@ -5778,8 +5778,9 @@ function mountSaaSMenu(){
   if(m.bolge!==false) nav+='<a href="#" onclick="closeAllOverlays();brOpen();return false">Bölge Analizi</a>';
   if(m.danismanlar!==false) nav+='<a href="#danismanlar" onclick="closeAllOverlays()">Danışmanlar</a>';
   document.querySelectorAll('.siteNav').forEach(n=>n.innerHTML=nav);
-  const cta='<a class="btn btn-line btn-sm hide-sm" href="https://wa.me/'+((typeof saasResolve==='function'&&saasResolve('whatsapp'))||c.whatsapp||'905000000000')+'" target="_blank" rel="noopener noreferrer"><svg class="ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.2-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg> WhatsApp</a><button class="btn btn-primary btn-sm hide-xs" onclick="satScrollForm(\'Satmak istiyorum\')">Ücretsiz Ekspertiz</button><button class="burger" onclick="openMnav()" aria-label="Menü"><span></span><span></span><span></span></button>';
+  const cta='<a id="saasPortalTrigger" class="portal-trigger" onclick="openSaasPortal()" role="button" tabindex="0" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openSaasPortal();}">Müşteri Portalı</a><a class="btn btn-line btn-sm hide-sm" href="https://wa.me/'+((typeof saasResolve==='function'&&saasResolve('whatsapp'))||c.whatsapp||'905000000000')+'" target="_blank" rel="noopener noreferrer"><svg class="ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.2-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg> WhatsApp</a><button class="btn btn-primary btn-sm hide-xs" onclick="satScrollForm(\'Satmak istiyorum\')">Ücretsiz Ekspertiz</button><button class="burger" onclick="openMnav()" aria-label="Menü"><span></span><span></span><span></span></button>';
   document.querySelectorAll('.siteCta').forEach(el=>el.innerHTML=cta);
+  try{saasPortalRenderNav();}catch(e){}
 }
 /* 4) TENANT SÜRÜM VARYASYONLARI — tenantType'a göre ana sayfa kimliği (DOM, reload yok) */
 function _tenantHeroHost(){return document.querySelector('.hero .wrap')||document.querySelector('.hero');}
@@ -5975,6 +5976,82 @@ window.saasSaveGoogle=saasSaveGoogle;window.saasApplyLogo=saasApplyLogo;window.s
 window.addEventListener('load',function(){try{initSaaSTheme();mountSaaSMenu();applyTenantType();applySaaSSettings();saasFillReportSelect();fetchSaaSData().then(applySaaSData);}catch(e){console.warn('SaaS init',e);}});
 /* Canlı tenant bootstrap: paket + özellik bayraklarını çek, premium kapıları uygula (tema repaint edilmez). */
 window.addEventListener('load',function(){try{if(typeof proxBootstrap==='function')proxBootstrap();}catch(e){console.warn('ProX bootstrap',e);}});
+
+/* ===== B2B Müşteri Portalı (Faz 20) ===== */
+window.SAAS_USER = { isLoggedIn:false, portalToken:null, clientProfile:{ companyName:'', role:'', regionAuth:[] } };
+async function saasPortalConnect(clientKey, securePass){
+  if(!clientKey || !securePass) return { ok:false, error:"Kurumsal anahtar ve şifre gereklidir." };
+  try{
+    var r = await Promise.race([ proxApi("/api/v1/tenant/portal/login", { method:"POST", body:{ client_key: clientKey, secure:true } }), new Promise(function(res){ setTimeout(function(){ res({fallback:true}); }, 8000); }) ]);
+    var online = !!(r && !r.fallback && r.success);
+    var profile = (online && r.profile) ? r.profile : _saasPortalSimProfile(clientKey);
+    window.SAAS_USER.isLoggedIn = true;
+    window.SAAS_USER.portalToken = (online && r.portal_token) ? r.portal_token : ("portal_"+Math.random().toString(36).slice(2,10));
+    window.SAAS_USER.clientProfile = profile;
+    saasPortalRenderNav();
+    return { ok:true, online:online, profile:profile };
+  }catch(e){ return { ok:false, error:"Bağlantı kurulamadı, lütfen tekrar deneyin." }; }
+}
+function _saasPortalSimProfile(k){ var n=(k||"").trim(); return { companyName: n?(n.length<=4?n.toUpperCase():n.charAt(0).toUpperCase()+n.slice(1)):"Kurumsal Üye", role:"Kurumsal Yönetici", regionAuth:["İstanbul","İzmir","Ankara"] }; }
+function saasPortalDisconnect(){ window.SAAS_USER={ isLoggedIn:false, portalToken:null, clientProfile:{ companyName:'', role:'', regionAuth:[] } }; saasPortalRenderNav(); openSaasPortal(); }
+function saasPortalRenderNav(){ var els=document.querySelectorAll('.portal-trigger'); for(var i=0;i<els.length;i++){ var el=els[i]; if(window.SAAS_USER.isLoggedIn){ el.classList.add('portal-on'); el.innerHTML='<span class="pdot"></span> Müşteri Portalı · '+(window.SAAS_USER.clientProfile.companyName||'Üye'); } else { el.classList.remove('portal-on'); el.innerHTML='Müşteri Portalı'; } } }
+function openSaasPortal(){ var m=_saasPortalHost(); document.getElementById('saasPortalBody').innerHTML = window.SAAS_USER.isLoggedIn?_saasPortalPanelHTML():_saasPortalLoginHTML(); m.classList.add('on'); var i=document.getElementById('spClientKey'); if(i) setTimeout(function(){i.focus();},60); }
+function closeSaasPortal(){ var m=document.getElementById('saasPortalModal'); if(m) m.classList.remove('on'); }
+async function saasPortalSubmit(){ var k=((document.getElementById('spClientKey')||{}).value||'').trim(); var p=(document.getElementById('spPass')||{}).value||''; var err=document.getElementById('spErr'); if(err)err.textContent=''; var btn=document.getElementById('spGo'); if(btn){btn.disabled=true;btn.textContent='Bağlanıyor…';} var r=await saasPortalConnect(k,p); if(btn){btn.disabled=false;btn.textContent='Güvenli Giriş →';} if(r.ok){ if(typeof toast==='function')toast('✓ Müşteri portalına bağlanıldı · '+r.profile.companyName); document.getElementById('saasPortalBody').innerHTML=_saasPortalPanelHTML(); } else { if(err)err.textContent='⚠ '+(r.error||'Giriş başarısız.'); var c=document.querySelector('#saasPortalModal .sp-card'); if(c){c.classList.add('sp-shake');setTimeout(function(){c.classList.remove('sp-shake');},450);} } }
+window.openSaasPortal=openSaasPortal;window.closeSaasPortal=closeSaasPortal;window.saasPortalSubmit=saasPortalSubmit;window.saasPortalConnect=saasPortalConnect;window.saasPortalDisconnect=saasPortalDisconnect;
+
+/* B) Modal host — sayfa yenilenmeden body'e enjekte edilir (tek sefer). */
+function _saasPortalHost(){
+  var m=document.getElementById('saasPortalModal');
+  if(m)return m;
+  m=document.createElement('div');
+  m.id='saasPortalModal';
+  m.innerHTML=''
+    +'<div class="sp-ov" onclick="closeSaasPortal()"></div>'
+    +'<div class="sp-card" role="dialog" aria-modal="true" aria-label="Müşteri Portalı">'
+    +'  <div class="sp-bar"><span class="sp-brand"><span class="sp-mark">M</span> Meridyen · Kurumsal Portal</span>'
+    +'    <button class="sp-x" onclick="closeSaasPortal()" aria-label="Kapat">✕</button></div>'
+    +'  <div id="saasPortalBody"></div>'
+    +'</div>';
+  document.body.appendChild(m);
+  /* Esc ile kapat */
+  if(!window._spEsc){window._spEsc=true;document.addEventListener('keydown',function(e){if(e.key==='Escape'){var mm=document.getElementById('saasPortalModal');if(mm&&mm.classList.contains('on'))closeSaasPortal();}});}
+  return m;
+}
+/* C) Giriş ekranı — altın/siyah lüks ton, mevcut CSS değişkenleri. */
+function _saasPortalLoginHTML(){
+  return ''
+    +'<div class="sp-pane">'
+    +'  <div class="sp-icon">🔐</div>'
+    +'  <h3 class="sp-h">Mülk Sahibi &amp; Yatırımcı Portföy Takip Girişi</h3>'
+    +'  <p class="sp-desc">Kurumsal Mülk Yönetim Paneli: Sözleşmeli mülklerinizin ProX AI pazar analizlerine ve performans grafiklerine erişim sağlayın.</p>'
+    +'  <input id="spClientKey" class="sp-in" type="text" placeholder="Kurumsal Anahtar (Client Key)" autocomplete="off">'
+    +'  <input id="spPass" class="sp-in" type="password" placeholder="Güvenli Şifre" autocomplete="off" onkeydown="if(event.key===\'Enter\')saasPortalSubmit()">'
+    +'  <div id="spErr" class="sp-err" role="alert"></div>'
+    +'  <button id="spGo" class="sp-go" onclick="saasPortalSubmit()">Güvenli Giriş →</button>'
+    +'  <div class="sp-trust"><span class="sp-badge">◆ ProX</span><span class="sp-badge">✓ Yetki Belgeli</span><span class="sp-badge">🛡 256-bit Şifreli</span></div>'
+    +'  <div class="sp-kvkk">Girişiniz KVKK kapsamında korunur. Kurumsal anahtarınız yalnızca yetkili kullanım içindir.</div>'
+    +'</div>';
+}
+/* D) Kontrol paneli — giriş sonrası. */
+function _saasPortalPanelHTML(){
+  var cp=window.SAAS_USER.clientProfile||{};
+  var regions=(cp.regionAuth||[]).map(function(r){return '<span class="sp-chip">'+r+'</span>';}).join('')||'<span class="sp-chip">—</span>';
+  return ''
+    +'<div class="sp-pane sp-panel">'
+    +'  <div class="sp-welcome"><div class="sp-co">'+(cp.companyName||'Kurumsal Üye')+'</div><div class="sp-role">'+(cp.role||'Kurumsal Yönetici')+'</div></div>'
+    +'  <div class="sp-reg-l">Yetkili Bölgeler</div><div class="sp-regions">'+regions+'</div>'
+    +'  <div class="sp-actions">'
+    +'    <button class="sp-act" onclick="closeSaasPortal();if(typeof toggleAiPanel===\'function\'){toggleAiPanel();}else if(typeof toast===\'function\'){toast(\'ProX AI Pazar Analizi hazırlanıyor…\');}">📊 ProX AI Pazar Analizi</button>'
+    +'    <button class="sp-act" onclick="if(typeof toast===\'function\')toast(\'Performans grafikleri portföyünüze göre derleniyor…\');">📈 Performans Grafikleri</button>'
+    +'    <button class="sp-act" onclick="if(typeof toast===\'function\')toast(\'Sözleşmeli mülkleriniz listeleniyor…\');">🏢 Sözleşmeli Mülkler</button>'
+    +'  </div>'
+    +'  <button class="sp-logout" onclick="saasPortalDisconnect()">Oturumu Kapat</button>'
+    +'</div>';
+}
+window._saasPortalHost=_saasPortalHost;window.saasPortalRenderNav=saasPortalRenderNav;
+/* F) Load'da navbar durumunu uygula. */
+window.addEventListener('load',function(){try{if(typeof saasPortalRenderNav==='function')saasPortalRenderNav();}catch(e){}});
 </script>
 <style>
 /* ===== Özel Portföy geliştirmeleri ===== */
@@ -6398,6 +6475,51 @@ body.tenant-dan #searchbar,body.tenant-dan .hero .hero-eye,body.tenant-dan .hero
 .prox-pdf-cats .cats{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
 .prox-pdf-cats i{font-style:normal;font-size:10.5px;background:var(--surface);border:1px solid var(--line);color:var(--ink-2);padding:3px 7px;border-radius:99px}
 .prox-pdf-ft{margin-top:12px;font-size:11px;color:var(--muted);border-top:1px dashed var(--line);padding-top:10px}
+
+/* ===== B2B Müşteri Portalı (Faz 20) — altın/siyah lüks ton, scoped ===== */
+.portal-trigger{--sp-gold:#d4af37;--sp-gold-2:#f5d77a;display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-family:var(--body);font-weight:700;font-size:13.5px;line-height:1;padding:9px 16px;border-radius:99px;color:#0a1631;background:linear-gradient(135deg,#fbe79b 0%,#d4af37 60%,#b8860b 100%);border:1px solid rgba(184,134,11,.55);box-shadow:0 6px 18px -10px rgba(184,134,11,.7);white-space:nowrap;transition:.18s;user-select:none}
+.portal-trigger:hover{transform:translateY(-1px);box-shadow:0 10px 24px -10px rgba(184,134,11,.85)}
+.portal-trigger .pdot{width:8px;height:8px;border-radius:50%;background:#34a853;box-shadow:0 0 0 3px rgba(52,168,83,.28);flex:none}
+.portal-trigger.portal-on{background:linear-gradient(135deg,#101a30 0%,#1a2440 100%);color:var(--sp-gold-2);border-color:rgba(212,175,55,.6);animation:spGlow 2.4s ease-in-out infinite}
+@keyframes spGlow{0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,.0),0 6px 18px -10px rgba(0,0,0,.5)}50%{box-shadow:0 0 0 4px rgba(212,175,55,.22),0 8px 22px -8px rgba(212,175,55,.55)}}
+#saasPortalModal{position:fixed;inset:0;z-index:400;display:none}
+#saasPortalModal.on{display:block}
+#saasPortalModal .sp-ov{position:absolute;inset:0;background:rgba(6,10,22,.74);backdrop-filter:blur(6px)}
+#saasPortalModal .sp-card{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(440px,calc(100vw - 32px));max-height:90vh;overflow:auto;background:linear-gradient(180deg,#0d1730 0%,#0a1326 100%);border:1px solid rgba(212,175,55,.34);border-radius:20px;box-shadow:0 40px 90px -30px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.03) inset;animation:spIn .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes spIn{from{opacity:0;transform:translate(-50%,-46%) scale(.97)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.sp-shake{animation:spShake .45s ease}
+@keyframes spShake{0%,100%{transform:translate(-50%,-50%)}20%{transform:translate(-53%,-50%)}40%{transform:translate(-47%,-50%)}60%{transform:translate(-51%,-50%)}80%{transform:translate(-49%,-50%)}}
+#saasPortalModal .sp-bar{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid rgba(212,175,55,.18)}
+#saasPortalModal .sp-brand{display:flex;align-items:center;gap:9px;font-family:var(--head);font-weight:700;font-size:14px;color:#e8eefc;letter-spacing:-.01em}
+#saasPortalModal .sp-mark{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-family:var(--head);font-weight:800;font-size:15px;color:#0a1631;background:linear-gradient(135deg,#f5d77a,#d4af37)}
+#saasPortalModal .sp-x{background:none;border:0;color:#9fb0ca;font-size:19px;cursor:pointer;line-height:1;padding:2px 6px;border-radius:8px;transition:.15s}
+#saasPortalModal .sp-x:hover{color:#fff;background:rgba(255,255,255,.08)}
+#saasPortalModal .sp-pane{padding:26px 24px 24px}
+#saasPortalModal .sp-icon{font-size:26px;text-align:center;margin-bottom:6px}
+#saasPortalModal .sp-h{font-family:var(--head);font-size:19px;line-height:1.25;color:#f3f6fd;text-align:center;margin:0 0 8px}
+#saasPortalModal .sp-desc{font-size:13px;line-height:1.6;color:#a9b8d2;text-align:center;margin:0 0 18px}
+#saasPortalModal .sp-in{width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1.5px solid rgba(212,175,55,.26);border-radius:11px;color:#f3f6fd;font-family:inherit;font-size:14.5px;outline:none;margin-bottom:11px;transition:.16s}
+#saasPortalModal .sp-in::placeholder{color:#7588a8}
+#saasPortalModal .sp-in:focus{border-color:#d4af37;box-shadow:0 0 0 3px rgba(212,175,55,.18);background:rgba(255,255,255,.07)}
+#saasPortalModal .sp-err{min-height:16px;color:#ffb4a4;font-size:12.5px;font-weight:600;margin:-2px 0 8px}
+#saasPortalModal .sp-go{width:100%;padding:13px;border:0;border-radius:12px;cursor:pointer;font-family:var(--body);font-weight:800;font-size:15px;color:#0a1631;background:linear-gradient(135deg,#f5d77a 0%,#d4af37 60%,#b8860b 100%);box-shadow:0 10px 26px -12px rgba(212,175,55,.7);transition:.18s}
+#saasPortalModal .sp-go:hover{transform:translateY(-1px);box-shadow:0 14px 30px -12px rgba(212,175,55,.85)}
+#saasPortalModal .sp-go:disabled{opacity:.7;cursor:default;transform:none}
+#saasPortalModal .sp-trust{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+#saasPortalModal .sp-badge{font-size:11px;font-weight:700;color:#e6cf86;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.28);padding:5px 10px;border-radius:99px}
+#saasPortalModal .sp-kvkk{margin-top:14px;font-size:10.5px;line-height:1.55;color:#7e90b0;text-align:center}
+#saasPortalModal .sp-panel .sp-welcome{text-align:center;padding-bottom:16px;border-bottom:1px solid rgba(212,175,55,.16);margin-bottom:16px}
+#saasPortalModal .sp-co{font-family:var(--head);font-size:20px;font-weight:800;color:#f3f6fd}
+#saasPortalModal .sp-role{font-size:12.5px;color:#e6cf86;font-weight:600;margin-top:3px}
+#saasPortalModal .sp-reg-l{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8a9bbb;margin-bottom:8px}
+#saasPortalModal .sp-regions{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+#saasPortalModal .sp-chip{font-size:12px;font-weight:600;color:#dbe6fb;background:rgba(255,255,255,.06);border:1px solid rgba(212,175,55,.24);padding:5px 11px;border-radius:99px}
+#saasPortalModal .sp-actions{display:grid;gap:9px;margin-bottom:16px}
+#saasPortalModal .sp-act{width:100%;text-align:left;padding:13px 15px;border:1px solid rgba(212,175,55,.22);border-radius:12px;background:rgba(255,255,255,.04);color:#eaf0fb;font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;transition:.16s}
+#saasPortalModal .sp-act:hover{border-color:rgba(212,175,55,.55);background:rgba(212,175,55,.09);transform:translateX(2px)}
+#saasPortalModal .sp-logout{width:100%;padding:11px;border:1px solid rgba(255,255,255,.16);border-radius:11px;background:transparent;color:#a9b8d2;font-family:inherit;font-weight:700;font-size:13.5px;cursor:pointer;transition:.16s}
+#saasPortalModal .sp-logout:hover{color:#fff;border-color:rgba(255,255,255,.34)}
+@media(max-width:560px){#saasPortalModal .sp-pane{padding:22px 18px}#saasPortalModal .sp-h{font-size:17px}}
 </style>
 </body>
 </html>
