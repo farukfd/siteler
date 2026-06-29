@@ -179,7 +179,8 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
 .ilet b{display:block;font-size:14.5px}.ilet span{color:var(--muted);font-size:13.5px}
 /* footer */
 footer{background:#0b1220;color:#cdd8ea;padding:46px 0 26px}
-.fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:30px}
+.fcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:24px 28px}
+.fbrand{max-width:560px;margin-bottom:30px}
 @media(max-width:760px){.fcols{grid-template-columns:1fr 1fr}}
 footer .logo{color:#fff}footer h4{color:#fff;font-size:14px;margin:0 0 12px}
 footer ul{list-style:none;margin:0;padding:0}footer li{margin-bottom:8px}
@@ -643,17 +644,22 @@ body.deg-lock{overflow:hidden}
 </div></section>
 
 <footer><div class="wrap">
-  <div class="fcols">
-    <div>
-      <div class="logo"><span class="mark">M</span><span>Meridyen<span class="lo2"> Değerleme</span></span></div>
-      <p style="color:#cdd8ea;font-size:14px;margin:12px 0 0">SPK lisanslı, BDDK yetkili bağımsız gayrimenkul ve varlık değerleme kuruluşu. UDES/IVS uyumlu resmî raporlama.</p>
-      <p class="fp">emlakekspertizi.com kurumsal değerleme altyapısıyla üretilmiştir.</p>
-    </div>
-    <div><h4>Hizmetler</h4><ul><li><a href="#hizmetler">Gayrimenkul Değerleme</a></li><li><a href="#hizmetler">Makine & Ekipman</a></li><li><a href="#hizmetler">Fabrika & Tesis</a></li><li><a href="#hizmetler">Enerji Santralleri</a></li></ul></div>
-    <div><h4>Kurumsal</h4><ul><li><a href="#metodoloji">Süreç & Metodoloji</a></li><li><a href="#lisans">Lisans & Mevzuat</a></li><li><a href="#iletisim">İletişim</a></li></ul></div>
-    <div><h4>Yasal</h4><ul><li><a href="#">KVKK Aydınlatma Metni</a></li><li><a href="#">Gizlilik Politikası</a></li><li><a href="#" onclick="openAdminGate();return false">Yönetim Paneli</a></li></ul></div>
+  <div class="fbrand">
+    <div class="logo"><span class="mark">M</span><span>Meridyen<span class="lo2"> Değerleme</span></span></div>
+    <p style="color:#cdd8ea;font-size:14px;margin:12px 0 0">SPK lisanslı, BDDK yetkili bağımsız gayrimenkul ve varlık değerleme kuruluşu. UDES/IVS uyumlu, bağımsız ve tarafsız resmî raporlama.</p>
+    <p class="fp">Resmî değerleme raporu yalnızca SPK lisanslı değerleme uzmanı / sorumlu değerleme uzmanı tarafından hazırlanır ve imzalanır. emlakekspertizi.com kurumsal değerleme altyapısıyla üretilmiştir.</p>
   </div>
-  <div class="fbot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142 · Tüm hakları saklıdır.</span><span>Bağımsız · Tarafsız · Gizlilik esaslı</span></div>
+  <div class="fcols">
+    <div><h4>Kurumsal</h4><ul><li><a href="#" onclick="openDegPage('kurumsal');return false">Kurumsal</a></li><li><a href="#" onclick="openDegPage('hakkimizda');return false">Hakkımızda</a></li><li><a href="#" onclick="openDegPage('lisans-yetkinlik');return false">Lisans &amp; Yetkinlikler</a></li></ul></div>
+    <div><h4>Rapor Türleri</h4><ul><li><a href="#" onclick="openDegPage('rapor-turleri');return false">Tüm Rapor Türleri</a></li><li><a href="#" onclick="openDegPage('konut');return false">Konut Değerleme</a></li><li><a href="#" onclick="openDegPage('banka-teminat-raporu');return false">Banka Teminat Raporu</a></li><li><a href="#" onclick="openDegPage('kamulastirma');return false">Kamulaştırma</a></li></ul></div>
+    <div><h4>Hizmetler</h4><ul><li><a href="#" onclick="openDegPage('ticari');return false">Ticari Değerleme</a></li><li><a href="#" onclick="openDegPage('arsa-arazi');return false">Arsa &amp; Arazi</a></li><li><a href="#" onclick="openDegPage('sanayi');return false">Sanayi / Fabrika</a></li><li><a href="#" onclick="openDegPage('otel-turizm');return false">Otel / Turizm</a></li><li><a href="#" onclick="openDegPage('kentsel-donusum');return false">Kentsel Dönüşüm</a></li></ul></div>
+    <div><h4>Metodoloji</h4><ul><li><a href="#" onclick="openDegPage('metodoloji');return false">Metodoloji</a></li><li><a href="#" onclick="openDegPage('pazar-yaklasimi');return false">Pazar Yaklaşımı</a></li><li><a href="#" onclick="openDegPage('gelir-yaklasimi');return false">Gelir Yaklaşımı</a></li><li><a href="#" onclick="openDegPage('maliyet-yaklasimi');return false">Maliyet Yaklaşımı</a></li><li><a href="#" onclick="openDegPage('emsal-analizi');return false">Emsal Analizi</a></li></ul></div>
+    <div><h4>SPK Güven Merkezi</h4><ul><li><a href="#" onclick="openDegPage('spk-lisansli-degerleme-nedir');return false">SPK Lisanslı Değerleme</a></li><li><a href="#" onclick="openDegPage('spk-kurulus-listesi');return false">SPK Kuruluş Listesi</a></li><li><a href="#" onclick="openDegPage('tdub-uyeligi');return false">TDUB Üyeliği</a></li><li><a href="#" onclick="openDegPage('ivs-udes-standartlari');return false">IVS / UDES Standartları</a></li><li><a href="#" onclick="openDegPage('raporu-kim-imzalar');return false">Raporu Kim İmzalar?</a></li></ul></div>
+    <div><h4>Bilgi Merkezi</h4><ul><li><a href="#" onclick="openDegPage('bilgi-merkezi');return false">Bilgi Merkezi</a></li><li><a href="#" onclick="openDegPage('rapor-bolumleri');return false">Raporda Neler Bulunur?</a></li><li><a href="#" onclick="openDegPage('degerleme-basvurusu-belgeler');return false">Gerekli Belgeler</a></li></ul></div>
+    <div><h4>Başvuru &amp; İletişim</h4><ul><li><a href="#" onclick="openDegPage('basvuru');return false">Değerleme Başvurusu</a></li><li><a href="#" onclick="openDegPage('kurumsal-teklif');return false">Kurumsal Teklif</a></li><li><a href="#" onclick="openDegPage('iletisim');return false">İletişim</a></li></ul></div>
+    <div><h4>Yasal &amp; Erişim</h4><ul><li><a href="#" onclick="openDegPage('kvkk-veri-guvenligi');return false">KVKK &amp; Veri Güvenliği</a></li><li><a href="#" onclick="openDegPage('etik-cikar-catismasi');return false">Etik &amp; Bağımsızlık</a></li><li><a href="#">Gizlilik Politikası</a></li><li><a href="#" onclick="openSaasPortal();return false">Müşteri Portalı</a></li><li><a href="#" onclick="openAdminGate();return false">Yönetim Paneli</a></li></ul></div>
+  </div>
+  <div class="fbot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142 · Tüm hakları saklıdır.</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
 </div></footer>
 
 <div class="toastbox" id="toastbox"></div>
