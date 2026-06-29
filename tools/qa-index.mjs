@@ -25,7 +25,8 @@ async function run(vp, name) {
     const nav = document.querySelector('.nav'); const navCount = nav ? [...nav.querySelectorAll('a')].length : 0;
     return { headerInViewport: inVp, headerOnTop: onTop, headerVisible: inVp && onTop, topEl, headerBottom: Math.round(hr ? hr.bottom : -9), heroTop: Math.round(her ? her.top : -9), gapPx: Math.round((her ? her.top : 0) - (hr ? hr.bottom : 0)), heroRight: hv ? { w: Math.round(hv.width), h: Math.round(hv.height) } : null, navCount, horizontalOverflow: document.documentElement.scrollWidth > iw + 2 };
   });
-  const shot = `${OUT}/v2-home-${name}.png`; const buf = await page.screenshot({ path: shot, fullPage: false });
+  const slug = (URL.split('/').pop() || 'index.html').replace('.html', '') || 'index';
+  const shot = `${OUT}/v2-${slug}-${name}.png`; const buf = await page.screenshot({ path: shot, fullPage: false });
   const real = errs.filter(e => !/favicon|ERR_FAILED|CORS|net::|Failed to load resource|emlakekspertizi\.com/i.test(e));
   const band = name === 'desktop' ? dens(buf, m.headerBottom, m.headerBottom + 90) : { white: null }; const d = name === 'desktop' ? dens(buf, 0, 900).density : null;
   const heroRightOk = !!m.heroRight && m.heroRight.w >= 320 && m.heroRight.h >= 240;
