@@ -1,0 +1,25 @@
+{
+  "name": "nadas-web-2030",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev:static": "python3 -m http.server 8765",
+    "qa:visual": "bun tools/visual-qa.mjs",
+    "qa:spk": "bun scripts/check-spk-legal.mjs degerleme.html",
+    "qa:all": "bun scripts/check-spk-legal.mjs degerleme.html && bun tools/visual-qa.mjs",
+    "test:visual": "playwright test tests/visual/degerleme.visual.spec.ts",
+    "test:visual:headed": "playwright test tests/visual/degerleme.visual.spec.ts --headed",
+    "test:spk": "node scripts/check-spk-legal.mjs degerleme.html",
+    "test:all": "npm run test:spk && npm run test:visual"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "pixelmatch": "^7.2.0",
+    "playwright-core": "^1.61.1",
+    "pngjs": "^7.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
