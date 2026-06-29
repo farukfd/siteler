@@ -59,6 +59,7 @@ img,svg{display:block;max-width:100%}
   .nav a{padding:14px 28px;border-bottom:1px solid var(--surface)}
   .nav a:after{display:none}
   .hdr-cta .btn{display:none}
+  .hdr-cta .btn.js-giris{display:inline-flex;padding:9px 15px;font-size:13px}
   .burger{display:flex}
 }
 
@@ -238,7 +239,7 @@ img,svg{display:block;max-width:100%}
 .gm-body label{display:block;font-size:12px;font-weight:600;color:var(--ink-2);margin:12px 0 6px}
 .gm-body input{width:100%;border:1px solid var(--line);border-radius:9px;padding:12px 13px;font-family:var(--body);font-size:14.5px;outline:none;transition:.18s}
 .gm-body input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(47,91,208,.12)}
-.gm-body .btn{width:100%;justify-content:center;margin-top:16px}
+.gm-body .btn{width:100%;justify-content:center;margin-top:16px;text-decoration:none}
 .gm-err{font-size:12.5px;color:#dc2626;min-height:16px;margin-top:10px}
 .gm-ok{font-size:13px;color:var(--teal);margin-top:10px}
 .gm-foot{border-top:1px solid var(--line);margin-top:16px;padding:14px 26px;font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:7px}

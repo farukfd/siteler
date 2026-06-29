@@ -11,6 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -73,6 +74,7 @@ img,svg{display:block;max-width:100%}
   .nav a{padding:14px 28px;border-bottom:1px solid var(--surface)}
   .nav a:after{display:none}
   .hdr-cta .btn{display:none}
+  .hdr-cta .btn.js-giris{display:inline-flex;padding:9px 15px;font-size:13px}
   .burger{display:flex}
 }
 
@@ -252,7 +254,7 @@ img,svg{display:block;max-width:100%}
 .gm-body label{display:block;font-size:12px;font-weight:600;color:var(--ink-2);margin:12px 0 6px}
 .gm-body input{width:100%;border:1px solid var(--line);border-radius:9px;padding:12px 13px;font-family:var(--body);font-size:14.5px;outline:none;transition:.18s}
 .gm-body input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(47,91,208,.12)}
-.gm-body .btn{width:100%;justify-content:center;margin-top:16px}
+.gm-body .btn{width:100%;justify-content:center;margin-top:16px;text-decoration:none}
 .gm-err{font-size:12.5px;color:#dc2626;min-height:16px;margin-top:10px}
 .gm-ok{font-size:13px;color:var(--teal);margin-top:10px}
 .gm-foot{border-top:1px solid var(--line);margin-top:16px;padding:14px 26px;font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:7px}
@@ -326,6 +328,7 @@ img,svg{display:block;max-width:100%}
   <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
 </div></footer>
 
+
 <script id="deg-inline-js">
 /* Meridyen Değerleme — kurumsal site JS (sade, çerçevesiz).
    Üyelik modeli: Personel/Danışman girişi + Müşteri (anahtar) girişi.
@@ -346,7 +349,8 @@ img,svg{display:block;max-width:100%}
   /* ---- emlakekspertizi.com API köprüsü ---- */
   window.EMLAK_API_BASE = 'https://www.emlakekspertizi.com';
   window.EMLAK_TENANT = { tenant_id: 'valuation', tenant_key: 'INJECT_AT_DEPLOY', domain: location.hostname };
-  window.SAAS_USER = { role: null, token: null, profile: null }; // 'personel' | 'musteri'
+  window.SAAS_USER = { role: null, token: null, profile: null }; // 'musteri'
+  var ADMIN_URL = 'https://www.emlakekspertizi.com/admin'; // mevcut merkezi yönetim paneli
 
   window.proxApi = async function (path, opt) {
     opt = opt || {};
@@ -375,12 +379,9 @@ img,svg{display:block;max-width:100%}
       + '<div class="gm-tabs"><button class="act" data-t="personel">Personel / Danışman</button><button data-t="musteri">Müşteri (Anahtar)</button></div>'
       + '<div class="gm-body">'
       + '<div class="gm-pane" data-p="personel">'
-      + '<p class="gm-sub">SPK lisanslı danışman / personel girişi. Giriş sonrası, sistem üzerinden <b>emlakekspertizi.com API destekli resmî PDF rapor</b> oluşturabilirsiniz.</p>'
-      + '<label>E-posta</label><input id="gp_mail" type="email" autocomplete="username" placeholder="ad@meridyendegerleme.com">'
-      + '<label>Şifre</label><input id="gp_pass" type="password" autocomplete="current-password" placeholder="••••••••">'
-      + '<button class="btn btn-primary" id="gp_btn">Personel Girişi →</button>'
-      + '<div class="gm-err" id="gp_err"></div>'
-      + '<div class="gm-note">SPK lisanslı uzman; saha kontrolü, belge/tapu incelemesi ve bağımsız değerlendirme ile raporu hazırlar ve imzalar. Sistem yalnız altyapı + API PDF sağlar.</div>'
+      + '<p class="gm-sub">SPK lisanslı danışman / personel girişi. Resmî değerleme ve <b>emlakekspertizi.com API destekli PDF</b> işlemleri mevcut merkezi <b>yönetim paneli</b> üzerinden yürütülür.</p>'
+      + '<a class="btn btn-primary gm-go" href="' + ADMIN_URL + '" target="_blank" rel="noopener noreferrer">Yönetim Paneline Git →</a>'
+      + '<div class="gm-note">Kimlik doğrulaması ve yetkilendirme yönetim panelinde (emlakekspertizi.com/admin) yapılır. SPK lisanslı uzman; saha kontrolü, belge/tapu incelemesi ve bağımsız değerlendirme ile raporu hazırlar ve imzalar.</div>'
       + '</div>'
       + '<div class="gm-pane" data-p="musteri" hidden>'
       + '<p class="gm-sub">Müşteri erişim anahtarınızla rapor takibi. Anahtar, kurumunuz/danışmanınız tarafından iletilir.</p>'
@@ -405,26 +406,12 @@ img,svg{display:block;max-width:100%}
         m.querySelectorAll('.gm-pane').forEach(function (p) { p.hidden = (p.dataset.p !== b.dataset.t); });
       });
     });
-    m.querySelector('#gp_btn').addEventListener('click', degPersonelLogin);
     m.querySelector('#gm_btn').addEventListener('click', degMusteriLogin);
     return m;
   }
   window.openGiris = function () { ensureGiris().classList.add('on'); };
   window.closeGiris = function () { var m = document.getElementById('girisModal'); if (m) m.classList.remove('on'); };
 
-  async function degPersonelLogin() {
-    var mail = (document.getElementById('gp_mail') || {}).value || '';
-    var pass = (document.getElementById('gp_pass') || {}).value || '';
-    var err = document.getElementById('gp_err'); err.textContent = '';
-    if (!mail || !pass) { err.textContent = '⚠ E-posta ve şifre gereklidir.'; return; }
-    var btn = document.getElementById('gp_btn'); btn.disabled = true; btn.textContent = 'Bağlanıyor…';
-    var r = await proxApi('/api/v1/tenant/staff/login', { method: 'POST', body: { email: mail } }); // şifre body'de/log'da değil
-    btn.disabled = false; btn.textContent = 'Personel Girişi →';
-    SAAS_USER.role = 'personel'; SAAS_USER.token = (r && r.token) ? r.token : ('sess_' + Math.random().toString(36).slice(2, 9));
-    SAAS_USER.profile = { email: mail, online: !(r && r.fallback) };
-    err.style.color = 'var(--teal)';
-    err.innerHTML = '✓ Personel girişi alındı' + (r && r.fallback ? ' (çevrimdışı/demo)' : '') + '. SPK lisanslı danışman paneli — <b>emlakekspertizi.com API ile resmî PDF rapor</b> oluşturma aktif.';
-  }
   async function degMusteriLogin() {
     var key = ((document.getElementById('gm_key') || {}).value || '').trim();
     var err = document.getElementById('gm_err'); err.textContent = '';
@@ -437,7 +424,7 @@ img,svg{display:block;max-width:100%}
     err.style.color = 'var(--teal)';
     err.innerHTML = '✓ Erişim anahtarı kabul edildi' + (r && r.fallback ? ' (çevrimdışı/demo)' : '') + '. Rapor takip erişiminiz açıldı.';
   }
-  window.degPersonelLogin = degPersonelLogin; window.degMusteriLogin = degMusteriLogin;
+  window.degMusteriLogin = degMusteriLogin;
 
   /* ---- ProX AI köprüsü (chat hook'u — UI sonraki adım) ---- */
   window.degProxAi = async function (prompt) {
