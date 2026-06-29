@@ -21,8 +21,9 @@ a{color:inherit;text-decoration:none}
 img,svg{display:block;max-width:100%}
 .wrap{max-width:1200px;margin:0 auto;padding:0 28px}
 .eyebrow{font-family:var(--body);font-weight:600;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
-.sec{padding:84px 0}
-.sec-h{max-width:760px;margin:0 auto 50px;text-align:center}
+.sec{padding:58px 0}
+.sec + .sec{padding-top:8px}
+.sec-h{max-width:760px;margin:0 auto 34px;text-align:center}
 .sec-h .eyebrow{display:block;margin-bottom:14px}
 .sec-h h2{font-size:clamp(26px,3.6vw,38px)}
 .sec-h p{color:var(--ink-2);font-size:17px;margin:14px 0 0}
@@ -218,3 +219,27 @@ img,svg{display:block;max-width:100%}
 .blogcard .bc-top svg{height:60px;color:#bcd0ff}
 .blogcard .bc-b{padding:20px}.blogcard .tagx{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
 .blogcard h3{font-size:16.5px;margin:8px 0 8px}.blogcard p{color:var(--ink-2);font-size:13.8px;margin:0 0 12px}
+
+/* ===== Faz 4 — Giriş (Personel + Müşteri Anahtar) modalı + ProX köprüsü ===== */
+.gmodal{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}
+.gmodal.on{display:flex}
+.gm-ov{position:absolute;inset:0;background:rgba(11,18,32,.6);backdrop-filter:blur(6px)}
+.gm-card{position:relative;width:100%;max-width:440px;background:#fff;border-radius:18px;box-shadow:var(--shadow);overflow:hidden;animation:gmpop .25s ease}
+@keyframes gmpop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.gm-x{position:absolute;top:12px;right:12px;background:none;border:0;font-size:20px;color:var(--muted);cursor:pointer;z-index:2}
+.gm-head{display:flex;align-items:center;gap:12px;padding:22px 26px 4px}
+.gm-head .mk{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--navy));display:grid;place-items:center;color:#fff;font-family:var(--head);font-weight:800}
+.gm-head b{font-family:var(--head);font-size:16px}
+.gm-tabs{display:flex;gap:6px;padding:14px 26px 0}
+.gm-tabs button{flex:1;background:var(--surface);border:1px solid var(--line);color:var(--ink-2);font-family:var(--head);font-weight:600;font-size:13.5px;padding:11px;border-radius:10px;cursor:pointer;transition:.18s}
+.gm-tabs button.act{background:linear-gradient(135deg,var(--accent),var(--accent-2));border-color:transparent;color:#fff}
+.gm-body{padding:18px 26px 4px}
+.gm-sub{color:var(--ink-2);font-size:13px;margin:0 0 14px;line-height:1.55}
+.gm-body label{display:block;font-size:12px;font-weight:600;color:var(--ink-2);margin:12px 0 6px}
+.gm-body input{width:100%;border:1px solid var(--line);border-radius:9px;padding:12px 13px;font-family:var(--body);font-size:14.5px;outline:none;transition:.18s}
+.gm-body input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(47,91,208,.12)}
+.gm-body .btn{width:100%;justify-content:center;margin-top:16px}
+.gm-err{font-size:12.5px;color:#dc2626;min-height:16px;margin-top:10px}
+.gm-ok{font-size:13px;color:var(--teal);margin-top:10px}
+.gm-foot{border-top:1px solid var(--line);margin-top:16px;padding:14px 26px;font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:7px}
+.gm-note{font-size:11.5px;color:var(--muted);background:var(--surface);border-radius:8px;padding:9px 11px;margin-top:12px}
