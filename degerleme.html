@@ -475,6 +475,19 @@ body.deg-lock{overflow:hidden}
 .dp-notice .ic{width:44px;height:44px;border-radius:11px;background:rgba(30,58,138,.1);color:var(--accent);display:grid;place-items:center;flex:none}
 .dp-notice b{display:block;font-family:var(--head);font-size:15.5px;color:var(--ink);margin-bottom:6px}
 .dp-notice p{margin:0;color:var(--ink-2);font-size:14px;line-height:1.7}
+.dp-def{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:14px;padding:20px 22px}
+.dp-def p{margin:8px 0 0;color:var(--ink);font-size:15.5px;line-height:1.75}
+.dp-idx-grp{margin-bottom:30px}
+.dp-idx-grp h2{margin:0 0 4px}
+.dp-idx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+@media(max-width:860px){.dp-idx-grid{grid-template-columns:1fr 1fr}}@media(max-width:520px){.dp-idx-grid{grid-template-columns:1fr}}
+.dp-idx{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;transition:.15s}
+.dp-idx:hover{border-color:var(--accent);transform:translateY(-2px)}
+.dp-idx b{font-size:14px;font-family:var(--head);font-weight:700}
+.dp-idx .ar{color:var(--accent);font-weight:700}
+.dp-idx.soon{opacity:.72;cursor:default}
+.dp-idx.soon:hover{transform:none;border-color:var(--line)}
+.dp-idx .soon-b{font-size:10.5px;font-weight:700;color:#b45309;background:#fef3c7;padding:2px 8px;border-radius:99px}
 </style>
 </head>
 <body>
@@ -505,6 +518,27 @@ body.deg-lock{overflow:hidden}
     <div class="s"><div class="v">12.000+</div><div class="l">Tamamlanan resmi rapor</div></div>
     <div class="s"><div class="v">81 il</div><div class="l">Saha kapsama alanı</div></div>
     <div class="s"><div class="v">UDES / IVS</div><div class="l">Uluslararası standart</div></div>
+  </div>
+</div></section>
+
+<!-- FAZ 21: Yasal güven bandı — raporu sistem değil uzman hazırlar -->
+<section style="background:var(--surface);border-bottom:1px solid var(--line);padding:30px 0"><div class="wrap">
+  <div style="display:flex;gap:15px;align-items:flex-start;max-width:980px;margin:0 auto;background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:14px;padding:18px 22px">
+    <div style="width:44px;height:44px;border-radius:11px;background:rgba(30,58,138,.1);color:var(--accent);display:grid;place-items:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+    <div><b style="font-family:var(--head);font-size:16px;display:block;margin-bottom:5px">Raporu sistem değil, SPK lisanslı uzman hazırlar</b><p style="margin:0;color:var(--ink-2);font-size:14px;line-height:1.65">Platform yalnızca başvuru, belge yönetimi, lokasyon/veri ve ön analiz altyapısı sağlar. Resmî değerleme raporu; SPK lisanslı değerleme uzmanı tarafından saha kontrolü, belge incelemesi ve mesleki kanaat ile hazırlanır ve en az bir sorumlu uzman tarafından imzalanır. <a onclick="openDegPage('raporu-kim-imzalar')" style="color:var(--accent);font-weight:700;cursor:pointer">Ayrıntı →</a></p></div>
+  </div>
+</div></section>
+
+<!-- FAZ 21: Rapor Türleri mega grid + güven alanı -->
+<section><div class="wrap">
+  <div class="sec-h"><div class="eyebrow">Rapor Türleri</div><h2>Hangi değerleme raporuna ihtiyacınız var?</h2><p>Taşınmaz tipi, kullanım amacı ve kuruma göre SPK lisanslı değerleme rapor türleri.</p></div>
+  <div id="homeReportGrid" class="dp-cards" style="margin-bottom:18px"></div>
+  <div style="text-align:center"><button class="btn btn-primary" onclick="openDegPage('rapor-turleri')">Tüm Rapor Türleri →</button></div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:30px">
+    <span class="lic-b" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px"><b style="display:inline">SPK</b> <span>Lisanslı Değerleme</span></span>
+    <span class="lic-b" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px"><b style="display:inline">TDUB</b> <span>Meslek Birliği</span></span>
+    <span class="lic-b" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px"><b style="display:inline">IVS / UDES</b> <span>2025 Standartları</span></span>
+    <span class="lic-b" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px"><b style="display:inline">Bağımsız</b> <span>& Tarafsız</span></span>
   </div>
 </div></section>
 
@@ -685,33 +719,58 @@ function mountChrome(){
   const wa=(saasResolve('whatsapp'))||SAAS_CONFIG.whatsapp||'905000000000';
   const c=document.getElementById('navCta');if(c)c.innerHTML='<a class="btn btn-line btn-sm hide-sm" href="https://wa.me/'+wa+'" target="_blank" rel="noopener noreferrer">WhatsApp</a><button class="btn btn-primary btn-sm" onclick="(typeof openDegPage===\'function\')?openDegPage(\'basvuru\'):document.getElementById(\'rapor\').scrollIntoView({behavior:\'smooth\'})">Değerleme Başvurusu</button><button class="burger" onclick="document.getElementById(\'mnav\').classList.add(\'open\')" aria-label="Menü"><span></span><span></span><span></span></button>';
 }
-/* --- Faz 21: profesyonel üst menü (mega-dropdown) — tek kaynak ---- */
+/* --- Faz 21 Dalga 1: amiral mega-menü — tek kaynak ---- */
+var _DEG_METH_MENU=['pazar-yaklasimi','gelir-yaklasimi','maliyet-yaklasimi','emsal-analizi','dcf','en-verimli-kullanim'];
+var _DEG_SPK_MENU=['spk-lisansli-degerleme-nedir','raporu-kim-imzalar','sistem-uzman-farki','platform-rolu-sinirlar','rapor-bolumleri','ivs-udes-standartlari','tdub-uyeligi','makine-ekipman-yetki'];
+function _degMegaItems(slugs){return slugs.filter(function(s){return DEG_PAGES[s];}).map(function(s){var pg=DEG_PAGES[s];return '<div class="mega-item" onclick="openDegPage(\''+s+'\')"><div class="mi-ic">'+_degSvgIcon()+'</div><div><b>'+_dgEsc(pg.h1)+'</b><span>'+_dgEsc((pg.lead||'').slice(0,54))+'…</span></div></div>';}).join('');}
 function _degNavDesktopHTML(){
-  var svc=DEG_SERVICES.map(function(s){var pg=DEG_PAGES[s];return '<div class="mega-item" onclick="openDegPage(\''+s+'\')"><div class="mi-ic">'+_degSvgIcon(_SVC_ICON[s]||'standart')+'</div><div><b>'+_dgEsc(pg.h1)+'</b><span>'+_dgEsc((pg.lead||'').slice(0,58))+'…</span></div></div>';}).join('');
   return ''
     +'<a onclick="closeDegPage()">Ana Sayfa</a>'
     +'<a onclick="openDegPage(\'kurumsal\')">Kurumsal</a>'
-    +'<span class="nav-mega"><a onclick="openDegPage(\'konut\')">Hizmetler</a><div class="mega-panel">'+svc+'</div></span>'
-    +'<a onclick="openDegPage(\'metodoloji\')">Metodoloji</a>'
-    +'<a onclick="openDegPage(\'degerleme-sureci\')">Rapor Süreci</a>'
+    +'<span class="nav-mega"><a onclick="openDegPage(\'rapor-turleri\')">Rapor Türleri</a><div class="mega-panel">'+_degMegaItems(DEG_SERVICES.concat(['daire','ofis','imarli-arsa','banka-teminat-raporu']))+'</div></span>'
+    +'<span class="nav-mega"><a onclick="openDegPage(\'konut\')">Hizmetler</a><div class="mega-panel">'+_degMegaItems(DEG_SERVICES)+'</div></span>'
+    +'<span class="nav-mega"><a onclick="openDegPage(\'metodoloji\')">Metodoloji</a><div class="mega-panel">'+_degMegaItems(_DEG_METH_MENU)+'</div></span>'
+    +'<span class="nav-mega"><a onclick="openDegPage(\'spk-lisansli-degerleme-nedir\')">SPK Güven Merkezi</a><div class="mega-panel">'+_degMegaItems(_DEG_SPK_MENU)+'</div></span>'
     +'<a onclick="openDegPage(\'bilgi-merkezi\')">Bilgi Merkezi</a>'
     +'<a onclick="openDegPage(\'basvuru\')">Başvuru</a>'
     +'<a onclick="openDegPage(\'iletisim\')">İletişim</a>'
     +'<a id="saasPortalTrigger" class="portal-trigger" onclick="openSaasPortal()">Müşteri Portalı</a>';
 }
 function _degNavMobileHTML(){
-  var cls=function(){return 'document.getElementById(\'mnav\').classList.remove(\'open\')';};
-  var svc=DEG_SERVICES.map(function(s){return '<a onclick="'+cls()+';openDegPage(\''+s+'\')">'+_dgEsc(DEG_PAGES[s].h1)+'</a>';}).join('');
+  var cls='document.getElementById(\'mnav\').classList.remove(\'open\')';
+  var acc=function(title,slugs){return '<div class="macc-h" onclick="this.nextElementSibling.classList.toggle(\'open\')">'+title+' <span>▾</span></div><div class="macc-body">'+slugs.filter(function(s){return DEG_PAGES[s];}).map(function(s){return '<a onclick="'+cls+';openDegPage(\''+s+'\')">'+_dgEsc(DEG_PAGES[s].h1)+'</a>';}).join('')+'</div>';};
   return ''
-    +'<a onclick="'+cls()+';closeDegPage()">Ana Sayfa</a>'
-    +'<a onclick="'+cls()+';openDegPage(\'kurumsal\')">Kurumsal</a>'
-    +'<div class="macc-h" onclick="this.nextElementSibling.classList.toggle(\'open\')">Hizmetler <span>▾</span></div><div class="macc-body">'+svc+'</div>'
-    +'<a onclick="'+cls()+';openDegPage(\'metodoloji\')">Metodoloji</a>'
-    +'<a onclick="'+cls()+';openDegPage(\'degerleme-sureci\')">Rapor Süreci</a>'
-    +'<a onclick="'+cls()+';openDegPage(\'bilgi-merkezi\')">Bilgi Merkezi</a>'
-    +'<a onclick="'+cls()+';openDegPage(\'basvuru\')">Başvuru</a>'
-    +'<a onclick="'+cls()+';openDegPage(\'iletisim\')">İletişim</a>'
-    +'<a class="portal-trigger" onclick="'+cls()+';openSaasPortal()">Müşteri Portalı</a>';
+    +'<a onclick="'+cls+';closeDegPage()">Ana Sayfa</a>'
+    +'<a onclick="'+cls+';openDegPage(\'kurumsal\')">Kurumsal</a>'
+    +'<a onclick="'+cls+';openDegPage(\'rapor-turleri\')">Rapor Türleri</a>'
+    +acc('Hizmetler',DEG_SERVICES)
+    +acc('Metodoloji',_DEG_METH_MENU)
+    +acc('SPK Güven Merkezi',_DEG_SPK_MENU)
+    +'<a onclick="'+cls+';openDegPage(\'bilgi-merkezi\')">Bilgi Merkezi</a>'
+    +'<a onclick="'+cls+';openDegPage(\'basvuru\')">Başvuru</a>'
+    +'<a onclick="'+cls+';openDegPage(\'iletisim\')">İletişim</a>'
+    +'<a class="portal-trigger" onclick="'+cls+';openSaasPortal()">Müşteri Portalı</a>';
+}
+/* ---- Faz 21 Dalga 1: future API'ler (mock/fallback, gerçeğe bağlanabilir) ---- */
+async function _degFutureApi(path,body){
+  try{var r=await proxApi(path,body?{method:'POST',body:body}:{method:'GET'});
+    if(r&&r.fallback)return {online:false,demo:true,data:null};
+    return {online:true,demo:false,data:r};
+  }catch(e){return {online:false,demo:true,data:null};}
+}
+window.degFetchSpkCompanies=function(){return _degFutureApi('/api/v1/tenant/spk/valuation-companies');};
+window.degFetchTdubMembers=function(){return _degFutureApi('/api/v1/tenant/tdub/members');};
+window.degFetchReportTypes=function(){return _degFutureApi('/api/v1/tenant/valuation/report-types');};
+window.degFetchDocChecklists=function(){return _degFutureApi('/api/v1/tenant/valuation/document-checklists');};
+window.degFetchMethodology=function(){return _degFutureApi('/api/v1/tenant/valuation/methodology');};
+window.degFetchSectorStats=function(){return _degFutureApi('/api/v1/tenant/valuation/sector-stats');};
+/* ana sayfa Rapor Türleri grid'ini doldur */
+function _degMountHomeGrid(){
+  var host=document.getElementById('homeReportGrid');if(!host)return;
+  var feat=['konut','ticari','arsa-arazi','sanayi','banka-teminat-raporu','kentsel-donusum'];
+  host.innerHTML=feat.filter(function(s){return DEG_PAGES[s];}).map(function(s){var p=DEG_PAGES[s];
+    return '<div class="dp-card" style="cursor:pointer" onclick="openDegPage(\''+s+'\')"><div class="ic">'+_degSvgIcon()+'</div><b>'+_dgEsc(p.h1)+'</b><p>'+_dgEsc((p.lead||'').slice(0,96))+'…</p></div>';
+  }).join('');
 }
 /* küçük menü ikonu (SVG kütüphanesinden sade currentColor) */
 function _degSvgIcon(k){return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg>';}
@@ -1153,7 +1212,27 @@ const _DEG_SVG={
  banka:'<svg viewBox="0 0 320 160" role="img" aria-label="Banka ve kurum rapor akışı: teminat amaçlı değerleme süreci" color="#93b4ff" stroke="currentColor"><path d="M40 130h240M52 70h216M60 70 160 36 260 70M70 70v52M110 70v52M150 70v52M190 70v52M230 70v52M250 70v52" fill="none" stroke="#93b4ff" stroke-width="2" stroke-linecap="round"/><path d="m150 96 6 6 12-12" fill="none" stroke="#9fe6c0" stroke-width="2.4"/></svg>',
  standart:'<svg viewBox="0 0 320 160" role="img" aria-label="Denetlenebilir rapor standardı: UDES/IVS uyumlu doküman" color="#93b4ff" stroke="currentColor"><rect x="96" y="24" width="128" height="112" rx="8" fill="none" stroke="#93b4ff" stroke-width="2"/><path d="M116 52h88M116 72h88M116 92h60" stroke="rgba(147,180,255,.6)" stroke-width="2" stroke-linecap="round"/><circle cx="196" cy="112" r="14" fill="none" stroke="#9fe6c0" stroke-width="2"/><path d="m190 112 4 4 8-8" stroke="#9fe6c0" stroke-width="2" fill="none"/></svg>',
  bolge:'<svg viewBox="0 0 320 160" role="img" aria-label="Bölge veri kartları: konum bazlı emsal yoğunluğu" color="#93b4ff" stroke="currentColor"><path d="M160 26c-30 0-52 22-52 50 0 38 52 64 52 64s52-26 52-64c0-28-22-50-52-50Z" fill="none" stroke="#93b4ff" stroke-width="2"/><circle cx="160" cy="76" r="16" fill="rgba(147,180,255,.25)" stroke="#93b4ff" stroke-width="2"/></svg>',
- basvuru:'<svg viewBox="0 0 320 150" role="img" aria-label="Kurumsal başvuru süreci: talepten teslime" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><rect x="40" y="50" width="60" height="50" rx="8"/><rect x="130" y="50" width="60" height="50" rx="8"/><rect x="220" y="50" width="60" height="50" rx="8"/><path d="M102 75h26m-6-4 6 4-6 4M192 75h26m-6-4 6 4-6 4"/></g></svg>'
+ basvuru:'<svg viewBox="0 0 320 150" role="img" aria-label="Kurumsal başvuru süreci: talepten teslime" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><rect x="40" y="50" width="60" height="50" rx="8"/><rect x="130" y="50" width="60" height="50" rx="8"/><rect x="220" y="50" width="60" height="50" rx="8"/><path d="M102 75h26m-6-4 6 4-6 4M192 75h26m-6-4 6 4-6 4"/></g></svg>',
+ 'rapor-turleri-matris':'<svg viewBox="0 0 320 180" role="img" aria-label="Rapor türleri matrisi" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="1.8">'+[0,1,2].map(function(r){return [0,1,2].map(function(c){return '<rect x="'+(40+c*84)+'" y="'+(30+r*46)+'" width="72" height="36" rx="6" opacity="'+(0.4+0.18*((r+c)%3))+'"/>';}).join('');}).join('')+'</g></svg>',
+ 'varlik-sinif-harita':'<svg viewBox="0 0 320 180" role="img" aria-label="Varlık sınıflandırma haritası" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="1.8"><circle cx="160" cy="90" r="20"/><circle cx="80" cy="50" r="14"/><circle cx="240" cy="50" r="14"/><circle cx="80" cy="130" r="14"/><circle cx="240" cy="130" r="14"/><path d="M146 78 94 58M174 78 226 58M146 102 94 122M174 102 226 122"/></g></svg>',
+ 'amac-matris':'<svg viewBox="0 0 320 180" role="img" aria-label="Değerleme amacı matrisi" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="1.8">'+[0,1].map(function(r){return [0,1,2].map(function(c){return '<rect x="'+(34+c*92)+'" y="'+(40+r*60)+'" width="80" height="48" rx="8"/>';}).join('');}).join('')+'</g><g fill="#93b4ff" stroke="none">'+[0,1,2].map(function(c){return '<circle cx="'+(54+c*92)+'" cy="64" r="3"/>';}).join('')+'</g></svg>',
+ 'spk-tdub-ivs-ucgen':'<svg viewBox="0 0 320 180" role="img" aria-label="SPK, TDUB ve IVS güven üçgeni" color="#93b4ff" stroke="currentColor"><path d="M160 30 280 150 40 150Z" fill="rgba(147,180,255,.1)" stroke="#93b4ff" stroke-width="2"/><g fill="#bcd0ff" stroke="none" font-size="12" text-anchor="middle"><text x="160" y="26">SPK</text><text x="36" y="166">TDUB</text><text x="284" y="166">IVS</text></g><circle cx="160" cy="108" r="6" fill="#9fe6c0" stroke="none"/></svg>',
+ 'yaklasim-karsilastirma':'<svg viewBox="0 0 320 180" role="img" aria-label="Pazar, gelir ve maliyet yaklaşımı karşılaştırması" color="#93b4ff" stroke="currentColor"><g fill="#93b4ff" stroke="none"><rect x="50" y="70" width="48" height="80" rx="4"/><rect x="136" y="50" width="48" height="100" rx="4"/><rect x="222" y="90" width="48" height="60" rx="4"/></g><g fill="#bcd0ff" stroke="none" font-size="11" text-anchor="middle"><text x="74" y="166">Pazar</text><text x="160" y="166">Gelir</text><text x="246" y="166">Maliyet</text></g></svg>',
+ 'banka-teminat-akis':'<svg viewBox="0 0 320 150" role="img" aria-label="Banka teminat değerleme akışı" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><path d="M40 110h240M52 60h216M60 60 160 30 260 60M80 60v50M160 60v50M240 60v50"/><path d="m150 86 6 6 12-12" stroke="#9fe6c0" stroke-width="2.4"/></g></svg>',
+ 'hukuki-surec-akis':'<svg viewBox="0 0 320 150" role="img" aria-label="Hukuki süreç değerleme akışı" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><rect x="40" y="56" width="56" height="44" rx="8"/><rect x="132" y="56" width="56" height="44" rx="8"/><rect x="224" y="56" width="56" height="44" rx="8"/><path d="M98 78h32m-6-4 6 4-6 4M190 78h32m-6-4 6 4-6 4M252 56v-8M249 50l3-4 3 4"/></g></svg>',
+ 'kamulastirma-surec':'<svg viewBox="0 0 320 150" role="img" aria-label="Kamulaştırma süreci" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><path d="M40 120h240"/><path d="M70 120V70l40-22 40 22v50"/><rect x="190" y="60" width="60" height="60" rx="4"/><path d="M205 76h30M205 92h30"/></g></svg>',
+ 'kentsel-donusum-sema':'<svg viewBox="0 0 320 160" role="img" aria-label="Kentsel dönüşüm şeması" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><path d="M40 130h90V70l-45-26-45 26v60Z" opacity=".6"/><path d="M160 80h12m-6-6 6 6-6 6"/><path d="M190 130h90V50l-45-22-45 22v80Z"/></g></svg>',
+ 'kurumsal-varlik':'<svg viewBox="0 0 320 160" role="img" aria-label="Kurumsal varlık değerleme" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><rect x="60" y="50" width="80" height="90" rx="6"/><rect x="180" y="80" width="80" height="60" rx="6"/><path d="M76 70h48M76 90h48M76 110h48M196 100h48"/></g></svg>',
+ 'fabrika-bilesen':'<svg viewBox="0 0 320 160" role="img" aria-label="Fabrika bileşen ayrıştırması: arsa, bina, makine" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><path d="M30 130h260"/><path d="M50 130V80l34 16V80l34 16V64h60v66"/><circle cx="220" cy="100" r="18"/><circle cx="220" cy="100" r="6"/></g></svg>',
+ 'otel-gelir':'<svg viewBox="0 0 320 160" role="img" aria-label="Otel gelir kapitalizasyonu" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><rect x="70" y="50" width="120" height="90" rx="4"/><path d="M86 66h12M110 66h12M134 66h12M158 66h12M86 88h12M110 88h12M134 88h12M158 88h12"/></g><path d="M210 120 L230 96 L250 78 L270 60" fill="none" stroke="#9fe6c0" stroke-width="2.4"/></svg>',
+ 'arsa-imar':'<svg viewBox="0 0 320 160" role="img" aria-label="Arsa imar analizi" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="1.8"><rect x="50" y="40" width="220" height="90" rx="4"/>'+[1,2,3,4].map(function(i){return '<line x1="'+(50+i*44)+'" y1="40" x2="'+(50+i*44)+'" y2="130"/>';}).join('')+'<line x1="50" y1="85" x2="270" y2="85"/></g><rect x="94" y="85" width="44" height="45" fill="rgba(147,180,255,.25)" stroke="none"/></svg>',
+ 'rapor-icerik-sema':'<svg viewBox="0 0 320 170" role="img" aria-label="Rapor içerik şeması" color="#93b4ff" stroke="currentColor"><rect x="96" y="20" width="128" height="130" rx="8" fill="none" stroke="#93b4ff" stroke-width="2"/><g stroke="rgba(147,180,255,.6)" stroke-width="2" stroke-linecap="round"><path d="M114 44h92M114 62h92M114 80h92M114 98h70M114 116h60"/></g></svg>',
+ 'uzman-imza-onay':'<svg viewBox="0 0 320 160" role="img" aria-label="SPK lisanslı uzman imza ve onayı" color="#93b4ff" stroke="currentColor"><rect x="80" y="34" width="160" height="100" rx="8" fill="none" stroke="#93b4ff" stroke-width="2"/><path d="M100 60h120M100 78h90" stroke="rgba(147,180,255,.6)" stroke-width="2" stroke-linecap="round"/><path d="M104 110c14-14 24 8 38-4s20 6 34-2" fill="none" stroke="#9fe6c0" stroke-width="2.4"/><circle cx="206" cy="108" r="16" fill="none" stroke="#9fe6c0" stroke-width="2"/><path d="m200 108 4 4 8-8" stroke="#9fe6c0" stroke-width="2" fill="none"/></svg>',
+ 'platform-vs-uzman-sorumluluk':'<svg viewBox="0 0 320 170" role="img" aria-label="Platform altyapısı ile SPK lisanslı uzman sorumluluğunun ayrımı" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><rect x="30" y="46" width="110" height="80" rx="10"/><rect x="180" y="46" width="110" height="80" rx="10" stroke="#9fe6c0"/></g><g fill="#bcd0ff" stroke="none" font-size="11" text-anchor="middle"><text x="85" y="40">Platform · Altyapı</text></g><g fill="#9fe6c0" stroke="none" font-size="11" text-anchor="middle"><text x="235" y="40">SPK Uzman · Rapor</text></g><path d="M148 86h24m-7-5 7 5-7 5" stroke="#93b4ff" stroke-width="2" fill="none"/><path d="M235 92l5 5 10-10" stroke="#9fe6c0" stroke-width="2.4" fill="none"/></svg>',
+ 'belge-checklist-ilerleme':'<svg viewBox="0 0 320 160" role="img" aria-label="Belge kontrol listesi ilerlemesi" color="#93b4ff" stroke="currentColor"><g stroke="#93b4ff" stroke-width="2" fill="none">'+[0,1,2,3].map(function(i){return '<rect x="50" y="'+(30+i*30)+'" width="18" height="18" rx="4"/>'+(i<3?'<path d="m54 '+(39+i*30)+' 4 4 7-8" stroke="#9fe6c0" stroke-width="2"/>':'')+'<line x1="80" y1="'+(39+i*30)+'" x2="250" y2="'+(39+i*30)+'" stroke="rgba(147,180,255,.5)"/>';}).join('')+'</g></svg>',
+ 'bolge-veri-kart':'<svg viewBox="0 0 320 160" role="img" aria-label="Bölge veri kartları" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><path d="M160 24c-30 0-52 22-52 50 0 38 52 64 52 64s52-26 52-64c0-28-22-50-52-50Z"/><circle cx="160" cy="74" r="15" fill="rgba(147,180,255,.25)"/></g></svg>',
+ 'risk-veri-kalitesi':'<svg viewBox="0 0 320 170" role="img" aria-label="Risk ve veri kalitesi ilişkisi" color="#93b4ff" stroke="currentColor"><g stroke="rgba(147,180,255,.25)"><line x1="40" y1="20" x2="40" y2="140"/><line x1="40" y1="140" x2="290" y2="140"/></g><path d="M40 120 L120 80 L200 60 L290 40" fill="none" stroke="#9fe6c0" stroke-width="2.6"/><g fill="#93b4ff" stroke="none"><circle cx="120" cy="80" r="4"/><circle cx="200" cy="60" r="4"/></g><text x="150" y="36" fill="#9fe6c0" font-size="11" stroke="none">Veri kalitesi ↑ · güven ↑</text></svg>',
+ 'kalite-kontrol-workflow':'<svg viewBox="0 0 320 150" role="img" aria-label="Kalite kontrol iş akışı" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><circle cx="60" cy="75" r="22"/><circle cx="160" cy="75" r="22"/><circle cx="260" cy="75" r="22"/><path d="M84 75h52m-6-4 6 4-6 4M184 75h52m-6-4 6 4-6 4"/><path d="m250 75 6 6 12-12" stroke="#9fe6c0" stroke-width="2.4"/></g></svg>'
 };
 function _degSvg(k){return _DEG_SVG[k]||_DEG_SVG.standart;}
 /* ---- ortak içerik blokları (tekrarsızlık için) ---- */
@@ -1174,6 +1253,77 @@ function _faqMeth(primary){return [
  {q:'Süreç ne kadar sürer?',a:'Belge bütünlüğü ve taşınmazın türüne bağlı olarak süreç tipik olarak 2–10 iş günü içinde tamamlanır.'},
  {q:'Değerleme bağımsız ve tarafsız mıdır?',a:'Evet. Tüm raporlar çıkar çatışmasından arınmış biçimde, bağımsızlık, tarafsızlık ve gizlilik ilkeleriyle, denetlenebilir bir metodolojiyle hazırlanır.'}
 ];}
+/* ---- Faz 21 Dalga 1: paylaşılan içerik blokları ---- */
+const _DEG_UZMAN_SURECI=[
+ {ad:'Talep & Belge Yönetimi (Platform)',desc:'Başvuru, belge yükleme ve lokasyon bilgisi platform üzerinden derlenir; ön analiz altyapısı hazırlanır.'},
+ {ad:'SPK Lisanslı Uzmana Atama',desc:'Dosya, yetkili SPK lisanslı değerleme uzmanına atanır. Gayrimenkul dışı varlıklarda ilgili ayrı yetki kapsamı resmî kayıtlardan kontrol edilir.'},
+ {ad:'Saha (Yerinde) Kontrol',desc:'Uzman, taşınmazı yerinde inceler; konum, yapı niteliği ve fiziki durum belgelenir.'},
+ {ad:'Belge & Belediye/Tapu İncelemesi',desc:'Tapu kütüğü, takyidatlar, imar durumu ve belediye kayıtları uzmanca incelenir.'},
+ {ad:'Emsal Analizi & Yöntem Uygulama',desc:'Uzman; pazar, gelir ve maliyet yaklaşımlarından uygun olan(lar)ı uygular ve mesleki kanaatini oluşturur.'},
+ {ad:'Rapor Tanzimi & İç Kalite Kontrol',desc:'UDES/IVS ve SPK III-62.3 Ek-1 asgari unsurlarına göre yazılı rapor düzenlenir, bağımsız iç kontrolden geçer.'},
+ {ad:'Sorumlu Uzman İmzası & Teslim',desc:'Rapor, en az bir sorumlu değerleme uzmanı tarafından imzalanır ve resmî olarak teslim edilir.'}
+];
+const _DEG_SINIRLAR=[
+ 'Bu platform yalnızca başvuru, belge yönetimi, lokasyon/veri ve ön analiz altyapısı sağlar; kendi başına resmî değerleme raporu üretmez.',
+ 'Resmî değer takdiri yalnızca SPK lisanslı değerleme uzmanının mesleki kanaati ve imzasıyla geçerlidir.',
+ 'Ön analiz çıktıları bir değer garantisi, yatırım tavsiyesi veya kredi/mahkeme sonucu taahhüdü değildir.',
+ 'Rapor, belirtilen değerleme tarihi, amaç ve varsayımlar çerçevesinde geçerlidir; koşullar değiştiğinde güncelleme gerekebilir.',
+ 'Yetki kapsamı (gayrimenkul / makine-ekipman vb.) ve kuruluş lisansı SPK resmî kayıtlarından doğrulanmalıdır.'
+];
+function _degFaqSpk(){return [
+ {q:'Resmî raporu sistem mi yoksa uzman mı hazırlar?',a:'Resmî değerleme raporu SPK lisanslı değerleme uzmanı tarafından hazırlanır ve en az bir sorumlu uzman tarafından imzalanır. Platform yalnızca başvuru, belge ve ön analiz altyapısı sağlar; kendi başına resmî rapor üretmez.'},
+ {q:'Rapor hangi standartlara uygundur?',a:'IVS/UDES (2025) ve SPK III-62.3 tebliği ile TDUB meslek kuralları çerçevesinde, yazılı ve Ek-1 asgari unsurları içerir biçimde hazırlanır.'},
+ {q:'Değerleme bağımsız ve tarafsız mıdır?',a:'Evet; çıkar çatışmasından arınmış, bağımsızlık, tarafsızlık ve gizlilik ilkeleriyle, denetlenebilir metodolojiyle hazırlanır.'}
+];}
+/* Öncelikli rapor türü sayfası fabrikası (TAM 15-bölüm) */
+function _degReportPage(o){
+  return {group:'Rapor Türleri',h1:o.h1,lead:o.lead,resmiTanim:o.resmiTanim||o.lead,
+   kimlerIcin:o.kimlerIcin,hangiDurumda:o.hangiDurumda,
+   belgeler:o.belgeler||_DEG_DOCS_GENEL,
+   incelenenler:o.incelenenler,
+   metodoloji:{baslik:o.methBaslik||(o.h1+' Metodolojisi'),aciklama:o.methAciklama,svg:o.svg||'yaklasim-karsilastirma'},
+   veriKatkisi:o.veriKatkisi||'emlakekspertizi.com lokasyon ve emsal veri altyapısı, bölge analizi ve ön analiz için uzmana girdi sağlar.',
+   uzmanSureci:_DEG_UZMAN_SURECI,sinirlar:_DEG_SINIRLAR,
+   form:o.form||'genel-degerleme-basvurusu',
+   faq:(o.faq||[]).concat(_degFaqSpk()),
+   related:o.related,seoTitle:o.seoTitle||(o.h1+' · SPK Lisanslı Değerleme'),seoDesc:o.seoDesc||o.lead.slice(0,150)};
+}
+/* Belge checklist sayfası fabrikası (HowTo) */
+function _degDocPage(slug,h1,docs,extra){
+  return {group:'Belge Checklist',h1:h1,lead:h1+': eksiksiz belge, hızlı ve doğru değerleme sürecinin temelidir.',
+   resmiTanim:'Aşağıdaki belgeler, SPK lisanslı uzmanın inceleme ve değer takdiri için gerekli temel belgelerdir; taşınmaz türüne göre uyarlanır.',
+   belgeler:docs,
+   incelenenler:(docs||[]).map(function(d){return d;}),
+   hangiDurumda:extra&&extra.hangi?extra.hangi:undefined,
+   metodoloji:{baslik:'Belge Akışı',aciklama:'Belgeler tamamlandığında dosya SPK lisanslı uzmana atanır; eksik belge süreci uzatabilir.',svg:'belge-checklist-ilerleme'},
+   uzmanSureci:_DEG_UZMAN_SURECI,howto:true,sinirlar:_DEG_SINIRLAR,
+   form:'belge-kontrol-talebi',
+   faq:[{q:'Belgeler eksikse ne olur?',a:'Eksik belge, yerinde inceleme ve değer takdirini geciktirebilir; uzman gerekli belgeleri talep eder.'},{q:'Belgeleri kimden alırım?',a:'Tapu müdürlüğü, belediye ve ilgili kurumlardan; süreçte uzman ekip yönlendirir.'}].concat(_degFaqSpk()),
+   related:(extra&&extra.related)||['degerleme-basvurusu-belgeler','basvuru','degerleme-sureci'],
+   seoTitle:h1,seoDesc:h1+' — SPK lisanslı değerleme için gerekli belgeler ve süreç etkisi.'};
+}
+/* Uzun-kuyruk (Dalga 2) kayıt fabrikası — yüzeysel sahte içerik YOK, dürüst placeholder */
+function _degSoonPage(slug,h1,group){
+  return {group:group||'Rapor Türleri',h1:h1,lead:h1+' için SPK lisanslı değerleme hizmeti.',
+   dalga2:'Bu sayfanın ayrıntılı içeriği bir sonraki yayında (Dalga 2) hazırlanacaktır.',
+   kimlerIcin:[['SPK Lisanslı Süreç','Uzman tarafından yürütülen resmî değerleme.'],['Bağımsız & Tarafsız','Denetlenebilir metodoloji.'],['Kurumsal Uyum','Banka, kurum ve resmî işlemlere uygun.']],
+   metodoloji:{baslik:'Uygun Yaklaşım',aciklama:'Taşınmaz niteliğine göre pazar, gelir veya maliyet yaklaşımı SPK lisanslı uzmanca seçilir.',svg:'yaklasim-karsilastirma'},
+   uzmanSureci:_DEG_UZMAN_SURECI,sinirlar:_DEG_SINIRLAR,form:'genel-degerleme-basvurusu',
+   faq:_degFaqSpk(),related:['rapor-turleri','basvuru','metodoloji'],
+   seoTitle:h1+' · SPK Lisanslı Değerleme',seoDesc:h1+' için SPK lisanslı, bağımsız taşınmaz değerleme.'};
+}
+/* Metodoloji alt sayfası fabrikası (tek tutarlı 15-bölüm şablonu) */
+function _degMethPage(slug,h1,svg,tanim,hangi,veriIht,sinir){
+  return {group:'Metodoloji',h1:h1,lead:tanim,resmiTanim:tanim,
+   kimlerIcin:[['Uzman Değerlendirmesi','Yöntem, SPK lisanslı uzmanın mesleki kanaatiyle uygulanır.'],['Kurumsal Süreç','Banka, kurum ve resmî işlemlerde standart uygulama.'],['Denetlenebilirlik','Yöntem seçimi ve varsayımlar raporda beyan edilir.']],
+   hangiDurumda:hangi,
+   incelenenler:(veriIht||[]).concat(['Yöntem seçim gerekçesi','Sonuçların uzlaştırılması']),
+   metodoloji:{baslik:h1+' — Uygulama',aciklama:tanim,svg:svg},
+   sinirlar:(sinir||[]).concat(_DEG_SINIRLAR),
+   faq:_degFaqSpk(),
+   related:['metodoloji','ivs-udes-standartlari','rapor-bolumleri'],
+   seoTitle:h1+' · Değerleme Metodolojisi',seoDesc:tanim.slice(0,150)};
+}
 /* ---- DEG_PAGES: 21 sayfa veri kaydı ---- */
 const DEG_PAGES={
  /* GROUP Kurumsal */
@@ -1321,7 +1471,349 @@ const DEG_PAGES={
   kimlerIcin:[['Genel Müdürlük','Alsancak Mah. ... Cad. No:00, Konak / İzmir'],['Telefon','+90 232 000 00 00 · Hafta içi 09:00–18:00'],['E-posta','info@meridyendegerleme.com']],
   metodoloji:{baslik:'Bize Ulaşın',aciklama:'Talebinizi iletin; uzman ekibimiz resmî süreç hakkında sizi bilgilendirsin.',svg:'basvuru'},
   faq:[{q:'Hangi illerde hizmet veriyorsunuz?',a:'81 ilde saha tespiti ve resmî raporlama kapasitesine sahibiz.'},{q:'Ne kadar sürede dönüş yapılır?',a:'Mesai saatleri içinde gelen talepler genellikle aynı gün yanıtlanır.'}],
-  related:['basvuru','kurumsal-teklif','banka-kurum'],seoTitle:'İletişim · Meridyen Değerleme',seoDesc:'SPK lisanslı değerleme süreçleri ve kurumsal çözümler için iletişim.'}
+  related:['basvuru','kurumsal-teklif','banka-kurum'],seoTitle:'İletişim · Meridyen Değerleme',seoDesc:'SPK lisanslı değerleme süreçleri ve kurumsal çözümler için iletişim.'},
+
+ /* ===== SPK GÜVEN MERKEZİ (16 sayfa) ===== */
+ 'spk-lisansli-degerleme-nedir':{group:'SPK Güven Merkezi',h1:'SPK Lisanslı Değerleme Nedir?',lead:'Sermaye Piyasası Kurulu (SPK) düzenlemeleri kapsamında, yetkili kuruluş ve lisanslı uzmanlarca yapılan, yasal geçerliliği olan bağımsız taşınmaz değerleme faaliyetidir.',
+  resmiTanim:'SPK lisanslı değerleme; 6362 sayılı Sermaye Piyasası Kanunu ve SPK III-62.3 tebliği çerçevesinde, yetkilendirilmiş değerleme kuruluşları ve SPK lisanslı değerleme uzmanları tarafından, UDES/IVS standartlarına uygun olarak yürütülür.',
+  kimlerIcin:[['Bankalar','Kredi ve teminat süreçlerinde zorunlu lisanslı rapor.'],['Kamu & Mahkeme','Resmî işlem ve bilirkişi nitelikli rapor.'],['Şirketler','Mali tablo ve yatırım kararı için bağımsız değer.']],
+  hangiDurumda:['Banka kredisi ve teminat işlemleri','Kentsel dönüşümde hak sahipliği','Mahkeme/icra süreçleri','SPK uyumlu mali raporlama'],
+  metodoloji:{baslik:'Yasal Çerçeve',aciklama:'SPK III-62.3 ve UDES/IVS, faaliyetin standardını; TDUB meslek kuralları etik çerçeveyi belirler.',svg:'spk-tdub-ivs-ucgen'},
+  uzmanSureci:_DEG_UZMAN_SURECI,sinirlar:_DEG_SINIRLAR,faq:_degFaqSpk(),
+  related:['degerleme-uzmani-kimdir','ivs-udes-standartlari','raporu-kim-imzalar'],seoTitle:'SPK Lisanslı Değerleme Nedir?',seoDesc:'SPK lisanslı taşınmaz değerlemenin yasal çerçevesi, kapsamı ve uzman süreci.'},
+ 'spk-sirket-kontrol':{group:'SPK Güven Merkezi',h1:'SPK Yetkili Kuruluş Nasıl Kontrol Edilir?',lead:'Bir değerleme kuruluşunun SPK yetkisini ve TDUB üyeliğini resmî kayıtlardan doğrulamak için izlenebilecek adımlar.',
+  resmiTanim:'Yetkili kuruluş ve lisanslı uzman bilgileri SPK ve TDUB resmî kayıtlarında tutulur; güncel ve bağlayıcı bilgi yalnızca bu resmî kaynaklardan teyit edilebilir.',
+  kimlerIcin:[['Bankalar','Hizmet alımında yetki doğrulaması.'],['Kurumlar','Tedarikçi uygunluk kontrolü.'],['Bireyler','Hizmet öncesi güven kontrolü.']],
+  incelenenler:['SPK yetkilendirme durumu','TDUB kuruluş/uzman kaydı','Sorumlu değerleme uzmanı sayısı','Yetki kapsamı (gayrimenkul / makine-ekipman)','Disiplin/iptal geçmişi (resmî kayıt)'],
+  metodoloji:{baslik:'Doğrulama Akışı',aciklama:'Kuruluş adı/unvanı ile SPK ve TDUB resmî kayıtları çapraz kontrol edilir; yetki kapsamı resmî listeden teyit edilir.',svg:'kalite-kontrol-workflow'},
+  sinirlar:_DEG_SINIRLAR,faq:[{q:'Yetkiyi nereden doğrularım?',a:'SPK ve TDUB resmî kayıtları esastır; bu platformdaki bilgiler bilgilendirme amaçlıdır.'}].concat(_degFaqSpk()),
+  related:['spk-kurulus-listesi','tdub-uyeligi','makine-ekipman-yetki'],seoTitle:'SPK Yetkili Kuruluş Kontrolü',seoDesc:'Değerleme kuruluşunun SPK yetkisi ve TDUB üyeliği resmî kayıtlardan nasıl doğrulanır.'},
+ 'spk-kurulus-listesi':{group:'SPK Güven Merkezi',h1:'SPK Yetkili Değerleme Kuruluşları Listesi',lead:'Güncel ve bağlayıcı liste SPK resmî kayıtlarında tutulur. Bu sayfa resmî kaynaklara yönlendirir ve bir kontrol kılavuzu sunar.',
+  spkList:true,
+  resmiTanim:'Yetkili değerleme kuruluşlarının güncel listesi yalnızca SPK resmî kayıtlarından teyit edilebilir; bu platformda statik/sabit bir şirket listesi tutulmaz.',
+  incelenenler:['Kuruluşun SPK yetki durumu','TDUB tüzel kişi üyeliği','Sorumlu uzman ve tam zamanlı uzman sayısı','Yetki kapsamının işleme uygunluğu'],
+  metodoloji:{baslik:'Resmî Kayıt Esası',aciklama:'Sabit liste yerine resmî kayıt doğrulaması esastır. İleride /api/v1/tenant/spk/valuation-companies ucu ile güncel kayıt sorgusu sağlanabilir (şu an demo/fallback).',svg:'rapor-icerik-sema'},
+  sinirlar:['Bu sayfada sahte veya sabit şirket listesi yer almaz.','Güncel liste için SPK resmî kayıtları esastır.'].concat(_DEG_SINIRLAR),
+  faq:[{q:'Neden burada hazır liste yok?',a:'Yanıltıcı olmaması için sabit liste tutmuyoruz; güncel ve bağlayıcı bilgi SPK resmî kayıtlarındadır.'}].concat(_degFaqSpk()),
+  related:['spk-sirket-kontrol','tdub-uyeligi','makine-ekipman-yetki'],seoTitle:'SPK Yetkili Değerleme Kuruluşları Listesi',seoDesc:'Güncel liste SPK resmî kayıtlarında; kontrol kılavuzu ve TDUB üyelik doğrulaması.'},
+ 'tdub-uyeligi':{group:'SPK Güven Merkezi',h1:'TDUB Üyeliği',lead:'Türkiye Değerleme Uzmanları Birliği (TDUB); 6362 sayılı Kanun md.76 kapsamında kamu tüzel kişiliğine sahip, öz-düzenleyici meslek birliğidir.',
+  resmiTanim:'TDUB, SPK lisanslı değerleme uzmanlarının ve kuruluşlarının üye olduğu, Meslek Kuralları ve Etik Sözleşme (15.06.2016) ile faaliyet gösteren öz-düzenleyici meslek birliğidir. Birlik bünyesinde yaklaşık 9.550 gerçek kişi uzman ve 153 tüzel kişi kuruluş yer almaktadır (bilgi amaçlı; güncel veri TDUB kayıtlarından teyit edilmelidir).',
+  kimlerIcin:[['Uzmanlar','Mesleki üyelik ve etik yükümlülük.'],['Kuruluşlar','Tüzel kişi üyelik ve denetim.'],['Hizmet alanlar','Üyelik ve disiplin kaydı kontrolü.']],
+  incelenenler:['Meslek Kuralları','Etik Sözleşme (15.06.2016)','Disiplin yaptırımları: uyarı / kınama / lisans iptali','Üye uzman ve kuruluş kaydı'],
+  metodoloji:{baslik:'Öz-Düzenleyici Çerçeve',aciklama:'TDUB; meslek kuralları, etik sözleşme ve disiplin mekanizmasıyla değerleme faaliyetinin güvenilirliğini destekler.',svg:'spk-tdub-ivs-ucgen'},
+  sinirlar:_DEG_SINIRLAR,faq:[{q:'TDUB ne yapar?',a:'Meslek kuralları, etik sözleşme ve disiplin mekanizmasıyla değerleme mesleğini öz-düzenler.'}].concat(_degFaqSpk()),
+  related:['etik-cikar-catismasi','degerleme-uzmani-kimdir','spk-sirket-kontrol'],seoTitle:'TDUB Üyeliği · Değerleme Uzmanları Birliği',seoDesc:'TDUB: 6362 s. Kanun md.76 kapsamında öz-düzenleyici meslek birliği, meslek kuralları ve etik çerçeve.'},
+ 'ivs-udes-standartlari':{group:'SPK Güven Merkezi',h1:'IVS / UDES Standartları',lead:'Uluslararası Değerleme Standartları (IVS/UDES) 2025 sürümü; değerleme faaliyetinin küresel çerçevesini belirler.',
+  resmiTanim:'IVS 2025 (yürürlük 31.01.2025), veri ve girdiler (Data & Inputs) ile dokümantasyon bölümlerini güçlendirmiş; IVS 103/105 ile pazar, gelir ve maliyet yaklaşımlarının uygulanışını standardize etmiştir.',
+  kimlerIcin:[['Uzmanlar','Yöntem ve raporlama standardı.'],['Kurumlar','Uluslararası karşılaştırılabilirlik.'],['Denetim','Standart uyum kontrolü.']],
+  incelenenler:['IVS 2025 · Data & Inputs','IVS 2025 · Documentation','IVS 103/105 · Pazar/Gelir/Maliyet','UDES yerel uyumu'],
+  metodoloji:{baslik:'Standart Yaklaşımlar',aciklama:'IVS 105 kapsamında pazar, gelir ve maliyet yaklaşımları; varlığa ve veriye göre seçilir ve uzlaştırılır.',svg:'yaklasim-karsilastirma'},
+  sinirlar:_DEG_SINIRLAR,faq:_degFaqSpk(),
+  related:['pazar-yaklasimi','gelir-yaklasimi','maliyet-yaklasimi'],seoTitle:'IVS / UDES Değerleme Standartları (2025)',seoDesc:'IVS 2025 standartları: veri/dokümantasyon, IVS 103/105 pazar-gelir-maliyet yaklaşımları.'},
+ 'bagimsizlik-tarafsizlik':{group:'SPK Güven Merkezi',h1:'Bağımsızlık & Tarafsızlık',lead:'Değerleme faaliyetinin temel ilkesi; çıkar çatışmasından arınmış, bağımsız ve tarafsız mesleki kanaattir.',
+  resmiTanim:'Bağımsızlık ve tarafsızlık; değerleme uzmanının sonucu hiçbir tarafın lehine yönlendirmeden, yalnızca veriye ve mesleki kanaate dayanarak belirlemesini gerektirir.',
+  kimlerIcin:[['Bankalar','Tarafsız teminat değeri.'],['Mahkemeler','Yansız bilirkişi kanaati.'],['Yatırımcılar','Yönlendirilmemiş analiz.']],
+  incelenenler:['Çıkar çatışması beyanı','Ücret-sonuç bağımsızlığı','Gizlilik ilkesi','Denetlenebilir gerekçelendirme'],
+  metodoloji:{baslik:'İlke Çerçevesi',aciklama:'TDUB Etik Sözleşme ve meslek kuralları, bağımsızlık ve tarafsızlığı zorunlu kılar.',svg:'platform-vs-uzman-sorumluluk'},
+  sinirlar:_DEG_SINIRLAR,faq:_degFaqSpk(),
+  related:['etik-cikar-catismasi','degerleme-uzmani-kimdir','sistem-uzman-farki'],seoTitle:'Bağımsızlık & Tarafsızlık · Değerleme',seoDesc:'Değerlemede bağımsızlık ve tarafsızlık ilkesi; çıkar çatışmasından arınmış mesleki kanaat.'},
+ 'degerleme-uzmani-kimdir':{group:'SPK Güven Merkezi',h1:'Değerleme Uzmanı Kimdir?',lead:'SPK lisansına sahip, taşınmaz değerleme faaliyetini mesleki yeterlilikle yürüten ve TDUB üyesi olan kişidir.',
+  resmiTanim:'SPK lisanslı değerleme uzmanı; gerekli sınav ve yeterlilik koşullarını sağlamış, lisanslandırılmış ve TDUB’a üye olarak meslek kurallarına tabi olan kişidir.',
+  kimlerIcin:[['Kuruluşlar','Lisanslı kadro zorunluluğu.'],['Hizmet alanlar','Yetkin uzman güvencesi.'],['Aday uzmanlar','Mesleğe giriş çerçevesi.']],
+  incelenenler:['SPK lisans durumu','TDUB üyeliği','Mesleki yeterlilik','Etik yükümlülük'],
+  metodoloji:{baslik:'Mesleki Yetkinlik',aciklama:'Uzman; lisans, üyelik ve etik çerçeve dahilinde bağımsız mesleki kanaatini oluşturur.',svg:'uzman-imza-onay'},
+  sinirlar:_DEG_SINIRLAR,faq:_degFaqSpk(),
+  related:['sorumlu-degerleme-uzmani','raporu-kim-imzalar','tdub-uyeligi'],seoTitle:'SPK Lisanslı Değerleme Uzmanı Kimdir?',seoDesc:'SPK lisanslı, TDUB üyesi değerleme uzmanının mesleki yetkinliği ve yükümlülükleri.'},
+ 'sorumlu-degerleme-uzmani':{group:'SPK Güven Merkezi',h1:'Sorumlu Değerleme Uzmanı',lead:'Kuruluş adına raporu imzalamaya yetkili, ek sorumluluk üstlenen SPK lisanslı değerleme uzmanıdır.',
+  resmiTanim:'SPK III-62.3 uyarınca yetkili kuruluşta en az iki sorumlu değerleme uzmanı bulunması gerekir; her resmî rapor en az bir sorumlu değerleme uzmanı tarafından imzalanır.',
+  kimlerIcin:[['Kuruluşlar','İmza yetkisi ve sorumluluk.'],['Bankalar','İmza geçerliliği teyidi.'],['Kurumlar','Sorumluluk zinciri netliği.']],
+  incelenenler:['En az 2 sorumlu uzman koşulu (kuruluş)','En az 1 sorumlu uzman imzası (rapor)','En az 10 tam zamanlı uzman koşulu','Sorumluluk çerçevesi'],
+  metodoloji:{baslik:'İmza & Sorumluluk',aciklama:'Sorumlu uzman imzası, raporun yasal geçerliliğinin ve sorumluluk zincirinin temelidir.',svg:'uzman-imza-onay'},
+  uzmanSureci:_DEG_UZMAN_SURECI,sinirlar:_DEG_SINIRLAR,faq:_degFaqSpk(),
+  related:['raporu-kim-imzalar','rapor-bolumleri','degerleme-uzmani-kimdir'],seoTitle:'Sorumlu Değerleme Uzmanı · İmza Yetkisi',seoDesc:'SPK III-62.3: en az iki sorumlu uzman ve raporda en az bir sorumlu uzman imzası zorunluluğu.'},
+ 'raporu-kim-imzalar':{group:'SPK Güven Merkezi',h1:'Resmî Raporu Kim Hazırlar ve İmzalar?',lead:'Resmî değerleme raporu SPK lisanslı değerleme uzmanı tarafından hazırlanır ve en az bir sorumlu değerleme uzmanı tarafından imzalanır.',
+  resmiTanim:'Platform yalnızca başvuru, veri toplama, belge yönetimi, lokasyon analizi ve ön analiz altyapısı sağlar. Resmî değerleme raporu; SPK lisanslı değerleme uzmanı / sorumlu değerleme uzmanı tarafından saha kontrolü, belge incelemesi, belediye/tapu araştırması, emsal analizi ve mesleki kanaat ile hazırlanır ve EN AZ BİR SORUMLU UZMAN tarafından imzalanır. Sistem kendi başına resmî rapor üretmez.',
+  kimlerIcin:[['Bankalar','İmzalı, geçerli rapor güvencesi.'],['Mahkemeler','İmza ve sorumluluk netliği.'],['Kurumlar','Yasal geçerlilik teyidi.']],
+  incelenenler:['SPK III-62.3 imza zorunluluğu','En az bir sorumlu uzman imzası','Yazılı rapor & Ek-1 asgari unsurlar','TDUB etik sorumluluk'],
+  metodoloji:{baslik:'İmza Zinciri',aciklama:'Saha ve belge incelemesi → uzman mesleki kanaati → yazılı rapor → sorumlu uzman imzası.',svg:'uzman-imza-onay'},
+  uzmanSureci:_DEG_UZMAN_SURECI,
+  sinirlar:['Sistem kendi başına resmî değerleme raporu üretmez.','Rapor, en az bir sorumlu değerleme uzmanının imzasıyla geçerlidir.'].concat(_DEG_SINIRLAR),
+  faq:[{q:'Raporu yapay zekâ mı hazırlar?',a:'Hayır. Yapay zekâ ve sistem yalnızca açıklama ve ön analiz altyapısı sağlar; resmî raporu SPK lisanslı uzman hazırlar ve sorumlu uzman imzalar.'}].concat(_degFaqSpk()),
+  related:['sistem-uzman-farki','platform-rolu-sinirlar','sorumlu-degerleme-uzmani'],seoTitle:'Resmî Değerleme Raporunu Kim İmzalar?',seoDesc:'Resmî rapor SPK lisanslı uzmanca hazırlanır, en az bir sorumlu uzman tarafından imzalanır; sistem rapor üretmez.'},
+ 'sistem-uzman-farki':{group:'SPK Güven Merkezi',h1:'Sistem ile SPK Lisanslı Uzman Farkı',lead:'Platform altyapısı ile SPK lisanslı uzmanın sorumluluğu birbirinden açıkça ayrıdır.',
+  resmiTanim:'Platform yalnızca başvuru, veri toplama, belge yönetimi, lokasyon analizi ve ön analiz altyapısı sağlar. Resmî değerleme raporu; SPK lisanslı değerleme uzmanı / sorumlu değerleme uzmanı tarafından saha kontrolü, belge incelemesi, belediye/tapu araştırması, emsal analizi ve mesleki kanaat ile hazırlanır ve EN AZ BİR SORUMLU UZMAN tarafından imzalanır. Sistem kendi başına resmî rapor üretmez.',
+  kimlerIcin:[['Sistem · Altyapı','Başvuru, belge, lokasyon, ön analiz.'],['Uzman · Rapor','Saha, kanaat, değer takdiri, imza.'],['Birlikte','Hızlı süreç + yasal geçerlilik.']],
+  incelenenler:['Sistem: veri & ön analiz','Uzman: saha & mesleki kanaat','Sistem değer ÜRETMEZ','Değer takdiri yalnızca uzmana ait'],
+  metodoloji:{baslik:'Sorumluluk Ayrımı',aciklama:'Sol taraf platform altyapısı, sağ taraf SPK lisanslı uzmanın münhasır sorumluluğudur.',svg:'platform-vs-uzman-sorumluluk'},
+  sinirlar:['Sistem kendi başına resmî değerleme raporu üretmez.','Değer ve rapor yalnızca SPK lisanslı uzmanın sorumluluğundadır.'].concat(_DEG_SINIRLAR),
+  faq:[{q:'Sistem otomatik SPK raporu üretir mi?',a:'Hayır. Sistem otomatik resmî rapor üretmez; yalnızca altyapı sağlar. Resmî rapor uzmanca hazırlanır ve imzalanır.'}].concat(_degFaqSpk()),
+  related:['platform-rolu-sinirlar','raporu-kim-imzalar','bagimsizlik-tarafsizlik'],seoTitle:'Sistem ile SPK Lisanslı Uzman Farkı',seoDesc:'Platform altyapı sağlar; resmî değerleme raporunu SPK lisanslı uzman hazırlar ve imzalar.'},
+ 'platform-rolu-sinirlar':{group:'SPK Güven Merkezi',h1:'Platformun Rolü ve Sınırları',lead:'Bu platformun değerleme sürecindeki rolü, başvuru ve ön analiz altyapısıyla sınırlıdır.',
+  resmiTanim:'Platform yalnızca başvuru, veri toplama, belge yönetimi, lokasyon analizi ve ön analiz altyapısı sağlar. Resmî değerleme raporu; SPK lisanslı değerleme uzmanı / sorumlu değerleme uzmanı tarafından saha kontrolü, belge incelemesi, belediye/tapu araştırması, emsal analizi ve mesleki kanaat ile hazırlanır ve EN AZ BİR SORUMLU UZMAN tarafından imzalanır. Sistem kendi başına resmî rapor üretmez.',
+  kimlerIcin:[['Kullanıcılar','Hızlı, şeffaf başvuru.'],['Kurumlar','Standart süreç altyapısı.'],['Uzmanlar','Dosya & veri hazırlığı.']],
+  incelenenler:['Başvuru & belge yönetimi','Lokasyon & veri altyapısı','Ön analiz (değer değil)','Süreç takibi'],
+  metodoloji:{baslik:'Rol Sınırı',aciklama:'Platform değer üretmez; yalnızca uzmanın işini hızlandıran altyapıyı sağlar.',svg:'platform-vs-uzman-sorumluluk'},
+  sinirlar:['Platform resmî değerleme raporu veya nihai değer üretmez.','Değer garantisi, yatırım tavsiyesi, kredi/mahkeme sonucu taahhüdü verilmez.'].concat(_DEG_SINIRLAR),
+  faq:[{q:'Platform değer belirler mi?',a:'Hayır. Nihai değer yalnızca SPK lisanslı uzmanın takdir ve imzasıyla belirlenir.'}].concat(_degFaqSpk()),
+  related:['sistem-uzman-farki','raporu-kim-imzalar','kvkk-veri-guvenligi'],seoTitle:'Platformun Rolü ve Sınırları',seoDesc:'Platform yalnızca başvuru ve ön analiz altyapısı sağlar; resmî raporu SPK lisanslı uzman hazırlar.'},
+ 'rapor-bolumleri':{group:'SPK Güven Merkezi',h1:'Değerleme Raporunda Neler Bulunur?',lead:'SPK III-62.3 Ek-1 ve UDES/IVS çerçevesinde, denetlenebilir bir değerleme raporunun içermesi gereken başlıklar.',
+  resmiTanim:'Resmî değerleme raporu yazılı olarak düzenlenir; SPK III-62.3 Ek-1 asgari unsurlarını içerir ve en az bir sorumlu değerleme uzmanı tarafından imzalanır.',
+  incelenenler:['Rapor tarihi ve numarası','Değerleme kuruluşu ve uzman bilgileri','Müşteri ve talep bilgisi','Değerleme konusu taşınmazın tanımı','Tapu ve hukuki durum','İmar durumu','Çevre ve konum analizi','Yapı ve fiziki özellikler','Kullanılan değerleme yöntem(ler)i','Emsal/veri analizi','Gelir/maliyet analizleri (varsa)','En verimli ve en iyi kullanım','Değer takdiri ve uzlaştırma','Değer esası (pazar değeri vb.)','Varsayımlar ve sınırlayıcı koşullar','Değerleme tarihi','Para birimi ve KDV durumu','Fotoğraflar ve krokiler','Belge ekleri','Uzman beyan ve taahhütleri','Sorumlu uzman imzası','Standart referansları (UDES/IVS, SPK)'],
+  metodoloji:{baslik:'Ek-1 Asgari Unsurlar',aciklama:'Her başlık kanıta dayanır; rapor bağımsız biçimde denetlenebilir olmalıdır.',svg:'rapor-icerik-sema'},
+  sinirlar:_DEG_SINIRLAR,faq:_degFaqSpk(),
+  related:['rapor-kontrol-denetlenebilirlik','raporu-kim-imzalar','rapor-yapisi'],seoTitle:'Değerleme Raporunda Neler Bulunur? (22 Başlık)',seoDesc:'SPK III-62.3 Ek-1 ve UDES/IVS uyumlu değerleme raporunun zorunlu bölümleri.'},
+ 'rapor-kontrol-denetlenebilirlik':{group:'SPK Güven Merkezi',h1:'Rapor Kontrolü & Denetlenebilirlik',lead:'Bir değerleme raporunun bağımsız biçimde kontrol edilebilmesi için gereken şeffaflık unsurları.',
+  resmiTanim:'Denetlenebilirlik; raporun veri kaynakları, yöntem seçimi ve varsayımlarının açıkça beyan edilerek üçüncü bir uzmanca yeniden izlenebilmesidir.',
+  incelenenler:['Veri kaynaklarının açıklanması','Yöntem gerekçesi','Varsayımların beyanı','Emsal seçim kriterleri','İç kalite kontrol kaydı'],
+  metodoloji:{baslik:'Denetlenebilir Standart',aciklama:'IVS 2025 dokümantasyon ilkeleri ve iç kalite kontrol, raporun izlenebilirliğini sağlar.',svg:'kalite-kontrol-workflow'},
+  sinirlar:_DEG_SINIRLAR,faq:_degFaqSpk(),
+  related:['rapor-bolumleri','kalite-kontrol','rapor-yapisi'],seoTitle:'Rapor Kontrolü & Denetlenebilirlik',seoDesc:'Değerleme raporunun bağımsız kontrolü için şeffaflık ve dokümantasyon unsurları.'},
+ 'etik-cikar-catismasi':{group:'SPK Güven Merkezi',h1:'Etik & Çıkar Çatışması',lead:'TDUB Etik Sözleşme ve meslek kuralları çerçevesinde çıkar çatışmasının önlenmesi.',
+  resmiTanim:'Değerleme uzmanı, sonucu etkileyebilecek çıkar ilişkilerini beyan etmek ve çıkar çatışması durumunda görevi reddetmekle yükümlüdür (TDUB Etik Sözleşme, 15.06.2016).',
+  incelenenler:['Çıkar çatışması beyanı','Bağımsız ücretlendirme','Gizlilik yükümlülüğü','Disiplin yaptırımları (uyarı/kınama/iptal)'],
+  metodoloji:{baslik:'Etik Çerçeve',aciklama:'Etik sözleşme ve disiplin mekanizması, mesleğin güvenilirliğini korur.',svg:'platform-vs-uzman-sorumluluk'},
+  sinirlar:_DEG_SINIRLAR,faq:_degFaqSpk(),
+  related:['bagimsizlik-tarafsizlik','tdub-uyeligi','degerleme-uzmani-kimdir'],seoTitle:'Etik & Çıkar Çatışması · Değerleme',seoDesc:'TDUB Etik Sözleşme çerçevesinde çıkar çatışmasının önlenmesi ve disiplin yaptırımları.'},
+ 'kvkk-veri-guvenligi':{group:'SPK Güven Merkezi',h1:'KVKK & Veri Güvenliği',lead:'Başvuru ve değerleme sürecinde paylaşılan kişisel ve kurumsal veriler KVKK kapsamında işlenir ve korunur.',
+  resmiTanim:'Kişisel veriler, 6698 sayılı KVKK kapsamında yalnızca resmî değerleme süreci amacıyla işlenir; tenant kimlik anahtarı yalnızca güvenli başlıkta iletilir, kullanıcıya açık biçimde saklanmaz.',
+  incelenenler:['Amaçla sınırlı işleme','Gizlilik ve erişim kontrolü','Saklama ve imha ilkeleri','Aktarımda güvenlik'],
+  metodoloji:{baslik:'Veri Güvenliği',aciklama:'Veriler yalnızca resmî süreç için kullanılır; güvenli iletim ve erişim kontrolü uygulanır.',svg:'standart'},
+  sinirlar:_DEG_SINIRLAR,faq:[{q:'Verilerim nasıl korunur?',a:'KVKK kapsamında, amaçla sınırlı olarak işlenir ve yalnızca resmî değerleme süreci için kullanılır.'}].concat(_degFaqSpk()),
+  related:['platform-rolu-sinirlar','etik-cikar-catismasi','iletisim'],seoTitle:'KVKK & Veri Güvenliği',seoDesc:'Başvuru ve değerleme sürecinde kişisel/kurumsal verilerin KVKK uyumlu işlenmesi ve güvenliği.'},
+ 'makine-ekipman-yetki':{group:'SPK Güven Merkezi',h1:'Makine, Ekipman, Tesis ve Altyapı Değerleme Yetkisi',lead:'Gayrimenkul değerleme ile makine-ekipman ve gayrimenkul dışı varlık değerleme, SPK’da ayrı yetki listeleri kapsamında değerlendirilebilir.',
+  resmiTanim:'Makine, ekipman ve gayrimenkul dışı varlıkların değerlemesi, gayrimenkul değerlemeden farklı bir yetki kapsamı ve kadro gerektirebilir. Bir kuruluşun ilgili yetkiye sahip olup olmadığı, ilgili mevzuat ve resmî kurum kayıtlarından kontrol edilmelidir.',
+  kimlerIcin:[['Sanayi','Makine-teçhizat ve üretim hattı.'],['Enerji & Altyapı','Tesis ve altyapı varlıkları.'],['Kurumlar','Karma varlık portföyleri.']],
+  incelenenler:['Gayrimenkul vs makine/ekipman yetki ayrımı','Tesis bütünlüğü: taşınmaz + makine ayrımı','Altyapı ve taşıt varlıkları','Yetki kapsamının resmî kayıttan teyidi'],
+  metodoloji:{baslik:'Bileşen & Yetki Ayrımı',aciklama:'Entegre tesiste taşınmaz ve makine bileşenleri ayrıştırılır; her bileşen için uygun yetki kapsamı esastır.',svg:'fabrika-bilesen'},
+  sinirlar:['Bu sayfa hiçbir yetki iddiasında bulunmaz.','Yetki kapsamı ilgili mevzuat ve resmî kurum kayıtlarından kontrol edilmelidir.'].concat(_DEG_SINIRLAR),
+  faq:[{q:'Her kuruluş makine değerlemesi yapabilir mi?',a:'Hayır; makine/ekipman ayrı yetki gerektirebilir. Yetki kapsamı resmî kayıtlardan doğrulanmalıdır.'}].concat(_degFaqSpk()),
+  related:['sanayi','spk-sirket-kontrol','spk-kurulus-listesi'],seoTitle:'Makine, Ekipman & Altyapı Değerleme Yetkisi',seoDesc:'Gayrimenkul ile makine-ekipman değerleme yetkisi farkı; yetki kapsamı resmî kayıtlardan kontrol edilmelidir.'},
+
+ /* ===== METODOLOJİ ALT SAYFALARI (16) ===== */
+ 'pazar-yaklasimi':_degMethPage('pazar-yaklasimi','Pazar (Emsal) Yaklaşımı','pazar','Yakın tarihli, benzer ve gerçekleşmiş işlemlerin düzeltme katsayılarıyla normalize edilerek konu taşınmaza uyarlanmasıdır (IVS 105 Pazar Yaklaşımı).',['Konut, arsa ve aktif pazarı olan taşınmazlar'],['Karşılaştırılabilir güncel emsaller','Düzeltme kriterleri (konum, alan, yaş)'],['Aktif/güncel emsal yoksa güvenilirlik düşer']),
+ 'gelir-yaklasimi':_degMethPage('gelir-yaklasimi','Gelir Yaklaşımı','gelir','Varlığın gelecekte üreteceği net nakit akışlarının, riski yansıtan oranla bugünkü değere indirgenmesidir (IVS 105 Gelir Yaklaşımı).',['Getirili ticari, otel ve tesis taşınmazları'],['Net faaliyet geliri (NOI)','Kapitalizasyon/iskonto oranı'],['Gelir projeksiyonu varsayımlarına duyarlıdır']),
+ 'maliyet-yaklasimi':_degMethPage('maliyet-yaklasimi','Maliyet Yaklaşımı','maliyet','İkame/yeniden inşa bedelinden fiziksel yıpranma ile fonksiyonel ve ekonomik eskimenin düşülmesidir (IVS 105 Maliyet Yaklaşımı).',['Özel amaçlı yapılar, yeni inşa, sanayi varlıkları'],['Birim maliyet verileri','Yıpranma ve eskime oranları'],['Pazar kanıtıyla desteklenmediğinde sınırlıdır']),
+ 'emsal-analizi':_degMethPage('emsal-analizi','Emsal Analizi','emsalAkis','Karşılaştırılabilir işlemlerin seçilmesi, düzeltilmesi ve normalize edilerek birim değer elde edilmesi sürecidir.',['Pazar yaklaşımının uygulandığı tüm taşınmazlar'],['En az 3-5 nitelikli emsal','İşlem doğrulama'],['Emsal niteliği zayıfsa sonuç güveni azalır']),
+ 'direkt-kapitalizasyon':_degMethPage('direkt-kapitalizasyon','Direkt Kapitalizasyon','gelir','Tek dönem net faaliyet gelirinin uygun kapitalizasyon oranına bölünerek değere ulaşılmasıdır.',['İstikrarlı gelirli ticari taşınmazlar'],['Sürdürülebilir NOI','Pazar kap. oranı'],['Gelir düzensizse uygun değildir']),
+ 'dcf':_degMethPage('dcf','İndirgenmiş Nakit Akışı (DCF/İNA)','gelir','Çok dönemli net nakit akışlarının iskonto oranıyla bugünkü değere indirgenmesidir.',['Gelişen gelirli tesis ve projeler'],['Çok yıllı nakit akışı projeksiyonu','WACC/iskonto oranı'],['Projeksiyon varsayımlarına yüksek duyarlılık']),
+ 'arsa-artik':_degMethPage('arsa-artik','Arsa Artık (Residual) Yöntemi','arsa-imar','Geliştirilmiş projenin değerinden geliştirme maliyet ve kârının düşülerek arsa değerine ulaşılmasıdır.',['Geliştirmeye uygun imarlı arsalar'],['Proje geliri ve maliyet tahmini','İmar/yapılaşma hakları'],['Maliyet/gelir varsayımlarına duyarlıdır']),
+ 'gelistirme-yaklasimi':_degMethPage('gelistirme-yaklasimi','Geliştirme Yaklaşımı','arsa-imar','Bir geliştirme projesinin fizibilite ve değer analizinin bütünleşik ele alınmasıdır.',['Proje geliştirme ve devam eden inşaatlar'],['Proje programı','Maliyet ve satış/gelir projeksiyonu'],['Piyasa ve tamamlanma riskine bağlıdır']),
+ 'amortisman-analizi':_degMethPage('amortisman-analizi','Amortisman & Yıpranma Analizi','maliyet','Fiziksel yıpranma ile fonksiyonel ve ekonomik eskimenin tespit edilerek değerden düşülmesidir.',['Sanayi, makine ve özel yapı bileşenleri'],['Faydalı ömür verileri','Bakım/kullanım geçmişi'],['Eskime tespiti uzmanlık gerektirir']),
+ 'en-verimli-kullanim':_degMethPage('en-verimli-kullanim','En Verimli ve En İyi Kullanım','arsa-imar','Yasal olarak izin verilen, fiziken mümkün, finansal olarak uygun ve azami verim sağlayan kullanımın tespitidir (highest & best use).',['Arsa ve geliştirme potansiyelli taşınmazlar'],['İmar durumu','Pazar talebi'],['Senaryo varsayımlarına dayanır']),
+ 'risk-duyarlilik':_degMethPage('risk-duyarlilik','Risk & Duyarlılık Analizi','risk-veri-kalitesi','Değer sonucunun temel varsayımlardaki değişimlere duyarlılığının ve risk düzeyinin değerlendirilmesidir.',['Gelir/proje esaslı değerlemeler'],['Senaryo aralıkları','Veri kalitesi'],['Bir değer garantisi sağlamaz']),
+ 'veri-kaynaklari':_degMethPage('veri-kaynaklari','Veri Kaynakları & Kalitesi','risk-veri-kalitesi','Emsal, gelir ve maliyet verilerinin kaynağı, güncelliği ve doğrulanabilirliğinin değerlendirilmesidir (IVS 2025 Data & Inputs).',['Tüm yaklaşımların veri temeli'],['Doğrulanabilir kaynaklar','Güncellik'],['Veri zayıfsa güven düzeyi düşer']),
+ 'imar-kontrolu':_degMethPage('imar-kontrolu','İmar Durumu Kontrolü','arsa-imar','Belediye imar planı, KAKS/TAKS, fonksiyon ve yapılaşma haklarının incelenmesidir.',['Arsa, geliştirme ve ruhsat süreçleri'],['İmar durum belgesi','Plan notları'],['Plan değişiklikleri sonucu etkiler']),
+ 'tapu-kadastro':_degMethPage('tapu-kadastro','Tapu & Kadastro İncelemesi','rapor-icerik-sema','Tapu kütüğü, mülkiyet, kat irtifakı/mülkiyeti ve takyidatların (ipotek, haciz, şerh) incelenmesidir.',['Tüm taşınmaz değerlemeleri'],['Tapu kayıt örneği','Takyidat bilgileri'],['Resmî kayıt güncelliğine bağlıdır']),
+ 'saha-kontrolu':_degMethPage('saha-kontrolu','Saha (Yerinde) Kontrol','platform-vs-uzman-sorumluluk','SPK lisanslı uzmanın taşınmazı yerinde inceleyerek konum, yapı ve fiziki durumu tespit etmesidir.',['Tüm taşınmaz değerlemeleri'],['Yerinde erişim','Fotoğraf ve ölçüm'],['Erişim kısıtı tespiti sınırlayabilir']),
+ 'kalite-kontrol':_degMethPage('kalite-kontrol','Kalite Kontrol & İç Denetim','kalite-kontrol-workflow','Raporun tanzim sonrası bağımsız iç kontrol ve kalite denetiminden geçirilmesidir.',['Tüm resmî raporlar'],['İç kontrol kaydı','Standart uyum kontrolü'],['Dış denetim ayrıca yapılabilir']),
+
+ /* ===== RAPOR TÜRLERİ index ===== */
+ 'rapor-turleri':{group:'Rapor Türleri',h1:'Rapor Türleri',lead:'Taşınmaz tipine, kullanım amacına, kurum/işleme, metodolojiye ve özel varlık sınıfına göre değerleme rapor türleri.',
+  index:[
+   {baslik:'A · Taşınmaz Tipine Göre',aciklama:'Varlık türüne göre değerleme.',items:[['konut','Konut Değerleme'],['daire','Daire'],['villa','Villa'],['ticari','Ticari Gayrimenkul'],['ofis','Ofis'],['plaza-is-merkezi','Plaza / İş Merkezi'],['avm','AVM'],['depo-lojistik','Depo & Lojistik'],['arsa-arazi','Arsa & Arazi'],['imarli-arsa','İmarlı Arsa'],['sanayi','Fabrika & Sanayi'],['otel-turizm','Otel & Turizm'],['hastane-saglik','Hastane & Sağlık'],['akaryakuit-istasyonu','Akaryakıt İstasyonu']]},
+   {baslik:'B · Kullanım Amacına Göre',aciklama:'Değerlemenin kullanım amacına göre.',items:[['banka-teminat-raporu','Banka Teminat'],['kredi-sureci','Kredi Süreci'],['kamulastirma','Kamulaştırma'],['sigorta-amacli','Sigorta Amaçlı'],['vergi-beyan','Vergi & Beyan'],['miras-paylasim','Miras & Paylaşım'],['ortaklik-hisse','Ortaklık & Hisse'],['hukuki-surec','Mahkeme / İcra']]},
+   {baslik:'C · Kurum & İşleme Göre',aciklama:'Kurumsal işlem türüne göre.',items:[['banka-kurum','Banka & Finans Kuruluşu'],['gyo-degerleme','GYO Değerleme'],['halka-acik-sirket','Halka Açık Şirket'],['leasing','Leasing'],['faktoring','Faktoring'],['yabanci-yatirimci','Yabancı Yatırımcı'],['kurumsal-sirket-degerleme','Kurumsal & Şirket']]},
+   {baslik:'D · Metodolojiye Göre',aciklama:'Uygulanan yaklaşıma göre.',items:[['pazar-yaklasimi','Pazar Yaklaşımı'],['gelir-yaklasimi','Gelir Yaklaşımı'],['maliyet-yaklasimi','Maliyet Yaklaşımı'],['dcf','İNA / DCF'],['arsa-artik','Arsa Artık'],['en-verimli-kullanim','En Verimli Kullanım']]},
+   {baslik:'E · Özel Varlık & Proje',aciklama:'Özel varlık sınıfları.',items:[['proje-gelistirme','Proje Geliştirme'],['devam-eden-insaat','Devam Eden İnşaat'],['kentsel-donusum','Kentsel Dönüşüm'],['makine-ekipman-yetki','Makine & Ekipman Yetkisi'],['imarli-arsa','İmarlı Arsa']]},
+   {baslik:'F · SPK Güven & Süreç',aciklama:'Yasal çerçeve ve güven.',items:[['spk-lisansli-degerleme-nedir','SPK Lisanslı Değerleme'],['raporu-kim-imzalar','Raporu Kim İmzalar'],['sistem-uzman-farki','Sistem-Uzman Farkı'],['rapor-bolumleri','Rapor Bölümleri'],['ivs-udes-standartlari','IVS/UDES'],['tdub-uyeligi','TDUB Üyeliği']]}
+  ],
+  faq:[{q:'Hangi rapor türü bana uygun?',a:'Taşınmaz tipiniz ve değerleme amacınıza göre uygun tür belirlenir; başvuru sonrası SPK lisanslı uzman yönlendirir.'}].concat(_degFaqSpk()),
+  related:['basvuru','metodoloji','spk-lisansli-degerleme-nedir'],seoTitle:'Değerleme Rapor Türleri',seoDesc:'Taşınmaz tipi, amaç, kurum, metodoloji ve özel varlık sınıfına göre SPK lisanslı değerleme rapor türleri.'},
+
+ /* ===== ÖNCELİKLİ RAPOR TÜRÜ SAYFALARI (TAM 15-bölüm) ===== */
+ daire:_degReportPage({h1:'Daire Değerleme',lead:'Apartman dairesi ve bağımsız bölümlerin pazar değeri; kat irtifakı/mülkiyeti, konum ve nitelik analizi ile emsal yaklaşımı esas alınarak belirlenir.',
+  kimlerIcin:[['Banka Kredisi','Konut kredisi teminat değeri.'],['Miras & Paylaşım','İzale-i şuyu ve paylaşım.'],['Mali Tablo','Bireysel/kurumsal varlık kaydı.']],
+  hangiDurumda:['Konut kredisi ve teminat','Miras paylaşımı','Mahkeme/icra','Mali tablo'],
+  incelenenler:['Kat irtifakı/mülkiyeti','Konum ve kat/cephe','Yapı yaşı ve nitelik','Emsal işlemler'],
+  methBaslik:'Emsal Karşılaştırma',methAciklama:'Benzer dairelerin güncel işlemleri; kat, cephe, alan ve yaş farkları için düzeltilir.',svg:'pazar',
+  related:['konut','villa','banka-teminat-raporu'],seoDesc:'Daire ve bağımsız bölümlerde emsal yöntemiyle SPK lisanslı değerleme.'}),
+ villa:_degReportPage({h1:'Villa Değerleme',lead:'Müstakil ve bahçeli villaların değeri; arsa payı, yapı niteliği ve konum primi dikkate alınarak emsal ve gerektiğinde maliyet yaklaşımıyla belirlenir.',
+  kimlerIcin:[['Banka & Teminat','Yüksek değerli konut teminatı.'],['Miras & Paylaşım','Tarafsız değer tespiti.'],['Kurumsal','Varlık kaydı.']],
+  hangiDurumda:['Banka teminatı','Miras','Mahkeme/icra'],
+  incelenenler:['Arsa payı ve bahçe','Yapı niteliği ve donanım','Konum primi','Emsal işlemler'],
+  methBaslik:'Emsal + Maliyet',methAciklama:'Konum ve nitelik primli villalarda emsal yaklaşımı, özgün yapılarda maliyet yaklaşımıyla desteklenir.',svg:'pazar',
+  related:['daire','konut','arsa-arazi'],seoDesc:'Müstakil villa değerlemesinde emsal ve maliyet yaklaşımıyla SPK lisanslı rapor.'}),
+ ofis:_degReportPage({h1:'Ofis Değerleme',lead:'Ofis ve büro birimlerinin değeri; kira getirisi ve konum esas alınarak gelir kapitalizasyonu ve emsal yaklaşımıyla belirlenir.',
+  kimlerIcin:[['Yatırımcı','Getiri analizi.'],['Banka','Ticari teminat.'],['Şirket','Mali raporlama.']],
+  hangiDurumda:['Ticari kredi/teminat','Yatırım kararı','Mali tablo'],
+  incelenenler:['Kira sözleşmeleri','Doluluk ve getiri','Konum ve ulaşım','Emsal işlemler'],
+  methBaslik:'Gelir + Emsal',methAciklama:'Getirili ofislerde gelir kapitalizasyonu; emsal yaklaşımıyla çapraz kontrol edilir.',svg:'gelir',
+  related:['plaza-is-merkezi','ticari','banka-teminat-raporu'],seoDesc:'Ofis ve büro değerlemesinde gelir ve emsal yaklaşımıyla SPK lisanslı rapor.'}),
+ 'plaza-is-merkezi':_degReportPage({h1:'Plaza & İş Merkezi Değerleme',lead:'Plaza ve iş merkezlerinin değeri; toplam kiralanabilir alan, doluluk ve net faaliyet geliri esas alınarak gelir yaklaşımıyla belirlenir.',
+  kimlerIcin:[['Kurumsal Yatırımcı','İşletme değeri.'],['Banka & Finans','Büyük ölçekli teminat.'],['GYO','Portföy değerleme.']],
+  hangiDurumda:['Kurumsal teminat','GYO/portföy','Birleşme/devir'],
+  incelenenler:['Kiralanabilir alan','Doluluk ve NOI','Yönetim giderleri','Pazar kira düzeyi'],
+  methBaslik:'Gelir Kapitalizasyonu',methAciklama:'NOI ve kapitalizasyon/iskonto oranıyla; DCF teknikleriyle desteklenir.',svg:'gelir',
+  related:['ofis','avm','gyo-degerleme'],seoDesc:'Plaza ve iş merkezi değerlemesinde gelir kapitalizasyonu yöntemiyle SPK lisanslı rapor.'}),
+ avm:_degReportPage({h1:'AVM Değerleme',lead:'Alışveriş merkezlerinin değeri; kiracı karması, ciro/kira gelirleri ve doluluk esas alınarak gelir yaklaşımıyla belirlenir.',
+  kimlerIcin:[['Kurumsal Yatırımcı','İşletme değeri ve getiri.'],['Banka & Finans','Büyük teminat.'],['GYO','Portföy.']],
+  hangiDurumda:['Kurumsal finansman','GYO portföy','Birleşme/devir'],
+  incelenenler:['Kiracı karması','Ciro ve kira gelirleri','Doluluk','Ortak alan giderleri'],
+  methBaslik:'Gelir + DCF',methAciklama:'Sürdürülebilir NOI ve DCF ile işletme değeri; senaryo/duyarlılık analiziyle.',svg:'gelir',
+  related:['plaza-is-merkezi','gyo-degerleme','ticari'],seoDesc:'AVM değerlemesinde gelir kapitalizasyonu ve DCF yöntemiyle SPK lisanslı rapor.'}),
+ 'depo-lojistik':_degReportPage({h1:'Depo & Lojistik Tesisi Değerleme',lead:'Depo ve lojistik tesislerinin değeri; kullanım alanı, lokasyon avantajı ve kira getirisi esas alınarak gelir ve emsal yaklaşımıyla belirlenir.',
+  kimlerIcin:[['Lojistik Şirketleri','Tesis değeri.'],['Yatırımcı','Getiri analizi.'],['Banka','Teminat.']],
+  hangiDurumda:['Ticari teminat','Yatırım','Mali tablo'],
+  incelenenler:['Kullanım alanı ve yükseklik','Lokasyon/erişim','Kira getirisi','Emsal'],
+  methBaslik:'Gelir + Emsal',methAciklama:'Getirili tesislerde gelir kapitalizasyonu; arsa/bina bileşeni maliyetle desteklenir.',svg:'gelir',
+  related:['ticari','sanayi','banka-teminat-raporu'],seoDesc:'Depo ve lojistik tesisi değerlemesinde gelir ve emsal yaklaşımıyla SPK lisanslı rapor.'}),
+ 'akaryakuit-istasyonu':_degReportPage({h1:'Akaryakıt İstasyonu Değerleme',lead:'Akaryakıt istasyonlarının değeri; intifa/üst hakkı, bayilik ve satış litrajı (ciro) ile gelir kapitalizasyonu esas alınarak belirlenir.',
+  kimlerIcin:[['İşletmeci','İşletme değeri.'],['Banka & Finans','Teminat.'],['Yatırımcı','Devir/edinim.']],
+  hangiDurumda:['Teminat','Devir/edinim','Mali tablo'],
+  incelenenler:['İntifa/üst hakkı ve süresi','Bayilik sözleşmesi','Satış litrajı (ciro)','Tapu şerhleri'],
+  methBaslik:'Gelir Kapitalizasyonu',methAciklama:'Satış/gelir projeksiyonu ve lisans/hak değeri kapitalize edilir.',svg:'otel-gelir',
+  related:['ticari','sanayi','kurumsal-sirket-degerleme'],seoDesc:'Akaryakıt istasyonu değerlemesinde gelir kapitalizasyonu ve intifa hakkı analiziyle SPK lisanslı rapor.'}),
+ 'hastane-saglik':_degReportPage({h1:'Hastane & Sağlık Tesisi Değerleme',lead:'Hastane ve sağlık tesislerinin değeri; işletme geliri, ruhsat/izinler ve özel donanım esas alınarak gelir ve maliyet yaklaşımıyla belirlenir.',
+  kimlerIcin:[['Sağlık Grupları','İşletme değeri.'],['Banka & Finans','Finansman.'],['Yatırımcı','Devir/birleşme.']],
+  hangiDurumda:['Finansman','Birleşme/devir','Mali tablo'],
+  incelenenler:['Ruhsat ve izinler','İşletme gelir-gider','Özel donanım','Konum'],
+  methBaslik:'Gelir + Maliyet',methAciklama:'İşletme değeri için gelir yaklaşımı; özel yapı/donanım için maliyet yaklaşımı.',svg:'otel-gelir',
+  related:['ticari','kurumsal-sirket-degerleme','sanayi'],seoDesc:'Hastane ve sağlık tesisi değerlemesinde gelir ve maliyet yaklaşımıyla SPK lisanslı rapor.'}),
+ 'imarli-arsa':_degReportPage({h1:'İmarlı Arsa Değerleme',lead:'İmarlı arsaların değeri; imar hakları, en verimli ve en iyi kullanım analizi ile emsal ve gerektiğinde arsa artık yöntemiyle belirlenir.',
+  kimlerIcin:[['Geliştirici','Edinim/geliştirme kararı.'],['Banka','Arsa teminatı.'],['Yatırımcı','Getiri.']],
+  hangiDurumda:['Geliştirme','Teminat','Kamulaştırma'],
+  incelenenler:['İmar durumu (KAKS/TAKS)','En verimli kullanım','Emsal arsa işlemleri','Altyapı durumu'],
+  methBaslik:'Emsal + Arsa Artık',methAciklama:'Emsal yaklaşımı; geliştirme potansiyelinde arsa artık (residual) yöntemiyle desteklenir.',svg:'arsa-imar',
+  related:['arsa-arazi','proje-gelistirme','en-verimli-kullanim'],seoDesc:'İmarlı arsa değerlemesinde emsal ve arsa artık yöntemiyle SPK lisanslı rapor.'}),
+ 'proje-gelistirme':_degReportPage({h1:'Proje Geliştirme Değerleme',lead:'Geliştirme projelerinin değeri; proje programı, maliyet ve gelir projeksiyonu ile geliştirme/arsa artık yaklaşımıyla belirlenir.',
+  kimlerIcin:[['Geliştirici','Fizibilite ve değer.'],['Banka & Finans','Proje finansmanı.'],['Yatırımcı','Ortaklık kararı.']],
+  hangiDurumda:['Proje finansmanı','Fizibilite','Ortaklık'],
+  incelenenler:['Proje programı','Maliyet tahmini','Satış/gelir projeksiyonu','İmar/ruhsat'],
+  methBaslik:'Geliştirme / Arsa Artık',methAciklama:'Proje değerinden maliyet ve kâr düşülerek arsa/proje değerine ulaşılır; DCF ile desteklenir.',svg:'arsa-imar',form:'proje-gelistirme-degerleme',
+  related:['imarli-arsa','devam-eden-insaat','dcf'],seoDesc:'Proje geliştirme değerlemesinde geliştirme ve arsa artık yöntemiyle SPK lisanslı rapor.'}),
+ 'devam-eden-insaat':_degReportPage({h1:'Devam Eden İnşaat Değerleme',lead:'Tamamlanmamış inşaatların değeri; tamamlanma oranı, kalan maliyet ve proje değeri esas alınarak maliyet ve geliştirme yaklaşımıyla belirlenir.',
+  kimlerIcin:[['Geliştirici','Ara dönem değer.'],['Banka','Proje teminatı.'],['Yatırımcı','Devir.']],
+  hangiDurumda:['Proje teminatı','Ara dönem raporlama','Devir'],
+  incelenenler:['Tamamlanma oranı','Kalan maliyet','Ruhsat uygunluğu','Proje değeri'],
+  methBaslik:'Maliyet + Geliştirme',methAciklama:'Mevcut imalat maliyetle, tamamlanmış proje geliştirme yaklaşımıyla değerlenir.',svg:'fabrika-bilesen',form:'proje-gelistirme-degerleme',
+  related:['proje-gelistirme','imarli-arsa','sanayi'],seoDesc:'Devam eden inşaat değerlemesinde maliyet ve geliştirme yaklaşımıyla SPK lisanslı rapor.'}),
+ 'banka-teminat-raporu':_degReportPage({h1:'Banka Teminat Değerleme Raporu',lead:'Banka kredi ve teminat süreçleri için; BDDK çerçevesinde, standart formatta ve denetlenebilir biçimde hazırlanan SPK lisanslı değerleme raporu.',
+  kimlerIcin:[['Bankalar','Kredi/teminat değeri.'],['Kredi Kullananlar','Teminat süreci.'],['Finans Kuruluşları','Portföy.']],
+  hangiDurumda:['Konut/ticari kredi','Teminat tesisi','Kredi yenileme'],
+  incelenenler:['Tapu ve takyidatlar','Pazar değeri','Likidite/satılabilirlik notu','Standart format uyumu'],
+  methBaslik:'Pazar / Gelir',methAciklama:'Taşınmaz türüne göre pazar veya gelir yaklaşımı; banka standardına uygun raporlanır.',svg:'banka-teminat-akis',form:'banka-teminat-basvurusu',
+  faq:[{q:'Banka değeri ile satış fiyatı aynı mı?',a:'Hayır; rapor, pazar değeri esasında bağımsız değer takdiridir, bir fiyat veya kredi onayı taahhüdü değildir.'}],
+  related:['kredi-sureci','banka-kurum','konut'],seoDesc:'Banka teminat amaçlı, BDDK çerçevesinde standart formatlı SPK lisanslı değerleme raporu.'}),
+ 'kredi-sureci':_degReportPage({h1:'Kredi Sürecinde Değerleme',lead:'Konut ve ticari kredi süreçlerinde teminat taşınmazının bağımsız değer tespiti; kredi kararından bağımsız, tarafsız raporlama.',
+  kimlerIcin:[['Kredi Kullananlar','Teminat değeri.'],['Bankalar','Süreç girdisi.'],['Danışmanlar','Süreç desteği.']],
+  hangiDurumda:['Konut kredisi','Ticari kredi','Kredi yapılandırma'],
+  incelenenler:['Teminat taşınmazı','Pazar değeri','Tapu/hukuki durum'],
+  methBaslik:'Pazar Değeri Esası',methAciklama:'IVS 104 pazar değeri esasında tarafsız değer takdiri yapılır.',svg:'banka-teminat-akis',form:'banka-teminat-basvurusu',
+  faq:[{q:'Değerleme krediyi garanti eder mi?',a:'Hayır; değerleme bağımsız bir tespittir, kredi onayı bankanın kararıdır.'}],
+  related:['banka-teminat-raporu','banka-kurum','konut'],seoDesc:'Kredi sürecinde teminat taşınmazının bağımsız SPK lisanslı değer tespiti.'}),
+ kamulastirma:_degReportPage({h1:'Kamulaştırma Değerleme',lead:'Kamulaştırma işlemlerinde taşınmazın bedel tespiti; ilgili mevzuat ve emsal analizi çerçevesinde bağımsız ve tarafsız raporlama.',
+  kimlerIcin:[['Kamu Kurumları','Resmî bedel tespiti.'],['Hak Sahipleri','Tarafsız değer.'],['Hukuk Büroları','Dava desteği.']],
+  hangiDurumda:['Kamulaştırma bedeli','Bedel tespit davası','Acele kamulaştırma'],
+  incelenenler:['Tapu ve yüzölçümü','Vasıf ve kullanım','Emsal işlemler','Verim/gelir (tarım vb.)'],
+  methBaslik:'Emsal + Gelir',methAciklama:'Arsa/arazide emsal; gelir getiren taşınmazda gelir yaklaşımı esas alınır.',svg:'kamulastirma-surec',form:'mahkeme-icra-basvurusu',
+  related:['arsa-arazi','hukuki-surec','imarli-arsa'],seoDesc:'Kamulaştırma bedel tespitinde emsal ve gelir yaklaşımıyla bağımsız SPK lisanslı değerleme.'}),
+ 'sigorta-amacli':_degReportPage({h1:'Sigorta Amaçlı Değerleme',lead:'Sigorta bedeli tespiti için; yapının yeniden inşa/ikame maliyeti esas alınarak maliyet yaklaşımıyla değer takdiri.',
+  kimlerIcin:[['Sigorta Şirketleri','Bedel tespiti.'],['Mülk Sahipleri','Doğru sigorta bedeli.'],['Kurumlar','Varlık sigortası.']],
+  hangiDurumda:['Yapı sigortası','Yeniden inşa bedeli','Hasar öncesi tespit'],
+  incelenenler:['Yapı niteliği ve alanı','İkame maliyeti','Yıpranma','Donanım'],
+  methBaslik:'Maliyet Yaklaşımı',methAciklama:'Yeniden inşa/ikame bedelinden yıpranma düşülerek sigortaya esas değer bulunur.',svg:'maliyet',
+  related:['kurumsal-sirket-degerleme','sanayi','maliyet-yaklasimi'],seoDesc:'Sigorta amaçlı değerlemede maliyet yaklaşımıyla yeniden inşa/ikame bedeli tespiti.'}),
+ 'vergi-beyan':_degReportPage({h1:'Vergi & Beyan Amaçlı Değerleme',lead:'Vergi ve resmî beyan süreçlerinde taşınmaz değerinin bağımsız tespiti; ilgili mevzuat çerçevesinde tarafsız raporlama.',
+  kimlerIcin:[['Şirketler','Vergi/beyan.'],['Bireyler','Resmî beyan.'],['Mali Müşavirler','Süreç desteği.']],
+  hangiDurumda:['Vergi beyanı','Değer artış kazancı','Emlak vergisi itirazı'],
+  incelenenler:['Tapu ve rayiç','Pazar değeri','Emsal işlemler'],
+  methBaslik:'Pazar Değeri',methAciklama:'IVS 104 pazar değeri esasında bağımsız değer takdiri.',svg:'yaklasim-karsilastirma',
+  related:['kurumsal-sirket-degerleme','miras-paylasim','ortaklik-hisse'],seoDesc:'Vergi ve beyan amaçlı bağımsız SPK lisanslı taşınmaz değerleme.'}),
+ 'miras-paylasim':_degReportPage({h1:'Miras & Paylaşım Değerleme',lead:'Miras ve izale-i şuyu (ortaklığın giderilmesi) süreçlerinde taşınmazın tarafsız değer tespiti.',
+  kimlerIcin:[['Mirasçılar','Adil paylaşım.'],['Hukuk Büroları','Dava desteği.'],['Mahkemeler','Bilirkişi kanaati.']],
+  hangiDurumda:['Miras paylaşımı','İzale-i şuyu davası','Tenkis'],
+  incelenenler:['Tapu ve hisse durumu','Pazar değeri','Emsal işlemler','Hukuki durum'],
+  methBaslik:'Emsal + Gelir',methAciklama:'Taşınmaz türüne göre emsal veya gelir yaklaşımıyla tarafsız değer.',svg:'hukuki-surec-akis',form:'mahkeme-icra-basvurusu',
+  related:['hukuki-surec','ortaklik-hisse','konut'],seoDesc:'Miras ve izale-i şuyu süreçlerinde tarafsız SPK lisanslı değer tespiti.'}),
+ 'ortaklik-hisse':_degReportPage({h1:'Ortaklık & Hisse Değerleme',lead:'Taşınmaz ortaklıklarında hisse/pay değerinin tespiti; ortaklık çözümü ve devir süreçleri için tarafsız raporlama.',
+  kimlerIcin:[['Ortaklar','Pay değeri.'],['Şirketler','Hisse devri.'],['Hukuk Büroları','Uyuşmazlık.']],
+  hangiDurumda:['Hisse devri','Ortaklık çözümü','Uyuşmazlık'],
+  incelenenler:['Tapu ve pay oranları','Taşınmaz değeri','Pay/hisse hesabı'],
+  methBaslik:'Emsal / Gelir',methAciklama:'Taşınmaz değeri belirlenir, pay oranına göre hisse değeri hesaplanır.',svg:'kurumsal-varlik',
+  related:['miras-paylasim','kurumsal-sirket-degerleme','hukuki-surec'],seoDesc:'Ortaklık ve hisse değerlemesinde tarafsız SPK lisanslı taşınmaz değer tespiti.'}),
+ 'gyo-degerleme':_degReportPage({h1:'GYO (Gayrimenkul Yatırım Ortaklığı) Değerleme',lead:'Gayrimenkul yatırım ortaklıklarının portföy varlıkları için; SPK düzenlemeleri çerçevesinde periyodik, bağımsız ve denetlenebilir değerleme.',
+  kimlerIcin:[['GYO','Portföy değerleme.'],['Yatırımcılar','Şeffaf değer.'],['Denetim','SPK uyumu.']],
+  hangiDurumda:['Periyodik portföy değerleme','Halka arz','SPK raporlama'],
+  incelenenler:['Portföy taşınmazları','Gelir ve doluluk','Pazar değeri','SPK uyum'],
+  methBaslik:'Gelir + Pazar',methAciklama:'Getirili portföyde gelir yaklaşımı; arsa/geliştirmede uygun yöntemlerle uzlaştırılır.',svg:'kurumsal-varlik',form:'kurumsal-teklif',
+  related:['halka-acik-sirket','plaza-is-merkezi','kurumsal-sirket-degerleme'],seoDesc:'GYO portföy varlıklarında SPK uyumlu periyodik bağımsız değerleme.'}),
+ 'halka-acik-sirket':_degReportPage({h1:'Halka Açık Şirket Varlık Değerleme',lead:'Halka açık şirketlerin taşınmaz ve sabit varlıkları için; SPK ve finansal raporlama çerçevesinde bağımsız değerleme.',
+  kimlerIcin:[['Halka Açık Şirketler','Finansal raporlama.'],['Yatırımcılar','Şeffaflık.'],['Denetim','TMS/TFRS & SPK.']],
+  hangiDurumda:['Finansal raporlama','SPK bildirimleri','Birleşme/devir'],
+  incelenenler:['Taşınmaz portföyü','Gerçeğe uygun değer','SPK/TFRS uyumu'],
+  methBaslik:'Gelir + Maliyet',methAciklama:'TFRS 13 gerçeğe uygun değer çerçevesinde uygun yaklaşımlar uygulanır.',svg:'kurumsal-varlik',form:'kurumsal-teklif',
+  related:['gyo-degerleme','kurumsal-sirket-degerleme','spk-lisansli-degerleme-nedir'],seoDesc:'Halka açık şirket varlıklarında SPK ve TFRS uyumlu bağımsız değerleme.'}),
+ leasing:_degReportPage({h1:'Leasing (Finansal Kiralama) Değerleme',lead:'Finansal kiralamaya konu taşınmaz ve varlıkların değeri; teminat ve sözleşme süreçleri için bağımsız değerleme.',
+  kimlerIcin:[['Leasing Şirketleri','Teminat değeri.'],['Kiracılar','Süreç.'],['Banka & Finans','Risk.']],
+  hangiDurumda:['Leasing teminatı','Sözleşme tesisi','Sözleşme sonu değer'],
+  incelenenler:['Varlık niteliği','Pazar/ikame değeri','Kalan ekonomik ömür'],
+  methBaslik:'Pazar / Maliyet',methAciklama:'Taşınmazda pazar; makine/ekipmanda maliyet yaklaşımı (ayrı yetki kapsamı resmî kayıttan kontrol edilir).',svg:'banka-teminat-akis',form:'kurumsal-teklif',
+  related:['faktoring','banka-kurum','makine-ekipman-yetki'],seoDesc:'Leasing teminatı için taşınmaz ve varlık değerlemesinde bağımsız SPK lisanslı rapor.'}),
+ faktoring:_degReportPage({h1:'Faktoring Teminat Değerleme',lead:'Faktoring işlemlerinde teminat taşınmazlarının bağımsız değer tespiti; risk ve teminat süreçleri için tarafsız raporlama.',
+  kimlerIcin:[['Faktoring Şirketleri','Teminat değeri.'],['İşletmeler','Süreç.'],['Finans','Risk.']],
+  hangiDurumda:['Faktoring teminatı','Risk değerlendirmesi'],
+  incelenenler:['Teminat taşınmazı','Pazar değeri','Likidite notu'],
+  methBaslik:'Pazar Değeri',methAciklama:'IVS 104 pazar değeri esasında tarafsız değer takdiri.',svg:'banka-teminat-akis',form:'kurumsal-teklif',
+  related:['leasing','banka-kurum','banka-teminat-raporu'],seoDesc:'Faktoring teminatı için bağımsız SPK lisanslı taşınmaz değerleme.'}),
+ 'yabanci-yatirimci':_degReportPage({h1:'Yabancı Yatırımcı İçin Değerleme',lead:'Yabancı gerçek/tüzel kişilerin taşınmaz işlemlerinde; ilgili mevzuat çerçevesinde bağımsız ve resmî değerleme.',
+  kimlerIcin:[['Yabancı Yatırımcılar','Edinim süreci.'],['Aracı Kurumlar','Süreç desteği.'],['Banka','Teminat.']],
+  hangiDurumda:['Yabancıya taşınmaz ediniminde değer tespiti','Banka teminatı','Resmî işlem'],
+  incelenenler:['Tapu ve hukuki durum','Pazar değeri','Emsal işlemler','Mevzuat uygunluğu'],
+  methBaslik:'Pazar Değeri',methAciklama:'IVS 104 pazar değeri esasında bağımsız değer takdiri; ilgili mevzuat dikkate alınır.',svg:'yaklasim-karsilastirma',
+  related:['konut','ticari','banka-teminat-raporu'],seoDesc:'Yabancı yatırımcı taşınmaz işlemlerinde bağımsız SPK lisanslı değerleme.'}),
+
+ /* ===== BELGE CHECKLIST'LERİ (genel + 10 set) ===== */
+ 'degerleme-basvurusu-belgeler':_degDocPage('degerleme-basvurusu-belgeler','Değerleme Başvurusu — Gerekli Belgeler',_DEG_DOCS_GENEL,{related:['basvuru','degerleme-sureci','rapor-bolumleri']}),
+ 'belge-konut':_degDocPage('belge-konut','Konut Değerleme Belgeleri',_DEG_DOCS_GENEL.concat(['Aidat/site bilgileri (varsa)'])),
+ 'belge-ticari':_degDocPage('belge-ticari','Ticari Gayrimenkul Belgeleri',_DEG_DOCS_GENEL.concat(['Kira sözleşmeleri','İşyeri açma ve çalışma ruhsatı'])),
+ 'belge-arsa-arazi':_degDocPage('belge-arsa-arazi','Arsa & Arazi Belgeleri',['Tapu senedi','İmar durum belgesi / imar çapı','Aplikasyon krokisi','Kimlik belgesi','Emlak rayiç bedeli']),
+ 'belge-fabrika-sanayi':_degDocPage('belge-fabrika-sanayi','Fabrika & Sanayi Belgeleri',_DEG_DOCS_GENEL.concat(['Kapasite raporu','Makine-teçhizat listesi','Çevre & işletme izinleri'])),
+ 'belge-otel-turizm':_degDocPage('belge-otel-turizm','Otel & Turizm Tesisi Belgeleri',_DEG_DOCS_GENEL.concat(['Turizm işletme belgesi','İşletme gelir-gider tabloları'])),
+ 'belge-banka-teminat':_degDocPage('belge-banka-teminat','Banka Teminat Belgeleri',_DEG_DOCS_GENEL.concat(['Kredi/teminat talep bilgisi'])),
+ 'belge-mahkeme-icra':_degDocPage('belge-mahkeme-icra','Mahkeme & İcra Belgeleri',['Tapu kayıt örneği','Dava/dosya bilgileri','Keşif tutanağı (varsa)','İmar & yapı belgeleri']),
+ 'belge-kentsel-donusum':_degDocPage('belge-kentsel-donusum','Kentsel Dönüşüm Belgeleri',_DEG_DOCS_GENEL.concat(['Riskli yapı tespit raporu','Arsa payı / hisse bilgileri'])),
+ 'belge-kurumsal-varlik':_degDocPage('belge-kurumsal-varlik','Kurumsal Varlık Belgeleri',['Mali tablolar','Sabit kıymet defteri','Tapu & makine listeleri','Şirket ortaklık yapısı']),
+ 'belge-proje-gelistirme':_degDocPage('belge-proje-gelistirme','Proje Geliştirme Belgeleri',['Tapu/imar durumu','Onaylı proje','Maliyet ve gelir projeksiyonu','Ruhsat belgeleri']),
+
+ /* ===== UZUN-KUYRUK (Dalga 2) kayıtları — dürüst placeholder, index'te görünür ===== */
+ residence:_degSoonPage('residence','Rezidans Değerleme'),
+ 'site-ici-konut':_degSoonPage('site-ici-konut','Site İçi Konut Değerleme'),
+ 'dukkan-magaza':_degSoonPage('dukkan-magaza','Dükkân & Mağaza Değerleme'),
+ 'uretim-tesisi':_degSoonPage('uretim-tesisi','Üretim Tesisi Değerleme'),
+ 'turizm-tesisi':_degSoonPage('turizm-tesisi','Turizm Tesisi Değerleme'),
+ 'okul-egitim':_degSoonPage('okul-egitim','Okul & Eğitim Tesisi Değerleme'),
+ yurt:_degSoonPage('yurt','Yurt Değerleme'),
+ arazi:_degSoonPage('arazi','Arazi Değerleme'),
+ tarla:_degSoonPage('tarla','Tarla Değerleme'),
+ 'sanayi-imarli-arsa':_degSoonPage('sanayi-imarli-arsa','Sanayi İmarlı Arsa Değerleme'),
+ 'ticari-imarli-arsa':_degSoonPage('ticari-imarli-arsa','Ticari İmarlı Arsa Değerleme'),
+ 'turizm-imarli-arsa':_degSoonPage('turizm-imarli-arsa','Turizm İmarlı Arsa Değerleme'),
+ 'tamamlanmamis-proje':_degSoonPage('tamamlanmamis-proje','Tamamlanmamış Proje Değerleme'),
+ 'karma-kullanim':_degSoonPage('karma-kullanim','Karma Kullanım Değerleme'),
+ 'kentsel-donusum-projesi':_degSoonPage('kentsel-donusum-projesi','Kentsel Dönüşüm Projesi Değerleme'),
+ 'kat-irtifaki-mulkiyeti':_degSoonPage('kat-irtifaki-mulkiyeti','Kat İrtifakı/Mülkiyeti Değerleme'),
+ 'haklar-faydalar':_degSoonPage('haklar-faydalar','Haklar & Faydalar Değerleme'),
+ 'finansman-oncesi':_degSoonPage('finansman-oncesi','Finansman Öncesi Değerleme','Rapor Türleri'),
+ 'kurumsal-teminat':_degSoonPage('kurumsal-teminat','Kurumsal Teminat Değerleme'),
+ 'spk-uyumlu':_degSoonPage('spk-uyumlu','SPK Uyumlu Değerleme'),
+ 'finansal-raporlama':_degSoonPage('finansal-raporlama','Finansal Raporlama Değerleme'),
+ 'varlik-yonetimi':_degSoonPage('varlik-yonetimi','Varlık Yönetimi Değerleme'),
+ 'sirket-aktifi':_degSoonPage('sirket-aktifi','Şirket Aktifi Değerleme'),
+ 'satin-alma-oncesi':_degSoonPage('satin-alma-oncesi','Satın Alma Öncesi Değerleme'),
+ fizibilite:_degSoonPage('fizibilite','Fizibilite Değerleme'),
+ 'risk-analizi-rapor':_degSoonPage('risk-analizi-rapor','Risk Analizi Raporu'),
+ ozellestirme:_degSoonPage('ozellestirme','Özelleştirme Değerleme'),
+ 'dava-uyusmazlik':_degSoonPage('dava-uyusmazlik','Dava & Uyuşmazlık Değerleme'),
+ 'varlik-envanteri':_degSoonPage('varlik-envanteri','Varlık Envanteri Değerleme'),
+ 'gayrimenkul-portfoyu-kurumsal':_degSoonPage('gayrimenkul-portfoyu-kurumsal','Kurumsal Taşınmaz Portföyü Değerleme'),
+ 'toplu-tasinmaz':_degSoonPage('toplu-tasinmaz','Toplu Taşınmaz Değerleme'),
+ 'finans-kurulusu':_degSoonPage('finans-kurulusu','Finans Kuruluşu Değerleme'),
+ 'gayrimenkul-yatirim-fonu':_degSoonPage('gayrimenkul-yatirim-fonu','Gayrimenkul Yatırım Fonu Değerleme'),
+ holding:_degSoonPage('holding','Holding Varlık Değerleme'),
+ belediye:_degSoonPage('belediye','Belediye Taşınmaz Değerleme'),
+ kamu:_degSoonPage('kamu','Kamu Taşınmaz Değerleme'),
+ 'sigorta-sirketi':_degSoonPage('sigorta-sirketi','Sigorta Şirketi Varlık Değerleme'),
+ 'yatirimci-bagimsiz':_degSoonPage('yatirimci-bagimsiz','Bağımsız Yatırımcı Değerleme')
 };
 /* Mega-dropdown için 8 hizmet (svc:1) */
 const DEG_SERVICES=['konut','ticari','arsa-arazi','sanayi','otel-turizm','banka-kurum','kentsel-donusum','hukuki-surec'];
@@ -1349,28 +1841,47 @@ function _degFormHTML(kind){
       +'<label class="dp-kvkk"><input type="checkbox" id="dpf_kvkk"> <span>Kurumsal verilerin teklif süreci kapsamında işlenmesini kabul ediyorum (KVKK).</span></label>'
       +'<button class="btn btn-primary" style="width:100%;justify-content:center" onclick="degPageFormSubmit(\'kurumsal-teklif\')">Kurumsal Teklif Talep Et</button></div>';
   }
-  /* basvuru (varsayılan) */
+  if(kind==='belge-kontrol-talebi'){
+    return '<div class="dp-form">'
+      +'<div class="rf-grid"><div class="rf"><label>Ad Soyad / Kurum *</label><input id="dpf_name" placeholder="Kişi veya şirket adı"></div><div class="rf"><label>Telefon *</label><input id="dpf_phone" placeholder="05xx xxx xx xx"></div></div>'
+      +'<div class="rf"><label>E-posta</label><input id="dpf_mail" placeholder="ornek@kurum.com"></div>'
+      +'<div class="rf"><label>Hangi belgeler hazır? (opsiyonel)</label><textarea id="dpf_msg" rows="2" placeholder="Tapu, ruhsat, proje vb."></textarea></div>'
+      +'<label class="dp-kvkk"><input type="checkbox" id="dpf_kvkk"> <span>Verilerimin değerleme süreci kapsamında işlenmesini kabul ediyorum (KVKK).</span></label>'
+      +'<button class="btn btn-primary" style="width:100%;justify-content:center" onclick="degPageFormSubmit(\'belge-kontrol-talebi\')">Belge Kontrolü Talep Et</button></div>';
+  }
+  /* genel başvuru (banka-teminat / mahkeme-icra / arsa / fabrika / otel / proje vb. dahil) */
+  var ctaLabel='Değerleme Başvurusu Oluştur';
+  if(kind==='banka-teminat-basvurusu')ctaLabel='Banka Teminat Değerleme Başvurusu';
+  else if(kind==='mahkeme-icra-basvurusu')ctaLabel='Mahkeme/İcra Değerleme Başvurusu';
+  else if(kind==='kentsel-donusum-basvurusu')ctaLabel='Kentsel Dönüşüm Değerleme Başvurusu';
+  else if(kind==='proje-gelistirme-degerleme')ctaLabel='Proje Geliştirme Değerleme Başvurusu';
+  else if(kind==='rapor-sureci-bilgi-talebi')ctaLabel='Rapor Süreci Hakkında Bilgi Al';
+  else if(kind==='spk-kurumsal-danismanlik-bilgi')ctaLabel='SPK Kurumsal Bilgilendirme Talep Et';
   return '<div class="dp-form">'
     +'<div class="rf-grid"><div class="rf"><label>Ad Soyad / Kurum *</label><input id="dpf_name" placeholder="Kişi veya şirket adı"></div><div class="rf"><label>Telefon *</label><input id="dpf_phone" placeholder="05xx xxx xx xx"></div></div>'
-    +'<div class="rf"><label>E-posta</label><input id="dpf_mail" placeholder="ornek@kurum.com"></div>'
-    +'<div class="rf-grid"><div class="rf"><label>Taşınmaz / Varlık Türü *</label><select id="dpf_extra"><option value="">Seçiniz…</option><option>Konut</option><option>Ticari Gayrimenkul</option><option>Arsa / Arazi</option><option>Fabrika / Sanayi Tesisi</option><option>Otel / Turizm Tesisi</option><option>Şirket / Kurumsal Varlık</option></select></div><div class="rf"><label>Değerleme Amacı *</label><select id="dpf_purpose"><option value="">Seçiniz…</option><option>Banka Kredisi / Teminat</option><option>Kentsel Dönüşüm</option><option>Mahkeme / İcra</option><option>Mali Tablo / Bilanço</option><option>Miras / Paylaşım</option><option>Kamulaştırma</option></select></div></div>'
-    +'<div class="rf"><label>Açıklama (opsiyonel)</label><textarea id="dpf_msg" rows="2" placeholder="Taşınmaza dair kısa bilgi (konum, alan, vb.)"></textarea></div>'
+    +'<div class="rf-grid"><div class="rf"><label>E-posta</label><input id="dpf_mail" placeholder="ornek@kurum.com"></div><div class="rf"><label>Kurum / Şirket (opsiyonel)</label><input id="dpf_company" placeholder="Banka / kurum / şirket adı"></div></div>'
+    +'<div class="rf-grid"><div class="rf"><label>İl</label><input id="dpf_city" placeholder="örn. İzmir"></div><div class="rf"><label>İlçe</label><input id="dpf_district" placeholder="örn. Konak"></div></div>'
+    +'<div class="rf-grid"><div class="rf"><label>Taşınmaz / Varlık Türü *</label><select id="dpf_extra"><option value="">Seçiniz…</option><option>Konut</option><option>Ticari Gayrimenkul</option><option>Arsa / Arazi</option><option>Fabrika / Sanayi Tesisi</option><option>Otel / Turizm Tesisi</option><option>Proje / Geliştirme</option><option>Şirket / Kurumsal Varlık</option></select></div><div class="rf"><label>Değerleme Amacı *</label><select id="dpf_purpose"><option value="">Seçiniz…</option><option>Banka Kredisi / Teminat</option><option>Kentsel Dönüşüm</option><option>Mahkeme / İcra</option><option>Mali Tablo / Bilanço</option><option>Miras / Paylaşım</option><option>Kamulaştırma</option><option>Sigorta</option><option>Vergi / Beyan</option></select></div></div>'
+    +'<div class="rf"><label>Mahalle / Ada-Parsel (opsiyonel)</label><input id="dpf_parcel" placeholder="Mahalle, ada/parsel bilgisi"></div>'
+    +'<div class="rf"><label>Açıklama (opsiyonel)</label><textarea id="dpf_msg" rows="2" placeholder="Taşınmaza dair kısa bilgi (alan, durum, vb.)"></textarea></div>'
     +'<label class="dp-kvkk"><input type="checkbox" id="dpf_kvkk"> <span>Kişisel verilerimin resmî değerleme süreci kapsamında işlenmesini kabul ediyorum (KVKK).</span></label>'
-    +'<button class="btn btn-primary" style="width:100%;justify-content:center" onclick="degPageFormSubmit(\'basvuru\')">Değerleme Başvurusu Oluştur</button></div>';
+    +'<button class="btn btn-primary" style="width:100%;justify-content:center" onclick="degPageFormSubmit(\''+_dgEsc(kind||'genel-degerleme-basvurusu')+'\')">'+ctaLabel+'</button></div>';
 }
 function degPageFormSubmit(kind){
   var val=function(id){var e=document.getElementById(id);return e?(''+(e.value||'')).trim():'';};
   var name=val('dpf_name'),phone=val('dpf_phone'),mail=val('dpf_mail'),msg=val('dpf_msg'),extra=val('dpf_extra'),purpose=val('dpf_purpose');
+  var company=val('dpf_company'),city=val('dpf_city'),district=val('dpf_district'),parcel=val('dpf_parcel');
   var kv=document.getElementById('dpf_kvkk');
   if(!name||!phone){toast('Lütfen ad/kurum ve telefon girin.');return;}
   if(kv&&!kv.checked){toast('Lütfen KVKK onayını işaretleyin.');return;}
   if(typeof submitLead==='function'){
-    try{submitLead({sourcePage:'degerleme',formType:kind,name:name,phone:phone,email:mail,message:msg,
-      extra:{requestedService:extra,purpose:purpose,page:(window._degCurrent||kind)}});}catch(_){}
+    /* Genişletilmiş lead modeli (değer/rapor üretmez; yalnız talep kaydı). */
+    try{submitLead({sourcePage:'degerleme',formType:kind,name:name,phone:phone,email:mail,message:msg,companyName:company,city:city,district:district,
+      extra:{reportType:(window._degCurrent||kind),assetType:extra,purpose:purpose,institutionType:company,city:city,district:district,neighborhood:parcel,parcelInfo:parcel,companyName:company,documentsReady:(kind==='belge-kontrol-talebi'?msg:''),page:(window._degCurrent||kind)}});}catch(_){}
   }
-  var labels={'basvuru':'Değerleme başvurunuz alındı; ekibimiz sizinle iletişime geçecek.','kurumsal-teklif':'Kurumsal teklif talebiniz alındı; en kısa sürede dönüş yapılacak.','iletisim':'Mesajınız alındı; teşekkür ederiz.'};
-  toast('✓ '+(labels[kind]||'Talebiniz alındı.'));
-  ['dpf_name','dpf_phone','dpf_mail','dpf_msg','dpf_extra'].forEach(function(i){var e=document.getElementById(i);if(e&&e.tagName!=='SELECT')e.value='';else if(e)e.selectedIndex=0;});
+  var labels={'basvuru':'Değerleme başvurunuz alındı; ekibimiz sizinle iletişime geçecek.','genel-degerleme-basvurusu':'Değerleme başvurunuz alındı; ekibimiz sizinle iletişime geçecek.','kurumsal-teklif':'Kurumsal teklif talebiniz alındı; en kısa sürede dönüş yapılacak.','iletisim':'Mesajınız alındı; teşekkür ederiz.','banka-teminat-basvurusu':'Banka teminat değerleme başvurunuz alındı.','mahkeme-icra-basvurusu':'Mahkeme/icra değerleme başvurunuz alındı.','belge-kontrol-talebi':'Belge kontrol talebiniz alındı.'};
+  toast('✓ '+(labels[kind]||'Talebiniz alındı; uzman ekibimiz dönüş yapacaktır.'));
+  ['dpf_name','dpf_phone','dpf_mail','dpf_msg','dpf_extra','dpf_company','dpf_city','dpf_district','dpf_parcel'].forEach(function(i){var e=document.getElementById(i);if(e&&e.tagName!=='SELECT')e.value='';else if(e)e.selectedIndex=0;});
   var ps=document.getElementById('dpf_purpose');if(ps)ps.selectedIndex=0;
   if(kv)kv.checked=false;
 }
@@ -1393,12 +1904,35 @@ function renderDegPage(slug){
       +'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>'
       +'<div><b>Sistem altyapı hazırlar · raporu SPK lisanslı uzman düzenler</b><p>'+_dgEsc(p.notice)+'</p></div></div></div></section>';
   }
+  /* resmî tanım bloğu */
+  var tanim='';
+  if(p.resmiTanim){
+    tanim='<section class="dp-sec"><div class="wrap"><div class="dp-def"><div class="eyebrow">Resmî Tanım</div><p>'+_dgEsc(p.resmiTanim)+'</p></div></div></section>';
+  }
+  /* Rapor Türleri / index grid (gruplu) */
+  var indexSec='';
+  if(p.index&&p.index.length){
+    indexSec='<section class="dp-sec"><div class="wrap">'
+      +p.index.map(function(grp){
+        return '<div class="dp-idx-grp"><h2>'+_dgEsc(grp.baslik)+'</h2>'+(grp.aciklama?'<p class="sub">'+_dgEsc(grp.aciklama)+'</p>':'')+'<div class="dp-idx-grid">'
+          +grp.items.map(function(it){var exists=!!DEG_PAGES[it[0]];return '<div class="dp-idx'+(exists?'':' soon')+'" onclick="'+(exists?'openDegPage(\''+it[0]+'\')':'toast(\'Bu sayfa yakında (Dalga 2) eklenecektir.\')')+'"><b>'+_dgEsc(it[1])+'</b>'+(exists?'<span class="ar">→</span>':'<span class="soon-b">yakında</span>')+'</div>';}).join('')
+          +'</div></div>';
+      }).join('')
+      +'</div></section>';
+  }
   /* kimler için */
   var kimler='';
   if(p.kimlerIcin&&p.kimlerIcin.length){
     kimler='<section class="dp-sec"><div class="wrap"><h2>Kimler İçin?</h2><div class="dp-cards">'
       +p.kimlerIcin.map(function(c){return '<div class="dp-card"><div class="ic">'+_CHECK_SVG+'</div><b>'+_dgEsc(c[0])+'</b><p>'+_dgEsc(c[1])+'</p></div>';}).join('')
       +'</div></div></section>';
+  }
+  /* Hangi Durumlarda Gerekir */
+  var hangi='';
+  if(p.hangiDurumda&&p.hangiDurumda.length){
+    hangi='<section class="dp-sec alt"><div class="wrap"><h2>Hangi Durumlarda Gerekir?</h2><ul class="dp-docs">'
+      +p.hangiDurumda.map(function(d){return '<li>'+_CHECK_SVG+'<span>'+_dgEsc(d)+'</span></li>';}).join('')
+      +'</ul></div></section>';
   }
   /* belgeler */
   var belgeler='';
@@ -1414,6 +1948,13 @@ function renderDegPage(slug){
       +p.surec.map(function(s,i){return '<div class="dp-step"><div class="n">'+(i+1)+'</div><div><b>'+_dgEsc(s.ad)+'</b><p>'+_dgEsc(s.desc)+'</p></div></div>';}).join('')
       +'</div></div></section>';
   }
+  /* İncelenen Başlıklar */
+  var incel='';
+  if(p.incelenenler&&p.incelenenler.length){
+    incel='<section class="dp-sec"><div class="wrap"><h2>İncelenen Başlıklar</h2><p class="sub">Uzman değerlendirmesinde ele alınan temel unsurlar.</p><ul class="dp-docs">'
+      +p.incelenenler.map(function(d){return '<li>'+_CHECK_SVG+'<span>'+_dgEsc(d)+'</span></li>';}).join('')
+      +'</ul></div></section>';
+  }
   /* metodoloji */
   var meth='';
   if(p.metodoloji){
@@ -1427,6 +1968,34 @@ function renderDegPage(slug){
     arts='<section class="dp-sec"><div class="wrap"><h2>Makaleler & Rehberler</h2><div class="dp-arts">'
       +p.articles.map(function(a){return '<div class="dp-art"><div class="ah">'+_degSvg('standart')+'</div><div class="ab"><span class="tag">'+_dgEsc(a.tag)+'</span><b>'+_dgEsc(a.baslik)+'</b><p>'+_dgEsc(a.ozet)+'</p><span class="rt">'+_dgEsc(a.rt)+' okuma</span></div></div>';}).join('')
       +'</div></div></section>';
+  }
+  /* emlakekspertizi.com Veri Katkısı */
+  var veri='';
+  if(p.veriKatkisi){
+    veri='<section class="dp-sec"><div class="wrap"><div class="dp-meth"><div class="mchart">'+_degSvg('bolge-veri-kart')+'</div>'
+      +'<div class="mtx"><div class="eyebrow">Veri Katkısı</div><h3>emlakekspertizi.com Veri & Lokasyon Altyapısı</h3><p>'+_dgEsc(p.veriKatkisi)+'</p>'
+      +'<p style="font-size:12.5px;color:var(--muted)">Bu veri altyapısı yalnızca ön analizi destekler; nihai değer takdiri SPK lisanslı uzmana aittir.</p></div></div></div></section>';
+  }
+  /* SPK Uzman Süreci */
+  var uzman='';
+  if(p.uzmanSureci&&p.uzmanSureci.length){
+    uzman='<section class="dp-sec alt"><div class="wrap"><h2>SPK Lisanslı Uzman Süreci</h2><p class="sub">Resmî rapor, aşağıdaki adımlarla SPK lisanslı değerleme uzmanı tarafından hazırlanır ve imzalanır.</p><div class="dp-steps">'
+      +p.uzmanSureci.map(function(s,i){return '<div class="dp-step"><div class="n">'+(i+1)+'</div><div><b>'+_dgEsc(s.ad)+'</b><p>'+_dgEsc(s.desc)+'</p></div></div>';}).join('')
+      +'</div></div></section>';
+  }
+  /* Raporun Sınırları / sorumluluk reddi */
+  var sinir='';
+  if(p.sinirlar&&p.sinirlar.length){
+    sinir='<section class="dp-sec"><div class="wrap"><h2>Raporun Sınırları & Sorumluluk Çerçevesi</h2><ul class="dp-docs">'
+      +p.sinirlar.map(function(d){return '<li>'+_CHECK_SVG+'<span>'+_dgEsc(d)+'</span></li>';}).join('')
+      +'</ul></div></section>';
+  }
+  /* Dalga 2 — içeriği henüz derinleştirilmemiş kayıtlı sayfa */
+  var dalga2='';
+  if(p.dalga2){
+    dalga2='<section class="dp-sec"><div class="wrap"><div class="dp-notice"><div class="ic">'
+      +'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg></div>'
+      +'<div><b>Bu sayfa hazırlanıyor</b><p>'+_dgEsc(p.dalga2)+' İhtiyaçlarınız için lütfen başvuru formunu kullanın; uzman ekibimiz sizinle iletişime geçecektir.</p></div></div></div></section>';
   }
   /* form */
   var formSec='';
@@ -1450,7 +2019,8 @@ function renderDegPage(slug){
   /* alt CTA */
   var cta='<section class="dp-cta"><div class="wrap"><h2>SPK lisanslı resmî değerleme için hazırız</h2><p>Taşınmazınız veya kurumsal varlıklarınız için bağımsız, tarafsız ve denetlenebilir bir değerleme süreci başlatın.</p>'
     +'<div class="ctas"><button class="btn btn-primary" onclick="openDegPage(\'basvuru\')">Değerleme Başvurusu Oluştur</button><button class="btn btn-line" onclick="openDegPage(\'kurumsal-teklif\')">Kurumsal Teklif Talep Et</button></div></div></section>';
-  var html='<div class="dp-spacer"></div>'+bread+hero+notice+kimler+belgeler+surec+meth+arts+formSec+faq+related+cta+_degFooterHTML();
+  /* Sıra: hero → resmî tanım → [index] → Kimler İçin → Hangi Durumlarda → Belgeler → İncelenen → Metodoloji+SVG → Veri Katkısı → Uzman Süreci → Sınırlar → 7-adım(mevcut surec) → SSS → İlgili → CTA */
+  var html='<div class="dp-spacer"></div>'+bread+hero+notice+dalga2+tanim+indexSec+kimler+hangi+belgeler+incel+meth+veri+uzman+sinir+surec+arts+formSec+faq+related+cta+_degFooterHTML();
   document.getElementById('degPageBody').innerHTML=html;
   document.getElementById('degPage').scrollTop=0;
   _degApplySeo(slug,p);
@@ -1480,6 +2050,16 @@ function _degInjectPageSchema(slug,p){
   if(p.faq&&p.faq.length){
     graph.push({'@type':'FAQPage','mainEntity':p.faq.map(function(f){return {'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}};})});
   }
+  /* index sayfaları için ItemList */
+  if(p.index&&p.index.length){
+    var li=[],pos=0;
+    p.index.forEach(function(grp){grp.items.forEach(function(it){pos++;li.push({'@type':'ListItem','position':pos,'name':it[1],'item':origin+'/#/'+it[0]});});});
+    graph.push({'@type':'ItemList','name':p.h1,'itemListElement':li});
+  }
+  /* HowTo — belge checklist sayfaları (uzman süreci adımları) */
+  if(p.howto&&p.uzmanSureci&&p.uzmanSureci.length){
+    graph.push({'@type':'HowTo','name':p.h1,'step':p.uzmanSureci.map(function(s,i){return {'@type':'HowToStep','position':i+1,'name':s.ad,'text':s.desc};})});
+  }
   try{var s=document.createElement('script');s.type='application/ld+json';s.setAttribute('data-deg-schema','1');s.text=JSON.stringify({'@context':'https://schema.org','@graph':graph});document.head.appendChild(s);}catch(e){}
 }
 /* ---- router: aç/kapat + hash ---- */
@@ -1507,6 +2087,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.ge
 window.addEventListener('load',function(){try{
   initSaaSTheme();mountChrome();applySaaSSettings();saasPortalRenderNav();
   renderAsset('gayrimenkul');renderMethod('maliyet');
+  _degMountHomeGrid();
   _degRouteFromHash();
   /* Ön yüzde harici buton YOK — yönetim yalnızca Footer › Yönetim Paneli › şifreli giriş ile.
      SuperAdmin yalnızca gizli kısayol (Ctrl+Shift+M) ile erişilir. */
