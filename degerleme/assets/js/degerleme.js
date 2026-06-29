@@ -238,6 +238,59 @@
     }).join('');
   }
 
+  /* ===== Teklif Al modalı (hizmet kartlarından) ===== */
+  function teklifHTML() {
+    var doc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>';
+    return '<div class="gm-ov" data-qclose="1"></div><div class="gm-card">'
+      + '<button class="gm-x" data-qclose="1" aria-label="Kapat">✕</button>'
+      + '<div class="gm-head"><span class="mk">M</span><b>Teklif Al · Meridyen Değerleme</b></div>'
+      + '<div class="gm-body">'
+      + '<div class="gm-chip" id="tk_svc">' + doc + '<span>Değerleme Hizmeti</span></div>'
+      + '<p class="gm-sub">Seçtiğiniz değerleme hizmeti için SPK lisanslı uzmanımız en kısa sürede sizi arasın. İletişim bilgilerinizi bırakmanız yeterli.</p>'
+      + '<div class="gm-row2"><div class="gm-f"><label>Ad Soyad</label><input id="tk_name" autocomplete="name" placeholder="Ad Soyad"></div>'
+      + '<div class="gm-f"><label>Telefon</label><input id="tk_phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="05__ ___ __ __"></div></div>'
+      + '<button class="btn btn-primary" id="tk_btn">Teklif İste →</button>'
+      + '<div class="gm-err" id="tk_err"></div>'
+      + '<div class="gm-note">Bilgileriniz yalnızca teklif görüşmesi için kullanılır ve KVKK kapsamında işlenir.</div>'
+      + '</div>'
+      + '<div class="gm-foot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/></svg> KVKK uyumlu · emlakekspertizi.com altyapısı · ProX</div>'
+      + '</div>';
+  }
+  function ensureTeklif() {
+    var m = document.getElementById('teklifModal');
+    if (m) return m;
+    m = document.createElement('div'); m.className = 'gmodal'; m.id = 'teklifModal';
+    m.innerHTML = teklifHTML();
+    document.body.appendChild(m);
+    m.addEventListener('click', function (e) { if (e.target.dataset && e.target.dataset.qclose) closeTeklif(); });
+    m.querySelector('#tk_btn').addEventListener('click', degTeklifSubmit);
+    return m;
+  }
+  window.openTeklif = function (service) {
+    var m = ensureTeklif();
+    var chip = m.querySelector('#tk_svc span'); if (chip) chip.textContent = service || 'Değerleme Hizmeti';
+    m.dataset.service = service || '';
+    var err = m.querySelector('#tk_err'); err.textContent = ''; err.style.color = '';
+    m.classList.add('on');
+    setTimeout(function () { var n = m.querySelector('#tk_name'); if (n) n.focus(); }, 60);
+  };
+  window.closeTeklif = function () { var m = document.getElementById('teklifModal'); if (m) m.classList.remove('on'); };
+  async function degTeklifSubmit() {
+    var m = document.getElementById('teklifModal');
+    var name = (document.getElementById('tk_name') || {}).value.trim();
+    var phone = (document.getElementById('tk_phone') || {}).value.trim();
+    var err = document.getElementById('tk_err'); err.style.color = ''; err.textContent = '';
+    if (!name) { err.textContent = '⚠ Ad soyad gereklidir.'; return; }
+    if (!/[0-9]{10,}/.test(phone.replace(/\D/g, ''))) { err.textContent = '⚠ Geçerli bir telefon numarası girin.'; return; }
+    var btn = document.getElementById('tk_btn'); btn.disabled = true; btn.textContent = 'Gönderiliyor…';
+    var r = await proxApi('/api/v1/tenant/lead', { method: 'POST', body: { type: 'teklif', service: (m && m.dataset.service) || '', name: name, phone: phone, source: 'hizmetler' } });
+    btn.disabled = false; btn.textContent = 'Teklif İste →';
+    err.style.color = 'var(--teal)';
+    err.innerHTML = '✓ Teklif talebiniz alındı' + (r && r.fallback ? ' (çevrimdışı/demo)' : '') + '. Uzmanımız en kısa sürede sizinle iletişime geçecek.';
+    var n = document.getElementById('tk_name'), p = document.getElementById('tk_phone'); if (n) n.value = ''; if (p) p.value = '';
+    degToast('Teklif talebiniz iletildi.');
+  }
+
   /* ---- Scroll-reveal + sayaç (yalnız ilgili öğeler varsa) ---- */
   function degInitReveal() {
     var els = document.querySelectorAll('.reveal');
@@ -264,10 +317,13 @@
 
   /* ---- Giriş tetikleyici + init ---- */
   document.addEventListener('click', function (e) {
-    var t = e.target.closest && e.target.closest('.js-giris');
-    if (t) { e.preventDefault(); openGiris(); }
+    if (!e.target.closest) return;
+    var g = e.target.closest('.js-giris');
+    if (g) { e.preventDefault(); openGiris(); return; }
+    var q = e.target.closest('.js-quote');
+    if (q) { e.preventDefault(); openTeklif(q.getAttribute('data-quote') || ''); }
   });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeGiris(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
   try { degInitReveal(); degInitCount(); } catch (e) {}
 })();

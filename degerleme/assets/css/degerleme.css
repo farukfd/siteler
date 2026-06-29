@@ -226,7 +226,7 @@ img,svg{display:block;max-width:100%}
 .gmodal.on{display:flex}
 .gm-ov{position:absolute;inset:0;background:rgba(11,18,32,.6);backdrop-filter:blur(6px)}
 .gm-card{position:relative;width:100%;max-width:440px;background:#fff;border-radius:18px;box-shadow:var(--shadow);overflow:hidden;animation:gmpop .25s ease}
-@keyframes gmpop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes gmpop{from{transform:translateY(14px)}to{transform:none}}
 .gm-x{position:absolute;top:12px;right:12px;background:none;border:0;font-size:20px;color:var(--muted);cursor:pointer;z-index:2}
 .gm-head{display:flex;align-items:center;gap:12px;padding:22px 26px 4px}
 .gm-head .mk{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--navy));display:grid;place-items:center;color:#fff;font-family:var(--head);font-weight:800}
@@ -323,7 +323,7 @@ img,svg{display:block;max-width:100%}
 
 /* Servis kart grid */
 .hz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:22px}
-.hz-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px 24px 20px;overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s}
+.hz-card{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px 24px 20px;overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s}
 .hz-card:before{content:"";position:absolute;left:0;top:0;height:100%;width:4px;background:linear-gradient(var(--accent),var(--accent-2));transform:scaleY(0);transform-origin:top;transition:transform .3s}
 .hz-card:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:#cdd8ea}
 .hz-card:hover:before{transform:scaleY(1)}
@@ -375,3 +375,16 @@ img,svg{display:block;max-width:100%}
 .hz-law .pills span{font-size:12.5px;font-weight:600;color:var(--accent);background:#fff;border:1px solid var(--line);border-radius:99px;padding:8px 14px}
 .hz-lawvis{background:linear-gradient(160deg,var(--navy),var(--accent));border-radius:18px;padding:26px;color:#fff}
 .hz-lawvis svg{width:100%;height:auto}
+
+/* ===== Hizmet kartı "Teklif Al" + Teklif modalı ===== */
+.hz-cta{margin-top:16px}
+.hz-quote{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--head);font-weight:600;font-size:13.5px;color:var(--accent);background:linear-gradient(135deg,#fff,var(--surface));border:1.5px solid var(--line);border-radius:11px;padding:11px 16px;cursor:pointer;transition:.22s}
+.hz-quote svg{width:15px;height:15px;transition:.22s}
+.hz-quote:hover{background:linear-gradient(135deg,var(--accent),var(--accent-2));border-color:transparent;color:#fff;box-shadow:0 16px 30px -16px rgba(30,58,138,.6);transform:translateY(-1px)}
+.hz-quote:hover svg{transform:translateX(3px)}
+/* Teklif modalı — gmodal kabuğunu paylaşır; ek öğeler */
+.gm-chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--head);font-weight:600;font-size:12.5px;color:var(--accent);background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:7px 13px;margin-bottom:12px}
+.gm-chip svg{width:14px;height:14px}
+.gm-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gm-row2 .gm-f label{margin-top:0}
+@media(max-width:480px){.gm-row2{grid-template-columns:1fr}}
