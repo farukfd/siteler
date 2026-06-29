@@ -489,6 +489,27 @@ body.deg-lock{overflow:hidden}
 .dp-idx.soon{opacity:.72;cursor:default}
 .dp-idx.soon:hover{transform:none;border-color:var(--line)}
 .dp-idx .soon-b{font-size:10.5px;font-weight:700;color:#b45309;background:#fef3c7;padding:2px 8px;border-radius:99px}
+/* Faz: kategori görsel bileşenleri */
+.dp-catvis{background:linear-gradient(135deg,#0b1220,#1e3a8a);border-radius:18px;padding:26px;color:#fff;box-shadow:0 24px 56px -32px rgba(11,18,32,.7)}
+.dp-catvis svg{display:block;width:100%;max-width:520px;height:auto;margin:0 auto}
+.dp-catvis-cap{margin-top:14px;text-align:center;font-size:13px;color:#cdd8ea;max-width:60ch;margin-left:auto;margin-right:auto;line-height:1.6}
+.dp-trendbox{background:linear-gradient(135deg,#0b1220,#1e3a8a);border-radius:16px;padding:18px;max-width:680px}
+.dp-trendbox svg{display:block;width:100%;height:auto}
+.dp-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:760px){.dp-kpi{grid-template-columns:1fr}}
+.dp-kpicard{background:#fff;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:13px;padding:16px 18px}
+.dp-kpicard .ic{width:34px;height:34px;border-radius:9px;background:rgba(30,58,138,.1);color:var(--accent);display:grid;place-items:center;margin-bottom:9px}
+.dp-kpicard b{display:block;font-size:15px;font-family:var(--head);margin-bottom:3px}
+.dp-kpicard span{font-size:12.8px;color:var(--ink-2);line-height:1.5}
+.dp-matrix{max-width:680px;display:grid;gap:11px}
+.dp-mrow{display:grid;grid-template-columns:1.1fr 2fr .8fr;align-items:center;gap:12px}
+@media(max-width:560px){.dp-mrow{grid-template-columns:1fr;gap:4px}}
+.dp-mlabel{font-size:14px;font-weight:600;color:var(--ink)}
+.dp-mbar{display:block;height:9px;border-radius:99px;background:var(--surface);overflow:hidden;border:1px solid var(--line)}
+.dp-mbar i{display:block;height:100%;border-radius:99px;background:var(--grad-cta)}
+.dp-mbar.hi i{width:90%}.dp-mbar.mid i{width:60%}.dp-mbar.lo i{width:32%}
+.dp-mlevel{font-size:12.5px;font-weight:700;color:var(--accent-2);text-align:right}
+@media(max-width:560px){.dp-mlevel{text-align:left}}
 </style>
 </head>
 <body>
@@ -1892,6 +1913,128 @@ function degPageFormSubmit(kind){
   if(kv)kv.checked=false;
 }
 window.degPageFormSubmit=degPageFormSubmit;
+
+/* =====================================================================
+   FAZ — Kategori görsel zenginleştirme (additive, kategoriye-duyarlı)
+   9 kategori: konut, ticari, arsa, sanayi, otel, banka, hukuki, kentsel, spk-guven
+   Tüm görseller destekleyici; resmî SPK raporu yerine geçmez. Değer yalnız uzman/API.
+   ===================================================================== */
+function _degCategoryOf(slug){
+  var p=DEG_PAGES[slug]||{};var g=p.group||'';
+  if(g==='SPK Güven Merkezi')return 'spk-guven';
+  if(/^(konut|daire|villa|residence|site-ici-konut|mustakil)/.test(slug))return 'konut';
+  if(/^(ticari|dukkan-magaza|ofis|plaza-is-merkezi|avm|depo-lojistik)/.test(slug))return 'ticari';
+  if(/(arsa|arazi|tarla|imarli)/.test(slug))return 'arsa';
+  if(/^(sanayi|uretim-tesisi|akaryakuit-istasyonu)/.test(slug)||slug==='sanayi')return 'sanayi';
+  if(/^(otel-turizm|turizm-tesisi|hastane-saglik|okul-egitim|yurt)/.test(slug))return 'otel';
+  if(/^(banka-kurum|banka-teminat-raporu|kredi-sureci|kurumsal-teminat|finansman-oncesi|finansal-raporlama|leasing|faktoring)/.test(slug))return 'banka';
+  if(/^(hukuki-surec|mahkeme|icra|dava-uyusmazlik|miras-paylasim|ortaklik-hisse|kamulastirma|ozellestirme)/.test(slug))return 'hukuki';
+  if(/^(kentsel-donusum|proje-gelistirme|devam-eden-insaat|tamamlanmamis-proje|karma-kullanim|kentsel-donusum-projesi)/.test(slug))return 'kentsel';
+  return null;
+}
+/* her kategori için meta (distinkt görsel dil) */
+var _DEG_CATMETA={
+ konut:{ad:'Konut',hero:'cat-konut',method:'pazar',methodAd:'Emsal (Pazar) Yaklaşımı',trendAd:'Konut Değer Eğilimi',
+  kpi:[['Tip Bazlı Eğilim','Daire / villa / müstakil kırılımı'],['Ulaşım & Sosyal Çevre','Erişim, okul, donatı yakınlığı'],['Emsal Yoğunluğu','Bölgedeki karşılaştırılabilir işlem sayısı']],
+  market:[['Bölge & Konum','Mahalle ölçeğinde konum analizi'],['Ulaşım Erişimi','Toplu taşıma ve ana arter yakınlığı'],['Sosyal Donatı','Okul, sağlık, ticaret yakınlığı']],
+  risk:[['Konum','Yüksek etki'],['Yapı Yaşı','Orta etki'],['Likidite','Orta etki'],['Emsal Kalitesi','Yüksek etki']]},
+ ticari:{ad:'Ticari',hero:'cat-ticari',method:'gelir',methodAd:'Gelir Kapitalizasyonu',trendAd:'Ticari Getiri Eğilimi',
+  kpi:[['Yaya Trafiği / Erişim','Cadde ve lokasyon yoğunluğu'],['Kira Çarpanı','Getiri/değer ilişkisi göstergesi'],['Doluluk','Sürdürülebilir kullanım oranı']],
+  market:[['Cadde & Lokasyon','Ticari yoğunluk ve görünürlük'],['Erişim','Araç/yaya ulaşım gücü'],['İşletme Profili','Kullanım ve kiracı niteliği']],
+  risk:[['Lokasyon','Yüksek etki'],['Gelir İstikrarı','Yüksek etki'],['Doluluk','Orta etki'],['Pazar Talebi','Orta etki']]},
+ arsa:{ad:'Arsa & Arazi',hero:'cat-arsa',method:'arsa-imar',methodAd:'Pazar + En Verimli Kullanım',trendAd:'Arsa Değer Eğilimi',
+  kpi:[['İmar Özeti','TAKS/KAKS ve fonksiyon'],['Yol / Cephe / Konum','Erişim ve cephe avantajı'],['Geliştirme Potansiyeli','Yapılaşma kapasitesi']],
+  market:[['İmar Durumu','Plan fonksiyonu ve haklar'],['Cephe & Yol','Erişim ve cephe niteliği'],['Geliştirme','En verimli kullanım senaryosu']],
+  risk:[['İmar Belirsizliği','Yüksek etki'],['Altyapı','Orta etki'],['Konum','Yüksek etki'],['Geliştirme Maliyeti','Orta etki']]},
+ sanayi:{ad:'Sanayi',hero:'cat-sanayi',method:'maliyet',methodAd:'Maliyet + Gelir (Bütünleşik)',trendAd:'Sanayi Tesis Eğilimi',
+  kpi:[['Tesis Bileşeni','Arsa + bina + makine ayrımı'],['Erişim & Lojistik','Ulaşım ve altyapı bağlantısı'],['Özel Risk','Tesise özgü teknik unsurlar']],
+  market:[['Lojistik Erişim','Ana arter ve liman/OSB yakınlığı'],['Altyapı','Enerji, su, atık altyapısı'],['Tesis Bütünlüğü','Taşınmaz + makine entegrasyonu']],
+  risk:[['Teknik Eskime','Yüksek etki'],['Altyapı Bağımlılığı','Orta etki'],['Tek Kullanım','Yüksek etki'],['Lojistik','Orta etki']]},
+ otel:{ad:'Otel & Tesis',hero:'cat-otel',method:'gelir',methodAd:'Gelir (İşletme Esaslı)',trendAd:'İşletme Geliri Eğilimi',
+  kpi:[['Kapasite / Fonksiyon','Oda/yatak ve işletme türü'],['Konum & Erişim','Turizm/erişim avantajı'],['İşletme Riski','Doluluk ve sezonsallık']],
+  market:[['Konum','Turizm/erişim değeri'],['Kapasite','Oda/yatak ve fonksiyon'],['İşletme Profili','Doluluk ve gelir yapısı']],
+  risk:[['Sezonsallık','Yüksek etki'],['İşletme Performansı','Yüksek etki'],['Konum','Orta etki'],['Özel Donanım','Orta etki']]},
+ banka:{ad:'Banka & Teminat',hero:'cat-banka',method:'banka-teminat-akis',methodAd:'Teminat Amaçlı Standart Raporlama',trendAd:'Teminat Süreç Göstergeleri',
+  kpi:[['Süreç Şeffaflığı','İzlenebilir resmî akış'],['Belge Tamlığı','Eksiksiz dosya oranı'],['Metodoloji Uygunluğu','Taşınmaza uygun yaklaşım']],
+  market:[['Standart Format','Banka/kurum şablon uyumu'],['Hız','Standart teslim süresi'],['Denetlenebilirlik','İç kontrol ve izlenebilirlik']],
+  risk:[['Belge Eksikliği','Yüksek etki'],['Likidite','Orta etki'],['Pazar Dalgası','Orta etki'],['Format Uyumu','Düşük etki']]},
+ hukuki:{ad:'Hukuki Süreç',hero:'cat-hukuki',method:'hukuki-surec-akis',methodAd:'Tarihli / Güncel Değer Tespiti',trendAd:'Değer Tespiti Göstergeleri',
+  kpi:[['Kullanım Amaçları','Mahkeme / icra / paylaşım'],['Resmî Belge','Dosya ve kayıt bütünlüğü'],['Tarafsızlık','Bağımsız bilirkişi niteliği']],
+  market:[['Bağımsızlık','Çıkar çatışmasından arınmış'],['Tarafsızlık','Yanlı olmayan değer'],['Sınırlar','Tarih ve varsayım çerçevesi']],
+  risk:[['Veri Tarihselliği','Yüksek etki'],['Belge Erişimi','Orta etki'],['Tarafsızlık','Yüksek etki'],['Kapsam','Orta etki']]},
+ kentsel:{ad:'Kentsel & Proje',hero:'cat-kentsel',method:'kentsel-donusum-sema',methodAd:'Hak Sahipliği + Geliştirme',trendAd:'Proje Değer Eğilimi',
+  kpi:[['Gelişim Potansiyeli','Dönüşüm/yapılaşma kapasitesi'],['İmar / Proje İlişkisi','Plan ve proje uyumu'],['Risk / Varsayım','Tamamlanma ve maliyet']],
+  market:[['Dönüşüm Alanı','Ada/parsel ölçeğinde kapsam'],['Proje Aşaması','Yaşam döngüsü konumu'],['Pay Dağıtımı','Hak sahipliği esası']],
+  risk:[['Tamamlanma','Yüksek etki'],['Maliyet Sapması','Yüksek etki'],['İmar/İzin','Orta etki'],['Pazar','Orta etki']]},
+ 'spk-guven':{ad:'SPK Güven',hero:'cat-spk',method:'spk-tdub-ivs-ucgen',methodAd:'SPK / TDUB / IVS Çerçevesi',trendAd:'Güven & Uyum Göstergeleri',
+  kpi:[['Mevzuat Güveni','SPK III-62.3 & IVS/UDES'],['Lisans / Kuruluş','Yetki ve TDUB üyeliği'],['Uzman Kontrolü','Sorumlu uzman imzası']],
+  market:[['SPK Çerçevesi','Yasal yetki ve standart'],['TDUB Etik','Meslek kuralları'],['Denetlenebilirlik','İzlenebilir metodoloji']],
+  risk:[['Yetki Kapsamı','Resmî kayıttan teyit'],['Güncellik','Mevzuat takibi'],['Bağımsızlık','Yüksek önem'],['İmza Zinciri','Yüksek önem']]}
+};
+/* kategori-özel hero illüstrasyonları (distinkt, currentColor lacivert, aria) */
+var _DEG_CAT_HERO_SVG={
+ 'cat-konut':'<svg viewBox="0 0 360 180" role="img" aria-label="Konut ve site yerleşim illüstrasyonu" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2" stroke-linejoin="round"><path d="M30 150h300"/><path d="M50 150V96l44-30 44 30v54"/><rect x="74" y="108" width="18" height="18"/><rect x="100" y="108" width="18" height="18"/><path d="M170 150V84h70v66"/><path d="M184 98h12M214 98h12M184 118h12M214 118h12"/><path d="M262 150v-40h54v40"/><path d="M274 120h10M294 120h10"/></g></svg>',
+ 'cat-ticari':'<svg viewBox="0 0 360 180" role="img" aria-label="Plaza, cadde mağazası ve lojistik depo illüstrasyonu" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2" stroke-linejoin="round"><path d="M24 152h312"/><rect x="48" y="50" width="58" height="102"/><path d="M58 64h8M82 64h8M58 84h8M82 84h8M58 104h8M82 104h8M58 124h8M82 124h8"/><path d="M134 152v-46h78v46"/><path d="M134 116h78"/><rect x="150" y="124" width="20" height="28"/><path d="M250 152V96h66v56"/><path d="M250 112h66M262 124v28M286 124v28"/></g></svg>',
+ 'cat-arsa':'<svg viewBox="0 0 360 180" role="img" aria-label="Parsel sınırı ve imar şeması illüstrasyonu" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><path d="M40 140 90 40l190 8 40 96Z"/><path d="M90 40 130 134M180 44 150 138M250 48 230 142" stroke="rgba(147,180,255,.4)"/></g><g fill="#93b4ff" stroke="none" font-size="10"><text x="60" y="120">TAKS</text><text x="250" y="80">KAKS</text></g><circle cx="180" cy="92" r="5" fill="#9fe6c0" stroke="none"/></svg>',
+ 'cat-sanayi':'<svg viewBox="0 0 360 180" role="img" aria-label="Fabrika planı ve tesis bileşenleri illüstrasyonu" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2" stroke-linejoin="round"><path d="M24 150h312"/><path d="M56 150V92l40 20V92l40 20V78h78v72"/><path d="M150 96h12M150 116h12M186 96h12M186 116h12"/><circle cx="262" cy="116" r="20"/><circle cx="262" cy="116" r="7"/><path d="M70 78c0-9 9-9 9-18M96 78c0-9 9-9 9-18" opacity=".6"/></g></svg>',
+ 'cat-otel':'<svg viewBox="0 0 360 180" role="img" aria-label="Otel ve turizm tesisi illüstrasyonu" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2" stroke-linejoin="round"><path d="M28 152h304"/><rect x="70" y="48" width="150" height="104"/><path d="M86 64h16M114 64h16M142 64h16M170 64h16M86 88h16M114 88h16M142 88h16M170 88h16M86 112h16M114 112h16M142 112h16M170 112h16"/><path d="M250 152v-58c0-18 50-18 50 0v58"/><path d="M250 110h50"/></g></svg>',
+ 'cat-banka':'<svg viewBox="0 0 360 170" role="img" aria-label="Teminat değerleme süreç akışı illüstrasyonu" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><path d="M40 130h280M54 70h252M64 70 180 34 296 70M84 70v60M132 70v60M180 70v60M228 70v60M276 70v60"/><path d="m170 100 7 7 14-14" stroke="#9fe6c0" stroke-width="2.4"/></g></svg>',
+ 'cat-hukuki':'<svg viewBox="0 0 360 170" role="img" aria-label="Hukuki süreç ve bilirkişi ilişki diyagramı" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><path d="M180 30v26M120 64h120M132 64 112 116M228 64 248 116"/><path d="M92 116h40l-20 8zM228 116h40l-20 8z"/><rect x="150" y="120" width="60" height="34" rx="6"/><path d="M168 137h24"/></g></svg>',
+ 'cat-kentsel':'<svg viewBox="0 0 360 180" role="img" aria-label="Kentsel dönüşüm alanı ve proje yaşam döngüsü illüstrasyonu" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2" stroke-linejoin="round"><path d="M30 150h120V92l-40-22-40 22v58Z" opacity=".55"/><path d="M168 92h22m-7-6 7 6-7 6"/><path d="M210 150h120V64l-40-20-40 20v86Z"/><path d="M232 86h16M232 108h16M286 86h16M286 108h16"/></g></svg>',
+ 'cat-spk':'<svg viewBox="0 0 360 180" role="img" aria-label="SPK, TDUB ve IVS güven üçgeni illüstrasyonu" color="#93b4ff" stroke="currentColor"><path d="M180 28 318 152 42 152Z" fill="rgba(147,180,255,.1)" stroke="#93b4ff" stroke-width="2"/><g fill="#bcd0ff" stroke="none" font-size="12" text-anchor="middle"><text x="180" y="24">SPK</text><text x="38" y="168">TDUB</text><text x="322" y="168">IVS/UDES</text></g><circle cx="180" cy="110" r="7" fill="#9fe6c0" stroke="none"/><path d="m176 110 3 3 6-6" stroke="#0b1220" stroke-width="2" fill="none"/></svg>'
+};
+function renderCategoryHeroVisual(cat){var m=_DEG_CATMETA[cat];if(!m)return '';
+  return '<section class="dp-sec"><div class="wrap"><div class="dp-catvis">'+(_DEG_CAT_HERO_SVG[m.hero]||_degSvg('standart'))
+    +'<div class="dp-catvis-cap">'+_dgEsc(m.ad)+' taşınmaz sınıfına özgü değerleme görseli · uzman değerlendirme sürecini destekleyen veri odaklı altyapı.</div></div></div></section>';}
+/* yıllık trend çizgi grafiği — API dener, yoksa demo etiketli */
+function _degTrendSvg(points,labelMin,labelMax){
+  var w=320,h=150,n=points.length,minV=Math.min.apply(null,points),maxV=Math.max.apply(null,points),rng=(maxV-minV)||1;
+  var pts=points.map(function(v,i){var x=36+i*((w-56)/(n-1));var y=20+(1-(v-minV)/rng)*(h-50);return [x,y];});
+  var line=pts.map(function(p,i){return (i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1);}).join(' ');
+  var area=line+' L'+pts[n-1][0].toFixed(1)+' '+(h-20)+' L'+pts[0][0].toFixed(1)+' '+(h-20)+' Z';
+  var dots=pts.map(function(p){return '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="3.4" fill="#93b4ff"/>';}).join('');
+  return '<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Yıllık değişim eğilimi (örnek/demo görsel)" color="#93b4ff" stroke="currentColor"><defs><linearGradient id="degTrendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#93b4ff" stop-opacity=".3"/><stop offset="100%" stop-color="#93b4ff" stop-opacity="0"/></linearGradient></defs>'
+    +'<g stroke="rgba(147,180,255,.25)"><line x1="36" y1="20" x2="36" y2="'+(h-20)+'"/><line x1="36" y1="'+(h-20)+'" x2="'+(w-20)+'" y2="'+(h-20)+'"/></g>'
+    +'<path d="'+area+'" fill="url(#degTrendFill)" stroke="none"/><path d="'+line+'" fill="none" stroke="#93b4ff" stroke-width="2.6" stroke-linecap="round"/>'+dots
+    +'<text x="42" y="16" fill="#9fb3d4" font-size="10" stroke="none">'+_dgEsc(labelMax||'')+'</text></svg>';
+}
+async function renderCategoryTrendChart(cat){var m=_DEG_CATMETA[cat];if(!m)return '';
+  /* API dene; yoksa fallback demo serisi (UYDURMA RESMÎ DEĞER DEĞİL — yalnız göreli endeks görseli) */
+  var pts=null,online=false;
+  try{
+    var r=await proxApi('/api/v1/tenant/endeks?persona=valuation&kategori='+encodeURIComponent(cat),{method:'GET'});
+    if(r&&!r.fallback&&Array.isArray(r.series)&&r.series.length>3){pts=r.series.map(Number);online=true;}
+  }catch(e){}
+  if(!pts){var seeds={konut:[100,108,121,134,150,168],ticari:[100,104,112,123,131,142],arsa:[100,112,128,141,159,178],sanayi:[100,106,114,120,129,138],otel:[100,98,109,124,138,151],banka:[100,103,107,111,116,121],hukuki:[100,105,110,114,119,124],kentsel:[100,110,123,138,152,167],'spk-guven':[100,104,108,112,117,122]};pts=seeds[cat]||[100,106,113,121,130,140];}
+  var demoTag=online?'':'<span class="dp-demobadge">örnek görsel · demo veri gösterimi</span>';
+  return '<section class="dp-sec alt"><div class="wrap"><h2>'+_dgEsc(m.trendAd)+' '+demoTag+'</h2>'
+    +'<p class="sub">Son yıllara ilişkin göreli eğilim göstergesi. Destekleyici içgörüdür; resmî SPK değerleme raporu yerine geçmez. Nihai değer yalnızca SPK lisanslı uzman tarafından takdir edilir.</p>'
+    +'<div class="dp-trendbox">'+_degTrendSvg(pts)+'</div></div></section>';
+}
+function renderCategoryKpiCards(cat){var m=_DEG_CATMETA[cat];if(!m)return '';
+  return '<section class="dp-sec"><div class="wrap"><h2>Bölge & Piyasa Göstergeleri</h2><p class="sub">Uzman değerlendirmesini destekleyen, taşınmaz türüne özgü gösterge başlıkları.</p><div class="dp-kpi">'
+    +m.kpi.map(function(k){return '<div class="dp-kpicard"><div class="ic">'+_degSvgIcon()+'</div><b>'+_dgEsc(k[0])+'</b><span>'+_dgEsc(k[1])+'</span></div>';}).join('')
+    +'</div></div></section>';}
+function renderCategoryRiskMatrix(cat){var m=_DEG_CATMETA[cat];if(!m)return '';
+  return '<section class="dp-sec alt"><div class="wrap"><h2>Risk & Metodoloji Uygunluk Matrisi</h2><p class="sub">'+_dgEsc(m.methodAd)+' çerçevesinde dikkate alınan başlıca etkenler.</p><div class="dp-matrix">'
+    +m.risk.map(function(r){var lv=/Yüksek/.test(r[1])?'hi':(/Orta/.test(r[1])?'mid':'lo');return '<div class="dp-mrow"><span class="dp-mlabel">'+_dgEsc(r[0])+'</span><span class="dp-mbar '+lv+'"><i></i></span><span class="dp-mlevel">'+_dgEsc(r[1])+'</span></div>';}).join('')
+    +'</div></div></section>';}
+function renderCategoryDocumentChecklist(cat){
+  /* mevcut checklist verisinden kategoriye uygun belge listesi seç */
+  var map={konut:'belge-konut',ticari:'belge-ticari',arsa:'belge-arsa-arazi',sanayi:'belge-fabrika-sanayi',otel:'belge-otel-turizm',banka:'belge-banka-teminat',hukuki:'belge-mahkeme-icra',kentsel:'belge-kentsel-donusum','spk-guven':'degerleme-basvurusu-belgeler'};
+  var src=DEG_PAGES[map[cat]];var docs=(src&&src.belgeler)||_DEG_DOCS_GENEL;var target=map[cat];
+  return '<section class="dp-sec"><div class="wrap"><h2>Belge & Süreç Hazırlığı</h2><p class="sub">Başvuru öncesi belge/süreç hazırlığını kolaylaştıran kontrol listesi.</p><ul class="dp-docs">'
+    +docs.slice(0,8).map(function(d){return '<li>'+_CHECK_SVG+'<span>'+_dgEsc(d)+'</span></li>';}).join('')
+    +'</ul><div style="margin-top:14px"><button class="btn btn-line" style="border-color:var(--line)" onclick="openDegPage(\''+target+'\')">Tüm belge listesi →</button></div></div></section>';}
+function renderCategoryMethodVisual(cat){var m=_DEG_CATMETA[cat];if(!m)return '';
+  return '<section class="dp-sec alt"><div class="wrap"><div class="dp-meth"><div class="mchart">'+_degSvg(m.method)+'</div>'
+    +'<div class="mtx"><div class="eyebrow">Metodolojik Çerçeve</div><h3>'+_dgEsc(m.methodAd)+'</h3>'
+    +'<p>Taşınmaz türüne uygun, bağımsız, denetlenebilir ve standartlara duyarlı yaklaşım. Yöntem seçimi ve değer takdiri SPK lisanslı uzmanın mesleki kanaatiyle yapılır.</p>'
+    +'<button class="btn btn-line" style="border-color:var(--line)" onclick="openDegPage(\'metodoloji\')">Tüm Metodoloji →</button></div></div></div></section>';}
+function renderCategoryMarketCards(cat){var m=_DEG_CATMETA[cat];if(!m)return '';
+  return '<section class="dp-sec"><div class="wrap"><h2>Bölge, Erişim & Lokasyon</h2><div class="dp-cards">'
+    +m.market.map(function(c){return '<div class="dp-card"><div class="ic">'+_degSvgIcon()+'</div><b>'+_dgEsc(c[0])+'</b><p>'+_dgEsc(c[1])+'</p></div>';}).join('')
+    +'</div></div></section>';}
 /* ---- TEK premium şablon ---- */
 function renderDegPage(slug){
   var p=DEG_PAGES[slug];if(!p)return;
@@ -2025,12 +2168,29 @@ function renderDegPage(slug){
   /* alt CTA */
   var cta='<section class="dp-cta"><div class="wrap"><h2>SPK lisanslı resmî değerleme için hazırız</h2><p>Taşınmazınız veya kurumsal varlıklarınız için bağımsız, tarafsız ve denetlenebilir bir değerleme süreci başlatın.</p>'
     +'<div class="ctas"><button class="btn btn-primary" onclick="openDegPage(\'basvuru\')">Değerleme Başvurusu Oluştur</button><button class="btn btn-line" onclick="openDegPage(\'kurumsal-teklif\')">Kurumsal Teklif Talep Et</button></div></div></section>';
-  /* Sıra: hero → resmî tanım → [index] → Kimler İçin → Hangi Durumlarda → Belgeler → İncelenen → Metodoloji+SVG → Veri Katkısı → Uzman Süreci → Sınırlar → 7-adım(mevcut surec) → SSS → İlgili → CTA */
-  var html='<div class="dp-spacer"></div>'+bread+hero+notice+dalga2+tanim+indexSec+kimler+hangi+belgeler+incel+meth+veri+uzman+sinir+surec+arts+formSec+faq+related+cta+_degFooterHTML();
+  /* ---- Kategori-duyarlı görsel zenginleştirme blokları (additive, çiftlemesiz) ---- */
+  var cat=_degCategoryOf(slug);
+  var catHero='',catKpi='',catMarket='',catRisk='',catMeth='',catDocs='',catTrendSlot='';
+  if(cat){
+    catHero=renderCategoryHeroVisual(cat);
+    catKpi=renderCategoryKpiCards(cat);
+    catMarket=renderCategoryMarketCards(cat);
+    catRisk=renderCategoryRiskMatrix(cat);
+    /* method visual yalnızca sayfanın kendi metodoloji bloğu yoksa (çiftleme önleme) */
+    if(!p.metodoloji)catMeth=renderCategoryMethodVisual(cat);
+    /* belge checklist yalnızca sayfanın kendi belgeler listesi yoksa (çiftleme önleme) */
+    if(!(p.belgeler&&p.belgeler.length))catDocs=renderCategoryDocumentChecklist(cat);
+    /* trend grafiği async — sonradan doldurulacak yer tutucu */
+    catTrendSlot='<div id="degTrendSlot"></div>';
+  }
+  /* Sıra: hero → catHero → resmî tanım → [index] → Kimler İçin → KPI → Hangi Durumlarda → Belgeler → İncelenen → catTrend+Market → Metodoloji+SVG → catMeth+catRisk → Veri Katkısı → Uzman Süreci → Sınırlar → catDocs → 7-adım → SSS → İlgili → CTA */
+  var html='<div class="dp-spacer"></div>'+bread+hero+catHero+notice+dalga2+tanim+indexSec+kimler+catKpi+hangi+belgeler+incel+catTrendSlot+catMarket+meth+catMeth+catRisk+veri+uzman+sinir+catDocs+surec+arts+formSec+faq+related+cta+_degFooterHTML();
   document.getElementById('degPageBody').innerHTML=html;
   document.getElementById('degPage').scrollTop=0;
   _degApplySeo(slug,p);
   _degInjectPageSchema(slug,p);
+  /* async trend grafiğini yer tutucuya bas */
+  if(cat){renderCategoryTrendChart(cat).then(function(htmlT){var slot=document.getElementById('degTrendSlot');if(slot&&window._degCurrent===slug)slot.innerHTML=htmlT;}).catch(function(){});}
 }
 /* ---- SEO: title + meta description (geri dönünce reset) ---- */
 var _DEG_BASE_TITLE=document.title;
