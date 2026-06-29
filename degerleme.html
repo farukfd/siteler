@@ -115,7 +115,10 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
 /* hero */
 .hero{position:relative;overflow:hidden;color:#fff;background:linear-gradient(135deg,#0b1220 0%,#1e3a8a 60%,#334155 100%);padding:74px 0 66px}
 .hero:before{content:"";position:absolute;inset:0;background:radial-gradient(720px 360px at 85% -10%,rgba(255,255,255,.10),transparent 60%),linear-gradient(transparent 70%,rgba(0,0,0,.25));pointer-events:none}
-.hero .in{position:relative;max-width:780px}
+.hero .in{position:relative;max-width:780px;z-index:2}
+.hero-art{position:absolute;right:2%;top:50%;transform:translateY(-50%);width:min(38%,440px);color:#93b4ff;opacity:.5;pointer-events:none;z-index:1}
+.hero-art svg{width:100%;height:auto;filter:drop-shadow(0 14px 30px rgba(0,0,0,.35))}
+@media(max-width:1024px){.hero-art{display:none}}
 .hero .eyebrow{color:#bcd0ff}
 .hero h1{color:#fff;font-size:clamp(30px,4.4vw,48px);margin:.4em 0 .4em;max-width:18ch}
 .hero h1 span{color:#93b4ff}
@@ -391,7 +394,7 @@ nav.main .nav-mega:hover .mega-panel,nav.main .nav-mega:focus-within .mega-panel
 .deg-page.on{display:block}
 body.deg-lock{overflow:hidden}
 .deg-page .dp-spacer{height:70px}
-.dp-bread{background:var(--surface);border-bottom:1px solid var(--line)}
+.dp-bread{display:none !important}
 .dp-bread .wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:14px;padding-bottom:14px;font-size:13px;color:var(--muted)}
 .dp-bread a{color:var(--accent);font-weight:600;cursor:pointer}
 .dp-bread .sep{opacity:.5}
@@ -515,7 +518,7 @@ body.deg-lock{overflow:hidden}
 <body>
 
 <header><div class="wrap bar">
-  <a class="logo" href="#"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Değerleme</span></span></a>
+  <a class="logo" href="#" onclick="if(typeof closeDegPage==='function')closeDegPage();window.scrollTo({top:0,behavior:'smooth'});return false"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Değerleme</span></span></a>
   <nav class="main" id="navMain"></nav>
   <div class="nav-cta" id="navCta"></div>
 </div></header>
@@ -527,7 +530,7 @@ body.deg-lock{overflow:hidden}
 </div></div>
 
 <!-- HERO -->
-<section class="hero"><div class="wrap in">
+<section class="hero"><div class="hero-art" aria-hidden="true"><svg viewBox="0 0 360 300" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g opacity=".9"><path d="M40 250h280"/><path d="M70 250V150l50-32 50 32v100"/><rect x="96" y="168" width="20" height="20"/><rect x="126" y="168" width="20" height="20"/><path d="M210 250V120h70v130"/><path d="M226 138h12M256 138h12M226 162h12M256 162h12M226 186h12M256 186h12"/></g><path d="M40 250 L100 200 L160 215 L220 160 L300 120" stroke="#9fe6c0" stroke-width="2.4" opacity=".95"/><g fill="#9fe6c0" stroke="none"><circle cx="100" cy="200" r="4"/><circle cx="220" cy="160" r="4"/><circle cx="300" cy="120" r="4"/></g><circle cx="300" cy="70" r="26" stroke-width="2" opacity=".55"/><path d="m289 70 8 8 14-16" stroke="#9fe6c0" stroke-width="2.4"/></svg></div><div class="wrap in">
   <div class="eyebrow">SPK Lisanslı · BDDK Yetkili · UDES Uyumlu Bağımsız Değerleme Kuruluşu</div>
   <h1>Varlıklarınıza, uluslararası standartlarda <span>resmi ve bağımsız</span> değer tespiti</h1>
   <p>Gayrimenkulden makine-ekipmana, fabrikadan enerji santrallerine; maliyet, emsal karşılaştırma ve gelir kapitalizasyonu yöntemleriyle, mevzuata tam uyumlu lisanslı değerleme raporları.</p>
@@ -563,6 +566,9 @@ body.deg-lock{overflow:hidden}
     <span class="lic-b" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px"><b style="display:inline">Bağımsız</b> <span>& Tarafsız</span></span>
   </div>
 </div></section>
+
+<!-- FAZ: Ana sayfa amiral doluluk blokları (JS ile basılır) -->
+<section id="homeFlagship"></section>
 
 <!-- HİZMETLER -->
 <section id="hizmetler"><div class="wrap">
@@ -743,40 +749,31 @@ const DEG_NAV=[['Kurumsal','#lisans'],['Değerleme Hizmetleri','#hizmetler'],['S
 function mountChrome(){
   const n=document.getElementById('navMain');if(n)n.innerHTML=_degNavDesktopHTML();
   const ml=document.getElementById('mnavLinks');if(ml)ml.innerHTML=_degNavMobileHTML();
-  const wa=(saasResolve('whatsapp'))||SAAS_CONFIG.whatsapp||'905000000000';
-  const c=document.getElementById('navCta');if(c)c.innerHTML='<a class="btn btn-line btn-sm hide-sm" href="https://wa.me/'+wa+'" target="_blank" rel="noopener noreferrer">WhatsApp</a><button class="btn btn-primary btn-sm" onclick="(typeof openDegPage===\'function\')?openDegPage(\'basvuru\'):document.getElementById(\'rapor\').scrollIntoView({behavior:\'smooth\'})">Değerleme Başvurusu</button><button class="burger" onclick="document.getElementById(\'mnav\').classList.add(\'open\')" aria-label="Menü"><span></span><span></span><span></span></button>';
+  /* navCta: yalnız tek küçük Başvuru butonu + mobil burger (WhatsApp/portal/2. buton YOK) */
+  const c=document.getElementById('navCta');if(c)c.innerHTML='<button class="btn btn-primary btn-sm" onclick="openDegPage(\'basvuru\')">Değerleme Başvurusu</button><button class="burger" onclick="document.getElementById(\'mnav\').classList.add(\'open\')" aria-label="Menü"><span></span><span></span><span></span></button>';
 }
-/* --- Faz 21 Dalga 1: amiral mega-menü — tek kaynak ---- */
+/* --- Faz: sade 5-link üst menü (Kurumsal · Rapor Türleri ▾ · Metodoloji ▾ · SPK Güven Merkezi ▾ · Başvuru) ---- */
+var _DEG_REPORT_MENU=['konut','ticari','arsa-arazi','sanayi','otel-turizm','banka-kurum','kentsel-donusum','hukuki-surec','daire','ofis','imarli-arsa','banka-teminat-raporu'];
 var _DEG_METH_MENU=['pazar-yaklasimi','gelir-yaklasimi','maliyet-yaklasimi','emsal-analizi','dcf','en-verimli-kullanim'];
 var _DEG_SPK_MENU=['spk-lisansli-degerleme-nedir','raporu-kim-imzalar','sistem-uzman-farki','platform-rolu-sinirlar','rapor-bolumleri','ivs-udes-standartlari','tdub-uyeligi','makine-ekipman-yetki'];
 function _degMegaItems(slugs){return slugs.filter(function(s){return DEG_PAGES[s];}).map(function(s){var pg=DEG_PAGES[s];return '<div class="mega-item" onclick="openDegPage(\''+s+'\')"><div class="mi-ic">'+_degSvgIcon()+'</div><div><b>'+_dgEsc(pg.h1)+'</b><span>'+_dgEsc((pg.lead||'').slice(0,54))+'…</span></div></div>';}).join('');}
 function _degNavDesktopHTML(){
   return ''
-    +'<a onclick="closeDegPage()">Ana Sayfa</a>'
     +'<a onclick="openDegPage(\'kurumsal\')">Kurumsal</a>'
-    +'<span class="nav-mega"><a onclick="openDegPage(\'rapor-turleri\')">Rapor Türleri</a><div class="mega-panel">'+_degMegaItems(DEG_SERVICES.concat(['daire','ofis','imarli-arsa','banka-teminat-raporu']))+'</div></span>'
-    +'<span class="nav-mega"><a onclick="openDegPage(\'konut\')">Hizmetler</a><div class="mega-panel">'+_degMegaItems(DEG_SERVICES)+'</div></span>'
+    +'<span class="nav-mega"><a onclick="openDegPage(\'rapor-turleri\')">Rapor Türleri</a><div class="mega-panel">'+_degMegaItems(_DEG_REPORT_MENU)+'</div></span>'
     +'<span class="nav-mega"><a onclick="openDegPage(\'metodoloji\')">Metodoloji</a><div class="mega-panel">'+_degMegaItems(_DEG_METH_MENU)+'</div></span>'
     +'<span class="nav-mega"><a onclick="openDegPage(\'spk-lisansli-degerleme-nedir\')">SPK Güven Merkezi</a><div class="mega-panel">'+_degMegaItems(_DEG_SPK_MENU)+'</div></span>'
-    +'<a onclick="openDegPage(\'bilgi-merkezi\')">Bilgi Merkezi</a>'
-    +'<a onclick="openDegPage(\'basvuru\')">Başvuru</a>'
-    +'<a onclick="openDegPage(\'iletisim\')">İletişim</a>'
-    +'<a id="saasPortalTrigger" class="portal-trigger" onclick="openSaasPortal()">Müşteri Portalı</a>';
+    +'<a onclick="openDegPage(\'basvuru\')">Başvuru</a>';
 }
 function _degNavMobileHTML(){
   var cls='document.getElementById(\'mnav\').classList.remove(\'open\')';
   var acc=function(title,slugs){return '<div class="macc-h" onclick="this.nextElementSibling.classList.toggle(\'open\')">'+title+' <span>▾</span></div><div class="macc-body">'+slugs.filter(function(s){return DEG_PAGES[s];}).map(function(s){return '<a onclick="'+cls+';openDegPage(\''+s+'\')">'+_dgEsc(DEG_PAGES[s].h1)+'</a>';}).join('')+'</div>';};
   return ''
-    +'<a onclick="'+cls+';closeDegPage()">Ana Sayfa</a>'
     +'<a onclick="'+cls+';openDegPage(\'kurumsal\')">Kurumsal</a>'
-    +'<a onclick="'+cls+';openDegPage(\'rapor-turleri\')">Rapor Türleri</a>'
-    +acc('Hizmetler',DEG_SERVICES)
+    +acc('Rapor Türleri',_DEG_REPORT_MENU)
     +acc('Metodoloji',_DEG_METH_MENU)
     +acc('SPK Güven Merkezi',_DEG_SPK_MENU)
-    +'<a onclick="'+cls+';openDegPage(\'bilgi-merkezi\')">Bilgi Merkezi</a>'
-    +'<a onclick="'+cls+';openDegPage(\'basvuru\')">Başvuru</a>'
-    +'<a onclick="'+cls+';openDegPage(\'iletisim\')">İletişim</a>'
-    +'<a class="portal-trigger" onclick="'+cls+';openSaasPortal()">Müşteri Portalı</a>';
+    +'<a onclick="'+cls+';openDegPage(\'basvuru\')">Başvuru</a>';
 }
 /* ---- Faz 21 Dalga 1: future API'ler (mock/fallback, gerçeğe bağlanabilir) ---- */
 async function _degFutureApi(path,body){
@@ -798,6 +795,46 @@ function _degMountHomeGrid(){
   host.innerHTML=feat.filter(function(s){return DEG_PAGES[s];}).map(function(s){var p=DEG_PAGES[s];
     return '<div class="dp-card" style="cursor:pointer" onclick="openDegPage(\''+s+'\')"><div class="ic">'+_degSvgIcon()+'</div><b>'+_dgEsc(p.h1)+'</b><p>'+_dgEsc((p.lead||'').slice(0,96))+'…</p></div>';
   }).join('');
+}
+/* Ana sayfa amiral doluluk blokları (#homeFlagship) — additive */
+function _degHomeCardGrid(slugs){return '<div class="dp-cards">'+slugs.filter(function(s){return DEG_PAGES[s];}).map(function(s){var p=DEG_PAGES[s];return '<div class="dp-card" style="cursor:pointer" onclick="openDegPage(\''+s+'\')"><div class="ic">'+_degSvgIcon()+'</div><b>'+_dgEsc(p.h1)+'</b><p>'+_dgEsc((p.lead||'').slice(0,80))+'…</p></div>';}).join('')+'</div>';}
+function _degMountHomeFlagship(){
+  var host=document.getElementById('homeFlagship');if(!host)return;
+  /* SPK/TDUB/IVS güven üçgeni */
+  var triangle='<section class="dp-sec alt"><div class="wrap"><div class="dp-meth"><div class="mchart">'+(typeof _degSvg==='function'?_degSvg('spk-tdub-ivs-ucgen'):'')+'</div>'
+    +'<div class="mtx"><div class="eyebrow">Yasal Güven Çerçevesi</div><h3>SPK · TDUB · IVS/UDES</h3>'
+    +'<p>SPK III-62.3 tebliği faaliyet standardını, TDUB meslek kuralları etik çerçeveyi, IVS/UDES 2025 uluslararası metodolojiyi belirler. Tüm raporlar bağımsız, tarafsız ve denetlenebilir biçimde hazırlanır.</p>'
+    +'<button class="btn btn-line" style="border-color:var(--line)" onclick="openDegPage(\'spk-lisansli-degerleme-nedir\')">SPK Güven Merkezi →</button></div></div></div></section>';
+  /* taşınmaz türüne göre */
+  var tasinmaz='<section class="dp-sec"><div class="wrap"><div class="sec-h"><div class="eyebrow">Taşınmaz Türüne Göre</div><h2>Varlık türüne özel değerleme</h2></div>'+_degHomeCardGrid(['konut','ticari','arsa-arazi','sanayi','otel-turizm','imarli-arsa'])+'</div></section>';
+  /* kullanım amacına göre */
+  var amac='<section class="dp-sec alt"><div class="wrap"><div class="sec-h"><div class="eyebrow">Kullanım Amacına Göre</div><h2>İşleme ve sürece özel raporlar</h2></div>'+_degHomeCardGrid(['banka-teminat-raporu','kamulastirma','miras-paylasim','vergi-beyan','sigorta-amacli','hukuki-surec'])+'</div></section>';
+  /* metodoloji üçlüsü */
+  var methTrio='<section class="dp-sec"><div class="wrap"><div class="sec-h"><div class="eyebrow">Metodoloji</div><h2>UDES/IVS üç temel yaklaşım</h2><p>Taşınmaz türüne uygun yöntem(ler) SPK lisanslı uzman tarafından seçilir ve uzlaştırılır.</p></div>'
+    +'<div class="dp-cards">'
+    +'<div class="dp-card" style="cursor:pointer" onclick="openDegPage(\'pazar-yaklasimi\')"><div class="mchart" style="border-radius:11px;overflow:hidden;margin-bottom:10px">'+_degSvg('pazar')+'</div><b>Pazar (Emsal) Yaklaşımı</b><p>Konut ve arsada birincil yöntem.</p></div>'
+    +'<div class="dp-card" style="cursor:pointer" onclick="openDegPage(\'gelir-yaklasimi\')"><div class="mchart" style="border-radius:11px;overflow:hidden;margin-bottom:10px">'+_degSvg('gelir')+'</div><b>Gelir Kapitalizasyonu</b><p>Getirili ticari ve tesis taşınmazları.</p></div>'
+    +'<div class="dp-card" style="cursor:pointer" onclick="openDegPage(\'maliyet-yaklasimi\')"><div class="mchart" style="border-radius:11px;overflow:hidden;margin-bottom:10px">'+_degSvg('maliyet')+'</div><b>Maliyet Yaklaşımı</b><p>Özel/yeni yapı ve sanayi varlıkları.</p></div>'
+    +'</div></div></section>';
+  /* yıllık destekleyici eğilim grafiği (demo etiketli) */
+  var trend='<section class="dp-sec alt"><div class="wrap"><div class="sec-h"><div class="eyebrow">Destekleyici Veri</div><h2>Bölgesel değer eğilimi <span class="dp-demobadge">örnek görsel · demo veri gösterimi</span></h2><p>Göreli eğilim göstergesidir; resmî SPK değerleme raporu yerine geçmez. Nihai değer yalnızca SPK lisanslı uzman tarafından takdir edilir.</p></div>'
+    +'<div class="dp-trendbox" style="margin:0 auto">'+(typeof _degTrendSvg==='function'?_degTrendSvg([100,108,121,134,150,168]):'')+'</div></div></section>';
+  /* emlakekspertizi.com veri altyapısı kartları */
+  var veri='<section class="dp-sec"><div class="wrap"><div class="sec-h"><div class="eyebrow">Veri Altyapısı</div><h2>emlakekspertizi.com ile uzmanı destekleyen veri katmanı</h2><p>Platform; başvuru, belge yönetimi, lokasyon ve ön analiz altyapısı sağlar. Değer takdiri uzmana aittir.</p></div>'
+    +'<div class="dp-cards">'
+    +'<div class="dp-card"><div class="ic">'+_degSvgIcon()+'</div><b>Lokasyon & Bölge Verisi</b><p>Bölge ve konum bazlı emsal/erişim altyapısı.</p></div>'
+    +'<div class="dp-card"><div class="ic">'+_degSvgIcon()+'</div><b>Belge & Süreç Yönetimi</b><p>Başvuru öncesi belge hazırlığını kolaylaştıran yapı.</p></div>'
+    +'<div class="dp-card"><div class="ic">'+_degSvgIcon()+'</div><b>Ön Analiz Altyapısı</b><p>Uzman değerlendirmesini destekleyen veri odaklı altyapı (değer üretmez).</p></div>'
+    +'</div></div></section>';
+  /* bilgi merkezi öne çıkanlar */
+  var bm=DEG_PAGES['bilgi-merkezi'];var arts=(bm&&bm.articles)||[];
+  var bilgi=arts.length?'<section class="dp-sec alt"><div class="wrap"><div class="sec-h"><div class="eyebrow">Bilgi Merkezi</div><h2>Öne çıkan içerikler</h2></div><div class="dp-cards">'
+    +arts.slice(0,3).map(function(a){return '<div class="dp-card" style="cursor:pointer" onclick="openDegPage(\'bilgi-merkezi\')"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)">'+_dgEsc(a.tag)+'</span><b style="margin-top:6px">'+_dgEsc(a.baslik)+'</b><p>'+_dgEsc(a.ozet)+'</p></div>';}).join('')
+    +'</div></div></section>':'';
+  /* başvuru CTA bandı */
+  var cta='<section class="dp-cta"><div class="wrap"><h2>SPK lisanslı resmî değerleme için hazırız</h2><p>Taşınmazınız veya kurumsal varlıklarınız için bağımsız, tarafsız ve denetlenebilir bir değerleme süreci başlatın.</p>'
+    +'<div class="ctas"><button class="btn btn-primary" onclick="openDegPage(\'basvuru\')">Değerleme Başvurusu Oluştur</button><button class="btn btn-line" onclick="openDegPage(\'kurumsal-teklif\')">Kurumsal Teklif Talep Et</button></div></div></section>';
+  host.innerHTML=triangle+tasinmaz+amac+methTrio+trend+veri+bilgi+cta;
 }
 /* küçük menü ikonu (SVG kütüphanesinden sade currentColor) */
 function _degSvgIcon(k){return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg>';}
@@ -2040,8 +2077,8 @@ function renderDegPage(slug){
   var p=DEG_PAGES[slug];if(!p)return;
   window._degCurrent=slug;
   var trust=p.group==='Hizmetler'||p.group==='Kurumsal'||p.group==='Başvuru'?_TRUST:['SPK Lisansı','UDES / IVS Uyumlu','Bağımsız & Tarafsız'];
-  /* breadcrumb */
-  var bread='<div class="dp-bread"><div class="wrap"><a onclick="closeDegPage()">Ana Sayfa</a><span class="sep">›</span><b>'+_dgEsc(p.group)+'</b><span class="sep">›</span><b>'+_dgEsc(p.h1)+'</b></div></div>';
+  /* breadcrumb UI kaldırıldı (görsel band YOK) — BreadcrumbList JSON-LD _degInjectPageSchema'da korunur */
+  var bread='';
   /* hero */
   var hero='<section class="dp-hero"><div class="wrap"><div class="eyebrow">'+_dgEsc(p.group)+'</div><h1>'+_dgEsc(p.h1)+'</h1><p class="lead">'+_dgEsc(p.lead)+'</p>'
     +'<div class="ctas"><button class="btn btn-primary" onclick="openDegPage(\'basvuru\')">Değerleme Başvurusu Oluştur</button><button class="btn btn-line" onclick="openDegPage(\'metodoloji\')">Metodolojiyi İncele</button></div>'
@@ -2254,6 +2291,7 @@ window.addEventListener('load',function(){try{
   initSaaSTheme();mountChrome();applySaaSSettings();saasPortalRenderNav();
   renderAsset('gayrimenkul');renderMethod('maliyet');
   _degMountHomeGrid();
+  _degMountHomeFlagship();
   _degRouteFromHash();
   /* Ön yüzde harici buton YOK — yönetim yalnızca Footer › Yönetim Paneli › şifreli giriş ile.
      SuperAdmin yalnızca gizli kısayol (Ctrl+Shift+M) ile erişilir. */
