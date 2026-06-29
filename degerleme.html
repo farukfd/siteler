@@ -369,6 +369,112 @@ footer a{color:#cdd8ea;font-size:14px}footer a:hover{color:#fff}
 .sp-logout{width:100%;background:rgba(255,255,255,.06);color:#cdd8ea;border:1px solid rgba(255,255,255,.16);border-radius:11px;padding:12px;font-weight:700;font-size:14px;cursor:pointer;font-family:var(--body);transition:.18s}
 .sp-logout:hover{background:rgba(255,255,255,.1);color:#fff}
 @media(max-width:980px){.portal-trigger{display:none}}
+
+/* ===== Faz 21: Enterprise çok-sayfa overlay router (lacivert) ===== */
+/* Mega-dropdown nav */
+nav.main .nav-mega{position:relative}
+nav.main .nav-mega>a:after{content:"▾";font-size:10px;margin-left:5px;opacity:.7}
+.mega-panel{position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(6px);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 30px 70px -30px rgba(15,23,42,.45);padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:6px;min-width:520px;opacity:0;visibility:hidden;transition:.18s;z-index:80}
+nav.main .nav-mega:hover .mega-panel,nav.main .nav-mega:focus-within .mega-panel{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.mega-item{display:flex;gap:11px;align-items:flex-start;padding:10px 12px;border-radius:11px;cursor:pointer;transition:.15s}
+.mega-item:hover{background:var(--surface)}
+.mega-item .mi-ic{width:34px;height:34px;border-radius:9px;background:rgba(30,58,138,.1);color:var(--accent);display:grid;place-items:center;flex:none}
+.mega-item b{display:block;font-size:14px;color:var(--ink);font-family:var(--head)}
+.mega-item span{font-size:12px;color:var(--muted);line-height:1.4}
+.mnav .panel .macc-h{display:flex;justify-content:space-between;align-items:center;padding:13px 12px;font-weight:700;border-radius:10px;cursor:pointer;border-bottom:1px solid var(--line)}
+.mnav .panel .macc-body{display:none;padding:2px 0 6px}
+.mnav .panel .macc-body.open{display:block}
+.mnav .panel .macc-body a{padding:10px 22px;font-size:14px;border-bottom:1px solid var(--line);display:block}
+/* Overlay */
+.deg-page{position:fixed;left:0;right:0;top:0;bottom:0;z-index:90;background:var(--bg);overflow-y:auto;overflow-x:hidden;display:none;-webkit-overflow-scrolling:touch}
+.deg-page.on{display:block}
+body.deg-lock{overflow:hidden}
+.deg-page .dp-spacer{height:70px}
+.dp-bread{background:var(--surface);border-bottom:1px solid var(--line)}
+.dp-bread .wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:14px;padding-bottom:14px;font-size:13px;color:var(--muted)}
+.dp-bread a{color:var(--accent);font-weight:600;cursor:pointer}
+.dp-bread .sep{opacity:.5}
+.dp-bread b{color:var(--ink)}
+.dp-hero{background:linear-gradient(135deg,#0b1220 0%,#1e3a8a 60%,#334155 100%);color:#fff;position:relative;overflow:hidden}
+.dp-hero:before{content:"";position:absolute;inset:0;background:radial-gradient(720px 360px at 85% -10%,rgba(255,255,255,.10),transparent 60%);pointer-events:none}
+.dp-hero .wrap{position:relative;padding-top:54px;padding-bottom:48px}
+.dp-hero .eyebrow{color:#bcd0ff}
+.dp-hero h1{color:#fff;font-size:clamp(26px,3.8vw,40px);margin:.35em 0 .4em;max-width:20ch}
+.dp-hero .lead{color:#cdd8ea;font-size:16.5px;max-width:62ch;margin:0 0 24px;line-height:1.7}
+.dp-hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+.dp-hero .btn-line{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.24);color:#fff}
+.dp-trustbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.dp-trustbar .t{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#bcd0ff;background:rgba(147,180,255,.12);border:1px solid rgba(147,180,255,.26);padding:6px 11px;border-radius:99px}
+.dp-sec{padding:52px 0}
+.dp-sec.alt{background:var(--surface)}
+.dp-sec h2{font-size:clamp(21px,2.6vw,28px);margin:0 0 6px}
+.dp-sec .sub{color:var(--muted);font-size:15px;margin:0 0 26px;max-width:62ch}
+.dp-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:860px){.dp-cards{grid-template-columns:1fr 1fr}}@media(max-width:560px){.dp-cards{grid-template-columns:1fr}}
+.dp-card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px;box-shadow:0 14px 36px -28px rgba(15,23,42,.4)}
+.dp-card .ic{width:42px;height:42px;border-radius:11px;background:rgba(30,58,138,.1);color:var(--accent);display:grid;place-items:center;margin-bottom:12px}
+.dp-card b{display:block;font-size:15.5px;font-family:var(--head);margin-bottom:5px}
+.dp-card p{color:var(--ink-2);font-size:13.8px;line-height:1.6;margin:0}
+.dp-docs{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px}
+@media(max-width:680px){.dp-docs{grid-template-columns:1fr}}
+.dp-docs li{list-style:none;display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--ink-2);padding:7px 0}
+.dp-docs li svg{color:var(--accent);flex:none;margin-top:2px}
+.dp-steps{display:grid;gap:14px}
+.dp-step{display:flex;gap:15px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.dp-step .n{width:38px;height:38px;border-radius:50%;background:var(--grad-cta);color:#fff;display:grid;place-items:center;font-family:var(--head);font-weight:800;flex:none}
+.dp-step b{display:block;font-size:15.5px;font-family:var(--head)}
+.dp-step p{color:var(--ink-2);font-size:13.8px;margin:4px 0 0;line-height:1.6}
+.dp-meth{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:center}
+@media(max-width:780px){.dp-meth{grid-template-columns:1fr}}
+.dp-meth .mchart{border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#0b1220,#1e3a8a);padding:8px}
+.dp-meth .mchart svg{display:block;width:100%;height:auto}
+.dp-meth .mtx h3{font-size:20px;margin:0 0 10px}
+.dp-meth .mtx p{color:var(--ink-2);font-size:15px;line-height:1.7;margin:0 0 12px}
+.dp-faq{max-width:820px;margin:0 auto}
+.dp-q{border:1px solid var(--line);border-radius:13px;margin-bottom:10px;overflow:hidden;background:#fff}
+.dp-q .qh{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:15px 18px;cursor:pointer;font-weight:700;font-size:15px;color:var(--ink)}
+.dp-q .qh .chev{color:var(--accent);transition:.2s;flex:none}
+.dp-q.open .qh .chev{transform:rotate(45deg)}
+.dp-q .qa{max-height:0;overflow:hidden;transition:.25s;color:var(--ink-2);font-size:14.3px;line-height:1.7;padding:0 18px}
+.dp-q.open .qa{max-height:400px;padding:0 18px 16px}
+.dp-related{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:760px){.dp-related{grid-template-columns:1fr}}
+.dp-rel{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px 18px;cursor:pointer;transition:.16s}
+.dp-rel:hover{border-color:var(--accent);transform:translateY(-2px)}
+.dp-rel b{font-size:15px;font-family:var(--head)}
+.dp-rel .ar{color:var(--accent)}
+.dp-cta{background:linear-gradient(135deg,#0b1220,#1e3a8a);color:#fff}
+.dp-cta .wrap{text-align:center;padding:48px 24px}
+.dp-cta h2{color:#fff;font-size:clamp(22px,2.8vw,30px);margin:0 0 10px}
+.dp-cta p{color:#cdd8ea;font-size:16px;max-width:60ch;margin:0 auto 22px}
+.dp-cta .ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.dp-cta .btn-line{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.24);color:#fff}
+/* form bloğu */
+.dp-form{max-width:760px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:0 24px 60px -34px rgba(15,23,42,.4)}
+.dp-form .rf-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.dp-form .rf-grid{grid-template-columns:1fr}}
+.dp-form .rf{margin-bottom:12px}
+.dp-form label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-2);margin-bottom:5px}
+.dp-form input,.dp-form select,.dp-form textarea{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:11px;font-size:14px;font-family:var(--body);outline:none;background:#fff;color:var(--ink);resize:vertical}
+.dp-form input:focus,.dp-form select:focus,.dp-form textarea:focus{border-color:var(--accent)}
+.dp-kvkk{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:var(--muted);line-height:1.45;margin:6px 0 14px;cursor:pointer}
+.dp-kvkk input{width:auto;margin-top:2px;accent-color:var(--accent)}
+/* bilgi merkezi */
+.dp-arts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:860px){.dp-arts{grid-template-columns:1fr 1fr}}@media(max-width:560px){.dp-arts{grid-template-columns:1fr}}
+.dp-art{background:#fff;border:1px solid var(--line);border-radius:15px;overflow:hidden;box-shadow:0 14px 36px -28px rgba(15,23,42,.4)}
+.dp-art .ah{background:linear-gradient(135deg,#0b1220,#1e3a8a);padding:18px;color:#bcd0ff}
+.dp-art .ab{padding:18px}
+.dp-art .ab .tag{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.dp-art .ab b{display:block;font-size:16px;font-family:var(--head);margin:6px 0 8px;line-height:1.3}
+.dp-art .ab p{color:var(--ink-2);font-size:13.5px;line-height:1.6;margin:0 0 12px}
+.dp-art .ab .rt{font-size:12px;color:var(--muted)}
+.dp-note{font-size:12px;color:var(--muted);margin-top:10px}
+.dp-demobadge{display:inline-block;font-size:11px;font-weight:700;color:#b45309;background:#fef3c7;padding:3px 9px;border-radius:99px;margin-left:8px}
+.dp-notice{display:flex;gap:15px;align-items:flex-start;background:rgba(30,58,138,.05);border:1px solid rgba(30,58,138,.2);border-left:4px solid var(--accent);border-radius:14px;padding:18px 20px}
+.dp-notice .ic{width:44px;height:44px;border-radius:11px;background:rgba(30,58,138,.1);color:var(--accent);display:grid;place-items:center;flex:none}
+.dp-notice b{display:block;font-family:var(--head);font-size:15.5px;color:var(--ink);margin-bottom:6px}
+.dp-notice p{margin:0;color:var(--ink-2);font-size:14px;line-height:1.7}
 </style>
 </head>
 <body>
@@ -470,14 +576,17 @@ footer a{color:#cdd8ea;font-size:14px}footer a:hover{color:#fff}
     <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="degReportSubmit()">Resmi Rapor Talep Et</button>
   </div>
   <div class="rep-dash">
-    <div class="rd-h"><span class="rd-dot"></span> Canlı Raporlama Zaman Çizelgesi</div>
+    <div class="rd-h"><span class="rd-dot"></span> Canlı Süreç Zaman Çizelgesi</div>
     <div class="rd-timeline" id="rdTimeline">
-      <div class="rd-step" data-s="0"><div class="rd-ic">1</div><div class="rd-tx"><b>Resmi Talep Alındı</b><span>Varlık & amaç kaydı</span></div></div>
-      <div class="rd-step" data-s="1"><div class="rd-ic">2</div><div class="rd-tx"><b>Merkez API Doğrulama</b><span>/api/v1/tenant/bootstrap · lisans & amortisman</span></div></div>
-      <div class="rd-step" data-s="2"><div class="rd-ic">3</div><div class="rd-tx"><b>ProX Analiz Motoru</b><span>UDES yöntem seçimi & hesaplama</span></div></div>
-      <div class="rd-step" data-s="3"><div class="rd-ic">4</div><div class="rd-tx"><b>Lisanslı Rapor Hazır</b><span>Resmî rapor numarası üretildi</span></div></div>
+      <div class="rd-step" data-s="0"><div class="rd-ic">1</div><div class="rd-tx"><b>Resmî Talep Alındı <em style="font-style:normal;color:#9fb3d4">· Sistem</em></b><span>Varlık & amaç kaydı</span></div></div>
+      <div class="rd-step" data-s="1"><div class="rd-ic">2</div><div class="rd-tx"><b>Merkez Veri & Lisans Doğrulama <em style="font-style:normal;color:#9fb3d4">· Sistem</em></b><span>/api/v1/tenant/bootstrap · endeks/mevzuat altyapısı</span></div></div>
+      <div class="rd-step" data-s="2"><div class="rd-ic">3</div><div class="rd-tx"><b>ProX Ön Analiz Altyapısı <em style="font-style:normal;color:#9fb3d4">· Sistem</em></b><span>Emsal/veri & yöntem hazırlığı (nihai değer üretmez)</span></div></div>
+      <div class="rd-step" data-s="3"><div class="rd-ic">4</div><div class="rd-tx"><b>SPK Lisanslı Uzmana Atama <em style="font-style:normal;color:#93b4ff">· Uzman</em></b><span>Dosya yetkili uzmana atanır</span></div></div>
+      <div class="rd-step" data-s="4"><div class="rd-ic">5</div><div class="rd-tx"><b>Saha (Yerinde) Kontrol <em style="font-style:normal;color:#93b4ff">· Uzman</em></b><span>Yerinde inceleme & tespit</span></div></div>
+      <div class="rd-step" data-s="5"><div class="rd-ic">6</div><div class="rd-tx"><b>Belediye & Tapu Kontrolü <em style="font-style:normal;color:#93b4ff">· Uzman</em></b><span>Yasal & imar teyidi</span></div></div>
+      <div class="rd-step" data-s="6"><div class="rd-ic">7</div><div class="rd-tx"><b>Uzman Değerlendirmesi & SPK Lisanslı Rapor <em style="font-style:normal;color:#93b4ff">· Uzman</em></b><span>Rapor uzmanca hazırlanır, iç kontrolden geçer ve imzalanır</span></div></div>
     </div>
-    <div class="rd-logh">ProX AI · canlı log</div>
+    <div class="rd-logh">Süreç · canlı log</div>
     <div class="rd-log" id="rdLog"><div class="rd-l muted">Form gönderildiğinde süreç burada canlı akar…</div></div>
   </div>
   </div>
@@ -514,6 +623,9 @@ footer a{color:#cdd8ea;font-size:14px}footer a:hover{color:#fff}
 </div></footer>
 
 <div class="toastbox" id="toastbox"></div>
+
+<!-- Faz 21: Enterprise çok-sayfa overlay router (içerik JS ile basılır; üst menü + footer tek kaynaktan) -->
+<div class="deg-page" id="degPage" aria-hidden="true"><div id="degPageBody"></div></div>
 
 <script>
 /* ============================================================
@@ -568,11 +680,41 @@ window.applySaaSSettings=applySaaSSettings;
 /* --- standart menü (değerleme şeması) --- */
 const DEG_NAV=[['Kurumsal','#lisans'],['Değerleme Hizmetleri','#hizmetler'],['Süreç & Metodoloji','#metodoloji'],['Lisans & Mevzuat','#lisans'],['İletişim','#iletisim']];
 function mountChrome(){
-  const n=document.getElementById('navMain');if(n)n.innerHTML=DEG_NAV.map(x=>'<a href="'+x[1]+'">'+x[0]+'</a>').join('')+'<a id="saasPortalTrigger" class="portal-trigger" onclick="openSaasPortal()">Müşteri Portalı</a>';
-  const ml=document.getElementById('mnavLinks');if(ml)ml.innerHTML=DEG_NAV.map(x=>'<a href="'+x[1]+'" onclick="document.getElementById(\'mnav\').classList.remove(\'open\')">'+x[0]+'</a>').join('')+'<a class="portal-trigger" onclick="document.getElementById(\'mnav\').classList.remove(\'open\');openSaasPortal()">Müşteri Portalı</a>';
+  const n=document.getElementById('navMain');if(n)n.innerHTML=_degNavDesktopHTML();
+  const ml=document.getElementById('mnavLinks');if(ml)ml.innerHTML=_degNavMobileHTML();
   const wa=(saasResolve('whatsapp'))||SAAS_CONFIG.whatsapp||'905000000000';
-  const c=document.getElementById('navCta');if(c)c.innerHTML='<a class="btn btn-line btn-sm hide-sm" href="https://wa.me/'+wa+'" target="_blank" rel="noopener noreferrer">WhatsApp</a><button class="btn btn-primary btn-sm" onclick="document.getElementById(\'rapor\').scrollIntoView({behavior:\'smooth\'})">Resmi Rapor Talep Et</button><button class="burger" onclick="document.getElementById(\'mnav\').classList.add(\'open\')" aria-label="Menü"><span></span><span></span><span></span></button>';
+  const c=document.getElementById('navCta');if(c)c.innerHTML='<a class="btn btn-line btn-sm hide-sm" href="https://wa.me/'+wa+'" target="_blank" rel="noopener noreferrer">WhatsApp</a><button class="btn btn-primary btn-sm" onclick="(typeof openDegPage===\'function\')?openDegPage(\'basvuru\'):document.getElementById(\'rapor\').scrollIntoView({behavior:\'smooth\'})">Değerleme Başvurusu</button><button class="burger" onclick="document.getElementById(\'mnav\').classList.add(\'open\')" aria-label="Menü"><span></span><span></span><span></span></button>';
 }
+/* --- Faz 21: profesyonel üst menü (mega-dropdown) — tek kaynak ---- */
+function _degNavDesktopHTML(){
+  var svc=DEG_SERVICES.map(function(s){var pg=DEG_PAGES[s];return '<div class="mega-item" onclick="openDegPage(\''+s+'\')"><div class="mi-ic">'+_degSvgIcon(_SVC_ICON[s]||'standart')+'</div><div><b>'+_dgEsc(pg.h1)+'</b><span>'+_dgEsc((pg.lead||'').slice(0,58))+'…</span></div></div>';}).join('');
+  return ''
+    +'<a onclick="closeDegPage()">Ana Sayfa</a>'
+    +'<a onclick="openDegPage(\'kurumsal\')">Kurumsal</a>'
+    +'<span class="nav-mega"><a onclick="openDegPage(\'konut\')">Hizmetler</a><div class="mega-panel">'+svc+'</div></span>'
+    +'<a onclick="openDegPage(\'metodoloji\')">Metodoloji</a>'
+    +'<a onclick="openDegPage(\'degerleme-sureci\')">Rapor Süreci</a>'
+    +'<a onclick="openDegPage(\'bilgi-merkezi\')">Bilgi Merkezi</a>'
+    +'<a onclick="openDegPage(\'basvuru\')">Başvuru</a>'
+    +'<a onclick="openDegPage(\'iletisim\')">İletişim</a>'
+    +'<a id="saasPortalTrigger" class="portal-trigger" onclick="openSaasPortal()">Müşteri Portalı</a>';
+}
+function _degNavMobileHTML(){
+  var cls=function(){return 'document.getElementById(\'mnav\').classList.remove(\'open\')';};
+  var svc=DEG_SERVICES.map(function(s){return '<a onclick="'+cls()+';openDegPage(\''+s+'\')">'+_dgEsc(DEG_PAGES[s].h1)+'</a>';}).join('');
+  return ''
+    +'<a onclick="'+cls()+';closeDegPage()">Ana Sayfa</a>'
+    +'<a onclick="'+cls()+';openDegPage(\'kurumsal\')">Kurumsal</a>'
+    +'<div class="macc-h" onclick="this.nextElementSibling.classList.toggle(\'open\')">Hizmetler <span>▾</span></div><div class="macc-body">'+svc+'</div>'
+    +'<a onclick="'+cls()+';openDegPage(\'metodoloji\')">Metodoloji</a>'
+    +'<a onclick="'+cls()+';openDegPage(\'degerleme-sureci\')">Rapor Süreci</a>'
+    +'<a onclick="'+cls()+';openDegPage(\'bilgi-merkezi\')">Bilgi Merkezi</a>'
+    +'<a onclick="'+cls()+';openDegPage(\'basvuru\')">Başvuru</a>'
+    +'<a onclick="'+cls()+';openDegPage(\'iletisim\')">İletişim</a>'
+    +'<a class="portal-trigger" onclick="'+cls()+';openSaasPortal()">Müşteri Portalı</a>';
+}
+/* küçük menü ikonu (SVG kütüphanesinden sade currentColor) */
+function _degSvgIcon(k){return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg>';}
 /* --- toast --- */
 function toast(m){const t=document.getElementById('toastbox');if(!t)return;t.textContent=m;t.classList.add('on');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('on'),3200);}
 /* --- ProX AI (resmî/teknik) --- */
@@ -679,7 +821,7 @@ async function saasGenerateOfficialReport(assetType,purpose){
   const an=await _degAnalyze(assetType,purpose);
   const method=an.method;
   const amort=boot.amortisman[assetType]||'—';
-  console.log('Resmi Değerleme Raporu başlatıldı: '+no+' · '+(assetType||'-')+' · '+(purpose||'-')+' · Yöntem: '+method+' · Yasal: '+boot.yasal.join(', '));
+  console.log('Değerleme dosyası altyapısı hazırlandı, SPK lisanslı uzmana atandı: '+no+' · '+(assetType||'-')+' · '+(purpose||'-')+' · Ön analiz yöntemi: '+method+' · Yasal: '+boot.yasal.join(', '));
   /* ⚠️ Değer satırları YALNIZCA merkez /prox/analyze döndürdüğünde gösterilir (değer = API). */
   let valRows='';
   if(an.online && an.value!=null){
@@ -699,54 +841,57 @@ async function saasGenerateOfficialReport(assetType,purpose){
     if(labels.length)hint='<div style="padding:10px 14px;font-size:12.5px;color:var(--accent-2);background:var(--surface);border-top:1px solid var(--line)">ℹ Daha hassas bir sonuç için: '+_esc(labels.join(', '))+'.</div>';
   }
   const out=_proxOut();
-  if(out)out.innerHTML='<div class="rep-track"><div class="h"><b>📋 Resmi Değerleme Rapor Takibi</b><span>'+no+' · '+boot.license.spk+'</span></div><div class="rows">'
+  if(out)out.innerHTML='<div class="rep-track"><div class="h"><b>📋 Değerleme Dosya Takibi</b><span>'+no+' · '+boot.license.spk+'</span></div><div class="rows">'
     +'<div class="r"><span>Varlık Türü</span><b>'+_esc(assetType||'-')+'</b></div>'
     +'<div class="r"><span>Değerleme Amacı</span><b>'+_esc(purpose||'-')+'</b></div>'
-    +'<div class="r"><span>Uygulanacak Yöntem</span><b>'+_esc(method)+'</b></div>'
+    +'<div class="r"><span>Ön Analiz Yöntemi (sistem)</span><b>'+_esc(method)+'</b></div>'
     +valRows
     +summ
     +'<div class="r"><span>Amortisman Endeksi</span><b>'+_esc(amort)+'</b></div>'
     +'<div class="r"><span>Yasal Dayanak</span><b>'+_esc(boot.yasal.join(' · '))+'</b></div>'
     +'<div class="r"><span>Standart</span><b>'+_esc(boot.license.udes)+'</b></div>'
-    +'<div class="r"><span>Durum</span><span class="st">Hazırlanıyor</span></div>'
-    +'<div class="r"><span>Tahmini Teslim</span><b>3–5 iş günü</b></div></div>'
+    +'<div class="r"><span>Durum</span><span class="st">SPK lisanslı uzmana atandı</span></div>'
+    +'<div class="r"><span>Tahmini Süreç</span><b>2–10 iş günü</b></div></div>'
     +hint
-    +'<div style="padding:0 14px 14px"><button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saasDownloadOfficialPdf(\''+no+'\',\''+(assetType||'').replace(/[\\\\\']/g,'')+'\',\''+(purpose||'').replace(/[\\\\\']/g,'')+'\')">⬇ Resmî Rapor PDF</button></div></div>';
-  toast('📋 Resmi rapor süreci başlatıldı: '+no);
+    +'<div style="padding:10px 14px;font-size:12px;color:var(--muted);line-height:1.5;border-top:1px solid var(--line)">Bu kart yalnızca sistem altyapısının hazırladığı dosya özetidir. Resmî değerleme raporu, saha kontrolü, belediye ve tapu incelemesi sonucunda <b style="color:var(--ink)">SPK lisanslı değerleme uzmanı</b> tarafından hazırlanır, iç kontrolden geçirilir ve imzalanır.</div>'
+    +'<div style="padding:0 14px 14px"><button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saasDownloadOfficialPdf(\''+no+'\',\''+(assetType||'').replace(/[\\\\\']/g,'')+'\',\''+(purpose||'').replace(/[\\\\\']/g,'')+'\')">⬇ Ön Dosya Özeti (PDF)</button></div></div>';
+  toast('📋 Dosya altyapısı hazırlandı, SPK lisanslı uzmana atandı: '+no);
   return {no,assetType,purpose,method,analyze:an,bootstrap:boot};
 }
 window.saasGenerateOfficialReport=saasGenerateOfficialReport;
-/* Resmî PDF rapor: önce paket yetkisi, sonra merkez PDF servisi; fallback yerel metin raporu. */
+/* Ön dosya özeti PDF: sistem altyapısı çıktısı (resmî rapor DEĞİL). Önce paket yetkisi, sonra merkez PDF servisi; fallback yerel çıktı. */
 function _b64ToBlob(b64,type){const bin=atob(b64);const len=bin.length;const buf=new Uint8Array(len);for(let i=0;i<len;i++)buf[i]=bin.charCodeAt(i);return new Blob([buf],{type:type||'application/pdf'});}
+const _DEG_UZMAN_NOTU='Bu belge, sistem altyapısının hazırladığı bir ÖN DOSYA ÖZETİDİR; resmî değerleme raporu değildir. Resmî değerleme raporu, saha kontrolü, belediye ve tapu incelemesi sonucunda SPK lisanslı değerleme uzmanı tarafından hazırlanır, iç kontrolden geçirilir ve imzalanır. Uzmanın hazırlamadığı rapor geçerli kabul edilmez.';
 async function saasDownloadOfficialPdf(no,assetType,purpose){
   if(typeof requireFeature==='function' && !requireFeature('canUsePdfReports'))return;
   try{
     /* Merkez /pdf/generate gövdesi: {title, pages:[{id,html}], css}. */
-    const pageHtml='<h1>Resmî Değerleme Raporu</h1>'
+    const pageHtml='<h1>Değerleme Ön Dosya Özeti</h1>'
       +'<p>Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: '+_esc(SAAS_CONFIG.licenseNo)+'</p>'
-      +'<table><tr><th>Rapor No</th><td>'+_esc(no||'-')+'</td></tr>'
+      +'<table><tr><th>Dosya No</th><td>'+_esc(no||'-')+'</td></tr>'
       +'<tr><th>Varlık Türü</th><td>'+_esc(assetType||'-')+'</td></tr>'
       +'<tr><th>Değerleme Amacı</th><td>'+_esc(purpose||'-')+'</td></tr>'
-      +'<tr><th>Uygulanacak Yöntem</th><td>'+_esc(_degMethodFor(assetType))+'</td></tr>'
-      +'<tr><th>Standart</th><td>UDES/IVS 2025</td></tr></table>';
+      +'<tr><th>Ön Analiz Yöntemi (sistem)</th><td>'+_esc(_degMethodFor(assetType))+'</td></tr>'
+      +'<tr><th>Standart</th><td>UDES/IVS 2025</td></tr></table>'
+      +'<p style="margin-top:24px;font-size:12px;color:#64748b">'+_esc(_DEG_UZMAN_NOTU)+'</p>';
     const css='body{font-family:Inter,Arial,sans-serif;color:#0f172a;padding:40px;line-height:1.6}h1{color:#1e3a8a;font-size:20px}table{border-collapse:collapse;width:100%;margin-top:18px}td,th{border:1px solid #e2e8f0;padding:10px;text-align:left;font-size:14px}th{background:#f1f5f9;color:#1e3a8a;width:38%}';
-    const r=await proxApi('/api/v1/tenant/pdf/generate',{method:'POST',body:{title:'Resmî Değerleme Raporu '+(no||''),pages:[{id:no||'rapor',html:pageHtml}],css:css}});
+    const r=await proxApi('/api/v1/tenant/pdf/generate',{method:'POST',body:{title:'Değerleme Ön Dosya Özeti '+(no||''),pages:[{id:no||'dosya',html:pageHtml}],css:css}});
     if(!r||r.fallback||r.success!==true||!r.pdf_base64)throw new Error('fallback');
     const blob=_b64ToBlob(r.pdf_base64,'application/pdf');
     const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download=(no||'rapor')+'.pdf';document.body.appendChild(a);a.click();a.remove();
+    const a=document.createElement('a');a.href=url;a.download=(no||'dosya')+'-on-ozet.pdf';document.body.appendChild(a);a.click();a.remove();
     setTimeout(()=>URL.revokeObjectURL(url),4000);
-    if(typeof toast==='function')toast('⬇ Resmî rapor PDF indiriliyor: '+no+(r.page_count?(' · '+r.page_count+' sayfa'):''));
+    if(typeof toast==='function')toast('⬇ Ön dosya özeti PDF indiriliyor: '+no+(r.page_count?(' · '+r.page_count+' sayfa'):''));
     return {ok:true,online:true};
   }catch(e){
-    /* Yerel fallback: tarayıcı yazdırma diyaloğu ile resmî rapor taslağı üretimi. */
+    /* Yerel fallback: tarayıcı yazdırma diyaloğu ile ön dosya özeti çıktısı. */
     try{
       const w=window.open('','_blank','noopener,noreferrer');
-      if(w){w.document.write('<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>'+(no||'Rapor')+'</title><style>body{font-family:Inter,Arial,sans-serif;color:#0f172a;padding:40px;line-height:1.6}h1{color:#1e3a8a;font-size:20px}table{border-collapse:collapse;width:100%;margin-top:18px}td,th{border:1px solid #e2e8f0;padding:10px;text-align:left;font-size:14px}th{background:#f1f5f9;color:#1e3a8a;width:38%}</style></head><body><h1>Resmî Değerleme Raporu (Taslak)</h1><p>Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: '+SAAS_CONFIG.licenseNo+'</p><table><tr><th>Rapor No</th><td>'+(no||'-')+'</td></tr><tr><th>Varlık Türü</th><td>'+(assetType||'-')+'</td></tr><tr><th>Değerleme Amacı</th><td>'+(purpose||'-')+'</td></tr><tr><th>Uygulanacak Yöntem</th><td>'+_degMethodFor(assetType)+'</td></tr><tr><th>Standart</th><td>UDES/IVS 2025</td></tr></table><p style="margin-top:24px;font-size:12px;color:#64748b">Bu belge, merkez PDF servisine erişilemediğinde üretilen yerel taslaktır; resmî nüsha lisanslı eksper onayıyla düzenlenir.</p><script>window.onload=function(){setTimeout(function(){window.print();},300);};<\/script></body></html>');
+      if(w){w.document.write('<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>'+(no||'Dosya')+'</title><style>body{font-family:Inter,Arial,sans-serif;color:#0f172a;padding:40px;line-height:1.6}h1{color:#1e3a8a;font-size:20px}table{border-collapse:collapse;width:100%;margin-top:18px}td,th{border:1px solid #e2e8f0;padding:10px;text-align:left;font-size:14px}th{background:#f1f5f9;color:#1e3a8a;width:38%}</style></head><body><h1>Değerleme Ön Dosya Özeti</h1><p>Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: '+SAAS_CONFIG.licenseNo+'</p><table><tr><th>Dosya No</th><td>'+(no||'-')+'</td></tr><tr><th>Varlık Türü</th><td>'+(assetType||'-')+'</td></tr><tr><th>Değerleme Amacı</th><td>'+(purpose||'-')+'</td></tr><tr><th>Ön Analiz Yöntemi (sistem)</th><td>'+_degMethodFor(assetType)+'</td></tr><tr><th>Standart</th><td>UDES/IVS 2025</td></tr></table><p style="margin-top:24px;font-size:12px;color:#64748b">'+_DEG_UZMAN_NOTU+'</p><script>window.onload=function(){setTimeout(function(){window.print();},300);};<\/script></body></html>');
         w.document.close();
       }
-      if(typeof toast==='function')toast('⬇ Yerel rapor taslağı hazırlandı (yazdır/PDF).');
-    }catch(_){ if(typeof toast==='function')toast('PDF üretilemedi.'); }
+      if(typeof toast==='function')toast('⬇ Ön dosya özeti hazırlandı (yazdır/PDF).');
+    }catch(_){ if(typeof toast==='function')toast('Çıktı üretilemedi.'); }
     return {ok:true,online:false};
   }
 }
@@ -770,13 +915,29 @@ window.degReportSubmit=degReportSubmit;
 /* --- Bayi admin paneli (#saasTenantAdmin) --- */
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='sta-modal';
   el.innerHTML='<div class="sta-ov" onclick="closeSaasAdmin()"></div><div class="sta-card"><div class="sta-hd"><b>⚡ ProX SaaS · '+SAAS_CONFIG.tenantName+'</b><button onclick="closeSaasAdmin()">✕</button></div>'
-   +'<div class="sta-tabs"><button class="act" data-t="tema" onclick="staTab(this)">Tema & Logo</button><button data-t="google" onclick="staTab(this)">Google & Meta</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="rapor" onclick="staTab(this)">Resmi Rapor</button></div><div class="sta-body">'
+   +'<div class="sta-tabs"><button class="act" data-t="tema" onclick="staTab(this)">Tema & Logo</button><button data-t="google" onclick="staTab(this)">Google & Meta</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="rapor" onclick="staTab(this)">Ön Dosya</button><button data-t="sayfalar" onclick="staTab(this);_staRenderPages()">Hizmet Sayfaları</button><button data-t="seo" onclick="staTab(this)">SEO Ayarları</button><button data-t="api" onclick="staTab(this);_staRenderApi()">API Durumu</button></div><div class="sta-body">'
    +'<div class="sta-pane" data-p="tema"><h4>Logo & Tema</h4><p class="sub">Kurumsal logo ve favicon; tema lacivert/antrasit ailesinde.</p><div class="sta-f"><label>Logo URL</label><input id="sl_logo" placeholder="https://.../logo.png"></div><div class="sta-f"><label>Favicon URL</label><input id="sl_favicon" placeholder="https://.../favicon.png"></div><div class="sta-f"><label>Tema</label><select id="sl_theme" onchange="saasSetTheme(this.value)"><option>Lacivert</option><option>Antrasit</option><option>Bordo</option><option>Yeşil</option><option>Mor</option></select></div><button class="sta-go" onclick="saasApplyLogo()">Uygula</button></div>'
    +'<div class="sta-pane" data-p="google" hidden><h4>Google & Meta</h4><p class="sub">Arama sonuçları + analytics; yenilenmeden uygulanır.</p><div class="sta-row2"><div class="sta-f"><label>Google Analytics (GA4)</label><input id="sg_ga" placeholder="G-XXXX"></div><div class="sta-f"><label>Search Console Doğrulama</label><input id="sg_gsc" placeholder="google-site-verification=..."></div></div><div class="sta-f"><label>Google Maps API Key</label><input id="sg_maps" placeholder="AIza..."></div><div class="sta-f"><label>Meta Başlık</label><input id="sm_title"></div><div class="sta-f"><label>Meta Açıklama</label><input id="sm_desc"></div><div class="sta-f"><label>Meta Anahtar Kelimeler</label><input id="sm_kw" placeholder="değerleme, ekspertiz, ..."></div><button class="sta-go" onclick="saasSaveGoogle()">Kaydet & Uygula</button></div>'
    +'<div class="sta-pane" data-p="prox" hidden><h4>ProX AI — Kuruma Özel Prompt</h4><p class="sub">UDES/SPK resmî promptuna eklenir. Örn: "Endüstriyel tesis değerlemesinde uzmanız."</p><textarea id="sp_custom" rows="3" placeholder="Endüstriyel tesis uzmanıyız..."></textarea><button class="sta-go" onclick="saasSaveProxPrompt()" style="margin-top:8px">Kaydet</button></div>'
-   +'<div class="sta-pane" data-p="rapor" hidden><h4>Resmi Rapor Üretici</h4><p class="sub">Merkez API (/api/v1/tenant/bootstrap) amortisman & yasal verisiyle.</p><div class="sta-row2"><div class="sta-f"><label>Varlık Türü</label><select id="sr_asset"><option>Konut</option><option>Arsa</option><option>İş Makinesi</option><option>Üretim Hattı</option><option>Fabrika</option><option>Akaryakıt İstasyonu</option><option>Enerji Santrali (GES/RES)</option></select></div><div class="sta-f"><label>Amaç</label><select id="sr_purpose"><option>Bankaya Yönelik</option><option>Miras Paylaşımı</option><option>Yasal Dava</option><option>Kurumsal Varlık Güncelleme</option></select></div></div><button class="sta-go" onclick="saasReportFromAdmin()">📋 Resmi Rapor Süreci Başlat</button></div>'
+   +'<div class="sta-pane" data-p="rapor" hidden><h4>Ön Dosya Hazırlama (Sistem Altyapısı)</h4><p class="sub">Merkez API (/api/v1/tenant/bootstrap) endeks & mevzuat verisiyle dosya altyapısı hazırlanır; resmî rapor SPK lisanslı uzmanca düzenlenir.</p><div class="sta-row2"><div class="sta-f"><label>Varlık Türü</label><select id="sr_asset"><option>Konut</option><option>Arsa</option><option>İş Makinesi</option><option>Üretim Hattı</option><option>Fabrika</option><option>Akaryakıt İstasyonu</option><option>Enerji Santrali (GES/RES)</option></select></div><div class="sta-f"><label>Amaç</label><select id="sr_purpose"><option>Bankaya Yönelik</option><option>Miras Paylaşımı</option><option>Yasal Dava</option><option>Kurumsal Varlık Güncelleme</option></select></div></div><button class="sta-go" onclick="saasReportFromAdmin()">📋 Dosya Altyapısını Hazırla & Uzmana Ata</button></div>'
+   +'<div class="sta-pane" data-p="sayfalar" hidden><h4>Hizmet Sayfaları</h4><p class="sub">Çok-sayfa içerik sayfalarının görünürlüğü (demo; localStorage). API tarafına bağlanabilir.</p><div id="sta_pages"></div></div>'
+   +'<div class="sta-pane" data-p="seo" hidden><h4>SEO Ayarları</h4><p class="sub">Sayfa-bazlı başlık/açıklama DEG_PAGES verisinden gelir; her overlay JSON-LD (Service + FAQPage + BreadcrumbList) enjekte eder. Genel meta için Google & Meta sekmesini kullanın.</p><div class="sta-f"><label>Varsayılan Başlık (ana sayfa)</label><input id="seo_title" placeholder="'+_dgEsc(document.title)+'"></div><div class="sta-f"><label>Varsayılan Açıklama</label><textarea id="seo_desc" rows="2"></textarea></div><button class="sta-go" onclick="(function(){var t=document.getElementById(\'seo_title\').value.trim(),d=document.getElementById(\'seo_desc\').value.trim();if(t)document.title=t;if(d){SAAS_CONFIG.tenantSettings.metaDescription=d;applySaaSSettings();}toast(\'SEO ayarları uygulandı.\');})()">Uygula</button></div>'
+   +'<div class="sta-pane" data-p="api" hidden><h4>API Kullanım Durumu</h4><p class="sub">Merkez ProX uçlarının canlı yoklaması (X-Tenant-Id: valuation).</p><div id="sta_api"><button class="sta-go" onclick="_staRenderApi()">Yokla</button></div></div>'
    +'</div></div>';
   document.body.appendChild(el);return el;}
+function _staPageVis(){try{return JSON.parse(localStorage.getItem("deg_page_vis")||"{}");}catch(e){return {};}}
+function _staSetPageVis(slug,on){try{var v=_staPageVis();v[slug]=on;localStorage.setItem("deg_page_vis",JSON.stringify(v));}catch(e){}}
+function _staRenderPages(){var host=document.getElementById("sta_pages");if(!host)return;var vis=_staPageVis();
+  var rows=Object.keys(DEG_PAGES).map(function(slug){var p=DEG_PAGES[slug];var on=(vis[slug]!==false);
+    return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)"><div><b style="font-size:13.5px">'+_dgEsc(p.h1)+'</b><div style="font-size:11.5px;color:#888">'+_dgEsc(p.group)+' · #/'+slug+'</div></div><label style="font-size:12px;display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" '+(on?"checked":"")+' onchange="_staSetPageVis(\''+slug+'\',this.checked);toast(this.checked?\'Sayfa görünür\':\'Sayfa gizlendi (demo)\')"> Görünür</label></div>';
+  }).join('');
+  host.innerHTML='<div style="max-height:340px;overflow:auto">'+rows+'</div>';}
+async function _staRenderApi(){var host=document.getElementById("sta_api");if(!host)return;host.innerHTML='<p class="sub">Yoklanıyor…</p>';
+  var endpoints=[["/api/v1/tenant/bootstrap","GET"],["/api/v1/tenant/prox/analyze","POST"],["/api/v1/tenant/prox/ai","POST"],["/api/v1/tenant/pdf/generate","POST"],["/api/v1/tenant/lead","POST"]];
+  var out=[];
+  for(var i=0;i<endpoints.length;i++){var ep=endpoints[i];try{var r=await proxApi(ep[0],{method:ep[1],body:ep[1]==="POST"?{ping:true}:null});var ok=r&&!r.fallback;out.push([ep[0],ok?"✓ çevrimiçi":"○ fallback"]);}catch(e){out.push([ep[0],"○ fallback"]);}}
+  host.innerHTML='<table class="ssa-tbl" style="color:var(--ink)"><tbody>'+out.map(function(o){return '<tr><td style="border-color:var(--line)">'+_dgEsc(o[0])+'</td><td style="border-color:var(--line);font-weight:700">'+_dgEsc(o[1])+'</td></tr>';}).join('')+'</tbody></table><p class="sub" style="margin-top:8px">Not: tenant anahtarı yalnızca başlıkta gönderilir; loglanmaz.</p>';}
+window._staRenderPages=_staRenderPages;window._staRenderApi=_staRenderApi;window._staSetPageVis=_staSetPageVis;
 function openSaasAdmin(){_saasAdminHost().classList.add('on');}
 function closeSaasAdmin(){const e=document.getElementById('saasTenantAdmin');if(e)e.classList.remove('on');}
 function staTab(b){const m=b.closest('.sta-modal');m.querySelectorAll('.sta-tabs button').forEach(x=>x.classList.toggle('act',x===b));const t=b.dataset.t;m.querySelectorAll('.sta-pane').forEach(p=>p.hidden=(p.dataset.p!==t));}
@@ -854,12 +1015,14 @@ function runReportTimeline(asset,purpose){
  const steps=document.querySelectorAll('#rdTimeline .rd-step');steps.forEach(s=>s.classList.remove('on'));
  const log=document.getElementById('rdLog');if(log)log.innerHTML='';
  const seq=[
-  ()=>{steps[0]&&steps[0].classList.add('on');_rdLog('Resmî talep alındı — '+(asset||'-')+' · '+(purpose||'-'));},
-  ()=>{steps[1]&&steps[1].classList.add('on');_rdLog('GET /api/v1/tenant/bootstrap … lisans & amortisman endeksi');},
-  ()=>{_rdLog('Merkez yanıt: SPK '+SAAS_CONFIG.licenseNo+' · UDES/IVS 2025 ✓');},
-  ()=>{steps[2]&&steps[2].classList.add('on');_rdLog('ProX motoru: '+_degMethodFor(asset)+' seçildi');},
-  ()=>{_rdLog('Hesaplama tamam · tarafsızlık & gizlilik kontrolü ✓');},
-  ()=>{steps[3]&&steps[3].classList.add('on');_rdLog('Lisanslı rapor üretildi → takip kartı açılıyor');saasGenerateOfficialReport(asset,purpose);}
+  ()=>{steps[0]&&steps[0].classList.add('on');_rdLog('[Sistem] Resmî talep alındı — '+(asset||'-')+' · '+(purpose||'-'));},
+  ()=>{steps[1]&&steps[1].classList.add('on');_rdLog('[Sistem] GET /api/v1/tenant/bootstrap … endeks & mevzuat altyapısı');},
+  ()=>{_rdLog('[Sistem] Merkez yanıt: SPK '+SAAS_CONFIG.licenseNo+' · UDES/IVS 2025 ✓');},
+  ()=>{steps[2]&&steps[2].classList.add('on');_rdLog('[Sistem] ProX ön analiz altyapısı: '+_degMethodFor(asset)+' (hazırlık — nihai değer üretilmez)');},
+  ()=>{steps[3]&&steps[3].classList.add('on');_rdLog('[Uzman] Dosya SPK lisanslı değerleme uzmanına atandı');},
+  ()=>{steps[4]&&steps[4].classList.add('on');_rdLog('[Uzman] Saha (yerinde) kontrol planlandı');},
+  ()=>{steps[5]&&steps[5].classList.add('on');_rdLog('[Uzman] Belediye & tapu / imar kontrolü');},
+  ()=>{steps[6]&&steps[6].classList.add('on');_rdLog('[Uzman] Uzman süreci başlatıldı → resmî rapor uzman tarafından hazırlanacaktır');saasGenerateOfficialReport(asset,purpose);}
  ];
  seq.forEach((fn,i)=>setTimeout(fn,i*650));
 }
@@ -973,8 +1136,378 @@ function _saasPortalPanelHTML(){
     +'<button class="sp-logout" onclick="saasPortalDisconnect()">Oturumu Kapat</button>';
 }
 
-window.addEventListener('load',function(){try{initSaaSTheme();mountChrome();applySaaSSettings();saasPortalRenderNav();
+/* =====================================================================
+   FAZ 21 — Enterprise çok-sayfa overlay router (data-driven, tek şablon)
+   Korunan: gate, SuperAdmin, portal, API, Faz16, lacivert CSS, footer/nav tek kaynak
+   Yasal silo: yalnız değerleme dili.
+   ===================================================================== */
+/* ---- SVG kütüphanesi (responsive, theme-fed currentColor=lacivert, aria) ---- */
+const _DEG_SVG={
+ pazar:'<svg viewBox="0 0 320 180" role="img" aria-label="Pazar (emsal) yaklaşımı: emsal verilerinin ortalama etrafında dağılımı" color="#93b4ff" stroke="currentColor"><g stroke="rgba(147,180,255,.25)" stroke-width="1"><line x1="36" y1="20" x2="36" y2="150"/><line x1="36" y1="150" x2="300" y2="150"/></g><line x1="36" y1="92" x2="300" y2="92" stroke="#34d399" stroke-width="2" stroke-dasharray="5 6"/><g fill="#93b4ff" stroke="none"><circle cx="80" cy="74" r="5"/><circle cx="124" cy="104" r="5"/><circle cx="168" cy="82" r="5"/><circle cx="212" cy="108" r="5"/><circle cx="256" cy="76" r="5"/></g><circle cx="168" cy="92" r="10" fill="none" stroke="#fff" stroke-width="2"/><text x="200" y="86" fill="#9fe6c0" font-size="11" stroke="none">Emsal ortalaması</text></svg>',
+ gelir:'<svg viewBox="0 0 320 180" role="img" aria-label="Gelir kapitalizasyonu: gelecekteki nakit akışlarının kümülatif getirisi" color="#93b4ff" stroke="currentColor"><g stroke="rgba(147,180,255,.25)"><line x1="36" y1="20" x2="36" y2="150"/><line x1="36" y1="150" x2="300" y2="150"/></g><g fill="#93b4ff" stroke="none"><rect x="56" y="86" width="30" height="64" rx="3"/><rect x="104" y="66" width="30" height="84" rx="3"/><rect x="152" y="50" width="30" height="100" rx="3"/><rect x="200" y="40" width="30" height="110" rx="3"/><rect x="248" y="30" width="30" height="120" rx="3"/></g><path d="M71 92 L119 70 L167 52 L215 40 L263 30" fill="none" stroke="#9fe6c0" stroke-width="2.6"/><text x="150" y="22" fill="#9fe6c0" font-size="11" stroke="none">Net nakit akışı</text></svg>',
+ maliyet:'<svg viewBox="0 0 320 180" role="img" aria-label="Maliyet yaklaşımı: ikame bedelinden birikmiş yıpranmanın düşülmesi" color="#93b4ff" stroke="currentColor"><defs><linearGradient id="dgCostFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#93b4ff" stop-opacity=".34"/><stop offset="100%" stop-color="#93b4ff" stop-opacity="0"/></linearGradient></defs><g stroke="rgba(147,180,255,.25)"><line x1="36" y1="20" x2="36" y2="150"/><line x1="36" y1="150" x2="300" y2="150"/></g><path d="M36 36 C 110 70, 170 116, 300 140 L300 150 L36 150 Z" fill="url(#dgCostFill)" stroke="none"/><path d="M36 36 C 110 70, 170 116, 300 140" fill="none" stroke="#93b4ff" stroke-width="3.2" stroke-linecap="round"/><text x="46" y="32" fill="#cdd8ea" font-size="11" stroke="none">İkame bedeli</text><text x="196" y="134" fill="#9fe6c0" font-size="11" stroke="none">Net değer</text></svg>',
+ surec:'<svg viewBox="0 0 320 120" role="img" aria-label="Değerleme süreci: yedi aşamalı resmî akış" color="#93b4ff" stroke="currentColor"><line x1="30" y1="60" x2="290" y2="60" stroke="rgba(147,180,255,.3)" stroke-width="2"/>'+[0,1,2,3,4,5,6].map(function(i){var x=30+i*43;return '<g><circle cx="'+x+'" cy="60" r="13" fill="#0b1220" stroke="#93b4ff" stroke-width="2"/><text x="'+x+'" y="64" text-anchor="middle" fill="#bcd0ff" font-size="11" stroke="none">'+(i+1)+'</text></g>';}).join('')+'</svg>',
+ matris:'<svg viewBox="0 0 320 180" role="img" aria-label="Varlık sınıflandırma matrisi: varlık türü ve yöntem eşleşmesi" color="#93b4ff" stroke="currentColor"><g stroke="rgba(147,180,255,.25)">'+[0,1,2,3].map(function(r){return '<line x1="40" y1="'+(30+r*36)+'" x2="290" y2="'+(30+r*36)+'"/>';}).join('')+[0,1,2,3].map(function(c){return '<line x1="'+(40+c*84)+'" y1="30" x2="'+(40+c*84)+'" y2="138"/>';}).join('')+'</g><g fill="#93b4ff" stroke="none">'+[[1,0],[2,1],[3,2]].map(function(p){return '<rect x="'+(42+p[0]*84-78)+'" y="'+(32+p[1]*36)+'" width="78" height="32" rx="4" opacity=".5"/>';}).join('')+'</g></svg>',
+ risk:'<svg viewBox="0 0 320 180" role="img" aria-label="Risk ve değer ilişkisi: artan riskle daralan değer bandı" color="#93b4ff" stroke="currentColor"><g stroke="rgba(147,180,255,.25)"><line x1="40" y1="20" x2="40" y2="150"/><line x1="40" y1="150" x2="300" y2="150"/></g><path d="M40 60 L300 40" stroke="#9fe6c0" stroke-width="2" fill="none"/><path d="M40 120 L300 110" stroke="#fca5a5" stroke-width="2" fill="none"/><path d="M40 60 L300 40 L300 110 L40 120 Z" fill="rgba(147,180,255,.12)" stroke="none"/><text x="120" y="34" fill="#9fe6c0" font-size="11" stroke="none">Değer bandı</text><text x="120" y="138" fill="#fca5a5" font-size="11" stroke="none">Risk düzeyi</text></svg>',
+ emsalAkis:'<svg viewBox="0 0 320 140" role="img" aria-label="Emsal analizi akışı: veri toplama, düzeltme, normalizasyon" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2">'+[0,1,2].map(function(i){var x=24+i*104;return '<rect x="'+x+'" y="48" width="84" height="44" rx="9"/>'+(i<2?'<path d="M'+(x+90)+' 70 h12 m-5 -4 l5 4 -5 4"/>':'');}).join('')+'</g><text x="66" y="74" text-anchor="middle" fill="#bcd0ff" font-size="11" stroke="none">Veri</text><text x="170" y="74" text-anchor="middle" fill="#bcd0ff" font-size="11" stroke="none">Düzeltme</text><text x="274" y="74" text-anchor="middle" fill="#bcd0ff" font-size="11" stroke="none">Sonuç</text></svg>',
+ banka:'<svg viewBox="0 0 320 160" role="img" aria-label="Banka ve kurum rapor akışı: teminat amaçlı değerleme süreci" color="#93b4ff" stroke="currentColor"><path d="M40 130h240M52 70h216M60 70 160 36 260 70M70 70v52M110 70v52M150 70v52M190 70v52M230 70v52M250 70v52" fill="none" stroke="#93b4ff" stroke-width="2" stroke-linecap="round"/><path d="m150 96 6 6 12-12" fill="none" stroke="#9fe6c0" stroke-width="2.4"/></svg>',
+ standart:'<svg viewBox="0 0 320 160" role="img" aria-label="Denetlenebilir rapor standardı: UDES/IVS uyumlu doküman" color="#93b4ff" stroke="currentColor"><rect x="96" y="24" width="128" height="112" rx="8" fill="none" stroke="#93b4ff" stroke-width="2"/><path d="M116 52h88M116 72h88M116 92h60" stroke="rgba(147,180,255,.6)" stroke-width="2" stroke-linecap="round"/><circle cx="196" cy="112" r="14" fill="none" stroke="#9fe6c0" stroke-width="2"/><path d="m190 112 4 4 8-8" stroke="#9fe6c0" stroke-width="2" fill="none"/></svg>',
+ bolge:'<svg viewBox="0 0 320 160" role="img" aria-label="Bölge veri kartları: konum bazlı emsal yoğunluğu" color="#93b4ff" stroke="currentColor"><path d="M160 26c-30 0-52 22-52 50 0 38 52 64 52 64s52-26 52-64c0-28-22-50-52-50Z" fill="none" stroke="#93b4ff" stroke-width="2"/><circle cx="160" cy="76" r="16" fill="rgba(147,180,255,.25)" stroke="#93b4ff" stroke-width="2"/></svg>',
+ basvuru:'<svg viewBox="0 0 320 150" role="img" aria-label="Kurumsal başvuru süreci: talepten teslime" color="#93b4ff" stroke="currentColor"><g fill="none" stroke="#93b4ff" stroke-width="2"><rect x="40" y="50" width="60" height="50" rx="8"/><rect x="130" y="50" width="60" height="50" rx="8"/><rect x="220" y="50" width="60" height="50" rx="8"/><path d="M102 75h26m-6-4 6 4-6 4M192 75h26m-6-4 6 4-6 4"/></g></svg>'
+};
+function _degSvg(k){return _DEG_SVG[k]||_DEG_SVG.standart;}
+/* ---- ortak içerik blokları (tekrarsızlık için) ---- */
+const _DEG_DOCS_GENEL=['Tapu senedi / tapu kayıt örneği','Kimlik belgesi (gerçek/tüzel kişi)','Yapı ruhsatı ve yapı kullanma izni (iskân)','Onaylı mimari proje','Kat irtifakı / kat mülkiyeti belgesi','Emlak rayiç bedeli (belediye)'];
+const _DEG_SUREC=[
+ {ad:'Talep & Belge Toplama',desc:'Resmî değerleme talebi alınır; taşınmaza ait tapu, ruhsat ve proje belgeleri derlenir.'},
+ {ad:'Yasal & İmar İnceleme',desc:'Tapu kütüğü, takyidatlar, imar durumu ve belediye kayıtları üzerinden hukuki durum tespiti yapılır.'},
+ {ad:'Yerinde İnceleme & Tespit',desc:'Lisanslı eksper sahada teknik tespit yapar; konum, yapı niteliği ve fiziki durum belgelenir.'},
+ {ad:'Emsal & Veri Analizi',desc:'Bölgedeki güncel emsal işlemler ve piyasa verileri düzeltme katsayılarıyla normalize edilir.'},
+ {ad:'Yöntem Uygulama & Değer Takdiri',desc:'Pazar, gelir ve maliyet yaklaşımlarından uygun olan(lar) uygulanır; sonuçlar uzlaştırılır.'},
+ {ad:'Rapor Tanzimi & İç Kontrol',desc:'UDES/IVS formatında rapor düzenlenir; bağımsız iç kontrol ve kalite denetimi yapılır.'},
+ {ad:'Teslim',desc:'Resmî, imzalı ve denetlenebilir değerleme raporu kuruma teslim edilir (2–10 iş günü).'}
+];
+const _TRUST=['SPK Lisansı','BDDK Yetki Listesi','UDES / IVS Uyumlu','Bağımsız & Tarafsız','Denetlenebilir Metodoloji'];
+function _faqMeth(primary){return [
+ {q:'Hangi değerleme yöntemi uygulanır?',a:'Taşınmazın niteliğine göre pazar (emsal karşılaştırma), gelir kapitalizasyonu ve maliyet yaklaşımlarından biri ya da bileşimi uygulanır; bu hizmette ağırlıklı yöntem '+primary+'dır. Sonuçlar UDES/IVS çerçevesinde uzlaştırılır.'},
+ {q:'Rapor hangi kurumlarda geçerlidir?',a:'SPK lisanslı kuruluşumuzca düzenlenen raporlar banka ve finans kuruluşları, mahkeme/icra süreçleri ve resmî kurum işlemlerinde kullanılabilir niteliktedir.'},
+ {q:'Süreç ne kadar sürer?',a:'Belge bütünlüğü ve taşınmazın türüne bağlı olarak süreç tipik olarak 2–10 iş günü içinde tamamlanır.'},
+ {q:'Değerleme bağımsız ve tarafsız mıdır?',a:'Evet. Tüm raporlar çıkar çatışmasından arınmış biçimde, bağımsızlık, tarafsızlık ve gizlilik ilkeleriyle, denetlenebilir bir metodolojiyle hazırlanır.'}
+];}
+/* ---- DEG_PAGES: 21 sayfa veri kaydı ---- */
+const DEG_PAGES={
+ /* GROUP Kurumsal */
+ kurumsal:{group:'Kurumsal',h1:'Kurumsal',lead:'SPK lisanslı, BDDK yetkili bağımsız taşınmaz değerleme kuruluşu olarak; bankalar, finans kuruluşları, kamu kurumları ve şirketler için uluslararası standartlarda resmî değerleme hizmeti sunuyoruz.',
+  kimlerIcin:[['Banka & Finans Kuruluşları','Teminat ve kredi süreçleri için lisanslı raporlama.'],['Kamu Kurumları','Kamulaştırma, vergi ve resmî işlemlerde tarafsız değer tespiti.'],['Şirketler','Bilanço, mali tablo ve yatırım kararı için varlık değerlemesi.']],
+  belgeler:_DEG_DOCS_GENEL,surec:_DEG_SUREC,
+  metodoloji:{baslik:'Kurumsal Değerleme Yaklaşımımız',aciklama:'Her rapor, varlığın niteliğine uygun yöntem(ler)le ve denetlenebilir bir metodolojiyle hazırlanır; bağımsızlık ve tarafsızlık esastır.',svg:'standart'},
+  faq:[{q:'Hangi yetkilere sahipsiniz?',a:'Kuruluşumuz SPK tarafından lisanslandırılmış olup BDDK değerleme listesinde yer almaktadır; raporlar UDES/IVS standartlarına uygundur.'},{q:'Hizmet kapsamınız nedir?',a:'Konut, ticari, arsa, sanayi, otel-turizm taşınmazları ile banka/kurum, hukuki süreç, kentsel dönüşüm ve şirket değerlemesi.'},{q:'Gizlilik nasıl sağlanır?',a:'Tüm veriler KVKK kapsamında işlenir ve yalnızca resmî değerleme süreci için kullanılır.'}],
+  related:['lisans-yetkinlik','metodoloji','iletisim'],seoTitle:'Kurumsal · Meridyen SPK Lisanslı Değerleme',seoDesc:'SPK lisanslı, BDDK yetkili bağımsız taşınmaz değerleme kuruluşu. Banka, kurum ve şirketler için resmî değerleme.'},
+ hakkimizda:{group:'Kurumsal',h1:'Hakkımızda',lead:'Lisanslı eksper kadromuz ve denetlenebilir metodolojimizle, taşınmaz ve varlık değerlemesinde güvenilir, bağımsız ve tarafsız bir referans olmayı ilke ediniyoruz.',
+  kimlerIcin:[['Deneyimli Kadro','SPK lisanslı değerleme uzmanları ve uzman eksperler.'],['Geniş Kapsama','81 ilde saha tespiti ve resmî raporlama.'],['Kurumsal Süreklilik','Banka ve kurumlarla uzun vadeli çerçeve iş birlikleri.']],
+  belgeler:_DEG_DOCS_GENEL,surec:_DEG_SUREC,
+  metodoloji:{baslik:'Değerlerimiz',aciklama:'Bağımsızlık, tarafsızlık, gizlilik ve mevzuata tam uyum; her raporun denetlenebilir olması temel ilkemizdir.',svg:'standart'},
+  faq:[{q:'Ne kadar süredir faaliyettesiniz?',a:'Kurumsal birikimimiz ve 12.000+ tamamlanmış resmî rapor ile sektörde yerleşik bir kuruluşuz.'},{q:'Kadronuz lisanslı mı?',a:'Evet, değerleme faaliyeti SPK lisanslı değerleme uzmanları sorumluluğunda yürütülür.'},{q:'Hangi standartları kullanıyorsunuz?',a:'Uluslararası Değerleme Standartları (UDES/IVS) ve ilgili Türk mevzuatı.'}],
+  related:['lisans-yetkinlik','kurumsal','iletisim'],seoTitle:'Hakkımızda · Meridyen Değerleme',seoDesc:'Lisanslı eksper kadrosu ve denetlenebilir metodoloji ile bağımsız taşınmaz değerleme.'},
+ 'lisans-yetkinlik':{group:'Kurumsal',h1:'Lisans & Yetkinlik',lead:'SPK lisansı, BDDK yetki listesi ve UDES/IVS uyumu; raporlarımızın yasal geçerliliğinin ve denetlenebilirliğinin teminatıdır.',
+  kimlerIcin:[['Yasal Geçerlilik','Banka, mahkeme ve resmî kurum işlemlerine uygun raporlar.'],['Denetlenebilirlik','Her adımı izlenebilir, kanıta dayalı metodoloji.'],['Standart Uyumu','UDES/IVS ve SPK tebliğlerine tam uyum.']],
+  belgeler:['SPK Değerleme Lisansı','BDDK Yetki Listesi Kaydı','UDES/IVS Uyum Beyanı','Lisanslı Eksper Sertifikaları'],surec:_DEG_SUREC,
+  metodoloji:{baslik:'Yetki & Standart Çerçevesi',aciklama:'SPK III-62.1 ve III-62.3 tebliğleri ile UDES/IVS standartları, raporlarımızın çerçevesini oluşturur.',svg:'standart'},
+  faq:[{q:'SPK lisansı neden önemli?',a:'Kentsel dönüşüm, banka teminatı ve birçok resmî işlemde SPK lisanslı değerleme zorunludur ve bilirkişi niteliği taşır.'},{q:'BDDK listesi ne anlama gelir?',a:'Bankalara değerleme hizmeti verebilmek için kuruluşun BDDK yetki listesinde yer alması gerekir.'},{q:'Raporlar uluslararası geçerli mi?',a:'UDES/IVS uyumu sayesinde raporlar uluslararası standartlarla uyumludur.'}],
+  related:['kurumsal','metodoloji','banka-kurum'],seoTitle:'Lisans & Yetkinlik · SPK · BDDK · UDES',seoDesc:'SPK lisansı, BDDK yetki listesi ve UDES/IVS uyumu ile yasal geçerli, denetlenebilir değerleme raporları.'},
+ /* GROUP Hizmetler */
+ konut:{group:'Hizmetler',svc:1,h1:'Konut Değerleme',lead:'Daire, müstakil konut ve rezidans taşınmazlarının pazar değeri; tapu, imar ve hukuki durum tespitiyle, ağırlıklı olarak emsal karşılaştırma yöntemiyle SPK/UDES çerçevesinde belirlenir.',
+  kimlerIcin:[['Banka Kredisi','Konut kredisi ve teminat süreçleri için resmî değer.'],['Miras & Paylaşım','İzale-i şuyu ve miras paylaşımında tarafsız değer tespiti.'],['Mali Tablo','Bireysel ve kurumsal varlık güncellemesi.']],
+  belgeler:_DEG_DOCS_GENEL,surec:_DEG_SUREC,
+  metodoloji:{baslik:'Emsal Karşılaştırma Yaklaşımı',aciklama:'Yakın tarihli, benzer konut işlemleri; konum, alan, yaş, kat ve donanım farkları için düzeltme katsayılarıyla normalize edilir.',svg:'pazar'},
+  faq:_faqMeth('emsal karşılaştırma'),related:['ticari','arsa-arazi','hukuki-surec'],seoTitle:'Konut Değerleme · SPK Lisanslı',seoDesc:'Daire, rezidans ve müstakil konutlarda emsal karşılaştırma yöntemiyle SPK lisanslı resmî değerleme.'},
+ ticari:{group:'Hizmetler',svc:1,h1:'Ticari Gayrimenkul Değerleme',lead:'Ofis, dükkân, plaza ve karma ticari taşınmazların değeri; getiri kapasitesi esas alınarak ağırlıklı olarak gelir kapitalizasyonu yöntemiyle takdir edilir.',
+  kimlerIcin:[['Yatırımcı & Şirket','Getirili taşınmazlarda yatırım kararı desteği.'],['Banka Teminatı','Ticari kredi ve teminat değerlemesi.'],['Mali Raporlama','TMS/TFRS uyumlu varlık değerlemesi.']],
+  belgeler:_DEG_DOCS_GENEL.concat(['Kira sözleşmeleri','İşyeri açma ve çalışma ruhsatı']),surec:_DEG_SUREC,
+  metodoloji:{baslik:'Gelir Kapitalizasyonu Yaklaşımı',aciklama:'Net faaliyet geliri (NOI), riski yansıtan kapitalizasyon oranıyla bugünkü değere indirgenir; doğrudan kapitalizasyon ve İNA/DCF teknikleri kullanılır.',svg:'gelir'},
+  faq:_faqMeth('gelir kapitalizasyonu'),related:['otel-turizm','yatirim-karari','banka-kurum'],seoTitle:'Ticari Gayrimenkul Değerleme · Gelir Yaklaşımı',seoDesc:'Ofis, dükkân ve plazalarda gelir kapitalizasyonu yöntemiyle SPK lisanslı ticari değerleme.'},
+ 'arsa-arazi':{group:'Hizmetler',svc:1,h1:'Arsa & Arazi Değerleme',lead:'İmarlı arsa ve tarım/arazi vasıflı taşınmazların değeri; imar durumu, en verimli ve en iyi kullanım analiziyle, ağırlıklı olarak emsal karşılaştırma yöntemiyle belirlenir.',
+  kimlerIcin:[['Yatırım & Geliştirme','Arsa edinim ve geliştirme kararları.'],['Kamulaştırma','Resmî kamulaştırma bedeli tespiti.'],['Banka & Teminat','Arsa teminatlı kredi süreçleri.']],
+  belgeler:['Tapu senedi','İmar durum belgesi / imar çapı','Aplikasyon krokisi','Kimlik belgesi','Emlak rayiç bedeli'],surec:_DEG_SUREC,
+  metodoloji:{baslik:'Pazar Yaklaşımı & HBU Analizi',aciklama:'En verimli ve en iyi kullanım (highest & best use) analizi yapılır; emsal arsa işlemleri imar haklarına göre düzeltilir.',svg:'pazar'},
+  faq:_faqMeth('emsal karşılaştırma'),related:['konut','kentsel-donusum','yatirim-karari'],seoTitle:'Arsa & Arazi Değerleme · İmar Analizi',seoDesc:'İmarlı arsa ve arazide HBU analizi ve emsal yöntemiyle SPK lisanslı değerleme.'},
+ sanayi:{group:'Hizmetler',svc:1,h1:'Fabrika & Sanayi Tesisi Değerleme',lead:'Arsa, bina, altyapı ve üretim makinelerinden oluşan entegre sanayi tesisleri; maliyet yaklaşımı ile gelir yaklaşımı birlikte kullanılarak bütünleşik biçimde değerlenir.',
+  kimlerIcin:[['Sanayi Şirketleri','Birleşme, devir ve finansman işlemleri.'],['Banka & Finans','Tesis teminatlı kredi değerlemesi.'],['Mali Raporlama','TMS/TFRS uyumlu maddi duran varlık ölçümü.']],
+  belgeler:_DEG_DOCS_GENEL.concat(['Kapasite raporu','Makine-teçhizat listesi','Çevre & işletme izinleri']),surec:_DEG_SUREC,
+  metodoloji:{baslik:'Maliyet + Gelir (Bütünleşik)',aciklama:'Bileşen bazında maliyet yaklaşımı (arsa, bina, makine-IVS 300) ile işletmenin nakit akışına dayalı gelir yaklaşımı birlikte uygulanır.',svg:'maliyet'},
+  faq:_faqMeth('maliyet ve gelir yaklaşımı bileşimi'),related:['ticari','kurumsal-sirket-degerleme','banka-kurum'],seoTitle:'Fabrika & Sanayi Tesisi Değerleme',seoDesc:'Entegre sanayi tesislerinde maliyet ve gelir yaklaşımıyla bütünleşik SPK lisanslı değerleme.'},
+ 'otel-turizm':{group:'Hizmetler',svc:1,h1:'Otel & Turizm Tesisi Değerleme',lead:'Oteller ve turizm işletmeleri; işletme geliri, doluluk ve oda başına gelir esas alınarak ağırlıklı olarak gelir kapitalizasyonu yöntemiyle değerlenir.',
+  kimlerIcin:[['Turizm Yatırımcısı','İşletme değeri ve yatırım analizi.'],['Banka & Finans','Tesis teminatlı finansman.'],['Şirket Birleşmeleri','Devir ve ortaklık işlemleri.']],
+  belgeler:_DEG_DOCS_GENEL.concat(['Turizm işletme belgesi','İşletme gelir-gider tabloları','Doluluk & ADR verileri']),surec:_DEG_SUREC,
+  metodoloji:{baslik:'Gelir Kapitalizasyonu (İşletme Esaslı)',aciklama:'Sürdürülebilir net faaliyet geliri ve İNA/DCF ile işletme değeri; fiziki varlıklar maliyet yaklaşımıyla çapraz kontrol edilir.',svg:'gelir'},
+  faq:_faqMeth('gelir kapitalizasyonu'),related:['ticari','yatirim-karari','kurumsal-sirket-degerleme'],seoTitle:'Otel & Turizm Tesisi Değerleme',seoDesc:'Otel ve turizm işletmelerinde gelir kapitalizasyonu yöntemiyle SPK lisanslı işletme değerlemesi.'},
+ 'banka-kurum':{group:'Hizmetler',svc:1,h1:'Banka & Finans Kuruluşları İçin Değerleme',lead:'Bankalar ve finans kuruluşları için teminat ve kredi süreçlerinde; BDDK yetki çerçevesinde, hızlı, denetlenebilir ve standart formatta lisanslı değerleme raporları.',
+  kimlerIcin:[['Bankalar','Kredi ve teminat amaçlı taşınmaz değerlemesi.'],['Finans Kuruluşları','Portföy varlıklarının tarafsız değer tespiti.'],['Faktoring & Leasing','Teminat varlıklarının değerlemesi.']],
+  belgeler:_DEG_DOCS_GENEL,surec:_DEG_SUREC,
+  metodoloji:{baslik:'Teminat Amaçlı Standart Raporlama',aciklama:'BDDK ve SPK çerçevesinde, banka süreçlerine uygun standart formatta, gelir/maliyet/pazar yaklaşımları kuruma göre uyarlanarak raporlanır.',svg:'banka'},
+  faq:[{q:'BDDK yetkiniz var mı?',a:'Evet, kuruluşumuz BDDK değerleme yetki listesinde yer almaktadır; bankalara teminat amaçlı değerleme hizmeti verebiliriz.'},{q:'Raporlar standart formatta mı?',a:'Banka ve finans kuruluşlarının talep ettiği standart şablonlara uyumlu, denetlenebilir raporlar düzenlenir.'},{q:'Teslim süresi nedir?',a:'Standart konut/ticari teminat raporları çoğunlukla 2–5 iş günü içinde teslim edilir.'},{q:'Toplu/çerçeve çalışma mümkün mü?',a:'Evet, kurumsal çerçeve anlaşmaları ve toplu rapor süreçleri için kurumsal teklif sunuyoruz.'}],
+  related:['ticari','kurumsal-teklif','lisans-yetkinlik'],seoTitle:'Banka & Finans Kuruluşları İçin Değerleme',seoDesc:'BDDK yetkili, teminat ve kredi amaçlı standart formatta SPK lisanslı banka değerleme hizmeti.'},
+ 'kentsel-donusum':{group:'Hizmetler',svc:1,h1:'Kentsel Dönüşüm Değerleme',lead:'6306 sayılı Kanun kapsamındaki kentsel dönüşüm süreçlerinde; hak sahipliği ve arsa payı dağıtımı için SPK lisanslı, bilirkişi niteliğinde zorunlu değerleme.',
+  kimlerIcin:[['Hak Sahipleri','Arsa payı ve daire dağıtımında tarafsız değer.'],['Müteahhit & Geliştirici','Paylaşım modeli için resmî değer tespiti.'],['Kamu & Belediye','Dönüşüm projelerinde resmî raporlama.']],
+  belgeler:_DEG_DOCS_GENEL.concat(['Riskli yapı tespit raporu','Arsa payı / hisse bilgileri']),surec:_DEG_SUREC,
+  metodoloji:{baslik:'Hak Sahipliği & Pay Analizi',aciklama:'Mevcut taşınmazların ve dönüşüm sonrası birimlerin değerleri, emsal ve maliyet yaklaşımlarıyla tespit edilerek adil pay dağıtımı sağlanır.',svg:'matris'},
+  faq:[{q:'Kentsel dönüşümde değerleme zorunlu mu?',a:'Evet, hak sahipliği ve pay dağıtımı için SPK lisanslı değerleme yasal olarak zorunludur ve bilirkişi niteliği taşır.'},{q:'Adil paylaşım nasıl sağlanır?',a:'Mevcut ve yeni birimlerin değerleri tarafsız ve denetlenebilir biçimde tespit edilerek arsa payına yansıtılır.'},{q:'Hangi standartlar uygulanır?',a:'SPK tebliğleri ve UDES/IVS çerçevesinde, bağımsız ve tarafsız metodoloji.'}],
+  related:['arsa-arazi','konut','hukuki-surec'],seoTitle:'Kentsel Dönüşüm Değerleme · SPK Zorunlu',seoDesc:'6306 sayılı Kanun kapsamında hak sahipliği ve arsa payı için SPK lisanslı bilirkişi değerlemesi.'},
+ 'hukuki-surec':{group:'Hizmetler',svc:1,h1:'Hukuki Süreç Değerleme (Mahkeme / İcra / Bilirkişi)',lead:'Mahkeme, icra ve bilirkişilik süreçlerinde; güncel ya da geçmişe yönelik tarihli değer tespiti için bağımsız, tarafsız ve denetlenebilir lisanslı raporlama.',
+  kimlerIcin:[['Mahkemeler','Bilirkişi niteliğinde tarafsız değer raporu.'],['İcra Daireleri','Satış/icra süreçlerinde değer tespiti.'],['Hukuk Büroları','Dava dosyaları için resmî değerleme.']],
+  belgeler:['Tapu kayıt örneği','Dava / dosya bilgileri','Keşif tutanağı (varsa)','İmar & yapı belgeleri'],surec:_DEG_SUREC,
+  metodoloji:{baslik:'Geçmişe Yönelik & Güncel Değer',aciklama:'Talebe göre değerleme tarihi belirlenir; geçmişe yönelik (retrospektif) değer için o döneme ait emsal ve piyasa verileri esas alınır.',svg:'risk'},
+  faq:[{q:'Geçmişe yönelik değer tespit edebilir misiniz?',a:'Evet, belirli bir tarihe yönelik (retrospektif) değer, o döneme ait emsal ve piyasa verileriyle tespit edilir.'},{q:'Raporlarınız bilirkişi niteliğinde mi?',a:'SPK lisanslı uzmanlarca düzenlenen raporlarımız mahkeme ve icra süreçlerinde bilirkişi niteliği taşır.'},{q:'Tarafsızlık nasıl güvence altında?',a:'Çıkar çatışmasından arınmış, bağımsız ve denetlenebilir metodoloji uygulanır.'}],
+  related:['konut','kentsel-donusum','arsa-arazi'],seoTitle:'Hukuki Süreç Değerleme · Mahkeme & İcra',seoDesc:'Mahkeme, icra ve bilirkişi süreçleri için geçmişe yönelik ve güncel SPK lisanslı değer tespiti.'},
+ 'kurumsal-sirket-degerleme':{group:'Hizmetler',svc:1,h1:'Kurumsal & Şirket Değerleme',lead:'Şirketlerin maddi duran varlıkları ve işletme değeri; bilanço, mali tablo, birleşme-devir ve finansman amaçlı olarak TMS/TFRS ve UDES/IVS çerçevesinde değerlenir.',
+  kimlerIcin:[['Şirketler','Bilanço ve mali tablo amaçlı varlık değerlemesi.'],['Yatırımcılar','Birleşme, devir ve ortaklık işlemleri.'],['Denetim & Finans','TMS/TFRS uyumlu gerçeğe uygun değer ölçümü.']],
+  belgeler:['Mali tablolar','Sabit kıymet defteri','Tapu & makine listeleri','Şirket ortaklık yapısı'],surec:_DEG_SUREC,
+  metodoloji:{baslik:'İşletme Değeri & Varlık Tahsisi',aciklama:'İNA/DCF ile işletme değeri; maddi/maddi olmayan varlıklar gerçeğe uygun değerle ölçülür (TFRS 3/13), kalan tutar şerefiye olarak tahsis edilir.',svg:'gelir'},
+  faq:_faqMeth('gelir yaklaşımı'),related:['sanayi','yatirim-karari','ticari'],seoTitle:'Kurumsal & Şirket Değerleme · TMS/TFRS',seoDesc:'Şirket varlıkları ve işletme değeri için TMS/TFRS ve UDES/IVS uyumlu SPK lisanslı değerleme.'},
+ 'yatirim-karari':{group:'Hizmetler',svc:1,h1:'Yatırım Kararı Değerleme & Analizi',lead:'Taşınmaz yatırımlarında getiri, risk ve geri ödeme süresi analizi; tarafsız emsal ve gelir verisiyle, yatırım kararını destekleyen bağımsız değerleme.',
+  kimlerIcin:[['Kurumsal Yatırımcı','Getiri ve risk dengesinin tarafsız analizi.'],['Fonlar & Kuruluşlar','Portföy varlıklarının değer tespiti.'],['Şirketler','Edinim ve elden çıkarma kararları.']],
+  belgeler:_DEG_DOCS_GENEL.concat(['Gelir-gider projeksiyonu','Kira/getiri sözleşmeleri']),surec:_DEG_SUREC,
+  metodoloji:{baslik:'Risk & Getiri Analizi',aciklama:'Nakit akışı projeksiyonları, kapitalizasyon oranı ve duyarlılık analiziyle değer bandı ve risk düzeyi tarafsız biçimde sunulur.',svg:'risk'},
+  faq:_faqMeth('gelir kapitalizasyonu'),related:['ticari','otel-turizm','kurumsal-sirket-degerleme'],seoTitle:'Yatırım Kararı Değerleme & Analizi',seoDesc:'Getiri, risk ve geri ödeme analiziyle yatırım kararını destekleyen bağımsız SPK lisanslı değerleme.'},
+ /* GROUP Süreç/Metodoloji */
+ metodoloji:{group:'Metodoloji',h1:'Değerleme Metodolojisi',lead:'Uluslararası Değerleme Standartları (UDES/IVS) çerçevesinde üç temel yaklaşım: pazar (emsal), gelir kapitalizasyonu ve maliyet. Her varlık türü için uygun yöntem(ler) seçilir ve sonuçlar uzlaştırılır.',
+  kimlerIcin:[['Pazar Yaklaşımı','Emsal karşılaştırma; konut ve arsada birincil yöntem.'],['Gelir Yaklaşımı','Gelir kapitalizasyonu; getirili ticari/otel taşınmazlarda.'],['Maliyet Yaklaşımı','İkame bedeli − yıpranma; özel/yeni yapılar ve sanayi.']],
+  belgeler:['UDES / IVS 104 — Değer Esasları','IVS 105 — Değerleme Yaklaşımları','SPK III-62.3 — Değerleme Standartları','IVS 400 — Gayrimenkul Hakları'],surec:_DEG_SUREC,
+  metodoloji:{baslik:'Yöntem Seçimi & Uzlaştırma',aciklama:'Varlığın niteliği, veri uygunluğu ve değerleme amacına göre yöntem(ler) seçilir; farklı yaklaşımların sonuçları gerekçeli biçimde uzlaştırılır (reconciliation).',svg:'matris'},
+  faq:[{q:'Hangi yaklaşım hangi varlıkta kullanılır?',a:'Konut/arsada pazar (emsal), getirili ticari/otelde gelir kapitalizasyonu, özel/yeni yapı ve sanayide maliyet yaklaşımı ağırlık kazanır.'},{q:'Birden fazla yöntem kullanılır mı?',a:'Evet; gerektiğinde yöntemler birlikte uygulanır ve sonuçlar uzlaştırılır.'},{q:'Emsal verisi nasıl seçilir?',a:'Yakın tarihli, benzer ve doğrulanabilir işlemler; konum, alan ve nitelik farkları düzeltme katsayılarıyla normalize edilir.'}],
+  related:['degerleme-sureci','rapor-yapisi','konut'],seoTitle:'Değerleme Metodolojisi · UDES/IVS',seoDesc:'Pazar, gelir ve maliyet yaklaşımlarıyla UDES/IVS uyumlu bilimsel ve tarafsız değerleme metodolojisi.'},
+ 'degerleme-sureci':{group:'Metodoloji',h1:'Değerleme Süreci',lead:'Talepten teslime kadar yedi aşamalı, izlenebilir ve denetlenebilir resmî süreç. Tipik tamamlanma süresi 2–10 iş günüdür.',
+  notice:'Platform yalnızca altyapı (talep, veri, ön analiz) hazırlar. Resmî değerleme raporu, SPK lisanslı değerleme uzmanı tarafından; saha kontrolü, belediye ve tapu incelemesi ve bağımsız değerlendirme sonucunda hazırlanır, iç kontrolden geçirilir ve imzalanır. SPK lisanslı uzmanın hazırlamadığı rapor geçerli kabul edilmez.',
+  kimlerIcin:[['Şeffaflık','Her aşama belgeli ve izlenebilir.'],['Hız','Standart raporlarda kısa teslim süresi.'],['Kalite','Bağımsız iç kontrol ve kalite denetimi.']],
+  belgeler:_DEG_DOCS_GENEL,surec:_DEG_SUREC,
+  metodoloji:{baslik:'İzlenebilir Resmî Akış',aciklama:'Talep, yasal inceleme, yerinde tespit, emsal analizi, yöntem uygulama, rapor tanzimi ve teslim adımları kayıt altında yürütülür.',svg:'surec'},
+  faq:[{q:'Süreç ne kadar sürer?',a:'Taşınmazın türü ve belge bütünlüğüne göre tipik olarak 2–10 iş günü.'},{q:'Yerinde inceleme zorunlu mu?',a:'Evet, lisanslı eksperin sahada teknik tespiti raporun esasıdır.'},{q:'İç kontrol nasıl işler?',a:'Her rapor, tanzimden sonra bağımsız iç kontrol ve kalite denetiminden geçer.'}],
+  related:['metodoloji','rapor-yapisi','basvuru'],seoTitle:'Değerleme Süreci · 7 Aşama',seoDesc:'Talepten teslime yedi aşamalı, denetlenebilir SPK lisanslı değerleme süreci (2–10 iş günü).'},
+ 'rapor-yapisi':{group:'Metodoloji',h1:'Rapor Yapısı & Standardı',lead:'UDES/IVS formatında, denetlenebilir bir değerleme raporunun bölümleri: kapsam, taşınmaz tanımı, hukuki durum, yöntem, analiz, değer takdiri ve ekler.',
+  notice:'Platform yalnızca altyapı (talep, veri, ön analiz) hazırlar. Resmî değerleme raporu, SPK lisanslı değerleme uzmanı tarafından; saha kontrolü, belediye ve tapu incelemesi ve bağımsız değerlendirme sonucunda hazırlanır, iç kontrolden geçirilir ve imzalanır. SPK lisanslı uzmanın hazırlamadığı rapor geçerli kabul edilmez.',
+  kimlerIcin:[['Bankalar','Standart formatta teminat raporu.'],['Kurumlar','Mali tablo ve resmî işlem uyumu.'],['Mahkemeler','Bilirkişi niteliğinde denetlenebilir rapor.']],
+  belgeler:['Değerleme kapsamı ve esası','Taşınmaz & hukuki durum tanımı','Uygulanan yöntem ve analiz','Değer takdiri ve uzlaştırma','Fotoğraf, kroki ve resmî ekler'],surec:_DEG_SUREC,
+  metodoloji:{baslik:'Denetlenebilir Rapor Standardı',aciklama:'Her bölüm kanıta dayanır; yöntem ve varsayımlar açıkça beyan edilir, böylece rapor bağımsız biçimde denetlenebilir.',svg:'standart'},
+  faq:[{q:'Rapor kaç sayfadır?',a:'Taşınmazın karmaşıklığına göre değişir; tüm zorunlu bölümler eksiksiz yer alır.'},{q:'PDF nüsha alabilir miyim?',a:'Evet, resmî rapor PDF olarak düzenlenir ve kuruma teslim edilir.'},{q:'Varsayımlar belirtilir mi?',a:'Evet, tüm değer esasları, yöntem ve varsayımlar raporda açıkça beyan edilir.'}],
+  related:['metodoloji','degerleme-sureci','banka-kurum'],seoTitle:'Rapor Yapısı & Standardı · UDES/IVS',seoDesc:'Denetlenebilir UDES/IVS uyumlu değerleme raporunun bölümleri ve standardı.'},
+ /* GROUP Bilgi */
+ sss:{group:'Bilgi',h1:'Sıkça Sorulan Sorular',lead:'Taşınmaz değerleme süreçleri, lisans, yöntem ve raporlama hakkında en sık sorulan sorular.',
+  kimlerIcin:[['Bireyler','Konut ve miras süreçleri.'],['Kurumlar','Banka, kurum ve şirket süreçleri.'],['Hukuk','Mahkeme ve icra süreçleri.']],
+  belgeler:_DEG_DOCS_GENEL,surec:_DEG_SUREC,
+  metodoloji:{baslik:'Bilgi & Şeffaflık',aciklama:'Süreçlerimizi ve standartlarımızı şeffaf biçimde paylaşırız.',svg:'standart'},
+  faq:[
+   {q:'Değerleme nedir?',a:'Bir taşınmazın ya da varlığın, belirli bir tarihte ve değer esasında, bağımsız ve tarafsız olarak parasal değerinin tespit edilmesidir.'},
+   {q:'SPK lisansı neden gereklidir?',a:'Banka teminatı, kentsel dönüşüm ve birçok resmî işlemde SPK lisanslı değerleme zorunludur; lisanslı raporlar yasal geçerlilik taşır.'},
+   {q:'Hangi yöntemler kullanılır?',a:'Pazar (emsal karşılaştırma), gelir kapitalizasyonu ve maliyet yaklaşımı; varlığın niteliğine göre seçilir.'},
+   {q:'Süreç ne kadar sürer?',a:'Taşınmazın türü ve belge bütünlüğüne bağlı olarak tipik 2–10 iş günü.'},
+   {q:'Hangi belgeler gerekir?',a:'Genel olarak tapu, kimlik, yapı ruhsatı ve iskân, mimari proje, kat irtifakı/mülkiyeti ve emlak rayiç bedeli; tipe göre uyarlanır.'},
+   {q:'Rapor hangi kurumlarda geçerli?',a:'Banka ve finans kuruluşları, mahkeme/icra ve resmî kurum işlemlerinde kullanılabilir niteliktedir.'},
+   {q:'Geçmişe yönelik değer tespiti yapılır mı?',a:'Evet, mahkeme/icra süreçlerinde belirli bir tarihe yönelik retrospektif değer tespiti yapılabilir.'},
+   {q:'Değerleme bağımsız mıdır?',a:'Evet, çıkar çatışmasından arınmış, bağımsızlık ve tarafsızlık ilkeleriyle hazırlanır.'},
+   {q:'Kentsel dönüşümde değerleme zorunlu mu?',a:'Evet, hak sahipliği ve arsa payı dağıtımı için SPK lisanslı değerleme yasal zorunluluktur.'},
+   {q:'Kurumsal çerçeve anlaşması mümkün mü?',a:'Evet, banka ve kurumlar için toplu rapor ve çerçeve iş birliği kapsamında kurumsal teklif sunuyoruz.'},
+   {q:'Verilerim nasıl korunur?',a:'Tüm veriler KVKK kapsamında işlenir ve yalnızca resmî değerleme süreci için kullanılır.'}
+  ],
+  related:['metodoloji','bilgi-merkezi','iletisim'],seoTitle:'Sıkça Sorulan Sorular · Değerleme',seoDesc:'Taşınmaz değerleme, SPK lisansı, yöntem ve raporlama hakkında sık sorulan sorular.'},
+ 'bilgi-merkezi':{group:'Bilgi',h1:'Bilgi Merkezi',lead:'Taşınmaz değerleme mevzuatı, metodoloji ve süreçleri üzerine kurumsal makaleler ve rehberler.',
+  kimlerIcin:[['Kurumsal Okuyucu','Mevzuat ve standart güncellemeleri.'],['Yatırımcı','Risk ve değer analizine giriş.'],['Profesyoneller','Metodoloji derinlemesine.']],
+  belgeler:_DEG_DOCS_GENEL,surec:_DEG_SUREC,
+  metodoloji:{baslik:'Kurumsal İçerik',aciklama:'Bağımsız ve teknik bir bakışla değerleme bilgisini paylaşıyoruz.',svg:'standart'},
+  articles:[
+   {tag:'Mevzuat',baslik:'SPK Lisanslı Değerleme Neden Zorunludur?',ozet:'Banka teminatı ve kentsel dönüşümde SPK lisanslı değerlemenin yasal dayanağı ve önemi.',rt:'5 dk'},
+   {tag:'Metodoloji',baslik:'Emsal Karşılaştırma Yöntemi Nasıl İşler?',ozet:'Emsal seçimi, düzeltme katsayıları ve normalizasyon adımlarıyla pazar yaklaşımı.',rt:'6 dk'},
+   {tag:'Gelir Yaklaşımı',baslik:'Kapitalizasyon Oranı ve İNA/DCF',ozet:'Getirili taşınmazlarda net faaliyet geliri ve indirgenmiş nakit akışı mantığı.',rt:'7 dk'},
+   {tag:'Süreç',baslik:'Değerleme Sürecinde Gerekli Belgeler',ozet:'Taşınmaz türüne göre belge listesi ve süreci hızlandıran ipuçları.',rt:'4 dk'},
+   {tag:'Standart',baslik:'UDES/IVS Uyumlu Rapor Yapısı',ozet:'Denetlenebilir bir değerleme raporunun zorunlu bölümleri ve standardı.',rt:'5 dk'},
+   {tag:'Risk',baslik:'Değerlemede Risk ve Belirsizlik Analizi',ozet:'Değer bandı, güven düzeyi ve duyarlılık analizinin yorumlanması.',rt:'6 dk'}
+  ],
+  faq:[{q:'Makaleler ne sıklıkla güncellenir?',a:'Mevzuat ve standart değişikliklerine göre düzenli olarak güncellenir.'},{q:'Profesyonel danışmanlık veriyor musunuz?',a:'İçerikler bilgilendirme amaçlıdır; resmî değerleme için lisanslı rapor süreci işletilir.'}],
+  related:['metodoloji','sss','rapor-yapisi'],seoTitle:'Bilgi Merkezi · Değerleme Makaleleri',seoDesc:'Taşınmaz değerleme mevzuatı, metodoloji ve süreçleri üzerine kurumsal makaleler.'},
+ /* GROUP Başvuru */
+ basvuru:{group:'Başvuru',h1:'Değerleme Başvurusu',lead:'Taşınmazınız için SPK lisanslı resmî değerleme sürecini başlatın. Uzman ekibimiz en kısa sürede sizinle iletişime geçer.',
+  form:'basvuru',belgeler:_DEG_DOCS_GENEL,surec:_DEG_SUREC,
+  kimlerIcin:[['Bireysel','Konut, arsa ve miras süreçleri.'],['Kurumsal','Şirket varlıkları ve mali tablo.'],['Banka & Kurum','Teminat ve resmî işlemler.']],
+  metodoloji:{baslik:'Başvurudan Sonra',aciklama:'Talebiniz alındığında belge listesi paylaşılır, yerinde inceleme planlanır ve süreç resmî olarak başlatılır.',svg:'basvuru'},
+  faq:[{q:'Başvuru sonrası ne olur?',a:'Ekibimiz iletişime geçerek belge listesini paylaşır ve yerinde inceleme randevusu planlar.'},{q:'Hangi bilgileri vermeliyim?',a:'Ad/kurum, iletişim, taşınmaz türü ve değerleme amacı yeterlidir; detaylar süreçte tamamlanır.'},{q:'Ücret nasıl belirlenir?',a:'Taşınmazın türü, konumu ve kapsamına göre resmî teklif sunulur.'}],
+  related:['kurumsal-teklif','degerleme-sureci','iletisim'],seoTitle:'Değerleme Başvurusu · SPK Lisanslı',seoDesc:'Taşınmazınız için SPK lisanslı resmî değerleme başvurusu oluşturun.'},
+ 'kurumsal-teklif':{group:'Başvuru',h1:'Kurumsal Teklif Talebi',lead:'Banka, finans kuruluşu ve şirketler için toplu rapor ve çerçeve iş birliği kapsamında kurumsal teklif talep edin.',
+  form:'kurumsal-teklif',belgeler:['Kurum bilgileri','Tahmini yıllık rapor adedi','Hizmet kapsamı (taşınmaz türleri)','Tercih edilen rapor formatı'],surec:_DEG_SUREC,
+  kimlerIcin:[['Bankalar','Teminat raporlarında çerçeve anlaşma.'],['Finans Kuruluşları','Portföy değerleme süreçleri.'],['Şirketler','Düzenli varlık değerleme ihtiyacı.']],
+  metodoloji:{baslik:'Kurumsal Çözümler',aciklama:'Hacme ve sürece göre özelleştirilmiş, standart formatlı ve hızlı kurumsal değerleme akışı kurgularız.',svg:'banka'},
+  faq:[{q:'Çerçeve anlaşması nasıl yapılır?',a:'İhtiyaç analizi sonrası hacim, format ve teslim sürelerini içeren kurumsal teklif sunulur.'},{q:'API entegrasyonu mümkün mü?',a:'Kurumsal süreçler için sistem entegrasyonu ve standart raporlama akışları kurgulanabilir.'},{q:'Toplu raporlarda süre kısalır mı?',a:'Standartlaştırılmış akışlarla toplu süreçlerde teslim süreleri optimize edilir.'}],
+  related:['banka-kurum','basvuru','iletisim'],seoTitle:'Kurumsal Teklif Talebi · Banka & Kurum',seoDesc:'Banka, finans kuruluşu ve şirketler için toplu değerleme ve çerçeve iş birliği teklifi.'},
+ iletisim:{group:'Başvuru',h1:'İletişim',lead:'Resmî değerleme süreçleri, kurumsal çözümler ve banka/kurum iş birlikleri için bizimle iletişime geçin.',
+  form:'iletisim',belgeler:_DEG_DOCS_GENEL,surec:_DEG_SUREC,
+  kimlerIcin:[['Genel Müdürlük','Alsancak Mah. ... Cad. No:00, Konak / İzmir'],['Telefon','+90 232 000 00 00 · Hafta içi 09:00–18:00'],['E-posta','info@meridyendegerleme.com']],
+  metodoloji:{baslik:'Bize Ulaşın',aciklama:'Talebinizi iletin; uzman ekibimiz resmî süreç hakkında sizi bilgilendirsin.',svg:'basvuru'},
+  faq:[{q:'Hangi illerde hizmet veriyorsunuz?',a:'81 ilde saha tespiti ve resmî raporlama kapasitesine sahibiz.'},{q:'Ne kadar sürede dönüş yapılır?',a:'Mesai saatleri içinde gelen talepler genellikle aynı gün yanıtlanır.'}],
+  related:['basvuru','kurumsal-teklif','banka-kurum'],seoTitle:'İletişim · Meridyen Değerleme',seoDesc:'SPK lisanslı değerleme süreçleri ve kurumsal çözümler için iletişim.'}
+};
+/* Mega-dropdown için 8 hizmet (svc:1) */
+const DEG_SERVICES=['konut','ticari','arsa-arazi','sanayi','otel-turizm','banka-kurum','kentsel-donusum','hukuki-surec'];
+const _SVC_ICON={konut:'standart',ticari:'gelir','arsa-arazi':'pazar',sanayi:'maliyet','otel-turizm':'gelir','banka-kurum':'banka','kentsel-donusum':'matris','hukuki-surec':'risk'};
+/* ---- yardımcı: HTML kaçış (XSS koruması) — _esc varsa onu kullan ---- */
+function _dgEsc(s){return (typeof _esc==='function')?_esc(s):(''+(s==null?'':s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+const _CHECK_SVG='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+/* ---- footer'ı tek kaynaktan klonla ---- */
+function _degFooterHTML(){var f=document.querySelector('footer');return f?f.outerHTML:'';}
+/* ---- form HTML üreticileri ---- */
+function _degFormHTML(kind){
+  if(kind==='iletisim'){
+    return '<div class="dp-form">'
+      +'<div class="rf-grid"><div class="rf"><label>Ad Soyad / Kurum *</label><input id="dpf_name" placeholder="Kişi veya şirket adı"></div><div class="rf"><label>Telefon *</label><input id="dpf_phone" placeholder="05xx xxx xx xx"></div></div>'
+      +'<div class="rf"><label>E-posta</label><input id="dpf_mail" placeholder="ornek@kurum.com"></div>'
+      +'<div class="rf"><label>Mesajınız</label><textarea id="dpf_msg" rows="3" placeholder="Talebinizi kısaca yazın"></textarea></div>'
+      +'<label class="dp-kvkk"><input type="checkbox" id="dpf_kvkk"> <span>Kişisel verilerimin resmî değerleme süreci kapsamında işlenmesini kabul ediyorum (KVKK).</span></label>'
+      +'<button class="btn btn-primary" style="width:100%;justify-content:center" onclick="degPageFormSubmit(\'iletisim\')">Banka ve Kurum Çözümleri İçin İletişime Geç</button></div>';
+  }
+  if(kind==='kurumsal-teklif'){
+    return '<div class="dp-form">'
+      +'<div class="rf-grid"><div class="rf"><label>Kurum Adı *</label><input id="dpf_name" placeholder="Banka / finans kuruluşu / şirket"></div><div class="rf"><label>Yetkili Telefon *</label><input id="dpf_phone" placeholder="05xx xxx xx xx"></div></div>'
+      +'<div class="rf-grid"><div class="rf"><label>Kurumsal E-posta</label><input id="dpf_mail" placeholder="yetkili@kurum.com"></div><div class="rf"><label>Tahmini Yıllık Rapor Adedi</label><input id="dpf_extra" placeholder="örn. 250+"></div></div>'
+      +'<div class="rf"><label>Hizmet Kapsamı / Not</label><textarea id="dpf_msg" rows="3" placeholder="Taşınmaz türleri, format ve süreç beklentileri"></textarea></div>'
+      +'<label class="dp-kvkk"><input type="checkbox" id="dpf_kvkk"> <span>Kurumsal verilerin teklif süreci kapsamında işlenmesini kabul ediyorum (KVKK).</span></label>'
+      +'<button class="btn btn-primary" style="width:100%;justify-content:center" onclick="degPageFormSubmit(\'kurumsal-teklif\')">Kurumsal Teklif Talep Et</button></div>';
+  }
+  /* basvuru (varsayılan) */
+  return '<div class="dp-form">'
+    +'<div class="rf-grid"><div class="rf"><label>Ad Soyad / Kurum *</label><input id="dpf_name" placeholder="Kişi veya şirket adı"></div><div class="rf"><label>Telefon *</label><input id="dpf_phone" placeholder="05xx xxx xx xx"></div></div>'
+    +'<div class="rf"><label>E-posta</label><input id="dpf_mail" placeholder="ornek@kurum.com"></div>'
+    +'<div class="rf-grid"><div class="rf"><label>Taşınmaz / Varlık Türü *</label><select id="dpf_extra"><option value="">Seçiniz…</option><option>Konut</option><option>Ticari Gayrimenkul</option><option>Arsa / Arazi</option><option>Fabrika / Sanayi Tesisi</option><option>Otel / Turizm Tesisi</option><option>Şirket / Kurumsal Varlık</option></select></div><div class="rf"><label>Değerleme Amacı *</label><select id="dpf_purpose"><option value="">Seçiniz…</option><option>Banka Kredisi / Teminat</option><option>Kentsel Dönüşüm</option><option>Mahkeme / İcra</option><option>Mali Tablo / Bilanço</option><option>Miras / Paylaşım</option><option>Kamulaştırma</option></select></div></div>'
+    +'<div class="rf"><label>Açıklama (opsiyonel)</label><textarea id="dpf_msg" rows="2" placeholder="Taşınmaza dair kısa bilgi (konum, alan, vb.)"></textarea></div>'
+    +'<label class="dp-kvkk"><input type="checkbox" id="dpf_kvkk"> <span>Kişisel verilerimin resmî değerleme süreci kapsamında işlenmesini kabul ediyorum (KVKK).</span></label>'
+    +'<button class="btn btn-primary" style="width:100%;justify-content:center" onclick="degPageFormSubmit(\'basvuru\')">Değerleme Başvurusu Oluştur</button></div>';
+}
+function degPageFormSubmit(kind){
+  var val=function(id){var e=document.getElementById(id);return e?(''+(e.value||'')).trim():'';};
+  var name=val('dpf_name'),phone=val('dpf_phone'),mail=val('dpf_mail'),msg=val('dpf_msg'),extra=val('dpf_extra'),purpose=val('dpf_purpose');
+  var kv=document.getElementById('dpf_kvkk');
+  if(!name||!phone){toast('Lütfen ad/kurum ve telefon girin.');return;}
+  if(kv&&!kv.checked){toast('Lütfen KVKK onayını işaretleyin.');return;}
+  if(typeof submitLead==='function'){
+    try{submitLead({sourcePage:'degerleme',formType:kind,name:name,phone:phone,email:mail,message:msg,
+      extra:{requestedService:extra,purpose:purpose,page:(window._degCurrent||kind)}});}catch(_){}
+  }
+  var labels={'basvuru':'Değerleme başvurunuz alındı; ekibimiz sizinle iletişime geçecek.','kurumsal-teklif':'Kurumsal teklif talebiniz alındı; en kısa sürede dönüş yapılacak.','iletisim':'Mesajınız alındı; teşekkür ederiz.'};
+  toast('✓ '+(labels[kind]||'Talebiniz alındı.'));
+  ['dpf_name','dpf_phone','dpf_mail','dpf_msg','dpf_extra'].forEach(function(i){var e=document.getElementById(i);if(e&&e.tagName!=='SELECT')e.value='';else if(e)e.selectedIndex=0;});
+  var ps=document.getElementById('dpf_purpose');if(ps)ps.selectedIndex=0;
+  if(kv)kv.checked=false;
+}
+window.degPageFormSubmit=degPageFormSubmit;
+/* ---- TEK premium şablon ---- */
+function renderDegPage(slug){
+  var p=DEG_PAGES[slug];if(!p)return;
+  window._degCurrent=slug;
+  var trust=p.group==='Hizmetler'||p.group==='Kurumsal'||p.group==='Başvuru'?_TRUST:['SPK Lisansı','UDES / IVS Uyumlu','Bağımsız & Tarafsız'];
+  /* breadcrumb */
+  var bread='<div class="dp-bread"><div class="wrap"><a onclick="closeDegPage()">Ana Sayfa</a><span class="sep">›</span><b>'+_dgEsc(p.group)+'</b><span class="sep">›</span><b>'+_dgEsc(p.h1)+'</b></div></div>';
+  /* hero */
+  var hero='<section class="dp-hero"><div class="wrap"><div class="eyebrow">'+_dgEsc(p.group)+'</div><h1>'+_dgEsc(p.h1)+'</h1><p class="lead">'+_dgEsc(p.lead)+'</p>'
+    +'<div class="ctas"><button class="btn btn-primary" onclick="openDegPage(\'basvuru\')">Değerleme Başvurusu Oluştur</button><button class="btn btn-line" onclick="openDegPage(\'metodoloji\')">Metodolojiyi İncele</button></div>'
+    +'<div class="dp-trustbar">'+trust.map(function(t){return '<span class="t">'+_CHECK_SVG+' '+_dgEsc(t)+'</span>';}).join('')+'</div></div></section>';
+  /* yasal bilgilendirme bloğu (uzman/sistem ayrımı) */
+  var notice='';
+  if(p.notice){
+    notice='<section class="dp-sec"><div class="wrap"><div class="dp-notice"><div class="ic">'
+      +'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>'
+      +'<div><b>Sistem altyapı hazırlar · raporu SPK lisanslı uzman düzenler</b><p>'+_dgEsc(p.notice)+'</p></div></div></div></section>';
+  }
+  /* kimler için */
+  var kimler='';
+  if(p.kimlerIcin&&p.kimlerIcin.length){
+    kimler='<section class="dp-sec"><div class="wrap"><h2>Kimler İçin?</h2><div class="dp-cards">'
+      +p.kimlerIcin.map(function(c){return '<div class="dp-card"><div class="ic">'+_CHECK_SVG+'</div><b>'+_dgEsc(c[0])+'</b><p>'+_dgEsc(c[1])+'</p></div>';}).join('')
+      +'</div></div></section>';
+  }
+  /* belgeler */
+  var belgeler='';
+  if(p.belgeler&&p.belgeler.length){
+    belgeler='<section class="dp-sec alt"><div class="wrap"><h2>Gerekli Belgeler</h2><p class="sub">Taşınmaz türüne göre belge listesi uyarlanır.</p><ul class="dp-docs">'
+      +p.belgeler.map(function(d){return '<li>'+_CHECK_SVG+'<span>'+_dgEsc(d)+'</span></li>';}).join('')
+      +'</ul></div></section>';
+  }
+  /* süreç */
+  var surec='';
+  if(p.surec&&p.surec.length){
+    surec='<section class="dp-sec"><div class="wrap"><h2>Süreç Nasıl İşler?</h2><p class="sub">Talepten teslime, izlenebilir ve denetlenebilir resmî akış (2–10 iş günü).</p><div class="dp-steps">'
+      +p.surec.map(function(s,i){return '<div class="dp-step"><div class="n">'+(i+1)+'</div><div><b>'+_dgEsc(s.ad)+'</b><p>'+_dgEsc(s.desc)+'</p></div></div>';}).join('')
+      +'</div></div></section>';
+  }
+  /* metodoloji */
+  var meth='';
+  if(p.metodoloji){
+    meth='<section class="dp-sec alt"><div class="wrap"><div class="dp-meth"><div class="mchart">'+_degSvg(p.metodoloji.svg)+'</div>'
+      +'<div class="mtx"><div class="eyebrow">Metodoloji</div><h3>'+_dgEsc(p.metodoloji.baslik)+'</h3><p>'+_dgEsc(p.metodoloji.aciklama)+'</p>'
+      +'<button class="btn btn-line" style="border-color:var(--line)" onclick="openDegPage(\'metodoloji\')">Tüm Metodoloji →</button></div></div></div></section>';
+  }
+  /* bilgi merkezi makaleleri */
+  var arts='';
+  if(p.articles&&p.articles.length){
+    arts='<section class="dp-sec"><div class="wrap"><h2>Makaleler & Rehberler</h2><div class="dp-arts">'
+      +p.articles.map(function(a){return '<div class="dp-art"><div class="ah">'+_degSvg('standart')+'</div><div class="ab"><span class="tag">'+_dgEsc(a.tag)+'</span><b>'+_dgEsc(a.baslik)+'</b><p>'+_dgEsc(a.ozet)+'</p><span class="rt">'+_dgEsc(a.rt)+' okuma</span></div></div>';}).join('')
+      +'</div></div></section>';
+  }
+  /* form */
+  var formSec='';
+  if(p.form){
+    formSec='<section class="dp-sec alt"><div class="wrap"><div class="sec-h" style="margin-bottom:24px"><h2 style="text-align:center">'+_dgEsc(p.h1)+'</h2></div>'+_degFormHTML(p.form)+'</div></section>';
+  }
+  /* SSS */
+  var faq='';
+  if(p.faq&&p.faq.length){
+    faq='<section class="dp-sec"><div class="wrap"><h2 style="text-align:center">Sıkça Sorulan Sorular</h2><div class="dp-faq" style="margin-top:24px">'
+      +p.faq.map(function(f){return '<div class="dp-q"><div class="qh" onclick="this.parentNode.classList.toggle(\'open\')">'+_dgEsc(f.q)+'<span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div><div class="qa">'+_dgEsc(f.a)+'</div></div>';}).join('')
+      +'</div></div></section>';
+  }
+  /* ilgili hizmetler */
+  var related='';
+  if(p.related&&p.related.length){
+    related='<section class="dp-sec alt"><div class="wrap"><h2>İlgili Hizmetler</h2><div class="dp-related" style="margin-top:22px">'
+      +p.related.filter(function(r){return DEG_PAGES[r];}).map(function(r){return '<div class="dp-rel" onclick="openDegPage(\''+r+'\')"><b>'+_dgEsc(DEG_PAGES[r].h1)+'</b><span class="ar">→</span></div>';}).join('')
+      +'</div></div></section>';
+  }
+  /* alt CTA */
+  var cta='<section class="dp-cta"><div class="wrap"><h2>SPK lisanslı resmî değerleme için hazırız</h2><p>Taşınmazınız veya kurumsal varlıklarınız için bağımsız, tarafsız ve denetlenebilir bir değerleme süreci başlatın.</p>'
+    +'<div class="ctas"><button class="btn btn-primary" onclick="openDegPage(\'basvuru\')">Değerleme Başvurusu Oluştur</button><button class="btn btn-line" onclick="openDegPage(\'kurumsal-teklif\')">Kurumsal Teklif Talep Et</button></div></div></section>';
+  var html='<div class="dp-spacer"></div>'+bread+hero+notice+kimler+belgeler+surec+meth+arts+formSec+faq+related+cta+_degFooterHTML();
+  document.getElementById('degPageBody').innerHTML=html;
+  document.getElementById('degPage').scrollTop=0;
+  _degApplySeo(slug,p);
+  _degInjectPageSchema(slug,p);
+}
+/* ---- SEO: title + meta description (geri dönünce reset) ---- */
+var _DEG_BASE_TITLE=document.title;
+var _DEG_BASE_DESC=(function(){var m=document.querySelector('meta[name="description"]');return m?m.getAttribute('content'):'';})();
+function _degSetMeta(name,val){var m=document.querySelector('meta[name="'+name+'"]');if(!m){m=document.createElement('meta');m.setAttribute('name',name);document.head.appendChild(m);}m.setAttribute('content',val);}
+function _degApplySeo(slug,p){document.title=p.seoTitle||(p.h1+' · Meridyen Değerleme');_degSetMeta('description',p.seoDesc||p.lead||_DEG_BASE_DESC);}
+function _degResetSeo(){document.title=_DEG_BASE_TITLE;if(_DEG_BASE_DESC)_degSetMeta('description',_DEG_BASE_DESC);}
+/* ---- sayfa-bazlı JSON-LD (ProfessionalService + Service + FAQPage + BreadcrumbList) ---- */
+function _degClearPageSchema(){document.querySelectorAll('script[data-deg-schema]').forEach(function(s){s.remove();});}
+function _degInjectPageSchema(slug,p){
+  _degClearPageSchema();
+  var origin=(location&&location.origin&&location.origin.indexOf('http')===0)?location.origin:'https://www.meridyendegerleme.com';
+  var pageUrl=origin+'/#/'+slug;
+  var graph=[
+    {'@type':'ProfessionalService','@id':origin+'/#service','name':'Meridyen Gayrimenkul Değerleme A.Ş.','url':origin+'/','areaServed':{'@type':'Country','name':'Türkiye'},'description':'SPK lisanslı, BDDK yetkili, UDES/IVS uyumlu bağımsız taşınmaz değerleme kuruluşu.'},
+    {'@type':'Service','serviceType':p.h1,'name':p.h1,'description':p.seoDesc||p.lead,'url':pageUrl,'areaServed':{'@type':'Country','name':'Türkiye'},'provider':{'@id':origin+'/#service'}},
+    {'@type':'BreadcrumbList','itemListElement':[
+      {'@type':'ListItem','position':1,'name':'Ana Sayfa','item':origin+'/'},
+      {'@type':'ListItem','position':2,'name':p.group},
+      {'@type':'ListItem','position':3,'name':p.h1,'item':pageUrl}
+    ]}
+  ];
+  if(p.faq&&p.faq.length){
+    graph.push({'@type':'FAQPage','mainEntity':p.faq.map(function(f){return {'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}};})});
+  }
+  try{var s=document.createElement('script');s.type='application/ld+json';s.setAttribute('data-deg-schema','1');s.text=JSON.stringify({'@context':'https://schema.org','@graph':graph});document.head.appendChild(s);}catch(e){}
+}
+/* ---- router: aç/kapat + hash ---- */
+function openDegPage(slug){
+  if(!DEG_PAGES[slug])return;
+  renderDegPage(slug);
+  var ov=document.getElementById('degPage');ov.classList.add('on');ov.setAttribute('aria-hidden','false');
+  document.body.classList.add('deg-lock');
+  try{document.getElementById('mnav').classList.remove('open');}catch(e){}
+  if(location.hash!=='#/'+slug){try{history.replaceState(null,'','#/'+slug);}catch(e){location.hash='#/'+slug;}}
+  window.scrollTo(0,0);
+}
+function closeDegPage(){
+  var ov=document.getElementById('degPage');if(ov){ov.classList.remove('on');ov.setAttribute('aria-hidden','true');}
+  document.body.classList.remove('deg-lock');
+  _degClearPageSchema();_degResetSeo();window._degCurrent=null;
+  if(location.hash.indexOf('#/')===0){try{history.replaceState(null,'',location.pathname+location.search);}catch(e){location.hash='';}}
+}
+window.openDegPage=openDegPage;window.closeDegPage=closeDegPage;window.renderDegPage=renderDegPage;
+function _degRouteFromHash(){var h=location.hash||'';if(h.indexOf('#/')===0){var slug=h.slice(2);if(DEG_PAGES[slug])openDegPage(slug);}}
+window.addEventListener('hashchange',function(){var h=location.hash||'';if(h.indexOf('#/')===0){var slug=h.slice(2);if(DEG_PAGES[slug]){renderDegPage(slug);var ov=document.getElementById('degPage');ov.classList.add('on');ov.setAttribute('aria-hidden','false');document.body.classList.add('deg-lock');}}else{if(document.getElementById('degPage').classList.contains('on'))closeDegPage();}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.getElementById('degPage')&&document.getElementById('degPage').classList.contains('on'))closeDegPage();});
+
+/* ---- başlatma (load) ---- */
+window.addEventListener('load',function(){try{
+  initSaaSTheme();mountChrome();applySaaSSettings();saasPortalRenderNav();
   renderAsset('gayrimenkul');renderMethod('maliyet');
+  _degRouteFromHash();
   /* Ön yüzde harici buton YOK — yönetim yalnızca Footer › Yönetim Paneli › şifreli giriş ile.
      SuperAdmin yalnızca gizli kısayol (Ctrl+Shift+M) ile erişilir. */
 }catch(e){console.warn('SaaS init',e);}});
