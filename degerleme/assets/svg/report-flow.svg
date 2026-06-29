@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 180" role="img" aria-label="Değerleme rapor süreci: sistem altyapısı, SPK lisanslı uzman atama, saha kontrolü, belediye ve tapu incelemesi, imzalı resmî rapor">
+  <defs>
+    <marker id="ah" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#94a3b8"/></marker>
+  </defs>
+  <style>
+    .lbl{font-family:Poppins,sans-serif;font-weight:600;font-size:13px;fill:#0f172a}
+    .sub{font-family:Inter,sans-serif;font-size:10.5px;fill:#64748b}
+    .tag{font-family:Inter,sans-serif;font-weight:600;font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+  </style>
+  <!-- bağlantılar -->
+  <g stroke="#94a3b8" stroke-width="2" marker-end="url(#ah)" fill="none">
+    <line x1="168" y1="78" x2="196" y2="78"/><line x1="356" y1="78" x2="384" y2="78"/>
+    <line x1="544" y1="78" x2="572" y2="78"/><line x1="732" y1="78" x2="760" y2="78"/>
+  </g>
+  <!-- 1 Sistem -->
+  <g><rect x="18" y="40" width="150" height="76" rx="12" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <rect x="34" y="56" width="22" height="22" rx="5" fill="#334155"/>
+    <text class="lbl" x="40" y="98">Sistem Altyapısı</text><text class="sub" x="40" y="113">Başvuru · veri · ön analiz</text>
+    <text class="tag" x="62" y="71" fill="#fff">1</text></g>
+  <!-- 2 Uzman atama -->
+  <g><rect x="206" y="40" width="150" height="76" rx="12" fill="#eaf0ff" stroke="#2f5bd0"/>
+    <circle cx="240" cy="67" r="12" fill="#1e3a8a"/>
+    <text class="lbl" x="228" y="98">SPK Lisanslı Uzman</text><text class="sub" x="228" y="113">Dosya atama</text></g>
+  <!-- 3 Saha -->
+  <g><rect x="394" y="40" width="150" height="76" rx="12" fill="#eaf0ff" stroke="#2f5bd0"/>
+    <path d="M428 72c0-9 7-9 7-16M444 72c0-9 7-9 7-16" stroke="#1e3a8a" stroke-width="2" fill="none"/>
+    <text class="lbl" x="416" y="98">Saha Kontrolü</text><text class="sub" x="416" y="113">Yerinde inceleme</text></g>
+  <!-- 4 Belediye/Tapu -->
+  <g><rect x="582" y="40" width="150" height="76" rx="12" fill="#eaf0ff" stroke="#2f5bd0"/>
+    <path d="M610 70h28M610 64l14-10 14 10" stroke="#1e3a8a" stroke-width="2" fill="none"/>
+    <text class="lbl" x="604" y="98">Belediye &amp; Tapu</text><text class="sub" x="604" y="113">Yasal &amp; imar teyidi</text></g>
+  <!-- 5 İmzalı rapor -->
+  <g><rect x="770" y="40" width="152" height="76" rx="12" fill="#0b1220" stroke="#b4975a"/>
+    <path d="M800 58h26v22h-26z" fill="none" stroke="#b4975a" stroke-width="2"/><path d="M806 76l5 5 9-10" stroke="#9fe6c0" stroke-width="2" fill="none"/>
+    <text class="lbl" x="796" y="98" fill="#fff">İmzalı Resmî Rapor</text><text class="sub" x="796" y="113" fill="#bcd0ff">Sorumlu uzman imzası</text></g>
+  <!-- üst etiket bandı -->
+  <text class="tag" x="18" y="26" fill="#64748b">PLATFORM</text>
+  <text class="tag" x="206" y="26" fill="#1e3a8a">SPK LİSANSLI DEĞERLEME UZMANI SÜRECİ</text>
+</svg>

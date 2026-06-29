@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 150" role="img" aria-label="Başvuru süreci: belge hazırlığı, başvuru, uzman atama, inceleme ve değerlendirme, rapor teslimi">
+  <style>
+    .n{font-family:Poppins,sans-serif;font-weight:600;font-size:13px;fill:#0f172a}
+    .s{font-family:Inter,sans-serif;font-size:10.5px;fill:#64748b}
+    .num{font-family:Poppins,sans-serif;font-weight:800;font-size:14px;fill:#fff}
+  </style>
+  <line x1="80" y1="46" x2="860" y2="46" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="3 6"/>
+  <g>
+    <circle cx="80" cy="46" r="26" fill="#1e3a8a"/><text class="num" x="80" y="51" text-anchor="middle">1</text>
+    <text class="n" x="80" y="96" text-anchor="middle">Belge Hazırlığı</text><text class="s" x="80" y="113" text-anchor="middle">Tapu · ruhsat · proje</text>
+  </g>
+  <g>
+    <circle cx="275" cy="46" r="26" fill="#2f5bd0"/><text class="num" x="275" y="51" text-anchor="middle">2</text>
+    <text class="n" x="275" y="96" text-anchor="middle">Başvuru</text><text class="s" x="275" y="113" text-anchor="middle">Varlık türü &amp; amaç</text>
+  </g>
+  <g>
+    <circle cx="470" cy="46" r="26" fill="#2f5bd0"/><text class="num" x="470" y="51" text-anchor="middle">3</text>
+    <text class="n" x="470" y="96" text-anchor="middle">Uzman Atama</text><text class="s" x="470" y="113" text-anchor="middle">SPK lisanslı uzman</text>
+  </g>
+  <g>
+    <circle cx="665" cy="46" r="26" fill="#2f5bd0"/><text class="num" x="665" y="51" text-anchor="middle">4</text>
+    <text class="n" x="665" y="96" text-anchor="middle">İnceleme</text><text class="s" x="665" y="113" text-anchor="middle">Saha · emsal · analiz</text>
+  </g>
+  <g>
+    <circle cx="860" cy="46" r="26" fill="#0b1220" stroke="#b4975a" stroke-width="2"/><text class="num" x="860" y="51" text-anchor="middle">5</text>
+    <text class="n" x="860" y="96" text-anchor="middle">İmzalı Rapor</text><text class="s" x="860" y="113" text-anchor="middle">Teslim</text>
+  </g>
+</svg>

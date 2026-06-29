@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 300" role="img" aria-label="Bağımsız değerleme altyapısı: resmî rapor, veri analizi ve SPK lisanslı uzman onayı">
+  <rect x="22" y="26" width="196" height="248" rx="14" fill="#ffffff" opacity="0.06" stroke="rgba(188,208,255,.35)" stroke-width="1.5"/>
+  <g stroke="#bcd0ff" stroke-width="2.4" stroke-linecap="round">
+    <path d="M48 64h150M48 90h112M48 116h150"/>
+  </g>
+  <rect x="48" y="150" width="150" height="96" rx="8" fill="rgba(47,91,208,.18)" stroke="rgba(188,208,255,.5)"/>
+  <g><rect x="64" y="206" width="20" height="28" rx="3" fill="#2f5bd0"/><rect x="96" y="190" width="20" height="44" rx="3" fill="#2f5bd0"/><rect x="128" y="176" width="20" height="58" rx="3" fill="#2f5bd0"/><rect x="160" y="164" width="20" height="70" rx="3" fill="#2f5bd0"/></g>
+  <path d="M64 208 96 192 128 178 160 166" fill="none" stroke="#9fe6c0" stroke-width="2.6"/>
+  <circle cx="304" cy="84" r="52" fill="#0b1220" stroke="#b4975a" stroke-width="2"/>
+  <text x="304" y="78" text-anchor="middle" fill="#bcd0ff" font-family="Poppins,sans-serif" font-weight="700" font-size="17">SPK</text>
+  <text x="304" y="98" text-anchor="middle" fill="#9fe6c0" font-family="Inter,sans-serif" font-size="11">LİSANSLI</text>
+  <g stroke="rgba(188,208,255,.5)" stroke-width="1.5" fill="none"><circle cx="276" cy="208" r="26"/><circle cx="332" cy="208" r="26"/><circle cx="304" cy="250" r="26"/></g>
+  <g font-family="Inter,sans-serif" font-size="11" fill="#bcd0ff" text-anchor="middle"><text x="276" y="212">TDUB</text><text x="332" y="212">IVS</text><text x="304" y="254">UDES</text></g>
+</svg>
