@@ -7,7 +7,7 @@ const navHTML = '<nav class="nav" id="nav">'
   + '<a href="hizmetler.html">Hizmetlerimiz</a>'
   + '<a href="neden-biz.html">Neden Biz</a>'
   + '<a href="referans.html">Referans</a>'
-  + '<a href="index.html#blog">Blog</a>'
+  + '<a href="blog.html">Blog</a>'
   + '<a href="basvuru.html">Talep</a>'
   + '</nav>';
 const ctaHTML = '<div class="hdr-cta">'

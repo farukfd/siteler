@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -169,7 +170,8 @@ img,svg{display:block;max-width:100%}
 
 /* ---- Footer ---- */
 .ft{background:var(--navy);color:#cdd8ea;padding:58px 0 26px}
-.ft .cols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px}
+.ft .cols{display:grid;grid-template-columns:1.5fr 1fr 1.05fr 1fr 1.05fr;gap:28px}
+@media(max-width:1080px){.ft .cols{grid-template-columns:1.4fr 1fr 1fr}}
 @media(max-width:860px){.ft .cols{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.ft .cols{grid-template-columns:1fr}}
 .ft .brand b{color:#fff}.ft .brand span{color:#8fa6c8}
@@ -704,6 +706,43 @@ img,svg{display:block;max-width:100%}
 .cookie-bar .cb-x{background:transparent;border:1px solid rgba(255,255,255,.25);color:#cdd8ea;border-radius:9px;padding:9px 14px;font-family:var(--head);font-weight:600;font-size:13px;cursor:pointer}
 .cookie-bar .cb-ok{background:linear-gradient(135deg,var(--accent),var(--accent-2));border:0;color:#fff;border-radius:9px;padding:9px 16px;font-family:var(--head);font-weight:600;font-size:13px;cursor:pointer}
 
+/* ============================================================
+   Sertifikalar + form kartı + kariyer + blog (ek) · 2026
+   ============================================================ */
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.cert{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 20px 20px;text-align:center;transition:transform .22s,box-shadow .22s,border-color .22s;overflow:hidden}
+.cert:before{content:"";position:absolute;left:0;top:0;width:100%;height:4px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+.cert:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:#cdd8ea}
+.cert .seal{width:62px;height:62px;margin:4px auto 14px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--accent));display:grid;place-items:center;color:#fff;box-shadow:0 12px 26px -12px rgba(30,58,138,.6)}
+.cert .seal svg{width:28px;height:28px}
+.cert b{font-family:var(--head);font-size:15px;display:block;margin-bottom:5px}
+.cert span{font-size:12.5px;color:var(--ink-2);line-height:1.5;display:block}
+.cert .no{font-size:11px;color:var(--muted);margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+
+/* Basit form kartı (şikayet/kariyer) */
+.frm{max-width:700px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px 26px;box-shadow:var(--shadow-sm)}
+.frm .bv-row{margin-bottom:0}
+.frm .btn{width:100%;justify-content:center;margin-top:8px}
+.frm-err{font-size:12.5px;color:#dc2626;min-height:15px;margin-top:6px}
+.frm-ok{display:none;text-align:center;padding:34px 20px}
+.frm-ok.on{display:block;animation:gmpop .35s ease}
+.frm-ok .okc{width:70px;height:70px;border-radius:50%;background:rgba(31,158,117,.12);border:2px solid var(--teal);display:grid;place-items:center;color:var(--teal);margin:0 auto 16px}
+.frm-ok h3{font-size:21px;margin-bottom:8px}
+.frm-ok p{color:var(--ink-2);font-size:14px;max-width:44ch;margin:0 auto}
+.frm-ok .tno{display:inline-block;font-family:var(--head);font-weight:700;color:var(--accent);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 15px;margin-top:12px}
+
+/* Kariyer açık pozisyon satırı */
+.job{display:flex;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:12px;transition:.2s}
+.job:hover{border-color:#cdd8ea;box-shadow:var(--shadow-sm);transform:translateY(-2px)}
+.job .ji{width:46px;height:46px;flex:none;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff}
+.job b{font-family:var(--head);font-size:15px;display:block}
+.job span{font-size:12.5px;color:var(--ink-2)}
+.job .tag{margin-left:auto;flex:none;font-size:11.5px;font-weight:600;color:var(--accent);background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:6px 12px}
+@media(max-width:560px){.job{flex-wrap:wrap}.job .tag{margin-left:0}}
+
+/* Blog büyük grid (blog.html) */
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+
 </style>
 </head>
 <body>
@@ -714,7 +753,7 @@ img,svg{display:block;max-width:100%}
       <span class="mk">M</span>
       <span><b>Meridyen Değerleme</b><span>SPK Lisanslı Değerleme</span></span>
     </a>
-    <nav class="nav" id="nav"><a href="hizmetler.html">Hizmetlerimiz</a><a href="neden-biz.html">Neden Biz</a><a href="referans.html">Referans</a><a href="index.html#blog">Blog</a><a href="basvuru.html">Talep</a></nav>
+    <nav class="nav" id="nav"><a href="hizmetler.html">Hizmetlerimiz</a><a href="neden-biz.html">Neden Biz</a><a href="referans.html">Referans</a><a href="blog.html">Blog</a><a href="basvuru.html">Talep</a></nav>
     <div class="hdr-cta"><a class="nav-wa" href="https://wa.me/905000000000" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg></a><a class="btn btn-line btn-sm js-giris" href="#giris">Giriş</a><button class="burger" id="burger" aria-label="Menü"><span></span><span></span><span></span></button></div>
   </div>
 </header>
@@ -775,8 +814,9 @@ img,svg{display:block;max-width:100%}
         <p>SPK lisanslı, BDDK yetkili bağımsız gayrimenkul ve varlık değerleme kuruluşu. Resmî rapor SPK lisanslı uzman tarafından hazırlanır ve imzalanır.</p>
       </div>
       <div><h4>Hizmetler</h4><ul><li><a href="hizmetler.html">Rapor Türleri</a></li><li><a href="metodoloji.html">Metodoloji</a></li><li><a href="basvuru.html">Başvuru</a></li><li><a class="wa-quick" href="https://wa.me/905000000000?text=Merhaba%2C%20de%C4%9Ferleme%20talebi%20olu%C5%9Fturmak%20istiyorum." target="_blank" rel="noopener noreferrer">WhatsApp Hızlı Talep</a></li></ul></div>
-      <div><h4>Kurumsal</h4><ul><li><a href="spk-guven-merkezi.html">SPK Güven Merkezi</a></li><li><a href="raporu-kim-imzalar.html">Raporu Kim İmzalar?</a></li><li><a href="organizasyon-semasi.html">Organizasyon Şeması</a></li><li><a href="iletisim.html">İletişim</a></li></ul></div>
-      <div><h4>Bilgi &amp; Yasal</h4><ul><li><a href="sss.html">Sıkça Sorulan Sorular</a></li><li><a href="surekli-bilgilendirme.html">Sürekli Bilgilendirme</a></li><li><a href="bilgi-servisi.html">Bilgi Servisi Hizmetleri</a></li><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="gizlilik.html">Gizlilik Politikası</a></li><li><a href="cerez.html">Çerez Politikası</a></li></ul></div>
+      <div><h4>Kurumsal</h4><ul><li><a href="spk-guven-merkezi.html">SPK Güven Merkezi</a></li><li><a href="raporu-kim-imzalar.html">Raporu Kim İmzalar?</a></li><li><a href="organizasyon-semasi.html">Organizasyon Şeması</a></li><li><a href="etik-ilkeler.html">Etik İlkeler</a></li><li><a href="sertifikalar.html">Sertifikalar & Belgeler</a></li><li><a href="bilgi-servisi.html">Bilgi Servisi Hizmetleri</a></li></ul></div>
+      <div><h4>Bilgi &amp; Destek</h4><ul><li><a href="blog.html">Blog</a></li><li><a href="sss.html">Sıkça Sorulan Sorular</a></li><li><a href="sikayet.html">Müşteri Şikayet &amp; İtiraz</a></li><li><a href="kariyer.html">Kariyer</a></li><li><a href="iletisim.html">İletişim</a></li></ul></div>
+      <div><h4>Yasal &amp; Künye</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="gizlilik.html">Gizlilik Politikası</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="bilgi-toplumu.html">Bilgi Toplumu Hizmetleri</a></li><li><a href="surekli-bilgilendirme.html">Sürekli Bilgilendirme</a></li></ul></div>
     </div>
     <div class="ft-members">
       <div class="mh">Üyesi Olduğumuz &amp; Yetkili Kuruluşlar</div>
@@ -791,6 +831,7 @@ img,svg{display:block;max-width:100%}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
 
 
 <script id="deg-inline-js">
@@ -1215,6 +1256,38 @@ img,svg{display:block;max-width:100%}
     }).join('');
   }
 
+  /* ---- Blog sayfası (#blogGrid) — emlakekspertizi.com/blog API'den (fallback statik) ---- */
+  async function degBlogPageInit() {
+    var grid = document.getElementById('blogGrid'); if (!grid) return;
+    var r = await proxApi('/api/v1/tenant/blog?limit=12');
+    if (!r || r.fallback || !Array.isArray(r.posts) || !r.posts.length) return; // fallback: statik kartlar kalır
+    grid.innerHTML = r.posts.map(function (p) {
+      return '<article class="blogcard"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>'
+        + '<div class="bc-b"><span class="tagx">' + degEsc(p.category || 'Bilgi Merkezi') + '</span><h3>' + degEsc(p.title || '') + '</h3><p>' + degEsc(p.excerpt || '') + '</p>'
+        + '<a class="more" href="' + (p.url || 'https://www.emlakekspertizi.com/blog') + '" target="_blank" rel="noopener noreferrer">Devamını oku →</a></div></article>';
+    }).join('');
+  }
+
+  /* ---- Şikayet & İtiraz formu (#skForm) ---- */
+  function degSikayetInit() {
+    var btn = document.getElementById('skBtn'); if (!btn) return;
+    btn.addEventListener('click', async function () {
+      function g(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+      var name = g('sk_name'), phone = g('sk_phone'), konu = g('sk_konu'), msg = g('sk_msg');
+      var err = document.getElementById('sk_err'); err.textContent = '';
+      if (!name) { err.textContent = '⚠ Ad soyad gereklidir.'; return; }
+      if (!/[0-9]{10,}/.test(phone.replace(/\D/g, '')) && !/.+@.+\..+/.test(g('sk_mail'))) { err.textContent = '⚠ Telefon veya e-posta gereklidir.'; return; }
+      if (!msg) { err.textContent = '⚠ Lütfen talebinizi açıklayın.'; return; }
+      btn.disabled = true; btn.textContent = 'Gönderiliyor…';
+      await proxApi('/api/v1/tenant/lead', { method: 'POST', body: { type: 'sikayet-itiraz', source: 'sikayet', name: name, phone: phone, email: g('sk_mail'), file_no: g('sk_dosya'), konu: konu, message: msg } });
+      btn.disabled = false; btn.textContent = 'Gönder →';
+      document.getElementById('skForm').style.display = 'none';
+      var ok = document.getElementById('skOk'); var tno = 'BSV-2026-' + String(1000 + Math.floor(Math.random() * 8999));
+      var t = document.getElementById('skTno'); if (t) t.textContent = tno;
+      ok.classList.add('on');
+    });
+  }
+
   /* ===== Teklif Al modalı (hizmet kartlarından) ===== */
   function teklifHTML() {
     var doc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>';
@@ -1302,7 +1375,7 @@ img,svg{display:block;max-width:100%}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>

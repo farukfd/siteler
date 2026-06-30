@@ -419,6 +419,38 @@
     }).join('');
   }
 
+  /* ---- Blog sayfası (#blogGrid) — emlakekspertizi.com/blog API'den (fallback statik) ---- */
+  async function degBlogPageInit() {
+    var grid = document.getElementById('blogGrid'); if (!grid) return;
+    var r = await proxApi('/api/v1/tenant/blog?limit=12');
+    if (!r || r.fallback || !Array.isArray(r.posts) || !r.posts.length) return; // fallback: statik kartlar kalır
+    grid.innerHTML = r.posts.map(function (p) {
+      return '<article class="blogcard"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>'
+        + '<div class="bc-b"><span class="tagx">' + degEsc(p.category || 'Bilgi Merkezi') + '</span><h3>' + degEsc(p.title || '') + '</h3><p>' + degEsc(p.excerpt || '') + '</p>'
+        + '<a class="more" href="' + (p.url || 'https://www.emlakekspertizi.com/blog') + '" target="_blank" rel="noopener noreferrer">Devamını oku →</a></div></article>';
+    }).join('');
+  }
+
+  /* ---- Şikayet & İtiraz formu (#skForm) ---- */
+  function degSikayetInit() {
+    var btn = document.getElementById('skBtn'); if (!btn) return;
+    btn.addEventListener('click', async function () {
+      function g(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+      var name = g('sk_name'), phone = g('sk_phone'), konu = g('sk_konu'), msg = g('sk_msg');
+      var err = document.getElementById('sk_err'); err.textContent = '';
+      if (!name) { err.textContent = '⚠ Ad soyad gereklidir.'; return; }
+      if (!/[0-9]{10,}/.test(phone.replace(/\D/g, '')) && !/.+@.+\..+/.test(g('sk_mail'))) { err.textContent = '⚠ Telefon veya e-posta gereklidir.'; return; }
+      if (!msg) { err.textContent = '⚠ Lütfen talebinizi açıklayın.'; return; }
+      btn.disabled = true; btn.textContent = 'Gönderiliyor…';
+      await proxApi('/api/v1/tenant/lead', { method: 'POST', body: { type: 'sikayet-itiraz', source: 'sikayet', name: name, phone: phone, email: g('sk_mail'), file_no: g('sk_dosya'), konu: konu, message: msg } });
+      btn.disabled = false; btn.textContent = 'Gönder →';
+      document.getElementById('skForm').style.display = 'none';
+      var ok = document.getElementById('skOk'); var tno = 'BSV-2026-' + String(1000 + Math.floor(Math.random() * 8999));
+      var t = document.getElementById('skTno'); if (t) t.textContent = tno;
+      ok.classList.add('on');
+    });
+  }
+
   /* ===== Teklif Al modalı (hizmet kartlarından) ===== */
   function teklifHTML() {
     var doc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>';
@@ -506,5 +538,5 @@
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
