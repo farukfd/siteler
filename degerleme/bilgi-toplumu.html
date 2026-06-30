@@ -10,6 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -823,9 +825,9 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="hero" style="--x:0"><div class="wrap in" style="padding:44px 0 40px">
   <div class="hero-main">
-    <span class="eyebrow">Yasal · Künye</span>
-    <h1>Bilgi Toplumu <em>Hizmetleri</em></h1>
-    <p class="lead">6563 sayılı Kanun ve ilgili mevzuat gereği kamuya açık şirket künyemiz ve tescil bilgilerimiz.</p>
+    <span data-ce="bilgi-toplumu.heroEyebrow" class="eyebrow">Yasal · Künye</span>
+    <h1 data-ce="bilgi-toplumu.heroTitle">Bilgi Toplumu <em>Hizmetleri</em></h1>
+    <p data-ce="bilgi-toplumu.heroLead" class="lead">6563 sayılı Kanun ve ilgili mevzuat gereği kamuya açık şirket künyemiz ve tescil bilgilerimiz.</p>
   </div>
   <aside class="hero-panel" style="animation:hzFloat 6s ease-in-out infinite"><div class="cap">Resmî Künye</div>
     <svg class="pv" viewBox="0 0 380 300" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Şirket künyesi">
@@ -840,7 +842,7 @@ body.crm{background:var(--surface);padding-top:0}
 </div></section>
 
 <section class="sec" id="kunye"><div class="wrap">
-  <div class="sec-h reveal"><span class="eyebrow">Şirket Künyesi</span><h2>Bilgi toplumu hizmetlerine ilişkin bilgiler</h2><p>Aşağıdaki bilgiler kurum yönetim panelinden güncellenir.</p></div>
+  <div class="sec-h reveal"><span class="eyebrow">Şirket Künyesi</span><h2 data-ce="bilgi-toplumu.sec1Title">Bilgi toplumu hizmetlerine ilişkin bilgiler</h2><p data-ce="bilgi-toplumu.sec1Lead">Aşağıdaki bilgiler kurum yönetim panelinden güncellenir.</p></div>
   <div class="disc-table reveal" style="max-width:880px;margin:0 auto">
     <div class="r"><div class="k">Ticaret Unvanı</div><div class="v">Meridyen Gayrimenkul Değerleme A.Ş.</div></div>
     <div class="r"><div class="k">SPK Değerleme Lisansı</div><div class="v">DD-2024-0142</div></div>
@@ -858,7 +860,7 @@ body.crm{background:var(--surface);padding-top:0}
   <div class="legal-note" style="max-width:880px;margin:18px auto 0">Bu künye bilgilendirme amaçlıdır ve kurum yönetim panelinden (Giriş → İletişim &amp; Adres / Sayfa İçerikleri) güncellenebilir.</div>
 </div></section>
 
-<section class="ctaband" id="talep"><div class="wrap in"><div><h2>Şeffaf ve tescilli bir kuruluş</h2><p>Kurumsal bilgilerimiz hakkında her sorunuz için bize ulaşın.</p></div><a class="btn btn-ghost-light" href="iletisim.html">İletişim</a></div></section>
+<section class="ctaband" id="talep"><div class="wrap in"><div><h2 data-ce="bilgi-toplumu.ctaTitle">Şeffaf ve tescilli bir kuruluş</h2><p data-ce="bilgi-toplumu.ctaText">Kurumsal bilgilerimiz hakkında her sorunuz için bize ulaşın.</p></div><a class="btn btn-ghost-light" href="iletisim.html">İletişim</a></div></section>
 
 <footer class="ft">
   <div class="wrap">
@@ -885,6 +887,8 @@ body.crm{background:var(--surface);padding-top:0}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
+
 
 
 <script id="deg-inline-js">
@@ -1258,6 +1262,13 @@ body.crm{background:var(--surface);padding-top:0}
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -1453,7 +1464,7 @@ body.crm{background:var(--surface);padding-top:0}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>

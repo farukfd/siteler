@@ -15,6 +15,8 @@
 
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -830,9 +832,9 @@ body.crm{background:var(--surface);padding-top:0}
 <section class="hero" style="--x:0">
   <div class="wrap in" style="padding:46px 0 44px">
     <div class="hero-main">
-      <span class="eyebrow">Kurumsal · Şeffaflık</span>
-      <h1>Sürekli Bilgilendirme &amp; <em>kurumsal künye</em></h1>
-      <p class="lead">Kamuyu sürekli bilgilendirme ilkesi gereği; şirket bilgilerimiz, lisans ve yetki durumumuz, ortaklık yapımız ve bağımsızlık taahhüdümüz şeffaf biçimde aşağıda yer alır.</p>
+      <span data-ce="surekli-bilgilendirme.heroEyebrow" class="eyebrow">Kurumsal · Şeffaflık</span>
+      <h1 data-ce="surekli-bilgilendirme.heroTitle">Sürekli Bilgilendirme &amp; <em>kurumsal künye</em></h1>
+      <p data-ce="surekli-bilgilendirme.heroLead" class="lead">Kamuyu sürekli bilgilendirme ilkesi gereği; şirket bilgilerimiz, lisans ve yetki durumumuz, ortaklık yapımız ve bağımsızlık taahhüdümüz şeffaf biçimde aşağıda yer alır.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="iletisim.html">Bize Ulaşın</a>
         <a class="btn btn-ghost-light" href="spk-guven-merkezi.html">SPK Güven Merkezi</a>
@@ -859,7 +861,7 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="sec" id="kunye">
   <div class="wrap">
-    <div class="sec-h reveal"><span class="eyebrow">Şirket Künyesi</span><h2>Kurumsal bilgiler</h2><p>Aşağıdaki bilgiler kurum yönetim panelinden güncellenir ve kamuyla sürekli paylaşılır.</p></div>
+    <div class="sec-h reveal"><span class="eyebrow">Şirket Künyesi</span><h2 data-ce="surekli-bilgilendirme.sec1Title">Kurumsal bilgiler</h2><p data-ce="surekli-bilgilendirme.sec1Lead">Aşağıdaki bilgiler kurum yönetim panelinden güncellenir ve kamuyla sürekli paylaşılır.</p></div>
     <div class="disc-table reveal" style="max-width:880px;margin:0 auto">
       <div class="r"><div class="k">Ticaret Unvanı</div><div class="v">Meridyen Gayrimenkul Değerleme A.Ş.</div></div>
       <div class="r"><div class="k">SPK Değerleme Lisansı</div><div class="v">DD-2024-0142 (Sermaye Piyasası Kurulu listesinde)</div></div>
@@ -876,7 +878,7 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="sec" id="beyan" style="background:var(--surface)">
   <div class="wrap">
-    <div class="sec-h reveal"><span class="eyebrow">Taahhütler</span><h2>Bağımsızlık, etik ve veri güvenliği beyanı</h2></div>
+    <div class="sec-h reveal"><span class="eyebrow">Taahhütler</span><h2 data-ce="surekli-bilgilendirme.sec2Title">Bağımsızlık, etik ve veri güvenliği beyanı</h2></div>
     <div class="nb-why">
       <div class="nb-w reveal"><div class="wi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Bağımsızlık &amp; Tarafsızlık</h3><p>Değerleme; talep eden ve işlemin taraflarından bağımsız, çıkar çatışmasından arınmış biçimde yürütülür.</p></div>
       <div class="nb-w reveal d1"><div class="wi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16"/><path d="M8 16l4-5 3 3 5-7"/></svg></div><h3>Mevzuat Uyumu</h3><p>SPK değerleme mevzuatı, TDUB meslek kuralları ve UDES/IVS standartlarına tam uyum esastır.</p></div>
@@ -893,7 +895,7 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="ctaband" id="talep">
   <div class="wrap in">
-    <div><h2>Şeffaflık ve güven esastır</h2><p>Kurumsal bilgilerimiz ve süreçlerimiz hakkında her sorunuz için bize ulaşın.</p></div>
+    <div><h2 data-ce="surekli-bilgilendirme.ctaTitle">Şeffaflık ve güven esastır</h2><p data-ce="surekli-bilgilendirme.ctaText">Kurumsal bilgilerimiz ve süreçlerimiz hakkında her sorunuz için bize ulaşın.</p></div>
     <a class="btn btn-ghost-light" href="iletisim.html">İletişime Geçin</a>
   </div>
 </section>
@@ -923,6 +925,8 @@ body.crm{background:var(--surface);padding-top:0}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
+
 
 
 
@@ -1301,6 +1305,13 @@ body.crm{background:var(--surface);padding-top:0}
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -1496,7 +1507,7 @@ body.crm{background:var(--surface);padding-top:0}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>

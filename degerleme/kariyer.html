@@ -10,6 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -823,9 +825,9 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="hero" style="--x:0"><div class="wrap in" style="padding:44px 0 40px">
   <div class="hero-main">
-    <span class="eyebrow">Kariyer · İnsan Kaynakları</span>
-    <h1>Değer üreten ekibin <em>bir parçası olun</em></h1>
-    <p class="lead">Bağımsızlığı, mesleki gelişimi ve etik değerleri merkeze alan bir ekipte; SPK lisanslı uzmanlık ve saha kariyeri fırsatları sizi bekliyor.</p>
+    <span data-ce="kariyer.heroEyebrow" class="eyebrow">Kariyer · İnsan Kaynakları</span>
+    <h1 data-ce="kariyer.heroTitle">Değer üreten ekibin <em>bir parçası olun</em></h1>
+    <p data-ce="kariyer.heroLead" class="lead">Bağımsızlığı, mesleki gelişimi ve etik değerleri merkeze alan bir ekipte; SPK lisanslı uzmanlık ve saha kariyeri fırsatları sizi bekliyor.</p>
     <div class="hero-cta"><a class="btn btn-primary" href="#basvur">Başvuru Yap</a><a class="btn btn-ghost-light" href="neden-biz.html">Neden Biz</a></div>
   </div>
   <aside class="hero-panel" style="animation:hzFloat 6s ease-in-out infinite"><div class="cap">Çalışma Kültürü</div>
@@ -841,7 +843,7 @@ body.crm{background:var(--surface);padding-top:0}
 </div></section>
 
 <section class="sec" id="acik"><div class="wrap">
-  <div class="sec-h reveal"><span class="eyebrow">Açık Pozisyonlar</span><h2>Bize katılın</h2><p>Uygun pozisyon bulamasanız da CV'nizi gönderebilirsiniz; uygun fırsat doğduğunda sizinle iletişime geçeriz.</p></div>
+  <div class="sec-h reveal"><span class="eyebrow">Açık Pozisyonlar</span><h2 data-ce="kariyer.sec1Title">Bize katılın</h2><p data-ce="kariyer.sec1Lead">Uygun pozisyon bulamasanız da CV'nizi gönderebilirsiniz; uygun fırsat doğduğunda sizinle iletişime geçeriz.</p></div>
   <div class="reveal" style="max-width:780px;margin:0 auto">
     <div class="job"><div class="ji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><div><b>SPK Lisanslı Gayrimenkul Değerleme Uzmanı</b><span>SPL lisanslı · saha ve raporlama</span></div><span class="tag">Tam zamanlı</span></div>
     <div class="job"><div class="ji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7Z"/><circle cx="12" cy="9" r="2.5"/></svg></div><div><b>Saha Değerleme Uzman Yardımcısı</b><span>Yerinde tespit, ölçüm ve belge takibi</span></div><span class="tag">Tam zamanlı</span></div>
@@ -851,7 +853,7 @@ body.crm{background:var(--surface);padding-top:0}
 </div></section>
 
 <section class="sec" id="basvur" style="background:var(--surface)"><div class="wrap">
-  <div class="sec-h reveal"><span class="eyebrow">Başvuru</span><h2>CV & başvuru</h2><p>Bilgilerinizi bırakın; insan kaynakları ekibimiz sizinle iletişime geçsin.</p></div>
+  <div class="sec-h reveal"><span class="eyebrow">Başvuru</span><h2 data-ce="kariyer.sec2Title">CV & başvuru</h2><p data-ce="kariyer.sec2Lead">Bilgilerinizi bırakın; insan kaynakları ekibimiz sizinle iletişime geçsin.</p></div>
   <div class="frm reveal">
     <div id="skForm">
       <div class="bv-row"><div class="bv-f"><label>Ad Soyad</label><input id="sk_name" placeholder="Ad Soyad"></div><div class="bv-f"><label>Telefon</label><input id="sk_phone" type="tel" inputmode="tel" placeholder="05__ ___ __ __"></div></div>
@@ -896,6 +898,8 @@ body.crm{background:var(--surface);padding-top:0}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
+
 
 
 <script id="deg-inline-js">
@@ -1269,6 +1273,13 @@ body.crm{background:var(--surface);padding-top:0}
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -1464,7 +1475,7 @@ body.crm{background:var(--surface);padding-top:0}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>

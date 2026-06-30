@@ -11,6 +11,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -826,9 +828,9 @@ body.crm{background:var(--surface);padding-top:0}
 <section class="hero" style="--x:0">
   <div class="wrap in" style="padding:46px 0 42px">
     <div class="hero-main">
-      <span class="eyebrow">Blog & Bilgi Merkezi</span>
-      <h1>Değerleme dünyasından <em>güncel bilgiler</em></h1>
-      <p class="lead">SPK lisanslı değerleme, ekspertiz süreçleri, banka teminat, kamulaştırma, metodoloji ve mevzuat üzerine kurumsal içerikler. Yazılar bağlı bilgi servisinden güncel olarak yayınlanır.</p>
+      <span data-ce="blog.heroEyebrow" class="eyebrow">Blog & Bilgi Merkezi</span>
+      <h1 data-ce="blog.heroTitle">Değerleme dünyasından <em>güncel bilgiler</em></h1>
+      <p data-ce="blog.heroLead" class="lead">SPK lisanslı değerleme, ekspertiz süreçleri, banka teminat, kamulaştırma, metodoloji ve mevzuat üzerine kurumsal içerikler. Yazılar bağlı bilgi servisinden güncel olarak yayınlanır.</p>
       <div class="hero-cta"><a class="btn btn-primary" href="basvuru.html">Değerleme Talebi</a><a class="btn btn-ghost-light" href="sss.html">Sıkça Sorulanlar</a></div>
     </div>
     <aside class="hero-panel" style="animation:hzFloat 6s ease-in-out infinite">
@@ -847,7 +849,7 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="sec" id="blog">
   <div class="wrap">
-    <div class="sec-h reveal"><span class="eyebrow">Yazılar</span><h2>Blog & rehberler</h2><p>Bağlı bilgi servisi yayında olduğunda güncel yazılar otomatik listelenir; aşağıda öne çıkan içeriklerimiz yer alır.</p></div>
+    <div class="sec-h reveal"><span class="eyebrow">Yazılar</span><h2 data-ce="blog.sec1Title">Blog & rehberler</h2><p data-ce="blog.sec1Lead">Bağlı bilgi servisi yayında olduğunda güncel yazılar otomatik listelenir; aşağıda öne çıkan içeriklerimiz yer alır.</p></div>
     <div class="blog-grid" id="blogGrid">
       <article class="blogcard reveal"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><div class="bc-b"><span class="tagx">SPK · Mevzuat</span><h3>SPK Lisanslı Değerleme Nedir?</h3><p>Lisanslı kuruluş, sorumlu değerleme uzmanı ve raporun yasal niteliği.</p><a class="more" href="sss.html">Devamını oku →</a></div></article>
       <article class="blogcard reveal d1"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 10l9-6 9 6"/><path d="M5 10v8M19 10v8"/><path d="M3 21h18"/></svg></div><div class="bc-b"><span class="tagx">Banka</span><h3>Konut Kredisinde Ekspertiz Süreci</h3><p>Teminat değeri, BDDK uyumu ve ekspertizin krediye etkisi.</p><a class="more" href="hizmetler.html">Devamını oku →</a></div></article>
@@ -862,7 +864,7 @@ body.crm{background:var(--surface);padding-top:0}
   </div>
 </section>
 
-<section class="ctaband" id="talep"><div class="wrap in"><div><h2>Değerleme talebiniz için hazırız</h2><p>SPK lisanslı uzmanımızla süreci birkaç adımda başlatın.</p></div><a class="btn btn-ghost-light" href="basvuru.html">Talep Oluştur</a></div></section>
+<section class="ctaband" id="talep"><div class="wrap in"><div><h2 data-ce="blog.ctaTitle">Değerleme talebiniz için hazırız</h2><p data-ce="blog.ctaText">SPK lisanslı uzmanımızla süreci birkaç adımda başlatın.</p></div><a class="btn btn-ghost-light" href="basvuru.html">Talep Oluştur</a></div></section>
 
 <footer class="ft">
   <div class="wrap">
@@ -889,6 +891,8 @@ body.crm{background:var(--surface);padding-top:0}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
+
 
 
 
@@ -1263,6 +1267,13 @@ body.crm{background:var(--surface);padding-top:0}
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -1458,7 +1469,7 @@ body.crm{background:var(--surface);padding-top:0}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>

@@ -368,6 +368,13 @@
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -563,5 +570,5 @@
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();

@@ -10,6 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -823,9 +825,9 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="hero" style="--x:0"><div class="wrap in" style="padding:44px 0 40px">
   <div class="hero-main">
-    <span class="eyebrow">Kurumsal · Etik</span>
-    <h1>Etik İlkeler & <em>Bağımsızlık Politikası</em></h1>
-    <p class="lead">Değerleme raporunun güvenilirliği, bağımsızlık ve tarafsızlık ilkesiyle başlar. Mesleki davranış kurallarımız her raporun temelindedir.</p>
+    <span data-ce="etik-ilkeler.heroEyebrow" class="eyebrow">Kurumsal · Etik</span>
+    <h1 data-ce="etik-ilkeler.heroTitle">Etik İlkeler & <em>Bağımsızlık Politikası</em></h1>
+    <p data-ce="etik-ilkeler.heroLead" class="lead">Değerleme raporunun güvenilirliği, bağımsızlık ve tarafsızlık ilkesiyle başlar. Mesleki davranış kurallarımız her raporun temelindedir.</p>
     <div class="hero-cta"><a class="btn btn-primary" href="basvuru.html">Değerleme Talebi</a><a class="btn btn-ghost-light" href="neden-biz.html">Neden Biz</a></div>
   </div>
   <aside class="hero-panel" style="animation:hzFloat 6s ease-in-out infinite"><div class="cap">Mesleki İlkeler</div>
@@ -842,7 +844,7 @@ body.crm{background:var(--surface);padding-top:0}
 </div></section>
 
 <section class="sec" id="ilkeler"><div class="wrap">
-  <div class="sec-h reveal"><span class="eyebrow">Etik İlkelerimiz</span><h2>Mesleki davranış kurallarımız</h2><p>Her değerleme uzmanımızın ve sürecimizin bağlı olduğu temel ilkeler.</p></div>
+  <div class="sec-h reveal"><span class="eyebrow">Etik İlkelerimiz</span><h2 data-ce="etik-ilkeler.sec1Title">Mesleki davranış kurallarımız</h2><p data-ce="etik-ilkeler.sec1Lead">Her değerleme uzmanımızın ve sürecimizin bağlı olduğu temel ilkeler.</p></div>
   <div class="nb-why">
     <div class="nb-w reveal"><div class="wi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Bağımsızlık</h3><p>Değerleme; talep eden, mülk sahibi veya işlemin taraflarından bağımsız biçimde yürütülür. Ücret veya ilişki, sonucu etkilemez.</p></div>
     <div class="nb-w reveal d1"><div class="wi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 7h14"/><path d="M5 7l-2 5a3 3 0 0 0 6 0L7 7M17 7l-2 5a3 3 0 0 0 6 0l-2-5"/></svg></div><h3>Tarafsızlık</h3><p>Hiçbir tarafın lehine veya aleyhine eğilim gösterilmez; değer yalnızca yöntem, veri ve mesleki kanaatle belirlenir.</p></div>
@@ -867,7 +869,7 @@ body.crm{background:var(--surface);padding-top:0}
   </div>
 </div></section>
 
-<section class="ctaband" id="talep"><div class="wrap in"><div><h2>Bağımsız ve güvenilir değerleme</h2><p>İlkelerimize uygun, denetlenebilir raporlama için bize ulaşın.</p></div><a class="btn btn-ghost-light" href="iletisim.html">İletişime Geçin</a></div></section>
+<section class="ctaband" id="talep"><div class="wrap in"><div><h2 data-ce="etik-ilkeler.ctaTitle">Bağımsız ve güvenilir değerleme</h2><p data-ce="etik-ilkeler.ctaText">İlkelerimize uygun, denetlenebilir raporlama için bize ulaşın.</p></div><a class="btn btn-ghost-light" href="iletisim.html">İletişime Geçin</a></div></section>
 
 <footer class="ft">
   <div class="wrap">
@@ -894,6 +896,8 @@ body.crm{background:var(--surface);padding-top:0}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
+
 
 
 <script id="deg-inline-js">
@@ -1267,6 +1271,13 @@ body.crm{background:var(--surface);padding-top:0}
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -1462,7 +1473,7 @@ body.crm{background:var(--surface);padding-top:0}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>

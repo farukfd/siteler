@@ -25,6 +25,8 @@
 
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -842,9 +844,9 @@ body.crm{background:var(--surface);padding-top:0}
 <section class="hero" style="--x:0">
   <div class="wrap in" style="padding:48px 0 52px">
     <div class="hero-main">
-      <span class="eyebrow">İletişim</span>
-      <h1>Bize ulaşın, süreci <em>birlikte başlatalım</em></h1>
-      <p class="lead">Adres, telefon ve WhatsApp ile dilediğiniz kanaldan bize ulaşın; canlı destek hattımız sorularınızı anında yanıtlasın. Değerleme talebinizi de birkaç adımda oluşturabilirsiniz.</p>
+      <span data-ce="iletisim.heroEyebrow" class="eyebrow">İletişim</span>
+      <h1 data-ce="iletisim.heroTitle">Bize ulaşın, süreci <em>birlikte başlatalım</em></h1>
+      <p data-ce="iletisim.heroLead" class="lead">Adres, telefon ve WhatsApp ile dilediğiniz kanaldan bize ulaşın; canlı destek hattımız sorularınızı anında yanıtlasın. Değerleme talebinizi de birkaç adımda oluşturabilirsiniz.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="basvuru.html">Değerleme Talebi Oluştur</a>
         <a class="btn btn-ghost-light" href="#destek">Canlı Destek</a>
@@ -879,7 +881,7 @@ body.crm{background:var(--surface);padding-top:0}
 <!-- ===== İLETİŞİM + HARİTA ===== -->
 <section class="sec" id="iletisim">
   <div class="wrap">
-    <div class="sec-h reveal"><span class="eyebrow">Bize Ulaşın</span><h2><span id="ctFirma">Meridyen Gayrimenkul Değerleme A.Ş.</span></h2><p>Adres ve iletişim bilgilerimiz; harita üzerinden konumumuza ulaşabilirsiniz.</p></div>
+    <div class="sec-h reveal"><span class="eyebrow">Bize Ulaşın</span><h2 data-ce="iletisim.sec1Title"><span id="ctFirma">Meridyen Gayrimenkul Değerleme A.Ş.</span></h2><p data-ce="iletisim.sec1Lead">Adres ve iletişim bilgilerimiz; harita üzerinden konumumuza ulaşabilirsiniz.</p></div>
     <div class="ct-grid">
       <div class="ct-info reveal">
         <div class="ct-row"><div class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7Z"/><circle cx="12" cy="9" r="2.5"/></svg></div><div><b>Adres</b><span id="ctAdres">Merkez Mah. Değerleme Cad. No: 1 · İstanbul</span></div></div>
@@ -900,7 +902,7 @@ body.crm{background:var(--surface);padding-top:0}
 <!-- ===== CANLI DESTEK ===== -->
 <section class="sec" id="destek" style="background:var(--surface)">
   <div class="wrap">
-    <div class="sec-h reveal"><span class="eyebrow">Canlı Destek</span><h2>Sorularınızı hemen yanıtlayalım</h2><p>ProX destek asistanına yazın; dilerseniz WhatsApp veya telefonla da ulaşabilirsiniz.</p></div>
+    <div class="sec-h reveal"><span class="eyebrow">Canlı Destek</span><h2 data-ce="iletisim.sec2Title">Sorularınızı hemen yanıtlayalım</h2><p data-ce="iletisim.sec2Lead">ProX destek asistanına yazın; dilerseniz WhatsApp veya telefonla da ulaşabilirsiniz.</p></div>
     <div class="ct-support reveal">
       <div class="ct-sh"><span class="av">P</span><div><b>ProX Canlı Destek</b><span class="ct-on"><i></i> Çevrimiçi · genelde birkaç dakikada yanıt</span></div></div>
       <div class="ct-msgs" id="ctMsgs">
@@ -919,7 +921,7 @@ body.crm{background:var(--surface);padding-top:0}
 <!-- ===== CTA BANDI ===== -->
 <section class="ctaband" id="talep">
   <div class="wrap in">
-    <div><h2>Değerlemeye hazır mısınız?</h2><p>Konum ve kategori bilgisiyle birkaç adımda talep oluşturun; SPK lisanslı uzmanımız süreci yürütsün.</p></div>
+    <div><h2 data-ce="iletisim.ctaTitle">Değerlemeye hazır mısınız?</h2><p data-ce="iletisim.ctaText">Konum ve kategori bilgisiyle birkaç adımda talep oluşturun; SPK lisanslı uzmanımız süreci yürütsün.</p></div>
     <a class="btn btn-ghost-light" href="basvuru.html">Değerleme Talebi Oluştur</a>
   </div>
 </section>
@@ -950,6 +952,8 @@ body.crm{background:var(--surface);padding-top:0}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
+
 
 
 
@@ -1330,6 +1334,13 @@ body.crm{background:var(--surface);padding-top:0}
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -1525,7 +1536,7 @@ body.crm{background:var(--surface);padding-top:0}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>

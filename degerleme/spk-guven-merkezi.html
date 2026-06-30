@@ -30,6 +30,8 @@
 
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -843,9 +845,9 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="hero"><div class="wrap in">
   <div class="hero-main">
-    <span class="eyebrow">Güven &amp; Mevzuat</span>
-    <h1>SPK · TDUB · IVS çerçevesinde <em>bağımsız değerleme</em></h1>
-    <p class="lead">Sermaye Piyasası Kurulu lisansı, Türkiye Değerleme Uzmanları Birliği meslek kuralları ve Uluslararası Değerleme Standartları (UDES/IVS) ile bağımsızlık, tarafsızlık ve denetlenebilirlik ilkeleri.</p>
+    <span data-ce="spk-guven-merkezi.heroEyebrow" class="eyebrow">Güven &amp; Mevzuat</span>
+    <h1 data-ce="spk-guven-merkezi.heroTitle">SPK · TDUB · IVS çerçevesinde <em>bağımsız değerleme</em></h1>
+    <p data-ce="spk-guven-merkezi.heroLead" class="lead">Sermaye Piyasası Kurulu lisansı, Türkiye Değerleme Uzmanları Birliği meslek kuralları ve Uluslararası Değerleme Standartları (UDES/IVS) ile bağımsızlık, tarafsızlık ve denetlenebilirlik ilkeleri.</p>
     <div class="hero-cta"><a class="btn btn-primary" href="raporu-kim-imzalar.html">Raporu Kim İmzalar?</a><a class="btn btn-ghost-light" href="basvuru.html">Başvuru</a></div>
     <div class="hero-badges"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5 9-11"/></svg> SPK Lisansı</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5 9-11"/></svg> TDUB Üyeliği</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5 9-11"/></svg> UDES / IVS</span></div>
   </div>
@@ -866,7 +868,7 @@ body.crm{background:var(--surface);padding-top:0}
 </div></section>
 
 <section class="sec"><div class="wrap">
-  <div class="sec-h"><span class="eyebrow">Güven Unsurları</span><h2>Hangi çerçevede çalışıyoruz?</h2><p>Lisans, meslek kuralları ve uluslararası standartların güven temeli.</p></div>
+  <div class="sec-h"><span class="eyebrow">Güven Unsurları</span><h2 data-ce="spk-guven-merkezi.sec1Title">Hangi çerçevede çalışıyoruz?</h2><p data-ce="spk-guven-merkezi.sec1Lead">Lisans, meslek kuralları ve uluslararası standartların güven temeli.</p></div>
   <div class="grid-3">
     <div class="card"><h3>SPK Lisansı</h3><p>Sermaye Piyasası Kurulu tarafından yetkilendirilmiş, III-62.3 Tebliği kapsamında faaliyet gösteren değerleme kuruluşu.</p></div>
     <div class="card"><h3>BDDK Değerleme Listesi</h3><p>Bankalara değerleme hizmeti vermeye yetkili kuruluşlar listesinde yer alma esası.</p></div>
@@ -891,7 +893,7 @@ body.crm{background:var(--surface);padding-top:0}
   <div class="note" style="margin:0 auto"><b>Önemli ayrım:</b> Platform yalnızca başvuru, belge yönetimi, veri ve lokasyon analizi ile ön analiz altyapısını sağlar. Resmî değerleme raporu, SPK lisanslı / sorumlu değerleme uzmanı tarafından bağımsız inceleme ve mesleki kanaatle hazırlanır ve imzalanır. Ayrıntı için <a href="raporu-kim-imzalar.html" style="color:var(--accent);font-weight:600">Raporu Kim İmzalar?</a> sayfasına bakın.</div>
 </div></section>
 
-<section class="ctaband"><div class="wrap in"><div><h2>Kurumsal güven ve mevzuat uyumlu değerleme</h2><p>Banka, kurum ve kamu süreçleri için bağımsız ve denetlenebilir değerleme altyapısı.</p></div><a class="btn btn-ghost-light" href="basvuru.html">Kurumsal Teklif Talep Et</a></div></section>
+<section class="ctaband"><div class="wrap in"><div><h2 data-ce="spk-guven-merkezi.ctaTitle">Kurumsal güven ve mevzuat uyumlu değerleme</h2><p data-ce="spk-guven-merkezi.ctaText">Banka, kurum ve kamu süreçleri için bağımsız ve denetlenebilir değerleme altyapısı.</p></div><a class="btn btn-ghost-light" href="basvuru.html">Kurumsal Teklif Talep Et</a></div></section>
 
 <footer class="ft">
   <div class="wrap">
@@ -918,6 +920,8 @@ body.crm{background:var(--surface);padding-top:0}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
+
 
 
 
@@ -1309,6 +1313,13 @@ body.crm{background:var(--surface);padding-top:0}
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -1504,7 +1515,7 @@ body.crm{background:var(--surface);padding-top:0}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>

@@ -14,6 +14,8 @@
 
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -829,9 +831,9 @@ body.crm{background:var(--surface);padding-top:0}
 <section class="hero" style="--x:0">
   <div class="wrap in" style="padding:44px 0 40px">
     <div class="hero-main">
-      <span class="eyebrow">Yasal · Çerezler</span>
-      <h1>Çerez <em>Politikası</em></h1>
-      <p class="lead">İnternet sitemizde kullanılan çerezler, türleri ve bunları nasıl yönetebileceğinize ilişkin bilgiler.</p>
+      <span data-ce="cerez.heroEyebrow" class="eyebrow">Yasal · Çerezler</span>
+      <h1 data-ce="cerez.heroTitle">Çerez <em>Politikası</em></h1>
+      <p data-ce="cerez.heroLead" class="lead">İnternet sitemizde kullanılan çerezler, türleri ve bunları nasıl yönetebileceğinize ilişkin bilgiler.</p>
     </div>
     <aside class="hero-panel" style="animation:hzFloat 6s ease-in-out infinite">
       <div class="cap">Çerez Yönetimi</div>
@@ -902,6 +904,8 @@ body.crm{background:var(--surface);padding-top:0}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
+
 
 
 
@@ -1278,6 +1282,13 @@ body.crm{background:var(--surface);padding-top:0}
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -1473,7 +1484,7 @@ body.crm{background:var(--surface);padding-top:0}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>

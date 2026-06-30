@@ -15,6 +15,8 @@
 
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -830,9 +832,9 @@ body.crm{background:var(--surface);padding-top:0}
 <section class="hero" style="--x:0">
   <div class="wrap in" style="padding:46px 0 44px">
     <div class="hero-main">
-      <span class="eyebrow">Kurumsal · Organizasyon</span>
-      <h1>Bağımsız ve <em>lisanslı</em> bir organizasyon yapısı</h1>
-      <p class="lead">Değerleme süreçlerinin tarafsızlığı ve denetlenebilirliği, açık bir görev ayrımı ile sağlanır. Yönetimden sorumlu değerleme uzmanına, kalite ve uyumdan veri altyapısına kadar her birim net sorumluluklarla çalışır.</p>
+      <span data-ce="organizasyon-semasi.heroEyebrow" class="eyebrow">Kurumsal · Organizasyon</span>
+      <h1 data-ce="organizasyon-semasi.heroTitle">Bağımsız ve <em>lisanslı</em> bir organizasyon yapısı</h1>
+      <p data-ce="organizasyon-semasi.heroLead" class="lead">Değerleme süreçlerinin tarafsızlığı ve denetlenebilirliği, açık bir görev ayrımı ile sağlanır. Yönetimden sorumlu değerleme uzmanına, kalite ve uyumdan veri altyapısına kadar her birim net sorumluluklarla çalışır.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="basvuru.html">Değerleme Talebi Oluştur</a>
         <a class="btn btn-ghost-light" href="neden-biz.html">Neden Biz</a>
@@ -860,7 +862,7 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="sec" id="org">
   <div class="wrap">
-    <div class="sec-h reveal"><span class="eyebrow">Organizasyon Şeması</span><h2>Görev ve sorumluluk ayrımı</h2><p>Her birim, değerleme raporunun bağımsızlığını ve kalitesini güvenceye alan net bir sorumlulukla çalışır.</p></div>
+    <div class="sec-h reveal"><span class="eyebrow">Organizasyon Şeması</span><h2 data-ce="organizasyon-semasi.sec1Title">Görev ve sorumluluk ayrımı</h2><p data-ce="organizasyon-semasi.sec1Lead">Her birim, değerleme raporunun bağımsızlığını ve kalitesini güvenceye alan net bir sorumlulukla çalışır.</p></div>
     <div class="org-top reveal"><div class="org-node lead"><b>Yönetim Kurulu</b><span>Strateji, yönetişim ve bağımsızlık gözetimi</span></div></div>
     <div class="org-conn"></div>
     <div class="org-top reveal"><div class="org-node"><b>Genel Müdür · Sorumlu Değerleme Uzmanı</b><span>SPK lisanslı · genel koordinasyon ve onay</span></div></div>
@@ -883,7 +885,7 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="ctaband" id="talep">
   <div class="wrap in">
-    <div><h2>Kurumsal değerleme için ekibimizle görüşün</h2><p>Bağımsız, lisanslı ve denetlenebilir bir organizasyonla çalışın.</p></div>
+    <div><h2 data-ce="organizasyon-semasi.ctaTitle">Kurumsal değerleme için ekibimizle görüşün</h2><p data-ce="organizasyon-semasi.ctaText">Bağımsız, lisanslı ve denetlenebilir bir organizasyonla çalışın.</p></div>
     <a class="btn btn-ghost-light" href="iletisim.html">Bize Ulaşın</a>
   </div>
 </section>
@@ -913,6 +915,8 @@ body.crm{background:var(--surface);padding-top:0}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
+
 
 
 
@@ -1291,6 +1295,13 @@ body.crm{background:var(--surface);padding-top:0}
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -1486,7 +1497,7 @@ body.crm{background:var(--surface);padding-top:0}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>

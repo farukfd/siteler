@@ -24,6 +24,8 @@
 
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -839,9 +841,9 @@ body.crm{background:var(--surface);padding-top:0}
 <section class="hero" style="--x:0">
   <div class="wrap in" style="padding:46px 0 46px">
     <div class="hero-main">
-      <span class="eyebrow">Sıkça Sorulan Sorular</span>
-      <h1>Değerleme ve ekspertiz hakkında <em>264+ soru, 264+ yanıt</em></h1>
-      <p class="lead">SPK lisanslı gayrimenkul değerleme ve ekspertiz süreçlerine dair merak ettiğiniz her şey: başvurudan rapora, banka teminatından kamulaştırmaya, metodolojiden kurumsal değerlemeye kadar kapsamlı yanıtlar.</p>
+      <span data-ce="sss.heroEyebrow" class="eyebrow">Sıkça Sorulan Sorular</span>
+      <h1 data-ce="sss.heroTitle">Değerleme ve ekspertiz hakkında <em>264+ soru, 264+ yanıt</em></h1>
+      <p data-ce="sss.heroLead" class="lead">SPK lisanslı gayrimenkul değerleme ve ekspertiz süreçlerine dair merak ettiğiniz her şey: başvurudan rapora, banka teminatından kamulaştırmaya, metodolojiden kurumsal değerlemeye kadar kapsamlı yanıtlar.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="basvuru.html">Değerleme Talebi Oluştur</a>
         <a class="btn btn-ghost-light" href="hizmetler.html">Hizmetlerimiz</a>
@@ -1180,7 +1182,7 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="ctaband" id="talep">
   <div class="wrap in">
-    <div><h2>Sorunuzun yanıtını bulamadınız mı?</h2><p>SPK lisanslı uzmanımıza danışın ya da değerleme talebinizi birkaç adımda oluşturun.</p></div>
+    <div><h2 data-ce="sss.ctaTitle">Sorunuzun yanıtını bulamadınız mı?</h2><p data-ce="sss.ctaText">SPK lisanslı uzmanımıza danışın ya da değerleme talebinizi birkaç adımda oluşturun.</p></div>
     <a class="btn btn-ghost-light" href="iletisim.html">Bize Ulaşın</a>
   </div>
 </section>
@@ -1238,6 +1240,8 @@ body.crm{background:var(--surface);padding-top:0}
   }
 })();
 </script>
+
+
 
 
 
@@ -1616,6 +1620,13 @@ body.crm{background:var(--surface);padding-top:0}
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -1811,7 +1822,7 @@ body.crm{background:var(--surface);padding-top:0}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>

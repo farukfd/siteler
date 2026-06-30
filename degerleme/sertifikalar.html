@@ -10,6 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -823,9 +825,9 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="hero" style="--x:0"><div class="wrap in" style="padding:44px 0 40px">
   <div class="hero-main">
-    <span class="eyebrow">Kurumsal · Belgeler</span>
-    <h1>Sertifikalar, <em>Lisans & Belgeler</em></h1>
-    <p class="lead">Yetkimizi ve uyumumuzu belgeleyen lisans ve sertifikalarımız. Resmî belge görselleri kurum yönetim panelinden eklenebilir.</p>
+    <span data-ce="sertifikalar.heroEyebrow" class="eyebrow">Kurumsal · Belgeler</span>
+    <h1 data-ce="sertifikalar.heroTitle">Sertifikalar, <em>Lisans & Belgeler</em></h1>
+    <p data-ce="sertifikalar.heroLead" class="lead">Yetkimizi ve uyumumuzu belgeleyen lisans ve sertifikalarımız. Resmî belge görselleri kurum yönetim panelinden eklenebilir.</p>
     <div class="hero-cta"><a class="btn btn-primary" href="basvuru.html">Değerleme Talebi</a><a class="btn btn-ghost-light" href="spk-guven-merkezi.html">SPK Güven Merkezi</a></div>
   </div>
   <aside class="hero-panel" style="animation:hzFloat 6s ease-in-out infinite"><div class="cap">Yetki & Uyum</div>
@@ -841,7 +843,7 @@ body.crm{background:var(--surface);padding-top:0}
 </div></section>
 
 <section class="sec" id="belgeler"><div class="wrap">
-  <div class="sec-h reveal"><span class="eyebrow">Lisans & Sertifikalar</span><h2>Yetki ve uyum belgelerimiz</h2><p>Bağımsız değerleme faaliyetimizin dayanağı olan lisans ve sertifikalar.</p></div>
+  <div class="sec-h reveal"><span class="eyebrow">Lisans & Sertifikalar</span><h2 data-ce="sertifikalar.sec1Title">Yetki ve uyum belgelerimiz</h2><p data-ce="sertifikalar.sec1Lead">Bağımsız değerleme faaliyetimizin dayanağı olan lisans ve sertifikalar.</p></div>
   <div class="cert-grid">
     <div class="cert reveal"><div class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><b>SPK Değerleme Lisansı</b><span>Sermaye Piyasası Kurulu listesinde yetkili değerleme kuruluşu.</span><div class="no">Lisans No: DD-2024-0142</div></div>
     <div class="cert reveal d1"><div class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6"/><path d="M5 10v8M19 10v8M9 10v8M15 10v8"/><path d="M3 21h18"/></svg></div><b>BDDK Yetki Listesi</b><span>Bankalara değerleme hizmeti verebilecek kuruluşlar listesinde.</span><div class="no">BDDK kayıtlı</div></div>
@@ -855,7 +857,7 @@ body.crm{background:var(--surface);padding-top:0}
   <p class="reveal" style="text-align:center;color:var(--muted);font-size:12.5px;margin-top:18px">Resmî belge görselleri ve numaraları kurum yönetim panelinden güncellenebilir.</p>
 </div></section>
 
-<section class="ctaband" id="talep"><div class="wrap in"><div><h2>Yetkili ve belgeli değerleme</h2><p>Lisanslı kadromuzla bağımsız ve denetlenebilir hizmet için bize ulaşın.</p></div><a class="btn btn-ghost-light" href="iletisim.html">İletişime Geçin</a></div></section>
+<section class="ctaband" id="talep"><div class="wrap in"><div><h2 data-ce="sertifikalar.ctaTitle">Yetkili ve belgeli değerleme</h2><p data-ce="sertifikalar.ctaText">Lisanslı kadromuzla bağımsız ve denetlenebilir hizmet için bize ulaşın.</p></div><a class="btn btn-ghost-light" href="iletisim.html">İletişime Geçin</a></div></section>
 
 <footer class="ft">
   <div class="wrap">
@@ -882,6 +884,8 @@ body.crm{background:var(--surface);padding-top:0}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
+
 
 
 <script id="deg-inline-js">
@@ -1255,6 +1259,13 @@ body.crm{background:var(--surface);padding-top:0}
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -1450,7 +1461,7 @@ body.crm{background:var(--surface);padding-top:0}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>

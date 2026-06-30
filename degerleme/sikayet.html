@@ -10,6 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -823,9 +825,9 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="hero" style="--x:0"><div class="wrap in" style="padding:44px 0 40px">
   <div class="hero-main">
-    <span class="eyebrow">Destek · Geri Bildirim</span>
-    <h1>Müşteri Şikayet & <em>İtiraz Hattı</em></h1>
-    <p class="lead">Hizmetimize veya değerleme raporuna ilişkin görüş, öneri ve itirazlarınızı bize iletin. Her başvuru kayıt altına alınır, tarafsızlıkla değerlendirilir ve size dönüş yapılır.</p>
+    <span data-ce="sikayet.heroEyebrow" class="eyebrow">Destek · Geri Bildirim</span>
+    <h1 data-ce="sikayet.heroTitle">Müşteri Şikayet & <em>İtiraz Hattı</em></h1>
+    <p data-ce="sikayet.heroLead" class="lead">Hizmetimize veya değerleme raporuna ilişkin görüş, öneri ve itirazlarınızı bize iletin. Her başvuru kayıt altına alınır, tarafsızlıkla değerlendirilir ve size dönüş yapılır.</p>
   </div>
   <aside class="hero-panel" style="animation:hzFloat 6s ease-in-out infinite"><div class="cap">Çözüm Süreci</div>
     <svg class="pv" viewBox="0 0 380 300" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Şikayet ve itiraz süreci">
@@ -840,7 +842,7 @@ body.crm{background:var(--surface);padding-top:0}
 </div></section>
 
 <section class="sec" id="basvuru"><div class="wrap">
-  <div class="sec-h reveal"><span class="eyebrow">Başvuru Formu</span><h2>Şikayet / İtiraz / Öneri</h2><p>Talebinizi iletin; başvuru numaranızla süreci takip edebilirsiniz.</p></div>
+  <div class="sec-h reveal"><span class="eyebrow">Başvuru Formu</span><h2 data-ce="sikayet.sec1Title">Şikayet / İtiraz / Öneri</h2><p data-ce="sikayet.sec1Lead">Talebinizi iletin; başvuru numaranızla süreci takip edebilirsiniz.</p></div>
   <div class="frm reveal">
     <div id="skForm">
       <div class="bv-row"><div class="bv-f"><label>Ad Soyad</label><input id="sk_name" placeholder="Ad Soyad"></div><div class="bv-f"><label>Telefon</label><input id="sk_phone" type="tel" inputmode="tel" placeholder="05__ ___ __ __"></div></div>
@@ -861,7 +863,7 @@ body.crm{background:var(--surface);padding-top:0}
 </div></section>
 
 <section class="sec" id="surec" style="background:var(--surface)"><div class="wrap">
-  <div class="sec-h reveal"><span class="eyebrow">Nasıl İşler?</span><h2>İtiraz & şikayet süreci</h2></div>
+  <div class="sec-h reveal"><span class="eyebrow">Nasıl İşler?</span><h2 data-ce="sikayet.sec2Title">İtiraz & şikayet süreci</h2></div>
   <div class="nb-why">
     <div class="nb-w reveal"><div class="wi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M22 4 12 14l-3-3"/></svg></div><h3>1 · Kayıt</h3><p>Başvurunuz benzersiz numarayla kayıt altına alınır ve ilgili birime yönlendirilir.</p></div>
     <div class="nb-w reveal d1"><div class="wi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div><h3>2 · Değerlendirme</h3><p>Rapora itirazlar, ilk değerlemeden bağımsız biçimde gözden geçirilerek incelenir.</p></div>
@@ -869,7 +871,7 @@ body.crm{background:var(--surface);padding-top:0}
   </div>
 </div></section>
 
-<section class="ctaband" id="talep"><div class="wrap in"><div><h2>Görüşleriniz bizim için değerli</h2><p>Acil durumlarda WhatsApp veya telefonla da ulaşabilirsiniz.</p></div><a class="btn btn-ghost-light" href="iletisim.html">İletişim</a></div></section>
+<section class="ctaband" id="talep"><div class="wrap in"><div><h2 data-ce="sikayet.ctaTitle">Görüşleriniz bizim için değerli</h2><p data-ce="sikayet.ctaText">Acil durumlarda WhatsApp veya telefonla da ulaşabilirsiniz.</p></div><a class="btn btn-ghost-light" href="iletisim.html">İletişim</a></div></section>
 
 <footer class="ft">
   <div class="wrap">
@@ -896,6 +898,8 @@ body.crm{background:var(--surface);padding-top:0}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
+
 
 
 <script id="deg-inline-js">
@@ -1269,6 +1273,13 @@ body.crm{background:var(--surface);padding-top:0}
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -1464,7 +1475,7 @@ body.crm{background:var(--surface);padding-top:0}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>

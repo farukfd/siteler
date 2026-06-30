@@ -15,6 +15,8 @@
 
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -830,9 +832,9 @@ body.crm{background:var(--surface);padding-top:0}
 <section class="hero" style="--x:0">
   <div class="wrap in" style="padding:46px 0 44px">
     <div class="hero-main">
-      <span class="eyebrow">Bilgi Servisi Hizmetleri</span>
-      <h1>Karar süreçlerinizi <em>güvenilir veriyle</em> güçlendirin</h1>
-      <p class="lead">Değerlemeyi tamamlayan veri ve bilgi servisleri: bölge fiyat endeksi, emsal veri, pazar raporları, API entegrasyonu ve periyodik bültenler. Kurumların analiz ve raporlama ihtiyacına yönelik güvenilir altyapı.</p>
+      <span data-ce="bilgi-servisi.heroEyebrow" class="eyebrow">Bilgi Servisi Hizmetleri</span>
+      <h1 data-ce="bilgi-servisi.heroTitle">Karar süreçlerinizi <em>güvenilir veriyle</em> güçlendirin</h1>
+      <p data-ce="bilgi-servisi.heroLead" class="lead">Değerlemeyi tamamlayan veri ve bilgi servisleri: bölge fiyat endeksi, emsal veri, pazar raporları, API entegrasyonu ve periyodik bültenler. Kurumların analiz ve raporlama ihtiyacına yönelik güvenilir altyapı.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="basvuru.html">Veri Servisi Talep Et</a>
         <a class="btn btn-ghost-light" href="iletisim.html">Bilgi Alın</a>
@@ -861,7 +863,7 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="sec" id="servisler">
   <div class="wrap">
-    <div class="sec-h reveal"><span class="eyebrow">Servislerimiz</span><h2>Bilgi servisi hizmetleri</h2><p>Değerleme veri altyapımızı kurumların karar ve raporlama süreçlerine açan modüler servisler.</p></div>
+    <div class="sec-h reveal"><span class="eyebrow">Servislerimiz</span><h2 data-ce="bilgi-servisi.sec1Title">Bilgi servisi hizmetleri</h2><p data-ce="bilgi-servisi.sec1Lead">Değerleme veri altyapımızı kurumların karar ve raporlama süreçlerine açan modüler servisler.</p></div>
     <div class="hz-grid">
       <article class="hz-card reveal">
         <div class="hz-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16"/><path d="M8 16l4-5 3 3 5-7"/></svg></div>
@@ -923,7 +925,7 @@ body.crm{background:var(--surface);padding-top:0}
 
 <section class="ctaband" id="talep">
   <div class="wrap in">
-    <div><h2>Kurumunuz için veri ve bilgi servisi</h2><p>İhtiyacınıza uygun endeks, rapor veya API servisini birlikte tasarlayalım.</p></div>
+    <div><h2 data-ce="bilgi-servisi.ctaTitle">Kurumunuz için veri ve bilgi servisi</h2><p data-ce="bilgi-servisi.ctaText">İhtiyacınıza uygun endeks, rapor veya API servisini birlikte tasarlayalım.</p></div>
     <a class="btn btn-ghost-light" href="iletisim.html">Bilgi Alın</a>
   </div>
 </section>
@@ -953,6 +955,8 @@ body.crm{background:var(--surface);padding-top:0}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
+
 
 
 
@@ -1331,6 +1335,13 @@ body.crm{background:var(--surface);padding-top:0}
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -1526,7 +1537,7 @@ body.crm{background:var(--surface);padding-top:0}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>

@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -834,6 +836,7 @@ body.crm{background:var(--surface);padding-top:0}
       <button data-v="icerik"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Sayfa İçerikleri</button>
       <button data-v="personel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15.5 14.2c2.3.4 4 2.4 4 4.8"/></svg> Personel</button>
       <button data-v="prox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6"/><path d="M9 16c1.5-2 3 2 4.5 0"/></svg> ProX &amp; PDF</button>
+      <button data-v="pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="M9 11h6M9 14h4"/></svg> SPK Lisanslı PDF</button>
       <button data-v="ayarlar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.5-2.3 1a7 7 0 0 0-1.7-1L14.5 2h-5l-.4 2.5a7 7 0 0 0-1.7 1l-2.3-1-2 3.5L3 11a7 7 0 0 0 0 2l-2 1.5 2 3.5 2.3-1a7 7 0 0 0 1.7 1L9.5 22h5l.4-2.5a7 7 0 0 0 1.7-1l2.3 1 2-3.5-2-1.5a7 7 0 0 0 .1-1Z"/></svg> Ayarlar</button>
       <button data-v="hesap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Hesap &amp; Güvenlik</button>
     </nav>
@@ -848,6 +851,7 @@ body.crm{background:var(--surface);padding-top:0}
       <section class="crm-view" data-v="icerik" id="v_icerik"></section>
       <section class="crm-view" data-v="personel" id="v_personel"></section>
       <section class="crm-view" data-v="prox" id="v_prox"></section>
+      <section class="crm-view" data-v="pdf" id="v_pdf"></section>
       <section class="crm-view" data-v="ayarlar" id="v_ayarlar"></section>
       <section class="crm-view" data-v="hesap" id="v_hesap"></section>
     </div>
@@ -857,7 +861,9 @@ body.crm{background:var(--surface);padding-top:0}
 <script id="crm-js">
 (function () {
   'use strict';
-  var TITLES = { dashboard: 'Gösterge Paneli', talepler: 'Talepler / CRM', makaleler: 'Makaleler / Blog', icerik: 'Sayfa İçerikleri', personel: 'Personel', prox: 'ProX & PDF', ayarlar: 'Ayarlar', hesap: 'Hesap & Güvenlik' };
+  var TITLES = { dashboard: 'Gösterge Paneli', talepler: 'Talepler / CRM', makaleler: 'Makaleler / Blog', icerik: 'Site İçerikleri', personel: 'Personel', prox: 'ProX & PDF', pdf: 'SPK Lisanslı PDF · Smart Office', ayarlar: 'Ayarlar', hesap: 'Hesap & Güvenlik' };
+  /* Smart Office (emlakekspertizi.com/profil?section=smart-office) PDF entegrasyonu — canlı uç bağlanınca doldurulur */
+  window.SMART_OFFICE = window.SMART_OFFICE || { url: 'https://www.emlakekspertizi.com/profil?section=smart-office', endpoint: '/api/v1/tenant/smart-office/pdf' };
   var DB = {
     load: function () { try { return JSON.parse(localStorage.getItem('deg_admin') || '{}'); } catch (e) { return {}; } },
     save: function (s) { try { localStorage.setItem('deg_admin', JSON.stringify(s)); } catch (e) {} },
@@ -990,17 +996,32 @@ body.crm{background:var(--surface);padding-top:0}
     });
   };
 
-  var PAGES = [['kvkk', 'KVKK Aydınlatma Metni'], ['gizlilik', 'Gizlilik Politikası'], ['cerez', 'Çerez Politikası'], ['etik', 'Etik İlkeler & Bağımsızlık']];
-  RENDER.icerik = function () {
-    var s = DB.load(); var pages = s.pages || {};
-    var opts = PAGES.map(function (p) { return '<option value="' + p[0] + '">' + esc(p[1]) + '</option>'; }).join('');
-    $('v_icerik').innerHTML = '<div class="crm-card"><h3>Sayfa İçeriği Düzenle</h3><p class="sub" style="font-size:12.5px;color:#777;margin:0 0 12px">İlgili sayfanın metnini düzenleyin. Boş bırakılırsa sayfadaki hazır varsayılan metin gösterilir. "## " ile başlık, boş satır ile yeni paragraf.</p>'
-      + '<div class="crm-f"><label>Sayfa</label><select id="ic_sel">' + opts + '</select></div>'
-      + '<div class="crm-f"><label>İçerik (düz metin)</label><textarea id="ic_body" rows="12"></textarea></div>'
-      + '<button class="crm-btn" id="ic_save">Kaydet & Uygula</button><div class="crm-out" id="ic_out"></div></div>';
-    function fill() { $('ic_body').value = (DB.load().pages || {})[$('ic_sel').value] || ''; }
-    $('ic_sel').addEventListener('change', fill); fill();
-    $('ic_save').addEventListener('click', function () { var s = DB.load(); s.pages = s.pages || {}; s.pages[$('ic_sel').value] = $('ic_body').value.trim(); DB.save(s); $('ic_out').innerHTML = '<span class="ok">✓ Kaydedildi. İlgili sayfada yayınlanır.</span>'; toast('Sayfa içeriği güncellendi.'); });
+  var PAGE_NAMES = { index: 'Ana Sayfa', hizmetler: 'Hizmetlerimiz', 'neden-biz': 'Neden Biz', referans: 'Referans', basvuru: 'Başvuru / Talep', iletisim: 'İletişim', sss: 'Sıkça Sorulan Sorular', 'organizasyon-semasi': 'Organizasyon Şeması', 'surekli-bilgilendirme': 'Sürekli Bilgilendirme', 'bilgi-servisi': 'Bilgi Servisi', blog: 'Blog', 'etik-ilkeler': 'Etik İlkeler', sertifikalar: 'Sertifikalar', sikayet: 'Şikayet & İtiraz', 'bilgi-toplumu': 'Bilgi Toplumu', kariyer: 'Kariyer', kvkk: 'KVKK Aydınlatma', gizlilik: 'Gizlilik Politikası', cerez: 'Çerez Politikası', 'rapor-turleri': 'Rapor Türleri', metodoloji: 'Metodoloji', 'spk-guven-merkezi': 'SPK Güven Merkezi', 'raporu-kim-imzalar': 'Raporu Kim İmzalar' };
+  var CMAP = null;
+  RENDER.icerik = async function () {
+    if (!CMAP) { try { var r = await fetch('assets/data/content-map.json'); CMAP = await r.json(); } catch (e) { CMAP = {}; } }
+    var slugs = Object.keys(CMAP).sort(function (a, b) { return (PAGE_NAMES[a] || a).localeCompare(PAGE_NAMES[b] || b, 'tr'); });
+    var opts = slugs.map(function (sl) { return '<option value="' + sl + '">' + esc(PAGE_NAMES[sl] || sl) + '</option>'; }).join('');
+    $('v_icerik').innerHTML = '<div class="crm-card"><div class="hd"><h3>Site İçerik Düzenleyici</h3><span class="sp"></span><div class="crm-f" style="margin:0;min-width:240px"><select id="ic_sel">' + opts + '</select></div></div>'
+      + '<p class="sub" style="font-size:12.5px;color:#777;margin:0 0 14px">Seçtiğiniz sayfanın tüm ana metinlerini düzenleyin. Boş bırakılan alan, sitedeki hazır metni gösterir.</p>'
+      + '<div id="ic_fields"></div><button class="crm-btn" id="ic_save">Kaydet & Yayınla</button><div class="crm-out" id="ic_out"></div></div>';
+    function renderFields() {
+      var sl = $('ic_sel').value, c = (DB.load().content) || {}, fields = CMAP[sl] || [];
+      var html = fields.map(function (f) { var val = (c[f.key] != null ? c[f.key] : f.def); var big = (f.def || '').length > 70;
+        return '<div class="crm-f"><label>' + esc(f.label) + '</label>' + (big ? '<textarea data-k="' + esc(f.key) + '" rows="2">' + esc(val) + '</textarea>' : '<input data-k="' + esc(f.key) + '" value="' + esc(val) + '">') + '</div>';
+      }).join('');
+      var legal = { kvkk: 1, gizlilik: 1, cerez: 1, 'etik-ilkeler': 1 };
+      if (legal[sl]) { var pk = (sl === 'etik-ilkeler' ? 'etik' : sl); var pages = (DB.load().pages) || {};
+        html += '<div class="crm-f"><label>Sayfa gövde metni — boşsa varsayılan ("## " başlık, boş satır = yeni paragraf)</label><textarea id="ic_body" data-page="' + pk + '" rows="8">' + esc(pages[pk] || '') + '</textarea></div>'; }
+      $('ic_fields').innerHTML = html || '<p class="crm-empty">Bu sayfada düzenlenebilir alan yok.</p>';
+    }
+    $('ic_sel').addEventListener('change', renderFields); renderFields();
+    $('ic_save').addEventListener('click', function () {
+      var s = DB.load(); s.content = s.content || {};
+      $('ic_fields').querySelectorAll('[data-k]').forEach(function (el) { s.content[el.getAttribute('data-k')] = el.value; });
+      var body = $('ic_fields').querySelector('#ic_body'); if (body) { s.pages = s.pages || {}; s.pages[body.getAttribute('data-page')] = body.value.trim(); }
+      DB.save(s); $('ic_out').innerHTML = '<span class="ok">✓ İçerik kaydedildi ve sitede yayınlandı.</span>'; toast('Sayfa içeriği güncellendi.');
+    });
   };
 
   RENDER.personel = function () {
@@ -1032,6 +1053,33 @@ body.crm{background:var(--surface);padding-top:0}
     $('px_ask').addEventListener('click', async function () { var q = $('px_q').value.trim(); if (!q) return; $('px_a').innerHTML = '<span class="warn">Yanıtlanıyor…</span>'; var r = await api('/api/v1/tenant/prox/ai', { method: 'POST', body: { prompt: q } }); $('px_a').textContent = (r && r.answer) ? r.answer : 'ProX çevrimdışı — canlı API bağlanınca yanıt verir.'; });
   };
 
+  RENDER.pdf = function () {
+    var SO = window.SMART_OFFICE || {};
+    $('v_pdf').innerHTML = '<div class="crm-card"><div class="hd"><h3>SPK Lisanslı Değerleme Raporu (PDF)</h3><span class="sp"></span><a class="crm-mini" href="' + esc(SO.url || '#') + '" target="_blank" rel="noopener noreferrer">Smart Office\'i Aç ↗</a></div>'
+      + '<p class="sub" style="font-size:12.5px;color:#777;margin:0 0 14px">emlakekspertizi.com <b>Smart Office</b> altyapısıyla entegre çalışır. Aşağıdaki bilgilerle dosya hazırlanır; resmî SPK lisanslı PDF, Smart Office hesabınızdan üretilir ve indirilebilir.</p>'
+      + '<div class="crm-row2"><div class="crm-f"><label>Rapor Türü</label><select id="so_kind"><option>Bankaya Yönelik Teminat</option><option>Alım-Satıma Esas Değer Tespiti</option><option>Mahkeme / Bilirkişi</option><option>Miras / İzaleyi Şuyu</option><option>Finansal Raporlama (UFRS/IVS)</option><option>Kamulaştırma</option></select></div><div class="crm-f"><label>Varlık Türü</label><select id="so_asset"><option>Konut</option><option>İş Yeri / Ofis</option><option>Arsa / Arazi</option><option>Sanayi / Fabrika</option><option>Turizm / Otel</option><option>Enerji Santrali</option><option>Akaryakıt İstasyonu</option><option>Diğer</option></select></div></div>'
+      + '<div class="crm-row2"><div class="crm-f"><label>Müşteri / Kurum</label><input id="so_client" placeholder="Ad Soyad / Şirket"></div><div class="crm-f"><label>Dosya / Talep No</label><input id="so_file" placeholder="DEG-2026-..."></div></div>'
+      + '<div class="crm-row2"><div class="crm-f"><label>İl / İlçe</label><input id="so_loc" placeholder="İstanbul / Kadıköy"></div><div class="crm-f"><label>Ada / Parsel</label><input id="so_ap" placeholder="1234 / 56"></div></div>'
+      + '<div class="crm-row2"><div class="crm-f"><label>Brüt Alan (m²)</label><input id="so_m2" type="number" placeholder="120"></div><div class="crm-f"><label>Değer Tarihi</label><input id="so_date" type="date"></div></div>'
+      + '<button class="crm-btn" id="so_btn">📄 Smart Office ile Resmî PDF Üret</button><div class="crm-out" id="so_out"></div></div>'
+      + '<div class="crm-card"><h3>Bağlantı Durumu</h3><table class="crm-tbl"><tbody>'
+      + '<tr><td>Smart Office Adresi</td><td><b>' + esc(SO.url) + '</b></td></tr>'
+      + '<tr><td>API Ucu</td><td><b>' + esc(SO.endpoint) + '</b></td></tr>'
+      + '<tr><td>Tenant</td><td><b>' + esc((window.EMLAK_TENANT || {}).tenant_id || '-') + '</b></td></tr>'
+      + '</tbody></table><p class="sub" style="font-size:12px;color:#888;margin-top:10px">Canlı Smart Office API anahtarı bağlandığında resmî PDF doğrudan buradan üretilir; bağlantı yoksa dosya altyapısı hazırlanıp uzman onayına gönderilir.</p></div>';
+    $('so_btn').addEventListener('click', async function () {
+      var client = $('so_client').value.trim(); var o = $('so_out');
+      if (!client) { o.innerHTML = '<span class="bad">⚠ Müşteri / kurum gerekli.</span>'; return; }
+      o.innerHTML = '<span class="warn">Smart Office\'e gönderiliyor…</span>';
+      var body = { kind: $('so_kind').value, asset: $('so_asset').value, client: client, file_no: $('so_file').value.trim(), location: $('so_loc').value.trim(), ada_parsel: $('so_ap').value.trim(), m2: $('so_m2').value.trim(), value_date: $('so_date').value, prox_prompt: (DB.load().proxPrompt || '') };
+      var ep = (window.SMART_OFFICE && window.SMART_OFFICE.endpoint) || '/api/v1/tenant/pdf/generate';
+      var r = await api(ep, { method: 'POST', body: body });
+      if (r && r.url) o.innerHTML = '<a class="ok" href="' + r.url + '" target="_blank" rel="noopener noreferrer">✓ Resmî PDF hazır — Smart Office\'ten indir →</a>';
+      else if (r && r.fallback) o.innerHTML = '<span class="warn">○ Çevrimdışı/demo: Dosya altyapısı hazırlandı ve SPK lisanslı uzmana atandı. Smart Office API bağlandığında PDF anında üretilir.</span>';
+      else o.innerHTML = '<span class="ok">✓ Talep Smart Office\'e iletildi; uzman onayına gönderildi.</span>';
+    });
+  };
+
   RENDER.ayarlar = function () {
     var s = DB.load(); var c = s.contact || {};
     function v(x) { return esc(x || ''); }
@@ -1054,6 +1102,8 @@ body.crm{background:var(--surface);padding-top:0}
   if (sess) showApp(sess.user || 'Yönetici');
 })();
 </script>
+
+
 
 <script id="deg-inline-js">
 /* Meridyen Değerleme — kurumsal site JS (sade, çerçevesiz).
@@ -1426,6 +1476,13 @@ body.crm{background:var(--surface);padding-top:0}
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
+  function degContentApply() {
+    var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
+    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
+  }
+
   /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
   function degLegalApply() {
     var el = document.getElementById('legalBody'); if (!el) return;
@@ -1621,7 +1678,7 @@ body.crm{background:var(--surface);padding-top:0}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();
 
 </script>
