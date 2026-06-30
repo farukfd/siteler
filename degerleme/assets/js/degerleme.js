@@ -433,7 +433,7 @@
     grid.innerHTML = r.posts.slice(0, 3).map(function (p) {
       return '<article class="blogcard"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>'
         + '<div class="bc-b"><span class="tagx">' + (p.category || 'Bilgi Merkezi') + '</span><h3>' + (p.title || '') + '</h3><p>' + (p.excerpt || '') + '</p>'
-        + '<a class="more" href="' + (p.url || 'https://www.emlakekspertizi.com/blog') + '" target="_blank" rel="noopener noreferrer">Devamını oku →</a></div></article>';
+        + '<a class="more" href="' + (p.url || 'blog.html') + '" target="_blank" rel="noopener noreferrer">Devamını oku →</a></div></article>';
     }).join('');
   }
 
@@ -455,7 +455,7 @@
     grid.innerHTML = r.posts.map(function (p) {
       return '<article class="blogcard"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>'
         + '<div class="bc-b"><span class="tagx">' + degEsc(p.category || 'Bilgi Merkezi') + '</span><h3>' + degEsc(p.title || '') + '</h3><p>' + degEsc(p.excerpt || '') + '</p>'
-        + '<a class="more" href="' + (p.url || 'https://www.emlakekspertizi.com/blog') + '" target="_blank" rel="noopener noreferrer">Devamını oku →</a></div></article>';
+        + '<a class="more" href="' + (p.url || 'blog.html') + '" target="_blank" rel="noopener noreferrer">Devamını oku →</a></div></article>';
     }).join('');
   }
 
@@ -560,6 +560,161 @@
     nums.forEach(function (n) { io.observe(n); });
   }
 
+  /* ===== Çok dilli (i18n) — TR (kaynak) + EN + RU + ZH + AR (RTL) ===== */
+  window.DEG_LANGS = { tr: 'Türkçe', en: 'English', ru: 'Русский', zh: '中文', ar: 'العربية' };
+  var _i18nRTL = { ar: 1 };
+  var _i18n = {}, _nodes = null, _phs = null;
+  var _i18nSkip = '.crm-app, .crm-login, #girisModal, #teklifModal, #degAdmin, .lang-sw, .spk-lic, .prox-badge, script, style, noscript';
+  function _collect() {
+    if (_nodes) return;
+    _nodes = []; _phs = [];
+    var sk = { SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, TEXTAREA: 1 };
+    var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode; if (!p || sk[p.nodeName]) return NodeFilter.FILTER_REJECT;
+        if (p.closest && p.closest(_i18nSkip)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var n; while (n = w.nextNode()) _nodes.push({ n: n, tr: n.nodeValue });
+    document.querySelectorAll('[placeholder]').forEach(function (el) { if (!el.closest(_i18nSkip)) _phs.push({ el: el, tr: el.getAttribute('placeholder') }); });
+  }
+  async function degApplyLang(lang) {
+    _collect();
+    document.documentElement.lang = lang;
+    document.documentElement.dir = _i18nRTL[lang] ? 'rtl' : 'ltr';
+    if (lang === 'tr') { _nodes.forEach(function (x) { x.n.nodeValue = x.tr; }); _phs.forEach(function (x) { x.el.setAttribute('placeholder', x.tr); }); return; }
+    var d = _i18n[lang];
+    if (!d) { try { var r = await fetch('assets/i18n/' + lang + '.json'); d = await r.json(); } catch (e) { d = {}; } _i18n[lang] = d; }
+    _nodes.forEach(function (x) { var k = x.tr.trim(); var t = d[k]; x.n.nodeValue = t ? x.tr.replace(k, t) : x.tr; });
+    _phs.forEach(function (x) { var t = d[(x.tr || '').trim()]; x.el.setAttribute('placeholder', t || x.tr); });
+  }
+  window.degSetLang = function (lang) { if (!window.DEG_LANGS[lang]) return; try { localStorage.setItem('deg_lang', lang); } catch (e) {} degApplyLang(lang); document.querySelectorAll('.lang-sel').forEach(function (s) { s.value = lang; }); };
+  /* ---- SPK Lisans No (admin'den düzenlenebilir; .spk-lic düğümleri) ---- */
+  function degSpkApply() {
+    var v = '';
+    try { var a = JSON.parse(localStorage.getItem('deg_admin') || '{}'); v = (a && a.spkLicense) ? String(a.spkLicense).trim() : ''; } catch (e) {}
+    if (!v) return;
+    document.querySelectorAll('.spk-lic').forEach(function (el) { el.textContent = v; });
+  }
+  /* ---- WhatsApp: tüm wa.me bağlantıları admin numarasına bağlı ---- */
+  function degWaNumber() {
+    var raw = '';
+    try { var a = JSON.parse(localStorage.getItem('deg_admin') || '{}'); raw = (a.contact && a.contact.whatsapp) || a.wa || ''; } catch (e) {}
+    var d = String(raw || '').replace(/[^\d]/g, '');
+    if (!d) return '';
+    if (d.charAt(0) === '0') d = '90' + d.slice(1);
+    else if (d.length === 10) d = '90' + d;
+    return d;
+  }
+  function degApplyWhatsApp() {
+    var num = degWaNumber();
+    if (!num) return;
+    document.querySelectorAll('a[href*="wa.me"], a[href*="api.whatsapp.com"]').forEach(function (a) {
+      var href = a.getAttribute('href') || '';
+      var q = href.indexOf('?'); var query = q !== -1 ? href.slice(q) : '';
+      a.setAttribute('href', 'https://wa.me/' + num + query);
+    });
+  }
+
+  /* ---- Logo: üst/alt menü logoları admin'den (bilgisayardan yüklenen görsel) ---- */
+  function degApplyLogo() {
+    var s = {}; try { s = JSON.parse(localStorage.getItem('deg_admin') || '{}'); } catch (e) {}
+    function setLogo(scope, url) {
+      if (!url) return;
+      var mk = document.querySelector(scope + ' .brand .mk'); if (!mk) return;
+      mk.style.background = 'transparent'; mk.style.backgroundImage = 'none';
+      mk.style.width = 'auto'; mk.style.minWidth = mk.style.height || '40px'; mk.style.padding = '0';
+      mk.innerHTML = '<img src="' + url + '" alt="logo" style="height:100%;width:auto;max-width:160px;object-fit:contain;display:block;border-radius:inherit">';
+    }
+    setLogo('.hdr', s.logoHeader || s.logo || '');
+    setLogo('.ft', s.logoFooter || s.logo || '');
+  }
+
+  /* ---- SEO & Reklam: GA4/GTM/Ads/AdSense/doğrulama/robots/özel kod (admin'den, kodsuz) ---- */
+  function degApplySeo() {
+    if (window.__degSeoDone) return; window.__degSeoDone = 1;
+    if (document.body && document.body.classList.contains('crm')) return;
+    var s = {}; try { s = JSON.parse(localStorage.getItem('deg_admin') || '{}'); } catch (e) {}
+    var seo = s.seo || {}; var head = document.head;
+    function meta(name, content) { if (!content) return; var m = document.createElement('meta'); m.setAttribute('name', name); m.setAttribute('content', String(content).trim()); head.appendChild(m); }
+    function srcScript(src, attrs) { var sc = document.createElement('script'); sc.src = src; sc.async = true; if (attrs) for (var k in attrs) sc.setAttribute(k, attrs[k]); head.appendChild(sc); }
+    function inlineScript(code) { var sc = document.createElement('script'); sc.text = code; head.appendChild(sc); }
+    function injectRaw(html) { var t = document.createElement('template'); t.innerHTML = html; Array.prototype.slice.call(t.content.childNodes).forEach(function (n) { if (n.tagName === 'SCRIPT') { var sc = document.createElement('script'); for (var i = 0; i < n.attributes.length; i++) sc.setAttribute(n.attributes[i].name, n.attributes[i].value); sc.text = n.textContent; head.appendChild(sc); } else { head.appendChild(n.cloneNode(true)); } }); }
+    function tok(v) { v = String(v || '').trim(); if (!v) return ''; var m = v.match(/content="([^"]+)"/i); if (m) return m[1]; if (v.indexOf('=') !== -1 && v.indexOf(' ') === -1) return v.split('=').pop(); return v; }
+    var gaId = (seo.ga4 || s.ga || '').trim(), adsId = (seo.adsId || '').trim(), gtagId = gaId || adsId;
+    if (gtagId) {
+      srcScript('https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(gtagId));
+      var c = 'window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());';
+      if (gaId) c += 'gtag("config","' + gaId + '");';
+      if (adsId) c += 'gtag("config","' + adsId + '");';
+      inlineScript(c);
+    }
+    var gtm = (seo.gtm || '').trim();
+    if (gtm) {
+      inlineScript("(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','" + gtm + "');");
+      var ns = document.createElement('noscript'); ns.innerHTML = '<iframe src="https://www.googletagmanager.com/ns.html?id=' + gtm + '" height="0" width="0" style="display:none;visibility:hidden"></iframe>'; if (document.body) document.body.insertBefore(ns, document.body.firstChild);
+    }
+    meta('google-site-verification', tok(seo.gsc || s.gsc));
+    meta('msvalidate.01', tok(seo.bing));
+    meta('yandex-verification', tok(seo.yandex));
+    var pub = (seo.adsense || '').trim();
+    if (pub) { meta('google-adsense-account', pub); srcScript('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(pub), { crossorigin: 'anonymous' }); }
+    meta('robots', seo.robotsIndex === false ? 'noindex,nofollow' : 'index,follow,max-image-preview:large');
+    if (seo.headCode) { try { injectRaw(seo.headCode); } catch (e) {} }
+  }
+
+  /* ---- API anahtarları: ProX (varsayılan, ücretsiz) + DeepSeek (yedek) ---- */
+  function degApplyApiKeys() {
+    try { var a = JSON.parse(localStorage.getItem('deg_admin') || '{}'); if (a.proxKey) window.EMLAK_TENANT.tenant_key = a.proxKey; } catch (e) {}
+  }
+  // Yapay zeka tek giriş: önce ProX (kurum anahtarı), kota/erişim yoksa kullanıcının DeepSeek anahtarına düşer.
+  window.degAi = async function (prompt, system) {
+    try { var r = await proxApi('/api/v1/tenant/prox/ai', { method: 'POST', body: { prompt: prompt, system: system || '' } }); if (r && r.answer) return { answer: r.answer, source: 'prox' }; } catch (e) {}
+    var key = ''; try { key = (JSON.parse(localStorage.getItem('deg_admin') || '{}').deepseekKey) || ''; } catch (e) {}
+    if (key) {
+      try {
+        var res = await fetch('https://api.deepseek.com/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+          body: JSON.stringify({ model: 'deepseek-chat', stream: false, messages: (system ? [{ role: 'system', content: system }] : []).concat([{ role: 'user', content: prompt }]) })
+        });
+        if (res.ok) { var j = await res.json(); var t = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content; if (t) return { answer: t, source: 'deepseek' }; }
+      } catch (e) {}
+    }
+    return { fallback: true };
+  };
+
+  /* ---- Mobil alt menü (Hizmetlerimiz · Neden Biz · Talep · WhatsApp) ---- */
+  function degMobileNav() {
+    if (document.querySelector('.mnav')) return;
+    if (document.body.classList.contains('crm')) return;
+    var WA = 'https://wa.me/905000000000';
+    var L = 'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+    var items = [
+      { href: 'hizmetler.html', label: 'Hizmetlerimiz', icon: '<svg viewBox="0 0 24 24" ' + L + '><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg>' },
+      { href: 'neden-biz.html', label: 'Neden Biz', icon: '<svg viewBox="0 0 24 24" ' + L + '><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>' },
+      { href: 'basvuru.html', label: 'Talep', icon: '<svg viewBox="0 0 24 24" ' + L + '><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg>' },
+      { href: WA, label: 'WhatsApp', wa: true, icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg>' }
+    ];
+    var here = (location.pathname.split('/').pop() || 'index.html');
+    var nav = document.createElement('nav');
+    nav.className = 'mnav'; nav.setAttribute('aria-label', 'Mobil menü');
+    nav.innerHTML = items.map(function (it) {
+      var cls = 'mnav-a' + (it.href === here ? ' active' : '') + (it.wa ? ' mnav-wa' : '');
+      var ext = it.wa ? ' target="_blank" rel="noopener noreferrer"' : '';
+      return '<a class="' + cls + '" href="' + it.href + '"' + ext + '>' + it.icon + '<span>' + it.label + '</span></a>';
+    }).join('');
+    document.body.appendChild(nav);
+  }
+  function degI18nInit() {
+    var lang = 'tr'; try { lang = localStorage.getItem('deg_lang') || 'tr'; } catch (e) {}
+    document.querySelectorAll('.lang-sel').forEach(function (s) { s.value = lang; });
+    document.addEventListener('change', function (e) { if (e.target && e.target.classList && e.target.classList.contains('lang-sel')) window.degSetLang(e.target.value); });
+    if (lang !== 'tr') degApplyLang(lang);
+  }
+
   /* ---- Giriş tetikleyici + init ---- */
   document.addEventListener('click', function (e) {
     if (!e.target.closest) return;
@@ -570,5 +725,5 @@
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degCookieBar(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
 })();

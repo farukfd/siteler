@@ -793,3 +793,48 @@ body.crm{background:var(--surface);padding-top:0}
 .crm-out{font-size:13px;margin-top:10px;min-height:16px}.crm-out .ok{color:var(--teal);font-weight:600}.crm-out .bad{color:#dc2626}.crm-out .warn{color:#b45309}
 .crm-empty{text-align:center;color:var(--muted);padding:34px;font-size:13.5px}
 @media(max-width:820px){.crm-app{grid-template-columns:1fr}.crm-side{position:static;height:auto}.crm-nav{flex-direction:row;flex-wrap:wrap}.crm-nav button{flex:1 1 auto}}
+
+/* ===== Dil seçici (header) ===== */
+.lang-sw{display:inline-flex;align-items:center;gap:5px}
+.lang-sw svg{width:17px;height:17px;color:var(--muted)}
+.lang-sel{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 8px;font-family:var(--head);font-weight:600;font-size:12.5px;color:var(--ink);cursor:pointer;outline:none;transition:.15s}
+.lang-sel:hover,.lang-sel:focus{border-color:var(--accent)}
+@media(max-width:980px){.lang-sw svg{display:none}.lang-sel{padding:7px 6px}}
+
+/* ===== Powered by ProX rozeti (footer, alt satır sonu — küçük/inline) ===== */
+.ft .bot .bot-end{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px}
+.prox-badge{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-family:var(--head);vertical-align:middle;margin-left:9px;padding:2px 0;transition:.2s}
+.prox-lead{color:#7f96bb;font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase}
+.prox-mark{display:inline-flex;align-items:center;font-weight:800;font-size:14.5px;letter-spacing:-.01em}
+.prox-pro{color:#fff}
+.prox-x{display:inline-flex;align-items:center;justify-content:center;min-width:1.32em;height:1.32em;margin-left:2px;padding:0 .12em;background:#16a34a;color:#0b1220;border-radius:5px}
+.prox-badge:hover .prox-x{background:#1fb155}
+.ft .bot .spk-lic{color:#cdd8ea;font-weight:600}
+
+/* ===== RTL (Arapça) ===== */
+[dir="rtl"] body{direction:rtl}
+[dir="rtl"] .nav a::after,[dir="rtl"] .crumbs{direction:rtl}
+[dir="rtl"] .card li,[dir="rtl"] .resp .col li,[dir="rtl"] .ft li{padding-left:0;padding-right:22px}
+[dir="rtl"] .card li::before,[dir="rtl"] .resp .col li::before{left:auto;right:0}
+[dir="rtl"] .legalband .ic{margin-left:14px;margin-right:0}
+[dir="rtl"] .prox-lead{letter-spacing:0}
+[dir="rtl"] .hero,[dir="rtl"] .sec-h{text-align:right}
+[dir="rtl"] .btn svg,[dir="rtl"] .more svg{transform:scaleX(-1)}
+
+/* ===== Mobil yatay-kayma güvenlik ağı + alt menü ===== */
+html{overflow-x:hidden}
+body{overflow-x:hidden;max-width:100%}
+img,svg,video,canvas,iframe,table{max-width:100%}
+.mnav{display:none}
+@media(max-width:768px){
+  .mnav{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;position:fixed;left:0;right:0;bottom:0;z-index:1400;background:rgba(255,255,255,.975);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 22px rgba(15,23,42,.09)}
+  .mnav-a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;text-decoration:none;color:var(--ink-2);font-family:var(--head);font-weight:600;font-size:10.5px;line-height:1.05;padding:5px 2px;border-radius:11px;transition:.15s;-webkit-tap-highlight-color:transparent}
+  .mnav-a span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mnav-a svg{width:21px;height:21px;flex:none}
+  .mnav-a:active{background:var(--surface)}
+  .mnav-a.active{color:var(--accent)}
+  .mnav-wa{color:#16a34a}
+  body{padding-bottom:calc(62px + env(safe-area-inset-bottom,0px))}
+  .cookie-bar{left:10px;right:10px;bottom:calc(70px + env(safe-area-inset-bottom,0px))}
+}
+[dir="rtl"] .mnav{direction:rtl}
