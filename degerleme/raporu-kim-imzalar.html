@@ -24,6 +24,7 @@
 
 
 
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -686,6 +687,12 @@ img,svg{display:block;max-width:100%}
 .disc-table .r .v{font-size:13.5px;color:var(--ink)}
 @media(max-width:600px){.disc-table .r{grid-template-columns:1fr}.disc-table .r .k{border-bottom:1px solid var(--line);padding-bottom:6px}.disc-table .r .v{padding-top:6px}}
 
+/* Admin mini butonlar (personel listesi) */
+.sta-mini{font-size:11.5px;font-weight:600;color:var(--accent);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:5px 10px;cursor:pointer;font-family:var(--head);transition:.15s}
+.sta-mini:hover{border-color:var(--accent)}
+.sta-mini.bad{color:#dc2626;border-color:#f1c4c4}
+.sta-mini.bad:hover{border-color:#dc2626}
+
 </style>
 </head>
 <body>
@@ -783,6 +790,7 @@ img,svg{display:block;max-width:100%}
 
 
 
+
 <script id="deg-inline-js">
 /* Meridyen Değerleme — kurumsal site JS (sade, çerçevesiz).
    Üyelik modeli: Personel/Danışman girişi + Müşteri (anahtar) girişi.
@@ -804,7 +812,9 @@ img,svg{display:block;max-width:100%}
   window.EMLAK_API_BASE = 'https://www.emlakekspertizi.com';
   window.EMLAK_TENANT = { tenant_id: 'valuation', tenant_key: 'INJECT_AT_DEPLOY', domain: location.hostname };
   window.SAAS_USER = { role: null, token: null, profile: null }; // 'personel' | 'musteri'
-  var ADMIN_PASS = 'ekspertiz2026'; // sitenin kendi bağımsız yönetim paneli giriş kapısı (istemci demo kapısı)
+  var ADMIN_DEFAULT = { user: 'admin', pass: '1234' }; // bağımsız panel varsayılan girişi (panelden değiştirilebilir)
+  function degAuth() { var s = degAdminLoad(); return Object.assign({}, ADMIN_DEFAULT, s.auth || {}); }
+  function degStaff() { var s = degAdminLoad(); return Array.isArray(s.staff) ? s.staff : []; }
 
   window.proxApi = async function (path, opt) {
     opt = opt || {};
@@ -833,8 +843,8 @@ img,svg{display:block;max-width:100%}
       + '<div class="gm-tabs"><button class="act" data-t="personel">Personel / Danışman</button><button data-t="musteri">Müşteri (Anahtar)</button></div>'
       + '<div class="gm-body">'
       + '<div class="gm-pane" data-p="personel">'
-      + '<p class="gm-sub">SPK lisanslı danışman / personel girişi. Giriş sonrası, sitenin <b>bağımsız yönetim paneli</b> üzerinden <b>emlakekspertizi.com API destekli resmî PDF rapor</b> oluşturabilirsiniz.</p>'
-      + '<label>E-posta</label><input id="gp_mail" type="email" autocomplete="username" placeholder="ad@meridyendegerleme.com">'
+      + '<p class="gm-sub">Değerleme şirketi yetkilileri ve SPK lisanslı uzmanları için giriş. Giriş sonrası, sitenin <b>bağımsız yönetim paneli</b> üzerinden personel yönetimi ve <b>API destekli resmî PDF rapor</b> işlemlerini yürütebilirsiniz.</p>'
+      + '<label>Kullanıcı adı / E-posta</label><input id="gp_mail" autocomplete="username" placeholder="admin veya e-posta">'
       + '<label>Şifre</label><input id="gp_pass" type="password" autocomplete="current-password" placeholder="••••••••">'
       + '<button class="btn btn-primary" id="gp_btn">Yönetim Paneline Giriş →</button>'
       + '<div class="gm-err" id="gp_err"></div>'
@@ -847,7 +857,7 @@ img,svg{display:block;max-width:100%}
       + '<div class="gm-err" id="gm_err"></div>'
       + '<div class="gm-note">Anahtar yalnızca tarayıcınızda kullanılır; URL veya günlüklere yazılmaz.</div>'
       + '</div></div>'
-      + '<div class="gm-foot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/></svg> KVKK uyumlu · emlakekspertizi.com altyapısı · ProX</div>'
+      + '<div class="gm-foot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/></svg> KVKK uyumlu · güvenli kurumsal altyapı · ProX</div>'
       + '</div>';
   }
   function ensureGiris() {
@@ -871,19 +881,25 @@ img,svg{display:block;max-width:100%}
   window.closeGiris = function () { var m = document.getElementById('girisModal'); if (m) m.classList.remove('on'); };
 
   async function degPersonelLogin() {
-    var mail = (document.getElementById('gp_mail') || {}).value.trim();
+    var id = (document.getElementById('gp_mail') || {}).value.trim();
     var pass = (document.getElementById('gp_pass') || {}).value || '';
     var err = document.getElementById('gp_err'); err.style.color = ''; err.textContent = '';
-    if (!mail || !pass) { err.textContent = '⚠ E-posta ve şifre gereklidir.'; return; }
-    if (pass !== ADMIN_PASS) { err.textContent = '⚠ Şifre hatalı. Yetkili personel girişi gereklidir.'; return; }
+    if (!id || !pass) { err.textContent = '⚠ Kullanıcı adı/e-posta ve şifre gereklidir.'; return; }
+    var auth = degAuth();
+    var role = null, who = null;
+    if ((id === auth.user || id === (auth.email || '')) && pass === auth.pass) { role = 'admin'; who = auth.user; }
+    else {
+      var st = degStaff().filter(function (s) { return s.active !== false && (s.email === id || s.user === id) && s.pass === pass; })[0];
+      if (st) { role = (st.role || 'personel'); who = st.name || st.email; }
+    }
+    if (!role) { err.textContent = '⚠ Kullanıcı adı veya şifre hatalı.'; return; }
     var btn = document.getElementById('gp_btn'); btn.disabled = true; btn.textContent = 'Bağlanıyor…';
-    var r = await proxApi('/api/v1/tenant/staff/login', { method: 'POST', body: { email: mail } }); // şifre body'de/log'da değil
+    var r = await proxApi('/api/v1/tenant/staff/login', { method: 'POST', body: { user: id, role: role } }); // şifre body'de/log'da değil
     btn.disabled = false; btn.textContent = 'Yönetim Paneline Giriş →';
-    SAAS_USER.role = 'personel'; SAAS_USER.token = (r && r.token) || ('sess_' + mail.length);
-    SAAS_USER.profile = { email: mail, online: !(r && r.fallback) };
+    SAAS_USER.role = role; SAAS_USER.token = (r && r.token) || ('sess_' + id.length); SAAS_USER.profile = { user: who, role: role };
     closeGiris();
-    openDegAdmin(); // sitenin kendi bağımsız yönetim paneli
-    degToast('Hoş geldiniz · Bağımsız yönetim paneli açıldı' + (r && r.fallback ? ' (çevrimdışı/demo)' : ''));
+    openDegAdmin();
+    degToast('Hoş geldiniz, ' + (who || 'kullanıcı') + ' · ' + (role === 'admin' ? 'Yönetici' : 'Personel') + ' paneli açıldı');
   }
 
   async function degMusteriLogin() {
@@ -916,6 +932,7 @@ img,svg{display:block;max-width:100%}
   function degAdminHTML() {
     var s = degAdminLoad();
     var c = s.contact || {};
+    var au = degAuth();
     function val(v) { return v ? String(v).replace(/"/g, '&quot;') : ''; }
     return '<div class="sta-ov" data-aclose="1"></div><div class="sta-card">'
       + '<div class="sta-hd"><b>⚡ Bağımsız Yönetim Paneli · Meridyen Değerleme</b><button data-aclose="1" aria-label="Kapat">✕</button></div>'
@@ -925,9 +942,11 @@ img,svg{display:block;max-width:100%}
       + '<button data-t="google">Google & Meta</button>'
       + '<button data-t="prox">ProX AI</button>'
       + '<button data-t="iletisim">İletişim & Adres</button>'
+      + '<button data-t="personel">Personel</button>'
+      + '<button data-t="hesap">Hesap & Güvenlik</button>'
       + '<button data-t="api">API Durumu</button>'
       + '</div><div class="sta-body">'
-      + '<div class="sta-pane" data-p="rapor"><h4>Resmî Değerleme Raporu (emlakekspertizi.com API)</h4><p class="sub">Merkez API ile endeks & mevzuat verisi çekilir; SPK lisanslı uzman dosyayı düzenler ve <b>resmî PDF</b> üretilir.</p>'
+      + '<div class="sta-pane" data-p="rapor"><h4>Resmî Değerleme Raporu (API destekli PDF)</h4><p class="sub">Merkezi API ile endeks & mevzuat verisi çekilir; SPK lisanslı uzman dosyayı düzenler ve <b>resmî PDF</b> üretilir.</p>'
       + '<div class="sta-row2"><div class="sta-f"><label>Varlık Türü</label><select id="ar_asset"><option>Konut</option><option>İş Yeri / Ofis</option><option>Arsa</option><option>İş Makinesi</option><option>Fabrika / Üretim Tesisi</option><option>Akaryakıt İstasyonu</option><option>Enerji Santrali (GES/RES)</option></select></div>'
       + '<div class="sta-f"><label>Rapor Amacı</label><select id="ar_purpose"><option>Bankaya Yönelik (Teminat)</option><option>Miras / İzaleyi Şuyu</option><option>Yasal Dava / Bilirkişi</option><option>Kurumsal Varlık Değerleme</option><option>Alım-Satıma Esas Değer Tespiti</option></select></div></div>'
       + '<div class="sta-row2"><div class="sta-f"><label>Müşteri / Kurum</label><input id="ar_client" placeholder="Ad Soyad / Şirket"></div><div class="sta-f"><label>Dosya / Talep No</label><input id="ar_file" placeholder="örn. DEG-2026-0142"></div></div>'
@@ -950,7 +969,17 @@ img,svg{display:block;max-width:100%}
       + '<div class="sta-f"><label>Adres</label><input id="ct_adres" value="' + val(c.adres) + '" placeholder="Mahalle, cadde, no, ilçe / il"></div>'
       + '<div class="sta-row2"><div class="sta-f"><label>Çalışma Saatleri</label><input id="ct_saat" value="' + val(c.saat) + '" placeholder="Hafta içi 09:00 – 18:00"></div><div class="sta-f"><label>Harita Konumu</label><input id="ct_harita" value="' + val(c.harita) + '" placeholder="41.0082,28.9784 veya adres"></div></div>'
       + '<button class="sta-go" id="ct_btn">Kaydet & İletişim Sayfasına Uygula</button><div class="sta-out" id="ct_out"></div></div>'
-      + '<div class="sta-pane" data-p="api" hidden><h4>API Kullanım Durumu</h4><p class="sub">Merkez ProX uçlarının canlı yoklaması (X-Tenant-Id: ' + EMLAK_TENANT.tenant_id + ').</p>'
+      + '<div class="sta-pane" data-p="personel" hidden><h4>Personel Yönetimi</h4><p class="sub">Sisteme personel/uzman ekleyin; bu kullanıcılar Personel Girişi ekranından kendi kullanıcı adı ve şifresiyle giriş yapar.</p>'
+      + '<div class="sta-row2"><div class="sta-f"><label>Ad Soyad</label><input id="pp_name" placeholder="Ad Soyad"></div><div class="sta-f"><label>Kullanıcı / E-posta</label><input id="pp_mail" placeholder="ad@firma.com"></div></div>'
+      + '<div class="sta-row2"><div class="sta-f"><label>Şifre</label><input id="pp_pass" placeholder="şifre belirleyin"></div><div class="sta-f"><label>Rol</label><select id="pp_role"><option value="personel">SPK Lisanslı Uzman / Personel</option><option value="admin">Yönetici</option></select></div></div>'
+      + '<button class="sta-go" id="pp_add">+ Personel Ekle</button><div class="sta-out" id="pp_out"></div>'
+      + '<div id="pp_list" style="margin-top:18px"></div></div>'
+      + '<div class="sta-pane" data-p="hesap" hidden><h4>Hesap &amp; Güvenlik</h4><p class="sub">Yönetici kullanıcı adını ve şifresini değiştirin. Varsayılan giriş: <b>admin / 1234</b>. Değişiklikten sonra yeni bilgilerle giriş yapılır.</p>'
+      + '<div class="sta-f"><label>Yönetici Kullanıcı Adı</label><input id="ac_user" value="' + val(au.user) + '"></div>'
+      + '<div class="sta-row2"><div class="sta-f"><label>Mevcut Şifre</label><input id="ac_cur" type="password" placeholder="mevcut şifre"></div><div class="sta-f"><label>Yeni Şifre</label><input id="ac_new" type="password" placeholder="yeni şifre (min 4)"></div></div>'
+      + '<div class="sta-f"><label>Yeni Şifre (Tekrar)</label><input id="ac_new2" type="password" placeholder="yeni şifre tekrar"></div>'
+      + '<button class="sta-go" id="ac_btn">Kullanıcı Adı &amp; Şifreyi Güncelle</button><div class="sta-out" id="ac_out"></div></div>'
+      + '<div class="sta-pane" data-p="api" hidden><h4>API Kullanım Durumu</h4><p class="sub">Merkezi ProX uçlarının canlı yoklaması (X-Tenant-Id: ' + EMLAK_TENANT.tenant_id + ').</p>'
       + '<div id="aa_out"><button class="sta-go" id="aa_btn">Yokla</button></div></div>'
       + '</div></div>';
   }
@@ -965,8 +994,11 @@ img,svg{display:block;max-width:100%}
       b.addEventListener('click', function () {
         m.querySelectorAll('.sta-tabs button').forEach(function (x) { x.classList.toggle('act', x === b); });
         m.querySelectorAll('.sta-pane').forEach(function (p) { p.hidden = (p.dataset.p !== b.dataset.t); });
+        if (b.dataset.t === 'personel') { try { degAdminRenderStaff(); } catch (e) {} }
       });
     });
+    m.querySelector('#pp_add').addEventListener('click', degAdminAddStaff);
+    m.querySelector('#ac_btn').addEventListener('click', degAdminSaveAuth);
     m.querySelector('#ar_btn').addEventListener('click', degAdminGenPdf);
     m.querySelector('#at_btn').addEventListener('click', function () { var s = degAdminLoad(); s.favicon = m.querySelector('#at_fav').value.trim(); s.theme = m.querySelector('#at_theme').value; degAdminSaveStore(s); degApplySettings(); degToast('Tema & logo uygulandı.'); });
     m.querySelector('#ag_btn').addEventListener('click', function () { var s = degAdminLoad(); s.ga = m.querySelector('#ag_ga').value.trim(); s.gsc = m.querySelector('#ag_gsc').value.trim(); s.metaTitle = m.querySelector('#ag_title').value.trim(); s.metaDesc = m.querySelector('#ag_desc').value.trim(); degAdminSaveStore(s); degApplySettings(); degToast('Google & Meta kaydedildi.'); });
@@ -1010,6 +1042,61 @@ img,svg{display:block;max-width:100%}
     }
     host.innerHTML = '<table class="aa-tbl"><tbody>' + rows.join('') + '</tbody></table><p class="sub" style="margin-top:8px">Not: tenant anahtarı yalnız başlıkta gönderilir; loglanmaz.</p><button class="sta-go" id="aa_btn2">Yeniden Yokla</button>';
     var b2 = document.getElementById('aa_btn2'); if (b2) b2.addEventListener('click', degAdminPingApi);
+  }
+
+  /* ---- Personel & hesap yönetimi (admin) ---- */
+  function degEsc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function degAdminRenderStaff() {
+    var host = document.getElementById('pp_list'); if (!host) return;
+    var st = degStaff();
+    if (!st.length) { host.innerHTML = '<p class="sub">Henüz personel eklenmedi. Yukarıdan ekleyebilirsiniz.</p>'; return; }
+    host.innerHTML = '<table class="aa-tbl"><tbody>' + st.map(function (s, i) {
+      return '<tr><td><b>' + degEsc(s.name || s.email) + '</b><div style="font-size:11.5px;color:#888">' + degEsc(s.email) + ' · ' + (s.role === 'admin' ? 'Yönetici' : 'Personel') + (s.active === false ? ' · pasif' : '') + '</div></td>'
+        + '<td style="text-align:right;white-space:nowrap"><button class="sta-mini" data-act="toggle" data-i="' + i + '">' + (s.active === false ? 'Aktif et' : 'Pasif et') + '</button> <button class="sta-mini bad" data-act="del" data-i="' + i + '">Sil</button></td></tr>';
+    }).join('') + '</tbody></table>';
+    host.querySelectorAll('button[data-act]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var i = +b.getAttribute('data-i'), act = b.getAttribute('data-act');
+        var s = degAdminLoad(); s.staff = degStaff();
+        if (act === 'del') s.staff.splice(i, 1);
+        else s.staff[i].active = (s.staff[i].active === false);
+        degAdminSaveStore(s); degAdminRenderStaff();
+        degToast(act === 'del' ? 'Personel silindi.' : 'Personel durumu güncellendi.');
+      });
+    });
+  }
+  function degAdminAddStaff() {
+    function g(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+    var name = g('pp_name'), mail = g('pp_mail'), pass = g('pp_pass'), role = g('pp_role') || 'personel';
+    var out = document.getElementById('pp_out'); out.className = 'sta-out';
+    if (!name || !mail || !pass) { out.innerHTML = '<span class="bad">⚠ Ad, kullanıcı/e-posta ve şifre gereklidir.</span>'; return; }
+    var s = degAdminLoad(); s.staff = degStaff();
+    if (s.staff.some(function (x) { return x.email === mail; })) { out.innerHTML = '<span class="bad">⚠ Bu kullanıcı/e-posta zaten kayıtlı.</span>'; return; }
+    s.staff.push({ name: name, email: mail, pass: pass, role: role, active: true });
+    degAdminSaveStore(s);
+    ['pp_name', 'pp_mail', 'pp_pass'].forEach(function (id) { var e = document.getElementById(id); if (e) e.value = ''; });
+    out.innerHTML = '<span class="ok">✓ Personel eklendi. Personel Girişi ekranından kendi bilgisiyle giriş yapabilir.</span>';
+    degAdminRenderStaff();
+    degToast('Personel eklendi.');
+  }
+  function degAdminSaveAuth() {
+    function g(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+    var user = g('ac_user'), cur = g('ac_cur'), nw = g('ac_new'), nw2 = g('ac_new2');
+    var out = document.getElementById('ac_out'); out.className = 'sta-out';
+    var auth = degAuth();
+    if (!user) { out.innerHTML = '<span class="bad">⚠ Kullanıcı adı boş olamaz.</span>'; return; }
+    var s = degAdminLoad(); s.auth = Object.assign({}, auth); s.auth.user = user;
+    var changed = (user !== auth.user);
+    if (cur || nw || nw2) {
+      if (cur !== auth.pass) { out.innerHTML = '<span class="bad">⚠ Mevcut şifre hatalı.</span>'; return; }
+      if (nw.length < 4) { out.innerHTML = '<span class="bad">⚠ Yeni şifre en az 4 karakter olmalı.</span>'; return; }
+      if (nw !== nw2) { out.innerHTML = '<span class="bad">⚠ Yeni şifreler eşleşmiyor.</span>'; return; }
+      s.auth.pass = nw; changed = true;
+    }
+    degAdminSaveStore(s);
+    ['ac_cur', 'ac_new', 'ac_new2'].forEach(function (id) { var e = document.getElementById(id); if (e) e.value = ''; });
+    out.innerHTML = '<span class="ok">✓ Yönetici hesabı güncellendi.' + (s.auth.pass !== auth.pass ? ' Yeni şifre etkin.' : '') + '</span>';
+    if (changed) degToast('Yönetici hesabı güncellendi.');
   }
 
   /* ===== İletişim sayfası — admin'den adres/harita + canlı destek (ProX) ===== */
@@ -1094,7 +1181,7 @@ img,svg{display:block;max-width:100%}
       + '<div class="gm-err" id="tk_err"></div>'
       + '<div class="gm-note">Bilgileriniz yalnızca teklif görüşmesi için kullanılır ve KVKK kapsamında işlenir.</div>'
       + '</div>'
-      + '<div class="gm-foot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/></svg> KVKK uyumlu · emlakekspertizi.com altyapısı · ProX</div>'
+      + '<div class="gm-foot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/></svg> KVKK uyumlu · güvenli kurumsal altyapı · ProX</div>'
       + '</div>';
   }
   function ensureTeklif() {
