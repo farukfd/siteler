@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Değerleme Başvurusu · Talep Oluştur | Meridyen Değerleme</title>
-<meta name="description" content="SPK lisanslı gayrimenkul değerleme talebinizi oluşturun: il, ilçe, mahalle, varlık türü ve rapor amacı ile 3 adımda başvuru. Talebiniz sisteme işlenir, SPK lisanslı uzmana atanır; sahada gerçek değer, belediye ve tapu incelemesiyle imzalı rapor hazırlanır.">
+<meta name="description" content="SPK lisanslı gayrimenkul değerleme talebinizi oluşturun: il, ilçe ve mahalle kademeli seçimi, değerleme kategorisi, ada/parsel/bağımsız bölüm ve m² ile 3 adımda başvuru. Talebiniz SPK lisanslı uzmana atanır; sahada gerçek değer, belediye ve tapu incelemesiyle imzalı rapor hazırlanır.">
 <link rel="canonical" href="https://www.emlakekspertizi.com/degerleme/basvuru.html">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Değerleme Başvurusu · Talep Oluştur">
-<meta property="og:description" content="3 adımda SPK lisanslı değerleme talebi: konum, değerleme detayı ve iletişim.">
+<meta property="og:description" content="3 adımda SPK lisanslı değerleme talebi: konum (il/ilçe/mahalle), kategori ve iletişim.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -589,21 +589,20 @@ img,svg{display:block;max-width:100%}
     <div class="hero-main">
       <span class="eyebrow">Değerleme Başvurusu</span>
       <h1>Değerleme talebinizi <em>3 adımda</em> oluşturun</h1>
-      <p class="lead">Taşınmazınızın konumunu ve değerleme amacını girin; talebiniz SPK lisanslı uzmanımıza atansın. Sistem ön analiz altyapısını hazırlar, raporu lisanslı uzman düzenler ve imzalar.</p>
+      <p class="lead">Taşınmazınızın konumunu (il, ilçe, mahalle) ve değerleme kategorisini seçin; talebiniz SPK lisanslı uzmanımıza atansın. Sistem ön analiz altyapısını hazırlar, raporu lisanslı uzman düzenler ve imzalar.</p>
       <div class="bv-mini">
-        <div class="m"><span class="n">1</span><div><b>Konum</b>İl, ilçe ve mahalle ile taşınmazın yeri.</div></div>
-        <div class="m"><span class="n">2</span><div><b>Değerleme Detayı</b>Varlık türü ve raporun amacı.</div></div>
-        <div class="m"><span class="n">3</span><div><b>İletişim</b>Size ulaşalım; uzmanımız süreci yürütsün.</div></div>
+        <div class="m"><span class="n">1</span><div><b>Konum</b>İl → ilçe → mahalle ve ada/parsel/bağımsız bölüm.</div></div>
+        <div class="m"><span class="n">2</span><div><b>Değerleme Kategorisi</b>Hizmetlerimizdeki değerleme türü ve m².</div></div>
+        <div class="m"><span class="n">3</span><div><b>İletişim</b>Telefon ve notunuz; uzmanımız sizi arasın.</div></div>
       </div>
     </div>
 
     <aside class="bv-card" id="bvCard">
       <div class="bv-hd"><span class="mk">M</span><div><b>Değerleme Talep Ekranı</b><span>SPK lisanslı · bağımsız · KVKK uyumlu</span></div></div>
 
-      <!-- stepper -->
       <div class="bv-steps" id="bvSteps">
         <div class="s act" data-s="1"><div class="dot">1</div><small>Konum</small></div>
-        <div class="s" data-s="2"><div class="dot">2</div><small>Detay</small></div>
+        <div class="s" data-s="2"><div class="dot">2</div><small>Kategori</small></div>
         <div class="s" data-s="3"><div class="dot">3</div><small>İletişim</small></div>
       </div>
       <div class="bv-prog"><i id="bvProg"></i></div>
@@ -612,47 +611,45 @@ img,svg{display:block;max-width:100%}
         <!-- ADIM 1: KONUM -->
         <div class="bv-pane on" data-p="1">
           <h4>Taşınmazın konumu</h4>
-          <div class="bv-row">
-            <div class="bv-f"><label>İl</label><select id="bv_il"><option value="">İl seçin</option></select></div>
-            <div class="bv-f"><label>İlçe</label><select id="bv_ilce" disabled><option value="">Önce il seçin</option></select></div>
-          </div>
-          <div class="bv-row">
-            <div class="bv-f"><label>Mahalle</label><input id="bv_mah" placeholder="Mahalle adı"></div>
-            <div class="bv-f"><label>Ada / Parsel <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="bv_adapar" placeholder="örn. 1234 / 56"></div>
+          <div class="bv-f"><label>İl</label><select id="bv_il"><option value="">Yükleniyor…</option></select></div>
+          <div class="bv-f"><label>İlçe</label><select id="bv_ilce" disabled><option value="">Önce il seçin</option></select></div>
+          <div class="bv-f"><label>Mahalle</label><select id="bv_mah" disabled><option value="">Önce ilçe seçin</option></select></div>
+          <div class="bv-row" style="grid-template-columns:1fr 1fr 1fr">
+            <div class="bv-f"><label>Ada</label><input id="bv_ada" inputmode="numeric" placeholder="örn. 1234"></div>
+            <div class="bv-f"><label>Parsel</label><input id="bv_parsel" inputmode="numeric" placeholder="örn. 56"></div>
+            <div class="bv-f"><label>B. Bölüm</label><input id="bv_bb" placeholder="örn. 12"></div>
           </div>
           <div class="bv-f"><label>Açık Adres <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="bv_adres" placeholder="Cadde, sokak, no"></div>
-          <div class="bv-note">Daha fazla bölge ve mahalle, bağlı konum servisiyle otomatik listelenir.</div>
+          <div class="bv-note">İl, ilçe ve mahalle listeleri konum servisinden (emlakyuvam.com) canlı çekilir; bağlantı yoksa çevrimdışı liste devreye girer.</div>
           <div class="bv-err" id="bv_e1"></div>
           <div class="bv-actions"><span class="grow"></span><button class="btn btn-primary" data-next="2">Devam →</button></div>
         </div>
 
-        <!-- ADIM 2: DETAY -->
+        <!-- ADIM 2: DEĞERLEME KATEGORİSİ -->
         <div class="bv-pane" data-p="2">
-          <h4>Değerleme detayı</h4>
-          <div class="bv-f"><label>Varlık Türü</label>
-            <div class="bv-chips" id="bv_asset">
-              <label><input type="radio" name="asset" value="Konut"><span class="c">Konut</span></label>
-              <label><input type="radio" name="asset" value="Ticari Gayrimenkul"><span class="c">Ticari</span></label>
-              <label><input type="radio" name="asset" value="Arsa / Arazi"><span class="c">Arsa / Arazi</span></label>
-              <label><input type="radio" name="asset" value="Sanayi / Fabrika"><span class="c">Sanayi / Fabrika</span></label>
-              <label><input type="radio" name="asset" value="Turizm / Otel"><span class="c">Turizm / Otel</span></label>
-              <label><input type="radio" name="asset" value="Diğer"><span class="c">Diğer</span></label>
-            </div>
+          <h4>Değerleme kategorisi</h4>
+          <div class="bv-f"><label>Değerleme Türü <span style="color:var(--muted);font-weight:400">(Hizmetlerimiz)</span></label>
+            <select id="bv_cat">
+              <option value="">Kategori seçin</option>
+              <optgroup label="Gayrimenkul Değerleme">
+                <option>Konut Değerleme</option><option>Ticari Gayrimenkul Değerleme</option><option>Arsa ve Arazi Değerleme</option><option>Sanayi Tesisi ve Fabrika Değerleme</option><option>Turizm Tesisi (Otel) Değerleme</option><option>Akaryakıt İstasyonu Değerleme</option><option>Enerji Santrali (GES/RES/HES) Değerleme</option><option>Maden ve Ocak Değerleme</option><option>Proje ve Geliştirme Değerleme</option><option>Tarımsal İşletme Değerleme</option><option>AVM ve Perakende Değerleme</option><option>Lojistik ve Depo Değerleme</option><option>Eğitim ve Sağlık Tesisi Değerleme</option><option>Liman, Marina ve Tersane Değerleme</option><option>Havalimanı ve Ulaştırma Tesisi Değerleme</option><option>Spor ve Eğlence Tesisi Değerleme</option><option>Veri Merkezi Değerleme</option>
+              </optgroup>
+              <optgroup label="Gayrimenkule Dayalı Haklar">
+                <option>İrtifak Hakkı Değerleme</option><option>Üst Hakkı Değerleme</option><option>İntifa Hakkı Değerleme</option><option>Devre Mülk ve Devre Tatil Değerleme</option>
+              </optgroup>
+              <optgroup label="Makine, Ekipman ve Menkul">
+                <option>İş Makinesi ve Ekipman Değerleme</option><option>Üretim Hattı ve Tesis Makineleri Değerleme</option><option>Gemi ve Deniz Aracı Değerleme</option><option>Menkul ve Demirbaş Değerleme</option>
+              </optgroup>
+              <optgroup label="Amaca Yönelik ve Kurumsal">
+                <option>Bankaya Yönelik Teminat Değerleme</option><option>Miras ve İzaleyi Şuyu Değerleme</option><option>Mahkeme ve Bilirkişi Değerleme</option><option>Kamulaştırma Değerleme</option><option>Finansal Raporlama (UFRS/IVS) Değerleme</option><option>GYO Portföy Değerleme</option><option>Sigorta Değer Tespiti</option><option>Due Diligence ve Varlık İnceleme</option><option>Kira Değeri Tespiti</option><option>Özelleştirme ve Halka Arz Değerleme</option><option>Vergi ve Emlak Vergisi Değer Tespiti</option>
+              </optgroup>
+              <optgroup label="Danışmanlık, Analiz ve Sürdürülebilirlik">
+                <option>En Verimli ve En İyi Kullanım Analizi</option><option>Fizibilite Analizi</option><option>Pazar Araştırması ve Sektör Analizi</option><option>Kentsel Dönüşüm Danışmanlığı</option><option>İnşaat İlerleme ve Yatırım İzleme</option><option>Konsept Geliştirme Danışmanlığı</option><option>Değerleme Raporu Gözden Geçirme</option><option>Maliyet Danışmanlığı</option><option>Yeşil Değerleme</option><option>ESG Değerlendirme Raporu</option><option>İhale Danışmanlığı ve Süreç Yönetimi</option>
+              </optgroup>
+            </select>
           </div>
-          <div class="bv-f" style="margin-top:4px"><label>Rapor Amacı</label>
-            <div class="bv-chips" id="bv_purpose">
-              <label><input type="radio" name="purpose" value="Banka Teminat / İpotek"><span class="c">Banka Teminat</span></label>
-              <label><input type="radio" name="purpose" value="Alım-Satım Değer Tespiti"><span class="c">Alım-Satım</span></label>
-              <label><input type="radio" name="purpose" value="Mahkeme / Bilirkişi"><span class="c">Mahkeme / Bilirkişi</span></label>
-              <label><input type="radio" name="purpose" value="Miras / İzaleyi Şuyu"><span class="c">Miras / İzaleyi Şuyu</span></label>
-              <label><input type="radio" name="purpose" value="Finansal Raporlama"><span class="c">Finansal Raporlama</span></label>
-              <label><input type="radio" name="purpose" value="Diğer"><span class="c">Diğer</span></label>
-            </div>
-          </div>
-          <div class="bv-row" style="margin-top:6px">
-            <div class="bv-f"><label>Brüt Alan (m²) <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="bv_area" type="number" inputmode="numeric" min="0" placeholder="örn. 120"></div>
-            <div class="bv-f"><label>Tapu Durumu <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><select id="bv_tapu"><option value="">Seçin</option><option>Kat Mülkiyeti</option><option>Kat İrtifakı</option><option>Arsa Payı</option><option>Hisseli</option><option>Müstakil</option></select></div>
-          </div>
+          <div class="bv-f"><label>Brüt Alan (m²) <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="bv_area" type="number" inputmode="numeric" min="0" placeholder="örn. 120"></div>
+          <div class="bv-note">Tüm değerleme kategorilerini <a href="hizmetler.html" style="color:var(--accent);font-weight:600">Hizmetlerimiz</a> sayfasından inceleyebilirsiniz.</div>
           <div class="bv-err" id="bv_e2"></div>
           <div class="bv-actions"><button class="btn btn-line" data-back="1">← Geri</button><span class="grow"></span><button class="btn btn-primary" data-next="3">Devam →</button></div>
         </div>
@@ -665,7 +662,7 @@ img,svg{display:block;max-width:100%}
             <div class="bv-f"><label>Telefon</label><input id="bv_phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="05__ ___ __ __"></div>
           </div>
           <div class="bv-f"><label>E-posta <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="bv_mail" type="email" autocomplete="email" placeholder="ornek@eposta.com"></div>
-          <div class="bv-f"><label>Not / Açıklama <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><textarea id="bv_note" rows="2" placeholder="Talebinizle ilgili eklemek istedikleriniz"></textarea></div>
+          <div class="bv-f"><label>Kullanıcı Notu <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><textarea id="bv_note" rows="3" placeholder="Talebinizle ilgili eklemek istedikleriniz"></textarea></div>
           <label class="bv-kvkk"><input type="checkbox" id="bv_kvkk"> <span>Bilgilerimin, değerleme talebimin değerlendirilmesi amacıyla KVKK kapsamında işlenmesine onay veriyorum.</span></label>
           <div class="bv-err" id="bv_e3"></div>
           <div class="bv-actions"><button class="btn btn-line" data-back="2">← Geri</button><span class="grow"></span><button class="btn btn-primary" id="bvSubmit">Talebi Gönder →</button></div>
@@ -694,7 +691,7 @@ img,svg{display:block;max-width:100%}
     <div class="rf-pipe">
       <div class="rf-node reveal">
         <div class="rn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M22 4 12 14l-3-3"/></svg></div>
-        <div><span class="rn-no">01</span><h4>Talebiniz Alındı</h4><p>Başvurunuz sisteme işlenir, talep numarası oluşturulur ve kapsam (varlık türü, amaç, konum) kayıt altına alınır.</p></div>
+        <div><span class="rn-no">01</span><h4>Talebiniz Alındı</h4><p>Başvurunuz sisteme işlenir, talep numarası oluşturulur ve kapsam (kategori, konum, ada/parsel) kayıt altına alınır.</p></div>
       </div>
       <div class="rf-node reveal d1">
         <div class="rn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></div>
@@ -702,7 +699,7 @@ img,svg{display:block;max-width:100%}
       </div>
       <div class="rf-node reveal d2">
         <div class="rn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/><path d="M17 5l1.4 1.4L21 4"/></svg></div>
-        <div><span class="rn-no">03</span><h4>Uzman Ataması</h4><p>Talebiniz, varlık türünüze uygun SPK lisanslı sorumlu değerleme uzmanına atanır ve sizinle iletişime geçilir.</p></div>
+        <div><span class="rn-no">03</span><h4>Uzman Ataması</h4><p>Talebiniz, seçtiğiniz değerleme kategorisine uygun SPK lisanslı sorumlu değerleme uzmanına atanır.</p></div>
       </div>
       <div class="rf-node reveal d3">
         <div class="rn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7Z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
@@ -760,9 +757,15 @@ img,svg{display:block;max-width:100%}
 </footer>
 
 <script id="bv-js">
-/* Başvuru talep sihirbazı — konum (API + bundled fallback) + 3 adım + lead gönderimi. */
+/* Başvuru talep sihirbazı — il/ilçe/mahalle kademeli (emlakyuvam.com konum servisi
+   + tenant proxy + çevrimdışı yedek) · 3 adım · lead gönderimi. */
 (function () {
   'use strict';
+
+  /* Konum servisi yapılandırması — emlakyuvam.com uçları burada doldurulur.
+     {il}/{ilce} yer tutucuları runtime'da değiştirilir. Boşsa tenant proxy + yedek devreye girer. */
+  window.EMLAK_LOCATION = window.EMLAK_LOCATION || { base: '', iller: '', ilceler: '', mahalleler: '' };
+
   var IL = ["Adana","Adıyaman","Afyonkarahisar","Ağrı","Aksaray","Amasya","Ankara","Antalya","Ardahan","Artvin","Aydın","Balıkesir","Bartın","Batman","Bayburt","Bilecik","Bingöl","Bitlis","Bolu","Burdur","Bursa","Çanakkale","Çankırı","Çorum","Denizli","Diyarbakır","Düzce","Edirne","Elazığ","Erzincan","Erzurum","Eskişehir","Gaziantep","Giresun","Gümüşhane","Hakkâri","Hatay","Iğdır","Isparta","İstanbul","İzmir","Kahramanmaraş","Karabük","Karaman","Kars","Kastamonu","Kayseri","Kırıkkale","Kırklareli","Kırşehir","Kilis","Kocaeli","Konya","Kütahya","Malatya","Manisa","Mardin","Mersin","Muğla","Muş","Nevşehir","Niğde","Ordu","Osmaniye","Rize","Sakarya","Samsun","Siirt","Sinop","Sivas","Şanlıurfa","Şırnak","Tekirdağ","Tokat","Trabzon","Tunceli","Uşak","Van","Yalova","Yozgat","Zonguldak"];
   var ILCE = {
     "İstanbul": ["Adalar","Arnavutköy","Ataşehir","Avcılar","Bağcılar","Bahçelievler","Bakırköy","Başakşehir","Bayrampaşa","Beşiktaş","Beykoz","Beylikdüzü","Beyoğlu","Büyükçekmece","Çatalca","Çekmeköy","Esenler","Esenyurt","Eyüpsultan","Fatih","Gaziosmanpaşa","Güngören","Kadıköy","Kağıthane","Kartal","Küçükçekmece","Maltepe","Pendik","Sancaktepe","Sarıyer","Silivri","Sultanbeyli","Sultangazi","Şile","Şişli","Tuzla","Ümraniye","Üsküdar","Zeytinburnu"],
@@ -774,40 +777,66 @@ img,svg{display:block;max-width:100%}
     "Adana": ["Aladağ","Ceyhan","Çukurova","Feke","İmamoğlu","Karaisalı","Karataş","Kozan","Pozantı","Saimbeyli","Sarıçam","Seyhan","Tufanbeyli","Yumurtalık","Yüreğir"],
     "Mersin": ["Akdeniz","Anamur","Aydıncık","Bozyazı","Çamlıyayla","Erdemli","Gülnar","Mezitli","Mut","Silifke","Tarsus","Toroslar","Yenişehir"]
   };
+
   function api(path, opt) { return (typeof window.proxApi === 'function') ? window.proxApi(path, opt) : Promise.resolve({ fallback: true }); }
-
   function $(id) { return document.getElementById(id); }
-  function opt(v, t) { var o = document.createElement('option'); o.value = v; o.textContent = t || v; return o; }
+  function opt(v) { var o = document.createElement('option'); o.value = v; o.textContent = v; return o; }
+  function norm(j) {
+    var arr = Array.isArray(j) ? j : (j && (j.items || j.data || j.result || j.list)) || [];
+    return arr.map(function (x) { return (typeof x === 'string') ? x : (x && (x.name || x.ad || x.text || x.title || x.label)) || ''; }).filter(Boolean);
+  }
 
-  function fillIl(list) {
-    var s = $('bv_il'); s.innerHTML = ''; s.appendChild(opt('', 'İl seçin'));
-    list.forEach(function (n) { s.appendChild(opt(n)); });
-  }
-  function setIlce(list) {
-    var s = $('bv_ilce');
-    if (list && list.length) {
-      s.innerHTML = ''; s.appendChild(opt('', 'İlçe seçin'));
-      list.forEach(function (n) { s.appendChild(opt(n)); });
-      s.disabled = false;
-    } else {
-      s.outerHTML = '<input id="bv_ilce" placeholder="İlçe adı">';
+  // Konum sağlayıcı: 1) emlakyuvam.com doğrudan (yapılandırıldıysa) 2) tenant proxy 3) çevrimdışı yedek
+  async function locFetch(kind, p) {
+    var L = window.EMLAK_LOCATION || {};
+    if (L.base && L[kind]) {
+      try {
+        var url = L.base + L[kind].replace(/\{(\w+)\}/g, function (_, k) { return encodeURIComponent(p[k] || ''); });
+        var res = await fetch(url, { mode: 'cors' });
+        if (res.ok) { var a = norm(await res.json()); if (a.length) return a; }
+      } catch (e) {}
     }
+    try {
+      var path = kind === 'iller' ? '/api/v1/tenant/locations/iller'
+        : kind === 'ilceler' ? '/api/v1/tenant/locations/ilceler?il=' + encodeURIComponent(p.il || '')
+        : '/api/v1/tenant/locations/mahalleler?il=' + encodeURIComponent(p.il || '') + '&ilce=' + encodeURIComponent(p.ilce || '');
+      var r = await api(path);
+      if (r && !r.fallback) { var b = norm(r); if (b.length) return b; }
+    } catch (e) {}
+    return null;
   }
+
+  function fill(sel, list, ph) {
+    sel.innerHTML = ''; var o0 = document.createElement('option'); o0.value = ''; o0.textContent = ph; sel.appendChild(o0);
+    list.forEach(function (n) { sel.appendChild(opt(n)); });
+    sel.disabled = false;
+  }
+  function freeText(id, ph) { var el = $(id); if (el.tagName !== 'INPUT') el.outerHTML = '<input id="' + id + '" placeholder="' + ph + '">'; }
+  function resetSelect(id, ph) { var el = $(id); if (el.tagName === 'INPUT') el.outerHTML = '<select id="' + id + '" disabled><option value="">' + ph + '</option></select>'; else { el.innerHTML = '<option value="">' + ph + '</option>'; el.disabled = true; } }
 
   async function init() {
-    var r = await api('/api/v1/tenant/locations/iller');
-    var list = (r && Array.isArray(r.items) && r.items.length) ? r.items.map(function (x) { return x.name || x; }) : IL;
-    fillIl(list);
+    var iller = await locFetch('iller', {});
+    fill($('bv_il'), iller || IL, 'İl seçin');
 
     document.addEventListener('change', async function (e) {
-      if (e.target && e.target.id === 'bv_il') {
-        var il = e.target.value;
-        var ce = $('bv_ilce');
-        if (ce && ce.tagName === 'INPUT') { ce.outerHTML = '<select id="bv_ilce"><option value="">İlçe seçin</option></select>'; }
-        if (!il) { var s = $('bv_ilce'); s.innerHTML = '<option value="">Önce il seçin</option>'; s.disabled = true; return; }
-        var rr = await api('/api/v1/tenant/locations/ilceler?il=' + encodeURIComponent(il));
-        var ilceler = (rr && Array.isArray(rr.items) && rr.items.length) ? rr.items.map(function (x) { return x.name || x; }) : (ILCE[il] || null);
-        setIlce(ilceler);
+      if (!e.target) return;
+      if (e.target.id === 'bv_il') {
+        resetSelect('bv_ilce', 'Önce il seçin'); resetSelect('bv_mah', 'Önce ilçe seçin');
+        var il = e.target.value; if (!il) return;
+        var s = $('bv_ilce'); s.innerHTML = '<option value="">Yükleniyor…</option>';
+        var ilceler = await locFetch('ilceler', { il: il });
+        if (!ilceler) ilceler = ILCE[il] || null;
+        if (ilceler && ilceler.length) fill($('bv_ilce'), ilceler, 'İlçe seçin');
+        else { freeText('bv_ilce', 'İlçe adı'); freeText('bv_mah', 'Mahalle adı'); }
+      } else if (e.target.id === 'bv_ilce') {
+        var mEl = $('bv_mah'); if (mEl.tagName === 'INPUT') return;
+        resetSelect('bv_mah', 'Önce ilçe seçin');
+        var ilce = e.target.value; if (!ilce) return;
+        var ilSel = $('bv_il'); var ilv = ilSel ? ilSel.value : '';
+        var ms = $('bv_mah'); ms.innerHTML = '<option value="">Yükleniyor…</option>';
+        var mah = await locFetch('mahalleler', { il: ilv, ilce: ilce });
+        if (mah && mah.length) fill($('bv_mah'), mah, 'Mahalle seçin');
+        else freeText('bv_mah', 'Mahalle adı'); // canlı mahalle servisi yoksa serbest giriş
       }
     });
 
@@ -823,29 +852,23 @@ img,svg{display:block;max-width:100%}
   function curStep() { var on = document.querySelector('.bv-pane.on'); return on ? parseInt(on.dataset.p, 10) : 1; }
   function go(n) {
     document.querySelectorAll('.bv-pane').forEach(function (p) { p.classList.toggle('on', parseInt(p.dataset.p, 10) === n); });
-    document.querySelectorAll('#bvSteps .s').forEach(function (s) {
-      var sn = parseInt(s.dataset.s, 10);
-      s.classList.toggle('act', sn === n);
-      s.classList.toggle('done', sn < n);
-    });
+    document.querySelectorAll('#bvSteps .s').forEach(function (s) { var sn = parseInt(s.dataset.s, 10); s.classList.toggle('act', sn === n); s.classList.toggle('done', sn < n); });
     $('bvProg').style.width = (n / 3 * 100) + '%';
     var card = $('bvCard'); if (card && card.scrollIntoView) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-
   function val(id) { var e = $(id); return e ? (e.value || '').trim() : ''; }
-  function radio(name) { var r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : ''; }
 
   function validateStep(n) {
     if (n === 1) {
       var e = $('bv_e1'); e.textContent = '';
       if (!val('bv_il')) { e.textContent = '⚠ Lütfen il seçin.'; return false; }
       if (!val('bv_ilce')) { e.textContent = '⚠ Lütfen ilçe seçin/girin.'; return false; }
+      if (!val('bv_mah')) { e.textContent = '⚠ Lütfen mahalle seçin/girin.'; return false; }
       return true;
     }
     if (n === 2) {
       var e2 = $('bv_e2'); e2.textContent = '';
-      if (!radio('asset')) { e2.textContent = '⚠ Varlık türü seçin.'; return false; }
-      if (!radio('purpose')) { e2.textContent = '⚠ Rapor amacı seçin.'; return false; }
+      if (!val('bv_cat')) { e2.textContent = '⚠ Değerleme kategorisi seçin.'; return false; }
       return true;
     }
     return true;
@@ -859,8 +882,9 @@ img,svg{display:block;max-width:100%}
     if (!$('bv_kvkk').checked) { e.textContent = '⚠ Devam için KVKK onayı gereklidir.'; return; }
     var payload = {
       type: 'degerleme-basvuru', source: 'basvuru',
-      il: val('bv_il'), ilce: val('bv_ilce'), mahalle: val('bv_mah'), ada_parsel: val('bv_adapar'), adres: val('bv_adres'),
-      asset: radio('asset'), purpose: radio('purpose'), area: val('bv_area'), tapu: val('bv_tapu'),
+      il: val('bv_il'), ilce: val('bv_ilce'), mahalle: val('bv_mah'),
+      ada: val('bv_ada'), parsel: val('bv_parsel'), bagimsiz_bolum: val('bv_bb'), adres: val('bv_adres'),
+      kategori: val('bv_cat'), m2: val('bv_area'),
       name: name, phone: phone, email: val('bv_mail'), note: val('bv_note')
     };
     var btn = $('bvSubmit'); btn.disabled = true; btn.textContent = 'Gönderiliyor…';
@@ -870,13 +894,14 @@ img,svg{display:block;max-width:100%}
   }
 
   function showSuccess(p) {
-    var tno = 'DEG-2026-' + String(1000 + Math.floor(Math.random() * 8999));
-    $('bvTno').textContent = tno;
+    $('bvTno').textContent = 'DEG-2026-' + String(1000 + Math.floor(Math.random() * 8999));
+    var adapar = [p.ada && 'Ada ' + p.ada, p.parsel && 'Parsel ' + p.parsel, p.bagimsiz_bolum && 'B.B. ' + p.bagimsiz_bolum].filter(Boolean).join(' · ');
     $('bvSummary').innerHTML =
-      '<div><span>Konum</span><b>' + esc(p.il) + (p.ilce ? ' / ' + esc(p.ilce) : '') + (p.mahalle ? ' / ' + esc(p.mahalle) : '') + '</b></div>' +
-      '<div><span>Varlık türü</span><b>' + esc(p.asset) + '</b></div>' +
-      '<div><span>Rapor amacı</span><b>' + esc(p.purpose) + '</b></div>' +
-      '<div><span>İletişim</span><b>' + esc(p.name) + '</b></div>';
+      '<div><span>Konum</span><b>' + esc(p.il) + ' / ' + esc(p.ilce) + ' / ' + esc(p.mahalle) + '</b></div>' +
+      (adapar ? '<div><span>Ada/Parsel</span><b>' + esc(adapar) + '</b></div>' : '') +
+      '<div><span>Kategori</span><b>' + esc(p.kategori) + '</b></div>' +
+      (p.m2 ? '<div><span>Alan</span><b>' + esc(p.m2) + ' m²</b></div>' : '') +
+      '<div><span>İletişim</span><b>' + esc(p.name) + ' · ' + esc(p.phone) + '</b></div>';
     $('bvSteps').style.display = 'none';
     document.querySelector('.bv-prog').style.display = 'none';
     $('bvBody').style.display = 'none';
