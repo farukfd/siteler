@@ -498,26 +498,49 @@ img,svg{display:block;max-width:100%}
       </div>
     </div>
     <aside class="hero-panel" style="animation:hzFloat 6s ease-in-out infinite">
-      <div class="cap">Veri + Saha + Lisans</div>
-      <svg class="pv hz-hero-svg" viewBox="0 0 380 300" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="500 milyonu aşkın veri, sahadaki lisanslı uzman ve imzalı rapor zinciri">
-        <g class="ring" stroke="rgba(188,208,255,.26)" stroke-width="1.2" fill="none"><circle cx="190" cy="150" r="120" stroke-dasharray="3 8"/></g>
-        <!-- veri bulutu -->
-        <g class="pulse" fill="#bcd0ff" opacity=".9"><circle cx="60" cy="70" r="3"/><circle cx="92" cy="52" r="2.4"/><circle cx="120" cy="78" r="3"/><circle cx="78" cy="104" r="2.4"/><circle cx="48" cy="120" r="2.4"/><circle cx="110" cy="120" r="2.4"/></g>
-        <text x="84" y="150" text-anchor="middle" fill="#9fe6c0" font-family="Poppins,sans-serif" font-weight="800" font-size="20">500M+</text>
-        <text x="84" y="168" text-anchor="middle" fill="#bcd0ff" font-family="Inter,sans-serif" font-size="10">veri noktası</text>
-        <!-- merkez SPK -->
-        <circle cx="210" cy="150" r="42" fill="#0b1220" stroke="#b4975a" stroke-width="2"/>
-        <text x="210" y="146" text-anchor="middle" fill="#bcd0ff" font-family="Poppins,sans-serif" font-weight="700" font-size="15">SPK</text>
-        <text x="210" y="163" text-anchor="middle" fill="#9fe6c0" font-family="Inter,sans-serif" font-size="9">LİSANSLI</text>
-        <path class="draw" d="M150 150 168 150M252 150 300 150M210 108 210 60M210 192 210 244" stroke="#9fe6c0" stroke-width="1.8"/>
-        <!-- saha uzmanı -->
-        <g class="pulse b" stroke="#bcd0ff" stroke-width="2.2"><circle cx="318" cy="78" r="11" fill="rgba(47,91,208,.2)"/><path d="M302 110c2-9 8-13 16-13s14 4 16 13"/></g>
-        <text x="318" y="132" text-anchor="middle" fill="#bcd0ff" font-family="Inter,sans-serif" font-size="9">Saha uzmanı</text>
-        <!-- imzalı rapor -->
-        <g class="pulse c"><rect x="298" y="196" width="42" height="52" rx="5" fill="rgba(255,255,255,.08)" stroke="#bcd0ff"/><path d="M306 210h26M306 222h26M306 234h16" stroke="#bcd0ff" stroke-width="2"/></g>
-        <text x="319" y="262" text-anchor="middle" fill="#bcd0ff" font-family="Inter,sans-serif" font-size="9">İmzalı rapor</text>
+      <div class="cap">Değerleme Serüveni</div>
+      <svg class="pv hz-hero-svg" viewBox="0 0 380 300" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Veriden sahaya, lisanstan imzalı rapora uzanan değerleme serüveni">
+        <defs>
+          <linearGradient id="nbpath" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#2f5bd0"/><stop offset=".55" stop-color="#7fb0ff"/><stop offset="1" stop-color="#9fe6c0"/></linearGradient>
+          <radialGradient id="nbglow"><stop offset="0" stop-color="#9fe6c0" stop-opacity=".9"/><stop offset="1" stop-color="#9fe6c0" stop-opacity="0"/></radialGradient>
+        </defs>
+        <!-- dönen yörüngeler (dekor) -->
+        <circle cx="190" cy="150" r="134" fill="none" stroke="rgba(188,208,255,.12)" stroke-width="1" stroke-dasharray="2 10"><animateTransform attributeName="transform" type="rotate" from="0 190 150" to="360 190 150" dur="44s" repeatCount="indefinite"/></circle>
+        <circle cx="190" cy="150" r="108" fill="none" stroke="rgba(188,208,255,.07)" stroke-width="1" stroke-dasharray="2 13"/>
+        <!-- serüven rotası (soluk) -->
+        <path d="M50 226 C 86 200 92 110 126 96 C 168 79 190 168 214 168 C 258 168 300 104 320 80" stroke="rgba(188,208,255,.28)" stroke-width="2" stroke-dasharray="3 7"/>
+        <!-- ilerleyen ışıklı rota (bir kez çizilir) -->
+        <path d="M50 226 C 86 200 92 110 126 96 C 168 79 190 168 214 168 C 258 168 300 104 320 80" stroke="url(#nbpath)" stroke-width="2.8" stroke-dasharray="420" stroke-dashoffset="420"><animate attributeName="stroke-dashoffset" from="420" to="0" dur="3.6s" begin="0.3s" fill="freeze"/></path>
+        <!-- DURAK 1 · VERİ -->
+        <circle cx="50" cy="226" r="17" fill="url(#nbglow)"><animate attributeName="opacity" values="0;.9;0" dur="4.4s" begin="0s" repeatCount="indefinite"/></circle>
+        <circle cx="50" cy="226" r="20" fill="rgba(47,91,208,.22)" stroke="#bcd0ff" stroke-width="1.5"/>
+        <g class="anim-pulse" fill="#9fe6c0"><circle cx="43" cy="222" r="1.8"/><circle cx="50" cy="219" r="1.8"/><circle cx="57" cy="224" r="1.8"/><circle cx="46" cy="231" r="1.8"/><circle cx="55" cy="232" r="1.8"/></g>
+        <text x="50" y="262" text-anchor="middle" fill="#bcd0ff" font-family="Inter,sans-serif" font-size="10.5">Veri · 500M+</text>
+        <!-- DURAK 2 · SAHA -->
+        <circle cx="126" cy="96" r="17" fill="url(#nbglow)"><animate attributeName="opacity" values="0;.9;0" dur="4.4s" begin="1.3s" repeatCount="indefinite"/></circle>
+        <circle cx="126" cy="96" r="20" fill="rgba(47,91,208,.22)" stroke="#bcd0ff" stroke-width="1.5"/>
+        <path d="M126 86a7 7 0 0 1 7 7c0 5-7 12-7 12s-7-7-7-12a7 7 0 0 1 7-7Z" fill="rgba(159,230,192,.3)" stroke="#9fe6c0" stroke-width="1.5"/><circle cx="126" cy="93" r="2.6" fill="#9fe6c0"/>
+        <text x="126" y="66" text-anchor="middle" fill="#bcd0ff" font-family="Inter,sans-serif" font-size="10.5">Saha</text>
+        <!-- DURAK 3 · SPK LİSANS (mühür) -->
+        <circle cx="214" cy="168" r="19" fill="url(#nbglow)"><animate attributeName="opacity" values="0;1;0" dur="4.4s" begin="2.5s" repeatCount="indefinite"/></circle>
+        <circle cx="214" cy="168" r="34" fill="none" stroke="rgba(180,151,90,.55)" stroke-width="1.2" stroke-dasharray="3 5"><animateTransform attributeName="transform" type="rotate" from="0 214 168" to="360 214 168" dur="14s" repeatCount="indefinite"/></circle>
+        <circle cx="214" cy="168" r="27" fill="#0b1220" stroke="#b4975a" stroke-width="2"/>
+        <text x="214" y="164" text-anchor="middle" fill="#bcd0ff" font-family="Poppins,sans-serif" font-weight="700" font-size="13">SPK</text>
+        <text x="214" y="178" text-anchor="middle" fill="#9fe6c0" font-family="Inter,sans-serif" font-size="8">LİSANSLI</text>
+        <!-- DURAK 4 · İMZALI RAPOR -->
+        <circle cx="320" cy="80" r="17" fill="url(#nbglow)"><animate attributeName="opacity" values="0;.95;0" dur="4.4s" begin="3.6s" repeatCount="indefinite"/></circle>
+        <rect x="302" y="56" width="36" height="48" rx="5" fill="rgba(255,255,255,.08)" stroke="#bcd0ff" stroke-width="1.5"/>
+        <path d="M309 68h22M309 78h22" stroke="#bcd0ff" stroke-width="1.8"/>
+        <path d="M309 92c3-5 6 4 9 0s5-3 8-1" stroke="#9fe6c0" stroke-width="2" stroke-dasharray="40" stroke-dashoffset="40"><animate attributeName="stroke-dashoffset" from="40" to="0" dur="1s" begin="3.9s;8.3s;12.7s" fill="freeze"/></path>
+        <text x="320" y="124" text-anchor="middle" fill="#bcd0ff" font-family="Inter,sans-serif" font-size="10.5">İmzalı Rapor</text>
+        <!-- AKAN IŞIK PAKETLERİ (serüven) -->
+        <g>
+          <circle r="5" fill="#9fe6c0"><animateMotion dur="4.4s" begin="0s" repeatCount="indefinite" path="M50 226 C 86 200 92 110 126 96 C 168 79 190 168 214 168 C 258 168 300 104 320 80"/><animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.08;.5;.92;1" dur="4.4s" repeatCount="indefinite"/></circle>
+          <circle r="3.4" fill="#bcd0ff"><animateMotion dur="4.4s" begin="1.5s" repeatCount="indefinite" path="M50 226 C 86 200 92 110 126 96 C 168 79 190 168 214 168 C 258 168 300 104 320 80"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.1;.9;1" dur="4.4s" begin="1.5s" repeatCount="indefinite"/></circle>
+          <circle r="3" fill="#cfe0ff"><animateMotion dur="4.4s" begin="3s" repeatCount="indefinite" path="M50 226 C 86 200 92 110 126 96 C 168 79 190 168 214 168 C 258 168 300 104 320 80"/></circle>
+        </g>
       </svg>
-      <div class="flow"><b>Veri</b><span class="ar">→</span><b>Saha &amp; Lisans</b><span class="ar">→</span><b>İmzalı Rapor</b></div>
+      <div class="flow"><b>Veri</b><span class="ar">→</span><b>Saha</b><span class="ar">→</span><b>Lisans</b><span class="ar">→</span><b>İmzalı Rapor</b></div>
       <div class="chips"><span>Bağımsız</span><span>Tarafsız</span><span>Denetlenebilir</span></div>
     </aside>
   </div>
