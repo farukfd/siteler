@@ -17,6 +17,7 @@
 {"@context":"https://schema.org","@type":"WebPage","name":"Değerleme Başvurusu","description":"SPK lisanslı gayrimenkul değerleme talep formu ve süreç bilgilendirmesi."}
 </script>
 
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -567,6 +568,48 @@ img,svg{display:block;max-width:100%}
 .bv-summary div{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px dashed var(--line)}
 .bv-summary div:last-child{border-bottom:0}.bv-summary b{color:var(--ink);text-align:right}
 
+/* ============================================================
+   İLETİŞİM — adres + harita + canlı destek (ct-*) · 2026
+   ============================================================ */
+.ct-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:30px;align-items:stretch}
+@media(max-width:900px){.ct-grid{grid-template-columns:1fr}}
+.ct-info{display:grid;gap:14px;align-content:start}
+.ct-row{display:flex;gap:15px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;transition:transform .2s,box-shadow .2s,border-color .2s}
+.ct-row:hover{border-color:#cdd8ea;box-shadow:var(--shadow-sm);transform:translateY(-2px)}
+.ct-row .ci{width:46px;height:46px;flex:none;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff}
+.ct-row .ci svg{width:22px;height:22px}
+.ct-row b{font-family:var(--head);font-size:14px;display:block;margin-bottom:3px}
+.ct-row a,.ct-row span{color:var(--ink-2);font-size:13.5px;line-height:1.5;text-decoration:none;word-break:break-word}
+.ct-row a:hover{color:var(--accent)}
+.ct-on{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--teal)}
+.ct-on i{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 0 rgba(29,158,117,.5);animation:ctPulse 2s infinite}
+@keyframes ctPulse{0%{box-shadow:0 0 0 0 rgba(29,158,117,.5)}70%{box-shadow:0 0 0 9px rgba(29,158,117,0)}100%{box-shadow:0 0 0 0 rgba(29,158,117,0)}}
+.ct-map{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow-sm);min-height:360px;background:var(--surface)}
+.ct-map iframe{width:100%;height:100%;min-height:360px;border:0;display:block;filter:saturate(1.05)}
+.ct-pin{position:absolute;left:16px;top:16px;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:12px;padding:9px 13px;font-size:12.5px;font-weight:600;color:var(--ink);box-shadow:var(--shadow-sm);display:flex;gap:8px;align-items:center;z-index:2;max-width:78%}
+.ct-pin svg{width:16px;height:16px;color:var(--accent);flex:none}
+
+/* Canlı destek (chat) */
+.ct-support{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;max-width:640px;margin:0 auto}
+.ct-sh{display:flex;align-items:center;gap:12px;padding:16px 20px;background:linear-gradient(135deg,var(--accent),var(--navy));color:#fff}
+.ct-sh .av{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-family:var(--head);font-weight:800;flex:none}
+.ct-sh b{font-family:var(--head);font-size:14.5px;display:block}
+.ct-sh .ct-on{color:#9fe6c0}
+.ct-sh .ct-on i{background:#9fe6c0}
+.ct-msgs{padding:18px;display:flex;flex-direction:column;gap:10px;min-height:170px;max-height:300px;overflow:auto}
+.ct-bot,.ct-me{max-width:84%;font-size:13.5px;line-height:1.5;padding:10px 13px;border-radius:14px}
+.ct-bot{background:var(--surface);color:var(--ink-2);border-bottom-left-radius:4px;align-self:flex-start}
+.ct-me{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.ct-input{display:flex;gap:8px;padding:14px 16px;border-top:1px solid var(--line)}
+.ct-input input{flex:1;border:1px solid var(--line);border-radius:10px;padding:12px 13px;font-size:14px;font-family:var(--body);outline:none}
+.ct-input input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(47,91,208,.12)}
+.ct-input button{border:0;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border-radius:10px;padding:0 18px;font-family:var(--head);font-weight:600;font-size:14px;cursor:pointer}
+.ct-quick{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 16px}
+.ct-quick a{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;border-radius:99px;padding:9px 14px;border:1px solid var(--line);color:var(--ink-2);transition:.18s}
+.ct-quick a svg{width:15px;height:15px}
+.ct-quick a.wa{background:#25d366;border-color:#25d366;color:#fff}
+.ct-quick a:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+
 </style>
 </head>
 <body>
@@ -749,7 +792,7 @@ img,svg{display:block;max-width:100%}
         <p>SPK lisanslı, BDDK yetkili bağımsız gayrimenkul ve varlık değerleme kuruluşu. Resmî rapor SPK lisanslı uzman tarafından hazırlanır ve imzalanır.</p>
       </div>
       <div><h4>Hizmetler</h4><ul><li><a href="rapor-turleri.html">Rapor Türleri</a></li><li><a href="metodoloji.html">Metodoloji</a></li><li><a href="basvuru.html">Başvuru</a></li></ul></div>
-      <div><h4>Kurumsal</h4><ul><li><a href="spk-guven-merkezi.html">SPK Güven Merkezi</a></li><li><a href="raporu-kim-imzalar.html">Raporu Kim İmzalar?</a></li></ul></div>
+      <div><h4>Kurumsal</h4><ul><li><a href="spk-guven-merkezi.html">SPK Güven Merkezi</a></li><li><a href="raporu-kim-imzalar.html">Raporu Kim İmzalar?</a></li><li><a href="iletisim.html">İletişim</a></li></ul></div>
       <div><h4>Yasal</h4><ul><li><a href="#">KVKK Aydınlatma</a></li><li><a href="#">Gizlilik Politikası</a></li></ul></div>
     </div>
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
@@ -913,6 +956,7 @@ img,svg{display:block;max-width:100%}
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
+
 <script id="deg-inline-js">
 /* Meridyen Değerleme — kurumsal site JS (sade, çerçevesiz).
    Üyelik modeli: Personel/Danışman girişi + Müşteri (anahtar) girişi.
@@ -1045,6 +1089,7 @@ img,svg{display:block;max-width:100%}
   }
   function degAdminHTML() {
     var s = degAdminLoad();
+    var c = s.contact || {};
     function val(v) { return v ? String(v).replace(/"/g, '&quot;') : ''; }
     return '<div class="sta-ov" data-aclose="1"></div><div class="sta-card">'
       + '<div class="sta-hd"><b>⚡ Bağımsız Yönetim Paneli · Meridyen Değerleme</b><button data-aclose="1" aria-label="Kapat">✕</button></div>'
@@ -1053,6 +1098,7 @@ img,svg{display:block;max-width:100%}
       + '<button data-t="tema">Tema & Logo</button>'
       + '<button data-t="google">Google & Meta</button>'
       + '<button data-t="prox">ProX AI</button>'
+      + '<button data-t="iletisim">İletişim & Adres</button>'
       + '<button data-t="api">API Durumu</button>'
       + '</div><div class="sta-body">'
       + '<div class="sta-pane" data-p="rapor"><h4>Resmî Değerleme Raporu (emlakekspertizi.com API)</h4><p class="sub">Merkez API ile endeks & mevzuat verisi çekilir; SPK lisanslı uzman dosyayı düzenler ve <b>resmî PDF</b> üretilir.</p>'
@@ -1072,6 +1118,12 @@ img,svg{display:block;max-width:100%}
       + '<div class="sta-pane" data-p="prox" hidden><h4>ProX AI — Kuruma Özel Prompt</h4><p class="sub">SPK/UDES resmî promptuna eklenir. Örn: "Endüstriyel tesis değerlemesinde uzmanız."</p>'
       + '<textarea id="ap_prompt" rows="4" placeholder="Kuruma özel uzmanlık / ton...">' + (s.proxPrompt || '') + '</textarea>'
       + '<button class="sta-go" id="ap_btn" style="margin-top:8px">Kaydet</button></div>'
+      + '<div class="sta-pane" data-p="iletisim" hidden><h4>İletişim & Adres</h4><p class="sub">Bu bilgiler İletişim sayfasında ve haritada gösterilir. Harita için tam adres ya da "enlem,boylam" girin (Google Haritalar konumu).</p>'
+      + '<div class="sta-row2"><div class="sta-f"><label>Firma Adı</label><input id="ct_firma" value="' + val(c.firma) + '" placeholder="Meridyen Gayrimenkul Değerleme A.Ş."></div><div class="sta-f"><label>Telefon</label><input id="ct_tel" value="' + val(c.tel) + '" placeholder="+90 (212) ..."></div></div>'
+      + '<div class="sta-row2"><div class="sta-f"><label>WhatsApp No</label><input id="ct_wa" value="' + val(c.whatsapp) + '" placeholder="905xxxxxxxxx"></div><div class="sta-f"><label>E-posta</label><input id="ct_mail" value="' + val(c.email) + '" placeholder="iletisim@..."></div></div>'
+      + '<div class="sta-f"><label>Adres</label><input id="ct_adres" value="' + val(c.adres) + '" placeholder="Mahalle, cadde, no, ilçe / il"></div>'
+      + '<div class="sta-row2"><div class="sta-f"><label>Çalışma Saatleri</label><input id="ct_saat" value="' + val(c.saat) + '" placeholder="Hafta içi 09:00 – 18:00"></div><div class="sta-f"><label>Harita Konumu</label><input id="ct_harita" value="' + val(c.harita) + '" placeholder="41.0082,28.9784 veya adres"></div></div>'
+      + '<button class="sta-go" id="ct_btn">Kaydet & İletişim Sayfasına Uygula</button><div class="sta-out" id="ct_out"></div></div>'
       + '<div class="sta-pane" data-p="api" hidden><h4>API Kullanım Durumu</h4><p class="sub">Merkez ProX uçlarının canlı yoklaması (X-Tenant-Id: ' + EMLAK_TENANT.tenant_id + ').</p>'
       + '<div id="aa_out"><button class="sta-go" id="aa_btn">Yokla</button></div></div>'
       + '</div></div>';
@@ -1093,6 +1145,15 @@ img,svg{display:block;max-width:100%}
     m.querySelector('#at_btn').addEventListener('click', function () { var s = degAdminLoad(); s.favicon = m.querySelector('#at_fav').value.trim(); s.theme = m.querySelector('#at_theme').value; degAdminSaveStore(s); degApplySettings(); degToast('Tema & logo uygulandı.'); });
     m.querySelector('#ag_btn').addEventListener('click', function () { var s = degAdminLoad(); s.ga = m.querySelector('#ag_ga').value.trim(); s.gsc = m.querySelector('#ag_gsc').value.trim(); s.metaTitle = m.querySelector('#ag_title').value.trim(); s.metaDesc = m.querySelector('#ag_desc').value.trim(); degAdminSaveStore(s); degApplySettings(); degToast('Google & Meta kaydedildi.'); });
     m.querySelector('#ap_btn').addEventListener('click', function () { var s = degAdminLoad(); s.proxPrompt = m.querySelector('#ap_prompt').value.trim(); degAdminSaveStore(s); degToast('Kuruma özel ProX promptu kaydedildi.'); });
+    m.querySelector('#ct_btn').addEventListener('click', function () {
+      function gv(id) { var e = m.querySelector('#' + id); return e ? e.value.trim() : ''; }
+      var s = degAdminLoad();
+      s.contact = { firma: gv('ct_firma'), tel: gv('ct_tel'), whatsapp: gv('ct_wa'), email: gv('ct_mail'), adres: gv('ct_adres'), saat: gv('ct_saat'), harita: gv('ct_harita') };
+      degAdminSaveStore(s);
+      var o = m.querySelector('#ct_out'); o.className = 'sta-out'; o.innerHTML = '<span class="ok">✓ İletişim & adres kaydedildi ve uygulandı.</span>';
+      try { degContactApply(); } catch (e) {}
+      degToast('İletişim bilgileri güncellendi.');
+    });
     m.querySelector('#aa_btn').addEventListener('click', degAdminPingApi);
     return m;
   }
@@ -1123,6 +1184,44 @@ img,svg{display:block;max-width:100%}
     }
     host.innerHTML = '<table class="aa-tbl"><tbody>' + rows.join('') + '</tbody></table><p class="sub" style="margin-top:8px">Not: tenant anahtarı yalnız başlıkta gönderilir; loglanmaz.</p><button class="sta-go" id="aa_btn2">Yeniden Yokla</button>';
     var b2 = document.getElementById('aa_btn2'); if (b2) b2.addEventListener('click', degAdminPingApi);
+  }
+
+  /* ===== İletişim sayfası — admin'den adres/harita + canlı destek (ProX) ===== */
+  function degContactApply() {
+    var c = (degAdminLoad().contact) || {};
+    function setTxt(id, t) { var e = document.getElementById(id); if (e && t) e.textContent = t; }
+    function setHref(id, h) { var e = document.getElementById(id); if (e && h) e.setAttribute('href', h); }
+    var firma = c.firma || 'Meridyen Gayrimenkul Değerleme A.Ş.';
+    var adres = c.adres || 'Merkez Mah. Değerleme Cad. No: 1 · İstanbul';
+    var tel = c.tel || '+90 (212) 000 00 00';
+    var wa = (c.whatsapp || '905000000000').replace(/[^0-9]/g, '');
+    var mail = c.email || 'iletisim@meridyendegerleme.com';
+    var saat = c.saat || 'Hafta içi 09:00 – 18:00 · Cumartesi 10:00 – 14:00';
+    var harita = c.harita || '41.0082,28.9784';
+    setTxt('ctFirma', firma); setTxt('ctAdres', adres); setTxt('ctTel', tel); setTxt('ctMail', mail); setTxt('ctSaat', saat); setTxt('ctPinTxt', firma);
+    setHref('ctTelA', 'tel:' + tel.replace(/[^0-9+]/g, ''));
+    setHref('ctMailA', 'mailto:' + mail);
+    setHref('ctWa', 'https://wa.me/' + wa); setHref('ctWaBtn', 'https://wa.me/' + wa);
+    var map = document.getElementById('ctMap');
+    if (map) map.src = 'https://maps.google.com/maps?q=' + encodeURIComponent(harita) + '&z=14&output=embed';
+  }
+  function degContactInit() {
+    if (!document.getElementById('ctMap')) return; // yalnız iletişim sayfası
+    try { degContactApply(); } catch (e) {}
+    var send = document.getElementById('ctSend'), inp = document.getElementById('ctIn'), box = document.getElementById('ctMsgs');
+    if (!send || !inp || !box) return;
+    function add(cls, txt) { var d = document.createElement('div'); d.className = cls; d.textContent = txt; box.appendChild(d); box.scrollTop = box.scrollHeight; return d; }
+    async function go() {
+      var t = inp.value.trim(); if (!t) return;
+      add('ct-me', t); inp.value = ''; send.disabled = true;
+      var w = add('ct-bot', 'Yanıt hazırlanıyor…');
+      var ans = '';
+      try { ans = window.degProxAi ? await degProxAi(t) : ''; } catch (e) {}
+      w.textContent = ans || 'Şu an için en hızlı yanıt WhatsApp hattımızdan; talebinizi oluşturmak isterseniz “Talep Oluştur” adımına geçebilirsiniz.';
+      send.disabled = false; inp.focus();
+    }
+    send.addEventListener('click', go);
+    inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
   /* ---- Toast ---- */
@@ -1241,7 +1340,7 @@ img,svg{display:block;max-width:100%}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); } catch (e) {}
 })();
 
 </script>

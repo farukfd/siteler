@@ -129,6 +129,7 @@
   }
   function degAdminHTML() {
     var s = degAdminLoad();
+    var c = s.contact || {};
     function val(v) { return v ? String(v).replace(/"/g, '&quot;') : ''; }
     return '<div class="sta-ov" data-aclose="1"></div><div class="sta-card">'
       + '<div class="sta-hd"><b>⚡ Bağımsız Yönetim Paneli · Meridyen Değerleme</b><button data-aclose="1" aria-label="Kapat">✕</button></div>'
@@ -137,6 +138,7 @@
       + '<button data-t="tema">Tema & Logo</button>'
       + '<button data-t="google">Google & Meta</button>'
       + '<button data-t="prox">ProX AI</button>'
+      + '<button data-t="iletisim">İletişim & Adres</button>'
       + '<button data-t="api">API Durumu</button>'
       + '</div><div class="sta-body">'
       + '<div class="sta-pane" data-p="rapor"><h4>Resmî Değerleme Raporu (emlakekspertizi.com API)</h4><p class="sub">Merkez API ile endeks & mevzuat verisi çekilir; SPK lisanslı uzman dosyayı düzenler ve <b>resmî PDF</b> üretilir.</p>'
@@ -156,6 +158,12 @@
       + '<div class="sta-pane" data-p="prox" hidden><h4>ProX AI — Kuruma Özel Prompt</h4><p class="sub">SPK/UDES resmî promptuna eklenir. Örn: "Endüstriyel tesis değerlemesinde uzmanız."</p>'
       + '<textarea id="ap_prompt" rows="4" placeholder="Kuruma özel uzmanlık / ton...">' + (s.proxPrompt || '') + '</textarea>'
       + '<button class="sta-go" id="ap_btn" style="margin-top:8px">Kaydet</button></div>'
+      + '<div class="sta-pane" data-p="iletisim" hidden><h4>İletişim & Adres</h4><p class="sub">Bu bilgiler İletişim sayfasında ve haritada gösterilir. Harita için tam adres ya da "enlem,boylam" girin (Google Haritalar konumu).</p>'
+      + '<div class="sta-row2"><div class="sta-f"><label>Firma Adı</label><input id="ct_firma" value="' + val(c.firma) + '" placeholder="Meridyen Gayrimenkul Değerleme A.Ş."></div><div class="sta-f"><label>Telefon</label><input id="ct_tel" value="' + val(c.tel) + '" placeholder="+90 (212) ..."></div></div>'
+      + '<div class="sta-row2"><div class="sta-f"><label>WhatsApp No</label><input id="ct_wa" value="' + val(c.whatsapp) + '" placeholder="905xxxxxxxxx"></div><div class="sta-f"><label>E-posta</label><input id="ct_mail" value="' + val(c.email) + '" placeholder="iletisim@..."></div></div>'
+      + '<div class="sta-f"><label>Adres</label><input id="ct_adres" value="' + val(c.adres) + '" placeholder="Mahalle, cadde, no, ilçe / il"></div>'
+      + '<div class="sta-row2"><div class="sta-f"><label>Çalışma Saatleri</label><input id="ct_saat" value="' + val(c.saat) + '" placeholder="Hafta içi 09:00 – 18:00"></div><div class="sta-f"><label>Harita Konumu</label><input id="ct_harita" value="' + val(c.harita) + '" placeholder="41.0082,28.9784 veya adres"></div></div>'
+      + '<button class="sta-go" id="ct_btn">Kaydet & İletişim Sayfasına Uygula</button><div class="sta-out" id="ct_out"></div></div>'
       + '<div class="sta-pane" data-p="api" hidden><h4>API Kullanım Durumu</h4><p class="sub">Merkez ProX uçlarının canlı yoklaması (X-Tenant-Id: ' + EMLAK_TENANT.tenant_id + ').</p>'
       + '<div id="aa_out"><button class="sta-go" id="aa_btn">Yokla</button></div></div>'
       + '</div></div>';
@@ -177,6 +185,15 @@
     m.querySelector('#at_btn').addEventListener('click', function () { var s = degAdminLoad(); s.favicon = m.querySelector('#at_fav').value.trim(); s.theme = m.querySelector('#at_theme').value; degAdminSaveStore(s); degApplySettings(); degToast('Tema & logo uygulandı.'); });
     m.querySelector('#ag_btn').addEventListener('click', function () { var s = degAdminLoad(); s.ga = m.querySelector('#ag_ga').value.trim(); s.gsc = m.querySelector('#ag_gsc').value.trim(); s.metaTitle = m.querySelector('#ag_title').value.trim(); s.metaDesc = m.querySelector('#ag_desc').value.trim(); degAdminSaveStore(s); degApplySettings(); degToast('Google & Meta kaydedildi.'); });
     m.querySelector('#ap_btn').addEventListener('click', function () { var s = degAdminLoad(); s.proxPrompt = m.querySelector('#ap_prompt').value.trim(); degAdminSaveStore(s); degToast('Kuruma özel ProX promptu kaydedildi.'); });
+    m.querySelector('#ct_btn').addEventListener('click', function () {
+      function gv(id) { var e = m.querySelector('#' + id); return e ? e.value.trim() : ''; }
+      var s = degAdminLoad();
+      s.contact = { firma: gv('ct_firma'), tel: gv('ct_tel'), whatsapp: gv('ct_wa'), email: gv('ct_mail'), adres: gv('ct_adres'), saat: gv('ct_saat'), harita: gv('ct_harita') };
+      degAdminSaveStore(s);
+      var o = m.querySelector('#ct_out'); o.className = 'sta-out'; o.innerHTML = '<span class="ok">✓ İletişim & adres kaydedildi ve uygulandı.</span>';
+      try { degContactApply(); } catch (e) {}
+      degToast('İletişim bilgileri güncellendi.');
+    });
     m.querySelector('#aa_btn').addEventListener('click', degAdminPingApi);
     return m;
   }
@@ -207,6 +224,44 @@
     }
     host.innerHTML = '<table class="aa-tbl"><tbody>' + rows.join('') + '</tbody></table><p class="sub" style="margin-top:8px">Not: tenant anahtarı yalnız başlıkta gönderilir; loglanmaz.</p><button class="sta-go" id="aa_btn2">Yeniden Yokla</button>';
     var b2 = document.getElementById('aa_btn2'); if (b2) b2.addEventListener('click', degAdminPingApi);
+  }
+
+  /* ===== İletişim sayfası — admin'den adres/harita + canlı destek (ProX) ===== */
+  function degContactApply() {
+    var c = (degAdminLoad().contact) || {};
+    function setTxt(id, t) { var e = document.getElementById(id); if (e && t) e.textContent = t; }
+    function setHref(id, h) { var e = document.getElementById(id); if (e && h) e.setAttribute('href', h); }
+    var firma = c.firma || 'Meridyen Gayrimenkul Değerleme A.Ş.';
+    var adres = c.adres || 'Merkez Mah. Değerleme Cad. No: 1 · İstanbul';
+    var tel = c.tel || '+90 (212) 000 00 00';
+    var wa = (c.whatsapp || '905000000000').replace(/[^0-9]/g, '');
+    var mail = c.email || 'iletisim@meridyendegerleme.com';
+    var saat = c.saat || 'Hafta içi 09:00 – 18:00 · Cumartesi 10:00 – 14:00';
+    var harita = c.harita || '41.0082,28.9784';
+    setTxt('ctFirma', firma); setTxt('ctAdres', adres); setTxt('ctTel', tel); setTxt('ctMail', mail); setTxt('ctSaat', saat); setTxt('ctPinTxt', firma);
+    setHref('ctTelA', 'tel:' + tel.replace(/[^0-9+]/g, ''));
+    setHref('ctMailA', 'mailto:' + mail);
+    setHref('ctWa', 'https://wa.me/' + wa); setHref('ctWaBtn', 'https://wa.me/' + wa);
+    var map = document.getElementById('ctMap');
+    if (map) map.src = 'https://maps.google.com/maps?q=' + encodeURIComponent(harita) + '&z=14&output=embed';
+  }
+  function degContactInit() {
+    if (!document.getElementById('ctMap')) return; // yalnız iletişim sayfası
+    try { degContactApply(); } catch (e) {}
+    var send = document.getElementById('ctSend'), inp = document.getElementById('ctIn'), box = document.getElementById('ctMsgs');
+    if (!send || !inp || !box) return;
+    function add(cls, txt) { var d = document.createElement('div'); d.className = cls; d.textContent = txt; box.appendChild(d); box.scrollTop = box.scrollHeight; return d; }
+    async function go() {
+      var t = inp.value.trim(); if (!t) return;
+      add('ct-me', t); inp.value = ''; send.disabled = true;
+      var w = add('ct-bot', 'Yanıt hazırlanıyor…');
+      var ans = '';
+      try { ans = window.degProxAi ? await degProxAi(t) : ''; } catch (e) {}
+      w.textContent = ans || 'Şu an için en hızlı yanıt WhatsApp hattımızdan; talebinizi oluşturmak isterseniz “Talep Oluştur” adımına geçebilirsiniz.';
+      send.disabled = false; inp.focus();
+    }
+    send.addEventListener('click', go);
+    inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
   /* ---- Toast ---- */
@@ -325,5 +380,5 @@
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); } catch (e) {}
 })();
