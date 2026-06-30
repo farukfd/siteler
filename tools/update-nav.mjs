@@ -6,7 +6,7 @@ const WA = 'https://wa.me/905000000000';
 const navHTML = '<nav class="nav" id="nav">'
   + '<a href="hizmetler.html">Hizmetlerimiz</a>'
   + '<a href="neden-biz.html">Neden Biz</a>'
-  + '<a href="index.html#referans">Referans</a>'
+  + '<a href="referans.html">Referans</a>'
   + '<a href="index.html#blog">Blog</a>'
   + '<a href="basvuru.html">Talep</a>'
   + '</nav>';
