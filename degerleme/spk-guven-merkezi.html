@@ -23,6 +23,7 @@
 
 
 
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -645,6 +646,46 @@ img,svg{display:block;max-width:100%}
 /* WhatsApp footer hızlı talep vurgusu */
 .ft .wa-quick{color:#9fe6c0!important;font-weight:600}
 
+/* ============================================================
+   Üyesi olduğumuz kuruluşlar (footer logo şeridi) + org şeması + künye
+   ============================================================ */
+.ft-members{border-top:1px solid rgba(255,255,255,.1);margin-top:34px;padding-top:26px}
+.ft-members .mh{font-family:var(--head);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#bcd0ff;text-align:center;margin:0 0 18px}
+.ft-logos{display:flex;flex-wrap:wrap;gap:13px;justify-content:center}
+.ft-logo{display:flex;align-items:center;gap:11px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:13px;padding:11px 16px;transition:transform .2s,background .2s,border-color .2s}
+.ft-logo:hover{background:rgba(255,255,255,.1);border-color:rgba(188,208,255,.4);transform:translateY(-2px)}
+.ft-logo .lm{width:36px;height:36px;flex:none;border-radius:9px;display:grid;place-items:center;color:#fff}
+.ft-logo .lm svg{width:20px;height:20px}
+.ft-logo .lt b{font-family:var(--head);font-weight:800;font-size:15px;color:#fff;letter-spacing:.03em;display:block;line-height:1.05}
+.ft-logo .lt span{font-size:9.5px;color:#9fb3d4;letter-spacing:.02em}
+@media(max-width:560px){.ft-logo .lt span{display:none}.ft-logo{padding:10px 13px}}
+
+/* Organizasyon şeması (org-*) */
+.org-top{display:flex;justify-content:center}
+.org-node{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px 22px;text-align:center;box-shadow:var(--shadow-sm);min-width:210px;transition:transform .22s,box-shadow .22s,border-color .22s}
+.org-node:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#cdd8ea}
+.org-node.lead{background:linear-gradient(135deg,var(--accent),var(--navy));color:#fff;border-color:transparent}
+.org-node b{font-family:var(--head);font-size:15px;display:block}
+.org-node span{font-size:12px;color:var(--ink-2)}
+.org-node.lead span{color:#cdd8ea}
+.org-conn{width:2px;height:24px;background:linear-gradient(var(--accent),var(--line));margin:0 auto}
+.org-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px}
+.org-ic{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;margin:0 auto 11px}
+.org-ic svg{width:23px;height:23px}
+.org-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 18px;text-align:center;transition:transform .22s,box-shadow .22s,border-color .22s}
+.org-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:#cdd8ea}
+.org-card b{font-family:var(--head);font-size:14.5px;display:block;margin-bottom:5px}
+.org-card p{font-size:12.5px;color:var(--ink-2);line-height:1.55;margin:0}
+
+/* Künye / sürekli bilgilendirme tablosu */
+.disc-table{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.disc-table .r{display:grid;grid-template-columns:250px 1fr;border-bottom:1px solid var(--line)}
+.disc-table .r:last-child{border-bottom:0}
+.disc-table .r > div{padding:14px 18px}
+.disc-table .r .k{background:var(--surface);font-family:var(--head);font-weight:600;font-size:13px;color:var(--ink-2)}
+.disc-table .r .v{font-size:13.5px;color:var(--ink)}
+@media(max-width:600px){.disc-table .r{grid-template-columns:1fr}.disc-table .r .k{border-bottom:1px solid var(--line);padding-bottom:6px}.disc-table .r .v{padding-top:6px}}
+
 </style>
 </head>
 <body>
@@ -719,12 +760,23 @@ img,svg{display:block;max-width:100%}
         <p>SPK lisanslı, BDDK yetkili bağımsız gayrimenkul ve varlık değerleme kuruluşu. Resmî rapor SPK lisanslı uzman tarafından hazırlanır ve imzalanır.</p>
       </div>
       <div><h4>Hizmetler</h4><ul><li><a href="rapor-turleri.html">Rapor Türleri</a></li><li><a href="metodoloji.html">Metodoloji</a></li><li><a href="basvuru.html">Başvuru</a></li><li><a class="wa-quick" href="https://wa.me/905000000000?text=Merhaba%2C%20de%C4%9Ferleme%20talebi%20olu%C5%9Fturmak%20istiyorum." target="_blank" rel="noopener noreferrer">WhatsApp Hızlı Talep</a></li></ul></div>
-      <div><h4>Kurumsal</h4><ul><li><a href="spk-guven-merkezi.html">SPK Güven Merkezi</a></li><li><a href="raporu-kim-imzalar.html">Raporu Kim İmzalar?</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="sss.html">Sıkça Sorulan Sorular</a></li></ul></div>
-      <div><h4>Yasal</h4><ul><li><a href="#">KVKK Aydınlatma</a></li><li><a href="#">Gizlilik Politikası</a></li></ul></div>
+      <div><h4>Kurumsal</h4><ul><li><a href="spk-guven-merkezi.html">SPK Güven Merkezi</a></li><li><a href="raporu-kim-imzalar.html">Raporu Kim İmzalar?</a></li><li><a href="organizasyon-semasi.html">Organizasyon Şeması</a></li><li><a href="iletisim.html">İletişim</a></li></ul></div>
+      <div><h4>Bilgi &amp; Yasal</h4><ul><li><a href="sss.html">Sıkça Sorulan Sorular</a></li><li><a href="surekli-bilgilendirme.html">Sürekli Bilgilendirme</a></li><li><a href="bilgi-servisi.html">Bilgi Servisi Hizmetleri</a></li><li><a href="#">KVKK Aydınlatma</a></li><li><a href="#">Gizlilik Politikası</a></li></ul></div>
+    </div>
+    <div class="ft-members">
+      <div class="mh">Üyesi Olduğumuz &amp; Yetkili Kuruluşlar</div>
+      <div class="ft-logos">
+        <div class="ft-logo"><span class="lm" style="background:linear-gradient(135deg,#1e3a8a,#0b1220)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6"/><path d="M5 10v8M19 10v8M9 10v8M15 10v8"/><path d="M3 21h18"/></svg></span><span class="lt"><b>BDDK</b><span>Değerleme Yetki Listesi</span></span></div>
+        <div class="ft-logo"><span class="lm" style="background:linear-gradient(135deg,#2f5bd0,#1e3a8a)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="M8 13l2 2 5-5"/></svg></span><span class="lt"><b>SPK</b><span>Sermaye Piyasası Kurulu</span></span></div>
+        <div class="ft-logo"><span class="lm" style="background:linear-gradient(135deg,#1d9e75,#0f5132)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15.5 14.2c2.3.4 4 2.4 4 4.8"/></svg></span><span class="lt"><b>TDUB</b><span>Değerleme Uzmanları Birliği</span></span></div>
+        <div class="ft-logo"><span class="lm" style="background:linear-gradient(135deg,#b4975a,#8a6d2f)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="13" rx="2"/><path d="M8 8h8M8 12h5"/><circle cx="12" cy="19" r="2.2"/><path d="M10.6 20.6 9.5 23M13.4 20.6 14.5 23"/></svg></span><span class="lt"><b>SPL</b><span>Sermaye Piyasası Lisanslama</span></span></div>
+        <div class="ft-logo"><span class="lm" style="background:linear-gradient(135deg,#334155,#0b1220)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-5h6v5"/><path d="M9 10h.01M15 10h.01"/></svg></span><span class="lt"><b>LİDEBİR</b><span>Lisanslı Değerleme Şirketleri Birliği</span></span></div>
+      </div>
     </div>
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
 
 
 
