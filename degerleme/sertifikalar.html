@@ -20,6 +20,7 @@
 
 
 
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -949,6 +950,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 
 
 
+
 <script id="deg-inline-js">
 /* Meridyen Değerleme — kurumsal site JS (sade, çerçevesiz).
    Üyelik modeli: Personel/Danışman girişi + Müşteri (anahtar) girişi.
@@ -1323,7 +1325,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
   function degContentApply() {
     var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
-    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    var c = {}; try { c = (degMerge().content) || {}; } catch (e) {}
     nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
   }
 
@@ -1546,14 +1548,14 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   /* ---- SPK Lisans No (admin'den düzenlenebilir; .spk-lic düğümleri) ---- */
   function degSpkApply() {
     var v = '';
-    try { var a = JSON.parse(localStorage.getItem('deg_admin') || '{}'); v = (a && a.spkLicense) ? String(a.spkLicense).trim() : ''; } catch (e) {}
+    try { var a = degMerge(); v = (a && a.spkLicense) ? String(a.spkLicense).trim() : ''; } catch (e) {}
     if (!v) return;
     document.querySelectorAll('.spk-lic').forEach(function (el) { el.textContent = v; });
   }
   /* ---- WhatsApp: tüm wa.me bağlantıları admin numarasına bağlı ---- */
   function degWaNumber() {
     var raw = '';
-    try { var a = JSON.parse(localStorage.getItem('deg_admin') || '{}'); raw = (a.contact && a.contact.whatsapp) || a.wa || ''; } catch (e) {}
+    try { var a = degMerge(); raw = (a.contact && a.contact.whatsapp) || a.wa || ''; } catch (e) {}
     var d = String(raw || '').replace(/[^\d]/g, '');
     if (!d) return '';
     if (d.charAt(0) === '0') d = '90' + d.slice(1);
@@ -1572,7 +1574,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 
   /* ---- Logo: üst/alt menü logoları admin'den (bilgisayardan yüklenen görsel) ---- */
   function degApplyLogo() {
-    var s = {}; try { s = JSON.parse(localStorage.getItem('deg_admin') || '{}'); } catch (e) {}
+    var s = degMerge();
     function setLogo(scope, url) {
       if (!url) return;
       var mk = document.querySelector(scope + ' .brand .mk'); if (!mk) return;
@@ -1588,7 +1590,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   function degApplySeo() {
     if (window.__degSeoDone) return; window.__degSeoDone = 1;
     if (document.body && document.body.classList.contains('crm')) return;
-    var s = {}; try { s = JSON.parse(localStorage.getItem('deg_admin') || '{}'); } catch (e) {}
+    var s = degMerge();
     var seo = s.seo || {}; var head = document.head;
     function meta(name, content) { if (!content) return; var m = document.createElement('meta'); m.setAttribute('name', name); m.setAttribute('content', String(content).trim()); head.appendChild(m); }
     function srcScript(src, attrs) { var sc = document.createElement('script'); sc.src = src; sc.async = true; if (attrs) for (var k in attrs) sc.setAttribute(k, attrs[k]); head.appendChild(sc); }
@@ -1616,6 +1618,14 @@ img,svg,video,canvas,iframe,table{max-width:100%}
     meta('robots', seo.robotsIndex === false ? 'noindex,nofollow' : 'index,follow,max-image-preview:large');
     if (seo.headCode) { try { injectRaw(seo.headCode); } catch (e) {} }
   }
+
+  /* ---- Yayınlanan ayarlar (site-config.json) + localStorage birleşimi ----
+     Ziyaretçi: yayınlanan config; Yönetici tarayıcısı: localStorage canlı önizleme üste yazar. */
+  function degMerge() {
+    var loc = {}; try { loc = JSON.parse(localStorage.getItem('deg_admin') || '{}'); } catch (e) {}
+    return Object.assign({}, window.DEG_PUBLISHED || {}, loc);
+  }
+  window.degSettings = degMerge;
 
   /* ---- API anahtarları: ProX (varsayılan, ücretsiz) + DeepSeek (yedek) ---- */
   function degApplyApiKeys() {
@@ -1677,7 +1687,16 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  function degRunInit() {
+    try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  }
+  // Yayınlanan ayarları (site-config.json) yükle, sonra tüm sayfaya uygula. Dosya yoksa sorunsuz devam eder.
+  try {
+    fetch('assets/data/site-config.json', { cache: 'no-cache' })
+      .then(function (r) { return (r && r.ok) ? r.json() : null; })
+      .then(function (j) { if (j && typeof j === 'object') window.DEG_PUBLISHED = j; }, function () {})
+      .then(degRunInit, degRunInit);
+  } catch (e) { degRunInit(); }
 })();
 
 </script>

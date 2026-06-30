@@ -18,6 +18,7 @@
 
 
 
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -1186,13 +1187,27 @@ img,svg,video,canvas,iframe,table{max-width:100%}
     var s = DB.load(); var c = s.contact || {};
     function v(x) { return esc(x || ''); }
     function logoPrev(u, k) { return u ? '<span style="display:inline-flex;align-items:center;gap:8px;background:#e2e8f0;border-radius:8px;padding:6px 8px"><img src="' + u + '" style="height:30px;max-width:130px;object-fit:contain"><button class="crm-btn ghost" data-rmlogo="' + k + '" style="padding:4px 10px;font-size:12px">Kaldır</button></span>' : '<span style="font-size:12px;color:#94a3b8">Yüklü değil</span>'; }
-    $('v_ayarlar').innerHTML = '<div class="crm-card"><h3>Tema & Logo</h3><div class="crm-row2"><div class="crm-f"><label>Favicon URL</label><input id="a_fav" value="' + v(s.favicon) + '"></div><div class="crm-f"><label>Tema</label><select id="a_theme"><option' + (s.theme === 'Lacivert' || !s.theme ? ' selected' : '') + '>Lacivert</option><option' + (s.theme === 'Antrasit' ? ' selected' : '') + '>Antrasit</option><option' + (s.theme === 'Bordo' ? ' selected' : '') + '>Bordo</option><option' + (s.theme === 'Yeşil' ? ' selected' : '') + '>Yeşil</option></select></div></div>'
+    $('v_ayarlar').innerHTML = '<div class="crm-card" style="border:1px solid rgba(22,163,74,.45);background:rgba(22,163,74,.06)"><h3>🚀 Yayınla (Canlıya Al)</h3>'
+      + '<p style="font-size:12.5px;color:#475569;margin:0 0 12px;line-height:1.6">Tüm ayarlarınızı (SEO &amp; reklam, logo, WhatsApp, SPK lisans, içerik) tek bir <b>site-config.json</b> dosyasına aktarır. Bu dosyayı sitenizin <code>degerleme/assets/data/</code> klasörüne yükleyin — ayarlar <b>tüm ziyaretçilerde ve Google\'da canlı</b> olur. Gizli bilgiler (ProX/DeepSeek anahtarları, personel, talepler) dosyaya <b>yazılmaz</b>.</p>'
+      + '<button class="crm-btn" id="a_publish">⬇ site-config.json İndir</button><div class="crm-out" id="a_pubout"></div></div>'
+      + '<div class="crm-card"><h3>Tema & Logo</h3><div class="crm-row2"><div class="crm-f"><label>Favicon URL</label><input id="a_fav" value="' + v(s.favicon) + '"></div><div class="crm-f"><label>Tema</label><select id="a_theme"><option' + (s.theme === 'Lacivert' || !s.theme ? ' selected' : '') + '>Lacivert</option><option' + (s.theme === 'Antrasit' ? ' selected' : '') + '>Antrasit</option><option' + (s.theme === 'Bordo' ? ' selected' : '') + '>Bordo</option><option' + (s.theme === 'Yeşil' ? ' selected' : '') + '>Yeşil</option></select></div></div>'
       + '<div class="crm-row2"><div class="crm-f"><label>Üst Menü Logosu (bilgisayardan)</label><input type="file" id="a_logoH" accept="image/*"><div id="a_logoHp" style="margin-top:8px">' + logoPrev(s.logoHeader, 'logoHeader') + '</div></div><div class="crm-f"><label>Alt Menü Logosu (bilgisayardan)</label><input type="file" id="a_logoF" accept="image/*"><div id="a_logoFp" style="margin-top:8px">' + logoPrev(s.logoFooter, 'logoFooter') + '</div></div></div>'
       + '<p style="font-size:12px;color:#94a3b8;margin:6px 0 10px">PNG · SVG · JPG · en fazla 1.5MB. Yüklenen logo üst ve alt menüde, tüm sayfalarda anında görünür.</p>'
       + '<button class="crm-btn" id="a_tsave">Kaydet & Uygula</button></div>'
       + '<div class="crm-card"><h3>Meta Etiketleri</h3><div class="crm-f"><label>Meta Başlık</label><input id="a_mt" value="' + v(s.metaTitle) + '"></div><div class="crm-f"><label>Meta Açıklama</label><textarea id="a_md" rows="2">' + esc(s.metaDesc || '') + '</textarea></div><p style="font-size:12px;color:#94a3b8;margin:6px 0 10px">Google Analytics, Search Console doğrulama, reklam ve bot ayarları için soldaki <b>SEO &amp; Reklam</b> bölümünü kullanın.</p><button class="crm-btn" id="a_gsave">Kaydet</button></div>'
       + '<div class="crm-card"><h3>Kurumsal Künye</h3><div class="crm-f"><label>SPK Lisans No</label><input id="a_spk" value="' + v(s.spkLicense || 'DD-2024-0142') + '" placeholder="DD-2024-0142"></div><p style="font-size:12px;color:#94a3b8;margin:6px 0 10px">Tüm sayfaların footer’ında “SPK Lisans No:” yanında gösterilir.</p><button class="crm-btn" id="a_spksave">Kaydet & Uygula</button></div>'
       + '<div class="crm-card"><h3>İletişim & Adres</h3><div class="crm-row2"><div class="crm-f"><label>Firma</label><input id="a_firma" value="' + v(c.firma) + '"></div><div class="crm-f"><label>Telefon</label><input id="a_tel" value="' + v(c.tel) + '"></div></div><div class="crm-row2"><div class="crm-f"><label>WhatsApp</label><input id="a_wa" value="' + v(c.whatsapp) + '"></div><div class="crm-f"><label>E-posta</label><input id="a_mail" value="' + v(c.email) + '"></div></div><div class="crm-f"><label>Adres</label><input id="a_adres" value="' + v(c.adres) + '"></div><div class="crm-row2"><div class="crm-f"><label>Çalışma Saatleri</label><input id="a_saat" value="' + v(c.saat) + '"></div><div class="crm-f"><label>Harita (adres / enlem,boylam)</label><input id="a_harita" value="' + v(c.harita) + '"></div></div><button class="crm-btn" id="a_csave">Kaydet & Uygula</button><div class="crm-out" id="a_out"></div></div>';
+    $('a_publish').addEventListener('click', function () {
+      var s = DB.load(); var pub = {};
+      ['seo', 'logoHeader', 'logoFooter', 'contact', 'spkLicense', 'theme', 'favicon', 'metaTitle', 'metaDesc', 'content', 'pages'].forEach(function (k) { if (s[k] !== undefined && s[k] !== null && s[k] !== '') pub[k] = s[k]; });
+      delete pub.proxKey; delete pub.deepseekKey; delete pub.auth; delete pub.staff;
+      var blob = new Blob([JSON.stringify(pub, null, 2)], { type: 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a'); a.href = url; a.download = 'site-config.json'; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+      $('a_pubout').innerHTML = '<span class="ok">✓ site-config.json indirildi. Sitenizin <b>degerleme/assets/data/</b> klasörüne yükleyin; ayarlar tüm ziyaretçilerde ve Google\'da canlı olur.</span>';
+      toast('site-config.json indirildi.');
+    });
     $('a_tsave').addEventListener('click', function () { var s = DB.load(); s.favicon = $('a_fav').value.trim(); s.theme = $('a_theme').value; DB.save(s); toast('Tema kaydedildi.'); });
     $('a_gsave').addEventListener('click', function () { var s = DB.load(); s.metaTitle = $('a_mt').value.trim(); s.metaDesc = $('a_md').value.trim(); DB.save(s); toast('Meta etiketleri kaydedildi.'); });
     $('a_spksave').addEventListener('click', function () { var s = DB.load(); s.spkLicense = ($('a_spk').value.trim() || 'DD-2024-0142'); DB.save(s); toast('SPK Lisans No kaydedildi (footer’a yansır).'); });
@@ -1227,6 +1242,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   if (sess) showApp(sess.user || 'Yönetici');
 })();
 </script>
+
 
 
 
@@ -1612,7 +1628,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   /* ---- Site içeriği (admin'den override) — [data-ce] öğeleri ---- */
   function degContentApply() {
     var nodes = document.querySelectorAll('[data-ce]'); if (!nodes.length) return;
-    var c = {}; try { c = (JSON.parse(localStorage.getItem('deg_admin') || '{}').content) || {}; } catch (e) {}
+    var c = {}; try { c = (degMerge().content) || {}; } catch (e) {}
     nodes.forEach(function (el) { var k = el.getAttribute('data-ce'); if (c[k] != null && String(c[k]).trim() !== '') el.textContent = c[k]; });
   }
 
@@ -1835,14 +1851,14 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   /* ---- SPK Lisans No (admin'den düzenlenebilir; .spk-lic düğümleri) ---- */
   function degSpkApply() {
     var v = '';
-    try { var a = JSON.parse(localStorage.getItem('deg_admin') || '{}'); v = (a && a.spkLicense) ? String(a.spkLicense).trim() : ''; } catch (e) {}
+    try { var a = degMerge(); v = (a && a.spkLicense) ? String(a.spkLicense).trim() : ''; } catch (e) {}
     if (!v) return;
     document.querySelectorAll('.spk-lic').forEach(function (el) { el.textContent = v; });
   }
   /* ---- WhatsApp: tüm wa.me bağlantıları admin numarasına bağlı ---- */
   function degWaNumber() {
     var raw = '';
-    try { var a = JSON.parse(localStorage.getItem('deg_admin') || '{}'); raw = (a.contact && a.contact.whatsapp) || a.wa || ''; } catch (e) {}
+    try { var a = degMerge(); raw = (a.contact && a.contact.whatsapp) || a.wa || ''; } catch (e) {}
     var d = String(raw || '').replace(/[^\d]/g, '');
     if (!d) return '';
     if (d.charAt(0) === '0') d = '90' + d.slice(1);
@@ -1861,7 +1877,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 
   /* ---- Logo: üst/alt menü logoları admin'den (bilgisayardan yüklenen görsel) ---- */
   function degApplyLogo() {
-    var s = {}; try { s = JSON.parse(localStorage.getItem('deg_admin') || '{}'); } catch (e) {}
+    var s = degMerge();
     function setLogo(scope, url) {
       if (!url) return;
       var mk = document.querySelector(scope + ' .brand .mk'); if (!mk) return;
@@ -1877,7 +1893,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   function degApplySeo() {
     if (window.__degSeoDone) return; window.__degSeoDone = 1;
     if (document.body && document.body.classList.contains('crm')) return;
-    var s = {}; try { s = JSON.parse(localStorage.getItem('deg_admin') || '{}'); } catch (e) {}
+    var s = degMerge();
     var seo = s.seo || {}; var head = document.head;
     function meta(name, content) { if (!content) return; var m = document.createElement('meta'); m.setAttribute('name', name); m.setAttribute('content', String(content).trim()); head.appendChild(m); }
     function srcScript(src, attrs) { var sc = document.createElement('script'); sc.src = src; sc.async = true; if (attrs) for (var k in attrs) sc.setAttribute(k, attrs[k]); head.appendChild(sc); }
@@ -1905,6 +1921,14 @@ img,svg,video,canvas,iframe,table{max-width:100%}
     meta('robots', seo.robotsIndex === false ? 'noindex,nofollow' : 'index,follow,max-image-preview:large');
     if (seo.headCode) { try { injectRaw(seo.headCode); } catch (e) {} }
   }
+
+  /* ---- Yayınlanan ayarlar (site-config.json) + localStorage birleşimi ----
+     Ziyaretçi: yayınlanan config; Yönetici tarayıcısı: localStorage canlı önizleme üste yazar. */
+  function degMerge() {
+    var loc = {}; try { loc = JSON.parse(localStorage.getItem('deg_admin') || '{}'); } catch (e) {}
+    return Object.assign({}, window.DEG_PUBLISHED || {}, loc);
+  }
+  window.degSettings = degMerge;
 
   /* ---- API anahtarları: ProX (varsayılan, ücretsiz) + DeepSeek (yedek) ---- */
   function degApplyApiKeys() {
@@ -1966,7 +1990,16 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  function degRunInit() {
+    try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+  }
+  // Yayınlanan ayarları (site-config.json) yükle, sonra tüm sayfaya uygula. Dosya yoksa sorunsuz devam eder.
+  try {
+    fetch('assets/data/site-config.json', { cache: 'no-cache' })
+      .then(function (r) { return (r && r.ok) ? r.json() : null; })
+      .then(function (j) { if (j && typeof j === 'object') window.DEG_PUBLISHED = j; }, function () {})
+      .then(degRunInit, degRunInit);
+  } catch (e) { degRunInit(); }
 })();
 
 </script>
