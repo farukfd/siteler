@@ -24,6 +24,7 @@
 
 
 
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -416,6 +417,61 @@ img,svg{display:block;max-width:100%}
 .gm-row2 .gm-f label{margin-top:0}
 @media(max-width:480px){.gm-row2{grid-template-columns:1fr}}
 
+/* ============================================================
+   NEDEN BİZ — saha gücü & veri altyapısı (nb-*) · 2026 animasyon
+   ============================================================ */
+/* Genel animasyon yardımcıları (her yerde kullanılabilir) */
+.anim-draw{stroke-dasharray:660;stroke-dashoffset:660;animation:hzDash 2.3s ease forwards .25s}
+.anim-pulse{animation:hzPulse 2.6s ease-in-out infinite}
+.anim-pulse.b{animation-delay:.5s}.anim-pulse.c{animation-delay:1s}.anim-pulse.d{animation-delay:1.5s}
+.anim-float{animation:hzFloat 4.6s ease-in-out infinite}
+.anim-spin{transform-origin:center;animation:hzSpin 30s linear infinite}
+
+/* Saha süreci — büyük animasyonlu kartlar */
+.nb-proc{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:920px){.nb-proc{grid-template-columns:1fr}}
+.nb-step{position:relative;background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px 24px 22px;overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s}
+.nb-step:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:#cdd8ea}
+.nb-no{position:absolute;top:14px;right:20px;font-family:var(--head);font-weight:800;font-size:44px;line-height:1;color:#eef2f9;z-index:0}
+.nb-vis{position:relative;height:160px;border-radius:14px;background:radial-gradient(420px 200px at 72% -20%,rgba(47,91,208,.5),transparent 60%),linear-gradient(160deg,var(--navy),var(--accent));margin-bottom:18px;overflow:hidden;display:grid;place-items:center}
+.nb-vis svg{width:100%;height:100%}
+.nb-step h3{font-size:18.5px;margin-bottom:8px;position:relative}
+.nb-step .ph{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px}
+.nb-step p{font-size:13.6px;color:var(--ink-2);line-height:1.62;margin:0 0 12px}
+.nb-step ul{list-style:none;margin:0;padding:0}
+.nb-step li{position:relative;padding-left:21px;font-size:12.8px;color:var(--ink-2);margin-bottom:6px;line-height:1.5}
+.nb-step li:before{content:"✓";position:absolute;left:0;color:var(--teal);font-weight:800;font-size:12px}
+
+/* Veri altyapısı */
+.nb-data{display:grid;grid-template-columns:1.05fr .95fr;gap:42px;align-items:center}
+@media(max-width:920px){.nb-data{grid-template-columns:1fr;gap:28px}}
+.nb-data h2{font-size:clamp(24px,3.2vw,34px);margin:10px 0 14px}
+.nb-data .lead2{color:var(--ink-2);font-size:15.5px;line-height:1.72;margin:0 0 20px}
+.nb-feats{display:grid;gap:14px}
+.nb-feat{display:flex;gap:13px;align-items:flex-start}
+.nb-feat .fi{width:42px;height:42px;flex:none;border-radius:11px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;color:var(--accent)}
+.nb-feat b{font-family:var(--head);font-size:14.5px;display:block;margin-bottom:2px}
+.nb-feat span{font-size:13px;color:var(--ink-2);line-height:1.55}
+.nb-chart{position:relative;background:radial-gradient(520px 240px at 82% -10%,rgba(47,91,208,.45),transparent 60%),linear-gradient(160deg,var(--navy),var(--accent));border-radius:20px;padding:30px 28px;color:#fff;box-shadow:0 44px 90px -38px rgba(0,0,0,.55)}
+.nb-chart .big{font-family:var(--head);font-weight:800;font-size:clamp(36px,5.4vw,56px);letter-spacing:-.02em;line-height:1}
+.nb-chart .big em{font-style:normal;color:#9fe6c0}
+.nb-chart .cap{font-size:13px;color:#cdd8ea;margin:6px 0 18px}
+.nb-chart svg{width:100%;height:auto;display:block}
+.nb-chart .yrs{display:flex;justify-content:space-between;font-size:11px;color:#bcd0ff;margin-top:8px}
+
+/* Neden Biz fark kartları (zengin) */
+.nb-why{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media(max-width:920px){.nb-why{grid-template-columns:1fr}}
+.nb-w{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;transition:.25s}
+.nb-w:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:#cdd8ea}
+.nb-w .wi{width:52px;height:52px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;margin-bottom:14px}
+.nb-w .wi svg{width:26px;height:26px}
+.nb-w h3{font-size:17px;margin-bottom:7px}
+.nb-w p{font-size:13.5px;color:var(--ink-2);line-height:1.6;margin:0}
+
+/* "Çok tercih edilen" rozet (hz-card üzerinde) */
+.hz-card .pref{position:absolute;top:16px;right:16px;font-size:10px;font-weight:700;letter-spacing:.04em;color:#8a6d2f;background:#faf5e9;border:1px solid #e7d8b5;border-radius:99px;padding:4px 10px}
+
 </style>
 </head>
 <body>
@@ -425,7 +481,7 @@ img,svg{display:block;max-width:100%}
       <span class="mk">M</span>
       <span><b>Meridyen Değerleme</b><span>SPK Lisanslı Değerleme</span></span>
     </a>
-    <nav class="nav" id="nav"><a href="hizmetler.html">Hizmetlerimiz</a><a href="index.html#neden-biz">Neden Biz</a><a href="index.html#referans">Referans</a><a href="index.html#blog">Blog</a><a href="basvuru.html">Talep</a></nav>
+    <nav class="nav" id="nav"><a href="hizmetler.html">Hizmetlerimiz</a><a href="neden-biz.html">Neden Biz</a><a href="index.html#referans">Referans</a><a href="index.html#blog">Blog</a><a href="basvuru.html">Talep</a></nav>
     <div class="hdr-cta"><a class="nav-wa" href="https://wa.me/905000000000" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg></a><a class="btn btn-line btn-sm js-giris" href="#giris">Giriş</a><button class="burger" id="burger" aria-label="Menü"><span></span><span></span><span></span></button></div>
   </div>
 </header>
@@ -486,6 +542,7 @@ img,svg{display:block;max-width:100%}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
 
 
 
