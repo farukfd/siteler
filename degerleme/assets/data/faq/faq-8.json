@@ -1,0 +1,167 @@
+[
+  {
+    "q": "Gayrimenkul değerlemede pazar (emsal karşılaştırma) yaklaşımı nasıl çalışır?",
+    "a": "Pazar yaklaşımında, değerlenen mülke benzer özellikteki gerçekleşmiş satış işlemleri emsal olarak seçilir. Her emsal; konum, yapı yaşı, kat durumu, kullanım amacı ve fiziksel durum gibi kriterler açısından değerlenen mülkle karşılaştırılır. Aralarındaki farklılıklar için düzeltme katsayıları uygulanarak emsallerin satış fiyatları düzeltilir ve bu düzeltilmiş değerlerin ağırlıklı ortalamasından pazar değeri elde edilir. Türkiye'de bu yöntem konut ve arsa değerlemesinde en yaygın kullanılan birincil yaklaşımdır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Emsal düzeltme katsayıları nedir ve nasıl belirlenir?",
+    "a": "Emsal düzeltme katsayıları, seçilen karşılaştırılabilir satışlarla değerlenen mülk arasındaki özelliklerin farklılığından kaynaklanan fiyat etkisini sayısal olarak ifade eden çarpanlardır. Konum avantajı, kat yüksekliği, cephe yönü, tapu durumu ve yapı kalitesi gibi unsurlar için ayrı katsayılar belirlenir. Bu katsayılar; pazar analizi, çiftli satış çalışmaları veya hedonik regresyon yöntemleriyle desteklenerek tarafsız biçimde hesaplanmalıdır. SPK tebliğleri, katsayıların gerekçesiyle birlikte raporda açıklanmasını zorunlu kılmaktadır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Gelir yaklaşımı kapsamında doğrudan kapitalizasyon yöntemi nasıl uygulanır?",
+    "a": "Doğrudan kapitalizasyon yönteminde mülkün stabilize net işletme geliri (NİG), piyasadan türetilen bir kapitalizasyon oranına bölünerek değer bulunur. Net işletme geliri; potansiyel brüt gelirden boşluk ve tahsilat kayıpları düşüldükten, işletme giderleri çıkarıldıktan sonra elde edilir. Yöntem, geliri sabit veya yavaş büyüyen olgun ticari mülklerde özellikle güçlüdür. Hesaplamanın sağlıklı olabilmesi için kapitalizasyon oranının piyasadan doğrulanmış emsal işlemlerle desteklenmesi gereklidir.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Kapitalizasyon oranı nedir ve neyi yansıtır?",
+    "a": "Kapitalizasyon oranı (cap rate), bir mülkün net işletme gelirinin piyasa değerine oranını ifade eden yüzdesel bir büyüklüktür. Yatırımcıların benzer varlıklardan beklediği getiriyi, mülke özgü risk primini ve piyasadaki likidite koşullarını yansıtır. Piyasadan çıkarılan (extracted) cap rate, gerçek satış işlemlerine dayanarak hesaplanır; survey yöntemiyle de piyasa katılımcılarından derlenen beklentiler kullanılabilir. Oranın mülk türüne, konuma ve kira sözleşmesinin kalitesine göre farklılaştığı göz önünde bulundurulmalıdır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "İndirgenmiş nakit akımı (DCF) yöntemi değerlemede ne zaman tercih edilir?",
+    "a": "DCF yöntemi, gelecekteki nakit akımlarının dönemsel olarak değiştiği, kira sözleşme süreleri ve boşluk dönemlerinin öngörülebildiği karmaşık ticari mülklerde tercih edilir. Analiz süresi boyunca yıllık net gelirler ve dönem sonu satış gelirleri uygun iskonto oranıyla bugünkü değere indirgenerek toplam değer bulunur. Geliştirme projelerinde, faz planlamasının gelir akışını belirsizleştirdiği durumlarda DCF en güvenilir yaklaşımdır. Bununla birlikte girdi varsayımlarındaki hataların sonucu önemli ölçüde etkileyebileceği unutulmamalıdır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Maliyet yaklaşımı (ikame değeri) ne zaman uygulanır?",
+    "a": "Maliyet yaklaşımı; pazar verilerinin sınırlı olduğu özel kullanımlı mülklerde, eğitim ve sağlık tesislerinde, endüstriyel yapılarda ve sigorta değerleme çalışmalarında ön plana çıkar. Yaklaşımda arsa değeri ayrıca belirlenir, ardından yapının yeniden inşa veya ikame maliyeti hesaplanır ve birikmiş amortisman (fiziksel yıpranma, fonksiyonel eskime, dışsal eskime) düşülür. Bulunan arsa ve yapı değerlerinin toplamı mülkün toplam değerini verir. Tek başına yeterli olmayabileceğinden diğer yaklaşımlarla birlikte kontrol aracı olarak kullanılması önerilir.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "En verimli ve en iyi kullanım analizi (HBU) nedir?",
+    "a": "En verimli ve en iyi kullanım (Highest and Best Use – HBU) analizi, bir mülkün fiziksel açıdan mümkün, yasal olarak izin verilebilir, finansal olarak uygulanabilir ve azami değer sağlayan kullanımını belirleyen analitik süreçtir. Önce arsa boşmuş gibi, ardından mevcut yapıyla olmak üzere iki aşamalı değerlendirilir. Sonuç, değerleme raporunun temel varsayımını oluşturduğundan tüm yaklaşımları doğrudan etkiler. HBU analizinin gerekçelendirilmemiş olması, SPK denetimlerinde rapor reddi gerekçeleri arasında sık yer alır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Fizibilite analizi ile değerleme raporunun farkı nedir?",
+    "a": "Fizibilite analizi, belirli bir proje için finansal geri dönüş, risk ve piyasa kabulünü araştırarak projenin gerçekleştirilebilirliğini irdeler; ileriye dönük çok senaryolu projeksiyon içerir. Değerleme raporu ise UDES/IVS standartlarına göre belirli bir değer tanımına (genellikle pazar değeri) ilişkin bağımsız ve nesnel bir kanaat belgesidir. Her iki çalışma da piyasa araştırmasına dayanır; ancak fizibilite daha geniş kapsamlı senaryo analizleri ve maliyet-fayda projeksiyonları içerirken değerleme sonucu tek bir değer noktasında veya aralığında ifade edilir. SPK mevzuatı, halka açık işlemlerde değerleme raporunu zorunlu kılarken fizibilite analizi tamamlayıcı niteliktedir.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Pazar araştırması değerleme sürecinde nasıl yürütülür?",
+    "a": "Pazar araştırması; makroekonomik göstergeler, inşaat maliyet endeksleri, bölgesel arz-talep dengesi, kira trendleri ve emsal işlem verileri dahil olmak üzere geniş bir veri tabanının derlenmesini kapsar. Uzman gayrimenkul danışmanlarıyla yapılan görüşmeler, tapu kayıtları, ticaret odası verileri ve sektörel raporlar birincil kaynaklar arasında yer alır. Elde edilen veriler analiz edilerek piyasanın denge noktası, büyüme eğrisi ve risk faktörleri belirlenir. Bu araştırma olmaksızın ne emsal seçimi ne de kapitalizasyon oranı tespiti güvenilir biçimde yapılabilir.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Nominal değer ile efektif değer arasındaki fark nedir?",
+    "a": "Nominal değer, gelecekteki nakit akımlarının enflasyon ve zaman değeri gözetilmeksizin cari fiyatlarla ifade edilen değeridir. Efektif (reel) değer ise enflasyonun arındırılması ve paranın zaman değerinin gözetilmesiyle elde edilen gerçek satın alma gücüne karşılık gelir. Değerleme çalışmalarında özellikle uzun vadeli kira projeksiyonlarında hangi değer türünün kullanıldığının açıkça belirtilmesi şarttır; aksi hâlde gelir ve iskonto oranı arasında tutarsızlık ortaya çıkar. UDES, değerleme hesaplamalarında nominal veya reel bazın raporun tamamında tutarlı biçimde uygulanmasını zorunlu kılar.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "UDES ve IVS'ye göre pazar değeri nasıl tanımlanır?",
+    "a": "UDES (Uluslararası Değerleme ve Etik Standartları) ve IVS'ye (International Valuation Standards) göre pazar değeri; tarafların istekli, bilgili ve bilinçli hareket ettiği, herhangi bir baskı altında kalmaksızın gerçekleştirilen koldan kolun uzunluğundaki bir işlemde mülkün değerleme tarihindeki tahmini el değiştirme bedelidir. Bu tanım; zorunlu satış, kamulaştırma değeri veya özel alıcıya özgü değerden ayrışır. Raporun hangi değer türünü hedeflediği açıkça belirtilmeli; kullanılan yaklaşımlar bu tanımla tutarlı olmalıdır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Alışveriş merkezi (AVM) değerlemesinde hangi yöntemler öne çıkar?",
+    "a": "AVM değerlemesinde gelir yaklaşımı birincil yöntem olup hem doğrudan kapitalizasyon hem de DCF analizleri birlikte uygulanır. Ortalama kira (baz kira + ciro kirası), boşluk oranı, hizmet giderleri ve yenileme (capex) maliyetleri dikkatle modellenir. Emsal olarak benzer büyüklük, lokasyon ve kiracı karması olan AVM işlemleri kullanılır; cap rate seçiminde piyasadaki perakende riski ve çevrim içi ticaretin sektöre etkisi mutlaka değerlendirilir. Yapı maliyeti kontrol amacıyla maliyet yaklaşımıyla da desteklenir.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Lojistik ve depo tesislerinin değerlemesinde özel dikkat edilmesi gereken unsurlar nelerdir?",
+    "a": "Lojistik ve depo değerlemesinde tavan yüksekliği, zemin yük kapasitesi, yükleme rampası sayısı ve ulaşım akslarına mesafe gibi işlevsel özellikler kritik rol oynar. Kiracının mali gücü ve kira sözleşmesinin kalan süresi, net kira gelirini güvence altına alan temel faktörlerdir. E-ticaretin yarattığı son mil lojistiği talebi, bu varlık sınıfındaki cap rate baskısını piyasada önemli biçimde etkilemektedir. Değerleme sürecinde bölgedeki sanayi alanı arzını ve zoning kısıtlamalarını gösteren pazar araştırması ayrıca hazırlanmalıdır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Eğitim ve sağlık tesislerinin değerlemesinde maliyet yaklaşımı neden önem taşır?",
+    "a": "Eğitim ve sağlık tesisleri, hastane, okul veya klinik gibi özel donanım gerektiren yapılardır ve emsal satış verisi son derece kısıtlıdır. Bu nedenle maliyet yaklaşımı, ikame değerini somutlaştıran birincil yöntem olarak uygulanır; arsa değeri ayrıca belirlenir. Bununla birlikte, tesisi işleten kurumun lisans değeri ve faaliyet geliri göz önüne alınarak gelir yaklaşımı tamamlayıcı kontrol yöntemi olarak kullanılır. Elde etme (acquisition) veya tasfiye senaryolarında lisans devir kısıtlamaları da ayrıca analiz edilmelidir.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Liman ve marina değerlemesinde hangi gelir kalemleri dikkate alınır?",
+    "a": "Liman ve marina değerlemesinde tekne bağlama ücretleri (günlük/mevsimlik/yıllık), yakıt satışı gelirleri, bakım-onarım hizmetleri, çekek alanı işletim ücretleri ve ticari kira gelirleri analiz edilir. Konumun rüzgar ve dalga koruması, su derinliği, ulaşım kolaylığı ve kapasite (bağlama sayısı) piyasa değerini doğrudan etkiler. Denizcilik mevzuatı kapsamındaki ruhsat ve işletim izinleri varlığın sürekliliği açısından kritik olup değerlemede ayrıca ele alınmalıdır. DCF yöntemi, sezonsal gelir dalgalanmalarını modellemek için bu varlık türünde tercih edilen yaklaşımdır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Havalimanı değerlemesinde aeronautical ve non-aeronautical gelir ayrımı nasıl yapılır?",
+    "a": "Havalimanı değerlemesinde gelirler; iniş-kalkış ücretleri, yolcu terminali hizmet bedelleri gibi doğrudan havacılık faaliyetlerine dayanan aeronautical gelirler ve perakende, otopark, otel ile kargo alanı kiraları gibi non-aeronautical gelirler olarak ikiye ayrılır. Her iki gelir akımı farklı risk profiline sahip olduğundan ayrı kapitalizasyon veya iskonto oranlarıyla modellenebilir. Düzenleyici çerçeve (ücret tavanları, imtiyaz sözleşmeleri), yolcu trafik projeksiyonu ve yakıt maliyetleri değerlemede belirleyici girdilerdir. Yoğun sermaye gerektiren niteliği nedeniyle çoğu zaman üç yaklaşım da bir arada uygulanır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Veri merkezi değerlemesinde kritik bileşenler ve yöntemler nelerdir?",
+    "a": "Veri merkezi değerlemesinde güç kapasitesi (MW), güç yoğunluğu (kW/rack), soğutma verimliliği (PUE), yedeklilik sınıfı (Tier I-IV) ve fiber bağlantı altyapısı temel değer sürücüleridir. Co-location kira anlaşmaları ve uzun vadeli güç satın alma sözleşmeleri (PPA) istikrarlı gelir akımı oluşturduğundan DCF yöntemi birincil yaklaşım olarak kullanılır. Altyapının yüksek ikame maliyeti nedeniyle maliyet yaklaşımı kontrol amacıyla uygulanır. Hızla değişen teknoloji ortamında fonksiyonel eskimenin değerlemeye yansıtılması özel önem taşır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Turizm ve otel mülklerinin değerlemesinde RevPAR ve EBITDA nasıl kullanılır?",
+    "a": "Otel değerlemesinde kullanılabilir oda başına geliri ifade eden RevPAR (Revenue per Available Room) birincil performans göstergesidir; doluluk oranı ile ortalama oda fiyatının (ADR) çarpımıyla hesaplanır. EBITDA, işletme gelirinden faiz, amortisman ve vergi öncesi karı temsil ederek net işletme gelirine yaklaşık bir proxy sunar. Değerleme uzmanları EBITDA'ya bir çarpan uygulayarak ya da net geliri bir cap rate ile kapitalize ederek değere ulaşır. Mevsimsellik, otel segmenti (butik, zincir, tatil köyü) ve yönetim sözleşmesinin varlığı çarpan seçimini önemli ölçüde etkiler.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Tarımsal işletme değerlemesinde arazi ve işletme değeri nasıl ayrıştırılır?",
+    "a": "Tarımsal işletme değerlemesinde tarım arazisi değeri pazar karşılaştırma yöntemiyle, işletmenin üretim kapasitesi ise gelir yaklaşımıyla ayrı ayrı belirlenerek birleştirilir. Toprak kalitesi, sulama imkânı, iklim verisi, parsel büyüklüğü ve konum tarımsal arsa değerini doğrudan belirleyen unsurlardır. Makine-ekipman, depo, soğuk hava tesisi gibi tarımsal varlıklar maliyet yaklaşımıyla ayrıca değerlenir. Ürün fiyatı volatilitesi, kuraklık ve sürüm masraflarını kapsayan risk unsurları iskonto oranına yansıtılmalıdır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Yeşil değerleme (green valuation) nedir ve sertifika sistemleri değere nasıl yansır?",
+    "a": "Yeşil değerleme; enerji verimliliği, su tasarrufu, iç hava kalitesi ve karbon ayak izi gibi sürdürülebilirlik parametrelerini geleneksel değerleme yaklaşımlarına entegre eden metodolojik bir çerçevedir. LEED, BREEAM veya DGNB gibi sertifikasyonlara sahip mülkler, daha düşük işletme maliyetleri ve yüksek kiracı kalitesi sayesinde hem kira geliri hem de işlem değeri açısından piyasada belgelenmiş bir prim taşıyabilir. Değerleme uzmanı bu etkiyi piyasadan çıkarılan emsal işlemlerle destekleyerek raporuna yansıtmak zorundadır; doğrulanamayan varsayımsal primler kabul edilemez.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "ESG faktörleri gayrimenkul değerlemesini nasıl etkiler?",
+    "a": "ESG (Çevresel, Sosyal ve Yönetişim) faktörleri, kurumsal yatırımcıların portföy tercihlerini giderek artan ölçüde yönlendirmekte ve bu durum piyasa kapitalizasyon oranlarını etkilemektedir. Çevresel boyutta enerji sertifikaları ve iklim riski (taşkın, aşırı sıcaklık), sosyal boyutta erişilebilirlik ve kiracı sağlığı, yönetişim boyutunda ise şeffaf yönetim ve raporlama standartları incelenir. Bu faktörleri gözetmeyen mülkler, kurumsal alıcılar nezdinde değer kaybına ya da satış sürecinde likidite sorunununa maruz kalabilir. SPK ve UDES çerçevesinde ESG değerlendirmesinin raporda ayrı bir bölüm olarak ele alınması giderek yaygınlaşmaktadır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Kentsel dönüşüm sürecinde değerleme danışmanlığı hangi aşamaları kapsar?",
+    "a": "Kentsel dönüşüm danışmanlığı; öncelikle mevcut yapının Riskli Alan veya Riskli Yapı tespiti kapsamında olup olmadığının belirlenmesiyle başlar. Akabinde kat maliklerine sunulan dönüşüm teklifinin ekonomik analizi, mevcut yapı değeri ile dönüşüm sonrası değer beklentisinin karşılaştırması hazırlanır. Arsa paylaşım modeli, katılım oranları ve ek maliyet analizlerini içeren fizibilite çalışması da sürecin ayrılmaz parçasıdır. Bakanlık tescilini haiz SPK lisanslı uzman tarafından hazırlanan değerleme raporu, hak sahipliği tespitinde esas belge niteliği taşır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Değerleme raporu gözden geçirme (review appraisal) nedir ve ne zaman yaptırılır?",
+    "a": "Değerleme raporu gözden geçirmesi, daha önce hazırlanmış bir değerleme raporunun bağımsız bir uzman tarafından standartlara uygunluk, metodoloji geçerliliği, veri güvenilirliği ve sonuç mantıksal tutarlılığı açısından incelenmesidir. Finansman, dava, özelleştirme veya çatışma çözüm süreçlerinde tarafların birbirinin raporunu sorgulama ihtiyacı duyduğu durumlarda yaptırılır. Gözden geçirme; açıklayıcı (descriptive) ya da değer sağlayan (value contributory) olmak üzere iki biçimde yapılabilir. UDES ve IVS standartları, review uzmanının da bağımsız olmasını ve kendi görüş gerekçesini açıkça ortaya koymasını zorunlu kılar.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Gelir yaklaşımında iskonto oranı nasıl belirlenir?",
+    "a": "İskonto oranı; risksiz getiri oranı (genellikle devlet tahvili), gayrimenkule özgü risk primi, likidite riski ve yönetim maliyetini kapsayan bileşenlerden oluşur. Risksiz oran için değerleme tarihi itibarıyla 10 yıllık Türkiye Hazine tahvil getirisi veya enflasyona endeksli tahvil kullanılabilir. Piyasa kaynaklı (extracted) iskonto oranı hesabında mevcut işlem verilerinden tersine mühendislik yöntemi de tercih edilir. Nominal ile reel iskonto oranı arasında tutarlılık sağlanması kritiktir; gelir projeksiyonu gerçek fiyatlarla yapılmışsa reel oran, nominal fiyatlarla yapılmışsa nominal oran kullanılmalıdır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Net işletme geliri (NİG) hesaplanırken hangi giderler düşülür?",
+    "a": "Net işletme geliri hesabında potansiyel brüt gelirden önce boşluk ve tahsilat kayıpları düşülerek etkin brüt gelire ulaşılır. Ardından; yönetim ücreti, sigorta, emlak vergisi, bakım-onarım giderleri, yedek akçe payı ve ortak alan giderleri düşülerek net işletme gelirine ulaşılır. Mortgage taksitleri, amortisman ve kişisel gelir vergisi bu hesaba dahil edilmez; bunlar proje düzeyindeki özkaynak analizine aittir. SPK tebliğleri, NİG bileşenlerinin raporda kalemler bazında şeffaf biçimde gösterilmesini zorunlu kılar.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Fonksiyonel eskime gayrimenkul değerlemesinde nasıl ölçülür?",
+    "a": "Fonksiyonel eskime; mevcut yapının günümüz piyasa standartlarını karşılayamamasından kaynaklanan değer kaybını ifade eder ve maliyet yaklaşımında birikmiş amortismanın bir bileşenini oluşturur. Tavan yüksekliğinin yetersizliği, enerji verimsizliği, asansör eksikliği veya park kapasitesinin düşüklüğü tipik fonksiyonel eskime unsurlarıdır. Eskime miktarı; iyileştirme maliyeti yöntemi ya da piyasadaki benzer normal işlevli mülklerle kıyaslama yöntemiyle tespit edilir. Teknolojik değişimlerin hızlandığı veri merkezi ve endüstriyel yapılarda bu faktör özellikle belirleyicidir.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Karma kullanımlı projelerde (mixed-use) değerleme nasıl yapılır?",
+    "a": "Karma kullanımlı projelerde konut, ofis, perakende ve konaklama gibi farklı bileşenlerin her biri kendi gelir akımı, cap rate ve piyasa dinamikleriyle ayrı ayrı değerlenir; ardından sonuçlar toplulaştırılır. Sinerji etkisi (ortak marka, paylaşılan altyapı değeri) varsa bu ayrıca gerekçelendirilerek toplam değere eklenebilir. Emsal seçiminde her bileşen için farklı karşılaştırılabilir işlem setleri kullanılmalıdır. Piyasa analizinin her kullanım türünü ayrı ayrı ele aldığı çok katmanlı bir yapıda sunulması, raporun SPK incelemesinden geçebilmesi açısından önem taşır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "LEED sertifikası değerleme üzerinde ölçülebilir bir etki yaratır mı?",
+    "a": "Uluslararası araştırmalar ve Türkiye'deki sınırlı emsal veri seti, LEED Gold ve Platinum sertifikalı ofis binalarında geleneksel ofislere kıyasla kira geliri ve doluluk oranında ölçülebilir farklılıklar olduğunu işaret etmektedir. Ancak bu farkı net biçimde saptamak için konum, yapı yaşı ve kiracı kalitesini kontrol eden çiftli emsal analizine ihtiyaç vardır. Değerleme uzmanı, yerel piyasada yeşil primin doğrulanamadığı durumlarda sertifika varlığını risk ve maliyet indirimi üzerindeki etkisiyle sınırlı biçimde raporuna yansıtmalıdır. Spekülatif prim rakamları SPK tebliğleri açısından kabul edilemez.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Değerleme sürecinde piyasa koşullarına göre düzeltme (piyasa koşulları düzeltmesi) ne anlama gelir?",
+    "a": "Piyasa koşullarına göre düzeltme; emsal işlemin gerçekleştiği tarih ile değerleme tarihi arasında piyasada yaşanan fiyat değişimini emsal satış fiyatına yansıtmak amacıyla uygulanan katsayı düzeltmesidir. Emsalin değerleme tarihinden önceki bir dönemde yapılmış olması hâlinde bu süredeki endeks değişimi veya piyasa araştırmasıyla saptanan fiyat hareketi kullanılır. Türkiye gibi enflasyonun yüksek olduğu ortamlarda bu düzeltmenin titizlikle uygulanması, özellikle 6-12 aydan eski emsaller için kritik hâle gelmektedir. Düzeltmenin dayanağı olan endeks veya veri kaynağı raporda kaynak gösterilerek belgelenmelidir.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Değerleme raporunda 'uzlaşma' (reconciliation) aşaması neden gereklidir?",
+    "a": "Uzlaşma aşaması; farklı yaklaşımlarla (pazar, gelir, maliyet) ulaşılan değer sonuçlarının değerleme uzmanı tarafından mülkün niteliğine, veri kalitesine ve her yaklaşımın güvenilirliğine göre ağırlıklandırıldığı kritik son adımdır. Uzlaşma mekanik bir ortalama alma değil, uzmanın gerekçeli yorumuna dayanan bir sentez sürecidir. Örneğin piyasa verisinin yeterli olduğu konut değerlemelerinde pazar yaklaşımı daha yüksek ağırlık alırken özel kullanımlı mülklerde maliyet yaklaşımı ön plana çıkabilir. UDES ve IVS, uzlaşma sonucunun gerekçesiyle birlikte raporda yer almasını zorunlu tutar.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Emsal seçiminde kullanılan 'koldan kolun uzunluğunda işlem' ilkesi ne anlama gelir?",
+    "a": "Koldan kolun uzunluğunda işlem (arm's length transaction) ilkesi; alıcı ve satıcının birbirinden bağımsız, istekli ve bilgili taraflar olduğu, herhangi bir ilişkili taraf etkisi veya zorunluluk olmaksızın gerçekleşen piyasa işlemini ifade eder. Akraba, ortak şirket veya bağlı kuruluş arasındaki satışlar, zorla satış veya tasfiye işlemleri, vergi planlaması güdümlü transferler bu kriteri karşılamaz ve emsal olarak kullanılamaz. Değerleme uzmanı emsal araştırmasında işlemin bağımsız piyasa koşullarında gerçekleşip gerçekleşmediğini teyit etmek zorundadır. Aksi hâlde emsal bazlı değer tespiti güvenilirliğini yitirir.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Boşluk ve kayıp oranı (vacancy & credit loss) değerlemeye nasıl yansıtılır?",
+    "a": "Boşluk ve kayıp oranı; mülkün teorik tam doluluktaki potansiyel brüt gelirinden, gerçekçi piyasa koşullarını yansıtacak biçimde düşülen yüzdesel kesintilerden oluşur. Boşluk kısmı kiracı devir dönemleri, piyasa emilim süresi ve geçmiş doluluk verileriyle; tahsilat kaybı kısmı ise kiracı kredi riski ve gecikmiş kira oranlarıyla desteklenir. Bölgedeki karşılaştırılabilir mülklerin doluluk verileri temel referans noktasını oluşturur. Oranın gerekçesiz olarak sıfır tutulması ya da aşırı muhafazakâr belirlenmesi, raporun güvenilirliğini ve kabul edilebilirliğini olumsuz etkiler.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  },
+  {
+    "q": "Dışsal (ekonomik) eskime gayrimenkul değerlemesinde nasıl tespit edilir?",
+    "a": "Dışsal eskime; mülkün kendisinden değil, çevresindeki olumsuz koşullardan kaynaklanan ve genellikle geri dönüşü olmayan değer kaybını ifade eder. Sanayi tesisi yakınlığı, yoğun trafik, çevre kirliliği, ekonomik durgunluk veya bölgede arz fazlası bu tür eskimenin tipik nedenlerindendir. Maliyet yaklaşımında birikmiş amortismanın üçüncü bileşeni olarak dışsal eskime, bölgedeki benzer mülklerin satış fiyatı ile yapı-arsa maliyeti arasındaki kapanmayan fark analiz edilerek ölçülür. Değerleme uzmanı, dışsal etkenin kalıcı mı geçici mi olduğunu piyasa kanıtlarıyla belgeleyerek raporuna yansıtmak zorundadır.",
+    "cat": "Metodoloji & Özel Varlıklar"
+  }
+]

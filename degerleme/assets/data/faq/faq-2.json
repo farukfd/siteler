@@ -1,0 +1,177 @@
+[
+  {
+    "q": "Gayrimenkul değerleme başvurusu nasıl yapılır?",
+    "a": "Değerleme başvurusu; telefon, e-posta veya web formu aracılığıyla taşınmazın adresini ve amacını belirterek yapılabilir. Başvurunuzun ardından uzmanlarımız sizinle iletişime geçerek sürecin ayrıntılarını paylaşır. Başvuru aşamasında tapu bilgileri ve iletişim bilgileriniz yeterlidir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Değerleme süreci hangi adımlardan oluşur?",
+    "a": "Süreç sırasıyla şu adımlardan oluşur: başvuru ve ön bilgi alınması, gerekli belgelerin derlenmesi, uzman ataması, saha (yerinde) inceleme, belediye ve tapu müdürlüğü araştırmaları, pazar analizi ile değer hesaplamalarının tamamlanması ve imzalı raporun teslimi. Her adım belirli bir kalite kontrol sürecine tabidir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Gayrimenkul ekspertiz raporu ne kadar sürede hazırlanır?",
+    "a": "Rapor hazırlık süresi taşınmazın türüne, konumuna ve belge eksiksizliğine bağlı olarak değişkenlik gösterir; bu nedenle kesin bir süre taahhüt edilmez. Standart konut değerlemelerinde ortalama birkaç iş günü, karmaşık veya büyük ölçekli taşınmazlarda bu süre uzayabilir. Belgelerinizi eksiksiz teslim etmeniz süreci hızlandıran en önemli faktördür.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Değerleme için hangi belgeler gereklidir?",
+    "a": "Temel belgeler şunlardır: güncel tapu senedi veya tapu kayıt belgesi, kimlik belgesi (TC kimlik kartı veya pasaport), imar durumu belgesi ve çap krokisi. Yapı ruhsatı, iskân belgesi, mimari proje ve kat planları da sürecin tamamlanması için talep edilebilir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Değerleme raporunda neler yer alır?",
+    "a": "Rapor; taşınmazın kimlik bilgileri, hukuki durumu, imar ve yapı durumu, fiziksel özellikleri, pazar analizi, karşılaştırmalı satış ve gelir yaklaşımı gibi değerleme yöntemleri ile nihai sonuç değerini kapsar. Ayrıca SPK lisanslı uzmanın beyanı, imzası ve kaşesi raporun zorunlu unsurları arasındadır.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Ekspertiz ücreti nasıl belirlenir?",
+    "a": "Değerleme ücreti; taşınmazın türü, büyüklüğü, konumu ve değerlemenin amacına (banka ipoteği, miras, mahkeme vb.) göre belirlenir. Bu nedenle web sitesinde genel fiyat listesi yayımlamak mümkün değildir; taşınmazınıza özgü teklif almak için bizimle iletişime geçmeniz gerekmektedir. Kesin fiyat, teklif aşamasında yazılı olarak tarafınıza iletilir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Değerleme teklifi almak için ne yapmam gerekiyor?",
+    "a": "Taşınmazın adresini, türünü (konut, arsa, ticari vb.) ve değerleme amacınızı belirterek iletişim kanallarımızdan herhangi biriyle bize ulaşabilirsiniz. Ön bilgileri aldıktan sonra uzmanlarımız tarafınıza yazılı teklif iletir. Teklif süreci ücret gerektirmez.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Saha incelemesi (yerinde muayene) zorunlu mudur?",
+    "a": "Evet, SPK mevzuatı ve uluslararası değerleme standartları gereği ekspertiz raporunun geçerli sayılabilmesi için uzmanın taşınmazı bizzat yerinde incelemesi zorunludur. Saha incelemesi sırasında uzman fotoğraf çeker, ölçümler yapar ve taşınmazın fiziksel durumunu belgeler. Bu adım atlanamaz.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Saha incelemesi randevusu nasıl alınır?",
+    "a": "Başvurunuzun ve ücret mutabakatının ardından size atanan uzman, uygun bir gün ve saat için doğrudan iletişime geçer. Randevu tarihini belirlerken taşınmaza erişim koşullarınızı (kiracı varlığı, anahtar durumu vb.) önceden bildirmeniz süreci kolaylaştırır.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Saha incelemesinde bulunmam gerekiyor mu?",
+    "a": "Mülk sahibi veya yetkili temsilcisinin inceleme sırasında hazır bulunması, uzmanın sorularını yanıtlaması ve taşınmaza erişimi kolaylaştırması açısından önerilir. Kiracılı taşınmazlarda kiracının ya da yetkili kişinin de inceleme günü hazır olması gerekebilir. Vekâleten temsil de mümkündür.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "İmar durumu belgesi olmadan değerleme yapılabilir mi?",
+    "a": "İmar durumu belgesi değerleme raporunun ayrılmaz bir parçasıdır; eksik olması halinde uzman bu belgeyi belediyeden temin edebilir veya sizden temin etmenizi talep edebilir. Belgenin eksikliği süreyi uzatır ancak süreci başlatmanın önünde engel değildir. Uzmanlarımız bu konuda yönlendirme sağlar.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Yapı ruhsatı veya iskân belgem yoksa ne olur?",
+    "a": "Yapı ruhsatı ya da iskân belgesi bulunmayan taşınmazlar için değerleme yapılabilir; ancak bu durum raporda açıkça belirtilir ve taşınmazın yasal durumuna ilişkin bilgi notu eklenir. Eksik belgeler değerin hesaplanmasını etkileyebilir, bu nedenle uzman mevcut durumu eksiksiz raporlar.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Tapu tescil belgesi yerine vasiyet veya mahkeme kararı sunabilir miyim?",
+    "a": "Evet, tapu senedi yanı sıra mahkeme kararı, miras taksim sözleşmesi veya veraset ilamı gibi hukuki belgeler de kabul edilebilir. Ancak sunulan belgenin güncel ve yetkili makamca onaylı olması gerekir. Durumunuza göre uzmanlarımız hangi belgelerin yeterli olacağını size bildirir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Değerleme raporu ne zaman teslim edilir?",
+    "a": "Rapor, saha incelemesi ve tüm araştırmaların tamamlanmasının ardından hazırlanarak teslim edilir; kesin tarih taşınmazın niteliğine ve belge eksiksizliğine göre değişir. Teslim tarihi konusunda teklif aşamasında tahmini bir bilgi paylaşılır. Acil değerleme taleplerini önceden belirtmeniz önceliklendirme açısından önem taşır.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Ekspertiz raporu dijital mi yoksa fiziksel mi teslim edilir?",
+    "a": "Raporlar hem ıslak imzalı fiziksel nüsha hem de PDF formatında dijital nüsha olarak teslim edilebilir. Bankalara ve mahkemelere sunulmak üzere kaşeli ve imzalı orijinal basılı nüsha zorunlu tutulmaktadır. Tercihlerinizi başvuru aşamasında belirtmeniz yeterlidir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Değerleme raporu kaç nüsha olarak düzenlenir?",
+    "a": "Standart uygulama en az iki nüsha (bir asıl, bir kopya) şeklindedir; ancak kurumsal müşteriler veya mahkeme süreçleri için daha fazla nüsha talep edilebilir. Nüsha sayısı ve teslim yöntemi, başvuru sırasında karşılıklı mutabakat ile belirlenir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Değerleme raporunda uzman bilgileri yer alıyor mu?",
+    "a": "Evet, SPK mevzuatı gereği raporda değerlemeyi gerçekleştiren uzmanın adı, soyadı, lisans numarası, imzası ve tarih bilgileri mutlaka bulunmak zorundadır. Bu unsurlar raporun hukuki geçerliliğini kanıtlar.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Değerleme raporunda pazar analizi nasıl yapılıyor?",
+    "a": "Uzman, taşınmazın bulunduğu bölgedeki güncel emsal satışları ve piyasa eğilimlerini inceleyerek karşılaştırmalı bir pazar analizi hazırlar. Bu analiz; konum, büyüklük, yaş, kat, nitelik gibi faktörleri dikkate alarak emsal değerlerini normalize eder ve sonuç değere ulaşır.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Değerleme raporunda hangi değerleme yaklaşımları kullanılır?",
+    "a": "Uluslararası değerleme standartlarına göre temel yaklaşımlar şunlardır: emsal karşılaştırma yaklaşımı (piyasa yaklaşımı), gelir indirgeme yaklaşımı (kira getirisi üzerinden) ve maliyet yaklaşımı (arsa değeri + yapı yeniden yapım maliyeti). Hangi yaklaşımların kullanılacağı taşınmazın türüne ve mevcut veriye göre uzman tarafından belirlenir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Değerleme raporu ne amaçlarla kullanılabilir?",
+    "a": "Değerleme raporu; banka ipoteği (konut kredisi veya ticari kredi), miras ve veraset süreçleri, boşanma davası, şirket bilançosu, sigorta, kamulaştırma itirazı ve mahkeme kararları gibi pek çok resmi amaçla kullanılabilir. Her amaç için raporun içeriği ve formatı farklılık gösterebilir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Banka için istenen değerleme raporu ile bireysel talep arasında fark var mı?",
+    "a": "Evet, bankalar genellikle kendi onaylı değerleme şirketleri listesinden seçim yapar ve rapora ilişkin spesifik format gereksinimleri bulunur. Bireysel talepte ise format daha esnektir; ancak her iki durumda da SPK mevzuatına uygunluk zorunludur. Hangi amaçla değerleme yaptırmak istediğinizi belirtmeniz doğru yönlendirme açısından önemlidir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Belediye araştırması değerleme sürecinde ne zaman yapılır?",
+    "a": "Belediye araştırması; saha incelemesinin ardından ya da eş zamanlı olarak gerçekleştirilir. Bu araştırmada imar durumu, yapı ruhsatı, kat irtifakı/kat mülkiyeti bilgileri ve varsa şerh/beyanlar sorgulanır. Araştırma bulguları rapordaki imar ve hukuki durum bölümüne işlenir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Tapu araştırması değerleme sürecinin neresinde yer alır?",
+    "a": "Tapu araştırması, değerleme sürecinin kritik adımlarından biridir; uzman tapu sicil müdürlüğünden veya e-Devlet üzerinden taşınmazın güncel tapu kaydını, ipotek, haciz, şerh ve beyan bilgilerini sorgular. Bu bilgiler taşınmazın hukuki durumunu ortaya koyar ve raporda ayrıntılı biçimde raporlanır.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Değerleme talebimi verdikten sonra sürecimi nasıl takip edebilirim?",
+    "a": "Başvurunuzun ardından size atanan uzman veya müşteri temsilcisi iletişim bilgilerini paylaşır; süreç hakkında ilerleme bilgisini bu kanaldan talep edebilirsiniz. Bazı süreçlerde müşteri portalı veya e-posta ile ara bilgilendirme yapılmaktadır. Talep takip yöntemi başvuru sırasında size bildirilir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Ekspertiz sürecinde kişisel verilerimi nasıl koruyorsunuz?",
+    "a": "Değerleme sürecinde paylaştığınız tüm kişisel veriler, 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında işlenir ve korunur. Verileriniz yalnızca değerleme hizmetinin ifası için kullanılır, üçüncü taraflarla amacı dışında paylaşılmaz. Ayrıntılı bilgiye KVKK Aydınlatma Metnimizden ulaşabilirsiniz.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "KVKK kapsamında hangi verilerimi işliyorsunuz?",
+    "a": "Değerleme hizmeti kapsamında ad-soyad, TC kimlik numarası, iletişim bilgileri, tapu bilgileri ve taşınmaza ilişkin belgeler gibi veriler işlenmektedir. Bu işleme; sözleşmenin kurulması ve yasal yükümlülüklerin yerine getirilmesi amaçlarına dayalıdır. Rıza gerektiren işlemler için ayrıca onayınız alınır.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Rapor tesliminden sonra itiraz veya düzeltme talep edebilir miyim?",
+    "a": "Raporun hazırlanmasında kullanılan verilere veya tespitlere ilişkin somut bir itirazınız varsa yazılı olarak bildirebilirsiniz; uzman ekibimiz itirazı değerlendirerek gerekli durumlarda revizyon yapabilir. Ancak değerleme sonucuna sırf beklentinizle örtüşmediği gerekçesiyle itiraz hukuki açıdan ayrı bir süreçtir. Haklı bulunan teknik itirazlarda rapor güncellenir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Değerleme raporu ne kadar süre geçerlidir?",
+    "a": "Değerleme raporlarının geçerlilik süresi; kullanım amacına ve talep eden kurumun politikasına göre farklılık gösterir. Bankalar genellikle raporun belirli bir dönem içinde (örneğin 3-6 ay) düzenlenmiş olmasını şart koşar, mahkemeler ise ayrı değerlendirme yapabilir. Kesin geçerlilik süresi için ilgili kurumunuza doğrulama yaptırmanızı öneririz.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Arsa için değerleme süreci konuttan farklı mıdır?",
+    "a": "Arsa değerlemesinde saha incelemesi ve tapu araştırması benzer şekilde yürütülür; ancak bina maliyeti yaklaşımı uygulanmaz, buna karşın imar planı, yapılaşma koşulları ve TAKS/KAKS değerleri öne çıkan analizlerdir. Konum ve altyapı erişimi de arsa değerini belirleyen kritik faktörler arasında yer alır.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Ticari mülk (dükkan, ofis, depo) değerlemesi nasıl işler?",
+    "a": "Ticari mülk değerlemesinde hem emsal karşılaştırma hem de gelir indirgeme yaklaşımı birlikte kullanılabilir; kira geliri potansiyeli önemli bir girdi oluşturur. Ticari taşınmazın kullanım izni, yapı ruhsatı ve imar fonksiyonu da incelenir. Süreç konut değerlemesine kıyasla daha fazla araştırma ve analiz gerektirebildiğinden tamamlanma süresi uzayabilir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Kat mülkiyeti olmayan (kat irtifakı) taşınmazda değerleme yapılabilir mi?",
+    "a": "Evet, kat irtifakı aşamasındaki taşınmazlar için değerleme yapılabilir; ancak bu durum raporun hukuki durum bölümünde açıkça belirtilir. Kat mülkiyetine geçiş sürecinin aşaması ve iskân durumu değer üzerinde etkili olabilir. Uzmanınız bu hususları raporunda değerlendirir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Başvurumu iptal etmek istersem ne yapmalıyım?",
+    "a": "Saha incelemesi gerçekleşmeden önce yapılan iptallerde süreç koşulsuz sonlandırılabilir; saha incelemesi yapılmış ise yapılan çalışmalar karşılığında kısmi ücret talep edilebilir. İptal koşulları teklif belgesinde yazılı olarak belirtilir. İptal talebinizi yazılı olarak iletmeniz kayıt açısından önerilir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Değerleme raporu dijital imzalı olarak düzenlenebilir mi?",
+    "a": "SPK mevzuatı ve ilgili tebliğler çerçevesinde bazı amaçlar için e-imzalı dijital rapor kabul görmektedir; ancak bankalar ve mahkemeler çoğunlukla ıslak imzalı fiziksel nüsha talep etmektedir. Dijital imza gereksinimlerinizi başvuru aşamasında paylaşmanız, raporun uygun formatta hazırlanmasını sağlar.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Değerleme raporunda taşınmazın fotoğrafları yer alır mı?",
+    "a": "Evet, saha incelemesi sırasında uzman tarafından çekilen fotoğraflar raporun ayrılmaz bir parçasıdır; hem taşınmazın iç hem dış mekanlarını belgeler. Fotoğraflar raporun fiziksel durum bölümünde sunulur ve değerleme kanaatini destekler.",
+    "cat": "Süreç, Belgeler & Rapor"
+  },
+  {
+    "q": "Ekspertiz başvurusunda taşınmazın adresi yeterlimil mi?",
+    "a": "Ön başvuru için taşınmazın tam adresi ve kadastral bilgileri (ada/parsel numarası) çoğunlukla yeterlidir; resmi belgeler daha sonraki aşamada talep edilir. Tapu numarasını başvuruda paylaşmanız uzmanın ön araştırma yapmasını kolaylaştırır. Belgelerinizi teslim zamanlaması konusunda uzmanınız size bilgi verir.",
+    "cat": "Süreç, Belgeler & Rapor"
+  }
+]

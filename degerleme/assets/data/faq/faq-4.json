@@ -1,0 +1,152 @@
+[
+  {
+    "q": "Bankaya teminat gösterilecek taşınmaz için neden ekspertiz yaptırılması gerekir?",
+    "a": "Bankalar, kredi riskini yönetmek amacıyla teminat olarak alacakları taşınmazın bağımsız ve nesnel bir değerinin belirlenmesini zorunlu tutar. Ekspertiz raporu, banka için taşınmazın gerçek piyasa değerini ve teminat uygunluğunu kanıtlayan resmi bir belgedir. BDDK düzenlemeleri kapsamında bu süreç yasal bir zorunluluktur.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Teminat değeri ile piyasa değeri arasındaki fark nedir?",
+    "a": "Piyasa değeri, taşınmazın açık piyasada alıcı ve satıcı arasında oluşan tahmini satış bedelidir. Teminat değeri ise banka tarafından bu değer üzerinden belirlenen ve kredi hesaplamalarında esas alınan daha ihtiyatlı bir rakamdır. Bankalar risk politikaları doğrultusunda piyasa değerinin belirli bir oranını teminat değeri olarak kabul edebilir; bu oran bankadan bankaya farklılık gösterir.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Ekspertiz değeri konut kredisi tutarını nasıl belirler?",
+    "a": "Bankalar, kullandıracakları konut kredisi tutarını ekspertiz raporunda yer alan değer üzerinden hesaplar. Yasal düzenlemeler ve bankanın risk politikası çerçevesinde ekspertiz değerinin belirli bir yüzdesi kredi olarak verilebilir; satış bedeli ekspertiz değerinin üzerinde olsa dahi banka bu üst sınırı aşamaz. Bu nedenle ekspertiz değeri, müşterinin çekebileceği maksimum kredi tutarını doğrudan etkiler.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Konut kredisi sürecinde ekspertiz kim tarafından talep edilir?",
+    "a": "Konut kredisi başvurusunda genellikle kredi veren banka, ekspertiz yaptırılmasını talep eder ve banka listesindeki bir değerleme şirketiyle sürecin başlatılmasını sağlar. Müşteri ekspertiz şirketini banka aracılığıyla öğrenir; ancak bazı bankaların müşteriye seçenek sunduğu da görülmektedir. Her iki durumda da ekspertiz süreci bankanın koordinasyonuyla yürütülür.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Ekspertiz ücretini kim öder?",
+    "a": "Konut kredisi işlemlerinde ekspertiz ücreti genellikle kredi başvurusu yapan müşteri tarafından ödenir. Bu ücret, kredi tahsis edilip edilmediğinden bağımsız olarak alınabilir çünkü ekspertiz hizmeti fiilen gerçekleştirilmiştir. Ücret tutarı değerleme şirketi ve taşınmazın türüne göre değişkenlik gösterir.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "BDDK değerleme listesi nedir ve neden önemlidir?",
+    "a": "BDDK (Bankacılık Düzenleme ve Denetleme Kurumu) onaylı değerleme listesi, bankaların kredi ve teminat işlemlerinde çalışabileceği, yetkin ve lisanslı değerleme şirketlerini içerir. Bankalar bu listenin dışında kalan firmalardan alınan raporları kredi işlemlerinde kabul etmez. Müşteriler de ekspertiz için mutlaka bu listede yer alan SPK lisanslı firmalarla çalışmalıdır.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Bankalar hangi değerleme şirketleriyle çalışır?",
+    "a": "Bankalar, Sermaye Piyasası Kurulu (SPK) tarafından yetkilendirilmiş ve kendi iç değerlendirmeleri sonucunda onayladıkları değerleme şirketleriyle çalışır. Her bankanın anlaşmalı değerleme firmaları farklılık gösterebilir; bu liste zaman içinde güncellenebilir. Müşteriler, ekspertiz başvurusu öncesinde ilgili bankanın güncel anlaşmalı firmalar listesini öğrenmesi tavsiye edilir.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Ekspertiz değeri düşük çıkarsa ne olur?",
+    "a": "Ekspertiz değeri beklentinin altında kalırsa banka, hesapladığı maksimum kredi tutarını da düşürür; bu durumda müşteri aradaki farkı özkaynaklarından karşılamak zorunda kalabilir. Müşteri, raporun hatalı olduğunu düşünüyorsa itiraz hakkını kullanabilir veya banka üzerinden yeniden değerleme talep edebilir. Ancak itirazın kabul edilip edilmeyeceği inceleme sonucuna bağlıdır.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Ekspertiz raporuna itiraz etmek mümkün müdür?",
+    "a": "Evet, müşteri ekspertiz raporundaki tespitlere itiraz edebilir. Bu süreçte banka aracılığıyla ikinci bir değerleme talep edilebilir ya da mevcut rapora yazılı itiraz yolu denenebilir. İtiraz değerlendirmesi değerleme şirketi veya banka tarafından incelenir; sonuç rapora yansıyıp yansımayacağı nesnel verilere ve denetime bağlıdır.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Ekspertiz raporu bankaya nasıl iletilir?",
+    "a": "Ekspertiz raporu, değerleme şirketi tarafından genellikle doğrudan kredi işlemini yürüten bankaya elektronik ortamda veya güvenli sistem üzerinden iletilir. Müşteri ayrıca fiziksel veya dijital bir kopya alabilir. Tüm süreç yasal zincir içinde yürütüldüğünden rapor, müşteriden bağımsız biçimde resmi kanallar aracılığıyla bankaya ulaşır.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Banka için yapılan ekspertiz raporunun geçerlilik süresi ne kadardır?",
+    "a": "Ekspertiz raporlarının geçerlilik süresi yasal düzenlemelere ve bankanın politikasına göre değişmekle birlikte, çoğu banka raporun belirli bir süre içinde (genellikle altı ay ile bir yıl arasında) kullanılmasını bekler. Bu süre aşılırsa yeni bir ekspertiz yaptırılması istenebilir. Piyasa koşullarının hızla değiştiği dönemlerde bankalar daha kısa geçerlilik süreleri uygulayabilir.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Yeniden ekspertiz ne zaman gerekir?",
+    "a": "Yeniden ekspertiz; mevcut raporun geçerlilik süresinin dolması, taşınmazda fiziksel değişiklik veya imar durumu güncellemesi gibi piyasayı etkileyen gelişmeler yaşanması ya da kredi yenileme sürecinde banka tarafından talep edilmesi durumlarında gündeme gelir. Ayrıca mevcut rapora itiraz sonucunda da yeni bir değerleme yapılabilir. Her durumda yeni rapor, güncel piyasa verilerini yansıtır.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "İpotek tesisi sürecinde ekspertiz ne rol oynar?",
+    "a": "İpotek tesisi için taşınmazın değerinin resmi olarak belirlenmesi gerekir; bu değer banka tarafından ipotek miktarının ve dolayısıyla kredi limitinin belirlenmesinde esas alınır. Ekspertiz raporu, tapu müdürlüğünde gerçekleştirilecek ipotek işleminin belgesel temelini oluşturur. Doğru ve kapsamlı bir ekspertiz, hem müşteriyi hem de bankayı hukuki açıdan korur.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Ekspertiz raporu ile satış bedeli birbirinden farklı olabilir mi?",
+    "a": "Evet, taşınmazın anlaşma bedeli ile ekspertiz değeri zaman zaman farklılaşabilir. Satıcı ve alıcı kendi müzakereleri sonucunda bir bedel belirlerken değerleme uzmanı piyasa verilerini, emsal satışları ve taşınmazın fiziksel durumunu nesnel biçimde değerlendirir. Banka, kredi kararında genellikle satış bedeli ile ekspertiz değerinden düşük olanı esas alır.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Ticari kredi teminatı için ekspertiz nasıl farklılaşır?",
+    "a": "Ticari kredi teminatı değerlemelerinde, konut değerlemesine kıyasla daha kapsamlı bir analiz yapılır; işletme değeri, kira getirisi, imar kullanım türü ve taşınmazın likiditesi gibi ek faktörler incelenir. Değerleme uzmanı ticari taşınmazın hem mevcut kullanım değerini hem de alternatif kullanım potansiyelini raporlar. Bu tür raporlar genellikle daha uzun ve teknik bir yapıya sahiptir.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "SPK lisanslı ekspertiz zorunluluğu nereden kaynaklanır?",
+    "a": "Sermaye Piyasası Kurulu (SPK), bankalar ve finansal kuruluşlar için değerleme faaliyetlerini düzenleyen yasal çerçeveyi belirler. BDDK'nın yayımladığı yönetmelikler, bankaların kredi işlemlerinde yalnızca SPK onaylı değerleme şirketleri ve lisanslı uzmanlardan rapor almasını zorunlu kılar. Bu düzenleme, değerleme kalitesini ve güvenilirliğini piyasa genelinde standartlaştırmak amacıyla oluşturulmuştur.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Banka, kredi kararında yalnızca ekspertiz değerine mi bakar?",
+    "a": "Hayır; banka kredi kararında ekspertiz değerinin yanı sıra müşterinin gelir durumu, kredi geçmişi, mevcut borç yükü ve bankanın risk politikası gibi pek çok faktörü birlikte değerlendirir. Ekspertiz değeri, teminatın yeterliliğini ölçen kilit bir girdi olmakla birlikte tek belirleyici unsur değildir. Tüm bu faktörler bir arada değerlendirilerek nihai kredi kararı verilir.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Arsa veya tarla niteliğindeki taşınmazlar teminat olarak kabul edilir mi?",
+    "a": "Arsa ve tarla gibi taşınmazların teminat olarak kabul edilip edilmeyeceği bankanın politikasına, taşınmazın imar durumuna ve likiditesine göre değişir. Yapılaşmaya uygun imar statüsünde olan arsalar daha kolay kabul görürken tarım arazileri veya imar dışı taşınmazlar için bazı bankalar ek kısıtlama uygulayabilir. Ekspertiz raporunda imar bilgileri ve pazar likiditesi detaylı biçimde belirtilir.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Banka teminat değerlemesinde hangi yöntemler kullanılır?",
+    "a": "Konut değerlemelerinde genellikle emsal karşılaştırma yöntemi esas alınırken ticari taşınmazlarda gelir kapitalizasyonu veya maliyet yöntemi de devreye girebilir. Değerleme uzmanı, taşınmazın türüne ve mevcut piyasa verilerinin kalitesine göre en uygun yöntemi belirler. Uluslararası Değerleme Standartları (IVS) ve Türkiye Değerleme Standartları bu metodolojilerin çerçevesini çizmektedir.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Ekspertiz raporunda hangi bilgiler yer alır?",
+    "a": "Standart bir ekspertiz raporu; taşınmazın tapu ve kadastro bilgilerini, imar durumunu, fiziksel özelliklerini, çevre analizi ve emsal satış verilerini, kullanılan değerleme yöntemini ve gerekçeli sonuç değerini içerir. Banka teminat değerlemelerinde ayrıca taşınmazın likiditesi ve varsa risk faktörleri de raporlanır. Rapor, lisanslı değerleme uzmanı tarafından imzalanarak geçerlilik kazanır.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Ekspertiz değeri ile kredi tutarı arasındaki oran yasal olarak belirlenmiş midir?",
+    "a": "Evet, Türkiye'de konut kredilerinde uygulanabilecek azami kredi/değer oranları (LTV) BDDK tarafından belirlenen sınırlar çerçevesinde yönetilir. Her bankanın bu üst sınır içinde kendi risk politikasına göre farklı oranlar belirleyebileceğini unutmamak gerekir. Bu düzenleme, hem bankacılık sistemini hem de tüketiciyi aşırı borçlanma riskine karşı korumaya yöneliktir.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Ortak mülkiyetli (hisseli) taşınmazlar teminat olarak verilebilir mi?",
+    "a": "Hisseli taşınmazlar teminat olarak gösterilmek istendiğinde bankalar genellikle ek koşullar arar; diğer hissedarların muvafakati ve taşınmazın paylaşıma uygunluğu sorgulanır. Ekspertiz raporunda hisseli yapı açıkça belirtilir ve bu durum likidite riski açısından ayrıca değerlendirilir. Bazı bankalar hisseli taşınmazları teminat olarak kabul etmeyebilir ya da değerlemede indirimli bir yaklaşım benimseyebilir.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Kat irtifakı veya kat mülkiyeti olmayan yapılar teminata konu olabilir mi?",
+    "a": "Kat irtifakı veya kat mülkiyeti kurulmamış yapılar için bankalar genellikle ihtiyatlı bir tutum sergiler ve söz konusu taşınmazları teminat olarak kabul etmeyebilir ya da değerlemede ciddi kısıtlamalar uygulayabilir. Ekspertiz uzmanı bu tür durumları raporda özellikle belirtir ve taşınmazın hukuki durumu kredi kararını doğrudan etkiler. Başvuru sahiplerinin önce tapu sicilindeki durumu düzelttirmesi tavsiye edilir.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Ekspertiz sürecinde değerleme uzmanı taşınmazı mutlaka yerinde inceler mi?",
+    "a": "Standart banka teminat değerlemelerinde değerleme uzmanının taşınmazı yerinde görmesi hem mesleki hem de yasal bir gerekliliktir. Yerinde incelemede yapının fiziksel durumu, çevresi, ulaşım imkânları ve emsal taşınmazlarla karşılaştırması yapılır. Uzaktan veya masaüstü değerleme bazı istisnai durumlarda uygulanabilse de banka teminat süreçlerinde fiziksel tespit esas kabul edilir.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Aynı taşınmaz için birden fazla bankaya ekspertiz yaptırılabilir mi?",
+    "a": "Hukuki olarak engelleyici bir düzenleme bulunmamakla birlikte her banka kendi anlaşmalı değerleme şirketleri aracılığıyla ayrı rapor talep edebilir. Bu durumda müşteri her başvuru için ayrı ekspertiz ücreti ödemek durumunda kalabilir. Bazı bankalar belirli koşullar altında güncel ve banka listesindeki firmadan alınan mevcut bir raporu kabul edebilir; ancak bu tamamen bankanın kendi politikasına bağlıdır.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Taşınmaz üzerinde haciz veya şerh varsa ekspertiz yapılır mı?",
+    "a": "Ekspertiz fiziksel ve piyasa değerini belirlemek amacıyla yapılabilir; ancak tapu üzerindeki haciz, şerh veya ipotek gibi hukuki kısıtlamalar ekspertiz raporunda mutlaka belirtilir. Bu tür kısıtlamalar bankanın teminat kararını olumsuz etkileyebilir veya krediyi tamamen engelleyebilir. Değerleme uzmanı hukuki durumu tespit eder ama bu konuda kesin bir çözüm öneremez; hukuki süreçler ayrıca takip edilmelidir.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Banka teminat değerlemesinde deprem riski dikkate alınır mı?",
+    "a": "Evet, modern ekspertiz raporlarında taşınmazın bulunduğu bölgenin deprem risk haritası, yapının zemin etüdü ve inşaat yılı gibi faktörler değerlemeye dahil edilebilir. Yüksek riskli bölgelerdeki yapılar için banka daha ihtiyatlı bir teminat değeri benimseyebilir. DASK zorunlu deprem sigortası poliçesi de kredi sürecinin ayrılmaz bir parçasıdır.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Konut kredisi onaylandıktan sonra ipotek ne zaman tesis edilir?",
+    "a": "Kredi onayının ardından banka, ekspertiz raporu ve diğer belgeleri tamamlanmış müşteri dosyasıyla tapu müdürlüğüne başvurarak ipotek tescil işlemini gerçekleştirir. İpotek tesisi, genellikle kredi kullandırımıyla eş zamanlı ya da hemen öncesinde tamamlanır. Bu aşamada tapu harcı ve döner sermaye ücreti gibi masraflar da ortaya çıkar.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Kredisi kapanan taşınmazın ipoteği nasıl kaldırılır?",
+    "a": "Kredi borcu tamamen ödendikten sonra banka, tapu müdürlüğüne ipotek fekki (kaldırma) talebi iletir ve gerekli belgeleri imzalar. Müşteri bu işlemi tapu müdürlüğünde gerçekleştirerek taşınmazı ipotek şerhinden kurtarabilir. Süreç tamamlandığında tapu kaydı temiz hale gelir ve taşınmaz üzerindeki banka hakkı sona erer.",
+    "cat": "Banka Teminat & Kredi"
+  },
+  {
+    "q": "Ekspertiz raporu ile banka değerleme raporu aynı şey midir?",
+    "a": "Teknik olarak her ikisi de taşınmazın değerini belirlemeye yönelik belgelerdir; ancak banka değerleme raporu özellikle bankanın teminat ve kredi ihtiyaçlarına göre yapılandırılmış, bankanın talep ettiği formatta hazırlanmış bir ekspertiz raporunu ifade eder. SPK lisanslı değerleme şirketleri bu raporları banka standartlarına ve BDDK gerekliliklerine uygun biçimde hazırlar. Dolayısıyla her banka değerleme raporu bir ekspertiz raporudur; ancak her ekspertiz raporunun bankanın istediği formatta olması gerekebilir.",
+    "cat": "Banka Teminat & Kredi"
+  }
+]

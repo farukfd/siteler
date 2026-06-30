@@ -1,0 +1,167 @@
+[
+  {
+    "q": "UFRS/TFRS kapsamında gayrimenkul değerlemesi neden zorunludur?",
+    "a": "UFRS 13 ve TFRS 13 standartları, finansal tablolarda gerçeğe uygun değer ölçümü yapılmasını zorunlu kılar. Bu kapsamda yatırım amaçlı gayrimenkuller TMS 40 çerçevesinde rayiç değer ya da maliyet yöntemiyle raporlanır. Bağımsız SPK lisanslı değerleme kuruluşlarından alınan raporlar, denetçilerin kabul ettiği objektif kanıt niteliği taşır. Söz konusu raporlar olmadan finansal tabloların bağımsız denetimden geçmesi güçleşmektedir.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Aktif yeniden değerleme (revaluation) nedir ve muhasebe sürecine etkisi nelerdir?",
+    "a": "Aktif yeniden değerleme, işletmenin bilançosundaki maddi duran varlıkların defter değerinin gerçeğe uygun değere güncellenmesi işlemidir. TMS 16 standardı bu yönteme izin vermekte; değer artışı özsermayede \"yeniden değerleme fonu\" olarak, değer düşüklüğü ise kâr-zarar tablosunda gider olarak raporlanır. Değerlemenin güvenilir ve tekrarlanabilir olması için SPK lisanslı uzmanlar tarafından belirli aralıklarla yapılması gerekmektedir. Bu süreç işletmenin bilanço gücünü ve finansal oranlarını doğrudan etkiler.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "GYO portföy değerlemesi ne sıklıkla yapılmalıdır?",
+    "a": "SPK'nın GYO tebliği uyarınca gayrimenkul yatırım ortaklıkları, portföylerindeki taşınmazları en az yılda bir kez SPK lisanslı değerleme kuruluşlarına bağımsız olarak değerlettirmek zorundadır. Portföye yeni gayrimenkul eklenmesi, halka arzdan önce veya portföyden çıkarma gibi özel durumlarda ek değerleme yapılması zorunludur. Periyodik raporlar KAP (Kamuyu Aydınlatma Platformu) aracılığıyla kamuoyuyla paylaşılır. Bu zorunluluk, yatırımcıların korunması ve portföy şeffaflığının sağlanması amacıyla getirilmiştir.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Halka arz sürecinde değerleme raporu ne işe yarar?",
+    "a": "Halka arz öncesinde hazırlanan değerleme raporu, şirketin sahip olduğu taşınmazların ve varlıkların bağımsız bir gözle tespit edilmiş piyasa değerini yansıtır. Bu rapor, izahname ve halka arz fiyatı belirlenirken kullanılan temel finansal belgeler arasında yer alır. SPK, halka arz sürecinde sunulan değerleme raporlarının belirli metodolojik standartları karşılamasını şart koşmaktadır. Değerlemenin tarafsızlığı, yatırımcı güveninin oluşmasında kritik rol oynar.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Özelleştirme süreçlerinde değerleme nasıl yürütülür?",
+    "a": "Özelleştirme İdaresi Başkanlığı bünyesinde yürütülen süreçlerde, devlete ait taşınmaz ve işletmelerin değeri birden fazla bağımsız değerleme kuruluşu tarafından ayrı ayrı tespit edilir. İndirimli nakit akışı, emsal karşılaştırma ve maliyet yaklaşımı yöntemleri birlikte kullanılarak kapsamlı bir değerleme ortaya konur. Raporlar, Özelleştirme Yüksek Kurulu'na sunulan muhammen bedelin belirlenmesine esas teşkil eder. Siyasi ve kamuoyu hassasiyeti nedeniyle şeffaflık ve metodolojik titizlik ön planda tutulur.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Sigorta değer tespitinde yeniden inşa bedeli ile piyasa değeri arasındaki fark nedir?",
+    "a": "Piyasa değeri, bir taşınmazın piyasada alıcı ve satıcı arasında serbestçe oluşan fiyatını ifade ederken; yeniden inşa bedeli, yapının hasar görmesi veya yıkılması durumunda aynı nitelikte yeniden inşa edilmesinin maliyetini gösterir. Sigorta primlerinin hesaplanmasında esas alınan büyüklük çoğunlukla yeniden inşa bedelidir, piyasa değeri değildir. İki değer arasındaki fark, arsanın piyasa değeri, yıpranma oranı ve inşaat maliyetlerinin seyrine göre önemli ölçüde değişebilir. Bu ayrım, eksik sigortalanma (underinsurance) riskini ortadan kaldırmak açısından kritiktir.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Hasar tespiti değerlemesi nasıl yapılır?",
+    "a": "Hasar tespiti değerlemesinde uzmanlar; hasarın kapsamını, etkilenen yapı elemanlarını ve onarım maliyetlerini ayrıntılı biçimde belirler. Birim fiyat analizleri ve Çevre, Şehircilik ve İklim Değişikliği Bakanlığı'nın yayımladığı yapı maliyeti cetvelleri referans alınarak tahmini onarım bedeli hesaplanır. Toplam hasar tutarı, yapının hasar öncesi değeriyle karşılaştırılarak tam ya da kısmi hasar sınıflandırması yapılır. Elde edilen rapor, sigorta tazminatının belirlenmesinde birincil belge olarak kullanılır.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Due diligence sürecinde değerleme uzmanının rolü nedir?",
+    "a": "Şirket birleşme ve devralma (M&A) süreçlerinde değerleme uzmanı, hedef şirketin mülkiyet portföyünü bağımsız bir bakış açısıyla inceler ve raporlar. Bu inceleme; tapu durumu, hukuki yükler (ipotek, şerh), imar durumu ve fiziksel koşullar gibi unsurları kapsar. Tespit edilen değer, alıcı tarafın teklifini ve risk primini doğrudan etkiler. Due diligence raporu, işlem sonrasında ortaya çıkabilecek varlık değer uyuşmazlıklarında da önemli bir hukuki dayanak oluşturur.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Vergi ve emlak vergisi değer tespitinde rayiç değer nasıl belirlenir?",
+    "a": "Emlak vergisine esas teşkil eden değer, belediyeler tarafından belirlenen asgari metrekare değerleri üzerinden hesaplanmakta; ancak tapu harcı hesaplamalarında taşınmazın beyan değeri veya rayiç değerinden yüksek olanı esas alınmaktadır. SPK lisanslı değerleme uzmanları, tapu devri işlemlerinde idareyle uyuşmazlık yaşanmaması için piyasayla uyumlu gerçekçi değerleme raporları düzenler. Tarhiyat aşamasında vergi idaresinin kabul ettiği standart metodolojiler kullanılarak değerleme yapılması, olası cezai yaptırımları önler. Doğru tespit edilmiş rayiç değer, hem mükellefi hem de alacaklı kurumu koruyucu bir işlev görür.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Tapu harcı hesaplamasında değerleme raporunun önemi nedir?",
+    "a": "Tapu devri sırasında ödenmesi gereken tapu harcı, satış bedeli ile taşınmazın rayiç değerinden yüksek olanı üzerinden hesaplanmaktadır. SPK lisanslı uzman tarafından hazırlanan değerleme raporu, tapu müdürlüğüne sunulduğunda harcın doğru matrah üzerinden hesaplanmasını sağlar. Beyan edilen değerin piyasa değerinin altında kalması durumunda idarenin cezai faiz ve vergi farkı talep etme hakkı doğmaktadır. Bağımsız değerleme raporu bu riskleri minimize eden belgesel bir güvence niteliği taşır.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Kira değeri tespiti ne zaman ve nasıl yapılır?",
+    "a": "Kira değeri tespiti; kira sözleşmesi yenileme müzakerelerinde, kira uyuşmazlıklarında mahkeme süreçlerinde veya kurumsal kiracıların yıllık kira güncellemelerinde başvurulan bağımsız bir değerleme sürecidir. Emsal kira analizleri, bölge piyasa araştırması ve taşınmazın nitelikleri dikkate alınarak piyasa kira değeri (market rent) tespit edilir. Bu rapor, uzlaşma görüşmelerinde ya da mahkeme heyetinin bilirkişi talebi olmaksızın sunduğu teknik kanıt olarak işlev görür. Kira tespit davalarında mahkeme, çoğunlukla bağımsız uzman görüşüne dayanarak karar vermektedir.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Kira uyuşmazlıklarında bağımsız değerleme nasıl sonuç doğurur?",
+    "a": "Kiracı ile kiraya veren arasındaki kira bedelinin tespiti uyuşmazlıklarında mahkemeler, bilirkişi atamak yerine taraflarca sunulan bağımsız değerleme raporlarını inceleyebilir. SPK lisanslı uzman tarafından emsal analizine dayalı olarak hazırlanan rapor, mahkemenin adil kira tespiti yapmasına metodolojik zemin hazırlar. Raporun güncel piyasa verilerine ve yeterli emsal karşılaştırmasına dayanması, delil değerini artırır. Sonuç, ileriye dönük kira düzenlemeleri için de bağlayıcı bir referans oluşturabilir.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Şerefiye (goodwill) değerlemesi gayrimenkul değerlemesiyle nasıl ilişkilendirilir?",
+    "a": "Otel, alışveriş merkezi ve benzeri ticari gayrimenkullerde taşınmazın fiziksel değerinin ötesinde, işletmenin yarattığı ticari şöhret ve müşteri tabanı şerefiye olarak sınıflandırılır. TFRS 3 (İşletme Birleşmeleri) ve TMS 38 (Maddi Olmayan Duran Varlıklar) standartları çerçevesinde şerefiye ayrıştırılarak raporlanır. Değerleme sürecinde gayrimenkul değerlemesiyle işletme değerlemesi paralel yürütülür; elde edilen toplam değer ikisi arasında tahsis edilir. Bu ayrıştırma süreci, bağımsız denetçiler ve vergi otoriteleri tarafından yakından incelenmektedir.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Maddi olmayan varlıkların değerlemesinde hangi yöntemler kullanılır?",
+    "a": "Maddi olmayan varlıklar; marka değeri, franchise hakları, kira hakları ve yazılım lisansları gibi unsurları kapsar. Bu varlıkların değerlemesinde çoğunlukla gelir yaklaşımı altındaki fazladan kazanç (excess earnings) veya telif bedeli muafiyeti (relief from royalty) yöntemleri tercih edilir. Değerleme, TFRS 13'ün belirlediği giriş ve çıkış fiyatı hiyerarşisine uygun biçimde seviye 2 veya seviye 3 girdiler kullanılarak yürütülür. Hesaplanan değerler, birleşme sonrası satın alma bedeli dağıtımı (PPA) raporlarının temelini oluşturur.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Muhammen bedel nedir ve ihale süreçlerinde nasıl uygulanır?",
+    "a": "Muhammen bedel, ihaleye konu taşınmaz veya varlık için yetkili idare ya da mahkeme tarafından belirlenen taban fiyatıdır. Kamu ihale mevzuatı kapsamında hazırlanan muhammen bedel raporları, SPK lisanslı değerleme uzmanları tarafından bağımsız değerleme standartlarına uygun şekilde düzenlenmektedir. İhalelerde teklifler bu taban bedelin altına inemez; dolayısıyla doğru tespit edilmiş muhammen bedel kamu yararını koruyan temel güvencedir. Mahkeme ihalelerinde (icra satışı vb.) tespit edilen muhammen bedel, itiraz ve iptal davalarında da hukuki dayanak teşkil eder.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Kurumsal aktif envanteri çalışması neden yapılır?",
+    "a": "Kurumsal aktif envanteri, büyük ölçekli işletmelerin bilançolarındaki tüm maddi duran varlıkların sistematik biçimde listelenmesi, fiziksel denetimi ve değerinin tespitidir. Bu çalışma; bağımsız denetim gereklilikleri, sigorta teminatı güncellemesi, kiralama (lease) muhasebesi ve aktif yeniden değerleme süreçlerinde temel veri seti olarak işlev görür. TFRS 16 kapsamındaki kullanım hakkı varlıklarının doğru raporlanması da güncel aktif envanterine dayanmaktadır. Periyodik envanter çalışmaları, kayıp, fazlalık ve yanlış sınıflandırma risklerini de önemli ölçüde azaltır.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Bağımsız denetime girdi olarak değerleme raporu nasıl değerlendirilir?",
+    "a": "Bağımsız denetçiler, finansal tablolarda yer alan taşınmaz değerlerini doğrulamak için SPK lisanslı uzmanlar tarafından hazırlanan değerleme raporlarını birincil kanıt olarak inceler. Denetçi, raporun metodolojik uygunluğunu, değerleme tarihini ve kullanılan varsayımların makul olup olmadığını değerlendirir. IVS (Uluslararası Değerleme Standartları) veya UDES (Uluslararası Değerleme Uygulama Standartları) uyumlu raporlar denetim sürecini hızlandırır ve denetçi rezervi riskini azaltır. Değerleme raporunun denetim tarihiyle aynı yıla ait olması çoğunlukla şart koşulmaktadır.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "IVS (Uluslararası Değerleme Standartları) ile ulusal standartlar arasındaki temel farklar nelerdir?",
+    "a": "IVS, IVSC (Uluslararası Değerleme Standartları Konseyi) tarafından yayımlanan küresel çerçeve olup metodoloji, şeffaflık ve raporlama ilkelerini düzenler. Türkiye'de UDES (Uluslararası Değerleme Uygulama Standartları) bu çerçeveyle uyumlu biçimde geliştirilmiş; SPK değerleme tebliğleri de bu standartlara atıf yapmaktadır. Temel fark, ulusal mevzuatın yasal zorunluluklar ve tapu/imar gibi yerel düzenlemeler açısından IVS'e ek katmanlar eklemesidir. Uluslararası yatırımcılara yönelik hazırlanan raporlarda IVS uyumu, güvenilirlik algısını doğrudan güçlendirmektedir.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Gerçeğe uygun değer (fair value) ile piyasa değeri (market value) aynı kavram mıdır?",
+    "a": "TFRS 13 çerçevesinde gerçeğe uygun değer, ölçüm tarihinde piyasa katılımcıları arasında gerçekleşecek olağan bir işlemde bir varlığın satışında elde edilecek fiyat olarak tanımlanır; bu tanım IVS'deki piyasa değeri kavramıyla büyük ölçüde örtüşmektedir. Ancak gerçeğe uygun değer muhasebe standartlarına özgü bir ölçüm çerçevesi sunarken, piyasa değeri değerleme pratiğinde daha geniş bir kavramsal temele oturur. Bazı durumlarda (zorla satış, tasfiye senaryoları vb.) iki kavram birbirinden ayrışabilmektedir. Bu nüansın finansal raporlama sürecinde doğru anlaşılması, metodoloji seçimi açısından kritik öneme sahiptir.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "İndirimli nakit akışı (DCF) yöntemi gayrimenkul değerlemesinde nasıl kullanılır?",
+    "a": "DCF yöntemi, taşınmazın ileride yaratacağı kira gelirleri ve nihai satış değeri (terminal value) gibi nakit akışlarının bugünkü değere indirgenmesi esasına dayanır. İskonto oranı olarak piyasa koşullarını yansıtan gayrimenkul getiri oranı (cap rate) veya ağırlıklı ortalama sermaye maliyeti (WACC) kullanılabilir. Yöntem özellikle gelir getiren ticari gayrimenkuller (ofis, AVM, lojistik depo) için tercih edilmekte; uzun vadeli kira sözleşmelerine sahip varlıklarda yüksek güvenilirlik sunmaktadır. Projeksiyon dönemindeki varsayımların gerçekçi temellere dayanması, sonucun güvenilirliğini belirleyen temel faktördür.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Kapitalizasyon oranı (cap rate) nedir ve değerlemeye etkisi nasıldır?",
+    "a": "Kapitalizasyon oranı (cap rate), bir taşınmazın net faaliyet gelirinin (NOI) piyasa değerine oranı olarak hesaplanan ve yatırımcının beklediği getiriyi gösteren temel bir değerleme metriğidir. Cap rate düştükçe taşınmazın değeri yükselir; bu oran piyasa likidite koşullarını, risk primini ve faiz ortamını yansıtır. Değerleme uzmanları emsal işlemlerden elde edilen piyasa cap rate'lerini kullanarak hedef taşınmazın değerini gelir kapitalizasyonu yöntemiyle hesaplar. Farklı lokasyon ve kalite sınıflarında cap rate'ler önemli ölçüde farklılaşabileceğinden emsal seçimi titizlikle yapılmalıdır.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Maliyet yaklaşımı (cost approach) değerlemede ne zaman tercih edilir?",
+    "a": "Maliyet yaklaşımı; piyasada yeterli emsal işlem bulunmayan özel amaçlı yapılar, sanayi tesisleri, hastane ve okul gibi varlıkların değerlemesinde ön plana çıkar. Bu yöntemde arsa değeri ayrıca tespit edilir; yapının yeniden inşa maliyetinden fiziksel yıpranma, fonksiyonel ve ekonomik eskime payları düşülerek net değere ulaşılır. Sigorta değer tespiti ve aktif yeniden değerleme çalışmalarında da maliyet yaklaşımı sıklıkla uygulanmaktadır. Diğer yöntemlerle birlikte kullanıldığında sonuçların tutarlılığını denetlemek için kontrol mekanizması işlevi görür.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "GYO portföy değerlemesinde öne çıkan metodoloji hangisidir?",
+    "a": "GYO portföy değerlemesinde taşınmazın niteliğine göre birden fazla yöntem bir arada uygulanmaktadır. Konut ve parseller için emsal karşılaştırma yöntemi esas alınırken; ofis, AVM ve lojistik gibi gelir getiren varlıklar için gelir kapitalizasyonu ve DCF yöntemi tercih edilmektedir. SPK tebliği, portföyde yer alan her varlık için ayrı bir değerleme raporu ve özet tablo hazırlanmasını zorunlu kılmaktadır. Bu kapsamlı yaklaşım, kamuoyuna açıklanan portföy net varlık değerinin (NAV) güvenilirliğini pekiştirir.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Satın alma bedeli dağıtımı (PPA) sürecinde gayrimenkul değerlemesi nasıl yapılır?",
+    "a": "TFRS 3 kapsamında gerçekleştirilen işletme birleşmelerinde, alınan şirketin varlıkları ve yükümlülükleri gerçeğe uygun değerleriyle yeniden ölçülmekte; bu işleme satın alma bedeli dağıtımı (PPA) adı verilmektedir. Gayrimenkuller, PPA sürecinde bağımsız değerleme raporları ile desteklenen gerçeğe uygun değerleriyle finansal tablolara alınır. Dağıtım sonucunda belirlenen değerler; amortisman matrahlarını, ertelenmiş vergi hesaplamalarını ve şerefiye tutarını doğrudan etkiler. Sürecin denetçiler ve vergi otoritesince kabul görmesi için metodolojik belgelemenin eksiksiz olması zorunludur.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Kira muhasebesi (TFRS 16) kapsamında kullanım hakkı varlıklarının değerlenmesi nasıl yapılır?",
+    "a": "TFRS 16, kiracı işletmelerin faaliyet kirasına konu varlıkları da bilançoda \"kullanım hakkı varlığı\" olarak raporlamasını zorunlu kılmaktadır. Bu varlığın başlangıç değeri, kira borçlarının bugünkü değeri üzerinden hesaplanmakta ve ilerleyen dönemlerde itfa edilmektedir. Değerleme uzmanları, özellikle kira oranının piyasa koşullarına uygunluğunu ve bilanço tarihindeki gerçeğe uygun değeri belirlemek amacıyla sürece dahil edilebilir. Piyasanın üzerinde veya altındaki kira oranları, kira varlık ve yükümlülüğünün gerçeğe uygun değerini bozarak denetçi sorusuna konu olabilmektedir.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Arsa değerlemesinde emsal karşılaştırma yöntemi nasıl uygulanır?",
+    "a": "Emsal karşılaştırma yönteminde değerleme uzmanı, hedef arsayla benzer nitelikteki (konum, imar, büyüklük, cephe) gerçekleşmiş satış işlemlerini tespit eder ve bu emsalleri düzeltme katsayılarıyla hedef arsaya uyarlar. Tapu sicil müdürlüğü kayıtları, belediye arşivleri ve piyasa veri tabanları emsal tespitinde kullanılan başlıca kaynaklar arasındadır. Emsal sayısının yetersiz kaldığı durumlarda EMRA/imar etüdü ve konum analizi yönteme entegre edilir. Kurumsal amaçlı değerlemelerde en az üç güncel ve ilgili emsal sunulması standart bir metodoloji gereğidir.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "İpotek/teminat değerlemesi ile piyasa değeri arasındaki fark nedir?",
+    "a": "Bankacılık mevzuatı kapsamında yapılan ipotek/teminat değerlemelerinde hedef, taşınmazın olası bir zorla satış (likidatif satış) senaryosundaki muhtemel gerçekleşme değerinin tespitini de içermektedir. BDDK düzenlemeleri, teminat değerinin piyasa değerinin belirli bir oranını geçmemesini şart koşarken; kredi-değer oranı (LTV) hesaplamalarında bu değer kullanılır. Piyasa değeri standart koşullarda oluşan fiyatı yansıtırken, ipotek değeri genellikle uzun vadeli ve daha muhafazakâr bir bakış açısıyla belirlenmektedir. Bu fark, bankalar ve kredi kullanıcıları için finansman miktarını belirleyen kritik bir unsurdur.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Yeniden değerleme fonunun vergisel boyutu nedir?",
+    "a": "TMS 16 kapsamında yapılan aktif yeniden değerlemesi sonucunda özsermayede oluşan yeniden değerleme fonu (revaluation surplus), vergi mevzuatı açısından karmaşık bir yapı oluşturabilmektedir. Vergi Usul Kanunu hükümleri çerçevesinde enflasyon düzeltmesi ve yeniden değerleme uygulamalarının vergisel sonuçları, muhasebe standartlarından farklılaşabilmektedir. Ertelenmiş vergi yükümlülüğü (deferred tax liability), yeniden değerleme artışı üzerinden TFRS gereklerine uygun biçimde hesaplanarak bilançoda raporlanmalıdır. Bu sürecin hem muhasebe hem vergi açısından eş zamanlı yönetilmesi, kurumsal yönetim kalitesinin önemli bir göstergesidir.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Enerji santrali veya altyapı varlığı değerlemesinde hangi yöntem uygulanır?",
+    "a": "Enerji santralleri, köprüler ve otoyollar gibi altyapı varlıkları için emsal işlem bulmak güç olduğundan gelir yaklaşımı (DCF) baskın yöntem olarak öne çıkar. Uzun vadeli enerji alım sözleşmeleri (YEKA, YEKDEM vb.) ve düzenleyici çerçeve, nakit akışlarının güvenilirliğini doğrudan belirler. Maliyet yaklaşımı, sigorta ve varlık yenileme planlama amaçlarıyla paralel yürütülen bir kontrol mekanizması olarak kullanılır. Bu tür değerlemelerde sektöre özgü teknik bilgi ile finansal modelleme yetkinliğinin bir arada bulunması zorunludur.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Değerleme raporunda hangi temel bölümler yer almalıdır?",
+    "a": "SPK ve UDES standartlarına uygun bir değerleme raporu; taşınmaz ve müvekkil bilgisi, değerlemenin amacı, inceleme tarihi ve koşulları, yasal statü (tapu, imar, şerhler), fiziksel analiz, piyasa analizi, kullanılan metodoloji ve gerekçesi, değerleme sonucu ve geçerlilik tarihi ile değerleme uzmanının imza ve lisans bilgilerini içermelidir. Raporun IVS veya UDES uyumlu olduğunun açıkça beyan edilmesi, denetçi ve kurumsal müşteriler açısından zorunlu bir gerekliliktir. Eksik bölümler içeren raporlar, bankalar veya denetçiler tarafından reddedilebilmektedir. Kapsamlı belgeleme, değerlemenin savunulabilirliğini hukuki süreçlerde de güvence altına alır.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Portföy değerlemesi ile tekil taşınmaz değerlemesi arasındaki metodolojik farklar nelerdir?",
+    "a": "Tekil taşınmaz değerlemesinde uzman, ilgili varlığa odaklanarak ayrıntılı fiziksel inceleme ve emsal analizi yapar. Portföy değerlemesinde ise birden fazla taşınmaz sistematik ve tutarlı bir metodoloji çerçevesinde toplu olarak değerlenir; bu yaklaşım zaman ve maliyet etkinliği sağlar. Ancak portföy değerlemesinde bazı taşınmazlar için fiziksel incelemenin örnekleme yöntemiyle yapılması, metodolojik bir uzlaşı noktası oluşturabilir. Kurumsal müşterilere sunulan portföy raporlarının her varlık için gerekçeli değer tespiti içermesi, denetim ve kamuoyu açıklaması standartlarının bir gereğidir.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "Değerleme raporunun geçerlilik süresi var mıdır?",
+    "a": "Değerleme raporları teknik olarak hazırlandıkları tarihteki piyasa koşullarını yansıtır ve zaman içinde geçerliliğini yitirebilir. SPK düzenlemeleri kapsamında GYO'larda ve halka arz süreçlerinde raporun hazırlanış tarihi ile kullanım tarihi arasındaki fark genellikle üç ila altı ay ile sınırlandırılmaktadır. Piyasa koşullarında önemli değişim yaşandığında (ekonomik kriz, imar revizyonu vb.) rapor güncellenebilir veya ek şerh (qualifying note) eklenerek güncelleme yapılabilir. Denetçiler ve kurumsal alıcılar, rapor tarihinin finansal tablo tarihleriyle uyumlu olmasını genel olarak şart koşmaktadır.",
+    "cat": "Kurumsal & Finansal"
+  },
+  {
+    "q": "SPK lisanslı değerleme kuruluşu seçiminde hangi kriterler gözetilmelidir?",
+    "a": "Kurumsal müşteriler için değerleme kuruluşu seçiminde öncelikle SPK ve BDDK listesinde kayıtlı olması, sektörel uzmanlık (konut, ticari, sanayi, tarım vb.) ve denetlenmiş referans portföyü gözetilmelidir. Ayrıca kuruluşun sigorta kapsamı (mesleki sorumluluk sigortası), raporlama kapasitesi ve teslim süreleri değerlendirme kriterlerine dahil edilmelidir. Uluslararası değerleme kuruluşlarıyla ortaklık veya üyelik (RICS, TEGOVA), özellikle yabancı yatırımcılara yönelik projelerde güven unsuru eklemektedir. Çıkar çatışmasının önüne geçilmesi amacıyla değerleme kuruluşunun müvekkille herhangi bir iş bağlantısının olmaması da etik bir zorunluluktur.",
+    "cat": "Kurumsal & Finansal"
+  }
+]

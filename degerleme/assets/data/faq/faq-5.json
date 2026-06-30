@@ -1,0 +1,152 @@
+[
+  {
+    "q": "Sanayi tesisi değerlemesinde arsa, yapı ve makineler ayrı mı değerlenir?",
+    "a": "SPK tebliğleri çerçevesinde sanayi tesisi değerlemesinde arsa, yapı ve bütünleyici parçalar (mütemmim cüz) önce bileşenler bazında ayrı ayrı değerlenir; ardından tesisin bütünleşik değeri hesaplanır. Makineler sözleşme kapsamına göre 'makine dahil' veya 'makine hariç' esasında ayrı bir bölüm olarak raporlanır. Bu ayrım, teminat değerlendirmesi ve tasfiye analizi açısından kritik önem taşır.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Fabrika değerlemesinde mütemmim cüz ile demirbaş arasındaki fark nedir?",
+    "a": "Mütemmim cüz, yapıya veya tesise kalıcı biçimde bağlanmış ve söküldüğünde işlevini yitiren unsurlardır; yasal açıdan gayrimenkulün ayrılmaz parçasıdır ve tapu kaydına tabi olabilir. Demirbaş (menkul) ise kolaylıkla sökülebilen ve bağımsız kullanılabilen varlıktır. Değerleme raporunda hangi ekipmanın mütemmim cüz, hangisinin demirbaş sayıldığı açıkça sınıflandırılmalıdır.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "İş makinesi değerlemesinde yaş ve çalışma saati nasıl dikkate alınır?",
+    "a": "İş makinelerinde (ekskavatör, beko, dozer vb.) teknik yıpranma hesaplanırken takvim yaşı yerine motor saati esas alınır; çünkü aynı yaştaki iki makine farklı kullanım yoğunluğuna sahip olabilir. Sertifikalı ekspertiz, saatmetre kayıtları ve periyodik bakım belgeleriyle fiili çalışma saatini teyit eder, ardından yeniden edinim bedeli üzerinden fiziksel yıpranma oranı uygulanır. Kalan ekonomik ömür ve yedek parça temin edilebilirliği de piyasa değerini doğrudan etkiler.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Vinç ve forklift gibi ekipmanların değerlemesinde hangi yaklaşım önerilir?",
+    "a": "Vinç ve forklift gibi taşıyıcı iş ekipmanları için genellikle maliyet yaklaşımı (yeniden edinim bedeli eksi birikmiş yıpranma) esas alınır; ancak aktif ikinci el piyasası mevcutsa pazar karşılaştırması ile çapraz kontrol yapılır. Taşıma kapasitesi, erişim yüksekliği, motor tipi (dizel/elektrik/LPG) ve TSE/CE sertifika durumu değer üzerinde belirleyici parametrelerdir. Lisanslı uzman, envanter tutanakları ve teknik şartnamelerle bu verileri doğrular.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Üretim hattı makinelerinin yeniden edinim bedeli nasıl hesaplanır?",
+    "a": "Yeniden edinim bedeli, değerleme tarihi itibarıyla aynı veya eşdeğer bir makinenin yeni olarak temin edilmesi için katlanılacak toplam maliyettir; makine bedeli, nakliye, montaj, devreye alma ve ithalat vergilerini kapsar. Bu bedel üretici katalog fiyatları, güncel proforma faturalar veya sektörel veri tabanlarından elde edilir. Yeniden edinim bedelinden fiziksel yıpranma, fonksiyonel yıpranma ve ekonomik yıpranma düşülerek ikame değerine ulaşılır.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Fonksiyonel yıpranma ile ekonomik yıpranma arasındaki fark nedir?",
+    "a": "Fonksiyonel yıpranma, teknolojik eskime veya tasarım yetersizliğinden kaynaklanan değer kaybıdır; örneğin daha yüksek enerji tüketimine sahip eski nesil bir makine, güncel muadillerine kıyasla fonksiyonel yıpranmaya uğramıştır. Ekonomik (harici) yıpranma ise piyasa koşulları, sektörel talep düşüşü veya çevresel kısıtlamalar gibi dışsal etkenlerden doğan değer kaybıdır. Her iki yıpranma türü maliyet yaklaşımında ayrı ayrı hesaplanıp yeniden edinim bedelinden indirilir.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Güneş enerjisi santrali (GES) değerlemesinde hangi yöntemler kullanılır?",
+    "a": "GES değerlemesinde öncelikle gelir kapitalizasyonu/DCF (indirgenmiş nakit akışı) yöntemi uygulanır; YEK mevzuatı kapsamındaki tarifeler, YEKDEM süresi, panel ve inverter verimliliğinin yıllara göre düşüşü (degradasyon) ve işletme giderleri modellenir. Lisans durumu, bağlantı anlaşması, arazi kullanım hakkı ve kalan ömür değerlemeyi önemli ölçüde etkiler. Maliyet yaklaşımı çapraz kontrol amacıyla kullanılır; işletmedeki santraller için piyasa karşılaştırması da mümkündür.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Rüzgar enerjisi santrali (RES) değerlemesinde kurulu güç ve kapasite faktörü neden önemlidir?",
+    "a": "Kurulu güç (MW), santralin toplam teorik üretim kapasitesini gösterirken kapasite faktörü (%), rüzgar koşullarına bağlı fiili üretimin teorik maksimuma oranını ifade eder; bu oran RES değerlemesinde gelir projeksiyonunun temelini oluşturur. Rüzgar ölçüm verileri (SCADA kayıtları, meteoroloji raporları) kapasite faktörünü desteklemek zorundadır; aksi hâlde DCF modeli gerçekçi olmaz. Türbin yaşı, bakım geçmişi ve garanti dışına çıkma tarihi de iskonto oranını ve kalan ekonomik ömrü etkiler.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Hidroelektrik santral (HES) değerlemesinde su hakkı ve DSİ sözleşmesi nasıl ele alınır?",
+    "a": "HES değerlemesinde DSİ ile imzalanan su kullanım hakkı sözleşmesi, kalan sözleşme süresi ve devir koşulları temel hukuki varlık olarak incelenir; bu hak olmaksızın santralin işletme değeri sıfıra yaklaşır. Hidrolik kaynağın yıllık akım verileri (hidrolojik seri) DCF modelinin girişini oluşturur; kurak ve yağışlı senaryolar için duyarlılık analizi yapılır. Baraj gövdesi, türbin-jeneratör seti ve şalt tesisi ayrı bileşenler olarak maliyet yaklaşımıyla da değerlenir.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "YEK/YEKDEM teşvikleri değerlemede nasıl modellenir?",
+    "a": "YEKDEM kapsamındaki garantili alım tarifesi, kalan süre boyunca sabit USD cinsinden gelir akışı sağlar ve DCF modelinde ayrı bir 'destekli dönem' olarak modellenir. Destek süresi dolduğunda santralin EPDK spot piyasasına ya da ikili anlaşma piyasasına geçmesi beklenir; bu geçiş için daha yüksek bir iskonto oranı ve piyasa fiyat tahminleri kullanılır. Teşvikin kalan süresinin uzunluğu, değer üzerindeki en belirleyici etkenlerden biridir.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Akaryakıt istasyonu değerlemesinde yer altı tank ve donanımlar nasıl değerlenir?",
+    "a": "Akaryakıt istasyonu değerlemesinde yer altı depolama tankları, pompalar ve dağıtım hatları maliyet yaklaşımıyla değerlenir; yasal zorunluluk olan tank sızdırmazlık testleri ve çevre mevzuatı uyum belgeleri varlığı fiziksel koşulun göstergesi olarak kullanılır. Çevresel sorumluluk (toprak/yeraltı suyu kirliliği) potansiyel yükümlülük olarak değerleme raporuna yansıtılmalıdır. İstasyonun işletme geliri ve bayi sözleşmesinin kalan süresi gelir yaklaşımını da mümkün kılar.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Akaryakıt istasyonunda intifa hakkı ve işletme hakkı değeri nasıl ayrıştırılır?",
+    "a": "Akaryakıt istasyonuna konu taşınmaz üzerinde tesis edilen intifa hakkı, mülkiyetten bağımsız biçimde belirli süre için gelir elde etme hakkı tanır ve kalan süre, yıllık net gelir ve iskonto oranı kullanılarak gelir kapitalizasyonu yöntemiyle değerlenir. İşletme hakkı ise markayla bağlantılı bayilik sözleşmesinden doğan ticari imtiyazı ifade eder ve bağımsız olarak işletmeye devam değeri veya tasfiye değeri bazında analiz edilir. Her iki hak ayrı ayrı raporlanmalıdır.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Maden ocağı ve taş ocağı değerlemesinde ruhsat ve rezervin önemi nedir?",
+    "a": "Maden ocağı değerlemesinin temel dayanağı, Maden İşleri Genel Müdürlüğü'nden (MİGEM) alınan arama veya işletme ruhsatıdır; ruhsatsız bir saha, yasal olarak işletilemeyeceğinden önemli ölçüde daha düşük değer taşır. Jeolojik rapor veya kaynak tahminiyle tespit edilen ispatlı/muhtemel rezerv miktarı ve kalitesi (tenör, deşme oranı), DCF modelindeki gelir akışının temelini oluşturur. Ruhsat kalan süresi, yenileme riski ve çevre izinleri de değerlemeyi doğrudan etkiler.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Maden değerlemesinde hangi uluslararası standartlar esas alınır?",
+    "a": "Maden varlık değerlemesinde RICS Kırmızı Kitap ile birlikte CRIRSCO (JORC, NI 43-101, SAMREC) kaynak-rezerv sınıflandırma standartları kullanılır; bu standartlar ispatlı, muhtemel ve olası rezervleri farklı güven düzeylerinde tanımlar. Türkiye'de SPK tebliğleri çerçevesinde hazırlanan raporlarda uluslararası bağımsız teknik raporların referans alınması beklenir. Değerleme yöntemi olarak indirgenmiş nakit akışı (DCF), karşılaştırmalı işlem analizi veya tekrar edinim maliyeti yaklaşımlarından biri ya da birkaçı kombinasyonu seçilir.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Gemi ve deniz aracı değerlemesinde hangi kriterler belirleyicidir?",
+    "a": "Gemi değerlemesinde DWT (deadweight ton) veya GT (groston), yapım yılı, bayrak devleti, sınıflandırma kuruluşu (Lloyd's, Bureau Veritas vb.) belgelerinin geçerliliği ve son döküm-bakım tarihi temel teknik parametrelerdir. Uluslararası piyasada benzer yaş ve kapasitedeki gemilerin son satış işlemleriyle karşılaştırmalı piyasa analizi yapılır; çürük/hurda gemiler için ise çelik ağırlığı bazlı tasfiye değeri esas alınır. Tutuklu gemi veya ipotek durumu ile kiracı sözleşmeleri hukuki durum tespitinde incelenir.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Maliyet yaklaşımı hangi durumlarda diğer yöntemlere tercih edilir?",
+    "a": "Maliyet yaklaşımı; aktif bir ikinci el piyasası bulunmayan özel üretim makineleri, tek tipin üretildiği özel amaçlı tesisler ve kısa süre önce devreye alınan yeni yatırımlar için birincil yöntem olarak tercih edilir. Gelir yaratmayan ya da geliri bağımsız ölçülemeyen varlıklarda da maliyet yaklaşımı temel referans noktasını oluşturur. Ancak yöntemin geçerliliği, yeniden edinim bedelinin güvenilir veriye dayanması ve tüm yıpranma türlerinin eksiksiz hesaplanmasına bağlıdır.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Özel amaçlı tesis (special purpose property) değerlemesinde ne tür güçlükler ortaya çıkar?",
+    "a": "Özel amaçlı tesisler (nükleer santral, tersane, hava limanı hangası, kimya fabrikası vb.) için piyasada karşılaştırılabilir satış verisi bulmak neredeyse imkânsızdır; bu nedenle maliyet yaklaşımı ya da işletme karı (trading) yöntemi kullanılır. Tesisin yalnızca belirli bir endüstri için uygun olması ekonomik yıpranma riskini artırır ve değerleme raporunda bu risk açıkça ifade edilmelidir. SPK tebliğleri, özel amaçlı mülk tespiti hâlinde raporun ek açıklama ve uyarılar içermesini şart koşar.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Bütünleşik tesis değeri nedir ve nasıl raporlanır?",
+    "a": "Bütünleşik tesis değeri (going concern value as a whole), tek tek bileşenlerin değerleri toplamından farklı olarak tesisin faaliyette ve bütünleşik hâlde yarattığı sinerji değerini ifade eder. Bu değer, arsa + yapı + makine + lisans + personel + müşteri ilişkileri gibi tüm maddi ve maddi olmayan varlıkların bir arada kullanılmasından doğan fazla getiriyi kapsar. Değerleme raporunda bütünleşik değer ile parça parça tasfiye değeri arasındaki fark ve hangi koşullarda her birinin geçerli olduğu açıklanmalıdır.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "DCF yöntemi sanayi tesisi değerlemesinde nasıl uygulanır?",
+    "a": "Sanayi tesisi DCF değerlemesinde önce tesisin geçmiş ve tahmini üretim kapasitesi, satış fiyatları ve işletme giderleri temel alınarak net nakit akışı projeksiyonu hazırlanır. Projeksiyon dönemi genellikle 10-20 yıl arasında seçilir; dönem sonu artık değer (terminal value) Gordon büyüme modeli veya çarpan yöntemiyle hesaplanır. Iskonto oranı olarak sektöre ve finansal yapıya uygun WACC (ağırlıklı ortalama sermaye maliyeti) kullanılır ve çeşitli senaryolar (baz, iyimser, kötümser) altında duyarlılık analizi yapılır.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Enerji santrallerinde kalan ekonomik ömür nasıl belirlenir?",
+    "a": "Enerji santrallerinde kalan ekonomik ömür, üretici teknik ömür garantisi, gerçekleştirilen revizyon ve yenileme yatırımları ile düzenleyici izinlerin geçerlilik süresi bir arada değerlendirilerek belirlenir. Örneğin güneş panellerinde standart teknik ömür 25-30 yıl olarak kabul edilir; ancak degradasyon oranı ve inverter değişim döngüleri bu süreyi fiilen kısaltabilir. Değerleme raporunda kalan ekonomik ömür varsayımı ve dayanaklarının açık biçimde gerekçelendirilmesi SPK mevzuatı açısından zorunludur.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Ekskavatör değerlemesinde hangi belgelerin temin edilmesi gerekir?",
+    "a": "Ekskavatör değerlemesinde makineye ait ruhsat/tescil belgesi, motor seri numarası, saatmetre kayıtları, periyodik bakım ve onarım kayıtları ile varsa son muayene raporu temin edilmelidir. Belgelerin özgünlüğü ve tutarlılığı, fiziksel incelemeyle (saatmetre okuması, gözle muayene, hidrolik test) çapraz kontrol edilir. Makinenin yurt içi distribütörünün katalog fiyatı ve satış istatistikleri yeniden edinim bedelinin tespitinde kullanılır.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Sanayi arazisi üzerindeki çevresel kirlilik değerlemeyi nasıl etkiler?",
+    "a": "Toprak veya yeraltı suyu kirliliği tespit edilen sanayi arazilerinde temizleme (remediation) maliyeti piyasa değerinden düşülür; bu maliyetin belirlenmesi için çevre mühendisi raporu veya ÇED çıktıları kullanılır. Bazı durumlarda kirlilik düzeyi o kadar yüksek olabilir ki temizleme maliyeti arazi değerini aşabilir ve 'negatif değer' koşulu ortaya çıkabilir. SPK tebliğleri çerçevesinde değerleme raporunda çevresel yükümlülüklere ilişkin uyarı ve koşullu değer ifadesinin yer alması zorunludur.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Lisanslı enerji tesisinde lisansın değeri ayrıca raporlanır mı?",
+    "a": "EPDK lisansı, enerji santrali değerinin önemli bir bileşeni olup maddi olmayan varlık niteliği taşır; yeni lisans almanın güçlüğü ve zaman maliyeti göz önüne alındığında bu varlığın ayrı olarak raporlanması değerin eksiksiz yansıtılması açısından gereklidir. Lisansın kalan süresi, devir kısıtlamaları ve yenileme koşulları analiz edilmelidir. Bazı değerleme anlaşmalarında lisans, tesis bütününden ayrıştırılarak bağımsız bir maddi olmayan varlık değerlemesine konu edilebilir.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Sanayi tesisi değerlemesinde yıpranma oranı nasıl hesaplanır?",
+    "a": "Fiziksel yıpranma oranı, varlığın yaşı ile toplam teknik ömrü arasındaki oran (yaş/ömür yöntemi) ya da müfettiş gözlemine dayalı koşul puanlaması yöntemiyle hesaplanır. Fonksiyonel ve ekonomik yıpranmalar ise sektör verisi, piyasa çarpanları ve maliyet artışı analizleriyle ayrıca tespit edilir. Makine değerlemesinde toplam yıpranma bu üç bileşenin toplamı olup yeniden edinim bedeliyle çarpılarak değer düşüklüğü bulunur.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Üretim tesislerinde kapasite kullanım oranı değerlemeyi nasıl etkiler?",
+    "a": "Kapasite kullanım oranı (KKO), tesisin fiili üretiminin teorik maksimum kapasitesine bölümüdür ve ekonomik yıpranmanın en somut göstergelerinden biridir; düşük KKO, tesisin mevcut piyasa koşullarında tam potansiyeliyle değer üretemediğine işaret eder. DCF modelinde KKO'nun geçmiş seyri ve ileriye dönük beklentisi gelir projeksiyonunu doğrudan belirler. Uzun süreli düşük KKO, tesisin atıl kapasitesini ve dolayısıyla fonksiyonel ya da ekonomik yıpranmasını raporlamayı zorunlu kılar.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Gemi ve deniz aracı değerlemesinde sınıf sertifikasının önemi nedir?",
+    "a": "Lloyd's Register, Bureau Veritas, DNV veya Türk Loydu gibi uluslararası sınıflandırma kuruluşlarından alınan sınıf sertifikası, geminin teknik standartlara uygunluğunun bağımsız belgesidir; geçerliliğini yitirmiş sertifika sigorta edilebilirliği ve işletilebilirliği ortadan kaldırır. Sertifikasız bir gemi, ikinci el piyasasında önemli ölçüde iskontolu işlem görür. Değerleme raporunda sınıf sertifikasının tarihi, kapsamı ve bir sonraki özel sörvey tarihi belirtilmelidir.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Sanayi tesisi değerlemesinde 'makine hariç' ve 'makine dahil' değerlemeler arasındaki fark nedir?",
+    "a": "'Makine dahil' değerleme, arsa, yapı ve bütünleşik tüm makine-ekipman varlıklarını tek bir değer kümesinde ele alır; bu yaklaşım özellikle işletme kredisi veya teminat değerlemesinde talep edilir. 'Makine hariç' değerleme ise yalnızca taşınmaz bileşenlerini (arsa ve yapı) kapsar ve makineler ayrı bir makine ekspertiz raporuyla değerlenir. Hangi yaklaşımın uygulanacağı müşteri talebi, kullanım amacı ve sözleşme kapsamıyla belirlenir ve raporda açıkça belirtilir.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Enerji santrali değerlemesinde iskonto oranı nasıl belirlenir?",
+    "a": "Enerji santrali DCF değerlemesinde iskonto oranı olarak kullanılan WACC, sektöre özgü risk primleri (teknoloji riski, kaynak riski, düzenleyici risk) ve ülke risk primiyle ağırlıklandırılır. YEKDEM kapsamındaki garantili satış döneminde düşük bir iskonto oranı, serbest piyasa döneminde ise daha yüksek bir oran uygulanabilir (aşamalı iskonto modeli). Piyasada emsal santral işlemleri varsa çıkarılan zımni iskonto oranları bu hesabı kalibre etmek için kullanılır.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Tasfiye değeri ile kullanım değeri sanayi varlıklarında nasıl farklılaşır?",
+    "a": "Tasfiye değeri, varlığın belirli bir süre içinde zorla satılması ya da sökülerek elden çıkarılması hâlinde elde edilebilecek değerdir ve genellikle kullanım (piyasa) değerinin önemli ölçüde altında kalır. Kullanım değeri ise varlığın süregelen işletme ortamında, normal piyasa koşullarında gerçekleşebilecek olası satış fiyatına karşılık gelir. Finansal kurumlar teminat değerlemesinde her iki değeri ayrı ayrı talep edebilir; tasfiye değeri kredi riskinin stres senaryosunu yansıtır.",
+    "cat": "Sanayi, Makine & Enerji"
+  },
+  {
+    "q": "Bir sanayi değerleme raporu SPK mevzuatı açısından hangi asgari unsurları içermelidir?",
+    "a": "SPK'nın Seri: VIII No:45 ve güncel tebliğleri uyarınca sanayi değerleme raporu; değerlemenin amacı ve kullanım sınırlılıkları, mülkiyet ve hukuki durum tespiti, yerinde fiziki inceleme bulguları, kullanılan yöntemler ve gerekçeleri, yıpranma hesabı, çevresel yükümlülük uyarısı (gerekiyorsa) ve değerleme sonucunu içermelidir. Rapor, SPK listesindeki gayrimenkul değerleme şirketi bünyesinde çalışan sorumlu değerleme uzmanı tarafından imzalanmalı; bağımsızlık beyanı ve yetkinlik ifadesi mutlaka yer almalıdır.",
+    "cat": "Sanayi, Makine & Enerji"
+  }
+]

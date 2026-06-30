@@ -1,0 +1,177 @@
+[
+  {
+    "q": "Bir dairenin değerlemesinde hangi temel kriterler esas alınır?",
+    "a": "Konut değerlemesinde taşınmazın konumu, brüt ve net kullanım alanı, yapı yaşı, kat durumu, cephesi ve manzarası, bina kalitesi ile yakın çevredeki emsal satış işlemleri esas alınır. SPK lisanslı değerleme uzmanları bu kriterleri UDES-IVS standartları çerçevesinde sistematik biçimde analiz eder.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Emsal karşılaştırma yöntemi konut değerlemesinde nasıl uygulanır?",
+    "a": "Emsal karşılaştırma yönteminde, değerleme konusu konutla benzer nitelikteki (konum, yaş, alan, kat) gerçekleşmiş satış işlemleri referans alınır; her emsalin değerleme konusundan olumlu ya da olumsuz farklılıkları düzeltme katsayılarıyla düzenlenir. Tapu sicil kayıtları ve piyasa verileri doğrulandıktan sonra ağırlıklı ortalama değer hesaplanır.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Kat faktörü konut değerini nasıl etkiler?",
+    "a": "Genel uygulamada orta ve üst katlar daha iyi doğal ışık, manzara ve gürültüden uzaklık sunduğundan zemin kata göre pozitif kat farklılığı katsayısı uygulanır; ancak asansörsüz binalarda üst katlar olumsuz etkilenebilir. Değerleme uzmanı kat faktörünü bölgesel piyasa eğilimleri ve binanın özellikleriyle birlikte değerlendirerek düzeltme yapar.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Cephe yönü bir konutun piyasa değerini etkiler mi?",
+    "a": "Güney ve batı cepheleri genellikle daha fazla güneş ışığı aldığından alıcı tercihini olumlu etkileyebilir; kuzey cepheli konutlar bazı piyasalarda iskontolu işlem görebilir. Değerleme uzmanları cephe etkisini emsal analizine ve yerel alıcı tercihlerine dayalı olarak raporlarına yansıtır.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Yapı yaşı değerlemeyi ne ölçüde etkiler?",
+    "a": "Fiziksel yıpranma ve fonksiyonel eskime nedeniyle yapı yaşı arttıkça birikimli amortisman değeri düşürer; ancak kapsamlı yenileme yapılmış eski bir bina, bakımsız yeni bir yapının önüne geçebilir. Uzman, yapı yaşını fiziksel durum tespiti ve teknik raporla birlikte değerlendirerek efektif yaş-kullanım ömrü analizi yapar.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Rezidans ile standart konut arasındaki değerleme farkı nedir?",
+    "a": "Rezidanslar otel hizmetleri (resepsiyon, güvenlik, spor merkezi, concierge) sunduğundan yönetim giderleri ve ortak alan kalitesi değerlemeye ayrıca yansıtılır; piyasa genellikle bu hizmetler için ek prim ödemeye hazırken uzman, sürdürülebilir kira veya satış emsallerini kullanarak prim tutarını nesnel biçimde saptar. Hizmet sözleşmeleri ve aidat yükleri de değerlemeyi doğrudan etkileyen unsurlar arasında yer alır.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Villa ve müstakil ev değerlemesinde arsa payı nasıl ele alınır?",
+    "a": "Müstakil konutlarda arsa değeri ile yapı değeri ayrı ayrı hesaplanarak toplanır; arsa payı, emsaline göre konumun gelişme potansiyeli, TAKS/KAKS değerleri ve çevre emsal arsa işlemleri dikkate alınarak belirlenir. Bu ayrıştırma yöntemi (maliyet yaklaşımı) UDES standartlarında ayrıntılı biçimde düzenlenmektedir.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Kat irtifakı ile kat mülkiyeti arasındaki fark değerlemeyi nasıl etkiler?",
+    "a": "Kat mülkiyetine geçilmiş taşınmazlar tapuda bağımsız bölüm olarak tescil edildiğinden piyasa değeri daha yüksek olup finansmanı ve devri de daha kolaydır. Kat irtifakı aşamasındaki taşınmazlarda iskân belgesi bulunmadığından uzman bu hukuki riski değerleme raporuna yansıtarak uygun iskonto uygular.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "İskânsız ya da kaçak yapıların değerlemesi mümkün mü?",
+    "a": "İskân belgesi (yapı kullanma izni) bulunmayan yapılar, hukuki durumlarına ilişkin ciddi riskler taşıdığından değerleme raporunda açıkça belirtilmesi zorunludur. Bu tür yapılarda SPK lisanslı uzman, taşınmazın mevcut fiziksel durumunu tespit edebilir; ancak değerin piyasanın çok altında oluşabileceğini ve finansmana konu edilemeyebileceğini raporuna yansıtır.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "İmar barışı ve yapı kayıt belgesi bir taşınmazın değerini artırır mı?",
+    "a": "Yapı kayıt belgesi, yapının kayıt altına alınmasını sağlar; ancak imar barışından yararlanmış yapılar yasal olarak ruhsatlandırılmış binalara tam anlamıyla eşdeğer sayılmaz. Değerleme uzmanı yapı kayıt belgesi varlığını ve kapsamını raporunda belirterek hukuki durumu piyasa değerine yansıtır; bu belgenin tek başına taşınmazı tam piyasa değerine taşımadığı bilinmelidir.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Hisseli tapulu konutlar nasıl değerlenir?",
+    "a": "Hisseli tapulu taşınmazlarda değerleme uzmanı önce taşınmazın tamamının piyasa değerini tespit eder, ardından müvekkile ait hisseye karşılık gelen değeri oranlı olarak hesaplar. Ancak hisseli mülkiyette kullanım hakkı belirsizliği, olası önalım hakkı uyuşmazlıkları ve hissedarlar arası anlaşmazlık riski nedeniyle tüm değere kıyasla belirli bir hukuki risk iskontosu uygulanabilir.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Bir konutun metrekare değeri nasıl hesaplanır?",
+    "a": "Metrekare birim değeri; benzer konumdaki gerçekleşmiş satış emsallerinin birim fiyatları analiz edilerek, değerleme konusu taşınmazın kat, cephe, durum ve donanım farkları için düzeltme katsayıları uygulandıktan sonra elde edilir. Hesaplanan birim değer, net kullanım alanıyla çarpılarak nihai değer tahminine ulaşılır.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Konut değerini düşüren başlıca unsurlar nelerdir?",
+    "a": "Fiziksel yıpranma, hatalı yapı tekniği, zemin sorunları, yüksek gürültü seviyesi, olumsuz komşuluk etkisi (sanayi, mezarlık vb.), hukuki kısıtlar (haciz, ipotek, şerh) ve imar uyumsuzlukları değeri olumsuz etkileyen başlıca etkenlerdir. Uzman bu olumsuz faktörlerin her birini ayrı ayrı tespit ederek raporunda belirtir.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Konut değerini artıran başlıca unsurlar nelerdir?",
+    "a": "Metro/tramvay gibi toplu taşıma erişimi, nitelikli okul ve hastane yakınlığı, yüksek yapı kalitesi, depreme dayanıklılık sertifikası, manzara ve yeşil alan varlığı ile sosyal donatı zenginliği değeri olumlu etkileyen temel unsurlardır. Bu değer artırıcı etkenler emsal verilerle doğrulandığında değerleme raporuna nesnel biçimde yansıtılır.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Ofis değerlemesinde hangi yöntemler kullanılır?",
+    "a": "Ticari ofis değerlemesinde genellikle gelir kapitalizasyonu yöntemi (kira gelirinin kapitalizasyon oranına bölünmesi) ile emsal karşılaştırma yöntemi birlikte uygulanır; maliyet yaklaşımı ise özellikle özellikli yapılar için tamamlayıcı yöntem olarak kullanılır. Uzman, kullanılan her yöntemin sonuçlarını ağırlıklandırarak mutabık değere ulaşır.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Kira çarpanı yöntemi ticari gayrimenkulde nasıl çalışır?",
+    "a": "Kira çarpanı (Gross Rent Multiplier), taşınmazın piyasa değerinin yıllık brüt kira gelirine bölünmesiyle hesaplanan bir göstergedir; emsal ticari mülklerin işlem verileriyle karşılaştırılarak değerleme analizine dahil edilir. Bu yaklaşım hızlı bir ön değerleme için kullanışlıdır; ancak boşluk oranı ve işletme giderleri dikkate alınmadığından net gelir kapitalizasyonu ile birlikte değerlendirilmelidir.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Gelir kapitalizasyonu yöntemi nedir ve ticarette neden tercih edilir?",
+    "a": "Gelir kapitalizasyonu yönteminde taşınmazın sağladığı net işletme geliri (NOI), piyasadan türetilen kapitalizasyon oranına (cap rate) bölünerek değer tahmin edilir. Ticari gayrimenkullerde mülkün değeri büyük ölçüde ürettiği kira gelirine bağlı olduğundan bu yöntem en doğrudan ve kabul görmüş değerleme yaklaşımlarından birini oluşturur.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Dükkân ve mağaza değerlemesinde cephe genişliği neden önemlidir?",
+    "a": "Perakende mağaza ve dükkânlarda yayaya açık yol cephesi, vitrin genişliği ve görünürlük gelir potansiyelini doğrudan etkilediğinden değerleme analizinde ayrı bir prim kalemi olarak değerlendirilir. Daha geniş cepheli mağazalar benzer iç alanlı ancak dar cepheli mağazalara kıyasla yüksek kira talep edebildiğinden bu faktör gelir yaklaşımına da yansır.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Plaza ve iş hanı değerlemesinde öne çıkan faktörler nelerdir?",
+    "a": "Plaza değerlemesinde bina sınıfı (A/B/C), asansör kapasitesi, otoparkı, ortak alan kalitesi, teknik altyapı (jeneratör, fiber, klima sistemi), doluluk oranı ve kira sözleşmelerinin kalitesi ön plana çıkar. Mevcut kiraların piyasa kira düzeyiyle kıyaslanması, boşluk ve tahsilat kaybı varsayımlarıyla birlikte gelir analizi modelinin temelini oluşturur.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "İmarlı arsa değerlemesinde KAKS/TAKS nasıl kullanılır?",
+    "a": "KAKS (Kat Alanı Katsayısı) parselde inşa edilebilecek toplam inşaat alanını belirlerken TAKS (Taban Alanı Katsayısı) zemin kat tabanının arsaya oranını sınırlar; bu katsayılar inşaat potansiyelini dolayısıyla geliştirme değerini doğrudan etkiler. Değerleme uzmanı bu verileri belediyeden alınan güncel imar durum belgesiyle teyit ederek geliştirme yaklaşımı ya da emsal karşılaştırmasına dahil eder.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "İmarsız arazi ile imarlı arsa arasındaki değerleme farkı nasıl ortaya çıkar?",
+    "a": "İmarlı arsalar yapılaşma izni taşıdığından, imarsız arazilere göre çok daha yüksek piyasa değeri oluşturur; değer farkı bölgeye, talep yoğunluğuna ve imar kullanım amacına (konut, ticaret, sanayi) göre büyük farklılıklar gösterebilir. İmarsız arazilerde uzman, mevcut tarımsal ya da orman niteliği ile uzun vadeli imar beklentisini risk faktörü olarak raporuna yansıtır.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Arsa değerini etkileyen başlıca faktörler nelerdir?",
+    "a": "Konumu ve çevresindeki altyapı (yol, elektrik, su, kanalizasyon), imar kullanım amacı ve yapılaşma hakları (KAKS/TAKS), parsel büyüklüğü ve geometrisi, ulaşım erişimi ile çevredeki gelişim projeleri arsa değerini belirleyen temel etkenlerdir. Uzman bu faktörleri güncel emsal parsel satışlarıyla kalibre ederek değer tahminine ulaşır.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Geliştirme potansiyeli yüksek bir arsa nasıl değerlenir?",
+    "a": "Geliştirme potansiyeli yüksek parseller için kalıntı arazi değeri (artık değer) yöntemi kullanılabilir; bu yöntemde proforma gelir-maliyet analizi yapılarak taşınmazın proje sonrasındaki tahmini değerinden toplam geliştirme maliyeti düşülür. Hesaplama, inşaat maliyeti, finansman giderleri ve geliştirici kârı gibi piyasa verileriyle desteklenmesi zorunlu varsayımlara dayanır.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Arsa değerlemesinde imar durumu belgesi neden kritiktir?",
+    "a": "İmar durumu belgesi; parselde uygulanacak yapılaşma koşullarını, plan notlarını ve kullanım amacını resmî olarak ortaya koyduğundan değerleme analizinin hukuki dayanağını oluşturur. Güncel olmayan ya da tapu kütüğüyle çelişen imar bilgisi değerleme sonucunu doğrudan yanıltabileceğinden uzman, ilgili belediyeden güncel belgeyi bizzat temin ederek raporda kullanır.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Arsa payı kavramı nedir ve değerlemeyi nasıl etkiler?",
+    "a": "Arsa payı, kat mülkiyetine konu bir yapıdaki her bağımsız bölüme tapu kütüğünde tahsis edilen ve arsa üzerindeki paydaşlık hakkını temsil eden kesirdir. Değerlemede arsa payı; özellikle eski yapı stokunun yoğun olduğu bölgelerde yenileme/kentsel dönüşüm senaryolarında arsanın müstakil değeriyle doğrudan ilişkilendirilir.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Kentsel dönüşüm kapsamındaki bir binanın arsa payı değerlemeye etkisi nedir?",
+    "a": "Kentsel dönüşüm bölgelerinde riskli yapı statüsündeki binalarda mevcut yapının değeri yerine arsa payına düşen arazi değeri ön plana çıkar; yüksek arsa payı olan bağımsız bölümler yenileme senaryosunda daha avantajlı konumdadır. Uzman bu değerlendirmeyi güncel emsal arsa fiyatları ve yasal dönüşüm haklarını dikkate alarak raporunda belgeler.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Ticari taşınmazlarda boşluk oranı değerlemeyi nasıl etkiler?",
+    "a": "Boşluk oranı, ticari mülkün kira gelirini doğrudan azalttığından gelir kapitalizasyonu analizinde net işletme gelirine ulaşmadan önce piyasa standartlarına uygun boşluk ve tahsilat kaybı oranları uygulanır. Yüksek boşluk oranı hem cari geliri hem de yatırımcı risk algısını olumsuz etkileyerek değer üzerinde aşağı yönlü baskı yaratır.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Uzun vadeli kira sözleşmesine bağlı ticari taşınmaz nasıl değerlenir?",
+    "a": "Uzun vadeli ve güçlü kiracıya bağlı kira sözleşmesi taşınmazın gelir akışını öngörülebilir kılarak yatırımcı risk primini düşürür ve değeri olumlu etkiler; ancak kira düzeyi piyasanın altında kalmışsa kiracı koruma hakları gözetilerek kira revizyonu senaryoları modellenir. Uzman sözleşmenin süresi, kira artış hükümleri ve kiracı kredibilitesini değerleme raporuna dahil eder.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Cadde katı dükkan ile pasaj içi dükkan arasındaki değerleme farkı nasıl açıklanır?",
+    "a": "Cadde cepheli dükkanlar yüksek yaya trafiğinden doğrudan yararlanırken pasaj içi dükkanlar müşteri çekmek için pasajın ziyaretçi yoğunluğuna bağımlıdır; bu fark kira ve satış emsal analizlerinde net biçimde gözlemlenen piyasa koşullarını yansıtır. Değerleme uzmanı konumsal avantaj/dezavantajı emsal karşılaştırmasında düzeltme kalemi olarak modele dahil eder.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Depo ve lojistik tesis değerlemesinde hangi faktörler öne çıkar?",
+    "a": "Depo ve lojistik tesislerde taban alanı, tavan yüksekliği, yükleme rampası sayısı, bölgenin ulaşım bağlantısı (otoyol/liman/havalimanı erişimi) ve zemin yük kapasitesi piyasa değerini doğrudan etkileyen teknik parametrelerdir. Bu sektörde gelir yaklaşımı dominant yöntemdir; piyasa kira düzeyi ve kapitalizasyon oranları benzer lojistik tesislerden türetilir.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Tarım arazisi değerlemesinde imar durumundan bağımsız hangi unsurlar dikkate alınır?",
+    "a": "Tarım arazilerinde toprak sınıfı ve verimliliği, sulama imkânı, ulaşım erişimi, arazi büyüklüğü ve geometrisi, bölgenin tarımsal ürün deseni ile çevre parsellerin satış işlemleri değerlemenin temelini oluşturur. Uzman bu verileri Tarım Bakanlığı'nın arazi sınıflandırmaları ve bölgesel emsal işlemlerle birlikte değerlendirir.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Orman vasfındaki arazilerin değerlemesi yapılabilir mi?",
+    "a": "Orman vasfı taşıyan araziler Orman Kanunu kapsamında kısıtlamalara tabi olup yapılaşmaya kapalıdır; bu tür arazilerin değerlemesi yapılabilir ancak hukuki kısıtlar değer üzerinde ciddi sınırlayıcı etki doğurur. SPK lisanslı uzman, tapu sicili ve kadastro kaydını inceleyerek orman şerhi ve 2/B statüsünü raporunda açıkça belirtir.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Değerleme raporunda 'teknik altyapı' ifadesiyle ne kastedilir?",
+    "a": "Teknik altyapı; taşınmazın su, elektrik, doğalgaz, fiber internet, atık su bağlantısı, jeneratör ve yangın tesisatı gibi sistemlerin varlığını ve kapasitesini kapsar. Özellikle ticari ve endüstriyel taşınmazlarda yeterli teknik altyapı, işletme maliyetini ve kiralanabilirliği doğrudan etkilediğinden değerleme raporunda ayrı bir başlık altında incelenir.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "SPK değerleme raporunda 'değer sınırlayıcı koşullar' ne anlama gelir?",
+    "a": "Değer sınırlayıcı koşullar; değerlemeye esas alınan bilgi kaynaklarının sınırlılığı, gizli fiziksel kusurların bilinememesi, hukuki uyuşmazlıkların sonuçlanmamış olması veya imar değişikliği gibi değeri etkileyen belirsizlikleri kapsar. Uzman bu koşulları raporunda şeffaflıkla açıklayarak değer tahminin hangi varsayımlar altında geçerli olduğunu ortaya koyar.",
+    "cat": "Konut, Ticari & Arsa"
+  },
+  {
+    "q": "Değerleme raporu ile ekspertiz raporu arasındaki temel fark nedir?",
+    "a": "SPK mevzuatı kapsamında hazırlanan değerleme raporu, standart bir metodoloji, uzman bağımsızlığı ve sorumluluk ilkeleri çerçevesinde düzenlenir; ekspertiz raporu ise daha geniş kapsamlı teknik durum tespiti ve sigorta amaçlı kullanımlar için kullanılan bir terimi ifade edebilir. Banka finansmanı ve sermaye piyasası işlemlerinde SPK lisanslı kurum tarafından hazırlanan değerleme raporu yasal olarak zorunludur.",
+    "cat": "Konut, Ticari & Arsa"
+  }
+]

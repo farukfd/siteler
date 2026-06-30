@@ -22,6 +22,7 @@
 
 
 
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -614,6 +615,36 @@ img,svg{display:block;max-width:100%}
 .ct-quick a.wa{background:#25d366;border-color:#25d366;color:#fff}
 .ct-quick a:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm)}
 
+/* ============================================================
+   SIKÇA SORULAN SORULAR (faq-*) · 2026 · SEO/akordeon
+   ============================================================ */
+.faq-search{position:sticky;top:var(--hh);z-index:60;background:rgba(255,255,255,.95);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line);padding:14px 0 6px}
+.faq-search .box{position:relative;max-width:680px;margin:0 auto}
+.faq-search input{width:100%;padding:14px 16px 14px 46px;border:1px solid var(--line);border-radius:12px;font-size:15px;font-family:var(--body);outline:none;background:#fff}
+.faq-search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(47,91,208,.12)}
+.faq-search .ic{position:absolute;left:15px;top:24px;transform:translateY(-50%);color:var(--muted)}
+.faq-search .cnt{text-align:center;font-size:12px;color:var(--muted);margin-top:9px}
+.faq-catnav{display:flex;gap:8px;overflow-x:auto;padding:4px 0;scrollbar-width:none}
+.faq-catnav::-webkit-scrollbar{display:none}
+.faq-catnav a{flex:none;font-family:var(--head);font-weight:600;font-size:12.5px;color:var(--ink-2);border:1px solid var(--line);border-radius:99px;padding:8px 14px;white-space:nowrap;transition:.18s}
+.faq-catnav a:hover{border-color:var(--accent);color:var(--accent);background:var(--surface)}
+.faq-cat{margin-bottom:36px;scroll-margin-top:150px}
+.faq-cat .ch{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.faq-cat .ch h2{font-size:clamp(20px,2.6vw,28px)}
+.faq-cat .ch .b{font-size:12px;font-weight:700;color:var(--accent);background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:4px 11px;flex:none}
+.faq-q{border:1px solid var(--line);border-radius:14px;margin-bottom:10px;background:#fff;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.faq-q[open]{border-color:#cdd8ea;box-shadow:var(--shadow-sm)}
+.faq-q summary{list-style:none;cursor:pointer;display:flex;align-items:flex-start;gap:13px;padding:16px 18px;font-family:var(--head);font-weight:600;font-size:14.8px;color:var(--ink);line-height:1.45}
+.faq-q summary::-webkit-details-marker{display:none}
+.faq-q summary .qn{flex:none;width:24px;height:24px;border-radius:7px;background:var(--surface);color:var(--accent);display:grid;place-items:center;font-size:11px;font-weight:800;margin-top:1px}
+.faq-q summary .cv{margin-left:auto;flex:none;color:var(--accent);transition:transform .25s;margin-top:3px}
+.faq-q[open] summary .cv{transform:rotate(180deg)}
+.faq-q .faq-a{padding:0 18px 18px 55px;color:var(--ink-2);font-size:13.8px;line-height:1.68}
+.faq-empty{display:none;text-align:center;color:var(--muted);padding:48px 20px;font-size:14.5px}
+.faq-empty.on{display:block}
+/* WhatsApp footer hızlı talep vurgusu */
+.ft .wa-quick{color:#9fe6c0!important;font-weight:600}
+
 </style>
 </head>
 <body>
@@ -680,13 +711,14 @@ img,svg{display:block;max-width:100%}
         <div class="brand"><span class="mk" style="width:36px;height:36px;font-size:17px">M</span><span><b>Meridyen Değerleme</b><span>SPK Lisanslı Değerleme</span></span></div>
         <p>SPK lisanslı, BDDK yetkili bağımsız gayrimenkul ve varlık değerleme kuruluşu. Resmî rapor SPK lisanslı uzman tarafından hazırlanır ve imzalanır.</p>
       </div>
-      <div><h4>Hizmetler</h4><ul><li><a href="rapor-turleri.html">Rapor Türleri</a></li><li><a href="metodoloji.html">Metodoloji</a></li><li><a href="basvuru.html">Başvuru</a></li></ul></div>
-      <div><h4>Kurumsal</h4><ul><li><a href="spk-guven-merkezi.html">SPK Güven Merkezi</a></li><li><a href="raporu-kim-imzalar.html">Raporu Kim İmzalar?</a></li><li><a href="iletisim.html">İletişim</a></li></ul></div>
+      <div><h4>Hizmetler</h4><ul><li><a href="rapor-turleri.html">Rapor Türleri</a></li><li><a href="metodoloji.html">Metodoloji</a></li><li><a href="basvuru.html">Başvuru</a></li><li><a class="wa-quick" href="https://wa.me/905000000000?text=Merhaba%2C%20de%C4%9Ferleme%20talebi%20olu%C5%9Fturmak%20istiyorum." target="_blank" rel="noopener noreferrer">WhatsApp Hızlı Talep</a></li></ul></div>
+      <div><h4>Kurumsal</h4><ul><li><a href="spk-guven-merkezi.html">SPK Güven Merkezi</a></li><li><a href="raporu-kim-imzalar.html">Raporu Kim İmzalar?</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="sss.html">Sıkça Sorulan Sorular</a></li></ul></div>
       <div><h4>Yasal</h4><ul><li><a href="#">KVKK Aydınlatma</a></li><li><a href="#">Gizlilik Politikası</a></li></ul></div>
     </div>
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
   </div>
 </footer>
+
 
 
 
