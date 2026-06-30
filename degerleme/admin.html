@@ -3,13 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blog & Bilgi Merkezi · SPK Lisanslı Değerleme | Meridyen Değerleme</title>
-<meta name="description" content="Gayrimenkul değerleme, SPK lisanslı ekspertiz, banka teminat, kamulaştırma, metodoloji ve mevzuat üzerine güncel yazılar. Meridyen Değerleme Blog & Bilgi Merkezi.">
-<link rel="canonical" href="https://www.emlakekspertizi.com/degerleme/blog.html">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>Yönetim Paneli (CRM) · Meridyen Değerleme</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
 
 <style id="deg-inline-css">
 /* ===========================================================================
@@ -810,87 +807,253 @@ body.crm{background:var(--surface);padding-top:0}
 
 </style>
 </head>
-<body>
+<body class="crm">
 
-<header class="hdr">
-  <div class="wrap bar">
-    <a class="brand" href="index.html" aria-label="Meridyen Değerleme ana sayfa">
-      <span class="mk">M</span>
-      <span><b>Meridyen Değerleme</b><span>SPK Lisanslı Değerleme</span></span>
-    </a>
-    <nav class="nav" id="nav"><a href="hizmetler.html">Hizmetlerimiz</a><a href="neden-biz.html">Neden Biz</a><a href="referans.html">Referans</a><a href="blog.html">Blog</a><a href="basvuru.html">Talep</a></nav>
-    <div class="hdr-cta"><a class="nav-wa" href="https://wa.me/905000000000" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg></a><a class="btn btn-line btn-sm js-giris" href="#giris">Giriş</a><button class="burger" id="burger" aria-label="Menü"><span></span><span></span><span></span></button></div>
+<!-- LOGIN GATE -->
+<div class="crm-login" id="crmLogin">
+  <div class="card">
+    <div class="mk">M</div>
+    <h1>Yönetim Paneli</h1>
+    <p>Meridyen Değerleme · bağımsız CRM</p>
+    <label>Kullanıcı adı / E-posta</label><input id="lg_user" autocomplete="username" placeholder="admin veya e-posta">
+    <label>Şifre</label><input id="lg_pass" type="password" autocomplete="current-password" placeholder="••••">
+    <button class="btn btn-primary" id="lg_btn" type="button">Giriş Yap →</button>
+    <div class="err" id="lg_err"></div>
+    <div class="hint">Varsayılan giriş: <b>admin / 1234</b> · şifrenizi panelden değiştirebilirsiniz.</div>
   </div>
-</header>
+</div>
 
-<section class="hero" style="--x:0">
-  <div class="wrap in" style="padding:46px 0 42px">
-    <div class="hero-main">
-      <span class="eyebrow">Blog & Bilgi Merkezi</span>
-      <h1>Değerleme dünyasından <em>güncel bilgiler</em></h1>
-      <p class="lead">SPK lisanslı değerleme, ekspertiz süreçleri, banka teminat, kamulaştırma, metodoloji ve mevzuat üzerine kurumsal içerikler. Yazılar bağlı bilgi servisinden güncel olarak yayınlanır.</p>
-      <div class="hero-cta"><a class="btn btn-primary" href="basvuru.html">Değerleme Talebi</a><a class="btn btn-ghost-light" href="sss.html">Sıkça Sorulanlar</a></div>
+<!-- CRM APP -->
+<div class="crm-app" id="crmApp" hidden>
+  <aside class="crm-side">
+    <div class="lg"><span class="mk">M</span><span><b>Meridyen CRM</b><span>Yönetim Paneli</span></span></div>
+    <nav class="crm-nav" id="crmNav">
+      <button class="act" data-v="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg> Gösterge Paneli</button>
+      <button data-v="talepler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg> Talepler / CRM</button>
+      <button data-v="makaleler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg> Makaleler / Blog</button>
+      <button data-v="icerik"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Sayfa İçerikleri</button>
+      <button data-v="personel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15.5 14.2c2.3.4 4 2.4 4 4.8"/></svg> Personel</button>
+      <button data-v="prox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6"/><path d="M9 16c1.5-2 3 2 4.5 0"/></svg> ProX &amp; PDF</button>
+      <button data-v="ayarlar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.5-2.3 1a7 7 0 0 0-1.7-1L14.5 2h-5l-.4 2.5a7 7 0 0 0-1.7 1l-2.3-1-2 3.5L3 11a7 7 0 0 0 0 2l-2 1.5 2 3.5 2.3-1a7 7 0 0 0 1.7 1L9.5 22h5l.4-2.5a7 7 0 0 0 1.7-1l2.3 1 2-3.5-2-1.5a7 7 0 0 0 .1-1Z"/></svg> Ayarlar</button>
+      <button data-v="hesap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Hesap &amp; Güvenlik</button>
+    </nav>
+    <div class="out"><button class="crm-nav" style="all:unset"><button data-v="__site" id="goSite" class="" style="display:flex;align-items:center;gap:11px;background:none;border:0;color:#9fb3d4;font-family:var(--head);font-weight:600;font-size:13.5px;padding:11px 12px;border-radius:10px;cursor:pointer;width:100%"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Siteyi Gör</button><button id="logoutBtn" style="display:flex;align-items:center;gap:11px;background:none;border:0;color:#ef9a9a;font-family:var(--head);font-weight:600;font-size:13.5px;padding:11px 12px;border-radius:10px;cursor:pointer;width:100%"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg> Çıkış</button></button></div>
+  </aside>
+  <main class="crm-main">
+    <header class="crm-top"><h2 id="crmTitle">Gösterge Paneli</h2><span class="sp"></span><span class="badge"><i></i> Çevrimiçi</span><span class="who" id="crmWho">Yönetici</span></header>
+    <div class="crm-body">
+      <section class="crm-view on" data-v="dashboard" id="v_dashboard"></section>
+      <section class="crm-view" data-v="talepler" id="v_talepler"></section>
+      <section class="crm-view" data-v="makaleler" id="v_makaleler"></section>
+      <section class="crm-view" data-v="icerik" id="v_icerik"></section>
+      <section class="crm-view" data-v="personel" id="v_personel"></section>
+      <section class="crm-view" data-v="prox" id="v_prox"></section>
+      <section class="crm-view" data-v="ayarlar" id="v_ayarlar"></section>
+      <section class="crm-view" data-v="hesap" id="v_hesap"></section>
     </div>
-    <aside class="hero-panel" style="animation:hzFloat 6s ease-in-out infinite">
-      <div class="cap">Bilgi Merkezi</div>
-      <svg class="pv" viewBox="0 0 380 300" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Blog içerikleri">
-        <circle cx="190" cy="150" r="110" fill="none" stroke="rgba(188,208,255,.12)" stroke-width="1" stroke-dasharray="2 11"><animateTransform attributeName="transform" type="rotate" from="0 190 150" to="360 190 150" dur="50s" repeatCount="indefinite"/></circle>
-        <g class="anim-pulse"><rect x="96" y="78" width="188" height="40" rx="8" fill="rgba(47,91,208,.18)" stroke="#bcd0ff"/><path d="M112 92h120M112 104h70" stroke="#bcd0ff" stroke-width="2"/></g>
-        <g class="anim-pulse b"><rect x="96" y="130" width="188" height="40" rx="8" fill="rgba(47,91,208,.14)" stroke="#bcd0ff"/><path d="M112 144h120M112 156h90" stroke="#bcd0ff" stroke-width="2"/></g>
-        <g class="anim-pulse c"><rect x="96" y="182" width="188" height="40" rx="8" fill="rgba(47,91,208,.1)" stroke="#bcd0ff"/><path d="M112 196h120M112 208h60" stroke="#bcd0ff" stroke-width="2"/></g>
-      </svg>
-      <div class="flow"><b>Mevzuat</b><span class="ar">·</span><b>Süreç</b><span class="ar">·</span><b>Metodoloji</b></div>
-      <div class="chips"><span>Güncel</span><span>Uzman içeriği</span></div>
-    </aside>
-  </div>
-</section>
+  </main>
+</div>
 
-<section class="sec" id="blog">
-  <div class="wrap">
-    <div class="sec-h reveal"><span class="eyebrow">Yazılar</span><h2>Blog & rehberler</h2><p>Bağlı bilgi servisi yayında olduğunda güncel yazılar otomatik listelenir; aşağıda öne çıkan içeriklerimiz yer alır.</p></div>
-    <div class="blog-grid" id="blogGrid">
-      <article class="blogcard reveal"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><div class="bc-b"><span class="tagx">SPK · Mevzuat</span><h3>SPK Lisanslı Değerleme Nedir?</h3><p>Lisanslı kuruluş, sorumlu değerleme uzmanı ve raporun yasal niteliği.</p><a class="more" href="sss.html">Devamını oku →</a></div></article>
-      <article class="blogcard reveal d1"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 10l9-6 9 6"/><path d="M5 10v8M19 10v8"/><path d="M3 21h18"/></svg></div><div class="bc-b"><span class="tagx">Banka</span><h3>Konut Kredisinde Ekspertiz Süreci</h3><p>Teminat değeri, BDDK uyumu ve ekspertizin krediye etkisi.</p><a class="more" href="hizmetler.html">Devamını oku →</a></div></article>
-      <article class="blogcard reveal d2"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V4M4 20h16"/><path d="M8 16l4-5 3 3 5-7"/></svg></div><div class="bc-b"><span class="tagx">Metodoloji</span><h3>Pazar, Gelir ve Maliyet Yaklaşımı</h3><p>Üç temel değerleme yaklaşımı ve hangi taşınmazda kullanıldığı.</p><a class="more" href="metodoloji.html">Devamını oku →</a></div></article>
-      <article class="blogcard reveal"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 21h16"/><path d="M6 21V8h12v13"/><path d="M9 4h6l1 4H8l1-4Z"/></svg></div><div class="bc-b"><span class="tagx">Kamu</span><h3>Kamulaştırma Bedeli Nasıl Belirlenir?</h3><p>Mevzuat çerçevesinde emsal ve bedel tespiti esasları.</p><a class="more" href="hizmetler.html">Devamını oku →</a></div></article>
-      <article class="blogcard reveal d1"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v14M5 7h14"/><path d="M5 7l-2 5a3 3 0 0 0 6 0L7 7M17 7l-2 5a3 3 0 0 0 6 0l-2-5"/></svg></div><div class="bc-b"><span class="tagx">Hukuk</span><h3>İzaleyi Şuyu'da Değerleme</h3><p>Ortaklığın giderilmesinde adil değer ve süreç.</p><a class="more" href="hizmetler.html">Devamını oku →</a></div></article>
-      <article class="blogcard reveal d2"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 20h18"/><path d="M5 20l4-9 4 3 3-6 4 12"/></svg></div><div class="bc-b"><span class="tagx">Sürdürülebilirlik</span><h3>Yeşil Değerleme ve ESG</h3><p>Sertifikaların ve sürdürülebilirliğin değere etkisi.</p><a class="more" href="hizmetler.html">Devamını oku →</a></div></article>
-      <article class="blogcard reveal"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div><div class="bc-b"><span class="tagx">Belgeler</span><h3>Değerleme İçin Gerekli Belgeler</h3><p>Tapu, imar durumu, ruhsat ve diğer belgeler.</p><a class="more" href="basvuru.html">Devamını oku →</a></div></article>
-      <article class="blogcard reveal d1"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21V8l9-4 9 4v13"/><path d="M3 21h18"/></svg></div><div class="bc-b"><span class="tagx">GYO · Kurumsal</span><h3>GYO Portföy Değerlemesi</h3><p>SPK GYO tebliği ve periyodik portföy değerlemesi.</p><a class="more" href="hizmetler.html">Devamını oku →</a></div></article>
-    </div>
-    <p class="reveal" style="text-align:center;color:var(--muted);font-size:12.5px;margin-top:18px">İçerikler bağlı bilgi servisinden (emlakekspertizi.com/blog) güncellenir; bağlantı yokken öne çıkan içerikler gösterilir.</p>
-  </div>
-</section>
+<script id="crm-js">
+(function () {
+  'use strict';
+  var TITLES = { dashboard: 'Gösterge Paneli', talepler: 'Talepler / CRM', makaleler: 'Makaleler / Blog', icerik: 'Sayfa İçerikleri', personel: 'Personel', prox: 'ProX & PDF', ayarlar: 'Ayarlar', hesap: 'Hesap & Güvenlik' };
+  var DB = {
+    load: function () { try { return JSON.parse(localStorage.getItem('deg_admin') || '{}'); } catch (e) { return {}; } },
+    save: function (s) { try { localStorage.setItem('deg_admin', JSON.stringify(s)); } catch (e) {} },
+    leads: function () { try { return JSON.parse(localStorage.getItem('deg_leads') || '[]'); } catch (e) { return []; } },
+    setLeads: function (a) { try { localStorage.setItem('deg_leads', JSON.stringify(a)); } catch (e) {} },
+    auth: function () { return Object.assign({ user: 'admin', pass: '1234' }, this.load().auth || {}); }
+  };
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function api(p, o) { return (typeof window.proxApi === 'function') ? window.proxApi(p, o) : Promise.resolve({ fallback: true }); }
+  function toast(m) { /* basit */ var t = $('crmToast'); if (!t) { t = document.createElement('div'); t.id = 'crmToast'; t.className = 'toastbox'; document.body.appendChild(t); } t.textContent = m; t.classList.add('on'); clearTimeout(t._t); t._t = setTimeout(function () { t.classList.remove('on'); }, 2400); }
+  function fmtDate(iso) { try { var d = new Date(iso); return d.toLocaleDateString('tr-TR') + ' ' + d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } }
 
-<section class="ctaband" id="talep"><div class="wrap in"><div><h2>Değerleme talebiniz için hazırız</h2><p>SPK lisanslı uzmanımızla süreci birkaç adımda başlatın.</p></div><a class="btn btn-ghost-light" href="basvuru.html">Talep Oluştur</a></div></section>
+  /* ---- Login ---- */
+  function showApp(who) { $('crmLogin').style.display = 'none'; $('crmApp').hidden = false; $('crmWho').textContent = who; show('dashboard'); }
+  function tryLogin(id, pass) {
+    var a = DB.auth();
+    if ((id === a.user || id === (a.email || '')) && pass === a.pass) return { user: a.user, role: 'admin' };
+    var st = (DB.load().staff || []).filter(function (s) { return s.active !== false && (s.email === id || s.user === id) && s.pass === pass; })[0];
+    if (st) return { user: st.name || st.email, role: st.role || 'personel' };
+    return null;
+  }
+  $('lg_btn').addEventListener('click', function () {
+    var id = $('lg_user').value.trim(), pass = $('lg_pass').value;
+    var e = $('lg_err'); e.textContent = '';
+    if (!id || !pass) { e.textContent = '⚠ Kullanıcı adı ve şifre gereklidir.'; return; }
+    var u = tryLogin(id, pass);
+    if (!u) { e.textContent = '⚠ Kullanıcı adı veya şifre hatalı.'; return; }
+    try { sessionStorage.setItem('deg_crm', JSON.stringify(u)); } catch (x) {}
+    showApp(u.user);
+  });
+  $('lg_pass').addEventListener('keydown', function (ev) { if (ev.key === 'Enter') $('lg_btn').click(); });
 
-<footer class="ft">
-  <div class="wrap">
-    <div class="cols">
-      <div>
-        <div class="brand"><span class="mk" style="width:36px;height:36px;font-size:17px">M</span><span><b>Meridyen Değerleme</b><span>SPK Lisanslı Değerleme</span></span></div>
-        <p>SPK lisanslı, BDDK yetkili bağımsız gayrimenkul ve varlık değerleme kuruluşu. Resmî rapor SPK lisanslı uzman tarafından hazırlanır ve imzalanır.</p>
-      </div>
-      <div><h4>Hizmetler</h4><ul><li><a href="hizmetler.html">Rapor Türleri</a></li><li><a href="metodoloji.html">Metodoloji</a></li><li><a href="basvuru.html">Başvuru</a></li><li><a class="wa-quick" href="https://wa.me/905000000000?text=Merhaba%2C%20de%C4%9Ferleme%20talebi%20olu%C5%9Fturmak%20istiyorum." target="_blank" rel="noopener noreferrer">WhatsApp Hızlı Talep</a></li></ul></div>
-      <div><h4>Kurumsal</h4><ul><li><a href="spk-guven-merkezi.html">SPK Güven Merkezi</a></li><li><a href="raporu-kim-imzalar.html">Raporu Kim İmzalar?</a></li><li><a href="organizasyon-semasi.html">Organizasyon Şeması</a></li><li><a href="etik-ilkeler.html">Etik İlkeler</a></li><li><a href="sertifikalar.html">Sertifikalar & Belgeler</a></li><li><a href="bilgi-servisi.html">Bilgi Servisi Hizmetleri</a></li></ul></div>
-      <div><h4>Bilgi &amp; Destek</h4><ul><li><a href="blog.html">Blog</a></li><li><a href="sss.html">Sıkça Sorulan Sorular</a></li><li><a href="sikayet.html">Müşteri Şikayet &amp; İtiraz</a></li><li><a href="kariyer.html">Kariyer</a></li><li><a href="iletisim.html">İletişim</a></li></ul></div>
-      <div><h4>Yasal &amp; Künye</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="gizlilik.html">Gizlilik Politikası</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="bilgi-toplumu.html">Bilgi Toplumu Hizmetleri</a></li><li><a href="surekli-bilgilendirme.html">Sürekli Bilgilendirme</a></li></ul></div>
-    </div>
-    <div class="ft-members">
-      <div class="mh">Üyesi Olduğumuz &amp; Yetkili Kuruluşlar</div>
-      <div class="ft-logos">
-        <div class="ft-logo"><span class="lm" style="background:linear-gradient(135deg,#1e3a8a,#0b1220)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6"/><path d="M5 10v8M19 10v8M9 10v8M15 10v8"/><path d="M3 21h18"/></svg></span><span class="lt"><b>BDDK</b><span>Değerleme Yetki Listesi</span></span></div>
-        <div class="ft-logo"><span class="lm" style="background:linear-gradient(135deg,#2f5bd0,#1e3a8a)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="M8 13l2 2 5-5"/></svg></span><span class="lt"><b>SPK</b><span>Sermaye Piyasası Kurulu</span></span></div>
-        <div class="ft-logo"><span class="lm" style="background:linear-gradient(135deg,#1d9e75,#0f5132)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15.5 14.2c2.3.4 4 2.4 4 4.8"/></svg></span><span class="lt"><b>TDUB</b><span>Değerleme Uzmanları Birliği</span></span></div>
-        <div class="ft-logo"><span class="lm" style="background:linear-gradient(135deg,#b4975a,#8a6d2f)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="13" rx="2"/><path d="M8 8h8M8 12h5"/><circle cx="12" cy="19" r="2.2"/><path d="M10.6 20.6 9.5 23M13.4 20.6 14.5 23"/></svg></span><span class="lt"><b>SPL</b><span>Sermaye Piyasası Lisanslama</span></span></div>
-        <div class="ft-logo"><span class="lm" style="background:linear-gradient(135deg,#334155,#0b1220)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-5h6v5"/><path d="M9 10h.01M15 10h.01"/></svg></span><span class="lt"><b>LİDEBİR</b><span>Lisanslı Değerleme Şirketleri Birliği</span></span></div>
-      </div>
-    </div>
-    <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: DD-2024-0142</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span></div>
-  </div>
-</footer>
+  /* ---- Nav ---- */
+  function show(v) {
+    document.querySelectorAll('.crm-view').forEach(function (s) { s.classList.toggle('on', s.dataset.v === v); });
+    document.querySelectorAll('#crmNav button').forEach(function (b) { b.classList.toggle('act', b.dataset.v === v); });
+    $('crmTitle').textContent = TITLES[v] || '';
+    if (RENDER[v]) RENDER[v]();
+  }
+  document.querySelectorAll('#crmNav button').forEach(function (b) { b.addEventListener('click', function () { show(b.dataset.v); }); });
+  $('goSite').addEventListener('click', function () { window.location.href = 'index.html'; });
+  $('logoutBtn').addEventListener('click', function () { try { sessionStorage.removeItem('deg_crm'); } catch (e) {} window.location.href = 'index.html'; });
 
+  /* ---- Views ---- */
+  var RENDER = {};
+  RENDER.dashboard = function () {
+    var leads = DB.leads(), s = DB.load();
+    var yeni = leads.filter(function (l) { return (l.status || 'yeni') === 'yeni'; }).length;
+    var arts = (s.articles || []).length, staff = (s.staff || []).length;
+    var rows = leads.slice(0, 7).map(function (l) {
+      return '<tr><td><b>' + esc(l.name || '-') + '</b><div style="font-size:11.5px;color:#888">' + esc(l.phone || l.email || '') + '</div></td><td>' + esc(typeLabel(l)) + '</td><td><span class="crm-st ' + (l.status || 'yeni') + '">' + stLabel(l.status) + '</span></td><td style="font-size:12px;color:#888">' + fmtDate(l.ts) + '</td></tr>';
+    }).join('') || '<tr><td colspan="4" class="crm-empty">Henüz talep yok. Sitedeki formlardan gelen talepler burada listelenir.</td></tr>';
+    $('v_dashboard').innerHTML =
+      '<div class="crm-kpis">'
+      + kpi('M3 21h18M5 21V8l7-4 7 4v13', leads.length, 'Toplam Talep')
+      + kpi('M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z', yeni, 'Yeni / Bekleyen')
+      + kpi('M4 4h16v16H4zM8 8h8M8 12h8', arts, 'Yayında Makale')
+      + kpi('M9 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3 20c0-3 3-5 6-5', staff, 'Personel')
+      + '</div>'
+      + '<div class="crm-card"><div class="hd"><h3>Son Talepler</h3><span class="sp"></span><button class="crm-mini" id="d_more">Tümünü Gör</button></div>'
+      + '<table class="crm-tbl"><thead><tr><th>Kişi</th><th>Tür</th><th>Durum</th><th>Tarih</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+    var dm = $('d_more'); if (dm) dm.addEventListener('click', function () { show('talepler'); });
+  };
+  function kpi(path, val, label) { return '<div class="crm-kpi"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="' + path + '"/></svg></div><b>' + val + '</b><span>' + label + '</span></div>'; }
+  function typeLabel(l) { return ({ 'teklif': 'Teklif (' + (l.service || '') + ')', 'degerleme-basvuru': 'Değerleme Başvurusu', 'sikayet-itiraz': (l.source === 'kariyer' ? 'Kariyer Başvurusu' : 'Şikayet/İtiraz') })[l.type] || (l.type || 'Talep'); }
+  function stLabel(s) { return ({ yeni: 'Yeni', islemde: 'İşlemde', tamam: 'Tamamlandı' })[s || 'yeni']; }
 
+  RENDER.talepler = function () {
+    var leads = DB.leads();
+    var rows = leads.map(function (l, i) {
+      return '<tr><td><b>' + esc(l.name || '-') + '</b><div style="font-size:11.5px;color:#888">' + esc([l.phone, l.email].filter(Boolean).join(' · ')) + (l.il ? '<br>' + esc([l.il, l.ilce, l.mahalle].filter(Boolean).join(' / ')) : '') + (l.kategori ? '<br>' + esc(l.kategori) : '') + (l.message ? '<br><i>' + esc(String(l.message).slice(0, 80)) + '</i>' : '') + '</div></td>'
+        + '<td>' + esc(typeLabel(l)) + '</td>'
+        + '<td><select class="crm-mini" data-i="' + i + '" data-act="st"><option value="yeni"' + (st(l) === 'yeni' ? ' selected' : '') + '>Yeni</option><option value="islemde"' + (st(l) === 'islemde' ? ' selected' : '') + '>İşlemde</option><option value="tamam"' + (st(l) === 'tamam' ? ' selected' : '') + '>Tamamlandı</option></select></td>'
+        + '<td style="font-size:12px;color:#888">' + fmtDate(l.ts) + '</td>'
+        + '<td style="text-align:right"><button class="crm-mini bad" data-i="' + i + '" data-act="del">Sil</button></td></tr>';
+    }).join('') || '<tr><td colspan="5" class="crm-empty">Henüz talep yok.</td></tr>';
+    $('v_talepler').innerHTML = '<div class="crm-card"><div class="hd"><h3>Gelen Talepler (' + leads.length + ')</h3><span class="sp"></span><button class="crm-mini bad" id="t_clear">Tümünü Temizle</button></div>'
+      + '<table class="crm-tbl"><thead><tr><th>Kişi / Detay</th><th>Tür</th><th>Durum</th><th>Tarih</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+    function st(l) { return l.status || 'yeni'; }
+    $('v_talepler').querySelectorAll('[data-act]').forEach(function (el) {
+      el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'click', function () {
+        var i = +el.getAttribute('data-i'), act = el.getAttribute('data-act'); var a = DB.leads();
+        if (act === 'st') { a[i].status = el.value; DB.setLeads(a); toast('Durum güncellendi.'); }
+        else if (act === 'del') { a.splice(i, 1); DB.setLeads(a); RENDER.talepler(); toast('Talep silindi.'); }
+      });
+    });
+    var tc = $('t_clear'); if (tc) tc.addEventListener('click', function () { if (confirm('Tüm talepler silinsin mi?')) { DB.setLeads([]); RENDER.talepler(); } });
+  };
+
+  RENDER.makaleler = function () {
+    var s = DB.load(); var arts = s.articles || [];
+    var list = arts.map(function (a, i) {
+      return '<tr><td><b>' + esc(a.title) + '</b><div style="font-size:11.5px;color:#888">' + esc(a.category || '') + ' · ' + (a.published === false ? 'taslak' : 'yayında') + '</div></td><td style="text-align:right;white-space:nowrap"><button class="crm-mini" data-i="' + i + '" data-act="edit">Düzenle</button> <button class="crm-mini bad" data-i="' + i + '" data-act="del">Sil</button></td></tr>';
+    }).join('') || '<tr><td colspan="2" class="crm-empty">Henüz makale yok. Soldaki formdan ekleyin; blog sayfasında yayınlanır.</td></tr>';
+    $('v_makaleler').innerHTML =
+      '<div class="crm-row2" style="grid-template-columns:1.1fr .9fr;gap:18px;align-items:start">'
+      + '<div class="crm-card"><h3 id="m_h">Yeni Makale</h3>'
+      + '<input type="hidden" id="m_idx" value="-1">'
+      + '<div class="crm-f"><label>Başlık</label><input id="m_title" placeholder="Makale başlığı"></div>'
+      + '<div class="crm-row2"><div class="crm-f"><label>Kategori</label><input id="m_cat" placeholder="örn. Mevzuat"></div><div class="crm-f"><label>Durum</label><select id="m_pub"><option value="1">Yayında</option><option value="0">Taslak</option></select></div></div>'
+      + '<div class="crm-f"><label>Özet</label><input id="m_exc" placeholder="Kısa özet"></div>'
+      + '<div class="crm-f"><label>İçerik</label><textarea id="m_body" rows="6" placeholder="Makale metni"></textarea></div>'
+      + '<div style="display:flex;gap:9px;flex-wrap:wrap"><button class="crm-btn" id="m_save">Kaydet</button><button class="crm-btn ghost" id="m_prox">⚡ ProX ile Taslak Oluştur</button><button class="crm-mini" id="m_new">Yeni / Temizle</button></div>'
+      + '<div class="crm-out" id="m_out"></div></div>'
+      + '<div class="crm-card"><h3>Makaleler (' + arts.length + ')</h3><table class="crm-tbl"><tbody>' + list + '</tbody></table></div>'
+      + '</div>';
+    $('m_save').addEventListener('click', function () {
+      var s = DB.load(); s.articles = s.articles || [];
+      var idx = +$('m_idx').value, t = $('m_title').value.trim();
+      if (!t) { $('m_out').innerHTML = '<span class="bad">⚠ Başlık gerekli.</span>'; return; }
+      var art = { title: t, category: $('m_cat').value.trim(), excerpt: $('m_exc').value.trim(), body: $('m_body').value.trim(), published: $('m_pub').value === '1', ts: new Date().toISOString() };
+      if (idx >= 0) s.articles[idx] = art; else s.articles.unshift(art);
+      DB.save(s); $('m_out').innerHTML = '<span class="ok">✓ Makale kaydedildi (blog sayfasında yayınlanır).</span>'; toast('Makale kaydedildi.'); RENDER.makaleler();
+    });
+    $('m_prox').addEventListener('click', async function () {
+      var t = $('m_title').value.trim(); if (!t) { $('m_out').innerHTML = '<span class="bad">⚠ Önce başlık girin.</span>'; return; }
+      $('m_out').innerHTML = '<span class="warn">ProX taslağı hazırlanıyor…</span>';
+      var r = await api('/api/v1/tenant/prox/ai', { method: 'POST', body: { prompt: 'SPK lisanslı gayrimenkul değerleme blogu için "' + t + '" başlıklı, mevzuata uygun, bilgilendirici bir makale taslağı yaz.' } });
+      if (r && r.answer) { $('m_body').value = r.answer; $('m_out').innerHTML = '<span class="ok">✓ Taslak oluşturuldu, düzenleyip kaydedin.</span>'; }
+      else { $('m_body').value = ($('m_body').value || '') + (t + ' — bu konuda SPK/UDES-IVS çerçevesinde bilgilendirici bir makale taslağı. (Canlı ProX bağlanınca otomatik üretilir.)'); $('m_out').innerHTML = '<span class="warn">○ ProX çevrimdışı: örnek taslak eklendi.</span>'; }
+    });
+    $('m_new').addEventListener('click', function () { ['m_title', 'm_cat', 'm_exc', 'm_body'].forEach(function (id) { $(id).value = ''; }); $('m_idx').value = '-1'; $('m_pub').value = '1'; $('m_h').textContent = 'Yeni Makale'; $('m_out').innerHTML = ''; });
+    $('v_makaleler').querySelectorAll('[data-act]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var i = +b.getAttribute('data-i'), act = b.getAttribute('data-act'); var s = DB.load();
+        if (act === 'del') { s.articles.splice(i, 1); DB.save(s); RENDER.makaleler(); toast('Makale silindi.'); }
+        else { var a = s.articles[i]; $('m_idx').value = i; $('m_title').value = a.title || ''; $('m_cat').value = a.category || ''; $('m_exc').value = a.excerpt || ''; $('m_body').value = a.body || ''; $('m_pub').value = a.published === false ? '0' : '1'; $('m_h').textContent = 'Makaleyi Düzenle'; window.scrollTo(0, 0); }
+      });
+    });
+  };
+
+  var PAGES = [['kvkk', 'KVKK Aydınlatma Metni'], ['gizlilik', 'Gizlilik Politikası'], ['cerez', 'Çerez Politikası'], ['etik', 'Etik İlkeler & Bağımsızlık']];
+  RENDER.icerik = function () {
+    var s = DB.load(); var pages = s.pages || {};
+    var opts = PAGES.map(function (p) { return '<option value="' + p[0] + '">' + esc(p[1]) + '</option>'; }).join('');
+    $('v_icerik').innerHTML = '<div class="crm-card"><h3>Sayfa İçeriği Düzenle</h3><p class="sub" style="font-size:12.5px;color:#777;margin:0 0 12px">İlgili sayfanın metnini düzenleyin. Boş bırakılırsa sayfadaki hazır varsayılan metin gösterilir. "## " ile başlık, boş satır ile yeni paragraf.</p>'
+      + '<div class="crm-f"><label>Sayfa</label><select id="ic_sel">' + opts + '</select></div>'
+      + '<div class="crm-f"><label>İçerik (düz metin)</label><textarea id="ic_body" rows="12"></textarea></div>'
+      + '<button class="crm-btn" id="ic_save">Kaydet & Uygula</button><div class="crm-out" id="ic_out"></div></div>';
+    function fill() { $('ic_body').value = (DB.load().pages || {})[$('ic_sel').value] || ''; }
+    $('ic_sel').addEventListener('change', fill); fill();
+    $('ic_save').addEventListener('click', function () { var s = DB.load(); s.pages = s.pages || {}; s.pages[$('ic_sel').value] = $('ic_body').value.trim(); DB.save(s); $('ic_out').innerHTML = '<span class="ok">✓ Kaydedildi. İlgili sayfada yayınlanır.</span>'; toast('Sayfa içeriği güncellendi.'); });
+  };
+
+  RENDER.personel = function () {
+    var s = DB.load(); var st = s.staff || [];
+    var list = st.map(function (x, i) { return '<tr><td><b>' + esc(x.name || x.email) + '</b><div style="font-size:11.5px;color:#888">' + esc(x.email) + ' · ' + (x.role === 'admin' ? 'Yönetici' : 'Personel') + (x.active === false ? ' · pasif' : '') + '</div></td><td style="text-align:right;white-space:nowrap"><button class="crm-mini" data-i="' + i + '" data-act="tog">' + (x.active === false ? 'Aktif et' : 'Pasif et') + '</button> <button class="crm-mini bad" data-i="' + i + '" data-act="del">Sil</button></td></tr>'; }).join('') || '<tr><td colspan="2" class="crm-empty">Personel eklenmedi.</td></tr>';
+    $('v_personel').innerHTML = '<div class="crm-card"><h3>Personel Ekle</h3><div class="crm-row2"><div class="crm-f"><label>Ad Soyad</label><input id="p_name"></div><div class="crm-f"><label>Kullanıcı / E-posta</label><input id="p_mail"></div></div><div class="crm-row2"><div class="crm-f"><label>Şifre</label><input id="p_pass"></div><div class="crm-f"><label>Rol</label><select id="p_role"><option value="personel">SPK Lisanslı Uzman / Personel</option><option value="admin">Yönetici</option></select></div></div><button class="crm-btn" id="p_add">+ Personel Ekle</button><div class="crm-out" id="p_out"></div></div>'
+      + '<div class="crm-card"><h3>Kayıtlı Personel (' + st.length + ')</h3><table class="crm-tbl"><tbody>' + list + '</tbody></table></div>';
+    $('p_add').addEventListener('click', function () { var n = $('p_name').value.trim(), m = $('p_mail').value.trim(), pw = $('p_pass').value.trim(); var o = $('p_out'); if (!n || !m || !pw) { o.innerHTML = '<span class="bad">⚠ Ad, kullanıcı ve şifre gerekli.</span>'; return; } var s = DB.load(); s.staff = s.staff || []; if (s.staff.some(function (x) { return x.email === m; })) { o.innerHTML = '<span class="bad">⚠ Zaten kayıtlı.</span>'; return; } s.staff.push({ name: n, email: m, pass: pw, role: $('p_role').value, active: true }); DB.save(s); o.innerHTML = '<span class="ok">✓ Eklendi.</span>'; toast('Personel eklendi.'); RENDER.personel(); });
+    $('v_personel').querySelectorAll('[data-act]').forEach(function (b) { b.addEventListener('click', function () { var i = +b.getAttribute('data-i'), act = b.getAttribute('data-act'); var s = DB.load(); if (act === 'del') s.staff.splice(i, 1); else s.staff[i].active = (s.staff[i].active === false); DB.save(s); RENDER.personel(); }); });
+  };
+
+  RENDER.prox = function () {
+    var s = DB.load();
+    $('v_prox').innerHTML = '<div class="crm-card"><h3>Resmî PDF Rapor (API destekli)</h3><p class="sub" style="font-size:12.5px;color:#777;margin:0 0 12px">Merkezi API ile dosya altyapısı hazırlanır; resmî PDF rapor üretimi SPK lisanslı uzman onayıyla tamamlanır.</p>'
+      + '<div class="crm-row2"><div class="crm-f"><label>Varlık Türü</label><select id="r_asset"><option>Konut</option><option>İş Yeri / Ofis</option><option>Arsa / Arazi</option><option>Sanayi / Fabrika</option><option>Enerji Santrali</option><option>Akaryakıt İstasyonu</option><option>Diğer</option></select></div><div class="crm-f"><label>Rapor Amacı</label><select id="r_purpose"><option>Bankaya Yönelik (Teminat)</option><option>Mahkeme / Bilirkişi</option><option>Miras / İzaleyi Şuyu</option><option>Finansal Raporlama</option><option>Kamulaştırma</option></select></div></div>'
+      + '<div class="crm-row2"><div class="crm-f"><label>Müşteri / Kurum</label><input id="r_client"></div><div class="crm-f"><label>Dosya / Talep No</label><input id="r_file" placeholder="DEG-2026-..."></div></div>'
+      + '<button class="crm-btn" id="r_btn">📄 Resmî PDF Rapor Oluştur</button><div class="crm-out" id="r_out"></div></div>'
+      + '<div class="crm-card"><h3>ProX AI — Kuruma Özel Prompt</h3><textarea id="px_prompt" rows="3" placeholder="Kuruma özel uzmanlık/ton...">' + esc(s.proxPrompt || '') + '</textarea><button class="crm-btn ghost" id="px_save" style="margin-top:8px">Kaydet</button></div>'
+      + '<div class="crm-card"><h3>ProX Asistan</h3><div class="crm-f"><textarea id="px_q" rows="2" placeholder="ProX\'a sorun (örn. otel değerlemesinde hangi yaklaşım?)"></textarea></div><button class="crm-btn" id="px_ask">Sor</button><div class="crm-out" id="px_a"></div></div>';
+    $('r_btn').addEventListener('click', async function () {
+      var client = $('r_client').value.trim(); var o = $('r_out'); if (!client) { o.innerHTML = '<span class="bad">⚠ Müşteri/kurum gerekli.</span>'; return; }
+      o.innerHTML = '<span class="warn">Oluşturuluyor…</span>';
+      var r = await api('/api/v1/tenant/pdf/generate', { method: 'POST', body: { asset: $('r_asset').value, purpose: $('r_purpose').value, client: client, file_no: $('r_file').value.trim(), prox_prompt: (DB.load().proxPrompt || '') } });
+      if (r && r.url) o.innerHTML = '<a class="ok" href="' + r.url + '" target="_blank" rel="noopener noreferrer">✓ Resmî PDF hazır — indir →</a>';
+      else if (r && r.fallback) o.innerHTML = '<span class="warn">○ Çevrimdışı/demo: Dosya altyapısı hazırlandı ve uzmana atandı. Canlı API bağlanınca PDF anında üretilir.</span>';
+      else o.innerHTML = '<span class="ok">✓ Talep alındı; uzman onayına gönderildi.</span>';
+    });
+    $('px_save').addEventListener('click', function () { var s = DB.load(); s.proxPrompt = $('px_prompt').value.trim(); DB.save(s); toast('ProX promptu kaydedildi.'); });
+    $('px_ask').addEventListener('click', async function () { var q = $('px_q').value.trim(); if (!q) return; $('px_a').innerHTML = '<span class="warn">Yanıtlanıyor…</span>'; var r = await api('/api/v1/tenant/prox/ai', { method: 'POST', body: { prompt: q } }); $('px_a').textContent = (r && r.answer) ? r.answer : 'ProX çevrimdışı — canlı API bağlanınca yanıt verir.'; });
+  };
+
+  RENDER.ayarlar = function () {
+    var s = DB.load(); var c = s.contact || {};
+    function v(x) { return esc(x || ''); }
+    $('v_ayarlar').innerHTML = '<div class="crm-card"><h3>Tema & Logo</h3><div class="crm-row2"><div class="crm-f"><label>Favicon URL</label><input id="a_fav" value="' + v(s.favicon) + '"></div><div class="crm-f"><label>Tema</label><select id="a_theme"><option' + (s.theme === 'Lacivert' || !s.theme ? ' selected' : '') + '>Lacivert</option><option' + (s.theme === 'Antrasit' ? ' selected' : '') + '>Antrasit</option><option' + (s.theme === 'Bordo' ? ' selected' : '') + '>Bordo</option><option' + (s.theme === 'Yeşil' ? ' selected' : '') + '>Yeşil</option></select></div></div><button class="crm-btn" id="a_tsave">Kaydet & Uygula</button></div>'
+      + '<div class="crm-card"><h3>Google & Meta</h3><div class="crm-row2"><div class="crm-f"><label>Google Analytics</label><input id="a_ga" value="' + v(s.ga) + '" placeholder="G-XXXX"></div><div class="crm-f"><label>Search Console</label><input id="a_gsc" value="' + v(s.gsc) + '"></div></div><div class="crm-f"><label>Meta Başlık</label><input id="a_mt" value="' + v(s.metaTitle) + '"></div><div class="crm-f"><label>Meta Açıklama</label><textarea id="a_md" rows="2">' + esc(s.metaDesc || '') + '</textarea></div><button class="crm-btn" id="a_gsave">Kaydet</button></div>'
+      + '<div class="crm-card"><h3>İletişim & Adres</h3><div class="crm-row2"><div class="crm-f"><label>Firma</label><input id="a_firma" value="' + v(c.firma) + '"></div><div class="crm-f"><label>Telefon</label><input id="a_tel" value="' + v(c.tel) + '"></div></div><div class="crm-row2"><div class="crm-f"><label>WhatsApp</label><input id="a_wa" value="' + v(c.whatsapp) + '"></div><div class="crm-f"><label>E-posta</label><input id="a_mail" value="' + v(c.email) + '"></div></div><div class="crm-f"><label>Adres</label><input id="a_adres" value="' + v(c.adres) + '"></div><div class="crm-row2"><div class="crm-f"><label>Çalışma Saatleri</label><input id="a_saat" value="' + v(c.saat) + '"></div><div class="crm-f"><label>Harita (adres / enlem,boylam)</label><input id="a_harita" value="' + v(c.harita) + '"></div></div><button class="crm-btn" id="a_csave">Kaydet & Uygula</button><div class="crm-out" id="a_out"></div></div>';
+    $('a_tsave').addEventListener('click', function () { var s = DB.load(); s.favicon = $('a_fav').value.trim(); s.theme = $('a_theme').value; DB.save(s); toast('Tema kaydedildi.'); });
+    $('a_gsave').addEventListener('click', function () { var s = DB.load(); s.ga = $('a_ga').value.trim(); s.gsc = $('a_gsc').value.trim(); s.metaTitle = $('a_mt').value.trim(); s.metaDesc = $('a_md').value.trim(); DB.save(s); toast('Google & Meta kaydedildi.'); });
+    $('a_csave').addEventListener('click', function () { var s = DB.load(); s.contact = { firma: $('a_firma').value.trim(), tel: $('a_tel').value.trim(), whatsapp: $('a_wa').value.trim(), email: $('a_mail').value.trim(), adres: $('a_adres').value.trim(), saat: $('a_saat').value.trim(), harita: $('a_harita').value.trim() }; DB.save(s); $('a_out').innerHTML = '<span class="ok">✓ İletişim & adres kaydedildi (iletişim sayfasına yansır).</span>'; toast('İletişim güncellendi.'); });
+  };
+
+  RENDER.hesap = function () {
+    var a = DB.auth();
+    $('v_hesap').innerHTML = '<div class="crm-card" style="max-width:540px"><h3>Yönetici Hesabı</h3><div class="crm-f"><label>Kullanıcı Adı</label><input id="h_user" value="' + esc(a.user) + '"></div><div class="crm-row2"><div class="crm-f"><label>Mevcut Şifre</label><input id="h_cur" type="password"></div><div class="crm-f"><label>Yeni Şifre</label><input id="h_new" type="password" placeholder="min 4"></div></div><div class="crm-f"><label>Yeni Şifre (Tekrar)</label><input id="h_new2" type="password"></div><button class="crm-btn" id="h_save">Güncelle</button><div class="crm-out" id="h_out"></div></div>';
+    $('h_save').addEventListener('click', function () { var a = DB.auth(); var s = DB.load(); s.auth = Object.assign({}, a); var u = $('h_user').value.trim(), cur = $('h_cur').value, nw = $('h_new').value, n2 = $('h_new2').value; var o = $('h_out'); if (!u) { o.innerHTML = '<span class="bad">⚠ Kullanıcı adı boş olamaz.</span>'; return; } s.auth.user = u; if (cur || nw || n2) { if (cur !== a.pass) { o.innerHTML = '<span class="bad">⚠ Mevcut şifre hatalı.</span>'; return; } if (nw.length < 4) { o.innerHTML = '<span class="bad">⚠ Yeni şifre min 4 karakter.</span>'; return; } if (nw !== n2) { o.innerHTML = '<span class="bad">⚠ Şifreler eşleşmiyor.</span>'; return; } s.auth.pass = nw; } DB.save(s); o.innerHTML = '<span class="ok">✓ Hesap güncellendi.</span>'; toast('Hesap güncellendi.'); });
+  };
+
+  /* ---- başlat ---- */
+  var sess = null; try { sess = JSON.parse(sessionStorage.getItem('deg_crm') || 'null'); } catch (e) {}
+  if (sess) showApp(sess.user || 'Yönetici');
+})();
+</script>
 
 <script id="deg-inline-js">
 /* Meridyen Değerleme — kurumsal site JS (sade, çerçevesiz).

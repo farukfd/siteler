@@ -41,6 +41,16 @@
     }
   };
 
+  /* ---- Lead/talep kaydı (CRM beslemesi) — localStorage deg_leads ---- */
+  window.degSaveLead = function (p) {
+    try {
+      var k = 'deg_leads', a = JSON.parse(localStorage.getItem(k) || '[]');
+      a.unshift(Object.assign({ id: 'L' + Date.now().toString(36), ts: new Date().toISOString(), status: 'yeni' }, p || {}));
+      if (a.length > 500) a = a.slice(0, 500);
+      localStorage.setItem(k, JSON.stringify(a));
+    } catch (e) {}
+  };
+
   /* ---- Giriş modalı (Personel + Müşteri Anahtar) ---- */
   function girisHTML() {
     return '<div class="gm-ov" data-close="1"></div><div class="gm-card">'
@@ -103,9 +113,9 @@
     var r = await proxApi('/api/v1/tenant/staff/login', { method: 'POST', body: { user: id, role: role } }); // şifre body'de/log'da değil
     btn.disabled = false; btn.textContent = 'Yönetim Paneline Giriş →';
     SAAS_USER.role = role; SAAS_USER.token = (r && r.token) || ('sess_' + id.length); SAAS_USER.profile = { user: who, role: role };
+    try { sessionStorage.setItem('deg_crm', JSON.stringify({ user: who, role: role })); } catch (e) {}
     closeGiris();
-    openDegAdmin();
-    degToast('Hoş geldiniz, ' + (who || 'kullanıcı') + ' · ' + (role === 'admin' ? 'Yönetici' : 'Personel') + ' paneli açıldı');
+    window.location.href = 'admin.html'; // tam donanımlı CRM paneli
   }
 
   async function degMusteriLogin() {
@@ -379,6 +389,7 @@
     el.innerHTML = (upd ? upd.outerHTML : '') + html;
   }
   function degCookieBar() {
+    if (document.body && document.body.classList.contains('crm')) return; // admin panelinde gösterme
     try { if (localStorage.getItem('deg_cookie')) return; } catch (e) { return; }
     var bar = document.createElement('div'); bar.className = 'cookie-bar'; bar.id = 'degCookie';
     bar.innerHTML = '<p>Sitemizde deneyiminizi iyileştirmek ve hizmetlerimizi sunmak için çerezler kullanıyoruz. Ayrıntılar için <a href="cerez.html">Çerez Politikası</a>.</p>'
@@ -422,8 +433,18 @@
   /* ---- Blog sayfası (#blogGrid) — emlakekspertizi.com/blog API'den (fallback statik) ---- */
   async function degBlogPageInit() {
     var grid = document.getElementById('blogGrid'); if (!grid) return;
+    function card(p) {
+      return '<article class="blogcard"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>'
+        + '<div class="bc-b"><span class="tagx">' + degEsc(p.category || 'Bilgi Merkezi') + '</span><h3>' + degEsc(p.title || '') + '</h3><p>' + degEsc(p.excerpt || (p.body ? String(p.body).slice(0, 120) : '')) + '</p>'
+        + '<a class="more" href="' + (p.url || 'blog.html') + '" target="' + (p.url ? '_blank' : '_self') + '" rel="noopener noreferrer">Devamını oku →</a></div></article>';
+    }
+    // 1) Admin'den yönetilen makaleler (yayınız)
+    var arts = []; try { arts = (JSON.parse(localStorage.getItem('deg_admin') || '{}').articles) || []; } catch (e) {}
+    arts = arts.filter(function (a) { return a && a.published !== false && a.title; });
+    if (arts.length) { grid.innerHTML = arts.map(card).join(''); return; }
+    // 2) Merkezi blog API'si
     var r = await proxApi('/api/v1/tenant/blog?limit=12');
-    if (!r || r.fallback || !Array.isArray(r.posts) || !r.posts.length) return; // fallback: statik kartlar kalır
+    if (!r || r.fallback || !Array.isArray(r.posts) || !r.posts.length) return; // 3) statik kartlar kalır
     grid.innerHTML = r.posts.map(function (p) {
       return '<article class="blogcard"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>'
         + '<div class="bc-b"><span class="tagx">' + degEsc(p.category || 'Bilgi Merkezi') + '</span><h3>' + degEsc(p.title || '') + '</h3><p>' + degEsc(p.excerpt || '') + '</p>'
@@ -442,7 +463,9 @@
       if (!/[0-9]{10,}/.test(phone.replace(/\D/g, '')) && !/.+@.+\..+/.test(g('sk_mail'))) { err.textContent = '⚠ Telefon veya e-posta gereklidir.'; return; }
       if (!msg) { err.textContent = '⚠ Lütfen talebinizi açıklayın.'; return; }
       btn.disabled = true; btn.textContent = 'Gönderiliyor…';
-      await proxApi('/api/v1/tenant/lead', { method: 'POST', body: { type: 'sikayet-itiraz', source: 'sikayet', name: name, phone: phone, email: g('sk_mail'), file_no: g('sk_dosya'), konu: konu, message: msg } });
+      var skp = { type: 'sikayet-itiraz', source: g('sk_dosya') === 'kariyer' ? 'kariyer' : 'sikayet', name: name, phone: phone, email: g('sk_mail'), file_no: g('sk_dosya'), konu: konu, message: msg };
+      window.degSaveLead(skp);
+      await proxApi('/api/v1/tenant/lead', { method: 'POST', body: skp });
       btn.disabled = false; btn.textContent = 'Gönder →';
       document.getElementById('skForm').style.display = 'none';
       var ok = document.getElementById('skOk'); var tno = 'BSV-2026-' + String(1000 + Math.floor(Math.random() * 8999));
@@ -496,7 +519,9 @@
     if (!name) { err.textContent = '⚠ Ad soyad gereklidir.'; return; }
     if (!/[0-9]{10,}/.test(phone.replace(/\D/g, ''))) { err.textContent = '⚠ Geçerli bir telefon numarası girin.'; return; }
     var btn = document.getElementById('tk_btn'); btn.disabled = true; btn.textContent = 'Gönderiliyor…';
-    var r = await proxApi('/api/v1/tenant/lead', { method: 'POST', body: { type: 'teklif', service: (m && m.dataset.service) || '', name: name, phone: phone, source: 'hizmetler' } });
+    var payload = { type: 'teklif', service: (m && m.dataset.service) || '', name: name, phone: phone, source: 'hizmetler' };
+    window.degSaveLead(payload);
+    var r = await proxApi('/api/v1/tenant/lead', { method: 'POST', body: payload });
     btn.disabled = false; btn.textContent = 'Teklif İste →';
     err.style.color = 'var(--teal)';
     err.innerHTML = '✓ Teklif talebiniz alındı' + (r && r.fallback ? ' (çevrimdışı/demo)' : '') + '. Uzmanımız en kısa sürede sizinle iletişime geçecek.';
