@@ -139,6 +139,7 @@
     var s = degAdminLoad();
     var c = s.contact || {};
     var au = degAuth();
+    var pg = s.pages || {};
     function val(v) { return v ? String(v).replace(/"/g, '&quot;') : ''; }
     return '<div class="sta-ov" data-aclose="1"></div><div class="sta-card">'
       + '<div class="sta-hd"><b>⚡ Bağımsız Yönetim Paneli · Meridyen Değerleme</b><button data-aclose="1" aria-label="Kapat">✕</button></div>'
@@ -149,6 +150,7 @@
       + '<button data-t="prox">ProX AI</button>'
       + '<button data-t="iletisim">İletişim & Adres</button>'
       + '<button data-t="personel">Personel</button>'
+      + '<button data-t="icerik">Sayfa İçerikleri</button>'
       + '<button data-t="hesap">Hesap & Güvenlik</button>'
       + '<button data-t="api">API Durumu</button>'
       + '</div><div class="sta-body">'
@@ -180,6 +182,11 @@
       + '<div class="sta-row2"><div class="sta-f"><label>Şifre</label><input id="pp_pass" placeholder="şifre belirleyin"></div><div class="sta-f"><label>Rol</label><select id="pp_role"><option value="personel">SPK Lisanslı Uzman / Personel</option><option value="admin">Yönetici</option></select></div></div>'
       + '<button class="sta-go" id="pp_add">+ Personel Ekle</button><div class="sta-out" id="pp_out"></div>'
       + '<div id="pp_list" style="margin-top:18px"></div></div>'
+      + '<div class="sta-pane" data-p="icerik" hidden><h4>Sayfa İçerikleri (Yasal Metinler)</h4><p class="sub">KVKK, Gizlilik ve Çerez sayfalarının metnini düzenleyin. Boş bırakılırsa hazır varsayılan metin gösterilir. Düz metin; boş satır yeni paragraf, satır içi başlık için satırı "## " ile başlatın.</p>'
+      + '<div class="sta-f"><label>KVKK Aydınlatma Metni</label><textarea id="pg_kvkk" rows="4">' + (pg.kvkk || '') + '</textarea></div>'
+      + '<div class="sta-f"><label>Gizlilik Politikası</label><textarea id="pg_gizlilik" rows="4">' + (pg.gizlilik || '') + '</textarea></div>'
+      + '<div class="sta-f"><label>Çerez Politikası</label><textarea id="pg_cerez" rows="4">' + (pg.cerez || '') + '</textarea></div>'
+      + '<button class="sta-go" id="pg_btn">Kaydet & Uygula</button><div class="sta-out" id="pg_out"></div></div>'
       + '<div class="sta-pane" data-p="hesap" hidden><h4>Hesap &amp; Güvenlik</h4><p class="sub">Yönetici kullanıcı adını ve şifresini değiştirin. Varsayılan giriş: <b>admin / 1234</b>. Değişiklikten sonra yeni bilgilerle giriş yapılır.</p>'
       + '<div class="sta-f"><label>Yönetici Kullanıcı Adı</label><input id="ac_user" value="' + val(au.user) + '"></div>'
       + '<div class="sta-row2"><div class="sta-f"><label>Mevcut Şifre</label><input id="ac_cur" type="password" placeholder="mevcut şifre"></div><div class="sta-f"><label>Yeni Şifre</label><input id="ac_new" type="password" placeholder="yeni şifre (min 4)"></div></div>'
@@ -205,6 +212,14 @@
     });
     m.querySelector('#pp_add').addEventListener('click', degAdminAddStaff);
     m.querySelector('#ac_btn').addEventListener('click', degAdminSaveAuth);
+    m.querySelector('#pg_btn').addEventListener('click', function () {
+      function gv(id) { var e = m.querySelector('#' + id); return e ? e.value : ''; }
+      var s = degAdminLoad(); s.pages = Object.assign({}, s.pages || {}, { kvkk: gv('pg_kvkk').trim(), gizlilik: gv('pg_gizlilik').trim(), cerez: gv('pg_cerez').trim() });
+      degAdminSaveStore(s);
+      var o = m.querySelector('#pg_out'); o.className = 'sta-out'; o.innerHTML = '<span class="ok">✓ Sayfa içerikleri kaydedildi ve uygulandı.</span>';
+      try { degLegalApply(); } catch (e) {}
+      degToast('Sayfa içerikleri güncellendi.');
+    });
     m.querySelector('#ar_btn').addEventListener('click', degAdminGenPdf);
     m.querySelector('#at_btn').addEventListener('click', function () { var s = degAdminLoad(); s.favicon = m.querySelector('#at_fav').value.trim(); s.theme = m.querySelector('#at_theme').value; degAdminSaveStore(s); degApplySettings(); degToast('Tema & logo uygulandı.'); });
     m.querySelector('#ag_btn').addEventListener('click', function () { var s = degAdminLoad(); s.ga = m.querySelector('#ag_ga').value.trim(); s.gsc = m.querySelector('#ag_gsc').value.trim(); s.metaTitle = m.querySelector('#ag_title').value.trim(); s.metaDesc = m.querySelector('#ag_desc').value.trim(); degAdminSaveStore(s); degApplySettings(); degToast('Google & Meta kaydedildi.'); });
@@ -343,6 +358,38 @@
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
   }
 
+  /* ---- Yasal sayfa içeriği (admin'den override) + çerez bandı ---- */
+  function degLegalApply() {
+    var el = document.getElementById('legalBody'); if (!el) return;
+    var page = el.getAttribute('data-page'); var pages = (degAdminLoad().pages) || {};
+    var txt = (pages[page] || '').trim();
+    if (!txt) return; // varsayılan yapısal metin kalır
+    var html = txt.split(/\n{2,}/).map(function (blk) {
+      blk = blk.replace(/^\n+|\n+$/g, ''); if (!blk) return '';
+      var out = '', para = [];
+      function flush() { if (para.length) { out += '<p>' + para.map(degEsc).join('<br>') + '</p>'; para = []; } }
+      blk.split('\n').forEach(function (ln) {
+        if (ln.indexOf('## ') === 0) { flush(); out += '<h2>' + degEsc(ln.slice(3).trim()) + '</h2>'; }
+        else if (ln.indexOf('### ') === 0) { flush(); out += '<h3>' + degEsc(ln.slice(4).trim()) + '</h3>'; }
+        else para.push(ln);
+      });
+      flush(); return out;
+    }).join('');
+    var upd = el.querySelector('.upd');
+    el.innerHTML = (upd ? upd.outerHTML : '') + html;
+  }
+  function degCookieBar() {
+    try { if (localStorage.getItem('deg_cookie')) return; } catch (e) { return; }
+    var bar = document.createElement('div'); bar.className = 'cookie-bar'; bar.id = 'degCookie';
+    bar.innerHTML = '<p>Sitemizde deneyiminizi iyileştirmek ve hizmetlerimizi sunmak için çerezler kullanıyoruz. Ayrıntılar için <a href="cerez.html">Çerez Politikası</a>.</p>'
+      + '<div class="cb-actions"><button class="cb-x" id="cbReddet">Yalnızca Zorunlu</button><button class="cb-ok" id="cbKabul">Kabul Et</button></div>';
+    document.body.appendChild(bar);
+    setTimeout(function () { bar.classList.add('on'); }, 500);
+    function close(v) { try { localStorage.setItem('deg_cookie', v); } catch (e) {} bar.classList.remove('on'); setTimeout(function () { if (bar.parentNode) bar.remove(); }, 320); }
+    bar.querySelector('#cbKabul').addEventListener('click', function () { close('all'); });
+    bar.querySelector('#cbReddet').addEventListener('click', function () { close('essential'); });
+  }
+
   /* ---- Toast ---- */
   function degToast(msg) {
     var t = document.getElementById('degToast');
@@ -459,5 +506,5 @@
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  try { degInitReveal(); degInitCount(); degContactInit(); } catch (e) {}
+  try { degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degCookieBar(); } catch (e) {}
 })();
