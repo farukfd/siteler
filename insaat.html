@@ -952,6 +952,7 @@ header.scrolled .lang-sel{color:var(--ink)}
 .fbrand{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 16px;margin-top:14px;padding:16px 0 4px;border-top:1px solid rgba(255,255,255,.09);font-size:12px;color:#8fa0bd;text-align:center}
 .fbrand .fvo{color:#b9c6dc;font-weight:600}
 .fprox{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.fprox .fprox-mark{display:inline-flex;align-items:center}
 .fprox .fprox-lead{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#7f8ea8;font-weight:600}
 .fprox .fprox-pro{font-family:var(--head);font-weight:800;font-size:15px;color:#fff}
 .fprox .fprox-x{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;height:1.4em;background:#16a34a;color:#0b1220;border-radius:6px;font-family:var(--head);font-weight:800;font-size:14px;margin-left:2px}
@@ -1543,7 +1544,7 @@ header.scrolled .lang-sel{color:var(--ink)}
     <div>© 2026 Meridyen Yapı A.Ş. · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span> · <a href="#admin" onclick="openAdmin()">Yönetici Girişi</a></div>
     <div><a href="#">KVKK</a> · <a href="#">Gizlilik</a> · <a href="#">Çerez Politikası</a> · <a href="#">Ada/Parsel (TKGM)</a></div>
   </div>
-  <div class="fbrand"><span class="fvo">🔗 emlakekspertizi.com Veri Ortağı</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span><a class="fprox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></a></div>
+  <div class="fbrand"><span class="fvo">🔗 emlakekspertizi.com Veri Ortağı</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span><a class="fprox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a></div>
 </div></footer>
 <button class="totop" id="totop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
 <div class="cookie" id="cookie" style="display:none">
@@ -2537,7 +2538,7 @@ function saasReportFromAdmin(){const e=document.getElementById('sr_prop'),id=e?e
 window.openSaasAdmin=openSaasAdmin;window.closeSaasAdmin=closeSaasAdmin;window.staTab=staTab;window.saasSaveGoogle=saasSaveGoogle;window.saasApplyLogo=saasApplyLogo;window.saasSaveProxPrompt=saasSaveProxPrompt;window.saasReportFromAdmin=saasReportFromAdmin;
 
 window.addEventListener('load',function(){try{initSaaSTheme();mountInsaatMenu();applySaaSSettings();fetchSaaSData().then(applySaaSData);
-  if(!document.getElementById('saasAdminBtn')){_saasAdminCss();const t=document.createElement('button');t.id='saasAdminBtn';t.className='saas-admin-btn';t.innerHTML='⚡ ProX Ayarları';t.onclick=openSaasAdmin;document.body.appendChild(t);}
+  _saasAdminCss(); /* ProX Ayarları modal stilleri hazır; herkese açık yüzen düğme kaldırıldı — panele admin içinden erişilir */
 }catch(e){console.warn('SaaS init',e);}});
 
 document.addEventListener('DOMContentLoaded',()=>{
