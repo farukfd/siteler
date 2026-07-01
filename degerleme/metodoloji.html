@@ -42,6 +42,7 @@
 
 
 
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -884,6 +885,57 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 }
 [dir="rtl"] .mnav{direction:rtl}
 
+/* ===== Hero paneli — ileri seviye canlı animasyon (hpx) ===== */
+.hpx{overflow:hidden}
+.hpx-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.hpx-head .cap{margin:0}
+.hpx-live{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#9fe6c0;white-space:nowrap}
+.hpx-live i{width:7px;height:7px;border-radius:50%;background:#37d67a;animation:hpxBlink 1.9s ease-in-out infinite}
+@keyframes hpxBlink{0%,100%{box-shadow:0 0 0 0 rgba(55,214,122,.55);opacity:1}55%{box-shadow:0 0 0 6px rgba(55,214,122,0);opacity:.65}}
+.hpx-scene{position:relative}
+.hpx-svg{width:100%;height:auto;display:block;overflow:visible}
+.hpx .hl,.hpx-trend{stroke-dasharray:1;stroke-dashoffset:1;animation:hpxDraw 1.5s ease forwards}
+.hpx .hl{animation-delay:calc(var(--d)*.22s + .25s)}
+.hpx-trend{animation-delay:1.05s}
+@keyframes hpxDraw{to{stroke-dashoffset:0}}
+.hpx-tip{opacity:0;animation:hpxTip .5s ease 2.2s forwards}
+@keyframes hpxTip{from{opacity:0;r:0}to{opacity:1;r:4.5px}}
+.hpx-bars rect{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);animation:hpxGrow .95s cubic-bezier(.2,.85,.25,1) forwards;animation-delay:calc(var(--i)*.11s + .45s)}
+@keyframes hpxGrow{to{transform:scaleY(1)}}
+.hpx-scan{animation:hpxScan 4s ease-in-out 1.9s infinite}
+@keyframes hpxScan{0%{transform:translateY(0);opacity:0}12%{opacity:.85}48%{transform:translateY(158px);opacity:.85}60%,100%{transform:translateY(158px);opacity:0}}
+.hpx-seal{transform-box:fill-box;transform-origin:50% 50%;animation:hpxSealIn .7s cubic-bezier(.2,.9,.3,1.3) .35s both}
+@keyframes hpxSealIn{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:scale(1)}}
+.hpx-ring{transform-box:fill-box;transform-origin:50% 50%;animation:hpxSpin 18s linear infinite}
+@keyframes hpxSpin{to{transform:rotate(360deg)}}
+.hpx-node{transform-box:fill-box;transform-origin:50% 50%;opacity:0;animation:hpxNodeIn .5s ease forwards,hpxFloat 3.6s ease-in-out infinite;animation-delay:calc(var(--n)*.18s + 1.2s),calc(var(--n)*.5s + 1.7s)}
+@keyframes hpxNodeIn{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+@keyframes hpxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.hpx-flow{animation:hpxMarch 1.1s linear infinite}
+@keyframes hpxMarch{to{stroke-dashoffset:-24}}
+.hpx-ticker{position:absolute;left:2px;bottom:-2px;display:flex;align-items:baseline;gap:7px;background:rgba(11,18,32,.55);backdrop-filter:blur(4px);border:1px solid rgba(159,230,192,.25);border-radius:11px;padding:6px 11px}
+.hpx-ticker b{font-family:var(--head);font-weight:800;font-size:18px;color:#fff;line-height:1}
+.hpx-ticker span{font-size:10px;color:#9fb3d4}
+.hpx-ticker .hpx-up{font-style:normal;font-size:10.5px;font-weight:700;color:#37d67a}
+.hpx-pipe{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:20px}
+.hpx-step{display:flex;align-items:center;gap:7px;font-size:12px;color:#aebfe0;opacity:.62;transition:.35s}
+.hpx-step b{font-weight:600;color:#eaf1ff}
+.hpx-step .hpx-dot{width:9px;height:9px;border-radius:50%;background:#54709f;transition:.35s}
+.hpx-step.on{opacity:1;transform:translateY(-1px)}
+.hpx-step.on .hpx-dot{background:#37d67a;box-shadow:0 0 12px 2px rgba(55,214,122,.75)}
+.hpx-arw{color:#9fe6c0;font-weight:800;opacity:.45;transition:.35s}
+.hpx-arw.on{opacity:1}
+.hpx-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.hpx-stats>div{background:rgba(255,255,255,.05);border:1px solid rgba(147,180,255,.18);border-radius:12px;padding:11px 8px;text-align:center}
+.hpx-stats b{display:block;font-family:var(--head);font-weight:800;font-size:19px;color:#fff;line-height:1.05}
+.hpx-stats span{font-size:10.5px;color:#9fb3d4}
+@media(prefers-reduced-motion:reduce){
+  .hpx *{animation:none!important}
+  .hpx .hl,.hpx-trend{stroke-dashoffset:0}
+  .hpx-bars rect{transform:scaleY(1)}
+  .hpx-tip,.hpx-node,.hpx-seal{opacity:1}
+}
+
 </style>
 </head>
 <body>
@@ -972,6 +1024,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: <b class="spk-lic">DD-2024-0142</b></span><span class="bot-end">Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu<a class="prox-badge" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="prox-lead">Powered by</span><span class="prox-mark"><span class="prox-pro">Pro</span><span class="prox-x">X</span></span></a></span></div>
   </div>
 </footer>
+
 
 
 
@@ -1741,8 +1794,28 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
+  /* ---- Hero paneli canlı süreç animasyonu (Başvuru → Uzman → İmzalı Rapor) ---- */
+  function degHeroAnim() {
+    var pipe = document.querySelector('.hpx-pipe'); if (!pipe) return;
+    var steps = [].slice.call(pipe.querySelectorAll('.hpx-step'));
+    var arws = [].slice.call(pipe.querySelectorAll('.hpx-arw'));
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { steps.forEach(function (s) { s.classList.add('on'); }); arws.forEach(function (a) { a.classList.add('on'); }); return; }
+    var i = 0;
+    function tick() {
+      steps.forEach(function (s, k) { s.classList.toggle('on', k <= i); });
+      arws.forEach(function (a, k) { a.classList.toggle('on', k < i); });
+      i = (i + 1) % (steps.length + 1);
+    }
+    tick(); setInterval(tick, 1150);
+    var val = document.querySelector('.hpx-ticker .hpx-num');
+    if (val) {
+      var base = parseFloat(val.getAttribute('data-count')) || 0, k = 0;
+      setTimeout(function () { setInterval(function () { k++; val.textContent = (base + Math.round(Math.sin(k / 2) * 18)); }, 2600); }, 3200);
+    }
+  }
   function degRunInit() {
-    try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+    try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degHeroAnim(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
   }
   // Yayınlanan ayarları (site-config.json) yükle, sonra tüm sayfaya uygula. Dosya yoksa sorunsuz devam eder.
   try {

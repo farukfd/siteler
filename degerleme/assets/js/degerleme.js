@@ -734,8 +734,28 @@
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
+  /* ---- Hero paneli canlı süreç animasyonu (Başvuru → Uzman → İmzalı Rapor) ---- */
+  function degHeroAnim() {
+    var pipe = document.querySelector('.hpx-pipe'); if (!pipe) return;
+    var steps = [].slice.call(pipe.querySelectorAll('.hpx-step'));
+    var arws = [].slice.call(pipe.querySelectorAll('.hpx-arw'));
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { steps.forEach(function (s) { s.classList.add('on'); }); arws.forEach(function (a) { a.classList.add('on'); }); return; }
+    var i = 0;
+    function tick() {
+      steps.forEach(function (s, k) { s.classList.toggle('on', k <= i); });
+      arws.forEach(function (a, k) { a.classList.toggle('on', k < i); });
+      i = (i + 1) % (steps.length + 1);
+    }
+    tick(); setInterval(tick, 1150);
+    var val = document.querySelector('.hpx-ticker .hpx-num');
+    if (val) {
+      var base = parseFloat(val.getAttribute('data-count')) || 0, k = 0;
+      setTimeout(function () { setInterval(function () { k++; val.textContent = (base + Math.round(Math.sin(k / 2) * 18)); }, 2600); }, 3200);
+    }
+  }
   function degRunInit() {
-    try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+    try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degHeroAnim(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
   }
   // Yayınlanan ayarları (site-config.json) yükle, sonra tüm sayfaya uygula. Dosya yoksa sorunsuz devam eder.
   try {

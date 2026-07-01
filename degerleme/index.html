@@ -48,6 +48,7 @@
 
 
 
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -890,6 +891,57 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 }
 [dir="rtl"] .mnav{direction:rtl}
 
+/* ===== Hero paneli — ileri seviye canlı animasyon (hpx) ===== */
+.hpx{overflow:hidden}
+.hpx-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.hpx-head .cap{margin:0}
+.hpx-live{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#9fe6c0;white-space:nowrap}
+.hpx-live i{width:7px;height:7px;border-radius:50%;background:#37d67a;animation:hpxBlink 1.9s ease-in-out infinite}
+@keyframes hpxBlink{0%,100%{box-shadow:0 0 0 0 rgba(55,214,122,.55);opacity:1}55%{box-shadow:0 0 0 6px rgba(55,214,122,0);opacity:.65}}
+.hpx-scene{position:relative}
+.hpx-svg{width:100%;height:auto;display:block;overflow:visible}
+.hpx .hl,.hpx-trend{stroke-dasharray:1;stroke-dashoffset:1;animation:hpxDraw 1.5s ease forwards}
+.hpx .hl{animation-delay:calc(var(--d)*.22s + .25s)}
+.hpx-trend{animation-delay:1.05s}
+@keyframes hpxDraw{to{stroke-dashoffset:0}}
+.hpx-tip{opacity:0;animation:hpxTip .5s ease 2.2s forwards}
+@keyframes hpxTip{from{opacity:0;r:0}to{opacity:1;r:4.5px}}
+.hpx-bars rect{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);animation:hpxGrow .95s cubic-bezier(.2,.85,.25,1) forwards;animation-delay:calc(var(--i)*.11s + .45s)}
+@keyframes hpxGrow{to{transform:scaleY(1)}}
+.hpx-scan{animation:hpxScan 4s ease-in-out 1.9s infinite}
+@keyframes hpxScan{0%{transform:translateY(0);opacity:0}12%{opacity:.85}48%{transform:translateY(158px);opacity:.85}60%,100%{transform:translateY(158px);opacity:0}}
+.hpx-seal{transform-box:fill-box;transform-origin:50% 50%;animation:hpxSealIn .7s cubic-bezier(.2,.9,.3,1.3) .35s both}
+@keyframes hpxSealIn{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:scale(1)}}
+.hpx-ring{transform-box:fill-box;transform-origin:50% 50%;animation:hpxSpin 18s linear infinite}
+@keyframes hpxSpin{to{transform:rotate(360deg)}}
+.hpx-node{transform-box:fill-box;transform-origin:50% 50%;opacity:0;animation:hpxNodeIn .5s ease forwards,hpxFloat 3.6s ease-in-out infinite;animation-delay:calc(var(--n)*.18s + 1.2s),calc(var(--n)*.5s + 1.7s)}
+@keyframes hpxNodeIn{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+@keyframes hpxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.hpx-flow{animation:hpxMarch 1.1s linear infinite}
+@keyframes hpxMarch{to{stroke-dashoffset:-24}}
+.hpx-ticker{position:absolute;left:2px;bottom:-2px;display:flex;align-items:baseline;gap:7px;background:rgba(11,18,32,.55);backdrop-filter:blur(4px);border:1px solid rgba(159,230,192,.25);border-radius:11px;padding:6px 11px}
+.hpx-ticker b{font-family:var(--head);font-weight:800;font-size:18px;color:#fff;line-height:1}
+.hpx-ticker span{font-size:10px;color:#9fb3d4}
+.hpx-ticker .hpx-up{font-style:normal;font-size:10.5px;font-weight:700;color:#37d67a}
+.hpx-pipe{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:20px}
+.hpx-step{display:flex;align-items:center;gap:7px;font-size:12px;color:#aebfe0;opacity:.62;transition:.35s}
+.hpx-step b{font-weight:600;color:#eaf1ff}
+.hpx-step .hpx-dot{width:9px;height:9px;border-radius:50%;background:#54709f;transition:.35s}
+.hpx-step.on{opacity:1;transform:translateY(-1px)}
+.hpx-step.on .hpx-dot{background:#37d67a;box-shadow:0 0 12px 2px rgba(55,214,122,.75)}
+.hpx-arw{color:#9fe6c0;font-weight:800;opacity:.45;transition:.35s}
+.hpx-arw.on{opacity:1}
+.hpx-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.hpx-stats>div{background:rgba(255,255,255,.05);border:1px solid rgba(147,180,255,.18);border-radius:12px;padding:11px 8px;text-align:center}
+.hpx-stats b{display:block;font-family:var(--head);font-weight:800;font-size:19px;color:#fff;line-height:1.05}
+.hpx-stats span{font-size:10.5px;color:#9fb3d4}
+@media(prefers-reduced-motion:reduce){
+  .hpx *{animation:none!important}
+  .hpx .hl,.hpx-trend{stroke-dashoffset:0}
+  .hpx-bars rect{transform:scaleY(1)}
+  .hpx-tip,.hpx-node,.hpx-seal{opacity:1}
+}
+
 </style>
 </head>
 <body>
@@ -923,22 +975,69 @@ img,svg,video,canvas,iframe,table{max-width:100%}
         <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5 9-11"/></svg> Lisanslı Uzman Kadrosu</span>
       </div>
     </div>
-    <aside class="hero-panel">
-      <div class="cap">Bağımsız Değerleme Altyapısı</div>
-      <svg class="pv" viewBox="0 0 380 300" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Resmî rapor, veri analizi ve SPK lisanslı uzman onayı görseli">
-        <rect x="22" y="26" width="196" height="248" rx="14" fill="rgba(255,255,255,.06)" stroke="rgba(188,208,255,.35)" stroke-width="1.5"/>
-        <g stroke="#bcd0ff" stroke-width="2.4"><path d="M48 64h150M48 90h112M48 116h150"/></g>
-        <rect x="48" y="150" width="150" height="96" rx="8" fill="rgba(47,91,208,.22)" stroke="rgba(188,208,255,.5)"/>
-        <g fill="#2f5bd0"><rect x="64" y="206" width="20" height="28" rx="3"/><rect x="96" y="190" width="20" height="44" rx="3"/><rect x="128" y="176" width="20" height="58" rx="3"/><rect x="160" y="164" width="20" height="70" rx="3"/></g>
-        <path d="M64 208 96 192 128 178 160 166" fill="none" stroke="#9fe6c0" stroke-width="2.6"/>
-        <circle cx="304" cy="84" r="52" fill="#0b1220" stroke="#b4975a" stroke-width="2"/>
-        <text x="304" y="78" text-anchor="middle" fill="#bcd0ff" font-family="Poppins,sans-serif" font-weight="700" font-size="17">SPK</text>
-        <text x="304" y="98" text-anchor="middle" fill="#9fe6c0" font-family="Inter,sans-serif" font-size="11">LİSANSLI</text>
-        <g stroke="rgba(188,208,255,.5)" stroke-width="1.5" fill="none"><circle cx="276" cy="208" r="26"/><circle cx="332" cy="208" r="26"/><circle cx="304" cy="250" r="26"/></g>
-        <g font-family="Inter,sans-serif" font-size="11" fill="#bcd0ff" text-anchor="middle"><text x="276" y="212">TDUB</text><text x="332" y="212">IVS</text><text x="304" y="254">UDES</text></g>
-      </svg>
-      <div class="flow"><b>Başvuru</b><span class="ar">→</span><b>SPK Lisanslı Uzman</b><span class="ar">→</span><b>İmzalı Rapor</b></div>
-      <div class="chips"><span>38 kategori endeks</span><span>UDES / IVS uyumlu</span><span>81 il saha</span></div>
+    <aside class="hero-panel hpx" role="img" aria-label="Bağımsız SPK lisanslı değerleme süreci ve canlı bölge endeksi animasyonu">
+      <div class="hpx-head"><span class="cap">Bağımsız Değerleme Altyapısı</span><span class="hpx-live"><i></i> canlı</span></div>
+      <div class="hpx-scene">
+        <svg class="hpx-svg" viewBox="0 0 360 200" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <defs>
+            <linearGradient id="hpxBar" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#2f5bd0"/><stop offset="1" stop-color="#8fb0ff"/></linearGradient>
+          </defs>
+          <!-- data-flow bağlaçları (rapor→mühür ve mühür→kurumlar) -->
+          <g stroke="#9fe6c0" stroke-width="1.8" stroke-dasharray="5 7" opacity=".55">
+            <path class="hpx-flow" d="M162 70 C 206 56 224 58 236 62"/>
+            <path class="hpx-flow" d="M266 96 C 250 128 236 142 228 150"/>
+            <path class="hpx-flow" d="M282 100 C 284 124 284 138 284 150"/>
+            <path class="hpx-flow" d="M300 92 C 318 116 326 124 330 128"/>
+          </g>
+          <!-- rapor kartı -->
+          <g class="hpx-doc">
+            <rect x="14" y="14" width="148" height="172" rx="12" fill="rgba(255,255,255,.06)" stroke="rgba(188,208,255,.32)" stroke-width="1.5"/>
+            <g stroke="#bcd0ff" stroke-width="2.6" pathLength="1">
+              <path class="hl" style="--d:0" d="M30 40h116"/>
+              <path class="hl" style="--d:1" d="M30 56h82"/>
+              <path class="hl" style="--d:2" d="M30 72h116"/>
+            </g>
+            <g class="hpx-bars">
+              <rect style="--i:0" x="30" y="142" width="16" height="28" rx="3" fill="url(#hpxBar)"/>
+              <rect style="--i:1" x="52" y="126" width="16" height="44" rx="3" fill="url(#hpxBar)"/>
+              <rect style="--i:2" x="74" y="112" width="16" height="58" rx="3" fill="url(#hpxBar)"/>
+              <rect style="--i:3" x="96" y="96" width="16" height="74" rx="3" fill="url(#hpxBar)"/>
+              <rect style="--i:4" x="118" y="78" width="16" height="92" rx="3" fill="url(#hpxBar)"/>
+            </g>
+            <path class="hpx-trend" pathLength="1" d="M38 148 60 132 82 118 104 100 126 82" stroke="#9fe6c0" stroke-width="2.8"/>
+            <circle class="hpx-tip" cx="126" cy="82" r="4.5" fill="#9fe6c0"/>
+            <line class="hpx-scan" x1="14" y1="14" x2="162" y2="14" stroke="#9fe6c0" stroke-width="2" opacity="0"/>
+          </g>
+          <!-- SPK mührü -->
+          <g transform="translate(272,58)">
+            <g class="hpx-seal">
+              <circle class="hpx-ring" r="47" fill="none" stroke="#b4975a" stroke-width="1.4" stroke-dasharray="4 7"/>
+              <circle r="40" fill="#0b1220" stroke="#b4975a" stroke-width="2"/>
+              <text y="-3" text-anchor="middle" fill="#e7c877" font-family="Poppins,sans-serif" font-weight="800" font-size="18">SPK</text>
+              <text y="15" text-anchor="middle" fill="#9fe6c0" font-family="Inter,sans-serif" font-weight="600" font-size="10" letter-spacing="1.5">LİSANSLI</text>
+            </g>
+          </g>
+          <!-- kurum düğümleri -->
+          <g font-family="Inter,sans-serif" font-size="10.5" font-weight="600" fill="#cfe0ff" text-anchor="middle">
+            <g class="hpx-node" style="--n:0"><circle cx="228" cy="152" r="22" fill="rgba(47,91,208,.2)" stroke="rgba(188,208,255,.5)"/><text x="228" y="156">TDUB</text></g>
+            <g class="hpx-node" style="--n:1"><circle cx="284" cy="158" r="22" fill="rgba(47,91,208,.2)" stroke="rgba(188,208,255,.5)"/><text x="284" y="162">IVS</text></g>
+            <g class="hpx-node" style="--n:2"><circle cx="332" cy="130" r="22" fill="rgba(47,91,208,.2)" stroke="rgba(188,208,255,.5)"/><text x="332" y="134">UDES</text></g>
+          </g>
+        </svg>
+        <div class="hpx-ticker"><b class="hpx-num" data-count="4820" data-suffix="">0</b><span>₺/m² · bölge endeksi</span><em class="hpx-up">▲ 2.4%</em></div>
+      </div>
+      <div class="hpx-pipe">
+        <div class="hpx-step"><span class="hpx-dot"></span><b>Başvuru</b></div>
+        <span class="hpx-arw">→</span>
+        <div class="hpx-step"><span class="hpx-dot"></span><b>SPK Lisanslı Uzman</b></div>
+        <span class="hpx-arw">→</span>
+        <div class="hpx-step"><span class="hpx-dot"></span><b>İmzalı Rapor</b></div>
+      </div>
+      <div class="hpx-stats">
+        <div><b class="hpx-num" data-count="38" data-suffix="">0</b><span>kategori endeks</span></div>
+        <div><b>UDES / IVS</b><span>uyumlu</span></div>
+        <div><b class="hpx-num" data-count="81" data-suffix="">0</b><span>il saha</span></div>
+      </div>
     </aside>
   </div>
 </section>
@@ -1097,6 +1196,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: <b class="spk-lic">DD-2024-0142</b></span><span class="bot-end">Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu<a class="prox-badge" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="prox-lead">Powered by</span><span class="prox-mark"><span class="prox-pro">Pro</span><span class="prox-x">X</span></span></a></span></div>
   </div>
 </footer>
+
 
 
 
@@ -1867,8 +1967,28 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
+  /* ---- Hero paneli canlı süreç animasyonu (Başvuru → Uzman → İmzalı Rapor) ---- */
+  function degHeroAnim() {
+    var pipe = document.querySelector('.hpx-pipe'); if (!pipe) return;
+    var steps = [].slice.call(pipe.querySelectorAll('.hpx-step'));
+    var arws = [].slice.call(pipe.querySelectorAll('.hpx-arw'));
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { steps.forEach(function (s) { s.classList.add('on'); }); arws.forEach(function (a) { a.classList.add('on'); }); return; }
+    var i = 0;
+    function tick() {
+      steps.forEach(function (s, k) { s.classList.toggle('on', k <= i); });
+      arws.forEach(function (a, k) { a.classList.toggle('on', k < i); });
+      i = (i + 1) % (steps.length + 1);
+    }
+    tick(); setInterval(tick, 1150);
+    var val = document.querySelector('.hpx-ticker .hpx-num');
+    if (val) {
+      var base = parseFloat(val.getAttribute('data-count')) || 0, k = 0;
+      setTimeout(function () { setInterval(function () { k++; val.textContent = (base + Math.round(Math.sin(k / 2) * 18)); }, 2600); }, 3200);
+    }
+  }
   function degRunInit() {
-    try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+    try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degHeroAnim(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
   }
   // Yayınlanan ayarları (site-config.json) yükle, sonra tüm sayfaya uygula. Dosya yoksa sorunsuz devam eder.
   try {
