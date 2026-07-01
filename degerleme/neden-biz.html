@@ -50,6 +50,8 @@
 
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -975,6 +977,52 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 .brand-logo{height:40px;width:auto;max-width:250px;object-fit:contain;display:block;background:none}
 @media(max-width:560px){.brand-logo{height:34px;max-width:190px}}
 
+/* ===== Metodoloji — ileri anlatım + animasyon ===== */
+.mt-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:22px 18px}
+.mt-steps.reveal{opacity:1;transform:none;transition:none}
+.mt-step{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 20px 20px;opacity:0;transform:translateY(22px);transition:opacity .6s cubic-bezier(.2,.75,.2,1),transform .6s cubic-bezier(.2,.75,.2,1)}
+.mt-steps.in .mt-step{opacity:1;transform:none}
+.mt-steps.in .mt-step:nth-child(1){transition-delay:.04s}.mt-steps.in .mt-step:nth-child(2){transition-delay:.1s}.mt-steps.in .mt-step:nth-child(3){transition-delay:.16s}
+.mt-steps.in .mt-step:nth-child(4){transition-delay:.22s}.mt-steps.in .mt-step:nth-child(5){transition-delay:.28s}.mt-steps.in .mt-step:nth-child(6){transition-delay:.34s}
+.mt-no{position:absolute;top:-15px;left:20px;width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--navy));color:#fff;font-family:var(--head);font-weight:800;font-size:16px;display:grid;place-items:center;box-shadow:0 8px 18px -6px rgba(30,58,138,.5)}
+.mt-step h3{font-size:16px;margin:14px 0 6px}
+.mt-step p{font-size:13.5px;color:var(--ink-2);margin:0;line-height:1.6}
+@media(max-width:860px){.mt-steps{grid-template-columns:1fr}}
+.mt-list{list-style:none;margin:2px 0 12px;padding:0}
+.mt-list li{position:relative;padding-left:22px;font-size:13.5px;color:var(--ink-2);margin-bottom:7px}
+.mt-list li::before{content:"";position:absolute;left:2px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.mblock .mt-draw{stroke-dasharray:1;stroke-dashoffset:1}
+.mblock.reveal.in .mt-draw{animation:mtDraw 1.5s ease .2s forwards}
+@keyframes mtDraw{to{stroke-dashoffset:0}}
+.mblock .mt-bars .mt-bar{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0)}
+.mblock.reveal.in .mt-bars .mt-bar{animation:mtGrow .9s cubic-bezier(.2,.85,.25,1) forwards}
+.mblock.reveal.in .mt-bars .mt-bar:nth-child(1){animation-delay:.15s}.mblock.reveal.in .mt-bars .mt-bar:nth-child(2){animation-delay:.27s}.mblock.reveal.in .mt-bars .mt-bar:nth-child(3){animation-delay:.39s}.mblock.reveal.in .mt-bars .mt-bar:nth-child(4){animation-delay:.51s}
+@keyframes mtGrow{to{transform:scaleY(1)}}
+.mblock .mt-dots circle{opacity:0;transform-box:fill-box;transform-origin:50% 50%}
+.mblock.reveal.in .mt-dots circle{animation:mtPop .4s ease forwards}
+.mblock.reveal.in .mt-dots circle:nth-child(1){animation-delay:.35s}.mblock.reveal.in .mt-dots circle:nth-child(2){animation-delay:.47s}.mblock.reveal.in .mt-dots circle:nth-child(3){animation-delay:.59s}.mblock.reveal.in .mt-dots circle:nth-child(4){animation-delay:.71s}
+@keyframes mtPop{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:scale(1)}}
+.mt-vt{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.mt-vt-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 20px;transition:transform .2s,box-shadow .2s}
+.mt-vt-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+.mt-vt-card .ic{width:44px;height:44px;border-radius:12px;background:var(--surface);display:grid;place-items:center;color:var(--accent);margin-bottom:14px}
+.mt-vt-card h3{font-size:16px;margin:0 0 6px}
+.mt-vt-card p{font-size:13.5px;color:var(--ink-2);margin:0;line-height:1.6}
+@media(max-width:860px){.mt-vt{grid-template-columns:1fr}}
+.mt-rec{display:grid;grid-template-columns:1fr auto 1fr;gap:22px;align-items:center;background:linear-gradient(135deg,var(--navy),var(--accent));border-radius:20px;padding:30px 28px;color:#fff}
+.mt-rec-in{display:flex;flex-direction:column;gap:10px}
+.mt-rec-b{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:12px 16px;font-family:var(--head);font-weight:700;font-size:15px;display:flex;flex-direction:column}
+.mt-rec-b em{font-style:normal;font-weight:500;font-size:12px;color:#bcd0ff;margin-top:2px}
+.mt-rec-arrow{color:#9fe6c0;display:grid;place-items:center}.mt-rec-arrow svg{width:60px}
+.mt-rec-out{text-align:center;background:rgba(255,255,255,.12);border:1px solid rgba(159,230,192,.4);border-radius:16px;padding:22px 18px}
+.mt-rec-out .mt-rec-lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9fe6c0}
+.mt-rec-out b{display:block;font-family:var(--head);font-weight:800;font-size:24px;margin:6px 0 2px}
+.mt-rec-out .mt-rec-sub{font-size:12px;color:#bcd0ff}
+@media(max-width:760px){.mt-rec{grid-template-columns:1fr;gap:16px}.mt-rec-arrow svg{transform:rotate(90deg)}}
+.mt-std{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:26px}
+.mt-std span{font-size:12.5px;font-weight:600;color:var(--ink-2);background:#fff;border:1px solid var(--line);border-radius:99px;padding:9px 16px}
+@media(prefers-reduced-motion:reduce){.mt-steps .mt-step{opacity:1;transform:none;transition:none}.mblock .mt-draw{stroke-dashoffset:0}.mblock .mt-bars .mt-bar{transform:scaleY(1)}.mblock .mt-dots circle{opacity:1}}
+
 </style>
 </head>
 <body>
@@ -1315,6 +1363,8 @@ img,svg,video,canvas,iframe,table{max-width:100%}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: <b class="spk-lic">DD-2024-0142</b></span><span class="bot-end">Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu<a class="prox-badge" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="prox-lead">Powered by</span><span class="prox-mark"><span class="prox-pro">Pro</span><span class="prox-x">X</span></span></a></span></div>
   </div>
 </footer>
+
+
 
 
 

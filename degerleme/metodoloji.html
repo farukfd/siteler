@@ -51,6 +51,8 @@
 
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -976,6 +978,52 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 .brand-logo{height:40px;width:auto;max-width:250px;object-fit:contain;display:block;background:none}
 @media(max-width:560px){.brand-logo{height:34px;max-width:190px}}
 
+/* ===== Metodoloji — ileri anlatım + animasyon ===== */
+.mt-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:22px 18px}
+.mt-steps.reveal{opacity:1;transform:none;transition:none}
+.mt-step{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 20px 20px;opacity:0;transform:translateY(22px);transition:opacity .6s cubic-bezier(.2,.75,.2,1),transform .6s cubic-bezier(.2,.75,.2,1)}
+.mt-steps.in .mt-step{opacity:1;transform:none}
+.mt-steps.in .mt-step:nth-child(1){transition-delay:.04s}.mt-steps.in .mt-step:nth-child(2){transition-delay:.1s}.mt-steps.in .mt-step:nth-child(3){transition-delay:.16s}
+.mt-steps.in .mt-step:nth-child(4){transition-delay:.22s}.mt-steps.in .mt-step:nth-child(5){transition-delay:.28s}.mt-steps.in .mt-step:nth-child(6){transition-delay:.34s}
+.mt-no{position:absolute;top:-15px;left:20px;width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--navy));color:#fff;font-family:var(--head);font-weight:800;font-size:16px;display:grid;place-items:center;box-shadow:0 8px 18px -6px rgba(30,58,138,.5)}
+.mt-step h3{font-size:16px;margin:14px 0 6px}
+.mt-step p{font-size:13.5px;color:var(--ink-2);margin:0;line-height:1.6}
+@media(max-width:860px){.mt-steps{grid-template-columns:1fr}}
+.mt-list{list-style:none;margin:2px 0 12px;padding:0}
+.mt-list li{position:relative;padding-left:22px;font-size:13.5px;color:var(--ink-2);margin-bottom:7px}
+.mt-list li::before{content:"";position:absolute;left:2px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.mblock .mt-draw{stroke-dasharray:1;stroke-dashoffset:1}
+.mblock.reveal.in .mt-draw{animation:mtDraw 1.5s ease .2s forwards}
+@keyframes mtDraw{to{stroke-dashoffset:0}}
+.mblock .mt-bars .mt-bar{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0)}
+.mblock.reveal.in .mt-bars .mt-bar{animation:mtGrow .9s cubic-bezier(.2,.85,.25,1) forwards}
+.mblock.reveal.in .mt-bars .mt-bar:nth-child(1){animation-delay:.15s}.mblock.reveal.in .mt-bars .mt-bar:nth-child(2){animation-delay:.27s}.mblock.reveal.in .mt-bars .mt-bar:nth-child(3){animation-delay:.39s}.mblock.reveal.in .mt-bars .mt-bar:nth-child(4){animation-delay:.51s}
+@keyframes mtGrow{to{transform:scaleY(1)}}
+.mblock .mt-dots circle{opacity:0;transform-box:fill-box;transform-origin:50% 50%}
+.mblock.reveal.in .mt-dots circle{animation:mtPop .4s ease forwards}
+.mblock.reveal.in .mt-dots circle:nth-child(1){animation-delay:.35s}.mblock.reveal.in .mt-dots circle:nth-child(2){animation-delay:.47s}.mblock.reveal.in .mt-dots circle:nth-child(3){animation-delay:.59s}.mblock.reveal.in .mt-dots circle:nth-child(4){animation-delay:.71s}
+@keyframes mtPop{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:scale(1)}}
+.mt-vt{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.mt-vt-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 20px;transition:transform .2s,box-shadow .2s}
+.mt-vt-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+.mt-vt-card .ic{width:44px;height:44px;border-radius:12px;background:var(--surface);display:grid;place-items:center;color:var(--accent);margin-bottom:14px}
+.mt-vt-card h3{font-size:16px;margin:0 0 6px}
+.mt-vt-card p{font-size:13.5px;color:var(--ink-2);margin:0;line-height:1.6}
+@media(max-width:860px){.mt-vt{grid-template-columns:1fr}}
+.mt-rec{display:grid;grid-template-columns:1fr auto 1fr;gap:22px;align-items:center;background:linear-gradient(135deg,var(--navy),var(--accent));border-radius:20px;padding:30px 28px;color:#fff}
+.mt-rec-in{display:flex;flex-direction:column;gap:10px}
+.mt-rec-b{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:12px 16px;font-family:var(--head);font-weight:700;font-size:15px;display:flex;flex-direction:column}
+.mt-rec-b em{font-style:normal;font-weight:500;font-size:12px;color:#bcd0ff;margin-top:2px}
+.mt-rec-arrow{color:#9fe6c0;display:grid;place-items:center}.mt-rec-arrow svg{width:60px}
+.mt-rec-out{text-align:center;background:rgba(255,255,255,.12);border:1px solid rgba(159,230,192,.4);border-radius:16px;padding:22px 18px}
+.mt-rec-out .mt-rec-lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9fe6c0}
+.mt-rec-out b{display:block;font-family:var(--head);font-weight:800;font-size:24px;margin:6px 0 2px}
+.mt-rec-out .mt-rec-sub{font-size:12px;color:#bcd0ff}
+@media(max-width:760px){.mt-rec{grid-template-columns:1fr;gap:16px}.mt-rec-arrow svg{transform:rotate(90deg)}}
+.mt-std{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:26px}
+.mt-std span{font-size:12.5px;font-weight:600;color:var(--ink-2);background:#fff;border:1px solid var(--line);border-radius:99px;padding:9px 16px}
+@media(prefers-reduced-motion:reduce){.mt-steps .mt-step{opacity:1;transform:none;transition:none}.mblock .mt-draw{stroke-dashoffset:0}.mblock .mt-bars .mt-bar{transform:scaleY(1)}.mblock .mt-dots circle{opacity:1}}
+
 </style>
 </head>
 <body>
@@ -1008,33 +1056,77 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   </aside>
 </div></section>
 
+<!-- ===== METODOLOJİK SÜREÇ (6 adım · animasyonlu) ===== -->
 <section class="sec"><div class="wrap">
-  <div class="sec-h"><span class="eyebrow">Yaklaşımlar</span><h2 data-ce="metodoloji.sec1Title">Yöntem · kullanım · veri · sınır</h2><p data-ce="metodoloji.sec1Lead">Her yaklaşım, hangi taşınmazda kullanıldığı, veri ihtiyacı ve sınırlamalarıyla birlikte uygulanır.</p></div>
+  <div class="sec-h reveal"><span class="eyebrow">Süreç</span><h2>Metodolojik değerleme akışı</h2><p>Kapsamın tanımlanmasından sorumlu uzman imzasına kadar; UDES/IVS ilkeleriyle izlenebilir, tekrarlanabilir ve denetlenebilir bir süreç.</p></div>
+  <ol class="mt-steps reveal">
+    <li class="mt-step"><span class="mt-no">1</span><h3>Kapsam &amp; Değer Türü</h3><p>Değerleme amacı, değerleme tarihi ve değer türü (pazar değeri, pazar kirası vb.) ile varsayım ve sınırlamalar tanımlanır.</p></li>
+    <li class="mt-step"><span class="mt-no">2</span><h3>Belge · Tapu · İmar</h3><p>Tapu kütüğü, takyidat, kat irtifakı/mülkiyeti ve belediye imar durumu incelenir; hukuki ve teknik veriler derlenir.</p></li>
+    <li class="mt-step"><span class="mt-no">3</span><h3>Saha Kontrolü</h3><p>SPK lisanslı / sorumlu uzman tarafından yerinde inceleme, fiziksel tespit ve fotoğraf dokümantasyonu yapılır.</p></li>
+    <li class="mt-step"><span class="mt-no">4</span><h3>Veri &amp; Emsal Analizi</h3><p>Karşılaştırılabilir işlem ve pazar verisi derlenir, doğrulanır; farklılıklar için düzeltme analizi uygulanır.</p></li>
+    <li class="mt-step"><span class="mt-no">5</span><h3>Yöntem &amp; Uzlaştırma</h3><p>Uygun yaklaşımlar uygulanır; sonuçlar güvenilirliklerine göre uzman kanaatiyle uzlaştırılır.</p></li>
+    <li class="mt-step"><span class="mt-no">6</span><h3>Sorumlu Uzman &amp; İmza</h3><p>Nihai değer kanaati bağımsız mesleki yargıyla oluşturulur ve rapor sorumlu değerleme uzmanınca imzalanır.</p></li>
+  </ol>
+</div></section>
 
-  <div class="mblock">
-    <div class="mb-vis"><svg viewBox="0 0 240 150" fill="none" stroke-linecap="round"><line x1="30" y1="20" x2="30" y2="120" stroke="#cbd5e1" stroke-width="2"/><line x1="30" y1="120" x2="220" y2="120" stroke="#cbd5e1" stroke-width="2"/><line x1="30" y1="74" x2="220" y2="74" stroke="#1d9e75" stroke-width="2" stroke-dasharray="4 5"/><g fill="#1e3a8a"><circle cx="64" cy="60" r="6"/><circle cx="104" cy="86" r="6"/><circle cx="146" cy="66" r="6"/><circle cx="188" cy="90" r="6"/></g><circle cx="125" cy="74" r="10" fill="none" stroke="#0f172a" stroke-width="2"/></svg></div>
-    <div><span class="badge">Pazar</span><h3>Emsal Karşılaştırma Yaklaşımı</h3><p>Yakın tarihli, benzer ve gerçekleşmiş işlemler; konum, alan, yaş, cephe ve donanım farkları için düzeltme katsayılarıyla normalize edilerek konu taşınmaza uyarlanır.</p><div class="kv"><span>Kullanım: konut · arsa · aktif pazar</span><span>Veri: emsal işlem &amp; ilan</span><span>Sınır: emsal yoğunluğu</span></div></div>
+<!-- ===== ÜÇ YAKLAŞIM (zenginleştirilmiş · animasyonlu SVG) ===== -->
+<section class="sec"><div class="wrap">
+  <div class="sec-h reveal"><span class="eyebrow">Yaklaşımlar</span><h2 data-ce="metodoloji.sec1Title">Üç değerleme yaklaşımı — yöntem · kullanım · veri · sınır</h2><p data-ce="metodoloji.sec1Lead">Her yaklaşım; taşınmaz türü, kullanım şekli ve veri erişilebilirliğine göre seçilir ve UDES/IVS çerçevesinde uygulanır.</p></div>
+
+  <div class="mblock reveal">
+    <div class="mb-vis"><svg viewBox="0 0 240 150" fill="none" stroke-linecap="round"><line x1="30" y1="20" x2="30" y2="120" stroke="#cbd5e1" stroke-width="2"/><line x1="30" y1="120" x2="220" y2="120" stroke="#cbd5e1" stroke-width="2"/><line class="mt-draw" pathLength="1" x1="30" y1="74" x2="220" y2="74" stroke="#1d9e75" stroke-width="2" stroke-dasharray="4 5"/><g fill="#1e3a8a" class="mt-dots"><circle cx="64" cy="60" r="6"/><circle cx="104" cy="86" r="6"/><circle cx="146" cy="66" r="6"/><circle cx="188" cy="90" r="6"/></g><circle cx="125" cy="74" r="10" fill="none" stroke="#0f172a" stroke-width="2"/></svg></div>
+    <div><span class="badge">Pazar Yaklaşımı</span><h3>Emsal Karşılaştırma</h3><p>Yakın tarihli, benzer ve gerçekleşmiş işlemler; konum, alan, yaş, cephe ve donanım farkları için düzeltme katsayılarıyla normalize edilerek konu taşınmaza uyarlanır.</p><ul class="mt-list"><li>Emsal seçimi ve benzerlik değerlendirmesi</li><li>Fark unsurları için düzeltme (konum · alan · tarih)</li><li>Uyarlanmış birim değer ve değer aralığı</li></ul><div class="kv"><span>Kullanım: konut · arsa · aktif pazar</span><span>Veri: emsal işlem &amp; pazar verisi</span><span>Sınır: yeterli emsal yoğunluğu</span></div></div>
   </div>
 
-  <div class="mblock">
-    <div class="mb-vis"><svg viewBox="0 0 240 150" fill="none" stroke-linecap="round"><line x1="30" y1="20" x2="30" y2="120" stroke="#cbd5e1" stroke-width="2"/><line x1="30" y1="120" x2="220" y2="120" stroke="#cbd5e1" stroke-width="2"/><g fill="#2f5bd0"><rect x="52" y="84" width="22" height="36" rx="3"/><rect x="90" y="68" width="22" height="52" rx="3"/><rect x="128" y="52" width="22" height="68" rx="3"/><rect x="166" y="40" width="22" height="80" rx="3"/></g><path d="M63 78 101 60 139 44 177 34" fill="none" stroke="#1d9e75" stroke-width="2.6"/></svg></div>
-    <div><span class="badge">Gelir</span><h3>Gelir Kapitalizasyonu</h3><p>Taşınmazın net gelir üretme kapasitesi, riski yansıtan kapitalizasyon oranıyla bugünkü değere indirgenir; doğrudan kapitalizasyon ve indirgenmiş nakit akışı (İNA) teknikleri kullanılır.</p><div class="kv"><span>Kullanım: ticari · otel · getirili</span><span>Veri: kira &amp; işletme verisi</span><span>Sınır: gelir öngörüsü</span></div></div>
+  <div class="mblock reveal">
+    <div class="mb-vis"><svg viewBox="0 0 240 150" fill="none" stroke-linecap="round"><line x1="30" y1="20" x2="30" y2="120" stroke="#cbd5e1" stroke-width="2"/><line x1="30" y1="120" x2="220" y2="120" stroke="#cbd5e1" stroke-width="2"/><g fill="#2f5bd0" class="mt-bars"><rect class="mt-bar" x="52" y="84" width="22" height="36" rx="3"/><rect class="mt-bar" x="90" y="68" width="22" height="52" rx="3"/><rect class="mt-bar" x="128" y="52" width="22" height="68" rx="3"/><rect class="mt-bar" x="166" y="40" width="22" height="80" rx="3"/></g><path class="mt-draw" pathLength="1" d="M63 78 101 60 139 44 177 34" fill="none" stroke="#1d9e75" stroke-width="2.6"/></svg></div>
+    <div><span class="badge">Gelir Yaklaşımı</span><h3>Gelir Kapitalizasyonu</h3><p>Taşınmazın net gelir üretme kapasitesi, riski yansıtan kapitalizasyon oranıyla bugünkü değere indirgenir; doğrudan kapitalizasyon ve indirgenmiş nakit akışı (İNA) teknikleri kullanılır.</p><ul class="mt-list"><li>Net işletme geliri (NOI) tahmini</li><li>Kapitalizasyon / iskonto oranının pazardan türetilmesi</li><li>Bugünkü değere indirgeme</li></ul><div class="kv"><span>Kullanım: ticari · otel · getirili taşınmaz</span><span>Veri: kira &amp; işletme verisi</span><span>Sınır: gelir öngörüsünün güvenilirliği</span></div></div>
   </div>
 
-  <div class="mblock">
-    <div class="mb-vis"><svg viewBox="0 0 240 150" fill="none" stroke-linecap="round"><line x1="30" y1="20" x2="30" y2="120" stroke="#cbd5e1" stroke-width="2"/><line x1="30" y1="120" x2="220" y2="120" stroke="#cbd5e1" stroke-width="2"/><path d="M30 30 C 90 56, 150 100, 220 114" fill="none" stroke="#b4975a" stroke-width="3"/><g fill="#b4975a"><circle cx="30" cy="30" r="5"/><circle cx="125" cy="78" r="5"/><circle cx="220" cy="114" r="5"/></g></svg></div>
-    <div><span class="badge">Maliyet</span><h3>Maliyet Yaklaşımı</h3><p>Eşdeğer fayda sağlayacak yeniden inşa/ikame bedelinden fiziksel yıpranma ile fonksiyonel ve ekonomik eskime düşülür. Özel amaçlı yapı ve sanayi tesislerinde esastır.</p><div class="kv"><span>Kullanım: sanayi · özel yapı · yeni</span><span>Veri: maliyet &amp; ömür</span><span>Sınır: eskime takdiri</span></div></div>
+  <div class="mblock reveal">
+    <div class="mb-vis"><svg viewBox="0 0 240 150" fill="none" stroke-linecap="round"><line x1="30" y1="20" x2="30" y2="120" stroke="#cbd5e1" stroke-width="2"/><line x1="30" y1="120" x2="220" y2="120" stroke="#cbd5e1" stroke-width="2"/><path class="mt-draw" pathLength="1" d="M30 30 C 90 56, 150 100, 220 114" fill="none" stroke="#b4975a" stroke-width="3"/><g fill="#b4975a"><circle cx="30" cy="30" r="5"/><circle cx="125" cy="78" r="5"/><circle cx="220" cy="114" r="5"/></g></svg></div>
+    <div><span class="badge">Maliyet Yaklaşımı</span><h3>Yeniden Edinim − Amortisman</h3><p>Eşdeğer fayda sağlayacak yeniden inşa/ikame bedelinden fiziksel yıpranma ile fonksiyonel ve ekonomik eskime düşülür. Özel amaçlı yapı ve sanayi tesislerinde esas alınır.</p><ul class="mt-list"><li>Yeniden inşa / ikame bedelinin belirlenmesi</li><li>Fiziksel · fonksiyonel · ekonomik eskime takdiri</li><li>Arsa değerinin ayrıca eklenmesi</li></ul><div class="kv"><span>Kullanım: sanayi · özel amaçlı · yeni yapı</span><span>Veri: maliyet &amp; ekonomik ömür</span><span>Sınır: eskime takdirinin öznelliği</span></div></div>
   </div>
 </div></section>
 
+<!-- ===== DEĞER TÜRLERİ (UDES/IVS tanımları) ===== -->
 <section class="sec meth"><div class="wrap">
-  <div class="sec-h"><span class="eyebrow">Veri &amp; Doğrulama</span><h2 data-ce="metodoloji.sec2Title">İncelemeyi destekleyen süreç</h2><p data-ce="metodoloji.sec2Lead">Her yaklaşım; bağımsız veri toplama, yasal kontrol ve kalite süreçleriyle desteklenir.</p></div>
-  <div class="grid-3">
-    <div class="card"><h3>İmar &amp; Tapu İncelemesi</h3><p>Belediye imar durumu, tapu kütüğü, takyidat ve kat irtifakı/mülkiyeti kontrolü.</p></div>
-    <div class="card"><h3>Saha Kontrolü</h3><p>Uzman tarafından yerinde inceleme, tespit ve fotoğraf dokümantasyonu.</p></div>
-    <div class="card"><h3>Emsal &amp; Veri Doğrulama</h3><p>Karşılaştırılabilir verinin derlenmesi, doğrulanması ve düzeltme analizi.</p></div>
+  <div class="sec-h reveal"><span class="eyebrow">Değer Türleri</span><h2>Rapora esas değer türleri</h2><p>Her rapor, amacına uygun ve UDES/IVS ile tanımlı bir değer türü üzerinden hazırlanır; değer türü kapsamda açıkça belirtilir.</p></div>
+  <div class="mt-vt reveal">
+    <div class="mt-vt-card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-4 7 4v13"/><path d="M9 21v-6h6v6"/></svg></div><h3>Pazar Değeri</h3><p>İstekli alıcı ve satıcı arasında, uygun pazarlama sonrası, bilgili ve zorlama olmadan el değiştirebileceği tahmini bedel.</p></div>
+    <div class="mt-vt-card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M6 20V9M18 20V9M4 9l8-5 8 5"/><path d="M10 20v-5h4v5"/></svg></div><h3>Pazar Kirası</h3><p>Taşınmazın pazar koşullarında, uygun kira sözleşmesi şartlarıyla elde edebileceği tahmini kira geliri.</p></div>
+    <div class="mt-vt-card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1.4 1.1-2 2.5-2s2.5.7 2.5 2-1.1 2-2.5 2-2.5.7-2.5 2 1.1 2 2.5 2 2.5-.6 2.5-2"/></svg></div><h3>Yatırım Değeri</h3><p>Belirli bir malik veya olası malik için, kendi ölçüt ve beklentilerine göre taşınmazın taşıdığı değer. Pazar değerinden farklı olabilir.</p></div>
+    <div class="mt-vt-card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 12h8M12 8v8"/></svg></div><h3>Gerçeğe Uygun Değer</h3><p>Finansal raporlama çerçevesinde (TMS/TFRS), piyasa katılımcıları arasında düzenli işlemle el değiştirebileceği bedel.</p></div>
+    <div class="mt-vt-card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M6 8l6-5 6 5M4 21h16"/></svg></div><h3>Tasfiye Değeri</h3><p>Sınırlı pazarlama süresi ve zorunlu satış koşullarında elde edilebilecek, genellikle pazar değerinin altındaki tahmini bedel.</p></div>
+    <div class="mt-vt-card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/></svg></div><h3>Sigortalanabilir / Yeniden İnşa Bedeli</h3><p>Yapının eşdeğerini yeniden inşa etmenin güncel maliyeti; sigorta ve teminat süreçlerinde esas alınır.</p></div>
   </div>
-  <div class="note" style="margin:26px auto 0"><b>Bağımsızlık:</b> Yöntem seçimi, varsayımlar ve nihai değer kanaati; SPK lisanslı / sorumlu değerleme uzmanının bağımsız mesleki yargısıyla belirlenir. Sistem değer üretmez.</div>
+</div></section>
+
+<!-- ===== UZLAŞTIRMA (animasyonlu) ===== -->
+<section class="sec"><div class="wrap">
+  <div class="sec-h reveal"><span class="eyebrow">Uzlaştırma</span><h2>Sonuçların uzlaştırılması ve değer kanaati</h2><p>Birden fazla yaklaşımın sonuçları; veri kalitesi, taşınmaz türü ve amaca göre güvenilirlikleri değerlendirilerek tek bir değer kanaatinde uzlaştırılır.</p></div>
+  <div class="mt-rec reveal">
+    <div class="mt-rec-in">
+      <span class="mt-rec-b b1">Pazar<em>emsal analizi</em></span>
+      <span class="mt-rec-b b2">Gelir<em>kapitalizasyon / İNA</em></span>
+      <span class="mt-rec-b b3">Maliyet<em>ikame − eskime</em></span>
+    </div>
+    <div class="mt-rec-arrow"><svg viewBox="0 0 60 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h48M42 4l10 8-10 8"/></svg></div>
+    <div class="mt-rec-out"><span class="mt-rec-lbl">Uzman kanaati</span><b>Nihai Değer</b><span class="mt-rec-sub">bağımsız mesleki yargı</span></div>
+  </div>
+  <div class="note" style="margin:24px auto 0"><b>Bağımsızlık:</b> Yöntem seçimi, ağırlıklandırma, varsayımlar ve nihai değer kanaati; SPK lisanslı / sorumlu değerleme uzmanının bağımsız mesleki yargısıyla belirlenir. Sistem değer üretmez; sonuç bir garanti ya da yatırım tavsiyesi değildir.</div>
+</div></section>
+
+<!-- ===== VERİ & DOĞRULAMA + STANDARTLAR ===== -->
+<section class="sec meth"><div class="wrap">
+  <div class="sec-h reveal"><span class="eyebrow">Veri · Doğrulama · Standart</span><h2 data-ce="metodoloji.sec2Title">İncelemeyi destekleyen süreç ve uyum çerçevesi</h2><p data-ce="metodoloji.sec2Lead">Her yaklaşım; bağımsız veri toplama, yasal kontrol ve kalite güvence süreçleriyle, tanınmış standartlar çerçevesinde desteklenir.</p></div>
+  <div class="grid-3 reveal">
+    <div class="card"><h3>İmar &amp; Tapu İncelemesi</h3><p>Belediye imar durumu, tapu kütüğü, takyidat ile kat irtifakı/mülkiyeti kontrolü ve hukuki durum tespiti.</p></div>
+    <div class="card"><h3>Saha Kontrolü</h3><p>Sorumlu uzman tarafından yerinde inceleme, fiziksel tespit ve fotoğraf dokümantasyonu.</p></div>
+    <div class="card"><h3>Emsal &amp; Veri Doğrulama</h3><p>Karşılaştırılabilir verinin derlenmesi, kaynak doğrulaması ve düzeltme analizi.</p></div>
+  </div>
+  <div class="mt-std reveal"><span>UDES / IVS</span><span>SPK Değerleme Tebliğleri</span><span>TDUB Meslek Kuralları</span><span>KGK / TMS-TFRS</span><span>BDDK Değerleme Listesi</span></div>
+  <div class="note" style="margin:22px auto 0"><b>Kapsam:</b> Bu sayfa bilgilendirme amaçlıdır; resmî değer, taşınmaza özel hazırlanan ve sorumlu uzmanca imzalanan değerleme raporuyla belirlenir. Sistem tek başına resmî rapor üretmez.</div>
 </div></section>
 
 <section class="ctaband"><div class="wrap in"><div><h2 data-ce="metodoloji.ctaTitle">Taşınmazınıza uygun yöntemi birlikte belirleyelim</h2><p data-ce="metodoloji.ctaText">Varlık türü ve amacınıza göre doğru metodolojik çerçeve için başvuru oluşturun.</p></div><a class="btn btn-ghost-light" href="basvuru.html">Başvuru Oluştur</a></div></section>
@@ -1064,6 +1156,8 @@ img,svg,video,canvas,iframe,table{max-width:100%}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: <b class="spk-lic">DD-2024-0142</b></span><span class="bot-end">Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu<a class="prox-badge" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="prox-lead">Powered by</span><span class="prox-mark"><span class="prox-pro">Pro</span><span class="prox-x">X</span></span></a></span></div>
   </div>
 </footer>
+
+
 
 
 
