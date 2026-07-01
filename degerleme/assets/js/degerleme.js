@@ -137,10 +137,11 @@
      "Resmî Rapor" sekmesi emlakekspertizi.com API (/pdf/generate) ile SPK destekli PDF üretir. */
   function degAdminLoad() { try { return JSON.parse(localStorage.getItem('deg_admin') || '{}'); } catch (e) { return {}; } }
   function degAdminSaveStore(s) { try { localStorage.setItem('deg_admin', JSON.stringify(s)); } catch (e) {} }
+  window.DEG_THEMES = { 'Lacivert': 'lacivert', 'Antrasit': 'antrasit', 'Bordo': 'bordo', 'Yeşil': 'yesil', 'Mor': 'mor', 'Okyanus': 'okyanus' };
   function degApplySettings() {
-    var s = degAdminLoad(), root = document.documentElement;
-    var themes = { Lacivert: ['#1e3a8a', '#2f5bd0'], Antrasit: ['#1f2937', '#374151'], Bordo: ['#7f1d34', '#a8324f'], Yeşil: ['#0f5132', '#1d9e75'] };
-    if (s.theme && themes[s.theme]) { root.style.setProperty('--accent', themes[s.theme][0]); root.style.setProperty('--accent-2', themes[s.theme][1]); }
+    var s = {}; try { s = degMerge(); } catch (e) { try { s = degAdminLoad(); } catch (e2) {} }
+    var root = document.documentElement;
+    root.setAttribute('data-theme', (window.DEG_THEMES[s.theme] || 'lacivert'));
     if (s.favicon) { var l = document.querySelector('link[rel~="icon"]') || document.head.appendChild(Object.assign(document.createElement('link'), { rel: 'icon' })); l.href = s.favicon; }
     if (s.metaTitle) document.title = s.metaTitle;
     if (s.metaDesc) { var md = document.querySelector('meta[name="description"]') || document.head.appendChild(Object.assign(document.createElement('meta'), { name: 'description' })); md.setAttribute('content', s.metaDesc); }
@@ -815,7 +816,7 @@
       + '<div><b>' + min[0] + '</b><span><i class="il-l">en uygun</i> ₺' + degTL(min[1]) + '</span></div>';
   }
   function degRunInit() {
-    try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degHeroAnim(); degIndexBand(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+    try { degApplySettings(); degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degHeroAnim(); degIndexBand(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
   }
   // Yayınlanan ayarları (site-config.json) yükle, sonra tüm sayfaya uygula. Dosya yoksa sorunsuz devam eder.
   try {

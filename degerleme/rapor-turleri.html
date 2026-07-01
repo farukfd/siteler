@@ -60,6 +60,8 @@
 
 
 
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -67,7 +69,7 @@
    =========================================================================== */
 :root{
   --navy:#0b1220; --navy-2:#13213f; --accent:#1e3a8a; --accent-2:#2f5bd0;
-  --steel:#334155; --gold:#b4975a; --teal:#1d9e75;
+  --steel:#334155; --gold:#b4975a; --teal:#1d9e75; --glow:rgba(47,91,208,.35);
   --ink:#0f172a; --ink-2:#475569; --muted:#64748b; --line:#e2e8f0;
   --surface:#f6f8fc; --surface-2:#eef2f9; --white:#fff;
   --head:'Poppins',-apple-system,Segoe UI,Roboto,sans-serif;
@@ -127,7 +129,7 @@ img,svg{display:block;max-width:100%}
 }
 
 /* ---- Hero (2 kolon) ---- */
-.hero{position:relative;background:radial-gradient(900px 500px at 88% -10%,rgba(47,91,208,.35),transparent 60%),linear-gradient(135deg,var(--navy) 0%,var(--accent) 62%,var(--steel) 100%);color:#fff;overflow:hidden}
+.hero{position:relative;background:radial-gradient(900px 500px at 88% -10%,var(--glow),transparent 60%),linear-gradient(135deg,var(--navy) 0%,var(--accent) 62%,var(--steel) 100%);color:#fff;overflow:hidden}
 .hero:before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.05) 1px,transparent 0);background-size:26px 26px;pointer-events:none}
 .hero .in{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center;padding:70px 0 76px}
 .hero-main{min-width:0}
@@ -1031,6 +1033,22 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 .mt-std span{font-size:12.5px;font-weight:600;color:var(--ink-2);background:#fff;border:1px solid var(--line);border-radius:99px;padding:9px 16px}
 @media(prefers-reduced-motion:reduce){.mt-steps .mt-step{opacity:1;transform:none;transition:none}.mblock .mt-draw{stroke-dashoffset:0}.mblock .mt-bars .mt-bar{transform:scaleY(1)}.mblock .mt-dots circle{opacity:1}}
 
+/* ===== Tema paletleri (data-theme) — tüm sayfalara detaylı tasarım ===== */
+[data-theme="antrasit"]{--navy:#0d1117;--navy-2:#1c2430;--accent:#2b3a55;--accent-2:#4a5f85;--steel:#1e293b;--gold:#9ca3af;--surface:#f4f5f7;--surface-2:#eceef2;--glow:rgba(74,95,133,.32)}
+[data-theme="bordo"]{--navy:#2a0a15;--navy-2:#4a1226;--accent:#7f1d34;--accent-2:#a8324f;--steel:#3d1420;--gold:#c9a227;--surface:#faf5f6;--surface-2:#f3e9ec;--glow:rgba(168,50,79,.35)}
+[data-theme="yesil"]{--navy:#052e1c;--navy-2:#0a3d26;--accent:#0f5132;--accent-2:#1d9e75;--steel:#0a3d26;--gold:#b4975a;--surface:#f1f9f4;--surface-2:#e6f3ec;--glow:rgba(29,158,117,.35)}
+[data-theme="mor"]{--navy:#1a1035;--navy-2:#2a1a52;--accent:#4c1d95;--accent-2:#7c3aed;--steel:#2a1a52;--gold:#c084fc;--surface:#f7f5fc;--surface-2:#efe9fb;--glow:rgba(124,58,237,.34)}
+[data-theme="okyanus"]{--navy:#062a33;--navy-2:#0a3f4d;--accent:#0e7490;--accent-2:#06b6d4;--steel:#0a3f4d;--gold:#b4975a;--surface:#f0fafb;--surface-2:#e2f4f6;--glow:rgba(6,182,212,.32)}
+html{transition:none}
+.hero,.ft,.ctaband,.btn-primary,.badge,.eyebrow{transition:background .35s,color .35s,border-color .35s}
+/* admin tema swatch seçici */
+.thm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+.thm{display:flex;align-items:center;gap:9px;background:#fff;border:2px solid var(--line);border-radius:12px;padding:9px 11px;cursor:pointer;font-family:var(--head);font-weight:600;font-size:13px;color:var(--ink);transition:.15s;text-align:left}
+.thm:hover{border-color:var(--accent-2)}
+.thm.on{border-color:var(--accent);box-shadow:0 0 0 3px rgba(30,58,138,.12)}
+.thm-sw{display:block;width:26px;height:26px;border-radius:8px;flex:none;background:linear-gradient(135deg,var(--c1) 0%,var(--c1) 50%,var(--c2) 50%,var(--c2) 100%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+@media(max-width:620px){.thm-grid{grid-template-columns:1fr 1fr}}
+
 </style>
 </head>
 <body>
@@ -1112,6 +1130,8 @@ img,svg,video,canvas,iframe,table{max-width:100%}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: <b class="spk-lic">DD-2024-0142</b></span><span class="bot-end">Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu<a class="prox-badge" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="prox-lead">Powered by</span><span class="prox-mark"><span class="prox-pro">Pro</span><span class="prox-x">X</span></span></a></span></div>
   </div>
 </footer>
+
+
 
 
 
@@ -1295,10 +1315,11 @@ img,svg,video,canvas,iframe,table{max-width:100%}
      "Resmî Rapor" sekmesi emlakekspertizi.com API (/pdf/generate) ile SPK destekli PDF üretir. */
   function degAdminLoad() { try { return JSON.parse(localStorage.getItem('deg_admin') || '{}'); } catch (e) { return {}; } }
   function degAdminSaveStore(s) { try { localStorage.setItem('deg_admin', JSON.stringify(s)); } catch (e) {} }
+  window.DEG_THEMES = { 'Lacivert': 'lacivert', 'Antrasit': 'antrasit', 'Bordo': 'bordo', 'Yeşil': 'yesil', 'Mor': 'mor', 'Okyanus': 'okyanus' };
   function degApplySettings() {
-    var s = degAdminLoad(), root = document.documentElement;
-    var themes = { Lacivert: ['#1e3a8a', '#2f5bd0'], Antrasit: ['#1f2937', '#374151'], Bordo: ['#7f1d34', '#a8324f'], Yeşil: ['#0f5132', '#1d9e75'] };
-    if (s.theme && themes[s.theme]) { root.style.setProperty('--accent', themes[s.theme][0]); root.style.setProperty('--accent-2', themes[s.theme][1]); }
+    var s = {}; try { s = degMerge(); } catch (e) { try { s = degAdminLoad(); } catch (e2) {} }
+    var root = document.documentElement;
+    root.setAttribute('data-theme', (window.DEG_THEMES[s.theme] || 'lacivert'));
     if (s.favicon) { var l = document.querySelector('link[rel~="icon"]') || document.head.appendChild(Object.assign(document.createElement('link'), { rel: 'icon' })); l.href = s.favicon; }
     if (s.metaTitle) document.title = s.metaTitle;
     if (s.metaDesc) { var md = document.querySelector('meta[name="description"]') || document.head.appendChild(Object.assign(document.createElement('meta'), { name: 'description' })); md.setAttribute('content', s.metaDesc); }
@@ -1973,7 +1994,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
       + '<div><b>' + min[0] + '</b><span><i class="il-l">en uygun</i> ₺' + degTL(min[1]) + '</span></div>';
   }
   function degRunInit() {
-    try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degHeroAnim(); degIndexBand(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+    try { degApplySettings(); degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degHeroAnim(); degIndexBand(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
   }
   // Yayınlanan ayarları (site-config.json) yükle, sonra tüm sayfaya uygula. Dosya yoksa sorunsuz devam eder.
   try {
