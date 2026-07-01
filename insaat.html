@@ -922,7 +922,7 @@ body.cookie-on .wa{bottom:86px}
 .rv-on.rv-in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.rv-on{opacity:1!important;transform:none!important}}
 /* ---- Yeni üst menü: Neden [X] Biz, WhatsApp, Dil, Giriş ---- */
-.nb-x{display:inline-flex;align-items:center;justify-content:center;width:1.45em;height:1.45em;background:#16a34a;color:#08130a;border-radius:5px;font-weight:800;font-size:.92em;line-height:1;vertical-align:-.3em;margin:0 2px}
+.nb-x{display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;background:#16a34a;color:#08130a;border-radius:6px;font-weight:800;font-size:.9em;line-height:1;vertical-align:middle;position:relative;top:-1px;margin:0 3px}
 .nav-wa{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;color:#25d366;border:1px solid var(--line);background:rgba(255,255,255,.05);transition:.2s;text-decoration:none}
 .nav-wa:hover{background:rgba(37,211,102,.16)}
 .nav-wa svg{width:20px;height:20px}
@@ -958,7 +958,7 @@ header.scrolled .lang-sel{color:var(--ink)}
   <a class="logo" href="#"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
   <nav class="main insaatNav">
     <a href="#hizmetler" onclick="event.preventDefault();openHizmetlerPage()">Hizmetlerimiz</a>
-    <a href="#neden-biz">Neden <span class="nb-x">X</span> Biz</a>
+    <a href="#neden-biz">Neden <span class="nb-x">?</span> Biz</a>
     <a href="#projeler" onclick="event.preventDefault();openProjelerPage()">Projeler</a>
     <a href="#bolge" onclick="event.preventDefault();openBolgePage()">Bölge Zekası</a>
   </nav>
@@ -974,7 +974,7 @@ header.scrolled .lang-sel{color:var(--ink)}
 <div class="mnav" id="mnav" onclick="if(event.target.id==='mnav')this.classList.remove('open')"><div class="panel">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><b style="font-family:var(--head)">Menü</b>
     <button style="background:none;border:0;font-size:22px;cursor:pointer" onclick="document.getElementById('mnav').classList.remove('open')">✕</button></div>
-  <a href="#hizmetler" onclick="event.preventDefault();document.getElementById('mnav').classList.remove('open');openHizmetlerPage()">Hizmetlerimiz</a><a href="#neden-biz" onclick="document.getElementById('mnav').classList.remove('open')">Neden <span class="nb-x">X</span> Biz</a><a href="#projeler" onclick="event.preventDefault();document.getElementById('mnav').classList.remove('open');openProjelerPage()">Projeler</a>
+  <a href="#hizmetler" onclick="event.preventDefault();document.getElementById('mnav').classList.remove('open');openHizmetlerPage()">Hizmetlerimiz</a><a href="#neden-biz" onclick="document.getElementById('mnav').classList.remove('open')">Neden <span class="nb-x">?</span> Biz</a><a href="#projeler" onclick="event.preventDefault();document.getElementById('mnav').classList.remove('open');openProjelerPage()">Projeler</a>
   <a href="#bolge" onclick="event.preventDefault();document.getElementById('mnav').classList.remove('open');openBolgePage()">Bölge Zekası</a><a href="#giris" onclick="event.preventDefault();document.getElementById('mnav').classList.remove('open');openGiris()">Giriş</a>
   <button class="btn btn-primary" style="margin-top:14px;justify-content:center" onclick="openTeklif();document.getElementById('mnav').classList.remove('open')">Ücretsiz Keşif</button>
 </div></div>
