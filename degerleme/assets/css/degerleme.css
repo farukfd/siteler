@@ -822,8 +822,8 @@ body.crm{background:var(--surface);padding-top:0}
 [dir="rtl"] .btn svg,[dir="rtl"] .more svg{transform:scaleX(-1)}
 
 /* ===== Mobil yatay-kayma güvenlik ağı + alt menü ===== */
-html{overflow-x:hidden}
-body{overflow-x:hidden;max-width:100%}
+html{overflow-x:clip}
+body{overflow-x:clip;max-width:100%}
 img,svg,video,canvas,iframe,table{max-width:100%}
 .mnav{display:none}
 @media(max-width:768px){
@@ -889,3 +889,28 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   .hpx-bars rect{transform:scaleY(1)}
   .hpx-tip,.hpx-node,.hpx-seal{opacity:1}
 }
+/* hero ticker — il + fiyat */
+.hpx-ticker .hpx-il{font-family:var(--head);font-weight:700;color:#9fe6c0;font-size:12px;letter-spacing:.01em}
+.hpx-ticker .hpx-il.sw{animation:hpxSwap .42s cubic-bezier(.2,.8,.2,1)}
+@keyframes hpxSwap{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hpx-ticker .hpx-u{font-size:10px;color:#9fb3d4}
+.hpx-ticker b{font-family:var(--head);font-weight:800;font-size:17px;color:#fff;line-height:1}
+
+/* ===== Canlı Konut Endeksi bandı (81 il) ===== */
+.idxband{background:linear-gradient(180deg,rgba(30,58,138,.045),transparent 70%);overflow:hidden}
+.idx-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:10px}
+.idx-stats>div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 14px;text-align:center;transition:transform .2s,box-shadow .2s}
+.idx-stats>div:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+.idx-stats b{display:block;font-family:var(--head);font-weight:800;font-size:21px;color:var(--accent);line-height:1.12}
+.idx-stats span{font-size:12px;color:var(--ink-2)}
+.idx-stats i.il-l{font-style:normal}
+.idx-marquee{position:relative;margin:26px 0 20px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.idx-track{display:flex;gap:12px;width:max-content;animation:idxScroll 90s linear infinite}
+.idx-marquee:hover .idx-track{animation-play-state:paused}
+@keyframes idxScroll{to{transform:translateX(-50%)}}
+.idx-chip{flex:none;display:inline-flex;align-items:baseline;gap:6px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:9px 15px;font-size:13px;color:var(--ink-2);white-space:nowrap;box-shadow:0 2px 9px rgba(15,23,42,.05)}
+.idx-chip b{font-family:var(--head);font-weight:700;color:var(--ink);font-size:13.5px}
+.idx-chip em{font-style:normal;color:var(--muted);font-size:11px}
+.idx-note{font-size:12px;color:var(--muted);text-align:center;max-width:82ch;margin:0 auto;line-height:1.55}
+@media(max-width:760px){.idx-stats{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.idx-track{animation:none}.hpx-ticker .hpx-il.sw{animation:none}}

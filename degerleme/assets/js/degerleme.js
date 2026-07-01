@@ -734,28 +734,82 @@
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  /* ---- Hero paneli canlı süreç animasyonu (Başvuru → Uzman → İmzalı Rapor) ---- */
+  /* ---- 81 il ortalama konut m² fiyatı (temsili bölge endeksi, ₺/m²) ---- */
+  window.DEG_ILLER = [
+    ['Adana', 29500], ['Adıyaman', 16500], ['Afyonkarahisar', 18500], ['Ağrı', 12500], ['Amasya', 17500],
+    ['Ankara', 43000], ['Antalya', 63000], ['Artvin', 21000], ['Aydın', 46000], ['Balıkesir', 41000],
+    ['Bilecik', 18500], ['Bingöl', 14500], ['Bitlis', 13500], ['Bolu', 31000], ['Burdur', 19500],
+    ['Bursa', 46000], ['Çanakkale', 43000], ['Çankırı', 15500], ['Çorum', 17500], ['Denizli', 33000],
+    ['Diyarbakır', 22500], ['Edirne', 29000], ['Elazığ', 19500], ['Erzincan', 17500], ['Erzurum', 20500],
+    ['Eskişehir', 35000], ['Gaziantep', 29000], ['Giresun', 22500], ['Gümüşhane', 16500], ['Hakkari', 12500],
+    ['Hatay', 24500], ['Isparta', 22500], ['Mersin', 41000], ['İstanbul', 96000], ['İzmir', 73000],
+    ['Kars', 14500], ['Kastamonu', 18500], ['Kayseri', 28500], ['Kırklareli', 26500], ['Kırşehir', 16500],
+    ['Kocaeli', 47000], ['Konya', 27000], ['Kütahya', 18500], ['Malatya', 20500], ['Manisa', 31000],
+    ['Kahramanmaraş', 20500], ['Mardin', 20500], ['Muğla', 89000], ['Muş', 12500], ['Nevşehir', 20500],
+    ['Niğde', 17500], ['Ordu', 26500], ['Rize', 28500], ['Sakarya', 39000], ['Samsun', 35000],
+    ['Siirt', 15500], ['Sinop', 24500], ['Sivas', 18500], ['Tekirdağ', 41000], ['Tokat', 16500],
+    ['Trabzon', 35000], ['Tunceli', 15500], ['Şanlıurfa', 20500], ['Uşak', 20500], ['Van', 18500],
+    ['Yozgat', 15500], ['Zonguldak', 24500], ['Aksaray', 18500], ['Bayburt', 15500], ['Karaman', 18500],
+    ['Kırıkkale', 18500], ['Batman', 18500], ['Şırnak', 15500], ['Bartın', 22500], ['Ardahan', 13500],
+    ['Iğdır', 14500], ['Yalova', 43000], ['Karabük', 22500], ['Kilis', 16500], ['Osmaniye', 20500], ['Düzce', 29000]
+  ];
+  function degTL(n) { try { return n.toLocaleString('tr-TR'); } catch (e) { return String(n); } }
+
+  /* ---- Hero paneli canlı süreç animasyonu + 81 il canlı endeks ---- */
   function degHeroAnim() {
     var pipe = document.querySelector('.hpx-pipe'); if (!pipe) return;
     var steps = [].slice.call(pipe.querySelectorAll('.hpx-step'));
     var arws = [].slice.call(pipe.querySelectorAll('.hpx-arw'));
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) { steps.forEach(function (s) { s.classList.add('on'); }); arws.forEach(function (a) { a.classList.add('on'); }); return; }
-    var i = 0;
-    function tick() {
-      steps.forEach(function (s, k) { s.classList.toggle('on', k <= i); });
-      arws.forEach(function (a, k) { a.classList.toggle('on', k < i); });
-      i = (i + 1) % (steps.length + 1);
+    var stepI = 0;
+    function stepTick() {
+      steps.forEach(function (s, k) { s.classList.toggle('on', k <= stepI); });
+      arws.forEach(function (a, k) { a.classList.toggle('on', k < stepI); });
+      stepI = (stepI + 1) % (steps.length + 1);
     }
-    tick(); setInterval(tick, 1150);
-    var val = document.querySelector('.hpx-ticker .hpx-num');
-    if (val) {
-      var base = parseFloat(val.getAttribute('data-count')) || 0, k = 0;
-      setTimeout(function () { setInterval(function () { k++; val.textContent = (base + Math.round(Math.sin(k / 2) * 18)); }, 2600); }, 3200);
+    if (reduce) { steps.forEach(function (s) { s.classList.add('on'); }); arws.forEach(function (a) { a.classList.add('on'); }); }
+    else { stepTick(); setInterval(stepTick, 1150); }
+
+    // Canlı il endeksi tickeri
+    var tIl = document.querySelector('.hpx-ticker .hpx-il'), tNum = document.querySelector('.hpx-ticker .hpx-num'), tUp = document.querySelector('.hpx-ticker .hpx-up');
+    var ILLER = window.DEG_ILLER || [];
+    if (tIl && tNum && ILLER.length) {
+      var idx = 0, prev = 0, raf = null;
+      function animNum(to) {
+        if (raf) cancelAnimationFrame(raf);
+        var from = prev || to, t0 = null, dur = 650;
+        function step(ts) { if (!t0) t0 = ts; var p = Math.min((ts - t0) / dur, 1), e = 1 - Math.pow(1 - p, 3); tNum.textContent = '₺' + degTL(Math.round(from + (to - from) * e)); if (p < 1) raf = requestAnimationFrame(step); }
+        raf = requestAnimationFrame(step);
+      }
+      function nextIl() {
+        var it = ILLER[idx % ILLER.length]; idx++;
+        tIl.classList.remove('sw'); void tIl.offsetWidth; tIl.textContent = it[0]; tIl.classList.add('sw');
+        if (tUp) { var up = it[1] >= prev; tUp.textContent = up ? '▲' : '▼'; tUp.style.color = up ? '#37d67a' : '#ff9aa2'; }
+        if (reduce) { tNum.textContent = '₺' + degTL(it[1]); } else { animNum(it[1]); }
+        prev = it[1];
+      }
+      nextIl(); if (!reduce) setInterval(nextIl, 2600);
     }
   }
+
+  /* ---- Ana sayfa "Canlı Konut Endeksi" bandı (81 il kayan şerit + özet) ---- */
+  function degIndexBand() {
+    var track = document.getElementById('degIdxTrack'); if (!track || !window.DEG_ILLER) return;
+    var arr = window.DEG_ILLER;
+    var chip = arr.map(function (it) { return '<span class="idx-chip"><b>' + it[0] + '</b> ₺' + degTL(it[1]) + '<em>/m²</em></span>'; }).join('');
+    track.innerHTML = chip + chip; // kesintisiz döngü için iki kopya
+    var prices = arr.map(function (i) { return i[1]; });
+    var max = arr.reduce(function (a, b) { return b[1] > a[1] ? b : a; }), min = arr.reduce(function (a, b) { return b[1] < a[1] ? b : a; });
+    var avg = Math.round(prices.reduce(function (a, b) { return a + b; }, 0) / prices.length);
+    var st = document.getElementById('degIdxStats');
+    if (st) st.innerHTML =
+      '<div><b>' + arr.length + '</b><span>il kapsam</span></div>'
+      + '<div><b>₺' + degTL(avg) + '</b><span>ortalama m²</span></div>'
+      + '<div><b>' + max[0] + '</b><span><i class="il-l">en yüksek</i> ₺' + degTL(max[1]) + '</span></div>'
+      + '<div><b>' + min[0] + '</b><span><i class="il-l">en uygun</i> ₺' + degTL(min[1]) + '</span></div>';
+  }
   function degRunInit() {
-    try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degHeroAnim(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+    try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degHeroAnim(); degIndexBand(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
   }
   // Yayınlanan ayarları (site-config.json) yükle, sonra tüm sayfaya uygula. Dosya yoksa sorunsuz devam eder.
   try {

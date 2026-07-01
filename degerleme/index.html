@@ -49,6 +49,11 @@
 
 
 
+
+
+
+
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -874,8 +879,8 @@ body.crm{background:var(--surface);padding-top:0}
 [dir="rtl"] .btn svg,[dir="rtl"] .more svg{transform:scaleX(-1)}
 
 /* ===== Mobil yatay-kayma güvenlik ağı + alt menü ===== */
-html{overflow-x:hidden}
-body{overflow-x:hidden;max-width:100%}
+html{overflow-x:clip}
+body{overflow-x:clip;max-width:100%}
 img,svg,video,canvas,iframe,table{max-width:100%}
 .mnav{display:none}
 @media(max-width:768px){
@@ -941,6 +946,31 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   .hpx-bars rect{transform:scaleY(1)}
   .hpx-tip,.hpx-node,.hpx-seal{opacity:1}
 }
+/* hero ticker — il + fiyat */
+.hpx-ticker .hpx-il{font-family:var(--head);font-weight:700;color:#9fe6c0;font-size:12px;letter-spacing:.01em}
+.hpx-ticker .hpx-il.sw{animation:hpxSwap .42s cubic-bezier(.2,.8,.2,1)}
+@keyframes hpxSwap{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hpx-ticker .hpx-u{font-size:10px;color:#9fb3d4}
+.hpx-ticker b{font-family:var(--head);font-weight:800;font-size:17px;color:#fff;line-height:1}
+
+/* ===== Canlı Konut Endeksi bandı (81 il) ===== */
+.idxband{background:linear-gradient(180deg,rgba(30,58,138,.045),transparent 70%);overflow:hidden}
+.idx-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:10px}
+.idx-stats>div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 14px;text-align:center;transition:transform .2s,box-shadow .2s}
+.idx-stats>div:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+.idx-stats b{display:block;font-family:var(--head);font-weight:800;font-size:21px;color:var(--accent);line-height:1.12}
+.idx-stats span{font-size:12px;color:var(--ink-2)}
+.idx-stats i.il-l{font-style:normal}
+.idx-marquee{position:relative;margin:26px 0 20px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.idx-track{display:flex;gap:12px;width:max-content;animation:idxScroll 90s linear infinite}
+.idx-marquee:hover .idx-track{animation-play-state:paused}
+@keyframes idxScroll{to{transform:translateX(-50%)}}
+.idx-chip{flex:none;display:inline-flex;align-items:baseline;gap:6px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:9px 15px;font-size:13px;color:var(--ink-2);white-space:nowrap;box-shadow:0 2px 9px rgba(15,23,42,.05)}
+.idx-chip b{font-family:var(--head);font-weight:700;color:var(--ink);font-size:13.5px}
+.idx-chip em{font-style:normal;color:var(--muted);font-size:11px}
+.idx-note{font-size:12px;color:var(--muted);text-align:center;max-width:82ch;margin:0 auto;line-height:1.55}
+@media(max-width:760px){.idx-stats{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.idx-track{animation:none}.hpx-ticker .hpx-il.sw{animation:none}}
 
 </style>
 </head>
@@ -1024,7 +1054,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
             <g class="hpx-node" style="--n:2"><circle cx="332" cy="130" r="22" fill="rgba(47,91,208,.2)" stroke="rgba(188,208,255,.5)"/><text x="332" y="134">UDES</text></g>
           </g>
         </svg>
-        <div class="hpx-ticker"><b class="hpx-num" data-count="4820" data-suffix="">0</b><span>₺/m² · bölge endeksi</span><em class="hpx-up">▲ 2.4%</em></div>
+        <div class="hpx-ticker"><span class="hpx-il">İstanbul</span><b class="hpx-num">₺—</b><span class="hpx-u">/m²</span><em class="hpx-up">▲</em></div>
       </div>
       <div class="hpx-pipe">
         <div class="hpx-step"><span class="hpx-dot"></span><b>Başvuru</b></div>
@@ -1053,26 +1083,36 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   </div>
 </section>
 
+<!-- ===== CANLI KONUT ENDEKSİ (81 İL) ===== -->
+<section class="sec idxband">
+  <div class="wrap">
+    <div class="sec-h reveal"><span class="eyebrow">Canlı Bölge Endeksi</span><h2>81 ilde ortalama konut m² fiyatı</h2><p>Saha verisi ve emsal analizine dayalı değerleme altyapımızın kapsamı — 81 ilde temsili konut endeksi, sürekli güncel.</p></div>
+    <div class="idx-stats reveal" id="degIdxStats"></div>
+  </div>
+  <div class="idx-marquee" aria-hidden="true"><div class="idx-track" id="degIdxTrack"></div></div>
+  <div class="wrap"><p class="idx-note">Değerler temsili bölge endeksidir; taşınmazınızın resmî değeri, SPK lisanslı uzman tarafından saha kontrolü ve emsal analiziyle hazırlanan raporla belirlenir.</p></div>
+</section>
+
 <!-- ===== RAPOR TÜRLERİ ANA KATEGORİ ===== -->
 <section class="sec" id="hizmetler">
   <div class="wrap">
-    <div class="sec-h"><span class="eyebrow">Hizmetlerimiz</span><h2 data-ce="index.sec1Title">Üç eksende değerleme hizmetlerimiz</h2><p data-ce="index.sec1Lead">Taşınmaz türü, kullanım amacı ve kurum tipine göre yapılandırılmış resmî değerleme raporları.</p></div>
+    <div class="sec-h reveal"><span class="eyebrow">Hizmetlerimiz</span><h2 data-ce="index.sec1Title">Üç eksende değerleme hizmetlerimiz</h2><p data-ce="index.sec1Lead">Taşınmaz türü, kullanım amacı ve kurum tipine göre yapılandırılmış resmî değerleme raporları.</p></div>
     <div class="grid-3">
-      <article class="card">
+      <article class="card reveal">
         <div class="ci"><svg viewBox="0 0 200 120" fill="none" stroke="#1e3a8a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 104h160"/><path d="M40 104V56l34-22 34 22v48"/><rect x="58" y="70" width="14" height="14"/><rect x="80" y="70" width="14" height="14"/><path d="M120 104V48h44v56"/><path d="M132 60h8M152 60h8M132 78h8M152 78h8"/></svg></div>
         <h3>Taşınmaz Türüne Göre</h3>
         <p>Varlık sınıfına özel yöntem ve veri çerçevesi.</p>
         <ul><li>Konut · ticari · ofis · AVM</li><li>Arsa · arazi · imarlı parsel</li><li>Sanayi tesisi · fabrika · otel</li></ul>
         <a class="more" href="rapor-turleri.html">İncele →</a>
       </article>
-      <article class="card">
+      <article class="card reveal">
         <div class="ci"><svg viewBox="0 0 200 120" fill="none" stroke="#2f5bd0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="100" cy="60" r="40"/><circle cx="100" cy="60" r="24"/><circle cx="100" cy="60" r="8" fill="#2f5bd0"/><path d="M100 8v12M100 100v12M40 60h12M148 60h12"/></svg></div>
         <h3>Kullanım Amacına Göre</h3>
         <p>İşlemin amacına göre raporlama kurgusu.</p>
         <ul><li>Banka teminat · kredi süreci</li><li>Kamulaştırma · mahkeme · icra</li><li>Sigorta · vergi · finansal raporlama</li></ul>
         <a class="more" href="rapor-turleri.html">İncele →</a>
       </article>
-      <article class="card">
+      <article class="card reveal">
         <div class="ci"><svg viewBox="0 0 200 120" fill="none" stroke="#0b1220" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M30 104h140"/><path d="M40 104V52h120v52"/><path d="M40 52 100 24l60 28"/><path d="M64 104V74h16v30M120 104V74h16v30M96 104V84h8v20"/></svg></div>
         <h3>Kurum Tipine Göre</h3>
         <p>Kurumsal süreç ve mevzuat uyumu.</p>
@@ -1085,22 +1125,22 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 
 <!-- ===== METODOLOJİ ÜÇLÜSÜ ===== -->
 <section class="sec" id="neden-biz"><div class="wrap">
-  <div class="sec-h"><span class="eyebrow">Neden Biz?</span><h2 data-ce="index.sec2Title">Bağımsız, lisanslı ve denetlenebilir</h2><p data-ce="index.sec2Lead">Kurumsal kararlarınızı güvenle destekleyen değerleme yaklaşımı.</p></div>
+  <div class="sec-h reveal"><span class="eyebrow">Neden Biz?</span><h2 data-ce="index.sec2Title">Bağımsız, lisanslı ve denetlenebilir</h2><p data-ce="index.sec2Lead">Kurumsal kararlarınızı güvenle destekleyen değerleme yaklaşımı.</p></div>
   <div class="grid-2">
-    <div class="reason"><div class="ri"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Bağımsızlık &amp; Tarafsızlık</h3><p>Çıkar çatışmasından arınmış, talep edenden bağımsız mesleki kanaat ve raporlama.</p></div>
-    <div class="reason"><div class="ri"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M8.5 13.5 7 22l5-2 5 2-1.5-8.5"/></svg></div><h3>SPK Lisanslı Uzman Kadrosu</h3><p>Sorumlu değerleme uzmanı ve lisanslı kadroyla mevzuata tam uyum; raporu uzman imzalar.</p></div>
-    <div class="reason"><div class="ri"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16"/><path d="M8 16l4-5 3 3 5-7"/></svg></div><h3>Denetlenebilir Metodoloji</h3><p>Yöntem, varsayım ve veri kaynaklarının izlenebilir ve denetlenebilir biçimde raporlanması.</p></div>
-    <div class="reason"><div class="ri"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h3>Şeffaf &amp; İzlenebilir Süreç</h3><p>Başvurudan imzalı rapora kadar her adım net, izlenebilir ve KVKK uyumlu.</p></div>
+    <div class="reason reveal"><div class="ri"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Bağımsızlık &amp; Tarafsızlık</h3><p>Çıkar çatışmasından arınmış, talep edenden bağımsız mesleki kanaat ve raporlama.</p></div>
+    <div class="reason reveal"><div class="ri"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M8.5 13.5 7 22l5-2 5 2-1.5-8.5"/></svg></div><h3>SPK Lisanslı Uzman Kadrosu</h3><p>Sorumlu değerleme uzmanı ve lisanslı kadroyla mevzuata tam uyum; raporu uzman imzalar.</p></div>
+    <div class="reason reveal"><div class="ri"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16"/><path d="M8 16l4-5 3 3 5-7"/></svg></div><h3>Denetlenebilir Metodoloji</h3><p>Yöntem, varsayım ve veri kaynaklarının izlenebilir ve denetlenebilir biçimde raporlanması.</p></div>
+    <div class="reason reveal"><div class="ri"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h3>Şeffaf &amp; İzlenebilir Süreç</h3><p>Başvurudan imzalı rapora kadar her adım net, izlenebilir ve KVKK uyumlu.</p></div>
   </div>
 </div></section>
 
 <section class="sec meth">
   <div class="wrap">
-    <div class="sec-h"><span class="eyebrow">Metodoloji</span><h2 data-ce="index.sec3Title">Üç temel değerleme yaklaşımı</h2><p data-ce="index.sec3Lead">UDES/IVS çerçevesinde taşınmaz türüne göre seçilen ve uzlaştırılan yöntemler.</p></div>
+    <div class="sec-h reveal"><span class="eyebrow">Metodoloji</span><h2 data-ce="index.sec3Title">Üç temel değerleme yaklaşımı</h2><p data-ce="index.sec3Lead">UDES/IVS çerçevesinde taşınmaz türüne göre seçilen ve uzlaştırılan yöntemler.</p></div>
     <div class="grid-3">
-      <div class="m"><div class="mv"><svg viewBox="0 0 220 120" fill="none" stroke-linecap="round"><line x1="26" y1="18" x2="26" y2="98" stroke="#cbd5e1" stroke-width="2"/><line x1="26" y1="98" x2="200" y2="98" stroke="#cbd5e1" stroke-width="2"/><line x1="26" y1="60" x2="200" y2="60" stroke="#1d9e75" stroke-width="2" stroke-dasharray="4 5"/><g fill="#1e3a8a"><circle cx="58" cy="48" r="6"/><circle cx="96" cy="70" r="6"/><circle cx="134" cy="54" r="6"/><circle cx="172" cy="74" r="6"/></g></svg></div><span class="badge">Pazar</span><h3>Emsal Karşılaştırma</h3><p>Yakın tarihli, benzer ve gerçekleşmiş işlemlerin düzeltme katsayılarıyla normalize edilmesi.</p></div>
-      <div class="m"><div class="mv"><svg viewBox="0 0 220 120" fill="none" stroke-linecap="round"><line x1="26" y1="18" x2="26" y2="98" stroke="#cbd5e1" stroke-width="2"/><line x1="26" y1="98" x2="200" y2="98" stroke="#cbd5e1" stroke-width="2"/><g fill="#2f5bd0"><rect x="48" y="66" width="22" height="32" rx="3"/><rect x="86" y="52" width="22" height="46" rx="3"/><rect x="124" y="38" width="22" height="60" rx="3"/><rect x="162" y="28" width="22" height="70" rx="3"/></g><path d="M59 60 97 46 135 32 173 24" fill="none" stroke="#1d9e75" stroke-width="2.6"/></svg></div><span class="badge">Gelir</span><h3>Gelir Kapitalizasyonu</h3><p>Net gelir üretme kapasitesinin kapitalizasyon/iskonto oranıyla bugünkü değere indirgenmesi.</p></div>
-      <div class="m"><div class="mv"><svg viewBox="0 0 220 120" fill="none" stroke-linecap="round"><line x1="26" y1="18" x2="26" y2="98" stroke="#cbd5e1" stroke-width="2"/><line x1="26" y1="98" x2="200" y2="98" stroke="#cbd5e1" stroke-width="2"/><path d="M26 28 C 84 50, 140 80, 200 92" fill="none" stroke="#b4975a" stroke-width="3"/><g fill="#b4975a"><circle cx="26" cy="28" r="5"/><circle cx="113" cy="64" r="5"/><circle cx="200" cy="92" r="5"/></g></svg></div><span class="badge">Maliyet</span><h3>Maliyet Yaklaşımı</h3><p>Yeniden edinim bedelinden fiziksel ve fonksiyonel yıpranmanın düşülmesi.</p></div>
+      <div class="m reveal"><div class="mv"><svg viewBox="0 0 220 120" fill="none" stroke-linecap="round"><line x1="26" y1="18" x2="26" y2="98" stroke="#cbd5e1" stroke-width="2"/><line x1="26" y1="98" x2="200" y2="98" stroke="#cbd5e1" stroke-width="2"/><line x1="26" y1="60" x2="200" y2="60" stroke="#1d9e75" stroke-width="2" stroke-dasharray="4 5"/><g fill="#1e3a8a"><circle cx="58" cy="48" r="6"/><circle cx="96" cy="70" r="6"/><circle cx="134" cy="54" r="6"/><circle cx="172" cy="74" r="6"/></g></svg></div><span class="badge">Pazar</span><h3>Emsal Karşılaştırma</h3><p>Yakın tarihli, benzer ve gerçekleşmiş işlemlerin düzeltme katsayılarıyla normalize edilmesi.</p></div>
+      <div class="m reveal"><div class="mv"><svg viewBox="0 0 220 120" fill="none" stroke-linecap="round"><line x1="26" y1="18" x2="26" y2="98" stroke="#cbd5e1" stroke-width="2"/><line x1="26" y1="98" x2="200" y2="98" stroke="#cbd5e1" stroke-width="2"/><g fill="#2f5bd0"><rect x="48" y="66" width="22" height="32" rx="3"/><rect x="86" y="52" width="22" height="46" rx="3"/><rect x="124" y="38" width="22" height="60" rx="3"/><rect x="162" y="28" width="22" height="70" rx="3"/></g><path d="M59 60 97 46 135 32 173 24" fill="none" stroke="#1d9e75" stroke-width="2.6"/></svg></div><span class="badge">Gelir</span><h3>Gelir Kapitalizasyonu</h3><p>Net gelir üretme kapasitesinin kapitalizasyon/iskonto oranıyla bugünkü değere indirgenmesi.</p></div>
+      <div class="m reveal"><div class="mv"><svg viewBox="0 0 220 120" fill="none" stroke-linecap="round"><line x1="26" y1="18" x2="26" y2="98" stroke="#cbd5e1" stroke-width="2"/><line x1="26" y1="98" x2="200" y2="98" stroke="#cbd5e1" stroke-width="2"/><path d="M26 28 C 84 50, 140 80, 200 92" fill="none" stroke="#b4975a" stroke-width="3"/><g fill="#b4975a"><circle cx="26" cy="28" r="5"/><circle cx="113" cy="64" r="5"/><circle cx="200" cy="92" r="5"/></g></svg></div><span class="badge">Maliyet</span><h3>Maliyet Yaklaşımı</h3><p>Yeniden edinim bedelinden fiziksel ve fonksiyonel yıpranmanın düşülmesi.</p></div>
     </div>
   </div>
 </section>
@@ -1120,24 +1160,24 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 
 <!-- ===== RAPORU KİM HAZIRLAR / İMZALAR ===== -->
 <section class="sec" id="referans"><div class="wrap">
-  <div class="sec-h"><span class="eyebrow">Referans</span><h2 data-ce="index.sec4Title">Çalıştığımız kurum tipleri</h2><p data-ce="index.sec4Lead">Kurumsal referanslarımız gizlilik esasıyla saklanır; düzenli hizmet verdiğimiz kurum tipleri aşağıdadır.</p></div>
+  <div class="sec-h reveal"><span class="eyebrow">Referans</span><h2 data-ce="index.sec4Title">Çalıştığımız kurum tipleri</h2><p data-ce="index.sec4Lead">Kurumsal referanslarımız gizlilik esasıyla saklanır; düzenli hizmet verdiğimiz kurum tipleri aşağıdadır.</p></div>
   <div class="reftiles">
-    <div class="reftile"><div class="rt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 21h18M5 21V10h14v11M4 10 12 4l8 6M9 21v-6h6v6"/></svg></div><div><b>Bankalar &amp; Finans</b><span>Teminat &amp; kredi süreçleri</span></div></div>
-    <div class="reftile"><div class="rt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 21V8l6-4 6 4v13M16 21V11l4 3v7M8 12h2M8 16h2"/></svg></div><div><b>GYO &amp; Yatırım Ortaklıkları</b><span>Portföy varlık değerlemesi</span></div></div>
-    <div class="reftile"><div class="rt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div><div><b>Kurumsal &amp; Holdingler</b><span>Aktif &amp; varlık güncelleme</span></div></div>
-    <div class="reftile"><div class="rt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 21h18M5 21V9h14v12M12 4l7 5H5l7-5M10 21v-5h4v5"/></svg></div><div><b>Kamu &amp; Belediyeler</b><span>Kamulaştırma &amp; kamu süreçleri</span></div></div>
-    <div class="reftile"><div class="rt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3v18M5 7h14M7 7l-3 7h6l-3-7M17 7l-3 7h6l-3-7"/></svg></div><div><b>Mahkeme &amp; İcra</b><span>Bilirkişi &amp; hukuki süreç</span></div></div>
-    <div class="reftile"><div class="rt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/></svg></div><div><b>Sigorta Şirketleri</b><span>Sigorta &amp; risk değerlemesi</span></div></div>
+    <div class="reftile reveal"><div class="rt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 21h18M5 21V10h14v11M4 10 12 4l8 6M9 21v-6h6v6"/></svg></div><div><b>Bankalar &amp; Finans</b><span>Teminat &amp; kredi süreçleri</span></div></div>
+    <div class="reftile reveal"><div class="rt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 21V8l6-4 6 4v13M16 21V11l4 3v7M8 12h2M8 16h2"/></svg></div><div><b>GYO &amp; Yatırım Ortaklıkları</b><span>Portföy varlık değerlemesi</span></div></div>
+    <div class="reftile reveal"><div class="rt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div><div><b>Kurumsal &amp; Holdingler</b><span>Aktif &amp; varlık güncelleme</span></div></div>
+    <div class="reftile reveal"><div class="rt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 21h18M5 21V9h14v12M12 4l7 5H5l7-5M10 21v-5h4v5"/></svg></div><div><b>Kamu &amp; Belediyeler</b><span>Kamulaştırma &amp; kamu süreçleri</span></div></div>
+    <div class="reftile reveal"><div class="rt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3v18M5 7h14M7 7l-3 7h6l-3-7M17 7l-3 7h6l-3-7"/></svg></div><div><b>Mahkeme &amp; İcra</b><span>Bilirkişi &amp; hukuki süreç</span></div></div>
+    <div class="reftile reveal"><div class="rt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/></svg></div><div><b>Sigorta Şirketleri</b><span>Sigorta &amp; risk değerlemesi</span></div></div>
   </div>
 </div></section>
 
 <section class="sec resp">
   <div class="wrap">
-    <div class="sec-h"><span class="eyebrow">Sorumluluk Ayrımı</span><h2 data-ce="index.sec5Title">Raporu kim hazırlar, kim imzalar?</h2><p data-ce="index.sec5Lead">Altyapı ile resmî değerleme süreci net biçimde ayrılır.</p></div>
+    <div class="sec-h reveal"><span class="eyebrow">Sorumluluk Ayrımı</span><h2 data-ce="index.sec5Title">Raporu kim hazırlar, kim imzalar?</h2><p data-ce="index.sec5Lead">Altyapı ile resmî değerleme süreci net biçimde ayrılır.</p></div>
     <div class="grid-2">
-      <div class="col platform"><span class="tag">Platform</span><h3>Altyapı &amp; ön hazırlık</h3>
+      <div class="col platform reveal"><span class="tag">Platform</span><h3>Altyapı &amp; ön hazırlık</h3>
         <ul><li>Başvuru ve belge yönetimi</li><li>Lokasyon ve bölge veri analizi</li><li>Emsal verisinin derlenmesine destek</li><li>Süreç takibi ve ön analiz hazırlığı</li></ul></div>
-      <div class="col expert"><span class="tag">SPK Lisanslı Uzman</span><h3>Resmî değerleme &amp; imza</h3>
+      <div class="col expert reveal"><span class="tag">SPK Lisanslı Uzman</span><h3>Resmî değerleme &amp; imza</h3>
         <ul><li>Saha (yerinde) kontrol ve tespit</li><li>Belge, tapu ve belediye/imar incelemesi</li><li>Metodoloji seçimi ve bağımsız değerlendirme</li><li>Sonuç değer kanaati ve sorumlu uzman imzası</li></ul></div>
     </div>
     <div class="resp-flow"><img src="assets/svg/report-flow.svg" alt="Değerleme rapor süreci akışı: sistem, uzman atama, saha, belediye/tapu, imzalı rapor" width="940" height="180" loading="lazy"></div>
@@ -1147,7 +1187,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 <!-- ===== BAŞVURU SÜRECİ ===== -->
 <section class="sec apply">
   <div class="wrap">
-    <div class="sec-h"><span class="eyebrow">Başvuru Süreci</span><h2 data-ce="index.sec6Title">Beş adımda değerleme başvurusu</h2><p data-ce="index.sec6Lead">Belge hazırlığından imzalı rapora kadar şeffaf ve izlenebilir süreç.</p></div>
+    <div class="sec-h reveal"><span class="eyebrow">Başvuru Süreci</span><h2 data-ce="index.sec6Title">Beş adımda değerleme başvurusu</h2><p data-ce="index.sec6Lead">Belge hazırlığından imzalı rapora kadar şeffaf ve izlenebilir süreç.</p></div>
     <div class="apply-flow"><img src="assets/svg/application-flow.svg" alt="Başvuru süreci: belge hazırlığı, başvuru, uzman atama, inceleme, imzalı rapor" width="940" height="150" loading="lazy"></div>
     <div class="apply-cta"><a class="btn btn-primary" href="basvuru.html">Değerleme Başvurusu Oluştur</a><a class="btn btn-line" href="basvuru.html">Gerekli Belgeleri Gör</a></div>
   </div>
@@ -1155,11 +1195,11 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 
 <!-- ===== CTA BANDI ===== -->
 <section class="sec meth" id="blog"><div class="wrap">
-  <div class="sec-h"><span class="eyebrow">Bilgi Merkezi</span><h2 data-ce="index.sec7Title">Blog &amp; rehberler</h2><p data-ce="index.sec7Lead">Değerleme süreçleri, mevzuat ve yöntemler üzerine kurumsal içerikler.</p></div>
+  <div class="sec-h reveal"><span class="eyebrow">Bilgi Merkezi</span><h2 data-ce="index.sec7Title">Blog &amp; rehberler</h2><p data-ce="index.sec7Lead">Değerleme süreçleri, mevzuat ve yöntemler üzerine kurumsal içerikler.</p></div>
   <div class="grid-3">
-    <article class="blogcard"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><div class="bc-b"><span class="tagx">SPK · Mevzuat</span><h3>SPK Lisanslı Değerleme Nedir?</h3><p>Lisanslı kuruluş, sorumlu değerleme uzmanı ve raporun yasal niteliği.</p><a class="more" href="spk-guven-merkezi.html">Devamını oku →</a></div></article>
-    <article class="blogcard"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div><div class="bc-b"><span class="tagx">Süreç</span><h3>Banka Teminat Raporu Nasıl Hazırlanır?</h3><p>Belgeler, saha kontrolü ve uzman değerlendirme süreci.</p><a class="more" href="basvuru.html">Devamını oku →</a></div></article>
-    <article class="blogcard"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 20V4M4 20h16"/><path d="M8 16l4-5 3 3 5-7"/></svg></div><div class="bc-b"><span class="tagx">Metodoloji</span><h3>Pazar, Gelir ve Maliyet Yaklaşımı</h3><p>Üç temel değerleme yaklaşımı ve hangi taşınmazda kullanıldığı.</p><a class="more" href="metodoloji.html">Devamını oku →</a></div></article>
+    <article class="blogcard reveal"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><div class="bc-b"><span class="tagx">SPK · Mevzuat</span><h3>SPK Lisanslı Değerleme Nedir?</h3><p>Lisanslı kuruluş, sorumlu değerleme uzmanı ve raporun yasal niteliği.</p><a class="more" href="spk-guven-merkezi.html">Devamını oku →</a></div></article>
+    <article class="blogcard reveal"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div><div class="bc-b"><span class="tagx">Süreç</span><h3>Banka Teminat Raporu Nasıl Hazırlanır?</h3><p>Belgeler, saha kontrolü ve uzman değerlendirme süreci.</p><a class="more" href="basvuru.html">Devamını oku →</a></div></article>
+    <article class="blogcard reveal"><div class="bc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 20V4M4 20h16"/><path d="M8 16l4-5 3 3 5-7"/></svg></div><div class="bc-b"><span class="tagx">Metodoloji</span><h3>Pazar, Gelir ve Maliyet Yaklaşımı</h3><p>Üç temel değerleme yaklaşımı ve hangi taşınmazda kullanıldığı.</p><a class="more" href="metodoloji.html">Devamını oku →</a></div></article>
   </div>
 </div></section>
 
@@ -1196,6 +1236,11 @@ img,svg,video,canvas,iframe,table{max-width:100%}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: <b class="spk-lic">DD-2024-0142</b></span><span class="bot-end">Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu<a class="prox-badge" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="prox-lead">Powered by</span><span class="prox-mark"><span class="prox-pro">Pro</span><span class="prox-x">X</span></span></a></span></div>
   </div>
 </footer>
+
+
+
+
+
 
 
 
@@ -1967,28 +2012,82 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeGiris(); closeTeklif(); } });
   if (document.getElementById('blog')) { try { degLoadBlog(); } catch (e) {} }
-  /* ---- Hero paneli canlı süreç animasyonu (Başvuru → Uzman → İmzalı Rapor) ---- */
+  /* ---- 81 il ortalama konut m² fiyatı (temsili bölge endeksi, ₺/m²) ---- */
+  window.DEG_ILLER = [
+    ['Adana', 29500], ['Adıyaman', 16500], ['Afyonkarahisar', 18500], ['Ağrı', 12500], ['Amasya', 17500],
+    ['Ankara', 43000], ['Antalya', 63000], ['Artvin', 21000], ['Aydın', 46000], ['Balıkesir', 41000],
+    ['Bilecik', 18500], ['Bingöl', 14500], ['Bitlis', 13500], ['Bolu', 31000], ['Burdur', 19500],
+    ['Bursa', 46000], ['Çanakkale', 43000], ['Çankırı', 15500], ['Çorum', 17500], ['Denizli', 33000],
+    ['Diyarbakır', 22500], ['Edirne', 29000], ['Elazığ', 19500], ['Erzincan', 17500], ['Erzurum', 20500],
+    ['Eskişehir', 35000], ['Gaziantep', 29000], ['Giresun', 22500], ['Gümüşhane', 16500], ['Hakkari', 12500],
+    ['Hatay', 24500], ['Isparta', 22500], ['Mersin', 41000], ['İstanbul', 96000], ['İzmir', 73000],
+    ['Kars', 14500], ['Kastamonu', 18500], ['Kayseri', 28500], ['Kırklareli', 26500], ['Kırşehir', 16500],
+    ['Kocaeli', 47000], ['Konya', 27000], ['Kütahya', 18500], ['Malatya', 20500], ['Manisa', 31000],
+    ['Kahramanmaraş', 20500], ['Mardin', 20500], ['Muğla', 89000], ['Muş', 12500], ['Nevşehir', 20500],
+    ['Niğde', 17500], ['Ordu', 26500], ['Rize', 28500], ['Sakarya', 39000], ['Samsun', 35000],
+    ['Siirt', 15500], ['Sinop', 24500], ['Sivas', 18500], ['Tekirdağ', 41000], ['Tokat', 16500],
+    ['Trabzon', 35000], ['Tunceli', 15500], ['Şanlıurfa', 20500], ['Uşak', 20500], ['Van', 18500],
+    ['Yozgat', 15500], ['Zonguldak', 24500], ['Aksaray', 18500], ['Bayburt', 15500], ['Karaman', 18500],
+    ['Kırıkkale', 18500], ['Batman', 18500], ['Şırnak', 15500], ['Bartın', 22500], ['Ardahan', 13500],
+    ['Iğdır', 14500], ['Yalova', 43000], ['Karabük', 22500], ['Kilis', 16500], ['Osmaniye', 20500], ['Düzce', 29000]
+  ];
+  function degTL(n) { try { return n.toLocaleString('tr-TR'); } catch (e) { return String(n); } }
+
+  /* ---- Hero paneli canlı süreç animasyonu + 81 il canlı endeks ---- */
   function degHeroAnim() {
     var pipe = document.querySelector('.hpx-pipe'); if (!pipe) return;
     var steps = [].slice.call(pipe.querySelectorAll('.hpx-step'));
     var arws = [].slice.call(pipe.querySelectorAll('.hpx-arw'));
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) { steps.forEach(function (s) { s.classList.add('on'); }); arws.forEach(function (a) { a.classList.add('on'); }); return; }
-    var i = 0;
-    function tick() {
-      steps.forEach(function (s, k) { s.classList.toggle('on', k <= i); });
-      arws.forEach(function (a, k) { a.classList.toggle('on', k < i); });
-      i = (i + 1) % (steps.length + 1);
+    var stepI = 0;
+    function stepTick() {
+      steps.forEach(function (s, k) { s.classList.toggle('on', k <= stepI); });
+      arws.forEach(function (a, k) { a.classList.toggle('on', k < stepI); });
+      stepI = (stepI + 1) % (steps.length + 1);
     }
-    tick(); setInterval(tick, 1150);
-    var val = document.querySelector('.hpx-ticker .hpx-num');
-    if (val) {
-      var base = parseFloat(val.getAttribute('data-count')) || 0, k = 0;
-      setTimeout(function () { setInterval(function () { k++; val.textContent = (base + Math.round(Math.sin(k / 2) * 18)); }, 2600); }, 3200);
+    if (reduce) { steps.forEach(function (s) { s.classList.add('on'); }); arws.forEach(function (a) { a.classList.add('on'); }); }
+    else { stepTick(); setInterval(stepTick, 1150); }
+
+    // Canlı il endeksi tickeri
+    var tIl = document.querySelector('.hpx-ticker .hpx-il'), tNum = document.querySelector('.hpx-ticker .hpx-num'), tUp = document.querySelector('.hpx-ticker .hpx-up');
+    var ILLER = window.DEG_ILLER || [];
+    if (tIl && tNum && ILLER.length) {
+      var idx = 0, prev = 0, raf = null;
+      function animNum(to) {
+        if (raf) cancelAnimationFrame(raf);
+        var from = prev || to, t0 = null, dur = 650;
+        function step(ts) { if (!t0) t0 = ts; var p = Math.min((ts - t0) / dur, 1), e = 1 - Math.pow(1 - p, 3); tNum.textContent = '₺' + degTL(Math.round(from + (to - from) * e)); if (p < 1) raf = requestAnimationFrame(step); }
+        raf = requestAnimationFrame(step);
+      }
+      function nextIl() {
+        var it = ILLER[idx % ILLER.length]; idx++;
+        tIl.classList.remove('sw'); void tIl.offsetWidth; tIl.textContent = it[0]; tIl.classList.add('sw');
+        if (tUp) { var up = it[1] >= prev; tUp.textContent = up ? '▲' : '▼'; tUp.style.color = up ? '#37d67a' : '#ff9aa2'; }
+        if (reduce) { tNum.textContent = '₺' + degTL(it[1]); } else { animNum(it[1]); }
+        prev = it[1];
+      }
+      nextIl(); if (!reduce) setInterval(nextIl, 2600);
     }
   }
+
+  /* ---- Ana sayfa "Canlı Konut Endeksi" bandı (81 il kayan şerit + özet) ---- */
+  function degIndexBand() {
+    var track = document.getElementById('degIdxTrack'); if (!track || !window.DEG_ILLER) return;
+    var arr = window.DEG_ILLER;
+    var chip = arr.map(function (it) { return '<span class="idx-chip"><b>' + it[0] + '</b> ₺' + degTL(it[1]) + '<em>/m²</em></span>'; }).join('');
+    track.innerHTML = chip + chip; // kesintisiz döngü için iki kopya
+    var prices = arr.map(function (i) { return i[1]; });
+    var max = arr.reduce(function (a, b) { return b[1] > a[1] ? b : a; }), min = arr.reduce(function (a, b) { return b[1] < a[1] ? b : a; });
+    var avg = Math.round(prices.reduce(function (a, b) { return a + b; }, 0) / prices.length);
+    var st = document.getElementById('degIdxStats');
+    if (st) st.innerHTML =
+      '<div><b>' + arr.length + '</b><span>il kapsam</span></div>'
+      + '<div><b>₺' + degTL(avg) + '</b><span>ortalama m²</span></div>'
+      + '<div><b>' + max[0] + '</b><span><i class="il-l">en yüksek</i> ₺' + degTL(max[1]) + '</span></div>'
+      + '<div><b>' + min[0] + '</b><span><i class="il-l">en uygun</i> ₺' + degTL(min[1]) + '</span></div>';
+  }
   function degRunInit() {
-    try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degHeroAnim(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+    try { degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degHeroAnim(); degIndexBand(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
   }
   // Yayınlanan ayarları (site-config.json) yükle, sonra tüm sayfaya uygula. Dosya yoksa sorunsuz devam eder.
   try {
