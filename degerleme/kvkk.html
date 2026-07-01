@@ -33,6 +33,7 @@
 
 
 
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -953,6 +954,12 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 @media(max-width:760px){.idx-stats{grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){.idx-track{animation:none}.hpx-ticker .hpx-il.sw{animation:none}}
 
+/* ===== Yüklenen logo — üstte yalnız logo, altta logo + açıklama ===== */
+.brand.has-logo{gap:0}
+.hdr .brand-logo{height:40px;width:auto;max-width:250px;object-fit:contain;display:block}
+.ft .brand-logo{height:34px;width:auto;max-width:220px;object-fit:contain;display:block;background:#fff;padding:8px 12px;border-radius:10px}
+@media(max-width:560px){.hdr .brand-logo{height:33px;max-width:180px}}
+
 </style>
 </head>
 <body>
@@ -1041,6 +1048,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
     <div class="bot"><span>© 2026 Meridyen Gayrimenkul Değerleme A.Ş. · SPK Lisans No: <b class="spk-lic">DD-2024-0142</b></span><span class="bot-end">Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu<a class="prox-badge" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="prox-lead">Powered by</span><span class="prox-mark"><span class="prox-pro">Pro</span><span class="prox-x">X</span></span></a></span></div>
   </div>
 </footer>
+
 
 
 
@@ -1691,10 +1699,15 @@ img,svg,video,canvas,iframe,table{max-width:100%}
     var s = degMerge();
     function setLogo(scope, url) {
       if (!url) return;
-      var mk = document.querySelector(scope + ' .brand .mk'); if (!mk) return;
-      mk.style.background = 'transparent'; mk.style.backgroundImage = 'none';
-      mk.style.width = 'auto'; mk.style.minWidth = mk.style.height || '40px'; mk.style.padding = '0';
-      mk.innerHTML = '<img src="' + url + '" alt="logo" style="height:100%;width:auto;max-width:160px;object-fit:contain;display:block;border-radius:inherit">';
+      var brand = document.querySelector(scope + ' .brand'); if (!brand) return;
+      var mk = brand.querySelector('.mk');
+      if (mk) {
+        mk.style.cssText = 'display:inline-flex;align-items:center;background:none;border:0;box-shadow:none;padding:0;width:auto;height:auto;min-width:0;border-radius:0';
+        mk.innerHTML = '<img src="' + url + '" alt="logo" class="brand-logo">';
+      }
+      // Logo varken marka metnini (Meridyen Değerleme / SPK Lisanslı Değerleme) gizle — üstte yalnız logo, altta logo + açıklama
+      for (var i = 0; i < brand.children.length; i++) { if (!brand.children[i].classList.contains('mk')) brand.children[i].style.display = 'none'; }
+      brand.classList.add('has-logo');
     }
     setLogo('.hdr', s.logoHeader || s.logo || '');
     setLogo('.ft', s.logoFooter || s.logo || '');

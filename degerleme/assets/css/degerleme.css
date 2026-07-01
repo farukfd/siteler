@@ -916,3 +916,9 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 .idx-note{font-size:12px;color:var(--muted);text-align:center;max-width:82ch;margin:0 auto;line-height:1.55}
 @media(max-width:760px){.idx-stats{grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){.idx-track{animation:none}.hpx-ticker .hpx-il.sw{animation:none}}
+
+/* ===== Yüklenen logo — üstte yalnız logo, altta logo + açıklama ===== */
+.brand.has-logo{gap:0}
+.hdr .brand-logo{height:40px;width:auto;max-width:250px;object-fit:contain;display:block}
+.ft .brand-logo{height:34px;width:auto;max-width:220px;object-fit:contain;display:block;background:#fff;padding:8px 12px;border-radius:10px}
+@media(max-width:560px){.hdr .brand-logo{height:33px;max-width:180px}}

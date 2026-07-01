@@ -623,10 +623,15 @@
     var s = degMerge();
     function setLogo(scope, url) {
       if (!url) return;
-      var mk = document.querySelector(scope + ' .brand .mk'); if (!mk) return;
-      mk.style.background = 'transparent'; mk.style.backgroundImage = 'none';
-      mk.style.width = 'auto'; mk.style.minWidth = mk.style.height || '40px'; mk.style.padding = '0';
-      mk.innerHTML = '<img src="' + url + '" alt="logo" style="height:100%;width:auto;max-width:160px;object-fit:contain;display:block;border-radius:inherit">';
+      var brand = document.querySelector(scope + ' .brand'); if (!brand) return;
+      var mk = brand.querySelector('.mk');
+      if (mk) {
+        mk.style.cssText = 'display:inline-flex;align-items:center;background:none;border:0;box-shadow:none;padding:0;width:auto;height:auto;min-width:0;border-radius:0';
+        mk.innerHTML = '<img src="' + url + '" alt="logo" class="brand-logo">';
+      }
+      // Logo varken marka metnini (Meridyen Değerleme / SPK Lisanslı Değerleme) gizle — üstte yalnız logo, altta logo + açıklama
+      for (var i = 0; i < brand.children.length; i++) { if (!brand.children[i].classList.contains('mk')) brand.children[i].style.display = 'none'; }
+      brand.classList.add('has-logo');
     }
     setLogo('.hdr', s.logoHeader || s.logo || '');
     setLogo('.ft', s.logoFooter || s.logo || '');
