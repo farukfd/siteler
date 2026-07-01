@@ -794,6 +794,12 @@ body.cookie-on .wa{bottom:86px}
 .hp-hero .eyebrow{color:var(--accent);font-weight:700;font-size:13px;letter-spacing:1px;text-transform:uppercase}
 .hp-hero h1{font-family:var(--head);font-size:clamp(30px,4.6vw,52px);margin:10px 0 12px;line-height:1.05}
 .hp-hero p{color:var(--muted);font-size:16px;max-width:660px;line-height:1.6}
+.hp-stats{margin-top:6px}
+.hp-trust{max-width:var(--maxw);margin:26px auto 0;padding:0 5vw;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.hp-trust .ht-lead{font-weight:700;font-size:13px;color:var(--ink);margin-right:4px}
+.hp-trust .ht-chip{display:inline-flex;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.hpc-tags{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.hpc-tags span{background:var(--surface-2,var(--surface));border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600;color:var(--muted)}
 .hp-grid{max-width:var(--maxw);margin:24px auto 50px;padding:0 5vw;display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
 @media(max-width:760px){.hp-grid{grid-template-columns:1fr}}
 .hpcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px;cursor:pointer;transition:transform .25s,box-shadow .25s,border-color .25s;display:flex;gap:20px;align-items:flex-start}
@@ -840,6 +846,52 @@ body.cookie-on .wa{bottom:86px}
 .sd-ctabar h3{font-family:var(--head);font-size:23px;margin:0 0 8px;color:var(--on-surface,var(--ink))}
 .sd-ctabar p{color:var(--muted);margin:0 0 18px}
 @media(max-width:860px){.sd-scope{grid-template-columns:1fr}.sd-steps{grid-template-columns:repeat(2,1fr)}.sd-rel{grid-template-columns:1fr}}
+/* ===== hizmet detay — zenginleştirilmiş bölümler (2026) ===== */
+.sd-rv{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.sd-rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.sd-rv{opacity:1!important;transform:none!important;transition:none}}
+.sd-badges{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 36px}
+.sd-badge{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 15px;font-size:12.5px;font-weight:600;color:var(--on-surface,var(--ink))}
+.sd-badge svg{width:15px;height:15px;fill:var(--accent);flex-shrink:0}
+/* süreç akışı */
+.sd-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:16px}
+.sd-node{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px 16px 18px;transition:transform .25s,border-color .25s}
+.sd-node:hover{transform:translateY(-3px);border-color:var(--accent)}
+.sd-node .n{position:absolute;top:-15px;left:16px;width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent-2,var(--accent)));color:var(--on-accent,#fff);display:grid;place-items:center;font-family:var(--head);font-weight:800;font-size:16px;box-shadow:0 8px 18px -8px var(--accent)}
+.sd-node .b h4{font-family:var(--head);font-size:15.5px;margin:6px 0 6px;color:var(--on-surface,var(--ink))}
+.sd-node .b p{font-size:12.5px;color:var(--muted);line-height:1.5;margin:0}
+/* derin analiz */
+.sd-deep p{font-size:15px;line-height:1.8;color:var(--on-bg-mut,var(--muted));margin:0 0 16px;max-width:820px}
+.sd-deep p:last-child{margin-bottom:0}
+/* risk kartları */
+.sd-risks{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.sd-risks .rk{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:18px 20px}
+.sd-risks .rk-h{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.sd-risks .rk-ic{width:24px;height:24px;border-radius:7px;background:var(--accent);color:var(--on-accent,#fff);display:grid;place-items:center;font-weight:800;font-size:15px;flex-shrink:0}
+.sd-risks .rk-h h4{font-family:var(--head);font-size:15px;margin:0;color:var(--on-surface,var(--ink));line-height:1.3}
+.sd-risks .rk p{font-size:13.5px;line-height:1.6;color:var(--muted);margin:0}
+.sd-risks .rk-lbl{color:var(--accent);font-weight:700}
+/* güvenceler */
+.sd-guar{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.sd-guar .it{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:15px 18px;font-size:14.5px;font-weight:600;color:var(--on-surface,var(--ink))}
+.sd-guar .it::before{content:'\2713';color:var(--on-accent,#fff);background:var(--accent);width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:13px;font-weight:800;flex-shrink:0}
+/* mühendislik sözlüğü */
+.sd-terms{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.sd-terms .tm{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+.sd-terms .tm b{display:block;font-family:var(--head);font-size:14.5px;color:var(--accent);margin-bottom:4px}
+.sd-terms .tm span{font-size:13px;color:var(--muted);line-height:1.55}
+/* SSS akordeon */
+.sd-faq{display:flex;flex-direction:column;gap:10px}
+.sd-faq .fq{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.sd-faq .fq summary{list-style:none;cursor:pointer;padding:16px 20px;font-family:var(--head);font-size:15.5px;color:var(--on-surface,var(--ink));display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sd-faq .fq summary::-webkit-details-marker{display:none}
+.sd-faq .fq summary::after{content:'+';font-size:22px;color:var(--accent);font-weight:400;line-height:1;transition:transform .2s;flex-shrink:0}
+.sd-faq .fq[open] summary::after{transform:rotate(45deg)}
+.sd-faq .fq .a{padding:0 20px 18px;font-size:14px;line-height:1.7;color:var(--muted)}
+/* SEO etiketleri */
+.sd-tags{display:flex;flex-wrap:wrap;gap:9px}
+.sd-tags .tg{background:var(--surface-2,var(--surface));border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:12.5px;color:var(--muted)}
+@media(max-width:860px){.sd-risks,.sd-guar,.sd-terms{grid-template-columns:1fr}}
 
 /* ===== /BOLGE ZEKASI SAYFASI ===== */
 #bolgePage{position:fixed;inset:0;z-index:115;background:var(--bg);overflow-y:auto;display:none;color:var(--ink)}
@@ -957,6 +1009,17 @@ header.scrolled .lang-sel{color:var(--ink)}
 .fprox .fprox-pro{font-family:var(--head);font-weight:800;font-size:15px;color:#fff}
 .fprox .fprox-x{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;height:1.4em;background:#16a34a;color:#0b1220;border-radius:6px;font-family:var(--head);font-weight:800;font-size:14px;margin-left:2px}
 .fprox:hover .fprox-x{background:#1fb155}
+.fvo{color:#b9c6dc;font-weight:600}
+.fsocial{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.fsocial a{width:38px;height:38px;border-radius:11px;display:inline-grid;place-items:center;padding:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);color:#b9c6dc;transition:.2s ease}
+.fsocial a:hover{background:var(--accent);border-color:transparent;color:#fff;transform:translateY(-2px);box-shadow:0 8px 20px -8px var(--accent)}
+.fsocial svg{width:17px;height:17px;fill:currentColor;display:block}
+.flegal{display:flex;flex-wrap:wrap;align-items:center;gap:8px 8px;font-size:12.5px;margin-top:14px}
+.flegal a{display:inline-block;position:relative;color:#8fa0bd;padding:2px 0;font-size:12.5px;transition:color .15s}
+.flegal a:not(:last-child)::after{content:"·";color:#4a5876;margin-left:8px}
+.flegal a:hover{color:#fff}
+.fbot{justify-content:center;align-items:center;text-align:center;gap:6px 16px}
+.fbot .fcopy{color:#8fa0bb}
 </style>
 </head>
 <body>
@@ -1277,27 +1340,7 @@ header.scrolled .lang-sel{color:var(--ink)}
   <div class="pp-count" id="ppCount"></div>
   <div class="pp-grid" id="ppGrid"></div>
 
-  <footer><div class="wrap">
-    <div class="fgrid">
-      <div><div class="lo">Meridyen<span class="lo2"> Yapı</span></div>
-        <p class="desc">1986'dan bu yana güvenle inşa eden kurumsal yapı, tadilat ve gayrimenkul geliştirme şirketi.</p>
-        <div class="fcerts"><span>ISO 9001</span><span>ISO 14001</span><span>ISO 45001</span><span>Yapı Denetim</span><span>TBDY 2018</span></div>
-        <div class="partner-seal">🔗 Canlı Bölge Veri Ağı</div>
-      </div>
-      <div><h4>Kurumsal</h4><a href="#hakkimizda" onclick="return ppGo('hakkimizda')">Hakkımızda</a><a href="#">Vizyon & Misyon</a><a href="#">Yönetim Kadrosu</a><a href="#">Kalite & Sertifikalar</a><a href="#medya" onclick="return ppGo('medya')">Basında Biz</a><a href="#">Kariyer</a></div>
-      <div><h4>Hizmetler</h4><a href="#hizmetler" onclick="event.preventDefault();closeProjelerPage();setTimeout(openHizmetlerPage,90)">Konut İnşaatı</a><a href="#hizmetler" onclick="event.preventDefault();closeProjelerPage();setTimeout(openHizmetlerPage,90)">Tadilat & Renovasyon</a><a href="#hizmetler" onclick="event.preventDefault();closeProjelerPage();setTimeout(openHizmetlerPage,90)">Kentsel Dönüşüm</a><a href="#hizmetler" onclick="event.preventDefault();closeProjelerPage();setTimeout(openHizmetlerPage,90)">Kat Karşılığı</a><a href="#hizmetler" onclick="event.preventDefault();closeProjelerPage();setTimeout(openHizmetlerPage,90)">Anahtar Teslim</a><a href="#hizmetler" onclick="event.preventDefault();closeProjelerPage();setTimeout(openHizmetlerPage,90)">Ticari Yapılar</a></div>
-      <div><h4>İletişim</h4>
-        <a href="#" onclick="return ppGo('iletisim')">Levent Mah. Yapı Cad. No:1<br>Beşiktaş / İstanbul</a>
-        <a href="tel:+902120000000" class="js-tel">+90 212 000 00 00</a>
-        <a href="mailto:info@meridyenyapi.com">info@meridyenyapi.com</a>
-        <div style="margin-top:10px;font-size:19px;display:flex;gap:14px"><a href="#">in</a><a href="#">f</a><a href="#">▶</a><a href="#">◎</a></div>
-      </div>
-    </div>
-    <div class="fbot">
-      <div>© 2026 Meridyen Yapı A.Ş. · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span> · <a href="#admin" onclick="openAdmin()">Yönetici Girişi</a></div>
-      <div><a href="#">KVKK</a> · <a href="#">Gizlilik</a> · <a href="#">Çerez Politikası</a> · <a href="#">Ada/Parsel (TKGM)</a></div>
-    </div>
-  </div></footer>
+  <footer class="insaatFooter"></footer>
 </div>
 
 <!-- ===== /HIZMETLER SAYFASI ===== -->
@@ -1326,8 +1369,16 @@ header.scrolled .lang-sel{color:var(--ink)}
   <div class="hp-hero">
     <div class="eyebrow">Hizmetlerimiz</div>
     <h1>Fikirden Teslime, Uçtan Uca Yapı Çözümleri</h1>
-    <p>Her hizmet; ayrı proje yönetimi, kendi mühendis ekibi ve kalite kontrol süreciyle yürütülür. Detayları görmek için hizmete tıklayın.</p>
+    <p>Her hizmet; ayrı proje yönetimi, kendi mühendis ekibi ve kalite kontrol süreciyle yürütülür. Her hizmet sayfasında derin analiz, süreç akışı, mevzuat, risk yönetimi ve sık sorulan soruları bulacaksınız.</p>
   </div>
+  <section class="statsband hp-stats"><div class="wrap"><div class="grid">
+    <div><div class="n" data-count="38">0</div><div class="l">Yıllık Tecrübe</div></div>
+    <div><div class="n" data-count="8400" data-suf="+">0</div><div class="l">Teslim Edilen Konut</div></div>
+    <div><div class="n" data-count="146">0</div><div class="l">Tamamlanan Proje</div></div>
+    <div><div class="n" data-count="12">0</div><div class="l">Aktif Şantiye</div></div>
+    <div><div class="n" data-count="2100000" data-fmt="m2">0</div><div class="l">Toplam İnşa Alanı</div></div>
+  </div></div></section>
+  <div class="hp-trust"><span class="ht-lead">🛡️ Standartlarımız</span><span class="ht-chip">TBDY 2018</span><span class="ht-chip">Yapı Denetimli · 4708</span><span class="ht-chip">6306 Kentsel Dönüşüm</span><span class="ht-chip">ISO 9001 · 14001 · 45001</span><span class="ht-chip">BIM Koordinasyon</span></div>
   <div class="hp-grid" id="hpGrid"></div>
   <div class="hp-cta"><div class="box">
     <h3>Projeniz için doğru hizmeti birlikte belirleyelim</h3>
@@ -1335,27 +1386,7 @@ header.scrolled .lang-sel{color:var(--ink)}
     <button class="btn" onclick="openTeklif()">Ücretsiz Keşif & Teklif Al →</button>
   </div></div>
 
-  <footer><div class="wrap">
-    <div class="fgrid">
-      <div><div class="lo">Meridyen<span class="lo2"> Yapı</span></div>
-        <p class="desc">1986'dan bu yana güvenle inşa eden kurumsal yapı, tadilat ve gayrimenkul geliştirme şirketi.</p>
-        <div class="fcerts"><span>ISO 9001</span><span>ISO 14001</span><span>ISO 45001</span><span>Yapı Denetim</span><span>TBDY 2018</span></div>
-        <div class="partner-seal">🔗 Canlı Bölge Veri Ağı</div>
-      </div>
-      <div><h4>Kurumsal</h4><a href="#hakkimizda" onclick="return hpGo('hakkimizda')">Hakkımızda</a><a href="#">Vizyon & Misyon</a><a href="#">Yönetim Kadrosu</a><a href="#">Kalite & Sertifikalar</a><a href="#medya" onclick="return hpGo('medya')">Basında Biz</a><a href="#">Kariyer</a></div>
-      <div><h4>Hizmetler</h4><a href="#" onclick="event.preventDefault();document.getElementById('hizmetlerPage').scrollTo({top:0,behavior:'smooth'})">Konut İnşaatı</a><a href="#" onclick="event.preventDefault();document.getElementById('hizmetlerPage').scrollTo({top:0,behavior:'smooth'})">Tadilat & Renovasyon</a><a href="#" onclick="event.preventDefault();document.getElementById('hizmetlerPage').scrollTo({top:0,behavior:'smooth'})">Kentsel Dönüşüm</a><a href="#" onclick="event.preventDefault();document.getElementById('hizmetlerPage').scrollTo({top:0,behavior:'smooth'})">Kat Karşılığı</a><a href="#" onclick="event.preventDefault();document.getElementById('hizmetlerPage').scrollTo({top:0,behavior:'smooth'})">Anahtar Teslim</a><a href="#" onclick="event.preventDefault();document.getElementById('hizmetlerPage').scrollTo({top:0,behavior:'smooth'})">Ticari Yapılar</a></div>
-      <div><h4>İletişim</h4>
-        <a href="#" onclick="return hpGo('iletisim')">Levent Mah. Yapı Cad. No:1<br>Beşiktaş / İstanbul</a>
-        <a href="tel:+902120000000" class="js-tel">+90 212 000 00 00</a>
-        <a href="mailto:info@meridyenyapi.com">info@meridyenyapi.com</a>
-        <div style="margin-top:10px;font-size:19px;display:flex;gap:14px"><a href="#">in</a><a href="#">f</a><a href="#">▶</a><a href="#">◎</a></div>
-      </div>
-    </div>
-    <div class="fbot">
-      <div>© 2026 Meridyen Yapı A.Ş. · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span> · <a href="#admin" onclick="openAdmin()">Yönetici Girişi</a></div>
-      <div><a href="#">KVKK</a> · <a href="#">Gizlilik</a> · <a href="#">Çerez Politikası</a> · <a href="#">Ada/Parsel (TKGM)</a></div>
-    </div>
-  </div></footer>
+  <footer class="insaatFooter"></footer>
 </div>
 
 <!-- ===== /BOLGE ZEKASI SAYFASI ===== -->
@@ -1389,27 +1420,7 @@ header.scrolled .lang-sel{color:var(--ink)}
 
   <div class="bz-body" id="bzBody"></div>
 
-  <footer><div class="wrap">
-    <div class="fgrid">
-      <div><div class="lo">Meridyen<span class="lo2"> Yapı</span></div>
-        <p class="desc">1986'dan bu yana güvenle inşa eden kurumsal yapı, tadilat ve gayrimenkul geliştirme şirketi.</p>
-        <div class="fcerts"><span>ISO 9001</span><span>ISO 14001</span><span>ISO 45001</span><span>Yapı Denetim</span><span>TBDY 2018</span></div>
-        <div class="partner-seal">🔗 Canlı Bölge Veri Ağı</div>
-      </div>
-      <div><h4>Kurumsal</h4><a href="#hakkimizda" onclick="return bzGo('hakkimizda')">Hakkımızda</a><a href="#">Vizyon & Misyon</a><a href="#">Yönetim Kadrosu</a><a href="#">Kalite & Sertifikalar</a><a href="#medya" onclick="return bzGo('medya')">Basında Biz</a><a href="#">Kariyer</a></div>
-      <div><h4>Hizmetler</h4><a href="#" onclick="event.preventDefault();closeBolgePage();setTimeout(openHizmetlerPage,90)">Konut İnşaatı</a><a href="#" onclick="event.preventDefault();closeBolgePage();setTimeout(openHizmetlerPage,90)">Tadilat & Renovasyon</a><a href="#" onclick="event.preventDefault();closeBolgePage();setTimeout(openHizmetlerPage,90)">Kentsel Dönüşüm</a><a href="#" onclick="event.preventDefault();closeBolgePage();setTimeout(openHizmetlerPage,90)">Kat Karşılığı</a><a href="#" onclick="event.preventDefault();closeBolgePage();setTimeout(openHizmetlerPage,90)">Anahtar Teslim</a><a href="#" onclick="event.preventDefault();closeBolgePage();setTimeout(openHizmetlerPage,90)">Ticari Yapılar</a></div>
-      <div><h4>İletişim</h4>
-        <a href="#" onclick="return bzGo('iletisim')">Levent Mah. Yapı Cad. No:1<br>Beşiktaş / İstanbul</a>
-        <a href="tel:+902120000000" class="js-tel">+90 212 000 00 00</a>
-        <a href="mailto:info@meridyenyapi.com">info@meridyenyapi.com</a>
-        <div style="margin-top:10px;font-size:19px;display:flex;gap:14px"><a href="#">in</a><a href="#">f</a><a href="#">▶</a><a href="#">◎</a></div>
-      </div>
-    </div>
-    <div class="fbot">
-      <div>© 2026 Meridyen Yapı A.Ş. · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span> · <a href="#admin" onclick="openAdmin()">Yönetici Girişi</a></div>
-      <div><a href="#">KVKK</a> · <a href="#">Gizlilik</a> · <a href="#">Çerez Politikası</a> · <a href="#">Ada/Parsel (TKGM)</a></div>
-    </div>
-  </div></footer>
+  <footer class="insaatFooter"></footer>
 </div>
 
 <!-- ===== HIZMET DETAY OVERLAY ===== -->
@@ -1443,27 +1454,7 @@ header.scrolled .lang-sel{color:var(--ink)}
   </div></div>
   <div class="sd-body" id="sdBody"></div>
 
-  <footer><div class="wrap">
-    <div class="fgrid">
-      <div><div class="lo">Meridyen<span class="lo2"> Yapı</span></div>
-        <p class="desc">1986'dan bu yana güvenle inşa eden kurumsal yapı, tadilat ve gayrimenkul geliştirme şirketi.</p>
-        <div class="fcerts"><span>ISO 9001</span><span>ISO 14001</span><span>ISO 45001</span><span>Yapı Denetim</span><span>TBDY 2018</span></div>
-        <div class="partner-seal">🔗 Canlı Bölge Veri Ağı</div>
-      </div>
-      <div><h4>Kurumsal</h4><a href="#hakkimizda" onclick="return sdGo('hakkimizda')">Hakkımızda</a><a href="#">Vizyon & Misyon</a><a href="#">Yönetim Kadrosu</a><a href="#">Kalite & Sertifikalar</a><a href="#medya" onclick="return sdGo('medya')">Basında Biz</a><a href="#">Kariyer</a></div>
-      <div><h4>Hizmetler</h4><a href="#" onclick="event.preventDefault();sdBackToHizmetler()">Konut İnşaatı</a><a href="#" onclick="event.preventDefault();sdBackToHizmetler()">Tadilat & Renovasyon</a><a href="#" onclick="event.preventDefault();sdBackToHizmetler()">Kentsel Dönüşüm</a><a href="#" onclick="event.preventDefault();sdBackToHizmetler()">Kat Karşılığı</a><a href="#" onclick="event.preventDefault();sdBackToHizmetler()">Anahtar Teslim</a><a href="#" onclick="event.preventDefault();sdBackToHizmetler()">Ticari Yapılar</a></div>
-      <div><h4>İletişim</h4>
-        <a href="#" onclick="return sdGo('iletisim')">Levent Mah. Yapı Cad. No:1<br>Beşiktaş / İstanbul</a>
-        <a href="tel:+902120000000" class="js-tel">+90 212 000 00 00</a>
-        <a href="mailto:info@meridyenyapi.com">info@meridyenyapi.com</a>
-        <div style="margin-top:10px;font-size:19px;display:flex;gap:14px"><a href="#">in</a><a href="#">f</a><a href="#">▶</a><a href="#">◎</a></div>
-      </div>
-    </div>
-    <div class="fbot">
-      <div>© 2026 Meridyen Yapı A.Ş. · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span> · <a href="#admin" onclick="openAdmin()">Yönetici Girişi</a></div>
-      <div><a href="#">KVKK</a> · <a href="#">Gizlilik</a> · <a href="#">Çerez Politikası</a> · <a href="#">Ada/Parsel (TKGM)</a></div>
-    </div>
-  </div></footer>
+  <footer class="insaatFooter"></footer>
 </div>
 
 <!-- ===== PROJE DETAY OVERLAY ===== -->
@@ -1501,51 +1492,10 @@ header.scrolled .lang-sel{color:var(--ink)}
   </div>
   <div class="pd-body" id="pdBody"></div>
 
-  <footer><div class="wrap">
-    <div class="fgrid">
-      <div><div class="lo">Meridyen<span class="lo2"> Yapı</span></div>
-        <p class="desc">1986'dan bu yana güvenle inşa eden kurumsal yapı, tadilat ve gayrimenkul geliştirme şirketi.</p>
-        <div class="fcerts"><span>ISO 9001</span><span>ISO 14001</span><span>ISO 45001</span><span>Yapı Denetim</span><span>TBDY 2018</span></div>
-        <div class="partner-seal">🔗 Canlı Bölge Veri Ağı</div>
-      </div>
-      <div><h4>Kurumsal</h4><a href="#hakkimizda" onclick="return jdGo('hakkimizda')">Hakkımızda</a><a href="#">Vizyon & Misyon</a><a href="#">Yönetim Kadrosu</a><a href="#">Kalite & Sertifikalar</a><a href="#medya" onclick="return jdGo('medya')">Basında Biz</a><a href="#">Kariyer</a></div>
-      <div><h4>Hizmetler</h4><a href="#" onclick="event.preventDefault();closeProjectDetail();closeProjelerPage();setTimeout(openHizmetlerPage,90)">Konut İnşaatı</a><a href="#" onclick="event.preventDefault();closeProjectDetail();closeProjelerPage();setTimeout(openHizmetlerPage,90)">Tadilat & Renovasyon</a><a href="#" onclick="event.preventDefault();closeProjectDetail();closeProjelerPage();setTimeout(openHizmetlerPage,90)">Kentsel Dönüşüm</a><a href="#" onclick="event.preventDefault();closeProjectDetail();closeProjelerPage();setTimeout(openHizmetlerPage,90)">Kat Karşılığı</a><a href="#" onclick="event.preventDefault();closeProjectDetail();closeProjelerPage();setTimeout(openHizmetlerPage,90)">Anahtar Teslim</a><a href="#" onclick="event.preventDefault();closeProjectDetail();closeProjelerPage();setTimeout(openHizmetlerPage,90)">Ticari Yapılar</a></div>
-      <div><h4>İletişim</h4>
-        <a href="#" onclick="return jdGo('iletisim')">Levent Mah. Yapı Cad. No:1<br>Beşiktaş / İstanbul</a>
-        <a href="tel:+902120000000" class="js-tel">+90 212 000 00 00</a>
-        <a href="mailto:info@meridyenyapi.com">info@meridyenyapi.com</a>
-        <div style="margin-top:10px;font-size:19px;display:flex;gap:14px"><a href="#">in</a><a href="#">f</a><a href="#">▶</a><a href="#">◎</a></div>
-      </div>
-    </div>
-    <div class="fbot">
-      <div>© 2026 Meridyen Yapı A.Ş. · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span> · <a href="#admin" onclick="openAdmin()">Yönetici Girişi</a></div>
-      <div><a href="#">KVKK</a> · <a href="#">Gizlilik</a> · <a href="#">Çerez Politikası</a> · <a href="#">Ada/Parsel (TKGM)</a></div>
-    </div>
-  </div></footer>
+  <footer class="insaatFooter"></footer>
 </div>
 
-<footer><div class="wrap">
-  <div class="fgrid">
-    <div><div class="lo">Meridyen<span class="lo2"> Yapı</span></div>
-      <p class="desc">1986'dan bu yana güvenle inşa eden kurumsal yapı, tadilat ve gayrimenkul geliştirme şirketi.</p>
-      <div class="fcerts"><span>ISO 9001</span><span>ISO 14001</span><span>ISO 45001</span><span>Yapı Denetim</span><span>TBDY 2018</span></div>
-    </div>
-    <div><h4>Kurumsal</h4><a href="#hakkimizda">Hakkımızda</a><a href="#">Vizyon & Misyon</a><a href="#">Yönetim Kadrosu</a><a href="#">Kalite & Sertifikalar</a><a href="#medya">Medya & Basında Biz</a><a href="#bolge" onclick="event.preventDefault();openBolgePage()">Bölge Ekspertizi</a><a href="#">Kariyer</a></div>
-    <div><h4>Hizmetler</h4><a href="#hizmetler" onclick="event.preventDefault();openHizmetlerPage()">Konut İnşaatı</a><a href="#hizmetler" onclick="event.preventDefault();openHizmetlerPage()">Tadilat & Renovasyon</a><a href="#hizmetler" onclick="event.preventDefault();openHizmetlerPage()">Kentsel Dönüşüm</a><a href="#hizmetler" onclick="event.preventDefault();openHizmetlerPage()">Kat Karşılığı</a><a href="#hizmetler" onclick="event.preventDefault();openHizmetlerPage()">Anahtar Teslim</a><a href="#hizmetler" onclick="event.preventDefault();openHizmetlerPage()">Ticari Yapılar</a></div>
-    <div><h4>İletişim</h4>
-      <a href="#">Levent Mah. Yapı Cad. No:1<br>Beşiktaş / İstanbul</a>
-      <a href="tel:+902120000000" class="js-tel">+90 212 000 00 00</a>
-      <a href="mailto:info@meridyenyapi.com">info@meridyenyapi.com</a>
-      <a href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer">💬 WhatsApp Hattı</a>
-      <div style="margin-top:10px;font-size:19px;display:flex;gap:14px"><a href="#">in</a><a href="#">f</a><a href="#">▶</a><a href="#">◎</a></div>
-    </div>
-  </div>
-  <div class="fbot">
-    <div>© 2026 Meridyen Yapı A.Ş. · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span> · <a href="#admin" onclick="openAdmin()">Yönetici Girişi</a></div>
-    <div><a href="#">KVKK</a> · <a href="#">Gizlilik</a> · <a href="#">Çerez Politikası</a> · <a href="#">Ada/Parsel (TKGM)</a></div>
-  </div>
-  <div class="fbrand"><span class="fvo">🔗 emlakekspertizi.com Veri Ortağı</span><span>Bağımsız · Tarafsız · Denetlenebilir · Mevzuata Uyumlu</span><a class="fprox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a></div>
-</div></footer>
+<footer class="insaatFooter"></footer>
 <button class="totop" id="totop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
 <div class="cookie" id="cookie" style="display:none">
   <div class="cwrap">
@@ -1855,16 +1805,7 @@ function cookieChoice(v){
 window.addEventListener("error",e=>{console.warn("[caught]",e.message,e.filename+":"+e.lineno);e.preventDefault&&e.preventDefault();return true;});
 /* ---------------- DATA ---------------- */
 const IMG = {"h0": "img/insaat/img1.jpg", "h1": "img/insaat/img2.jpg", "h2": "img/insaat/img3.jpg", "h3": "img/insaat/img4.jpg", "p_res": "img/insaat/img5.jpg", "p_lux": "img/insaat/img6.jpg", "p_villa": "img/insaat/img7.jpg", "p_office": "img/insaat/img8.jpg", "p_white": "img/insaat/img9.jpg", "p_home": "img/insaat/img10.jpg", "about": "img/insaat/img11.jpg", "b1": "img/insaat/img12.jpg", "b2": "img/insaat/img13.jpg", "b3": "img/insaat/img14.jpg"};
-let SERVICES=[
-  {i:'🏢',t:'Konut İnşaatı',d:'Lüks rezidans, apartman ve site projelerinde anahtar teslim konut üretimi.',long:"L\u00fcks rezidans, apartman ve site projelerinde arsa analizinden anahtar teslime kadar t\u00fcm konut \u00fcretim s\u00fcrecini y\u00f6netiyoruz. TBDY 2018 deprem y\u00f6netmeli\u011fine uyumlu betonarme ta\u015f\u0131y\u0131c\u0131 sistemler, BIM koordinasyonu ve A s\u0131n\u0131f\u0131 enerji performans\u0131yla ya\u015fanabilir, de\u011ferini koruyan konutlar in\u015fa ediyoruz.",scope:["Mimari & statik proje y\u00f6netimi", "Betonarme C30/37 ta\u015f\u0131y\u0131c\u0131 sistem", "BIM koordinasyonu & clash detection", "Ak\u0131ll\u0131 bina (KNX) altyap\u0131s\u0131", "Peyzaj & sosyal donat\u0131", "\u0130skan belgesi & teslim"],steps:[{"t": "Arsa & Fizibilite", "d": "Zemin et\u00fcd\u00fc, imar analizi ve fizibilite raporu"}, {"t": "Proje & Ruhsat", "d": "Mimari, statik, mekanik projeler ve ruhsat s\u00fcreci"}, {"t": "\u0130n\u015faat", "d": "Temel, karkas, cephe ve ince i\u015f\u00e7ilik"}, {"t": "Teslim", "d": "\u0130skan belgesi, anahtar teslim ve garanti"}]},
-  {i:'🔨',t:'Tadilat & Renovasyon',d:'Daire, ofis ve bina genelinde komple tadilat, yenileme ve iç mekan renovasyonu.',long:"Daire, ofis ve bina genelinde komple tadilat, yenileme ve i\u00e7 mekan renovasyonu hizmeti sunuyoruz. Y\u0131k\u0131m, tesisat yenileme, al\u00e7\u0131pan, boya, mutfak-banyo d\u00f6n\u00fc\u015f\u00fcm\u00fc dahil tek elden, takvimle y\u00fcr\u00fcyen profesyonel renovasyon.",scope:["Komple i\u00e7 mekan yenileme", "Elektrik & s\u0131hhi tesisat yenileme", "Mutfak & banyo d\u00f6n\u00fc\u015f\u00fcm\u00fc", "Al\u00e7\u0131pan, boya, zemin kaplama", "Kap\u0131-pencere & cephe yenileme", "Anahtar teslim teslimat"],steps:[{"t": "Ke\u015fif & \u00d6l\u00e7\u00fc", "d": "Yerinde ke\u015fif, \u00f6l\u00e7\u00fcm ve detayl\u0131 teklif"}, {"t": "Tasar\u0131m", "d": "3D g\u00f6rsel ve malzeme se\u00e7imi"}, {"t": "Uygulama", "d": "Y\u0131k\u0131m, tesisat, kaba ve ince i\u015f\u00e7ilik"}, {"t": "Teslim", "d": "Temizlik, kontrol ve teslimat"}]},
-  {i:'♻️',t:'Kentsel Dönüşüm',d:'Riskli yapıların 6306 sayılı kanun kapsamında güvenli yenilenmesi.',long:"Riskli yap\u0131lar\u0131n 6306 say\u0131l\u0131 kanun kapsam\u0131nda g\u00fcvenli yenilenmesini, hak sahibi haklar\u0131n\u0131 koruyarak y\u00f6netiyoruz. Kira yard\u0131m\u0131, ta\u015f\u0131nma deste\u011fi ve \u015feffaf s\u00fcre\u00e7 y\u00f6netimiyle d\u00f6n\u00fc\u015f\u00fcm\u00fc sorunsuz tamaml\u0131yoruz.",scope:["Riskli yap\u0131 tespiti & rapor", "6306 yasal s\u00fcre\u00e7 y\u00f6netimi", "Hak sahibi s\u00f6zle\u015fmeleri", "Kira yard\u0131m\u0131 & ta\u015f\u0131nma deste\u011fi", "TBDY 2018 g\u00fc\u00e7l\u00fc yeni yap\u0131", "Sosyal donat\u0131 & otopark"],steps:[{"t": "Risk Tespiti", "d": "Bakanl\u0131k lisansl\u0131 riskli yap\u0131 raporu"}, {"t": "Mutabakat", "d": "Hak sahipleriyle s\u00f6zle\u015fme ve proje onay\u0131"}, {"t": "Y\u0131k\u0131m & \u0130n\u015faat", "d": "Ruhsat, y\u0131k\u0131m ve yeni yap\u0131 \u00fcretimi"}, {"t": "Teslim", "d": "\u0130skan ve hak sahiplerine teslim"}]},
-  {i:'🔑',t:'Anahtar Teslim Taahhüt',d:'Tasarımdan teslime tüm sorumluluğun tek elde toplandığı taahhüt modeli.',long:"Tasar\u0131mdan teslime t\u00fcm sorumlulu\u011fun tek elde topland\u0131\u011f\u0131 taahh\u00fct modeliyle, i\u015fveren i\u00e7in risksiz ve \u00f6ng\u00f6r\u00fclebilir bir s\u00fcre\u00e7 sa\u011fl\u0131yoruz. Sabit fiyat, sabit takvim, tek muhatap.",scope:["Tek elden proje y\u00f6netimi", "Sabit fiyat & sabit takvim", "T\u00fcm disiplinlerin koordinasyonu", "Hakedi\u015f & maliyet kontrol\u00fc", "Kalite & \u0130SG y\u00f6netimi", "Garanti & sat\u0131\u015f sonras\u0131"],steps:[{"t": "S\u00f6zle\u015fme", "d": "Kapsam, fiyat ve takvim mutabakat\u0131"}, {"t": "Planlama", "d": "CPM kritik yol ve kaynak plan\u0131"}, {"t": "\u00dcretim", "d": "Hakedi\u015f sistemiyle kontroll\u00fc in\u015faat"}, {"t": "Teslim", "d": "Test, devreye alma ve teslim"}]},
-  {i:'🤝',t:'Kat Karşılığı İnşaat',d:'Arsa sahipleriyle şeffaf hisse paylaşımına dayalı kazan-kazan projeler.',long:"Arsa sahipleriyle \u015feffaf hisse payla\u015f\u0131m\u0131na dayal\u0131 kazan-kazan projeler geli\u015ftiriyoruz. Detayl\u0131 fizibilite, adil payla\u015f\u0131m oran\u0131 ve noterli s\u00f6zle\u015fmeyle g\u00fcvenli ortakl\u0131k kuruyoruz.",scope:["Arsa fizibilite & de\u011ferleme", "Adil payla\u015f\u0131m oran\u0131 analizi", "Noterli kat kar\u015f\u0131l\u0131\u011f\u0131 s\u00f6zle\u015fmesi", "Proje & ruhsat y\u00f6netimi", "\u0130n\u015faat & pazarlama", "Tapu devir & teslim"],steps:[{"t": "Fizibilite", "d": "Arsa potansiyeli ve payla\u015f\u0131m analizi"}, {"t": "S\u00f6zle\u015fme", "d": "Noterli kat kar\u015f\u0131l\u0131\u011f\u0131 anla\u015fmas\u0131"}, {"t": "\u0130n\u015faat", "d": "Proje, ruhsat ve yap\u0131m"}, {"t": "Payla\u015f\u0131m", "d": "Ba\u011f\u0131ms\u0131z b\u00f6l\u00fcm devri ve teslim"}]},
-  {i:'🏬',t:'Ticari & Karma Yapılar',d:'Ofis, AVM, otel ve karma kullanımlı projelerde uçtan uca yapım.',long:"Ofis, AVM, otel ve karma kullan\u0131ml\u0131 projelerde u\u00e7tan uca yap\u0131m hizmeti veriyoruz. LEED/BREEAM sertifikal\u0131, ak\u0131ll\u0131 bina y\u00f6netimli ticari yap\u0131lar i\u00e7in kurumsal \u00e7\u00f6z\u00fcmler.",scope:["Ofis & plaza yap\u0131m\u0131", "AVM & perakende alanlar\u0131", "Otel & konaklama tesisleri", "Karma kullan\u0131m projeleri", "LEED/BREEAM sertifikasyon", "Ak\u0131ll\u0131 bina (BMS) sistemleri"],steps:[{"t": "Konsept", "d": "Kullan\u0131m analizi ve fizibilite"}, {"t": "Tasar\u0131m", "d": "Mimari, MEP ve sertifika hedefleri"}, {"t": "\u0130n\u015faat", "d": "\u00c7elik/betonarme yap\u0131m ve MEP"}, {"t": "\u0130\u015fletme", "d": "Devreye alma ve i\u015fletme deste\u011fi"}]},
-  {i:'🏛️',t:'Güçlendirme & Restorasyon',d:'Mevcut yapılarda deprem güçlendirmesi ve tarihi yapı restorasyonu.',long:"Mevcut yap\u0131larda deprem g\u00fc\u00e7lendirmesi ve tarihi yap\u0131 restorasyonu yap\u0131yoruz. Karbon fiber, mantolama, perde-kolon g\u00fc\u00e7lendirme ve \u00f6zg\u00fcn dokuya sad\u0131k restorasyon teknikleri.",scope:["Deprem performans analizi", "Karbon fiber (FRP) g\u00fc\u00e7lendirme", "Perde & kolon mantolama", "Temel g\u00fc\u00e7lendirme", "Tarihi yap\u0131 restorasyonu", "R\u00f6leve & restit\u00fcsyon projesi"],steps:[{"t": "Analiz", "d": "Yap\u0131 performans de\u011ferlendirmesi"}, {"t": "Proje", "d": "G\u00fc\u00e7lendirme/restorasyon projesi"}, {"t": "Uygulama", "d": "Kontroll\u00fc g\u00fc\u00e7lendirme i\u015fleri"}, {"t": "Onay", "d": "Test, raporlama ve onay"}]},
-  {i:'🏭',t:'Endüstriyel Yapılar',d:'Fabrika, depo ve lojistik tesislerinde çelik ve betonarme çözümler.',long:"Fabrika, depo ve lojistik tesislerinde \u00e7elik ve betonarme \u00e7\u00f6z\u00fcmler sunuyoruz. Geni\u015f a\u00e7\u0131kl\u0131kl\u0131 \u00e7elik konstr\u00fcksiyon, prefabrik sistemler ve h\u0131zl\u0131 yap\u0131m teknikleriyle end\u00fcstriyel ihtiya\u00e7lara cevap veriyoruz.",scope:["\u00c7elik konstr\u00fcksiyon yap\u0131m", "Prefabrik betonarme sistemler", "Geni\u015f a\u00e7\u0131kl\u0131kl\u0131 \u00e7at\u0131 sistemleri", "Lojistik & depo tesisleri", "\u00dcretim & fabrika binalar\u0131", "Altyap\u0131 & saha d\u00fczenleme"],steps:[{"t": "\u0130htiya\u00e7 Analizi", "d": "\u00dcretim ak\u0131\u015f\u0131 ve alan ihtiya\u00e7lar\u0131"}, {"t": "Tasar\u0131m", "d": "\u00c7elik/prefabrik sistem tasar\u0131m\u0131"}, {"t": "Montaj", "d": "H\u0131zl\u0131 saha montaj\u0131 ve yap\u0131m"}, {"t": "Teslim", "d": "Test, devreye alma ve teslim"}]},
-];
+let SERVICES=[{"i": "🏢", "t": "Konut İnşaatı", "d": "Lüks rezidans, apartman ve site projelerinde anahtar teslim konut üretimi.", "long": "Arsa analizinden anahtar teslime kadar tüm konut üretim sürecini tek çatı altında yönetiyoruz. TBDY 2018 deprem yönetmeliğine uyumlu C30/37 betonarme taşıyıcı sistemler, zemin etüdüne dayalı temel tasarımı, BIM koordinasyonu ve A sınıfı enerji performansıyla; yaşanabilir, değerini koruyan ve nesiller boyu güvenli konutlar inşa ediyoruz.", "mevzuat": ["TBDY 2018", "İmar Kanunu 3194", "Yapı Denetim 4708", "BEP-TR Enerji", "ISO 9001"], "scope": ["Zemin etüdü & jeoteknik rapor", "Mimari + statik + mekanik + elektrik proje", "Betonarme C30/37 taşıyıcı sistem", "BIM koordinasyonu & clash detection", "A sınıfı enerji & akıllı bina altyapısı", "İskân belgesi & anahtar teslim"], "steps": [{"t": "Arsa & İmar Analizi", "d": "TAKS/KAKS/Hmax hesabı, inşaat hakkı ve kısıtların tespiti"}, {"t": "Zemin Etüdü & Fizibilite", "d": "Jeoteknik sondaj, zemin sınıfı ve gider-gelir fizibilitesi"}, {"t": "Proje & Ruhsat", "d": "Mimari, statik, mekanik, elektrik projeleri ve yapı ruhsatı"}, {"t": "Temel & Kaba Yapı", "d": "Hafriyat-iksa, radye/kazıklı temel, betonarme karkas"}, {"t": "Cephe & Tesisat", "d": "Mantolama, cephe, mekanik-elektrik (M&E) tesisat, su yalıtımı"}, {"t": "İnce İşler", "d": "Sıva, alçı, boya, seramik-parke, kapı-pencere"}, {"t": "İskân & Teslim", "d": "Yapı denetim uygunluğu, enerji kimlik belgesi, anahtar teslim"}], "deep": ["Konut inşaatında kalıcı değeri belirleyen ilk karar zeminde alınır. Yerinde açılan jeoteknik sondajlarla zemin sınıfı ve emniyet gerilmesi belirlenir; buna göre radye ya da kazıklı temel seçilir. Taşıyıcı sistem, TBDY 2018'in öngördüğü Deprem Tasarım Sınıfı (DTS) ve bina yükseklik sınıfına (BYS) uygun olarak, C30/37 betonu ve nervürlü donatıyla boyutlandırılır; perde-kolon düzeni süneklik hedefiyle çözülür.", "Üretim aşamasında BIM (Yapı Bilgi Modellemesi) ile mimari, statik ve MEP disiplinleri tek modelde çakıştırılır; clash detection sayesinde sahada sürpriz maliyet doğuran çakışmalar tasarım masasında çözülür. A sınıfı enerji performansı, mantolama ve verimli mekanik sistemlerle sağlanır. Her etap bağımsız yapı denetimi (4708) ve kendi kalite kontrolümüzle belgelenerek iskâna hazır hale getirilir."], "risks": [{"t": "Zemin sürprizi (yeraltı suyu / zayıf tabaka)", "d": "Detaylı jeoteknik etüt ve doğru temel tipi (radye/kazıklı) ile riski inşaata başlamadan kapatırız."}, {"t": "Malzeme maliyeti dalgalanması", "d": "Demir-beton tedarikini erken bağlar, sabit bütçe ve şeffaf revizyon protokolü uygularız."}, {"t": "İşçilik / kalite kusuru", "d": "4708 yapı denetimi + donatı ve beton dökümünde kendi QA aşama kontrollerimizle her etabı kayıt altına alırız."}, {"t": "Süre aşımı", "d": "CPM kritik yol planı ve haftalık ilerleme raporlarıyla takvimi izlenebilir kılarız."}], "guarantee": ["Sabit götürü bedel sözleşmesi", "Kademeli hakediş & maliyet kontrolü", "TBDY 2018 %100 uyum taahhüdü", "İskâna kadar tek muhatap", "2 yıl işçilik + yapısal garanti"], "terms": [{"k": "Zemin etüdü", "v": "Sondaj ve arazi deneyleriyle zemin taşıma gücünün belirlenmesi."}, {"k": "Betonarme C30/37", "v": "30 MPa karakteristik basınç dayanımına sahip yapısal beton sınıfı."}, {"k": "Radye temel", "v": "Yükü tüm tabana yayan plak temel; zayıf zeminde tercih edilir."}, {"k": "BIM", "v": "3B veri modeliyle çakışma, maliyet ve planlamanın yönetimi."}, {"k": "İskân", "v": "Yapının hukuken kullanılabilir olduğunu belgeleyen yapı kullanma izni."}], "faq": [{"q": "Konut inşaatı metrekare maliyeti 2026'da ne kadar?", "a": "Maliyet; zemin sınıfı, kat adedi, malzeme ve cephe sistemine göre değişir. Sağlıklı rakam yerinde keşif ve metraj sonrası verilir — bu yüzden sabit fiyat yerine güncel keşifle şeffaf teklif sunuyoruz."}, {"q": "Binam deprem yönetmeliğine uygun olacak mı?", "a": "Evet. Tüm projelerimiz TBDY 2018'e göre, zemin sınıfına uygun deprem tasarım sınıfı ve performans hedefiyle boyutlandırılır ve bağımsız yapı denetim kuruluşunca denetlenir."}, {"q": "Süreç ne kadar sürer?", "a": "Proje-ruhsat aşaması genelde 2-6 ay; inşaat, ölçek ve kat adedine göre planlanır. Sözleşmede net teslim tarihi ve gecikme için cezai şart yer alır."}], "tags": ["konut inşaatı firması", "anahtar teslim ev yapımı", "betonarme konut", "deprem yönetmeliğine uygun bina", "m² inşaat maliyeti 2026"]}, {"i": "🔨", "t": "Tadilat & Renovasyon", "d": "Daire, ofis ve bina genelinde komple tadilat, yenileme ve iç mekan renovasyonu.", "long": "Daire, ofis ve bina genelinde komple tadilat, yenileme ve iç mekân renovasyonunu tek elden yönetiyoruz. En önemli farkımız şudur: taşıyıcı sisteme (kolon-kiriş-perde) asla izinsiz müdahale etmeyiz; gereken her yapısal işlem statik mühendis onayı ve gerektiğinde güçlendirme ruhsatıyla yapılır.", "mevzuat": ["TBDY 2018", "Tadilat/İmar Ruhsatı", "Kat Mülkiyeti Kanunu 634"], "scope": ["Komple iç mekân yenileme", "Elektrik & sıhhi tesisat yenileme", "Mutfak & banyo (ıslak hacim) dönüşümü", "Alçıpan, asma tavan, boya, zemin kaplama", "Kapı-pencere & cephe yenileme", "Su kaçağı tespiti & çatlak onarımı"], "steps": [{"t": "Keşif & Ölçüm", "d": "Yerinde keşif, ölçüm ve kalem kalem detaylı teklif"}, {"t": "3D Tasarım & Malzeme", "d": "Görselleştirme, malzeme seçimi ve yazılı sözleşme"}, {"t": "Söküm / Yıkım", "d": "Kontrollü söküm, moloz tahliyesi ve gizli hasar tespiti"}, {"t": "Tesisat & İnce İşler", "d": "Elektrik-su tesisatı, alçıpan, seramik, boya, montaj"}, {"t": "Temizlik & Teslim", "d": "İnce temizlik, kontrol listesi ve teslim"}], "deep": ["Tadilatta güvenliğin sınırı taşıyıcı sistemdir. Kolon, kiriş ve perde duvarların kesilmesi veya delinmesi yapının deprem davranışını bozar ve mevzuata göre suç teşkil eder; bu tür bir ihtiyaç doğduğunda yalnızca statik mühendis raporu ve gerekiyorsa güçlendirme ruhsatıyla çalışırız. Boya, zemin ve dolap gibi işler ruhsat gerektirmezken; duvar kaldırma, ıslak hacim yeri değiştirme ve tesisat değişikliği belediye izni ve çoğu zaman kat malikleri onayı ister.", "Tipik bir 95-115 m² komple daire tadilatı, tesisat (2-3 hafta) ve ince işler (3-4 hafta) dahil yaklaşık 5-8 haftada tamamlanır. Süreci yazılı sözleşme, sabit fiyat ve günlük ilerleme paylaşımıyla yürütür; şantiye temizliği, gürültü saatleri ve komşu bilgilendirmesi gibi yaşam düzenini koruyan detayları standart kabul ederiz."], "risks": [{"t": "Taşıyıcıya izinsiz müdahale", "d": "Kolon/kiriş/perdeye dokunulmaz; zorunlu hallerde statik onaylı, ruhsatlı güçlendirme yapılır."}, {"t": "Ruhsatsız iş riski", "d": "Gerekli belediye izni ve kat malikleri kurulu onayı önceden alınır."}, {"t": "Gizli hasar (nem, elektrik, sıva altı)", "d": "Söküm öncesi tespit ve teklif revizyonuyla sürprizi ortadan kaldırırız."}, {"t": "Komşu / ortak alan uyuşmazlığı", "d": "Yönetim planına uyum ve komşu bilgilendirmesiyle çatışmayı önleriz."}], "guarantee": ["Yazılı sözleşme & sabit fiyat", "Statik mühendis onaylı müdahale", "A sınıfı malzeme & 2 yıl işçilik garantisi", "Şantiye temizliği & komşu bilgilendirmesi", "Günlük ilerleme paylaşımı"], "terms": [{"k": "Röleve", "v": "Mevcut yapının ölçülü olarak belgelenmesi."}, {"k": "Taşıyıcı sistem", "v": "Yükü aktaran betonarme perde-kolon-kiriş iskeleti; müdahale statik onayı ister."}, {"k": "Su yalıtımı", "v": "Islak hacim ve terasta suya karşı membran/kaplama koruması."}, {"k": "Tadilat ruhsatı", "v": "Yapısal veya tesisat değişikliklerinde gereken belediye izni."}], "faq": [{"q": "Tadilat için ruhsat gerekli mi?", "a": "Boya, zemin ve dolap gibi işler ruhsatsız yapılabilir; duvar kaldırma, ıslak hacim taşıma ve tesisat değişikliği için belediye tadilat ruhsatı gerekir."}, {"q": "Salonu büyütmek için duvarı kaldırabilir miyiz?", "a": "Duvar taşıyıcı değilse mümkündür. Taşıyıcıysa kaldırılamaz; ancak statik mühendis onaylı güçlendirme (kiriş aktarımı) ile çözüm üretilebilir."}, {"q": "Komple tadilat ne kadar sürer?", "a": "95-115 m² bir daire, tesisat ve ince işler dahil yaklaşık 5-8 haftada teslim edilir; kesin süre keşif sonrası sözleşmeye yazılır."}], "tags": ["ev tadilatı", "daire renovasyon", "komple tadilat fiyatları 2026", "banyo mutfak yenileme", "tadilat firması İstanbul"]}, {"i": "♻️", "t": "Kentsel Dönüşüm", "d": "Riskli yapıların 6306 sayılı kanun kapsamında güvenli yenilenmesi.", "long": "Riskli yapıların 6306 sayılı kanun kapsamında güvenli yenilenmesini, hak sahiplerinin haklarını koruyarak uçtan uca yönetiyoruz. Riskli yapı tespitinden maliklerle mutabakata, kira yardımı başvurusundan TBDY 2018 uyumlu yeni binaya kadar tüm yasal ve teknik süreç bizde.", "mevzuat": ["6306 Kentsel Dönüşüm", "TBDY 2018", "Yapı Denetim 4708", "İmar Kanunu 3194"], "scope": ["Riskli yapı tespiti & rapor", "6306 yasal süreç yönetimi", "Hak sahibi sözleşmeleri & mutabakat", "Kira yardımı & taşınma desteği", "TBDY 2018 uyumlu güçlü yeni yapı", "Sosyal donatı & otopark"], "steps": [{"t": "Riskli Yapı Tespiti", "d": "Bakanlık lisanslı kuruluşça karot ve performans analizi"}, {"t": "Şerh & Tebligat", "d": "Tapuya riskli yapı şerhi, maliklere e-Devlet tebliği (15 gün itiraz)"}, {"t": "Malik Mutabakatı", "d": "Arsa payının 2/3 çoğunluğuyla dönüşüm kararı ve sözleşme"}, {"t": "Yıkım Ruhsatı", "d": "Tahliye, kira yardımı başvurusu ve yıkım"}, {"t": "Yeni Proje & Ruhsat", "d": "TBDY 2018 uyumlu mimari-statik proje ve yapı ruhsatı"}, {"t": "İnşaat", "d": "Yapı denetimli, güçlü yeni binanın üretimi"}, {"t": "İskân & Teslim", "d": "İskân ve hak sahiplerine bağımsız bölüm teslimi"}], "deep": ["Kentsel dönüşümün yasal omurgası 6306 sayılı kanundur. Süreç, Bakanlıkça lisanslandırılmış kuruluşun hazırladığı riskli yapı raporuyla başlar; rapor onaylanınca tapuya 'riskli yapı' şerhi işlenir ve maliklere e-Devlet üzerinden tebliğ edilir, 15 günlük itiraz hakkı tanınır. Dönüşüm kararı arsa payının en az 2/3 çoğunluğuyla alınır; karara katılmayan maliklerin payları, bağımsız (SPK lisanslı) değerleme rayici üzerinden açık artırmayla değerlendirilir. 2023 değişikliğiyle kira yardımı başvuru süresi bir yıla çıkarılmıştır.", "Güçlendirme mi, yıkıp yeniden yapmak mı sorusu yalnızca maliyetle değil imar haklarıyla da ilgilidir: eski imarda beş kat olan bir yapı yeni imarda üç kata düşmüş olabilir; bu durumda güçlendirme mevcut metrekareyi korur. Genel mühendislik ölçütü, güçlendirme maliyetinin yıkıp yeniden yapma maliyetinin %40'ını aşması halinde yeniden yapımın önerilmesidir. Karbon fiber (FRP) güçlendirme 30-90 günde tamamlanabilirken klasik dönüşüm 18-24 ay sürer. İki senaryoyu bağımsız mühendis raporuyla karşılaştırmalı sunarız."], "risks": [{"t": "Malik mutabakatsızlığı", "d": "Şeffaf müzakere ve bağımsız değerleme desteğiyle 2/3 çoğunluğu adil biçimde sağlarız."}, {"t": "Hak sahipliği itirazı", "d": "Askı-ilan ve tebligat süreçlerini hukuki takiple yönetiriz."}, {"t": "Kira yardımı / tahliye takvimi", "d": "Başvuru ve devlet desteklerini (kira, faiz, vergi muafiyeti) sizin adınıza yürütürüz."}, {"t": "Riskli yapı tespit hatası", "d": "Lisanslı kuruluşla doğrulama ve TBDY 2018 performans analiziyle raporu sağlama alırız."}], "guarantee": ["Bakanlık lisanslı riskli yapı raporu", "Bina tamamlama sigortası", "Kira yardımı & devlet destekleri yönetimi", "Şeffaf hak sahipliği cetveli", "Teminatlı, cezai şartlı sözleşme"], "terms": [{"k": "Riskli yapı tespiti", "v": "Lisanslı kuruluşça yapılan, dönüşümü başlatan resmî deprem güvenliği raporu."}, {"k": "Karot testi", "v": "Mevcut betondan silindir örnek alıp basınç dayanımı ölçme."}, {"k": "2/3 çoğunluk", "v": "Dönüşüm kararının alınması için gereken arsa payı çoğunluğu."}, {"k": "Kira yardımı", "v": "Tahliye/yıkım sonrası hak sahiplerine yapılan devlet kira desteği."}, {"k": "Bina tamamlama sigortası", "v": "Yüklenici işi bırakırsa binayı tamamlatan veya ödemeleri yasal faiziyle iade eden güvence."}], "faq": [{"q": "Kentsel dönüşümde cebimden para çıkar mı?", "a": "Kat karşılığı modelinde arsa sahibi para ödemez; ayrıca kira yardımı, düşük faizli kredi ve vergi muafiyeti gibi devlet destekleri devreye girer."}, {"q": "Komşularımın hepsi imza atmazsa ne olur?", "a": "Karar arsa payının 2/3 çoğunluğuyla alınır. Katılmayan maliklerin payı, bağımsız değerleme rayici üzerinden açık artırmayla değerlendirilir."}, {"q": "İnşaat sırasında nerede oturacağım?", "a": "Tahliye tarihinden itibaren bir yıl içinde başvuruyla kira yardımı alınır; başvuru ve takibi bizim tarafımızdan yürütülür."}], "tags": ["kentsel dönüşüm firması", "6306 sayılı kanun", "riskli yapı tespiti", "kentsel dönüşüm kira yardımı 2026", "kentsel dönüşüm süreci"]}, {"i": "🔑", "t": "Anahtar Teslim Taahhüt", "d": "Tasarımdan teslime tüm sorumluluğun tek elde toplandığı taahhüt modeli.", "long": "Mühendislikten tasarıma, tedarikten iskâna kadar tüm sorumluluğun tek yüklenicide toplandığı EPC (Engineering-Procurement-Construction) modeliyle; sabit fiyat, sabit takvim ve tek muhatap güvencesiyle işveren için risksiz ve öngörülebilir bir süreç sağlıyoruz.", "mevzuat": ["TBDY 2018", "İmar Kanunu 3194", "Yapı Denetim 4708", "ISO 9001 / 45001"], "scope": ["Tek elden proje yönetimi (EPC)", "Sabit götürü bedel & sabit takvim", "Tüm disiplinlerin koordinasyonu", "Hakediş & maliyet kontrolü", "Kalite & İSG (6331) yönetimi", "Garanti & satış sonrası"], "steps": [{"t": "Sözleşme", "d": "Kapsam, götürü bedel ve takvim mutabakatı"}, {"t": "Planlama", "d": "CPM kritik yol ve kaynak planı, BIM koordinasyonu"}, {"t": "Tedarik", "d": "Malzeme, ekipman ve işgücünün önceden bağlanması"}, {"t": "Üretim", "d": "Hakediş sistemiyle kontrollü, denetimli inşaat"}, {"t": "Test & Teslim", "d": "Devreye alma, geçici-kesin kabul ve anahtar teslim"}], "deep": ["Anahtar teslim (götürü bedel) modelinde kapsam, maliyet ve süre riski işverenden yükleniciye geçer: sabit fiyat verildiği için keşif ve tasarım hataları bizim sorumluluğumuzdadır. Bu yüzden işi sağlam bir ön proje ve BIM koordinasyonuyla başlatır, disiplinler arası çakışmaları sözleşme öncesi çözerek fiyatı gerçekçi ve sürdürülebilir kılarız.", "İşverenin kazancı öngörülebilirliktir: tek sözleşme, tek muhatap, sabit takvim ve kademeli hakediş. Süreç boyunca kalite ve iş güvenliği (6331) yönetimi standarttır; teslim, geçici kabulle başlar ve garanti/teminat süresi sonunda kesin kabulle tamamlanır."], "risks": [{"t": "Kapsam / keşif hatası", "d": "Detaylı ön proje ve BIM ile çakışmaları önce çözer, götürü bedeli sağlam temele oturturuz."}, {"t": "Fiyat sabitliği baskısı", "d": "Gerçekçi bütçeleme ve sözleşmede uyarlama esaslarıyla kaliteden ödün vermeyiz."}, {"t": "Gizli ayıp", "d": "Kesin kabule kadar süren garanti ve teminatla riski üstleniriz."}, {"t": "Disiplinler arası koordinasyon", "d": "Tek yüklenici sorumluluğu ve CPM planıyla koordinasyon boşluğunu kapatırız."}], "guarantee": ["Sabit götürü bedel — sürpriz maliyet yok", "Tek muhatap, tek sözleşme", "CPM ile öngörülebilir teslim", "Kademeli hakediş", "Kesin kabule kadar garanti"], "terms": [{"k": "EPC", "v": "Mühendislik-Tedarik-İnşaatın tek yüklenicide toplandığı anahtar teslim modeli."}, {"k": "Götürü bedel", "v": "İşin tamamı için baştan belirlenen, sabit toplam sözleşme bedeli."}, {"k": "CPM kritik yol", "v": "Projenin en uzun bağımlı iş zincirini yöneten planlama yöntemi."}, {"k": "Hakediş", "v": "Tamamlanan imalat oranına göre yapılan ara ödeme."}, {"k": "Kesin kabul", "v": "Garanti süresi sonunda yapılan nihai teslim onayı."}], "faq": [{"q": "Anahtar teslim ne demek?", "a": "Proje, ruhsat, tedarik ve inşaatın tümünün tek yüklenicide olduğu; sizin yalnızca hazır yapıyı teslim aldığınız modeldir."}, {"q": "Fiyat sabit mi kalır?", "a": "Evet, sözleşmedeki götürü bedel sabittir. Kapsam dışı ek talepler ayrıca ve yazılı olarak fiyatlandırılır."}, {"q": "Süreçte bana ne düşer?", "a": "Başlangıçtaki karar ve onaylar dışında süreç bizde; düzenli ilerleme raporlarıyla bilgilendirilirsiniz."}], "tags": ["anahtar teslim inşaat", "götürü bedel inşaat", "sabit fiyat inşaat", "anahtar teslim proje", "anahtar teslim m² fiyatı"]}, {"i": "🤝", "t": "Kat Karşılığı İnşaat", "d": "Arsa sahipleriyle şeffaf hisse paylaşımına dayalı kazan-kazan projeler.", "long": "Arsa sahipleriyle şeffaf hisse paylaşımına dayalı kazan-kazan projeler geliştiriyoruz. Arsa sahibi hiç para ödemeden arsasını değerlendirir; biz detaylı fizibilite, adil paylaşım oranı, noter onaylı sözleşme ve teminat ipoteğiyle güvenli bir ortaklık kurarız.", "mevzuat": ["Arsa Payı Karşılığı Sözleşme", "Tapu & Kat İrtifakı", "TBK Cezai Şart", "TBDY 2018"], "scope": ["Arsa fizibilite & bağımsız değerleme", "Adil paylaşım oranı analizi", "Noter onaylı, tapuya şerhli sözleşme", "Teminat ipoteği & banka teminat mektubu", "Proje, ruhsat & yapım", "Kademeli tapu devri & teslim"], "steps": [{"t": "İmar & Değer Analizi", "d": "Arsanın imar hakkı, potansiyeli ve rayiç değeri"}, {"t": "Paylaşım Oranı", "d": "Adil daire/hasılat paylaşımının belirlenmesi"}, {"t": "Noter Sözleşmesi", "d": "Tapuya şerhli, cezai şartlı kat karşılığı sözleşmesi"}, {"t": "Proje & Ruhsat", "d": "Mimari-statik proje ve yapı ruhsatı"}, {"t": "İnşaat", "d": "Yapı denetimli, teminatlı inşaat süreci"}, {"t": "Paylaşım & Teslim", "d": "Kademeli tapu devri ve bağımsız bölüm teslimi"}], "deep": ["Kat karşılığı (arsa payı karşılığı) inşaat, arsa sahibinin arsasının belirli bir payını yükleniciye devrettiği; yüklenicinin karşılığında ürettiği bağımsız bölümlerin bir kısmını arsa sahibine teslim ettiği, iki tarafa borç yükleyen bir sözleşmedir. Arsa sahibi para ödemez, arsa payı devreder. Sözleşme yasal geçerlilik için noter huzurunda düzenlenmeli ve tapuya şerh edilmelidir; hangi kat, hangi cephe, kaç metrekare bağımsız bölümün kime ait olduğu net cetvelle yazılır.", "Güveni somut kılan mekanizma teminattır: 'İstanbul usulü'nde yükleniciye devredilen taşınmaza teminat ipoteği konur; yüklenici yükümlülüğünü yerine getirmezse ipotek paraya çevrilir. Buna banka teminat mektubu ve kefalet eklenebilir. Tapu devri genelde inşaat bitmeden yapılmaz, kademeli takvimle ilerler. Teslim süresi ve gecikme cezası (TBK cezai şart) sözleşmede açıkça yer alır."], "risks": [{"t": "Paylaşım anlaşmazlığı", "d": "Hangi bağımsız bölümün kime ait olduğunu net cetvelle sözleşmeye bağlarız."}, {"t": "Erken tapu devri riski", "d": "Kademeli/aşamalı tapu devri ve teminat ipoteğiyle arsa sahibini koruruz."}, {"t": "Süre aşımı / temerrüt", "d": "Cezai şart, kira kaybı tazminatı ve kesin süre hükümleriyle güvence sağlarız."}, {"t": "Ayıplı / eksik ifa", "d": "Hakediş bazlı kontrol ve teminat ipoteğiyle kaliteyi güvenceye alırız."}], "guarantee": ["Noter onaylı, tapuya şerhli sözleşme", "Teminat ipoteği ile güvence", "Kademeli tapu devri", "Cezai şart & net teslim tarihi", "Bağımsız değerleme ile adil paylaşım"], "terms": [{"k": "Arsa payı", "v": "Bir bağımsız bölüme bağlı, arsadaki ortak mülkiyet payı."}, {"k": "Kat irtifakı", "v": "Henüz tamamlanmamış yapıda bağımsız bölümler üzerinde kurulan tapu hakkı."}, {"k": "Teminat ipoteği", "v": "Yüklenicinin yükümlülüğü için devredilen taşınmaza konan güvence ipoteği."}, {"k": "Cezai şart", "v": "Gecikme/temerrüt halinde ödenecek, sözleşmede yazılı tazminat."}, {"k": "Kademeli tapu devri", "v": "Tapunun inşaat ilerledikçe aşamalı olarak devredilmesi."}], "faq": [{"q": "Kat karşılığında kaç daire alırım?", "a": "Paylaşım oranı; arsanın imar hakkı, konumu ve rayiç değerine göre belirlenir ve hangi bağımsız bölümlerin size ait olduğu sözleşmede net yazılır."}, {"q": "Hiç para ödeyecek miyim?", "a": "Hayır. Kat karşılığı modelinde para ödemez, arsa payı devredersiniz; karşılığında anlaşılan bağımsız bölümleri alırsınız."}, {"q": "Müteahhit işi yarım bırakırsa güvencem ne?", "a": "Teminat ipoteği, banka teminat mektubu ve cezai şart devreye girer; ipotek paraya çevrilerek zararınız karşılanır."}], "tags": ["kat karşılığı inşaat", "arsa payı karşılığı inşaat", "kat karşılığı sözleşme", "kat karşılığı paylaşım oranı", "güvenilir müteahhit"]}, {"i": "🏬", "t": "Ticari & Karma Yapılar", "d": "Ofis, AVM, otel ve karma kullanımlı projelerde uçtan uca yapım.", "long": "Ofis, plaza, AVM, otel ve karma kullanımlı (mixed-use) projelerde; yangın, otopark ve işyeri açma yönetmeliklerine tam uyumlu, LEED/BREEAM sertifikalı ve akıllı bina (BMS) yönetimli ticari yapılar üretiyoruz.", "mevzuat": ["İşyeri Açma & Çalışma Ruhsatı", "Yangın Yönetmeliği (BYKHY)", "Otopark Yönetmeliği", "LEED / BREEAM", "ISO 9001/14001/45001"], "scope": ["Ofis & plaza yapımı", "AVM & perakende alanları", "Otel & konaklama tesisleri", "Karma kullanım (mixed-use) projeleri", "LEED / BREEAM sertifikasyon", "Akıllı bina (BMS) sistemleri"], "steps": [{"t": "Konsept & Fizibilite", "d": "Kullanım analizi, gelir modeli ve fizibilite"}, {"t": "Tasarım", "d": "Mimari, MEP ve sertifika (LEED/BREEAM) hedefleri"}, {"t": "Ruhsat & Onaylar", "d": "Yangın, otopark ve işyeri açma uyum onayları"}, {"t": "Yapım & MEP", "d": "Çelik/betonarme yapım, mekanik-elektrik tesisat"}, {"t": "Devreye Alma", "d": "Test, işletmeye alma ve teknik destek"}], "deep": ["Ticari yapılarda başarı, yaşam güvenliği ve işletme yönetmeliklerine uyumla başlar. Bina yangın kompartımanları, kaçış yolları ve sprinkler sistemleri BYKHY'ye göre; otopark kapasitesi Otopark Yönetmeliği hesabına göre; işlev ise İşyeri Açma ve Çalışma Ruhsatı Yönetmeliği'ne göre tasarlanır. Geniş açıklık ve yüksek yük gerektiren mekânlarda çelik konstrüksiyon, bina yükseklik sınıfına (BYS) uygun taşıyıcı çözümlerle birlikte kullanılır.", "Kurumsal kiracı ve yatırımcı güveni için LEED/BREEAM yeşil bina sertifikaları ve akıllı bina yönetim sistemleri (BMS) standart hedefimizdir. Enerji, aydınlatma, HVAC ve güvenlik tek merkezden yönetilerek işletme maliyeti düşürülür ve varlık değeri korunur."], "risks": [{"t": "Ruhsat / işyeri açma engeli", "d": "İşyeri Açma ve Çalışma Ruhsatı Yönetmeliği'ne uygun tasarımla baştan uyum sağlarız."}, {"t": "Yangın güvenliği uyumsuzluğu", "d": "BYKHY kaçış, kompartıman ve sprinkler tasarımıyla riski kapatırız."}, {"t": "Otopark yetersizliği", "d": "Otopark Yönetmeliği hesabını tasarım aşamasında çözeriz."}, {"t": "Yüksek yük / geniş açıklık", "d": "Çelik veya özel taşıyıcı sistemle BYS'ye uygun çözüm üretiriz."}], "guarantee": ["Yönetmeliklere tam uyum (yangın/otopark/işyeri)", "LEED/BREEAM sertifika hedefi", "Akıllı bina (BMS) entegrasyonu", "İşletmeye alma & teknik destek", "ISO entegre kalite sistemi"], "terms": [{"k": "Çelik konstrüksiyon", "v": "Geniş açıklık ve hızlı yapım sağlayan çelik taşıyıcı sistem."}, {"k": "BMS", "v": "Bina yönetim sistemi; enerji, HVAC ve güvenliğin merkezi kontrolü."}, {"k": "BYKHY", "v": "Binaların Yangından Korunması Hakkında Yönetmelik."}, {"k": "Mixed-use", "v": "Konut, ofis ve ticareti birlikte barındıran karma kullanım."}, {"k": "LEED / BREEAM", "v": "Uluslararası yeşil bina sertifikasyon sistemleri."}], "faq": [{"q": "Ticari yapıda hangi ruhsatlar gerekir?", "a": "Yapı ruhsatı, yangın onayı, otopark uygunluğu ve işletme için işyeri açma ve çalışma ruhsatı gerekir; tasarımı baştan bu uyumla kurarız."}, {"q": "Çelik mi betonarme mi?", "a": "Geniş açıklık, hız ve yüksek yük gereken hacimlerde çelik; diğer bölümlerde betonarme tercih edilir. Karar, statik analiz ve işlev ihtiyacına göre verilir."}, {"q": "LEED/BREEAM şart mı?", "a": "Zorunlu değildir ancak kurumsal kiracı, işletme maliyeti ve varlık değeri açısından güçlü avantaj sağlar; hedefi tasarım aşamasında belirleriz."}], "tags": ["ticari bina inşaatı", "plaza inşaatı", "iş merkezi yapımı", "çelik yapı", "AVM inşaatı"]}, {"i": "🏛️", "t": "Güçlendirme & Restorasyon", "d": "Mevcut yapılarda deprem güçlendirmesi ve tarihi yapı restorasyonu.", "long": "Mevcut yapılarda deprem güçlendirmesi ve tarihi yapı restorasyonunu, önce performans analiziyle teşhis koyarak yapıyoruz. Karbon fiber (FRP), mantolama ve perde-kolon güçlendirme teknikleriyle taşıyıcı kapasiteyi artırır; tarihi yapılarda özgün dokuya sadık röleve-restitüsyon-restorasyon sürecini yürütürüz.", "mevzuat": ["TBDY 2018", "6306", "Koruma Kurulu (tarihi yapı)", "Yapı Denetim 4708"], "scope": ["Deprem performans analizi", "Karbon fiber (FRP) güçlendirme", "Perde & kolon mantolama", "Temel güçlendirme", "Tarihi yapı restorasyonu", "Röleve & restitüsyon projesi"], "steps": [{"t": "Analiz", "d": "Karot, donatı tespiti ve TBDY 2018 performans değerlendirmesi"}, {"t": "Proje", "d": "Güçlendirme veya restorasyon projesinin hazırlanması"}, {"t": "Uygulama", "d": "Kontrollü FRP/mantolama/perde güçlendirme işleri"}, {"t": "Onay", "d": "Test, raporlama ve (tarihi yapıda) kurul onayı"}], "deep": ["Güçlendirmenin ilk adımı doğru teşhistir: karot numunesiyle beton dayanımı, donatı tespiti ve TBDY 2018'e göre performans analizi yapılır. Sonuca göre karbon fiber (CFRP), betonarme mantolama/çelik ceket veya yeni perde ekleme yöntemlerinden uygun olanı seçilir. CFRP; çelikten kat kat yüksek çekme dayanımı ve düşük ağırlığıyla, binayı boşaltmadan hızlı uygulama imkânı sunar.", "Kentsel dönüşümde güçlendirme, imar hakkı korunacaksa (kat/metrekare kaybı istenmiyorsa) güçlü bir alternatiftir. Tarihi yapılarda ise süreç röleve (mevcut durumun ölçülü belgelenmesi), restitüsyon (özgün halin araştırılması) ve restorasyon aşamalarıyla, Koruma Kurulu onaylarına bağlı yürütülür."], "risks": [{"t": "Yanlış teşhis", "d": "Karot ve performans analiziyle güçlendirme yöntemini veriyle seçeriz."}, {"t": "Kullanım kesintisi", "d": "CFRP gibi hızlı yöntemlerle binayı çoğu zaman boşaltmadan çalışırız."}, {"t": "Tarihi dokuya zarar", "d": "Röleve-restitüsyon ve kurul onaylı özgün malzeme yaklaşımıyla dokuyu koruruz."}, {"t": "İmar hakkı kaybı endişesi", "d": "Güçlendirme senaryosuyla mevcut kat ve metrekareyi koruruz."}], "guarantee": ["Veriyle teşhis (karot + performans analizi)", "TBDY 2018 uyumlu güçlendirme projesi", "Hızlı ve az kesintili uygulama", "Kurul onaylı restorasyon (tarihi yapı)", "Test & raporlamayla belgeli teslim"], "terms": [{"k": "CFRP / FRP", "v": "Karbon fiber; çelikten hafif, yüksek çekme dayanımlı güçlendirme kumaşı."}, {"k": "Mantolama (çelik ceket)", "v": "Kolon-perde kesitini sararak taşıyıcı kapasiteyi artırma."}, {"k": "Süneklik", "v": "Yapının kırılmadan enerji yutma ve şekil değiştirme kabiliyeti."}, {"k": "Röleve", "v": "Mevcut yapının ölçülü olarak belgelenmesi."}], "faq": [{"q": "Güçlendirme mi, yıkıp yeniden mi?", "a": "Karar maliyet ve imar hakkına bağlıdır. Güçlendirme maliyeti yeniden yapımın %40'ını aşıyorsa yeniden yapım; imar hakkı kaybı istenmiyorsa güçlendirme öne çıkar. İki senaryoyu karşılaştırmalı sunarız."}, {"q": "Güçlendirmede evi boşaltmam gerekir mi?", "a": "Çoğu karbon fiber uygulamasında bina boşaltılmadan çalışılabilir; kapsamlı işlerde kısmi tahliye gerekebilir."}, {"q": "Ne kadar sürer?", "a": "FRP güçlendirme genelde 30-90 gün; kapsam analiz sonrası netleşir."}], "tags": ["bina güçlendirme", "karbon fiber güçlendirme fiyatları", "deprem güçlendirme", "tarihi yapı restorasyonu", "kolon mantolama"]}, {"i": "🏭", "t": "Endüstriyel Yapılar", "d": "Fabrika, depo ve lojistik tesislerinde çelik ve betonarme çözümler.", "long": "Fabrika, depo ve lojistik tesislerinde; geniş açıklıklı çelik konstrüksiyon, prefabrik betonarme sistemler ve hızlı yapım teknikleriyle üretim akışına ve büyümeye uygun endüstriyel yapılar kuruyoruz.", "mevzuat": ["TBDY 2018", "İş Sağlığı & Güvenliği 6331", "Yapı Denetim 4708", "ISO 9001/14001/45001"], "scope": ["Çelik konstrüksiyon yapım", "Prefabrik betonarme sistemler", "Geniş açıklıklı çatı sistemleri", "Lojistik & depo tesisleri", "Üretim & fabrika binaları", "Altyapı & saha düzenleme"], "steps": [{"t": "İhtiyaç Analizi", "d": "Üretim akışı, yük, açıklık ve alan ihtiyaçları"}, {"t": "Tasarım", "d": "Çelik/prefabrik sistem ve çatı statiği tasarımı"}, {"t": "İmalat & Montaj", "d": "Atölye imalatı ve hızlı saha montajı"}, {"t": "Test & Teslim", "d": "Devreye alma, İSG onayı ve teslim"}], "deep": ["Endüstriyel yapılarda tasarımı belirleyen üç ölçüt vardır: açıklık, yük ve hız. Geniş açıklıklı üretim ve depo hacimleri, kolonsuz alan sağlayan çelik konstrüksiyonla; tekrarlı ve hızlı yapım gereken bölümler prefabrik betonarme sistemlerle çözülür. Çatı sistemleri kar, rüzgâr ve ekipman yüklerine göre boyutlandırılır.", "Saha montajı, atölyede üretilen elemanların hızlı kurulumuyla proje süresini kısaltır. Tüm süreç iş sağlığı ve güvenliği (6331) planı, yüksekte çalışma ve kaldırma güvenliği protokolleriyle yürütülür; teslim, devreye alma testleri ve raporlamayla tamamlanır."], "risks": [{"t": "Yetersiz açıklık / yük hesabı", "d": "Üretim akışı ve ekipman yüklerini önce analiz eder, çelik/prefabrik seçimini buna göre yaparız."}, {"t": "Montaj güvenliği", "d": "6331 kapsamında yüksekte çalışma ve kaldırma güvenliği protokolleriyle çalışırız."}, {"t": "Süre baskısı", "d": "Atölye imalatı + hızlı saha montajıyla üretim başlangıcını öne çekeriz."}, {"t": "Zemin / saha altyapısı", "d": "Ağır yük ve forklift trafiği için zemin ve saha düzenlemesini birlikte çözeriz."}], "guarantee": ["Yük ve açıklığa göre optimize taşıyıcı", "Hızlı atölye imalatı + saha montajı", "6331 İSG planı", "Devreye alma testleri & raporlama", "ISO entegre kalite sistemi"], "terms": [{"k": "Çelik konstrüksiyon", "v": "Kolonsuz geniş açıklık sağlayan çelik taşıyıcı sistem."}, {"k": "Prefabrik betonarme", "v": "Atölyede üretilip sahada montajlanan, hızlı yapım sağlayan sistem."}, {"k": "Geniş açıklık", "v": "Kolon araları büyük, kesintisiz üretim/depo alanı."}, {"k": "İSG (6331)", "v": "Şantiyede iş sağlığı ve güvenliği yönetimi zorunluluğu."}], "faq": [{"q": "Çelik mi prefabrik mi daha hızlı?", "a": "İkisi de hızlıdır; geniş kolonsuz açıklıklarda çelik, tekrarlı modüler bölümlerde prefabrik betonarme öne çıkar. Karar yük ve açıklık analizine göre verilir."}, {"q": "Depo zemini ağır yükü taşır mı?", "a": "Forklift trafiği ve raf yüklerine göre zemin ve saha altyapısını hesaplayıp birlikte çözeriz."}, {"q": "Ne kadar sürede üretime geçerim?", "a": "Atölye imalatı + hızlı saha montajıyla süre kısalır; kesin takvim ihtiyaç analizi sonrası verilir."}], "tags": ["endüstriyel yapı", "çelik konstrüksiyon", "fabrika inşaatı", "depo lojistik tesisi", "prefabrik yapı"]}];
 let PROJECTS=[
   {t:'Meridyen Levent Rezidans',loc:'Levent, İstanbul',st:'devam',type:'Konut · 2+1/4+1',area:'48.000 m²',img:'p_res',price:'8.500.000 ₺\'den başlayan',delivery:'2026 Q4',units:'180 daire',desc:'Levent\'in merkezinde, modern mimari ve akıllı bina teknolojisiyle donatılmış prestijli rezidans projesi.',progress:65,
     longDesc:'Meridyen Levent Rezidans, Levent\'in finans merkezinde 48.000 m\u00b2 in\u015faat alan\u0131 \u00fczerinde y\u00fckselen, TBDY 2018 deprem y\u00f6netmeli\u011fine tam uyumlu, C30/37 betonarme ta\u015f\u0131y\u0131c\u0131 sistemli prestijli bir konut projesidir. BIM koordinasyonu ve clash detection ile tasarlanan proje, ak\u0131ll\u0131 bina otomasyonu, jeotermal \u0131s\u0131 pompas\u0131 ve A s\u0131n\u0131f\u0131 enerji performans\u0131 sunar. Zemin et\u00fcd\u00fc ZC s\u0131n\u0131f\u0131 zeminde DD-2 deprem analizi ile boyutland\u0131r\u0131lm\u0131\u015ft\u0131r.',
@@ -2232,7 +2173,7 @@ function renderHizmetlerPage(){
   document.getElementById('hpGrid').innerHTML=SERVICES.map((s,i)=>`
     <div class="hpcard" onclick="openSvcDetail(${i})">
       <div class="ic">${s.i}</div>
-      <div class="c"><h3>${s.t}</h3><p>${s.d}</p><span class="more">Detaylı bilgi →</span></div>
+      <div class="c"><h3>${s.t}</h3><p>${s.d}</p>${(s.mevzuat&&s.mevzuat.length)?`<div class="hpc-tags">${s.mevzuat.slice(0,3).map(m=>`<span>${m}</span>`).join('')}</div>`:''}<span class="more">Derin analiz &amp; riskler →</span></div>
     </div>`).join('');
 }
 // hizmet detayı
@@ -2265,25 +2206,74 @@ function sdBackToHizmetler(){
 }
 function renderSdBody(){
   const s=SERVICES[_sdIdx];if(!s)return;
-  const scope=s.scope||[], steps=s.steps||[];
+  const esc=x=>String(x==null?'':x);
   let h='';
-  if(scope.length){
-    h+='<div class="sd-sec"><h2>Hizmet Kapsamı</h2><div class="sd-scope">'+
-      scope.map(x=>`<div class="it">${x}</div>`).join('')+'</div></div>';
+  // mevzuat & standart rozetleri
+  if(s.mevzuat&&s.mevzuat.length){
+    h+='<div class="sd-badges sd-rv">'+s.mevzuat.map(m=>`<span class="sd-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3Zm-1.2 13.2-3-3 1.4-1.4 1.6 1.6 3.9-3.9 1.4 1.4-5.3 5.3Z"/></svg>${esc(m)}</span>`).join('')+'</div>';
   }
-  if(steps.length){
-    h+='<div class="sd-sec"><h2>Nasıl Çalışıyoruz?</h2><div class="sd-steps">'+
-      steps.map(st=>`<div class="sd-step"><h4>${st.t}</h4><p>${st.d}</p></div>`).join('')+'</div></div>';
+  // hizmet kapsamı
+  if(s.scope&&s.scope.length){
+    h+='<div class="sd-sec sd-rv"><h2>Hizmet Kapsamı</h2><div class="sd-scope">'+
+      s.scope.map(x=>`<div class="it">${esc(x)}</div>`).join('')+'</div></div>';
   }
-  // ilgili projeler (tip eşleşmesi yoksa ilk 3 proje)
+  // süreç akışı (timeline)
+  if(s.steps&&s.steps.length){
+    h+='<div class="sd-sec sd-rv"><h2>Nasıl Çalışıyoruz?</h2><div class="sd-flow">'+
+      s.steps.map((st,idx)=>`<div class="sd-node"><div class="n">${idx+1}</div><div class="b"><h4>${esc(st.t)}</h4><p>${esc(st.d)}</p></div></div>`).join('')+'</div></div>';
+  }
+  // derin analiz — mühendislik yaklaşımı (SEO uzun-metin)
+  if(s.deep&&s.deep.length){
+    h+='<div class="sd-sec sd-rv"><h2>Derin Analiz — Mühendislik Yaklaşımımız</h2><div class="sd-deep">'+
+      s.deep.map(p=>`<p>${esc(p)}</p>`).join('')+'</div></div>';
+  }
+  // risk analizi & yönetimi
+  if(s.risks&&s.risks.length){
+    h+='<div class="sd-sec sd-rv"><h2>Risk Analizi &amp; Yönetimi</h2><div class="sd-risks">'+
+      s.risks.map(r=>`<div class="rk"><div class="rk-h"><span class="rk-ic">!</span><h4>${esc(r.t)}</h4></div><p><span class="rk-lbl">Yönetimimiz:</span> ${esc(r.d)}</p></div>`).join('')+'</div></div>';
+  }
+  // somut güvenceler
+  if(s.guarantee&&s.guarantee.length){
+    h+='<div class="sd-sec sd-rv"><h2>Somut Güvenceler</h2><div class="sd-guar">'+
+      s.guarantee.map(g=>`<div class="it">${esc(g)}</div>`).join('')+'</div></div>';
+  }
+  // mühendislik sözlüğü
+  if(s.terms&&s.terms.length){
+    h+='<div class="sd-sec sd-rv"><h2>Mühendislik Sözlüğü</h2><div class="sd-terms">'+
+      s.terms.map(t=>`<div class="tm"><b>${esc(t.k)}</b><span>${esc(t.v)}</span></div>`).join('')+'</div></div>';
+  }
+  // sık sorulan sorular (SSS)
+  if(s.faq&&s.faq.length){
+    h+='<div class="sd-sec sd-rv"><h2>Sık Sorulan Sorular</h2><div class="sd-faq">'+
+      s.faq.map(f=>`<details class="fq"><summary>${esc(f.q)}</summary><div class="a">${esc(f.a)}</div></details>`).join('')+'</div></div>';
+  }
+  // ilgili projeler
   if(typeof PROJECTS!=='undefined'&&PROJECTS.length){
     const rel=PROJECTS.slice(0,3);
-    h+='<div class="sd-sec"><h2>İlgili Projelerimiz</h2><div class="sd-rel">'+
-      rel.map(p=>{const src=imgFor((p.gallery&&p.gallery[0])||p.img);return `<div class="rc" onclick="closeSvcDetail();closeHizmetlerPage();setTimeout(()=>openProjectDetail(${PROJECTS.indexOf(p)}),120)">${src?`<img src="${src}" alt="${p.t}" loading="lazy" decoding="async">`:''}<div class="b"><h4>${p.t}</h4><span>📍 ${p.loc||''}</span></div></div>`;}).join('')+
+    h+='<div class="sd-sec sd-rv"><h2>İlgili Projelerimiz</h2><div class="sd-rel">'+
+      rel.map(p=>{const src=imgFor((p.gallery&&p.gallery[0])||p.img);return `<div class="rc" onclick="closeSvcDetail();closeHizmetlerPage();setTimeout(()=>openProjectDetail(${PROJECTS.indexOf(p)}),120)">${src?`<img src="${src}" alt="${esc(p.t)}" loading="lazy" decoding="async">`:''}<div class="b"><h4>${esc(p.t)}</h4><span>📍 ${esc(p.loc||'')}</span></div></div>`;}).join('')+
       '</div></div>';
   }
-  h+=`<div class="sd-ctabar"><h3>${s.t} hizmetiyle mi ilgileniyorsunuz?</h3><p>Ücretsiz keşif ve detaylı teklif için bizimle iletişime geçin.</p><button class="btn btn-primary" onclick="closeSvcDetail();closeHizmetlerPage();openTeklif()">Teklif Al →</button></div>`;
+  // ilgili konular (SEO etiketleri)
+  if(s.tags&&s.tags.length){
+    h+='<div class="sd-sec sd-rv"><h2>İlgili Konular</h2><div class="sd-tags">'+
+      s.tags.map(t=>`<span class="tg">${esc(t)}</span>`).join('')+'</div></div>';
+  }
+  h+=`<div class="sd-ctabar sd-rv"><h3>${esc(s.t)} hizmetiyle mi ilgileniyorsunuz?</h3><p>Ücretsiz keşif ve detaylı teklif için bizimle iletişime geçin.</p><button class="btn btn-primary" onclick="closeSvcDetail();closeHizmetlerPage();openTeklif()">Ücretsiz Keşif Talep Et →</button></div>`;
   document.getElementById('sdBody').innerHTML=h;
+  _sdReveal();
+}
+// hizmet detay bölümlerini görünüme girdikçe açığa çıkar (fail-safe)
+function _sdReveal(){
+  const root=document.getElementById('svcDetail');if(!root)return;
+  const items=root.querySelectorAll('.sd-rv');
+  const showAll=()=>items.forEach(el=>el.classList.add('in'));
+  if(!('IntersectionObserver' in window)){showAll();return;}
+  try{
+    const io=new IntersectionObserver((ents,obs)=>{ents.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');obs.unobserve(en.target);}});},{threshold:.12});
+    items.forEach(el=>io.observe(el));
+  }catch(e){showAll();return;}
+  setTimeout(showAll,2400); // içerik asla gizli kalmasın
 }
 document.addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
@@ -2405,9 +2395,39 @@ const INSAAT_CTA=`<a class="nav-wa" href="https://wa.me/905001234567" target="_b
   +`<div class="lang-sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><select class="lang-sel" aria-label="Dil / Language"><option value="tr">TR</option><option value="en">EN</option></select></div>`
   +`<a class="btn btn-ghost js-giris" href="#giris" onclick="openGiris();return false">Giriş</a>`
   +`<button class="burger" onclick="openInsaatMobile()" aria-label="Menü"><span></span><span></span><span></span></button>`;
+const INSAAT_FOOTER=`<div class="wrap">
+  <div class="fgrid">
+    <div><div class="lo">Meridyen<span class="lo2"> Yapı</span></div>
+      <p class="desc">1986'dan bu yana güvenle inşa eden kurumsal yapı, tadilat ve gayrimenkul geliştirme şirketi.</p>
+      <div class="fsocial">
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg></a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg></a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a>
+        <a href="https://nsosyal.com" target="_blank" rel="noopener noreferrer" aria-label="NEXT Sosyal (Türkiye)" title="NEXT Sosyal — Türkiye'nin yerli sosyal medya platformu"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg></a>
+      </div>
+      <div class="flegal"><a href="#">KVKK</a><a href="#">Gizlilik</a><a href="#">Çerez Politikası</a></div>
+    </div>
+    <div><h4>Kurumsal</h4><a href="#hakkimizda" onclick="return fGo('hakkimizda')">Hakkımızda</a><a href="#">Vizyon & Misyon</a><a href="#">Yönetim Kadrosu</a><a href="#">Kalite & Sertifikalar</a><a href="#medya" onclick="return fGo('medya')">Medya & Basında Biz</a><a href="#bolge" onclick="closeAllInsaatOverlays();openBolgePage();return false">Bölge Ekspertizi</a><a href="#">Kariyer</a></div>
+    <div><h4>Hizmetler</h4><a href="#hizmetler" onclick="closeAllInsaatOverlays();openHizmetlerPage();return false">Konut İnşaatı</a><a href="#hizmetler" onclick="closeAllInsaatOverlays();openHizmetlerPage();return false">Tadilat & Renovasyon</a><a href="#hizmetler" onclick="closeAllInsaatOverlays();openHizmetlerPage();return false">Kentsel Dönüşüm</a><a href="#hizmetler" onclick="closeAllInsaatOverlays();openHizmetlerPage();return false">Kat Karşılığı</a><a href="#hizmetler" onclick="closeAllInsaatOverlays();openHizmetlerPage();return false">Anahtar Teslim</a><a href="#hizmetler" onclick="closeAllInsaatOverlays();openHizmetlerPage();return false">Ticari Yapılar</a></div>
+    <div><h4>İletişim</h4>
+      <a href="#" onclick="return fGo('iletisim')">Levent Mah. Yapı Cad. No:1<br>Beşiktaş / İstanbul</a>
+      <a href="tel:+902120000000" class="js-tel">+90 212 000 00 00</a>
+      <a href="mailto:info@meridyenyapi.com">info@meridyenyapi.com</a>
+      <a href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer">💬 WhatsApp Hattı</a>
+    </div>
+  </div>
+  <div class="fbot">
+    <div class="fcopy">© 2026 Meridyen Yapı A.Ş. · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span> · <span class="fvo">🔗 emlakekspertizi.com Veri Ortağı</span></div>
+    <a class="fprox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a>
+  </div>
+</div>`;
+function fGo(id){try{closeAllInsaatOverlays();}catch(e){}setTimeout(function(){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},250);return false;}
 function mountInsaatMenu(){
   document.querySelectorAll('.insaatNav').forEach(n=>n.innerHTML=INSAAT_NAV);
   document.querySelectorAll('.insaatCta').forEach(el=>el.innerHTML=INSAAT_CTA);
+  document.querySelectorAll('.insaatFooter').forEach(f=>f.innerHTML=INSAAT_FOOTER);
 }
 /* 3) BÖLGE YETKİSİ — allowedRegions ile PROJECTS / ARSALAR süzme (merkez API simülasyonu) */
 function _saasInScope(loc){const a=SAAS_CONFIG.allowedRegions||{};if(!a.ilceler||!a.ilceler.length)return true;const s=(loc||'').toLocaleLowerCase('tr');return a.ilceler.some(x=>s.indexOf((x||'').toLocaleLowerCase('tr'))>=0);}
