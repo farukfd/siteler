@@ -635,6 +635,7 @@
   /* ---- SEO & Reklam: GA4/GTM/Ads/AdSense/doğrulama/robots/özel kod (admin'den, kodsuz) ---- */
   function degApplySeo() {
     if (window.__degSeoDone) return; window.__degSeoDone = 1;
+    if (window.__DEG_BAKED) return; // SEO etiketleri ham HTML'e gömülü (tools/apply-config.mjs) — çifte enjeksiyonu önle
     if (document.body && document.body.classList.contains('crm')) return;
     var s = degMerge();
     var seo = s.seo || {}; var head = document.head;

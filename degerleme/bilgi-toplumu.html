@@ -21,6 +21,7 @@
 
 
 
+
 <style id="deg-inline-css">
 /* ===========================================================================
    Meridyen Değerleme — SPK Lisanslı Gayrimenkul Değerleme · Kurumsal Stylesheet
@@ -954,6 +955,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
 
 
 
+
 <script id="deg-inline-js">
 /* Meridyen Değerleme — kurumsal site JS (sade, çerçevesiz).
    Üyelik modeli: Personel/Danışman girişi + Müşteri (anahtar) girişi.
@@ -1592,6 +1594,7 @@ img,svg,video,canvas,iframe,table{max-width:100%}
   /* ---- SEO & Reklam: GA4/GTM/Ads/AdSense/doğrulama/robots/özel kod (admin'den, kodsuz) ---- */
   function degApplySeo() {
     if (window.__degSeoDone) return; window.__degSeoDone = 1;
+    if (window.__DEG_BAKED) return; // SEO etiketleri ham HTML'e gömülü (tools/apply-config.mjs) — çifte enjeksiyonu önle
     if (document.body && document.body.classList.contains('crm')) return;
     var s = degMerge();
     var seo = s.seo || {}; var head = document.head;
