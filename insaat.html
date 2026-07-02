@@ -4772,9 +4772,15 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
   function _clean(s){return (s||'').replace(/\\[A-Za-z][^;]*;|[{}\\]/g,'').replace(/\s+/g,' ').trim();}
   function _num2(s){var m=(String(s).match(/(\d{1,3}[.,]?\d{0,2})\s*(m2|m²)?/i)||[])[1];return m?(parseFloat(m.replace(',','.'))||0):0;}
   function _dwgExtractModel(db){
-    var ents=db.entities||[]; var toM=(db.header&&db.header.INSUNITS===6)?1:0.001;
+    var ents=db.entities||[], rawTexts=[];
+    for(var i=0;i<ents.length;i++){var e=ents[i];if((e.type==='TEXT'||e.type==='MTEXT')&&e.text){var p=e.startPoint||e.insertionPoint;if(p&&isFinite(p.x))rawTexts.push({t:e.text,x:p.x,y:p.y});}}
+    var _lay=(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries)?db.tables.LAYER.entries.length:0;
+    return _dwgModelFromTexts(rawTexts,_lay,(db.header&&db.header.INSUNITS),ents.length);
+  }
+  function _dwgModelFromTexts(rawTexts,layers,insunits,entityCount){
+    var toM=(insunits===6)?1:0.001;
     var texts=[];
-    for(var i=0;i<ents.length;i++){var e=ents[i];if((e.type==='TEXT'||e.type==='MTEXT')&&e.text){var p=e.startPoint||e.insertionPoint;if(p&&isFinite(p.x))texts.push({t:_clean(e.text),x:p.x,y:p.y});}}
+    for(var i=0;i<rawTexts.length;i++){var _rc=_clean(rawTexts[i].t);if(_rc&&isFinite(rawTexts[i].x))texts.push({t:_rc,x:rawTexts[i].x,y:rawTexts[i].y});}
     var KAT=/(ZEMİN|BODRUM|ÇATI|\d+\.?\s*NORMAL|NORMAL)\s*KAT\b/i, NOISE=/ADEDİ|İRTİFAK|HOL|PLANI|ONAY|NOT|KAPAĞ|GİRİŞ/i;
     var floors=[],seen={};
     for(var j=0;j<texts.length;j++){var t=texts[j];if(KAT.test(t.t)&&!NOISE.test(t.t)){var k=t.t.toUpperCase();if(!seen[k]){seen[k]=1;floors.push(t);}}}
@@ -4794,7 +4800,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     var byFloor={'Tüm Mahaller':rooms};
     var total=0;for(var z=0;z<rooms.length;z++)total+=rooms[z].m2;
     var katList=floors.map(function(x){return x.t;});
-    return {katSayisi:Math.max(katList.length,1),katlar:katList,mahalSayisi:rooms.length,toplamM2:Math.round(total*10)/10,byFloor:byFloor,layers:(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries?db.tables.LAYER.entries.length:0),entityCount:ents.length};
+    var _ks=Math.max(katList.length,1);
+    return {katSayisi:_ks,katlar:katList,mahalSayisi:rooms.length,toplamM2:Math.round(total*10)/10,avgFloorM2:Math.round((total/_ks)*10)/10,byFloor:byFloor,layers:layers||0,entityCount:entityCount||0};
   }
   function _renderAnalysis(model){
     var box=el('dwgAnalyz'); if(!box)return;
@@ -4802,7 +4809,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     var h='<div style="background:var(--surface);border:1px solid var(--accent);border-radius:14px;padding:16px;margin-top:4px">';
     h+='<h3 style="margin:0 0 10px;font-family:var(--head)">🏗️ Otomatik Yapı Analizi <span style="font-size:11px;color:var(--muted);font-weight:400">(DWG\'den — gerçek veri)</span></h3>';
     h+='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">';
-    h+='<span class="dwg-kpi"><b>'+model.katSayisi+'</b> Kat</span><span class="dwg-kpi"><b>'+model.mahalSayisi+'</b> Mahal</span><span class="dwg-kpi"><b>'+model.toplamM2+'</b> m² toplam</span><span class="dwg-kpi"><b>'+model.entityCount.toLocaleString('tr-TR')+'</b> nesne</span><span class="dwg-kpi"><b>'+model.layers+'</b> katman</span>';
+    h+='<span class="dwg-kpi"><b>'+model.katSayisi+'</b> Kat</span><span class="dwg-kpi"><b>'+model.mahalSayisi+'</b> Mahal</span><span class="dwg-kpi"><b>'+model.toplamM2+'</b> m² toplam</span>'+(model.avgFloorM2?'<span class="dwg-kpi"><b>'+model.avgFloorM2+'</b> m² ~kat/taban</span>':'')+'<span class="dwg-kpi"><b>'+model.entityCount.toLocaleString('tr-TR')+'</b> nesne</span><span class="dwg-kpi"><b>'+model.layers+'</b> katman</span>';
     h+='</div>';
     if(model.katlar&&model.katlar.length){h+='<div style="font-size:12px;color:var(--muted);margin:-4px 0 12px">🏢 Tespit edilen katlar: '+model.katlar.map(function(k){return '<b style="color:var(--on-surface,var(--ink))">'+k+'</b>';}).join(' · ')+'</div>';}
     if(!model.mahalSayisi){h+='<p style="font-size:12.5px;color:var(--muted);margin:0">Mahal/m² etiketi otomatik okunamadı (çizimde yazılı alan yok olabilir). 2B plan yine de tam görüntülenir.</p>';}
@@ -4820,37 +4827,58 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
   function _dwgAutofill(model){
     try{
       var setV=function(id,v){var e=el(id);if(e){e.value=v;}};
+      var getN=function(id,d){var e=el(id);var n=e?parseFloat(e.value):NaN;return (isFinite(n)&&n>0)?n:d;};
       if(model.katSayisi)setV('p3_kat',Math.max(1,Math.min(40,model.katSayisi)));
-      // ortalama kat alanı
       var fk=Object.keys(model.byFloor), avg=model.katSayisi?Math.round(model.toplamM2/model.katSayisi):0;
       if(avg>10)setV('p3_daireM2',avg);
+      // oransal kütle: arsa ≈ toplam inşaat / emsal → mevcut 3B üretici massing'i orantılı çizer
+      var emsal=getN('p3_emsal',2);
+      if(model.toplamM2>0){setV('p3_m2',Math.max(50,Math.round((model.toplamM2/emsal)/10)*10));}
+      setV('p3_blok',1);
       var lines=[]; fk.forEach(function(k){var arr=model.byFloor[k];lines.push(k+': '+arr.map(function(r){return r.name+' '+r.m2+'m²';}).join(', '));});
-      setV('p3_not','[DWG otomatik] '+model.katSayisi+' kat · '+model.mahalSayisi+' mahal · '+model.toplamM2+' m²\n'+lines.join('\n'));
+      setV('p3_not','[DWG otomatik] '+model.katSayisi+' kat · '+model.mahalSayisi+' mahal · '+model.toplamM2+' m² (kat/taban ~'+avg+' m²)\n'+lines.join('\n'));
       if(typeof window.saveP3Note==='function')window.saveP3Note();
       if(typeof window.updateProje3D==='function')window.updateProje3D();
       window.__dwgModel=model;
     }catch(e){}
   }
+  var _DWG_CDN='https://cdn.jsdelivr.net/npm/@mlightcad/libredwg-web@0.7.7';
+  var _DWG_WORKER_SRC="import { LibreDwg, Dwg_File_Type } from '"+_DWG_CDN+"/dist/libredwg-web.js';\nlet libP;\nself.onmessage=async function(e){try{if(!libP)libP=LibreDwg.create('"+_DWG_CDN+"/wasm/');var lib=await libP;var dwg=lib.dwg_read_data(e.data,Dwg_File_Type.DWG);var db=lib.convert(dwg);var svg=lib.dwg_to_svg(db);var ents=db.entities||[];var texts=[];for(var i=0;i<ents.length;i++){var en=ents[i];if((en.type==='TEXT'||en.type==='MTEXT')&&en.text){var p=en.startPoint||en.insertionPoint;if(p&&typeof p.x==='number'&&isFinite(p.x))texts.push({t:en.text,x:p.x,y:p.y});}}var layers=(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries)?db.tables.LAYER.entries.length:0;var insunits=db.header&&db.header.INSUNITS;try{lib.dwg_free(dwg);}catch(_){}self.postMessage({svg:svg,texts:texts,layers:layers,insunits:insunits,entityCount:ents.length});}catch(err){self.postMessage({error:String((err&&err.message)||err)});}};";
+  function _dwgApplyResult(d){
+    if(d.error){stat('Çözümleme hatası: '+d.error+' — dosya çok büyük/bozuk olabilir.','err');return;}
+    if(d.svg&&d.svg.length>80)_showSvg(d.svg);
+    var model=d.model||_dwgModelFromTexts(d.texts||[],d.layers,d.insunits,d.entityCount);
+    _renderAnalysis(model);_dwgAutofill(model);
+    stat('✓ Yapı çözümlendi: '+model.katSayisi+' kat · '+model.mahalSayisi+' mahal · '+model.toplamM2+' m² (2B plan + tablo aşağıda).','ok');
+  }
+  function _dwgMainThread(buf){
+    _loadLibreDwg().then(function(lib){ setTimeout(function(){
+      try{
+        var dwg=lib.inst.dwg_read_data(buf,lib.DwgType.DWG);
+        var db=lib.inst.convert(dwg);
+        var svg=lib.inst.dwg_to_svg(db);
+        var model=_dwgExtractModel(db);
+        try{lib.inst.dwg_free(dwg);}catch(e){}
+        _dwgApplyResult({svg:svg,model:model});
+      }catch(e){stat('Çözümleme hatası: '+((e&&e.message)||e),'err');}
+    },30); }).catch(function(e){stat('WASM yüklenemedi (internet/CDN?): '+((e&&e.message)||e),'err');});
+  }
   window.dwgAnalyze=function(){
     var f=window.__dwgFile;if(!f){stat('Önce bir .dwg yükleyin.','err');return;}
     var mb=f.size/1048576;
     if(mb>3 && !confirm('Bu dosya '+mb.toFixed(1)+' MB — çözümleme 30-60 sn sürebilir. Devam?'))return;
-    stat('WASM motoru yükleniyor (ilk seferde ~9 MB)…');
-    _loadLibreDwg().then(function(lib){
-      stat('Çizim çözümleniyor'+(mb>3?' (büyük dosya — bekleyin)':'')+'…');
-      return f.arrayBuffer().then(function(buf){ setTimeout(function(){
-        try{
-          var dwg=lib.inst.dwg_read_data(buf,lib.DwgType.DWG);
-          var db=lib.inst.convert(dwg);
-          var svg=lib.inst.dwg_to_svg(db);
-          var model=_dwgExtractModel(db);
-          try{lib.inst.dwg_free(dwg);}catch(e){}
-          if(svg&&svg.length>80)_showSvg(svg);
-          _renderAnalysis(model); _dwgAutofill(model);
-          stat('✓ Yapı çözümlendi: '+model.katSayisi+' kat · '+model.mahalSayisi+' mahal · '+model.toplamM2+' m² (2B plan + tablo aşağıda).','ok');
-        }catch(e){stat('Çözümleme hatası: '+((e&&e.message)||e),'err');}
-      },30); });
-    }).catch(function(e){stat('WASM yüklenemedi (internet/CDN?): '+((e&&e.message)||e),'err');});
+    stat('WASM motoru yükleniyor + çizim çözümleniyor'+(mb>2?' (worker\'da — arayüz donmaz)':'')+'…');
+    f.arrayBuffer().then(function(buf){
+      var handled=false, worker=null;
+      var fallback=function(){ if(handled)return; handled=true; if(worker)try{worker.terminate();}catch(e){} _dwgMainThread(buf); };
+      try{
+        worker=new Worker(URL.createObjectURL(new Blob([_DWG_WORKER_SRC],{type:'text/javascript'})),{type:'module'});
+        worker.onmessage=function(ev){ if(handled)return; handled=true; try{worker.terminate();}catch(e){} _dwgApplyResult(ev.data); };
+        worker.onerror=function(){ fallback(); };
+        worker.postMessage(buf); // transfer YOK → fallback için buf korunur
+        setTimeout(function(){ fallback(); }, mb>3?150000:60000); // takılırsa ana yola geç
+      }catch(e){ fallback(); }
+    }).catch(function(e){ stat('Dosya okunamadı: '+((e&&e.message)||e),'err'); });
   };
   window.dwgToPortfolio=function(){
     var m=window.__dwgModel;if(!m){stat('Önce "Yapıyı Otomatik Çöz" ile çözümleyin.','err');return;}
