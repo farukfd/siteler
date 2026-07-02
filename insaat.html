@@ -1806,6 +1806,7 @@ function cookieChoice(v){
               <input type="file" id="apsFile" accept=".dwg,.dxf,.rvt,.ifc,.nwd,.nwc" style="display:none" onchange="apsUpload(this)">
               <button class="btn-mini" style="width:100%;background:var(--accent);color:#0e0f13;border-color:var(--accent);font-weight:700" onclick="document.getElementById('apsFile').click()">📤 .dwg Mimari Proje Yükle</button>
               <div id="apsStatus" style="font-size:12px;margin-top:8px;color:var(--muted);line-height:1.45"></div>
+              <div id="apsPreview" style="margin-top:8px"></div>
               <button class="btn-mini" id="apsBackBtn" style="width:100%;margin-top:8px;display:none" onclick="apsCloseViewer()">← Kapat / Konsept 3B'ye dön</button>
               <button class="btn-mini" style="width:100%;margin-top:8px;background:none" onclick="apsToggleCfg()">⚙️ APS Bağlantı & Demo</button>
               <div id="apsCfg" style="display:none;margin-top:8px">
@@ -4728,14 +4729,74 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
   }
   window.apsUpload=function(input){
     var f=input&&input.files&&input.files[0];if(!f)return;input.value='';
+    window.dwgLocalPreview(f); // her zaman: yerel gömülü 2B önizleme (hesapsız)
     var c=cfg();
-    if(!c.uploadUrl){stat('Yükleme endpoint tanımlı değil. Aşağıdan "⚙️ APS Bağlantı & Demo"yu açıp endpoint girin ya da hazır URN ile demo deneyin.','err');window.apsToggleCfg(true);return;}
+    if(!c.uploadUrl){stat('2B önizleme aşağıda ↓ · Tam BIM 3B için APS bağlayın (⚙️) veya URN demo.','ok');return;}
     stat('Yükleniyor: '+f.name+' ('+(f.size/1048576).toFixed(1)+' MB)…');
     var fd=new FormData();fd.append('file',f,f.name);fd.append('name',f.name);
     fetch(c.uploadUrl,{method:'POST',body:fd}).then(function(r){return r.json();}).then(function(j){
       if(!j.urn){stat('Yükleme yanıtında "urn" alanı yok.','err');return;}
       stat('Yüklendi. Çevriliyor…');poll(j.urn,0);
     }).catch(function(){stat('Yükleme başarısız (endpoint/CORS?).','err');});
+  };
+  /* ---- .dwg gömülü 2B önizleme (tamamen yerel, hesapsız) ---- */
+  var DWG_VERS={AC1014:'AutoCAD R14',AC1015:'AutoCAD 2000',AC1018:'AutoCAD 2004',AC1021:'AutoCAD 2007',AC1024:'AutoCAD 2010',AC1027:'AutoCAD 2013',AC1032:'AutoCAD 2018'};
+  function seq(u8,s,from){for(var i=from;i<u8.length-s.length;i++){var ok=true;for(var k=0;k<s.length;k++){if(u8[i+k]!==s[k]){ok=false;break;}}if(ok)return i;}return -1;}
+  function u32(u8,o){return (u8[o]|u8[o+1]<<8|u8[o+2]<<16|u8[o+3]<<24)>>>0;}
+  function u16(u8,o){return (u8[o]|u8[o+1]<<8)>>>0;}
+  function extractImages(buf){
+    var u8=new Uint8Array(buf),out=[],i,o;
+    for(i=0;i<u8.length-24;i++){ // PNG — IHDR + makul boyut doğrula (sahte eşleşme yok)
+      if(u8[i]===0x89&&u8[i+1]===0x50&&u8[i+2]===0x4E&&u8[i+3]===0x47&&u8[i+12]===0x49&&u8[i+13]===0x48&&u8[i+14]===0x44&&u8[i+15]===0x52){
+        var w=(u8[i+16]<<24|u8[i+17]<<16|u8[i+18]<<8|u8[i+19])>>>0, h=(u8[i+20]<<24|u8[i+21]<<16|u8[i+22]<<8|u8[i+23])>>>0;
+        if(w>=8&&w<=10000&&h>=8&&h<=10000){var j=seq(u8,[0x49,0x45,0x4E,0x44],i+16);if(j>0){var end=j+8;out.push({type:'image/png',w:w,h:h,bytes:u8.slice(i,end)});i=end-1;}}
+      }
+    }
+    for(o=0;o<u8.length-40;o++){ // Başlıksız DIB (DWG önizleme) → geçerli BMP sentezle
+      if(u32(u8,o)===40){
+        var dw=u32(u8,o+4)|0, dhr=u32(u8,o+8)|0, planes=u16(u8,o+12), bit=u16(u8,o+14), comp=u32(u8,o+16);
+        var dh=dhr<0?-dhr:dhr;
+        if(planes===1&&(bit===1||bit===4||bit===8||bit===24||bit===32)&&comp<=3&&dw>=32&&dw<=10000&&dh>=32&&dh<=10000){
+          var pal=(bit<=8)?(1<<bit)*4:0, row=Math.floor((bit*dw+31)/32)*4, imgsz=u32(u8,o+20)||row*dh, total=40+pal+imgsz;
+          if(o+total<=u8.length){
+            var fs=14+total, off=14+40+pal, bmp=new Uint8Array(fs);
+            bmp[0]=0x42;bmp[1]=0x4D;bmp[2]=fs&255;bmp[3]=(fs>>8)&255;bmp[4]=(fs>>16)&255;bmp[5]=(fs>>24)&255;
+            bmp[10]=off&255;bmp[11]=(off>>8)&255;bmp[12]=(off>>16)&255;bmp[13]=(off>>24)&255;
+            bmp.set(u8.subarray(o,o+total),14);
+            out.push({type:'image/bmp',w:dw,h:dh,bytes:bmp});o+=total-1;
+          }
+        }
+      }
+    }
+    out.sort(function(a,c){return (c.w*c.h)-(a.w*a.h);});
+    return {ver:String.fromCharCode(u8[0]||0,u8[1]||0,u8[2]||0,u8[3]||0,u8[4]||0,u8[5]||0),imgs:out.slice(0,6)};
+  }
+  window.dwgLocalPreview=function(file){
+    var box=el('apsPreview');if(box)box.innerHTML='<span style="font-size:12px;color:var(--muted)">🔎 '+file.name+' okunuyor…</span>';
+    var fr=new FileReader();
+    fr.onload=function(){
+      var r; try{r=extractImages(fr.result);}catch(e){if(box)box.innerHTML='<span style="font-size:12px;color:#ff6b6b">Okuma hatası.</span>';return;}
+      var vName=DWG_VERS[r.ver]||r.ver||'?', mb=(file.size/1048576).toFixed(1);
+      window.__dwgInfo={name:file.name,size:file.size,ver:vName,previews:[]};
+      var head='<div style="font-size:12px;color:var(--muted);margin-bottom:6px">📄 <b>'+file.name+'</b> · '+vName+' · '+mb+' MB';
+      if(!r.imgs.length){if(box)box.innerHTML=head+'<br>Gömülü önizleme yok. Tam 3B için APS gerekir.</div>';return;}
+      var html=head+' · '+r.imgs.length+' önizleme</div><div style="display:flex;flex-wrap:wrap;gap:8px">';
+      r.imgs.forEach(function(im){
+        var blob=new Blob([im.bytes],{type:im.type});var url=URL.createObjectURL(blob);
+        var d=new FileReader();d.onload=function(){window.__dwgInfo.previews.push(d.result);};d.readAsDataURL(blob);
+        html+='<img src="'+url+'" alt="önizleme '+im.w+'×'+im.h+'" title="'+im.w+'×'+im.h+' — büyütmek için tıklayın" style="width:132px;height:auto;border:1px solid var(--line);border-radius:8px;cursor:zoom-in;background:#fff" onclick="dwgZoom(this.src)">';
+      });
+      html+='</div><div style="font-size:11px;color:var(--muted);margin-top:6px">Gerçek çizim önizlemesi (DWG içinden). Yüksek çözünürlük & 3B için APS ile çevirin.</div>';
+      if(box)box.innerHTML=html;
+    };
+    fr.onerror=function(){if(box)box.innerHTML='<span style="font-size:12px;color:#ff6b6b">Dosya okunamadı.</span>';};
+    fr.readAsArrayBuffer(file);
+  };
+  window.dwgZoom=function(src){
+    var o=document.createElement('div');o.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;cursor:zoom-out;padding:20px';
+    o.onclick=function(){o.remove();};
+    var img=new Image();img.src=src;img.style.cssText='max-width:96%;max-height:96%;background:#fff;border-radius:8px;image-rendering:pixelated;box-shadow:0 20px 60px rgba(0,0,0,.6)';
+    o.appendChild(img);document.body.appendChild(o);
   };
   function initCfg(){var c=cfg();['tokenUrl','uploadUrl','statusUrl'].forEach(function(k){var e=el('aps_'+k);if(e&&c[k])e.value=c[k];});}
   if(document.readyState!=='loading')initCfg();else document.addEventListener('DOMContentLoaded',initCfg);
