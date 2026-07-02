@@ -1800,6 +1800,25 @@ function cookieChoice(v){
               <div id="glbStatus" style="font-size:12px;margin-top:8px;color:var(--muted)"></div>
               <button class="btn-mini" id="glbClearBtn" style="width:100%;margin-top:8px;display:none" onclick="clearGLBModel()">🗑️ Modeli Kaldır (konsepte dön)</button>
             </div>
+            <div class="panelcard" style="margin-top:14px;border:1px solid var(--accent)">
+              <h3 style="margin:0 0 8px">📐 .dwg Mimari Yükle · <span style="color:var(--accent)">Autodesk APS</span></h3>
+              <p style="font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.5">Mimari projeyi <b>.dwg</b> (veya .dxf/.rvt/.ifc) yükleyin — Autodesk bulutta çevirir, <b>bağımsız bölümler nesne ağacıyla tam BIM 3B</b> görüntülenir.</p>
+              <input type="file" id="apsFile" accept=".dwg,.dxf,.rvt,.ifc,.nwd,.nwc" style="display:none" onchange="apsUpload(this)">
+              <button class="btn-mini" style="width:100%;background:var(--accent);color:#0e0f13;border-color:var(--accent);font-weight:700" onclick="document.getElementById('apsFile').click()">📤 .dwg Mimari Proje Yükle</button>
+              <div id="apsStatus" style="font-size:12px;margin-top:8px;color:var(--muted);line-height:1.45"></div>
+              <button class="btn-mini" id="apsBackBtn" style="width:100%;margin-top:8px;display:none" onclick="apsCloseViewer()">← Kapat / Konsept 3B'ye dön</button>
+              <button class="btn-mini" style="width:100%;margin-top:8px;background:none" onclick="apsToggleCfg()">⚙️ APS Bağlantı & Demo</button>
+              <div id="apsCfg" style="display:none;margin-top:8px">
+                <label>Token endpoint (viewables:read)</label><input type="text" id="aps_tokenUrl" placeholder="https://…/aps/token" oninput="apsSaveCfg()">
+                <label>Yükle + çevir endpoint</label><input type="text" id="aps_uploadUrl" placeholder="https://…/aps/upload" oninput="apsSaveCfg()">
+                <label>Çeviri durum endpoint</label><input type="text" id="aps_statusUrl" placeholder="https://…/aps/status" oninput="apsSaveCfg()">
+                <div style="border-top:1px dashed var(--line);margin:10px 0 0;padding-top:8px">
+                  <label>Demo: hazır URN (base64)</label><input type="text" id="aps_urn" placeholder="dXJuOmFkc2sub2JqZWN0cz…">
+                  <button class="btn-mini" style="width:100%;margin-top:6px" onclick="apsViewUrn(document.getElementById('aps_urn').value)">👁️ URN'yi Görüntüle</button>
+                </div>
+                <p style="font-size:11px;color:var(--muted);line-height:1.5;margin:8px 0 0">APS <b>client_secret</b> istemcide tutulamaz; token + yükleme/çeviri bir backend proxy üzerinden yapılır. Endpoint sözleşmesi & örnek proxy: <b>APS-BACKEND.md</b>.</p>
+              </div>
+            </div>
             <div class="panelcard" style="margin-top:14px">
               <h3 style="margin:0 0 12px">🏬 Bağımsız Bölüm Dağılımı</h3>
               <div class="ed2">
@@ -1841,6 +1860,14 @@ function cookieChoice(v){
             <div class="p3d-stage">
               <canvas id="adminBuild3d"></canvas>
               <div class="p3d-hint">🖱️ Döndür · tekerlek ile yakınlaştır</div>
+            </div>
+            <div id="apsViewerWrap" style="display:none;margin-top:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <b style="font-family:var(--head)">📐 Mimari 3B · Autodesk APS (tam BIM)</b>
+                <button class="btn-mini" onclick="apsCloseViewer()" style="width:auto">✕ Kapat</button>
+              </div>
+              <div id="apsViewer" style="position:relative;width:100%;height:560px;background:#0b0d12;border:1px solid var(--line);border-radius:12px;overflow:hidden"></div>
+              <p style="font-size:11.5px;color:var(--muted);margin:8px 0 0">Sol üstteki ağaç simgesinden <b>Model Ağacı</b> ile bağımsız bölümleri (daire/kat/oda) gezebilir, seçip özelliklerini görebilirsiniz.</p>
             </div>
             <div class="panelcard" style="margin-top:14px">
               <h3 style="margin:0 0 10px">📊 Anlık Fizibilite Özeti</h3>
@@ -4646,6 +4673,73 @@ function musteriGiris(){
   e.style.color='#7bdca0';e.textContent='✓ Anahtar alındı. Proje takip erişimi yakında aktifleşecek.';
 }
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris();});
+</script>
+
+<script>
+/* ================= Autodesk APS (Forge) — .dwg → tam BIM 3B ================= */
+(function(){
+  function el(id){return document.getElementById(id);}
+  function v(id){var e=el(id);return e?(''+e.value).trim():'';}
+  function cfg(){try{return JSON.parse(localStorage.getItem('insaat_aps')||'{}');}catch(e){return{};}}
+  function stat(m,k){var e=el('apsStatus');if(!e)return;e.textContent=m||'';e.style.color=k==='err'?'#ff6b6b':(k==='ok'?'#37d67a':'var(--muted)');}
+  function show(s){var w=el('apsViewerWrap');if(w){w.style.display=s?'block':'none';if(s)try{w.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}}var b=el('apsBackBtn');if(b)b.style.display=s?'block':'none';}
+  window.apsSaveCfg=function(){try{localStorage.setItem('insaat_aps',JSON.stringify({tokenUrl:v('aps_tokenUrl'),uploadUrl:v('aps_uploadUrl'),statusUrl:v('aps_statusUrl')}));}catch(e){}};
+  window.apsReady=function(){var c=cfg();return !!(c.uploadUrl&&c.tokenUrl);};
+  window.apsToggleCfg=function(force){var e=el('apsCfg');if(!e)return;var open=(force===true)||(force!==false&&e.style.display==='none');e.style.display=open?'block':'none';};
+  window.apsCloseViewer=function(){show(false);};
+  var sdkP=null;
+  function loadSDK(){
+    if(sdkP)return sdkP;
+    sdkP=new Promise(function(res,rej){
+      if(window.Autodesk&&window.Autodesk.Viewing)return res();
+      var ver='7.*',base='https://developer.api.autodesk.com/modelderivative/v2/viewers/'+ver+'/';
+      var c=document.createElement('link');c.rel='stylesheet';c.href=base+'style.min.css';document.head.appendChild(c);
+      var s=document.createElement('script');s.src=base+'viewer3D.min.js';s.onload=function(){res();};s.onerror=function(){rej();};document.head.appendChild(s);
+    });
+    return sdkP;
+  }
+  function token(cb){var c=cfg();if(!c.tokenUrl){stat('Token endpoint tanımlı değil (APS Ayarları).','err');return;}fetch(c.tokenUrl).then(function(r){return r.json();}).then(function(j){cb(j.access_token||j.token,j.expires_in||1800);}).catch(function(){stat('Token alınamadı (endpoint/CORS?).','err');});}
+  var viewer=null;
+  window.apsViewUrn=function(urn){
+    urn=(urn||'').trim();if(!urn){stat('URN boş.','err');return;}
+    stat('Görüntüleyici yükleniyor…');
+    loadSDK().then(function(){
+      Autodesk.Viewing.Initializer({env:'AutodeskProduction',api:'derivativeV2',getAccessToken:function(onT){token(function(tk,ex){onT(tk,ex);});}},function(){
+        show(true);
+        if(!viewer){viewer=new Autodesk.Viewing.GuiViewer3D(el('apsViewer'));viewer.start();}
+        var docId=urn.indexOf('urn:')===0?urn:'urn:'+urn;
+        Autodesk.Viewing.Document.load(docId,function(doc){
+          var g=doc.getRoot().getDefaultGeometry();
+          viewer.loadDocumentNode(doc,g).then(function(){stat('Model yüklendi — bağımsız bölümler soldaki Model Ağacı\'nda.','ok');try{viewer.setLightPreset(8);}catch(e){}});
+        },function(code,msg){stat('Model yüklenemedi ('+(msg||code)+'). Çeviri tamamlandı mı?','err');});
+      });
+    }).catch(function(){stat('Forge Viewer indirilemedi (internet?).','err');});
+  };
+  function poll(urn,n){
+    var c=cfg();
+    if(!c.statusUrl){window.apsViewUrn(urn);return;}
+    fetch(c.statusUrl+(c.statusUrl.indexOf('?')<0?'?':'&')+'urn='+encodeURIComponent(urn)).then(function(r){return r.json();}).then(function(j){
+      var st=((j.status||'')+'').toLowerCase();
+      if(st==='success'||st==='complete'){stat('Çeviri tamam. Görüntüleniyor…','ok');window.apsViewUrn(urn);}
+      else if(st==='failed'||st==='timeout'){stat('Çeviri başarısız.','err');}
+      else if(n>=90){stat('Çeviri zaman aşımı (çok büyük dosya?).','err');}
+      else{stat('Çevriliyor… (bağımsız bölümler ayrıştırılıyor) '+(j.progress||''));setTimeout(function(){poll(urn,n+1);},4000);}
+    }).catch(function(){stat('Durum sorgusu başarısız.','err');});
+  }
+  window.apsUpload=function(input){
+    var f=input&&input.files&&input.files[0];if(!f)return;input.value='';
+    var c=cfg();
+    if(!c.uploadUrl){stat('Yükleme endpoint tanımlı değil. Aşağıdan "⚙️ APS Bağlantı & Demo"yu açıp endpoint girin ya da hazır URN ile demo deneyin.','err');window.apsToggleCfg(true);return;}
+    stat('Yükleniyor: '+f.name+' ('+(f.size/1048576).toFixed(1)+' MB)…');
+    var fd=new FormData();fd.append('file',f,f.name);fd.append('name',f.name);
+    fetch(c.uploadUrl,{method:'POST',body:fd}).then(function(r){return r.json();}).then(function(j){
+      if(!j.urn){stat('Yükleme yanıtında "urn" alanı yok.','err');return;}
+      stat('Yüklendi. Çevriliyor…');poll(j.urn,0);
+    }).catch(function(){stat('Yükleme başarısız (endpoint/CORS?).','err');});
+  };
+  function initCfg(){var c=cfg();['tokenUrl','uploadUrl','statusUrl'].forEach(function(k){var e=el('aps_'+k);if(e&&c[k])e.value=c[k];});}
+  if(document.readyState!=='loading')initCfg();else document.addEventListener('DOMContentLoaded',initCfg);
+})();
 </script>
 
 </body>
