@@ -1703,7 +1703,8 @@ function cookieChoice(v){
       <button data-pane="projects" onclick="admNav('projects',this)">🏗️ Projeler</button>
       <button data-pane="services" onclick="admNav('services',this)">🧰 Hizmetler</button>
       <button data-pane="arsa" onclick="admNav('arsa',this)">🤝 Kat Karşılığı Hesap</button>
-      <button data-pane="proje3d" onclick="admNav('proje3d',this)">🏗️ 3D Proje Üretici</button>
+      <button data-pane="proje3d" onclick="admNav('proje3d',this)">🏗️ 3D Proje Üretici (Kat Karşılığı)</button>
+      <button data-pane="dwgproje" onclick="admNav('dwgproje',this)">📐 DWG Mimari Proje</button>
       <button data-pane="contracts" onclick="admNav('contracts',this)">📋 Sözleşmeler</button>
       <button data-pane="leads" onclick="admNav('leads',this)">👥 Müşteriler / Teklifler</button>
       <button data-pane="theme" onclick="admNav('theme',this)">🎨 Tema & Renk</button>
@@ -1805,15 +1806,6 @@ function cookieChoice(v){
               <div id="glbStatus" style="font-size:12px;margin-top:8px;color:var(--muted)"></div>
               <button class="btn-mini" id="glbClearBtn" style="width:100%;margin-top:8px;display:none" onclick="clearGLBModel()">🗑️ Modeli Kaldır (konsepte dön)</button>
             </div>
-            <div class="panelcard" style="margin-top:14px;border:1px solid var(--accent)">
-              <h3 style="margin:0 0 8px">📐 .dwg Mimari Proje · <span style="color:var(--accent)">Gerçek Çözümleme</span></h3>
-              <p style="font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.5">Mimarın <b>.dwg</b> dosyasını yükleyin — tamamen <b>tarayıcıda, hesapsız ve backend'siz</b> çözümlenir: <b>2B kat planı + bağımsız bölümler + m²</b> → tek tıkla portföy. (libredwg-web · WASM)</p>
-              <input type="file" id="apsFile" accept=".dwg,.dxf" style="display:none" onchange="if(this.files[0])window.dwgLocalPreview(this.files[0]);this.value=''">
-              <button class="btn-mini" style="width:100%;background:var(--accent);color:#0e0f13;border-color:var(--accent);font-weight:700" onclick="document.getElementById('apsFile').click()">📤 .dwg Mimari Proje Yükle</button>
-              <div id="apsStatus" style="font-size:12px;margin-top:8px;color:var(--muted);line-height:1.45"></div>
-              <div id="apsPreview" style="margin-top:8px"></div>
-              <button class="btn-mini" id="apsBackBtn" style="width:100%;margin-top:8px;display:none" onclick="apsCloseViewer()">← Planı Kapat</button>
-            </div>
             <div class="panelcard" style="margin-top:14px">
               <h3 style="margin:0 0 12px">🏬 Bağımsız Bölüm Dağılımı</h3>
               <div class="ed2">
@@ -1856,18 +1848,54 @@ function cookieChoice(v){
               <canvas id="adminBuild3d"></canvas>
               <div class="p3d-hint">🖱️ Döndür · tekerlek ile yakınlaştır</div>
             </div>
-            <div id="apsViewerWrap" style="display:none;margin-top:14px">
+            <div class="panelcard" style="margin-top:14px">
+              <h3 style="margin:0 0 10px">📊 Anlık Fizibilite Özeti</h3>
+              <div id="p3_stats"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- DWG MİMARİ PROJE -->
+      <div class="adm-pane" id="pane-dwgproje">
+        <h2>📐 DWG Mimari Proje → Projeler</h2>
+        <div class="crumb">Mimarın <b>.dwg</b> dosyasını yükleyin → tüm yapı okunur (kat · mahal · m² · 2B gerçek plan) → site <b>Projeler</b> sayfasına kapsamlı proje olarak kaydedin. Tamamen tarayıcıda, hesapsız · backend'siz.</div>
+        <div class="p3d-layout">
+          <div class="p3d-controls">
+            <div class="panelcard">
+              <h3 style="margin:0 0 12px">🏷️ Proje Bilgileri</h3>
+              <label>Proje Adı</label><input type="text" id="dwg_ad" placeholder="Örn. Fatih Menteşe Konutları">
+              <div class="ed3">
+                <div><label>İl</label><input type="text" id="dwg_il" value="İstanbul"></div>
+                <div><label>İlçe</label><input type="text" id="dwg_ilce" value="" placeholder="Örn. Kadıköy"></div>
+                <div><label>Mahalle</label><input type="text" id="dwg_mah" value=""></div>
+              </div>
+              <div class="ed2">
+                <div><label>Ada</label><input type="text" id="dwg_ada" value="" placeholder="Örn. 1234"></div>
+                <div><label>Parsel</label><input type="text" id="dwg_parsel" value="" placeholder="Örn. 56"></div>
+              </div>
+            </div>
+            <div class="panelcard" style="margin-top:14px;border:1px solid var(--accent)">
+              <h3 style="margin:0 0 8px">📤 Mimari Proje Yükle</h3>
+              <p style="font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.5"><b>.dwg</b> (veya .dxf) seçin → <b>Yapıyı Otomatik Çöz</b> ile kat/mahal/m² + 2B plan çıkar. (libredwg-web · WASM · arayüz donmaz)</p>
+              <input type="file" id="apsFile" accept=".dwg,.dxf" style="display:none" onchange="if(this.files[0])window.dwgLocalPreview(this.files[0]);this.value=''">
+              <button class="btn-mini" style="width:100%;background:var(--accent);color:#0e0f13;border-color:var(--accent);font-weight:700" onclick="document.getElementById('apsFile').click()">📤 .dwg / .dxf Seç</button>
+              <div id="apsStatus" style="font-size:12px;margin-top:8px;color:var(--muted);line-height:1.45"></div>
+              <div id="apsPreview" style="margin-top:8px"></div>
+              <button class="btn-mini" id="apsBackBtn" style="width:100%;margin-top:8px;display:none" onclick="apsCloseViewer()">← Planı Kapat</button>
+            </div>
+          </div>
+          <div class="p3d-right">
+            <div id="apsViewerWrap" style="display:none">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
                 <b style="font-family:var(--head)">📐 Gerçek Vektör Kat Planı (.dwg)</b>
                 <button class="btn-mini" onclick="apsCloseViewer()" style="width:auto">✕ Kapat</button>
               </div>
               <div id="apsViewer" style="position:relative;width:100%;height:560px;background:#0b0d12;border:1px solid var(--line);border-radius:12px;overflow:hidden"></div>
-              <p style="font-size:11.5px;color:var(--muted);margin:8px 0 0">Gerçek vektör kat planı (.dwg'den, tarayıcıda). Sağ üstteki <b>＋ / －</b> ile yakınlaştırıp kaydırarak inceleyebilirsiniz.</p>
+              <p style="font-size:11.5px;color:var(--muted);margin:8px 0 0">Gerçek vektör kat planı. Sağ üstteki <b>＋ / －</b> ile yakınlaştırıp kaydırarak inceleyin.</p>
             </div>
             <div id="dwgAnalyz"></div>
-            <div class="panelcard" style="margin-top:14px">
-              <h3 style="margin:0 0 10px">📊 Anlık Fizibilite Özeti</h3>
-              <div id="p3_stats"></div>
+            <div class="panelcard" id="dwgHint" style="margin-top:14px">
+              <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.6">💡 Soldan bir <b>.dwg</b> yükleyip <b>🏗️ Yapıyı Otomatik Çöz</b>'e basın. Büyük dosyalar Web Worker'da işlenir (arayüz donmaz); ilk seferde ~9 MB motor iner.</p>
             </div>
           </div>
         </div>
@@ -4824,31 +4852,14 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     h+='</div>';
     box.innerHTML=h;
   }
-  function _dwgAutofill(model){
-    try{
-      var setV=function(id,v){var e=el(id);if(e){e.value=v;}};
-      var getN=function(id,d){var e=el(id);var n=e?parseFloat(e.value):NaN;return (isFinite(n)&&n>0)?n:d;};
-      if(model.katSayisi)setV('p3_kat',Math.max(1,Math.min(40,model.katSayisi)));
-      var fk=Object.keys(model.byFloor), avg=model.katSayisi?Math.round(model.toplamM2/model.katSayisi):0;
-      if(avg>10)setV('p3_daireM2',avg);
-      // oransal kütle: arsa ≈ toplam inşaat / emsal → mevcut 3B üretici massing'i orantılı çizer
-      var emsal=getN('p3_emsal',2);
-      if(model.toplamM2>0){setV('p3_m2',Math.max(50,Math.round((model.toplamM2/emsal)/10)*10));}
-      setV('p3_blok',1);
-      var lines=[]; fk.forEach(function(k){var arr=model.byFloor[k];lines.push(k+': '+arr.map(function(r){return r.name+' '+r.m2+'m²';}).join(', '));});
-      setV('p3_not','[DWG otomatik] '+model.katSayisi+' kat · '+model.mahalSayisi+' mahal · '+model.toplamM2+' m² (kat/taban ~'+avg+' m²)\n'+lines.join('\n'));
-      if(typeof window.saveP3Note==='function')window.saveP3Note();
-      if(typeof window.updateProje3D==='function')window.updateProje3D();
-      window.__dwgModel=model;
-    }catch(e){}
-  }
   var _DWG_CDN='https://cdn.jsdelivr.net/npm/@mlightcad/libredwg-web@0.7.7';
   var _DWG_WORKER_SRC="import { LibreDwg, Dwg_File_Type } from '"+_DWG_CDN+"/dist/libredwg-web.js';\nlet libP;\nself.onmessage=async function(e){try{if(!libP)libP=LibreDwg.create('"+_DWG_CDN+"/wasm/');var lib=await libP;var dwg=lib.dwg_read_data(e.data,Dwg_File_Type.DWG);var db=lib.convert(dwg);var svg=lib.dwg_to_svg(db);var ents=db.entities||[];var texts=[];for(var i=0;i<ents.length;i++){var en=ents[i];if((en.type==='TEXT'||en.type==='MTEXT')&&en.text){var p=en.startPoint||en.insertionPoint;if(p&&typeof p.x==='number'&&isFinite(p.x))texts.push({t:en.text,x:p.x,y:p.y});}}var layers=(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries)?db.tables.LAYER.entries.length:0;var insunits=db.header&&db.header.INSUNITS;try{lib.dwg_free(dwg);}catch(_){}self.postMessage({svg:svg,texts:texts,layers:layers,insunits:insunits,entityCount:ents.length});}catch(err){self.postMessage({error:String((err&&err.message)||err)});}};";
   function _dwgApplyResult(d){
     if(d.error){stat('Çözümleme hatası: '+d.error+' — dosya çok büyük/bozuk olabilir.','err');return;}
     if(d.svg&&d.svg.length>80)_showSvg(d.svg);
     var model=d.model||_dwgModelFromTexts(d.texts||[],d.layers,d.insunits,d.entityCount);
-    _renderAnalysis(model);_dwgAutofill(model);
+    window.__dwgModel=model;
+    _renderAnalysis(model);
     stat('✓ Yapı çözümlendi: '+model.katSayisi+' kat · '+model.mahalSayisi+' mahal · '+model.toplamM2+' m² (2B plan + tablo aşağıda).','ok');
   }
   function _dwgMainThread(buf){
@@ -4884,9 +4895,9 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     var m=window.__dwgModel;if(!m){stat('Önce "Yapıyı Otomatik Çöz" ile çözümleyin.','err');return;}
     if(typeof PROJECTS==='undefined'){stat('Proje sistemi hazır değil.','err');return;}
     var g=function(id){return (el(id)||{}).value||'';};
-    var il=g('p3_il')||'İstanbul', ilce=g('p3_ilce'), mah=g('p3_mah'), ada=g('p3_ada'), parsel=g('p3_parsel');
+    var il=g('dwg_il')||'İstanbul', ilce=g('dwg_ilce'), mah=g('dwg_mah'), ada=g('dwg_ada'), parsel=g('dwg_parsel');
     var loc=[mah,ilce,il].filter(Boolean).join(', ')||il;
-    var title=g('p3_ad')&&g('p3_ad')!=='Müşteri Arsası'?g('p3_ad'):((window.__dwgInfo&&window.__dwgInfo.name?window.__dwgInfo.name.replace(/\.dwg$/i,''):'DWG Projesi'));
+    var title=g('dwg_ad')||((window.__dwgInfo&&window.__dwgInfo.name)?window.__dwgInfo.name.replace(/\.dwg$/i,''):'DWG Projesi');
     var katLbl=(m.katlar&&m.katlar.length?m.katlar.join(' / '):'-');
     var apts=[];Object.keys(m.byFloor).forEach(function(fk){m.byFloor[fk].forEach(function(r,ri){apts.push({no:'M'+(ri+1),tip:r.name,m2:String(r.m2),kat:katLbl,cephe:'-',fiyat:'-',durum:'musait'});});});
     var desc='Mimari .dwg projesinden otomatik oluşturuldu: '+m.katSayisi+' kat · '+m.mahalSayisi+' bağımsız mahal · '+m.toplamM2+' m² toplam alan.'+(ada?(' Ada/Parsel: '+ada+'/'+parsel+'.'):'');
