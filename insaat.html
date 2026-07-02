@@ -1858,7 +1858,7 @@ function cookieChoice(v){
       <!-- DWG MİMARİ PROJE -->
       <div class="adm-pane" id="pane-dwgproje">
         <h2>📐 DWG Mimari Proje → Projeler</h2>
-        <div class="crumb">Mimarın <b>.dwg</b> dosyasını yükleyin → tüm yapı okunur (kat · mahal · m² · 2B gerçek plan) → site <b>Projeler</b> sayfasına kapsamlı proje olarak kaydedin. Tamamen tarayıcıda, hesapsız · backend'siz.</div>
+        <div class="crumb">Mimarın <b>.dwg</b> dosyasını yükleyin → çizim <b>eksiksiz okunur</b> (2B gerçek vektör plan) → <b>Pro<span style="background:#16a34a;color:#07130a;border-radius:4px;padding:0 5px;font-weight:800">X</span></b> dosyanın <b>Alan Cetvelinden</b> gerçek verileri (kat · bağımsız bölüm · toplam inşaat alanı · m²) okur — <b>hiçbir şey uydurmaz</b> → <b>Projeler</b> sayfasına kaydedilir. Daire tipleri/fiyatlar admin panelde tamamlanır.</div>
         <div class="p3d-layout">
           <div class="p3d-controls">
             <div class="panelcard">
@@ -1894,8 +1894,9 @@ function cookieChoice(v){
               <p style="font-size:11.5px;color:var(--muted);margin:8px 0 0">Gerçek vektör kat planı. Sağ üstteki <b>＋ / －</b> ile yakınlaştırıp kaydırarak inceleyin.</p>
             </div>
             <div id="dwgAnalyz"></div>
+            <div id="dwgAiResult"></div>
             <div class="panelcard" id="dwgHint" style="margin-top:14px">
-              <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.6">💡 Soldan bir <b>.dwg</b> yükleyip <b>🏗️ Yapıyı Otomatik Çöz</b>'e basın. Büyük dosyalar Web Worker'da işlenir (arayüz donmaz); ilk seferde ~9 MB motor iner.</p>
+              <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.6">💡 <b>1)</b> Soldan bir <b>.dwg</b> yükleyip <b>🏗️ Yapıyı Otomatik Çöz</b>'e basın (2B plan açılır). <b>2)</b> <b>Pro<span style="background:#16a34a;color:#07130a;border-radius:3px;padding:0 4px;font-weight:800">X</span> ile Çözümle</b> ile Alan Cetvelinden gerçek veriler okunur (uydurma yok). <b>3)</b> <b>Portföye Ekle</b> ile kaydedin; daire tipi/fiyat admin panelde tamamlanır. Büyük dosyalar Web Worker'da işlenir (arayüz donmaz); ilk seferde ~9 MB motor iner.</p>
             </div>
           </div>
         </div>
@@ -4840,7 +4841,10 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     h+='<span class="dwg-kpi"><b>'+model.katSayisi+'</b> Kat</span><span class="dwg-kpi"><b>'+model.mahalSayisi+'</b> Mahal</span><span class="dwg-kpi"><b>'+model.toplamM2+'</b> m² toplam</span>'+(model.avgFloorM2?'<span class="dwg-kpi"><b>'+model.avgFloorM2+'</b> m² ~kat/taban</span>':'')+'<span class="dwg-kpi"><b>'+model.entityCount.toLocaleString('tr-TR')+'</b> nesne</span><span class="dwg-kpi"><b>'+model.layers+'</b> katman</span>';
     h+='</div>';
     if(model.katlar&&model.katlar.length){h+='<div style="font-size:12px;color:var(--muted);margin:-4px 0 12px">🏢 Tespit edilen katlar: '+model.katlar.map(function(k){return '<b style="color:var(--on-surface,var(--ink))">'+k+'</b>';}).join(' · ')+'</div>';}
-    if(!model.mahalSayisi){h+='<p style="font-size:12.5px;color:var(--muted);margin:0">Mahal/m² etiketi otomatik okunamadı (çizimde yazılı alan yok olabilir). 2B plan yine de tam görüntülenir.</p>';}
+    // BİRİNCİL: ProX ile Alan Cetvelinden GERÇEK veri okuma (uydurma yok)
+    h+='<button id="dwgAiBtn" class="btn-mini" style="width:100%;margin:2px 0 12px;background:#16a34a;color:#fff;border:none;font-weight:800;font-size:13.5px;padding:13px;border-radius:11px;box-shadow:0 6px 18px rgba(22,163,74,.28);display:flex;align-items:center;justify-content:center;gap:8px" onclick="dwgProxAnalyze()">'+_prox(14)+'<span> ile Çözümle — Alan Cetvelinden gerçek veri</span></button>';
+    if(!model.mahalSayisi){h+='<p style="font-size:12.5px;color:var(--muted);margin:0 0 8px">Yukarıdaki '+_PROX_INLINE+' düğmesiyle çizimin Alan Cetvelinden gerçek veriler (kat sayısı · bağımsız bölüm · toplam alan · m²) okunur. 2B plan tam görüntülenir.</p>';}
+    if(model.mahalSayisi){h+='<div style="font-size:11.5px;color:var(--muted);margin:0 0 6px;text-transform:uppercase;letter-spacing:.04em">Ham mahal/m² okuması (bilgi)</div>';}
     floorKeys.forEach(function(fk){
       var arr=model.byFloor[fk]; var ft=0;arr.forEach(function(r){ft+=r.m2;});
       h+='<div style="margin-top:6px"><div style="font-weight:700;font-size:13px;color:var(--accent);margin:8px 0 4px">'+fk+' <span style="color:var(--muted);font-weight:400">· '+arr.length+' mahal · '+Math.round(ft*10)/10+' m²</span></div>';
@@ -4848,19 +4852,21 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
       arr.forEach(function(r){h+='<tr><td>'+r.name+'</td><td style="text-align:right;font-weight:700">'+r.m2+' m²</td></tr>';});
       h+='</tbody></table></div>';
     });
-    h+='<button class="btn-mini" style="width:100%;margin-top:12px;background:var(--accent);color:#0e0f13;border-color:var(--accent);font-weight:700" onclick="dwgToPortfolio()">➕ Bu Projeyi Portföye Ekle (otomatik)</button>';
     h+='</div>';
     box.innerHTML=h;
   }
   var _DWG_CDN='https://cdn.jsdelivr.net/npm/@mlightcad/libredwg-web@0.7.7';
-  var _DWG_WORKER_SRC="import { LibreDwg, Dwg_File_Type } from '"+_DWG_CDN+"/dist/libredwg-web.js';\nlet libP;\nself.onmessage=async function(e){try{if(!libP)libP=LibreDwg.create('"+_DWG_CDN+"/wasm/');var lib=await libP;var dwg=lib.dwg_read_data(e.data,Dwg_File_Type.DWG);var db=lib.convert(dwg);var svg=lib.dwg_to_svg(db);var ents=db.entities||[];var texts=[];for(var i=0;i<ents.length;i++){var en=ents[i];if((en.type==='TEXT'||en.type==='MTEXT')&&en.text){var p=en.startPoint||en.insertionPoint;if(p&&typeof p.x==='number'&&isFinite(p.x))texts.push({t:en.text,x:p.x,y:p.y});}}var layers=(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries)?db.tables.LAYER.entries.length:0;var insunits=db.header&&db.header.INSUNITS;try{lib.dwg_free(dwg);}catch(_){}self.postMessage({svg:svg,texts:texts,layers:layers,insunits:insunits,entityCount:ents.length});}catch(err){self.postMessage({error:String((err&&err.message)||err)});}};";
+  var _DWG_WORKER_SRC="import { LibreDwg, Dwg_File_Type } from '"+_DWG_CDN+"/dist/libredwg-web.js';\nlet libP;\nself.onmessage=async function(e){try{if(!libP)libP=LibreDwg.create('"+_DWG_CDN+"/wasm/');var lib=await libP;var dwg=lib.dwg_read_data(e.data,Dwg_File_Type.DWG);var db=lib.convert(dwg);var svg=lib.dwg_to_svg(db);var ents=db.entities||[];var texts=[];for(var i=0;i<ents.length;i++){var en=ents[i];if((en.type==='TEXT'||en.type==='MTEXT')&&en.text){var p=en.startPoint||en.insertionPoint;if(p&&typeof p.x==='number'&&isFinite(p.x))texts.push({t:en.text,x:p.x,y:p.y});}}var lys=(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries)||[];var layerNames=[];for(var li=0;li<lys.length&&layerNames.length<80;li++){if(lys[li]&&lys[li].name)layerNames.push(String(lys[li].name));}var insunits=db.header&&db.header.INSUNITS;try{lib.dwg_free(dwg);}catch(_){}self.postMessage({svg:svg,texts:texts,layers:lys.length,layerNames:layerNames,insunits:insunits,entityCount:ents.length});}catch(err){self.postMessage({error:String((err&&err.message)||err)});}};";
   function _dwgApplyResult(d){
     if(d.error){stat('Çözümleme hatası: '+d.error+' — dosya çok büyük/bozuk olabilir.','err');return;}
     if(d.svg&&d.svg.length>80)_showSvg(d.svg);
+    window.__dwgSvg=(d.svg&&d.svg.length>80)?d.svg:'';
+    window.__dwgRaw={texts:d.texts||[],layerNames:d.layerNames||[],layers:d.layers||0,insunits:d.insunits,entityCount:d.entityCount||0};
+    window.__dwgAi=null; var _ar=el('dwgAiResult');if(_ar)_ar.innerHTML='';
     var model=d.model||_dwgModelFromTexts(d.texts||[],d.layers,d.insunits,d.entityCount);
     window.__dwgModel=model;
     _renderAnalysis(model);
-    stat('✓ Yapı çözümlendi: '+model.katSayisi+' kat · '+model.mahalSayisi+' mahal · '+model.toplamM2+' m² (2B plan + tablo aşağıda).','ok');
+    stat('✓ Çizim eksiksiz okundu: '+model.entityCount.toLocaleString('tr-TR')+' nesne. Şimdi ProX ile Alan Cetvelinden gerçek verileri (kat · bağımsız bölüm · toplam alan) okuyun.','ok');
   }
   function _dwgMainThread(buf){
     _loadLibreDwg().then(function(lib){ setTimeout(function(){
@@ -4868,9 +4874,12 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
         var dwg=lib.inst.dwg_read_data(buf,lib.DwgType.DWG);
         var db=lib.inst.convert(dwg);
         var svg=lib.inst.dwg_to_svg(db);
-        var model=_dwgExtractModel(db);
+        var ents=db.entities||[], rawTexts=[];
+        for(var i=0;i<ents.length;i++){var e=ents[i];if((e.type==='TEXT'||e.type==='MTEXT')&&e.text){var p=e.startPoint||e.insertionPoint;if(p&&isFinite(p.x))rawTexts.push({t:e.text,x:p.x,y:p.y});}}
+        var lys=(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries)||[], layerNames=[];
+        for(var li=0;li<lys.length&&layerNames.length<80;li++){if(lys[li]&&lys[li].name)layerNames.push(String(lys[li].name));}
         try{lib.inst.dwg_free(dwg);}catch(e){}
-        _dwgApplyResult({svg:svg,model:model});
+        _dwgApplyResult({svg:svg,texts:rawTexts,layers:lys.length,layerNames:layerNames,insunits:(db.header&&db.header.INSUNITS),entityCount:ents.length});
       }catch(e){stat('Çözümleme hatası: '+((e&&e.message)||e),'err');}
     },30); }).catch(function(e){stat('WASM yüklenemedi (internet/CDN?): '+((e&&e.message)||e),'err');});
   }
@@ -4891,29 +4900,186 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
       }catch(e){ fallback(); }
     }).catch(function(e){ stat('Dosya okunamadı: '+((e&&e.message)||e),'err'); });
   };
+  /* ========== ProX — dosyanın Alan Cetvelindeki GERÇEK veriyi okur (sıfır uydurma) ========== */
+  // NOT: Kurgusal tanıtım demosu. ProX metin motoru anahtarı istemcide görünür ve geçicidir;
+  // kalıcı kullanımda localStorage.setItem('deepseek_key', '...') ile ezin veya bir proxy arkasına alın.
+  var _DS_KEY_DEFAULT='sk-65f4199efefa475e9378805538afdfbd';
+  function _dsKey(){var k='';try{k=localStorage.getItem('deepseek_key')||'';}catch(e){}return k||_DS_KEY_DEFAULT;}
+  function _esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  // ProX marka rozeti (footer stiliyle: X yeşil kutuda)
+  function _prox(sz){sz=sz||14;return '<span style="display:inline-flex;align-items:center;font-family:var(--head);font-weight:800;vertical-align:middle;font-size:'+sz+'px"><span style="color:var(--ink,#e8eefc)">Pro</span><span style="display:inline-flex;align-items:center;justify-content:center;min-width:1.35em;height:1.35em;background:#16a34a;color:#07130a;border-radius:5px;margin-left:2px">X</span></span>';}
+  var _PROX_INLINE='Pro<span style="background:#16a34a;color:#07130a;border-radius:4px;padding:0 5px;font-weight:800">X</span>';
+  function _deepseek(messages){
+    var ctrl=(typeof AbortController!=='undefined')?new AbortController():null;
+    var to=ctrl?setTimeout(function(){try{ctrl.abort();}catch(e){}},120000):0;
+    var done=function(v){clearTimeout(to);return v;};
+    return fetch('https://api.deepseek.com/chat/completions',{method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+_dsKey()},
+      body:JSON.stringify({model:'deepseek-chat',temperature:0.1,max_tokens:8192,response_format:{type:'json_object'},messages:messages}),
+      signal:ctrl?ctrl.signal:undefined
+    }).then(function(r){if(!r.ok)return r.text().then(function(t){throw new Error('HTTP '+r.status+' — '+t.slice(0,140));});return r.json();})
+      .then(function(j){return (j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||'';})
+      .then(done,function(e){clearTimeout(to);throw (e&&e.name==='AbortError')?new Error('zaman aşımı (120 sn) — dosya çok karmaşık olabilir'):e;});
+  }
+  function _rname(r){return (r&&typeof r==='object')?(r.name||''):String(r||'');}
+  function _rm2(r){return (r&&typeof r==='object'&&r.m2)?r.m2:0;}
+  // Kesik/eksik JSON onarımı — yalnız TAM kapanan öğelere kadar geri alır, sonra parantezleri kapatır
+  function _dsParse(txt){
+    if(!txt)return null;
+    var s=String(txt).replace(/^```(?:json)?/i,'').replace(/```\s*$/,'').trim();
+    var a=s.indexOf('{'); if(a<0)return null; s=s.slice(a);
+    try{return JSON.parse(s);}catch(e){}
+    var inStr=false,esc=false,stack=[],safeCut=-1,safeStack=null;
+    for(var i=0;i<s.length;i++){var ch=s[i];
+      if(inStr){ if(esc)esc=false; else if(ch==='\\')esc=true; else if(ch==='"')inStr=false; continue; }
+      if(ch==='"')inStr=true;
+      else if(ch==='{'||ch==='[')stack.push(ch==='{'?'}':']');
+      else if(ch==='}'||ch===']'){stack.pop();safeCut=i;safeStack=stack.slice();}
+    }
+    if(safeCut<0)return null;
+    var cand=s.slice(0,safeCut+1).replace(/,\s*$/,''), closers=(safeStack||[]).slice().reverse().join('');
+    try{return JSON.parse(cand+closers);}catch(e){return null;}
+  }
+  /* GERÇEK VERİ ÇIKARIMI — deterministik, dosyanın Alan Cetvelinden; hiçbir şey uydurulmaz. */
+  function _dwgFacts(){
+    var raw=window.__dwgRaw||{}, toM=(raw.insunits===6)?1:0.001, T=[], arr=raw.texts||[];
+    for(var i=0;i<arr.length;i++){var c=_clean(arr[i].t); if(c&&isFinite(arr[i].x))T.push({t:c,x:arr[i].x*toM,y:arr[i].y*toM});}
+    function nearestVal(labelRe,valRe,max){var best=null,bd=1e18;for(var a=0;a<T.length;a++){if(!labelRe.test(T[a].t))continue;for(var o=0;o<T.length;o++){if(o===a||!valRe.test(T[o].t))continue;var d=Math.hypot(T[a].x-T[o].x,T[a].y-T[o].y);if(d<bd&&d<(max||3)){bd=d;best=T[o].t;}}}return best;}
+    function dedupCount(re){var s={},n=0;for(var i2=0;i2<T.length;i2++){if(!re.test(T[i2].t))continue;var k=Math.round(T[i2].x)+','+Math.round(T[i2].y);if(!s[k]){s[k]=1;n++;}}return n;}
+    // KATLAR — "... KAT PLANI" başlıklarından (gerçek)
+    var titleRe=/(BODRUM|ZEMİN|ZEMIN|ÇATI|CATI|\d+\.?\s*NORMAL)\s*KAT\s*PLAN/i, fset=[];
+    function floorName(s){var u=s.toUpperCase();if(/BODRUM/.test(u))return 'Bodrum Kat';if(/ZEM/.test(u))return 'Zemin Kat';if(/ÇATI|CATI/.test(u))return 'Çatı Katı';var m=u.match(/(\d+)\.?\s*NORMAL/);if(m)return m[1]+'. Normal Kat';return '';}
+    for(var j=0;j<T.length;j++){if(!titleRe.test(T[j].t))continue;var nm=floorName(T[j].t);if(nm&&fset.indexOf(nm)<0)fset.push(nm);}
+    function forder(n){var u=n.toUpperCase();if(/BODRUM/.test(u))return -1;if(/ZEM/.test(u))return 0;if(/ÇATI|CATI/.test(u))return 98;var m=u.match(/(\d+)/);return m?parseInt(m[1]):50;}
+    fset.sort(function(a,b){return forder(a)-forder(b);});
+    // BAĞIMSIZ BÖLÜM SAYISI (gerçek) — etiketin komşu hücresindeki sayı, yoksa distinct BB numarası
+    var bbStr=nearestVal(/B\.?\s*B[ÖO]L[ÜU]M\s*SAYISI|BA[ĞG]IMSIZ\s*B[ÖO]L[ÜU]M\s*SAYISI/i,/^\d{1,3}$/,2.5);
+    var bbCount=bbStr?parseInt(bbStr):null;
+    if(!bbCount){var st={};for(var b2=0;b2<T.length;b2++){var mm=T[b2].t.match(/(\d+)\s*NO'?LU/i);if(mm&&/BA[ĞG]IMSIZ|daire|d[üu]kkan/i.test(T[b2].t))st[mm[1]]=1;}var kk2=Object.keys(st);bbCount=kk2.length||null;}
+    // TOPLAM İNŞAAT ALANI (gerçek)
+    var taStr=nearestVal(/TOPLAM\s*İ?NŞAAT\s*ALAN|TOPLAM\s*I?NSAAT\s*ALAN/i,/\d{2,5}[.,]\d{1,2}\s*m[2²]/i,2.5);
+    var totalArea=taStr?parseFloat((taStr.match(/(\d{2,5}[.,]\d{1,2})/)||[0,'0'])[1].replace(',','.')):null;
+    // DAİRE / DÜKKAN (ait-alan satırları, konum-dedup) — yaklaşık
+    var daireN=dedupCount(/nolu\s*daire/i), dukkanN=dedupCount(/nolu\s*d[üu]kkan/i);
+    if(!daireN&&!dukkanN){dukkanN=dedupCount(/^d[üu]kkan\b/i);}
+    // GERÇEK m² değerleri (dosyadan)
+    var m2=[]; for(var q=0;q<T.length;q++){var m3=T[q].t.match(/(\d{1,4}[.,]\d{1,2})\s*m[2²]/i);if(m3){var v=parseFloat(m3[1].replace(',','.'));if(v>2&&v<5000)m2.push(v);}}
+    // Teknik hacimler (birim DEĞİL) — sadece bilgi
+    var tech=dedupCount(/(kazan|makin[ae]|trafo|jenerat[öo]r|pompa)\s*daire|sığınak|siginak|su\s*deposu|hidrofor/i);
+    return {floors:fset, floorCount:fset.length, bbCount:bbCount, totalArea:totalArea, daireN:daireN, dukkanN:dukkanN, tech:tech, m2:m2, layerNames:(raw.layerNames||[]).slice(0,40), entityCount:raw.entityCount||0, layers:raw.layers||0, fileName:(window.__dwgInfo&&window.__dwgInfo.name)||''};
+  }
+  function _valStr(s){s=String(s==null?'':s).trim();return (s&&!/uydur|bilinm|belirsiz|null/i.test(s))?s:'';}
+  function _autoType(F){var hasDuk=(F.dukkanN||0)>0||/DÜKKAN|DUKKAN|MAĞAZA|TİCAR/i.test((F.layerNames||[]).join(' '));var hasDaire=(F.daireN||0)>0||(F.bbCount||0)>0;if(hasDuk&&hasDaire)return 'Konut + Ticari';if(hasDuk)return 'Ticari';if(hasDaire)return 'Konut';return 'Yapı';}
+  // ProX metnindeki, gerçeklerde OLMAYAN m² iddialarını maskele (uydurma sızıntısını engelle)
+  function _sanitize(s,F){s=String(s==null?'':s);if(!s)return '';var ta=F.totalArea?String(Math.round(F.totalArea)):null;
+    return s.replace(/(\d[\d.,]*)\s*(m²|m2)/gi,function(full,num){var r=String(Math.round(parseFloat(String(num).replace(/\./g,'').replace(',','.'))||0));if(ta&&(r===ta||String(num).indexOf(ta)>=0))return full;return 'ilgili alan';});}
+  window.dwgProxAnalyze=function(){
+    if(!window.__dwgRaw){stat('Önce "Yapıyı Otomatik Çöz" ile çizimi okuyun.','err');return;}
+    var F=_dwgFacts(); window.__dwgFacts=F;
+    if(!F.floorCount&&!F.bbCount&&!F.totalArea&&!F.m2.length){stat('Bu çizimde okunacak Alan Cetveli/kat/m² verisi bulunamadı. 2B plan yine de tam görüntülenir; detayları admin girer.','err');return;}
+    var btn=el('dwgAiBtn'); if(btn){btn.disabled=true;btn.style.opacity='.7';btn.innerHTML=_prox(13)+' okuyor…';}
+    stat('✓ Gerçek veriler okundu: '+F.floorCount+' kat'+(F.bbCount?' · '+F.bbCount+' bağımsız bölüm':'')+(F.totalArea?' · '+F.totalArea+' m²':'')+'. ProX profesyonel özet yazıyor…');
+    _renderProx(F,{buildingTypeLabel:_autoType(F),summary:'',highlights:[]}); // GERÇEK veriyi ANINDA göster; ProX prose sonra güncellenir
+    var facts={dosya:F.fileName, katSayisi:F.floorCount, katlar:F.floors, bagimsizBolumSayisi:F.bbCount, toplamInsaatAlaniM2:F.totalArea, daireSayisiTahmini:F.daireN||null, dukkanSayisiTahmini:F.dukkanN||null, teknikHacim:F.tech, gercekM2Adedi:F.m2.length, enBuyukM2:F.m2.length?Math.max.apply(null,F.m2):null, katmanlar:F.layerNames};
+    var sys='Sen bir mimari sunum editörüsün. Sana bir DWG projesinden DETERMİNİSTİK olarak çıkarılmış GERÇEK VERİLER (JSON) veriliyor. Görevin SADECE bu verilerden akıcı, profesyonel Türkçe bir yapı tanıtımı üretmek.\n\nKESİN KURALLAR (ihlal = ret):\n1) Verilmeyen HİÇBİR sayı/m²/birim/kat/tip UYDURMA. Yalnız verilen alanlardaki değerleri kullanabilirsin.\n2) Daire tipi (2+1, dubleks vb.) VERİLMEDİ → asla tahmin etme, yazma.\n3) summary yalnız verilen gerçeklere dayanır; başka rakam üretme.\n4) buildingTypeLabel: verilere göre kısa etiket (ör. "Konut + Ticari", "Konut", "Kamu Yapısı"). Emin değilsen "Yapı".\n\nSADECE şu JSON (başka metin yok): {"buildingTypeLabel":"kısa etiket","summary":"2-3 cümle, yalnız verilen gerçeklerle","highlights":["kısa madde","kısa madde"]}';
+    var usr='GERÇEK VERİLER (yalnızca bunları kullan):\n'+JSON.stringify(facts);
+    _deepseek([{role:'system',content:sys},{role:'user',content:usr}]).then(function(txt){
+      var ai=_dsParse(txt)||{};
+      window.__dwgProx={buildingTypeLabel:_valStr(ai.buildingTypeLabel)||_autoType(F), summary:_sanitize(ai.summary,F), highlights:(ai.highlights||[]).map(function(x){return _sanitize(x,F);}).filter(Boolean).slice(0,6)};
+      _renderProx(F,window.__dwgProx);
+      stat('✓ ProX gerçek verileri okudu: '+F.floorCount+' kat'+(F.bbCount?' · '+F.bbCount+' bağımsız bölüm':'')+(F.totalArea?' · '+F.totalArea+' m²':'')+'. Yazılı olmayan (tip/fiyat) admin panelde tamamlanır.','ok');
+    }).catch(function(e){
+      window.__dwgProx={buildingTypeLabel:_autoType(F),summary:'',highlights:[]};
+      _renderProx(F,window.__dwgProx);
+      stat('ProX metni üretilemedi ('+((e&&e.message)||e)+') — ama gerçek veriler okundu ve aşağıda gösterildi.','ok');
+    }).then(function(){var b=el('dwgAiBtn');if(b){b.disabled=false;b.style.opacity='1';b.innerHTML=_prox(13)+' ile yeniden oku';}});
+  };
+  window.dwgAiAnalyze=window.dwgProxAnalyze; // eski buton çağrısı uyumluluğu
+  function _renderProx(F,prox){
+    var box=el('dwgAiResult'); if(!box)return;
+    var h='<div style="background:var(--surface);border:2px solid #16a34a;border-radius:16px;padding:18px;margin-top:14px">';
+    h+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><h3 style="margin:0;font-family:var(--head)">Yapı Çözümlemesi</h3><span style="margin-left:auto">'+_prox(14)+'</span></div>';
+    h+='<div style="font-size:11px;color:var(--muted);margin:-2px 0 12px">Aşağıdaki değerler doğrudan mimari dosyanın <b>Alan Cetvelinden</b> okunmuştur — hiçbir değer uydurulmamıştır.</div>';
+    if(prox.buildingTypeLabel)h+='<div style="font-size:12.5px;color:var(--muted);margin-bottom:8px">🏢 <b style="color:var(--ink)">'+_esc(prox.buildingTypeLabel)+'</b></div>';
+    if(prox.summary)h+='<p style="font-size:13px;line-height:1.6;margin:0 0 12px">'+_esc(prox.summary)+'</p>';
+    // GERÇEK KPI (deterministik)
+    h+='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">';
+    if(F.floorCount)h+='<span class="dwg-kpi"><b>'+F.floorCount+'</b> Kat</span>';
+    if(F.bbCount)h+='<span class="dwg-kpi"><b>'+F.bbCount+'</b> Bağımsız Bölüm</span>';
+    if(F.totalArea)h+='<span class="dwg-kpi"><b>'+F.totalArea+'</b> m² toplam inşaat</span>';
+    if(F.daireN)h+='<span class="dwg-kpi"><b>'+F.daireN+'</b> Daire~</span>';
+    if(F.dukkanN)h+='<span class="dwg-kpi"><b>'+F.dukkanN+'</b> Dükkan~</span>';
+    if(F.tech)h+='<span class="dwg-kpi" style="opacity:.7"><b>'+F.tech+'</b> teknik hacim</span>';
+    h+='</div>';
+    if(F.floors&&F.floors.length)h+='<div style="font-size:12.5px;margin-bottom:12px">🏢 <b>Katlar:</b> '+F.floors.map(function(k){return '<span style="background:var(--surface-2,rgba(120,120,140,.09));border:1px solid var(--line);border-radius:6px;padding:2px 9px;margin:2px 3px 0 0;display:inline-block">'+_esc(k)+'</span>';}).join('')+'</div>';
+    if(F.m2&&F.m2.length){var sorted=F.m2.slice().sort(function(a,b){return b-a;});h+='<details style="margin-bottom:12px"><summary style="cursor:pointer;font-size:12.5px;color:#16a34a;font-weight:700">📋 Gerçek m² cetveli — '+F.m2.length+' değer (dosyadan)</summary><div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.8;max-height:130px;overflow:auto">'+sorted.slice(0,80).map(function(v){return v+' m²';}).join(' · ')+(sorted.length>80?' …':'')+'</div></details>';}
+    if(prox.highlights&&prox.highlights.length)h+='<ul style="font-size:12.5px;color:var(--muted);margin:0 0 12px;padding-left:18px;line-height:1.6">'+prox.highlights.map(function(x){return '<li>'+_esc(x)+'</li>';}).join('')+'</ul>';
+    h+='<div style="font-size:11.5px;color:var(--muted);background:var(--surface-2,rgba(120,120,140,.06));border:1px dashed var(--line);border-radius:9px;padding:9px 11px;margin-bottom:12px;line-height:1.55">ℹ️ Daire tipleri (2+1, dubleks vb.) ve birim fiyatları mimari dosyada <b>yazılı olmadığından</b> "belirtilmemiş" bırakıldı. Portföye ekledikten sonra <b>admin → Projeler</b> bölümünde her birimin tipini/fiyatını tek tıkla tamamlayabilirsiniz.</div>';
+    h+='<button class="btn-mini" style="width:100%;background:#16a34a;color:#fff;border-color:#16a34a;font-weight:800;font-size:13px;padding:12px" onclick="dwgToPortfolio()">✅ Bu Projeyi Portföye Ekle (gerçek veriler)</button>';
+    h+='</div>';
+    box.innerHTML=h;
+    try{box.scrollIntoView({behavior:'smooth',block:'nearest'});}catch(e){}
+  }
   window.dwgToPortfolio=function(){
-    var m=window.__dwgModel;if(!m){stat('Önce "Yapıyı Otomatik Çöz" ile çözümleyin.','err');return;}
     if(typeof PROJECTS==='undefined'){stat('Proje sistemi hazır değil.','err');return;}
     var g=function(id){return (el(id)||{}).value||'';};
     var il=g('dwg_il')||'İstanbul', ilce=g('dwg_ilce'), mah=g('dwg_mah'), ada=g('dwg_ada'), parsel=g('dwg_parsel');
     var loc=[mah,ilce,il].filter(Boolean).join(', ')||il;
     var title=g('dwg_ad')||((window.__dwgInfo&&window.__dwgInfo.name)?window.__dwgInfo.name.replace(/\.dwg$/i,''):'DWG Projesi');
-    var katLbl=(m.katlar&&m.katlar.length?m.katlar.join(' / '):'-');
-    var apts=[];Object.keys(m.byFloor).forEach(function(fk){m.byFloor[fk].forEach(function(r,ri){apts.push({no:'M'+(ri+1),tip:r.name,m2:String(r.m2),kat:katLbl,cephe:'-',fiyat:'-',durum:'musait'});});});
-    var desc='Mimari .dwg projesinden otomatik oluşturuldu: '+m.katSayisi+' kat · '+m.mahalSayisi+' bağımsız mahal · '+m.toplamM2+' m² toplam alan.'+(ada?(' Ada/Parsel: '+ada+'/'+parsel+'.'):'');
-    var proj={t:title,loc:loc,st:'plan',type:'Konut · '+m.katSayisi+' kat',area:m.toplamM2+' m²',img:'p_home',
-      price:'İletişime geçin',delivery:'Belirlenecek',units:m.mahalSayisi+' mahal · '+m.katSayisi+' kat',desc:desc,progress:0,
+    var thumb=(window.__dwgInfo&&window.__dwgInfo.previews&&window.__dwgInfo.previews[0])||'';
+    var F=window.__dwgFacts, prox=window.__dwgProx||{};
+    if(!F){stat('Önce ProX ile çözümleyin.','err');return;}
+    var kk=F.floorCount||0, tipLbl=prox.buildingTypeLabel||_autoType(F);
+    // GERÇEK plan görseli: dosyanın gömülü önizlemesi (gerçek çizim). HD için _dwgUpgradePlan async yükseltir.
+    var planImg=(window.__dwgInfo&&window.__dwgInfo.previews&&window.__dwgInfo.previews[0])||thumb||'';
+    // GERÇEK kat listesi → floors (her kat, gerçek planı gösterir; admin kat kat görsel ekleyebilir)
+    var floors=(F.floors||[]).map(function(nm){return {name:nm,usage:'',units:[],img:planImg};});
+    // Birim SLOTLARI — sayı gerçek (bağımsız bölüm); tip/m²/fiyat "belirtilmemiş" → admin tamamlar
+    var apts=[], nUnits=F.bbCount||0, nDuk=F.dukkanN||0, nDaire=(nUnits?Math.max(nUnits-nDuk,0):0);
+    for(var i=0;i<nUnits;i++){var isDuk=i<nDuk;apts.push({no:(isDuk?'K':'D')+(i+1),tip:'belirtilmemiş',m2:'',kat:'belirtilmemiş',cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:isDuk?'dükkan':'daire'});}
+    var areaStr=F.totalArea?(F.totalArea+' m²'):'belirtilmemiş';
+    var real='Gerçek veriler (mimari dosyanın Alan Cetvelinden): '+kk+' kat'+(F.bbCount?(' · '+F.bbCount+' bağımsız bölüm'):'')+(F.totalArea?(' · '+F.totalArea+' m² toplam inşaat alanı'):'')+'.';
+    var desc=((prox.summary||'')+' '+real).trim()+(ada?(' Ada/Parsel: '+ada+'/'+parsel+'.'):'');
+    var proj={t:title,loc:loc,st:'plan',type:tipLbl+(kk?(' · '+kk+' kat'):''),area:areaStr,img:(planImg||'p_home'),
+      price:'İletişime geçin',delivery:'Belirlenecek',units:(nUnits?(nUnits+' bağımsız bölüm · '):'')+kk+' kat',desc:desc,progress:0,
       ada:ada,parsel:parsel,il:il,ilce:ilce,mahalle:mah,
-      longDesc:desc+' Kat planları ve mahal listesi mimarın .dwg dosyasından çözümlenmiştir.',
-      apts:apts,
-      dwgModel:{katlar:m.katlar,katSayisi:m.katSayisi,mahalSayisi:m.mahalSayisi,toplamM2:m.toplamM2,byFloor:m.byFloor,thumb:(window.__dwgInfo&&window.__dwgInfo.previews&&window.__dwgInfo.previews[0])||''}};
+      longDesc:desc+' Kat planı, mimari dosyanın gerçek vektör çiziminden alınmıştır. Daire tipleri (2+1, dubleks vb.) ve fiyatlar dosyada yazılı olmadığından admin panelde tamamlanır.',
+      apts:apts,floors:floors,gallery:(planImg?[planImg]:[]),
+      specs:[{k:'Yapı tipi',v:tipLbl},{k:'Kat sayısı',v:String(kk)}].concat(F.bbCount?[{k:'Bağımsız bölüm',v:String(F.bbCount)}]:[]).concat(F.totalArea?[{k:'Toplam inşaat alanı',v:F.totalArea+' m²'}]:[]).concat(ada?[{k:'Ada/Parsel',v:ada+'/'+parsel}]:[]),
+      dwgFacts:F, dwgModel:{thumb:thumb}};
     PROJECTS.unshift(proj);
+    _dwgSave();
+    _dwgUpgradePlan(proj); // gerçek vektör plandan HD görsel dene (async), başarırsa görseli yükseltir
+    stat('✓ Portföye eklendi: "'+title+'" ('+kk+' kat'+(F.bbCount?' · '+F.bbCount+' bağımsız bölüm':'')+(F.totalArea?' · '+F.totalArea+' m²':'')+'). Daire tiplerini admin → Projeler bölümünde tamamlayın.','ok');
+  };
+  function _dwgSave(){
     try{if(typeof renderProjects==='function')renderProjects();}catch(e){}
     try{if(typeof admPjList==='function')admPjList();}catch(e){}
     try{if(typeof renderKpi==='function')renderKpi();}catch(e){}
     try{if(typeof saveAll==='function')saveAll();}catch(e){}
-    stat('✓ Portföye eklendi: "'+title+'" ('+m.katSayisi+' kat · '+m.toplamM2+' m² · '+m.mahalSayisi+' mahal) — Projeler sayfasında ve admin → Projeler listesinde görünür.','ok');
-  };
+  }
+  // Gömülü önizleme yoksa: gerçek vektör plandan (dwg_to_svg) rasterize ederek HD plan görseli üret
+  function _dwgUpgradePlan(proj){
+    try{
+      var svg=window.__dwgSvg; if(!svg||svg.length>8000000)return;
+      if(proj.gallery&&proj.gallery.length&&/^data:/.test(proj.gallery[0]))return; // gerçek önizleme zaten var
+      var vb=(svg.match(/viewBox="([^"]+)"/)||[])[1]; if(!vb)return;
+      var p=vb.trim().split(/\s+/).map(Number); if(p.length<4||!(p[2]>0&&p[3]>0))return;
+      var ratio=p[2]/p[3]; if(ratio>6||ratio<1/6)return; // aşırı outlier viewBox → atla
+      var cw=1600, ch=Math.max(1,Math.round(cw/ratio));
+      var sized=svg.replace(/width="100%"/,'width="'+cw+'"').replace(/height="100%"/,'height="'+ch+'"');
+      var url=URL.createObjectURL(new Blob([sized],{type:'image/svg+xml'})), img=new Image(), done=false;
+      var to=setTimeout(function(){if(!done){done=true;try{URL.revokeObjectURL(url);}catch(e){}}},20000);
+      img.onload=function(){ if(done)return; done=true; clearTimeout(to);
+        try{var cv=document.createElement('canvas');cv.width=cw;cv.height=ch;var ctx=cv.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,cw,ch);ctx.drawImage(img,0,0,cw,ch);
+          var png=cv.toDataURL('image/jpeg',0.85); URL.revokeObjectURL(url);
+          if(png&&png.length>3000){proj.img=png;proj.gallery=[png];(proj.floors||[]).forEach(function(f){f.img=png;});_dwgSave();}
+        }catch(e){try{URL.revokeObjectURL(url);}catch(_){}}
+      };
+      img.onerror=function(){if(!done){done=true;clearTimeout(to);try{URL.revokeObjectURL(url);}catch(e){}}};
+      img.src=url;
+    }catch(e){}
+  }
 })();
 </script>
 
