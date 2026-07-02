@@ -4772,6 +4772,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     return {ver:String.fromCharCode(u8[0]||0,u8[1]||0,u8[2]||0,u8[3]||0,u8[4]||0,u8[5]||0),imgs:out.slice(0,6)};
   }
   window.dwgLocalPreview=function(file){
+    window.__dwgFile=file; // gerçek vektör render için sakla
     var box=el('apsPreview');if(box)box.innerHTML='<span style="font-size:12px;color:var(--muted)">🔎 '+file.name+' okunuyor…</span>';
     var fr=new FileReader();
     fr.onload=function(){
@@ -4779,7 +4780,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
       var vName=DWG_VERS[r.ver]||r.ver||'?', mb=(file.size/1048576).toFixed(1);
       window.__dwgInfo={name:file.name,size:file.size,ver:vName,previews:[]};
       var head='<div style="font-size:12px;color:var(--muted);margin-bottom:6px">📄 <b>'+file.name+'</b> · '+vName+' · '+mb+' MB';
-      if(!r.imgs.length){if(box)box.innerHTML=head+'<br>Gömülü önizleme yok. Tam 3B için APS gerekir.</div>';return;}
+      var vbtn='<button class="btn-mini" style="width:100%;margin-top:8px;background:var(--accent);color:#0e0f13;border-color:var(--accent);font-weight:700" onclick="dwgVectorRender()">🧩 Gerçek Vektör Çizimi Aç (WASM · hesapsız)</button>';
+      if(!r.imgs.length){if(box)box.innerHTML=head+'<br>Gömülü önizleme yok — yine de gerçek vektör çizimini açabilirsiniz.</div>'+vbtn;return;}
       var html=head+' · '+r.imgs.length+' önizleme</div><div style="display:flex;flex-wrap:wrap;gap:8px">';
       r.imgs.forEach(function(im,idx){
         var blob=new Blob([im.bytes],{type:im.type});var url=URL.createObjectURL(blob);
@@ -4796,7 +4798,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
         };d.readAsDataURL(blob);
         html+='<img src="'+url+'" alt="önizleme '+im.w+'×'+im.h+'" title="'+im.w+'×'+im.h+' — büyütmek için tıklayın" style="width:132px;height:auto;border:1px solid var(--line);border-radius:8px;cursor:zoom-in;background:#fff" onclick="dwgZoom(this.src)">';
       });
-      html+='</div><div id="apsPrevNote" style="font-size:11px;color:var(--muted);margin-top:6px">Gerçek çizim önizlemesi (DWG içinden). Rapora ekleniyor…</div>';
+      html+='</div><div id="apsPrevNote" style="font-size:11px;color:var(--muted);margin-top:6px">Gerçek çizim önizlemesi (DWG içinden). Rapora ekleniyor…</div>'+vbtn;
       if(box)box.innerHTML=html;
     };
     fr.onerror=function(){if(box)box.innerHTML='<span style="font-size:12px;color:#ff6b6b">Dosya okunamadı.</span>';};
@@ -4808,6 +4810,48 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     var img=new Image();img.src=src;img.style.cssText='max-width:96%;max-height:96%;background:#fff;border-radius:8px;image-rendering:pixelated;box-shadow:0 20px 60px rgba(0,0,0,.6)';
     o.appendChild(img);document.body.appendChild(o);
   };
+  /* ---- Gerçek vektör çizim: libredwg-web (WASM) ile tarayıcıda DWG→SVG, hesapsız ---- */
+  var _dwgLibP=null;
+  function _loadLibreDwg(){
+    if(_dwgLibP)return _dwgLibP;
+    var base='https://cdn.jsdelivr.net/npm/@mlightcad/libredwg-web@0.7.7';
+    _dwgLibP=import(base+'/dist/libredwg-web.js').then(function(m){
+      return m.LibreDwg.create(base+'/wasm/').then(function(inst){return {LibreDwg:m.LibreDwg,DwgType:m.Dwg_File_Type,inst:inst};});
+    });
+    return _dwgLibP;
+  }
+  window.dwgVectorRender=function(){
+    var f=window.__dwgFile;if(!f){stat('Önce bir .dwg yükleyin.','err');return;}
+    var mb=f.size/1048576;
+    if(mb>3 && !confirm('Bu dosya '+mb.toFixed(1)+' MB. Gerçek vektör çizimi 30-60 sn sürebilir ve çok bellek kullanır. Devam edilsin mi?'))return;
+    stat('WASM motoru yükleniyor (ilk seferde ~9 MB indirilir)…');
+    _loadLibreDwg().then(function(lib){
+      stat('Çizim ayrıştırılıyor'+(mb>3?' (büyük dosya — lütfen bekleyin)':'')+'…');
+      return f.arrayBuffer().then(function(buf){
+        setTimeout(function(){ // UI'ın stat'ı boyamasına izin ver
+          try{
+            var dwg=lib.inst.dwg_read_data(buf,lib.DwgType.DWG);
+            var db=lib.inst.convert(dwg);
+            var svg=lib.inst.dwg_to_svg(db);
+            try{lib.inst.dwg_free(dwg);}catch(e){}
+            if(!svg||svg.length<80){stat('Çizim boş ya da desteklenmeyen entity.','err');return;}
+            _showSvg(svg);
+            var ec=(svg.match(/<(path|line|polyline|circle|ellipse|text|rect)/g)||[]).length;
+            stat('✓ Gerçek vektör çizim ('+(svg.length/1048576).toFixed(1)+' MB SVG · ~'+ec.toLocaleString('tr-TR')+' öğe).','ok');
+          }catch(e){stat('Vektör render başarısız: '+((e&&e.message)||e)+' — gömülü önizleme geçerli.','err');}
+        },30);
+      });
+    }).catch(function(e){stat('WASM yüklenemedi (internet/CDN?): '+((e&&e.message)||e),'err');});
+  };
+  function _showSvg(svg){
+    var wrap=el('apsViewerWrap'),host=el('apsViewer');if(!wrap||!host)return;
+    var url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));
+    host.innerHTML='<div id="dwgSvgScroll" style="position:absolute;inset:0;overflow:auto;background:#0b0d12;text-align:center"><img id="dwgSvgImg" src="'+url+'" style="display:inline-block;width:1400px;height:auto;max-width:none;background:#fff;margin:8px"></div>'
+      +'<div style="position:absolute;top:10px;right:10px;display:flex;gap:6px;z-index:5"><button class="btn-mini" style="width:36px" onclick="dwgSvgZoom(1.3)">＋</button><button class="btn-mini" style="width:36px" onclick="dwgSvgZoom(0.77)">－</button></div>';
+    wrap.style.display='block';var b=el('apsBackBtn');if(b)b.style.display='block';
+    try{wrap.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}
+  }
+  window.dwgSvgZoom=function(k){var img=el('dwgSvgImg');if(img){var w=parseFloat(img.style.width)||1400;img.style.width=Math.max(300,Math.min(30000,w*k))+'px';}};
   function initCfg(){var c=cfg();['tokenUrl','uploadUrl','statusUrl'].forEach(function(k){var e=el('aps_'+k);if(e&&c[k])e.value=c[k];});}
   if(document.readyState!=='loading')initCfg();else document.addEventListener('DOMContentLoaded',initCfg);
 })();
