@@ -1858,7 +1858,7 @@ function cookieChoice(v){
       <!-- DWG MİMARİ PROJE -->
       <div class="adm-pane" id="pane-dwgproje">
         <h2>📐 DWG Mimari Proje → Projeler</h2>
-        <div class="crumb">Mimarın <b>.dwg</b> dosyasını yükleyin → çizim <b>eksiksiz okunur</b> (2B gerçek vektör plan) → <b>Pro<span style="background:#16a34a;color:#07130a;border-radius:4px;padding:0 5px;font-weight:800">X</span></b> dosyanın <b>Alan Cetvelinden</b> gerçek verileri (kat · bağımsız bölüm · toplam inşaat alanı · m²) okur — <b>hiçbir şey uydurmaz</b> → <b>Projeler</b> sayfasına kaydedilir. Daire tipleri/fiyatlar admin panelde tamamlanır.</div>
+        <div class="crumb">Mimarın <b>.dwg</b> dosyasını yükleyin → çizim <b>eksiksiz okunur</b> (2B gerçek vektör plan) → <b>Pro<span style="background:#16a34a;color:#07130a;border-radius:4px;padding:0 5px;font-weight:800">X</span></b> dosyanın <b>Alan Cetvelinden</b> gerçek verileri (kat · bağımsız bölüm · toplam inşaat alanı · m²) okur — <b>hiçbir şey uydurmaz</b> + <b>gerçek kat planları görsele</b> çevrilir (her kat ayrı) → <b>Projeler</b> sayfasına kaydedilir. Daire tipleri/fiyatlar admin panelde tamamlanır.</div>
         <div class="p3d-layout">
           <div class="p3d-controls">
             <div class="panelcard">
@@ -1894,6 +1894,7 @@ function cookieChoice(v){
               <p style="font-size:11.5px;color:var(--muted);margin:8px 0 0">Gerçek vektör kat planı. Sağ üstteki <b>＋ / －</b> ile yakınlaştırıp kaydırarak inceleyin.</p>
             </div>
             <div id="dwgAnalyz"></div>
+            <div id="dwgFloorPlans"></div>
             <div id="dwgAiResult"></div>
             <div class="panelcard" id="dwgHint" style="margin-top:14px">
               <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.6">💡 <b>1)</b> Soldan bir <b>.dwg</b> yükleyip <b>🏗️ Yapıyı Otomatik Çöz</b>'e basın (2B plan açılır). <b>2)</b> <b>Pro<span style="background:#16a34a;color:#07130a;border-radius:3px;padding:0 4px;font-weight:800">X</span> ile Çözümle</b> ile Alan Cetvelinden gerçek veriler okunur (uydurma yok). <b>3)</b> <b>Portföye Ekle</b> ile kaydedin; daire tipi/fiyat admin panelde tamamlanır. Büyük dosyalar Web Worker'da işlenir (arayüz donmaz); ilk seferde ~9 MB motor iner.</p>
@@ -4856,17 +4857,21 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     box.innerHTML=h;
   }
   var _DWG_CDN='https://cdn.jsdelivr.net/npm/@mlightcad/libredwg-web@0.7.7';
-  var _DWG_WORKER_SRC="import { LibreDwg, Dwg_File_Type } from '"+_DWG_CDN+"/dist/libredwg-web.js';\nlet libP;\nself.onmessage=async function(e){try{if(!libP)libP=LibreDwg.create('"+_DWG_CDN+"/wasm/');var lib=await libP;var dwg=lib.dwg_read_data(e.data,Dwg_File_Type.DWG);var db=lib.convert(dwg);var svg=lib.dwg_to_svg(db);var ents=db.entities||[];var texts=[];for(var i=0;i<ents.length;i++){var en=ents[i];if((en.type==='TEXT'||en.type==='MTEXT')&&en.text){var p=en.startPoint||en.insertionPoint;if(p&&typeof p.x==='number'&&isFinite(p.x))texts.push({t:en.text,x:p.x,y:p.y});}}var lys=(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries)||[];var layerNames=[];for(var li=0;li<lys.length&&layerNames.length<80;li++){if(lys[li]&&lys[li].name)layerNames.push(String(lys[li].name));}var insunits=db.header&&db.header.INSUNITS;try{lib.dwg_free(dwg);}catch(_){}self.postMessage({svg:svg,texts:texts,layers:lys.length,layerNames:layerNames,insunits:insunits,entityCount:ents.length});}catch(err){self.postMessage({error:String((err&&err.message)||err)});}};";
+  var _DWG_WORKER_SRC="import { LibreDwg, Dwg_File_Type } from '"+_DWG_CDN+"/dist/libredwg-web.js';\nlet libP;\nself.onmessage=async function(e){try{if(!libP)libP=LibreDwg.create('"+_DWG_CDN+"/wasm/');var lib=await libP;var dwg=lib.dwg_read_data(e.data,Dwg_File_Type.DWG);var db=lib.convert(dwg);var svg=lib.dwg_to_svg(db);var ents=db.entities||[];var texts=[];for(var i=0;i<ents.length;i++){var en=ents[i];if((en.type==='TEXT'||en.type==='MTEXT')&&en.text){var p=en.startPoint||en.insertionPoint;if(p&&typeof p.x==='number'&&isFinite(p.x))texts.push({t:en.text,x:p.x,y:p.y});}}var lys=(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries)||[];var layerNames=[];for(var li=0;li<lys.length&&layerNames.length<80;li++){if(lys[li]&&lys[li].name)layerNames.push(String(lys[li].name));}var titles=[],frames=[];for(var qi=0;qi<ents.length;qi++){var qe=ents[qi];if((qe.type==='TEXT'||qe.type==='MTEXT')&&qe.text&&/KAT.{0,4}PLAN/i.test(qe.text)){var qp=qe.startPoint||qe.insertionPoint;if(qp&&typeof qp.x==='number'&&isFinite(qp.x))titles.push({t:qe.text,x:qp.x,y:qp.y});}else if((qe.type==='LWPOLYLINE'||qe.type==='POLYLINE')&&qe.vertices&&qe.vertices.length>=4&&frames.length<400){var ax0=1e18,ay0=1e18,ax1=-1e18,ay1=-1e18;for(var vj=0;vj<qe.vertices.length;vj++){var vv=qe.vertices[vj];if(!vv)continue;if(vv.x<ax0)ax0=vv.x;if(vv.x>ax1)ax1=vv.x;if(vv.y<ay0)ay0=vv.y;if(vv.y>ay1)ay1=vv.y;}var aw=ax1-ax0,ah=ay1-ay0;if(aw>1000&&aw<9000&&ah>2000&&ah<14000)frames.push({x0:ax0,y0:ay0,x1:ax1,y1:ay1,w:aw,h:ah});}}var insunits=db.header&&db.header.INSUNITS;try{lib.dwg_free(dwg);}catch(_){}self.postMessage({svg:svg,texts:texts,layers:lys.length,layerNames:layerNames,insunits:insunits,entityCount:ents.length,titles:titles,frames:frames});}catch(err){self.postMessage({error:String((err&&err.message)||err)});}};";
   function _dwgApplyResult(d){
     if(d.error){stat('Çözümleme hatası: '+d.error+' — dosya çok büyük/bozuk olabilir.','err');return;}
     if(d.svg&&d.svg.length>80)_showSvg(d.svg);
     window.__dwgSvg=(d.svg&&d.svg.length>80)?d.svg:'';
     window.__dwgRaw={texts:d.texts||[],layerNames:d.layerNames||[],layers:d.layers||0,insunits:d.insunits,entityCount:d.entityCount||0};
-    window.__dwgAi=null; var _ar=el('dwgAiResult');if(_ar)_ar.innerHTML='';
+    window.__dwgTitles=d.titles||[]; window.__dwgFrames=d.frames||[]; window.__dwgFloorImgs=null;
+    window.__dwgAi=null; var _ar=el('dwgAiResult');if(_ar)_ar.innerHTML=''; var _fp=el('dwgFloorPlans');if(_fp)_fp.innerHTML='';
     var model=d.model||_dwgModelFromTexts(d.texts||[],d.layers,d.insunits,d.entityCount);
     window.__dwgModel=model;
     _renderAnalysis(model);
-    stat('✓ Çizim eksiksiz okundu: '+model.entityCount.toLocaleString('tr-TR')+' nesne. Şimdi ProX ile Alan Cetvelinden gerçek verileri (kat · bağımsız bölüm · toplam alan) okuyun.','ok');
+    stat('✓ Çizim eksiksiz okundu: '+model.entityCount.toLocaleString('tr-TR')+' nesne. Kat planları görsele dönüştürülüyor…','ok');
+    // Faz 1: gerçek kat planı görsellerini çıkar (çerçeve tespiti + viewBox crop, Y-flip)
+    _dwgMakeFloorPlans().then(function(fp){window.__dwgFloorImgs=fp; _renderFloorPlans(fp);
+      stat('✓ Çizim okundu: '+model.entityCount.toLocaleString('tr-TR')+' nesne'+(fp&&fp.length?(' · '+fp.length+' kat planı görsele dönüştürüldü'):'')+'. Şimdi ProX ile gerçek verileri okuyun.','ok');});
   }
   function _dwgMainThread(buf){
     _loadLibreDwg().then(function(lib){ setTimeout(function(){
@@ -4874,12 +4879,15 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
         var dwg=lib.inst.dwg_read_data(buf,lib.DwgType.DWG);
         var db=lib.inst.convert(dwg);
         var svg=lib.inst.dwg_to_svg(db);
-        var ents=db.entities||[], rawTexts=[];
-        for(var i=0;i<ents.length;i++){var e=ents[i];if((e.type==='TEXT'||e.type==='MTEXT')&&e.text){var p=e.startPoint||e.insertionPoint;if(p&&isFinite(p.x))rawTexts.push({t:e.text,x:p.x,y:p.y});}}
+        var ents=db.entities||[], rawTexts=[], titles=[], frames=[];
+        for(var i=0;i<ents.length;i++){var e=ents[i];
+          if((e.type==='TEXT'||e.type==='MTEXT')&&e.text){var p=e.startPoint||e.insertionPoint;if(p&&isFinite(p.x)){rawTexts.push({t:e.text,x:p.x,y:p.y});if(/KAT.{0,4}PLAN/i.test(e.text))titles.push({t:e.text,x:p.x,y:p.y});}}
+          else if((e.type==='LWPOLYLINE'||e.type==='POLYLINE')&&e.vertices&&e.vertices.length>=4&&frames.length<400){var ax0=1e18,ay0=1e18,ax1=-1e18,ay1=-1e18;for(var vj=0;vj<e.vertices.length;vj++){var vv=e.vertices[vj];if(!vv)continue;if(vv.x<ax0)ax0=vv.x;if(vv.x>ax1)ax1=vv.x;if(vv.y<ay0)ay0=vv.y;if(vv.y>ay1)ay1=vv.y;}var aw=ax1-ax0,ah=ay1-ay0;if(aw>1000&&aw<9000&&ah>2000&&ah<14000)frames.push({x0:ax0,y0:ay0,x1:ax1,y1:ay1,w:aw,h:ah});}
+        }
         var lys=(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries)||[], layerNames=[];
         for(var li=0;li<lys.length&&layerNames.length<80;li++){if(lys[li]&&lys[li].name)layerNames.push(String(lys[li].name));}
         try{lib.inst.dwg_free(dwg);}catch(e){}
-        _dwgApplyResult({svg:svg,texts:rawTexts,layers:lys.length,layerNames:layerNames,insunits:(db.header&&db.header.INSUNITS),entityCount:ents.length});
+        _dwgApplyResult({svg:svg,texts:rawTexts,layers:lys.length,layerNames:layerNames,insunits:(db.header&&db.header.INSUNITS),entityCount:ents.length,titles:titles,frames:frames});
       }catch(e){stat('Çözümleme hatası: '+((e&&e.message)||e),'err');}
     },30); }).catch(function(e){stat('WASM yüklenemedi (internet/CDN?): '+((e&&e.message)||e),'err');});
   }
@@ -5031,9 +5039,13 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     if(!F){stat('Önce ProX ile çözümleyin.','err');return;}
     var kk=F.floorCount||0, tipLbl=prox.buildingTypeLabel||_autoType(F);
     // GERÇEK plan görseli: dosyanın gömülü önizlemesi (gerçek çizim). HD için _dwgUpgradePlan async yükseltir.
-    var planImg=(window.__dwgInfo&&window.__dwgInfo.previews&&window.__dwgInfo.previews[0])||thumb||'';
-    // GERÇEK kat listesi → floors (her kat, gerçek planı gösterir; admin kat kat görsel ekleyebilir)
-    var floors=(F.floors||[]).map(function(nm){return {name:nm,usage:'',units:[],img:planImg};});
+    // Faz 1: her kat kendi GERÇEK plan görselini taşır (isimle eşleşir); yoksa gömülü önizleme
+    var floorImgs=window.__dwgFloorImgs||[], byName={}; floorImgs.forEach(function(f){byName[f.name]=f.img;});
+    var planImg=(floorImgs[0]&&floorImgs[0].img)||(window.__dwgInfo&&window.__dwgInfo.previews&&window.__dwgInfo.previews[0])||thumb||'';
+    var floors=(F.floors||[]).map(function(nm){return {name:nm,usage:'',units:[],img:(byName[nm]||planImg)};});
+    // eğer _dwgFacts kat bulamadıysa ama plan görselleri varsa, onları kat olarak kullan
+    if(!floors.length&&floorImgs.length)floors=floorImgs.map(function(f){return {name:f.name,usage:'',units:[],img:f.img};});
+    var gallery=floorImgs.length?floorImgs.map(function(f){return f.img;}):(planImg?[planImg]:[]);
     // Birim SLOTLARI — sayı gerçek (bağımsız bölüm); tip/m²/fiyat "belirtilmemiş" → admin tamamlar
     var apts=[], nUnits=F.bbCount||0, nDuk=F.dukkanN||0, nDaire=(nUnits?Math.max(nUnits-nDuk,0):0);
     for(var i=0;i<nUnits;i++){var isDuk=i<nDuk;apts.push({no:(isDuk?'K':'D')+(i+1),tip:'belirtilmemiş',m2:'',kat:'belirtilmemiş',cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:isDuk?'dükkan':'daire'});}
@@ -5044,7 +5056,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
       price:'İletişime geçin',delivery:'Belirlenecek',units:(nUnits?(nUnits+' bağımsız bölüm · '):'')+kk+' kat',desc:desc,progress:0,
       ada:ada,parsel:parsel,il:il,ilce:ilce,mahalle:mah,
       longDesc:desc+' Kat planı, mimari dosyanın gerçek vektör çiziminden alınmıştır. Daire tipleri (2+1, dubleks vb.) ve fiyatlar dosyada yazılı olmadığından admin panelde tamamlanır.',
-      apts:apts,floors:floors,gallery:(planImg?[planImg]:[]),
+      apts:apts,floors:floors,gallery:gallery,
       specs:[{k:'Yapı tipi',v:tipLbl},{k:'Kat sayısı',v:String(kk)}].concat(F.bbCount?[{k:'Bağımsız bölüm',v:String(F.bbCount)}]:[]).concat(F.totalArea?[{k:'Toplam inşaat alanı',v:F.totalArea+' m²'}]:[]).concat(ada?[{k:'Ada/Parsel',v:ada+'/'+parsel}]:[]),
       dwgFacts:F, dwgModel:{thumb:thumb}};
     PROJECTS.unshift(proj);
@@ -5057,6 +5069,97 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     try{if(typeof admPjList==='function')admPjList();}catch(e){}
     try{if(typeof renderKpi==='function')renderKpi();}catch(e){}
     try{if(typeof saveAll==='function')saveAll();}catch(e){}
+  }
+  /* ===== Faz 1: GERÇEK kat planı görselleri — çerçeve tespiti + viewBox crop (Y-flip) + rasterize ===== */
+  function _floorName(s){s=String(s||'').toUpperCase();if(/BODRUM/.test(s))return 'Bodrum Kat';if(/ZEM/.test(s))return 'Zemin Kat';if(/ÇATI|CATI/.test(s))return 'Çatı Katı';var m=s.match(/(\d+)\.?\s*NORMAL/);if(m)return m[1]+'. Normal Kat';return '';}
+  // Bir bbox'ı SVG viewBox override (Y-flip: y=-maxY) ile kesip PNG'ye rasterize et
+  function _dwgCropRaster(svg,f,maxW){
+    return new Promise(function(resolve){
+      try{
+        var pad=(f.x1-f.x0)*0.02, X0=f.x0-pad, Y1=f.y1+pad, w=(f.x1-f.x0)+2*pad, h=(f.y1-f.y0)+2*pad;
+        if(!(w>0&&h>0)){resolve('');return;}
+        var W=maxW||900, H=Math.max(1,Math.min(4000,Math.round(W*(h/w))));
+        var nvb=X0+' '+(-Y1)+' '+w+' '+h; // Y-flip: SVG_y=-DWG_y
+        var sized=svg.replace(/viewBox="[^"]+"/,'viewBox="'+nvb+'"').replace(/width="100%"/,'width="'+W+'"').replace(/height="100%"/,'height="'+H+'"');
+        var url=URL.createObjectURL(new Blob([sized],{type:'image/svg+xml'})), img=new Image(), done=false;
+        var to=setTimeout(function(){if(!done){done=true;try{URL.revokeObjectURL(url);}catch(e){}resolve('');}},25000);
+        img.onload=function(){ if(done)return; done=true; clearTimeout(to);
+          try{var cv=document.createElement('canvas');cv.width=W;cv.height=H;var ctx=cv.getContext('2d');ctx.fillStyle='#0b0d12';ctx.fillRect(0,0,W,H);ctx.drawImage(img,0,0,W,H);
+            var png=cv.toDataURL('image/jpeg',0.72); URL.revokeObjectURL(url); resolve(png&&png.length>3000?png:'');
+          }catch(e){try{URL.revokeObjectURL(url);}catch(_){}resolve('');}
+        };
+        img.onerror=function(){if(!done){done=true;clearTimeout(to);try{URL.revokeObjectURL(url);}catch(e){}resolve('');}};
+        img.src=url;
+      }catch(e){resolve('');}
+    });
+  }
+  // Kat başlıkları + çerçeve adaylarından her kat için temiz plan görseli üret
+  function _dwgMakeFloorPlans(){
+    var svg=window.__dwgSvg, titles=window.__dwgTitles||[], frames=window.__dwgFrames||[];
+    if(!svg||svg.length<200||!titles.length||!frames.length)return Promise.resolve([]);
+    var T=[]; titles.forEach(function(t){var nm=_floorName(t.t);if(nm&&isFinite(t.x))T.push({nm:nm,x:t.x,y:t.y});});
+    if(T.length<2)return Promise.resolve([]);
+    T.sort(function(a,b){return a.x-b.x;});
+    var sp=(T[T.length-1].x-T[0].x)/Math.max(1,T.length-1); if(!(sp>0))sp=4000;
+    var tX0=T[0].x-sp, tX1=T[T.length-1].x+sp;
+    // başlık yakınındaki çerçeveler
+    var cand=frames.filter(function(f){var cx=(f.x0+f.x1)/2;return cx>tX0&&cx<tX1;});
+    if(!cand.length)return Promise.resolve([]);
+    // dominant boyut kümesi (antet/detay elenir) — (w,h) yuvarlanmış kova, en kalabalık
+    var bk={}; cand.forEach(function(f){var k=Math.round(f.w/400)+'x'+Math.round(f.h/400);(bk[k]=bk[k]||[]).push(f);});
+    var best=[]; Object.keys(bk).forEach(function(k){if(bk[k].length>best.length)best=bk[k];});
+    if(best.length<2)return Promise.resolve([]);
+    // iç/dış çift çerçeveyi dedupe (x0 yakınlığı)
+    best.sort(function(a,b){return a.x0-b.x0;});
+    var uniq=[]; best.forEach(function(f){if(!uniq.some(function(u){return Math.abs(u.x0-f.x0)<f.w*0.3;}))uniq.push(f);});
+    if(uniq.length>12)uniq=uniq.slice(0,12);
+    uniq.sort(function(a,b){return a.x0-b.x0;});
+    uniq.forEach(function(f){var cx=(f.x0+f.x1)/2;f._t=T.reduce(function(b,tt){return Math.abs(tt.x-cx)<Math.abs(b.x-cx)?tt:b;},T[0]).nm;});
+    // TEK DECODE: büyük SVG'yi bir kez plan-şeridine raster'la, sonra her katı canvas source-rect ile kes (hızlı, donma yok)
+    stat('📐 Kat planları görsele dönüştürülüyor…');
+    var mx=Math.min.apply(null,uniq.map(function(f){return f.x0;})), MX=Math.max.apply(null,uniq.map(function(f){return f.x1;}));
+    var my=Math.min.apply(null,uniq.map(function(f){return f.y0;})), MY=Math.max.apply(null,uniq.map(function(f){return f.y1;}));
+    var padx=(MX-mx)*0.008, pady=(MY-my)*0.02; mx-=padx;MX+=padx;my-=pady;MY+=pady;
+    var stripW=MX-mx, stripH=MY-my;
+    var floorW=uniq.reduce(function(s,f){return s+(f.x1-f.x0);},0)/uniq.length;
+    var imgW=Math.max(900,Math.min(13000,Math.round(760*(stripW/Math.max(1,floorW)))));
+    var imgH=Math.max(1,Math.min(15000,Math.round(imgW*(stripH/stripW))));
+    var nvb=mx+' '+(-MY)+' '+stripW+' '+stripH; // Y-flip: SVG_y=-DWG_y
+    var sized=svg.replace(/viewBox="[^"]+"/,'viewBox="'+nvb+'"').replace(/width="100%"/,'width="'+imgW+'"').replace(/height="100%"/,'height="'+imgH+'"');
+    return new Promise(function(resolve){
+      var url=URL.createObjectURL(new Blob([sized],{type:'image/svg+xml'})), img=new Image(), done=false;
+      var to=setTimeout(function(){if(!done){done=true;try{URL.revokeObjectURL(url);}catch(e){}resolve([]);}},45000);
+      img.onerror=function(){if(!done){done=true;clearTimeout(to);try{URL.revokeObjectURL(url);}catch(e){}resolve([]);}};
+      img.onload=function(){ if(done)return; done=true; clearTimeout(to);
+        try{
+          var master=document.createElement('canvas');master.width=imgW;master.height=imgH;
+          var mc=master.getContext('2d');mc.fillStyle='#0b0d12';mc.fillRect(0,0,imgW,imgH);mc.drawImage(img,0,0,imgW,imgH);
+          URL.revokeObjectURL(url);
+          var out=uniq.map(function(f){
+            var sx=((f.x0-mx)/stripW)*imgW, sw=((f.x1-f.x0)/stripW)*imgW;
+            var sy=((MY-f.y1)/stripH)*imgH, sh=((f.y1-f.y0)/stripH)*imgH; // Y-flip: üst = MY
+            var W2=Math.max(1,Math.min(900,Math.round(sw))), H2=Math.max(1,Math.round(W2*(sh/Math.max(1,sw))));
+            var cv=document.createElement('canvas');cv.width=W2;cv.height=H2;var c=cv.getContext('2d');c.fillStyle='#0b0d12';c.fillRect(0,0,W2,H2);
+            c.drawImage(master,sx,sy,sw,sh,0,0,W2,H2);
+            var png=cv.toDataURL('image/jpeg',0.72);
+            return png&&png.length>2000?{name:f._t,img:png,x0:f.x0}:null;
+          }).filter(Boolean);
+          resolve(out);
+        }catch(e){resolve([]);}
+      };
+      img.src=url;
+    });
+  }
+  function _renderFloorPlans(fp){
+    var box=el('dwgFloorPlans'); if(!box)return;
+    if(!fp||!fp.length){box.innerHTML='';return;}
+    var h='<div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:14px">';
+    h+='<h3 style="margin:0 0 4px;font-family:var(--head)">📐 Kat Planları <span style="font-size:11px;color:var(--muted);font-weight:400">(dosyanın gerçek çiziminden — '+fp.length+' kat)</span></h3>';
+    h+='<div style="font-size:11px;color:var(--muted);margin:0 0 12px">Her kat, mimari dosyadaki gerçek vektör plandan otomatik kırpıldı. Portföye eklediğinizde proje sayfasında kat kat görünür.</div>';
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">';
+    fp.forEach(function(f){h+='<div style="border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#0b0d12;cursor:zoom-in" onclick="dwgZoom(\''+f.img+'\')"><img src="'+f.img+'" alt="'+_esc(f.name)+'" style="width:100%;height:150px;object-fit:cover;display:block"><div style="font-size:12px;font-weight:700;padding:6px 8px;color:var(--ink)">'+_esc(f.name)+'</div></div>';});
+    h+='</div></div>';
+    box.innerHTML=h;
   }
   // Gömülü önizleme yoksa: gerçek vektör plandan (dwg_to_svg) rasterize ederek HD plan görseli üret
   function _dwgUpgradePlan(proj){
