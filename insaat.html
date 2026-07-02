@@ -4781,12 +4781,22 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
       var head='<div style="font-size:12px;color:var(--muted);margin-bottom:6px">📄 <b>'+file.name+'</b> · '+vName+' · '+mb+' MB';
       if(!r.imgs.length){if(box)box.innerHTML=head+'<br>Gömülü önizleme yok. Tam 3B için APS gerekir.</div>';return;}
       var html=head+' · '+r.imgs.length+' önizleme</div><div style="display:flex;flex-wrap:wrap;gap:8px">';
-      r.imgs.forEach(function(im){
+      r.imgs.forEach(function(im,idx){
         var blob=new Blob([im.bytes],{type:im.type});var url=URL.createObjectURL(blob);
-        var d=new FileReader();d.onload=function(){window.__dwgInfo.previews.push(d.result);};d.readAsDataURL(blob);
+        var d=new FileReader();d.onload=function(){
+          window.__dwgInfo.previews.push(d.result);
+          if(idx===0){ // birincil (en büyük) önizlemeyi fizibilite raporuna OTOMATİK ekle
+            window.__p3images=window.__p3images||[];
+            if(window.__p3images.indexOf(d.result)<0 && window.__p3images.length<4){
+              window.__p3images.push(d.result);
+              if(typeof window.renderReportImages==='function')window.renderReportImages();
+              var nt=el('apsPrevNote');if(nt)nt.innerHTML='✓ Birincil önizleme <b>Fizibilite Raporu</b> görsellerine eklendi (📄 PDF\'te görünür).';
+            }
+          }
+        };d.readAsDataURL(blob);
         html+='<img src="'+url+'" alt="önizleme '+im.w+'×'+im.h+'" title="'+im.w+'×'+im.h+' — büyütmek için tıklayın" style="width:132px;height:auto;border:1px solid var(--line);border-radius:8px;cursor:zoom-in;background:#fff" onclick="dwgZoom(this.src)">';
       });
-      html+='</div><div style="font-size:11px;color:var(--muted);margin-top:6px">Gerçek çizim önizlemesi (DWG içinden). Yüksek çözünürlük & 3B için APS ile çevirin.</div>';
+      html+='</div><div id="apsPrevNote" style="font-size:11px;color:var(--muted);margin-top:6px">Gerçek çizim önizlemesi (DWG içinden). Rapora ekleniyor…</div>';
       if(box)box.innerHTML=html;
     };
     fr.onerror=function(){if(box)box.innerHTML='<span style="font-size:12px;color:#ff6b6b">Dosya okunamadı.</span>';};
