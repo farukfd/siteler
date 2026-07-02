@@ -4675,65 +4675,9 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
 /* ========== .dwg mimari çözümleme (libredwg-web WASM) — tarayıcıda, hesapsız, backend'siz ========== */
 (function(){
   function el(id){return document.getElementById(id);}
-  function v(id){var e=el(id);return e?(''+e.value).trim():'';}
-  function cfg(){try{return JSON.parse(localStorage.getItem('insaat_aps')||'{}');}catch(e){return{};}}
   function stat(m,k){var e=el('apsStatus');if(!e)return;e.textContent=m||'';e.style.color=k==='err'?'#ff6b6b':(k==='ok'?'#37d67a':'var(--muted)');}
   function show(s){var w=el('apsViewerWrap');if(w){w.style.display=s?'block':'none';if(s)try{w.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}}var b=el('apsBackBtn');if(b)b.style.display=s?'block':'none';}
-  window.apsSaveCfg=function(){try{localStorage.setItem('insaat_aps',JSON.stringify({tokenUrl:v('aps_tokenUrl'),uploadUrl:v('aps_uploadUrl'),statusUrl:v('aps_statusUrl')}));}catch(e){}};
-  window.apsReady=function(){var c=cfg();return !!(c.uploadUrl&&c.tokenUrl);};
-  window.apsToggleCfg=function(force){var e=el('apsCfg');if(!e)return;var open=(force===true)||(force!==false&&e.style.display==='none');e.style.display=open?'block':'none';};
   window.apsCloseViewer=function(){show(false);};
-  var sdkP=null;
-  function loadSDK(){
-    if(sdkP)return sdkP;
-    sdkP=new Promise(function(res,rej){
-      if(window.Autodesk&&window.Autodesk.Viewing)return res();
-      var ver='7.*',base='https://developer.api.autodesk.com/modelderivative/v2/viewers/'+ver+'/';
-      var c=document.createElement('link');c.rel='stylesheet';c.href=base+'style.min.css';document.head.appendChild(c);
-      var s=document.createElement('script');s.src=base+'viewer3D.min.js';s.onload=function(){res();};s.onerror=function(){rej();};document.head.appendChild(s);
-    });
-    return sdkP;
-  }
-  function token(cb){var c=cfg();if(!c.tokenUrl){stat('Token endpoint tanımlı değil (APS Ayarları).','err');return;}fetch(c.tokenUrl).then(function(r){return r.json();}).then(function(j){cb(j.access_token||j.token,j.expires_in||1800);}).catch(function(){stat('Token alınamadı (endpoint/CORS?).','err');});}
-  var viewer=null;
-  window.apsViewUrn=function(urn){
-    urn=(urn||'').trim();if(!urn){stat('URN boş.','err');return;}
-    stat('Görüntüleyici yükleniyor…');
-    loadSDK().then(function(){
-      Autodesk.Viewing.Initializer({env:'AutodeskProduction',api:'derivativeV2',getAccessToken:function(onT){token(function(tk,ex){onT(tk,ex);});}},function(){
-        show(true);
-        if(!viewer){viewer=new Autodesk.Viewing.GuiViewer3D(el('apsViewer'));viewer.start();}
-        var docId=urn.indexOf('urn:')===0?urn:'urn:'+urn;
-        Autodesk.Viewing.Document.load(docId,function(doc){
-          var g=doc.getRoot().getDefaultGeometry();
-          viewer.loadDocumentNode(doc,g).then(function(){stat('Model yüklendi — bağımsız bölümler soldaki Model Ağacı\'nda.','ok');try{viewer.setLightPreset(8);}catch(e){}});
-        },function(code,msg){stat('Model yüklenemedi ('+(msg||code)+'). Çeviri tamamlandı mı?','err');});
-      });
-    }).catch(function(){stat('Forge Viewer indirilemedi (internet?).','err');});
-  };
-  function poll(urn,n){
-    var c=cfg();
-    if(!c.statusUrl){window.apsViewUrn(urn);return;}
-    fetch(c.statusUrl+(c.statusUrl.indexOf('?')<0?'?':'&')+'urn='+encodeURIComponent(urn)).then(function(r){return r.json();}).then(function(j){
-      var st=((j.status||'')+'').toLowerCase();
-      if(st==='success'||st==='complete'){stat('Çeviri tamam. Görüntüleniyor…','ok');window.apsViewUrn(urn);}
-      else if(st==='failed'||st==='timeout'){stat('Çeviri başarısız.','err');}
-      else if(n>=90){stat('Çeviri zaman aşımı (çok büyük dosya?).','err');}
-      else{stat('Çevriliyor… (bağımsız bölümler ayrıştırılıyor) '+(j.progress||''));setTimeout(function(){poll(urn,n+1);},4000);}
-    }).catch(function(){stat('Durum sorgusu başarısız.','err');});
-  }
-  window.apsUpload=function(input){
-    var f=input&&input.files&&input.files[0];if(!f)return;input.value='';
-    window.dwgLocalPreview(f); // her zaman: yerel gömülü 2B önizleme (hesapsız)
-    var c=cfg();
-    if(!c.uploadUrl){stat('2B önizleme aşağıda ↓ · Tam BIM 3B için APS bağlayın (⚙️) veya URN demo.','ok');return;}
-    stat('Yükleniyor: '+f.name+' ('+(f.size/1048576).toFixed(1)+' MB)…');
-    var fd=new FormData();fd.append('file',f,f.name);fd.append('name',f.name);
-    fetch(c.uploadUrl,{method:'POST',body:fd}).then(function(r){return r.json();}).then(function(j){
-      if(!j.urn){stat('Yükleme yanıtında "urn" alanı yok.','err');return;}
-      stat('Yüklendi. Çevriliyor…');poll(j.urn,0);
-    }).catch(function(){stat('Yükleme başarısız (endpoint/CORS?).','err');});
-  };
   /* ---- .dwg gömülü 2B önizleme (tamamen yerel, hesapsız) ---- */
   var DWG_VERS={AC1014:'AutoCAD R14',AC1015:'AutoCAD 2000',AC1018:'AutoCAD 2004',AC1021:'AutoCAD 2007',AC1024:'AutoCAD 2010',AC1027:'AutoCAD 2013',AC1032:'AutoCAD 2018'};
   function seq(u8,s,from){for(var i=from;i<u8.length-s.length;i++){var ok=true;for(var k=0;k<s.length;k++){if(u8[i+k]!==s[k]){ok=false;break;}}if(ok)return i;}return -1;}
@@ -4863,17 +4807,17 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     for(var r=0;r<texts.length;r++){var rt=texts[r];if(!ROOMS.test(rt.t))continue;
       var best=null,bd=1e18;for(var n=0;n<nums.length;n++){var d=Math.hypot(nums[n].x-rt.x,nums[n].y-rt.y);if(d<bd){bd=d;best=nums[n];}}
       var m2=(best&&bd*toM<5)?_num2(best.t):0; if(m2<1||m2>400)continue;
-      var fl='Kat 1',fd=1e18;for(var f=0;f<floors.length;f++){var dd=Math.hypot(floors[f].x-rt.x,floors[f].y-rt.y);if(dd<fd){fd=dd;fl=floors[f].t;}}
-      rooms.push({name:rt.t,m2:m2,floor:fl,x:rt.x,y:rt.y});
+      rooms.push({name:rt.t,m2:m2,x:rt.x,y:rt.y});
     }
     // dedupe (aynı ad+m²+yakın konum)
     var uniq=[],ok;
     for(var a=0;a<rooms.length;a++){ok=true;for(var b=0;b<uniq.length;b++){if(uniq[b].name===rooms[a].name&&Math.abs(uniq[b].m2-rooms[a].m2)<0.1&&Math.hypot(uniq[b].x-rooms[a].x,uniq[b].y-rooms[a].y)*toM<1){ok=false;break;}}if(ok)uniq.push(rooms[a]);}
     rooms=uniq;
-    var byFloor={};for(var q=0;q<rooms.length;q++){var rr=rooms[q];(byFloor[rr.floor]=byFloor[rr.floor]||[]).push(rr);}
+    rooms.sort(function(a,c){return c.m2-a.m2;});
+    var byFloor={'Tüm Mahaller':rooms};
     var total=0;for(var z=0;z<rooms.length;z++)total+=rooms[z].m2;
-    var katList=floors.length?floors.map(function(x){return x.t;}):Object.keys(byFloor);
-    return {katSayisi:Math.max(katList.length,Object.keys(byFloor).length,1),katlar:katList,mahalSayisi:rooms.length,toplamM2:Math.round(total*10)/10,byFloor:byFloor,layers:(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries?db.tables.LAYER.entries.length:0),entityCount:ents.length};
+    var katList=floors.map(function(x){return x.t;});
+    return {katSayisi:Math.max(katList.length,1),katlar:katList,mahalSayisi:rooms.length,toplamM2:Math.round(total*10)/10,byFloor:byFloor,layers:(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries?db.tables.LAYER.entries.length:0),entityCount:ents.length};
   }
   function _renderAnalysis(model){
     var box=el('dwgAnalyz'); if(!box)return;
@@ -4883,6 +4827,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     h+='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">';
     h+='<span class="dwg-kpi"><b>'+model.katSayisi+'</b> Kat</span><span class="dwg-kpi"><b>'+model.mahalSayisi+'</b> Mahal</span><span class="dwg-kpi"><b>'+model.toplamM2+'</b> m² toplam</span><span class="dwg-kpi"><b>'+model.entityCount.toLocaleString('tr-TR')+'</b> nesne</span><span class="dwg-kpi"><b>'+model.layers+'</b> katman</span>';
     h+='</div>';
+    if(model.katlar&&model.katlar.length){h+='<div style="font-size:12px;color:var(--muted);margin:-4px 0 12px">🏢 Tespit edilen katlar: '+model.katlar.map(function(k){return '<b style="color:var(--on-surface,var(--ink))">'+k+'</b>';}).join(' · ')+'</div>';}
     if(!model.mahalSayisi){h+='<p style="font-size:12.5px;color:var(--muted);margin:0">Mahal/m² etiketi otomatik okunamadı (çizimde yazılı alan yok olabilir). 2B plan yine de tam görüntülenir.</p>';}
     floorKeys.forEach(function(fk){
       var arr=model.byFloor[fk]; var ft=0;arr.forEach(function(r){ft+=r.m2;});
@@ -4937,7 +4882,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     var il=g('p3_il')||'İstanbul', ilce=g('p3_ilce'), mah=g('p3_mah'), ada=g('p3_ada'), parsel=g('p3_parsel');
     var loc=[mah,ilce,il].filter(Boolean).join(', ')||il;
     var title=g('p3_ad')&&g('p3_ad')!=='Müşteri Arsası'?g('p3_ad'):((window.__dwgInfo&&window.__dwgInfo.name?window.__dwgInfo.name.replace(/\.dwg$/i,''):'DWG Projesi'));
-    var apts=[];Object.keys(m.byFloor).forEach(function(fk){m.byFloor[fk].forEach(function(r){apts.push({no:fk,tip:r.name,m2:String(r.m2),kat:fk,cephe:'-',fiyat:'-',durum:'musait'});});});
+    var katLbl=(m.katlar&&m.katlar.length?m.katlar.join(' / '):'-');
+    var apts=[];Object.keys(m.byFloor).forEach(function(fk){m.byFloor[fk].forEach(function(r,ri){apts.push({no:'M'+(ri+1),tip:r.name,m2:String(r.m2),kat:katLbl,cephe:'-',fiyat:'-',durum:'musait'});});});
     var desc='Mimari .dwg projesinden otomatik oluşturuldu: '+m.katSayisi+' kat · '+m.mahalSayisi+' bağımsız mahal · '+m.toplamM2+' m² toplam alan.'+(ada?(' Ada/Parsel: '+ada+'/'+parsel+'.'):'');
     var proj={t:title,loc:loc,st:'plan',type:'Konut · '+m.katSayisi+' kat',area:m.toplamM2+' m²',img:'p_home',
       price:'İletişime geçin',delivery:'Belirlenecek',units:m.mahalSayisi+' mahal · '+m.katSayisi+' kat',desc:desc,progress:0,
@@ -4952,8 +4898,6 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     try{if(typeof saveAll==='function')saveAll();}catch(e){}
     stat('✓ Portföye eklendi: "'+title+'" ('+m.katSayisi+' kat · '+m.toplamM2+' m² · '+m.mahalSayisi+' mahal) — Projeler sayfasında ve admin → Projeler listesinde görünür.','ok');
   };
-  function initCfg(){var c=cfg();['tokenUrl','uploadUrl','statusUrl'].forEach(function(k){var e=el('aps_'+k);if(e&&c[k])e.value=c[k];});}
-  if(document.readyState!=='loading')initCfg();else document.addEventListener('DOMContentLoaded',initCfg);
 })();
 </script>
 
