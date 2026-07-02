@@ -1806,24 +1806,13 @@ function cookieChoice(v){
               <button class="btn-mini" id="glbClearBtn" style="width:100%;margin-top:8px;display:none" onclick="clearGLBModel()">🗑️ Modeli Kaldır (konsepte dön)</button>
             </div>
             <div class="panelcard" style="margin-top:14px;border:1px solid var(--accent)">
-              <h3 style="margin:0 0 8px">📐 .dwg Mimari Yükle · <span style="color:var(--accent)">Autodesk APS</span></h3>
-              <p style="font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.5">Mimari projeyi <b>.dwg</b> (veya .dxf/.rvt/.ifc) yükleyin — Autodesk bulutta çevirir, <b>bağımsız bölümler nesne ağacıyla tam BIM 3B</b> görüntülenir.</p>
-              <input type="file" id="apsFile" accept=".dwg,.dxf,.rvt,.ifc,.nwd,.nwc" style="display:none" onchange="apsUpload(this)">
+              <h3 style="margin:0 0 8px">📐 .dwg Mimari Proje · <span style="color:var(--accent)">Gerçek Çözümleme</span></h3>
+              <p style="font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.5">Mimarın <b>.dwg</b> dosyasını yükleyin — tamamen <b>tarayıcıda, hesapsız ve backend'siz</b> çözümlenir: <b>2B kat planı + bağımsız bölümler + m²</b> → tek tıkla portföy. (libredwg-web · WASM)</p>
+              <input type="file" id="apsFile" accept=".dwg,.dxf" style="display:none" onchange="if(this.files[0])window.dwgLocalPreview(this.files[0]);this.value=''">
               <button class="btn-mini" style="width:100%;background:var(--accent);color:#0e0f13;border-color:var(--accent);font-weight:700" onclick="document.getElementById('apsFile').click()">📤 .dwg Mimari Proje Yükle</button>
               <div id="apsStatus" style="font-size:12px;margin-top:8px;color:var(--muted);line-height:1.45"></div>
               <div id="apsPreview" style="margin-top:8px"></div>
-              <button class="btn-mini" id="apsBackBtn" style="width:100%;margin-top:8px;display:none" onclick="apsCloseViewer()">← Kapat / Konsept 3B'ye dön</button>
-              <button class="btn-mini" style="width:100%;margin-top:8px;background:none" onclick="apsToggleCfg()">⚙️ APS Bağlantı & Demo</button>
-              <div id="apsCfg" style="display:none;margin-top:8px">
-                <label>Token endpoint (viewables:read)</label><input type="text" id="aps_tokenUrl" placeholder="https://…/aps/token" oninput="apsSaveCfg()">
-                <label>Yükle + çevir endpoint</label><input type="text" id="aps_uploadUrl" placeholder="https://…/aps/upload" oninput="apsSaveCfg()">
-                <label>Çeviri durum endpoint</label><input type="text" id="aps_statusUrl" placeholder="https://…/aps/status" oninput="apsSaveCfg()">
-                <div style="border-top:1px dashed var(--line);margin:10px 0 0;padding-top:8px">
-                  <label>Demo: hazır URN (base64)</label><input type="text" id="aps_urn" placeholder="dXJuOmFkc2sub2JqZWN0cz…">
-                  <button class="btn-mini" style="width:100%;margin-top:6px" onclick="apsViewUrn(document.getElementById('aps_urn').value)">👁️ URN'yi Görüntüle</button>
-                </div>
-                <p style="font-size:11px;color:var(--muted);line-height:1.5;margin:8px 0 0">APS <b>client_secret</b> istemcide tutulamaz; token + yükleme/çeviri bir backend proxy üzerinden yapılır. Endpoint sözleşmesi & örnek proxy: <b>APS-BACKEND.md</b>.</p>
-              </div>
+              <button class="btn-mini" id="apsBackBtn" style="width:100%;margin-top:8px;display:none" onclick="apsCloseViewer()">← Planı Kapat</button>
             </div>
             <div class="panelcard" style="margin-top:14px">
               <h3 style="margin:0 0 12px">🏬 Bağımsız Bölüm Dağılımı</h3>
@@ -1869,7 +1858,7 @@ function cookieChoice(v){
             </div>
             <div id="apsViewerWrap" style="display:none;margin-top:14px">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-                <b style="font-family:var(--head)">📐 Mimari 3B · Autodesk APS (tam BIM)</b>
+                <b style="font-family:var(--head)">📐 Gerçek Vektör Kat Planı (.dwg)</b>
                 <button class="btn-mini" onclick="apsCloseViewer()" style="width:auto">✕ Kapat</button>
               </div>
               <div id="apsViewer" style="position:relative;width:100%;height:560px;background:#0b0d12;border:1px solid var(--line);border-radius:12px;overflow:hidden"></div>
@@ -4683,7 +4672,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
 </script>
 
 <script>
-/* ================= Autodesk APS (Forge) — .dwg → tam BIM 3B ================= */
+/* ========== .dwg mimari çözümleme (libredwg-web WASM) — tarayıcıda, hesapsız, backend'siz ========== */
 (function(){
   function el(id){return document.getElementById(id);}
   function v(id){var e=el(id);return e?(''+e.value).trim():'';}
