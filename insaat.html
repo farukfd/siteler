@@ -170,6 +170,8 @@ section{padding:66px 0}
 
 /* header */
 header{position:sticky;top:0;z-index:60;transition:.25s}
+/* overlay (tam-sayfa) header'ları: kendi içinde kaydıkları için .scrolled almaz → opak yaparak içerik sızmasını önle */
+.pp-hdr{background:var(--bg);border-bottom:1px solid var(--line)}
 header .bar{display:flex;align-items:center;justify-content:space-between;height:72px}
 .logo{display:flex;align-items:center;gap:11px;font-family:var(--head);font-weight:800;font-size:22px;letter-spacing:-.02em;color:#fff}
 .logo .mark{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-size:19px;box-shadow:var(--shadow-sm)}
