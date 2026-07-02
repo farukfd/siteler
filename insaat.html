@@ -2983,10 +2983,12 @@ function renderPdBody(){
     const filtered=apts.filter(a=>_pdAptFilter==='all'||a.tip===_pdAptFilter);
     h+=filtered.map(a=>`<div class="apt ${a.durum}" onclick="${a.durum==='satildi'?'':`reserveApt('${a.no}')`}">
         <span class="badge ${a.durum}">${DURUM_LBL[a.durum]||a.durum}</span>
+        ${a.plan?`<img src="${a.plan}" alt="${a.no} planı" loading="lazy" onclick="event.stopPropagation();document.getElementById('pdHeroImg').src=this.src;document.getElementById('pjDetail').scrollTo({top:0,behavior:'smooth'})" style="width:100%;height:120px;object-fit:cover;background:#0b0d12;border-radius:8px;margin-bottom:8px;cursor:zoom-in">`:''}
         <div class="no">${a.no}</div><div class="tip">${a.tip}</div>
         <div class="row"><span>Alan</span><b>${a.m2} m²</b></div>
         <div class="row"><span>Kat</span><b>${a.kat}</b></div>
         <div class="row"><span>Cephe</span><b>${a.cephe||'-'}</b></div>
+        ${a.rooms&&a.rooms.length?`<div style="font-size:10.5px;color:var(--muted);margin-top:5px;line-height:1.5">${a.rooms.map(r=>String(r.name||'').replace(/[<>]/g,'')+(r.m2?' '+r.m2:'')).join(' · ')}</div>`:''}
         <div class="pr">${a.fiyat||'-'}</div></div>`).join('');
     h+='</div></div>';
   }
@@ -5071,11 +5073,13 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     // GERÇEK BİRİMLER: dükkan/mağaza/ofis — isim+alan eş-konumundan gerçek m²+kat (araştırma yöntemi)
     var _isDuk=function(n){return /d[üu]kkan|ma[ğg]aza|of[İiı]s|market|büro|buro|ticar|işyer|isyer|at[öo]lye/i.test(n);};
     var realUnits=[]; floors.forEach(function(fl){(fl.unitList||[]).forEach(function(u){if(_isDuk(u.name))realUnits.push({name:u.name,m2:u.m2,kat:fl.name});});});
-    var apts=[], nUnits=F.bbCount||0;
-    realUnits.forEach(function(u,ri){apts.push({no:'K'+(ri+1),tip:u.name,m2:String(u.m2),kat:u.kat,cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:'dükkan'});});
-    // kalanı bağımsız bölüm sayısına kadar DAİRE slotu (tip/m² "belirtilmemiş" → admin gerçek oda cetveliyle doldurur)
-    var remaining=Math.max(0,nUnits-apts.length);
-    for(var i=0;i<remaining;i++){apts.push({no:'D'+(i+1),tip:'belirtilmemiş',m2:'',kat:'belirtilmemiş',cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:'daire'});}
+    var apts=[], nUnits=F.bbCount||0, dn=0, kn=0;
+    // GERÇEK DAİRELER (salon-çıpalı segmentasyon) — tip+m²+kat + AYRI plan görseli
+    floorImgs.forEach(function(fl){(fl.apts||[]).forEach(function(ap){dn++;apts.push({no:'D'+dn,tip:ap.tip||'belirtilmemiş',m2:String(ap.m2||''),kat:ap.kat||fl.name,cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:'daire',plan:ap.img||'',rooms:ap.rooms||[]});});});
+    // GERÇEK DÜKKANLAR (isim+alan eş-konum) — isim+m²+kat
+    realUnits.forEach(function(u){kn++;apts.push({no:'K'+kn,tip:u.name,m2:String(u.m2),kat:u.kat,cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:'dükkan'});});
+    // hiç gerçek birim çıkmadıysa → bağımsız bölüm sayısı kadar slot (admin gerçek oda cetveliyle doldurur)
+    if(!apts.length){for(var i=0;i<nUnits;i++)apts.push({no:'D'+(i+1),tip:'belirtilmemiş',m2:'',kat:'belirtilmemiş',cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:'daire'});}
     var areaStr=F.totalArea?(F.totalArea+' m²'):'belirtilmemiş';
     var real='Gerçek veriler (mimari dosyanın Alan Cetvelinden): '+kk+' kat'+(F.bbCount?(' · '+F.bbCount+' bağımsız bölüm'):'')+(F.totalArea?(' · '+F.totalArea+' m² toplam inşaat alanı'):'')+'.';
     var desc=((prox.summary||'')+' '+real).trim()+(ada?(' Ada/Parsel: '+ada+'/'+parsel+'.'):'');
@@ -5142,17 +5146,20 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     if(uniq.length>12)uniq=uniq.slice(0,12);
     uniq.sort(function(a,b){return a.x0-b.x0;});
     uniq.forEach(function(f){var cx=(f.x0+f.x1)/2;f._t=T.reduce(function(b,tt){return Math.abs(tt.x-cx)<Math.abs(b.x-cx)?tt:b;},T[0]).nm;});
-    // TEK DECODE: büyük SVG'yi bir kez plan-şeridine raster'la, sonra her katı canvas source-rect ile kes (hızlı, donma yok)
-    stat('📐 Kat planları görsele dönüştürülüyor…');
+    var _fdM={}; try{_dwgFloorData().forEach(function(d){_fdM[d.name]=d;});}catch(e){}
+    // TEK DECODE: büyük SVG'yi bir kez plan-şeridine YÜKSEK ÇÖZÜNÜRLÜKTE raster'la (daire detayı), sonra kat+daire source-rect ile kes
+    stat('📐 Kat + daire planları görsele dönüştürülüyor…');
     var mx=Math.min.apply(null,uniq.map(function(f){return f.x0;})), MX=Math.max.apply(null,uniq.map(function(f){return f.x1;}));
     var my=Math.min.apply(null,uniq.map(function(f){return f.y0;})), MY=Math.max.apply(null,uniq.map(function(f){return f.y1;}));
     var padx=(MX-mx)*0.008, pady=(MY-my)*0.02; mx-=padx;MX+=padx;my-=pady;MY+=pady;
     var stripW=MX-mx, stripH=MY-my;
     var floorW=uniq.reduce(function(s,f){return s+(f.x1-f.x0);},0)/uniq.length;
-    var imgW=Math.max(900,Math.min(13000,Math.round(760*(stripW/Math.max(1,floorW)))));
+    var imgW=Math.max(1200,Math.min(15000,Math.round(1350*(stripW/Math.max(1,floorW)))));
     var imgH=Math.max(1,Math.min(15000,Math.round(imgW*(stripH/stripW))));
     var nvb=mx+' '+(-MY)+' '+stripW+' '+stripH; // Y-flip: SVG_y=-DWG_y
-    var sized=svg.replace(/viewBox="[^"]+"/,'viewBox="'+nvb+'"').replace(/width="100%"/,'width="'+imgW+'"').replace(/height="100%"/,'height="'+imgH+'"');
+    // TEMİZ PLAN: kırmızı (aks/ölçü ızgarası) + sarı (ölçü grip) gizle → cyan duvar + mobilya + etiket kalır
+    var cleanSvg=svg.replace(/stroke="rgb\(255,0,0\)"/g,'stroke="rgb(255,0,0)" opacity="0"').replace(/stroke="rgb\(255,255,0\)"/g,'stroke="rgb(255,255,0)" opacity="0"');
+    var sized=cleanSvg.replace(/viewBox="[^"]+"/,'viewBox="'+nvb+'"').replace(/width="100%"/,'width="'+imgW+'"').replace(/height="100%"/,'height="'+imgH+'"');
     return new Promise(function(resolve){
       var url=URL.createObjectURL(new Blob([sized],{type:'image/svg+xml'})), img=new Image(), done=false;
       var to=setTimeout(function(){if(!done){done=true;try{URL.revokeObjectURL(url);}catch(e){}resolve([]);}},45000);
@@ -5162,14 +5169,23 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
           var master=document.createElement('canvas');master.width=imgW;master.height=imgH;
           var mc=master.getContext('2d');mc.fillStyle='#0b0d12';mc.fillRect(0,0,imgW,imgH);mc.drawImage(img,0,0,imgW,imgH);
           URL.revokeObjectURL(url);
-          var out=uniq.map(function(f){
-            var sx=((f.x0-mx)/stripW)*imgW, sw=((f.x1-f.x0)/stripW)*imgW;
-            var sy=((MY-f.y1)/stripH)*imgH, sh=((f.y1-f.y0)/stripH)*imgH; // Y-flip: üst = MY
-            var W2=Math.max(1,Math.min(900,Math.round(sw))), H2=Math.max(1,Math.round(W2*(sh/Math.max(1,sw))));
+          // ortak source-rect kesici (master'dan bir bölgeyi PNG'ye)
+          function _srcCrop(rx0,ry0,rx1,ry1,maxW,q){
+            var sx=((rx0-mx)/stripW)*imgW, sw=((rx1-rx0)/stripW)*imgW;
+            var sy=((MY-ry1)/stripH)*imgH, sh=((ry1-ry0)/stripH)*imgH; // Y-flip: üst = MY
+            if(sw<2||sh<2)return '';
+            var W2=Math.max(1,Math.min(maxW,Math.round(sw))), H2=Math.max(1,Math.round(W2*(sh/Math.max(1,sw))));
             var cv=document.createElement('canvas');cv.width=W2;cv.height=H2;var c=cv.getContext('2d');c.fillStyle='#0b0d12';c.fillRect(0,0,W2,H2);
             c.drawImage(master,sx,sy,sw,sh,0,0,W2,H2);
-            var png=cv.toDataURL('image/jpeg',0.72);
-            return png&&png.length>2000?{name:f._t,img:png,x0:f.x0}:null;
+            var p=cv.toDataURL('image/jpeg',q||0.72); return p&&p.length>2000?p:'';
+          }
+          var out=uniq.map(function(f){
+            var png=_srcCrop(f.x0,f.y0,f.x1,f.y1,880,0.68);
+            var d=_fdM[f._t]||{};
+            var apts=(d.apts||[]).map(function(ap){var b=ap.bbox||{},w=(b.x1-b.x0)||0,h=(b.y1-b.y0)||0;
+              var aimg=''; if(w>0&&h>0){var px=w*0.3+250,py=h*0.3+250;aimg=_srcCrop(b.x0-px,b.y0-py,b.x1+px,b.y1+py,540,0.62);}
+              return {tip:ap.tip,m2:ap.m2,rooms:ap.rooms,kat:ap.kat,img:aimg};});
+            return png?{name:f._t,img:png,x0:f.x0,totalM2:d.totalM2,rooms:d.rooms,units:d.units,apts:apts}:null;
           }).filter(Boolean);
           resolve(out);
         }catch(e){resolve([]);}
@@ -5221,7 +5237,21 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
         if(bv>3&&bv<total*0.92&&bd<f.w*0.5){useen.push(k);units.push({name:u.t.charAt(0).toUpperCase()+u.t.slice(1).toLowerCase().slice(0,15),m2:Math.round(bv*10)/10});}
       });
       units.sort(function(a,b){return b.m2-a.m2;});
-      return {name:f.name, x0:f.x0, totalM2:Math.round(total*10)/10, rooms:rooms, units:units};
+      // DAİRELER — SALON-çıpalı segmentasyon (her daire tam 1 salon; odalar en yakın salona bağlanır)
+      function nearA(x,y){var bv=0,bd=1e18;for(var k=0;k<areas.length;k++){var d=Math.hypot(areas[k].x-x,areas[k].y-y);if(d<bd){bd=d;bv=areas[k].v;}}return bd<thr?bv:0;}
+      var salons=names.filter(function(n){return /^SALON|OTURMA|YAŞAMA/i.test(n.t);});
+      var roomPts=names.filter(function(n){return n.t.length<18&&!/D[ÜU]KKAN|OTOPARK|ASANS|MERD/i.test(n.t);}).map(function(n){return {name:n.t.slice(0,15),x:n.x,y:n.y,m2:nearA(n.x,n.y)};});
+      var apts=[];
+      if(salons.length){
+        var cl=salons.map(function(s){return {sx:s.x,sy:s.y,rooms:[]};});
+        roomPts.forEach(function(r){var bi=0,bd=1e18;cl.forEach(function(c,ci){var d=Math.hypot(c.sx-r.x,c.sy-r.y);if(d<bd){bd=d;bi=ci;}});cl[bi].rooms.push(r);});
+        apts=cl.map(function(c){var yat=c.rooms.filter(function(r){return /YATAK|ÇOCUK|EBEVEYN/i.test(r.name);}).length;var hasS=c.rooms.some(function(r){return /SALON|OTURMA|YAŞAMA/i.test(r.name);});var m2=c.rooms.reduce(function(s,r){return s+(r.m2||0);},0);
+          var bx0=1e18,by0=1e18,bx1=-1e18,by1=-1e18;c.rooms.forEach(function(r){if(r.x<bx0)bx0=r.x;if(r.x>bx1)bx1=r.x;if(r.y<by0)by0=r.y;if(r.y>by1)by1=r.y;});
+          return {tip:hasS?(yat+'+1'):(c.rooms.length+' oda'),m2:Math.round(m2),rooms:c.rooms.map(function(r){return {name:r.name,m2:Math.round((r.m2||0)*10)/10};}),bbox:{x0:bx0,y0:by0,x1:bx1,y1:by1},kat:f.name};
+        }).filter(function(a){return a.rooms.length>=2&&a.m2>10;});
+        apts.sort(function(a,b){return b.m2-a.m2;});
+      }
+      return {name:f.name, x0:f.x0, totalM2:Math.round(total*10)/10, rooms:rooms, units:units, apts:apts, frame:{x0:f.x0,y0:f.y0,x1:f.x1,y1:f.y1}};
     });
   }
   function _renderFloorPlans(fp){
@@ -5237,6 +5267,12 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
         '<img src="'+f.img+'" alt="'+_esc(f.name)+'" style="width:100%;height:150px;object-fit:cover;display:block;cursor:zoom-in" onclick="dwgZoom(\''+f.img+'\')">'+
         '<div style="padding:6px 8px"><div style="font-size:12.5px;font-weight:700;color:var(--ink)">'+_esc(f.name)+'</div>'+(meta?'<div style="font-size:11px;color:var(--muted);margin-top:1px">'+meta+'</div>':'')+'</div></div>';});
     h+='</div>';
+    // GERÇEK DAİRELER — her dairenin ayrı planı + tip + m² (salon-çıpalı segmentasyon)
+    var allApts=[]; fp.forEach(function(f){(f.apts||[]).forEach(function(a){if(a.img)allApts.push(a);});});
+    if(allApts.length){h+='<div style="margin-top:14px;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">🏠 Daireler — her dairenin ayrı planı ('+allApts.length+' daire)'+_srcTag('measured')+'</div>';
+      h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">';
+      allApts.forEach(function(a){h+='<div style="border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#0b0d12"><img src="'+a.img+'" alt="daire" style="width:100%;height:130px;object-fit:cover;display:block;cursor:zoom-in" onclick="dwgZoom(\''+a.img+'\')"><div style="padding:6px 8px"><div style="font-size:12.5px;font-weight:800;color:var(--accent)">'+_esc(a.tip)+' <span style="color:var(--ink);font-weight:600">· '+a.m2+' m²</span></div><div style="font-size:10px;color:var(--muted)">'+_esc(a.kat)+'</div></div></div>';});
+      h+='</div>';}
     // GERÇEK BİRİMLER (dükkan/otopark vb.) — isim+alan eş-konumundan gerçek m² (araştırma yöntemi: text-anchor→area)
     var allUnits=[]; fp.forEach(function(f){var d=fd[f.name];if(d&&d.units)d.units.forEach(function(u){allUnits.push({kat:f.name,name:u.name,m2:u.m2});});});
     if(allUnits.length){h+='<div style="margin-top:14px;background:rgba(22,163,74,.08);border:1px solid rgba(22,163,74,.35);border-radius:10px;padding:11px"><div style="font-size:12px;font-weight:700;color:#16a34a;margin-bottom:7px">🏪 Gerçek birimler (dosyadan, gerçek m²)'+_srcTag('labeled')+'</div><div style="display:flex;flex-wrap:wrap;gap:6px">'+allUnits.map(function(u){return '<span style="font-size:11.5px;background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:3px 9px">'+_esc(u.name)+' <b style="color:var(--accent)">'+u.m2+' m²</b> <span style="color:var(--muted)">· '+_esc(u.kat)+'</span></span>';}).join('')+'</div></div>';}
