@@ -3006,7 +3006,7 @@ function renderPdBody(){
     });
     // Faz 2: GERÇEK kat alanı + mahal cetveli (dosyanın plan etiketlerinden)
     if(fl.totalM2){h+=`<div class="pu" style="background:var(--surface-2);font-weight:800"><span>📐 Kat alanı</span><span style="color:var(--accent)">${fl.totalM2} m²</span></div>`;}
-    if(fl.rooms&&fl.rooms.length){h+='<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px">'+fl.rooms.map(r=>`<span style="font-size:11px;background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:3px 8px">${esc(r.name)} <b>${r.m2}m²</b></span>`).join('')+'</div>';}
+    if(fl.rooms&&fl.rooms.length){h+='<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px">'+fl.rooms.map(r=>`<span style="font-size:11px;background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:3px 8px">${String(r.name||'').replace(/[<>]/g,'')} <b>${r.m2}m²</b></span>`).join('')+'</div>';}
     h+='</div></div></div>';
   }
   // TESLİM TAKVİMİ
@@ -3217,6 +3217,19 @@ function admPjDetailEditor(p,i){
   h+=p.gallery.map((g,gi)=>`<div style="position:relative"><div style="width:70px;height:54px;border-radius:8px;background:#222 url('${imgFor(g)}') center/cover;border:1px solid var(--line)"></div><button onclick="PROJECTS[${i}].gallery.splice(${gi},1);admPjList();renderProjects();saveAll()" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;border:none;background:#d4416a;color:#fff;cursor:pointer;font-size:12px;line-height:1">×</button></div>`).join('');
   h+='</div>';
   h+=`<button class="btn-mini" onclick="document.getElementById('gup${i}').click()">📁 Galeriye Görsel Ekle</button><input type="file" id="gup${i}" accept="image/*" multiple style="display:none" onchange="uploadGalleryImg(${i},this)">`;
+  // DWG GERÇEK KAT CETVELİ (referans — admin daireleri buradan doldurur)
+  var _hasDwg=(p.floors||[]).some(f=>(f.rooms&&f.rooms.length)||f.totalM2);
+  if(_hasDwg){
+    var _e=function(s){return String(s==null?'':s).replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});};
+    h+='<div style="margin-top:14px;background:var(--surface-2);border:1px solid rgba(22,163,74,.4);border-radius:10px;padding:11px">';
+    h+='<div style="font-size:12px;font-weight:700;color:#16a34a;margin-bottom:8px">📐 DWG gerçek kat cetveli 🏷️ <span style="font-weight:400;color:var(--muted)">— daireleri buradan tek tıkla doldurun (m² dosyadan)</span></div>';
+    p.floors.forEach((f)=>{ if(!(f.totalM2||(f.rooms&&f.rooms.length)))return;
+      h+=`<div style="font-size:11.5px;margin-bottom:6px;border-bottom:1px solid var(--line);padding-bottom:5px"><b>${_e(f.name)}</b>${f.totalM2?` · <b style="color:var(--accent)">${f.totalM2} m²</b>`:''}${f.rooms&&f.rooms.length?` · ${f.rooms.length} mahal`:''} <button class="lk" style="color:#16a34a" data-kat="${_e(f.name)}" onclick="dwgAddApt(${i},this.getAttribute('data-kat'))">+ bu kata daire</button>`;
+      if(f.rooms&&f.rooms.length)h+=`<div style="color:var(--muted);margin-top:3px;line-height:1.6">${f.rooms.map(r=>_e(r.name)+' <b>'+r.m2+'</b>').join(' · ')}</div>`;
+      h+='</div>';
+    });
+    h+='</div>';
+  }
   // DAİRELER
   h+='<label style="margin-top:14px">Daireler ('+p.apts.length+')</label>';
   h+=p.apts.map((a,ai)=>`<div style="background:var(--surface-2);border-radius:10px;padding:10px;margin-bottom:8px">
@@ -3281,6 +3294,8 @@ function uploadFloorImg(i,fi,input){
   const r=new FileReader();r.onload=()=>{PROJECTS[i].floors[fi].img=r.result;admPjList();saveAll();};r.readAsDataURL(file);
 }
 function admPjList0(){} // no-op to avoid rerender focus loss on title
+// DWG kat cetvelinden tek tıkla daire ekle (kat önceden dolu; tip/m² admin girer)
+function dwgAddApt(i,kat){if(!PROJECTS[i])return;var no=(kat&&/dükkan|dukkan|ticar/i.test(kat)?'K':'D')+(PROJECTS[i].apts.length+1);PROJECTS[i].apts.push({no:no,tip:'',m2:'',kat:kat||'',cephe:'',fiyat:'',durum:'musait'});admPjList();try{saveAll();}catch(e){}}
 function admDelPj(i){if(confirm('Proje silinsin mi?')){PROJECTS.splice(i,1);renderProjects();admPjList();renderKpi();}}
 
 function uploadPjImg(i,input){
@@ -4920,6 +4935,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
   // ProX marka rozeti (footer stiliyle: X yeşil kutuda)
   function _prox(sz){sz=sz||14;return '<span style="display:inline-flex;align-items:center;font-family:var(--head);font-weight:800;vertical-align:middle;font-size:'+sz+'px"><span style="color:var(--ink,#e8eefc)">Pro</span><span style="display:inline-flex;align-items:center;justify-content:center;min-width:1.35em;height:1.35em;background:#16a34a;color:#07130a;border-radius:5px;margin-left:2px">X</span></span>';}
   var _PROX_INLINE='Pro<span style="background:#16a34a;color:#07130a;border-radius:4px;padding:0 5px;font-weight:800">X</span>';
+  // Güven/kaynak rozeti — her değerin nereden geldiğini gösterir (uydurma önleyici şeffaflık)
+  function _srcTag(src){var m={labeled:['🏷️','çizimde yazılı','#2f7fe0'],measured:['📐','ölçüldü','#16a34a'],derived:['≈','türetildi','#d9930a'],unknown:['—','belirtilmemiş','#8892a0']}[src];if(!m)return '';return '<span title="'+m[1]+'" style="font-size:9px;background:'+m[2]+'22;color:'+m[2]+';border:1px solid '+m[2]+'55;border-radius:5px;padding:0 4px;margin-left:4px;vertical-align:middle;white-space:nowrap;font-weight:600">'+m[0]+' '+m[1]+'</span>';}
   function _deepseek(messages){
     var ctrl=(typeof AbortController!=='undefined')?new AbortController():null;
     var to=ctrl?setTimeout(function(){try{ctrl.abort();}catch(e){}},120000):0;
@@ -5013,15 +5030,16 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     h+='<div style="font-size:11px;color:var(--muted);margin:-2px 0 12px">Aşağıdaki değerler doğrudan mimari dosyanın <b>Alan Cetvelinden</b> okunmuştur — hiçbir değer uydurulmamıştır.</div>';
     if(prox.buildingTypeLabel)h+='<div style="font-size:12.5px;color:var(--muted);margin-bottom:8px">🏢 <b style="color:var(--ink)">'+_esc(prox.buildingTypeLabel)+'</b></div>';
     if(prox.summary)h+='<p style="font-size:13px;line-height:1.6;margin:0 0 12px">'+_esc(prox.summary)+'</p>';
-    // GERÇEK KPI (deterministik)
-    h+='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">';
-    if(F.floorCount)h+='<span class="dwg-kpi"><b>'+F.floorCount+'</b> Kat</span>';
-    if(F.bbCount)h+='<span class="dwg-kpi"><b>'+F.bbCount+'</b> Bağımsız Bölüm</span>';
-    if(F.totalArea)h+='<span class="dwg-kpi"><b>'+F.totalArea+'</b> m² toplam inşaat</span>';
-    if(F.daireN)h+='<span class="dwg-kpi"><b>'+F.daireN+'</b> Daire~</span>';
-    if(F.dukkanN)h+='<span class="dwg-kpi"><b>'+F.dukkanN+'</b> Dükkan~</span>';
-    if(F.tech)h+='<span class="dwg-kpi" style="opacity:.7"><b>'+F.tech+'</b> teknik hacim</span>';
+    // GERÇEK KPI (deterministik) + kaynak rozetleri
+    h+='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px">';
+    if(F.floorCount)h+='<span class="dwg-kpi"><b>'+F.floorCount+'</b> Kat'+_srcTag('labeled')+'</span>';
+    if(F.bbCount)h+='<span class="dwg-kpi"><b>'+F.bbCount+'</b> Bağımsız Bölüm'+_srcTag('labeled')+'</span>';
+    if(F.totalArea)h+='<span class="dwg-kpi"><b>'+F.totalArea+'</b> m² toplam inşaat'+_srcTag('labeled')+'</span>';
+    if(F.daireN)h+='<span class="dwg-kpi"><b>'+F.daireN+'</b> Daire'+_srcTag('derived')+'</span>';
+    if(F.dukkanN)h+='<span class="dwg-kpi"><b>'+F.dukkanN+'</b> Dükkan'+_srcTag('derived')+'</span>';
+    if(F.tech)h+='<span class="dwg-kpi" style="opacity:.7"><b>'+F.tech+'</b> teknik hacim'+_srcTag('labeled')+'</span>';
     h+='</div>';
+    h+='<div style="font-size:10.5px;color:var(--muted);margin-bottom:12px">Rozetler: 🏷️ çizimde yazılı · 📐 geometriden ölçüldü · ≈ türetildi (yaklaşık) · — belirtilmemiş (admin girer). <b>Hiçbir değer uydurulmaz.</b></div>';
     if(F.floors&&F.floors.length)h+='<div style="font-size:12.5px;margin-bottom:12px">🏢 <b>Katlar:</b> '+F.floors.map(function(k){return '<span style="background:var(--surface-2,rgba(120,120,140,.09));border:1px solid var(--line);border-radius:6px;padding:2px 9px;margin:2px 3px 0 0;display:inline-block">'+_esc(k)+'</span>';}).join('')+'</div>';
     if(F.m2&&F.m2.length){var sorted=F.m2.slice().sort(function(a,b){return b-a;});h+='<details style="margin-bottom:12px"><summary style="cursor:pointer;font-size:12.5px;color:#16a34a;font-weight:700">📋 Gerçek m² cetveli — '+F.m2.length+' değer (dosyadan)</summary><div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.8;max-height:130px;overflow:auto">'+sorted.slice(0,80).map(function(v){return v+' m²';}).join(' · ')+(sorted.length>80?' …':'')+'</div></details>';}
     if(prox.highlights&&prox.highlights.length)h+='<ul style="font-size:12.5px;color:var(--muted);margin:0 0 12px;padding-left:18px;line-height:1.6">'+prox.highlights.map(function(x){return '<li>'+_esc(x)+'</li>';}).join('')+'</ul>';
