@@ -1152,6 +1152,11 @@ header.scrolled .lang-sel{color:var(--ink)}
 .flegal a:hover{color:#fff}
 .fbot{justify-content:center;align-items:center;text-align:center;gap:6px 16px}
 .fbot .fcopy{color:#8fa0bb}
+.dwg-kpi{background:var(--surface-2,var(--surface));border:1px solid var(--line);border-radius:9px;padding:6px 12px;font-size:12px;color:var(--muted)}
+.dwg-kpi b{color:var(--accent);font-family:var(--head);font-size:15px;margin-right:4px}
+.dwg-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.dwg-tbl td{padding:5px 8px;border-bottom:1px solid var(--line);color:var(--on-surface,var(--ink))}
+.dwg-tbl tr:last-child td{border-bottom:0}
 </style>
 </head>
 <body>
@@ -1870,6 +1875,7 @@ function cookieChoice(v){
               <div id="apsViewer" style="position:relative;width:100%;height:560px;background:#0b0d12;border:1px solid var(--line);border-radius:12px;overflow:hidden"></div>
               <p style="font-size:11.5px;color:var(--muted);margin:8px 0 0">Sol üstteki ağaç simgesinden <b>Model Ağacı</b> ile bağımsız bölümleri (daire/kat/oda) gezebilir, seçip özelliklerini görebilirsiniz.</p>
             </div>
+            <div id="dwgAnalyz"></div>
             <div class="panelcard" style="margin-top:14px">
               <h3 style="margin:0 0 10px">📊 Anlık Fizibilite Özeti</h3>
               <div id="p3_stats"></div>
@@ -4780,7 +4786,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
       var vName=DWG_VERS[r.ver]||r.ver||'?', mb=(file.size/1048576).toFixed(1);
       window.__dwgInfo={name:file.name,size:file.size,ver:vName,previews:[]};
       var head='<div style="font-size:12px;color:var(--muted);margin-bottom:6px">📄 <b>'+file.name+'</b> · '+vName+' · '+mb+' MB';
-      var vbtn='<button class="btn-mini" style="width:100%;margin-top:8px;background:var(--accent);color:#0e0f13;border-color:var(--accent);font-weight:700" onclick="dwgVectorRender()">🧩 Gerçek Vektör Çizimi Aç (WASM · hesapsız)</button>';
+      var vbtn='<button class="btn-mini" style="width:100%;margin-top:8px;background:var(--accent);color:#0e0f13;border-color:var(--accent);font-weight:700" onclick="dwgAnalyze()">🏗️ Yapıyı Otomatik Çöz (2B plan + mahal + m²)</button>';
       if(!r.imgs.length){if(box)box.innerHTML=head+'<br>Gömülü önizleme yok — yine de gerçek vektör çizimini açabilirsiniz.</div>'+vbtn;return;}
       var html=head+' · '+r.imgs.length+' önizleme</div><div style="display:flex;flex-wrap:wrap;gap:8px">';
       r.imgs.forEach(function(im,idx){
@@ -4852,6 +4858,94 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     try{wrap.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}
   }
   window.dwgSvgZoom=function(k){var img=el('dwgSvgImg');if(img){var w=parseFloat(img.style.width)||1400;img.style.width=Math.max(300,Math.min(30000,w*k))+'px';}};
+  /* ===== DWG → GERÇEK YAPI ÇÖZÜMLEME (kat + mahal + m²), tamamen yerel ===== */
+  function _clean(s){return (s||'').replace(/\\[A-Za-z][^;]*;|[{}\\]/g,'').replace(/\s+/g,' ').trim();}
+  function _num2(s){var m=(String(s).match(/(\d{1,3}[.,]?\d{0,2})\s*(m2|m²)?/i)||[])[1];return m?(parseFloat(m.replace(',','.'))||0):0;}
+  function _dwgExtractModel(db){
+    var ents=db.entities||[]; var toM=(db.header&&db.header.INSUNITS===6)?1:0.001;
+    var texts=[];
+    for(var i=0;i<ents.length;i++){var e=ents[i];if((e.type==='TEXT'||e.type==='MTEXT')&&e.text){var p=e.startPoint||e.insertionPoint;if(p&&isFinite(p.x))texts.push({t:_clean(e.text),x:p.x,y:p.y});}}
+    var KAT=/(ZEMİN|BODRUM|ÇATI|\d+\.?\s*NORMAL|NORMAL)\s*KAT\b/i, NOISE=/ADEDİ|İRTİFAK|HOL|PLANI|ONAY|NOT|KAPAĞ|GİRİŞ/i;
+    var floors=[],seen={};
+    for(var j=0;j<texts.length;j++){var t=texts[j];if(KAT.test(t.t)&&!NOISE.test(t.t)){var k=t.t.toUpperCase();if(!seen[k]){seen[k]=1;floors.push(t);}}}
+    var ROOMS=/^(SALON|MUTFAK\+SALON|MUTFAK|YATAK ODASI|ÇOCUK ODASI|EBEVEYN|ODA|BANYO|WC|HOL|ANTRE|BALKON|TERAS|OTURMA|YAŞAMA|KİLER|DEPO|GARAJ|DÜKKAN|DUKKAN|OFİS|VESTİYER|GİYİNME|ÇALIŞMA|YEMEK)/i;
+    var nums=texts.filter(function(x){return /(^|:)\s*\d{1,3}[.,]?\d{0,2}\s*(m2|m²)/i.test(x.t)||/^\d{1,3}[.,]\d{1,2}$/.test(x.t);});
+    var rooms=[];
+    for(var r=0;r<texts.length;r++){var rt=texts[r];if(!ROOMS.test(rt.t))continue;
+      var best=null,bd=1e18;for(var n=0;n<nums.length;n++){var d=Math.hypot(nums[n].x-rt.x,nums[n].y-rt.y);if(d<bd){bd=d;best=nums[n];}}
+      var m2=(best&&bd*toM<5)?_num2(best.t):0; if(m2<1||m2>400)continue;
+      var fl='Kat 1',fd=1e18;for(var f=0;f<floors.length;f++){var dd=Math.hypot(floors[f].x-rt.x,floors[f].y-rt.y);if(dd<fd){fd=dd;fl=floors[f].t;}}
+      rooms.push({name:rt.t,m2:m2,floor:fl,x:rt.x,y:rt.y});
+    }
+    // dedupe (aynı ad+m²+yakın konum)
+    var uniq=[],ok;
+    for(var a=0;a<rooms.length;a++){ok=true;for(var b=0;b<uniq.length;b++){if(uniq[b].name===rooms[a].name&&Math.abs(uniq[b].m2-rooms[a].m2)<0.1&&Math.hypot(uniq[b].x-rooms[a].x,uniq[b].y-rooms[a].y)*toM<1){ok=false;break;}}if(ok)uniq.push(rooms[a]);}
+    rooms=uniq;
+    var byFloor={};for(var q=0;q<rooms.length;q++){var rr=rooms[q];(byFloor[rr.floor]=byFloor[rr.floor]||[]).push(rr);}
+    var total=0;for(var z=0;z<rooms.length;z++)total+=rooms[z].m2;
+    var katList=floors.length?floors.map(function(x){return x.t;}):Object.keys(byFloor);
+    return {katSayisi:Math.max(katList.length,Object.keys(byFloor).length,1),katlar:katList,mahalSayisi:rooms.length,toplamM2:Math.round(total*10)/10,byFloor:byFloor,layers:(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries?db.tables.LAYER.entries.length:0),entityCount:ents.length};
+  }
+  function _renderAnalysis(model){
+    var box=el('dwgAnalyz'); if(!box)return;
+    var floorKeys=Object.keys(model.byFloor);
+    var h='<div style="background:var(--surface);border:1px solid var(--accent);border-radius:14px;padding:16px;margin-top:4px">';
+    h+='<h3 style="margin:0 0 10px;font-family:var(--head)">🏗️ Otomatik Yapı Analizi <span style="font-size:11px;color:var(--muted);font-weight:400">(DWG\'den — gerçek veri)</span></h3>';
+    h+='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">';
+    h+='<span class="dwg-kpi"><b>'+model.katSayisi+'</b> Kat</span><span class="dwg-kpi"><b>'+model.mahalSayisi+'</b> Mahal</span><span class="dwg-kpi"><b>'+model.toplamM2+'</b> m² toplam</span><span class="dwg-kpi"><b>'+model.entityCount.toLocaleString('tr-TR')+'</b> nesne</span><span class="dwg-kpi"><b>'+model.layers+'</b> katman</span>';
+    h+='</div>';
+    if(!model.mahalSayisi){h+='<p style="font-size:12.5px;color:var(--muted);margin:0">Mahal/m² etiketi otomatik okunamadı (çizimde yazılı alan yok olabilir). 2B plan yine de tam görüntülenir.</p>';}
+    floorKeys.forEach(function(fk){
+      var arr=model.byFloor[fk]; var ft=0;arr.forEach(function(r){ft+=r.m2;});
+      h+='<div style="margin-top:6px"><div style="font-weight:700;font-size:13px;color:var(--accent);margin:8px 0 4px">'+fk+' <span style="color:var(--muted);font-weight:400">· '+arr.length+' mahal · '+Math.round(ft*10)/10+' m²</span></div>';
+      h+='<table class="dwg-tbl"><tbody>';
+      arr.forEach(function(r){h+='<tr><td>'+r.name+'</td><td style="text-align:right;font-weight:700">'+r.m2+' m²</td></tr>';});
+      h+='</tbody></table></div>';
+    });
+    h+='<button class="btn-mini" style="width:100%;margin-top:12px;background:var(--accent);color:#0e0f13;border-color:var(--accent);font-weight:700" onclick="dwgToPortfolio()">➕ Bu Projeyi Portföye Ekle (otomatik)</button>';
+    h+='</div>';
+    box.innerHTML=h;
+  }
+  function _dwgAutofill(model){
+    try{
+      var setV=function(id,v){var e=el(id);if(e){e.value=v;}};
+      if(model.katSayisi)setV('p3_kat',Math.max(1,Math.min(40,model.katSayisi)));
+      // ortalama kat alanı
+      var fk=Object.keys(model.byFloor), avg=model.katSayisi?Math.round(model.toplamM2/model.katSayisi):0;
+      if(avg>10)setV('p3_daireM2',avg);
+      var lines=[]; fk.forEach(function(k){var arr=model.byFloor[k];lines.push(k+': '+arr.map(function(r){return r.name+' '+r.m2+'m²';}).join(', '));});
+      setV('p3_not','[DWG otomatik] '+model.katSayisi+' kat · '+model.mahalSayisi+' mahal · '+model.toplamM2+' m²\n'+lines.join('\n'));
+      if(typeof window.saveP3Note==='function')window.saveP3Note();
+      if(typeof window.updateProje3D==='function')window.updateProje3D();
+      window.__dwgModel=model;
+    }catch(e){}
+  }
+  window.dwgAnalyze=function(){
+    var f=window.__dwgFile;if(!f){stat('Önce bir .dwg yükleyin.','err');return;}
+    var mb=f.size/1048576;
+    if(mb>3 && !confirm('Bu dosya '+mb.toFixed(1)+' MB — çözümleme 30-60 sn sürebilir. Devam?'))return;
+    stat('WASM motoru yükleniyor (ilk seferde ~9 MB)…');
+    _loadLibreDwg().then(function(lib){
+      stat('Çizim çözümleniyor'+(mb>3?' (büyük dosya — bekleyin)':'')+'…');
+      return f.arrayBuffer().then(function(buf){ setTimeout(function(){
+        try{
+          var dwg=lib.inst.dwg_read_data(buf,lib.DwgType.DWG);
+          var db=lib.inst.convert(dwg);
+          var svg=lib.inst.dwg_to_svg(db);
+          var model=_dwgExtractModel(db);
+          try{lib.inst.dwg_free(dwg);}catch(e){}
+          if(svg&&svg.length>80)_showSvg(svg);
+          _renderAnalysis(model); _dwgAutofill(model);
+          stat('✓ Yapı çözümlendi: '+model.katSayisi+' kat · '+model.mahalSayisi+' mahal · '+model.toplamM2+' m² (2B plan + tablo aşağıda).','ok');
+        }catch(e){stat('Çözümleme hatası: '+((e&&e.message)||e),'err');}
+      },30); });
+    }).catch(function(e){stat('WASM yüklenemedi (internet/CDN?): '+((e&&e.message)||e),'err');});
+  };
+  window.dwgToPortfolio=function(){
+    var m=window.__dwgModel;if(!m){stat('Önce çözümleyin.','err');return;}
+    stat('Portföye eklendi: parametrik alanlar dolduruldu (Kat/m²/mahal notu). 3D Proje Üretici ile rapor/portföy oluşturabilirsiniz.','ok');
+    var pane=el('pane-proje3d');if(pane)pane.scrollTop=0;
+  };
   function initCfg(){var c=cfg();['tokenUrl','uploadUrl','statusUrl'].forEach(function(k){var e=el('aps_'+k);if(e&&c[k])e.value=c[k];});}
   if(document.readyState!=='loading')initCfg();else document.addEventListener('DOMContentLoaded',initCfg);
 })();
