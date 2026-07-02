@@ -4942,9 +4942,26 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     }).catch(function(e){stat('WASM yüklenemedi (internet/CDN?): '+((e&&e.message)||e),'err');});
   };
   window.dwgToPortfolio=function(){
-    var m=window.__dwgModel;if(!m){stat('Önce çözümleyin.','err');return;}
-    stat('Portföye eklendi: parametrik alanlar dolduruldu (Kat/m²/mahal notu). 3D Proje Üretici ile rapor/portföy oluşturabilirsiniz.','ok');
-    var pane=el('pane-proje3d');if(pane)pane.scrollTop=0;
+    var m=window.__dwgModel;if(!m){stat('Önce "Yapıyı Otomatik Çöz" ile çözümleyin.','err');return;}
+    if(typeof PROJECTS==='undefined'){stat('Proje sistemi hazır değil.','err');return;}
+    var g=function(id){return (el(id)||{}).value||'';};
+    var il=g('p3_il')||'İstanbul', ilce=g('p3_ilce'), mah=g('p3_mah'), ada=g('p3_ada'), parsel=g('p3_parsel');
+    var loc=[mah,ilce,il].filter(Boolean).join(', ')||il;
+    var title=g('p3_ad')&&g('p3_ad')!=='Müşteri Arsası'?g('p3_ad'):((window.__dwgInfo&&window.__dwgInfo.name?window.__dwgInfo.name.replace(/\.dwg$/i,''):'DWG Projesi'));
+    var apts=[];Object.keys(m.byFloor).forEach(function(fk){m.byFloor[fk].forEach(function(r){apts.push({no:fk,tip:r.name,m2:String(r.m2),kat:fk,cephe:'-',fiyat:'-',durum:'musait'});});});
+    var desc='Mimari .dwg projesinden otomatik oluşturuldu: '+m.katSayisi+' kat · '+m.mahalSayisi+' bağımsız mahal · '+m.toplamM2+' m² toplam alan.'+(ada?(' Ada/Parsel: '+ada+'/'+parsel+'.'):'');
+    var proj={t:title,loc:loc,st:'plan',type:'Konut · '+m.katSayisi+' kat',area:m.toplamM2+' m²',img:'p_home',
+      price:'İletişime geçin',delivery:'Belirlenecek',units:m.mahalSayisi+' mahal · '+m.katSayisi+' kat',desc:desc,progress:0,
+      ada:ada,parsel:parsel,il:il,ilce:ilce,mahalle:mah,
+      longDesc:desc+' Kat planları ve mahal listesi mimarın .dwg dosyasından çözümlenmiştir.',
+      apts:apts,
+      dwgModel:{katlar:m.katlar,katSayisi:m.katSayisi,mahalSayisi:m.mahalSayisi,toplamM2:m.toplamM2,byFloor:m.byFloor,thumb:(window.__dwgInfo&&window.__dwgInfo.previews&&window.__dwgInfo.previews[0])||''}};
+    PROJECTS.unshift(proj);
+    try{if(typeof renderProjects==='function')renderProjects();}catch(e){}
+    try{if(typeof admPjList==='function')admPjList();}catch(e){}
+    try{if(typeof renderKpi==='function')renderKpi();}catch(e){}
+    try{if(typeof saveAll==='function')saveAll();}catch(e){}
+    stat('✓ Portföye eklendi: "'+title+'" ('+m.katSayisi+' kat · '+m.toplamM2+' m² · '+m.mahalSayisi+' mahal) — Projeler sayfasında ve admin → Projeler listesinde görünür.','ok');
   };
   function initCfg(){var c=cfg();['tokenUrl','uploadUrl','statusUrl'].forEach(function(k){var e=el('aps_'+k);if(e&&c[k])e.value=c[k];});}
   if(document.readyState!=='loading')initCfg();else document.addEventListener('DOMContentLoaded',initCfg);
