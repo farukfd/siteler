@@ -3004,6 +3004,9 @@ function renderPdBody(){
       if(a){h+=`<div class="pu" onclick="${a.durum==='satildi'?'':`reserveApt('${a.no}')`}" style="cursor:${a.durum==='satildi'?'default':'pointer'}"><span><i class="d ${a.durum}"></i><b>${a.no}</b> · ${a.tip} · ${a.m2}m²</span><span style="color:var(--muted)">${DURUM_LBL[a.durum]||''}</span></div>`;}
       else{h+=`<div class="pu"><span><b>${uno}</b></span></div>`;}
     });
+    // Faz 2: GERÇEK kat alanı + mahal cetveli (dosyanın plan etiketlerinden)
+    if(fl.totalM2){h+=`<div class="pu" style="background:var(--surface-2);font-weight:800"><span>📐 Kat alanı</span><span style="color:var(--accent)">${fl.totalM2} m²</span></div>`;}
+    if(fl.rooms&&fl.rooms.length){h+='<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px">'+fl.rooms.map(r=>`<span style="font-size:11px;background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:3px 8px">${esc(r.name)} <b>${r.m2}m²</b></span>`).join('')+'</div>';}
     h+='</div></div></div>';
   }
   // TESLİM TAKVİMİ
@@ -5042,9 +5045,10 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     // Faz 1: her kat kendi GERÇEK plan görselini taşır (isimle eşleşir); yoksa gömülü önizleme
     var floorImgs=window.__dwgFloorImgs||[], byName={}; floorImgs.forEach(function(f){byName[f.name]=f.img;});
     var planImg=(floorImgs[0]&&floorImgs[0].img)||(window.__dwgInfo&&window.__dwgInfo.previews&&window.__dwgInfo.previews[0])||thumb||'';
-    var floors=(F.floors||[]).map(function(nm){return {name:nm,usage:'',units:[],img:(byName[nm]||planImg)};});
+    var fdMap={}; try{_dwgFloorData().forEach(function(d){fdMap[d.name]=d;});}catch(e){}
+    var floors=(F.floors||[]).map(function(nm){var d=fdMap[nm]||{};return {name:nm,usage:'',units:[],img:(byName[nm]||planImg),totalM2:d.totalM2||0,rooms:d.rooms||[]};});
     // eğer _dwgFacts kat bulamadıysa ama plan görselleri varsa, onları kat olarak kullan
-    if(!floors.length&&floorImgs.length)floors=floorImgs.map(function(f){return {name:f.name,usage:'',units:[],img:f.img};});
+    if(!floors.length&&floorImgs.length)floors=floorImgs.map(function(f){var d=fdMap[f.name]||{};return {name:f.name,usage:'',units:[],img:f.img,totalM2:d.totalM2||0,rooms:d.rooms||[]};});
     var gallery=floorImgs.length?floorImgs.map(function(f){return f.img;}):(planImg?[planImg]:[]);
     // Birim SLOTLARI — sayı gerçek (bağımsız bölüm); tip/m²/fiyat "belirtilmemiş" → admin tamamlar
     var apts=[], nUnits=F.bbCount||0, nDuk=F.dukkanN||0, nDaire=(nUnits?Math.max(nUnits-nDuk,0):0);
@@ -5150,15 +5154,64 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
       img.src=url;
     });
   }
+  // Faz 2: kat çerçevelerini seç (Faz1 ile aynı mantık) — hem görsel hem cetvel için
+  function _dwgSelectFrames(){
+    var titles=window.__dwgTitles||[], frames=window.__dwgFrames||[];
+    var T=[]; titles.forEach(function(t){var nm=_floorName(t.t);if(nm&&isFinite(t.x))T.push({nm:nm,x:t.x,y:t.y});});
+    if(T.length<2||!frames.length)return [];
+    T.sort(function(a,b){return a.x-b.x;});
+    var sp=(T[T.length-1].x-T[0].x)/Math.max(1,T.length-1); if(!(sp>0))sp=4000;
+    var cand=frames.filter(function(f){var cx=(f.x0+f.x1)/2;return cx>T[0].x-sp&&cx<T[T.length-1].x+sp;});
+    if(!cand.length)return [];
+    var bk={}; cand.forEach(function(f){var k=Math.round(f.w/400)+'x'+Math.round(f.h/400);(bk[k]=bk[k]||[]).push(f);});
+    var best=[]; Object.keys(bk).forEach(function(k){if(bk[k].length>best.length)best=bk[k];});
+    if(best.length<2)return [];
+    best.sort(function(a,b){return a.x0-b.x0;});
+    var uniq=[]; best.forEach(function(f){if(!uniq.some(function(u){return Math.abs(u.x0-f.x0)<f.w*0.3;}))uniq.push(f);});
+    if(uniq.length>12)uniq=uniq.slice(0,12);
+    uniq.forEach(function(f){var cx=(f.x0+f.x1)/2;f.name=T.reduce(function(b,tt){return Math.abs(tt.x-cx)<Math.abs(b.x-cx)?tt:b;},T[0]).nm;});
+    return uniq.sort(function(a,b){return a.x0-b.x0;});
+  }
+  // Faz 2: her kat için GERÇEK toplam alan (max A:m²) + oda cetveli (isim + m²) — plan üzerindeki etiketlerden
+  var _ROOMRE=/SALON|MUTFAK|YATAK|^ODA|BANYO|WC|HOL|ANTRE|TERAS|BALKON|K[İI]LER|G[İI]YS[İI]|DUŞ|OTURMA|EBEVEYN|ÇOCUK|MERD[İI]VEN|ASANS[ÖO]R|N[İI]Ş|DEPO|D[ÜU]KKAN|VEST[İI]YER|ÇAMAŞIR|MEKAN|OFİS/i;
+  function _dwgFloorData(){
+    var uniq=_dwgSelectFrames(), texts=(window.__dwgRaw&&window.__dwgRaw.texts)||[];
+    if(!uniq.length||!texts.length)return [];
+    return uniq.map(function(f){
+      var padY=(f.y1-f.y0)*0.06, areas=[], names=[];
+      for(var i=0;i<texts.length;i++){var t=texts[i];if(t.x<f.x0||t.x>f.x1||t.y<f.y0-padY||t.y>f.y1+padY)continue;
+        var c=_clean(t.t); if(!c)continue;
+        var am=c.match(/(\d{1,4}[.,]\d{1,2})\s*m[2²]/i); if(am){var v=parseFloat(am[1].replace(',','.'));if(v>0.5&&v<3000)areas.push({v:v,x:t.x,y:t.y});}
+        if(_ROOMRE.test(c)&&c.length<26)names.push({t:c,x:t.x,y:t.y});
+      }
+      areas.sort(function(a,b){return b.v-a.v;});
+      var total=areas.length?areas[0].v:0, thr=f.w*0.25;
+      var roomAreas=areas.filter(function(a){return a.v<total*0.5;});
+      var rooms=roomAreas.map(function(a){var b=null,bd=1e18;names.forEach(function(n){var d=Math.hypot(n.x-a.x,n.y-a.y);if(d<bd){bd=d;b=n;}});return {name:(b&&bd<thr)?b.t.slice(0,20):'Mahal',m2:Math.round(a.v*10)/10};});
+      return {name:f.name, x0:f.x0, totalM2:Math.round(total*10)/10, rooms:rooms};
+    });
+  }
   function _renderFloorPlans(fp){
     var box=el('dwgFloorPlans'); if(!box)return;
+    var fd=(function(){try{var m={};_dwgFloorData().forEach(function(d){m[d.name]=d;});return m;}catch(e){return {};}})();
     if(!fp||!fp.length){box.innerHTML='';return;}
     var h='<div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:14px">';
     h+='<h3 style="margin:0 0 4px;font-family:var(--head)">📐 Kat Planları <span style="font-size:11px;color:var(--muted);font-weight:400">(dosyanın gerçek çiziminden — '+fp.length+' kat)</span></h3>';
     h+='<div style="font-size:11px;color:var(--muted);margin:0 0 12px">Her kat, mimari dosyadaki gerçek vektör plandan otomatik kırpıldı. Portföye eklediğinizde proje sayfasında kat kat görünür.</div>';
-    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">';
-    fp.forEach(function(f){h+='<div style="border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#0b0d12;cursor:zoom-in" onclick="dwgZoom(\''+f.img+'\')"><img src="'+f.img+'" alt="'+_esc(f.name)+'" style="width:100%;height:150px;object-fit:cover;display:block"><div style="font-size:12px;font-weight:700;padding:6px 8px;color:var(--ink)">'+_esc(f.name)+'</div></div>';});
-    h+='</div></div>';
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:10px">';
+    fp.forEach(function(f){var d=fd[f.name]||{};var meta=(d.totalM2?('<b style="color:var(--accent)">'+d.totalM2+' m²</b>'):'')+(d.rooms&&d.rooms.length?(' · '+d.rooms.length+' mahal'):'');
+      h+='<div style="border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#0b0d12">'+
+        '<img src="'+f.img+'" alt="'+_esc(f.name)+'" style="width:100%;height:150px;object-fit:cover;display:block;cursor:zoom-in" onclick="dwgZoom(\''+f.img+'\')">'+
+        '<div style="padding:6px 8px"><div style="font-size:12.5px;font-weight:700;color:var(--ink)">'+_esc(f.name)+'</div>'+(meta?'<div style="font-size:11px;color:var(--muted);margin-top:1px">'+meta+'</div>':'')+'</div></div>';});
+    h+='</div>';
+    // GERÇEK oda cetveli (kat kat) — plan üzerindeki A:m² etiketlerinden
+    var anyRooms=fp.some(function(f){var d=fd[f.name];return d&&d.rooms&&d.rooms.length;});
+    if(anyRooms){h+='<div style="margin-top:14px;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">📋 Kat kat mahal cetveli (gerçek m²)</div>';
+      fp.forEach(function(f){var d=fd[f.name];if(!d||!d.rooms||!d.rooms.length)return;
+        h+='<details style="margin-bottom:6px"><summary style="cursor:pointer;font-size:12.5px;font-weight:700;color:var(--ink)">'+_esc(f.name)+' <span style="color:var(--muted);font-weight:400">· '+(d.totalM2||'?')+' m² · '+d.rooms.length+' mahal</span></summary>'+
+          '<div style="display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 4px">'+d.rooms.map(function(r){return '<span style="font-size:10.5px;background:var(--surface-2,rgba(120,120,140,.08));border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--muted)">'+_esc(r.name)+' <b style="color:var(--ink)">'+r.m2+'</b></span>';}).join('')+'</div></details>';});
+    }
+    h+='</div>';
     box.innerHTML=h;
   }
   // Gömülü önizleme yoksa: gerçek vektör plandan (dwg_to_svg) rasterize ederek HD plan görseli üret
