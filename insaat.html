@@ -1862,7 +1862,7 @@ function cookieChoice(v){
                 <button class="btn-mini" onclick="apsCloseViewer()" style="width:auto">✕ Kapat</button>
               </div>
               <div id="apsViewer" style="position:relative;width:100%;height:560px;background:#0b0d12;border:1px solid var(--line);border-radius:12px;overflow:hidden"></div>
-              <p style="font-size:11.5px;color:var(--muted);margin:8px 0 0">Sol üstteki ağaç simgesinden <b>Model Ağacı</b> ile bağımsız bölümleri (daire/kat/oda) gezebilir, seçip özelliklerini görebilirsiniz.</p>
+              <p style="font-size:11.5px;color:var(--muted);margin:8px 0 0">Gerçek vektör kat planı (.dwg'den, tarayıcıda). Sağ üstteki <b>＋ / －</b> ile yakınlaştırıp kaydırarak inceleyebilirsiniz.</p>
             </div>
             <div id="dwgAnalyz"></div>
             <div class="panelcard" style="margin-top:14px">
@@ -4759,29 +4759,6 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     });
     return _dwgLibP;
   }
-  window.dwgVectorRender=function(){
-    var f=window.__dwgFile;if(!f){stat('Önce bir .dwg yükleyin.','err');return;}
-    var mb=f.size/1048576;
-    if(mb>3 && !confirm('Bu dosya '+mb.toFixed(1)+' MB. Gerçek vektör çizimi 30-60 sn sürebilir ve çok bellek kullanır. Devam edilsin mi?'))return;
-    stat('WASM motoru yükleniyor (ilk seferde ~9 MB indirilir)…');
-    _loadLibreDwg().then(function(lib){
-      stat('Çizim ayrıştırılıyor'+(mb>3?' (büyük dosya — lütfen bekleyin)':'')+'…');
-      return f.arrayBuffer().then(function(buf){
-        setTimeout(function(){ // UI'ın stat'ı boyamasına izin ver
-          try{
-            var dwg=lib.inst.dwg_read_data(buf,lib.DwgType.DWG);
-            var db=lib.inst.convert(dwg);
-            var svg=lib.inst.dwg_to_svg(db);
-            try{lib.inst.dwg_free(dwg);}catch(e){}
-            if(!svg||svg.length<80){stat('Çizim boş ya da desteklenmeyen entity.','err');return;}
-            _showSvg(svg);
-            var ec=(svg.match(/<(path|line|polyline|circle|ellipse|text|rect)/g)||[]).length;
-            stat('✓ Gerçek vektör çizim ('+(svg.length/1048576).toFixed(1)+' MB SVG · ~'+ec.toLocaleString('tr-TR')+' öğe).','ok');
-          }catch(e){stat('Vektör render başarısız: '+((e&&e.message)||e)+' — gömülü önizleme geçerli.','err');}
-        },30);
-      });
-    }).catch(function(e){stat('WASM yüklenemedi (internet/CDN?): '+((e&&e.message)||e),'err');});
-  };
   function _showSvg(svg){
     var wrap=el('apsViewerWrap'),host=el('apsViewer');if(!wrap||!host)return;
     var url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));
