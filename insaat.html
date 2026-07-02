@@ -2629,6 +2629,16 @@ window.openSaasAdmin=openSaasAdmin;window.closeSaasAdmin=closeSaasAdmin;window.s
 window.addEventListener('load',function(){try{initSaaSTheme();mountInsaatMenu();applySaaSSettings();fetchSaaSData().then(applySaaSData);
   _saasAdminCss(); /* ProX Ayarları modal stilleri hazır; herkese açık yüzen düğme kaldırıldı — panele admin içinden erişilir */
 }catch(e){console.warn('SaaS init',e);}});
+// derin link / sayfa yenileme: URL hash'ine göre ilgili tam-sayfa overlay'ini aç
+function _insaatOpenFromHash(){
+  var h=(location.hash||'').toLowerCase();
+  try{
+    if(h==='#hizmetler'){if(typeof openHizmetlerPage==='function')openHizmetlerPage();}
+    else if(h==='#projeler'){if(typeof openProjelerPage==='function')openProjelerPage();}
+    else if(h==='#bolge'){if(typeof openBolgePage==='function')openBolgePage();}
+  }catch(e){}
+}
+window.addEventListener('load',function(){setTimeout(_insaatOpenFromHash,80);});
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('#ppFilters .ppf').forEach(b=>b.onclick=()=>{
