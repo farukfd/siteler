@@ -2985,7 +2985,7 @@ function renderPdBody(){
         <span class="badge ${a.durum}">${DURUM_LBL[a.durum]||a.durum}</span>
         ${a.plan?`<img src="${a.plan}" alt="${a.no} planı" loading="lazy" onclick="event.stopPropagation();document.getElementById('pdHeroImg').src=this.src;document.getElementById('pjDetail').scrollTo({top:0,behavior:'smooth'})" style="width:100%;height:120px;object-fit:cover;background:#0b0d12;border-radius:8px;margin-bottom:8px;cursor:zoom-in">`:''}
         <div class="no">${a.no}</div><div class="tip">${a.tip}</div>
-        <div class="row"><span>Alan</span><b>${(a.net>0&&a.brut>0)?(a.net+' m² net · '+a.brut+' m² brüt'):((a.est?'≈ ':'')+a.m2+' m²')}</b></div>
+        <div class="row"><span>Alan</span><b>${(a.net>0&&a.brut>0)?(a.net+' m² net · '+a.brut+' m² brüt'):(((a.guven==='dusuk')?'≈ ':'')+a.m2+' m²'+((a.est&&a.guven!=='dusuk')?' <span style="font-weight:400;font-size:10px;color:var(--muted)">(oda toplamı)</span>':''))}</b></div>
         <div class="row"><span>Kat</span><b>${a.kat}</b></div>
         <div class="row"><span>Cephe</span><b>${a.cephe||'-'}</b></div>
         ${a.rooms&&a.rooms.length?`<div style="font-size:10.5px;color:var(--muted);margin-top:5px;line-height:1.5">${a.rooms.map(r=>String(r.name||'').replace(/[<>]/g,'')+(r.m2?' '+r.m2:'')).join(' · ')}</div>`:''}
@@ -4999,6 +4999,9 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     var m2=[]; for(var q=0;q<T.length;q++){var m3=T[q].t.match(/(\d{1,4}[.,]\d{1,2})\s*m[2²]/i);if(m3){var v=parseFloat(m3[1].replace(',','.'));if(v>2&&v<5000)m2.push(v);}}
     // Teknik hacimler (birim DEĞİL) — sadece bilgi
     var tech=dedupCount(/(kazan|makin[ae]|trafo|jenerat[öo]r|pompa)\s*daire|sığınak|siginak|su\s*deposu|hidrofor/i);
+    // BAĞIMSIZ BÖLÜM sayısı: segmentasyon (daire+dükkan) gerçek sayımı varsa onu kullan (etiket sayımından güvenilir)
+    var segN=0; try{_dwgFloorData().forEach(function(d){segN+=((d.apts&&d.apts.length)||0)+((d.units&&d.units.length)||0);});}catch(e){}
+    if(segN)bbCount=segN;
     return {floors:fset, floorCount:fset.length, bbCount:bbCount, totalArea:totalArea, daireN:daireN, dukkanN:dukkanN, tech:tech, m2:m2, layerNames:(raw.layerNames||[]).slice(0,40), entityCount:raw.entityCount||0, layers:raw.layers||0, fileName:(window.__dwgInfo&&window.__dwgInfo.name)||''};
   }
   function _valStr(s){s=String(s==null?'':s).trim();return (s&&!/uydur|bilinm|belirsiz|null/i.test(s))?s:'';}
@@ -5078,7 +5081,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     var realUnits=[]; floors.forEach(function(fl){(fl.unitList||[]).forEach(function(u){if(_isDuk(u.name))realUnits.push({name:u.name,m2:u.m2,kat:fl.name});});});
     var apts=[], nUnits=F.bbCount||0, dn=0, kn=0;
     // GERÇEK DAİRELER (salon-çıpalı segmentasyon) — tip+m²+kat + AYRI plan görseli
-    floorImgs.forEach(function(fl){(fl.apts||[]).forEach(function(ap){dn++;apts.push({no:(ap.bbNo?('BB'+ap.bbNo):('D'+dn)),tip:ap.tip||'belirtilmemiş',m2:String(ap.m2||''),est:!!ap.est,net:ap.net||0,brut:ap.brut||0,kat:ap.kat||fl.name,cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:'daire',plan:ap.img||'',rooms:ap.rooms||[]});});});
+    floorImgs.forEach(function(fl){(fl.apts||[]).forEach(function(ap){dn++;apts.push({no:(ap.no?('D'+ap.no):(ap.bbNo?('BB'+ap.bbNo):('D'+dn))),tip:ap.tip||'belirtilmemiş',m2:String(ap.m2||''),est:!!ap.est,guven:ap.guven||'',net:ap.net||0,brut:ap.brut||0,kat:ap.kat||fl.name,cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:'daire',plan:ap.img||'',rooms:ap.rooms||[]});});});
     // BB Alan Cetveli var ama hiçbir kata eşleşmediyse (kat kolonu boş) → cetveli düz otoriter liste olarak ekle
     try{var _bb=_dwgBB(); if(_bb.length && !apts.some(function(a){return a.est===false;})){ apts=[]; dn=0;
       _bb.forEach(function(r){dn++;var m2=Math.round(r.net||r.brut);apts.push({no:(r.bbNo?('BB'+r.bbNo):('D'+dn)),tip:r.tip||'belirtilmemiş',m2:String(m2),est:false,net:r.net||0,brut:r.brut||0,kat:r.kat||'belirtilmemiş',cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:'daire',rooms:[]});}); }
@@ -5191,7 +5194,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
             var d=_fdM[f._t]||{};
             var apts=(d.apts||[]).map(function(ap){var b=ap.bbox||{},w=(b.x1-b.x0)||0,h=(b.y1-b.y0)||0;
               var aimg=''; if(w>0&&h>0){var px=w*0.3+250,py=h*0.3+250;aimg=_srcCrop(b.x0-px,b.y0-py,b.x1+px,b.y1+py,540,0.62);}
-              return {tip:ap.tip,m2:ap.m2,est:ap.m2est,net:ap.net||0,brut:ap.brut||0,bbNo:ap.bbNo||'',rooms:ap.rooms,kat:ap.kat,img:aimg};});
+              return {tip:ap.tip,m2:ap.m2,est:ap.m2est,guven:ap.guven||'',no:ap.no||'',net:ap.net||0,brut:ap.brut||0,bbNo:ap.bbNo||'',rooms:ap.rooms,kat:ap.kat,img:aimg};});
             return png?{name:f._t,img:png,x0:f.x0,totalM2:d.totalM2,rooms:d.rooms,units:d.units,apts:apts}:null;
           }).filter(Boolean);
           resolve(out);
@@ -5297,63 +5300,88 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     var kb=/ZEM/.test(b)?'Z':/BODR/.test(b)?'B':/[ÇC]ATI/.test(b)?'C':/NORMAL|KAT/.test(b)?('N'+(nb||'')):('K'+(nb||''));
     return ka===kb&&ka!=='';
   }
+  /* ===== SEGMENTASYON YARDIMCILARI (mimari-proje-okuma uzman ajanı doğruladı — ANTRE çıpası) ===== */
+  function _segArea(s){var m=String(s).match(/(\d{1,4}[.,]\d{1,2})\s*m[2²]?/i);return m?parseFloat(m[1].replace(',','.')):null;}
+  function _segKind(name){var t=String(name).toLowerCase();
+    if(/antre/.test(t))return 'antre';
+    if(/^hol[üu]?$/.test(t))return 'antre';            // yalnız BAĞIMSIZ "hol" (kat holü DEĞİL)
+    if(/salon|oturma|ya[şs]ama/.test(t))return 'salon';
+    if(/mutfak/.test(t))return 'mutfak';
+    if(/banyo|(^|\s)wc\b/.test(t))return 'banyo';
+    if(/yatak|ebeveyn|çocuk|^oda\b/.test(t))return 'yatak';
+    if(/balkon|teras/.test(t))return 'balkon';
+    return 'diger';}
+  function _segNear(x,y,areas,maxD){var bv=0,bd=1e18;for(var i=0;i<areas.length;i++){var d=Math.hypot(areas[i].x-x,areas[i].y-y);if(d<bd){bd=d;bv=areas[i].v;}}return bd<=maxD?bv:0;}
+  function _segFloorTotal(T,alanL,halfW){var best=0,bd=1e18;for(var i=0;i<alanL.length;i++){var v=_segArea(alanL[i].t);if(v==null||v<150)continue;if(alanL[i].y>=T.y)continue;if(Math.abs(alanL[i].x-T.x)>=halfW)continue;var d=Math.abs(alanL[i].x-T.x)+Math.abs(alanL[i].y-T.y)*0.3;if(d<bd){bd=d;best=v;}}return best||0;}
+  // ANA SEGMENTASYON: kat + bağımsız bölüm (daire/dükkan) — mahal(oda isim)+alan(m²) katmanı eş-konum, ANTRE çıpası
   function _dwgFloorData(){
-    var uniq=_dwgSelectFrames(), texts=(window.__dwgRaw&&window.__dwgRaw.texts)||[];
-    if(!uniq.length||!texts.length)return [];
-    var _COMMON=/kat\s*hol|^hol$|merd|asans|sahanl|ışıkl|isikl|[şs]aft|kovas|ortak/i;
-    var _BEDRE=/YATAK|ÇOCUK|EBEVEYN|ÇALIŞMA|M[İI]SAF[İI]R|GENÇ|^ODA$|^ODA\b/i;
-    return uniq.map(function(f){
-      var padY=(f.y1-f.y0)*0.06, areas=[], names=[], unitLabels=[];
-      for(var i=0;i<texts.length;i++){var t=texts[i];if(t.x<f.x0||t.x>f.x1||t.y<f.y0-padY||t.y>f.y1+padY)continue;
-        if(/aks|axis|^ax$|kot$/i.test(t.l||''))continue; // AKS/kot katmanı → daire verisi değil
-        var c=_clean(t.t); if(!c)continue;
-        var am=c.match(/(\d{1,4}[.,]\d{1,2})\s*m[2²]/i); if(am){var v=parseFloat(am[1].replace(',','.'));if(v>0.5&&v<3000)areas.push({v:v,x:t.x,y:t.y});}
-        if(_ROOMRE.test(c)&&c.length<26)names.push({t:c,x:t.x,y:t.y});
-        if(_UNITRE.test(c)&&c.length<22)unitLabels.push({t:c,x:t.x,y:t.y});
-      }
-      areas.sort(function(a,b){return b.v-a.v;});
-      var total=areas.length?areas[0].v:0, thr=f.w*0.25;
-      // GREEDY BİPARTİT: her oda-ismi ile en yakın alanı 1-e-1 eşle (aynı alanı 3 isme verme hatasını yener)
-      var roomA=areas.filter(function(a){return a.v<total*0.5;});
-      var pairs=[]; names.forEach(function(n,ni){roomA.forEach(function(a,ai){var d=Math.hypot(n.x-a.x,n.y-a.y);if(d<thr)pairs.push({ni:ni,ai:ai,d:d});});});
-      pairs.sort(function(p,q){return p.d-q.d;});
-      var nu={},au={},roomPts=[];
-      pairs.forEach(function(p){if(nu[p.ni]||au[p.ai])return;nu[p.ni]=1;au[p.ai]=1;var n=names[p.ni],a=roomA[p.ai];roomPts.push({name:n.t.slice(0,16),m2:a.v,x:n.x,y:n.y});});
-      var rooms=roomPts.map(function(r){return {name:r.name,m2:Math.round(r.m2*10)/10};});
-      // BİRİMLER (dükkan) — isim+alan eş-konum, konumla dedupe
-      var units=[], useen=[], gcell=Math.max(1,f.w*0.05);
-      unitLabels.forEach(function(u){var k=Math.round(u.x/gcell)+','+Math.round(u.y/gcell);if(useen.indexOf(k)>=0)return;
-        var bv=0,bd=1e18;areas.forEach(function(a){var d=Math.hypot(a.x-u.x,a.y-u.y);if(d<bd){bd=d;bv=a.v;}});
-        if(bv>3&&bv<total*0.92&&bd<f.w*0.5){useen.push(k);units.push({name:u.t.charAt(0).toUpperCase()+u.t.slice(1).toLowerCase().slice(0,15),m2:Math.round(bv*10)/10});}
-      });
-      units.sort(function(a,b){return b.m2-a.m2;});
-      // DAİRELER — SALON çıpası (>12 m² gerçek salon); ortak alanlar (hol/merdiven/asansör) daireye katılmaz
-      var salons=roomPts.filter(function(r){return /^SALON|OTURMA|YAŞAMA/i.test(r.name)&&r.m2>12;});
-      var aptRooms=roomPts.filter(function(r){return !_COMMON.test(r.name);});
-      var apts=[];
-      if(salons.length){
-        var cl=salons.map(function(s){return {sx:s.x,sy:s.y,rooms:[]};});
-        aptRooms.forEach(function(r){var bi=0,bd=1e18;cl.forEach(function(c,ci){var d=Math.hypot(c.sx-r.x,c.sy-r.y);if(d<bd){bd=d;bi=ci;}});cl[bi].rooms.push(r);});
-        apts=cl.map(function(c){var yat=c.rooms.filter(function(r){return _BEDRE.test(r.name);}).length;var hasS=c.rooms.some(function(r){return /SALON|OTURMA|YAŞAMA/i.test(r.name);});var m2=c.rooms.reduce(function(s,r){return s+(r.m2||0);},0);
-          var bx0=1e18,by0=1e18,bx1=-1e18,by1=-1e18;c.rooms.forEach(function(r){if(r.x<bx0)bx0=r.x;if(r.x>bx1)bx1=r.x;if(r.y<by0)by0=r.y;if(r.y>by1)by1=r.y;});
-          return {tip:hasS?(yat+'+1'):(yat?yat+'+0':(c.rooms.length+' oda')),m2:Math.round(m2),m2est:true,rooms:c.rooms.map(function(r){return {name:r.name,m2:Math.round((r.m2||0)*10)/10};}),bbox:{x0:bx0,y0:by0,x1:bx1,y1:by1},kat:f.name};
-        }).filter(function(a){return a.rooms.length>=2&&a.m2>10;});
-        apts.sort(function(a,b){return b.m2-a.m2;});
+    var raw=(window.__dwgRaw&&window.__dwgRaw.texts)||[];
+    if(!raw.length)return [];
+    var ms=[];
+    for(var i=0;i<raw.length;i++){var c=_clean(raw[i].t);if(c&&isFinite(raw[i].x))ms.push({t:c,x:raw[i].x,y:raw[i].y,l:raw[i].l||''});}
+    // mahal(oda isimleri) + alan(m²) katmanları; yoksa içerikten türet (genel dosya desteği)
+    var mahal=ms.filter(function(t){return /^mahal$/i.test(t.l);});
+    var alanL=ms.filter(function(t){return /^alan$/i.test(t.l);});
+    if(mahal.length<4)mahal=ms.filter(function(t){return _ROOMRE.test(t.t)&&t.t.length<26&&!/aks|axis|^ax$|kot$/i.test(t.l);});
+    if(alanL.length<4)alanL=ms.filter(function(t){return /(\d{1,4}[.,]\d{1,2})\s*m[2²]/i.test(t.t)&&t.t.length<16;});
+    var titles=ms.filter(function(t){return /KAT.{0,4}PLAN/i.test(t.t);}).sort(function(p,q){return p.x-q.x;});
+    if(titles.length<2)return [];
+    var dx=Math.abs(titles[1].x-titles[0].x)||4000, halfW=dx*0.45, upH=Math.max(dx*2.4,8000), maxD=Math.max(dx*0.06,200);
+    var out=[];
+    for(var ti=0;ti<titles.length;ti++){
+      var T=titles[ti], name=_floorName(T.t)||(_clean(T.t).replace(/\s*Ö.*/i,'').replace(/KAT PLANI/i,'Kat').trim());
+      // kat kolonu: başlığın ÜSTÜNDEKİ bant (odalar başlığın üstünde)
+      var col=mahal.filter(function(t){return Math.abs(t.x-T.x)<halfW && t.y>T.y && t.y<T.y+upH;});
+      var colAreasRaw=alanL.filter(function(t){return Math.abs(t.x-T.x)<halfW && t.y>T.y && t.y<T.y+upH;});
+      var colAreas=[]; for(var ca=0;ca<colAreasRaw.length;ca++){var av=_segArea(colAreasRaw[ca].t);if(av!=null&&av>0.5&&av<3000)colAreas.push({v:av,x:colAreasRaw[ca].x,y:colAreasRaw[ca].y});}
+      var AR=colAreas.length?colAreas:[]; // eş-konum için bu katın alan etiketleri
+      var totalM2=_segFloorTotal(T,alanL,halfW);
+      // KAT ODA CETVELİ: her mahal ismine eş-konum alan (konumla hafif dedupe)
+      var rooms=[], rseen={};
+      col.forEach(function(r){var k=Math.round(r.x/Math.max(1,maxD))+','+Math.round(r.y/Math.max(1,maxD))+r.t;if(rseen[k])return;rseen[k]=1;rooms.push({name:r.t.slice(0,18),m2:Math.round(_segNear(r.x,r.y,AR,maxD)*10)/10});});
+      var antres=col.filter(function(t){return _segKind(t.t)==='antre';});
+      var duks=col.filter(function(t){return /d[üu]kkan|ma[ğg]aza/i.test(t.t);});
+      var units=[], apts=[];
+      if(antres.length>=1){
+        // --- DAİRE KATI: ANTRE çıpası + en-yakın-oda ataması ---
+        var restRooms=col.filter(function(t){return _segKind(t.t)!=='antre' && !/^\d{1,2}$/.test(t.t) && !/d[üu]kkan|ma[ğg]aza/i.test(t.t) && !/kat\s*hol|merd|asans|[şs]aft|kovas|sahanl/i.test(t.t);});
+        var cores=antres.map(function(an){return {ax:an.x,ay:an.y,rooms:[{name:an.t,x:an.x,y:an.y}]};});
+        restRooms.forEach(function(rr){var bi=0,bd=1e18;cores.forEach(function(c,ci){var d=Math.hypot(c.ax-rr.x,c.ay-rr.y);if(d<bd){bd=d;bi=ci;}});cores[bi].rooms.push({name:rr.t,x:rr.x,y:rr.y});});
+        cores.sort(function(p,q){return p.ax-q.ax;});
+        // daire no'ları (kat holü lejantında kümeli) — küçükten büyüğe, sol→sağ ata (dosyadaki set, uydurma değil)
+        var numPool=col.filter(function(t){return /^\d{1,2}$/.test(t.t);}).map(function(n){return parseInt(n.t,10);}).sort(function(a,b){return a-b;});
+        apts=cores.map(function(c,ci){
+          var yat=0,hasS=false,total=0,rl=[],bx0=1e18,by0=1e18,bx1=-1e18,by1=-1e18,matched=0;
+          c.rooms.forEach(function(ro){var m2=_segNear(ro.x,ro.y,AR,maxD),kind=_segKind(ro.name);
+            rl.push({name:_clean(ro.name).slice(0,18),m2:Math.round(m2*10)/10});total+=m2;if(m2>0)matched++;
+            if(kind==='yatak')yat++;if(kind==='salon')hasS=true;
+            if(ro.x<bx0)bx0=ro.x;if(ro.x>bx1)bx1=ro.x;if(ro.y<by0)by0=ro.y;if(ro.y>by1)by1=ro.y;});
+          var tip=hasS?(yat+'+1'):(yat>0?(yat+'+0'):'stüdyo');
+          var guven=(matched===c.rooms.length)?'yuksek':(matched>=c.rooms.length-1?'orta':'dusuk');
+          var no=(numPool.length===cores.length&&numPool.length)?String(numPool[ci]):'';
+          return {tip:tip,m2:Math.round(total),m2est:true,guven:guven,no:no,rooms:rl,bbox:{x0:bx0,y0:by0,x1:bx1,y1:by1},kat:name};
+        }).filter(function(a){return a.rooms.length>=2;});
+      } else if(duks.length>=1){
+        // --- DÜKKAN/HİZMET KATI: her DÜKKAN etiketi bir bağımsız bölüm ---
+        var extras=col.filter(function(t){return !/d[üu]kkan|ma[ğg]aza/i.test(t.t) && !/^\d{1,2}$/.test(t.t);});
+        var shops=duks.map(function(d){return {sx:d.x,sy:d.y,rooms:[],raw:d.t};});
+        extras.forEach(function(ex){var bi=0,bd=1e18;shops.forEach(function(s,si){var d=Math.hypot(s.sx-ex.x,s.sy-ex.y);if(d<bd){bd=d;bi=si;}});if(shops.length)shops[bi].rooms.push({name:ex.t,x:ex.x,y:ex.y});});
+        shops.sort(function(p,q){return p.sx-q.sx;});
+        units=shops.map(function(sh,si){var shM2=_segNear(sh.sx,sh.sy,AR,maxD*1.6),ex=0;sh.rooms.forEach(function(r){ex+=_segNear(r.x,r.y,AR,maxD);});
+          return {name:(/ma[ğg]aza/i.test(sh.raw)?'Mağaza ':'Dükkan ')+(si+1),m2:Math.round((shM2+ex)*10)/10};});
       }
       // BB Alan Cetveli varsa (2019+): tahmini m² YERİNE gerçek net/brüt geç (kat eşleşince)
       var bbAll=[]; try{bbAll=_dwgBB();}catch(e){}
-      if(bbAll.length){
-        var bbHere=bbAll.filter(function(r){return _katMatch(r.kat,f.name);});
-        if(bbHere.length){
-          bbHere.sort(function(a,b){return (b.net||b.brut)-(a.net||a.brut);});
-          var estA=apts.slice(); // plan-crop bbox'ını miras al
-          apts=bbHere.map(function(r,ri){var e=estA[ri]||{}; var m2=Math.round(r.net||r.brut);
-            return {tip:r.tip||e.tip||'',m2:m2,m2est:false,brut:r.brut||0,net:r.net||0,bbNo:r.bbNo,
-              rooms:e.rooms||[],bbox:e.bbox,kat:f.name};});
-        }
-      }
-      return {name:f.name, x0:f.x0, totalM2:Math.round(total*10)/10, rooms:rooms, units:units, apts:apts, frame:{x0:f.x0,y0:f.y0,x1:f.x1,y1:f.y1}};
-    });
+      if(bbAll.length){var bbHere=bbAll.filter(function(r){return _katMatch(r.kat,name);});
+        if(bbHere.length){bbHere.sort(function(a,b){return (b.net||b.brut)-(a.net||a.brut);});var estA=apts.slice();
+          apts=bbHere.map(function(r,ri){var e=estA[ri]||{};return {tip:r.tip||e.tip||'',m2:Math.round(r.net||r.brut),m2est:false,net:r.net||0,brut:r.brut||0,bbNo:r.bbNo,no:r.bbNo||'',guven:'yuksek',rooms:e.rooms||[],bbox:e.bbox,kat:name};});}}
+      var fx0=T.x-halfW, fx1=T.x+halfW, fy0=T.y, fy1=T.y+upH;
+      out.push({name:name, x0:fx0, totalM2:Math.round(totalM2*10)/10, rooms:rooms, units:units, apts:apts, frame:{x0:fx0,y0:fy0,x1:fx1,y1:fy1}});
+    }
+    // TİPİK-KAT toplam alan propagasyonu (özdeş normal katlar — mimar yalnız birine yazmış)
+    var typ=0; for(var z=0;z<out.length;z++){if(/normal/i.test(out[z].name)&&out[z].totalM2){typ=out[z].totalM2;break;}}
+    if(typ)for(var z2=0;z2<out.length;z2++){if(/normal/i.test(out[z2].name)&&!out[z2].totalM2)out[z2].totalM2=typ;}
+    return out;
   }
   function _renderFloorPlans(fp){
     var box=el('dwgFloorPlans'); if(!box)return;
