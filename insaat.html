@@ -4973,6 +4973,43 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     var cand=s.slice(0,safeCut+1).replace(/,\s*$/,''), closers=(safeStack||[]).slice().reverse().join('');
     try{return JSON.parse(cand+closers);}catch(e){return null;}
   }
+  /* ===== ANTET (PAFTA) + KESİT OKUYUCU — dosyanın resmi proje künyesinden GERÇEK veri ===== */
+  // Bağımsız bölüm sayısı, kat adedi, toplam alan, kullanım amacı, yapı sınıfı, ilçe — antet + bağımsız bölüm numaralarından (çapraz doğrulama).
+  function _dwgAntet(raw){
+    var ms=[]; for(var i=0;i<raw.length;i++){var c=_clean(raw[i].t);if(c&&isFinite(raw[i].x))ms.push({t:c,x:raw[i].x,y:raw[i].y});}
+    // label çevresinde (R yarıçap) tip-uyumlu en yakın değer (sağ/alt yönü tercih — antet gridinde değer sağda/altta)
+    function nearVal(labelRe,test,R,prefer){
+      var lbl=null;for(var i=0;i<ms.length;i++){if(labelRe.test(ms[i].t)){lbl=ms[i];break;}}
+      if(!lbl)return null;
+      var best=null,bs=1e18;
+      for(var j=0;j<ms.length;j++){var t=ms[j];if(t===lbl||!test(t.t))continue;
+        var dx=t.x-lbl.x, dy=t.y-lbl.y, d=Math.hypot(dx,dy);if(d>R||d<1)continue;
+        var sc=d; if(prefer==='right'&&dx>0)sc*=0.5; if(prefer==='below'&&dy<0)sc*=0.5;
+        if(sc<bs){bs=sc;best=t.t;}
+      }
+      return best;
+    }
+    // BAĞIMSIZ BÖLÜM NUMARALARI (plan+kesitte 1..N) — en güvenilir sayım; ardışık dizi max'ı
+    var nums={};for(var k=0;k<ms.length;k++){if(/^\d{1,2}$/.test(ms[k].t)){var n=parseInt(ms[k].t,10);if(n>=1&&n<=99)nums[n]=1;}}
+    var maxSeq=0;for(var s=1;s<=99;s++){if(nums[s])maxSeq=s;else if(s>1&&!nums[s]&&!nums[s+1])break;}
+    var katAdedi=nearVal(/KAT\s*ADED[İI]/i,function(t){return /^\d{1,2}$/.test(t)&&+t>=1&&+t<=40;},1400,'below');
+    var bbLbl=nearVal(/B\.?\s*B[ÖO]L[ÜU]M\s*SAYISI/i,function(t){return /^\d{1,3}$/.test(t)&&+t>=1&&+t<=400;},1400,'below');
+    var kullanim=nearVal(/KULLANIM\s*AMACI/i,function(t){return /KONUT|T[İI]CAR|KONUT\s*\+\s*T[İI]C|MESKEN|B[ÜU]RO|OF[İI]S/i.test(t);},1600,'below');
+    var yapiSinif=nearVal(/YAPI\s*SINIFI/i,function(t){return /^\d[ABCDE]$|^[ABCDE]\d$/.test(t);},1400,'below');
+    var ilce=nearVal(/[İI]L[ÇC]ES[İI]/i,function(t){return /^[A-ZÇĞİÖŞÜ][a-zA-ZÇĞİÖŞÜçğıöşü ]{3,}$/.test(t)&&!/İLÇE|MAHALLE|PAFTA|ADA|PARSEL|BLOK|ARSA/i.test(t);},1600,'below');
+    // toplam inşaat alanı: antet bölgesindeki (kat planlarının solu) en büyük 500-99999 ondalık sayı
+    var titles=ms.filter(function(t){return /KAT.{0,4}PLAN/i.test(t.t);}).sort(function(a,b){return a.x-b.x;});
+    var leftX=titles.length?titles[0].x-2000:1e15;
+    var toplam=0;for(var a2=0;a2<ms.length;a2++){if(ms[a2].x>leftX)continue;var m=ms[a2].t.match(/(\d{3,5}[.,]\d{1,2})/);if(m){var v=parseFloat(m[1].replace(',','.'));if(v>500&&v<99999&&v>toplam)toplam=v;}}
+    return {
+      bbSayisi:(maxSeq>=2?maxSeq:(bbLbl?parseInt(bbLbl):null)),
+      bbNumMax:maxSeq||null, bbAntet:(bbLbl?parseInt(bbLbl):null),
+      katAdedi:(katAdedi?parseInt(katAdedi):null),
+      toplamAlan:(toplam||null),
+      kullanim:_kullanimLbl(kullanim), yapiSinifi:yapiSinif||null, ilce:ilce||null
+    };
+  }
+  function _kullanimLbl(k){if(!k)return null;k=String(k).toUpperCase();if(/KONUT.*T[İI]C|T[İI]C.*KONUT/.test(k))return 'Konut + Ticari';if(/KONUT|MESKEN/.test(k))return 'Konut';if(/T[İI]CAR/.test(k))return 'Ticari';if(/B[ÜU]RO|OF[İI]S/.test(k))return 'Ofis';return null;}
   /* GERÇEK VERİ ÇIKARIMI — deterministik, dosyanın Alan Cetvelinden; hiçbir şey uydurulmaz. */
   function _dwgFacts(){
     var raw=window.__dwgRaw||{}, toM=(raw.insunits===6)?1:0.001, T=[], arr=raw.texts||[];
@@ -4999,13 +5036,17 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     var m2=[]; for(var q=0;q<T.length;q++){var m3=T[q].t.match(/(\d{1,4}[.,]\d{1,2})\s*m[2²]/i);if(m3){var v=parseFloat(m3[1].replace(',','.'));if(v>2&&v<5000)m2.push(v);}}
     // Teknik hacimler (birim DEĞİL) — sadece bilgi
     var tech=dedupCount(/(kazan|makin[ae]|trafo|jenerat[öo]r|pompa)\s*daire|sığınak|siginak|su\s*deposu|hidrofor/i);
-    // BAĞIMSIZ BÖLÜM sayısı: segmentasyon (daire+dükkan) gerçek sayımı varsa onu kullan (etiket sayımından güvenilir)
-    var segN=0; try{_dwgFloorData().forEach(function(d){segN+=((d.apts&&d.apts.length)||0)+((d.units&&d.units.length)||0);});}catch(e){}
-    if(segN)bbCount=segN;
-    return {floors:fset, floorCount:fset.length, bbCount:bbCount, totalArea:totalArea, daireN:daireN, dukkanN:dukkanN, tech:tech, m2:m2, layerNames:(raw.layerNames||[]).slice(0,40), entityCount:raw.entityCount||0, layers:raw.layers||0, fileName:(window.__dwgInfo&&window.__dwgInfo.name)||''};
+    // ANTET (resmi pafta künyesi) — en OTORİTER kaynak: b.bölüm sayısı + toplam alan + kullanım + yapı sınıfı + ilçe
+    var ant={}; try{ant=_dwgAntet(arr);}catch(e){}
+    // BAĞIMSIZ BÖLÜM SAYISI: antet/numara (çapraz-doğrulanmış) > segmentasyon > etiket
+    var segN=0,segDaire=0,segDuk=0; try{_dwgFloorData().forEach(function(d){var na=(d.apts&&d.apts.length)||0,nu=(d.units&&d.units.length)||0;segDaire+=na;segDuk+=nu;segN+=na+nu;});}catch(e){}
+    if(ant.bbSayisi)bbCount=ant.bbSayisi; else if(segN)bbCount=segN;
+    if(segDaire)daireN=segDaire; if(segDuk)dukkanN=segDuk; // gerçek segmentasyon sayımı (etiket over-count'unu yener)
+    if(ant.toplamAlan)totalArea=ant.toplamAlan; // antetteki resmi toplam inşaat alanı (kat-türetiminden güvenilir)
+    return {floors:fset, floorCount:fset.length, katAdedi:ant.katAdedi||null, bbCount:bbCount, bbAntet:ant.bbAntet||null, bbNumMax:ant.bbNumMax||null, totalArea:totalArea, kullanim:ant.kullanim||null, yapiSinifi:ant.yapiSinifi||null, ilceAntet:ant.ilce||null, daireN:daireN, dukkanN:dukkanN, tech:tech, m2:m2, layerNames:(raw.layerNames||[]).slice(0,40), entityCount:raw.entityCount||0, layers:raw.layers||0, fileName:(window.__dwgInfo&&window.__dwgInfo.name)||''};
   }
   function _valStr(s){s=String(s==null?'':s).trim();return (s&&!/uydur|bilinm|belirsiz|null/i.test(s))?s:'';}
-  function _autoType(F){var hasDuk=(F.dukkanN||0)>0||/DÜKKAN|DUKKAN|MAĞAZA|TİCAR/i.test((F.layerNames||[]).join(' '));var hasDaire=(F.daireN||0)>0||(F.bbCount||0)>0;if(hasDuk&&hasDaire)return 'Konut + Ticari';if(hasDuk)return 'Ticari';if(hasDaire)return 'Konut';return 'Yapı';}
+  function _autoType(F){if(F&&F.kullanim)return F.kullanim;var hasDuk=(F.dukkanN||0)>0||/DÜKKAN|DUKKAN|MAĞAZA|TİCAR/i.test((F.layerNames||[]).join(' '));var hasDaire=(F.daireN||0)>0||(F.bbCount||0)>0;if(hasDuk&&hasDaire)return 'Konut + Ticari';if(hasDuk)return 'Ticari';if(hasDaire)return 'Konut';return 'Yapı';}
   // ProX metnindeki, gerçeklerde OLMAYAN m² iddialarını maskele (uydurma sızıntısını engelle)
   function _sanitize(s,F){s=String(s==null?'':s);if(!s)return '';var ta=F.totalArea?String(Math.round(F.totalArea)):null;
     return s.replace(/(\d[\d.,]*)\s*(m²|m2)/gi,function(full,num){var r=String(Math.round(parseFloat(String(num).replace(/\./g,'').replace(',','.'))||0));if(ta&&(r===ta||String(num).indexOf(ta)>=0))return full;return 'ilgili alan';});}
@@ -5043,6 +5084,9 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     if(F.floorCount)h+='<span class="dwg-kpi"><b>'+F.floorCount+'</b> Kat'+_srcTag('labeled')+'</span>';
     if(F.bbCount)h+='<span class="dwg-kpi"><b>'+F.bbCount+'</b> Bağımsız Bölüm'+_srcTag('labeled')+'</span>';
     if(F.totalArea)h+='<span class="dwg-kpi"><b>'+F.totalArea+'</b> m² toplam inşaat'+_srcTag('labeled')+'</span>';
+    if(F.kullanim)h+='<span class="dwg-kpi"><b>'+_esc(F.kullanim)+'</b> kullanım'+_srcTag('labeled')+'</span>';
+    if(F.yapiSinifi)h+='<span class="dwg-kpi"><b>'+_esc(F.yapiSinifi)+'</b> yapı sınıfı'+_srcTag('labeled')+'</span>';
+    if(F.katAdedi)h+='<span class="dwg-kpi" style="opacity:.85"><b>'+F.katAdedi+'</b> kat adedi (resmi)'+_srcTag('labeled')+'</span>';
     if(F.daireN)h+='<span class="dwg-kpi"><b>'+F.daireN+'</b> Daire'+_srcTag('derived')+'</span>';
     if(F.dukkanN)h+='<span class="dwg-kpi"><b>'+F.dukkanN+'</b> Dükkan'+_srcTag('derived')+'</span>';
     if(F.tech)h+='<span class="dwg-kpi" style="opacity:.7"><b>'+F.tech+'</b> teknik hacim'+_srcTag('labeled')+'</span>';
@@ -5060,7 +5104,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
   window.dwgToPortfolio=function(){
     if(typeof PROJECTS==='undefined'){stat('Proje sistemi hazır değil.','err');return;}
     var g=function(id){return (el(id)||{}).value||'';};
-    var il=g('dwg_il')||'İstanbul', ilce=g('dwg_ilce'), mah=g('dwg_mah'), ada=g('dwg_ada'), parsel=g('dwg_parsel');
+    var _Fpre=window.__dwgFacts||{};
+    var il=g('dwg_il')||'İstanbul', ilce=g('dwg_ilce')||_Fpre.ilceAntet||'', mah=g('dwg_mah'), ada=g('dwg_ada'), parsel=g('dwg_parsel');
     var loc=[mah,ilce,il].filter(Boolean).join(', ')||il;
     var title=g('dwg_ad')||((window.__dwgInfo&&window.__dwgInfo.name)?window.__dwgInfo.name.replace(/\.dwg$/i,''):'DWG Projesi');
     var thumb=(window.__dwgInfo&&window.__dwgInfo.previews&&window.__dwgInfo.previews[0])||'';
@@ -5098,7 +5143,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
       ada:ada,parsel:parsel,il:il,ilce:ilce,mahalle:mah,
       longDesc:desc+' Kat planı, mimari dosyanın gerçek vektör çiziminden alınmıştır. Daire tipleri (2+1, dubleks vb.) ve fiyatlar dosyada yazılı olmadığından admin panelde tamamlanır.',
       apts:apts,floors:floors,gallery:gallery,
-      specs:[{k:'Yapı tipi',v:tipLbl},{k:'Kat sayısı',v:String(kk)}].concat(F.bbCount?[{k:'Bağımsız bölüm',v:String(F.bbCount)}]:[]).concat(F.totalArea?[{k:'Toplam inşaat alanı',v:F.totalArea+' m²'}]:[]).concat(ada?[{k:'Ada/Parsel',v:ada+'/'+parsel}]:[]),
+      specs:[{k:'Yapı tipi',v:tipLbl},{k:'Kat sayısı',v:String(kk)}].concat(F.katAdedi?[{k:'Kat adedi (resmi)',v:String(F.katAdedi)}]:[]).concat(F.bbCount?[{k:'Bağımsız bölüm',v:String(F.bbCount)}]:[]).concat(F.yapiSinifi?[{k:'Yapı sınıfı',v:F.yapiSinifi}]:[]).concat(F.totalArea?[{k:'Toplam inşaat alanı',v:F.totalArea+' m²'}]:[]).concat(ada?[{k:'Ada/Parsel',v:ada+'/'+parsel}]:[]),
       dwgFacts:F, dwgModel:{thumb:thumb}};
     PROJECTS.unshift(proj);
     _dwgSave();
