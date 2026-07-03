@@ -2959,13 +2959,18 @@ function renderPdBody(){
   const p=PROJECTS[_pdIdx];if(!p)return;
   const apts=p.apts||[], floors=p.floors||[], gallery=p.gallery||[], features=p.features||[];
   const musaitN=apts.filter(a=>a.durum==='musait').length;
+  const _isDukA=a=>(a.kind==='dükkan'||a.kind==='dukkan'||/d[üu]kkan|ma[ğg]aza|of[İiı]s/i.test(a.tip||''));
+  const daireN=apts.filter(a=>!_isDukA(a)).length;
+  const dukN=apts.filter(a=>_isDukA(a)).length;
+  const dubN=apts.filter(a=>/dubleks/i.test(a.tip||'')).length;
+  const unitSummary=[daireN?daireN+' Daire':'',dukN?dukN+' Dükkan':'',dubN?dubN+' Dubleks':''].filter(Boolean).join(' · ')||(p.units||'-');
   let h='';
-  // key stats
+  // key stats — bağımsız bölüm daire/dükkan/dubleks olarak bölünür
   h+='<div class="pd-stats">'+
-     `<div class="pd-stat"><div class="v">${p.area||'-'}</div><div class="l">Toplam Alan</div></div>`+
-     `<div class="pd-stat"><div class="v">${p.units||(apts.length+' birim')}</div><div class="l">Konut/Birim</div></div>`+
-     `<div class="pd-stat"><div class="v">${p.delivery||'-'}</div><div class="l">Teslim</div></div>`+
-     `<div class="pd-stat"><div class="v">${apts.length?musaitN+' müsait':(p.price||'-')}</div><div class="l">${apts.length?'Daire Durumu':'Fiyat'}</div></div>`+
+     `<div class="pd-stat"><div class="v">${p.area||'-'}</div><div class="l">Toplam İnşaat Alanı</div></div>`+
+     `<div class="pd-stat"><div class="v" style="font-size:16px;line-height:1.35">${unitSummary}</div><div class="l">Bağımsız Bölüm${p.kAdedi?(' · '+p.kAdedi+' kat'):''}</div></div>`+
+     `<div class="pd-stat"><div class="v">${p.kullanim||p.type||'-'}</div><div class="l">Kullanım</div></div>`+
+     `<div class="pd-stat"><div class="v">${apts.length?musaitN+' / '+apts.length+' müsait':(p.price||'-')}</div><div class="l">${apts.length?'Satışa Açık':'Fiyat'}</div></div>`+
      '</div>';
   // açıklama
   if(p.longDesc||p.desc){h+=`<div class="pd-sec"><h2>Proje Hakkında</h2><p>${p.longDesc||p.desc}</p></div>`;}
@@ -2976,7 +2981,7 @@ function renderPdBody(){
   // DAİRE SEÇİCİ
   if(apts.length){
     const tipler=['all',...new Set(apts.map(a=>a.tip))];
-    h+='<div class="pd-sec"><h2>Daire Seçimi</h2><div class="pd-aptbar">'+
+    h+='<div class="pd-sec"><h2>Bağımsız Bölümler <span style="font-size:13px;color:var(--muted);font-weight:400">— '+unitSummary+' · hepsi satışa açık</span></h2><div class="pd-aptbar">'+
        tipler.map(t=>`<button class="aptf${t===_pdAptFilter?' active':''}" onclick="_pdAptFilter='${t}';renderPdBody()">${t==='all'?'Tümü':t}</button>`).join('')+
        '<div class="lg"><span><i style="background:#16a34a"></i>Müsait</span><span><i style="background:#d97706"></i>Opsiyonlu</span><span><i style="background:#9aa0ab"></i>Satıldı</span></div>'+
        '</div><div class="pd-apts">';
@@ -3001,14 +3006,14 @@ function renderPdBody(){
     h+='<div class="pd-plan"><div class="pd-plan-img">'+
        (planImg?`<img src="${planImg}" alt="${fl.name} planı" loading="lazy" decoding="async">`:'<div class="ph">Bu kat için plan görseli yüklenmemiş.<br><small>Admin panelinden ekleyebilirsiniz.</small></div>')+
        '</div><div class="pd-plan-units">';
-    (fl.units||[]).forEach(uno=>{
-      const a=apts.find(x=>x.no===uno);
-      if(a){h+=`<div class="pu" onclick="${a.durum==='satildi'?'':`reserveApt('${a.no}')`}" style="cursor:${a.durum==='satildi'?'default':'pointer'}"><span><i class="d ${a.durum}"></i><b>${a.no}</b> · ${a.tip} · ${a.m2}m²</span><span style="color:var(--muted)">${DURUM_LBL[a.durum]||''}</span></div>`;}
-      else{h+=`<div class="pu"><span><b>${uno}</b></span></div>`;}
-    });
-    // Faz 2: GERÇEK kat alanı + mahal cetveli (dosyanın plan etiketlerinden)
-    if(fl.totalM2){h+=`<div class="pu" style="background:var(--surface-2);font-weight:800"><span>📐 Kat alanı</span><span style="color:var(--accent)">${fl.totalM2} m²</span></div>`;}
-    if(fl.rooms&&fl.rooms.length){h+='<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px">'+fl.rooms.map(r=>`<span style="font-size:11px;background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:3px 8px">${String(r.name||'').replace(/[<>]/g,'')} <b>${r.m2}m²</b></span>`).join('')+'</div>';}
+    const flApts=(fl.units||[]).map(uno=>apts.find(x=>x.no===uno)).filter(Boolean);
+    if(flApts.length){
+      h+=`<div style="font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Bu kattaki bağımsız bölümler (${flApts.length})</div>`;
+      flApts.forEach(a=>{h+=`<div class="pu" onclick="${a.durum==='satildi'?'':`reserveApt('${a.no}')`}" style="cursor:${a.durum==='satildi'?'default':'pointer'}"><span><i class="d ${a.durum}"></i><b>${a.no}</b> · ${a.tip} · ${(a.net>0?a.net+' m² net':a.m2+' m²')}</span><span style="color:var(--muted)">${DURUM_LBL[a.durum]||''}</span></div>`;});
+    }
+    if(fl.totalM2){h+=`<div class="pu" style="background:var(--surface-2);font-weight:800"><span>📐 Kat toplam alanı</span><span style="color:var(--accent)">${fl.totalM2} m²</span></div>`;}
+    // Ham oda-m² cetveli YALNIZ daireye ayrışmamış katlarda (villa/hizmet katı) — aksi halde daireler yeterli
+    if(!flApts.length && fl.rooms&&fl.rooms.length){h+='<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px">'+fl.rooms.map(r=>`<span style="font-size:11px;background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:3px 8px">${String(r.name||'').replace(/[<>]/g,'')}${r.m2?' <b>'+r.m2+'m²</b>':''}</span>`).join('')+'</div>';}
     h+='</div></div></div>';
   }
   // TESLİM TAKVİMİ
@@ -5143,11 +5148,14 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     realUnits.forEach(function(u){kn++;apts.push({no:'K'+kn,tip:u.name,m2:String(u.m2),kat:u.kat,cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:'dükkan'});});
     // hiç gerçek birim çıkmadıysa → bağımsız bölüm sayısı kadar slot (admin gerçek oda cetveliyle doldurur)
     if(!apts.length){for(var i=0;i<nUnits;i++)apts.push({no:'D'+(i+1),tip:'belirtilmemiş',m2:'',kat:'belirtilmemiş',cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:'daire'});}
+    // HER KATA o katın BAĞIMSIZ BÖLÜMLERİNİ ata (kat ham oda-m²'si değil, dairelere bölünmüş gösterim)
+    floors.forEach(function(fl){fl.units=apts.filter(function(a){return a.kat===fl.name;}).map(function(a){return a.no;});});
     var areaStr=F.totalArea?(F.totalArea+' m²'):'belirtilmemiş';
     var real='Gerçek veriler (mimari dosyanın Alan Cetvelinden): '+kk+' kat'+(F.bbCount?(' · '+F.bbCount+' bağımsız bölüm'):'')+(F.totalArea?(' · '+F.totalArea+' m² toplam inşaat alanı'):'')+'.';
     var desc=((prox.summary||'')+' '+real).trim()+(ada?(' Ada/Parsel: '+ada+'/'+parsel+'.'):'');
     var proj={t:title,loc:loc,st:'plan',type:tipLbl+(kk?(' · '+kk+' kat'):''),area:areaStr,img:(planImg||'p_home'),
       price:'İletişime geçin',delivery:'Belirlenecek',units:(nUnits?(nUnits+' bağımsız bölüm · '):'')+kk+' kat',desc:desc,progress:0,
+      kAdedi:(F.katAdedi||kk||0),kullanim:(F.kullanim||tipLbl||''),yapiSinifi:(F.yapiSinifi||''),
       ada:ada,parsel:parsel,il:il,ilce:ilce,mahalle:mah,
       longDesc:desc+' Kat planı, mimari dosyanın gerçek vektör çiziminden alınmıştır. Daire tipleri (2+1, dubleks vb.) ve fiyatlar dosyada yazılı olmadığından admin panelde tamamlanır.',
       apts:apts,floors:floors,gallery:gallery,
@@ -5172,14 +5180,14 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
       try{
         var pad=(f.x1-f.x0)*0.02, X0=f.x0-pad, Y1=f.y1+pad, w=(f.x1-f.x0)+2*pad, h=(f.y1-f.y0)+2*pad;
         if(!(w>0&&h>0)){resolve('');return;}
-        var W=maxW||900, H=Math.max(1,Math.min(4000,Math.round(W*(h/w))));
+        var W=maxW||1500, H=Math.max(1,Math.min(6000,Math.round(W*(h/w))));
         var nvb=X0+' '+(-Y1)+' '+w+' '+h; // Y-flip: SVG_y=-DWG_y
         var sized=svg.replace(/viewBox="[^"]+"/,'viewBox="'+nvb+'"').replace(/width="100%"/,'width="'+W+'"').replace(/height="100%"/,'height="'+H+'"');
         var url=URL.createObjectURL(new Blob([sized],{type:'image/svg+xml'})), img=new Image(), done=false;
         var to=setTimeout(function(){if(!done){done=true;try{URL.revokeObjectURL(url);}catch(e){}resolve('');}},25000);
         img.onload=function(){ if(done)return; done=true; clearTimeout(to);
           try{var cv=document.createElement('canvas');cv.width=W;cv.height=H;var ctx=cv.getContext('2d');ctx.fillStyle='#0b0d12';ctx.fillRect(0,0,W,H);ctx.drawImage(img,0,0,W,H);
-            var png=cv.toDataURL('image/jpeg',0.72); URL.revokeObjectURL(url); resolve(png&&png.length>3000?png:'');
+            var png=cv.toDataURL('image/jpeg',0.86); URL.revokeObjectURL(url); resolve(png&&png.length>3000?png:'');
           }catch(e){try{URL.revokeObjectURL(url);}catch(_){}resolve('');}
         };
         img.onerror=function(){if(!done){done=true;clearTimeout(to);try{URL.revokeObjectURL(url);}catch(e){}resolve('');}};
@@ -5217,7 +5225,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     var padx=(MX-mx)*0.008, pady=(MY-my)*0.02; mx-=padx;MX+=padx;my-=pady;MY+=pady;
     var stripW=MX-mx, stripH=MY-my;
     var floorW=uniq.reduce(function(s,f){return s+(f.x1-f.x0);},0)/uniq.length;
-    var imgW=Math.max(1200,Math.min(15000,Math.round(1350*(stripW/Math.max(1,floorW)))));
+    var imgW=Math.max(1600,Math.min(20000,Math.round(2100*(stripW/Math.max(1,floorW)))));
     var imgH=Math.max(1,Math.min(15000,Math.round(imgW*(stripH/stripW))));
     var nvb=mx+' '+(-MY)+' '+stripW+' '+stripH; // Y-flip: SVG_y=-DWG_y
     // TEMİZ PLAN: kırmızı (aks/ölçü ızgarası) + sarı (ölçü grip) gizle → cyan duvar + mobilya + etiket kalır
@@ -5243,10 +5251,10 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
             var p=cv.toDataURL('image/jpeg',q||0.72); return p&&p.length>2000?p:'';
           }
           var out=uniq.map(function(f){
-            var png=_srcCrop(f.x0,f.y0,f.x1,f.y1,880,0.68);
+            var png=_srcCrop(f.x0,f.y0,f.x1,f.y1,1500,0.86);
             var d=_fdM[f._t]||{};
             var apts=(d.apts||[]).map(function(ap){var b=ap.bbox||{},w=(b.x1-b.x0)||0,h=(b.y1-b.y0)||0;
-              var aimg=''; if(w>0&&h>0){var px=w*0.3+250,py=h*0.3+250;aimg=_srcCrop(b.x0-px,b.y0-py,b.x1+px,b.y1+py,540,0.62);}
+              var aimg=''; if(w>0&&h>0){var px=w*0.3+250,py=h*0.3+250;aimg=_srcCrop(b.x0-px,b.y0-py,b.x1+px,b.y1+py,1050,0.85);}
               return {tip:ap.tip,m2:ap.m2,est:ap.m2est,guven:ap.guven||'',no:ap.no||'',net:ap.net||0,brut:ap.brut||0,bbNo:ap.bbNo||'',rooms:ap.rooms,kat:ap.kat,img:aimg};});
             return png?{name:f._t,img:png,x0:f.x0,totalM2:d.totalM2,rooms:d.rooms,units:d.units,apts:apts}:null;
           }).filter(Boolean);
@@ -5334,12 +5342,17 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     });
     return recs.length>=2?recs:[];
   }
-  // memoize: önce ATTRIB blok, yoksa TEXT cetvel
+  // memoize — SIKI KAPI: yalnızca dosyada GERÇEK "Bağımsız Bölüm Alan Cetveli / Metrekare Cetveli"
+  // tablosu VARSA oku. Aksi halde kapı/pencere/doğrama bloklarının ölçüleri (100/220, 500/140) çöp
+  // bağımsız bölüm olarak sızıyordu (uydurma). ATTRIB-blok yolu güvenilmez → devre dışı.
   function _dwgBB(){
     if(window.__dwgBBcache)return window.__dwgBBcache;
-    var texts=(window.__dwgRaw&&window.__dwgRaw.texts)||[], ins=window.__dwgInserts||[];
-    var recs=[]; try{recs=_dwgBBFromInserts(ins);}catch(e){}
-    if(!recs.length){try{recs=_dwgBBCetvel(texts);}catch(e){}}
+    var texts=(window.__dwgRaw&&window.__dwgRaw.texts)||[];
+    var hasCetvel=false;
+    for(var i=0;i<texts.length;i++){var c=_clean(texts[i].t);
+      if(/ba[ğg][ıi]ms[ıi]z\s*b[öo]l[üu]m.{0,12}(cetvel|liste)|metrekare\s*cetvel|m[2²]\s*cetvel|net\s*\/\s*br[üu]t\s*cetvel/i.test(c)){hasCetvel=true;break;}}
+    var recs=[];
+    if(hasCetvel){try{recs=_dwgBBCetvel(texts);}catch(e){}}
     window.__dwgBBcache=recs; return recs;
   }
   // BB kaydını bir kat adına eşle
