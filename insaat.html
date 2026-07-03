@@ -2985,7 +2985,7 @@ function renderPdBody(){
         <span class="badge ${a.durum}">${DURUM_LBL[a.durum]||a.durum}</span>
         ${a.plan?`<img src="${a.plan}" alt="${a.no} planı" loading="lazy" onclick="event.stopPropagation();document.getElementById('pdHeroImg').src=this.src;document.getElementById('pjDetail').scrollTo({top:0,behavior:'smooth'})" style="width:100%;height:120px;object-fit:cover;background:#0b0d12;border-radius:8px;margin-bottom:8px;cursor:zoom-in">`:''}
         <div class="no">${a.no}</div><div class="tip">${a.tip}</div>
-        <div class="row"><span>Alan</span><b>${a.est?'≈ ':''}${a.m2} m²</b></div>
+        <div class="row"><span>Alan</span><b>${(a.net>0&&a.brut>0)?(a.net+' m² net · '+a.brut+' m² brüt'):((a.est?'≈ ':'')+a.m2+' m²')}</b></div>
         <div class="row"><span>Kat</span><b>${a.kat}</b></div>
         <div class="row"><span>Cephe</span><b>${a.cephe||'-'}</b></div>
         ${a.rooms&&a.rooms.length?`<div style="font-size:10.5px;color:var(--muted);margin-top:5px;line-height:1.5">${a.rooms.map(r=>String(r.name||'').replace(/[<>]/g,'')+(r.m2?' '+r.m2:'')).join(' · ')}</div>`:''}
@@ -4877,12 +4877,13 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     box.innerHTML=h;
   }
   var _DWG_CDN='https://cdn.jsdelivr.net/npm/@mlightcad/libredwg-web@0.7.7';
-  var _DWG_WORKER_SRC="import { LibreDwg, Dwg_File_Type } from '"+_DWG_CDN+"/dist/libredwg-web.js';\nlet libP;\nself.onmessage=async function(e){try{if(!libP)libP=LibreDwg.create('"+_DWG_CDN+"/wasm/');var lib=await libP;var dwg=lib.dwg_read_data(e.data,Dwg_File_Type.DWG);var db=lib.convert(dwg);var svg=lib.dwg_to_svg(db);var ents=db.entities||[];var texts=[];for(var i=0;i<ents.length;i++){var en=ents[i];if((en.type==='TEXT'||en.type==='MTEXT')&&en.text){var p=en.startPoint||en.insertionPoint;if(p&&typeof p.x==='number'&&isFinite(p.x))texts.push({t:en.text,x:p.x,y:p.y,l:en.layer});}}var lys=(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries)||[];var layerNames=[];for(var li=0;li<lys.length&&layerNames.length<80;li++){if(lys[li]&&lys[li].name)layerNames.push(String(lys[li].name));}var titles=[],frames=[];for(var qi=0;qi<ents.length;qi++){var qe=ents[qi];if((qe.type==='TEXT'||qe.type==='MTEXT')&&qe.text&&/KAT.{0,4}PLAN/i.test(qe.text)){var qp=qe.startPoint||qe.insertionPoint;if(qp&&typeof qp.x==='number'&&isFinite(qp.x))titles.push({t:qe.text,x:qp.x,y:qp.y});}else if((qe.type==='LWPOLYLINE'||qe.type==='POLYLINE')&&qe.vertices&&qe.vertices.length>=4&&frames.length<400){var ax0=1e18,ay0=1e18,ax1=-1e18,ay1=-1e18;for(var vj=0;vj<qe.vertices.length;vj++){var vv=qe.vertices[vj];if(!vv)continue;if(vv.x<ax0)ax0=vv.x;if(vv.x>ax1)ax1=vv.x;if(vv.y<ay0)ay0=vv.y;if(vv.y>ay1)ay1=vv.y;}var aw=ax1-ax0,ah=ay1-ay0;if(aw>1000&&aw<9000&&ah>2000&&ah<14000)frames.push({x0:ax0,y0:ay0,x1:ax1,y1:ay1,w:aw,h:ah});}}var insunits=db.header&&db.header.INSUNITS;try{lib.dwg_free(dwg);}catch(_){}self.postMessage({svg:svg,texts:texts,layers:lys.length,layerNames:layerNames,insunits:insunits,entityCount:ents.length,titles:titles,frames:frames});}catch(err){self.postMessage({error:String((err&&err.message)||err)});}};";
+  var _DWG_WORKER_SRC="import { LibreDwg, Dwg_File_Type } from '"+_DWG_CDN+"/dist/libredwg-web.js';\nlet libP;\nself.onmessage=async function(e){try{if(!libP)libP=LibreDwg.create('"+_DWG_CDN+"/wasm/');var lib=await libP;var dwg=lib.dwg_read_data(e.data,Dwg_File_Type.DWG);var db=lib.convert(dwg);var svg=lib.dwg_to_svg(db);var ents=db.entities||[];var texts=[];var inserts=[];for(var i=0;i<ents.length;i++){var en=ents[i];if((en.type==='TEXT'||en.type==='MTEXT')&&en.text){var p=en.startPoint||en.insertionPoint;if(p&&typeof p.x==='number'&&isFinite(p.x))texts.push({t:en.text,x:p.x,y:p.y,l:en.layer});}else if(en.type==='INSERT'&&en.attribs&&en.attribs.length>=2&&inserts.length<4000){var ip=en.insertionPoint||{x:0,y:0};var aa=[];for(var ai=0;ai<en.attribs.length;ai++){var at=en.attribs[ai];if(at&&at.tag!=null)aa.push({g:String(at.tag),t:String(at.text==null?'':at.text)});}if(aa.length>=2)inserts.push({n:String(en.name||''),x:ip.x,y:ip.y,a:aa});}}var lys=(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries)||[];var layerNames=[];for(var li=0;li<lys.length&&layerNames.length<80;li++){if(lys[li]&&lys[li].name)layerNames.push(String(lys[li].name));}var titles=[],frames=[];for(var qi=0;qi<ents.length;qi++){var qe=ents[qi];if((qe.type==='TEXT'||qe.type==='MTEXT')&&qe.text&&/KAT.{0,4}PLAN/i.test(qe.text)){var qp=qe.startPoint||qe.insertionPoint;if(qp&&typeof qp.x==='number'&&isFinite(qp.x))titles.push({t:qe.text,x:qp.x,y:qp.y});}else if((qe.type==='LWPOLYLINE'||qe.type==='POLYLINE')&&qe.vertices&&qe.vertices.length>=4&&frames.length<400){var ax0=1e18,ay0=1e18,ax1=-1e18,ay1=-1e18;for(var vj=0;vj<qe.vertices.length;vj++){var vv=qe.vertices[vj];if(!vv)continue;if(vv.x<ax0)ax0=vv.x;if(vv.x>ax1)ax1=vv.x;if(vv.y<ay0)ay0=vv.y;if(vv.y>ay1)ay1=vv.y;}var aw=ax1-ax0,ah=ay1-ay0;if(aw>1000&&aw<9000&&ah>2000&&ah<14000)frames.push({x0:ax0,y0:ay0,x1:ax1,y1:ay1,w:aw,h:ah});}}var insunits=db.header&&db.header.INSUNITS;try{lib.dwg_free(dwg);}catch(_){}self.postMessage({svg:svg,texts:texts,inserts:inserts,layers:lys.length,layerNames:layerNames,insunits:insunits,entityCount:ents.length,titles:titles,frames:frames});}catch(err){self.postMessage({error:String((err&&err.message)||err)});}};";
   function _dwgApplyResult(d){
     if(d.error){stat('Çözümleme hatası: '+d.error+' — dosya çok büyük/bozuk olabilir.','err');return;}
     if(d.svg&&d.svg.length>80)_showSvg(d.svg);
     window.__dwgSvg=(d.svg&&d.svg.length>80)?d.svg:'';
     window.__dwgRaw={texts:d.texts||[],layerNames:d.layerNames||[],layers:d.layers||0,insunits:d.insunits,entityCount:d.entityCount||0};
+    window.__dwgInserts=d.inserts||[]; window.__dwgBBcache=null;
     window.__dwgTitles=d.titles||[]; window.__dwgFrames=d.frames||[]; window.__dwgFloorImgs=null;
     window.__dwgAi=null; var _ar=el('dwgAiResult');if(_ar)_ar.innerHTML=''; var _fp=el('dwgFloorPlans');if(_fp)_fp.innerHTML='';
     var model=d.model||_dwgModelFromTexts(d.texts||[],d.layers,d.insunits,d.entityCount);
@@ -4891,7 +4892,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     stat('✓ Çizim eksiksiz okundu: '+model.entityCount.toLocaleString('tr-TR')+' nesne. Kat planları görsele dönüştürülüyor…','ok');
     // Faz 1: gerçek kat planı görsellerini çıkar (çerçeve tespiti + viewBox crop, Y-flip)
     _dwgMakeFloorPlans().then(function(fp){window.__dwgFloorImgs=fp; _renderFloorPlans(fp);
-      stat('✓ Çizim okundu: '+model.entityCount.toLocaleString('tr-TR')+' nesne'+(fp&&fp.length?(' · '+fp.length+' kat planı görsele dönüştürüldü'):'')+'. Şimdi ProX ile gerçek verileri okuyun.','ok');});
+      var _bbN=0; try{_bbN=_dwgBB().length;}catch(e){}
+      stat('✓ Çizim okundu: '+model.entityCount.toLocaleString('tr-TR')+' nesne'+(fp&&fp.length?(' · '+fp.length+' kat planı görsele dönüştürüldü'):'')+(_bbN?(' · 🏷️ '+_bbN+' bağımsız bölüm KESİN net/brüt cetveli okundu'):'')+'. Şimdi ProX ile gerçek verileri okuyun.','ok');});
   }
   function _dwgMainThread(buf){
     _loadLibreDwg().then(function(lib){ setTimeout(function(){
@@ -4899,15 +4901,16 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
         var dwg=lib.inst.dwg_read_data(buf,lib.DwgType.DWG);
         var db=lib.inst.convert(dwg);
         var svg=lib.inst.dwg_to_svg(db);
-        var ents=db.entities||[], rawTexts=[], titles=[], frames=[];
+        var ents=db.entities||[], rawTexts=[], titles=[], frames=[], inserts=[];
         for(var i=0;i<ents.length;i++){var e=ents[i];
           if((e.type==='TEXT'||e.type==='MTEXT')&&e.text){var p=e.startPoint||e.insertionPoint;if(p&&isFinite(p.x)){rawTexts.push({t:e.text,x:p.x,y:p.y,l:e.layer});if(/KAT.{0,4}PLAN/i.test(e.text))titles.push({t:e.text,x:p.x,y:p.y});}}
+          else if(e.type==='INSERT'&&e.attribs&&e.attribs.length>=2&&inserts.length<4000){var ip=e.insertionPoint||{x:0,y:0};var aa=[];for(var ai=0;ai<e.attribs.length;ai++){var at=e.attribs[ai];if(at&&at.tag!=null)aa.push({g:String(at.tag),t:String(at.text==null?'':at.text)});}if(aa.length>=2)inserts.push({n:String(e.name||''),x:ip.x,y:ip.y,a:aa});}
           else if((e.type==='LWPOLYLINE'||e.type==='POLYLINE')&&e.vertices&&e.vertices.length>=4&&frames.length<400){var ax0=1e18,ay0=1e18,ax1=-1e18,ay1=-1e18;for(var vj=0;vj<e.vertices.length;vj++){var vv=e.vertices[vj];if(!vv)continue;if(vv.x<ax0)ax0=vv.x;if(vv.x>ax1)ax1=vv.x;if(vv.y<ay0)ay0=vv.y;if(vv.y>ay1)ay1=vv.y;}var aw=ax1-ax0,ah=ay1-ay0;if(aw>1000&&aw<9000&&ah>2000&&ah<14000)frames.push({x0:ax0,y0:ay0,x1:ax1,y1:ay1,w:aw,h:ah});}
         }
         var lys=(db.tables&&db.tables.LAYER&&db.tables.LAYER.entries)||[], layerNames=[];
         for(var li=0;li<lys.length&&layerNames.length<80;li++){if(lys[li]&&lys[li].name)layerNames.push(String(lys[li].name));}
         try{lib.inst.dwg_free(dwg);}catch(e){}
-        _dwgApplyResult({svg:svg,texts:rawTexts,layers:lys.length,layerNames:layerNames,insunits:(db.header&&db.header.INSUNITS),entityCount:ents.length,titles:titles,frames:frames});
+        _dwgApplyResult({svg:svg,texts:rawTexts,inserts:inserts,layers:lys.length,layerNames:layerNames,insunits:(db.header&&db.header.INSUNITS),entityCount:ents.length,titles:titles,frames:frames});
       }catch(e){stat('Çözümleme hatası: '+((e&&e.message)||e),'err');}
     },30); }).catch(function(e){stat('WASM yüklenemedi (internet/CDN?): '+((e&&e.message)||e),'err');});
   }
@@ -5075,7 +5078,11 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
     var realUnits=[]; floors.forEach(function(fl){(fl.unitList||[]).forEach(function(u){if(_isDuk(u.name))realUnits.push({name:u.name,m2:u.m2,kat:fl.name});});});
     var apts=[], nUnits=F.bbCount||0, dn=0, kn=0;
     // GERÇEK DAİRELER (salon-çıpalı segmentasyon) — tip+m²+kat + AYRI plan görseli
-    floorImgs.forEach(function(fl){(fl.apts||[]).forEach(function(ap){dn++;apts.push({no:'D'+dn,tip:ap.tip||'belirtilmemiş',m2:String(ap.m2||''),est:!!ap.est,kat:ap.kat||fl.name,cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:'daire',plan:ap.img||'',rooms:ap.rooms||[]});});});
+    floorImgs.forEach(function(fl){(fl.apts||[]).forEach(function(ap){dn++;apts.push({no:(ap.bbNo?('BB'+ap.bbNo):('D'+dn)),tip:ap.tip||'belirtilmemiş',m2:String(ap.m2||''),est:!!ap.est,net:ap.net||0,brut:ap.brut||0,kat:ap.kat||fl.name,cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:'daire',plan:ap.img||'',rooms:ap.rooms||[]});});});
+    // BB Alan Cetveli var ama hiçbir kata eşleşmediyse (kat kolonu boş) → cetveli düz otoriter liste olarak ekle
+    try{var _bb=_dwgBB(); if(_bb.length && !apts.some(function(a){return a.est===false;})){ apts=[]; dn=0;
+      _bb.forEach(function(r){dn++;var m2=Math.round(r.net||r.brut);apts.push({no:(r.bbNo?('BB'+r.bbNo):('D'+dn)),tip:r.tip||'belirtilmemiş',m2:String(m2),est:false,net:r.net||0,brut:r.brut||0,kat:r.kat||'belirtilmemiş',cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:'daire',rooms:[]});}); }
+    }catch(e){}
     // GERÇEK DÜKKANLAR (isim+alan eş-konum) — isim+m²+kat
     realUnits.forEach(function(u){kn++;apts.push({no:'K'+kn,tip:u.name,m2:String(u.m2),kat:u.kat,cephe:'-',fiyat:'belirtilmemiş',durum:'musait',kind:'dükkan'});});
     // hiç gerçek birim çıkmadıysa → bağımsız bölüm sayısı kadar slot (admin gerçek oda cetveliyle doldurur)
@@ -5184,7 +5191,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
             var d=_fdM[f._t]||{};
             var apts=(d.apts||[]).map(function(ap){var b=ap.bbox||{},w=(b.x1-b.x0)||0,h=(b.y1-b.y0)||0;
               var aimg=''; if(w>0&&h>0){var px=w*0.3+250,py=h*0.3+250;aimg=_srcCrop(b.x0-px,b.y0-py,b.x1+px,b.y1+py,540,0.62);}
-              return {tip:ap.tip,m2:ap.m2,est:ap.m2est,rooms:ap.rooms,kat:ap.kat,img:aimg};});
+              return {tip:ap.tip,m2:ap.m2,est:ap.m2est,net:ap.net||0,brut:ap.brut||0,bbNo:ap.bbNo||'',rooms:ap.rooms,kat:ap.kat,img:aimg};});
             return png?{name:f._t,img:png,x0:f.x0,totalM2:d.totalM2,rooms:d.rooms,units:d.units,apts:apts}:null;
           }).filter(Boolean);
           resolve(out);
@@ -5215,6 +5222,81 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
   var _ROOMRE=/SALON|MUTFAK|YATAK|^ODA|BANYO|WC|HOL|ANTRE|TERAS|BALKON|K[İI]LER|G[İI]YS[İI]|DUŞ|OTURMA|EBEVEYN|ÇOCUK|MERD[İI]VEN|ASANS[ÖO]R|N[İI]Ş|DEPO|D[ÜU]KKAN|VEST[İI]YER|ÇAMAŞIR|MEKAN|OFİS/i;
   // Adlandırılmış BİRİM (ticari/özel) — isim+eş-konum alan ile GERÇEK m² çıkar (araştırma: text-anchor→area)
   var _UNITRE=/^(D[ÜU]KKAN|MA[ĞG]AZA|OF[İI]S|OTOPARK|İŞYER|ISYER|MARKET|ATÖLYE|ATOLYE|BÜRO|BURO|TİCAR|TICAR)/i;
+  /* ===== BB (Bağımsız Bölüm) Alan Cetveli — 2019+ dosyalarda daire KESİN net/brüt m² ===== */
+  function _pnum2(s){if(!s)return 0;var m=String(s).match(/(\d{1,4})[.,]?(\d{0,2})/);if(!m)return 0;return parseFloat(m[1]+'.'+(m[2]||'0'))||0;}
+  // (A) TEXT grid tablosu — "Bağımsız Bölüm Alan Cetveli"
+  function _dwgBBCetvel(texts){
+    if(!texts||texts.length<8)return [];
+    var COL={
+      id:/^(b\.?b\.?|ba[ğg][ıi]ms[ıi]z|daire|d\.?no|no|s[ıi]ra)\b|^bb$|^no$/i,
+      brut:/br[üu]t/i, net:/\bnet\b|kullan[ıi]m/i,
+      tip:/^t[İi]p\b|cins|nitelik|nevi/i, kat:/^kat\b|^blok\b|bulundu[ğg]u/i,
+      area:/^alan\b|^m[2²]$|\(m[2²]\)/i
+    };
+    var cn=Object.keys(COL), hdr=[];
+    for(var i=0;i<texts.length;i++){var c=_clean(texts[i].t);if(!c||c.length>18||!isFinite(texts[i].x))continue;
+      for(var k=0;k<cn.length;k++){if(COL[cn[k]].test(c)){hdr.push({col:cn[k],x:texts[i].x,y:texts[i].y,t:c});break;}}}
+    if(hdr.length<2)return [];
+    hdr.sort(function(a,b){return b.y-a.y;});
+    var best=null;
+    for(var h=0;h<hdr.length;h++){
+      var cols={};hdr.forEach(function(r){if(Math.abs(r.y-hdr[h].y)<220){if(!cols[r.col]||Math.abs(r.y-hdr[h].y)<Math.abs(cols[r.col].y-hdr[h].y))cols[r.col]=r;}});
+      var nc=Object.keys(cols).length; if(!best||nc>best.nc)best={y:hdr[h].y,cols:cols,nc:nc};
+    }
+    if(!best||best.nc<2||!(best.cols.net||best.cols.brut||best.cols.area))return [];
+    var colArr=Object.keys(best.cols).map(function(k){return {col:k,x:best.cols[k].x};}), hy=best.y;
+    var below=texts.map(function(t){return {t:_clean(t.t),x:t.x,y:t.y};}).filter(function(t){return t.t&&isFinite(t.x)&&t.y<hy-5&&t.y>hy-12000;});
+    below.sort(function(a,b){return b.y-a.y;});
+    var rowTol=150, used=[], rows=[];
+    for(var b2=0;b2<below.length;b2++){if(used[b2])continue;var grp=[below[b2]];used[b2]=1;
+      for(var c2=b2+1;c2<below.length;c2++){if(!used[c2]&&Math.abs(below[c2].y-below[b2].y)<rowTol){grp.push(below[c2]);used[c2]=1;}}
+      rows.push(grp);}
+    var recs=[];
+    rows.forEach(function(grp){var rec={};
+      colArr.forEach(function(cl){var b3=null,bd=1e18;grp.forEach(function(g){var d=Math.abs(g.x-cl.x);if(d<bd){bd=d;b3=g;}});if(b3&&bd<1000)rec[cl.col]=b3.t;});
+      var brut=_pnum2(rec.brut), net=_pnum2(rec.net)||_pnum2(rec.area);
+      var id=(rec.id||'').replace(/^d[:.]?\s*/i,'').trim();
+      var tip=(rec.tip||'').toUpperCase().replace(/\s+/g,'');
+      if((net>8&&net<2000)||(brut>8&&brut<2000))
+        recs.push({bbNo:id||String(recs.length+1),tip:/\d\s*\+\s*\d|DUBLEKS|ST[ÜU]DYO|STUDYO|D[ÜU]KKAN|OF[İI]S/i.test(tip)?tip:'',brut:brut||0,net:net||0,kat:(rec.kat||'').trim()});
+    });
+    return recs.length>=2?recs:[];
+  }
+  // (B) ATTRIB blok yolu — daire bloğu özniteliklerinden
+  function _dwgBBFromInserts(inserts){
+    if(!inserts||!inserts.length)return [];
+    var TAG={net:/net/i,brut:/br[üu]t|brut|gross/i,tip:/tip|type|cins/i,no:/(^|_)no$|num|^bb|daire/i,kat:/kat|floor|blok/i};
+    var recs=[];
+    inserts.forEach(function(ins){var a=ins.a||[];if(a.length<2)return;var g={};
+      a.forEach(function(at){var tag=String(at.g||''),val=String(at.t||'');
+        if(TAG.net.test(tag)&&g.net==null)g.net=val; else if(TAG.brut.test(tag)&&g.brut==null)g.brut=val;
+        else if(TAG.tip.test(tag)&&g.tip==null)g.tip=val; else if(TAG.no.test(tag)&&g.no==null)g.no=val;
+        else if(TAG.kat.test(tag)&&g.kat==null)g.kat=val;});
+      var net=_pnum2(g.net),brut=_pnum2(g.brut);
+      if((net>8&&net<2000)||(brut>8&&brut<2000))
+        recs.push({bbNo:(g.no||String(recs.length+1)).trim(),tip:(g.tip||'').toUpperCase().replace(/\s+/g,''),brut:brut||0,net:net||0,kat:(g.kat||'').trim()});
+    });
+    return recs.length>=2?recs:[];
+  }
+  // memoize: önce ATTRIB blok, yoksa TEXT cetvel
+  function _dwgBB(){
+    if(window.__dwgBBcache)return window.__dwgBBcache;
+    var texts=(window.__dwgRaw&&window.__dwgRaw.texts)||[], ins=window.__dwgInserts||[];
+    var recs=[]; try{recs=_dwgBBFromInserts(ins);}catch(e){}
+    if(!recs.length){try{recs=_dwgBBCetvel(texts);}catch(e){}}
+    window.__dwgBBcache=recs; return recs;
+  }
+  // BB kaydını bir kat adına eşle
+  function _katMatch(katStr,floorName){
+    if(!katStr)return false;
+    var a=String(katStr).toUpperCase().replace(/[İIı]/g,'I'), b=String(floorName||'').toUpperCase().replace(/[İIı]/g,'I');
+    if(!a||!b)return false;
+    if(b.indexOf(a)>=0||a.indexOf(b)>=0)return true;
+    var na=(a.match(/\d+/)||[])[0], nb=(b.match(/\d+/)||[])[0];
+    var ka=/ZEM/.test(a)?'Z':/BODR/.test(a)?'B':/[ÇC]ATI/.test(a)?'C':/NORMAL|KAT/.test(a)?('N'+(na||'')):('K'+(na||''));
+    var kb=/ZEM/.test(b)?'Z':/BODR/.test(b)?'B':/[ÇC]ATI/.test(b)?'C':/NORMAL|KAT/.test(b)?('N'+(nb||'')):('K'+(nb||''));
+    return ka===kb&&ka!=='';
+  }
   function _dwgFloorData(){
     var uniq=_dwgSelectFrames(), texts=(window.__dwgRaw&&window.__dwgRaw.texts)||[];
     if(!uniq.length||!texts.length)return [];
@@ -5257,6 +5339,18 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
           return {tip:hasS?(yat+'+1'):(yat?yat+'+0':(c.rooms.length+' oda')),m2:Math.round(m2),m2est:true,rooms:c.rooms.map(function(r){return {name:r.name,m2:Math.round((r.m2||0)*10)/10};}),bbox:{x0:bx0,y0:by0,x1:bx1,y1:by1},kat:f.name};
         }).filter(function(a){return a.rooms.length>=2&&a.m2>10;});
         apts.sort(function(a,b){return b.m2-a.m2;});
+      }
+      // BB Alan Cetveli varsa (2019+): tahmini m² YERİNE gerçek net/brüt geç (kat eşleşince)
+      var bbAll=[]; try{bbAll=_dwgBB();}catch(e){}
+      if(bbAll.length){
+        var bbHere=bbAll.filter(function(r){return _katMatch(r.kat,f.name);});
+        if(bbHere.length){
+          bbHere.sort(function(a,b){return (b.net||b.brut)-(a.net||a.brut);});
+          var estA=apts.slice(); // plan-crop bbox'ını miras al
+          apts=bbHere.map(function(r,ri){var e=estA[ri]||{}; var m2=Math.round(r.net||r.brut);
+            return {tip:r.tip||e.tip||'',m2:m2,m2est:false,brut:r.brut||0,net:r.net||0,bbNo:r.bbNo,
+              rooms:e.rooms||[],bbox:e.bbox,kat:f.name};});
+        }
       }
       return {name:f.name, x0:f.x0, totalM2:Math.round(total*10)/10, rooms:rooms, units:units, apts:apts, frame:{x0:f.x0,y0:f.y0,x1:f.x1,y1:f.y1}};
     });
