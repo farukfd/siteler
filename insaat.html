@@ -5448,7 +5448,9 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris()
             rl.push({name:_clean(ro.name).slice(0,18),m2:Math.round(m2*10)/10});total+=m2;if(m2>0)matched++;
             if(kind==='yatak')yat++;if(kind==='salon')hasS=true;
             if(ro.x<bx0)bx0=ro.x;if(ro.x>bx1)bx1=ro.x;if(ro.y<by0)by0=ro.y;if(ro.y>by1)by1=ro.y;});
-          var tip=hasS?(yat+'+1'):(yat>0?(yat+'+0'):'stüdyo');
+          // TÜR: Türkiye'de her daire salonludur → daima N+1. "N+0" diye TİP YOKTUR (uydurma yasak).
+          // yatak varsa yat+1; hiç yatak yoksa 1+1 (salon var) ya da 1+0 stüdyo.
+          var tip=(yat>=1)?(yat+'+1'):(hasS?'1+1':'1+0');
           var guven=(matched===c.rooms.length)?'yuksek':(matched>=c.rooms.length-1?'orta':'dusuk');
           var no=(numPool.length===cores.length&&numPool.length)?String(numPool[ci]):'';
           return {tip:tip,m2:Math.round(total),m2est:true,guven:guven,no:no,rooms:rl,bbox:{x0:bx0,y0:by0,x1:bx1,y1:by1},kat:name};
