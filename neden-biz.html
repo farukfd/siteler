@@ -1,0 +1,645 @@
+<!doctype html><html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neden Meridyen Yapı? · Kanıtlanabilir Güven</title>
+<meta name="description" content="Deprem güvenliği, mühendislik kalitesi, zamanında teslim, ISO sertifikaları ve veri odaklı yatırım — Meridyen Yapı'yı ayıran yedi somut fark.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23ff7a2f'/%3E%3Ctext x='16' y='23' font-family='sans-serif' font-size='20' font-weight='800' fill='%231a1205' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<script>document.documentElement.classList.add('has-js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0c10; --bg2:#0e0f13; --surface:#14161c; --surface-2:#1b1e26; --ink:#f2f0ea; --muted:#8b909c;
+  --line:#22252e; --accent:#ff7a2f; --accent-2:#ffb070; --spark:#ffd7b0; --blu:#5fb6ff; --ok:#22c55e;
+  --head:'Space Grotesk',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+  --brand:#0e0f13; --on-accent:#1a1205; --maxw:1240px; --shadow:0 18px 50px -24px rgba(13,30,60,.28); --shadow-sm:0 8px 24px -16px rgba(13,30,60,.35); --on-bg:#f6f4ef;
+}
+/* ===== insaat.html anasayfa HEADER + FOOTER — BİREBİR AYNI ===== */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:13px 22px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;border:0;transition:.2s;font-family:var(--body)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--on-accent);box-shadow:var(--shadow-sm)}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff}
+header#hdr{position:fixed;top:0;left:0;right:0;z-index:60;transition:.25s;background:transparent}
+header#hdr .bar{display:flex;align-items:center;justify-content:space-between;height:72px}
+header#hdr .logo{display:flex;align-items:center;gap:11px;font-family:var(--head);font-weight:800;font-size:22px;letter-spacing:-.02em;color:#fff}
+header#hdr .logo .mark{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-size:19px;box-shadow:var(--shadow-sm)}
+header#hdr .logo .lo2{color:var(--accent-2)}
+header#hdr nav.main{display:flex;gap:28px;align-items:center}
+header#hdr nav.main a{font-weight:600;font-size:15px;color:rgba(255,255,255,.86);position:static}
+header#hdr nav.main a::after{content:none}
+header#hdr nav.main a:hover{color:#fff}
+header#hdr .nav-cta{display:flex;align-items:center;gap:12px}
+header#hdr.scrolled{background:var(--surface);box-shadow:0 6px 24px -16px rgba(13,30,60,.4)}
+header#hdr.scrolled .logo{color:var(--ink)}
+header#hdr.scrolled nav.main a{color:var(--muted)}
+header#hdr.scrolled nav.main a:hover{color:var(--ink)}
+header#hdr.scrolled .btn-ghost{border-color:rgba(16,26,43,.22);color:var(--ink)}
+header#hdr.scrolled .burger span{background:var(--ink)}
+header#hdr.scrolled .lang-sel{color:var(--ink)}
+header#hdr.scrolled .nav-wa{color:var(--ink)}
+header#hdr.scrolled{background:var(--surface);box-shadow:0 6px 24px -16px rgba(13,30,60,.4);backdrop-filter:blur(12px)}
+header#hdr.scrolled nav.main a{color:var(--muted)}header#hdr.scrolled nav.main a:hover{color:var(--ink)}
+header#hdr.scrolled .btn-ghost{border-color:rgba(255,255,255,.22);color:var(--ink)}
+header#hdr .burger{display:none;background:none;border:0;cursor:pointer;width:42px;height:42px}
+header#hdr .burger span{display:block;height:2px;background:#fff;margin:5px 0;transition:.2s}
+@media(max-width:980px){header#hdr nav.main,header#hdr .nav-cta .btn-ghost{display:none}header#hdr .burger{display:block}}
+@media(max-width:600px){header#hdr .nav-cta .btn-primary{display:none}header#hdr .logo{font-size:19px;gap:9px}header#hdr .bar{height:64px}}
+.mnav{position:fixed;inset:0;background:rgba(8,16,30,.6);backdrop-filter:blur(4px);z-index:80;opacity:0;pointer-events:none;transition:.25s}
+.mnav.open{opacity:1;pointer-events:auto}
+.mnav .panel{position:absolute;right:0;top:0;height:100%;width:min(320px,84vw);background:var(--surface);padding:26px 22px;display:flex;flex-direction:column;gap:4px;transform:translateX(100%);transition:.3s}
+.mnav.open .panel{transform:none}.mnav a{padding:13px 8px;border-bottom:1px solid var(--line);font-weight:600;color:var(--ink)}
+footer.insaatFooter{background:var(--brand);color:#b9c6dc;padding:60px 0 0;margin-top:0}
+footer.insaatFooter .fgrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:32px;padding-bottom:36px}
+footer.insaatFooter h4{color:#fff;font-size:15px;margin-bottom:14px}
+footer.insaatFooter a{display:block;color:#a9b8d0;padding:5px 0;font-size:14px}footer.insaatFooter a:hover{color:#fff}
+footer.insaatFooter .lo{color:#fff;font-family:var(--head);font-weight:800;font-size:22px;margin-bottom:12px}footer.insaatFooter .lo .lo2{color:var(--accent-2)}
+footer.insaatFooter p.desc{font-size:14px;color:#9fb0ca;max-width:34ch}
+footer.insaatFooter .fbot{border-top:1px solid rgba(255,255,255,.1);padding:18px 0;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13px;color:#8fa0bb}
+@media(max-width:880px){footer.insaatFooter .fgrid{grid-template-columns:1fr 1fr;gap:24px}}
+.nb-x{display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;background:#16a34a;color:#08130a;border-radius:6px;font-weight:800;font-size:.9em;line-height:1;vertical-align:middle;position:relative;top:-1px;margin:0 3px}
+.nav-wa{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;color:#25d366;border:1px solid var(--line);background:rgba(255,255,255,.05);transition:.2s;text-decoration:none}
+.nav-wa:hover{background:rgba(37,211,102,.16)}.nav-wa svg{width:20px;height:20px}
+.lang-sw{display:inline-flex;align-items:center;gap:5px}.lang-sw>svg{width:17px;height:17px;color:var(--muted)}
+.lang-sel{border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:9px;padding:7px 8px;font-family:var(--body);font-weight:700;font-size:12.5px;color:#fff;cursor:pointer;outline:none}
+@media(max-width:980px){.nav-wa,.lang-sw{display:none}}
+.fsocial{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.fsocial a{width:38px;height:38px;border-radius:11px;display:inline-grid;place-items:center;padding:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);color:#b9c6dc;transition:.2s ease}
+.fsocial a:hover{background:var(--accent);border-color:transparent;color:#fff;transform:translateY(-2px)}
+.fsocial svg{width:17px;height:17px;fill:currentColor;display:block}
+.flegal{display:flex;flex-wrap:wrap;gap:8px;font-size:12.5px;margin-top:14px}
+.fportals{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:16px}
+.fportals .fp-lead{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8fa0bb;margin-right:2px}
+.fportals .fp{font-family:var(--head);font-weight:800;font-size:12.5px;line-height:1;padding:7px 12px;border-radius:8px;text-decoration:none;transition:.2s ease;box-shadow:0 4px 12px -6px rgba(0,0,0,.5)}
+.fportals .fp:hover{transform:translateY(-2px);filter:brightness(1.05)}
+.fportals .fp-sah{background:#ffe800;color:#12100a}
+.fportals .fp-hep{background:#ff5000;color:#fff}
+.fportals .fp-ejt{background:#0a4bd6;color:#fff}
+.flegal a{display:inline-block;color:#8fa0bd;padding:2px 0}.flegal a:hover{color:#fff}
+.fprox{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.fprox .fprox-lead{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#7f8ea8;font-weight:600}
+.fprox .fprox-pro{font-family:var(--head);font-weight:800;font-size:15px;color:#fff}
+.fprox .fprox-x{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;height:1.4em;background:#16a34a;color:#0b1220;border-radius:6px;font-family:var(--head);font-weight:800;font-size:14px;margin-left:2px}
+.fvo{color:#b9c6dc;font-weight:600}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4{font-family:var(--head);margin:0;line-height:1.05;letter-spacing:-.025em;font-weight:600}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 clamp(20px,4vw,52px)}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);display:inline-flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:30px;height:1px;background:linear-gradient(90deg,var(--accent),transparent)}
+/* grain */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:.045;mix-blend-mode:soft-light;filter:url(#grainf)}
+/* cursor */
+.cur{position:fixed;top:0;left:0;width:34px;height:34px;border:1px solid var(--accent);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:9999;transition:width .25s,height .25s,background .25s,opacity .3s;mix-blend-mode:difference}
+.cur.big{width:64px;height:64px;background:rgba(255,122,47,.12)}
+@media(pointer:coarse){.cur{display:none}}
+/* progress */
+.prog{position:fixed;left:0;top:0;height:2px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));z-index:100}
+/* header */
+header{position:fixed;top:0;left:0;right:0;z-index:90;transition:.4s cubic-bezier(.2,.7,.2,1)}
+header .bar{display:flex;align-items:center;justify-content:space-between;height:78px;transition:.4s;border-bottom:1px solid transparent}
+header.scr{background:rgba(11,12,16,.72);backdrop-filter:blur(14px)}
+header.scr .bar{height:62px;border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:11px;font-family:var(--head);font-weight:700;font-size:20px;letter-spacing:-.02em}
+.logo .m{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#1a1205;font-size:19px;font-weight:700}
+nav.main{display:flex;gap:28px}
+@media(max-width:1000px){nav.main{display:none}}
+nav.main a{position:relative;font-size:14.5px;color:var(--muted);font-weight:500;padding:6px 0;transition:color .25s}
+nav.main a:hover,nav.main a.on{color:var(--ink)}
+nav.main a::after{content:"";position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:right;transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+nav.main a:hover::after,nav.main a.on::after{transform:scaleX(1);transform-origin:left}
+.hcta{display:flex;align-items:center;gap:12px}
+.hbrand{font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:8px 12px;transition:.25s}
+.hbrand:hover{border-color:var(--accent);color:var(--ink)}
+.btn{font-family:var(--head);font-weight:600;font-size:14.5px;padding:11px 20px;border-radius:10px;border:0;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#1a1205;transition:transform .2s}
+.burger{display:none}
+@media(max-width:1000px){.hbrand{display:none}.burger{display:grid;gap:5px;background:none;border:0;cursor:pointer;padding:8px}.burger span{width:24px;height:2px;background:var(--ink);display:block}}
+/* HERO */
+.hero{position:relative;min-height:min(88vh,780px);display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:20px;padding-top:86px}
+@media(max-width:900px){.hero{grid-template-columns:1fr;min-height:auto;padding:96px 0 24px;text-align:left}}
+.hero-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,122,47,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,122,47,.05) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(120% 90% at 30% 40%,#000,transparent 75%);mask-image:radial-gradient(120% 90% at 30% 40%,#000,transparent 75%)}
+.hero-copy{position:relative;z-index:2}
+.hero h1{font-size:clamp(40px,7vw,84px);font-weight:700;letter-spacing:-.04em;text-wrap:balance}
+.hero h1 .mk{color:var(--accent);position:relative;white-space:nowrap}
+.ln{display:block;overflow:hidden}
+.hero .lead{color:var(--muted);font-size:clamp(15px,1.8vw,19px);max-width:48ch;margin:26px 0 0}
+.hero .actions{display:flex;gap:14px;align-items:center;margin-top:34px;flex-wrap:wrap}
+.ghost{font-family:var(--head);font-weight:600;font-size:14.5px;padding:11px 18px;border-radius:10px;border:1px solid var(--line);background:none;color:var(--ink);cursor:pointer;transition:.25s}
+.ghost:hover{border-color:var(--accent)}
+.hero-vis{position:relative;height:min(76vh,720px);z-index:1}
+@media(max-width:900px){.hero-vis{height:56vh;margin-top:30px}}
+.hero-vis svg{width:100%;height:100%;overflow:visible}
+.scan{filter:drop-shadow(0 0 8px var(--accent))}
+.scroll-hint{position:absolute;left:clamp(20px,4vw,52px);bottom:26px;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px;z-index:3}
+.scroll-hint .d{width:22px;height:34px;border:1px solid var(--line);border-radius:12px;position:relative}
+.scroll-hint .d::after{content:"";position:absolute;left:50%;top:6px;width:3px;height:6px;border-radius:2px;background:var(--accent);transform:translateX(-50%);animation:sc 1.6s infinite}
+@keyframes sc{0%{opacity:1;top:6px}70%{opacity:0;top:18px}100%{opacity:0}}
+/* metrics */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-top:10px}
+@media(max-width:720px){.metrics{grid-template-columns:repeat(2,1fr)}}
+.metric{background:var(--bg2);padding:26px 22px}
+.metric .v{font-family:var(--head);font-size:clamp(30px,4vw,46px);font-weight:700;color:#fff;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
+.metric .v .s{color:var(--accent)}
+.metric .k{font-size:13px;color:var(--muted);margin-top:10px}
+/* section */
+.sec{padding:clamp(38px,4.5vw,60px) 0;position:relative}
+.sec-head{display:flex;align-items:flex-start;gap:22px;margin-bottom:28px;position:relative}
+.sh-no{font-family:var(--head);font-size:clamp(38px,6vw,72px);font-weight:700;color:transparent;-webkit-text-stroke:1.5px var(--line);line-height:.78;letter-spacing:-.04em;flex:0 0 auto;padding-top:2px}
+.sh-txt{flex:1;min-width:0}
+.sec-head h2{font-size:clamp(26px,3.9vw,46px);font-weight:700;max-width:22ch;text-wrap:balance;margin:0}
+.sec-head p{color:var(--muted);max-width:52ch;font-size:15px;margin:12px 0 0}
+.sh-rule{height:13px;margin-top:12px;width:min(100%,320px);display:block;overflow:visible}
+.sh-rule line,.sh-rule path,.sh-rule circle{stroke:var(--accent);stroke-width:1.5;fill:none;stroke-linecap:round}
+@media(max-width:640px){.sh-no{font-size:44px}.sec-head{gap:14px}}
+/* neden grid */
+.ngrid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.ncard{grid-column:span 4;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px 24px;position:relative;transition:border-color .35s,background .35s,transform .35s;will-change:transform}
+.ncard.feat{grid-column:span 12;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:26px;padding:24px 30px;background:linear-gradient(120deg,var(--surface-2),var(--surface))}
+.ncard.feat .ic{margin-bottom:0}
+.ncard.feat h3{margin:0 0 5px}
+.ncard.feat .ftxt p{margin:0;max-width:60ch}
+@media(max-width:900px){.ncard{grid-column:span 6}.ncard.feat{grid-column:span 12;grid-template-columns:auto 1fr;gap:18px}.ncard.feat .chip{grid-column:2}}
+@media(max-width:600px){.ncard{grid-column:span 12}.ncard.feat{grid-template-columns:1fr}}
+.ncard:hover{border-color:rgba(255,122,47,.5);background:var(--surface-2)}
+.ncard .ic{width:60px;height:60px;margin-bottom:22px;position:relative;display:grid;place-items:center;flex:0 0 auto}
+.ncard .ic::before{content:"";position:absolute;inset:0;border-radius:50%;border:1px dashed rgba(255,122,47,.30);animation:icspin 16s linear infinite}
+.ncard .ic::after{content:"";position:absolute;inset:8px;border-radius:13px;background:rgba(255,122,47,.07);border:1px solid rgba(255,122,47,.16);transition:.35s}
+.ncard:hover .ic::before{border-color:rgba(255,122,47,.6);animation-duration:6s}
+.ncard:hover .ic::after{background:rgba(255,122,47,.14);inset:6px}
+@keyframes icspin{to{transform:rotate(360deg)}}
+.ncard .ic svg{width:32px;height:32px;position:relative;z-index:1;overflow:visible}
+.ncard .ic path,.ncard .ic circle,.ncard .ic rect,.ncard .ic line,.ncard .ic polyline{stroke:var(--accent);stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:stroke-width .3s}
+.ncard:hover .ic path,.ncard:hover .ic circle,.ncard:hover .ic rect,.ncard:hover .ic line{stroke-width:2}
+.ncard .ic .pulse{fill:var(--accent);stroke:none;transform-origin:center;animation:icpulse 2.4s ease-in-out infinite}
+@keyframes icpulse{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.ncard .ic::before{animation:none}.ncard .ic .pulse{animation:none}}
+.ncard h3{font-size:20px;margin-bottom:10px;font-weight:600}
+.ncard p{color:var(--muted);font-size:14.5px;margin:0 0 18px}
+.chip{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;color:var(--accent-2);background:rgba(255,122,47,.08);border:1px solid rgba(255,122,47,.22);border-radius:20px;padding:6px 12px;font-weight:600}
+.chip::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.ncard .idx{position:absolute;top:24px;right:26px;font-family:var(--head);font-size:12px;color:var(--line);font-weight:700}
+/* iskele horizontal */
+.isk{position:relative;background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+#iskPin{overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-width:thin;padding-bottom:clamp(30px,4vw,48px);cursor:grab}
+#iskPin::-webkit-scrollbar{height:6px}#iskPin::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+.isk-track{display:flex;gap:20px;padding:0 clamp(20px,4vw,52px);width:max-content;align-items:stretch}
+.isk-panel{width:min(80vw,440px);flex:0 0 auto;border-radius:18px;overflow:hidden;position:relative;background:var(--surface);border:1px solid var(--line);height:min(52vh,440px);scroll-snap-align:start}
+.isk-panel{display:flex;flex-direction:column;justify-content:flex-end}
+.isk-panel .ph{position:absolute;inset:0;background:linear-gradient(165deg,#222834,#0e1116 78%)}
+.isk-panel .floors{position:absolute;inset:0;
+  background-image:repeating-linear-gradient(0deg,transparent 0 33px,rgba(255,255,255,.055) 33px 34px),repeating-linear-gradient(90deg,transparent 0 40px,rgba(255,255,255,.04) 40px 41px),
+    radial-gradient(circle at 22% 30%,rgba(255,170,90,.5) 0 3px,transparent 4px),radial-gradient(circle at 58% 22%,rgba(255,170,90,.4) 0 3px,transparent 4px),radial-gradient(circle at 78% 44%,rgba(255,170,90,.45) 0 3px,transparent 4px),radial-gradient(circle at 40% 52%,rgba(255,170,90,.35) 0 3px,transparent 4px)}
+.isk-panel::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,9,12,.95) 24%,rgba(8,9,12,.2) 55%,transparent 72%);z-index:1}
+.isk-panel .meta{position:relative;padding:24px;z-index:2}
+.isk-panel .tag{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.isk-panel h3{font-size:26px;margin:10px 0 6px}
+.isk-panel .loc{color:var(--muted);font-size:14px}
+.isk-panel .stat{display:flex;gap:22px;margin-top:16px}
+.isk-panel .stat b{font-family:var(--head);font-size:20px;color:#fff}
+.isk-panel .stat span{display:block;font-size:11.5px;color:var(--muted)}
+.isk-intro{padding:clamp(34px,4vw,54px) 0 24px}
+/* karşılaştırma */
+.cmp{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:clamp(24px,3vw,40px)}
+.cmp .row{display:grid;grid-template-columns:1.1fr 2fr;gap:18px;align-items:center;padding:18px 0;border-top:1px solid var(--line)}
+.cmp .row:first-child{border-top:0}
+.cmp .lbl{font-weight:600;font-size:15px}
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar{display:grid;grid-template-columns:92px 1fr;align-items:center;gap:14px}
+.bar .who{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.bar .tr{height:10px;border-radius:6px;background:#0a0b0f;overflow:hidden}
+.bar .fl{height:100%;width:0;border-radius:6px}
+.bar.us .fl{background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+.bar.them .fl{background:#343943}
+@media(max-width:640px){.cmp .row{grid-template-columns:1fr}.bar{grid-template-columns:64px 1fr}}
+/* footer */
+.fcta{padding:clamp(50px,7vw,90px) 0;border-top:1px solid var(--line);text-align:center;position:relative;overflow:hidden}
+.fcta h2{font-size:clamp(28px,5vw,58px);font-weight:700;text-wrap:balance}
+.fcta .news{display:flex;gap:10px;max-width:440px;margin:26px auto 0;flex-wrap:wrap}
+.fcta input{flex:1;min-width:200px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:13px 16px;color:var(--ink);font-family:var(--body);font-size:14px}
+.fcta input:focus{outline:none;border-color:var(--accent)}
+footer.big{position:relative;background:var(--bg2);border-top:1px solid var(--line);overflow:hidden;padding:clamp(50px,7vw,80px) 0 0}
+.fwm{position:absolute;left:0;right:0;bottom:-2%;font-family:var(--head);font-weight:700;font-size:clamp(70px,17vw,240px);text-align:center;color:#fff;opacity:.035;letter-spacing:-.04em;pointer-events:none;line-height:.8}
+.fgrid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.3fr;gap:34px;position:relative;z-index:1}
+@media(max-width:820px){.fgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.fgrid{grid-template-columns:1fr}}
+.fcol h4{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;font-family:var(--body);font-weight:600}
+.fcol a{display:block;color:var(--muted);font-size:14px;padding:5px 0;transition:.2s}
+.fcol a:hover{color:var(--ink)}
+.fbadges{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.fbadge{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:5px 9px;font-weight:600}
+.fbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:44px;padding:22px 0;position:relative;z-index:1;font-size:12.5px;color:var(--muted)}
+.totop{background:none;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 15px;cursor:pointer;font-size:12.5px;display:inline-flex;gap:8px;align-items:center;transition:.25s}
+.totop:hover{border-color:var(--accent)}
+.has-js .reveal{opacity:0;transform:translateY(26px)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+/* ==== MOBİL ALT DOCK ==== */
+.mdock{display:none}
+@media(max-width:980px){
+  .mdock{display:grid;grid-template-columns:repeat(4,1fr);align-items:center;position:fixed;left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));bottom:calc(10px + env(safe-area-inset-bottom));z-index:128;background:rgba(20,22,28,.72);-webkit-backdrop-filter:blur(20px) saturate(1.6);backdrop-filter:blur(20px) saturate(1.6);border:1px solid rgba(255,255,255,.10);border-radius:22px;padding:9px 8px;box-shadow:0 16px 40px -12px rgba(0,0,0,.62),0 2px 8px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.07);transition:transform .34s cubic-bezier(.2,.85,.25,1),opacity .3s}
+  .mdock a{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 2px;border-radius:14px;color:rgba(255,255,255,.6);font:600 11px/1 Inter,sans-serif;letter-spacing:.01em;text-decoration:none;position:relative;transition:color .2s,transform .12s;-webkit-tap-highlight-color:transparent}
+  .mdock a svg{width:23px;height:23px;display:block}
+  .mdock a span{white-space:nowrap}
+  .mdock a:active{transform:scale(.88)}
+  .mdock a:hover,.mdock a.active{color:var(--accent)}
+  .mdock a.active::before{content:"";position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:22px;height:3px;border-radius:3px;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+  .mdock a.mdwa{color:#25d366}
+  body:has(.mnav.open) .mdock{opacity:0;pointer-events:none;transform:translateY(160%)}
+  footer.insaatFooter{padding-bottom:calc(100px + env(safe-area-inset-bottom))}
+}
+</style></head>
+<body>
+<svg width="0" height="0"><filter id="grainf"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter></svg>
+<div class="grain"></div>
+<div class="cur" id="cur"></div>
+<div class="prog" id="prog"></div>
+
+<header id="hdr"><div class="wrap bar">
+  <a class="logo" href="insaat.html"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
+  <nav class="main insaatNav">
+    <a href="#hizmetler" onclick="event.preventDefault();openHizmetlerPage()">Hizmetlerimiz</a>
+    <a href="#hero" class="on">Neden <span class="nb-x">?</span> Biz</a>
+    <a href="#projeler" onclick="event.preventDefault();openProjelerPage()">Projeler</a>
+    <a href="#bolge" onclick="event.preventDefault();openBolgePage()">Bölge Zekası</a>
+  </nav>
+  <div class="nav-cta insaatCta">
+    <a class="nav-wa" href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg></a>
+    <button class="btn btn-primary" onclick="openTeklif()">Ücretsiz Keşif</button>
+    <div class="lang-sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg><select class="lang-sel" aria-label="Dil / Language" onchange="nbLang(this.value)"><option value="tr">TR</option><option value="en">EN</option></select></div>
+    <a class="btn btn-ghost js-giris" href="#giris" onclick="event.preventDefault();openGiris()">Giriş</a>
+    <button class="burger" onclick="document.getElementById('mnav').classList.add('open')"><span></span><span></span><span></span></button>
+  </div>
+</div></header>
+<div class="mnav" id="mnav" onclick="if(event.target.id==='mnav')this.classList.remove('open')"><div class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><b style="font-family:var(--head)">Menü</b>
+    <button style="background:none;border:0;font-size:22px;cursor:pointer;color:var(--ink)" onclick="document.getElementById('mnav').classList.remove('open')">✕</button></div>
+  <a href="#hizmetler" onclick="event.preventDefault();document.getElementById('mnav').classList.remove('open');openHizmetlerPage()">Hizmetlerimiz</a><a href="#hero" onclick="document.getElementById('mnav').classList.remove('open')">Neden <span class="nb-x">?</span> Biz</a><a href="#projeler" onclick="event.preventDefault();document.getElementById('mnav').classList.remove('open');openProjelerPage()">Projeler</a>
+  <a href="#bolge" onclick="event.preventDefault();document.getElementById('mnav').classList.remove('open');openBolgePage()">Bölge Zekası</a><a href="#giris" onclick="event.preventDefault();document.getElementById('mnav').classList.remove('open');openGiris()">Giriş</a>
+  <button class="btn btn-primary" style="margin-top:14px;justify-content:center" onclick="openTeklif();document.getElementById('mnav').classList.remove('open')">Ücretsiz Keşif</button>
+</div></div>
+
+<section class="hero wrap" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-copy">
+    <span class="eyebrow reveal">Neden Meridyen Yapı</span>
+    <h1><span class="ln">Söz veririz,</span> <span class="ln"><span class="mk">inşa ederiz.</span></span></h1>
+    <p class="lead reveal">Her vaadin altında ölçülebilir bir kanıt var: bağımsız denetim, sözleşmeli takvim ve veriyle belgelenen mühendislik. Biz çizimi gerçeğe dönüştürürüz.</p>
+    <div class="actions reveal">
+      <button class="btn btn-primary magnet" data-cur onclick="openProjelerPage()">Projelerimizi Görün →</button>
+      <button class="ghost" data-cur onclick="var t=document.querySelector('#neden,#projeler,#fark');if(t)t.scrollIntoView({behavior:'smooth'})">Süreç &amp; Güvenceler</button>
+    </div>
+  </div>
+  <div class="hero-vis" id="heroVis">
+    <svg viewBox="0 0 400 660" preserveAspectRatio="xMidYMid meet" aria-label="Blueprint'ten betona inşa olan bina">
+      <g id="bp" stroke="var(--accent)" fill="none" stroke-width="1.1" opacity=".9">
+        <line x1="40" y1="620" x2="360" y2="620"/>
+        <rect x="120" y="120" width="160" height="500"/>
+        <line x1="120" y1="180" x2="280" y2="180"/><line x1="120" y1="240" x2="280" y2="240"/><line x1="120" y1="300" x2="280" y2="300"/><line x1="120" y1="360" x2="280" y2="360"/><line x1="120" y1="420" x2="280" y2="420"/><line x1="120" y1="480" x2="280" y2="480"/><line x1="120" y1="540" x2="280" y2="540"/>
+        <line x1="173" y1="120" x2="173" y2="620"/><line x1="227" y1="120" x2="227" y2="620"/>
+        <path d="M120 120 L200 78 L280 120"/>
+        <rect x="188" y="560" width="24" height="60"/>
+        <line x1="70" y1="120" x2="70" y2="620"/><path d="M66 128 L70 120 L74 128"/><path d="M66 612 L70 620 L74 612"/>
+        <line x1="120" y1="648" x2="280" y2="648"/><path d="M128 644 L120 648 L128 652"/><path d="M272 644 L280 648 L272 652"/>
+        <circle cx="330" cy="150" r="16"/><path d="M330 138 L330 162 M330 138 L325 146 M330 138 L335 146"/>
+      </g>
+      <g id="solid" style="clip-path:inset(100% 0 0 0)">
+        <rect x="120" y="120" width="160" height="500" fill="#161a22"/>
+        <path d="M120 120 L200 78 L280 120 Z" fill="#1e232d"/>
+        <g fill="#0e1218">
+          <rect x="130" y="130" width="34" height="40"/><rect x="183" y="130" width="34" height="40"/><rect x="236" y="130" width="34" height="40"/>
+          <rect x="130" y="190" width="34" height="40"/><rect x="183" y="190" width="34" height="40"/><rect x="236" y="190" width="34" height="40"/>
+          <rect x="130" y="250" width="34" height="40"/><rect x="183" y="250" width="34" height="40"/><rect x="236" y="250" width="34" height="40"/>
+          <rect x="130" y="310" width="34" height="40"/><rect x="183" y="310" width="34" height="40"/><rect x="236" y="310" width="34" height="40"/>
+          <rect x="130" y="370" width="34" height="40"/><rect x="183" y="370" width="34" height="40"/><rect x="236" y="370" width="34" height="40"/>
+          <rect x="130" y="430" width="34" height="40"/><rect x="183" y="430" width="34" height="40"/><rect x="236" y="430" width="34" height="40"/>
+          <rect x="130" y="490" width="34" height="40"/><rect x="183" y="490" width="34" height="40"/><rect x="236" y="490" width="34" height="40"/>
+        </g>
+        <g class="win" fill="var(--accent)" opacity=".85">
+          <rect x="183" y="190" width="34" height="40"/><rect x="236" y="310" width="34" height="40"/><rect x="130" y="370" width="34" height="40"/><rect x="183" y="490" width="34" height="40"/><rect x="236" y="130" width="34" height="40"/><rect x="130" y="250" width="34" height="40"/>
+        </g>
+        <rect x="188" y="560" width="24" height="60" fill="#0e1218"/>
+      </g>
+      <line id="scanline" class="scan" x1="112" y1="620" x2="288" y2="620" stroke="var(--accent)" stroke-width="2.4" opacity="0"/>
+    </svg>
+  </div>
+  <div class="scroll-hint"><span class="d"></span> Kaydırın · inşa olsun</div>
+</section>
+
+<section class="wrap" style="padding:2px 0 clamp(26px,3.5vw,44px)">
+  <div class="metrics" id="metrics">
+    <div class="metric"><div class="v" data-to="8400" data-suf="+"><span class="s">0</span></div><div class="k">Teslim edilen konut</div></div>
+    <div class="metric"><div class="v" data-to="100" data-suf="%"><span class="s">0</span></div><div class="k">Sözleşmeli sürede teslim</div></div>
+    <div class="metric"><div class="v" data-to="1.2" data-suf="M m²" data-dec="1"><span class="s">0</span></div><div class="k">İnşa edilen alan</div></div>
+    <div class="metric"><div class="v" data-to="18" data-suf=" yıl"><span class="s">0</span></div><div class="k">Saha deneyimi</div></div>
+  </div>
+</section>
+
+<section class="sec wrap" id="neden">
+  <div class="sec-head">
+    <span class="sh-no">01</span>
+    <div class="sh-txt">
+      <h2 class="reveal">Bizi ayıran yedi somut fark</h2>
+      <svg class="sh-rule reveal" viewBox="0 0 320 13" preserveAspectRatio="none" aria-hidden="true"><line class="dl" x1="1" y1="7" x2="250" y2="7"/><path d="M250 3 L262 7 L250 11"/><circle cx="300" cy="7" r="3.5"/></svg>
+      <p class="reveal">Genel iddialar değil — her biri bir standart, sertifika veya ölçülebilir taahhütle karşılık bulur. Sözünü kanıta bağlayan tek müteahhit sistemi.</p>
+    </div>
+  </div>
+  <div class="ngrid" id="ngrid">
+    <div class="ncard reveal"><span class="idx">01</span><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Deprem Güvenliği</h3><p>Her proje TBDY 2018 ve zemin etüdüne tam uyumlu; statik hesap bağımsız yapı denetiminden geçer, deprem yönetmeliği raporlanır.</p><span class="chip">TBDY 2018 · zemin etüdü</span></div>
+    <div class="ncard reveal"><span class="idx">02</span><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 20L20 4"/><path d="M4 20l3-1 12-12 1-3-3 1L5 17l-1 3z"/><path d="M14 6l4 4"/></svg></div><h3>Mühendislik Kalitesi</h3><p>Statik, mimari ve mekanik projeler kendi kadromuzca üretilir; kullanılan her malzeme ve her metrekare yapı denetimiyle belgelenir.</p><span class="chip">In-house · yapı denetimi</span></div>
+    <div class="ncard reveal"><span class="idx">03</span><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/><circle class="pulse" cx="12" cy="13" r="1.7"/></svg></div><h3>Zamanında Teslim</h3><p>Sözleşmeye bağlı teslim takvimi, gecikme yaptırımı, aylık ilerleme raporu ve şantiye kamerasıyla süreci baştan sona şeffaf yönetiriz.</p><span class="chip">Sözleşmeli takvim · SLA</span></div>
+    <div class="ncard reveal"><span class="idx">04</span><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 14a8 8 0 0116 0"/><path d="M2 14h20"/><path d="M12 6V4"/><path d="M9 6.5C9 5 10.3 4 12 4s3 1 3 2.5"/></svg></div><h3>İş Sağlığı &amp; Güvenliği</h3><p>ISO 45001 sertifikalı İSG yönetim sistemi, düzenli saha eğitimleri ve sıfır kaza hedefiyle çalışan güvenliğini önceliklendiririz.</p><span class="chip">ISO 45001 · sıfır kaza</span></div>
+    <div class="ncard reveal"><span class="idx">05</span><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21c-5-3-8-7-8-11a8 8 0 0116 0c0 4-3 8-8 11z"/><path d="M12 21V9"/></svg></div><h3>Sürdürülebilirlik</h3><p>Enerji verimli tasarım, düşük karbonlu üretim ve geri dönüştürülebilir malzeme seçimiyle çevreye ve bütçeye duyarlı yapı.</p><span class="chip">ISO 14001</span></div>
+    <div class="ncard reveal"><span class="idx">06</span><div class="ic"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div><h3>Şeffaf Süreç</h3><p>Ödeme planından malzeme seçimine kadar her aşama yazılı, izlenebilir ve müşteriyle paylaşılır; şantiye kamerasıyla anlık takip.</p><span class="chip">Yazılı plan · şantiye kamerası</span></div>
+    <div class="ncard feat reveal"><span class="idx">07</span><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16"/><path d="M7 16l4-5 3 3 5-7"/><circle class="pulse" cx="19" cy="7" r="1.9"/></svg></div><div class="ftxt"><h3>Veri Odaklı Yatırım</h3><p>Her projeyi mahalle bazlı fiyat endeksi, 5 yıllık değer trendi, yatırım skoru ve deprem/fay analiziyle sunarız. Kararınızı duyguyla değil veriyle verin — kazancınızı da riskinizi de önceden görün.</p></div><span class="chip">81 il · 50.000+ mahalle endeksi</span></div>
+  </div>
+</section>
+
+<section class="isk" id="projeler">
+  <div class="isk-intro wrap"><div class="sec-head" style="margin-bottom:0">
+    <span class="sh-no">02</span>
+    <div class="sh-txt">
+      <h2 class="reveal">Şantiyeyi kat kat gezin</h2>
+      <svg class="sh-rule reveal" viewBox="0 0 320 13" preserveAspectRatio="none" aria-hidden="true"><line class="dl" x1="1" y1="7" x2="250" y2="7"/><path d="M250 3 L262 7 L250 11"/><circle cx="300" cy="7" r="3.5"/></svg>
+      <p class="reveal">Yandan kaydırın — her proje, gerçek verisiyle bir iskele hattında. Devam eden, tamamlanan ve yeni lansman.</p>
+    </div>
+  </div></div>
+  <div id="iskPin"><div class="isk-track" id="iskTrack">
+    <div class="isk-panel"><div class="ph"></div><div class="floors"></div><div class="meta"><span class="tag">Devam Ediyor</span><h3>Meridyen Levent</h3><div class="loc">Beşiktaş, İstanbul</div><div class="stat"><div><b>7</b><span>kat</span></div><div><b>24</b><span>daire</span></div><div><b>%68</b><span>tamam</span></div></div></div></div>
+    <div class="isk-panel"><div class="ph"></div><div class="floors"></div><div class="meta"><span class="tag">Tamamlandı</span><h3>Artut Rezidans</h3><div class="loc">Arnavutköy, İstanbul</div><div class="stat"><div><b>6</b><span>kat</span></div><div><b>52</b><span>bölüm</span></div><div><b>6.107</b><span>m²</span></div></div></div></div>
+    <div class="isk-panel"><div class="ph"></div><div class="floors"></div><div class="meta"><span class="tag">Kentsel Dönüşüm</span><h3>Çallı Park Evleri</h3><div class="loc">Hadımköy, İstanbul</div><div class="stat"><div><b>8</b><span>kat</span></div><div><b>40</b><span>daire</span></div><div><b>%92</b><span>tamam</span></div></div></div></div>
+    <div class="isk-panel"><div class="ph"></div><div class="floors"></div><div class="meta"><span class="tag">Yeni Lansman</span><h3>Menteşe Villaları</h3><div class="loc">Hadımköy, İstanbul</div><div class="stat"><div><b>3</b><span>kat</span></div><div><b>2</b><span>villa</span></div><div><b>523</b><span>m²</span></div></div></div></div>
+  </div></div>
+</section>
+
+<section class="sec wrap" id="fark">
+  <div class="sec-head">
+    <span class="sh-no">03</span>
+    <div class="sh-txt">
+      <h2 class="reveal">Sıradan müteahhit ile aradaki fark</h2>
+      <svg class="sh-rule reveal" viewBox="0 0 320 13" preserveAspectRatio="none" aria-hidden="true"><line class="dl" x1="1" y1="7" x2="250" y2="7"/><path d="M250 3 L262 7 L250 11"/><circle cx="300" cy="7" r="3.5"/></svg>
+      <p class="reveal">Aynı beton, aynı demir — farkı yaratan sistem, denetim ve şeffaflıktır. Ölçtük, karşılaştırdık.</p>
+    </div>
+  </div>
+  <div class="cmp reveal" id="cmp">
+    <div class="row"><div class="lbl">Bağımsız denetim</div><div class="bars"><div class="bar us"><span class="who">Meridyen</span><div class="tr"><div class="fl" data-w="100"></div></div></div><div class="bar them"><span class="who">Sıradan</span><div class="tr"><div class="fl" data-w="35"></div></div></div></div></div>
+    <div class="row"><div class="lbl">Yazılı garanti &amp; sözleşme</div><div class="bars"><div class="bar us"><span class="who">Meridyen</span><div class="tr"><div class="fl" data-w="100"></div></div></div><div class="bar them"><span class="who">Sıradan</span><div class="tr"><div class="fl" data-w="45"></div></div></div></div></div>
+    <div class="row"><div class="lbl">Teslim disiplini</div><div class="bars"><div class="bar us"><span class="who">Meridyen</span><div class="tr"><div class="fl" data-w="96"></div></div></div><div class="bar them"><span class="who">Sıradan</span><div class="tr"><div class="fl" data-w="52"></div></div></div></div></div>
+    <div class="row"><div class="lbl">Veri odaklı sunum</div><div class="bars"><div class="bar us"><span class="who">Meridyen</span><div class="tr"><div class="fl" data-w="100"></div></div></div><div class="bar them"><span class="who">Sıradan</span><div class="tr"><div class="fl" data-w="18"></div></div></div></div></div>
+  </div>
+</section>
+
+<section class="fcta wrap" id="iletisim">
+  <span class="eyebrow reveal" style="justify-content:center">İletişim</span>
+  <h2 class="reveal" style="margin-top:14px">Hayalinizdeki yapıyı<br>birlikte inşa edelim</h2>
+  <div class="news reveal"><input type="email" placeholder="E-posta adresiniz"><button class="btn btn-primary magnet" data-cur onclick="openTeklif()">Ücretsiz Keşif →</button></div>
+</section>
+
+<footer class="insaatFooter"><div class="wrap">
+  <div class="fgrid">
+    <div><div class="lo">Meridyen<span class="lo2"> Yapı</span></div>
+      <p class="desc">1986'dan bu yana güvenle inşa eden kurumsal yapı, tadilat ve gayrimenkul geliştirme şirketi.</p>
+      <div class="fsocial">
+        <a href="https://facebook.com/meridyenyapi" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a>
+        <a href="https://instagram.com/meridyenyapi" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a>
+        <a href="https://x.com/meridyenyapi" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg></a>
+        <a href="https://www.linkedin.com/company/meridyenyapi" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg></a>
+        <a href="https://www.youtube.com/@meridyenyapi" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a>
+        <a href="https://nsosyal.com" target="_blank" rel="noopener noreferrer" aria-label="NEXT Sosyal (Türkiye)" title="NEXT Sosyal — Türkiye'nin yerli sosyal medya platformu"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg></a>
+      </div>
+      <div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
+      <div class="flegal"><a href="insaat.html#doc-kvkk">KVKK</a><a href="insaat.html#doc-gizlilik">Gizlilik</a><a href="insaat.html#doc-cerez">Çerez Politikası</a></div>
+    </div>
+    <div><h4>Kurumsal</h4><a href="neden-biz.html">Hakkımızda</a><a href="insaat.html#doc-vizyon">Vizyon &amp; Misyon</a><a href="insaat.html#doc-yonetim">Yönetim Kadrosu</a><a href="insaat.html#doc-kalite">Kalite &amp; Sertifikalar</a><a href="insaat.html#medya">Medya &amp; Basında Biz</a><a href="#" onclick="openBolgePage();return false">Bölge Ekspertizi</a><a href="insaat.html#doc-kariyer">Kariyer</a><a href="insaat.html#sss">İnşaata Başlamadan Dikkat Edilecekler</a></div>
+    <div><h4>Hizmetler</h4><a href="#" onclick="openHizmetlerPage();return false">Konut İnşaatı</a><a href="#" onclick="openHizmetlerPage();return false">Tadilat &amp; Renovasyon</a><a href="#" onclick="openHizmetlerPage();return false">Kentsel Dönüşüm</a><a href="#" onclick="openHizmetlerPage();return false">Kat Karşılığı</a><a href="#" onclick="openHizmetlerPage();return false">Anahtar Teslim</a><a href="#" onclick="openHizmetlerPage();return false">Ticari Yapılar</a></div>
+    <div><h4>İletişim</h4>
+      <a href="insaat.html#iletisim">Levent Mah. Yapı Cad. No:1<br>Beşiktaş / İstanbul</a>
+      <a href="tel:+902120000000" class="js-tel">+90 212 000 00 00</a>
+      <a href="mailto:info@meridyenyapi.com">info@meridyenyapi.com</a>
+      <a href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer">💬 WhatsApp Hattı</a>
+    </div>
+  </div>
+  <div class="fbot">
+    <div class="fcopy">© 2026 Meridyen Yapı A.Ş. · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span> · <span class="fvo">🔗 emlakekspertizi.com Veri Ortağı</span></div>
+    <a class="fprox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a>
+  </div>
+</div></footer>
+
+<nav class="mdock" aria-label="Hızlı erişim">
+  <a href="#" onclick="event.preventDefault();openHizmetlerPage()" aria-label="Hizmetlerimiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a6 6 0 0 1 6-6"/><path d="M14 6a6 6 0 0 1 6 6v3"/></svg><span>Hizmetler</span></a>
+  <a href="#" onclick="event.preventDefault();openProjelerPage()" aria-label="Projeler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4M10 10h4M10 14h4M10 18h4"/></svg><span>Projeler</span></a>
+  <a href="#hero" class="active" aria-label="Neden Biz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg><span>Neden Biz</span></a>
+  <a class="mdwa" href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg><span>WhatsApp</span></a>
+</nav>
+
+<script>
+/* Prototip: header/footer insaat.html'e gider (bire bir aynı menü) */
+function openHizmetlerPage(){location.href='insaat.html#hizmetler'}
+function openProjelerPage(){location.href='insaat.html#projeler'}
+function openBolgePage(){location.href='insaat.html#bolge'}
+function openGiris(){location.href='insaat.html'}
+function openTeklif(){location.href='insaat.html'}
+function closeAllInsaatOverlays(){}
+/* Yayınlanan marka config'ini uygula (admin → Yayınla → tüm sayfalar) */
+(function(){
+  try{
+    var pub=JSON.parse(localStorage.getItem('meridyen_pub_v1')||'null'); if(!pub)return;
+    var esc=function(s){return String(s==null?'':s).replace(/[<>&"]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});};
+    if(pub.BRAND){ var b=pub.BRAND;
+      document.querySelectorAll('.logo .mark').forEach(function(mk){ if(b.logo){mk.innerHTML='<img src="'+b.logo+'" alt="logo" style="width:100%;height:100%;object-fit:contain;border-radius:inherit">';mk.style.background='transparent';mk.style.boxShadow='none';} });
+      document.querySelectorAll('.js-logo').forEach(function(el){ el.innerHTML=esc(b.name||'Meridyen')+'<span class="lo2">'+esc(b.name2||' Yapı')+'</span>'; });
+      document.querySelectorAll('footer.insaatFooter .lo').forEach(function(lo){ var fl=b.logoFooter||b.logo; if(fl){lo.innerHTML='<img src="'+fl+'" alt="logo" style="height:36px;max-width:190px;object-fit:contain;display:block">';} });
+      if(b.favicon){var l=document.querySelector('link[rel="icon"]');if(!l){l=document.createElement('link');l.rel='icon';document.head.appendChild(l);}l.href=b.favicon;}
+    }
+    if(pub.MENU){ var M=pub.MENU, nz=function(s){return esc(s).replace('?','<span class="nb-x">?</span>');};
+      document.querySelectorAll('.insaatNav a').forEach(function(a,i){ var v=[M.hizmetler,M.nedenBiz,M.projeler,M.bolge][i]; if(v==null)return; if(i===1)a.innerHTML=nz(v); else a.textContent=v; });
+      document.querySelectorAll('#mnav .panel a').forEach(function(a,i){ var v=[M.hizmetler,M.nedenBiz,M.projeler,M.bolge,M.giris][i]; if(v==null)return; if(i===1)a.innerHTML=nz(v); else a.textContent=v; });
+      document.querySelectorAll('.nav-cta .btn-primary, #mnav .btn-primary').forEach(function(b){if(M.teklif)b.textContent=M.teklif;});
+      var gr=document.querySelector('.js-giris'); if(gr&&M.giris)gr.textContent=M.giris;
+    }
+    if(pub.FOOT){ var F=pub.FOOT; document.querySelectorAll('footer.insaatFooter').forEach(function(f){
+      var d=f.querySelector('.desc');if(d&&F.desc)d.textContent=F.desc;
+      var h=f.querySelectorAll('.fgrid h4');if(h[0]&&F.colKurumsal)h[0].textContent=F.colKurumsal;if(h[1]&&F.colHizmetler)h[1].textContent=F.colHizmetler;if(h[2]&&F.colIletisim)h[2].textContent=F.colIletisim;
+      var cols=f.querySelectorAll('.fgrid > div');if(cols[3]&&F.adres){var fa=cols[3].querySelector('a');if(fa)fa.innerHTML=F.adres;}
+      var tel=f.querySelector('a.js-tel');if(tel&&F.tel)tel.textContent=F.tel;
+      var mail=f.querySelector('a[href^="mailto:"]');if(mail&&F.email)mail.textContent=F.email;
+      var fc=f.querySelector('.fcopy');if(fc&&fc.firstChild&&fc.firstChild.nodeType===3&&F.copyright)fc.firstChild.textContent=F.copyright+' · ';
+    }); }
+    if(pub.SOCIAL){ var _S=pub.SOCIAL, _m={Facebook:_S.facebook,Instagram:_S.instagram,X:_S.x,LinkedIn:_S.linkedin,YouTube:_S.youtube};
+      document.querySelectorAll('.fsocial a').forEach(function(a){var lb=a.getAttribute('aria-label')||'';if(lb.indexOf('NEXT')>-1){if(_S.nsosyal){a.href=_S.nsosyal;a.style.display='';}else a.style.display='none';return;}if(_m.hasOwnProperty(lb)){if(_m[lb]){a.href=_m[lb];a.style.display='';}else a.style.display='none';}});
+      var _pm={'fp-sah':_S.sahibinden,'fp-hep':_S.hepsiemlak,'fp-ejt':_S.emlakjet};Object.keys(_pm).forEach(function(c){document.querySelectorAll('.'+c).forEach(function(a){if(_pm[c]){a.href=_pm[c];a.style.display='';}else a.style.display='none';});});
+    }
+    (function(){var _wa=(pub.CONTACT&&pub.CONTACT.wa)||(pub.SEO&&pub.SEO.wa)||'';_wa=String(_wa).replace(/[^0-9]/g,'');if(_wa)document.querySelectorAll('a[href*="wa.me/"]').forEach(function(a){a.href=a.href.replace(/wa\.me\/\d+/,'wa.me/'+_wa);});
+      if(pub.CONTACT){var C=pub.CONTACT;if(C.tel)document.querySelectorAll('a.js-tel').forEach(function(a){a.textContent=C.tel;if(a.tagName==='A')a.href='tel:'+String(C.tel).replace(/[^0-9+]/g,'');});if(C.email)document.querySelectorAll('a[href^="mailto:"]').forEach(function(a){a.href='mailto:'+C.email;a.textContent=C.email;});}})();
+    if(pub.ADS){ var inj=function(html,target){var t=document.createElement('div');t.innerHTML=html;[].slice.call(t.childNodes).forEach(function(n){var el;if(n.tagName==='SCRIPT'){el=document.createElement('script');[].forEach.call(n.attributes,function(at){el.setAttribute(at.name,at.value);});el.text=n.textContent;}else{el=n;}target.appendChild(el);});};
+      if(pub.ADS.head)inj(pub.ADS.head,document.head);
+      if(pub.ADS.body){var host=document.createElement('div');document.body.appendChild(host);inj(pub.ADS.body,host);}
+    }
+    if(pub.SEO){ var S=pub.SEO;
+      if(S.title)document.title=S.title;
+      if(S.gsv){var mv=document.querySelector('meta[name="google-site-verification"]');if(!mv){mv=document.createElement('meta');mv.name='google-site-verification';document.head.appendChild(mv);}mv.content=(''+S.gsv).replace(/^google-site-verification=/,'');}
+      if(S.ga&&!document.getElementById('pub-gtag')){var s=document.createElement('script');s.id='pub-gtag';s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+S.ga;document.head.appendChild(s);var s2=document.createElement('script');s2.text='window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","'+S.ga+'");';document.head.appendChild(s2);}
+    }
+  }catch(e){}
+})();
+/* neden-biz i18n (TR/EN) — kaynak-metin anahtar */
+var NB_LANG='tr'; try{NB_LANG=localStorage.getItem('meridyen_lang')||'tr';}catch(e){}
+var NB_SEL='.hero-copy .eyebrow,.hero-copy h1,.hero-copy .lead,.sh-txt h2,.sh-txt p,.ncard h3,.ncard p,.ncard .chip,.news h2,.news p,section .lead,.metrics .m-l,.cmp h3,.cmp .cmp-t';
+var NB_EN={
+ "Neden Meridyen Yapı":"Why Meridyen Yapı",
+ "Deprem Güvenliği":"Earthquake Safety",
+ "Mühendislik Kalitesi":"Engineering Quality",
+ "Zamanında Teslim":"On-Time Delivery",
+ "İş Sağlığı & Güvenliği":"Occupational Health & Safety",
+ "Sürdürülebilirlik":"Sustainability",
+ "Şeffaf Süreç":"Transparent Process",
+ "Veri Odaklı Yatırım":"Data-Driven Investment",
+ "Söz veririz, inşa ederiz.":"<span class='ln'>We promise,</span> <span class='ln'><span class='mk'>we build.</span></span>",
+ "Her vaadin altında ölçülebilir bir kanıt var: bağımsız denetim, sözleşmeli takvim ve veriyle belgelenen mühendislik. Biz çizimi gerçeğe dönüştürürüz.":"Beneath every promise lies measurable proof: independent audit, a contractual schedule and engineering documented with data. We turn the drawing into reality.",
+ "Bizi ayıran yedi somut fark":"Seven concrete differences that set us apart",
+ "Genel iddialar değil — her biri bir standart, sertifika veya ölçülebilir taahhütle karşılık bulur. Sözünü kanıta bağlayan tek müteahhit sistemi.":"Not generic claims — each is backed by a standard, certificate or measurable commitment. The only contractor system that ties its word to proof.",
+ "Her proje TBDY 2018 ve zemin etüdüne tam uyumlu; statik hesap bağımsız yapı denetiminden geçer, deprem yönetmeliği raporlanır.":"Every project fully complies with TBDY 2018 and the geotechnical survey; structural calculations pass independent building inspection and the seismic code is reported.",
+ "TBDY 2018 · zemin etüdü":"TBDY 2018 · geotechnical survey",
+ "Statik, mimari ve mekanik projeler kendi kadromuzca üretilir; kullanılan her malzeme ve her metrekare yapı denetimiyle belgelenir.":"Structural, architectural and mechanical designs are produced by our own staff; every material and every square metre is documented by building inspection.",
+ "In-house · yapı denetimi":"In-house · building inspection",
+ "Sözleşmeye bağlı teslim takvimi, gecikme yaptırımı, aylık ilerleme raporu ve şantiye kamerasıyla süreci baştan sona şeffaf yönetiriz.":"We manage the process transparently end-to-end with a contractual delivery schedule, delay penalties, monthly progress reports and a site camera.",
+ "Sözleşmeli takvim · SLA":"Contractual schedule · SLA",
+ "ISO 45001 sertifikalı İSG yönetim sistemi, düzenli saha eğitimleri ve sıfır kaza hedefiyle çalışan güvenliğini önceliklendiririz.":"With an ISO 45001-certified OHS management system, regular field training and a zero-accident target, we prioritise worker safety.",
+ "ISO 45001 · sıfır kaza":"ISO 45001 · zero accidents",
+ "Enerji verimli tasarım, düşük karbonlu üretim ve geri dönüştürülebilir malzeme seçimiyle çevreye ve bütçeye duyarlı yapı.":"Buildings sensitive to both the environment and the budget, with energy-efficient design, low-carbon production and recyclable material choices.",
+ "ISO 14001":"ISO 14001",
+ "Ödeme planından malzeme seçimine kadar her aşama yazılı, izlenebilir ve müşteriyle paylaşılır; şantiye kamerasıyla anlık takip.":"From the payment plan to material selection, every stage is written, traceable and shared with the client; real-time tracking via site camera.",
+ "Yazılı plan · şantiye kamerası":"Written plan · site camera",
+ "Her projeyi mahalle bazlı fiyat endeksi, 5 yıllık değer trendi, yatırım skoru ve deprem/fay analiziyle sunarız. Kararınızı duyguyla değil veriyle verin — kazancınızı da riskinizi de önceden görün.":"We present every project with a neighbourhood-level price index, a 5-year value trend, an investment score and earthquake/fault analysis. Decide with data, not emotion — see both your gain and your risk in advance.",
+ "81 il · 50.000+ mahalle endeksi":"81 provinces · 50,000+ neighbourhood index",
+ "Şantiyeyi kat kat gezin":"Tour the site floor by floor",
+ "Yandan kaydırın — her proje, gerçek verisiyle bir iskele hattında. Devam eden, tamamlanan ve yeni lansman.":"Swipe sideways — every project on a scaffold line with its real data. Ongoing, completed and newly launched.",
+ "Sıradan müteahhit ile aradaki fark":"The difference from an ordinary contractor",
+ "Aynı beton, aynı demir — farkı yaratan sistem, denetim ve şeffaflıktır. Ölçtük, karşılaştırdık.":"Same concrete, same steel — the difference is the system, inspection and transparency. We measured and compared."
+};
+function _nbK(el){return (el.textContent||'').replace(/\s+/g,' ').trim();}
+function nbHarvest(){document.querySelectorAll(NB_SEL).forEach(function(el){if(el.closest('header,footer,.mnav,.mdock'))return;if(el.hasAttribute('data-ik'))return;var k=_nbK(el);if(!k||k.length>600)return;el.setAttribute('data-io',el.innerHTML);el.setAttribute('data-ik',k);});}
+function nbLang(lang){NB_LANG=(lang==='en')?'en':'tr';try{localStorage.setItem('meridyen_lang',NB_LANG);}catch(e){}document.documentElement.setAttribute('lang',NB_LANG);
+ document.querySelectorAll('[data-ik]').forEach(function(el){var k=el.getAttribute('data-ik'),orig=el.getAttribute('data-io');var v=(NB_LANG==='en')?(NB_EN[k]||orig):orig;if(v!=null)el.innerHTML=v;});
+ document.querySelectorAll('.lang-sel').forEach(function(s){try{s.value=NB_LANG;}catch(e){}});
+ var en=(NB_LANG==='en');
+ var nl=en?['Services','Why ? Us','Projects','Regional Intelligence']:['Hizmetlerimiz','Neden ? Biz','Projeler','Bölge Zekası'];
+ document.querySelectorAll('.insaatNav a').forEach(function(a,i){if(nl[i]){if(i===1)a.innerHTML=nl[i].replace('?','<span class="nb-x">?</span>');else a.textContent=nl[i];}});
+ var ml=en?['Services','Why ? Us','Projects','Regional Intelligence','Sign In']:['Hizmetlerimiz','Neden ? Biz','Projeler','Bölge Zekası','Giriş'];
+ document.querySelectorAll('#mnav .panel a').forEach(function(a,i){if(ml[i]){if(i===1)a.innerHTML=ml[i].replace('?','<span class="nb-x">?</span>');else a.textContent=ml[i];}});
+ var dl=en?['Services','Projects','Why Us','WhatsApp']:['Hizmetler','Projeler','Neden Biz','WhatsApp'];document.querySelectorAll('.mdock a span').forEach(function(sp,i){if(dl[i])sp.textContent=dl[i];});
+ document.querySelectorAll('.fportals .fp-lead').forEach(function(el){el.textContent=en?'Our Listings':'İlanlarımız';});
+ document.querySelectorAll('.nav-cta .btn-primary,#mnav .btn-primary').forEach(function(b){b.textContent=en?'Free Survey':'Ücretsiz Keşif';});
+ var gr=document.querySelector('.js-giris');if(gr)gr.textContent=en?'Sign In':'Giriş';
+}
+document.addEventListener('DOMContentLoaded',function(){try{nbHarvest();nbLang(NB_LANG);}catch(e){}});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/DrawSVGPlugin.min.js"></script>
+<script src="https://unpkg.com/lenis@1.3.25/dist/lenis.min.js"></script>
+<script>
+(function(){
+  var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var FINE = matchMedia('(pointer:fine)').matches;
+  if(!window.gsap){ document.documentElement.classList.remove('has-js'); return; }
+  // FAILSAFE: 4sn içinde animasyonlar başlamazsa içeriği görünür kıl (garanti)
+  setTimeout(function(){ if(!window.__animOK) document.documentElement.classList.remove('has-js'); },4000);
+  gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin);
+
+  // smooth scroll
+  var lenis=null;
+  if(!RM && window.Lenis){ lenis=new Lenis({lerp:.1,smoothWheel:true}); lenis.on('scroll',ScrollTrigger.update); gsap.ticker.add(function(t){lenis.raf(t*1000);}); gsap.ticker.lagSmoothing(0); }
+
+  // header + progress + scrollspy
+  var hdr=document.getElementById('hdr'), prog=document.getElementById('prog');
+  var navlinks=[].slice.call(document.querySelectorAll('#nav a'));
+  addEventListener('scroll',function(){var y=scrollY; hdr.classList.toggle('scrolled',y>24);
+    prog.style.width=(y/(document.body.scrollHeight-innerHeight)*100)+'%';},{passive:true});
+  navlinks.forEach(function(a){var id=a.getAttribute('href').slice(1),el=document.getElementById(id); if(!el)return;
+    ScrollTrigger.create({trigger:el,start:'top 45%',end:'bottom 45%',onToggle:function(s){if(s.isActive){navlinks.forEach(function(l){l.classList.remove('on');});a.classList.add('on');}}});});
+
+  // custom cursor + magnetic
+  if(FINE && !RM){
+    var cur=document.getElementById('cur');
+    var cx=gsap.quickTo(cur,'x',{duration:.18,ease:'power3'}), cy=gsap.quickTo(cur,'y',{duration:.18,ease:'power3'});
+    addEventListener('mousemove',function(e){cx(e.clientX);cy(e.clientY);});
+    document.querySelectorAll('[data-cur],a,button').forEach(function(el){el.addEventListener('mouseenter',function(){cur.classList.add('big');});el.addEventListener('mouseleave',function(){cur.classList.remove('big');});});
+    document.querySelectorAll('.magnet').forEach(function(el){var xt=gsap.quickTo(el,'x',{duration:.4,ease:'power3'}),yt=gsap.quickTo(el,'y',{duration:.4,ease:'power3'});
+      el.addEventListener('mousemove',function(e){var r=el.getBoundingClientRect();xt((e.clientX-r.left-r.width/2)*.4);yt((e.clientY-r.top-r.height/2)*.4);});
+      el.addEventListener('mouseleave',function(){xt(0);yt(0);});});
+  } else { var c=document.getElementById('cur'); if(c)c.style.display='none'; }
+
+  document.fonts.ready.then(function(){
+    window.__animOK=true; // animasyon motoru çalıştı → failsafe iptal
+    // HERO intro
+    var tl=gsap.timeline({defaults:{ease:'power4.out'}});
+    if(!RM){
+      gsap.set('#solid',{clipPath:'inset(100% 0 0 0)'});
+      tl.from('#bp line, #bp rect, #bp path, #bp circle',{drawSVG:'0%',duration:1.5,stagger:.045,ease:'power1.inOut'},0);
+    }
+    document.querySelectorAll('.hero h1 .ln').forEach(function(l,i){
+      var sp=new SplitText(l,{type:'chars'});
+      tl.from(sp.chars,{yPercent:120,opacity:0,duration:.9,stagger:.02},0.5+i*0.12);
+    });
+    tl.to('.hero .reveal',{opacity:1,y:0,duration:.8,stagger:.12},'-=.6');
+
+    // HERO scroll: blueprint -> beton
+    if(!RM){
+      gsap.timeline({scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:.6}})
+        .to('#bp',{opacity:.15,duration:1},0)
+        .to('#solid',{clipPath:'inset(0% 0 0 0)',ease:'none',duration:1},0)
+        .fromTo('#scanline',{attr:{y1:620,y2:620},opacity:1},{attr:{y1:110,y2:110},opacity:0,ease:'none',duration:1},0)
+        .to('.win rect',{opacity:.95,stagger:.02,duration:.4},.3);
+    } else { gsap.set('#solid',{clipPath:'inset(0 0 0 0)'}); }
+
+    // generic reveals
+    gsap.utils.toArray('.reveal').forEach(function(el){
+      if(el.closest('.hero'))return;
+      gsap.to(el,{opacity:1,y:0,duration:.9,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 86%'}});
+    });
+
+    // metric counters
+    document.querySelectorAll('#metrics .v').forEach(function(v){
+      var to=parseFloat(v.dataset.to)||0, suf=v.dataset.suf||'', dec=parseInt(v.dataset.dec||0), o={n:0};
+      ScrollTrigger.create({trigger:v,start:'top 88%',once:true,onEnter:function(){
+        if(RM){v.textContent=to.toLocaleString('tr-TR')+suf;return;}
+        gsap.to(o,{n:to,duration:1.8,ease:'power2.out',onUpdate:function(){v.textContent=(dec?o.n.toFixed(dec):Math.round(o.n).toLocaleString('tr-TR'))+suf;}});
+      }});
+    });
+
+    // neden cards stagger + tilt
+    if(FINE&&!RM){document.querySelectorAll('.ncard').forEach(function(card){
+      card.addEventListener('mousemove',function(e){var r=card.getBoundingClientRect();var rx=((e.clientY-r.top)/r.height-.5)*-6,ry=((e.clientX-r.left)/r.width-.5)*6;card.style.transform='perspective(900px) translateY(-4px) rotateX('+rx+'deg) rotateY('+ry+'deg)';});
+      card.addEventListener('mouseleave',function(){card.style.transform='';});});}
+
+    // İSKELE — sıkı yatay-kaydırma şeridi (pinsiz; boşluk yaratmaz). Wheel dikey → yatay çevir.
+    var iskPin=document.getElementById('iskPin');
+    iskPin.addEventListener('wheel',function(e){ if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){ iskPin.scrollLeft+=e.deltaY; e.preventDefault(); } },{passive:false});
+
+    // comparison bars
+    ScrollTrigger.create({trigger:'#cmp',start:'top 80%',once:true,onEnter:function(){
+      document.querySelectorAll('#cmp .fl').forEach(function(f){gsap.to(f,{width:(f.dataset.w||0)+'%',duration:1.1,ease:'power3.out'});});
+    }});
+
+    // GÜÇLÜ SVG: kart ikonları kart görününce KENDİNİ ÇİZER (blueprint hissi)
+    if(!RM){
+      gsap.utils.toArray('.ncard').forEach(function(card){
+        ScrollTrigger.create({trigger:card,start:'top 90%',once:true,onEnter:function(){
+          gsap.from(card.querySelectorAll('.ic svg > *:not(.pulse)'),{drawSVG:'0%',duration:1.1,stagger:.08,ease:'power1.inOut'});
+        }});
+      });
+      // başlık ölçü-çizgileri çizilir + düğüm yaylanır
+      gsap.utils.toArray('.sh-rule').forEach(function(svg){
+        ScrollTrigger.create({trigger:svg,start:'top 92%',once:true,onEnter:function(){
+          gsap.from(svg.querySelectorAll('line,path'),{drawSVG:'0%',duration:1,stagger:.18,ease:'power2.inOut'});
+          gsap.from(svg.querySelectorAll('circle'),{scale:0,transformOrigin:'center',duration:.5,delay:.5,ease:'back.out(2.5)'});
+        }});
+      });
+    }
+
+    ScrollTrigger.refresh();
+  });
+})();
+</script>
+</body></html>
