@@ -1340,6 +1340,26 @@ html{transition:none}
   function degAdminLoad() { try { return JSON.parse(localStorage.getItem('deg_admin') || '{}'); } catch (e) { return {}; } }
   function degAdminSaveStore(s) { try { localStorage.setItem('deg_admin', JSON.stringify(s)); } catch (e) {} }
   window.DEG_THEMES = { 'Lacivert': 'lacivert', 'Antrasit': 'antrasit', 'Bordo': 'bordo', 'Yeşil': 'yesil', 'Mor': 'mor', 'Okyanus': 'okyanus' };
+  window.DEG_SOCIAL_DEF = { facebook:'https://facebook.com/meridyendegerleme', instagram:'https://instagram.com/meridyendegerleme', x:'https://x.com/meridyendegerleme', linkedin:'https://www.linkedin.com/company/meridyendegerleme', youtube:'https://www.youtube.com/@meridyendegerleme', nsosyal:'https://nsosyal.com' };
+  function degApplySocial(){ try{
+    var s={}; try{ s=degMerge(); }catch(e){ try{ s=degAdminLoad(); }catch(e2){} }
+    var soc=s.social||{}, DEF=window.DEG_SOCIAL_DEF||{};
+    var IC={
+      facebook:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg>',
+      instagram:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg>',
+      x:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg>',
+      linkedin:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg>',
+      youtube:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg>',
+      nsosyal:'<svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg>'
+    };
+    var ORDER=['facebook','instagram','x','linkedin','youtube','nsosyal'];
+    var LBL={facebook:'Facebook',instagram:'Instagram',x:'X',linkedin:'LinkedIn',youtube:'YouTube',nsosyal:'NEXT Sosyal'};
+    if(!document.getElementById('deg-social-css')){ var st=document.createElement('style'); st.id='deg-social-css'; st.textContent='.ft .fsocial{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.ft .fsocial a{width:34px;height:34px;border-radius:10px;display:inline-grid;place-items:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#c7d2e3;transition:.2s ease;text-decoration:none}.ft .fsocial a:hover{background:var(--acc,#2f5bd0);border-color:transparent;color:#fff;transform:translateY(-2px)}.ft .fsocial svg{width:17px;height:17px;fill:currentColor;display:block}'; document.head.appendChild(st); }
+    var col=document.querySelector('.ft .cols > div'); if(!col) return;
+    var box=col.querySelector('.fsocial'); if(!box){ box=document.createElement('div'); box.className='fsocial'; col.appendChild(box); }
+    var html=''; ORDER.forEach(function(k){ var u=(soc[k]!=null)?soc[k]:DEF[k]; if(!u) return; html+='<a href="'+u+'" target="_blank" rel="noopener noreferrer" aria-label="'+LBL[k]+'">'+IC[k]+'</a>'; });
+    box.innerHTML=html;
+  }catch(e){} }
   function degApplySettings() {
     var s = {}; try { s = degMerge(); } catch (e) { try { s = degAdminLoad(); } catch (e2) {} }
     var root = document.documentElement;
@@ -1351,6 +1371,8 @@ html{transition:none}
   function degAdminHTML() {
     var s = degAdminLoad();
     var c = s.contact || {};
+    var so = s.social || {};
+    var sd = window.DEG_SOCIAL_DEF || {};
     var au = degAuth();
     var pg = s.pages || {};
     function val(v) { return v ? String(v).replace(/"/g, '&quot;') : ''; }
@@ -1389,6 +1411,10 @@ html{transition:none}
       + '<div class="sta-row2"><div class="sta-f"><label>WhatsApp No</label><input id="ct_wa" value="' + val(c.whatsapp) + '" placeholder="905xxxxxxxxx"></div><div class="sta-f"><label>E-posta</label><input id="ct_mail" value="' + val(c.email) + '" placeholder="iletisim@..."></div></div>'
       + '<div class="sta-f"><label>Adres</label><input id="ct_adres" value="' + val(c.adres) + '" placeholder="Mahalle, cadde, no, ilçe / il"></div>'
       + '<div class="sta-row2"><div class="sta-f"><label>Çalışma Saatleri</label><input id="ct_saat" value="' + val(c.saat) + '" placeholder="Hafta içi 09:00 – 18:00"></div><div class="sta-f"><label>Harita Konumu</label><input id="ct_harita" value="' + val(c.harita) + '" placeholder="41.0082,28.9784 veya adres"></div></div>'
+      + '<div style="margin:16px 0 10px;border-top:1px solid rgba(255,255,255,.12);padding-top:14px"><b>Sosyal Medya</b><span class="sub" style="display:block;margin-top:2px">Footer alaninda logonun altinda gorunur. Bos birakilan ikon gizlenir.</span></div>'
+      + '<div class="sta-row2"><div class="sta-f"><label>Facebook</label><input id="sc_facebook" value="' + val(so.facebook != null ? so.facebook : sd.facebook) + '" placeholder="https://facebook.com/..."></div><div class="sta-f"><label>Instagram</label><input id="sc_instagram" value="' + val(so.instagram != null ? so.instagram : sd.instagram) + '" placeholder="https://instagram.com/..."></div></div>'
+      + '<div class="sta-row2"><div class="sta-f"><label>X (Twitter)</label><input id="sc_x" value="' + val(so.x != null ? so.x : sd.x) + '" placeholder="https://x.com/..."></div><div class="sta-f"><label>LinkedIn</label><input id="sc_linkedin" value="' + val(so.linkedin != null ? so.linkedin : sd.linkedin) + '" placeholder="https://linkedin.com/company/..."></div></div>'
+      + '<div class="sta-row2"><div class="sta-f"><label>YouTube</label><input id="sc_youtube" value="' + val(so.youtube != null ? so.youtube : sd.youtube) + '" placeholder="https://youtube.com/@..."></div><div class="sta-f"><label>NEXT Sosyal</label><input id="sc_nsosyal" value="' + val(so.nsosyal != null ? so.nsosyal : sd.nsosyal) + '" placeholder="https://nsosyal.com/..."></div></div>'
       + '<button class="sta-go" id="ct_btn">Kaydet & İletişim Sayfasına Uygula</button><div class="sta-out" id="ct_out"></div></div>'
       + '<div class="sta-pane" data-p="personel" hidden><h4>Personel Yönetimi</h4><p class="sub">Sisteme personel/uzman ekleyin; bu kullanıcılar Personel Girişi ekranından kendi kullanıcı adı ve şifresiyle giriş yapar.</p>'
       + '<div class="sta-row2"><div class="sta-f"><label>Ad Soyad</label><input id="pp_name" placeholder="Ad Soyad"></div><div class="sta-f"><label>Kullanıcı / E-posta</label><input id="pp_mail" placeholder="ad@firma.com"></div></div>'
@@ -1441,9 +1467,11 @@ html{transition:none}
       function gv(id) { var e = m.querySelector('#' + id); return e ? e.value.trim() : ''; }
       var s = degAdminLoad();
       s.contact = { firma: gv('ct_firma'), tel: gv('ct_tel'), whatsapp: gv('ct_wa'), email: gv('ct_mail'), adres: gv('ct_adres'), saat: gv('ct_saat'), harita: gv('ct_harita') };
+      s.social = { facebook: gv('sc_facebook'), instagram: gv('sc_instagram'), x: gv('sc_x'), linkedin: gv('sc_linkedin'), youtube: gv('sc_youtube'), nsosyal: gv('sc_nsosyal') };
       degAdminSaveStore(s);
       var o = m.querySelector('#ct_out'); o.className = 'sta-out'; o.innerHTML = '<span class="ok">✓ İletişim & adres kaydedildi ve uygulandı.</span>';
       try { degContactApply(); } catch (e) {}
+      try { degApplySocial(); } catch (e) {}
       degToast('İletişim bilgileri güncellendi.');
     });
     m.querySelector('#aa_btn').addEventListener('click', degAdminPingApi);
@@ -1451,6 +1479,7 @@ html{transition:none}
   }
   window.openDegAdmin = function () { ensureDegAdmin().classList.add('on'); };
   window.closeDegAdmin = function () { var m = document.getElementById('degAdmin'); if (m) m.classList.remove('on'); };
+  window.addEventListener('hashchange', function(){ if(/^#(yonetim|admin|panel)$/i.test(location.hash||'')){ try{ openDegAdmin(); }catch(e){} } });
 
   async function degAdminGenPdf() {
     var asset = (document.getElementById('ar_asset') || {}).value || '';
@@ -1535,7 +1564,7 @@ html{transition:none}
 
   /* ===== İletişim sayfası — admin'den adres/harita + canlı destek (ProX) ===== */
   function degContactApply() {
-    var c = (degAdminLoad().contact) || {};
+    var c = (function(){try{return (degMerge()||{}).contact;}catch(e){return (degAdminLoad()||{}).contact;}})() || {};
     function setTxt(id, t) { var e = document.getElementById(id); if (e && t) e.textContent = t; }
     function setHref(id, h) { var e = document.getElementById(id); if (e && h) e.setAttribute('href', h); }
     var firma = c.firma || 'Meridyen Gayrimenkul Değerleme A.Ş.';
@@ -1904,10 +1933,28 @@ html{transition:none}
   };
 
   /* ---- Mobil alt menü (Hizmetlerimiz · Neden Biz · Talep · WhatsApp) ---- */
+  function degNedenBiz(){try{
+    if(!document.getElementById('deg-nbx-css')){var st=document.createElement('style');st.id='deg-nbx-css';st.textContent='.nb-x{display:inline-flex;align-items:center;justify-content:center;width:1.35em;height:1.35em;background:#16a34a;color:#08130a;border-radius:6px;font-weight:800;font-size:.82em;line-height:1;vertical-align:middle;position:relative;top:-1px;margin:0 3px}';document.head.appendChild(st);}
+    var lang='tr'; try{lang=localStorage.getItem('deg_lang')||'tr';}catch(e){}
+    var links=document.querySelectorAll('nav a[href="neden-biz.html"], .mnav a[href="neden-biz.html"]');
+    links.forEach(function(a){var tg=a.querySelector(':scope > span:not(.nb-x)')||a;
+      if(!a.getAttribute('data-nbtr')){var o=(tg.textContent||'').replace(/[?]/g,'').replace(/\s+/g,' ').trim();if(o)a.setAttribute('data-nbtr',o);}
+      var trL=a.getAttribute('data-nbtr')||'Neden Biz', label=trL;
+      if(lang!=='tr'){try{var D=(typeof _i18n!=='undefined')?_i18n[lang]:null;if(D&&D[trL])label=D[trL];}catch(e){}}
+      var p=label.split(/\s+/);
+      var html=(p.length>=2)?(p[0]+' <span class="nb-x">?</span> '+p.slice(1).join(' ')):(label+' <span class="nb-x">?</span>');
+      if(tg.getAttribute('data-nbhtml')!==html){tg.innerHTML=html;tg.setAttribute('data-nbhtml',html);}
+    });
+    if(!window._degNbHook){window._degNbHook=1;
+      try{var o1=window.degSetLang;if(typeof o1==='function'){window.degSetLang=function(l){o1(l);[80,300,700].forEach(function(ms){setTimeout(degNedenBiz,ms);});};}}catch(e){}
+      document.addEventListener('change',function(e){if(e.target&&e.target.classList&&e.target.classList.contains('lang-sel')){[80,300,700].forEach(function(ms){setTimeout(degNedenBiz,ms);});}});
+    }
+  }catch(e){}}
   function degMobileNav() {
     if (document.querySelector('.mnav')) return;
     if (document.body.classList.contains('crm')) return;
     var WA = 'https://wa.me/905000000000';
+    try{ var _da=degAdminLoad(); var _wn=((_da.contact&&_da.contact.whatsapp)||'').replace(/[^0-9]/g,''); if(_wn) WA='https://wa.me/'+_wn; }catch(e){}
     var L = 'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
     var items = [
       { href: 'hizmetler.html', label: 'Hizmetlerimiz', icon: '<svg viewBox="0 0 24 24" ' + L + '><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg>' },
@@ -2018,7 +2065,7 @@ html{transition:none}
       + '<div><b>' + min[0] + '</b><span><i class="il-l">en uygun</i> ₺' + degTL(min[1]) + '</span></div>';
   }
   function degRunInit() {
-    try { degApplySettings(); degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degCookieBar(); degI18nInit(); degInitReveal(); degInitCount(); degHeroAnim(); degIndexBand(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); } catch (e) {}
+    try { degApplySettings(); degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degApplySocial(); degCookieBar(); degI18nInit(); degNedenBiz(); degInitReveal(); degInitCount(); degHeroAnim(); degIndexBand(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); try{ if(/^#(yonetim|admin|panel)$/i.test(location.hash||'')) openDegAdmin(); }catch(_e){} } catch (e) {}
   }
   // Yayınlanan ayarları (site-config.json) yükle, sonra tüm sayfaya uygula. Dosya yoksa sorunsuz devam eder.
   try {
