@@ -1283,10 +1283,26 @@ function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');
   set('sp_base',SAAS_CONFIG.proxAiPrompts.persona);set('sp_custom',SAAS_CONFIG.tenantSettings.customPrompt);
   set('ed_belge',eidsFirma().eids.belgeNo);try{eidsRenderAdmin();}catch(e){}
   try{renderSA();renderVipStatus();}catch(e){}
+  try{staGate();}catch(e){}
   _refreshLogoPrev();
 }
 function closeSaasAdmin(){const e=document.getElementById('saasTenantAdmin');if(e)e.classList.remove('on');}
-function staTab(b){const m=b.closest('.sta-modal');m.querySelectorAll('.sta-tabs button').forEach(x=>x.classList.toggle('act',x===b));const t=b.dataset.t;m.querySelectorAll('.sta-pane').forEach(p=>p.hidden=(p.dataset.p!==t));}
+/* ===== PAKET / ÖZELLİK KİLİDİ (admin sekmeleri) — upsell'li ===== */
+var STA_TAB_FEAT={seo:'canUseAnalytics',prox:'canUseMarketingContent',portfoy:'canUseAdvancedProX'};
+var STA_FEAT_LABEL={canUseAnalytics:'Google & SEO / Analitik',canUseMarketingContent:'ProX AI İçerik',canUseAdvancedProX:'Gerçek ProX Özel Portföy'};
+var PKG_ORDER_D=['BASIC','PRO','BUSINESS','ENTERPRISE'];
+var PKG_KAPSAM_D={BASIC:'Piyasa analizi · Lead CRM · SVG',PRO:'+ Analitik · SEO & pazarlama içeriği',BUSINESS:'+ Gelişmiş ProX · Blog · Premium tema',ENTERPRISE:'+ Tam white-label'};
+function featHasD(f){return typeof window.hasFeature==='function'?window.hasFeature(f):true;}
+function featMinPkgD(f){var P=window.EMLAK_PACKAGES||{};for(var i=0;i<PKG_ORDER_D.length;i++){if((P[PKG_ORDER_D[i]]||[]).indexOf(f)>=0)return PKG_ORDER_D[i];}return 'ENTERPRISE';}
+function staTabGated(t){var f=STA_TAB_FEAT[t];return !!(f&&!featHasD(f));}
+function staGate(m){try{(m||document).querySelectorAll('.sta-tabs button').forEach(function(b){var t=b.dataset.t,old=b.querySelector('.tlock');if(old)old.remove();b.style.removeProperty('opacity');if(staTabGated(t)){b.style.opacity='.55';var s=document.createElement('span');s.className='tlock';s.textContent=' 🔒';b.appendChild(s);}});}catch(e){}}
+function staUpsell(t){var f=STA_TAB_FEAT[t];if(!f)return;var need=featMinPkgD(f),cur=(window.EMLAK_TENANT&&window.EMLAK_TENANT.packageCode)||'—',label=STA_FEAT_LABEL[f]||f;
+  var id='dnUpsell',mm=document.getElementById(id);
+  if(!mm){mm=document.createElement('div');mm.id=id;mm.style.cssText='position:fixed;inset:0;z-index:100000;display:none;align-items:center;justify-content:center;padding:20px';mm.addEventListener('click',function(ev){if(ev.target.id===id)mm.style.display='none';});document.body.appendChild(mm);}
+  mm.innerHTML='<div style="position:absolute;inset:0;background:rgba(0,0,0,.75)" onclick="document.getElementById(\''+id+'\').style.display=\'none\'"></div><div style="position:relative;max-width:460px;background:var(--ink,#0b0b0c);border:1px solid var(--line-soft);border-radius:14px;padding:26px;text-align:center"><div style="font-size:32px">🔒</div><h3 style="font-family:var(--serif);color:var(--gold);margin:6px 0">'+_leD(label)+' · '+_leD(need)+' paketi</h3><div class="sub">Mevcut paket: <b>'+_leD(cur)+'</b>. Bu özellik <b>'+_leD(need)+'</b> ve üzeri paketlerde açıktır.</div><div style="text-align:left;background:#0a0a0b;border:1px solid var(--line-soft);border-radius:10px;padding:12px;margin:14px 0;font-size:13px;color:var(--muted)"><b style="color:var(--gold)">'+_leD(need)+' kapsamı:</b><br>'+_leD(PKG_KAPSAM_D[need]||'')+'</div><button class="btn btn-gold" style="width:100%" onclick="document.getElementById(\''+id+'\').style.display=\'none\';if(typeof toast===\'function\')toast(\''+_leD(need)+' paketi yükseltme talebiniz iletildi.\')">'+_leD(need)+' Paketine Yükselt</button></div>';
+  mm.style.display='flex';}
+window.staGate=staGate;window.staUpsell=staUpsell;window.staTabGated=staTabGated;
+function staTab(b){var t=b.dataset.t;if(staTabGated(t)){staUpsell(t);return;}const m=b.closest('.sta-modal');m.querySelectorAll('.sta-tabs button').forEach(x=>x.classList.toggle('act',x===b));m.querySelectorAll('.sta-pane').forEach(p=>p.hidden=(p.dataset.p!==t));}
 function _v(id){const e=document.getElementById(id);return e?e.value.trim():'';}
 function _refreshLogoPrev(){const box=document.getElementById('adLogoPrev');if(!box)return;const logo=saasResolve('logoUrl');if(logo)box.innerHTML='<img src="'+logo+'" alt="logo">';else box.textContent=(saasResolve('brandName')||'M').trim().charAt(0);}
 function saasUploadImg(input,key){const f=input.files&&input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{SAAS_CONFIG.tenantSettings[key]=e.target.result;applySaaSSettings();_refreshLogoPrev();toast((key==='logoUrl'?'Logo':'Favicon')+' yüklendi & uygulandı.');};r.readAsDataURL(f);}

@@ -23,6 +23,13 @@ ok('TRG yüklendi', !!T && typeof T.city==='function');
 eq("Antalya'da (yumuşak)", T.city("İzmir'de","Antalya"), "Antalya'da");
 eq("Uşak'ta (sert ünsüz)",  T.city("İzmir'de","Uşak"),   "Uşak'ta");
 
+/* ---- 1b) tr-iller.js — 81 il ortak veri ---- */
+globalThis.window = globalThis.window || {};
+eval(readFileSync('tr-iller.js','utf8'));
+const IL = globalThis.window.TR_ILILCE;
+ok('tr-iller.js yüklendi (81 il)', IL && Object.keys(IL).length===81);
+ok("İstanbul ilçeleri var", IL && IL['İstanbul'] && IL['İstanbul'].ilce.length>=39);
+
 /* ---- 2) JS sözdizimi (bun build — en büyük inline script) ---- */
 function buildsOk(){
   try{
@@ -53,11 +60,22 @@ const invariants = [
   ["A/B (abVariant)", "function abVariant"],
   ["Proxy güvenlik modu", "EMLAK_PROXY_MODE"],
   ["Çok dilli (gmLang)", "async function gmLang"],
-  ["Hizmet bölgeleri (kapEnsure)", "function kapEnsure"],
+  ["İl/ilçe motoru (makeProvince)", "function makeProvince"],
+  ["Mahalle katmanı (realMah/loadMahalle)", "function loadMahalle"],
+  ["Tam Hizmet Alanı (saApply)", "function saApply"],
+  ["Çok-illi iş listesi (saWorkList)", "function saWorkList"],
+  ["Gerçek ProX portföy (rebuildVipFromProx)", "function rebuildVipFromProx"],
+  ["ProX analiz fiyatı (proxAnalyzePrice)", "function proxAnalyzePrice"],
+  ["Veri tazeliği (wlStale)", "function wlStale"],
+  ["Paket kilidi (staGate)", "function staGate"],
+  ["Paket upsell (staUpsell)", "function staUpsell"],
   ["Kurulum sihirbazı (openOnboarding)", "function openOnboarding"],
   ["tr-grammar.js yüklenir", 'src="tr-grammar.js"'],
+  ["tr-iller.js yüklenir", 'src="tr-iller.js"'],
   ["prox/ai aiGuard'lı", "prompt:aiGuard(q)"],
   ["EİDS public rozet öğesi", 'id="eidsPublicBadge"'],
+  ["Hizmet Alanı admin sekmesi", 'data-t="hizmetalani"'],
+  ["Portföy ⟳ ProX butonu", "rebuildVipFromProx()"],
   ["Footer KVKK canlı link", "openKvkk()"],
   ["Nav dil seçici", "gmLang(this.value)"],
 ];
