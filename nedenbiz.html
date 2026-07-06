@@ -2128,6 +2128,7 @@ document.addEventListener('DOMContentLoaded',function(){ if(location.hash){var e
     var mk=document.querySelector('.logo .mark');if(mk&&name!==ORIG)mk.textContent=shortN.charAt(0).toLocaleUpperCase('tr');
     if(document.title.indexOf('Meridyen')>=0||(il!=='İzmir'&&document.title.indexOf('İzmir')>=0))document.title=rep(document.title);
     document.querySelectorAll('meta[content]').forEach(function(m){var v=m.getAttribute('content');if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0))m.setAttribute('content',rep(v));});
+    document.querySelectorAll('script[type="application/ld+json"]').forEach(function(s){var v=s.textContent;if(v&&(v.indexOf('Meridyen')>=0||(il!=='İzmir'&&(v.indexOf('İzmir')>=0||v.indexOf('İZMİR')>=0))))s.textContent=rep(v);});
   }catch(e){}if(obs)obs.observe(document.body,{childList:true,subtree:true,characterData:true});}
   function start(){sweep();if('MutationObserver' in window){obs=new MutationObserver(function(){clearTimeout(to);to=setTimeout(sweep,150);});obs.observe(document.body,{childList:true,subtree:true,characterData:true});}}
   if(document.readyState!=='loading')start();else document.addEventListener('DOMContentLoaded',start);

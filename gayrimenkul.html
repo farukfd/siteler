@@ -4532,7 +4532,7 @@ function kurumsalApply(){var res=window._kiResult;if(!res){toast("Önce oluştur
 function saveFirma(){const g=id=>document.getElementById(id).value.trim();
   var _pe=(FIRMA&&FIRMA.eids)||{};FIRMA={name:g('cf_name')||FIRMA.name,tel:g('cf_tel'),mail:g('cf_mail'),wa:g('cf_wa').replace(/[^0-9]/g,''),adres:g('cf_adres'),hours:g('cf_hours'),vergi:(document.getElementById('cf_vergi')?g('cf_vergi'):(FIRMA.vergi||'')),yetkili:(document.getElementById('cf_yetkili')?g('cf_yetkili'):(FIRMA.yetkili||'')),eids:{connected:_pe.connected||false,firmaKod:_pe.firmaKod||'',kullaniciKodu:_pe.kullaniciKodu||'',belgeNo:(document.getElementById('cf_eidsBelge')?g('cf_eidsBelge').replace(/[^0-9]/g,''):(_pe.belgeNo||'')),unvan:(document.getElementById('cf_eidsUnvan')?g('cf_eidsUnvan'):(_pe.unvan||''))}};
   FIRMA.eids.yetkili=!!(FIRMA.eids.belgeNo&&FIRMA.eids.belgeNo.length===7&&FIRMA.eids.connected);
-  saveAll();applyFirma();if(typeof renderEidsYetki==='function')renderEidsYetki();if(typeof renderIlanRows==='function')renderIlanRows();toast('✓ Firma bilgileri kaydedildi ve siteye uygulandı.');}
+  saveAll();applyFirma();if(typeof renderEidsYetki==='function')renderEidsYetki();if(typeof renderIlanRows==='function')renderIlanRows();if(typeof applySchema==='function')applySchema();toast('✓ Firma bilgileri kaydedildi ve siteye uygulandı.');}
 function eidsConnect(){var e=(FIRMA.eids||(FIRMA.eids={}));var bno=document.getElementById('cf_eidsBelge');if(bno)e.belgeNo=(bno.value||'').replace(/[^0-9]/g,'');toast('e-Devlet EİDS oturumu açılıyor…');setTimeout(function(){e.connected=true;if(!e.firmaKod)e.firmaKod=eidsGuid();e.kullaniciKodu=eidsGuid();e.yetkili=!!(e.belgeNo&&e.belgeNo.length===7&&e.connected);saveAll();fillFirmaForm();if(typeof renderIlanRows==='function')renderIlanRows();toast(e.yetkili?'✓ e-Devlet ile bağlanıldı · Kullanıcı Kodu üretildi · Yetki aktif.':'e-Devlet bağlandı. Geçerli 7 haneli yetki belgesi girip kaydedin.');},900);}
 function renderEidsYetki(){var box=document.getElementById('eidsYetkiBox');if(!box)return;var e=(FIRMA&&FIRMA.eids)||{};if(e.yetkili){box.innerHTML='<div class="eids-yetki on"><span class="ic"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z\"/><path d=\"M9 12l2 2 4-4\"/></svg></span><div>EİDS Yetkisi Aktif — açık ilan yayınlayabilirsiniz.<div style="font-weight:500;font-size:12px;opacity:.85">Yetki Belgesi No '+(e.belgeNo||'—')+' · e-Devlet bağlı'+(e.kullaniciKodu?' · Kullanıcı '+e.kullaniciKodu.slice(0,8)+'…':'')+'</div></div></div>';}else{box.innerHTML='<div class="eids-yetki off"><span class="ic">⚠️</span><div>EİDS Yetkisi Yok — yalnızca Özel Portföy kaydı eklenebilir.<div style="font-weight:500;font-size:12px;opacity:.85">7 haneli yetki belgesi girin ve e-Devlet ile bağlanın.</div></div></div>';}}
 /* ===== KUSURSUZ MARKA MOTORU (white-label · Meridyen -> firma adı) ===== */
@@ -4575,9 +4575,10 @@ function brandSweep(root){try{if(brandName()===BRAND_ORIG&&wlCityOff())return;ro
   root.querySelectorAll('[title],[alt],[placeholder],[aria-label]').forEach(function(el){attrs.forEach(function(a){var v=el.getAttribute&&el.getAttribute(a);if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0))el.setAttribute(a,wlReplace(v));});});
   try{var mk=document.querySelector('.logo .mark');if(mk&&brandShort())mk.textContent=brandShort().charAt(0).toLocaleUpperCase('tr');}catch(e){}
   try{if(document.title.indexOf('Meridyen')>=0||document.title.indexOf('İzmir')>=0)document.title=wlReplace(document.title);
-    document.querySelectorAll('meta[content]').forEach(function(m){var v=m.getAttribute('content');if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0))m.setAttribute('content',wlReplace(v));});}catch(e){}
+    document.querySelectorAll('meta[content]').forEach(function(m){var v=m.getAttribute('content');if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0))m.setAttribute('content',wlReplace(v));});document.querySelectorAll('script[type="application/ld+json"]').forEach(function(s){var v=s.textContent;if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0||v.indexOf('İZMİR')>=0))s.textContent=wlReplace(v);});}catch(e){}
   if(_brandObs&&brandName()!==BRAND_ORIG)_brandObs.observe(document.body,{childList:true,subtree:true,characterData:true});
  }catch(e){}}
+function applySchema(){try{if(typeof FIRMA==='undefined'||!FIRMA)return;var name=brandName(),il=(typeof PROVINCE!=='undefined'&&PROVINCE.name)||'İzmir';var sd=(typeof SEO==='object'&&SEO&&SEO.desc)||'';var gen=name+' — '+il+' ve çevresinde satılık ve kiralık konut, arsa, ticari gayrimenkul, değerleme, yatırım ve miras/intikal danışmanlığı.';var desc=(sd&&sd.indexOf('İzmir')<0&&sd.indexOf('Ege')<0)?sd:gen;var node={'@context':'https://schema.org','@type':['RealEstateAgent','LocalBusiness'],name:name,url:(location.origin+'/'),description:desc,areaServed:{'@type':'City',name:il},address:{'@type':'PostalAddress',addressLocality:il,addressRegion:il,addressCountry:'TR',streetAddress:(FIRMA.adres||'')},telephone:(FIRMA.tel||''),email:(FIRMA.mail||''),priceRange:'\u20ba\u20ba',knowsAbout:['Satılık konut','Kiralık konut','Arsa','Ticari gayrimenkul','Ofis','Gayrimenkul değerleme','Miras ve intikal','Yatırım danışmanlığı']};if(FIRMA.eids&&FIRMA.eids.belgeNo)node.identifier={'@type':'PropertyValue',name:'Taşınmaz Ticareti Yetki Belgesi No',value:FIRMA.eids.belgeNo};var sc=document.querySelectorAll('script[type="application/ld+json"]'),tg=null;for(var i=0;i<sc.length;i++){if((sc[i].textContent||'').indexOf('RealEstateAgent')>=0){tg=sc[i];break;}}if(!tg){tg=document.createElement('script');tg.type='application/ld+json';document.head.appendChild(tg);}tg.textContent=JSON.stringify(node);}catch(e){}}
 function brandObserve(){try{if(_brandObs||(brandName()===BRAND_ORIG&&wlCityOff())||!('MutationObserver' in window))return;
   _brandObs=new MutationObserver(function(){clearTimeout(_brandTO);_brandTO=setTimeout(function(){brandSweep(document.body);},140);});
   _brandObs.observe(document.body,{childList:true,subtree:true,characterData:true});}catch(e){}}
@@ -4588,7 +4589,7 @@ function applyBrand(name){try{if(name)FIRMA.name=name.trim();
   if(typeof AICFG==='object'&&AICFG&&AICFG.persona&&AICFG.persona.indexOf('Meridyen')>=0)AICFG.persona=brandReplace(AICFG.persona);
   if(typeof saveAll==='function')saveAll();
   if(typeof applyFirma==='function')applyFirma();if(typeof applyContent==='function'){try{applyContent();}catch(e){}}
-  brandSweep(document.body);brandObserve();
+  brandSweep(document.body);brandObserve();applySchema();
 }catch(e){console.warn('applyBrand:',e);}}
 function applyFirma(){
   document.querySelectorAll('.js-tel').forEach(e=>{e.textContent=FIRMA.tel;if(e.tagName==='A')e.href='tel:'+FIRMA.tel.replace(/[^0-9+]/g,'');});
@@ -4972,7 +4973,7 @@ function importData(inp){const f=inp.files[0];if(!f)return;const r=new FileReade
     toast('✓ Yedek başarıyla içe aktarıldı.');}catch(err){toast('Geçersiz yedek dosyası.');}};
   r.readAsText(f);inp.value='';}
 function resetData(){if(!confirm('Tüm değişiklikler silinip demo verisine dönülecek. Emin misiniz?'))return;
-  localStorage.removeItem(LS);loadAll();eidsEnsure();applyProxTenant();try{if(PROX&&PROX.il&&PROX.il!==PROVINCE.name)applyProvince(PROX.il,true);}catch(e){}try{if(typeof FIRMA!=='undefined'&&FIRMA.name!==BRAND_ORIG&&typeof applySeoHead==='function')applySeoHead();}catch(e){}applyFirma();applyContent();document.documentElement.removeAttribute('style');
+  localStorage.removeItem(LS);loadAll();eidsEnsure();applyProxTenant();try{if(PROX&&PROX.il&&PROX.il!==PROVINCE.name)applyProvince(PROX.il,true);}catch(e){}try{if(typeof FIRMA!=='undefined'&&FIRMA.name!==BRAND_ORIG&&typeof applySeoHead==='function')applySeoHead();}catch(e){}try{if(typeof applySchema==='function')applySchema();}catch(e){}applyFirma();applyContent();document.documentElement.removeAttribute('style');
   renderIlanlar();renderDan();renderBlogFeed();renderRefGrid();applyModuleVisibility();initAiAssistant();
   renderIlanRows();renderDanRows();renderLeads();renderRecentLeads();renderKpis();renderBolgeRows();fillFirmaForm();renderThemeGrid();
   renderP3();render3dForm();fillContent();renderBlogRows();renderRefRows();fillSeo();fillGoogle();fillProx();renderModules();renderEpRows();fillAiCfg();renderAllCrm();
@@ -4980,7 +4981,7 @@ function resetData(){if(!confirm('Tüm değişiklikler silinip demo verisine dö
 
 /* ============ INIT ============ */
 document.addEventListener('DOMContentLoaded',()=>{
-  loadAll();eidsEnsure();applyProxTenant();try{if(PROX&&PROX.il&&PROX.il!==PROVINCE.name)applyProvince(PROX.il,true);}catch(e){}try{if(typeof FIRMA!=='undefined'&&FIRMA.name!==BRAND_ORIG&&typeof applySeoHead==='function')applySeoHead();}catch(e){}
+  loadAll();eidsEnsure();applyProxTenant();try{if(PROX&&PROX.il&&PROX.il!==PROVINCE.name)applyProvince(PROX.il,true);}catch(e){}try{if(typeof FIRMA!=='undefined'&&FIRMA.name!==BRAND_ORIG&&typeof applySeoHead==='function')applySeoHead();}catch(e){}try{if(typeof applySchema==='function')applySchema();}catch(e){}
   if(THEME&&THEME.accent)setTheme(THEME.accent,THEME.green,THEME.navy);
   applyContent();
   initHero();renderIlanlar();renderOzel();ozHero();renderOzHome();renderDan();renderBolgePick();initVal();applyFirma();renderBlogFeed();renderRefGrid();
