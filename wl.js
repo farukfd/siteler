@@ -54,7 +54,7 @@ function sweep(){if(!customized)return;if(obs)obs.disconnect();try{
   if(document.title.indexOf('Meridyen')>=0||(il!=='İzmir'&&(document.title.indexOf('İzmir')>=0||document.title.indexOf('İZMİR')>=0)))document.title=rep(document.title);
   document.querySelectorAll('meta[content]').forEach(function(m){var v=m.getAttribute('content');if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0||v.indexOf('İZMİR')>=0))m.setAttribute('content',rep(v));});
   document.querySelectorAll('script[type="application/ld+json"]').forEach(function(s){var v=s.textContent;if(v&&(v.indexOf('Meridyen')>=0||(il!=='İzmir'&&(v.indexOf('İzmir')>=0||v.indexOf('İZMİR')>=0))))s.textContent=rep(v);});
-}catch(e){}if(obs)obs.observe(document.body,{childList:true,subtree:true,characterData:true});}
+}catch(e){}if(obs)obs.observe(document.body,{childList:true,subtree:true});}
 
 /* ---- 4) nedenbiz Bölge Hakimiyeti — gerçek ProX verisi (wl_bolge) ---- */
 function buildBolge(){try{
@@ -72,7 +72,7 @@ function buildBolge(){try{
   if(projWrap){projWrap.style.display='none';var ph=projWrap.previousElementSibling;if(ph&&ph.tagName==='H3'&&/proje/i.test(ph.textContent))ph.style.display='none';}
 }catch(e){}}
 
-function start(){buildBolge();sweep();if(customized&&'MutationObserver' in window){obs=new MutationObserver(function(){clearTimeout(to);to=setTimeout(function(){sweep();},150);});obs.observe(document.body,{childList:true,subtree:true,characterData:true});}setTimeout(function(){buildBolge();sweep();},400);}
+function start(){buildBolge();sweep();if(customized&&'MutationObserver' in window){obs=new MutationObserver(function(){clearTimeout(to);to=setTimeout(function(){sweep();},150);});obs.observe(document.body,{childList:true,subtree:true});}setTimeout(function(){buildBolge();sweep();},400);}
 if(document.readyState!=='loading')start();else document.addEventListener('DOMContentLoaded',start);
 
 }catch(e){}

@@ -4484,7 +4484,7 @@ function renderIlanRows(){
   const tb=document.getElementById('ilanRows');if(!tb)return;
   if(!ILANLAR.length){tb.innerHTML='<tr><td colspan="6" class="empty">Henüz ilan yok.</td></tr>';return;}
   tb.innerHTML=ILANLAR.map(it=>`<tr>
-    <td><div class="trow"><img src="${imgSrc(it.img)}" class="tthumb"><div><b>${it.title}</b><div class="tsub">${it.type} · ${it.oda} · ${it.m2}m²</div></div></div></td>
+    <td><div class="trow"><img src="${imgSrc(it.img)}" class="tthumb" loading="lazy" decoding="async"><div><b>${it.title}</b><div class="tsub">${it.type} · ${it.oda} · ${it.m2}m²</div></div></div></td>
     <td><span class="atag ${it.op==='Satılık'?'sat':'kir'}">${it.op}</span></td>
     <td class="num">${fmt(it.price)} ₺</td>
     <td>${it.mah}, ${it.ilce}${it.il?`<div class="tsub">${it.il}</div>`:''}</td>
@@ -4519,7 +4519,7 @@ function delDan(id){if(!confirm('Bu danışmanı silmek istediğinize emin misin
 function renderDanRows(){const tb=document.getElementById('danRows');if(!tb)return;
   if(!DANISMANLAR.length){tb.innerHTML='<tr><td colspan="5" class="empty">Henüz danışman yok.</td></tr>';return;}
   tb.innerHTML=DANISMANLAR.map(d=>{const src=d.foto?(IMG[d.foto]||d.foto):'';const ini=d.name.split(' ').map(x=>x[0]).slice(0,2).join('');
-    const av=src?`<img src="${src}" class="tthumb" style="border-radius:50%;width:38px;height:38px">`:`<span class="tthumb" style="border-radius:50%;width:38px;height:38px;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:12px;font-weight:700">${ini}</span>`;
+    const av=src?`<img src="${src}" class="tthumb" loading="lazy" decoding="async" style="border-radius:50%;width:38px;height:38px">`:`<span class="tthumb" style="border-radius:50%;width:38px;height:38px;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:12px;font-weight:700">${ini}</span>`;
     return `<tr><td><div class="trow">${av}<div><b>${d.name}</b>${d.feat?' <span class="atag" style="background:#fef3c7;color:#92400e">★</span>':''}</div></div></td><td>${d.role}</td><td>${d.area}</td><td class="num">${d.sales}</td>
     <td class="ta"><button class="ico-btn" onclick="editDan(${d.id})">✎</button><button class="ico-btn del" onclick="delDan(${d.id})">🗑</button></td></tr>`;}).join('');}
 
@@ -4679,13 +4679,13 @@ function brandSweep(root){try{if(brandName()===BRAND_ORIG&&wlCityOff())return;ro
   try{var mk=document.querySelector('.logo .mark');if(mk&&brandShort())mk.textContent=brandShort().charAt(0).toLocaleUpperCase('tr');var jl=document.querySelector('.js-logo');if(jl){var bn=brandName();if(bn!==BRAND_ORIG){var ps=bn.split(/\s+/);var last=ps.length>1?ps[ps.length-1]:'';var head=ps.length>1?ps.slice(0,-1).join(' '):bn;var esc=function(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');};jl.innerHTML=esc(head)+(last?'<span class="lo2"> '+esc(last)+'</span>':'');}}}catch(e){}
   try{if(document.title.indexOf('Meridyen')>=0||document.title.indexOf('İzmir')>=0)document.title=wlReplace(document.title);
     document.querySelectorAll('meta[content]').forEach(function(m){var v=m.getAttribute('content');if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0))m.setAttribute('content',wlReplace(v));});document.querySelectorAll('script[type="application/ld+json"]').forEach(function(s){var v=s.textContent;if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0||v.indexOf('İZMİR')>=0))s.textContent=wlReplace(v);});}catch(e){}
-  if(_brandObs&&brandName()!==BRAND_ORIG)_brandObs.observe(document.body,{childList:true,subtree:true,characterData:true});
+  if(_brandObs&&brandName()!==BRAND_ORIG)_brandObs.observe(document.body,{childList:true,subtree:true});
  }catch(e){}}
 function applyCanonical(){try{var url=location.origin+location.pathname.replace(/index\.html$/,'');var setL=function(rel,href){var l=document.querySelector('link[rel="'+rel+'"]');if(!l){l=document.createElement('link');l.setAttribute('rel',rel);document.head.appendChild(l);}l.setAttribute('href',href);};setL('canonical',url);var setM=function(pr,val){var m=document.querySelector('meta[property="'+pr+'"]');if(!m){m=document.createElement('meta');m.setAttribute('property',pr);document.head.appendChild(m);}m.setAttribute('content',val);};setM('og:url',url);try{setM('og:site_name',brandName());}catch(e){}}catch(e){}}
 function applySchema(){try{if(typeof FIRMA==='undefined'||!FIRMA)return;var name=brandName(),il=(typeof PROVINCE!=='undefined'&&PROVINCE.name)||'İzmir';var sd=(typeof SEO==='object'&&SEO&&SEO.desc)||'';var gen=name+' — '+il+' ve çevresinde satılık ve kiralık konut, arsa, ticari gayrimenkul, değerleme, yatırım ve miras/intikal danışmanlığı.';var desc=(sd&&sd.indexOf('İzmir')<0&&sd.indexOf('Ege')<0)?sd:gen;var node={'@context':'https://schema.org','@type':['RealEstateAgent','LocalBusiness'],name:name,url:(location.origin+'/'),description:desc,areaServed:{'@type':'City',name:il},address:{'@type':'PostalAddress',addressLocality:il,addressRegion:il,addressCountry:'TR',streetAddress:(FIRMA.adres||'')},telephone:(FIRMA.tel||''),email:(FIRMA.mail||''),priceRange:'\u20ba\u20ba',knowsAbout:['Satılık konut','Kiralık konut','Arsa','Ticari gayrimenkul','Ofis','Gayrimenkul değerleme','Miras ve intikal','Yatırım danışmanlığı']};if(FIRMA.eids&&FIRMA.eids.belgeNo)node.identifier={'@type':'PropertyValue',name:'Taşınmaz Ticareti Yetki Belgesi No',value:FIRMA.eids.belgeNo};var sc=document.querySelectorAll('script[type="application/ld+json"]'),tg=null;for(var i=0;i<sc.length;i++){if((sc[i].textContent||'').indexOf('RealEstateAgent')>=0){tg=sc[i];break;}}if(!tg){tg=document.createElement('script');tg.type='application/ld+json';document.head.appendChild(tg);}tg.textContent=JSON.stringify(node);}catch(e){}}
 function brandObserve(){try{if(_brandObs||(brandName()===BRAND_ORIG&&wlCityOff())||!('MutationObserver' in window))return;
   _brandObs=new MutationObserver(function(){clearTimeout(_brandTO);_brandTO=setTimeout(function(){brandSweep(document.body);},140);});
-  _brandObs.observe(document.body,{childList:true,subtree:true,characterData:true});}catch(e){}}
+  _brandObs.observe(document.body,{childList:true,subtree:true});}catch(e){}}
 function applyBrand(name){try{if(name)FIRMA.name=name.trim();
   if(FIRMA.eids&&FIRMA.eids.unvan&&FIRMA.eids.unvan.indexOf('Meridyen')>=0)FIRMA.eids.unvan=brandReplace(FIRMA.eids.unvan);
   if(typeof CONTENT==='object'&&CONTENT){Object.keys(CONTENT).forEach(function(k){if(typeof CONTENT[k]==='string'&&CONTENT[k].indexOf('Meridyen')>=0)CONTENT[k]=brandReplace(CONTENT[k]);});}
@@ -5488,7 +5488,7 @@ function runMatch(){const id=+document.getElementById('es_kisi').value;const k=K
   let head=`<div class="crm-detail"><div class="cdrow"><span>Talep</span><b>${k.op||'Farketmez'} · ${k.tip||'Her tip'} · ${k.max?fmtK(k.min)+'–'+fmtK(k.max)+'₺':'bütçe yok'} · ${(k.ilceler||[]).join(', ')||'her bölge'}</b></div></div>`;
   if(!scored.length){box.innerHTML=head+'<div class="empty">Uygun ilan bulunamadı. Talep kriterlerini genişletin.</div>';return;}
   box.innerHTML=head+'<table class="atable" style="margin-top:12px"><thead><tr><th>İlan</th><th>Fiyat</th><th>Uyum</th><th></th></tr></thead><tbody>'+
-    scored.map(({it,s})=>`<tr><td><div class="trow"><img src="${imgSrc(it.img)}" class="tthumb"><div><b>${it.title}</b><div class="tsub">${it.mah}, ${it.ilce} · ${it.oda} · ${it.m2}m²</div></div></div></td>
+    scored.map(({it,s})=>`<tr><td><div class="trow"><img src="${imgSrc(it.img)}" class="tthumb" loading="lazy" decoding="async"><div><b>${it.title}</b><div class="tsub">${it.mah}, ${it.ilce} · ${it.oda} · ${it.m2}m²</div></div></div></td>
       <td class="num">${fmt(it.price)} ₺</td>
       <td><span class="matchbar"><span class="mb"><span class="mbf" style="width:${s}%"></span></span><b>%${s}</b></span></td>
       <td class="ta"><button class="ico-btn" onclick="matchWa(${k.id},${it.id})" title="WhatsApp gönder">💬</button><button class="ico-btn" onclick="matchToDeal(${k.id},${it.id})" title="Fırsata ekle">＋</button></td></tr>`).join('')+'</tbody></table>';}
@@ -6404,7 +6404,7 @@ function buildTenantHero(type){
   if(type==='Değerleme'){return '';}  /* Değerleme modu kaldırıldı — yasal silo: ayrı degerleme.html platformunda */
   if(type==='Danışman'){const a=SAAS_CONFIG.agent||{};const ini=(a.name||'MD').split(' ').map(s=>s[0]).slice(0,2).join('');
     return '<div id="tenantHero" class="th th-dan"><div class="th-dan-card">'
-      +'<div class="th-photo">'+(a.photo?'<img src="'+a.photo+'" alt="'+a.name+'">':'<span>'+ini+'</span>')+'</div>'
+      +'<div class="th-photo">'+(a.photo?'<img src="'+a.photo+'" alt="'+a.name+'" loading="lazy" decoding="async">':'<span>'+ini+'</span>')+'</div>'
       +'<div class="th-info"><div class="th-eyebrow"><span class="dot"></span> Gayrimenkul Danışmanınız</div>'
       +'<h1>'+(a.name||'Danışman')+'</h1><div class="th-role">'+(a.title||'')+'</div>'
       +'<p>'+(a.bio||'')+'</p>'
