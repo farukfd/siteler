@@ -3344,7 +3344,45 @@ function saveOzel(){const g=id=>{const e=document.getElementById(id);return e?e.
   if(ozEditId){const o=OZEL.find(x=>x.id===ozEditId);if(o)Object.assign(o,obj);}else{obj.id='o'+Date.now();OZEL.unshift(obj);}
   saveAll();renderOzel();renderOzelRows();document.getElementById('ozEditCard').style.display='none';toast('Özel portföy kaydedildi.');}
 function delOzel(id){if(!confirm('Bu özel portföy kaydı silinsin mi?'))return;OZEL=OZEL.filter(x=>x.id!==id);saveAll();renderOzel();renderOzelRows();toast('Kayıt silindi.');}
-async function proxEndeksM2(il,ilce,durum){try{var r=await proxApi('/api/v1/tenant/endeks?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce)+'&kategori=konut&durum='+durum);if(r&&r.success&&r.data&&+r.data.m2>0)return +r.data.m2;}catch(e){}return null;}
+var _wlM2Cache={};
+async function proxEndeksM2(il,ilce,durum){var k=il+'|'+ilce+'|'+durum;if(_wlM2Cache[k]!==undefined)return _wlM2Cache[k];var v=null;try{var r=await proxApi('/api/v1/tenant/endeks?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce)+'&kategori=konut&durum='+durum);if(r&&r.success&&r.data&&+r.data.m2>0)v=+r.data.m2;}catch(e){}_wlM2Cache[k]=v;return v;}
+async function proxEndeksInfo(il,ilce){try{var r=await proxApi('/api/v1/tenant/endeks?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce)+'&kategori=konut&durum=satilik');if(r&&r.success&&r.data)return {m2:+r.data.m2||0,score:+r.data.score||0};}catch(e){}return {m2:0,score:0};}
+async function wlBuildBolge(il,silent){
+  il=il||PROVINCE.name;if(il==='İzmir')return;
+  try{
+    var allIlce=Object.keys(PROVINCE.districts),ilceler=allIlce.slice(0,12);
+    if(!silent)toast('ProX bölge verisi çekiliyor… ('+il+')');
+    var cards=[];
+    for(var i=0;i<ilceler.length;i++){var ilce=ilceler[i];
+      var inf=await proxEndeksInfo(il,ilce);var kir=await proxEndeksM2(il,ilce,'kiralik');
+      var m2=inf.m2||((BAZ[ilce]&&BAZ[ilce].m2)||30000),sc=Math.round(inf.score||62);
+      var trend=m2>=45000?'yükselen':m2>=28000?'talep gören':'gelişen';
+      var tier=m2>=60000?'yüksek değerli merkez':m2>=40000?'talep gören':'uygun fiyatlı';
+      cards.push({ad:ilce,trend:trend,one_liner:il+'’in '+tier+' ilçelerinden.',
+        deger_ipucu:'ProX ort. m²: '+fmt(m2)+' ₺'+(kir?' · kira '+fmt(kir)+' ₺/m²':'')+' · yatırım skoru '+sc+'/100.'});}
+    var m2s=cards.map(function(c){return parseInt(c.deger_ipucu.replace(/\D/g,''))||0;});
+    var ilInf=await proxEndeksInfo(il,'');
+    var maxIdx=0;cards.forEach(function(c,i){var v=parseInt((c.deger_ipucu.match(/([\d.]+) ₺/)||[])[1]||'0');});
+    var maxC=cards.reduce(function(a,b){var av=+((a.deger_ipucu.match(/m²: ([\d.]+)/)||[])[1]||'0').replace(/\./g,''),bv=+((b.deger_ipucu.match(/m²: ([\d.]+)/)||[])[1]||'0').replace(/\./g,'');return bv>av?b:a;},cards[0]||{});
+    var avgSc=Math.round(cards.reduce(function(s,c){return s+(+(c.deger_ipucu.match(/skoru (\d+)/)||[])[1]||62);},0)/(cards.length||1));
+    var dpoints=[
+      {baslik:'İlçe kapsamı',deger:''+allIlce.length,aciklama:il+' genelinde tüm ilçelerde veri.'},
+      {baslik:'Zirve m² fiyatı',deger:((maxC.deger_ipucu||'').match(/m²: ([\d.]+) ₺/)||['','—'])[1]+' ₺',aciklama:(maxC.ad||'-')+' ilçesi (ProX).'},
+      {baslik:'Ortalama yatırım skoru',deger:avgSc+'/100',aciklama:'ProX endeks skorlaması.'},
+      {baslik:'Aktif portföy bölgesi',deger:''+ilceler.length+'+',aciklama:'Öncelikli ilçelerimiz.'}
+    ];
+    var insights=[];
+    try{var pr='Sen '+il+' ilinde çalışan yerel emlak uzmanısın. Alıcı ve satıcıların bilmesi gereken, YEREL uzmanın gözünden 5 GENEL içgörü yaz (cephe/kat farkı, zemin/deprem, ulaşım/altyapı yakınlığı, sezonluk kira, kentsel dönüşüm gibi genel emlak dinamikleri). '+il+'’e özgü UYDURMA proje adı veya kesin rakam VERME. Her satır tam olarak: Başlık | 1-2 cümle açıklama. SADECE 5 satır.';
+      var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',tool:'bolge',prompt:pr}});
+      var txt=r&&(r.answer||r.text||(r.data&&r.data.answer));
+      if(txt)txt.split('\n').forEach(function(l){var p=l.split('|');if(p.length>=2&&p[0].trim().length>2&&p[0].length<60)insights.push({baslik:p[0].replace(/[*#]/g,'').replace(/^[-\d.\s]+/,'').trim(),metin:p.slice(1).join('|').replace(/[*#]/g,'').trim()});});}catch(e){}
+    if(insights.length<3)insights=[{baslik:'Cephe ve kat değeri',metin:'Aynı binada cephe yönü ve kat, m² fiyatını belirgin değiştirir; veriyle doğru konumlandırırız.'},{baslik:'Zemin ve yapı kalitesi',metin:'Zemin etüdü ve yapı yaşı, değerin ve satılabilirliğin kritik bileşenidir.'},{baslik:'Ulaşım yakınlığı',metin:'Ana arter, toplu taşıma ve altyapıya yakınlık kira ve satış talebini yükseltir.'},{baslik:'Sezonluk kira dinamiği',metin:'Bölgeye göre kira talebi sezonsal değişir; doğru zamanlama getiriyi artırır.'},{baslik:'Kentsel dönüşüm etkisi',metin:'Dönüşüm bölgelerinde eski yapı stoku ile yeni proje arasında değer farkı oluşur.'}];
+    var pack={il:il,name:(FIRMA&&FIRMA.name)||'',cards:cards,dpoints:dpoints,insights:insights.slice(0,6),ts:Date.now()};
+    try{localStorage.setItem('wl_bolge',JSON.stringify(pack));}catch(e){}
+    if(!silent)toast('✓ '+il+' bölge verisi hazır — Neden Biz sayfası gerçek verilerle güncellendi.');
+    return pack;
+  }catch(e){if(!silent)toast('Bölge verisi çekilemedi.');}
+}
 var _ozBusy=false;
 async function rebuildOzelFromProx(il,silent){
   if(_ozBusy)return;_ozBusy=true;il=il||PROVINCE.name;
@@ -4463,6 +4501,7 @@ function kurumsalApply(){var res=window._kiResult;if(!res){toast("Önce oluştur
   try{applyContent();}catch(e){}
   try{applySeoHead();}catch(e){}
   try{if(typeof rebuildOzelFromProx==='function')rebuildOzelFromProx(il,true);}catch(e){}
+  try{if(il!=='İzmir'&&typeof wlBuildBolge==='function')wlBuildBolge(il,true);}catch(e){}
   try{fillFirmaForm();}catch(e){}
   try{if(typeof fillSeo==="function")fillSeo();}catch(e){}
   brandSweep(document.body);
@@ -4495,7 +4534,7 @@ function citySuffix(city,type){var v=trLastVowel(city),vwl=trEndsVowel(city),D=t
   switch(type){case 'gen':return (vwl?'n':'')+trI(v)+'n';case 'dat':return (vwl?'y':'')+trA(v);
    case 'acc':return (vwl?'y':'')+trI(v);case 'loc':return D+trA(v);case 'abl':return D+trA(v)+'n';
    case 'li':return 'l'+trI(v);}return '';}
-function wlCity(s){if(!s||typeof s!=='string'||wlCityOff()||s.indexOf('İzmir')<0)return s;var c=PROVINCE.name;
+function wlCity(s){if(!s||typeof s!=='string'||wlCityOff()||(s.indexOf('İzmir')<0&&s.indexOf('İZMİR')<0))return s;var c=PROVINCE.name;
   s=s.split('İzmir ve Ege bölgesi').join(c+' ve çevresi').split('İzmir ve Ege').join(c+' ve çevresi').split('İzmir & Ege').join(c+' & çevresi').split('İzmir ve çevresi').join(c+' ve çevresi');
   s=s.replace(/İzmir['’](nin|nın|nun|nün|in|ın|un|ün)\b/g,c+"'"+citySuffix(c,'gen'));
   s=s.replace(/İzmir['’](den|dan|ten|tan)\b/g,c+"'"+citySuffix(c,'abl'));
@@ -4504,6 +4543,7 @@ function wlCity(s){if(!s||typeof s!=='string'||wlCityOff()||s.indexOf('İzmir')<
   s=s.replace(/İzmir['’](ya|ye|a|e)\b/g,c+"'"+citySuffix(c,'dat'));
   s=s.replace(/İzmir['’](yı|yi|yu|yü|ı|i|u|ü)\b/g,c+"'"+citySuffix(c,'acc'));
   s=s.replace(/İzmir['’]?li\b/g,c+citySuffix(c,'li'));
+  s=s.split('İZMİR').join((c||'').toLocaleUpperCase('tr'));
   s=s.replace(/İzmir/g,c);
   return s;}
 function wlReplace(s){return wlCity(brandReplace(s));}
@@ -4511,7 +4551,7 @@ var _brandObs=null,_brandTO=null;
 function brandSweep(root){try{if(brandName()===BRAND_ORIG&&wlCityOff())return;root=root||document.body;if(!root)return;
   if(_brandObs)_brandObs.disconnect();
   var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null,false),nodes=[],nn;
-  while(nn=w.nextNode()){if(nn.nodeValue&&(nn.nodeValue.indexOf('Meridyen')>=0||nn.nodeValue.indexOf('İzmir')>=0))nodes.push(nn);}
+  while(nn=w.nextNode()){if(nn.nodeValue&&(nn.nodeValue.indexOf('Meridyen')>=0||nn.nodeValue.indexOf('İzmir')>=0||nn.nodeValue.indexOf('İZMİR')>=0))nodes.push(nn);}
   nodes.forEach(function(t){t.nodeValue=wlReplace(t.nodeValue);});
   var attrs=['title','alt','placeholder','aria-label','value'];
   root.querySelectorAll('[title],[alt],[placeholder],[aria-label]').forEach(function(el){attrs.forEach(function(a){var v=el.getAttribute&&el.getAttribute(a);if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0))el.setAttribute(a,wlReplace(v));});});
@@ -5172,7 +5212,7 @@ function fillProx(){document.getElementById('px_key').value=PROX.key||'';
   if(typeof proxRenderStatus==='function')proxRenderStatus();}
 function saveProx(){PROX.key=document.getElementById('px_key').value.trim();
   var il=(document.getElementById('px_il')||{}).value||'İzmir';PROX.il=il;PROX.region=il;
-  applyProxTenant();saveAll();applyProvince(il);if(typeof proxRenderStatus==='function')proxRenderStatus();try{if(il!=='İzmir'&&typeof rebuildOzelFromProx==='function')rebuildOzelFromProx(il,true);}catch(e){}
+  applyProxTenant();saveAll();applyProvince(il);if(typeof proxRenderStatus==='function')proxRenderStatus();try{if(il!=='İzmir'&&typeof rebuildOzelFromProx==='function')rebuildOzelFromProx(il,true);}catch(e){}try{if(il!=='İzmir'&&typeof wlBuildBolge==='function')wlBuildBolge(il,true);}catch(e){}
   toast('✓ ProX bağlantısı kaydedildi · aktif il: '+il);}
 function proxRenderStatus(){var el=document.getElementById('px_status');if(!el)return;var t=window.EMLAK_TENANT||{};
   el.innerHTML='<div class="eids-yetki '+(PROX.key?'on':'off')+'" style="margin:0"><span class="ic">'+(PROX.key?'◉':'⚠️')+'</span><div>'+(PROX.key?('ProX bağlı · tenant '+(t.tenant_id||'-')+' · aktif il '+(PROX.il||'İzmir')):'API anahtarı girilmedi')+'<div style="font-weight:500;font-size:12px;opacity:.85">Base: '+(window.EMLAK_API_BASE||'-')+'</div></div></div>';}
