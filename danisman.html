@@ -23,7 +23,7 @@ window.EMLAK_PACKAGES = {
 window.EMLAK_TENANT.enabledFeatures = window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode] || window.EMLAK_PACKAGES.PRO;
 window.hasFeature = function(f){ return window.EMLAK_TENANT.enabledFeatures.indexOf(f)!==-1; };
 window.requireFeature = function(f){ if(window.hasFeature(f)) return true; var m="Bu özellik mevcut paketinizde aktif değildir. Kurumsal paketinizi yükseltin."; if(typeof toast==="function")toast(m); else alert(m); return false; };
-async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ var _base=(window.EMLAK_PROXY_MODE&&window.EMLAK_PROXY_URL)?window.EMLAK_PROXY_URL:window.EMLAK_API_BASE; var _h={"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id}; if(!window.EMLAK_PROXY_MODE)_h["X-Tenant-Key"]=window.EMLAK_TENANT.tenant_key; /* proxy modunda gizli anahtar istemciden GÖNDERİLMEZ */ Object.assign(_h,headers); const res=await fetch(_base+path,{method,mode:"cors",headers:_h,body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
+async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ var _base=(window.EMLAK_PROXY_MODE&&window.EMLAK_PROXY_URL)?window.EMLAK_PROXY_URL:window.EMLAK_API_BASE; var _h={"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id}; if(!window.EMLAK_PROXY_MODE)_h["X-Tenant-Key"]=window.EMLAK_TENANT.tenant_key; /* proxy modunda gizli anahtar istemciden GÖNDERİLMEZ */ Object.assign(_h,headers); const res=await fetch(_base+path,{method,mode:"cors",headers:_h,body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); try{var _qm=new Date().toISOString().slice(0,7),_q=JSON.parse(localStorage.getItem("dn_quota")||"null");if(!_q||_q.month!==_qm)_q={month:_qm,count:0};_q.count++;localStorage.setItem("dn_quota",JSON.stringify(_q));}catch(_e){} const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
 function proxFallback(path,options={}){ return { fallback:true, message:"API baglantisi yok. Demo/fallback veri kullaniliyor.", path, data:(window.EMLAK_FALLBACK?window.EMLAK_FALLBACK(path,options):null) }; }
 async function submitLead(lead){ lead=lead||{}; var payload={ sourcePage:lead.sourcePage||"danisman", formType:lead.formType||"contact", name:lead.name||"", phone:lead.phone||"", email:lead.email||"", message:lead.message||"", extra:lead.extra||{ location:lead.location||"", requestedService:lead.requestedService||"", sector:window.EMLAK_TENANT.sector } }; try{if(typeof trackEvent==='function')trackEvent('generate_lead',{source:payload.formType||'lead'});}catch(_t){} try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:payload}); if(r&&r.fallback)throw new Error("fallback"); if(r&&r.success===false)throw new Error("lead reddedildi"); return {ok:true,online:(r&&r.online!==false),data:r}; }catch(e){ try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(Object.assign({id:"lead_"+Date.now(),createdAt:new Date().toISOString()},payload));localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:payload}; } }
 window.injectSchema=function(o){try{var s=document.createElement("script");s.type="application/ld+json";s.text=JSON.stringify(o);document.head.appendChild(s);}catch(e){}};
@@ -837,6 +837,46 @@ function saApply(){saLoad();saSave();try{applyProvince(SERVICE_AREA.primary);}ca
   var ai=saActiveIller().length,aic=(saServedIlce(SERVICE_AREA.primary)||[]).length;
   toast('✓ Hizmet alanı uygulandı — '+ai+' il · '+aic+' ilçe ('+SERVICE_AREA.primary+') · '+SERVICE_AREA.kategoriler.length+' kategori.');}
 window.renderSA=renderSA;window.saApply=saApply;window.saAddProvince=saAddProvince;window.saRemoveProvince=saRemoveProvince;window.saSelectIl=saSelectIl;window.saToggleIlce=saToggleIlce;window.saAllIlce=saAllIlce;window.saSelectIlce=saSelectIlce;window.saAddMahalle=saAddMahalle;window.saAddMahalleName=saAddMahalleName;window.saRemoveMahalle=saRemoveMahalle;window.saAddKat=saAddKat;window.saRemoveKat=saRemoveKat;window.applyProvince=applyProvince;window.saServedMahalle=saServedMahalle;
+/* ===================== ÖZEL PORTFÖY — GERÇEK ProX VERİSİ (analyze.range.min) ===================== */
+var _wlAnalyzeCache={},_wlM2Cache={};
+function proxKategoriOf(tip){var t=(tip||'').toLowerCase();if(t.indexOf('arsa')>=0)return 'arsa';if(t.indexOf('ofis')>=0||t.indexOf('dükkan')>=0||t.indexOf('dukkan')>=0||t.indexOf('ticari')>=0)return 'ticari';return 'konut';}
+async function _wlPMap(items,fn,conc){conc=conc||4;var out=new Array(items.length),idx=0;async function w(){while(idx<items.length){var i=idx++;try{out[i]=await fn(items[i],i);}catch(e){out[i]=null;}}}var ws=[];for(var k=0;k<Math.min(conc,items.length);k++)ws.push(w());await Promise.all(ws);return out;}
+async function proxAnalyzePrice(il,ilce,mah,tip,durum,m2){var k=[il,ilce,mah||'',tip,durum,m2].join('|');if(_wlAnalyzeCache[k]!==undefined)return _wlAnalyzeCache[k];var v=null;try{var r=await proxApi('/api/v1/tenant/prox/analyze',{method:'POST',body:{il:il,ilce:ilce,mahalle:mah||'',kategori:proxKategoriOf(tip),durum:durum,brut_m2:m2,attrs:{}}});if(r&&r.success===true&&!r.fallback){var rg=r.range||{};var mn=+rg.min_value||0,st=+r.strongest_value||0,mx=+rg.max_value||0;if(mn>0||st>0)v={min:mn||st,strong:st,max:mx,conf:(r.confidence!=null?r.confidence:null)};}}catch(e){}_wlAnalyzeCache[k]=v;return v;}
+async function proxEndeksM2(il,ilce,durum){var k=il+'|'+ilce+'|'+durum;if(_wlM2Cache[k]!==undefined)return _wlM2Cache[k];var v=null;try{var r=await proxApi('/api/v1/tenant/endeks?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce)+'&kategori=konut&durum='+durum);if(r&&r.success&&r.data&&+r.data.m2>0)v=+r.data.m2;}catch(e){}_wlM2Cache[k]=v;return v;}
+function wlStale(key,il,maxH){maxH=maxH||24;try{var p=JSON.parse(localStorage.getItem(key)||'null');if(!p||p.il!==il||!p.ts)return true;return (Date.now()-p.ts)>maxH*3600000;}catch(e){return true;}}
+function wlAgo(ts){if(!ts)return '—';var s=Math.max(0,Math.round((Date.now()-ts)/1000));if(s<60)return 'az önce';var m=Math.round(s/60);if(m<60)return m+' dk önce';var h=Math.round(m/60);if(h<24)return h+' sa önce';return Math.round(h/24)+' gün önce';}
+var VIP_TIPS=[{tip:'yali',tag:'Boğaz Yalısı',oda:'7+2',ozet:'Özel iskele',m2:820},{tip:'villa',tag:'Müstakil Villa',oda:'6+2',ozet:'Havuz & bahçe',m2:540},{tip:'penthouse',tag:'Penthouse',oda:'5+1',ozet:'360° manzara',m2:410},{tip:'rezidans',tag:'Branded Residence',oda:'4+1',ozet:'Otel konsept',m2:260}];
+var VIP_CADDE=['Kuruçeşme Cad.','Abdi İpekçi Cad.','Bağdat Cad.','Sahil Yolu','Nispetiye Cad.','Tepeüstü Sok.','Vali Konağı Cad.'];
+var _vipBusy=false;
+async function rebuildVipFromProx(il,silent){if(_vipBusy)return;_vipBusy=true;saLoad();il=il||SERVICE_AREA.primary||PROVINCE.name;
+  try{
+    var work=saWorkList(6);var illerSet={};work.forEach(function(w){illerSet[w.il]=1;});
+    try{await Promise.all(Object.keys(illerSet).map(function(x){return loadMahalle(x);}));}catch(e){}
+    var cArsa=saHasCat('arsa');
+    if(!silent&&typeof toast==='function')toast('ProX gerçek fiyatlarla Özel Portföy oluşturuluyor… ('+work.length+' bölge)');
+    var specs=[],ti=0,ci=0,primary=SERVICE_AREA.primary;
+    work.forEach(function(w,i){var t=VIP_TIPS[ti++%VIP_TIPS.length];var rm=realMah(w.il,w.ilce,3);
+      specs.push({il:w.il,ilce:w.ilce,tip:t.tip,tag:t.tag,oda:t.oda,ozet:t.ozet,m2:t.m2,mah:(rm[0]||'Merkez'),cadde:VIP_CADDE[ci++%VIP_CADDE.length]});
+      if(cArsa&&i<3)specs.push({il:w.il,ilce:w.ilce,tip:'arsa',tag:'Yatırım Arsası',oda:'İmarlı',ozet:'Ticari imar',m2:1000,mah:(rm[1]||'Merkez'),cadde:VIP_CADDE[ci++%VIP_CADDE.length]});
+    });
+    var priced=await _wlPMap(specs,function(s){return proxAnalyzePrice(s.il,s.ilce,s.mah,s.tip,'satilik',s.m2);},4);
+    var out=[],real=0;
+    specs.forEach(function(s,ix){var az=priced[ix],baslangic;
+      if(az&&az.min>0){baslangic=Math.max(100000,Math.round(az.min/100000)*100000);real++;}
+      else{var base=(BAZ[s.ilce]&&BAZ[s.ilce].m2)||30000;baslangic=Math.round(base*s.m2*1.4/100000)*100000;}
+      var ekIl=(s.il!==primary);
+      out.push({tip:s.tip,tag:s.tag,baslik:s.mah+' '+s.tag,cadde:s.cadde,bolge:s.ilce+(ekIl?' · '+s.il:''),m2:s.m2+' m²',oda:s.oda,ozet:s.ozet,baslangic:baslangic});
+    });
+    if(out.length){VIP_PORTFOLIO.length=0;out.forEach(function(x){VIP_PORTFOLIO.push(x);});}
+    try{localStorage.setItem('dn_vip_ts',JSON.stringify({il:primary,ts:Date.now(),n:out.length,real:real}));}catch(e){}
+    try{var g=document.getElementById('vaultGrid');if(g)g.innerHTML=vipCardsHTML();}catch(e){}
+    try{renderVipStatus();}catch(e){}
+    if(!silent&&typeof toast==='function')toast('✓ Özel Portföy '+primary+': '+out.length+' mülk ('+real+' gerçek ProX analiz fiyatı).');
+  }catch(e){if(!silent&&typeof toast==='function')toast('Portföy oluşturulamadı.');}
+  _vipBusy=false;}
+function renderVipStatus(){var el=document.getElementById('vipStatus');if(!el)return;var q=null,ts=null;try{q=JSON.parse(localStorage.getItem('dn_quota')||'null');}catch(e){}try{ts=JSON.parse(localStorage.getItem('dn_vip_ts')||'null');}catch(e){}
+  el.innerHTML='<div style="font-size:12.5px;color:var(--muted);line-height:1.7">📦 Özel Portföy: '+(ts&&ts.ts?('<b style="color:var(--gold)">'+wlAgo(ts.ts)+'</b> · '+ts.n+' mülk / '+(ts.real||0)+' gerçek analiz fiyatı ('+ts.il+')'):'henüz ProX ile oluşturulmadı')+(q?(' &nbsp;·&nbsp; 📊 Kota: '+fmt(q.count)+' istek ('+q.month+')'):'')+'</div>';}
+window.rebuildVipFromProx=rebuildVipFromProx;window.renderVipStatus=renderVipStatus;
 /* ===================== KURULUM SİHİRBAZI — danışman tek akış ===================== */
 var OB={step:1,advisor:'',brand:'',unvan:'',vergi:'',mail:'',tel:'',adres:'',belge:'',accent:'',logo:'',bolgeler:'',key:''};
 var OB_STEPS=['Danışman & Firma','EİDS Yetki','Marka & Logo','Hizmet Bölgeleri','ProX ile Kur'];
@@ -1228,9 +1268,11 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
      +'<div class="sta-f"><label>Kategoriler</label><div id="saKatChips" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0"></div><div class="sta-row2"><input id="saAddKat" placeholder="ör. Yalı" onkeydown="if(event.key===\'Enter\'){saAddKat();event.preventDefault();}"><button class="btn btn-line" onclick="saAddKat()">+ Ekle</button></div></div>'
      +'<button class="btn btn-gold sta-go" onclick="saApply()">Kaydet & Siteye Uygula</button></div>'
    /* PORTFOY */
-   +'<div class="sta-pane" data-p="portfoy" hidden><h4>Portföy Özeti</h4><p class="sub">Açık ilanlar ve VIP portföy durumu (merkezden senkronize edilir).</p>'
+   +'<div class="sta-pane" data-p="portfoy" hidden><h4>Özel Portföy — ProX Gerçek Veri</h4><p class="sub">Hizmet alanınıza (il · ilçe · mahalle) göre ProX analiz (range.min) <b>gerçek başlangıç fiyatlarıyla</b> Özel Portföy (VIP) oluşturun.</p>'
+     +'<div id="vipStatus" style="margin:8px 0"></div>'
      +'<div class="sta-row2"><div class="sta-f"><label>Açık İlan</label><input value="'+LISTINGS.length+' güncel ilan" readonly></div><div class="sta-f"><label>VIP Portföy</label><input value="'+VIP_PORTFOLIO.length+' yetki belgeli (adres gizli)" readonly></div></div>'
-     +'<p class="sub" style="margin-top:10px">Detaylı portföy CRUD ve lead yönetimi emlakekspertizi.com merkezi panelinden yapılır.</p></div>'
+     +'<button class="btn btn-gold sta-go" onclick="rebuildVipFromProx()">⟳ ProX Gerçek Fiyatlarla Oluştur</button>'
+     +'<p class="sub" style="margin-top:10px">EİDS yetkisi açık ilan yayını içindir; VIP portföy davet usulüdür (adres gizli).</p></div>'
    +'</div></div>';
   document.body.appendChild(el);return el;}
 function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');
@@ -1240,7 +1282,7 @@ function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');
   set('sm_title',saasResolve('metaTitle'));set('sm_desc',saasResolve('metaDescription'));set('sm_kw',saasResolve('metaKeywords'));
   set('sp_base',SAAS_CONFIG.proxAiPrompts.persona);set('sp_custom',SAAS_CONFIG.tenantSettings.customPrompt);
   set('ed_belge',eidsFirma().eids.belgeNo);try{eidsRenderAdmin();}catch(e){}
-  try{renderSA();}catch(e){}
+  try{renderSA();renderVipStatus();}catch(e){}
   _refreshLogoPrev();
 }
 function closeSaasAdmin(){const e=document.getElementById('saasTenantAdmin');if(e)e.classList.remove('on');}
