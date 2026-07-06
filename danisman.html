@@ -648,6 +648,50 @@ function eidsConnect(){var e=eidsFirma().eids;var inp=document.getElementById('e
     toast(e.yetkili?'✓ e-Devlet ile bağlanıldı · Kullanıcı Kodu üretildi · Yetki aktif.':'e-Devlet bağlandı. Geçerli 7+ haneli yetki belgesi girip kaydedin.');},900);}
 function eidsSave(){var e=eidsFirma().eids;var inp=document.getElementById('ed_belge');if(inp)e.belgeNo=(inp.value||'').replace(/\D/g,'');eidsVerify();eidsRenderAdmin();eidsRenderPublic();toast('EİDS bilgileri kaydedildi.');}
 window.eidsConnect=eidsConnect;window.eidsSave=eidsSave;
+/* ===================== YASAL METİN MOTORU — firma künyesinden (per-firma) ===================== */
+function firmaKune(){var f=SAAS_CONFIG.firma||{};var e=f.eids||{};var name=saasResolve('brandName')||SAAS_CONFIG.advisorName||'—';
+  return {name:name,unvan:f.unvan||name,adres:f.adres||'—',mail:f.mail||'—',tel:f.tel||'—',vergi:f.vergi||'',belge:e.belgeNo||''};}
+function legalKunyeRows(){var k=firmaKune();var g='color:var(--gold)';
+  return '<div style="background:#0a0a0b;border:1px solid var(--line-soft);border-radius:10px;padding:11px 13px;margin:0 0 12px;font-size:12.5px;line-height:1.8">'
+   +'<div><b style="'+g+'">Veri Sorumlusu / Unvan:</b> '+_leD(k.unvan)+'</div>'
+   +'<div><b style="'+g+'">Adres:</b> '+_leD(k.adres)+'</div>'
+   +'<div><b style="'+g+'">E-posta:</b> '+_leD(k.mail)+' · <b style="'+g+'">Tel:</b> '+_leD(k.tel)+'</div>'
+   +(k.vergi?'<div><b style="'+g+'">Vergi No:</b> '+_leD(k.vergi)+'</div>':'')
+   +(k.belge?'<div><b style="'+g+'">EİDS Yetki Belge No:</b> '+_leD(k.belge)+'</div>':'')+'</div>';}
+function legalDoc(type){var k=firmaKune(),kn=legalKunyeRows();
+  if(type==='cerez')return {title:'Çerez Politikası',body:kn
+    +'<p><b>Çerez nedir?</b> Siteyi ziyaret ettiğinizde cihazınıza kaydedilen küçük metin dosyalarıdır.</p>'
+    +'<p><b>Kullandığımız çerezler:</b> Zorunlu (oturum/güvenlik) · Tercih (dil, tema) · Analitik (anonim ziyaret istatistiği).</p>'
+    +'<p><b>Yönetim:</b> Tarayıcı ayarlarınızdan silebilir/engelleyebilirsiniz; zorunlu çerezler site işlevi için gereklidir.</p>'
+    +'<p>Sorularınız için <b>'+_leD(k.mail)+'</b> adresine yazabilirsiniz.</p>'};
+  if(type==='mesafeli')return {title:'Mesafeli Hizmet & Kullanım Koşulları',body:kn
+    +'<p><b>Hizmet Sağlayıcı:</b> '+_leD(k.unvan)+'. Bu site üzerinden lüks konut danışmanlığı, ücretsiz mülk değer analizi ve davet usulü VIP portföy erişimi sunulur.</p>'
+    +'<p><b>Kapsam:</b> Değer/analiz bilgileri ön bilgi niteliğindedir; kesin değer, yerinde ekspertiz ve ProX endeksiyle teyit edilir.</p>'
+    +'<p><b>İletişim & Şikayet:</b> '+_leD(k.mail)+' · '+_leD(k.tel)+'.</p>'};
+  return {title:'KVKK Aydınlatma Metni',body:kn
+    +'<p><b>Veri Sorumlusu:</b> '+_leD(k.unvan)+'. Form/randevu aracılığıyla paylaştığınız ad, telefon ve e-posta; talebinizin değerlendirilmesi, sizinle iletişim ve danışmanlık hizmeti sunulması amacıyla işlenir.</p>'
+    +'<p><b>Aktarım:</b> Verileriniz açık rızanız olmadan üçüncü kişilerle paylaşılmaz. Analiz için ProX endeks altyapısı kullanılabilir.</p>'
+    +'<p><b>Haklarınız:</b> KVKK m.11 uyarınca verilerinize erişme, düzeltme, silme ve işlemeye itiraz haklarına sahipsiniz. Başvuru: <b>'+_leD(k.mail)+'</b>.</p>'};}
+function openLegal(type){var d=legalDoc(type),id='legalModal',m=document.getElementById(id);
+  if(!m){m=document.createElement('div');m.id=id;m.style.cssText='position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:20px';
+    m.innerHTML='<div style="position:absolute;inset:0;background:rgba(0,0,0,.72)" onclick="closeLegal()"></div><div id="legalCard" style="position:relative;max-width:600px;width:100%;max-height:82vh;overflow:auto;background:var(--ink,#0b0b0c);border:1px solid var(--line-soft);border-radius:14px;padding:26px 26px 22px"></div>';
+    document.body.appendChild(m);}
+  document.getElementById('legalCard').innerHTML='<button onclick="closeLegal()" style="position:absolute;top:12px;right:14px;background:none;border:0;color:var(--muted);font-size:20px;cursor:pointer">✕</button><h3 style="font-family:var(--serif);color:var(--gold);margin:0 0 4px;font-size:22px">'+d.title+'</h3><div style="font-size:13.5px;color:var(--muted);line-height:1.7">'+d.body+'</div><button class="btn btn-gold" style="margin-top:16px;width:100%" onclick="closeLegal()">Anladım</button>';
+  m.style.display='flex';}
+function closeLegal(){var m=document.getElementById('legalModal');if(m)m.style.display='none';}
+function openKvkk(){openLegal('kvkk');}function openCerez(){openLegal('cerez');}function openMesafeli(){openLegal('mesafeli');}
+window.openLegal=openLegal;window.closeLegal=closeLegal;window.openKvkk=openKvkk;window.openCerez=openCerez;window.openMesafeli=openMesafeli;
+/* ===================== AI GÜVENLİK KORKULUĞU — ProX/DeepSeek çıktısı ===================== */
+var AI_GUARD_RULE='\n\n[KESİN KURALLAR — UYDURMA YASAK] Gerçek olmayan proje/marka adı, kesin fiyat/rakam, "%X garanti/net getiri", sahte istatistik, ödül veya referans ÜRETME. Emin olmadığın sayısal veriyi "ProX endeksiyle teyit edilmeli" diye işaretle. Yalnızca genel, doğrulanabilir bilgi ver; abartıdan kaçın.';
+function aiGuard(p){p=(p==null?'':''+p);return p.indexOf('[KESİN KURALLAR')>=0?p:(p+AI_GUARD_RULE);}
+var AI_RISK_PATTERNS=[
+  {re:/(garanti|kesin|net)\s*(getiri|kazanç|kâr|kar)|(getiri|kazanç)\s*(garanti|kesin)/i,t:'garanti getiri iddiası'},
+  {re:/\d[\d.\s]{5,}\s*(tl|₺|lira)/i,t:'kesin fiyat rakamı'},
+  {re:/en\s+(ucuz|pahalı|iyi|büyük|kaliteli|lüks)|türkiye'?nin\s+(ilk|tek|en)|lider|(bir|1)\s*numara/i,t:'doğrulanmamış üstünlük iddiası'},
+  {re:/ödül|sertifika|patent|dünya\s*markası/i,t:'doğrulanmamış ödül/sertifika'}
+];
+function aiRiskScan(t){var h=[];AI_RISK_PATTERNS.forEach(function(p){if(p.re.test(t||''))h.push(p.t);});return h;}
+window.aiGuard=aiGuard;window.aiRiskScan=aiRiskScan;
 function initSaaSTheme(){const r=document.documentElement.style;const a=saasResolve('accent'),a2=saasResolve('accent2'),as=saasResolve('accentSoft');if(a){r.setProperty('--accent',a);r.setProperty('--gold',a);}if(a2)r.setProperty('--accent-2',a2);if(as)r.setProperty('--gold-soft',as);}
 function applySaaSSettings(){
   const title=saasResolve('metaTitle');if(title)document.title=title;
@@ -761,7 +805,7 @@ function footerHTML(){return '<footer><div class="wrap"><div class="fcols">'
   +'<div><div class="brand" onclick="goHome()"><span class="mark">'+(saasResolve('brandName')||'M').trim().charAt(0)+'</span><span><b>'+(saasResolve('brandName')||'Selin Meridyen')+'</b><small>Lüks Portföy Danışmanı</small></span></div><p>Yetki belgeli butik emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy ve ücretsiz mülk değer analizi.</p></div>'
   +'<div><h4>Keşfet</h4><ul><li><a onclick="navGo(\'ilanlar\')">İlanlar</a></li><li><a onclick="navGo(\'vip\')">VIP Portföy</a></li><li><a onclick="navGo(\'surec\')">Süreç</a></li><li><a onclick="navGo(\'randevu\')">Ücretsiz Analiz</a></li></ul></div>'
   +'<div><h4>Kurumsal</h4><ul><li><a onclick="goHome()">Ana Sayfa</a></li><li><a onclick="navGo(\'iletisim\')">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>'
-  +'<div><h4>Yasal</h4><ul><li><a>KVKK Aydınlatma</a></li><li><a>Gizlilik Politikası</a></li><li><a onclick="openAdminGate()">Yönetim Paneli</a></li></ul></div>'
+  +'<div><h4>Yasal</h4><ul><li><a onclick="openKvkk()">KVKK Aydınlatma</a></li><li><a onclick="openCerez()">Çerez Politikası</a></li><li><a onclick="openMesafeli()">Mesafeli Hizmet & Kullanım</a></li><li><a onclick="openAdminGate()">Yönetim Paneli</a></li></ul></div>'
   +'</div><div class="fbot"><span>© 2026 Selin Meridyen · Lüks Konut & Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span><span>emlakekspertizi.com kurumsal altyapısıyla üretilmiştir.</span></div></div></footer>';}
 
 /* =====================================================================
@@ -902,7 +946,7 @@ async function _proxResolveReply(q){
   try{
     const t=_norm(q);
     const wantsAnalyze=/(yatırım|yatirim|prim|değer|deger|fiyat|kaça|ne kadar|kıymet|kiymet|getiri)/.test(t);
-    const ai=await proxApi("/api/v1/tenant/prox/ai",{method:"POST",body:{prompt:q,context:"persona=consultant; sector="+window.EMLAK_TENANT.sector}});
+    const ai=await proxApi("/api/v1/tenant/prox/ai",{method:"POST",body:{prompt:aiGuard(q),context:"persona=consultant; sector="+window.EMLAK_TENANT.sector}});
     var answer=(ai&&!ai.fallback&&ai.success!==false&&ai.answer)?ai.answer:'';
     var analyzeHTML='';
     if(wantsAnalyze){
