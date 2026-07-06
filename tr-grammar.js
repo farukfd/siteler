@@ -32,5 +32,18 @@ function city(s,c){if(!s||typeof s!=='string'||!c||(s.indexOf('İzmir')<0&&s.ind
   s=s.split('İZMİR').join((c||'').toLocaleUpperCase('tr'));
   s=s.replace(/İzmir/g,c);
   return s;}
-window.TRG={lastVowel:lastVowel,back:back,round:round,I:I,A:A,endsVowel:endsVowel,hard:hard,suffix:suffix,city:city};
+/* İçerikteki İzmir ilçe/semt adlarını → hedef ilin ilçelerine (konumsal, deterministik) çevirir.
+   White-label'da "Konak, Karşıyaka, Bornova…" gibi sabit İzmir yerleri seçilen ile uyarlanır. */
+var IZMIR_PLACES=['Konak','Karşıyaka','Bornova','Buca','Çeşme','Bayraklı','Gaziemir','Karabağlar','Menemen','Torbalı','Urla','Bayındır','Ödemiş','Tire','Foça','Aliağa','Çiğli','Narlıdere','Balçova','Güzelbahçe','Seferihisar','Selçuk','Bergama','Menderes','Kemalpaşa','Alsancak','Bostanlı','Göztepe','Mavişehir','Güzelyalı','Bergama'];
+var _trLet='a-zçğıöşüA-ZÇĞİÖŞÜ';
+var _izReCache=new RegExp('(?:'+IZMIR_PLACES.join('|')+')');
+function hasIzmirPlace(s){return typeof s==='string'&&_izReCache.test(s);}
+function _dList(targetIl){try{var r=(typeof window!=='undefined'&&window.TR_ILILCE&&window.TR_ILILCE[targetIl]);return (r&&r.ilce&&r.ilce.length)?r.ilce:null;}catch(e){return null;}}
+function districts(s,targetIl){if(!s||typeof s!=='string'||!targetIl||targetIl==='İzmir')return s;var tgt=_dList(targetIl);if(!tgt)return s;
+  for(var i=0;i<IZMIR_PLACES.length;i++){var pl=IZMIR_PLACES[i];if(s.indexOf(pl)<0)continue;var repl=tgt[i%tgt.length];
+    try{s=s.replace(new RegExp(pl+'(?![' +_trLet+ '])','g'),repl);}catch(e){s=s.split(pl).join(repl);}}
+  return s;}
+/* Marka-dışı tam yerelleştirme: şehir grameri + ilçe adları */
+function localize(s,targetIl){return districts(city(s,targetIl),targetIl);}
+window.TRG={lastVowel:lastVowel,back:back,round:round,I:I,A:A,endsVowel:endsVowel,hard:hard,suffix:suffix,city:city,districts:districts,localize:localize,hasIzmirPlace:hasIzmirPlace,IZMIR_PLACES:IZMIR_PLACES};
 })();

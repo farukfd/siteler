@@ -31,6 +31,15 @@ eq("İZMİR → BURSA (büyük harf)",T.city("İZMİR","Bursa"),     "BURSA");
 eq("İzmir ve Ege → çevresi",    T.city("İzmir ve Ege","Konya"),"Konya ve çevresi");
 eq("Bare 'Ege' korunur",        T.city("Ege Denizi kıyısı","Antalya"),"Ege Denizi kıyısı");
 eq("İzmir yoksa değişmez",      T.city("Egemenlik hakkı","Antalya"),"Egemenlik hakkı");
+/* ---- 1b) İzmir ilçe → hedef il ilçe swap (içerik yerelleştirme) ---- */
+eval(readFileSync('tr-iller.js','utf8'));   // window.TR_ILILCE kurar
+ok("districts + hasIzmirPlace var", typeof T.districts==='function' && typeof T.hasIzmirPlace==='function');
+ok("İzmir ilçesi algılanır", T.hasIzmirPlace('Konak, Karşıyaka ve Bornova'));
+ok("Konya harici metin algılanmaz", !T.hasIzmirPlace('Ankara Çankaya bölgesi'));
+ok("Konak → Rize ilçesine döner", T.districts('Konak bölgesi','Rize')!=='Konak bölgesi' && T.districts('Konak bölgesi','Rize').indexOf('Konak')<0);
+ok("İzmir ilçeleri Rize'de kalmaz", ['Konak','Karşıyaka','Bornova','Buca','Çeşme'].every(function(p){return T.districts('Konak, Karşıyaka, Bornova, Buca, Çeşme','Rize').indexOf(p)<0;}));
+ok("İzmir hedefte swap yok", T.districts('Konak, Karşıyaka','İzmir')==='Konak, Karşıyaka');
+ok("localize = il + ilçe birlikte", (function(){var r=T.localize("İzmir'in Konak ilçesi",'Rize');return r.indexOf('Rize')>=0 && r.indexOf('Konak')<0 && r.indexOf('İzmir')<0;})());
 
 /* ---- 2) JS sözdizimi (bun build) ---- */
 function buildsOk(file, extractBiggestInline){
@@ -68,7 +77,7 @@ const invariants = [
   ["Çok dilli (gmLang)", "async function gmLang"],
   ["Proxy güvenlik modu", "EMLAK_PROXY_MODE"],
   ["Süper-admin bayi paneli", "function openSuperAdmin"],
-  ["tr-grammar.js yüklenir", 'src="tr-grammar.js"'],
+  ["tr-grammar.js yüklenir", 'src="tr-grammar.js'],
   ["EİDS yayın kapısı", "function eidsVerify"],
 ];
 for(const [name, needle] of invariants) ok("değişmez: "+name, gm.includes(needle));
@@ -76,8 +85,9 @@ for(const [name, needle] of invariants) ok("değişmez: "+name, gm.includes(need
 /* ---- 4) Alt sayfa entegrasyonu ---- */
 for(const f of ['hizmetlerimiz.html','nedenbiz.html']){
   const h = readFileSync(f,'utf8');
-  ok(f+' → wl.js', h.includes('src="wl.js"'));
-  ok(f+' → tr-grammar.js', h.includes('src="tr-grammar.js"'));
+  ok(f+' → wl.js', h.includes('src="wl.js'));
+  ok(f+' → tr-grammar.js', h.includes('src="tr-grammar.js'));
+  ok(f+' → tr-iller.js', h.includes('src="tr-iller.js'));
   ok(f+' inline WL kalıntısı yok', !/White-label senkron|Çalışma-zamanı canonical/.test(h));
 }
 

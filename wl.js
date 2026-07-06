@@ -34,7 +34,7 @@ function bk(v){return 'aıou'.indexOf(v)>=0;}function ro(v){return 'ouöü'.inde
 function I(v){return bk(v)?(ro(v)?'u':'ı'):(ro(v)?'ü':'i');}function A(v){return bk(v)?'a':'e';}
 function ev(w){return /[aeıioöuü]$/i.test(w||'');}function hard(w){return 'pçtkfhsş'.indexOf((w||'').slice(-1).toLowerCase())>=0;}
 function sfx(c,t){if(window.TRG)return window.TRG.suffix(c,t);var v=lv(c),V=ev(c),D=hard(c)?'t':'d';return t=='gen'?(V?'n':'')+I(v)+'n':t=='dat'?(V?'y':'')+A(v):t=='acc'?(V?'y':'')+I(v):t=='loc'?D+A(v):t=='abl'?D+A(v)+'n':t=='li'?'l'+I(v):'';}
-function city(s){if(il==='İzmir'||(s.indexOf('İzmir')<0&&s.indexOf('İZMİR')<0))return s;if(window.TRG)return window.TRG.city(s,il);var c=il;
+function city(s){if(il==='İzmir')return s;if(window.TRG&&window.TRG.city){if(s.indexOf('İzmir')>=0||s.indexOf('İZMİR')>=0)s=window.TRG.city(s,il);if(window.TRG.districts)s=window.TRG.districts(s,il);return s;}if(s.indexOf('İzmir')<0&&s.indexOf('İZMİR')<0)return s;var c=il;
   s=s.replace(/İzmir ve Ege bölgesinde/g,c+"'"+sfx(c,'loc')).replace(/İzmir ve Ege['’]de/g,c+"'"+sfx(c,'loc')).replace(/İzmir ve Ege['’]den/g,c+"'"+sfx(c,'abl')).replace(/İzmir ve Ege['’]nin/g,c+"'"+sfx(c,'gen')).replace(/İzmir ve Ege['’]ye/g,c+"'"+sfx(c,'dat'))
    .split('İzmir ve Ege bölgesi').join(c).split('İzmir ve Ege').join(c+' ve çevresi').split('İzmir & Ege').join(c);
   s=s.replace(/İzmir['’](nin|nın|nun|nün|in|ın|un|ün)\b/g,c+"'"+sfx(c,'gen')).replace(/İzmir['’](den|dan|ten|tan)\b/g,c+"'"+sfx(c,'abl')).replace(/İzmir['’](deki|daki|teki|takı)\b/g,c+"'"+sfx(c,'loc')+'ki').replace(/İzmir['’](de|da|te|ta)\b/g,c+"'"+sfx(c,'loc')).replace(/İzmir['’](ya|ye|a|e)\b/g,c+"'"+sfx(c,'dat')).replace(/İzmir['’](yı|yi|yu|yü|ı|i|u|ü)\b/g,c+"'"+sfx(c,'acc')).replace(/İzmir['’]?li\b/g,c+sfx(c,'li'))
@@ -45,7 +45,7 @@ function rep(s){if(!s||typeof s!=='string')return s;if(name!==ORIG&&s.indexOf('M
 var obs=null,to=null;
 function sweep(){if(!customized)return;if(obs)obs.disconnect();try{
   var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false),ns=[],n;
-  while(n=w.nextNode()){var t=n.nodeValue;if(t&&(t.indexOf('Meridyen')>=0||(il!=='İzmir'&&(t.indexOf('İzmir')>=0||t.indexOf('İZMİR')>=0))))ns.push(n);}
+  while(n=w.nextNode()){var t=n.nodeValue;if(t&&(t.indexOf('Meridyen')>=0||(il!=='İzmir'&&(t.indexOf('İzmir')>=0||t.indexOf('İZMİR')>=0||(window.TRG&&window.TRG.hasIzmirPlace&&window.TRG.hasIzmirPlace(t))))))ns.push(n);}
   ns.forEach(function(t){t.nodeValue=rep(t.nodeValue);});
   document.querySelectorAll('[title],[alt],[placeholder],[aria-label]').forEach(function(el){['title','alt','placeholder','aria-label'].forEach(function(a){var v=el.getAttribute(a);if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0||v.indexOf('İZMİR')>=0))el.setAttribute(a,rep(v));});});
   /* logo: tam ad (mark = baş harf, metin = tam ad) */
