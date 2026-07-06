@@ -2241,6 +2241,7 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
             <button class="btn btn-primary btn-sm" onclick="saveProx()">Kaydet & Uygula</button>
             <button class="abtn" onclick="proxTest()">Bağlan & Test Et</button>
             <button class="abtn" onclick="openSuperAdmin()" title="emlakekspertizi.com bayi yönetimi">🏛️ Bayi Paneli (Süper-Admin)</button>
+            <button class="abtn" onclick="openOnboarding()" title="Adım adım kurulum">🚀 Kurulum Sihirbazı</button>
           </div>
         </div>
         <div class="adm-card"><h3>Aktif Modüller</h3><div class="csub">Sitede gösterilecek ProX veri modüllerini açıp kapatın.</div>
@@ -4419,6 +4420,69 @@ function superAddDealer(){var firma=prompt('Yeni bayi firma adı:');if(!firma)re
 function superReset(){try{localStorage.removeItem('wl_super_tenants');}catch(e){}openSuperAdmin();if(typeof toast==='function')toast('Demo bayi verileri sıfırlandı.');}
 window.addEventListener('hashchange',function(){if(location.hash==='#super')openSuperAdmin();});
 window.addEventListener('load',function(){if(location.hash==='#super')setTimeout(openSuperAdmin,400);});
+
+/* ===== ONBOARDING SİHİRBAZI — yeni bayi tek akış (il → firma → EİDS → logo → ProX ile kur) ===== */
+var OB={step:1,il:'',name:'',unvan:'',vergi:'',adres:'',tel:'',mail:'',belge:'',logo:'',key:''};
+var OB_STEPS=['İl Seçimi','Firma Bilgileri','EİDS Yetki','Logo','ProX ile Kur'];
+function obSeed(){try{OB.il=(typeof PROX!=='undefined'&&PROX.il)||'İzmir';var f=(typeof FIRMA!=='undefined'&&FIRMA)||{};OB.name=(f.name&&f.name!=='Meridyen Gayrimenkul')?f.name:'';OB.unvan=(f.eids&&f.eids.unvan)||'';OB.vergi=f.vergi||'';OB.adres=(f.adres&&f.adres.indexOf('İzmir')<0)?f.adres:'';OB.tel=(f.tel&&f.tel.indexOf('232')<0)?f.tel:'';OB.mail=(f.mail&&f.mail.indexOf('meridyen')<0)?f.mail:'';OB.belge=(f.eids&&f.eids.belgeNo)||'';OB.key=(typeof PROX!=='undefined'&&PROX.key&&PROX.key.indexOf('emlaktahadimkoy')<0)?PROX.key:'';}catch(e){}}
+function obCollect(){function v(id){var e=document.getElementById(id);return e?e.value.trim():undefined;}
+  var m={ob_il:'il',ob_name:'name',ob_unvan:'unvan',ob_vergi:'vergi',ob_adres:'adres',ob_tel:'tel',ob_mail:'mail',ob_belge:'belge',ob_logo:'logo',ob_key:'key'};
+  Object.keys(m).forEach(function(id){var val=v(id);if(val!==undefined)OB[m[id]]=val;});}
+function obBody(n){var e=function(s){return (s||'').replace(/"/g,'&quot;');};
+  if(n===1){var ils=(typeof trIlList==='function'?trIlList():['İzmir']).slice().sort(function(a,b){return a.localeCompare(b,'tr');});
+    return '<p class="csub">Sitenizin yayınlanacağı ili seçin. İl/ilçe/mahalle endeksi ProX API üzerinden bu ile göre çekilir.</p><div class="afield"><label>İl</label><select id="ob_il" style="width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;font:inherit">'+ils.map(function(il){return '<option'+(il===OB.il?' selected':'')+'>'+il+'</option>';}).join('')+'</select></div>';}
+  if(n===2){return '<p class="csub">Yasal firma bilgileriniz — KVKK/çerez/mesafeli metinleri ve site künyesi bunlardan otomatik dolar.</p>'
+    +'<div class="afield"><label>Firma Adı *</label><input id="ob_name" value="'+e(OB.name)+'" placeholder="ör. Antalya Elite Gayrimenkul"></div>'
+    +'<div class="afield"><label>Ticari Unvan</label><input id="ob_unvan" value="'+e(OB.unvan)+'" placeholder="ör. Antalya Elite Gayrimenkul A.Ş."></div>'
+    +'<div class="ed2"><div class="afield"><label>Vergi No</label><input id="ob_vergi" value="'+e(OB.vergi)+'"></div><div class="afield"><label>Telefon</label><input id="ob_tel" value="'+e(OB.tel)+'" placeholder="+90 ..."></div></div>'
+    +'<div class="afield"><label>E-posta</label><input id="ob_mail" value="'+e(OB.mail)+'" placeholder="info@firmaniz.com"></div>'
+    +'<div class="afield"><label>Adres</label><input id="ob_adres" value="'+e(OB.adres)+'"></div>';}
+  if(n===3){return '<p class="csub">EİDS (Elektronik İlan Doğrulama) — Özel Portföy kayıtları serbesttir; <b>gerçek ilan yayınlamak için</b> yetki belgesi gerekir. Şimdi girebilir veya sonra ekleyebilirsiniz.</p>'
+    +'<div class="afield"><label>Yetki Belge No <span style="color:var(--muted);font-weight:400">(7 hane, opsiyonel)</span></label><input id="ob_belge" value="'+e(OB.belge)+'" maxlength="7" placeholder="1234567"></div>'
+    +'<div class="csub" style="margin-top:6px">Yayında e-Devlet ile bağlanıp kullanıcı kodu üretilir; sihirbaz sonrası admin → Firma\'dan tamamlanır.</div>';}
+  if(n===4){return '<p class="csub">Logo (opsiyonel) — URL girin. Girilmezse firma adınızın baş harfi marka olarak kullanılır.</p>'
+    +'<div class="afield"><label>Logo URL</label><input id="ob_logo" value="'+e(OB.logo)+'" placeholder="https://... .png"></div>'
+    +(OB.logo?'<div style="margin-top:8px"><img src="'+e(OB.logo)+'" alt="logo" style="max-height:56px;border:1px solid var(--line);border-radius:8px;padding:6px;background:#fff"></div>':'');}
+  if(n===5){return '<p class="csub">ProX API anahtarınızı girin (canlı il/ilçe/mahalle + değerleme + AI). Boş bırakırsanız demo veriyle kurulur; sonra admin → ProX\'tan ekleyebilirsiniz.</p>'
+    +'<div class="afield"><label>ProX API Anahtarı <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="ob_key" value="'+e(OB.key)+'" placeholder="prox_..." style="font-family:monospace;font-size:12px"></div>'
+    +'<div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.8"><b>Kurulum özeti</b><br>İl: <b>'+e(OB.il)+'</b> · Firma: <b>'+e(OB.name||'—')+'</b><br>EİDS: '+(OB.belge?'✓ '+e(OB.belge):'sonra')+' · Logo: '+(OB.logo?'✓':'baş harf')+' · ProX: '+(OB.key?'✓ anahtar':'demo')+'</div>';}
+  return '';}
+function obRender(){var id='obWizard',m=document.getElementById(id);
+  if(!m){m=document.createElement('div');m.id=id;m.className='modal';document.body.appendChild(m);}
+  var dots=OB_STEPS.map(function(t,i){var n=i+1,on=n===OB.step,done=n<OB.step;return '<div style="flex:1;text-align:center;font-size:11px;color:'+(on?'var(--accent)':done?'#1a7f4b':'var(--muted)')+';font-weight:'+(on?'700':'500')+'"><div style="height:6px;border-radius:3px;background:'+(on||done?'var(--accent)':'var(--line)')+';margin-bottom:5px"></div>'+(done?'✓ ':'')+t+'</div>';}).join('');
+  var last=OB.step===OB_STEPS.length;
+  m.innerHTML='<div class="mbox" style="max-width:600px"><button class="mclose" onclick="obClose()">✕</button>'
+    +'<h3>🚀 Kurulum Sihirbazı <span class="tsub" style="font-weight:400">— '+OB.step+'/'+OB_STEPS.length+'</span></h3>'
+    +'<div style="display:flex;gap:6px;margin:12px 0 16px">'+dots+'</div>'
+    +'<div style="min-height:180px">'+obBody(OB.step)+'</div>'
+    +'<div style="display:flex;gap:10px;margin-top:16px;justify-content:space-between">'
+    +'<div>'+(OB.step>1?'<button class="abtn" onclick="obGo(-1)">← Geri</button>':'<button class="abtn" onclick="obClose()">Daha sonra</button>')+'</div>'
+    +'<div>'+(last?'<button class="btn btn-primary" onclick="obFinish()">✓ Kur & Yayınla</button>':'<button class="btn btn-primary" onclick="obGo(1)">Devam →</button>')+'</div></div></div>';
+  m.classList.add('open');}
+function obGo(d){obCollect();if(d>0&&OB.step===2&&!OB.name){toast('Lütfen firma adını girin.');return;}OB.step=Math.max(1,Math.min(OB_STEPS.length,OB.step+d));obRender();}
+function openOnboarding(){obSeed();OB.step=1;obRender();}
+function obClose(){var m=document.getElementById('obWizard');if(m)m.classList.remove('open');}
+function obFinish(){obCollect();if(!OB.name){OB.step=2;obRender();toast('Firma adı gerekli.');return;}
+  try{
+    if(typeof applyProvince==='function')applyProvince(OB.il);
+    if(typeof FIRMA!=='undefined'){FIRMA.name=OB.name;if(OB.vergi)FIRMA.vergi=OB.vergi;if(OB.adres)FIRMA.adres=OB.adres;if(OB.tel)FIRMA.tel=OB.tel;if(OB.mail)FIRMA.mail=OB.mail;
+      FIRMA.eids=FIRMA.eids||{};if(OB.unvan)FIRMA.eids.unvan=OB.unvan;else if(!FIRMA.eids.unvan)FIRMA.eids.unvan=OB.name+' Danışmanlık Ltd. Şti.';
+      if(OB.belge){FIRMA.eids.belgeNo=OB.belge.replace(/[^0-9]/g,'');FIRMA.eids.yetkili=!!(FIRMA.eids.belgeNo.length===7&&FIRMA.eids.connected);}}
+    if(typeof applyBrand==='function')applyBrand(OB.name);
+    if(OB.logo){try{if(typeof SAAS_CONFIG!=='undefined'&&SAAS_CONFIG.tenantSettings){SAAS_CONFIG.tenantSettings.logoUrl=OB.logo;if(typeof applySaaSSettings==='function')applySaaSSettings();}}catch(e){}}
+    if(OB.key&&typeof PROX!=='undefined'){PROX.key=OB.key;PROX.il=OB.il;PROX.region=OB.il;if(typeof applyProxTenant==='function')applyProxTenant();}
+    if(typeof saveAll==='function')saveAll();
+    if(OB.il!=='İzmir'){try{if(typeof rebuildOzelFromProx==='function')rebuildOzelFromProx(OB.il,true);}catch(e){}try{if(typeof wlBuildBolge==='function')wlBuildBolge(OB.il,true);}catch(e){}}
+    try{localStorage.setItem('wl_onboarded','1');}catch(e){}
+    obClose();
+    if(typeof toast==='function')toast('✓ Kurulum tamam! '+OB.name+' · '+OB.il+' yayında.'+(OB.key?'':' (ProX anahtarını admin→ProX\'tan ekleyebilirsiniz.)'));
+  }catch(e){if(typeof toast==='function')toast('Kurulumda hata: '+(e&&e.message||e));}}
+window.addEventListener('hashchange',function(){if(location.hash==='#kur')openOnboarding();});
+window.addEventListener('load',function(){try{
+  if(location.hash==='#kur'){setTimeout(openOnboarding,400);return;}
+  var fresh=!localStorage.getItem('meridyenGM_v1')&&!localStorage.getItem('wl_onboarded');
+  if(fresh)setTimeout(openOnboarding,1400); /* yeni bayi ilk çalıştırma — 'Daha sonra' ile atlanır */
+}catch(e){}});
 function closeAdmin(){document.getElementById('adminApp').classList.remove('show');document.body.style.overflow='';}
 function admLogin(){
   const u=document.getElementById('adm_user').value.trim(),p=document.getElementById('adm_pass').value.trim();
