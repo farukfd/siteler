@@ -22,7 +22,7 @@ window.EMLAK_PACKAGES = {
 window.EMLAK_TENANT.enabledFeatures = window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode] || window.EMLAK_PACKAGES.PRO;
 window.hasFeature = function(f){ return window.EMLAK_TENANT.enabledFeatures.indexOf(f)!==-1; };
 window.requireFeature = function(f){ if(window.hasFeature(f)) return true; var m="Bu özellik mevcut paketinizde aktif değildir. Kurumsal paketinizi yükseltin."; if(typeof toast==="function")toast(m); else alert(m); return false; };
-async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ const res=await fetch(window.EMLAK_API_BASE+path,{method,mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id,"X-Tenant-Key":window.EMLAK_TENANT.tenant_key,...headers},body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
+async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ const res=await fetch(window.EMLAK_API_BASE+path,{method,mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id,"X-Tenant-Key":window.EMLAK_TENANT.tenant_key,...headers},body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); try{var _qm=new Date().toISOString().slice(0,7),_q=JSON.parse(localStorage.getItem("prox_quota")||"null");if(!_q||_q.month!==_qm)_q={month:_qm,count:0};_q.count++;localStorage.setItem("prox_quota",JSON.stringify(_q));}catch(_e){} const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
 function proxFallback(path,options={}){ return { fallback:true, message:"API baglantisi yok. Demo/fallback veri kullaniliyor.", path, data:(window.EMLAK_FALLBACK?window.EMLAK_FALLBACK(path,options):null) }; }
 async function submitLead(lead){ var p=Object.assign({id:"lead_"+Date.now(),tenantId:window.EMLAK_TENANT.id,tenant_id:window.EMLAK_TENANT.tenant_id,sector:window.EMLAK_TENANT.sector,createdAt:new Date().toISOString(),status:"new"},lead); try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:p}); if(r&&r.fallback)throw new Error("fallback"); return {ok:true,online:true,data:r}; }catch(e){ try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(p);localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:p}; } }
 window.injectSchema=function(o){try{var s=document.createElement("script");s.type="application/ld+json";s.text=JSON.stringify(o);document.head.appendChild(s);}catch(e){}};
@@ -3371,19 +3371,25 @@ async function _wlPMap(items,fn,conc){conc=conc||4;var out=new Array(items.lengt
 /* /prox/analyze → gerçek başlangıç fiyatı (range.min_value). Cache'li. */
 var _wlAnalyzeCache={};
 async function proxAnalyzePrice(il,ilce,mah,tip,durum,m2){var k=[il,ilce,mah||'',tip,durum,m2].join('|');if(_wlAnalyzeCache[k]!==undefined)return _wlAnalyzeCache[k];var v=null;try{var r=await proxApi('/api/v1/tenant/prox/analyze',{method:'POST',body:{il:il,ilce:ilce,mahalle:mah||'',kategori:(typeof proxKategoriOf==='function'?proxKategoriOf(tip):'konut'),durum:durum,brut_m2:m2,attrs:{}}});if(r&&r.success===true&&!r.fallback){var rg=r.range||{};var mn=+rg.min_value||0,st=+r.strongest_value||0,mx=+rg.max_value||0;if(mn>0||st>0)v={min:mn||st,strong:st,max:mx,conf:(r.confidence!=null?r.confidence:null)};}}catch(e){}_wlAnalyzeCache[k]=v;return v;}
+/* Tazelik: veri paketi eski mi? (il değişti / ts yok / >maxH saat) → gereksiz API/kota tüketimini önler */
+function wlStale(key,il,maxH){maxH=maxH||24;try{var p=JSON.parse(localStorage.getItem(key)||'null');if(!p||p.il!==il||!p.ts)return true;return (Date.now()-p.ts)>maxH*3600000;}catch(e){return true;}}
+function wlAgo(ts){if(!ts)return '—';var s=Math.max(0,Math.round((Date.now()-ts)/1000));if(s<60)return 'az önce';var m=Math.round(s/60);if(m<60)return m+' dk önce';var h=Math.round(m/60);if(h<24)return h+' sa önce';return Math.round(h/24)+' gün önce';}
 async function wlBuildBolge(il,silent){
   il=il||PROVINCE.name;if(il==='İzmir')return;
   try{
     var allIlce=Object.keys(PROVINCE.districts),ilceler=allIlce.slice(0,12);
     if(!silent)toast('ProX bölge verisi çekiliyor… ('+il+')');
-    var cards=[];
-    for(var i=0;i<ilceler.length;i++){var ilce=ilceler[i];
-      var inf=await proxEndeksInfo(il,ilce);var kir=await proxEndeksM2(il,ilce,'kiralik');
+    /* İlçe endeks + kira m² — PARALEL (eşzamanlılık 4): sıralı ~12 çağrı yerine ~3 tur */
+    var raw=await _wlPMap(ilceler,async function(ilce){
+      var pair=await Promise.all([proxEndeksInfo(il,ilce),proxEndeksM2(il,ilce,'kiralik')]);
+      return {ilce:ilce,inf:pair[0]||{m2:0,score:0},kir:pair[1]};
+    },4);
+    var cards=raw.map(function(x){var ilce=x.ilce,inf=x.inf,kir=x.kir;
       var m2=inf.m2||((BAZ[ilce]&&BAZ[ilce].m2)||30000),sc=Math.round(inf.score||62);
       var trend=m2>=45000?'yükselen':m2>=28000?'talep gören':'gelişen';
       var tier=m2>=60000?'yüksek değerli merkez':m2>=40000?'talep gören':'uygun fiyatlı';
-      cards.push({ad:ilce,trend:trend,one_liner:il+'’in '+tier+' ilçelerinden.',
-        deger_ipucu:'ProX ort. m²: '+fmt(m2)+' ₺'+(kir?' · kira '+fmt(kir)+' ₺/m²':'')+' · yatırım skoru '+sc+'/100.'});}
+      return {ad:ilce,trend:trend,one_liner:il+'’in '+tier+' ilçelerinden.',
+        deger_ipucu:'ProX ort. m²: '+fmt(m2)+' ₺'+(kir?' · kira '+fmt(kir)+' ₺/m²':'')+' · yatırım skoru '+sc+'/100.'};});
     var m2s=cards.map(function(c){return parseInt(c.deger_ipucu.replace(/\D/g,''))||0;});
     var ilInf=await proxEndeksInfo(il,'');
     var maxIdx=0;cards.forEach(function(c,i){var v=parseInt((c.deger_ipucu.match(/([\d.]+) ₺/)||[])[1]||'0');});
@@ -3403,6 +3409,7 @@ async function wlBuildBolge(il,silent){
     if(insights.length<3)insights=[{baslik:'Cephe ve kat değeri',metin:'Aynı binada cephe yönü ve kat, m² fiyatını belirgin değiştirir; veriyle doğru konumlandırırız.'},{baslik:'Zemin ve yapı kalitesi',metin:'Zemin etüdü ve yapı yaşı, değerin ve satılabilirliğin kritik bileşenidir.'},{baslik:'Ulaşım yakınlığı',metin:'Ana arter, toplu taşıma ve altyapıya yakınlık kira ve satış talebini yükseltir.'},{baslik:'Sezonluk kira dinamiği',metin:'Bölgeye göre kira talebi sezonsal değişir; doğru zamanlama getiriyi artırır.'},{baslik:'Kentsel dönüşüm etkisi',metin:'Dönüşüm bölgelerinde eski yapı stoku ile yeni proje arasında değer farkı oluşur.'}];
     var pack={il:il,name:(FIRMA&&FIRMA.name)||'',cards:cards,dpoints:dpoints,insights:insights.slice(0,6),ts:Date.now()};
     try{localStorage.setItem('wl_bolge',JSON.stringify(pack));}catch(e){}
+    try{if(typeof proxRenderStatus==='function')proxRenderStatus();}catch(e){}
     if(!silent)toast('✓ '+il+' bölge verisi hazır — Neden Biz sayfası gerçek verilerle güncellendi.');
     return pack;
   }catch(e){if(!silent)toast('Bölge verisi çekilemedi.');}
@@ -3450,7 +3457,7 @@ async function rebuildOzelFromProx(il,silent){
     });
     OZEL=out;saveAll();
     try{localStorage.setItem('wl_ozel_ts',JSON.stringify({il:il,ts:Date.now(),n:out.length,real:realCount}));}catch(e){}
-    try{if(typeof renderOzel==='function')renderOzel();if(typeof renderOzHome==='function')renderOzHome();if(typeof ozHero==='function')ozHero();if(typeof renderOzelRows==='function')renderOzelRows();}catch(e){}
+    try{if(typeof renderOzel==='function')renderOzel();if(typeof renderOzHome==='function')renderOzHome();if(typeof ozHero==='function')ozHero();if(typeof renderOzelRows==='function')renderOzelRows();if(typeof proxRenderStatus==='function')proxRenderStatus();}catch(e){}
     if(!silent)toast('✓ Özel Portföy '+il+': '+out.length+' kayıt ('+realCount+' gerçek ProX analiz fiyatı).');
   }catch(e){if(!silent)toast('Özel Portföy güncellenemedi.');}
   _ozBusy=false;
@@ -4543,8 +4550,8 @@ function kurumsalApply(){var res=window._kiResult;if(!res){toast("Önce oluştur
   applyBrand(name);
   try{applyContent();}catch(e){}
   try{applySeoHead();}catch(e){}
-  try{if(typeof rebuildOzelFromProx==='function')rebuildOzelFromProx(il,true);}catch(e){}
-  try{if(il!=='İzmir'&&typeof wlBuildBolge==='function')wlBuildBolge(il,true);}catch(e){}
+  try{if(typeof rebuildOzelFromProx==='function'&&wlStale('wl_ozel_ts',il))rebuildOzelFromProx(il,true);}catch(e){}
+  try{if(il!=='İzmir'&&typeof wlBuildBolge==='function'&&wlStale('wl_bolge',il))wlBuildBolge(il,true);}catch(e){}
   try{fillFirmaForm();}catch(e){}
   try{if(typeof fillSeo==="function")fillSeo();}catch(e){}
   brandSweep(document.body);
@@ -5257,15 +5264,23 @@ async function aiSend(){
 function fillProx(){document.getElementById('px_key').value=PROX.key||'';
   var sel=document.getElementById('px_il');
   if(sel){var cur=PROX.il||PROX.region||'İzmir';sel.innerHTML=trIlList().sort(function(a,b){return a.localeCompare(b,'tr');}).map(function(il){return '<option'+(il===cur?' selected':'')+'>'+il+'</option>';}).join('');}
-  const pct=Math.round(PROX.quotaUsed/PROX.quotaMax*100);document.getElementById('px_fill').style.width=pct+'%';
-  document.getElementById('px_quotaTxt').textContent=fmt(PROX.quotaUsed)+' / '+fmt(PROX.quotaMax)+' istek';
+  var _q=null;try{_q=JSON.parse(localStorage.getItem('prox_quota')||'null');}catch(e){}
+  var _used=(_q&&_q.count)||PROX.quotaUsed||0,_max=PROX.quotaMax||10000;
+  const pct=Math.min(100,Math.round(_used/_max*100));document.getElementById('px_fill').style.width=pct+'%';
+  document.getElementById('px_quotaTxt').textContent=fmt(_used)+' / '+fmt(_max)+' istek'+(_q?' · '+_q.month:'');
   if(typeof proxRenderStatus==='function')proxRenderStatus();}
 function saveProx(){PROX.key=document.getElementById('px_key').value.trim();
   var il=(document.getElementById('px_il')||{}).value||'İzmir';PROX.il=il;PROX.region=il;
-  applyProxTenant();saveAll();applyProvince(il);if(typeof proxRenderStatus==='function')proxRenderStatus();try{if(il!=='İzmir'&&typeof rebuildOzelFromProx==='function')rebuildOzelFromProx(il,true);}catch(e){}try{if(il!=='İzmir'&&typeof wlBuildBolge==='function')wlBuildBolge(il,true);}catch(e){}
+  applyProxTenant();saveAll();applyProvince(il);if(typeof proxRenderStatus==='function')proxRenderStatus();try{if(il!=='İzmir'&&typeof rebuildOzelFromProx==='function'&&wlStale('wl_ozel_ts',il))rebuildOzelFromProx(il,true);}catch(e){}try{if(il!=='İzmir'&&typeof wlBuildBolge==='function'&&wlStale('wl_bolge',il))wlBuildBolge(il,true);}catch(e){}
   toast('✓ ProX bağlantısı kaydedildi · aktif il: '+il);}
 function proxRenderStatus(){var el=document.getElementById('px_status');if(!el)return;var t=window.EMLAK_TENANT||{};
-  el.innerHTML='<div class="eids-yetki '+(PROX.key?'on':'off')+'" style="margin:0"><span class="ic">'+(PROX.key?'◉':'⚠️')+'</span><div>'+(PROX.key?('ProX bağlı · tenant '+(t.tenant_id||'-')+' · aktif il '+(PROX.il||'İzmir')):'API anahtarı girilmedi')+'<div style="font-weight:500;font-size:12px;opacity:.85">Base: '+(window.EMLAK_API_BASE||'-')+'</div></div></div>';}
+  var oz=null,bl=null,q=null;try{oz=JSON.parse(localStorage.getItem('wl_ozel_ts')||'null');}catch(e){}try{bl=JSON.parse(localStorage.getItem('wl_bolge')||'null');}catch(e){}try{q=JSON.parse(localStorage.getItem('prox_quota')||'null');}catch(e){}
+  var fresh='';
+  if(PROX.key){fresh='<div style="font-weight:500;font-size:12px;opacity:.85;margin-top:5px;border-top:1px solid rgba(0,0,0,.08);padding-top:5px">'
+    +'📦 Özel Portföy: '+(oz&&oz.ts?('<b>'+wlAgo(oz.ts)+'</b> · '+oz.n+' kayıt / '+(oz.real||0)+' gerçek analiz fiyatı'):'henüz çekilmedi')
+    +' &nbsp;·&nbsp; 🗺️ Bölge: '+(bl&&bl.ts?('<b>'+wlAgo(bl.ts)+'</b>'):'—')
+    +(q?(' &nbsp;·&nbsp; 📊 Kota: '+fmt(q.count)+' istek ('+q.month+')'):'')+'</div>';}
+  el.innerHTML='<div class="eids-yetki '+(PROX.key?'on':'off')+'" style="margin:0"><span class="ic">'+(PROX.key?'◉':'⚠️')+'</span><div>'+(PROX.key?('ProX bağlı · tenant '+(t.tenant_id||'-')+' · aktif il '+(PROX.il||'İzmir')):'API anahtarı girilmedi')+'<div style="font-weight:500;font-size:12px;opacity:.85">Base: '+(window.EMLAK_API_BASE||'-')+'</div>'+fresh+'</div></div>';}
 async function proxTest(){var el=document.getElementById('px_status');if(el)el.innerHTML='<div class="csub">● ProX API test ediliyor…</div>';
   PROX.key=(document.getElementById('px_key')||{}).value.trim()||PROX.key;applyProxTenant();
   try{var b=await proxApi('/api/v1/tenant/bootstrap');
