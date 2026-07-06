@@ -27,7 +27,7 @@ function proxFallback(path,options={}){ return { fallback:true, message:"API bag
 async function submitLead(lead){ var p=Object.assign({id:"lead_"+Date.now(),tenantId:window.EMLAK_TENANT.id,tenant_id:window.EMLAK_TENANT.tenant_id,sector:window.EMLAK_TENANT.sector,createdAt:new Date().toISOString(),status:"new"},lead); try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:p}); if(r&&r.fallback)throw new Error("fallback"); return {ok:true,online:true,data:r}; }catch(e){ try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(p);localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:p}; } }
 window.injectSchema=function(o){try{var s=document.createElement("script");s.type="application/ld+json";s.text=JSON.stringify(o);document.head.appendChild(s);}catch(e){}};
 /* Preserve the API lead-poster under a stable alias so the later UI-level submitLead(src) redefinition does not shadow it. */
-window.proxSubmitLead = submitLead;
+window.proxSubmitLead = (function(apiSubmit){ return function(p){ try{ var r=apiSubmit(p); return (r&&r.then)?r.then(function(res){ try{var L=window._lastLead; if(L){ L.sync=(res&&res.online)?'online':'offline'; L.online=!!(res&&res.online); if(typeof window.saveAll==='function')window.saveAll(); if(typeof window.renderLeads==='function')window.renderLeads(); } }catch(e){} return res; }):r; }catch(e){ return Promise.resolve({ok:false,online:false}); } }; })(submitLead);
 /* Map coarse backend feature flags -> canUse* gate names used by requireFeature(). */
 window.EMLAK_FEATURE_MAP = {
   locations:["canUseMarketAnalysis"],
@@ -2006,7 +2006,7 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
       <!-- LEADLER -->
       <div class="adm-pane" id="pane-leadler">
         <div class="adm-top"><h1>Lead Gelen Kutusu</h1><button class="abtn" onclick="clearLeads()">Tümünü Temizle</button></div>
-        <div class="adm-card"><table class="atable"><thead><tr><th>Tarih</th><th>Ad</th><th>Telefon</th><th>Konu</th><th>Kaynak</th></tr></thead><tbody id="leadRows"></tbody></table></div>
+        <div class="adm-card"><table class="atable"><thead><tr><th>Tarih</th><th>Ad</th><th>Telefon</th><th>Konu</th><th>Kaynak</th><th>CRM</th></tr></thead><tbody id="leadRows"></tbody></table></div>
       </div>
       <!-- BÖLGE -->
       <div class="adm-pane" id="pane-bolge">
@@ -4207,7 +4207,7 @@ function valLead(){const ad=document.getElementById('vl_ad').value,tel=document.
 }
 
 /* ============ LEAD / FORM ============ */
-function pushLead(o){LEADS.unshift({...o,date:new Date().toLocaleString('tr-TR')});saveAll();if(typeof renderLeads==='function')renderLeads();if(typeof renderKpis==='function')renderKpis();}
+function pushLead(o){var lead={...o,sync:'pending',date:new Date().toLocaleString('tr-TR')};LEADS.unshift(lead);window._lastLead=lead;saveAll();if(typeof renderLeads==='function')renderLeads();if(typeof renderKpis==='function')renderKpis();return lead;}
 function submitLead(src){
   const g=id=>document.getElementById(id);let ad,tel,konu,kvkk,msg;
   if(src==='modal'){ad=g('m_ad').value;tel=g('m_tel').value;konu=g('m_konu').value;kvkk=g('m_kvkk').checked;msg=g('m_msg').value;}
@@ -4524,9 +4524,10 @@ function renderDanRows(){const tb=document.getElementById('danRows');if(!tb)retu
     <td class="ta"><button class="ico-btn" onclick="editDan(${d.id})">✎</button><button class="ico-btn del" onclick="delDan(${d.id})">🗑</button></td></tr>`;}).join('');}
 
 /* ============ ADMIN: LEADLER ============ */
+function leadSyncBadge(s){if(s==='online')return '<span title="ProX CRM iletildi" style="color:var(--green-700,#1a7f4b);font-weight:600">☁ Online</span>';if(s==='offline')return '<span title="Cevrimdisi — yeniden denenecek" style="color:#b26a00;font-weight:600">⧗ Beklemede</span>';return '<span class="tsub">⋯</span>';}
 function renderLeads(){const tb=document.getElementById('leadRows');if(!tb)return;
-  if(!LEADS.length){tb.innerHTML='<tr><td colspan="5" class="empty">Henüz lead yok.</td></tr>';return;}
-  tb.innerHTML=LEADS.map(l=>`<tr><td class="tsub">${l.date}</td><td><b>${l.ad}</b></td><td class="num">${l.tel||'-'}</td><td>${l.konu||'-'}${l.msg?`<div class="tsub">${l.msg}</div>`:''}</td><td><span class="src">${l.src}</span></td></tr>`).join('');}
+  if(!LEADS.length){tb.innerHTML='<tr><td colspan="6" class="empty">Henüz lead yok.</td></tr>';return;}
+  tb.innerHTML=LEADS.map(l=>`<tr><td class="tsub">${l.date}</td><td><b>${l.ad}</b></td><td class="num">${l.tel||'-'}</td><td>${l.konu||'-'}${l.msg?`<div class="tsub">${l.msg}</div>`:''}</td><td><span class="src">${l.src}</span></td><td>${leadSyncBadge(l.sync)}</td></tr>`).join('');}
 function clearLeads(){if(!LEADS.length){toast('Temizlenecek lead yok.');return;}if(!confirm('Tüm lead kayıtları silinecek. Emin misiniz?'))return;
   LEADS=[];saveAll();renderLeads();renderRecentLeads();renderKpis();toast('Tüm lead\'ler temizlendi.');}
 
@@ -6055,6 +6056,7 @@ function skSubmit(){const g=id=>{const e=document.getElementById(id);return e?e.
   const op=(amac||'').indexOf('Kira')>=0?'Kiralık':'Satılık';
   const bolge=[ilce,mah].filter(Boolean).join(' / ')||'-';
   pushLead({ad,tel,konu:'Sat/Kirala ('+(amac||'-')+'): '+tip+' '+bolge,src:'Özel Portföy Mülk Sahibi',mtip:tip,op,amac,bolge,m2:+m2||0,fiyat:+fiyat||0,msg:not});
+  if(typeof proxSubmitLead==='function')proxSubmitLead({sourcePage:'sat-kirala',formType:'satKirala',name:ad,phone:tel,email:'',location:bolge,message:tip+' · '+(amac||'-')+' · '+(m2?m2+'m²':'')+' · beklenen: '+(fiyat||'-')+(not?(' · '+not):''),requestedService:'Sat / Kirala'});
   if(typeof renderOzOwner==='function')renderOzOwner();
   ['sk_ad','sk_tel','sk_ilce','sk_mah','sk_m2','sk_fiyat','sk_not'].forEach(i=>{const e=document.getElementById(i);if(e)e.value='';});
   if(kv)kv.checked=false;
@@ -6301,6 +6303,7 @@ function pwLeadSubmit(){const g=id=>{const e=document.getElementById(id);return 
   const line='[Pusula Lead] '+ad+' - '+tel+' - Kriterler: '+crit+' - İlgilenilen Mülk: '+prop;
   console.log(line);
   if(typeof pushLead==='function')pushLead({ad,tel,konu:'Mülk Pusulası',src:'Mülk Pusulası',msg:(not?not+' · ':'')+'Kriterler: '+crit+' · Mülk: '+prop});
+  if(typeof proxSubmitLead==='function')proxSubmitLead({sourcePage:'mulk-pusulasi',formType:'pwLead',name:ad,phone:tel,email:'',location:(it?(it.mah+', '+it.ilce):''),message:'Kriterler: '+crit+' · Mülk: '+prop,requestedService:'Mülk Pusulası'});
   pwBody('<div class="pw-intro"><div class="big" style="background:rgba(52,168,83,.15);color:var(--green-700)"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><h3>Talebiniz alındı 🎉</h3><p>Danışmanımız <b>'+ad+'</b>, en kısa sürede sizi arayacak. Seçtiğiniz mülk ve tüm kriterleriniz ekibimize iletildi.</p></div>');
   const foot=document.getElementById('pwFoot');if(foot)foot.innerHTML='<span class="sp"></span><button class="pw-go" onclick="pwClose()">Kapat</button>';
   toast('🔔 Pusula talebiniz danışmana iletildi.');
@@ -6427,6 +6430,7 @@ function thValuationSubmit(){const g=id=>{const e=document.getElementById(id);re
   if(!tip){toast('Lütfen mülk tipini seçin.');return;}
   console.log('[Değerleme Talebi] '+ad+' - '+tel+' - '+tip+' · '+amac+(ilce?' · '+ilce:''));
   if(typeof pushLead==='function')pushLead({ad,tel,konu:'Değerleme Talebi: '+tip+' ('+amac+')',src:'Değerleme Talebi',msg:ilce});
+  if(typeof proxSubmitLead==='function')proxSubmitLead({sourcePage:'degerleme-talebi',formType:'thValuation',name:ad,phone:tel,email:'',location:ilce||'',message:tip+' · '+amac,requestedService:'Değerleme Talebi'});
   ['tv_ad','tv_tel','tv_ilce'].forEach(i=>{const e=document.getElementById(i);if(e)e.value='';});
   toast('✅ Değerleme talebiniz alındı. Lisanslı eksperimiz sizi arayacak.');
 }
