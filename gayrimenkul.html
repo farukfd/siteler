@@ -1976,6 +1976,7 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
       </div>
       <div class="adm-pane" id="pane-danismanlar">
         <div class="adm-top"><h1>Danışman Yönetimi</h1><button class="btn btn-primary btn-sm" onclick="newDan()">+ Yeni Danışman</button></div>
+        <div id="danDemoBanner"></div>
         <div class="adm-card" id="danEditCard" style="display:none">
           <h3>Danışman</h3><div class="csub">Ekip vitrininde görünür. Fotoğraf ekleyin — fotoğraflı danışmanlar çok daha fazla güven ve dönüş alır.</div>
           <div class="afield"><label>Profil Fotoğrafı</label>
@@ -3097,10 +3098,10 @@ const DEF_ILANLAR=[
 ];
 const DAN_COLORS=['#1e40af','#34a853','#8b5cf6','#0284c7','#f59e0b','#0f766e','#be185d','#1e7e3a'];
 const DEF_DAN=[
- {id:1,name:'Ahmet Yılmaz',role:'Kıdemli Emlak Danışmanı',area:'Karşıyaka · Bostanlı · Mavişehir',wa:'905000000001',tel:'+90 532 000 00 01',sales:142,rating:4.9,exp:12,feat:1,foto:'dan1',bio:'12 yıllık tecrübe, Karşıyaka–Bostanlı hattının lüks konut uzmanı.'},
- {id:2,name:'Zeynep Aksoy',role:'Yatırım Danışmanı',area:'Konak · Alsancak · Göztepe',wa:'905000000002',tel:'+90 532 000 00 02',sales:118,rating:4.8,exp:9,feat:1,foto:'dan2',bio:'Konak–Alsancak yatırım gayrimenkulleri ve getiri analizi.'},
- {id:3,name:'Mehmet Demir',role:'Portföy Uzmanı',area:'Çeşme · Urla · Alaçatı',wa:'905000000003',tel:'+90 532 000 00 03',sales:96,rating:4.9,exp:7,feat:0,foto:'dan3',bio:'Çeşme–Urla sahil ve villa portföyü konusunda uzman.'},
- {id:4,name:'Selin Kara',role:'Kiralama Uzmanı',area:'Bornova · Buca',wa:'905000000004',tel:'+90 532 000 00 04',sales:134,rating:5.0,exp:8,feat:0,foto:'dan4',bio:'Kurumsal kiralama ve kira yönetimi süreçleri.'}
+ {id:1,name:'Ahmet Yılmaz',role:'Kıdemli Emlak Danışmanı',area:'Karşıyaka · Bostanlı · Mavişehir',wa:'905000000001',tel:'+90 532 000 00 01',sales:142,rating:4.9,exp:12,feat:1,demo:1,foto:'dan1',bio:'12 yıllık tecrübe, Karşıyaka–Bostanlı hattının lüks konut uzmanı.'},
+ {id:2,name:'Zeynep Aksoy',role:'Yatırım Danışmanı',area:'Konak · Alsancak · Göztepe',wa:'905000000002',tel:'+90 532 000 00 02',sales:118,rating:4.8,exp:9,feat:1,demo:1,foto:'dan2',bio:'Konak–Alsancak yatırım gayrimenkulleri ve getiri analizi.'},
+ {id:3,name:'Mehmet Demir',role:'Portföy Uzmanı',area:'Çeşme · Urla · Alaçatı',wa:'905000000003',tel:'+90 532 000 00 03',sales:96,rating:4.9,exp:7,feat:0,demo:1,foto:'dan3',bio:'Çeşme–Urla sahil ve villa portföyü konusunda uzman.'},
+ {id:4,name:'Selin Kara',role:'Kiralama Uzmanı',area:'Bornova · Buca',wa:'905000000004',tel:'+90 532 000 00 04',sales:134,rating:5.0,exp:8,feat:0,demo:1,foto:'dan4',bio:'Kurumsal kiralama ve kira yönetimi süreçleri.'}
 ];
 
 /* ============ STATE + STORAGE ============ */
@@ -4598,7 +4599,22 @@ function saveDan(){const g=id=>document.getElementById(id).value.trim();
   saveAll();renderDanRows();renderDan();renderKpis();document.getElementById('danEditCard').style.display='none';}
 function delDan(id){if(!confirm('Bu danışmanı silmek istediğinize emin misiniz?'))return;
   DANISMANLAR=DANISMANLAR.filter(x=>x.id!==id);saveAll();renderDanRows();renderDan();renderKpis();toast('Danışman silindi.');}
+function renderDanDemoBanner(){var b=document.getElementById('danDemoBanner');if(!b)return;
+  var wl=((typeof FIRMA!=='undefined'&&FIRMA&&FIRMA.name&&FIRMA.name!=='Meridyen Gayrimenkul')||(typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name&&PROVINCE.name!=='İzmir'));
+  var demoN=(typeof DANISMANLAR!=='undefined'?DANISMANLAR.filter(function(d){return d.demo;}).length:0);
+  if(wl&&demoN>0){
+    b.innerHTML='<div style="background:rgba(230,150,20,.12);border:1px solid rgba(230,150,20,.42);border-radius:11px;padding:12px 14px;margin-bottom:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">'
+      +'<div style="flex:1;min-width:230px;font-size:13.5px;line-height:1.5"><b>⚠ Örnek ekip görünüyor</b> — listedeki <b>'+demoN+'</b> danışman İzmir demo verisidir. Ziyaretçilerinize <b>kendi gerçek ekibinizi</b> tanıtın; güven ve dönüşüm belirgin artar.</div>'
+      +'<button class="btn btn-primary btn-sm" onclick="newDan()">+ Danışman Ekle</button>'
+      +'<button class="abtn" onclick="danClearDemo()">Demo ekibi temizle</button></div>';
+  }else{b.innerHTML='';}}
+function danClearDemo(){if(typeof DANISMANLAR==='undefined')return;var real=DANISMANLAR.filter(function(d){return !d.demo;});
+  if(real.length===DANISMANLAR.length){toast('Temizlenecek demo danışman yok.');return;}
+  if(!confirm('Örnek/demo danışmanlar silinecek; kendi ekibinizi ekleyeceksiniz. Devam edilsin mi?'))return;
+  DANISMANLAR=real;saveAll();if(typeof renderDan==='function')renderDan();renderDanRows();
+  toast('Demo ekip temizlendi. "+ Danışman Ekle" ile kendi ekibinizi tanıtın.');if(typeof newDan==='function')newDan();}
 function renderDanRows(){const tb=document.getElementById('danRows');if(!tb)return;
+  renderDanDemoBanner();
   if(!DANISMANLAR.length){tb.innerHTML='<tr><td colspan="5" class="empty">Henüz danışman yok.</td></tr>';return;}
   tb.innerHTML=DANISMANLAR.map(d=>{const src=d.foto?(IMG[d.foto]||d.foto):'';const ini=d.name.split(' ').map(x=>x[0]).slice(0,2).join('');
     const av=src?`<img src="${src}" class="tthumb" loading="lazy" decoding="async" style="border-radius:50%;width:38px;height:38px">`:`<span class="tthumb" style="border-radius:50%;width:38px;height:38px;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:12px;font-weight:700">${ini}</span>`;
