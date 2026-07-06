@@ -4094,13 +4094,12 @@ function initVal(){
 }
 /* API-first ilçe listesi; canlı: {success,data:["..."]}. fallback = mevcut local BAZ verisi (görsel değişmez) */
 async function hydrateIlcelerFromApi(sel){
-  try{
-    const r=await proxApi('/api/v1/tenant/locations/ilceler?il='+encodeURIComponent('İzmir'));
-    if(!r||r.fallback||r.success!==true||!Array.isArray(r.data)||!r.data.length)return; // API yok/boş → local kalır
-    const cur=sel.value;
-    sel.innerHTML='<option value="">Seçin</option>'+r.data.map(k=>`<option>${(k&&k.name)||k}</option>`).join('');
+  try{var il=(typeof PROVINCE!=='undefined'&&PROVINCE.name)||'İzmir';var d=await loadMahalle(il);
+    if(!d||typeof d!=='object')return; // uç yok/boş → local BAZ kalır
+    var cur=sel.value;
+    sel.innerHTML='<option value="">Seçin</option>'+Object.keys(d).map(function(k){return '<option>'+k+'</option>';}).join('');
     if(cur)sel.value=cur;
-  }catch(e){/* sessiz: local liste korunur */}
+  }catch(e){}
 }
 function valMahalle(){const il=document.getElementById('v_ilce').value;const m=document.getElementById('v_mah');
   if(!il||!MAH[il]){m.innerHTML='<option value="">Önce ilçe seçin</option>';return;}
@@ -4108,12 +4107,11 @@ function valMahalle(){const il=document.getElementById('v_ilce').value;const m=d
   hydrateMahallelerFromApi(il,m);}
 /* API-first mahalle listesi; canlı: {success,data:["..."]}. fallback = mevcut local MAH verisi */
 async function hydrateMahallelerFromApi(il,m){
-  try{
-    const r=await proxApi('/api/v1/tenant/locations/mahalleler?il='+encodeURIComponent('İzmir')+'&ilce='+encodeURIComponent(il));
-    if(!r||r.fallback||r.success!==true||!Array.isArray(r.data)||!r.data.length)return;
-    if(document.getElementById('v_ilce').value!==il)return;       // kullanıcı ilçeyi değiştirdiyse dokunma
-    m.innerHTML=r.data.map(x=>`<option>${(x&&x.name)||x}</option>`).join('');
-  }catch(e){/* sessiz: local liste korunur */}
+  try{var d=await loadMahalle((typeof PROVINCE!=='undefined'&&PROVINCE.name)||'İzmir');
+    if(!d||!d[il]||!d[il].length)return;
+    if(document.getElementById('v_ilce').value!==il)return;
+    m.innerHTML=d[il].map(function(x){return '<option>'+x+'</option>';}).join('');
+  }catch(e){}
 }
 function hesaplaDeger(){
   const il=document.getElementById('v_ilce').value,tip=document.getElementById('v_tip').value,m2=+document.getElementById('v_m2').value;
@@ -4141,7 +4139,7 @@ async function refineDegerFromAnalyze(il,tip,m2,localB){
   try{
     const mah=(document.getElementById('v_mah')&&document.getElementById('v_mah').value)||'';
     const r=await proxApi('/api/v1/tenant/prox/analyze',{method:'POST',body:{
-      il:'İzmir',ilce:il,mahalle:mah,kategori:proxKategoriOf(tip),durum:'satilik',brut_m2:m2,attrs:{}
+      il:((typeof PROVINCE!=='undefined'&&PROVINCE.name)||'İzmir'),ilce:il,mahalle:mah,kategori:proxKategoriOf(tip),durum:'satilik',brut_m2:m2,attrs:{}
     }});
     if(!r||r.fallback||r.success!==true)return;                  // API yok → local sonuç korunur
     const val=+r.strongest_value;if(!val||!isFinite(val))return;
@@ -4168,7 +4166,7 @@ function valLead(){const ad=document.getElementById('vl_ad').value,tel=document.
   if(!kvkk){toast('Lütfen KVKK onayını işaretleyin.');return;}
   const v=window._lastVal||{};
   pushLead({ad,tel,konu:`Değerleme: ${v.il||''} ${v.tip||''} ${v.m2||''}m² ≈ ${v.val?fmt(v.val)+'₺':''}`,src:'Değerleme Aracı'});
-  if(typeof proxSubmitLead==='function')proxSubmitLead({sourcePage:'degerleme',formType:'valLead',name:ad,phone:tel,email:'',location:v.il||'',message:`${v.tip||''} ${v.m2||''}m² · tahmin: ${v.val?fmt(v.val)+'₺':''}`,requestedService:'Ön Değerleme Talebi'});
+  if(typeof proxSubmitLead==='function')proxSubmitLead({sourcePage:'degerleme',formType:'valLead',name:ad,phone:tel,email:'',location:v.il||((typeof PROVINCE!=='undefined'&&PROVINCE.name)||''),message:`${v.tip||''} ${v.m2||''}m² · tahmin: ${v.val?fmt(v.val)+'₺':''}`,requestedService:'Ön Değerleme Talebi'});
   document.getElementById('vl_ad').value='';document.getElementById('vl_tel').value='';document.getElementById('vl_kvkk').checked=false;
   toast('✓ Talebiniz alındı! Uzmanımız detaylı raporla sizi arayacak.');
 }
@@ -4182,7 +4180,7 @@ function submitLead(src){
   if(!ad||!tel){toast('Lütfen ad ve telefon girin.');return;}
   if(!kvkk){toast('Lütfen KVKK onayını işaretleyin.');return;}
   pushLead({ad,tel,konu,msg,src:src==='modal'?'Teklif/Değerleme Modalı':'İletişim Formu'});
-  if(typeof proxSubmitLead==='function')proxSubmitLead({sourcePage:src==='modal'?'lead-modal':'iletisim',formType:src==='modal'?'leadModal':'contactForm',name:ad,phone:tel,email:(src==='modal'?'':((g('f_mail')&&g('f_mail').value)||'')),location:'',message:msg,requestedService:konu||'İletişim'});
+  if(typeof proxSubmitLead==='function')proxSubmitLead({sourcePage:src==='modal'?'lead-modal':'iletisim',formType:src==='modal'?'leadModal':'contactForm',name:ad,phone:tel,email:(src==='modal'?'':((g('f_mail')&&g('f_mail').value)||'')),location:((typeof PROVINCE!=='undefined'&&PROVINCE.name)||''),message:msg,requestedService:konu||'İletişim'});
   if(src==='modal'){closeLead();['m_ad','m_tel','m_msg'].forEach(i=>g(i).value='');g('m_kvkk').checked=false;}
   else{['f_ad','f_tel','f_mail','f_msg'].forEach(i=>g(i).value='');g('f_kvkk').checked=false;}
   toast('✓ Talebiniz alındı! En kısa sürede dönüş yapacağız.');
