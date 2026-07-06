@@ -2345,48 +2345,6 @@ document.addEventListener('DOMContentLoaded',function(){ if(location.hash){var e
   setTimeout(function(){[].slice.call(document.querySelectorAll('.reveal')).forEach(reveal);},3500);
 })();
 </script>
-<script>
-/* ===== White-label senkron (config: brand + il) — grammar-aware ===== */
-(function(){try{
-  var d={};try{d=JSON.parse(localStorage.getItem('meridyenGM_v1')||'{}');}catch(e){}
-  var name=((d.FIRMA&&d.FIRMA.name)||'Meridyen Gayrimenkul').trim();
-  var il=((d.PROX&&(d.PROX.il||d.PROX.region))||'İzmir');
-  var ORIG='Meridyen Gayrimenkul',OSHORT='Meridyen';
-  if(name===ORIG && il==='İzmir')return;
-  var shortN=name.split(/\s+/)[0]||OSHORT;
-  function lv(w){var m=(w||'').toLowerCase().match(/[aeıioöuü]/g);return m?m[m.length-1]:'a';}
-  function bk(v){return 'aıou'.indexOf(v)>=0;}function ro(v){return 'ouöü'.indexOf(v)>=0;}
-  function I(v){return bk(v)?(ro(v)?'u':'ı'):(ro(v)?'ü':'i');}function A(v){return bk(v)?'a':'e';}
-  function ev(w){return /[aeıioöuü]$/i.test(w||'');}function hard(w){return 'pçtkfhsş'.indexOf((w||'').slice(-1).toLowerCase())>=0;}
-  function sfx(c,t){var v=lv(c),V=ev(c),D=hard(c)?'t':'d';return t=='gen'?(V?'n':'')+I(v)+'n':t=='dat'?(V?'y':'')+A(v):t=='acc'?(V?'y':'')+I(v):t=='loc'?D+A(v):t=='abl'?D+A(v)+'n':t=='li'?'l'+I(v):'';}
-  function city(s){if(il==='İzmir'||(s.indexOf('İzmir')<0&&s.indexOf('İZMİR')<0))return s;var c=il;
-    s=s.split('İzmir ve Ege bölgesi').join(c+' ve çevresi').split('İzmir ve Ege').join(c+' ve çevresi').split('İzmir & Ege').join(c+' & çevresi').split('İzmir ve çevresi').join(c+' ve çevresi');
-    s=s.replace(/İzmir['’](nin|nın|nun|nün|in|ın|un|ün)\b/g,c+"'"+sfx(c,'gen')).replace(/İzmir['’](den|dan|ten|tan)\b/g,c+"'"+sfx(c,'abl')).replace(/İzmir['’](deki|daki|teki|takı)\b/g,c+"'"+sfx(c,'loc')+'ki').replace(/İzmir['’](de|da|te|ta)\b/g,c+"'"+sfx(c,'loc')).replace(/İzmir['’](ya|ye|a|e)\b/g,c+"'"+sfx(c,'dat')).replace(/İzmir['’](yı|yi|yu|yü|ı|i|u|ü)\b/g,c+"'"+sfx(c,'acc')).replace(/İzmir['’]?li\b/g,c+sfx(c,'li')).split('İZMİR').join((c||'').toLocaleUpperCase('tr')).replace(/İzmir/g,c);
-    return s;}
-  function rep(s){if(!s||typeof s!=='string')return s;if(name!==ORIG&&s.indexOf('Meridyen')>=0)s=s.split(ORIG).join(name).split(OSHORT).join(shortN);return city(s);}
-  var obs=null,to=null;
-  function sweep(){if(obs)obs.disconnect();try{
-    var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false),ns=[],n;
-    while(n=w.nextNode()){var t=n.nodeValue;if(t&&(t.indexOf('Meridyen')>=0||(il!=='İzmir'&&(t.indexOf('İzmir')>=0||t.indexOf('İZMİR')>=0))))ns.push(n);}
-    ns.forEach(function(t){t.nodeValue=rep(t.nodeValue);});
-    document.querySelectorAll('[title],[alt],[placeholder],[aria-label]').forEach(function(el){['title','alt','placeholder','aria-label'].forEach(function(a){var v=el.getAttribute(a);if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0))el.setAttribute(a,rep(v));});});
-    var mk=document.querySelector('.logo .mark');if(mk&&name!==ORIG)mk.textContent=shortN.charAt(0).toLocaleUpperCase('tr');
-    if(document.title.indexOf('Meridyen')>=0||(il!=='İzmir'&&document.title.indexOf('İzmir')>=0))document.title=rep(document.title);
-    document.querySelectorAll('meta[content]').forEach(function(m){var v=m.getAttribute('content');if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0))m.setAttribute('content',rep(v));});
-    document.querySelectorAll('script[type="application/ld+json"]').forEach(function(s){var v=s.textContent;if(v&&(v.indexOf('Meridyen')>=0||(il!=='İzmir'&&(v.indexOf('İzmir')>=0||v.indexOf('İZMİR')>=0))))s.textContent=rep(v);});
-  }catch(e){}if(obs)obs.observe(document.body,{childList:true,subtree:true,characterData:true});}
-  function start(){sweep();if('MutationObserver' in window){obs=new MutationObserver(function(){clearTimeout(to);to=setTimeout(sweep,150);});obs.observe(document.body,{childList:true,subtree:true,characterData:true});}}
-  if(document.readyState!=='loading')start();else document.addEventListener('DOMContentLoaded',start);
-}catch(e){}})();
-</script>
-<script>
-/* Çalışma-zamanı canonical + og:url — deploy edilen domaine göre otomatik (white-label per-domain) */
-(function(){try{var url=location.origin+location.pathname;
-  function setL(rel,href){var l=document.querySelector('link[rel="'+rel+'"]');if(!l){l=document.createElement('link');l.setAttribute('rel',rel);document.head.appendChild(l);}l.setAttribute('href',href);}
-  setL('canonical',url);
-  function setM(pr,val){var m=document.querySelector('meta[property="'+pr+'"]');if(!m){m=document.createElement('meta');m.setAttribute('property',pr);document.head.appendChild(m);}m.setAttribute('content',val);}
-  setM('og:url',url);
-}catch(e){}})();
-</script>
+<script src="wl.js"></script>
 </body>
 </html>
