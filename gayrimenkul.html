@@ -22,7 +22,7 @@ window.EMLAK_PACKAGES = {
 window.EMLAK_TENANT.enabledFeatures = window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode] || window.EMLAK_PACKAGES.PRO;
 window.hasFeature = function(f){ return window.EMLAK_TENANT.enabledFeatures.indexOf(f)!==-1; };
 window.requireFeature = function(f){ if(window.hasFeature(f)) return true; var m="Bu özellik mevcut paketinizde aktif değildir. Kurumsal paketinizi yükseltin."; if(typeof toast==="function")toast(m); else alert(m); return false; };
-async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ const res=await fetch(window.EMLAK_API_BASE+path,{method,mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id,"X-Tenant-Key":window.EMLAK_TENANT.tenant_key,...headers},body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); try{var _qm=new Date().toISOString().slice(0,7),_q=JSON.parse(localStorage.getItem("prox_quota")||"null");if(!_q||_q.month!==_qm)_q={month:_qm,count:0};_q.count++;localStorage.setItem("prox_quota",JSON.stringify(_q));}catch(_e){} const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
+async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ var _hd={"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id}; if(!window.EMLAK_PROXY_MODE)_hd["X-Tenant-Key"]=window.EMLAK_TENANT.tenant_key; /* proxy modunda gizli anahtar istemciden GÖNDERİLMEZ — edge/proxy sunucuda ekler */ Object.assign(_hd,headers); const res=await fetch(window.EMLAK_API_BASE+path,{method,mode:"cors",headers:_hd,body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); try{var _qm=new Date().toISOString().slice(0,7),_q=JSON.parse(localStorage.getItem("prox_quota")||"null");if(!_q||_q.month!==_qm)_q={month:_qm,count:0};_q.count++;localStorage.setItem("prox_quota",JSON.stringify(_q));}catch(_e){} const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
 function proxFallback(path,options={}){ return { fallback:true, message:"API baglantisi yok. Demo/fallback veri kullaniliyor.", path, data:(window.EMLAK_FALLBACK?window.EMLAK_FALLBACK(path,options):null) }; }
 async function submitLead(lead){ var p=Object.assign({id:"lead_"+Date.now(),tenantId:window.EMLAK_TENANT.id,tenant_id:window.EMLAK_TENANT.tenant_id,sector:window.EMLAK_TENANT.sector,createdAt:new Date().toISOString(),status:"new"},lead); try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:p}); if(r&&r.fallback)throw new Error("fallback"); return {ok:true,online:true,data:r}; }catch(e){ try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(p);localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:p}; } }
 window.injectSchema=function(o){try{var s=document.createElement("script");s.type="application/ld+json";s.text=JSON.stringify(o);document.head.appendChild(s);}catch(e){}};
@@ -2224,6 +2224,13 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
             <div class="afield"><label>ProX API Anahtarı <span style="color:var(--muted);font-weight:400">(müşteriye özel)</span></label><input id="px_key" type="text" placeholder="prox_..." style="font-family:var(--num),monospace;font-size:12px"></div>
             <div class="afield"><label>Aktif İl <span style="color:var(--muted);font-weight:400">(site bu ile göre yayınlanır)</span></label><select id="px_il"></select></div>
           </div>
+          <details style="margin:2px 0 6px"><summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--accent)">🔒 Gelişmiş: Proxy / Edge güvenli mod (anahtarı sunucuda gizle)</summary>
+            <div class="csub" style="margin:6px 0">Proxy URL girilirse gizli API anahtarı <b>istemciden gönderilmez</b>; edge/proxy sunucu anahtarı ekler. İstemcide yalnızca genel Tenant ID + proxy adresi kalır. Kurulum: <b>DEPLOY-VE-GUVENLIK-NOTU.md</b>.</div>
+            <div class="ed2">
+              <div class="afield"><label>Proxy / Edge URL <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="px_proxy" type="text" placeholder="https://proxy.firmasite.com/prox" style="font-size:12px"></div>
+              <div class="afield"><label>Public Tenant ID <span style="color:var(--muted);font-weight:400">(proxy modu)</span></label><input id="px_tenant" type="text" placeholder="emlaktahadimkoy_com" style="font-size:12px"></div>
+            </div>
+          </details>
           <div id="px_status" style="margin:8px 0"></div>
           <div class="quota"><div class="bar"><div class="fill" id="px_fill" style="width:34%"></div></div>
             <div class="qlabel"><span><span class="dot-live"></span>Bu ay kullanılan</span><span id="px_quotaTxt">3.420 / 10.000 istek</span></div></div>
@@ -3057,7 +3064,18 @@ function applyProvince(il,silent){
 }
 function deriveTenantId(key){var m=/^prox_(.+)_[a-f0-9]{16,}$/i.exec(key||'');return m?m[1]:'office';}
 function proxEnsure(){if(Array.isArray(ILANLAR))ILANLAR.forEach(function(it){if(!it.il)it.il='İzmir';});if(typeof PROX!=='object'||!PROX)return;if(!PROX.key)PROX.key=DEF_PROX.key;if(!PROX.base)PROX.base=DEF_PROX.base;if(!PROX.il)PROX.il=PROX.region||'İzmir';}
-function applyProxTenant(){try{proxEnsure();if(PROX.base)window.EMLAK_API_BASE=PROX.base;if(PROX.key){window.EMLAK_TENANT.tenant_key=PROX.key;window.EMLAK_TENANT.tenant_id=deriveTenantId(PROX.key);}}catch(e){}}
+function applyProxTenant(){try{proxEnsure();
+  var pu=((PROX&&PROX.proxyUrl)||'').trim();
+  if(pu){ /* PROXY/EDGE MODU: gizli anahtar istemcide TUTULMAZ/GÖNDERİLMEZ; base=proxy, sadece public tenant id */
+    window.EMLAK_API_BASE=pu.replace(/\/+$/,''); window.EMLAK_PROXY_MODE=true;
+    var tid=((PROX&&PROX.tenantId)||'').trim()||(PROX.key?deriveTenantId(PROX.key):'');
+    if(tid)window.EMLAK_TENANT.tenant_id=tid;
+  }else{
+    window.EMLAK_PROXY_MODE=false;
+    if(PROX.base)window.EMLAK_API_BASE=PROX.base;
+    if(PROX.key){window.EMLAK_TENANT.tenant_key=PROX.key;window.EMLAK_TENANT.tenant_id=deriveTenantId(PROX.key);}
+  }
+}catch(e){}}
 
 const TYPE_F={'Daire':1,'Villa':1.18,'Müstakil Ev':1.1,'Ofis / İş Yeri':0.94,'Arsa':0.52};
 
@@ -3127,7 +3145,7 @@ const DEF_REFS=[{id:1,name:'Ayşe Yıldırım',meta:'Satıcı · Kadıköy',text
 const DEF_SEO={title:'Meridyen Gayrimenkul · İzmir Emlak & Gayrimenkul Ofisi',desc:'İzmir ve Ege\'de veri odaklı emlak ofisi. Satılık & kiralık portföy, mahalle fiyat endeksi, yatırım skoru ve ücretsiz değerleme.',kw:'istanbul emlak, satılık daire, kiralık daire, gayrimenkul danışmanı, emlak değerleme',og:'',schema:true,llms:true,sitemap:true,prog:true};
 const DEF_GOOGLE={ga4:'',gtm:'',gsc:'',maps:'',recaptcha:'',business:'',aiseo:true,ab:false};
 const DEF_MODULES=[{k:'emlak_endeks',n:'Emlak Endeksi',d:'Mahalle m² fiyat ve trend',on:true},{k:'yatirim_skoru',n:'Yatırım Skoru',d:'0-100 bölge skoru',on:true},{k:'risk_analiz',n:'Fay/Deprem Risk',d:'Coğrafi risk rozeti',on:true},{k:'degerleme',n:'Online Değerleme',d:'"Evimin değeri ne?" aracı',on:true},{k:'portfoy3d',n:'3D Portföy & Tur',d:'GLB model + sanal tur',on:true},{k:'ai_asistan',n:'AI Asistan',d:'ProX yapay zeka asistanı',on:true},{k:'pdf_rapor',n:'Logolu PDF Rapor',d:'Şirket logolu endeks raporu',on:true},{k:'fiyat_alarmi',n:'Fiyat Alarmı',d:'Bölge fiyat değişim bildirimi',on:true},{k:'blog_feed',n:'Blog Akışı',d:'emlakekspertizi blog beslemesi',on:true},{k:'whatsapp',n:'WhatsApp Destek',d:'Tek dokunuş iletişim',on:true}];
-const DEF_PROX={key:'prox_emlaktahadimkoy_com_5d318fd5639d630018d37e2b219cbd0c',base:'https://www.emlakekspertizi.com',il:'İzmir',region:'İzmir',quotaUsed:3420,quotaMax:10000,modules:clone(DEF_MODULES)};
+const DEF_PROX={key:'prox_emlaktahadimkoy_com_5d318fd5639d630018d37e2b219cbd0c',base:'https://www.emlakekspertizi.com',proxyUrl:'',tenantId:'',il:'İzmir',region:'İzmir',quotaUsed:3420,quotaMax:10000,modules:clone(DEF_MODULES)};
 const DEF_AICFG={enable:true,greet:'Merhaba! Ben Meridyen ProX Asistanı. Bölge, fiyat veya portföy hakkında sorabilirsiniz.',persona:'Meridyen Gayrimenkul\'ün yardımcı, profesyonel emlak danışmanısın. Türkçe, kısa ve net yanıt ver. Bölge fiyat verisi sorulursa örnek olduğunu belirt.'};
 const DEF_CONTRACTS=[
  {id:'c1',tip:'aracilik',baslik:'Konak 3+1 — Satış Aracılık',durum:'aktif',tarih:'2026-06-12',karsiTaraf:'Okan Demir',karsiTC:'12345678901',karsiAdres:'Alsancak Mah. Kıbrıs Şehitleri Cad. No:00 D:0, Konak / İzmir',il:'İzmir',ilce:'Konak',mahalle:'Alsancak',tasinmazAdres:'Kıbrıs Şehitleri Cad. No:00 Daire:0',tasinmazTip:'Daire',m2:'140',islem:'Satılık',bedel:'14.500.000',komisyon:'2',sureAy:'6',ozelMetin:''},
@@ -5365,6 +5383,8 @@ async function aiSend(){
 
 /* ---------- PROX API & MODÜLLER ---------- */
 function fillProx(){document.getElementById('px_key').value=PROX.key||'';
+  if(document.getElementById('px_proxy'))document.getElementById('px_proxy').value=PROX.proxyUrl||'';
+  if(document.getElementById('px_tenant'))document.getElementById('px_tenant').value=PROX.tenantId||'';
   var sel=document.getElementById('px_il');
   if(sel){var cur=PROX.il||PROX.region||'İzmir';sel.innerHTML=trIlList().sort(function(a,b){return a.localeCompare(b,'tr');}).map(function(il){return '<option'+(il===cur?' selected':'')+'>'+il+'</option>';}).join('');}
   var _q=null;try{_q=JSON.parse(localStorage.getItem('prox_quota')||'null');}catch(e){}
@@ -5373,6 +5393,8 @@ function fillProx(){document.getElementById('px_key').value=PROX.key||'';
   document.getElementById('px_quotaTxt').textContent=fmt(_used)+' / '+fmt(_max)+' istek'+(_q?' · '+_q.month:'');
   if(typeof proxRenderStatus==='function')proxRenderStatus();}
 function saveProx(){PROX.key=document.getElementById('px_key').value.trim();
+  if(document.getElementById('px_proxy'))PROX.proxyUrl=document.getElementById('px_proxy').value.trim();
+  if(document.getElementById('px_tenant'))PROX.tenantId=document.getElementById('px_tenant').value.trim();
   var il=(document.getElementById('px_il')||{}).value||'İzmir';PROX.il=il;PROX.region=il;
   applyProxTenant();saveAll();applyProvince(il);if(typeof proxRenderStatus==='function')proxRenderStatus();try{if(il!=='İzmir'&&typeof rebuildOzelFromProx==='function'&&wlStale('wl_ozel_ts',il))rebuildOzelFromProx(il,true);}catch(e){}try{if(il!=='İzmir'&&typeof wlBuildBolge==='function'&&wlStale('wl_bolge',il))wlBuildBolge(il,true);}catch(e){}
   toast('✓ ProX bağlantısı kaydedildi · aktif il: '+il);}
@@ -5383,7 +5405,8 @@ function proxRenderStatus(){var el=document.getElementById('px_status');if(!el)r
     +'📦 Özel Portföy: '+(oz&&oz.ts?('<b>'+wlAgo(oz.ts)+'</b> · '+oz.n+' kayıt / '+(oz.real||0)+' gerçek analiz fiyatı'):'henüz çekilmedi')
     +' &nbsp;·&nbsp; 🗺️ Bölge: '+(bl&&bl.ts?('<b>'+wlAgo(bl.ts)+'</b>'):'—')
     +(q?(' &nbsp;·&nbsp; 📊 Kota: '+fmt(q.count)+' istek ('+q.month+')'):'')+'</div>';}
-  el.innerHTML='<div class="eids-yetki '+(PROX.key?'on':'off')+'" style="margin:0"><span class="ic">'+(PROX.key?'◉':'⚠️')+'</span><div>'+(PROX.key?('ProX bağlı · tenant '+(t.tenant_id||'-')+' · aktif il '+(PROX.il||'İzmir')):'API anahtarı girilmedi')+'<div style="font-weight:500;font-size:12px;opacity:.85">Base: '+(window.EMLAK_API_BASE||'-')+'</div>'+fresh+'</div></div>';}
+  var secBadge=window.EMLAK_PROXY_MODE?'<div style="font-weight:600;font-size:12px;color:#1a7f4b;margin-top:3px">🔒 Güvenli mod: gizli anahtar sunucuda (proxy) — istemciden gönderilmiyor</div>':((PROX.key)?'<div style="font-weight:500;font-size:12px;color:#b26a00;margin-top:3px">⚠ Doğrudan mod: anahtar istemcide. Üretimde Proxy/Edge modunu önerilir (DEPLOY-VE-GUVENLIK-NOTU.md).</div>':'');
+  el.innerHTML='<div class="eids-yetki '+((PROX.key||window.EMLAK_PROXY_MODE)?'on':'off')+'" style="margin:0"><span class="ic">'+((PROX.key||window.EMLAK_PROXY_MODE)?'◉':'⚠️')+'</span><div>'+((PROX.key||window.EMLAK_PROXY_MODE)?('ProX bağlı · tenant '+(t.tenant_id||'-')+' · aktif il '+(PROX.il||'İzmir')):'API anahtarı girilmedi')+'<div style="font-weight:500;font-size:12px;opacity:.85">Base: '+(window.EMLAK_API_BASE||'-')+'</div>'+secBadge+fresh+'</div></div>';}
 async function proxTest(){var el=document.getElementById('px_status');if(el)el.innerHTML='<div class="csub">● ProX API test ediliyor…</div>';
   PROX.key=(document.getElementById('px_key')||{}).value.trim()||PROX.key;applyProxTenant();
   try{var b=await proxApi('/api/v1/tenant/bootstrap');
