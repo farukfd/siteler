@@ -3366,6 +3366,11 @@ function delOzel(id){if(!confirm('Bu özel portföy kaydı silinsin mi?'))return
 var _wlM2Cache={};
 async function proxEndeksM2(il,ilce,durum){var k=il+'|'+ilce+'|'+durum;if(_wlM2Cache[k]!==undefined)return _wlM2Cache[k];var v=null;try{var r=await proxApi('/api/v1/tenant/endeks?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce)+'&kategori=konut&durum='+durum);if(r&&r.success&&r.data&&+r.data.m2>0)v=+r.data.m2;}catch(e){}_wlM2Cache[k]=v;return v;}
 async function proxEndeksInfo(il,ilce){try{var r=await proxApi('/api/v1/tenant/endeks?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce)+'&kategori=konut&durum=satilik');if(r&&r.success&&r.data)return {m2:+r.data.m2||0,score:+r.data.score||0};}catch(e){}return {m2:0,score:0};}
+/* Eşzamanlılık-sınırlı paralel map (kota dostu): sıralı ~15sn → paralel ~3sn */
+async function _wlPMap(items,fn,conc){conc=conc||4;var out=new Array(items.length),idx=0;async function w(){while(idx<items.length){var i=idx++;try{out[i]=await fn(items[i],i);}catch(e){out[i]=null;}}}var ws=[];for(var k=0;k<Math.min(conc,items.length);k++)ws.push(w());await Promise.all(ws);return out;}
+/* /prox/analyze → gerçek başlangıç fiyatı (range.min_value). Cache'li. */
+var _wlAnalyzeCache={};
+async function proxAnalyzePrice(il,ilce,mah,tip,durum,m2){var k=[il,ilce,mah||'',tip,durum,m2].join('|');if(_wlAnalyzeCache[k]!==undefined)return _wlAnalyzeCache[k];var v=null;try{var r=await proxApi('/api/v1/tenant/prox/analyze',{method:'POST',body:{il:il,ilce:ilce,mahalle:mah||'',kategori:(typeof proxKategoriOf==='function'?proxKategoriOf(tip):'konut'),durum:durum,brut_m2:m2,attrs:{}}});if(r&&r.success===true&&!r.fallback){var rg=r.range||{};var mn=+rg.min_value||0,st=+r.strongest_value||0,mx=+rg.max_value||0;if(mn>0||st>0)v={min:mn||st,strong:st,max:mx,conf:(r.confidence!=null?r.confidence:null)};}}catch(e){}_wlAnalyzeCache[k]=v;return v;}
 async function wlBuildBolge(il,silent){
   il=il||PROVINCE.name;if(il==='İzmir')return;
   try{
@@ -3411,22 +3416,42 @@ async function rebuildOzelFromProx(il,silent){
     var mahs=['Cumhuriyet','Atatürk','Merkez','Yeni','Fatih','Bahçelievler','Yavuz Selim','İnönü','Yıldız','Gazi'];
     var cads=['Atatürk Caddesi','Cumhuriyet Caddesi','İstiklal Caddesi','Gazi Bulvarı','Sahil Yolu','Fevzi Çakmak Caddesi','İnönü Caddesi','19 Mayıs Caddesi','Kışla Caddesi','Bağdat Caddesi'];
     if(!silent)toast('ProX gerçek bölge fiyatları çekiliyor… ('+il+')');
-    var out=[],id=1,mi=0,ci=0;
     function rp(v,step){v=Math.round(v/step)*step;return Math.max(step,v);}
+    /* 1) İlan spec'lerini deterministik kur (fiyat henüz yok) */
+    var specs=[],mi=0,ci=0;
     for(var i=0;i<ilceler.length;i++){var ilce=ilceler[i];var rm=realMah(il,ilce,8),rmi=0;
-      var satM2=await proxEndeksM2(il,ilce,'satilik');var kirM2=await proxEndeksM2(il,ilce,'kiralik');
-      if(!satM2)satM2=(BAZ[ilce]&&BAZ[ilce].m2)||30000;
-      if(!kirM2)kirM2=Math.max(120,Math.round(satM2*0.0042));
-      var m1=(rm[rmi++]||mahs[mi++%mahs.length]),c1=cads[ci++%cads.length];
-      out.push({id:'o'+(id++),op:'Satılık',tip:'Daire',ilce:ilce,mah:m1,cadde:c1,m2:110,oda:'3+1',fiyat:rp(satM2*110*0.9,1000),durum:'aktif',not:'ProX bölge m²: '+fmt(satM2)+' ₺/m² · '+m1+' Mah., '+c1+' civarı'});
-      var m2n=(rm[rmi++]||mahs[mi++%mahs.length]),c2=cads[ci++%cads.length];
-      out.push({id:'o'+(id++),op:'Kiralık',tip:'Daire',ilce:ilce,mah:m2n,cadde:c2,m2:90,oda:'2+1',fiyat:rp(kirM2*90*0.9,500),durum:'aktif',not:'ProX kira m²: '+fmt(kirM2)+' ₺/m² · '+m2n+' Mah., '+c2+' civarı'});
-      if(i<3){var m3=(rm[rmi++]||mahs[mi++%mahs.length]),c3=cads[ci++%cads.length];
-        out.push({id:'o'+(id++),op:(i===1?'Kiralık':'Satılık'),tip:(i===0?'Ofis':i===1?'Dükkan':'Arsa'),ilce:ilce,mah:m3,cadde:c3,m2:(i===2?400:120),oda:'-',fiyat:(i===2?rp(satM2*400*0.35,5000):i===1?rp(kirM2*120*0.9,500):rp(satM2*120*0.95,1000)),durum:'aktif',not:'Yatırımlık · '+m3+' Mah., '+c3+' · ProX bölge verisi'});}
+      specs.push({op:'Satılık',durum:'satilik',tip:'Daire',ilce:ilce,mah:(rm[rmi++]||mahs[mi++%mahs.length]),cadde:cads[ci++%cads.length],m2:110,oda:'3+1'});
+      specs.push({op:'Kiralık',durum:'kiralik',tip:'Daire',ilce:ilce,mah:(rm[rmi++]||mahs[mi++%mahs.length]),cadde:cads[ci++%cads.length],m2:90,oda:'2+1'});
+      if(i<3)specs.push({op:(i===1?'Kiralık':'Satılık'),durum:(i===1?'kiralik':'satilik'),tip:(i===0?'Ofis':i===1?'Dükkan':'Arsa'),ilce:ilce,mah:(rm[rmi++]||mahs[mi++%mahs.length]),cadde:cads[ci++%cads.length],m2:(i===2?400:120),oda:'-'});
     }
+    /* 2) analyze başlangıç fiyatı + endeks m² — PARALEL (eşzamanlılık 4) */
+    var priced=await _wlPMap(specs,async function(s){
+      var pair=await Promise.all([proxAnalyzePrice(il,s.ilce,s.mah,s.tip,s.durum,s.m2),proxEndeksM2(il,s.ilce,s.durum)]);
+      return {az:pair[0],em:pair[1]};
+    },4);
+    /* 3) OZEL kur — fiyat = analyze range.min ('…den başlayan'); yoksa m²×alan fallback */
+    var out=[],id=1,realCount=0;
+    specs.forEach(function(s,ix){
+      var az=priced[ix]&&priced[ix].az, em=priced[ix]&&priced[ix].em, fiyat, src, band='';
+      if(az&&az.min>0){
+        fiyat=rp(az.min, s.durum==='kiralik'?500:1000); src='analyze'; realCount++;
+        if(az.max>az.min)band=' ('+fmt(az.min)+'–'+fmt(az.max)+' ₺)';
+      }else{
+        var baseSat=(BAZ[s.ilce]&&BAZ[s.ilce].m2)||30000;
+        if(s.durum==='kiralik'){var rmv=em||Math.max(120,Math.round(baseSat*0.0042));fiyat=rp(rmv*s.m2*0.9,500);}
+        else{var smv=em||baseSat;fiyat=rp(smv*s.m2*(s.tip==='Arsa'?0.35:0.9),s.tip==='Arsa'?5000:1000);}
+        src='m2';
+      }
+      var m2info=em?('ProX '+(s.durum==='kiralik'?'kira':'satış')+' m²: '+fmt(em)+' ₺/m²'):'ProX bölge verisi';
+      var not=(src==='analyze')
+        ? (s.mah+' Mah., '+s.cadde+'’de ProX analiz başlangıç değeri'+band+((az.conf!=null)?' · güven '+az.conf+'/100':'')+' · '+m2info)
+        : (m2info+' · '+s.mah+' Mah., '+s.cadde+' civarı');
+      out.push({id:'o'+(id++),op:s.op,tip:s.tip,ilce:s.ilce,mah:s.mah,cadde:s.cadde,m2:s.m2,oda:s.oda,fiyat:fiyat,durum:'aktif',basla:(src==='analyze'),not:not});
+    });
     OZEL=out;saveAll();
+    try{localStorage.setItem('wl_ozel_ts',JSON.stringify({il:il,ts:Date.now(),n:out.length,real:realCount}));}catch(e){}
     try{if(typeof renderOzel==='function')renderOzel();if(typeof renderOzHome==='function')renderOzHome();if(typeof ozHero==='function')ozHero();if(typeof renderOzelRows==='function')renderOzelRows();}catch(e){}
-    if(!silent)toast('✓ Özel Portföy '+il+' gerçek bölge fiyatlarıyla güncellendi ('+out.length+' kayıt).');
+    if(!silent)toast('✓ Özel Portföy '+il+': '+out.length+' kayıt ('+realCount+' gerçek ProX analiz fiyatı).');
   }catch(e){if(!silent)toast('Özel Portföy güncellenemedi.');}
   _ozBusy=false;
 }
