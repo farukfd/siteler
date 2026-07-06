@@ -420,7 +420,8 @@ footer{background:#060607;border-top:1px solid var(--line);padding:64px 0 30px}
 @media(max-width:560px){.nav-cta .portal-trigger{display:none}}
 @media(max-width:1040px){.nav-links .portal-trigger{display:inline-flex;margin-top:8px;font-size:15px}}
 </style>
-<script src="tr-grammar.js"></script><!-- Türkçe gramer tek kaynak (gayrimenkul.html ile ortak) -->
+<script src="tr-grammar.js"></script>
+<script src="tr-iller.js"></script><!-- Türkçe gramer tek kaynak (gayrimenkul.html ile ortak) -->
 </head>
 <body>
 
@@ -699,11 +700,11 @@ function applySchema(){try{var k=firmaKune();var desc=saasResolve('metaDescripti
   try{if(typeof SERVICE_AREA!=='undefined'&&SERVICE_AREA&&SERVICE_AREA.primary)il=SERVICE_AREA.primary;}catch(e){}
   var e=(SAAS_CONFIG.firma&&SAAS_CONFIG.firma.eids)||{};
   var old=document.getElementById('ld-dyn');if(old)old.remove();
-  var kap=(SAAS_CONFIG.firma&&SAAS_CONFIG.firma.kapsama)||{};
-  var areas=(kap.bolgeler&&kap.bolgeler.length)?kap.bolgeler.map(function(b){return {"@type":"Place","name":b};}):{"@type":"City","name":il};
+  var areas=[];try{if(typeof saActiveIller==='function')saActiveIller().forEach(function(pil){areas.push({"@type":"City","name":pil});});}catch(e){}
+  if(!areas.length)areas=[{"@type":"City","name":il}];
   var o={"@context":"https://schema.org","@type":"RealEstateAgent","name":k.name,"description":desc,
     "areaServed":areas,"email":k.mail,"telephone":k.tel,"address":k.adres,"priceRange":"₺₺₺₺"};
-  if(kap.kategoriler&&kap.kategoriler.length)o.knowsAbout=kap.kategoriler.slice();
+  try{var kats=(typeof saKategoriler==='function')?saKategoriler():[];if(kats.length)o.knowsAbout=kats;}catch(e){}
   if(e.belgeNo)o.identifier={"@type":"PropertyValue","name":"EİDS Yetki Belge No","value":''+e.belgeNo};
   var s=document.createElement('script');s.type='application/ld+json';s.id='ld-dyn';s.text=JSON.stringify(o);document.head.appendChild(s);
 }catch(e){}}
@@ -742,25 +743,107 @@ async function gmLang(v){var sel=document.querySelectorAll('.lang-sel');
   try{localStorage.setItem(ck,JSON.stringify({firma:firma,n:texts.length,tr:applied}));localStorage.setItem('dn_lang',v);}catch(e){}
   try{toast('✓ '+(v==='ar'?'العربية':'English')+' aktif.');}catch(e){}}
 window.gmLang=gmLang;
-/* ===================== HİZMET BÖLGELERİ & KATEGORİLER (danışman kapsama) ===================== */
-function kapEnsure(){SAAS_CONFIG.firma=SAAS_CONFIG.firma||{};SAAS_CONFIG.firma.kapsama=SAAS_CONFIG.firma.kapsama||{bolgeler:[],kategoriler:[]};var k=SAAS_CONFIG.firma.kapsama;k.bolgeler=k.bolgeler||[];k.kategoriler=k.kategoriler||[];return k;}
-function _kapChip(txt,fn){var e=(''+txt).replace(/\\/g,'\\\\').replace(/'/g,"\\'");return '<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border:1px solid var(--line-soft);border-radius:999px;font-size:13px;color:var(--gold)">'+_leD(txt)+' <b onclick="'+fn+'(\''+e+'\')" style="cursor:pointer;opacity:.55;color:var(--muted)">✕</b></span>';}
-function renderKapsama(){var k=kapEnsure();
-  var b=document.getElementById('kap_bolgeler');if(b)b.innerHTML=k.bolgeler.map(function(x){return _kapChip(x,'kapRemoveBolge');}).join('')||'<span class="sub">Bölge eklenmedi.</span>';
-  var c=document.getElementById('kap_kategoriler');if(c)c.innerHTML=k.kategoriler.map(function(x){return _kapChip(x,'kapRemoveKat');}).join('')||'<span class="sub">Kategori eklenmedi.</span>';}
-function kapAddBolge(){var i=document.getElementById('kap_addBolge');var v=i&&i.value.trim();if(!v)return;var k=kapEnsure();if(k.bolgeler.indexOf(v)<0)k.bolgeler.push(v);i.value='';renderKapsama();}
-function kapRemoveBolge(x){var k=kapEnsure();k.bolgeler=k.bolgeler.filter(function(y){return y!==x;});renderKapsama();}
-function kapAddKat(){var i=document.getElementById('kap_addKat');var v=i&&i.value.trim();if(!v)return;var k=kapEnsure();if(k.kategoriler.indexOf(v)<0)k.kategoriler.push(v);i.value='';renderKapsama();}
-function kapRemoveKat(x){var k=kapEnsure();k.kategoriler=k.kategoriler.filter(function(y){return y!==x;});renderKapsama();}
-function kapApply(){var k=kapEnsure();try{applySchema();}catch(e){}toast('✓ Hizmet bölgeleri & kategoriler uygulandı ('+k.bolgeler.length+' bölge · '+k.kategoriler.length+' kategori).');}
-window.renderKapsama=renderKapsama;window.kapAddBolge=kapAddBolge;window.kapRemoveBolge=kapRemoveBolge;window.kapAddKat=kapAddKat;window.kapRemoveKat=kapRemoveKat;window.kapApply=kapApply;
+/* ===================== İL/İLÇE/MAHALLE MOTORU + HİZMET ALANI (danışman · tam) ===================== */
+var TR_ILILCE=window.TR_ILILCE||{};
+function bzSeed(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function bzRng(seed){var x=seed||123456789;return function(){x^=x<<13;x>>>=0;x^=x>>>17;x^=x<<5;x>>>=0;return (x>>>0)/4294967296;};}
+var _mahCache={};
+function mahalleSlug(il){var m={'ç':'c','Ç':'c','ğ':'g','Ğ':'g','ı':'i','İ':'i','ö':'o','Ö':'o','ş':'s','Ş':'s','ü':'u','Ü':'u',' ':'-'};return (il||'').replace(/[çÇğĞıİöÖşŞüÜ ]/g,function(x){return m[x]||x;}).toLowerCase();}
+async function loadMahalle(il){if(!il)return null;if(_mahCache[il]!==undefined)return _mahCache[il];var out=null;
+  try{var r=await proxApi('/api/v1/tenant/locations?il='+encodeURIComponent(il));
+    if(r&&!r.fallback&&r.success===true){var t=r.ilceler||r.data||r.locations;
+      if(t&&typeof t==='object'){out={};Object.keys(t).forEach(function(ic){var a=t[ic]||[];out[ic]=(Array.isArray(a)?a:[]).map(function(m){return (''+m).replace(/\s+(Mah\.?|Mahallesi|Köyü)$/i,'').trim();}).filter(Boolean);});}}}catch(e){}
+  _mahCache[il]=out;return out;}
+var COMMON_MAH=['Cumhuriyet','Atatürk','Merkez','Yeni','Fatih','Bahçelievler','Yavuz Selim','İnönü','Yıldız','Gazi','Yeşiltepe','Bağlar','Çamlık','Güzelyalı','Hürriyet','Kurtuluş','Mimar Sinan','Zafer','Barbaros','Aydınlıkevler','Şirinevler','Esentepe','Yenimahalle','Karşıyaka','19 Mayıs'];
+function _mahHash(s){var h=0;for(var i=0;i<(s||'').length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
+function realMah(il,ilce,n){n=n||3;var out=[],seen={};
+  var sub=(typeof saServedMahalle==='function'?saServedMahalle(il,ilce):null);
+  if(sub)sub.forEach(function(m){if(!seen[m]&&out.length<n){seen[m]=1;out.push(m);}});
+  if(out.length>=n)return out;
+  var d=_mahCache[il];var arr=(d&&d[ilce])||(PROVINCE.districts[ilce]&&PROVINCE.districts[ilce].mah);
+  if(!arr||!arr.length){var start=_mahHash(il+'|'+ilce)%COMMON_MAH.length;arr=[];for(var k=0;k<COMMON_MAH.length;k++)arr.push(COMMON_MAH[(start+k)%COMMON_MAH.length]);}
+  for(var i=0;i<arr.length&&out.length<n;i++){var m=arr[i];if(!seen[m]){seen[m]=1;out.push(m);}}return out;}
+function trIlList(){return Object.keys(TR_ILILCE);}
+function makeProvince(il){var rec=TR_ILILCE[il];if(!rec){il='İstanbul';rec=TR_ILILCE['İstanbul']||{plate:34,ilce:['Merkez']};}
+  var ilceler=rec.ilce,districts={},POOL=COMMON_MAH,mc=Math.max(3,Math.round(ilceler.length*0.3));
+  ilceler.forEach(function(d,i){var r=bzRng(bzSeed(il+'|'+d));
+    var m2=Math.round((14000+r()*42000)/500)*500,chg=Math.round(150+r()*95),score=Math.round(55+r()*32);
+    var st=_mahHash(il+'|'+d)%POOL.length,cnt=6+Math.floor(r()*4),mah=[];
+    for(var mk=0;mk<cnt;mk++){var nm=POOL[(st+mk)%POOL.length];if(mah.indexOf(nm)<0)mah.push(nm);}
+    districts[d]={group:i<mc?'merkez':'ilce',m2:m2,chg:chg,score:score,mah:mah};});
+  return {name:il,plate:rec.plate,districts:districts};}
+var PROVINCE=makeProvince((SAAS_CONFIG.firma&&SAAS_CONFIG.firma.il)||'İstanbul');
+var BAZ={},MAH={};
+function rebuildBAZ(){BAZ={};MAH={};Object.keys(PROVINCE.districts).forEach(function(k){var v=PROVINCE.districts[k];BAZ[k]={m2:v.m2,chg:v.chg,score:v.score};MAH[k]=v.mah;});}
+rebuildBAZ();
+var DEF_KATEGORILER=['Konut','Arsa','Ticari & Ofis','Kiralık','Miras & İntikal','Yatırım'];
+var SERVICE_AREA=null,saCurIl='',saCurIlce='';
+function saDefault(){return {primary:(SAAS_CONFIG.firma&&SAAS_CONFIG.firma.il)||'İstanbul',iller:{},kategoriler:DEF_KATEGORILER.slice()};}
+function saBuildIl(il){var prov=makeProvince(il),ilceler={};Object.keys(prov.districts).forEach(function(ic){ilceler[ic]={aktif:true,mahalleler:[]};});return {aktif:true,ilceler:ilceler};}
+function saEnsure(){if(!SERVICE_AREA)SERVICE_AREA=saDefault();if(!SERVICE_AREA.iller)SERVICE_AREA.iller={};if(!SERVICE_AREA.kategoriler||!SERVICE_AREA.kategoriler.length)SERVICE_AREA.kategoriler=DEF_KATEGORILER.slice();var pil=SERVICE_AREA.primary||'İstanbul';SERVICE_AREA.primary=pil;if(!SERVICE_AREA.iller[pil])SERVICE_AREA.iller[pil]=saBuildIl(pil);return SERVICE_AREA;}
+function saLoad(){if(SERVICE_AREA)return SERVICE_AREA;try{SERVICE_AREA=JSON.parse(localStorage.getItem('dn_service_area')||'null');}catch(e){}return saEnsure();}
+function saSave(){try{localStorage.setItem('dn_service_area',JSON.stringify(SERVICE_AREA));}catch(e){}}
+function saActiveIller(){return SERVICE_AREA?Object.keys(SERVICE_AREA.iller).filter(function(il){return SERVICE_AREA.iller[il].aktif!==false;}):[];}
+function saServedIlce(il){try{var r=SERVICE_AREA&&SERVICE_AREA.iller[il];if(!r||!r.ilceler)return null;return Object.keys(r.ilceler).filter(function(ic){return r.ilceler[ic].aktif!==false;});}catch(e){return null;}}
+function saServedMahalle(il,ilce){try{var e=SERVICE_AREA&&SERVICE_AREA.iller[il]&&SERVICE_AREA.iller[il].ilceler[ilce];var m=e&&e.mahalleler;return (m&&m.length)?m.slice():null;}catch(e){return null;}}
+function saKategoriler(){return (SERVICE_AREA&&SERVICE_AREA.kategoriler&&SERVICE_AREA.kategoriler.length)?SERVICE_AREA.kategoriler.slice():DEF_KATEGORILER.slice();}
+function saHasCat(kw){if(!SERVICE_AREA||!SERVICE_AREA.kategoriler)return true;var s=SERVICE_AREA.kategoriler.join('|').toLocaleLowerCase('tr');return s.indexOf((''+kw).toLocaleLowerCase('tr'))>=0;}
+function saFilterActiveProvince(){try{if(typeof PROVINCE==='undefined'||!PROVINCE||!SERVICE_AREA)return;var rec=SERVICE_AREA.iller[PROVINCE.name];if(!rec||!rec.ilceler)return;Object.keys(PROVINCE.districts).forEach(function(ic){var e=rec.ilceler[ic];if(e&&e.aktif===false)delete PROVINCE.districts[ic];});}catch(e){}}
+function saWorkList(maxPrimary){maxPrimary=maxPrimary||7;var list=[];
+  if(SERVICE_AREA){var ills=saActiveIller();ills.sort(function(a,b){return a===SERVICE_AREA.primary?-1:b===SERVICE_AREA.primary?1:0;});
+    ills.forEach(function(il){var ics=saServedIlce(il)||[];var take=(il===SERVICE_AREA.primary)?maxPrimary:Math.min(3,ics.length);for(var i=0;i<take&&i<ics.length;i++)list.push({il:il,ilce:ics[i]});});}
+  if(!list.length){var pn=PROVINCE.name;Object.keys(PROVINCE.districts).slice(0,maxPrimary).forEach(function(ic){list.push({il:pn,ilce:ic});});}
+  return list;}
+function applyProvince(il,silent){PROVINCE=makeProvince(il);
+  try{if(SERVICE_AREA){SERVICE_AREA.primary=il;if(!SERVICE_AREA.iller[il])SERVICE_AREA.iller[il]=saBuildIl(il);}}catch(e){}
+  saFilterActiveProvince();rebuildBAZ();
+  try{applySchema();}catch(e){}
+  try{loadMahalle(il);}catch(e){}
+  if(!silent&&typeof toast==='function')toast('Aktif il: '+il+' · içerik güncellendi.');}
+function saEsc(s){return (''+s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
+function saDelChip(txt,fn){return '<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--line-soft);border-radius:999px;font-size:13px;color:var(--gold)">'+_leD(txt)+' <b onclick="'+fn+'(\''+saEsc(txt)+'\')" style="cursor:pointer;opacity:.55;color:var(--muted)">✕</b></span>';}
+function renderSA(){saLoad();saCurIl=(saCurIl&&SERVICE_AREA.iller[saCurIl])?saCurIl:SERVICE_AREA.primary;var GOLD='var(--gold)',LINE='var(--line-soft)';
+  var ilBox=document.getElementById('saIlChips');
+  if(ilBox)ilBox.innerHTML=Object.keys(SERVICE_AREA.iller).map(function(il){var isP=il===SERVICE_AREA.primary,cur=il===saCurIl;
+    return '<span onclick="saSelectIl(\''+saEsc(il)+'\')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border:1px solid '+(cur?GOLD:LINE)+';border-radius:999px;background:'+(cur?GOLD:'transparent')+';color:'+(cur?'#111':GOLD)+';cursor:pointer;font-size:13px;font-weight:600">'+il+(isP?' ★':'')+(isP?'':' <b onclick="event.stopPropagation();saRemoveProvince(\''+saEsc(il)+'\')" style="cursor:pointer;opacity:.75">✕</b>')+'</span>';}).join('');
+  var addSel=document.getElementById('saAddIl');
+  if(addSel){var have=Object.keys(SERVICE_AREA.iller);var opts=trIlList().filter(function(il){return have.indexOf(il)<0;}).sort(function(a,b){return a.localeCompare(b,'tr');});addSel.innerHTML=opts.map(function(il){return '<option>'+il+'</option>';}).join('');}
+  var lbl=document.getElementById('saCurIlLbl');if(lbl)lbl.textContent='· '+saCurIl;
+  var ilceBox=document.getElementById('saIlceList');
+  if(ilceBox){var rec=SERVICE_AREA.iller[saCurIl];var ilcs=rec?Object.keys(rec.ilceler):[];
+    ilceBox.innerHTML=ilcs.map(function(ic){var e=rec.ilceler[ic],on=e.aktif!==false,cur=ic===saCurIlce,mn=(e.mahalleler&&e.mahalleler.length)||0;
+      return '<label style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid '+(cur?GOLD:LINE)+';border-radius:9px;cursor:pointer;font-size:13px;opacity:'+(on?'1':'.5')+';color:var(--muted)"><input type="checkbox" '+(on?'checked':'')+' onchange="saToggleIlce(\''+saEsc(ic)+'\')"><span onclick="saSelectIlce(\''+saEsc(ic)+'\')">'+ic+(mn?' <b style="color:'+GOLD+'">('+mn+')</b>':'')+'</span></label>';}).join('')||'<span class="sub">İlçe bulunamadı.</span>';}
+  var mlbl=document.getElementById('saCurIlceLbl');if(mlbl)mlbl.textContent=saCurIlce?('· '+saCurIlce+', '+saCurIl):'· (ilçe seçin)';
+  var mBox=document.getElementById('saMahChips');
+  if(mBox){if(!saCurIlce)mBox.innerHTML='<span class="sub">Yukarıdan bir ilçe seçin, sonra mahalle ekleyin.</span>';
+    else{var e=SERVICE_AREA.iller[saCurIl].ilceler[saCurIlce],ms=(e&&e.mahalleler)||[];
+      var sug=realMah(saCurIl,saCurIlce,8).filter(function(m){return ms.indexOf(m)<0;});
+      mBox.innerHTML=(ms.length?ms.map(function(m){return saDelChip(m,'saRemoveMahalle');}).join(''):'<span class="sub">Tüm mahalleler hizmet alanında (özel seçim yok).</span>')
+        +(sug.length?'<div style="width:100%;margin-top:8px;font-size:12px;color:var(--muted)">Öneri: '+sug.map(function(m){return '<span onclick="saAddMahalleName(\''+saEsc(m)+'\')" style="cursor:pointer;color:'+GOLD+';margin-right:10px;white-space:nowrap">+ '+m+'</span>';}).join('')+'</div>':'');}}
+  var kBox=document.getElementById('saKatChips');
+  if(kBox)kBox.innerHTML=SERVICE_AREA.kategoriler.map(function(k){return saDelChip(k,'saRemoveKat');}).join('')||'<span class="sub">Kategori yok.</span>';}
+function saAddProvince(){saLoad();var sel=document.getElementById('saAddIl');var il=sel&&sel.value;if(!il)return;if(!SERVICE_AREA.iller[il])SERVICE_AREA.iller[il]=saBuildIl(il);saCurIl=il;saCurIlce='';renderSA();toast('Hizmet ili eklendi: '+il);}
+function saRemoveProvince(il){saLoad();if(il===SERVICE_AREA.primary){toast('Ana il çıkarılamaz. Önce başka ili ana yapın.');return;}delete SERVICE_AREA.iller[il];if(saCurIl===il){saCurIl=SERVICE_AREA.primary;saCurIlce='';}renderSA();toast('Hizmet ili çıkarıldı: '+il);}
+function saSelectIl(il){saLoad();saCurIl=il;saCurIlce='';renderSA();}
+function saToggleIlce(ic){saLoad();var rec=SERVICE_AREA.iller[saCurIl];if(!rec||!rec.ilceler[ic])return;rec.ilceler[ic].aktif=(rec.ilceler[ic].aktif===false);renderSA();}
+function saAllIlce(on){saLoad();var rec=SERVICE_AREA.iller[saCurIl];if(!rec)return;Object.keys(rec.ilceler).forEach(function(ic){rec.ilceler[ic].aktif=!!on;});renderSA();toast(on?'Tüm ilçeler eklendi.':'Tüm ilçeler çıkarıldı.');}
+function saSelectIlce(ic){saLoad();saCurIlce=ic;renderSA();}
+function saAddMahalle(){var inp=document.getElementById('saAddMah');var v=inp&&inp.value.trim();if(v){saAddMahalleName(v);inp.value='';}}
+function saAddMahalleName(v){saLoad();if(!saCurIlce){toast('Önce bir ilçe seçin.');return;}var e=SERVICE_AREA.iller[saCurIl].ilceler[saCurIlce];e.mahalleler=e.mahalleler||[];if(e.mahalleler.indexOf(v)<0)e.mahalleler.push(v);renderSA();}
+function saRemoveMahalle(m){saLoad();var e=SERVICE_AREA.iller[saCurIl].ilceler[saCurIlce];if(e)e.mahalleler=(e.mahalleler||[]).filter(function(x){return x!==m;});renderSA();}
+function saAddKat(){var inp=document.getElementById('saAddKat');var v=inp&&inp.value.trim();if(!v)return;saLoad();if(SERVICE_AREA.kategoriler.indexOf(v)<0)SERVICE_AREA.kategoriler.push(v);inp.value='';renderSA();}
+function saRemoveKat(k){saLoad();SERVICE_AREA.kategoriler=SERVICE_AREA.kategoriler.filter(function(x){return x!==k;});renderSA();}
+function saApply(){saLoad();saSave();try{applyProvince(SERVICE_AREA.primary);}catch(e){}try{if(typeof rebuildVipFromProx==='function')rebuildVipFromProx(SERVICE_AREA.primary,true);}catch(e){}try{applySchema();renderSA();}catch(e){}
+  var ai=saActiveIller().length,aic=(saServedIlce(SERVICE_AREA.primary)||[]).length;
+  toast('✓ Hizmet alanı uygulandı — '+ai+' il · '+aic+' ilçe ('+SERVICE_AREA.primary+') · '+SERVICE_AREA.kategoriler.length+' kategori.');}
+window.renderSA=renderSA;window.saApply=saApply;window.saAddProvince=saAddProvince;window.saRemoveProvince=saRemoveProvince;window.saSelectIl=saSelectIl;window.saToggleIlce=saToggleIlce;window.saAllIlce=saAllIlce;window.saSelectIlce=saSelectIlce;window.saAddMahalle=saAddMahalle;window.saAddMahalleName=saAddMahalleName;window.saRemoveMahalle=saRemoveMahalle;window.saAddKat=saAddKat;window.saRemoveKat=saRemoveKat;window.applyProvince=applyProvince;window.saServedMahalle=saServedMahalle;
 /* ===================== KURULUM SİHİRBAZI — danışman tek akış ===================== */
 var OB={step:1,advisor:'',brand:'',unvan:'',vergi:'',mail:'',tel:'',adres:'',belge:'',accent:'',logo:'',bolgeler:'',key:''};
 var OB_STEPS=['Danışman & Firma','EİDS Yetki','Marka & Logo','Hizmet Bölgeleri','ProX ile Kur'];
 function obSeed(){try{var s=SAAS_CONFIG.systemSettings,f=SAAS_CONFIG.firma||{},e=f.eids||{},k=f.kapsama||{};
-  OB.advisor=SAAS_CONFIG.advisorName||'';OB.brand=(saasResolve('brandName')||'');OB.unvan=f.unvan||'';OB.vergi=f.vergi||'';OB.mail=f.mail||'';OB.tel=f.tel||'';OB.adres=f.adres||'';OB.belge=e.belgeNo||'';OB.accent=s.accent||'';OB.logo=saasResolve('logoUrl')||'';OB.bolgeler=(k.bolgeler||[]).join(', ');OB.key='';}catch(e){}}
+  OB.advisor=SAAS_CONFIG.advisorName||'';OB.brand=(saasResolve('brandName')||'');OB.unvan=f.unvan||'';OB.vergi=f.vergi||'';OB.mail=f.mail||'';OB.tel=f.tel||'';OB.adres=f.adres||'';OB.belge=e.belgeNo||'';OB.accent=s.accent||'';OB.logo=saasResolve('logoUrl')||'';OB.il=(function(){try{return (typeof saLoad==='function'?saLoad().primary:null)||'İstanbul';}catch(_e){return 'İstanbul';}})();OB.key='';}catch(e){}}
 function obCollect(){function v(id){var e=document.getElementById(id);return e?e.value.trim():undefined;}
-  var m={ob_advisor:'advisor',ob_brand:'brand',ob_unvan:'unvan',ob_vergi:'vergi',ob_mail:'mail',ob_tel:'tel',ob_adres:'adres',ob_belge:'belge',ob_accent:'accent',ob_logo:'logo',ob_bolgeler:'bolgeler',ob_key:'key'};
+  var m={ob_advisor:'advisor',ob_brand:'brand',ob_unvan:'unvan',ob_vergi:'vergi',ob_mail:'mail',ob_tel:'tel',ob_adres:'adres',ob_belge:'belge',ob_accent:'accent',ob_logo:'logo',ob_il:'il',ob_key:'key'};
   Object.keys(m).forEach(function(id){var val=v(id);if(val!==undefined)OB[m[id]]=val;});}
 function _obe(s){return (s||'').replace(/"/g,'&quot;');}
 function obBody(n){
@@ -774,11 +857,11 @@ function obBody(n){
     +'<div class="sta-f"><label>Yetki Belge No (7+ hane)</label><input id="ob_belge" value="'+_obe(OB.belge)+'" placeholder="0034812"></div>';
   if(n===3)return '<p class="sub">Marka rengi ve logo (opsiyonel).</p>'
     +'<div class="sta-row2"><div class="sta-f"><label>Altın Ton (accent)</label><input id="ob_accent" value="'+_obe(OB.accent)+'" placeholder="#b4975a"></div><div class="sta-f"><label>Logo URL</label><input id="ob_logo" value="'+_obe(OB.logo)+'" placeholder="https://.../logo.png"></div></div>';
-  if(n===4)return '<p class="sub">Hizmet verdiğiniz bölgeler (virgülle ayırın) — SEO areaServed ve konumlandırmaya yansır.</p>'
-    +'<div class="sta-f"><label>Hizmet Bölgeleri</label><input id="ob_bolgeler" value="'+_obe(OB.bolgeler)+'" placeholder="Beşiktaş, Sarıyer, Şişli"></div>';
+  if(n===4)return '<p class="sub">Ana hizmet ilinizi seçin. İlçe / mahalle / kategori detaylarını sonra admin → Hizmet Alanı\'ndan yönetirsiniz.</p>'
+    +'<div class="sta-f"><label>Ana İl</label><select id="ob_il" style="width:100%;padding:11px;border:1px solid var(--line-soft);border-radius:9px;background:#0a0a0b;color:inherit;font:inherit">'+(typeof trIlList==='function'?trIlList():['İstanbul']).slice().sort(function(a,b){return a.localeCompare(b,'tr');}).map(function(il){return '<option'+(il===OB.il?' selected':'')+'>'+il+'</option>';}).join('')+'</select></div>';
   return '<p class="sub">ProX API anahtarı (opsiyonel — canlı analiz/AI). Boş bırakılırsa demo ile kurulur.</p>'
     +'<div class="sta-f"><label>ProX API Anahtarı</label><input id="ob_key" value="'+_obe(OB.key)+'" placeholder="prox_..." style="font-family:monospace;font-size:12px"></div>'
-    +'<div style="background:#0a0a0b;border:1px solid var(--line-soft);border-radius:10px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.7;color:var(--muted)"><b style="color:var(--gold)">Kurulum özeti</b><br>Danışman: <b>'+_obe(OB.advisor||OB.brand||'—')+'</b> · EİDS: '+(OB.belge?'✓ '+_obe(OB.belge):'sonra')+'<br>Bölge: '+_obe(OB.bolgeler||'—')+' · ProX: '+(OB.key?'✓ anahtar':'demo')+'</div>';}
+    +'<div style="background:#0a0a0b;border:1px solid var(--line-soft);border-radius:10px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.7;color:var(--muted)"><b style="color:var(--gold)">Kurulum özeti</b><br>Danışman: <b>'+_obe(OB.advisor||OB.brand||'—')+'</b> · EİDS: '+(OB.belge?'✓ '+_obe(OB.belge):'sonra')+'<br>İl: '+_obe(OB.il||'—')+' · ProX: '+(OB.key?'✓ anahtar':'demo')+'</div>';}
 function obRender(){var id='obWizard',m=document.getElementById(id);
   if(!m){m=document.createElement('div');m.id=id;m.style.cssText='position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:20px';
     m.innerHTML='<div style="position:absolute;inset:0;background:rgba(0,0,0,.75)"></div><div id="obCard" style="position:relative;max-width:580px;width:100%;max-height:88vh;overflow:auto;background:var(--ink,#0b0b0c);border:1px solid var(--line-soft);border-radius:16px;padding:26px"></div>';
@@ -801,7 +884,7 @@ function obFinish(){obCollect();if(!(OB.brand||OB.advisor)){OB.step=1;obRender()
     if(OB.accent){s.accent=OB.accent;s.gold=OB.accent;}if(OB.logo)SAAS_CONFIG.tenantSettings.logoUrl=OB.logo;
     if(OB.unvan)f.unvan=OB.unvan;if(OB.vergi)f.vergi=OB.vergi;if(OB.mail)f.mail=OB.mail;if(OB.tel)f.tel=OB.tel;if(OB.adres)f.adres=OB.adres;
     if(OB.belge){f.eids.belgeNo=OB.belge.replace(/\D/g,'');f.eids.connected=true;eidsVerify();}
-    if(OB.bolgeler){var arr=OB.bolgeler.split(',').map(function(x){return x.trim();}).filter(Boolean);if(arr.length){kapEnsure();SAAS_CONFIG.firma.kapsama.bolgeler=arr;}}
+    if(OB.il&&typeof applyProvince==='function'){try{saLoad();applyProvince(OB.il);saSave();}catch(_e){}}
     if(OB.key)window.EMLAK_TENANT.tenant_key=OB.key;
     initSaaSTheme();applySaaSSettings();try{eidsRenderPublic();applySchema();}catch(e){}
     try{localStorage.setItem('dn_onboarded','1');}catch(e){}
@@ -1110,7 +1193,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();cl
    ===================================================================== */
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='sta-modal';
   el.innerHTML='<div class="sta-ov" onclick="closeSaasAdmin()"></div><div class="sta-card"><div class="sta-hd"><b>ProX SaaS · '+SAAS_CONFIG.tenantName+'</b><button onclick="openOnboarding()" title="Kurulum Sihirbazı" style="margin-left:auto;margin-right:10px;background:none;border:1px solid var(--line-soft);border-radius:8px;color:var(--gold);padding:4px 11px;cursor:pointer;font:inherit;font-size:12.5px">🚀 Sihirbaz</button><button onclick="closeSaasAdmin()">✕</button></div>'
-   +'<div class="sta-tabs"><button class="act" data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="kapsama" onclick="staTab(this)">Hizmet Bölgeleri</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
+   +'<div class="sta-tabs"><button class="act" data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="hizmetalani" onclick="staTab(this)">Hizmet Alanı</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
    /* MARKA & LOGO */
    +'<div class="sta-pane" data-p="marka"><h4>Marka, Logo & Tema</h4><p class="sub">Logo/favicon yükleyin veya URL girin; altın/şampanya tema tonunu ayarlayın.</p>'
      +'<div class="logo-prev"><div class="box" id="adLogoPrev">M</div><span>Mevcut logo önizleme</span></div>'
@@ -1137,11 +1220,13 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
      +'<div id="ed_status" style="margin-bottom:12px"></div>'
      +'<div class="sta-f"><label>Yetki Belge No (7+ hane)</label><input id="ed_belge" placeholder="0034812"></div>'
      +'<div class="sta-row2"><button class="btn btn-gold sta-go" onclick="eidsConnect()">e-Devlet ile Bağlan & Doğrula</button><button class="btn btn-line sta-go" onclick="eidsSave()">Kaydet</button></div></div>'
-   /* HİZMET BÖLGELERİ */
-   +'<div class="sta-pane" data-p="kapsama" hidden><h4>Hizmet Bölgeleri & Kategoriler</h4><p class="sub">Hizmet verdiğiniz bölgeleri ve mülk kategorilerini ekleyin/çıkarın; SEO (areaServed / knowsAbout) ve konumlandırmaya yansır.</p>'
-     +'<div class="sta-f"><label>Hizmet Bölgeleri (semt / ilçe)</label><div id="kap_bolgeler" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0"></div><div class="sta-row2"><input id="kap_addBolge" placeholder="ör. Beşiktaş" onkeydown="if(event.key===\'Enter\'){kapAddBolge();event.preventDefault();}"><button class="btn btn-line" onclick="kapAddBolge()">+ Bölge Ekle</button></div></div>'
-     +'<div class="sta-f"><label>Kategoriler</label><div id="kap_kategoriler" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0"></div><div class="sta-row2"><input id="kap_addKat" placeholder="ör. Yalı" onkeydown="if(event.key===\'Enter\'){kapAddKat();event.preventDefault();}"><button class="btn btn-line" onclick="kapAddKat()">+ Kategori Ekle</button></div></div>'
-     +'<button class="btn btn-gold sta-go" onclick="kapApply()">Kaydet & Uygula</button></div>'
+   /* HİZMET ALANI (tam: il / ilçe / mahalle / kategori) */
+   +'<div class="sta-pane" data-p="hizmetalani" hidden><h4>Hizmet Alanı Yönetimi</h4><p class="sub">İl · ilçe · mahalle · kategori — hizmet verdiğiniz alanları ekleyin/çıkarın (çok-illi). Çıkarılanlar site/SEO/Özel Portföy\'den kalkar.</p>'
+     +'<div class="sta-f"><label>Hizmet İlleri</label><div id="saIlChips" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0"></div><div class="sta-row2"><select id="saAddIl" style="padding:9px 11px;border:1px solid var(--line-soft);border-radius:9px;background:#0a0a0b;color:inherit;font:inherit"></select><button class="btn btn-line" onclick="saAddProvince()">+ İl Ekle</button></div></div>'
+     +'<div class="sta-f"><label>İlçeler <span id="saCurIlLbl" class="sub"></span></label><div class="sta-row2" style="margin-bottom:6px"><button class="btn btn-line" onclick="saAllIlce(1)">Tümünü Seç</button><button class="btn btn-line" onclick="saAllIlce(0)">Tümünü Kaldır</button></div><div id="saIlceList" style="display:flex;flex-wrap:wrap;gap:7px;max-height:190px;overflow:auto"></div></div>'
+     +'<div class="sta-f"><label>Mahalleler <span id="saCurIlceLbl" class="sub"></span></label><div id="saMahChips" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0"></div><div class="sta-row2"><input id="saAddMah" placeholder="Mahalle adı" onkeydown="if(event.key===\'Enter\'){saAddMahalle();event.preventDefault();}"><button class="btn btn-line" onclick="saAddMahalle()">+ Ekle</button></div></div>'
+     +'<div class="sta-f"><label>Kategoriler</label><div id="saKatChips" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0"></div><div class="sta-row2"><input id="saAddKat" placeholder="ör. Yalı" onkeydown="if(event.key===\'Enter\'){saAddKat();event.preventDefault();}"><button class="btn btn-line" onclick="saAddKat()">+ Ekle</button></div></div>'
+     +'<button class="btn btn-gold sta-go" onclick="saApply()">Kaydet & Siteye Uygula</button></div>'
    /* PORTFOY */
    +'<div class="sta-pane" data-p="portfoy" hidden><h4>Portföy Özeti</h4><p class="sub">Açık ilanlar ve VIP portföy durumu (merkezden senkronize edilir).</p>'
      +'<div class="sta-row2"><div class="sta-f"><label>Açık İlan</label><input value="'+LISTINGS.length+' güncel ilan" readonly></div><div class="sta-f"><label>VIP Portföy</label><input value="'+VIP_PORTFOLIO.length+' yetki belgeli (adres gizli)" readonly></div></div>'
@@ -1155,7 +1240,7 @@ function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');
   set('sm_title',saasResolve('metaTitle'));set('sm_desc',saasResolve('metaDescription'));set('sm_kw',saasResolve('metaKeywords'));
   set('sp_base',SAAS_CONFIG.proxAiPrompts.persona);set('sp_custom',SAAS_CONFIG.tenantSettings.customPrompt);
   set('ed_belge',eidsFirma().eids.belgeNo);try{eidsRenderAdmin();}catch(e){}
-  try{renderKapsama();}catch(e){}
+  try{renderSA();}catch(e){}
   _refreshLogoPrev();
 }
 function closeSaasAdmin(){const e=document.getElementById('saasTenantAdmin');if(e)e.classList.remove('on');}
