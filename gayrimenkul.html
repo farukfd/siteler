@@ -2171,11 +2171,13 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
             <div class="ai-tool act" data-ai="ilan" onclick="selAiTool(this)"><div class="ti">🏠</div><h4>İlan Açıklaması</h4><p>Daire özelliklerinden satışa hazır, ikna edici açıklama.</p></div>
             <div class="ai-tool" data-ai="blog" onclick="selAiTool(this)"><div class="ti">📝</div><h4>Blog Yazısı</h4><p>SEO uyumlu emlak/yatırım rehber yazısı taslağı.</p></div>
             <div class="ai-tool" data-ai="bolge" onclick="selAiTool(this)"><div class="ti">📍</div><h4>Bölge Analizi</h4><p>Seçilen ilçe için yatırım & yaşam özeti.</p></div>
+            <div class="ai-tool" data-ai="sosyal" onclick="selAiTool(this)"><div class="ti">📣</div><h4>Sosyal Medya</h4><p>Instagram/Facebook paylaşım metni + hashtag.</p></div>
+            <div class="ai-tool" data-ai="seo" onclick="selAiTool(this)"><div class="ti">🔍</div><h4>SEO Metni</h4><p>Başlık + açıklama + anahtar kelime.</p></div>
           </div>
           <div class="afield" style="margin-top:14px"><label id="aiInLabel">Konu / Girdi</label><textarea id="aiInput" rows="3" placeholder="örn. Levent'te 3+1, 165m², 7. kat, deniz manzaralı, kapalı otopark, 7/24 güvenlik"></textarea></div>
           <button class="btn btn-primary btn-sm" id="aiGenBtn" onclick="aiGenerate()">✨ Üret</button>
           <div class="ai-out empty" id="aiOut">Üretilen içerik burada görünecek.</div>
-          <div id="aiActions" style="display:none;gap:10px;margin-top:10px"><button class="abtn" onclick="copyAi()">📋 Kopyala</button><button class="abtn" onclick="aiToBlog()">📝 Blog'a Aktar</button></div>
+          <div id="aiActions" style="display:none;gap:10px;margin-top:10px;flex-wrap:wrap"><button class="abtn" onclick="copyAi()">📋 Kopyala</button><button class="abtn" onclick="aiIndir()">⬇ İndir</button><button class="abtn" onclick="aiToBlog()">📝 Blog'a Aktar</button></div>
         </div>
         <div class="adm-card"><h3>Site AI Asistanı (ProX)</h3><div class="csub">Ziyaretçilerin emlak/bölge sorularını yanıtlayan canlı asistan. Sitenin sağ altında balon olarak görünür.</div>
           <div class="sw-row"><div class="swl"><b>AI Asistanı Etkinleştir</b><span>Sitede yüzen "ProX Asistan" balonu</span></div><label class="switch"><input type="checkbox" id="ai_enable" checked onchange="toggleAiFab()"><span class="sl"></span></label></div>
@@ -4585,7 +4587,7 @@ function applyBrand(name){try{if(name)FIRMA.name=name.trim();
   if(FIRMA.eids&&FIRMA.eids.unvan&&FIRMA.eids.unvan.indexOf('Meridyen')>=0)FIRMA.eids.unvan=brandReplace(FIRMA.eids.unvan);
   if(typeof CONTENT==='object'&&CONTENT){Object.keys(CONTENT).forEach(function(k){if(typeof CONTENT[k]==='string'&&CONTENT[k].indexOf('Meridyen')>=0)CONTENT[k]=brandReplace(CONTENT[k]);});}
   if(typeof SEO==='object'&&SEO){['title','desc','kw'].forEach(function(k){if(SEO[k]&&SEO[k].indexOf('Meridyen')>=0)SEO[k]=brandReplace(SEO[k]);});}
-  if(typeof AICFG==='object'&&AICFG&&AICFG.persona&&AICFG.persona.indexOf('Meridyen')>=0)AICFG.persona=brandReplace(AICFG.persona);
+  if(typeof AICFG==='object'&&AICFG){if(AICFG.persona&&AICFG.persona.indexOf('Meridyen')>=0)AICFG.persona=brandReplace(AICFG.persona);if(AICFG.greet&&AICFG.greet.indexOf('Meridyen')>=0)AICFG.greet=brandReplace(AICFG.greet);}
   if(typeof saveAll==='function')saveAll();
   if(typeof applyFirma==='function')applyFirma();if(typeof applyContent==='function'){try{applyContent();}catch(e){}}
   brandSweep(document.body);brandObserve();applySchema();
@@ -5138,19 +5140,22 @@ function massing(holderId,opts){
 
 /* ---------- AI STÜDYO (Claude) ---------- */
 let curAiTool='ilan';
-const AI_LABELS={ilan:'İlan Özellikleri (oda, m², kat, bölge, öne çıkanlar)',blog:'Blog Konusu',bolge:'Bölge / İlçe Adı'};
+const AI_LABELS={ilan:'İlan Özellikleri (oda, m², kat, bölge, öne çıkanlar)',blog:'Blog Konusu',bolge:'Bölge / İlçe Adı',sosyal:'Konu / İlan / Kampanya',seo:'Sayfa / Konu (SEO metni için)'};
 function selAiTool(el){document.querySelectorAll('.ai-tool').forEach(t=>t.classList.remove('act'));el.classList.add('act');
   curAiTool=el.dataset.ai;document.getElementById('aiInLabel').textContent=AI_LABELS[curAiTool];
-  const ph={ilan:'örn. Alsancak\'ta 3+1, 165m², 7. kat, deniz manzaralı, kapalı otopark, 7/24 güvenlik',blog:'örn. 2026 İzmir kira piyasası beklentileri',bolge:'örn. Alsancak'};
+  var _il=(typeof PROVINCE!=='undefined'&&PROVINCE.name)||'İzmir';const ph={ilan:'örn. 3+1, 165m², 7. kat, deniz manzaralı, kapalı otopark, 7/24 güvenlik',blog:'örn. 2026 '+_il+' kira piyasası beklentileri',bolge:'örn. bir ilçe/mahalle adı',sosyal:'örn. yeni sahil projemiz / haftanın fırsatı',seo:'örn. '+_il+' satılık daire'};
   document.getElementById('aiInput').placeholder=ph[curAiTool]||'';}
 async function aiGenerate(){
   const input=document.getElementById('aiInput').value.trim();if(!input){toast('Lütfen bir girdi yazın.');return;}
   const out=document.getElementById('aiOut');const btn=document.getElementById('aiGenBtn');
   out.classList.remove('empty');out.innerHTML='<span class="spinner"></span> Yapay zeka içeriği üretiyor…';btn.disabled=true;
+  var _il=(typeof PROVINCE!=='undefined'&&PROVINCE.name)||'İzmir';
   const prompts={
-    ilan:`Sen profesyonel bir Türk emlak metin yazarısın. Şu özelliklerdeki gayrimenkul için satışa hazır, ikna edici ve akıcı bir ilan açıklaması yaz (120-160 kelime, abartısız, somut faydalara odaklı, Türkçe):\n${input}`,
-    blog:`Türk emlak ve yatırım okuyucusu için "${input}" konulu, SEO uyumlu bir blog yazısı taslağı yaz. Başlık + 3 alt başlık + her birinin altında 2-3 cümle. Türkçe, profesyonel ama anlaşılır.`,
-    bolge:`"${input}" bölgesi (İzmir) için gayrimenkul yatırımcısına yönelik kısa bir bölge analizi yaz: konum avantajları, yaşam kalitesi, yatırım potansiyeli ve dikkat edilecek noktalar. 100-140 kelime, Türkçe. Somut fiyat verisi uydurma; "güncel endeks verisiyle teyit edilmeli" notu ekle.`
+    ilan:`Sen profesyonel bir Türk emlak metin yazarısın. ${_il} bölgesindeki şu gayrimenkul için satışa hazır, ikna edici ve akıcı bir ilan açıklaması yaz (120-160 kelime, abartısız, somut faydalara odaklı, Türkçe):\n${input}`,
+    blog:`Türk emlak ve yatırım okuyucusu için "${input}" konulu, ${_il} odaklı, SEO uyumlu bir blog yazısı yaz. Çekici başlık + 3 alt başlık + her birinin altında 2-3 cümle. Konut, arsa, ticari, kiralama ve yatırımı kapsa. Türkçe, profesyonel ama anlaşılır.`,
+    bolge:`"${input}" bölgesi (${_il}) için gayrimenkul yatırımcısına yönelik kısa bir bölge analizi yaz: konum avantajları, yaşam kalitesi, ulaşım, yatırım potansiyeli ve dikkat edilecek noktalar. 100-140 kelime, Türkçe. Somut fiyat uydurma; "güncel ProX endeksiyle teyit edilmeli" notu ekle.`,
+    sosyal:`"${input}" için ${_il}'de faaliyet gösteren emlak ofisi adına dikkat çekici bir sosyal medya paylaşımı yaz (Instagram/Facebook). 2-3 kısa vurucu cümle + 5-7 uygun hashtag (${_il} ve emlak temalı). Türkçe, samimi ama profesyonel.`,
+    seo:`"${input}" için ${_il} odaklı SEO metni üret. SADECE şu formatta, başka açıklama ekleme:\nBaşlık: <55-60 karakter>\nAçıklama: <150-155 karakter>\nAnahtar Kelimeler: <8-10 virgülle ayrılmış>`
   };
   try{
     let text=null;
@@ -5159,14 +5164,16 @@ async function aiGenerate(){
       if(r&&!r.fallback)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;
     }catch(_){}
     if(!text)text=await callClaude([{role:'user',content:prompts[curAiTool]}],'Yardımcı, profesyonel bir Türk emlak içerik asistanısın. Sadece istenen içeriği üret, ön söz ekleme.');
-    out.textContent=text;document.getElementById('aiActions').style.display='flex';window._aiLast=text;
+    out.classList.remove('empty');out.innerHTML='<textarea id="aiOutEdit" class="adm-ta" rows="10" style="width:100%;line-height:1.6"></textarea>';document.getElementById('aiOutEdit').value=text;document.getElementById('aiActions').style.display='flex';window._aiLast=text;
   }catch(e){
     out.innerHTML='⚠️ AI servisine şu an ulaşılamadı.<br><span class="tsub">Bu özellik Claude API üzerinden çalışır; canlı yayında ProX AI servisine (/api/ai/generate-content) bağlanır. Demo ortamında bağlantı gerektirir.</span>';
   }
   btn.disabled=false;
 }
-function copyAi(){if(window._aiLast){navigator.clipboard&&navigator.clipboard.writeText(window._aiLast);toast('📋 Kopyalandı.');}}
-function aiToBlog(){if(!window._aiLast)return;const lines=window._aiLast.split('\n').filter(x=>x.trim());
+function aiOutText(){var e=document.getElementById('aiOutEdit');return (e&&e.value)||window._aiLast||'';}
+function copyAi(){var t=aiOutText();if(t){navigator.clipboard&&navigator.clipboard.writeText(t);toast('📋 Kopyalandı.');}}
+function aiIndir(){var t=aiOutText();if(!t)return;try{var b=new Blob([t],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='prox-icerik.txt';document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(a.href);},120);}catch(e){}}
+function aiToBlog(){var _t=aiOutText();if(!_t)return;const lines=_t.split('\n').filter(x=>x.trim());
   document.getElementById('bl_title').value=(lines[0]||'AI Yazısı').replace(/^#+\s*/,'').slice(0,80);
   document.getElementById('bl_cat').value='AI İçerik';document.getElementById('bl_sum').value=lines.slice(1).join(' ').slice(0,160);
   editingBlog=null;document.querySelector('.adm-nav[data-p="icerik"]').click();document.getElementById('blogEditCard').style.display='block';
