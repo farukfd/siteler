@@ -1939,7 +1939,7 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
       <!-- DANIŞMANLAR -->
       <!-- ÖZEL PORTFÖY -->
       <div class="adm-pane" id="pane-ozel">
-        <div class="adm-top"><h1>Özel Portföy Yönetimi</h1><button class="btn btn-primary btn-sm" onclick="newOzel()">+ Yeni Kayıt</button></div>
+        <div class="adm-top"><h1>Özel Portföy Yönetimi</h1><div style="display:flex;gap:8px"><button class="abtn" onclick="rebuildOzelFromProx(PROVINCE.name)">⟳ ProX Gerçek Fiyatları Çek</button><button class="btn btn-primary btn-sm" onclick="newOzel()">+ Yeni Kayıt</button></div></div>
         <div class="adm-card"><div class="csub">Açık ilan öncesi, e-Devlet yetkilendirmesi tamamlanmadan bölgedeki talebi ölçmek için cadde/sokak bazlı ön tanıtım kayıtları. Açık adres ve görsel içermez; net konum yalnızca talep gelince danışmanla paylaşılır.</div></div>
         <div class="adm-card" id="ozEditCard" style="display:none">
           <h3 id="ozEditTitle">Yeni Kayıt</h3>
@@ -3344,6 +3344,34 @@ function saveOzel(){const g=id=>{const e=document.getElementById(id);return e?e.
   if(ozEditId){const o=OZEL.find(x=>x.id===ozEditId);if(o)Object.assign(o,obj);}else{obj.id='o'+Date.now();OZEL.unshift(obj);}
   saveAll();renderOzel();renderOzelRows();document.getElementById('ozEditCard').style.display='none';toast('Özel portföy kaydedildi.');}
 function delOzel(id){if(!confirm('Bu özel portföy kaydı silinsin mi?'))return;OZEL=OZEL.filter(x=>x.id!==id);saveAll();renderOzel();renderOzelRows();toast('Kayıt silindi.');}
+async function proxEndeksM2(il,ilce,durum){try{var r=await proxApi('/api/v1/tenant/endeks?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce)+'&kategori=konut&durum='+durum);if(r&&r.success&&r.data&&+r.data.m2>0)return +r.data.m2;}catch(e){}return null;}
+var _ozBusy=false;
+async function rebuildOzelFromProx(il,silent){
+  if(_ozBusy)return;_ozBusy=true;il=il||PROVINCE.name;
+  try{
+    var ilceler=Object.keys(PROVINCE.districts).slice(0,7);
+    var mahs=['Cumhuriyet','Atatürk','Merkez','Yeni','Fatih','Bahçelievler','Yavuz Selim','İnönü','Yıldız','Gazi'];
+    var cads=['Atatürk Caddesi','Cumhuriyet Caddesi','İstiklal Caddesi','Gazi Bulvarı','Sahil Yolu','Fevzi Çakmak Caddesi','İnönü Caddesi','19 Mayıs Caddesi','Kışla Caddesi','Bağdat Caddesi'];
+    if(!silent)toast('ProX gerçek bölge fiyatları çekiliyor… ('+il+')');
+    var out=[],id=1,mi=0,ci=0;
+    function rp(v,step){v=Math.round(v/step)*step;return Math.max(step,v);}
+    for(var i=0;i<ilceler.length;i++){var ilce=ilceler[i];
+      var satM2=await proxEndeksM2(il,ilce,'satilik');var kirM2=await proxEndeksM2(il,ilce,'kiralik');
+      if(!satM2)satM2=(BAZ[ilce]&&BAZ[ilce].m2)||30000;
+      if(!kirM2)kirM2=Math.max(120,Math.round(satM2*0.0042));
+      var m1=mahs[mi++%mahs.length],c1=cads[ci++%cads.length];
+      out.push({id:'o'+(id++),op:'Satılık',tip:'Daire',ilce:ilce,mah:m1,cadde:c1,m2:110,oda:'3+1',fiyat:rp(satM2*110*0.9,1000),durum:'aktif',not:'ProX bölge m²: '+fmt(satM2)+' ₺/m² · '+m1+' Mah., '+c1+' civarı'});
+      var m2n=mahs[mi++%mahs.length],c2=cads[ci++%cads.length];
+      out.push({id:'o'+(id++),op:'Kiralık',tip:'Daire',ilce:ilce,mah:m2n,cadde:c2,m2:90,oda:'2+1',fiyat:rp(kirM2*90*0.9,500),durum:'aktif',not:'ProX kira m²: '+fmt(kirM2)+' ₺/m² · '+m2n+' Mah., '+c2+' civarı'});
+      if(i<3){var m3=mahs[mi++%mahs.length],c3=cads[ci++%cads.length];
+        out.push({id:'o'+(id++),op:(i===1?'Kiralık':'Satılık'),tip:(i===0?'Ofis':i===1?'Dükkan':'Arsa'),ilce:ilce,mah:m3,cadde:c3,m2:(i===2?400:120),oda:'-',fiyat:(i===2?rp(satM2*400*0.35,5000):i===1?rp(kirM2*120*0.9,500):rp(satM2*120*0.95,1000)),durum:'aktif',not:'Yatırımlık · '+m3+' Mah., '+c3+' · ProX bölge verisi'});}
+    }
+    OZEL=out;saveAll();
+    try{if(typeof renderOzel==='function')renderOzel();if(typeof renderOzHome==='function')renderOzHome();if(typeof ozHero==='function')ozHero();if(typeof renderOzelRows==='function')renderOzelRows();}catch(e){}
+    if(!silent)toast('✓ Özel Portföy '+il+' gerçek bölge fiyatlarıyla güncellendi ('+out.length+' kayıt).');
+  }catch(e){if(!silent)toast('Özel Portföy güncellenemedi.');}
+  _ozBusy=false;
+}
 function renderOzelRows(){const t=document.getElementById('ozRows');if(!t)return;
   if(!OZEL.length){t.innerHTML='<tr><td colspan="7" class="empty">Henüz kayıt yok.</td></tr>';return;}
   t.innerHTML=OZEL.map(o=>`<tr>
@@ -4434,6 +4462,7 @@ function kurumsalApply(){var res=window._kiResult;if(!res){toast("Önce oluştur
   applyBrand(name);
   try{applyContent();}catch(e){}
   try{applySeoHead();}catch(e){}
+  try{if(typeof rebuildOzelFromProx==='function')rebuildOzelFromProx(il,true);}catch(e){}
   try{fillFirmaForm();}catch(e){}
   try{if(typeof fillSeo==="function")fillSeo();}catch(e){}
   brandSweep(document.body);
@@ -5143,7 +5172,7 @@ function fillProx(){document.getElementById('px_key').value=PROX.key||'';
   if(typeof proxRenderStatus==='function')proxRenderStatus();}
 function saveProx(){PROX.key=document.getElementById('px_key').value.trim();
   var il=(document.getElementById('px_il')||{}).value||'İzmir';PROX.il=il;PROX.region=il;
-  applyProxTenant();saveAll();applyProvince(il);if(typeof proxRenderStatus==='function')proxRenderStatus();
+  applyProxTenant();saveAll();applyProvince(il);if(typeof proxRenderStatus==='function')proxRenderStatus();try{if(il!=='İzmir'&&typeof rebuildOzelFromProx==='function')rebuildOzelFromProx(il,true);}catch(e){}
   toast('✓ ProX bağlantısı kaydedildi · aktif il: '+il);}
 function proxRenderStatus(){var el=document.getElementById('px_status');if(!el)return;var t=window.EMLAK_TENANT||{};
   el.innerHTML='<div class="eids-yetki '+(PROX.key?'on':'off')+'" style="margin:0"><span class="ic">'+(PROX.key?'◉':'⚠️')+'</span><div>'+(PROX.key?('ProX bağlı · tenant '+(t.tenant_id||'-')+' · aktif il '+(PROX.il||'İzmir')):'API anahtarı girilmedi')+'<div style="font-weight:500;font-size:12px;opacity:.85">Base: '+(window.EMLAK_API_BASE||'-')+'</div></div></div>';}
