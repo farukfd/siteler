@@ -754,6 +754,62 @@ function kapAddKat(){var i=document.getElementById('kap_addKat');var v=i&&i.valu
 function kapRemoveKat(x){var k=kapEnsure();k.kategoriler=k.kategoriler.filter(function(y){return y!==x;});renderKapsama();}
 function kapApply(){var k=kapEnsure();try{applySchema();}catch(e){}toast('✓ Hizmet bölgeleri & kategoriler uygulandı ('+k.bolgeler.length+' bölge · '+k.kategoriler.length+' kategori).');}
 window.renderKapsama=renderKapsama;window.kapAddBolge=kapAddBolge;window.kapRemoveBolge=kapRemoveBolge;window.kapAddKat=kapAddKat;window.kapRemoveKat=kapRemoveKat;window.kapApply=kapApply;
+/* ===================== KURULUM SİHİRBAZI — danışman tek akış ===================== */
+var OB={step:1,advisor:'',brand:'',unvan:'',vergi:'',mail:'',tel:'',adres:'',belge:'',accent:'',logo:'',bolgeler:'',key:''};
+var OB_STEPS=['Danışman & Firma','EİDS Yetki','Marka & Logo','Hizmet Bölgeleri','ProX ile Kur'];
+function obSeed(){try{var s=SAAS_CONFIG.systemSettings,f=SAAS_CONFIG.firma||{},e=f.eids||{},k=f.kapsama||{};
+  OB.advisor=SAAS_CONFIG.advisorName||'';OB.brand=(saasResolve('brandName')||'');OB.unvan=f.unvan||'';OB.vergi=f.vergi||'';OB.mail=f.mail||'';OB.tel=f.tel||'';OB.adres=f.adres||'';OB.belge=e.belgeNo||'';OB.accent=s.accent||'';OB.logo=saasResolve('logoUrl')||'';OB.bolgeler=(k.bolgeler||[]).join(', ');OB.key='';}catch(e){}}
+function obCollect(){function v(id){var e=document.getElementById(id);return e?e.value.trim():undefined;}
+  var m={ob_advisor:'advisor',ob_brand:'brand',ob_unvan:'unvan',ob_vergi:'vergi',ob_mail:'mail',ob_tel:'tel',ob_adres:'adres',ob_belge:'belge',ob_accent:'accent',ob_logo:'logo',ob_bolgeler:'bolgeler',ob_key:'key'};
+  Object.keys(m).forEach(function(id){var val=v(id);if(val!==undefined)OB[m[id]]=val;});}
+function _obe(s){return (s||'').replace(/"/g,'&quot;');}
+function obBody(n){
+  if(n===1)return '<p class="sub">Danışman ve firma bilgileriniz — logo yazısı, künye ve yasal metinler bunlardan dolar.</p>'
+    +'<div class="sta-f"><label>Danışman Adı *</label><input id="ob_advisor" value="'+_obe(OB.advisor)+'" placeholder="Selin Meridyen"></div>'
+    +'<div class="sta-f"><label>Marka / Logo Yazısı</label><input id="ob_brand" value="'+_obe(OB.brand)+'" placeholder="Selin Meridyen"></div>'
+    +'<div class="sta-f"><label>Ticari Unvan</label><input id="ob_unvan" value="'+_obe(OB.unvan)+'" placeholder="... Gayrimenkul Danışmanlık"></div>'
+    +'<div class="sta-row2"><div class="sta-f"><label>Vergi No</label><input id="ob_vergi" value="'+_obe(OB.vergi)+'"></div><div class="sta-f"><label>Telefon</label><input id="ob_tel" value="'+_obe(OB.tel)+'"></div></div>'
+    +'<div class="sta-row2"><div class="sta-f"><label>E-posta</label><input id="ob_mail" value="'+_obe(OB.mail)+'"></div><div class="sta-f"><label>Adres</label><input id="ob_adres" value="'+_obe(OB.adres)+'"></div></div>';
+  if(n===2)return '<p class="sub">EİDS — açık ilan yayınlamak için yetki belgesi gerekir; VIP portföy serbesttir. Şimdi girin veya sonra ekleyin.</p>'
+    +'<div class="sta-f"><label>Yetki Belge No (7+ hane)</label><input id="ob_belge" value="'+_obe(OB.belge)+'" placeholder="0034812"></div>';
+  if(n===3)return '<p class="sub">Marka rengi ve logo (opsiyonel).</p>'
+    +'<div class="sta-row2"><div class="sta-f"><label>Altın Ton (accent)</label><input id="ob_accent" value="'+_obe(OB.accent)+'" placeholder="#b4975a"></div><div class="sta-f"><label>Logo URL</label><input id="ob_logo" value="'+_obe(OB.logo)+'" placeholder="https://.../logo.png"></div></div>';
+  if(n===4)return '<p class="sub">Hizmet verdiğiniz bölgeler (virgülle ayırın) — SEO areaServed ve konumlandırmaya yansır.</p>'
+    +'<div class="sta-f"><label>Hizmet Bölgeleri</label><input id="ob_bolgeler" value="'+_obe(OB.bolgeler)+'" placeholder="Beşiktaş, Sarıyer, Şişli"></div>';
+  return '<p class="sub">ProX API anahtarı (opsiyonel — canlı analiz/AI). Boş bırakılırsa demo ile kurulur.</p>'
+    +'<div class="sta-f"><label>ProX API Anahtarı</label><input id="ob_key" value="'+_obe(OB.key)+'" placeholder="prox_..." style="font-family:monospace;font-size:12px"></div>'
+    +'<div style="background:#0a0a0b;border:1px solid var(--line-soft);border-radius:10px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.7;color:var(--muted)"><b style="color:var(--gold)">Kurulum özeti</b><br>Danışman: <b>'+_obe(OB.advisor||OB.brand||'—')+'</b> · EİDS: '+(OB.belge?'✓ '+_obe(OB.belge):'sonra')+'<br>Bölge: '+_obe(OB.bolgeler||'—')+' · ProX: '+(OB.key?'✓ anahtar':'demo')+'</div>';}
+function obRender(){var id='obWizard',m=document.getElementById(id);
+  if(!m){m=document.createElement('div');m.id=id;m.style.cssText='position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:20px';
+    m.innerHTML='<div style="position:absolute;inset:0;background:rgba(0,0,0,.75)"></div><div id="obCard" style="position:relative;max-width:580px;width:100%;max-height:88vh;overflow:auto;background:var(--ink,#0b0b0c);border:1px solid var(--line-soft);border-radius:16px;padding:26px"></div>';
+    document.body.appendChild(m);}
+  var dots=OB_STEPS.map(function(t,i){var no=i+1,on=no===OB.step,done=no<OB.step;return '<div style="flex:1;text-align:center;font-size:10.5px;color:'+(on?'var(--gold)':done?'#8a7a4e':'var(--muted)')+';font-weight:'+(on?'700':'500')+'"><div style="height:5px;border-radius:3px;background:'+(on||done?'var(--gold)':'var(--line-soft)')+';margin-bottom:5px"></div>'+(done?'✓ ':'')+t+'</div>';}).join('');
+  var last=OB.step===OB_STEPS.length;
+  document.getElementById('obCard').innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><h3 style="font-family:var(--serif);color:var(--gold);margin:0;font-size:22px">🚀 Kurulum Sihirbazı</h3><span class="sub">'+OB.step+'/'+OB_STEPS.length+'</span></div>'
+    +'<div style="display:flex;gap:6px;margin:12px 0 16px">'+dots+'</div>'
+    +'<div style="min-height:170px">'+obBody(OB.step)+'</div>'
+    +'<div style="display:flex;gap:10px;margin-top:16px;justify-content:space-between">'
+    +(OB.step>1?'<button class="btn btn-line" onclick="obGo(-1)">← Geri</button>':'<button class="btn btn-line" onclick="obClose()">Daha sonra</button>')
+    +(last?'<button class="btn btn-gold" onclick="obFinish()">✓ Kur & Yayınla</button>':'<button class="btn btn-gold" onclick="obGo(1)">Devam →</button>')+'</div>';
+  m.style.display='flex';}
+function obGo(d){obCollect();if(d>0&&OB.step===1&&!(OB.advisor||OB.brand)){toast('Danışman/marka adını girin.');return;}OB.step=Math.max(1,Math.min(OB_STEPS.length,OB.step+d));obRender();}
+function openOnboarding(){obSeed();OB.step=1;obRender();}
+function obClose(){var m=document.getElementById('obWizard');if(m)m.style.display='none';}
+function obFinish(){obCollect();if(!(OB.brand||OB.advisor)){OB.step=1;obRender();toast('Danışman/marka adı gerekli.');return;}
+  try{var s=SAAS_CONFIG.systemSettings,f=eidsFirma();
+    if(OB.brand)s.brandName=OB.brand;if(OB.advisor)SAAS_CONFIG.advisorName=OB.advisor;
+    if(OB.accent){s.accent=OB.accent;s.gold=OB.accent;}if(OB.logo)SAAS_CONFIG.tenantSettings.logoUrl=OB.logo;
+    if(OB.unvan)f.unvan=OB.unvan;if(OB.vergi)f.vergi=OB.vergi;if(OB.mail)f.mail=OB.mail;if(OB.tel)f.tel=OB.tel;if(OB.adres)f.adres=OB.adres;
+    if(OB.belge){f.eids.belgeNo=OB.belge.replace(/\D/g,'');f.eids.connected=true;eidsVerify();}
+    if(OB.bolgeler){var arr=OB.bolgeler.split(',').map(function(x){return x.trim();}).filter(Boolean);if(arr.length){kapEnsure();SAAS_CONFIG.firma.kapsama.bolgeler=arr;}}
+    if(OB.key)window.EMLAK_TENANT.tenant_key=OB.key;
+    initSaaSTheme();applySaaSSettings();try{eidsRenderPublic();applySchema();}catch(e){}
+    try{localStorage.setItem('dn_onboarded','1');}catch(e){}
+    obClose();toast('✓ Kurulum tamam! '+(OB.brand||OB.advisor)+' yayında.'+(OB.key?'':' (ProX anahtarını admin→ProX/EİDS\'ten ekleyebilirsiniz.)'));
+  }catch(e){toast('Kurulumda hata: '+(e&&e.message||e));}}
+window.openOnboarding=openOnboarding;window.obGo=obGo;window.obClose=obClose;window.obFinish=obFinish;
+window.addEventListener('hashchange',function(){if(location.hash==='#kur')openOnboarding();});
+window.addEventListener('load',function(){try{if(location.hash==='#kur')setTimeout(openOnboarding,500);}catch(e){}});
 function initSaaSTheme(){const r=document.documentElement.style;const a=saasResolve('accent'),a2=saasResolve('accent2'),as=saasResolve('accentSoft');if(a){r.setProperty('--accent',a);r.setProperty('--gold',a);}if(a2)r.setProperty('--accent-2',a2);if(as)r.setProperty('--gold-soft',as);}
 function applySaaSSettings(){
   const title=saasResolve('metaTitle');if(title)document.title=title;
@@ -1053,7 +1109,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();cl
    YÖNETİM PANELİ (#saasTenantAdmin) — tam fonksiyonlu
    ===================================================================== */
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='sta-modal';
-  el.innerHTML='<div class="sta-ov" onclick="closeSaasAdmin()"></div><div class="sta-card"><div class="sta-hd"><b>ProX SaaS · '+SAAS_CONFIG.tenantName+'</b><button onclick="closeSaasAdmin()">✕</button></div>'
+  el.innerHTML='<div class="sta-ov" onclick="closeSaasAdmin()"></div><div class="sta-card"><div class="sta-hd"><b>ProX SaaS · '+SAAS_CONFIG.tenantName+'</b><button onclick="openOnboarding()" title="Kurulum Sihirbazı" style="margin-left:auto;margin-right:10px;background:none;border:1px solid var(--line-soft);border-radius:8px;color:var(--gold);padding:4px 11px;cursor:pointer;font:inherit;font-size:12.5px">🚀 Sihirbaz</button><button onclick="closeSaasAdmin()">✕</button></div>'
    +'<div class="sta-tabs"><button class="act" data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="kapsama" onclick="staTab(this)">Hizmet Bölgeleri</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
    /* MARKA & LOGO */
    +'<div class="sta-pane" data-p="marka"><h4>Marka, Logo & Tema</h4><p class="sub">Logo/favicon yükleyin veya URL girin; altın/şampanya tema tonunu ayarlayın.</p>'
