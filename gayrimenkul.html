@@ -1862,6 +1862,7 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
       <button class="adm-nav" data-p="portfoy3d" onclick="admPane(this)">🧊 3D / VR Portföy</button>
       <button class="adm-nav" data-p="danismanlar" onclick="admPane(this)">👥 Danışmanlar</button>
       <button class="adm-nav" data-p="bolge" onclick="admPane(this)">📍 Bölge Analizi</button>
+      <button class="adm-nav" data-p="hizmetalani" onclick="admPane(this)">🗺️ Hizmet Alanı</button>
       <button class="adm-nav" data-p="icerik" onclick="admPane(this)">📝 İçerik & Sayfalar</button>
       <div class="adm-group">YAPAY ZEKA & PROX</div>
       <button class="adm-nav" data-p="ai" onclick="admPane(this)">✨ Yapay Zeka Stüdyo</button>
@@ -2016,6 +2017,27 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
         <div class="adm-top"><h1>Bölge Analizi İçeriği</h1></div>
         <div class="adm-card"><h3>Bölge Verileri</h3><div class="csub">Ana sayfadaki "Bölge Zekası" widget'ında gösterilir. Canlı veride emlakekspertizi /api/emlak-endeksi/detail ucuna bağlanır.</div>
           <table class="atable"><thead><tr><th>Bölge</th><th>m² Fiyatı</th><th>5Y Değişim</th><th>Yatırım Skoru</th><th>Risk</th></tr></thead><tbody id="bolgeRows"></tbody></table></div>
+      </div>
+      <!-- HİZMET ALANI -->
+      <div class="adm-pane" id="pane-hizmetalani">
+        <div class="adm-top"><h1>Hizmet Alanı Yönetimi</h1><button class="btn btn-primary btn-sm" onclick="saApply()">Kaydet & Siteye Uygula</button></div>
+        <div class="csub" style="margin-bottom:12px">Hizmet verdiğiniz <b>il · ilçe · mahalle · kategori</b>leri buradan yönetin. Çıkardıklarınız site genelinden (bölge, Özel Portföy, dropdown) kalkar; birden fazla il ekleyebilirsiniz.</div>
+        <div class="adm-card"><h3>Hizmet İlleri</h3><div class="csub">Ana il + ek hizmet illeri. Bir ile tıklayıp ilçelerini düzenleyin.</div>
+          <div id="saIlChips" style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><select id="saAddIl" style="padding:9px 11px;border:1px solid var(--line);border-radius:9px;font:inherit;min-width:160px"></select><button class="abtn" onclick="saAddProvince()">+ İl Ekle</button></div>
+        </div>
+        <div class="adm-card"><h3>İlçeler <span id="saCurIlLbl" class="tsub"></span></h3><div class="csub">Hizmet verdiğiniz ilçeleri işaretleyin; işaretsizler siteden çıkar. İlçeye tıklayınca mahallelerini düzenlersiniz.</div>
+          <div style="display:flex;gap:8px;margin:8px 0"><button class="abtn" onclick="saAllIlce(1)">Tümünü Seç</button><button class="abtn" onclick="saAllIlce(0)">Tümünü Kaldır</button></div>
+          <div id="saIlceList" style="display:flex;flex-wrap:wrap;gap:7px"></div>
+        </div>
+        <div class="adm-card"><h3>Mahalleler <span id="saCurIlceLbl" class="tsub"></span></h3><div class="csub">Seçili ilçede öne çıkaracağınız mahalleleri ekleyin/çıkarın (boşsa tüm mahalleler hizmet alanındadır).</div>
+          <div id="saMahChips" style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="saAddMah" placeholder="Mahalle adı" style="padding:9px 11px;border:1px solid var(--line);border-radius:9px;font:inherit" onkeydown="if(event.key==='Enter'){saAddMahalle();event.preventDefault();}"><button class="abtn" onclick="saAddMahalle()">+ Ekle</button></div>
+        </div>
+        <div class="adm-card"><h3>Kategoriler</h3><div class="csub">Sunduğunuz gayrimenkul kategorileri (konut, arsa, ticari, kiralık, miras, yatırım…).</div>
+          <div id="saKatChips" style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="saAddKat" placeholder="Kategori adı" style="padding:9px 11px;border:1px solid var(--line);border-radius:9px;font:inherit" onkeydown="if(event.key==='Enter'){saAddKat();event.preventDefault();}"><button class="abtn" onclick="saAddKat()">+ Ekle</button></div>
+        </div>
       </div>
       <!-- FİRMA -->
       <div class="adm-pane" id="pane-firma">
@@ -3036,10 +3058,14 @@ async function enrichProvinceMahalle(il){il=il||PROVINCE.name;var d=await loadMa
    Uç canlıya geçince (PROX-API-GEREKSINIM-NOTU.md) bu havuz kullanılmaz; gerçek mahalle gelir. */
 var COMMON_MAH=['Cumhuriyet','Atatürk','Merkez','Yeni','Fatih','Bahçelievler','Yavuz Selim','İnönü','Yıldız','Gazi','Yeşiltepe','Bağlar','Çamlık','Güzelyalı','Hürriyet','Kurtuluş','Mimar Sinan','Zafer','Barbaros','Aydınlıkevler','Şirinevler','Esentepe','Yenimahalle','Karşıyaka','Bahçelievler','19 Mayıs'];
 function _mahHash(s){var h=0;for(var i=0;i<(s||'').length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
-function realMah(il,ilce,n){n=n||3;var d=_mahCache[il];var arr=(d&&d[ilce])||(PROVINCE.districts[ilce]&&PROVINCE.districts[ilce].mah);
+function realMah(il,ilce,n){n=n||3;var out=[],seen={};
+  var sub=(typeof saServedMahalle==='function'?saServedMahalle(il,ilce):null);   // kullanıcı seçtiği mahalleler öncelikli
+  if(sub)sub.forEach(function(m){if(!seen[m]&&out.length<n){seen[m]=1;out.push(m);}});
+  if(out.length>=n)return out;
+  var d=_mahCache[il];var arr=(d&&d[ilce])||(PROVINCE.districts[ilce]&&PROVINCE.districts[ilce].mah);
   if(!arr||!arr.length){ /* gerçek veri yok → common-real havuzdan İLÇEYE ÖZGÜ deterministik, çeşitli dizi */
     var start=_mahHash(il+'|'+ilce)%COMMON_MAH.length;arr=[];for(var k=0;k<COMMON_MAH.length;k++)arr.push(COMMON_MAH[(start+k)%COMMON_MAH.length]);}
-  var out=[],seen={};for(var i=0;i<arr.length&&out.length<n;i++){var m=arr[i];if(!seen[m]){seen[m]=1;out.push(m);}}return out;}
+  for(var i=0;i<arr.length&&out.length<n;i++){var m=arr[i];if(!seen[m]){seen[m]=1;out.push(m);}}return out;}
 function trIlList(){return Object.keys(TR_ILILCE);}
 function makeProvince(il){
   if(il==='İzmir'||!il)return IZMIR_PROVINCE;
@@ -3060,8 +3086,24 @@ let BAZ={},MAH={};
 function rebuildBAZ(){BAZ={};MAH={};Object.keys(PROVINCE.districts).forEach(k=>{const v=PROVINCE.districts[k];BAZ[k]={m2:v.m2,chg:v.chg,score:v.score,risk:v.risk,warn:v.warn||0};MAH[k]=v.mah;});}
 rebuildBAZ();
 function applyProvinceLabels(){try{document.querySelectorAll('.js-il').forEach(function(e){e.textContent=PROVINCE.name;});}catch(e){}}
+/* ===== HİZMET ALANI — çok-illi + ilçe/mahalle/kategori seçimli hizmet tanımı ===== */
+var DEF_KATEGORILER=['Konut','Arsa','Ticari & Ofis','Kiralık','Miras & İntikal','Yatırım'];
+var SERVICE_AREA=null,saCurIl='',saCurIlce='';
+function saDefault(){return {primary:(typeof PROX!=='undefined'&&PROX&&PROX.il)||'İzmir',iller:{},kategoriler:DEF_KATEGORILER.slice()};}
+function saBuildIl(il){var prov=makeProvince(il),ilceler={};Object.keys(prov.districts).forEach(function(ic){ilceler[ic]={aktif:true,mahalleler:[]};});return {aktif:true,ilceler:ilceler};}
+function saEnsure(){if(!SERVICE_AREA)SERVICE_AREA=saDefault();if(!SERVICE_AREA.iller)SERVICE_AREA.iller={};if(!SERVICE_AREA.kategoriler||!SERVICE_AREA.kategoriler.length)SERVICE_AREA.kategoriler=DEF_KATEGORILER.slice();var pil=SERVICE_AREA.primary||'İzmir';SERVICE_AREA.primary=pil;if(!SERVICE_AREA.iller[pil])SERVICE_AREA.iller[pil]=saBuildIl(pil);return SERVICE_AREA;}
+function saLoad(){if(SERVICE_AREA)return SERVICE_AREA;try{SERVICE_AREA=JSON.parse(localStorage.getItem('wl_service_area')||'null');}catch(e){}return saEnsure();}
+function saSave(){try{localStorage.setItem('wl_service_area',JSON.stringify(SERVICE_AREA));}catch(e){}}
+function saActiveIller(){return SERVICE_AREA?Object.keys(SERVICE_AREA.iller).filter(function(il){return SERVICE_AREA.iller[il].aktif!==false;}):[];}
+function saServedIlce(il){try{var r=SERVICE_AREA&&SERVICE_AREA.iller[il];if(!r||!r.ilceler)return null;return Object.keys(r.ilceler).filter(function(ic){return r.ilceler[ic].aktif!==false;});}catch(e){return null;}}
+function saServedMahalle(il,ilce){try{var e=SERVICE_AREA&&SERVICE_AREA.iller[il]&&SERVICE_AREA.iller[il].ilceler[ilce];var m=e&&e.mahalleler;return (m&&m.length)?m.slice():null;}catch(e){return null;}}
+function saKategoriler(){return (SERVICE_AREA&&SERVICE_AREA.kategoriler&&SERVICE_AREA.kategoriler.length)?SERVICE_AREA.kategoriler.slice():DEF_KATEGORILER.slice();}
+/* Primary il PROVINCE'inden hizmet-dışı ilçeleri çıkar (yalnızca açıkça aktif:false) */
+function saFilterActiveProvince(){try{if(typeof PROVINCE==='undefined'||!PROVINCE||!SERVICE_AREA)return;var rec=SERVICE_AREA.iller[PROVINCE.name];if(!rec||!rec.ilceler)return;Object.keys(PROVINCE.districts).forEach(function(ic){var e=rec.ilceler[ic];if(e&&e.aktif===false)delete PROVINCE.districts[ic];});}catch(e){}}
 function applyProvince(il,silent){
-  PROVINCE=makeProvince(il);rebuildBAZ();
+  PROVINCE=makeProvince(il);
+  try{if(SERVICE_AREA){SERVICE_AREA.primary=il;if(!SERVICE_AREA.iller[il])SERVICE_AREA.iller[il]=saBuildIl(il);}}catch(e){}
+  saFilterActiveProvince();rebuildBAZ();
   try{PROX.il=il;PROX.region=il;saveAll();}catch(e){}
   try{if(typeof initHero==='function')initHero();
     if(typeof renderBolgePick==='function')renderBolgePick();
@@ -3450,31 +3492,43 @@ async function wlBuildBolge(il,silent){
   }catch(e){if(!silent)toast('Bölge verisi çekilemedi.');}
 }
 var _ozBusy=false;
+/* Hizmet alanı → çok-illi iş listesi ({il,ilce}) + kategori geçidi */
+function saWorkList(maxPrimary){maxPrimary=maxPrimary||7;var list=[];
+  if(SERVICE_AREA){var ills=saActiveIller();ills.sort(function(a,b){return a===SERVICE_AREA.primary?-1:b===SERVICE_AREA.primary?1:0;});
+    ills.forEach(function(il){var ics=saServedIlce(il)||[];var take=(il===SERVICE_AREA.primary)?maxPrimary:Math.min(3,ics.length);for(var i=0;i<take&&i<ics.length;i++)list.push({il:il,ilce:ics[i]});});}
+  if(!list.length){var pn=(typeof PROVINCE!=='undefined'&&PROVINCE.name)||'İzmir';Object.keys((typeof PROVINCE!=='undefined'&&PROVINCE.districts)||{}).slice(0,maxPrimary).forEach(function(ic){list.push({il:pn,ilce:ic});});}
+  return list;}
+function saHasCat(kw){if(!SERVICE_AREA||!SERVICE_AREA.kategoriler)return true;var s=SERVICE_AREA.kategoriler.join('|').toLocaleLowerCase('tr');return s.indexOf((''+kw).toLocaleLowerCase('tr'))>=0;}
 async function rebuildOzelFromProx(il,silent){
   if(_ozBusy)return;_ozBusy=true;il=il||PROVINCE.name;
   try{
-    try{await loadMahalle(il);}catch(e){}
-    var ilceler=Object.keys(PROVINCE.districts).slice(0,7);
+    var work=saWorkList(7);   // çok-illi: primary + ek hizmet illeri (SERVICE_AREA'daki aktif il/ilçe)
+    var illerSet={};work.forEach(function(w){illerSet[w.il]=1;});
+    try{await Promise.all(Object.keys(illerSet).map(function(x){return loadMahalle(x);}));}catch(e){}
+    var cKonut=saHasCat('konut'),cKira=saHasCat('kira'),cTicari=(saHasCat('ticari')||saHasCat('ofis')||saHasCat('dükkan')||saHasCat('dukkan')),cArsa=saHasCat('arsa');
+    if(!cKonut&&!cKira&&!cTicari&&!cArsa){cKonut=true;} // hiç kategori yoksa en azından konut
     var mahs=['Cumhuriyet','Atatürk','Merkez','Yeni','Fatih','Bahçelievler','Yavuz Selim','İnönü','Yıldız','Gazi'];
     var cads=['Atatürk Caddesi','Cumhuriyet Caddesi','İstiklal Caddesi','Gazi Bulvarı','Sahil Yolu','Fevzi Çakmak Caddesi','İnönü Caddesi','19 Mayıs Caddesi','Kışla Caddesi','Bağdat Caddesi'];
-    if(!silent)toast('ProX gerçek bölge fiyatları çekiliyor… ('+il+')');
+    if(!silent)toast('ProX gerçek bölge fiyatları çekiliyor… ('+work.length+' bölge / '+Object.keys(illerSet).length+' il)');
     function rp(v,step){v=Math.round(v/step)*step;return Math.max(step,v);}
-    /* 1) İlan spec'lerini deterministik kur (fiyat henüz yok) */
-    var specs=[],mi=0,ci=0;
-    for(var i=0;i<ilceler.length;i++){var ilce=ilceler[i];var rm=realMah(il,ilce,8),rmi=0;
-      specs.push({op:'Satılık',durum:'satilik',tip:'Daire',ilce:ilce,mah:(rm[rmi++]||mahs[mi++%mahs.length]),cadde:cads[ci++%cads.length],m2:110,oda:'3+1'});
-      specs.push({op:'Kiralık',durum:'kiralik',tip:'Daire',ilce:ilce,mah:(rm[rmi++]||mahs[mi++%mahs.length]),cadde:cads[ci++%cads.length],m2:90,oda:'2+1'});
-      if(i<3)specs.push({op:(i===1?'Kiralık':'Satılık'),durum:(i===1?'kiralik':'satilik'),tip:(i===0?'Ofis':i===1?'Dükkan':'Arsa'),ilce:ilce,mah:(rm[rmi++]||mahs[mi++%mahs.length]),cadde:cads[ci++%cads.length],m2:(i===2?400:120),oda:'-'});
-    }
-    /* 2) analyze başlangıç fiyatı + endeks m² — PARALEL (eşzamanlılık 4) */
+    /* 1) İlan spec'leri (çok-illi + kategori-farkında) */
+    var specs=[],mi=0,ci=0,primary=(SERVICE_AREA&&SERVICE_AREA.primary)||il;
+    work.forEach(function(w,i){var il2=w.il,ilce=w.ilce;var rm=realMah(il2,ilce,8),rmi=0;
+      if(cKonut)specs.push({il:il2,op:'Satılık',durum:'satilik',tip:'Daire',ilce:ilce,mah:(rm[rmi++]||mahs[mi++%mahs.length]),cadde:cads[ci++%cads.length],m2:110,oda:'3+1'});
+      if(cKira||cKonut)specs.push({il:il2,op:'Kiralık',durum:'kiralik',tip:'Daire',ilce:ilce,mah:(rm[rmi++]||mahs[mi++%mahs.length]),cadde:cads[ci++%cads.length],m2:90,oda:'2+1'});
+      if(i<3){var t=(i===0&&cTicari)?'Ofis':(i===1&&cTicari)?'Dükkan':cArsa?'Arsa':cTicari?'Ofis':null;
+        if(t)specs.push({il:il2,op:(t==='Dükkan'?'Kiralık':'Satılık'),durum:(t==='Dükkan'?'kiralik':'satilik'),tip:t,ilce:ilce,mah:(rm[rmi++]||mahs[mi++%mahs.length]),cadde:cads[ci++%cads.length],m2:(t==='Arsa'?400:120),oda:'-'});}
+    });
+    /* 2) analyze başlangıç fiyatı + endeks m² — PARALEL (her spec kendi ilini kullanır) */
     var priced=await _wlPMap(specs,async function(s){
-      var pair=await Promise.all([proxAnalyzePrice(il,s.ilce,s.mah,s.tip,s.durum,s.m2),proxEndeksM2(il,s.ilce,s.durum)]);
+      var pair=await Promise.all([proxAnalyzePrice(s.il,s.ilce,s.mah,s.tip,s.durum,s.m2),proxEndeksM2(s.il,s.ilce,s.durum)]);
       return {az:pair[0],em:pair[1]};
     },4);
     /* 3) OZEL kur — fiyat = analyze range.min ('…den başlayan'); yoksa m²×alan fallback */
     var out=[],id=1,realCount=0;
     specs.forEach(function(s,ix){
       var az=priced[ix]&&priced[ix].az, em=priced[ix]&&priced[ix].em, fiyat, src, band='';
+      var ekIl=(s.il&&s.il!==primary);   // çok-illi: ek il ilanı (Trabzon sitesi Rize ilanı)
       if(az&&az.min>0){
         fiyat=rp(az.min, s.durum==='kiralik'?500:1000); src='analyze'; realCount++;
         if(az.max>az.min)band=' ('+fmt(az.min)+'–'+fmt(az.max)+' ₺)';
@@ -3488,7 +3542,7 @@ async function rebuildOzelFromProx(il,silent){
       var not=(src==='analyze')
         ? (s.mah+' Mah., '+s.cadde+'’de ProX analiz başlangıç değeri'+band+((az.conf!=null)?' · güven '+az.conf+'/100':'')+' · '+m2info)
         : (m2info+' · '+s.mah+' Mah., '+s.cadde+' civarı');
-      out.push({id:'o'+(id++),op:s.op,tip:s.tip,ilce:s.ilce,mah:s.mah,cadde:s.cadde,m2:s.m2,oda:s.oda,fiyat:fiyat,durum:'aktif',basla:(src==='analyze'),not:not});
+      out.push({id:'o'+(id++),op:s.op,tip:s.tip,ilce:s.ilce+(ekIl?' ('+s.il+')':''),mah:s.mah,cadde:s.cadde,m2:s.m2,oda:s.oda,fiyat:fiyat,durum:'aktif',basla:(src==='analyze'),il:s.il,not:not});
     });
     OZEL=out;saveAll();
     try{localStorage.setItem('wl_ozel_ts',JSON.stringify({il:il,ts:Date.now(),n:out.length,real:realCount}));}catch(e){}
@@ -4515,13 +4569,54 @@ function featUpsell(p){var f=ADMIN_PANE_FEAT[p];if(!f)return;var need=featMinPac
     +'<button class="btn btn-primary" style="width:100%" onclick="document.getElementById(\''+id+'\').classList.remove(\'open\');if(typeof toast===\'function\')toast(\''+_le(need)+' paketi yükseltme talebiniz iletildi.\')">'+_le(need)+' Paketine Yükselt</button>'
     +'<div class="tsub" style="margin-top:8px">emlakekspertizi.com · ProX bayi paketleri</div></div>';
   m.classList.add('open');}
+/* ===== Hizmet Alanı — admin dinamik CRUD arayüzü ===== */
+function saEsc(s){return (''+s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
+function saDelChip(txt,fn){return '<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:13px">'+txt+' <b onclick="'+fn+'(\''+saEsc(txt)+'\')" style="cursor:pointer;opacity:.55">✕</b></span>';}
+function renderSA(){saLoad();
+  saCurIl=(saCurIl&&SERVICE_AREA.iller[saCurIl])?saCurIl:SERVICE_AREA.primary;
+  var ilBox=document.getElementById('saIlChips');
+  if(ilBox)ilBox.innerHTML=Object.keys(SERVICE_AREA.iller).map(function(il){var isP=il===SERVICE_AREA.primary,cur=il===saCurIl;
+    return '<span onclick="saSelectIl(\''+saEsc(il)+'\')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border:1px solid '+(cur?'var(--accent)':'var(--line)')+';border-radius:999px;background:'+(cur?'var(--accent)':'var(--surface)')+';color:'+(cur?'#fff':'var(--ink)')+';cursor:pointer;font-size:13px;font-weight:600">'+il+(isP?' ★':'')+(isP?'':' <b onclick="event.stopPropagation();saRemoveProvince(\''+saEsc(il)+'\')" style="cursor:pointer;opacity:.75">✕</b>')+'</span>';}).join('');
+  var addSel=document.getElementById('saAddIl');
+  if(addSel){var have=Object.keys(SERVICE_AREA.iller);var opts=(typeof trIlList==='function'?trIlList():[]).filter(function(il){return have.indexOf(il)<0;}).sort(function(a,b){return a.localeCompare(b,'tr');});addSel.innerHTML=opts.map(function(il){return '<option>'+il+'</option>';}).join('');}
+  var lbl=document.getElementById('saCurIlLbl');if(lbl)lbl.textContent='· '+saCurIl;
+  var ilceBox=document.getElementById('saIlceList');
+  if(ilceBox){var rec=SERVICE_AREA.iller[saCurIl];var ilcs=rec?Object.keys(rec.ilceler):[];
+    ilceBox.innerHTML=ilcs.map(function(ic){var e=rec.ilceler[ic],on=e.aktif!==false,cur=ic===saCurIlce,mn=(e.mahalleler&&e.mahalleler.length)||0;
+      return '<label style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid '+(cur?'var(--accent)':'var(--line)')+';border-radius:9px;background:var(--surface);cursor:pointer;font-size:13px;opacity:'+(on?'1':'.5')+'"><input type="checkbox" '+(on?'checked':'')+' onchange="saToggleIlce(\''+saEsc(ic)+'\')"><span onclick="saSelectIlce(\''+saEsc(ic)+'\')">'+ic+(mn?' <b style="color:var(--accent)">('+mn+')</b>':'')+'</span></label>';}).join('')||'<span class="tsub">İlçe bulunamadı.</span>';}
+  var mlbl=document.getElementById('saCurIlceLbl');if(mlbl)mlbl.textContent=saCurIlce?('· '+saCurIlce+', '+saCurIl):'· (ilçe seçin)';
+  var mBox=document.getElementById('saMahChips');
+  if(mBox){if(!saCurIlce)mBox.innerHTML='<span class="tsub">Yukarıdan bir ilçe seçin, sonra mahalle ekleyin.</span>';
+    else{var e=SERVICE_AREA.iller[saCurIl].ilceler[saCurIlce],ms=(e&&e.mahalleler)||[];
+      var sug=(typeof realMah==='function'?realMah(saCurIl,saCurIlce,8):[]).filter(function(m){return ms.indexOf(m)<0;});
+      mBox.innerHTML=(ms.length?ms.map(function(m){return saDelChip(m,'saRemoveMahalle');}).join(''):'<span class="tsub">Tüm mahalleler hizmet alanında (özel seçim yok).</span>')
+        +(sug.length?'<div style="width:100%;margin-top:8px;font-size:12px;color:var(--muted)">Öneri: '+sug.map(function(m){return '<span onclick="saAddMahalleName(\''+saEsc(m)+'\')" style="cursor:pointer;color:var(--accent);margin-right:10px;white-space:nowrap">+ '+m+'</span>';}).join('')+'</div>':'');}}
+  var kBox=document.getElementById('saKatChips');
+  if(kBox)kBox.innerHTML=SERVICE_AREA.kategoriler.map(function(k){return saDelChip(k,'saRemoveKat');}).join('')||'<span class="tsub">Kategori yok.</span>';}
+function saAddProvince(){saLoad();var sel=document.getElementById('saAddIl');var il=sel&&sel.value;if(!il)return;if(!SERVICE_AREA.iller[il])SERVICE_AREA.iller[il]=saBuildIl(il);saCurIl=il;saCurIlce='';renderSA();toast('Hizmet ili eklendi: '+il);}
+function saRemoveProvince(il){saLoad();if(il===SERVICE_AREA.primary){toast('Ana il çıkarılamaz. Önce başka ili ana yapın (il değiştir).');return;}delete SERVICE_AREA.iller[il];if(saCurIl===il){saCurIl=SERVICE_AREA.primary;saCurIlce='';}renderSA();toast('Hizmet ili çıkarıldı: '+il);}
+function saSelectIl(il){saLoad();saCurIl=il;saCurIlce='';renderSA();}
+function saToggleIlce(ic){saLoad();var rec=SERVICE_AREA.iller[saCurIl];if(!rec||!rec.ilceler[ic])return;rec.ilceler[ic].aktif=(rec.ilceler[ic].aktif===false);renderSA();}
+function saAllIlce(on){saLoad();var rec=SERVICE_AREA.iller[saCurIl];if(!rec)return;Object.keys(rec.ilceler).forEach(function(ic){rec.ilceler[ic].aktif=!!on;});renderSA();toast(on?'Tüm ilçeler hizmet alanına alındı.':'Tüm ilçeler çıkarıldı.');}
+function saSelectIlce(ic){saLoad();saCurIlce=ic;renderSA();}
+function saAddMahalle(){var inp=document.getElementById('saAddMah');var v=inp&&inp.value.trim();if(v){saAddMahalleName(v);inp.value='';}}
+function saAddMahalleName(v){saLoad();if(!saCurIlce){toast('Önce bir ilçe seçin.');return;}var e=SERVICE_AREA.iller[saCurIl].ilceler[saCurIlce];e.mahalleler=e.mahalleler||[];if(e.mahalleler.indexOf(v)<0)e.mahalleler.push(v);renderSA();}
+function saRemoveMahalle(m){saLoad();var e=SERVICE_AREA.iller[saCurIl].ilceler[saCurIlce];if(e)e.mahalleler=(e.mahalleler||[]).filter(function(x){return x!==m;});renderSA();}
+function saAddKat(){var inp=document.getElementById('saAddKat');var v=inp&&inp.value.trim();if(!v)return;saLoad();if(SERVICE_AREA.kategoriler.indexOf(v)<0)SERVICE_AREA.kategoriler.push(v);inp.value='';renderSA();}
+function saRemoveKat(k){saLoad();SERVICE_AREA.kategoriler=SERVICE_AREA.kategoriler.filter(function(x){return x!==k;});renderSA();}
+function saApply(){saLoad();saSave();
+  try{applyProvince(SERVICE_AREA.primary);}catch(e){}
+  try{if(SERVICE_AREA.primary!=='İzmir'&&typeof rebuildOzelFromProx==='function')rebuildOzelFromProx(SERVICE_AREA.primary,true);}catch(e){}
+  try{if(typeof renderBolgeRows==='function')renderBolgeRows();if(typeof renderSA==='function')renderSA();}catch(e){}
+  var aktifIl=saActiveIller().length,aktifIlce=(saServedIlce(SERVICE_AREA.primary)||[]).length;
+  toast('✓ Hizmet alanı uygulandı — '+aktifIl+' il · '+aktifIlce+' ilçe ('+SERVICE_AREA.primary+') · '+SERVICE_AREA.kategoriler.length+' kategori.');}
 function admPane(btn){
   if(btn&&btn.dataset&&btn.dataset.p&&admPaneGated(btn.dataset.p)){featUpsell(btn.dataset.p);return;}
   document.querySelectorAll('.adm-nav').forEach(b=>b.classList.remove('act'));
   if(btn.dataset.p){btn.classList.add('act');
     document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('act'));
     document.getElementById('pane-'+btn.dataset.p).classList.add('act');
-    if(btn.dataset.p==='contracts'&&typeof renderContracts==='function')renderContracts();if(btn.dataset.p==='ozel'&&typeof renderOzelRows==='function'){renderOzelRows();renderOzTalep();renderOzAlarm();if(typeof renderOzOwner==='function')renderOzOwner();}}
+    if(btn.dataset.p==='contracts'&&typeof renderContracts==='function')renderContracts();if(btn.dataset.p==='ozel'&&typeof renderOzelRows==='function'){renderOzelRows();renderOzTalep();renderOzAlarm();if(typeof renderOzOwner==='function')renderOzOwner();}if(btn.dataset.p==='hizmetalani'&&typeof renderSA==='function')renderSA();}
 }
 
 /* ============ ADMIN: KPI + RECENT ============ */
@@ -5261,6 +5356,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   applyContent();
   initHero();renderIlanlar();renderOzel();ozHero();renderOzHome();renderDan();renderBolgePick();initVal();applyFirma();renderBlogFeed();renderRefGrid();
   initAiAssistant();applyModuleVisibility();try{brandSweep(document.body);brandObserve();}catch(e){}try{abApply();}catch(e){}
+  try{if(localStorage.getItem('wl_service_area')){saLoad();if(typeof PROVINCE!=='undefined'&&PROVINCE){saFilterActiveProvince();rebuildBAZ();if(typeof renderBolgePick==='function')renderBolgePick();if(typeof renderOzel==='function')renderOzel();if(typeof renderOzHome==='function')renderOzHome();}}}catch(e){}
   // counters via IntersectionObserver
   const io=new IntersectionObserver((ents)=>{ents.forEach(e=>{if(e.isIntersecting){animateCounters();}});},{threshold:.25});
   document.querySelectorAll('[data-count]').forEach(el=>io.observe(el.closest('section,.hero,footer')||el));
