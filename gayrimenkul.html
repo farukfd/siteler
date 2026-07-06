@@ -2237,6 +2237,7 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
           <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
             <button class="btn btn-primary btn-sm" onclick="saveProx()">Kaydet & Uygula</button>
             <button class="abtn" onclick="proxTest()">Bağlan & Test Et</button>
+            <button class="abtn" onclick="openSuperAdmin()" title="emlakekspertizi.com bayi yönetimi">🏛️ Bayi Paneli (Süper-Admin)</button>
           </div>
         </div>
         <div class="adm-card"><h3>Aktif Modüller</h3><div class="csub">Sitede gösterilecek ProX veri modüllerini açıp kapatın.</div>
@@ -4374,6 +4375,39 @@ function animateCounters(){
 
 /* ============ ADMIN: AÇ / KAPAT / GİRİŞ ============ */
 function openAdmin(){document.getElementById('adminApp').classList.add('show');document.body.style.overflow='hidden';try{admGateNav();}catch(e){}}
+/* ===== SÜPER-ADMİN / BAYİ PANELİ (emlakekspertizi.com — client prototip) ===== */
+function superSeed(){var s=null;try{s=JSON.parse(localStorage.getItem('wl_super_tenants')||'null');}catch(e){}
+  if(s&&s.length)return s;
+  s=[{id:'emlaktahadimkoy_com',firma:'Tahadımköy Gayrimenkul',il:'İstanbul',paket:'BUSINESS',domain:'tahadimkoy.com',kotaKullanim:5230,kotaMax:10000,durum:'aktif'},
+     {id:'antalyaelite_com',firma:'Antalya Elite Gayrimenkul',il:'Antalya',paket:'ENTERPRISE',domain:'antalyaelite.com',kotaKullanim:8120,kotaMax:25000,durum:'aktif'},
+     {id:'samsunmeydan_com',firma:'Meydan Emlak',il:'Samsun',paket:'PRO',domain:'meydanemlak.com',kotaKullanim:1840,kotaMax:10000,durum:'aktif'},
+     {id:'trabzonyildiz_com',firma:'Yıldız Gayrimenkul',il:'Trabzon',paket:'BASIC',domain:'yildizgm.com',kotaKullanim:640,kotaMax:5000,durum:'deneme'}];
+  try{localStorage.setItem('wl_super_tenants',JSON.stringify(s));}catch(e){}return s;}
+function superStats(list){var tot=0,mx=0,il={};list.forEach(function(t){tot+=t.kotaKullanim||0;mx+=t.kotaMax||0;il[t.il]=1;});return {bayi:list.length,tot:tot,mx:mx,il:Object.keys(il).length,aktif:list.filter(function(t){return t.durum==='aktif';}).length};}
+function _kpi(v,l,c){return '<div style="flex:1;min-width:120px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px"><div style="font-size:22px;font-weight:800;color:'+(c||'var(--ink)')+'">'+v+'</div><div class="tsub">'+l+'</div></div>';}
+function openSuperAdmin(){var list=superSeed(),st=superStats(list),pct=st.mx?Math.round(st.tot/st.mx*100):0;
+  var id='superAdmin',m=document.getElementById(id);
+  if(!m){m=document.createElement('div');m.id=id;m.className='modal';m.addEventListener('click',function(e){if(e.target.id===id)m.classList.remove('open');});document.body.appendChild(m);}
+  var rows=list.map(function(t){var p=t.kotaMax?Math.round(t.kotaKullanim/t.kotaMax*100):0;
+    return '<tr><td><b>'+_le(t.firma)+'</b><div class="tsub">'+_le(t.domain||'—')+' · '+_le(t.id)+'</div></td><td>'+_le(t.il)+'</td><td><span class="scorebadge">'+_le(t.paket)+'</span></td><td class="num" style="min-width:130px">'+fmt(t.kotaKullanim)+' / '+fmt(t.kotaMax)+'<div style="height:5px;background:var(--line);border-radius:3px;margin-top:3px"><div style="height:100%;width:'+Math.min(100,p)+'%;background:'+(p>85?'#d9534f':'var(--accent)')+';border-radius:3px"></div></div></td><td>'+(t.durum==='aktif'?'<span style="color:#1a7f4b;font-weight:600">● aktif</span>':'<span style="color:#b26a00;font-weight:600">● '+_le(t.durum)+'</span>')+'</td><td style="white-space:nowrap"><button class="abtn" onclick="superPreview(\''+t.id+'\')">Önizle</button></td></tr>';}).join('');
+  m.innerHTML='<div class="mbox" style="max-width:940px"><button class="mclose" onclick="document.getElementById(\''+id+'\').classList.remove(\'open\')">✕</button>'
+    +'<h3>🏛️ Bayi Paneli · Süper-Admin <span class="tsub" style="font-weight:400">— emlakekspertizi.com</span></h3>'
+    +'<div class="msub">Tüm bayiler, iller ve kota kullanımı. Prototip — canlıda ProX bayi API\'sine bağlanır.</div>'
+    +'<div style="display:flex;gap:10px;flex-wrap:wrap;margin:12px 0">'+_kpi(st.bayi,'Toplam Bayi','var(--accent)')+_kpi(st.aktif,'Aktif Bayi','#1a7f4b')+_kpi(st.il,'Farklı İl')+_kpi('%'+pct,'Kota Kullanımı',pct>85?'#d9534f':'var(--ink)')+_kpi(fmt(st.tot),'Toplam İstek/ay')+'</div>'
+    +'<div style="overflow:auto;border:1px solid var(--line);border-radius:12px"><table class="atable" style="margin:0"><thead><tr><th>Bayi</th><th>İl</th><th>Paket</th><th>Kota (aylık)</th><th>Durum</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+    +'<div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="superAddDealer()">+ Yeni Bayi</button><button class="abtn" onclick="superReset()">Demo Verilerini Sıfırla</button></div></div>';
+  m.classList.add('open');}
+function superPreview(id){var t=superSeed().filter(function(x){return x.id===id;})[0];if(!t)return;
+  try{if(typeof FIRMA!=='undefined')FIRMA.name=t.firma;if(typeof applyBrand==='function')applyBrand(t.firma);}catch(e){}
+  try{if(typeof PROX!=='undefined'){PROX.il=t.il;PROX.region=t.il;}if(typeof applyProvince==='function')applyProvince(t.il);}catch(e){}
+  var m=document.getElementById('superAdmin');if(m)m.classList.remove('open');
+  if(typeof toast==='function')toast('Önizleme: '+t.firma+' · '+t.il+' ('+t.paket+')');}
+function superAddDealer(){var firma=prompt('Yeni bayi firma adı:');if(!firma)return;var il=prompt('İl:','İstanbul')||'İstanbul';
+  var list=superSeed();list.push({id:firma.toLocaleLowerCase('tr').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,''),firma:firma,il:il,paket:'PRO',domain:'',kotaKullanim:0,kotaMax:10000,durum:'deneme'});
+  try{localStorage.setItem('wl_super_tenants',JSON.stringify(list));}catch(e){}openSuperAdmin();if(typeof toast==='function')toast('✓ Bayi eklendi: '+firma);}
+function superReset(){try{localStorage.removeItem('wl_super_tenants');}catch(e){}openSuperAdmin();if(typeof toast==='function')toast('Demo bayi verileri sıfırlandı.');}
+window.addEventListener('hashchange',function(){if(location.hash==='#super')openSuperAdmin();});
+window.addEventListener('load',function(){if(location.hash==='#super')setTimeout(openSuperAdmin,400);});
 function closeAdmin(){document.getElementById('adminApp').classList.remove('show');document.body.style.overflow='';}
 function admLogin(){
   const u=document.getElementById('adm_user').value.trim(),p=document.getElementById('adm_pass').value.trim();
