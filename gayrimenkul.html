@@ -53,6 +53,7 @@ async function proxBootstrap(){
     if(r.branding&&r.branding.powered_by)window.EMLAK_TENANT.poweredBy=r.branding.powered_by; // "ProX"
     /* Theme accent (r.theme.accent) BİLEREK uygulanmaz — site markası korunur. */
     if(typeof applyFeatureGates==="function")applyFeatureGates();
+    try{if(typeof admGateNav==="function")admGateNav();}catch(e){}   // canlı pakete göre admin kilitlerini tazele
     return true;
   }catch(e){ return false; }
 }
@@ -4326,7 +4327,7 @@ function animateCounters(){
 }
 
 /* ============ ADMIN: AÇ / KAPAT / GİRİŞ ============ */
-function openAdmin(){document.getElementById('adminApp').classList.add('show');document.body.style.overflow='hidden';}
+function openAdmin(){document.getElementById('adminApp').classList.add('show');document.body.style.overflow='hidden';try{admGateNav();}catch(e){}}
 function closeAdmin(){document.getElementById('adminApp').classList.remove('show');document.body.style.overflow='';}
 function admLogin(){
   const u=document.getElementById('adm_user').value.trim(),p=document.getElementById('adm_pass').value.trim();
@@ -4339,7 +4340,28 @@ function admLogin(){
   }else{toast('Hatalı kullanıcı adı veya şifre. (admin / 1234)');}
 }
 function admLogout(){document.getElementById('adminApp').classList.remove('authed');toast('Çıkış yapıldı.');}
+/* ===== PAKET / ÖZELLİK KİLİDİ (admin panel) — upsell'li =====
+   Yalnızca premium paneller kilitlenir; çekirdek CRM her pakette açık. */
+var ADMIN_PANE_FEAT={seo:'canUseSeoContent',ai:'canUseMarketingContent',raporlar:'canUseAnalytics',rapor:'canUseAnalytics',google:'canUseAnalytics',tema:'canUsePremiumTheme',portfoy3d:'canUseAdvancedProX'};
+var FEAT_LABEL={canUseSeoContent:'SEO İçerik Üretimi',canUseMarketingContent:'Pazarlama & AI İçerik',canUseAnalytics:'Analitik & Raporlar',canUsePremiumTheme:'Premium Temalar',canUseAdvancedProX:'Gelişmiş ProX & 3D'};
+var PKG_ORDER=['BASIC','PRO','BUSINESS','ENTERPRISE'];
+var PKG_KAPSAM={BASIC:'Piyasa analizi · Fiyat tahmini · Lead CRM · SVG grafikler',PRO:'BASIC + Kira/yatırım skoru · PDF rapor · Analitik · SEO & pazarlama içeriği',BUSINESS:'PRO + Gelişmiş ProX · Özel domain · Blog otomasyonu · Premium tema · 3D/VR',ENTERPRISE:'BUSINESS + Tam white-label'};
+function featHas(f){return typeof window.hasFeature==='function'?window.hasFeature(f):true;}
+function featMinPackage(f){var P=window.EMLAK_PACKAGES||{};for(var i=0;i<PKG_ORDER.length;i++){if((P[PKG_ORDER[i]]||[]).indexOf(f)>=0)return PKG_ORDER[i];}return 'ENTERPRISE';}
+function admPaneGated(p){var f=ADMIN_PANE_FEAT[p];return !!(f&&!featHas(f));}
+function admGateNav(){try{document.querySelectorAll('.adm-nav[data-p]').forEach(function(b){var f=ADMIN_PANE_FEAT[b.dataset.p];var old=b.querySelector('.lock-badge');if(old)old.remove();b.classList.remove('locked');b.style.removeProperty('opacity');if(f&&!featHas(f)){b.classList.add('locked');b.style.opacity='.62';var s=document.createElement('span');s.className='lock-badge';s.textContent='🔒';s.style.cssText='margin-left:auto;font-size:12px';b.appendChild(s);}});}catch(e){}}
+function featUpsell(p){var f=ADMIN_PANE_FEAT[p];if(!f)return;var need=featMinPackage(f),cur=(window.EMLAK_TENANT&&window.EMLAK_TENANT.packageCode)||'—',label=FEAT_LABEL[f]||f;
+  var id='upsellModal',m=document.getElementById(id);
+  if(!m){m=document.createElement('div');m.id=id;m.className='modal';m.addEventListener('click',function(ev){if(ev.target.id===id)m.classList.remove('open');});document.body.appendChild(m);}
+  m.innerHTML='<div class="mbox" style="max-width:520px;text-align:center"><button class="mclose" onclick="document.getElementById(\''+id+'\').classList.remove(\'open\')">✕</button>'
+    +'<div style="font-size:34px">🔒</div><h3 style="margin:6px 0">'+_le(label)+' · <span style="color:var(--accent)">'+_le(need)+'</span> paketi</h3>'
+    +'<div class="msub">Mevcut paketiniz: <b>'+_le(cur)+'</b>. Bu özellik <b>'+_le(need)+'</b> ve üzeri paketlerde açıktır.</div>'
+    +'<div style="text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:13px;line-height:1.7"><b>'+_le(need)+' paketi kapsamı:</b><br>'+_le(PKG_KAPSAM[need]||'')+'</div>'
+    +'<button class="btn btn-primary" style="width:100%" onclick="document.getElementById(\''+id+'\').classList.remove(\'open\');if(typeof toast===\'function\')toast(\''+_le(need)+' paketi yükseltme talebiniz iletildi.\')">'+_le(need)+' Paketine Yükselt</button>'
+    +'<div class="tsub" style="margin-top:8px">emlakekspertizi.com · ProX bayi paketleri</div></div>';
+  m.classList.add('open');}
 function admPane(btn){
+  if(btn&&btn.dataset&&btn.dataset.p&&admPaneGated(btn.dataset.p)){featUpsell(btn.dataset.p);return;}
   document.querySelectorAll('.adm-nav').forEach(b=>b.classList.remove('act'));
   if(btn.dataset.p){btn.classList.add('act');
     document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('act'));
