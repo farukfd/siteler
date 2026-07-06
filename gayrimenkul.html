@@ -3403,7 +3403,7 @@ async function wlBuildBolge(il,silent){
     ];
     var insights=[];
     try{var pr='Sen '+il+' ilinde çalışan yerel emlak uzmanısın. Alıcı ve satıcıların bilmesi gereken, YEREL uzmanın gözünden 5 GENEL içgörü yaz (cephe/kat farkı, zemin/deprem, ulaşım/altyapı yakınlığı, sezonluk kira, kentsel dönüşüm gibi genel emlak dinamikleri). '+il+'’e özgü UYDURMA proje adı veya kesin rakam VERME. Her satır tam olarak: Başlık | 1-2 cümle açıklama. SADECE 5 satır.';
-      var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',tool:'bolge',prompt:pr}});
+      var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',tool:'bolge',prompt:aiGuard(pr)}});
       var txt=r&&(r.answer||r.text||(r.data&&r.data.answer));
       if(txt)txt.split('\n').forEach(function(l){var p=l.split('|');if(p.length>=2&&p[0].trim().length>2&&p[0].length<60)insights.push({baslik:p[0].replace(/[*#]/g,'').replace(/^[-\d.\s]+/,'').trim(),metin:p.slice(1).join('|').replace(/[*#]/g,'').trim()});});}catch(e){}
     if(insights.length<3)insights=[{baslik:'Cephe ve kat değeri',metin:'Aynı binada cephe yönü ve kat, m² fiyatını belirgin değiştirir; veriyle doğru konumlandırırız.'},{baslik:'Zemin ve yapı kalitesi',metin:'Zemin etüdü ve yapı yaşı, değerin ve satılabilirliğin kritik bileşenidir.'},{baslik:'Ulaşım yakınlığı',metin:'Ana arter, toplu taşıma ve altyapıya yakınlık kira ve satış talebini yükseltir.'},{baslik:'Sezonluk kira dinamiği',metin:'Bölgeye göre kira talebi sezonsal değişir; doğru zamanlama getiriyi artırır.'},{baslik:'Kentsel dönüşüm etkisi',metin:'Dönüşüm bölgelerinde eski yapı stoku ile yeni proje arasında değer farkı oluşur.'}];
@@ -4490,6 +4490,20 @@ function fillFirmaForm(){
 function kiFillIl(){var sel=document.getElementById("ki_il");if(!sel)return;var cur=(typeof PROX!=="undefined"&&PROX.il)||"İzmir";
   sel.innerHTML=trIlList().sort(function(a,b){return a.localeCompare(b,"tr");}).map(function(il){return "<option"+(il===cur?" selected":"")+">"+il+"</option>";}).join("");
   var nm=document.getElementById("ki_name");if(nm&&!nm.value&&FIRMA&&FIRMA.name&&FIRMA.name!==BRAND_ORIG)nm.value=FIRMA.name;}
+/* ===== AI GÜVENLİK KORKULUĞU — tüm ProX/DeepSeek üretimini + sohbeti kapsar =====
+   1) aiGuard(prompt): her isteme uydurma-yasağı kuralını ekler (idempotent).
+   2) aiRiskScan/aiGuardBadge: üretilen metni riskli iddialar için tarar,
+      insan onayı için görsel uyarı üretir. */
+var AI_GUARD_RULE='\n\n[KESİN KURALLAR — UYDURMA YASAK] Gerçek olmayan proje/site/marka adı, kesin fiyat/rakam, "%X garanti/net getiri", sahte istatistik, ödül, sertifika veya referans ÜRETME. Emin olmadığın sayısal veriyi "ProX endeksiyle teyit edilmeli" diye işaretle. Yalnızca genel, doğrulanabilir emlak bilgisi ver; abartıdan kaçın.';
+function aiGuard(p){p=(p==null?'':''+p);return p.indexOf('[KESİN KURALLAR')>=0?p:(p+AI_GUARD_RULE);}
+var AI_RISK_PATTERNS=[
+  {re:/(garanti|kesin|net)\s*(getiri|kazanç|kâr|kar)|(getiri|kazanç)\s*(garanti|kesin)/i,t:'garanti getiri iddiası'},
+  {re:/\d[\d.\s]{5,}\s*(tl|₺|lira)/i,t:'kesin fiyat rakamı'},
+  {re:/en\s+(ucuz|pahalı|iyi|büyük|kaliteli|lüks)|türkiye'?nin\s+(ilk|tek|en)|lider|(bir|1)\s*numara/i,t:'doğrulanmamış üstünlük iddiası'},
+  {re:/ödül|sertifika|patent|dünya\s*markası/i,t:'doğrulanmamış ödül/sertifika'}
+];
+function aiRiskScan(t){var h=[];AI_RISK_PATTERNS.forEach(function(p){if(p.re.test(t||''))h.push(p.t);});return h;}
+function aiGuardBadge(t){var h=aiRiskScan(t);if(!h.length)return '<div class="ai-guard-ok" style="margin-top:8px;padding:7px 10px;border-radius:8px;background:rgba(30,160,90,.10);border:1px solid rgba(30,160,90,.28);font-size:12px;color:#1a7f4b">✓ AI güvenlik denetimi: riskli iddia bulunamadı — yine de yayınlamadan önce gözden geçirin.</div>';return '<div class="ai-guard-warn" style="margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(230,150,20,.13);border:1px solid rgba(230,150,20,.4);font-size:12.5px;color:#8a5a00"><b>⚠ İnsan onayı gerekli</b> — doğrulanması gereken ifade: '+h.join(', ')+'. Yayınlamadan önce ProX verisiyle teyit edin veya düzeltin.</div>';}
 async function kurumsalGenerate(){
   var name=(document.getElementById("ki_name").value||"").trim();
   var il=(document.getElementById("ki_il")||{}).value||(typeof PROX!=="undefined"&&PROX.il)||"İzmir";
@@ -4499,7 +4513,7 @@ async function kurumsalGenerate(){
   out.innerHTML='<div class="eids-yetki on" style="margin:0"><span class="ic">⏳</span><div>ProX yapay zeka kapsamlı kurumsal kimliğinizi oluşturuyor…<div style="font-weight:500;font-size:12px;opacity:.85">DeepSeek · '+name+' · '+il+'</div></div></div>';
   var prompt="Sen ProX kurumsal kimlik ve Google SEO uzmanısın (emlakekspertizi.com). "+name+" adlı, "+il+" ilinde faaliyet gösteren TAM KAPSAMLI bir gayrimenkul/emlak ofisi için içerik üret. Ofis tüm alanlarda hizmet verir: konut (daire, villa, müstakil ev), arsa ve arazi, ticari & ofis/dükkan, kiralama, gayrimenkul değerleme, yatırım danışmanlığı ve miras/intikal işlemleri."+(hint?(" Öne çıkan uzmanlık: "+hint+"."):"")+" Profesyonel, güven veren, Google SEO uyumlu Türkçe kullan. Belirli tek bir nişe (sadece sahil/daire) sıkışma; tüm kategorileri kapsa. SADECE şu formatta yanıtla, başka açıklama ekleme:\nSLOGAN: <il ismi geçen tek cümle vurucu slogan>\nHERO1: <ana sayfa başlığı 1. satır, 2-4 kelime>\nHERO2: <ana sayfa başlığı 2. satır, 2-4 kelime>\nHERODESC: <hero alt açıklaması 20-30 kelime, veri odaklı, birkaç kategoriye atıf>\nHAKKINDA: <160-200 kelime kapsamlı hakkımızda; "+name+", "+il+", konut+arsa+ticari+miras+değerleme+yatırım hizmetleri, veri odaklı yaklaşım>\nSEOTITLE: <55-60 karakter; "+name+" + "+il+" + gayrimenkul/emlak>\nSEODESC: <150-155 karakter; hizmet çeşitliliği ("+il+" satılık/kiralık konut, arsa, ticari, değerleme, miras)>\nSEOKW: <virgülle 10-12 anahtar kelime; "+il+" emlak, "+il+" satılık daire, "+il+" kiralık, "+il+" arsa, "+il+" ticari gayrimenkul, "+il+" gayrimenkul değerleme, miras intikal, yatırım danışmanlığı>";
   var text=null;
-  try{var r=await proxApi("/api/v1/tenant/prox/ai",{method:"POST",body:{persona:"office",tool:"kurumsal",prompt:prompt}});
+  try{var r=await proxApi("/api/v1/tenant/prox/ai",{method:"POST",body:{persona:"office",tool:"kurumsal",prompt:aiGuard(prompt)}});
     if(r&&!r.fallback&&r.success!==false)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;}catch(e){}
   if(!text){out.innerHTML='<div class="eids-yetki off" style="margin:0"><span class="ic">⚠️</span><div>ProX AI yanıt vermedi. Anahtarı kontrol edin veya tekrar deneyin.</div></div>';return;}
   function pick(k){var m=new RegExp(k+"\\s*:?\\s*([\\s\\S]+?)(?:\\n\\s*(?:SLOGAN|HERO1|HERO2|HERODESC|HAKKINDA|SEOTITLE|SEODESC|SEOKW)\\s*:|$)","i").exec(text);return m?m[1].trim().replace(/^["“]+|["”]+$/g,"").trim():"";}
@@ -4514,6 +4528,7 @@ async function kurumsalGenerate(){
    +'<div class="afield"><label>Hakkımızda <span style="color:var(--muted);font-weight:400">(tam kapsamlı)</span></label><textarea id="ki_about" class="adm-ta" rows="6"></textarea></div>'
    +'<div class="ed2"><div class="afield"><label>SEO Başlık <span id="ki_seotLen" class="tsub"></span></label><input id="ki_seotitle" oninput="kiSeoLen()"></div><div class="afield"><label>SEO Anahtar Kelimeler</label><input id="ki_seokw"></div></div>'
    +'<div class="afield"><label>SEO Açıklama <span id="ki_seodLen" class="tsub"></span></label><textarea id="ki_seodesc" class="adm-ta" rows="2" oninput="kiSeoLen()"></textarea></div>'
+   +aiGuardBadge(text)
    +'<div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="kurumsalApply()">Kaydet & Tüm Siteye Uygula</button><button class="abtn" onclick="kurumsalGenerate()">Yeniden Üret (ProX)</button></div></div>';
   document.getElementById("ki_slogan").value=res.slogan||"";
   document.getElementById("ki_hero1").value=res.hero1||"";
@@ -5192,11 +5207,11 @@ async function aiGenerate(){
   try{
     let text=null;
     try{                                                  // API-first ProX AI; fallback = callClaude
-      const r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',prompt:prompts[curAiTool],tool:curAiTool}});
+      const r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',prompt:aiGuard(prompts[curAiTool]),tool:curAiTool}});
       if(r&&!r.fallback)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;
     }catch(_){}
     if(!text)text=await callClaude([{role:'user',content:prompts[curAiTool]}],'Yardımcı, profesyonel bir Türk emlak içerik asistanısın. Sadece istenen içeriği üret, ön söz ekleme.');
-    out.classList.remove('empty');out.innerHTML='<textarea id="aiOutEdit" class="adm-ta" rows="10" style="width:100%;line-height:1.6"></textarea>';document.getElementById('aiOutEdit').value=text;document.getElementById('aiActions').style.display='flex';window._aiLast=text;
+    out.classList.remove('empty');out.innerHTML='<textarea id="aiOutEdit" class="adm-ta" rows="10" style="width:100%;line-height:1.6"></textarea>';document.getElementById('aiOutEdit').value=text;out.insertAdjacentHTML('beforeend',aiGuardBadge(text));document.getElementById('aiActions').style.display='flex';window._aiLast=text;
   }catch(e){
     out.innerHTML='⚠️ AI servisine şu an ulaşılamadı.<br><span class="tsub">Bu özellik Claude API üzerinden çalışır; canlı yayında ProX AI servisine (/api/ai/generate-content) bağlanır. Demo ortamında bağlantı gerektirir.</span>';
   }
@@ -5249,7 +5264,7 @@ async function aiSend(){
   try{
     let text=null;
     try{                                                  // API-first ProX AI; fallback = callClaude
-      const r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',prompt:AICFG.persona+'\n\nElindeki referans veri: '+ctx,messages:aiHistory.slice(-8),message:txt}});
+      const r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',prompt:aiGuard(AICFG.persona+'\n\nElindeki referans veri: '+ctx),messages:aiHistory.slice(-8),message:txt}});
       if(r&&!r.fallback)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;
     }catch(_){}
     if(!text)text=await callClaude(aiHistory.slice(-8),AICFG.persona+'\n\nElindeki referans veri: '+ctx);
@@ -6397,7 +6412,7 @@ async function proxAiQuery(userMessage,contextType){
   console.log('[ProX AI →] '+SAAS_CONFIG.tenantName+' · ctx='+ctx+' · prompt="'+prompt.slice(0,46)+'…" · soru: '+userMessage);
   let answer=null;
   try{                                                   // API-first ProX AI; fallback = local _proxSimulate
-    const r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',prompt:prompt,context:ctx,message:userMessage}});
+    const r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',prompt:aiGuard(prompt),context:ctx,message:userMessage}});
     if(r&&!r.fallback){answer=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;}
   }catch(e){/* sessiz: local simülasyona düş */}
   if(!answer){
