@@ -2274,6 +2274,8 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
             <div class="afield"><label>Google Tag Manager ID</label><input id="g_gtm" placeholder="GTM-XXXXXXX"></div>
           </div>
           <div class="afield"><label>Search Console Doğrulama Kodu</label><input id="g_gsc" placeholder="google-site-verification=..."></div>
+          <div class="afield" style="margin-top:6px"><label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="g_ab" onchange="saveGoogle()"> A/B testi etkin (hero CTA varyantı) — dönüşümler il+firma etiketiyle ölçülür</label></div>
+          <div id="wlAbBox"></div>
         </div>
         <div class="adm-card"><h3>Harita & Güvenlik</h3>
           <div class="ed2">
@@ -3122,7 +3124,7 @@ const DEF_REFS=[{id:1,name:'Ayşe Yıldırım',meta:'Satıcı · Kadıköy',text
  {id:2,name:'Murat Kaya',meta:'Yatırımcı · Sarıyer',text:'Yatırım için daire arıyordum. Yatırım skoru ve 5 yıllık trend analizi sayesinde doğru mahalleyi seçtim. Bir yılda değer kazandı.'},
  {id:3,name:'Elif Demir',meta:'Alıcı · Karşıyaka',text:'Danışmanımız bölgeyi avucunun içi gibi biliyordu. WhatsApp\'tan anında dönüş, şeffaf süreç. Kesinlikle tavsiye ederim.'}];
 const DEF_SEO={title:'Meridyen Gayrimenkul · İzmir Emlak & Gayrimenkul Ofisi',desc:'İzmir ve Ege\'de veri odaklı emlak ofisi. Satılık & kiralık portföy, mahalle fiyat endeksi, yatırım skoru ve ücretsiz değerleme.',kw:'istanbul emlak, satılık daire, kiralık daire, gayrimenkul danışmanı, emlak değerleme',og:'',schema:true,llms:true,sitemap:true,prog:true};
-const DEF_GOOGLE={ga4:'',gtm:'',gsc:'',maps:'',recaptcha:'',business:'',aiseo:true};
+const DEF_GOOGLE={ga4:'',gtm:'',gsc:'',maps:'',recaptcha:'',business:'',aiseo:true,ab:false};
 const DEF_MODULES=[{k:'emlak_endeks',n:'Emlak Endeksi',d:'Mahalle m² fiyat ve trend',on:true},{k:'yatirim_skoru',n:'Yatırım Skoru',d:'0-100 bölge skoru',on:true},{k:'risk_analiz',n:'Fay/Deprem Risk',d:'Coğrafi risk rozeti',on:true},{k:'degerleme',n:'Online Değerleme',d:'"Evimin değeri ne?" aracı',on:true},{k:'portfoy3d',n:'3D Portföy & Tur',d:'GLB model + sanal tur',on:true},{k:'ai_asistan',n:'AI Asistan',d:'ProX yapay zeka asistanı',on:true},{k:'pdf_rapor',n:'Logolu PDF Rapor',d:'Şirket logolu endeks raporu',on:true},{k:'fiyat_alarmi',n:'Fiyat Alarmı',d:'Bölge fiyat değişim bildirimi',on:true},{k:'blog_feed',n:'Blog Akışı',d:'emlakekspertizi blog beslemesi',on:true},{k:'whatsapp',n:'WhatsApp Destek',d:'Tek dokunuş iletişim',on:true}];
 const DEF_PROX={key:'prox_emlaktahadimkoy_com_5d318fd5639d630018d37e2b219cbd0c',base:'https://www.emlakekspertizi.com',il:'İzmir',region:'İzmir',quotaUsed:3420,quotaMax:10000,modules:clone(DEF_MODULES)};
 const DEF_AICFG={enable:true,greet:'Merhaba! Ben Meridyen ProX Asistanı. Bölge, fiyat veya portföy hakkında sorabilirsiniz.',persona:'Meridyen Gayrimenkul\'ün yardımcı, profesyonel emlak danışmanısın. Türkçe, kısa ve net yanıt ver. Bölge fiyat verisi sorulursa örnek olduğunu belirt.'};
@@ -4207,7 +4209,32 @@ function valLead(){const ad=document.getElementById('vl_ad').value,tel=document.
 }
 
 /* ============ LEAD / FORM ============ */
-function pushLead(o){var lead={...o,sync:'pending',date:new Date().toLocaleString('tr-TR')};LEADS.unshift(lead);window._lastLead=lead;saveAll();if(typeof renderLeads==='function')renderLeads();if(typeof renderKpis==='function')renderKpis();return lead;}
+/* ===== PER-TENANT ANALİTİK + A/B (il bazlı dönüşüm takibi) ===== */
+function abVariant(){try{var v=localStorage.getItem('wl_ab');if(v!=='A'&&v!=='B'){v=(Math.random()<0.5?'A':'B');localStorage.setItem('wl_ab',v);}return v;}catch(e){return 'A';}}
+function trackEvent(name,params){try{
+  var il=(typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name)||(typeof PROX!=='undefined'&&PROX&&PROX.il)||'';
+  var firma=(typeof FIRMA!=='undefined'&&FIRMA&&FIRMA.name)||'';
+  var pkg=(window.EMLAK_TENANT&&window.EMLAK_TENANT.packageCode)||'';
+  var payload=Object.assign({il:il,firma:firma,paket:pkg,ab_variant:abVariant()},params||{});
+  if(typeof window.gtag==='function')window.gtag('event',name,payload);
+  else if(window.dataLayer&&window.dataLayer.push)window.dataLayer.push(Object.assign({event:name},payload));
+  try{var k='wl_analytics',a=JSON.parse(localStorage.getItem(k)||'[]');a.push({t:Date.now(),name:name,il:il,ab:payload.ab_variant});if(a.length>800)a=a.slice(-800);localStorage.setItem(k,JSON.stringify(a));}catch(e){}
+}catch(e){}}
+function abApply(){try{var v=abVariant();if(document.body)document.body.setAttribute('data-ab',v);
+  var on=(typeof GOOGLE!=='undefined'&&GOOGLE&&GOOGLE.ab);
+  if(on&&v==='B'){document.querySelectorAll('.btn-primary').forEach(function(b){var t=(b.textContent||'').trim();if(/Ücretsiz Ekspertiz|Ücretsiz Değerleme/i.test(t))b.textContent='Hemen Değerini Öğren →';});}
+  trackEvent('page_impression',{});
+}catch(e){}}
+function wlAnalyticsSummary(){try{var a=JSON.parse(localStorage.getItem('wl_analytics')||'[]');var byIl={},ab={A:{imp:0,lead:0},B:{imp:0,lead:0}};
+  a.forEach(function(e){if(e.name==='generate_lead'){byIl[e.il||'—']=(byIl[e.il||'—']||0)+1;if(ab[e.ab])ab[e.ab].lead++;}else if(e.name==='page_impression'&&ab[e.ab])ab[e.ab].imp++;});
+  return {byIl:byIl,ab:ab,total:a.length};}catch(e){return {byIl:{},ab:{A:{imp:0,lead:0},B:{imp:0,lead:0}},total:0};}}
+function renderWlAb(){try{var box=document.getElementById('wlAbBox');if(!box)return;var s=wlAnalyticsSummary();
+  var ilRows=Object.keys(s.byIl).sort(function(a,b){return s.byIl[b]-s.byIl[a];}).slice(0,6).map(function(il){return '<tr><td>'+il+'</td><td class="num">'+s.byIl[il]+'</td></tr>';}).join('')||'<tr><td colspan="2" class="tsub">Henüz dönüşüm yok.</td></tr>';
+  function cr(x){return x.imp?Math.round(x.lead/x.imp*100):0;}
+  box.innerHTML='<div class="csub" style="margin:6px 0">Yerel dönüşüm günlüğü (GA4 etkinse ayrıca canlıya gönderilir · il+firma+paket etiketli)</div>'
+    +'<div class="ed2"><div><b>A/B Dönüşüm (hero CTA)</b><div style="font-size:13px;line-height:1.8;margin-top:4px">A: <b>'+s.ab.A.lead+'</b> lead / '+s.ab.A.imp+' gösterim (%'+cr(s.ab.A)+')<br>B: <b>'+s.ab.B.lead+'</b> lead / '+s.ab.B.imp+' gösterim (%'+cr(s.ab.B)+')</div></div>'
+    +'<div><b>İl bazında dönüşüm</b><table class="atable" style="margin-top:4px"><tbody>'+ilRows+'</tbody></table></div></div>';}catch(e){}}
+function pushLead(o){var lead={...o,sync:'pending',date:new Date().toLocaleString('tr-TR')};LEADS.unshift(lead);window._lastLead=lead;saveAll();if(typeof trackEvent==='function')trackEvent('generate_lead',{source:o.src||'',konu:o.konu||''});if(typeof renderLeads==='function')renderLeads();if(typeof renderKpis==='function')renderKpis();if(typeof renderWlAb==='function')renderWlAb();return lead;}
 function submitLead(src){
   const g=id=>document.getElementById(id);let ad,tel,konu,kvkk,msg;
   if(src==='modal'){ad=g('m_ad').value;tel=g('m_tel').value;konu=g('m_konu').value;kvkk=g('m_kvkk').checked;msg=g('m_msg').value;}
@@ -5090,7 +5117,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(THEME&&THEME.accent)setTheme(THEME.accent,THEME.green,THEME.navy);
   applyContent();
   initHero();renderIlanlar();renderOzel();ozHero();renderOzHome();renderDan();renderBolgePick();initVal();applyFirma();renderBlogFeed();renderRefGrid();
-  initAiAssistant();applyModuleVisibility();try{brandSweep(document.body);brandObserve();}catch(e){}
+  initAiAssistant();applyModuleVisibility();try{brandSweep(document.body);brandObserve();}catch(e){}try{abApply();}catch(e){}
   // counters via IntersectionObserver
   const io=new IntersectionObserver((ents)=>{ents.forEach(e=>{if(e.isIntersecting){animateCounters();}});},{threshold:.25});
   document.querySelectorAll('[data-count]').forEach(el=>io.observe(el.closest('section,.hero,footer')||el));
@@ -5412,9 +5439,9 @@ function previewArtifact(type){const pre=document.getElementById('seoPreview');p
 
 /* ---------- GOOGLE ---------- */
 function fillGoogle(){const g=id=>document.getElementById(id);
-  g('g_ga4').value=GOOGLE.ga4;g('g_gtm').value=GOOGLE.gtm;g('g_gsc').value=GOOGLE.gsc;g('g_maps').value=GOOGLE.maps;g('g_recaptcha').value=GOOGLE.recaptcha;g('g_business').value=GOOGLE.business;g('g_aiseo').checked=GOOGLE.aiseo;}
+  g('g_ga4').value=GOOGLE.ga4;g('g_gtm').value=GOOGLE.gtm;g('g_gsc').value=GOOGLE.gsc;g('g_maps').value=GOOGLE.maps;g('g_recaptcha').value=GOOGLE.recaptcha;g('g_business').value=GOOGLE.business;g('g_aiseo').checked=GOOGLE.aiseo;if(document.getElementById('g_ab'))document.getElementById('g_ab').checked=!!GOOGLE.ab;if(typeof renderWlAb==='function')renderWlAb();}
 function saveGoogle(){const g=id=>document.getElementById(id);
-  GOOGLE={ga4:g('g_ga4').value.trim(),gtm:g('g_gtm').value.trim(),gsc:g('g_gsc').value.trim(),maps:g('g_maps').value.trim(),recaptcha:g('g_recaptcha').value.trim(),business:g('g_business').value.trim(),aiseo:g('g_aiseo').checked};
+  GOOGLE={ga4:g('g_ga4').value.trim(),gtm:g('g_gtm').value.trim(),gsc:g('g_gsc').value.trim(),maps:g('g_maps').value.trim(),recaptcha:g('g_recaptcha').value.trim(),business:g('g_business').value.trim(),aiseo:g('g_aiseo').checked,ab:!!(document.getElementById('g_ab')&&document.getElementById('g_ab').checked)};
   saveAll();toast('✓ Google entegrasyon ayarları kaydedildi.'+(GOOGLE.ga4?' GA4 etkin: '+GOOGLE.ga4:''));}
 
 // SEO live counters
