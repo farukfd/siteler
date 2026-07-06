@@ -3031,17 +3031,25 @@ async function enrichProvinceMahalle(il){il=il||PROVINCE.name;var d=await loadMa
   if(typeof rebuildBAZ==='function')rebuildBAZ();
   try{if(typeof renderBolgePick==='function')renderBolgePick();if(typeof BZ_CUR!=='undefined'&&BZ_CUR&&BZ_CUR.ilce&&BAZ[BZ_CUR.ilce]&&typeof selBolge==='function')selBolge(BZ_CUR.ilce);}catch(e){}
   return true;}
-function realMah(il,ilce,n){var d=_mahCache[il];var arr=(d&&d[ilce])||(PROVINCE.districts[ilce]&&PROVINCE.districts[ilce].mah)||['Merkez','Cumhuriyet','Atatürk'];
-  var out=[],seen={};for(var i=0;i<arr.length&&out.length<(n||3);i++){var m=arr[i];if(!seen[m]){seen[m]=1;out.push(m);}}return out;}
+/* Türkiye genelinde en yaygın GERÇEK mahalle adları — endeks ucu 404 iken fallback havuzu.
+   Uç canlıya geçince (PROX-API-GEREKSINIM-NOTU.md) bu havuz kullanılmaz; gerçek mahalle gelir. */
+var COMMON_MAH=['Cumhuriyet','Atatürk','Merkez','Yeni','Fatih','Bahçelievler','Yavuz Selim','İnönü','Yıldız','Gazi','Yeşiltepe','Bağlar','Çamlık','Güzelyalı','Hürriyet','Kurtuluş','Mimar Sinan','Zafer','Barbaros','Aydınlıkevler','Şirinevler','Esentepe','Yenimahalle','Karşıyaka','Bahçelievler','19 Mayıs'];
+function _mahHash(s){var h=0;for(var i=0;i<(s||'').length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
+function realMah(il,ilce,n){n=n||3;var d=_mahCache[il];var arr=(d&&d[ilce])||(PROVINCE.districts[ilce]&&PROVINCE.districts[ilce].mah);
+  if(!arr||!arr.length){ /* gerçek veri yok → common-real havuzdan İLÇEYE ÖZGÜ deterministik, çeşitli dizi */
+    var start=_mahHash(il+'|'+ilce)%COMMON_MAH.length;arr=[];for(var k=0;k<COMMON_MAH.length;k++)arr.push(COMMON_MAH[(start+k)%COMMON_MAH.length]);}
+  var out=[],seen={};for(var i=0;i<arr.length&&out.length<n;i++){var m=arr[i];if(!seen[m]){seen[m]=1;out.push(m);}}return out;}
 function trIlList(){return Object.keys(TR_ILILCE);}
 function makeProvince(il){
   if(il==='İzmir'||!il)return IZMIR_PROVINCE;
   var rec=TR_ILILCE[il];if(!rec)return IZMIR_PROVINCE;
-  var ilceler=rec.ilce,districts={},common=['Merkez','Cumhuriyet','Atatürk','Yeni','Fatih','İnönü','Yavuz Selim','Bahçelievler','Hürriyet','Kültür','Yıldız','Yeşiltepe'];
+  var ilceler=rec.ilce,districts={},POOL=(typeof COMMON_MAH!=='undefined'?COMMON_MAH:['Merkez','Cumhuriyet','Atatürk','Yeni','Fatih']);
   var mc=Math.max(3,Math.round(ilceler.length*0.3));
   ilceler.forEach(function(d,i){var r=bzRng(bzSeed(il+'|'+d));
     var m2=Math.round((14000+r()*42000)/500)*500,chg=Math.round(150+r()*95),score=Math.round(55+r()*32);
-    var mah=[d].concat(common.slice(0,5+Math.floor(r()*4)));
+    /* Mahalle: common-real havuzdan İLÇEYE ÖZGÜ rotasyon (endeks ucu 404 iken; uç gelince gerçek mahalle) */
+    var st=(typeof _mahHash==='function'?_mahHash(il+'|'+d):i)%POOL.length,cnt=6+Math.floor(r()*4),mah=[];
+    for(var mk=0;mk<cnt;mk++){var nm=POOL[(st+mk)%POOL.length];if(mah.indexOf(nm)<0)mah.push(nm);}
     districts[d]={group:i<mc?'merkez':'ilce',m2:m2,chg:chg,score:score,risk:'Bölge verisi ProX endeksinden güncellenir',warn:0,mah:mah};});
   return {name:il,plate:rec.plate,center:il,region:'',mahCount:(ilceler.length*8)+'+',
     groups:[{key:'merkez',name:'Merkez İlçeler',desc:il+' kent merkezi ve çevre ilçeleri'},{key:'ilce',name:'İlçeler',desc:il+' geneli ilçeler'}],
