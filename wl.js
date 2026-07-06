@@ -33,8 +33,8 @@ function lv(w){var m=(w||'').toLowerCase().match(/[aeıioöuü]/g);return m?m[m.
 function bk(v){return 'aıou'.indexOf(v)>=0;}function ro(v){return 'ouöü'.indexOf(v)>=0;}
 function I(v){return bk(v)?(ro(v)?'u':'ı'):(ro(v)?'ü':'i');}function A(v){return bk(v)?'a':'e';}
 function ev(w){return /[aeıioöuü]$/i.test(w||'');}function hard(w){return 'pçtkfhsş'.indexOf((w||'').slice(-1).toLowerCase())>=0;}
-function sfx(c,t){var v=lv(c),V=ev(c),D=hard(c)?'t':'d';return t=='gen'?(V?'n':'')+I(v)+'n':t=='dat'?(V?'y':'')+A(v):t=='acc'?(V?'y':'')+I(v):t=='loc'?D+A(v):t=='abl'?D+A(v)+'n':t=='li'?'l'+I(v):'';}
-function city(s){if(il==='İzmir'||(s.indexOf('İzmir')<0&&s.indexOf('İZMİR')<0))return s;var c=il;
+function sfx(c,t){if(window.TRG)return window.TRG.suffix(c,t);var v=lv(c),V=ev(c),D=hard(c)?'t':'d';return t=='gen'?(V?'n':'')+I(v)+'n':t=='dat'?(V?'y':'')+A(v):t=='acc'?(V?'y':'')+I(v):t=='loc'?D+A(v):t=='abl'?D+A(v)+'n':t=='li'?'l'+I(v):'';}
+function city(s){if(il==='İzmir'||(s.indexOf('İzmir')<0&&s.indexOf('İZMİR')<0))return s;if(window.TRG)return window.TRG.city(s,il);var c=il;
   s=s.replace(/İzmir ve Ege bölgesinde/g,c+"'"+sfx(c,'loc')).replace(/İzmir ve Ege['’]de/g,c+"'"+sfx(c,'loc')).replace(/İzmir ve Ege['’]den/g,c+"'"+sfx(c,'abl')).replace(/İzmir ve Ege['’]nin/g,c+"'"+sfx(c,'gen')).replace(/İzmir ve Ege['’]ye/g,c+"'"+sfx(c,'dat'))
    .split('İzmir ve Ege bölgesi').join(c).split('İzmir ve Ege').join(c+' ve çevresi').split('İzmir & Ege').join(c);
   s=s.replace(/İzmir['’](nin|nın|nun|nün|in|ın|un|ün)\b/g,c+"'"+sfx(c,'gen')).replace(/İzmir['’](den|dan|ten|tan)\b/g,c+"'"+sfx(c,'abl')).replace(/İzmir['’](deki|daki|teki|takı)\b/g,c+"'"+sfx(c,'loc')+'ki').replace(/İzmir['’](de|da|te|ta)\b/g,c+"'"+sfx(c,'loc')).replace(/İzmir['’](ya|ye|a|e)\b/g,c+"'"+sfx(c,'dat')).replace(/İzmir['’](yı|yi|yu|yü|ı|i|u|ü)\b/g,c+"'"+sfx(c,'acc')).replace(/İzmir['’]?li\b/g,c+sfx(c,'li'))

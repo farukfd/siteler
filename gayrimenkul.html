@@ -70,6 +70,8 @@ function applyFeatureGates(){
 window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 </script>
 <!-- ===== /EMLAK API-FIRST SAAS CORE ===== -->
+<script src="tr-grammar.js"></script><!-- Türkçe gramer tek kaynak (SPA + wl.js ortak) -->
+
 <!-- ===== SEO: canonical + OpenGraph + Twitter (additive) ===== -->
 <link rel="canonical" href="https://www.emlakekspertizi.com/">
 <meta property="og:site_name" content="Meridyen Gayrimenkul">
@@ -4732,11 +4734,11 @@ function trI(v){return trBack(v)?(trRound(v)?'u':'ı'):(trRound(v)?'ü':'i');}
 function trA(v){return trBack(v)?'a':'e';}
 function trEndsVowel(w){return /[aeıioöuü]$/i.test(w||'');}
 function trHard(w){var c=(w||'').replace(/['’]/g,'').slice(-1).toLowerCase();return 'pçtkfhsş'.indexOf(c)>=0;}
-function citySuffix(city,type){var v=trLastVowel(city),vwl=trEndsVowel(city),D=trHard(city)?'t':'d';
+function citySuffix(city,type){if(window.TRG)return window.TRG.suffix(city,type);var v=trLastVowel(city),vwl=trEndsVowel(city),D=trHard(city)?'t':'d';
   switch(type){case 'gen':return (vwl?'n':'')+trI(v)+'n';case 'dat':return (vwl?'y':'')+trA(v);
    case 'acc':return (vwl?'y':'')+trI(v);case 'loc':return D+trA(v);case 'abl':return D+trA(v)+'n';
    case 'li':return 'l'+trI(v);}return '';}
-function wlCity(s){if(!s||typeof s!=='string'||wlCityOff()||(s.indexOf('İzmir')<0&&s.indexOf('İZMİR')<0))return s;var c=PROVINCE.name;
+function wlCity(s){if(!s||typeof s!=='string'||wlCityOff()||(s.indexOf('İzmir')<0&&s.indexOf('İZMİR')<0))return s;var c=PROVINCE.name;if(window.TRG)return window.TRG.city(s,c);
   s=s.split('İzmir ve Ege bölgesi').join(c+' ve çevresi').split('İzmir ve Ege').join(c+' ve çevresi').split('İzmir & Ege').join(c+' & çevresi').split('İzmir ve çevresi').join(c+' ve çevresi');
   s=s.replace(/İzmir['’](nin|nın|nun|nün|in|ın|un|ün)\b/g,c+"'"+citySuffix(c,'gen'));
   s=s.replace(/İzmir['’](den|dan|ten|tan)\b/g,c+"'"+citySuffix(c,'abl'));
