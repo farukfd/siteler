@@ -420,6 +420,7 @@ footer{background:#060607;border-top:1px solid var(--line);padding:64px 0 30px}
 @media(max-width:560px){.nav-cta .portal-trigger{display:none}}
 @media(max-width:1040px){.nav-links .portal-trigger{display:inline-flex;margin-top:8px;font-size:15px}}
 </style>
+<script src="tr-grammar.js"></script><!-- Türkçe gramer tek kaynak (gayrimenkul.html ile ortak) -->
 </head>
 <body>
 
@@ -471,6 +472,7 @@ footer{background:#060607;border-top:1px solid var(--line);padding:64px 0 30px}
       <a class="btn btn-gold" onclick="navGo('ilanlar')">Güncel İlanları Gör</a>
       <a class="btn btn-line" onclick="navGo('randevu')">Ücretsiz Analiz</a>
     </div>
+    <div id="eidsPublicBadge" style="margin-top:24px;animation:rise 1s .7s both"></div>
   </div>
   <div class="hero-scroll">Keşfet<i></i></div>
 </section>
@@ -613,9 +615,39 @@ const SAAS_CONFIG={
   tenantSettings:{ customPrompt:'' },
   proxAiPrompts:{
     persona:'Sen, üst segment gayrimenkulde 18 yıllık tecrübeli, son derece elit, vizyoner ve güven veren bir lüks konut broker’ısın (Selin Meridyen). Üslubun zarif, sakin ve danışan odaklıdır; agresif satış yapmaz, değeri görünür kılarsın. Kullanıcı bir bölge/mülk/yatırım sorduğunda hafızandaki portföyü tarar, uygun mülkleri ve prim (değer artışı) potansiyelini anlatır, kesin fiyat vaadi vermez ve her görüşmeyi nazikçe ücretsiz analiz randevusuna yönlendirirsin.'
+  },
+  firma:{
+    unvan:'Selin Meridyen Gayrimenkul Danışmanlık', vergi:'', adres:'Nişantaşı, Şişli / İstanbul',
+    tel:'+90 212 000 00 00', mail:'info@selinmeridyen.com',
+    eids:{ yetkili:true, connected:true, belgeNo:'0034812', firmaKod:'', kullaniciKodu:'' }
   }
 };
 function saasResolve(key){const t=SAAS_CONFIG.tenantSettings,s=SAAS_CONFIG.systemSettings;if(t&&t[key]!=null&&t[key]!=='')return t[key];return s?s[key]:undefined;}
+/* ===================== EİDS — Elektronik İlan Doğrulama (danışman) =====================
+   Açık ilan yayını EİDS yetkisi ister; VIP (davet usulü) portföy serbesttir.
+   gerçek Bakanlık entegrasyonu için soyutlama: eidsConnect gerçek {firmaKod,kullaniciKodu}
+   akışıyla değiştirilebilir. ===================================================== */
+function _leD(s){return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function eidsFirma(){SAAS_CONFIG.firma=SAAS_CONFIG.firma||{};SAAS_CONFIG.firma.eids=SAAS_CONFIG.firma.eids||{yetkili:false,connected:false,belgeNo:'',firmaKod:'',kullaniciKodu:''};return SAAS_CONFIG.firma;}
+function eidsGuid(){var s='';for(var i=0;i<8;i++)s+=Math.floor(Math.random()*10);return 'K'+s;}
+function eidsVerify(){var e=eidsFirma().eids;e.yetkili=!!(e.belgeNo&&(''+e.belgeNo).replace(/\D/g,'').length>=7&&e.connected);return e.yetkili;}
+function eidsCanPublish(){return eidsVerify();}
+function eidsShieldSvg(sz){sz=sz||16;return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="M9 12l2 2 4-4"/></svg>';}
+function eidsBadgeHTML(){var e=eidsFirma().eids;
+  if(eidsVerify())return '<span style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--gold);border-radius:999px;color:var(--gold);font-size:12.5px;letter-spacing:.04em">'+eidsShieldSvg(15)+' EİDS Yetkili · Belge No '+_leD(e.belgeNo)+' · e-Devlet doğrulamalı</span>';
+  return '<span style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--line-soft);border-radius:999px;color:var(--muted);font-size:12.5px">'+eidsShieldSvg(15)+' EİDS yetkisi bekleniyor</span>';}
+function eidsRenderPublic(){var el=document.getElementById('eidsPublicBadge');if(el)el.innerHTML=eidsBadgeHTML();
+  var ql=document.getElementById('eidsListingNote');if(ql)ql.innerHTML=eidsVerify()?(eidsShieldSvg(13)+' EİDS ile doğrulanmış ilanlar'):'';}
+function eidsRenderAdmin(){var box=document.getElementById('ed_status');if(!box)return;var e=eidsFirma().eids;
+  box.innerHTML=eidsVerify()
+    ? '<div style="display:flex;gap:10px;align-items:center;padding:11px 13px;border:1px solid var(--gold);border-radius:10px;color:var(--gold)"><span>'+eidsShieldSvg(18)+'</span><div>EİDS Yetkisi Aktif — açık ilan yayınlayabilirsiniz.<div style="font-size:12px;opacity:.85;color:var(--muted)">Belge No '+_leD(e.belgeNo)+' · e-Devlet bağlı'+(e.kullaniciKodu?' · Kullanıcı '+_leD(e.kullaniciKodu):'')+'</div></div></div>'
+    : '<div style="display:flex;gap:10px;align-items:center;padding:11px 13px;border:1px solid var(--line-soft);border-radius:10px;color:var(--muted)"><span>⚠️</span><div>EİDS Yetkisi Yok — yalnızca VIP (davet usulü) portföy eklenebilir.<div style="font-size:12px;opacity:.85">7+ haneli yetki belgesi girip e-Devlet ile bağlanın.</div></div></div>';}
+function eidsConnect(){var e=eidsFirma().eids;var inp=document.getElementById('ed_belge');if(inp)e.belgeNo=(inp.value||'').replace(/\D/g,'');
+  toast('e-Devlet EİDS oturumu açılıyor…');
+  setTimeout(function(){e.connected=true;if(!e.firmaKod)e.firmaKod=eidsGuid();e.kullaniciKodu=eidsGuid();eidsVerify();try{eidsRenderAdmin();eidsRenderPublic();}catch(x){}
+    toast(e.yetkili?'✓ e-Devlet ile bağlanıldı · Kullanıcı Kodu üretildi · Yetki aktif.':'e-Devlet bağlandı. Geçerli 7+ haneli yetki belgesi girip kaydedin.');},900);}
+function eidsSave(){var e=eidsFirma().eids;var inp=document.getElementById('ed_belge');if(inp)e.belgeNo=(inp.value||'').replace(/\D/g,'');eidsVerify();eidsRenderAdmin();eidsRenderPublic();toast('EİDS bilgileri kaydedildi.');}
+window.eidsConnect=eidsConnect;window.eidsSave=eidsSave;
 function initSaaSTheme(){const r=document.documentElement.style;const a=saasResolve('accent'),a2=saasResolve('accent2'),as=saasResolve('accentSoft');if(a){r.setProperty('--accent',a);r.setProperty('--gold',a);}if(a2)r.setProperty('--accent-2',a2);if(as)r.setProperty('--gold-soft',as);}
 function applySaaSSettings(){
   const title=saasResolve('metaTitle');if(title)document.title=title;
@@ -916,7 +948,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();cl
    ===================================================================== */
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='sta-modal';
   el.innerHTML='<div class="sta-ov" onclick="closeSaasAdmin()"></div><div class="sta-card"><div class="sta-hd"><b>ProX SaaS · '+SAAS_CONFIG.tenantName+'</b><button onclick="closeSaasAdmin()">✕</button></div>'
-   +'<div class="sta-tabs"><button class="act" data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
+   +'<div class="sta-tabs"><button class="act" data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
    /* MARKA & LOGO */
    +'<div class="sta-pane" data-p="marka"><h4>Marka, Logo & Tema</h4><p class="sub">Logo/favicon yükleyin veya URL girin; altın/şampanya tema tonunu ayarlayın.</p>'
      +'<div class="logo-prev"><div class="box" id="adLogoPrev">M</div><span>Mevcut logo önizleme</span></div>'
@@ -938,6 +970,11 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
      +'<div class="sta-f"><label>Ana Persona (sistem)</label><textarea id="sp_base" rows="4" readonly></textarea></div>'
      +'<div class="sta-f"><label>Kuruma Özel Ek Ton (override)</label><textarea id="sp_custom" rows="3" placeholder="Örn: Boğaz hattı yalıları ve marka rezidanslarda uzmanız..."></textarea></div>'
      +'<button class="btn btn-gold sta-go" onclick="saasSaveProxPrompt()">Kaydet</button></div>'
+   /* EİDS */
+   +'<div class="sta-pane" data-p="eids" hidden><h4>EİDS — Elektronik İlan Doğrulama</h4><p class="sub">Açık ilan yayınlamak için yetki belgesi gerekir; VIP (davet usulü) portföy serbesttir. Kamuya güven rozeti olarak gösterilir.</p>'
+     +'<div id="ed_status" style="margin-bottom:12px"></div>'
+     +'<div class="sta-f"><label>Yetki Belge No (7+ hane)</label><input id="ed_belge" placeholder="0034812"></div>'
+     +'<div class="sta-row2"><button class="btn btn-gold sta-go" onclick="eidsConnect()">e-Devlet ile Bağlan & Doğrula</button><button class="btn btn-line sta-go" onclick="eidsSave()">Kaydet</button></div></div>'
    /* PORTFOY */
    +'<div class="sta-pane" data-p="portfoy" hidden><h4>Portföy Özeti</h4><p class="sub">Açık ilanlar ve VIP portföy durumu (merkezden senkronize edilir).</p>'
      +'<div class="sta-row2"><div class="sta-f"><label>Açık İlan</label><input value="'+LISTINGS.length+' güncel ilan" readonly></div><div class="sta-f"><label>VIP Portföy</label><input value="'+VIP_PORTFOLIO.length+' yetki belgeli (adres gizli)" readonly></div></div>'
@@ -950,6 +987,7 @@ function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');
   set('sg_ga',saasResolve('googleAnalytics'));set('sg_gsc',saasResolve('googleSiteVerification'));set('sg_maps',saasResolve('googleMapsKey'));
   set('sm_title',saasResolve('metaTitle'));set('sm_desc',saasResolve('metaDescription'));set('sm_kw',saasResolve('metaKeywords'));
   set('sp_base',SAAS_CONFIG.proxAiPrompts.persona);set('sp_custom',SAAS_CONFIG.tenantSettings.customPrompt);
+  set('ed_belge',eidsFirma().eids.belgeNo);try{eidsRenderAdmin();}catch(e){}
   _refreshLogoPrev();
 }
 function closeSaasAdmin(){const e=document.getElementById('saasTenantAdmin');if(e)e.classList.remove('on');}
@@ -1020,6 +1058,7 @@ window.openSaasPortal=openSaasPortal;window.closeSaasPortal=closeSaasPortal;wind
 /* ---------- INIT ---------- */
 window.addEventListener('load',function(){try{
   initSaaSTheme();applySaaSSettings();
+  try{eidsRenderPublic();}catch(e){}
   document.getElementById('homeListings').innerHTML=listingCardsHTML();
   document.getElementById('vaultGrid').innerHTML=vipCardsHTML();
   document.getElementById('homeContact').innerHTML=contactHTML();
