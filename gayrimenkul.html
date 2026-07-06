@@ -2258,7 +2258,7 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
           <div class="sw-row"><div class="swl"><b>llms.txt üret</b><span>AI motorlarına yapılandırılmış özet</span></div><label class="switch"><input type="checkbox" id="seo_llms" checked><span class="sl"></span></label></div>
           <div class="sw-row"><div class="swl"><b>Otomatik Sitemap.xml</b><span>Tüm sayfa + bölge sayfaları</span></div><label class="switch"><input type="checkbox" id="seo_sitemap" checked><span class="sl"></span></label></div>
           <div class="sw-row"><div class="swl"><b>Programatik Bölge Sayfaları</b><span>Her mahalle için endeks SEO sayfası</span></div><label class="switch"><input type="checkbox" id="seo_prog" checked><span class="sl"></span></label></div>
-          <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap"><button class="abtn" onclick="previewArtifact('schema')">Schema Önizle</button><button class="abtn" onclick="previewArtifact('llms')">llms.txt Önizle</button><button class="abtn" onclick="previewArtifact('sitemap')">Sitemap Önizle</button></div>
+          <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap"><button class="abtn" onclick="previewArtifact('schema')">Schema Önizle</button><button class="abtn" onclick="previewArtifact('llms')">llms.txt Önizle</button><button class="abtn" onclick="previewArtifact('sitemap')">Sitemap Önizle</button><button class="btn btn-primary btn-sm" onclick="genSeoFiles()">sitemap.xml + robots.txt İndir (bu domain)</button></div>
           <pre id="seoPreview" style="display:none;background:var(--c-bg-navy);color:#cbd5e1;padding:16px;border-radius:12px;font-size:12px;overflow:auto;max-height:300px;margin-top:12px"></pre>
         </div>
       </div>
@@ -4578,6 +4578,7 @@ function brandSweep(root){try{if(brandName()===BRAND_ORIG&&wlCityOff())return;ro
     document.querySelectorAll('meta[content]').forEach(function(m){var v=m.getAttribute('content');if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0))m.setAttribute('content',wlReplace(v));});document.querySelectorAll('script[type="application/ld+json"]').forEach(function(s){var v=s.textContent;if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0||v.indexOf('İZMİR')>=0))s.textContent=wlReplace(v);});}catch(e){}
   if(_brandObs&&brandName()!==BRAND_ORIG)_brandObs.observe(document.body,{childList:true,subtree:true,characterData:true});
  }catch(e){}}
+function applyCanonical(){try{var url=location.origin+location.pathname.replace(/index\.html$/,'');var setL=function(rel,href){var l=document.querySelector('link[rel="'+rel+'"]');if(!l){l=document.createElement('link');l.setAttribute('rel',rel);document.head.appendChild(l);}l.setAttribute('href',href);};setL('canonical',url);var setM=function(pr,val){var m=document.querySelector('meta[property="'+pr+'"]');if(!m){m=document.createElement('meta');m.setAttribute('property',pr);document.head.appendChild(m);}m.setAttribute('content',val);};setM('og:url',url);try{setM('og:site_name',brandName());}catch(e){}}catch(e){}}
 function applySchema(){try{if(typeof FIRMA==='undefined'||!FIRMA)return;var name=brandName(),il=(typeof PROVINCE!=='undefined'&&PROVINCE.name)||'İzmir';var sd=(typeof SEO==='object'&&SEO&&SEO.desc)||'';var gen=name+' — '+il+' ve çevresinde satılık ve kiralık konut, arsa, ticari gayrimenkul, değerleme, yatırım ve miras/intikal danışmanlığı.';var desc=(sd&&sd.indexOf('İzmir')<0&&sd.indexOf('Ege')<0)?sd:gen;var node={'@context':'https://schema.org','@type':['RealEstateAgent','LocalBusiness'],name:name,url:(location.origin+'/'),description:desc,areaServed:{'@type':'City',name:il},address:{'@type':'PostalAddress',addressLocality:il,addressRegion:il,addressCountry:'TR',streetAddress:(FIRMA.adres||'')},telephone:(FIRMA.tel||''),email:(FIRMA.mail||''),priceRange:'\u20ba\u20ba',knowsAbout:['Satılık konut','Kiralık konut','Arsa','Ticari gayrimenkul','Ofis','Gayrimenkul değerleme','Miras ve intikal','Yatırım danışmanlığı']};if(FIRMA.eids&&FIRMA.eids.belgeNo)node.identifier={'@type':'PropertyValue',name:'Taşınmaz Ticareti Yetki Belgesi No',value:FIRMA.eids.belgeNo};var sc=document.querySelectorAll('script[type="application/ld+json"]'),tg=null;for(var i=0;i<sc.length;i++){if((sc[i].textContent||'').indexOf('RealEstateAgent')>=0){tg=sc[i];break;}}if(!tg){tg=document.createElement('script');tg.type='application/ld+json';document.head.appendChild(tg);}tg.textContent=JSON.stringify(node);}catch(e){}}
 function brandObserve(){try{if(_brandObs||(brandName()===BRAND_ORIG&&wlCityOff())||!('MutationObserver' in window))return;
   _brandObs=new MutationObserver(function(){clearTimeout(_brandTO);_brandTO=setTimeout(function(){brandSweep(document.body);},140);});
@@ -4973,7 +4974,7 @@ function importData(inp){const f=inp.files[0];if(!f)return;const r=new FileReade
     toast('✓ Yedek başarıyla içe aktarıldı.');}catch(err){toast('Geçersiz yedek dosyası.');}};
   r.readAsText(f);inp.value='';}
 function resetData(){if(!confirm('Tüm değişiklikler silinip demo verisine dönülecek. Emin misiniz?'))return;
-  localStorage.removeItem(LS);loadAll();eidsEnsure();applyProxTenant();try{if(PROX&&PROX.il&&PROX.il!==PROVINCE.name)applyProvince(PROX.il,true);}catch(e){}try{if(typeof FIRMA!=='undefined'&&FIRMA.name!==BRAND_ORIG&&typeof applySeoHead==='function')applySeoHead();}catch(e){}try{if(typeof applySchema==='function')applySchema();}catch(e){}applyFirma();applyContent();document.documentElement.removeAttribute('style');
+  localStorage.removeItem(LS);loadAll();eidsEnsure();applyProxTenant();try{if(typeof applyCanonical==='function')applyCanonical();}catch(e){}try{if(PROX&&PROX.il&&PROX.il!==PROVINCE.name)applyProvince(PROX.il,true);}catch(e){}try{if(typeof FIRMA!=='undefined'&&FIRMA.name!==BRAND_ORIG&&typeof applySeoHead==='function')applySeoHead();}catch(e){}try{if(typeof applySchema==='function')applySchema();}catch(e){}applyFirma();applyContent();document.documentElement.removeAttribute('style');
   renderIlanlar();renderDan();renderBlogFeed();renderRefGrid();applyModuleVisibility();initAiAssistant();
   renderIlanRows();renderDanRows();renderLeads();renderRecentLeads();renderKpis();renderBolgeRows();fillFirmaForm();renderThemeGrid();
   renderP3();render3dForm();fillContent();renderBlogRows();renderRefRows();fillSeo();fillGoogle();fillProx();renderModules();renderEpRows();fillAiCfg();renderAllCrm();
@@ -4981,7 +4982,7 @@ function resetData(){if(!confirm('Tüm değişiklikler silinip demo verisine dö
 
 /* ============ INIT ============ */
 document.addEventListener('DOMContentLoaded',()=>{
-  loadAll();eidsEnsure();applyProxTenant();try{if(PROX&&PROX.il&&PROX.il!==PROVINCE.name)applyProvince(PROX.il,true);}catch(e){}try{if(typeof FIRMA!=='undefined'&&FIRMA.name!==BRAND_ORIG&&typeof applySeoHead==='function')applySeoHead();}catch(e){}try{if(typeof applySchema==='function')applySchema();}catch(e){}
+  loadAll();eidsEnsure();applyProxTenant();try{if(typeof applyCanonical==='function')applyCanonical();}catch(e){}try{if(PROX&&PROX.il&&PROX.il!==PROVINCE.name)applyProvince(PROX.il,true);}catch(e){}try{if(typeof FIRMA!=='undefined'&&FIRMA.name!==BRAND_ORIG&&typeof applySeoHead==='function')applySeoHead();}catch(e){}try{if(typeof applySchema==='function')applySchema();}catch(e){}
   if(THEME&&THEME.accent)setTheme(THEME.accent,THEME.green,THEME.navy);
   applyContent();
   initHero();renderIlanlar();renderOzel();ozHero();renderOzHome();renderDan();renderBolgePick();initVal();applyFirma();renderBlogFeed();renderRefGrid();
@@ -5270,6 +5271,17 @@ function seoLen(){const t=document.getElementById('seo_title').value.length,d=do
   document.getElementById('seo_titleLen').textContent=t+'/60 karakter'+(t>60?' ⚠ uzun':' ✓');
   document.getElementById('seo_descLen').textContent=d+'/160 karakter'+(d>160?' ⚠ uzun':' ✓');}
 function seoOg(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{SEO.og=e.target.result;document.getElementById('seo_ogPrev').src=e.target.result;document.getElementById('seo_ogPrev').style.display='block';};r.readAsDataURL(f);}
+function seoDl(name,content,mime){try{var b=new Blob([content],{type:mime||'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(a.href);},120);}catch(e){}}
+function genSeoFiles(){try{var origin=location.origin;var d=(new Date()).toISOString().slice(0,10);
+  var pages=[['',1.0,'daily'],['hizmetlerimiz.html',0.9,'weekly'],['nedenbiz.html',0.8,'monthly']];
+  var sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+  pages.forEach(function(pg){sm+='  <url><loc>'+origin+'/'+pg[0]+'</loc><lastmod>'+d+'</lastmod><changefreq>'+pg[2]+'</changefreq><priority>'+pg[1].toFixed(1)+'</priority></url>\n';});
+  sm+='</urlset>\n';
+  var rb='# '+((typeof FIRMA!=='undefined'&&FIRMA.name)||'Gayrimenkul')+' — robots.txt\nUser-agent: *\nAllow: /\nDisallow: /admin\n\nSitemap: '+origin+'/sitemap.xml\n';
+  var pre=document.getElementById('seoPreview');if(pre){pre.style.display='block';pre.textContent='=== sitemap.xml ===\n'+sm+'\n=== robots.txt ===\n'+rb;}
+  seoDl('sitemap.xml',sm,'application/xml');seoDl('robots.txt',rb,'text/plain');
+  if(typeof toast==='function')toast('sitemap.xml ve robots.txt bu domain için üretildi ve indirildi — hosting köküne yükleyin.');
+}catch(e){}}
 function saveSeo(){const g=id=>document.getElementById(id);
   SEO={...SEO,title:g('seo_title').value,desc:g('seo_desc').value,kw:g('seo_kw').value,schema:g('seo_schema').checked,llms:g('seo_llms').checked,sitemap:g('seo_sitemap').checked,prog:g('seo_prog').checked};
   document.title=SEO.title;let md=document.querySelector('meta[name="description"]');if(!md){md=document.createElement('meta');md.name='description';document.head.appendChild(md);}md.content=SEO.desc;

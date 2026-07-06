@@ -2379,5 +2379,14 @@ document.addEventListener('DOMContentLoaded',function(){ if(location.hash){var e
   if(document.readyState!=='loading')start();else document.addEventListener('DOMContentLoaded',start);
 }catch(e){}})();
 </script>
+<script>
+/* Çalışma-zamanı canonical + og:url — deploy edilen domaine göre otomatik (white-label per-domain) */
+(function(){try{var url=location.origin+location.pathname;
+  function setL(rel,href){var l=document.querySelector('link[rel="'+rel+'"]');if(!l){l=document.createElement('link');l.setAttribute('rel',rel);document.head.appendChild(l);}l.setAttribute('href',href);}
+  setL('canonical',url);
+  function setM(pr,val){var m=document.querySelector('meta[property="'+pr+'"]');if(!m){m=document.createElement('meta');m.setAttribute('property',pr);document.head.appendChild(m);}m.setAttribute('content',val);}
+  setM('og:url',url);
+}catch(e){}})();
+</script>
 </body>
 </html>

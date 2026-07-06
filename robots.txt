@@ -1,0 +1,8 @@
+# White-label emlak sitesi — tüm sayfalar taranabilir
+User-agent: *
+Allow: /
+Disallow: /*?*sort=
+Disallow: /admin
+
+# Sitemap (kendi domaininizde /sitemap.xml olarak yayınlayın)
+Sitemap: /sitemap.xml
