@@ -1279,7 +1279,8 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
     <div><h4>Hizmetler</h4><ul><li><a href="#ilanlar">Satılık İlanlar</a></li><li><a href="#ilanlar">Kiralık İlanlar</a></li><li><a href="#" onclick="ozOpen();return false">Özel Portföy</a></li><li><a href="#" onclick="satOpen();return false">Sat / Kirala</a></li><li><a href="#degerleme">Ücretsiz Değerleme</a></li><li><a href="#" onclick="brOpen();return false">Bölge Analizi</a></li><li><a href="#alarm">Fiyat Alarmı</a></li></ul></div>
     <div><h4>Yasal & Araçlar</h4><ul>
       <li><a href="#" onclick="openKvkk();return false">KVKK Aydınlatma Metni</a></li>
-      <li><a href="#" onclick="toast('Çerez tercihleri açıldı.');return false">Çerez Politikası</a></li>
+      <li><a href="#" onclick="openCerez();return false">Çerez Politikası</a></li>
+      <li><a href="#" onclick="openMesafeli();return false">Mesafeli Hizmet & Kullanım</a></li>
       <li><a href="https://parselsorgu.tkgm.gov.tr" target="_blank" rel="noopener noreferrer">TKGM Ada/Parsel Sorgu ↗</a></li>
       <li><a href="#" onclick="openAdmin();return false"><svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> Yönetim Paneli</a></li>
     </ul></div>
@@ -1427,13 +1428,11 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
 <!-- ===== KVKK MODAL ===== -->
 <div class="modal" id="kvkkModal" onclick="if(event.target.id==='kvkkModal')closeKvkk()"><div class="mbox" style="max-width:640px">
   <button class="mclose" onclick="closeKvkk()">✕</button>
-  <h3>KVKK Aydınlatma Metni</h3>
-  <div class="msub">6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında</div>
-  <div style="font-size:13.5px;color:var(--ink-2);line-height:1.7;max-height:50vh;overflow:auto;padding-right:6px">
+  <h3 id="kvkkTitle">KVKK Aydınlatma Metni</h3>
+  <div class="msub" id="kvkkSub">6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında</div>
+  <div id="kvkkBody" style="font-size:13.5px;color:var(--ink-2);line-height:1.7;max-height:50vh;overflow:auto;padding-right:6px">
     <p><b>Veri Sorumlusu:</b> Meridyen Gayrimenkul. Form aracılığıyla paylaştığınız ad, soyad, telefon ve e-posta bilgileriniz; talebinizin değerlendirilmesi, sizinle iletişim kurulması ve gayrimenkul danışmanlığı hizmetlerinin sunulması amacıyla işlenir.</p>
-    <p><b>İşleme Amaçları:</b> İletişim taleplerinin yanıtlanması, ilan eşleştirmesi, değerleme ön bilgisi sunulması, hizmet kalitesinin artırılması.</p>
-    <p><b>Aktarım:</b> Verileriniz, açık rızanız olmadan üçüncü kişilerle paylaşılmaz. Endeks/analiz hizmetleri için Türkiye geneli veri altyapısı kullanılabilir.</p>
-    <p><b>Haklarınız:</b> KVKK m.11 uyarınca verilerinize erişme, düzeltme, silme ve işlemeye itiraz etme haklarına sahipsiniz. Başvurularınızı info@meridyengm.com adresine iletebilirsiniz.</p>
+    <p><b>Haklarınız:</b> KVKK m.11 uyarınca verilerinize erişme, düzeltme, silme ve işlemeye itiraz etme haklarına sahipsiniz.</p>
   </div>
   <button class="btn btn-primary" style="width:100%;margin-top:16px" onclick="closeKvkk()">Anladım</button>
 </div></div>
@@ -2647,7 +2646,8 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
     <div><h4>Hizmetler</h4><ul><li><a href="#ilanlar">Satılık İlanlar</a></li><li><a href="#ilanlar">Kiralık İlanlar</a></li><li><span style="color:var(--accent);font-weight:700">Özel Portföy</span></li><li><a href="#degerleme">Ücretsiz Değerleme</a></li><li><a href="#" onclick="brOpen();return false">Bölge Analizi</a></li><li><a href="#alarm">Fiyat Alarmı</a></li></ul></div>
     <div><h4>Yasal & Araçlar</h4><ul>
       <li><a href="#" onclick="openKvkk();return false">KVKK Aydınlatma Metni</a></li>
-      <li><a href="#" onclick="toast('Çerez tercihleri açıldı.');return false">Çerez Politikası</a></li>
+      <li><a href="#" onclick="openCerez();return false">Çerez Politikası</a></li>
+      <li><a href="#" onclick="openMesafeli();return false">Mesafeli Hizmet & Kullanım</a></li>
       <li><a href="https://parselsorgu.tkgm.gov.tr" target="_blank" rel="noopener noreferrer">TKGM Ada/Parsel Sorgu ↗</a></li>
       <li><a href="#" onclick="openAdmin();return false"><svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> Yönetim Paneli</a></li>
     </ul></div>
@@ -4231,7 +4231,41 @@ function createAlarm(){const b=document.getElementById('al_bolge').value,m=docum
 /* ============ MODALS ============ */
 function openLead(t){document.getElementById('leadTitle').textContent=t||'İletişim';if(t&&document.getElementById('m_konu')){const s=document.getElementById('m_konu');for(let o of s.options){if(o.text===t){s.value=o.value;break;}}}document.getElementById('leadModal').classList.add('open');}
 function closeLead(){document.getElementById('leadModal').classList.remove('open');}
-function openKvkk(){document.getElementById('kvkkModal').classList.add('open');}
+/* ===== YASAL METİN MOTORU — firma künyesinden otomatik dolar (per-firma) ===== */
+function _le(s){return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function firmaKunye(){var f=(typeof FIRMA==='object'&&FIRMA)||{};var e=f.eids||{};
+  return {name:f.name||e.unvan||'—',unvan:e.unvan||f.name||'—',adres:f.adres||'—',mail:f.mail||'—',tel:f.tel||'—',vergi:f.vergi||'',belge:e.belgeNo||''};}
+function legalKunyeRows(){var k=firmaKunye();
+  return '<div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 12px;font-size:12.5px;line-height:1.7">'
+    +'<div><b>Veri Sorumlusu / Unvan:</b> '+_le(k.unvan)+'</div>'
+    +'<div><b>Adres:</b> '+_le(k.adres)+'</div>'
+    +'<div><b>E-posta:</b> '+_le(k.mail)+' &nbsp;·&nbsp; <b>Tel:</b> '+_le(k.tel)+'</div>'
+    +(k.vergi?'<div><b>Vergi No:</b> '+_le(k.vergi)+'</div>':'')
+    +(k.belge?'<div><b>Yetki Belge No:</b> '+_le(k.belge)+'</div>':'')
+    +'</div>';}
+function legalDoc(type){var k=firmaKunye();var kn=legalKunyeRows();
+  if(type==='cerez')return {title:'Çerez Politikası',sub:k.name+' — çerez kullanımı hakkında',body:kn
+    +'<p><b>Çerez nedir?</b> Çerezler, siteyi ziyaret ettiğinizde cihazınıza kaydedilen küçük metin dosyalarıdır.</p>'
+    +'<p><b>Kullandığımız çerezler:</b> <b>Zorunlu</b> (oturum/güvenlik) · <b>Tercih</b> (dil, tema, favoriler) · <b>Analitik</b> (anonim ziyaret istatistiği).</p>'
+    +'<p><b>Yönetim:</b> Çerezleri tarayıcı ayarlarınızdan silebilir veya engelleyebilirsiniz; ancak zorunlu çerezler site işlevi için gereklidir.</p>'
+    +'<p>Sorularınız için <b>'+_le(k.mail)+'</b> adresine yazabilirsiniz.</p>'};
+  if(type==='mesafeli')return {title:'Mesafeli Hizmet & Kullanım Koşulları',sub:k.name+' — hizmet ön bilgilendirme',body:kn
+    +'<p><b>Hizmet Sağlayıcı:</b> '+_le(k.unvan)+'. Bu site üzerinden gayrimenkul danışmanlığı, değerleme/ekspertiz ön bilgisi ve ilan eşleştirme hizmetleri sunulur.</p>'
+    +'<p><b>Kapsam:</b> Sitedeki değerleme ve fiyat bilgileri ön bilgi niteliğindedir; kesin değer, yerinde ekspertiz ve ProX endeksiyle teyit edilir.</p>'
+    +'<p><b>Cayma & Şikayet:</b> Ücretli hizmet sözleşmelerinde tüketici mevzuatı kapsamındaki haklarınız saklıdır. İletişim: <b>'+_le(k.mail)+'</b> · '+_le(k.tel)+'.</p>'};
+  return {title:'KVKK Aydınlatma Metni',sub:'6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında',body:kn
+    +'<p><b>Veri Sorumlusu:</b> '+_le(k.unvan)+'. Form aracılığıyla paylaştığınız ad, soyad, telefon ve e-posta bilgileriniz; talebinizin değerlendirilmesi, sizinle iletişim kurulması ve gayrimenkul danışmanlığı hizmetlerinin sunulması amacıyla işlenir.</p>'
+    +'<p><b>İşleme Amaçları:</b> İletişim taleplerinin yanıtlanması, ilan eşleştirmesi, değerleme ön bilgisi sunulması, hizmet kalitesinin artırılması.</p>'
+    +'<p><b>Aktarım:</b> Verileriniz açık rızanız olmadan üçüncü kişilerle paylaşılmaz. Endeks/analiz hizmetleri için Türkiye geneli veri altyapısı kullanılabilir.</p>'
+    +'<p><b>Haklarınız:</b> KVKK m.11 uyarınca verilerinize erişme, düzeltme, silme ve işlemeye itiraz etme haklarına sahipsiniz. Başvurularınızı <b>'+_le(k.mail)+'</b> adresine iletebilirsiniz.</p>'};}
+function openLegal(type){var d=legalDoc(type);var m=document.getElementById('kvkkModal');if(!m)return;
+  var t=document.getElementById('kvkkTitle');if(t)t.textContent=d.title;
+  var s=document.getElementById('kvkkSub');if(s)s.textContent=d.sub;
+  var b=document.getElementById('kvkkBody');if(b)b.innerHTML=d.body;
+  m.classList.add('open');}
+function openKvkk(){openLegal('kvkk');}
+function openCerez(){openLegal('cerez');}
+function openMesafeli(){openLegal('mesafeli');}
 function closeKvkk(){document.getElementById('kvkkModal').classList.remove('open');}
 function eidsQrSvg(seed){var s=0,i;for(i=0;i<(seed||'x').length;i++)s=(s*31+seed.charCodeAt(i))>>>0;var n=7,r='',x,y;for(y=0;y<n;y++)for(x=0;x<n;x++){s=(s*1103515245+12345)>>>0;var on=((s>>16)&1)||(x<2&&y<2)||(x>n-3&&y<2)||(x<2&&y>n-3);if(on)r+='<rect x="'+(x*7)+'" y="'+(y*7)+'" width="7" height="7"/>';}return '<svg viewBox="0 0 49 49" width="100%" height="100%" fill="#0f1f3d" aria-hidden="true">'+r+'</svg>';}
 function detEidsHtml(it){var e=it.eids;return '<div class="det-eids"><div class="deh"><span class="sh">'+eidsShieldSvg(17)+'</span> EİDS ile Doğrulanmış İlan</div><div class="dnote">Bu ilan T.C. Ticaret Bakanlığı Elektronik İlan Doğrulama Sistemi (EİDS) ile doğrulanmıştır. İl/ilçe/ada/parsel resmi kayıttan gelir ve değiştirilemez.</div><div class="dcode"><div><div class="kod">'+e.kod+'</div><div style="font-size:11.5px;color:var(--muted);margin-top:6px">Taşınmaz No '+e.tasinmazNo+' · Ada '+e.ada+' / Parsel '+e.parsel+' · Yetki bitiş '+e.yetkiBitis+'</div></div><div class="qr" onclick="eidsSorgu(\''+e.kod+'\','+it.id+')" title="Doğrulama sonucunu gör">'+eidsQrSvg(e.kod)+'</div></div><button class="verifybtn" style="margin-top:8px" onclick="eidsSorgu(\''+e.kod+'\','+it.id+')">Doğrulama sonucunu görüntüle →</button></div>';}
@@ -6058,7 +6092,8 @@ const SITE_FOOTER=`<div class="wrap">
     </ul></div>
     <div><h4>Yasal & Araçlar</h4><ul>
       <li><a href="#" onclick="closeAllOverlays();openKvkk();return false">KVKK Aydınlatma Metni</a></li>
-      <li><a href="#" onclick="toast('Çerez tercihleri açıldı.');return false">Çerez Politikası</a></li>
+      <li><a href="#" onclick="openCerez();return false">Çerez Politikası</a></li>
+      <li><a href="#" onclick="openMesafeli();return false">Mesafeli Hizmet & Kullanım</a></li>
       <li><a href="https://parselsorgu.tkgm.gov.tr" target="_blank" rel="noopener noreferrer">TKGM Ada/Parsel Sorgu ↗</a></li>
       <li><a href="#" onclick="closeAllOverlays();openSaasPortal();return false">Müşteri Portalı / Giriş</a></li><li><a href="#" onclick="closeAllOverlays();openAdmin();return false">Yönetim Paneli</a></li>
     </ul></div>
