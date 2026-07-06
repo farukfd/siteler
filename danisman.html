@@ -23,9 +23,9 @@ window.EMLAK_PACKAGES = {
 window.EMLAK_TENANT.enabledFeatures = window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode] || window.EMLAK_PACKAGES.PRO;
 window.hasFeature = function(f){ return window.EMLAK_TENANT.enabledFeatures.indexOf(f)!==-1; };
 window.requireFeature = function(f){ if(window.hasFeature(f)) return true; var m="Bu özellik mevcut paketinizde aktif değildir. Kurumsal paketinizi yükseltin."; if(typeof toast==="function")toast(m); else alert(m); return false; };
-async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ const res=await fetch(window.EMLAK_API_BASE+path,{method,mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id,"X-Tenant-Key":window.EMLAK_TENANT.tenant_key,...headers},body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
+async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ var _base=(window.EMLAK_PROXY_MODE&&window.EMLAK_PROXY_URL)?window.EMLAK_PROXY_URL:window.EMLAK_API_BASE; var _h={"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id}; if(!window.EMLAK_PROXY_MODE)_h["X-Tenant-Key"]=window.EMLAK_TENANT.tenant_key; /* proxy modunda gizli anahtar istemciden GÖNDERİLMEZ */ Object.assign(_h,headers); const res=await fetch(_base+path,{method,mode:"cors",headers:_h,body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
 function proxFallback(path,options={}){ return { fallback:true, message:"API baglantisi yok. Demo/fallback veri kullaniliyor.", path, data:(window.EMLAK_FALLBACK?window.EMLAK_FALLBACK(path,options):null) }; }
-async function submitLead(lead){ lead=lead||{}; var payload={ sourcePage:lead.sourcePage||"danisman", formType:lead.formType||"contact", name:lead.name||"", phone:lead.phone||"", email:lead.email||"", message:lead.message||"", extra:lead.extra||{ location:lead.location||"", requestedService:lead.requestedService||"", sector:window.EMLAK_TENANT.sector } }; try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:payload}); if(r&&r.fallback)throw new Error("fallback"); if(r&&r.success===false)throw new Error("lead reddedildi"); return {ok:true,online:(r&&r.online!==false),data:r}; }catch(e){ try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(Object.assign({id:"lead_"+Date.now(),createdAt:new Date().toISOString()},payload));localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:payload}; } }
+async function submitLead(lead){ lead=lead||{}; var payload={ sourcePage:lead.sourcePage||"danisman", formType:lead.formType||"contact", name:lead.name||"", phone:lead.phone||"", email:lead.email||"", message:lead.message||"", extra:lead.extra||{ location:lead.location||"", requestedService:lead.requestedService||"", sector:window.EMLAK_TENANT.sector } }; try{if(typeof trackEvent==='function')trackEvent('generate_lead',{source:payload.formType||'lead'});}catch(_t){} try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:payload}); if(r&&r.fallback)throw new Error("fallback"); if(r&&r.success===false)throw new Error("lead reddedildi"); return {ok:true,online:(r&&r.online!==false),data:r}; }catch(e){ try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(Object.assign({id:"lead_"+Date.now(),createdAt:new Date().toISOString()},payload));localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:payload}; } }
 window.injectSchema=function(o){try{var s=document.createElement("script");s.type="application/ld+json";s.text=JSON.stringify(o);document.head.appendChild(s);}catch(e){}};
 /* Canlı paket/özellik senkronu — theme.accent ile CSS REPAINT EDILMEZ (siyah/altın korunur). */
 async function proxBootstrap(){ try{ var r=await proxApi("/api/v1/tenant/bootstrap",{method:"GET"}); if(!r||r.fallback||r.success===false)return false; if(r.package)window.EMLAK_TENANT.packageCode=r.package; if(Array.isArray(r.enabled_features)&&r.enabled_features.length)window.EMLAK_TENANT.enabledFeatures=r.enabled_features; else if(window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode])window.EMLAK_TENANT.enabledFeatures=window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode]; return true; }catch(e){ return false; } }
@@ -618,7 +618,7 @@ const SAAS_CONFIG={
   },
   firma:{
     unvan:'Selin Meridyen Gayrimenkul Danışmanlık', vergi:'', adres:'Nişantaşı, Şişli / İstanbul',
-    tel:'+90 212 000 00 00', mail:'info@selinmeridyen.com',
+    tel:'+90 212 000 00 00', mail:'info@selinmeridyen.com', proxyUrl:'',
     eids:{ yetkili:true, connected:true, belgeNo:'0034812', firmaKod:'', kullaniciKodu:'' }
   }
 };
@@ -692,6 +692,29 @@ var AI_RISK_PATTERNS=[
 ];
 function aiRiskScan(t){var h=[];AI_RISK_PATTERNS.forEach(function(p){if(p.re.test(t||''))h.push(p.t);});return h;}
 window.aiGuard=aiGuard;window.aiRiskScan=aiRiskScan;
+/* ===================== DİNAMİK SEO / JSON-LD (per-firma) ===================== */
+function applySchema(){try{var k=firmaKune();var desc=saasResolve('metaDescription')||'';var il='İstanbul';
+  try{if(typeof SERVICE_AREA!=='undefined'&&SERVICE_AREA&&SERVICE_AREA.primary)il=SERVICE_AREA.primary;}catch(e){}
+  var e=(SAAS_CONFIG.firma&&SAAS_CONFIG.firma.eids)||{};
+  var old=document.getElementById('ld-dyn');if(old)old.remove();
+  var o={"@context":"https://schema.org","@type":"RealEstateAgent","name":k.name,"description":desc,
+    "areaServed":{"@type":"City","name":il},"email":k.mail,"telephone":k.tel,"address":k.adres,"priceRange":"₺₺₺₺"};
+  if(e.belgeNo)o.identifier={"@type":"PropertyValue","name":"EİDS Yetki Belge No","value":''+e.belgeNo};
+  var s=document.createElement('script');s.type='application/ld+json';s.id='ld-dyn';s.text=JSON.stringify(o);document.head.appendChild(s);
+}catch(e){}}
+/* ===================== PER-TENANT ANALİTİK + A/B ===================== */
+function abVariant(){try{var v=localStorage.getItem('dn_ab');if(v!=='A'&&v!=='B'){v=(Math.random()<0.5?'A':'B');localStorage.setItem('dn_ab',v);}return v;}catch(e){return 'A';}}
+function trackEvent(name,params){try{
+  var firma=saasResolve('brandName')||'';var pkg=(window.EMLAK_TENANT&&window.EMLAK_TENANT.packageCode)||'';
+  var payload=Object.assign({firma:firma,paket:pkg,ab_variant:abVariant()},params||{});
+  if(typeof window.gtag==='function')window.gtag('event',name,payload);else if(window.dataLayer&&window.dataLayer.push)window.dataLayer.push(Object.assign({event:name},payload));
+  try{var kk='dn_analytics',a=JSON.parse(localStorage.getItem(kk)||'[]');a.push({t:Date.now(),name:name,ab:payload.ab_variant});if(a.length>500)a=a.slice(-500);localStorage.setItem(kk,JSON.stringify(a));}catch(e){}
+}catch(e){}}
+function abApply(){try{var v=abVariant();if(document.body)document.body.setAttribute('data-ab',v);trackEvent('page_impression',{});}catch(e){}}
+/* ===================== PROXY / EDGE GÜVENLİK MODU (anahtarı sunucuda gizle) ===================== */
+function applyProxyMode(){try{var pu=((SAAS_CONFIG.firma&&SAAS_CONFIG.firma.proxyUrl)||'').trim();
+  if(pu){window.EMLAK_PROXY_MODE=true;window.EMLAK_PROXY_URL=pu.replace(/\/+$/,'');}else{window.EMLAK_PROXY_MODE=false;window.EMLAK_PROXY_URL='';}}catch(e){}}
+window.applySchema=applySchema;window.trackEvent=trackEvent;window.abVariant=abVariant;window.applyProxyMode=applyProxyMode;
 function initSaaSTheme(){const r=document.documentElement.style;const a=saasResolve('accent'),a2=saasResolve('accent2'),as=saasResolve('accentSoft');if(a){r.setProperty('--accent',a);r.setProperty('--gold',a);}if(a2)r.setProperty('--accent-2',a2);if(as)r.setProperty('--gold-soft',as);}
 function applySaaSSettings(){
   const title=saasResolve('metaTitle');if(title)document.title=title;
@@ -1102,7 +1125,7 @@ window.openSaasPortal=openSaasPortal;window.closeSaasPortal=closeSaasPortal;wind
 /* ---------- INIT ---------- */
 window.addEventListener('load',function(){try{
   initSaaSTheme();applySaaSSettings();
-  try{eidsRenderPublic();}catch(e){}
+  try{eidsRenderPublic();applySchema();applyProxyMode();abApply();}catch(e){}
   document.getElementById('homeListings').innerHTML=listingCardsHTML();
   document.getElementById('vaultGrid').innerHTML=vipCardsHTML();
   document.getElementById('homeContact').innerHTML=contactHTML();
