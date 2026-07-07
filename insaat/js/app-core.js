@@ -684,8 +684,8 @@ function bzGo(id){
 }
 function openBolgePage(){
   renderBolgePage();
-  const ov=document.getElementById('bolgePage');ov.classList.add('on');document.body.style.overflow='hidden';ov.scrollTop=0;
-  if(location.hash!=='#bolge')try{history.replaceState(null,'','#bolge');}catch(e){}
+  const ov=document.getElementById('bolgePage');ov.classList.add('on');_insSyncUrl('bolge');document.body.style.overflow='hidden';ov.scrollTop=0;
+  /* URL: temiz router yönetir */
   /* API-first endeks: canlı /endeks {success,data:{m2,score,delta,trend}} gelir; alan boş/yoksa o alanda yerel demo korunur. BOŞ DÖNEBİLİR → fallback. */
   try{
     if(typeof proxApi==='function'){
@@ -707,17 +707,17 @@ function openBolgePage(){
 }
 function closeBolgePage(){
   document.getElementById('bolgePage').classList.remove('on');document.body.style.overflow='';
-  if(location.hash==='#bolge')try{history.replaceState(null,'',location.pathname);}catch(e){}
+  /* URL: temiz router yönetir */
 }
 function openIletisimPage(){
   renderIletisimPage();
-  var ov=document.getElementById('iletisimPage');ov.classList.add('on');document.body.style.overflow='hidden';ov.scrollTop=0;
+  var ov=document.getElementById('iletisimPage');ov.classList.add('on');_insSyncUrl('iletisim');document.body.style.overflow='hidden';ov.scrollTop=0;
   if(typeof i18nInit==='function')i18nInit();
-  if(location.hash!=='#iletisim')try{history.replaceState(null,'','#iletisim');}catch(e){}
+  /* URL: temiz router yönetir */
 }
 function closeIletisimPage(){
   document.getElementById('iletisimPage').classList.remove('on');document.body.style.overflow='';
-  if(location.hash==='#iletisim')try{history.replaceState(null,'',location.pathname);}catch(e){}
+  /* URL: temiz router yönetir */
 }
 var DOC={
  "vizyon":{t:"Vizyon & Misyon", h:"<h2>Vizyonumuz</h2><p>1986'dan bu yana İstanbul'un mimari hafızasına değer katan Meridyen Yapı İnşaat A.Ş. olarak vizyonumuz; mühendislik disiplinini estetik anlayışla buluşturarak, nesiller boyu ayakta kalacak, güvenli ve sürdürülebilir yaşam alanları inşa etmektir. Ülkemizin gelişen şehircilik anlayışına öncülük etmeyi, deprem güvenliğini bir tercih değil temel bir zorunluluk olarak konumlandırmayı ve inşa ettiğimiz her yapıda kalıcı bir değer yaratmayı hedefliyoruz. Yerel köklerimizden aldığımız güçle uluslararası standartlarda projeler üretmeyi sürdürüyoruz.</p><h2>Misyonumuz</h2><p>Misyonumuz; kentsel dönüşümden anahtar teslim konut projelerine, kat karşılığı iş birliklerinden kurumsal tadilata kadar üstlendiğimiz her işi; şeffaflık, zamanında teslim ve kusursuz işçilik ilkeleriyle hayata geçirmektir. Yatırımcılarımızın, iş ortaklarımızın ve son kullanıcılarımızın güvenini korumayı en değerli sermayemiz sayıyoruz. Çalışanlarımızın gelişimini destekleyen, iş güvenliğini önceleyen ve çevreye saygılı bir üretim kültürünü tüm süreçlerimize yerleştiriyoruz.</p><h2>Değerlerimiz</h2><ul><li><b>Güven:</b> Verdiğimiz her sözü yazılı taahhüdümüz kadar bağlayıcı sayar, uzun soluklu ilişkiler kurarız.</li><li><b>Dürüstlük:</b> Fiyatlandırmadan malzeme seçimine kadar her aşamada açık ve doğru bilgi paylaşırız.</li><li><b>İş Güvenliği:</b> Şantiyelerimizde 'sıfır kaza' hedefiyle çalışır, insan hayatını her şeyin üzerinde tutarız.</li><li><b>Sürdürülebilirlik:</b> Enerji verimli, çevreye duyarlı ve gelecek nesillere karşı sorumlu bir üretim benimseriz.</li><li><b>Mühendislik Disiplini:</b> Her kararı hesaba, standarda ve bilimsel yönteme dayandırırız.</li><li><b>Şeffaflık:</b> Proje süreçlerini iş ortaklarımızla düzenli olarak ve eksiksiz biçimde paylaşırız.</li></ul>"},
@@ -730,7 +730,7 @@ var DOC={
 };
 function openDoc(key){
   renderDoc(key);
-  var ov=document.getElementById('docPage');ov.classList.add('on');document.body.style.overflow='hidden';ov.scrollTop=0;
+  var ov=document.getElementById('docPage');ov.classList.add('on');_insSyncUrl('');document.body.style.overflow='hidden';ov.scrollTop=0;
   if(typeof i18nInit==='function')i18nInit();
   try{history.replaceState(null,'','#doc-'+key);}catch(e){}
 }
@@ -940,14 +940,14 @@ function hpGo(id){
 }
 function openHizmetlerPage(){
   renderHizmetlerPage();
-  const ov=document.getElementById('hizmetlerPage');ov.classList.add('on');document.body.style.overflow='hidden';ov.scrollTop=0;
+  const ov=document.getElementById('hizmetlerPage');ov.classList.add('on');_insSyncUrl('hizmetler');document.body.style.overflow='hidden';ov.scrollTop=0;
   _ovReveal('hizmetlerPage');
-  if(location.hash!=='#hizmetler')try{history.replaceState(null,'','#hizmetler');}catch(e){}
+  /* URL: temiz router yönetir */
 }
 function closeHizmetlerPage(){
   document.getElementById('hizmetlerPage').classList.remove('on');
   document.body.style.overflow='';
-  if(location.hash==='#hizmetler')try{history.replaceState(null,'',location.pathname);}catch(e){}
+  /* URL: temiz router yönetir */
 }
 function renderHizmetlerPage(){
   var h='';
@@ -1235,14 +1235,14 @@ function openProjelerPage(){
   const sb=document.getElementById('ppSearch');if(sb)sb.value='';
   document.querySelectorAll('#ppFilters .ppf').forEach(b=>b.classList.toggle('active',b.dataset.f==='all'));
   renderProjelerPage();
-  const ov=document.getElementById('projelerPage');ov.classList.add('on');document.body.style.overflow='hidden';ov.scrollTop=0;
+  const ov=document.getElementById('projelerPage');ov.classList.add('on');_insSyncUrl('projeler');document.body.style.overflow='hidden';ov.scrollTop=0;
   if(typeof i18nInit==='function')i18nInit();
-  if(location.hash!=='#projeler')try{history.replaceState(null,'','#projeler');}catch(e){}
+  /* URL: temiz router yönetir */
 }
 function closeProjelerPage(){
   document.getElementById('projelerPage').classList.remove('on');
   document.body.style.overflow='';
-  if(location.hash==='#projeler')try{history.replaceState(null,'',location.pathname);}catch(e){}
+  /* URL: temiz router yönetir */
 }
 function renderProjelerPage(){
   const q=(document.getElementById('ppSearch').value||'').toLowerCase().trim();
@@ -1329,20 +1329,20 @@ window.saasSetTheme=function(name){SAAS_CONFIG.themeColor=name;initSaaSTheme();}
 /* 2) GLOBAL DİNAMİK MENÜ — 6 statik navbar yerine tek kaynak */
 function closeAllInsaatOverlays(){['closeProjelerPage','closeHizmetlerPage','closeSvcDetail','closeProjectDetail','closeBolgePage','closeIletisimPage','closeDoc','closeFaqPage'].forEach(fn=>{try{if(typeof window[fn]==='function')window[fn]();}catch(e){}});document.body.style.overflow='';}
 function openInsaatMobile(){var ov=document.querySelector('#projelerPage.on,#hizmetlerPage.on,#bolgePage.on,#svcDetail.on,#pjDetail.on,#iletisimPage.on,#docPage.on,#faqPage.on');var m=ov?ov.querySelector('.mnav'):document.getElementById('mnav');if(m)m.classList.add('open');}
-const INSAAT_NAV=`<a href="#" onclick="closeAllInsaatOverlays();openHizmetlerPage();return false">Hizmetlerimiz</a>`
+const INSAAT_NAV=`<a href="hizmetler" onclick="closeAllInsaatOverlays();openHizmetlerPage();return false">Hizmetlerimiz</a>`
   +`<a href="neden-biz.html">Neden <span class="nb-x">?</span> Biz</a>`
-  +`<a href="#" onclick="closeAllInsaatOverlays();openProjelerPage();return false">Projeler</a>`
-  +`<a href="#" onclick="closeAllInsaatOverlays();openBolgePage();return false">Bölge Zekası</a>`;
+  +`<a href="projeler" onclick="closeAllInsaatOverlays();openProjelerPage();return false">Projeler</a>`
+  +`<a href="bolge" onclick="closeAllInsaatOverlays();openBolgePage();return false">Bölge Zekası</a>`;
 const INSAAT_CTA=`<a class="nav-wa" href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg></a>`
   +`<button class="btn btn-primary" onclick="openTeklif()">Ücretsiz Keşif</button>`
   +`<div class="lang-sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><select class="lang-sel" aria-label="Dil / Language" onchange="applyLang(this.value)"><option value="tr">TR</option><option value="en">EN</option></select></div>`
   +`<a class="btn btn-ghost js-giris" href="#giris" onclick="openGiris();return false">Giriş</a>`
   +`<button class="burger" onclick="openInsaatMobile()" aria-label="Menü"><span></span><span></span><span></span></button>`;
 const INSAAT_MNAV=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><b style="font-family:var(--head)">Menü</b><button style="background:none;border:0;font-size:22px;cursor:pointer;color:inherit" onclick="this.closest('.mnav').classList.remove('open')" aria-label="Kapat">✕</button></div>`
-  +`<a href="#" onclick="event.preventDefault();closeAllInsaatOverlays();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openHizmetlerPage()">Hizmetlerimiz</a>`
+  +`<a href="hizmetler" onclick="event.preventDefault();closeAllInsaatOverlays();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openHizmetlerPage()">Hizmetlerimiz</a>`
   +`<a href="neden-biz.html">Neden <span class="nb-x">?</span> Biz</a>`
-  +`<a href="#" onclick="event.preventDefault();closeAllInsaatOverlays();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openProjelerPage()">Projeler</a>`
-  +`<a href="#" onclick="event.preventDefault();closeAllInsaatOverlays();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openBolgePage()">Bölge Zekası</a>`
+  +`<a href="projeler" onclick="event.preventDefault();closeAllInsaatOverlays();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openProjelerPage()">Projeler</a>`
+  +`<a href="bolge" onclick="event.preventDefault();closeAllInsaatOverlays();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openBolgePage()">Bölge Zekası</a>`
   +`<a href="#" onclick="event.preventDefault();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openGiris()">Giriş</a>`
   +`<button class="btn btn-primary" style="margin-top:14px;justify-content:center" onclick="document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openTeklif()">Ücretsiz Keşif</button>`;
 const INSAAT_FOOTER=`<div class="wrap">
@@ -2302,7 +2302,7 @@ var FAQ_CATS=[
 function _faqCatLabel(k){for(var i=0;i<FAQ_CATS.length;i++){if(FAQ_CATS[i].k===k)return FAQ_CATS[i].l;}return k;}
 function _faqCatIcon(k){for(var i=0;i<FAQ_CATS.length;i++){if(FAQ_CATS[i].k===k)return FAQ_CATS[i].i;}return '•';}
 var _faqCat='all', _faqQ='';
-function openFaqPage(){renderFaqPage();var ov=document.getElementById('faqPage');ov.classList.add('on');document.body.style.overflow='hidden';ov.scrollTop=0;if(typeof i18nInit==='function')i18nInit();try{history.replaceState(null,'','#sss');}catch(e){}}
+function openFaqPage(){renderFaqPage();var ov=document.getElementById('faqPage');ov.classList.add('on');_insSyncUrl('soru-cevap');document.body.style.overflow='hidden';ov.scrollTop=0;if(typeof i18nInit==='function')i18nInit();try{history.replaceState(null,'','#sss');}catch(e){}}
 function closeFaqPage(){document.getElementById('faqPage').classList.remove('on');document.body.style.overflow='';var h=location.hash||'';if(h==='#sss'||h==='#soru-cevap'||h==='#faq')try{history.replaceState(null,'',location.pathname);}catch(e){}}
 function renderFaqPage(){
   var en=(typeof LANG!=='undefined'&&LANG==='en');
@@ -2383,5 +2383,34 @@ function saveSocial(){var S=SOCIAL,g=function(id){return ((document.getElementBy
 function loadStatsUI(){var s=SETTINGS,g=function(id){return document.getElementById(id);};if(g('st_yil'))g('st_yil').value=s.statYil||'';if(g('st_konut'))g('st_konut').value=s.statKonut||'';if(g('st_proje'))g('st_proje').value=s.statProje||'';if(g('st_santiye'))g('st_santiye').value=s.statSantiye||'';if(g('st_alan'))g('st_alan').value=s.statAlan||'';if(g('st_certs'))g('st_certs').value=(s.certChips||[]).join('\n');}
 function saveStats(){var s=SETTINGS,v=function(id){return (document.getElementById(id)||{}).value;};var pi=function(x,d){var n=parseInt(x,10);return isNaN(n)?d:n;};s.statYil=pi(v('st_yil'),s.statYil);s.statKonut=pi(v('st_konut'),s.statKonut);s.statProje=pi(v('st_proje'),s.statProje);s.statSantiye=pi(v('st_santiye'),s.statSantiye);s.statAlan=pi(v('st_alan'),s.statAlan);var certs=(v('st_certs')||'').split('\n').map(function(x){return x.trim();}).filter(Boolean);if(certs.length)s.certChips=certs;applyStats();applyCerts();saveAll();if(typeof flashSaved==='function')flashSaved();}
 
-function checkHash(){if(location.hash==='#admin')showAdmin();else if(location.hash==='#projeler')openProjelerPage();else if(location.hash==='#hizmetler')openHizmetlerPage();else if(location.hash==='#bolge')openBolgePage();else if(location.hash==='#iletisim')openIletisimPage();else if(location.hash==='#sss'||location.hash==='#soru-cevap'||location.hash==='#faq')openFaqPage();else if((location.hash||'').indexOf('#doc-')===0)openDoc(location.hash.slice(5));}
-addEventListener('hashchange',checkHash);checkHash();
+/* ===== TEMİZ URL ROUTER (# YOK · SEO) — /insaat/<slug> ===== */
+var _INS_BASE=(function(){try{return location.pathname.replace(/[^/]*$/,'');}catch(e){return '/insaat/';}})();
+var _insBaseTitle=null, _insRouting=false;
+var _INS_OV={
+  hizmetler:{t:'Hizmetlerimiz',fn:function(){openHizmetlerPage();}},
+  projeler:{t:'Projeler',fn:function(){openProjelerPage();}},
+  bolge:{t:'Bölge Zekası',fn:function(){openBolgePage();}},
+  iletisim:{t:'İletişim',fn:function(){openIletisimPage();}},
+  'soru-cevap':{t:'Soru-Cevap',fn:function(){openFaqPage();}}
+};
+function _insBrand(){try{var e=document.querySelector('.js-logo');return (e&&e.textContent&&e.textContent.trim())||'Meridyen Yapı';}catch(_){return 'Meridyen Yapı';}}
+function _insCloseDom(){try{if(typeof closeAllInsaatOverlays==='function')closeAllInsaatOverlays();}catch(e){}}
+/* HER openXPage sonunda çağrılır. Nav'dan gelince (routing=false) temiz URL push + başlık;
+   router/boot/geçiş içinden gelince (routing=true) URL zaten doğru → dokunma. Onclick MİGRASYONU GEREKMEZ. */
+function _insSyncUrl(slug){if(_insRouting)return;var v=_INS_OV[slug];if(!v)return;if(_insBaseTitle===null)_insBaseTitle=document.title;try{if(location.pathname!==_INS_BASE+slug)history.pushState({p:slug},'',_INS_BASE+slug);}catch(e){}try{document.title=v.t+' · '+_insBrand();}catch(e){}}
+function _insApply(slug){var v=_INS_OV[slug];if(!v)return;if(_insBaseTitle===null)_insBaseTitle=document.title;_insRouting=true;try{_insCloseDom();v.fn();document.title=v.t+' · '+_insBrand();}catch(e){}_insRouting=false;}
+function goPage(slug,ev){ev=ev||window.event;try{if(ev&&ev.preventDefault)ev.preventDefault();}catch(e){}if(!_INS_OV[slug])return false;_insApply(slug);try{if(location.pathname!==_INS_BASE+slug)history.pushState({p:slug},'',_INS_BASE+slug);}catch(e){}return false;}
+function insHome(ev){ev=ev||window.event;try{if(ev&&ev.preventDefault)ev.preventDefault();}catch(e){}if(_insBaseTitle!==null){document.title=_insBaseTitle;_insBaseTitle=null;}try{if(location.pathname!==_INS_BASE&&!/\/index\.html$/.test(location.pathname))history.pushState({},'',_INS_BASE);}catch(e){}_insRouting=true;try{_insCloseDom();}catch(e){}_insRouting=false;return false;}
+function insRoute(){var seg=decodeURIComponent(location.pathname.slice(_INS_BASE.length)).replace(/\/$/,'').replace(/^index\.html$/,'');if(_INS_OV[seg])_insApply(seg);else{_insRouting=true;try{_insCloseDom();}catch(e){}_insRouting=false;if(_insBaseTitle!==null){document.title=_insBaseTitle;_insBaseTitle=null;}}}
+/* legacy #admin / #doc- (SEO-dışı modallar) hâlâ hash ile */
+function checkHash(){if(location.hash==='#admin')showAdmin();else if((location.hash||'').indexOf('#doc-')===0)openDoc(location.hash.slice(5));}
+function insBoot(){
+  var target=null;
+  try{var s=sessionStorage.getItem('_ins_ov');if(s){sessionStorage.removeItem('_ins_ov');if(_INS_OV[s])target=s;}}catch(e){}
+  if(!target){try{var hs=(location.hash||'').replace(/^#/,'');var hm={hizmetler:'hizmetler',projeler:'projeler',bolge:'bolge',iletisim:'iletisim',sss:'soru-cevap','soru-cevap':'soru-cevap',faq:'soru-cevap'};if(hm[hs]&&_INS_OV[hm[hs]]){history.replaceState({},'',_INS_BASE);target=hm[hs];}}catch(e){}}
+  if(!target){try{var seg=decodeURIComponent(location.pathname.slice(_INS_BASE.length)).replace(/\/$/,'').replace(/^index\.html$/,'');if(_INS_OV[seg])target=seg;}catch(e){}}
+  if(target){try{document.documentElement.classList.add('ov-boot');}catch(e){}try{if(location.pathname!==_INS_BASE+target)history.replaceState({p:target},'',_INS_BASE+target);}catch(e){}_insApply(target);var _rm=function(){try{document.documentElement.classList.remove('ov-boot');}catch(e){}};try{requestAnimationFrame(function(){requestAnimationFrame(_rm);});}catch(e){}setTimeout(_rm,120);}
+  checkHash();
+}
+window.addEventListener('popstate',insRoute);
+addEventListener('hashchange',checkHash);insBoot();

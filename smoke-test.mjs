@@ -117,6 +117,15 @@ const invariants = [
 for(const [name, needle] of invariants) ok("değişmez: "+name, gmAll.includes(needle));
 /* Tekil logo bug'ının GERİ GELMEDİĞİ (regresyon kilidi) */
 ok("değişmez: brandSweep artık .logo .mark tekil güncellemiyor", !gmAll.includes("var mk=document.querySelector('.logo .mark')"));
+/* ---- 3a2) insaat TEMİZ URL router (# YOK) ---- */
+const insCore = readFileSync('insaat/js/app-core.js','utf8');
+const insHtml = readFileSync('insaat/index.html','utf8');
+const insNb = readFileSync('insaat/neden-biz.html','utf8');
+ok('insaat: temiz URL router (goPage/insBoot)', insCore.includes('function goPage') && insCore.includes('function insBoot'));
+ok('insaat: _INS_OV route tablosu', insCore.includes('_INS_OV') && insCore.includes("'soru-cevap'"));
+ok('insaat: nav temiz href (# overlay hash yok)', !/href="#(hizmetler|projeler|bolge|iletisim|sss)"/.test(insHtml) && !/href="#(hizmetler|projeler|bolge|iletisim|sss)"/.test(insNb));
+ok('insaat: neden-biz kırık insaat.html linki yok', !/(href=|location\.href=)['"]insaat\.html/.test(insNb));
+ok('insaat: yükleyici stub dizinleri', ['hizmetler','projeler','bolge','iletisim','soru-cevap'].every(s=>{try{return readFileSync('insaat/'+s+'/index.html','utf8').includes("_ins_ov")}catch(e){return false}}));
 /* ---- 3b) wl.js logo tek-kaynak (footer dahil) ---- */
 const wl = readFileSync('wl.js','utf8');
 ok('wl.js logo: querySelectorAll(.logo)', wl.includes("querySelectorAll('.logo')"));
