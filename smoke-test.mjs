@@ -76,6 +76,11 @@ ok('P1: index.html ince kabuk (<2600 satır)', gm.split('\n').length < 2600);
 ok('P1: app.js ana motor (goView+brandLogos)', gmjs.includes('function goView') && gmjs.includes('function brandLogos'));
 ok('P2: theme.css token katmanı ayrık (:root/--accent, base.css\'te :root yok)', gmtheme.includes(':root') && gmtheme.includes('--accent') && !gmbase.includes(':root{'));
 ok('P1: ana motor index.html\'den çıktı (app.js\'e taşındı)', !gm.includes('function goView') && !gm.includes('function brandLogos') && !gm.includes('function portfoyOpen'));
+/* ---- 3.0b) P4 nav düzeltme değişmezleri ---- */
+ok('P4-G1: goView window.event fallback', gmjs.includes('ev=ev||window.event'));
+ok('P4-G3: ovBoot flash guard (ov-boot)', gmjs.includes("classList.add('ov-boot')"));
+ok('P4-G3: base.css ov-boot fade kapatma', gmbase.includes('html.ov-boot'));
+ok('P4-G2: header logo onclick closeAllOverlays', gm.includes('class="logo" href="#" onclick="closeAllOverlays();return false"'));
 const invariants = [
   ["BRAND_ORIG sabiti", "BRAND_ORIG='Meridyen Gayrimenkul'"],
   ["Özel Portföy analyze fiyatı", "function proxAnalyzePrice"],
@@ -124,6 +129,7 @@ for(const f of ['gayrimenkul/hizmetlerimiz.html','gayrimenkul/nedenbiz.html','ga
   ok(f+' → tr-grammar.js', h.includes('src="../tr-grammar.js'));
   ok(f+' → tr-iller.js', h.includes('src="../tr-iller.js'));
   ok(f+' inline WL kalıntısı yok', !/White-label senkron|Çalışma-zamanı canonical/.test(h));
+  ok(f+' P4-G4: overlay stub temiz yol (index.html# değil)', h.includes("function brOpen(){location.href='analiz';}") && !h.includes("location.href='index.html#analiz'"));
 }
 /* ---- 4b) portfoy.html içerik + SEO ---- */
 const pf = readFileSync('gayrimenkul/portfoy.html','utf8');

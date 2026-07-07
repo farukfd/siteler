@@ -334,6 +334,8 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
 .br-page{position:fixed;inset:0;z-index:130;background:var(--surface);display:none;flex-direction:column;overscroll-behavior:contain}
 .br-page.open{display:flex;animation:brFade .25s ease}
 @keyframes brFade{from{opacity:0}to{opacity:1}}
+/* G3: derin-link/yükleme açılışında (ov-boot) overlay SOLMADAN opak açılır → ana sayfa flash etmez */
+html.ov-boot .br-page.open,html.ov-boot #portfoyPage.open,html.ov-boot #brPage.open,html.ov-boot #satPage.open,html.ov-boot #blogPage.open{animation:none!important;opacity:1!important}
 .br-hd{flex:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 26px;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
 .br-hd .logo{display:flex;align-items:center;gap:11px;font-family:var(--head);font-weight:800;font-size:21px;color:var(--ink)}
 .br-hd .logo .mark{width:42px;height:42px;border-radius:11px;background:var(--grad-hero);display:grid;place-items:center;color:#fff;font-weight:800;font-size:21px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}

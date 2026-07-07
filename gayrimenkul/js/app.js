@@ -3735,13 +3735,23 @@ var _OV={
 };
 function _ovCloseDom(){['portfoyPage','brPage','satPage','blogPage'].forEach(function(id){var e=document.getElementById(id);if(e)e.classList.remove('open');});var d=document.getElementById('brDetail');if(d)d.classList.remove('open');document.body.style.overflow='';}
 function _applyView(slug){var v=_OV[slug];if(!v)return;if(_ovBaseTitle===null)_ovBaseTitle=document.title;_ovRouting=true;try{_ovCloseDom();v.fn();document.title=v.t+' · '+_ovBrand();}catch(e){}_ovRouting=false;}
-function goView(slug,ev){try{if(ev&&ev.preventDefault)ev.preventDefault();}catch(e){}if(!_OV[slug])return false;try{if(location.pathname!==_OVBASE+slug)history.pushState({v:slug},'',_OVBASE+slug);}catch(e){}_applyView(slug);return false;}
+function goView(slug,ev){ev=ev||window.event;try{if(ev&&ev.preventDefault)ev.preventDefault();}catch(e){}if(!_OV[slug])return false;try{if(location.pathname!==_OVBASE+slug)history.pushState({v:slug},'',_OVBASE+slug);}catch(e){}_applyView(slug);return false;}
 function goHome(){if(_ovBaseTitle!==null){document.title=_ovBaseTitle;_ovBaseTitle=null;}else{try{document.title=_ovHomeTitle();}catch(e){}}try{if(location.pathname!==_OVBASE&&!/\/index\.html$/.test(location.pathname))history.pushState({},'',_OVBASE);}catch(e){}_ovRouting=true;try{_ovCloseDom();}catch(e){}_ovRouting=false;}
 function ovRoute(){var seg=decodeURIComponent(location.pathname.slice(_OVBASE.length)).replace(/\/$/,'').replace(/^index\.html$/,'');if(_OV[seg])_applyView(seg);else{_ovRouting=true;try{_ovCloseDom();}catch(e){}_ovRouting=false;if(_ovBaseTitle!==null){document.title=_ovBaseTitle;_ovBaseTitle=null;}}}
-function ovBoot(){try{var s=sessionStorage.getItem('_ov');if(s){sessionStorage.removeItem('_ov');if(_OV[s]){goView(s);return;}}}catch(e){}
-  /* eski #hash bookmark uyumu → temiz yola çevir */
-  try{var hs=(location.hash||'').replace(/^#/,'');var hm={analiz:'analiz',sat:'sat',blog:'blog',portfoy:'portfoy','portfoy-ilan':'ilanlar',ozel:'ozel','portfoy-ozel':'ozel'};if(hm[hs]){history.replaceState({},'',_OVBASE);goView(hm[hs]);return;}}catch(e){}
-  ovRoute();}
+function ovBoot(){
+  /* Hedef görünümü TEK yerden hesapla; varsa 'ov-boot' bayrağı ile overlay'i
+     SOLMA animasyonu OLMADAN aç → arkadaki ana sayfa asla flash etmez (G3). */
+  var target=null;
+  try{var s=sessionStorage.getItem('_ov');if(s){sessionStorage.removeItem('_ov');if(_OV[s])target=s;}}catch(e){}
+  if(!target){try{var hs=(location.hash||'').replace(/^#/,'');var hm={analiz:'analiz',sat:'sat',blog:'blog',portfoy:'portfoy','portfoy-ilan':'ilanlar',ozel:'ozel','portfoy-ozel':'ozel'};if(hm[hs]&&_OV[hm[hs]]){history.replaceState({},'',_OVBASE);target=hm[hs];}}catch(e){}}
+  if(!target){try{var seg=decodeURIComponent(location.pathname.slice(_OVBASE.length)).replace(/\/$/,'').replace(/^index\.html$/,'');if(_OV[seg])target=seg;}catch(e){}}
+  if(!target){ovRoute();return;}
+  try{document.documentElement.classList.add('ov-boot');}catch(e){}
+  goView(target);
+  var _rmBoot=function(){try{document.documentElement.classList.remove('ov-boot');}catch(e){}};
+  try{requestAnimationFrame(function(){requestAnimationFrame(_rmBoot);});}catch(e){}
+  setTimeout(_rmBoot,120);   /* rAF throttle'a karşı güvenilir backstop → sonraki in-app açılışlar fade'i geri alır */
+}
 window.addEventListener('popstate',ovRoute);
 /* Geriye dönük: closeAllOverlays artık temiz URL'e (ana sayfaya) döner */
 function closeAllOverlays(){goHome();}
