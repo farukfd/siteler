@@ -87,8 +87,21 @@ const invariants = [
   ["Temiz URL router (goView)", "function goView"],
   ["Overlay yükleyici (ovBoot)", "function ovBoot"],
   ["Portföy nav → portfoy.html gerçek sayfa", 'href="portfoy.html"'],
+  ["Tek kaynak logo motoru (brandLogos)", "function brandLogos"],
+  ["Logo bilgisayardan yükleme (saasLogoFile)", "function saasLogoFile"],
+  ["Logo kaldırma (saasLogoRemove)", "function saasLogoRemove"],
+  ["Yüklenen logo standart boyut CSS", ".logo .logo-img{"],
+  ["has-logo-img gizleme kuralı", ".logo.has-logo-img .mark"],
+  ["brandSweep tekil querySelector kaldırıldı", "try{brandLogos();}catch(e){}"],
 ];
 for(const [name, needle] of invariants) ok("değişmez: "+name, gm.includes(needle));
+/* Tekil logo bug'ının GERİ GELMEDİĞİ (regresyon kilidi) */
+ok("değişmez: brandSweep artık .logo .mark tekil güncellemiyor", !gm.includes("var mk=document.querySelector('.logo .mark')"));
+/* ---- 3b) wl.js logo tek-kaynak (footer dahil) ---- */
+const wl = readFileSync('wl.js','utf8');
+ok('wl.js logo: querySelectorAll(.logo)', wl.includes("querySelectorAll('.logo')"));
+ok('wl.js: yüklenen logo görseli desteği', wl.includes('logo-img') && wl.includes('d.FIRMA&&d.FIRMA.logo'));
+ok('wl.js: tekil .logo .mark querySelector kaldırıldı', !wl.includes("var mk=document.querySelector('.logo .mark')"));
 
 /* ---- 4) Alt sayfa entegrasyonu (portfoy.html gerçek SEO sayfası dahil) ---- */
 for(const f of ['gayrimenkul/hizmetlerimiz.html','gayrimenkul/nedenbiz.html','gayrimenkul/portfoy.html']){

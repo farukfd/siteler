@@ -24,8 +24,11 @@ try{
 var d={};try{d=JSON.parse(localStorage.getItem('meridyenGM_v1')||'{}');}catch(e){}
 var name=((d.FIRMA&&d.FIRMA.name)||'Meridyen Gayrimenkul').trim();
 var il=((d.PROX&&(d.PROX.il||d.PROX.region))||'İzmir');
+var logo=((d.FIRMA&&d.FIRMA.logo)||'').toString();
 var ORIG='Meridyen Gayrimenkul',OSHORT='Meridyen';
-var customized=!(name===ORIG && il==='İzmir');
+var customized=!(name===ORIG && il==='İzmir') || !!logo;   /* logo yüklüyse marka değişmese de uygula */
+/* Yüklenen logo görseli için CSS (alt sayfa <style>'ına gerek yok) — ana site ile birebir */
+try{if(!document.getElementById('wl-logo-css')){var _st=document.createElement('style');_st.id='wl-logo-css';_st.textContent='.logo .logo-img{height:40px;width:auto;max-width:200px;object-fit:contain;display:block}.logo.has-logo-img{gap:0}.logo.has-logo-img .mark,.logo.has-logo-img .js-logo,.logo.has-logo-img>span:not(.logo-img){display:none}footer .logo .logo-img{height:34px;max-width:180px}';(document.head||document.documentElement).appendChild(_st);}}catch(e){}
 
 /* ---- 2) Marka + gramerli şehir ---- */
 var shortN=name.split(/\s+/)[0]||OSHORT;
@@ -48,9 +51,19 @@ function sweep(){if(!customized)return;if(obs)obs.disconnect();try{
   while(n=w.nextNode()){var t=n.nodeValue;if(t&&(t.indexOf('Meridyen')>=0||(il!=='İzmir'&&(t.indexOf('İzmir')>=0||t.indexOf('İZMİR')>=0||(window.TRG&&window.TRG.hasIzmirPlace&&window.TRG.hasIzmirPlace(t))))))ns.push(n);}
   ns.forEach(function(t){t.nodeValue=rep(t.nodeValue);});
   document.querySelectorAll('[title],[alt],[placeholder],[aria-label]').forEach(function(el){['title','alt','placeholder','aria-label'].forEach(function(a){var v=el.getAttribute(a);if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0||v.indexOf('İZMİR')>=0))el.setAttribute(a,rep(v));});});
-  /* logo: tam ad (mark = baş harf, metin = tam ad) */
-  try{var mk=document.querySelector('.logo .mark');if(mk&&name!==ORIG)mk.textContent=shortN.charAt(0).toLocaleUpperCase('tr');
-    var jl=document.querySelector('.js-logo');if(jl&&name!==ORIG){var ps=name.split(/\s+/);var last=ps.length>1?ps[ps.length-1]:'';var head=ps.length>1?ps.slice(0,-1).join(' '):name;var esc=function(x){return (x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');};jl.innerHTML=esc(head)+(last?'<span class="lo2"> '+esc(last)+'</span>':'');}}catch(e){}
+  /* logo: TÜM .logo öğeleri (header + footer) BİREBİR — yüklü görsel varsa <img>, yoksa baş harf + tam ad.
+     (Eski kod document.querySelector TEKİL kullanıyordu → footer logosu "M" kalıyordu.) */
+  try{
+    var esc=function(x){return (x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');};
+    var jlH=null;if(name!==ORIG){var ps=name.split(/\s+/);var last=ps.length>1?ps[ps.length-1]:'';var head=ps.length>1?ps.slice(0,-1).join(' '):name;jlH=esc(head)+(last?'<span class="lo2"> '+esc(last)+'</span>':'');}
+    var lt=shortN.charAt(0).toLocaleUpperCase('tr');
+    document.querySelectorAll('.logo').forEach(function(lo){
+      var mk=lo.querySelector('.mark'),jl=lo.querySelector('.js-logo');
+      if(logo){lo.classList.add('has-logo-img');var im=lo.querySelector('img.logo-img');if(!im){im=document.createElement('img');im.className='logo-img';im.setAttribute('alt',name||'logo');lo.insertBefore(im,lo.firstChild);}if(im.getAttribute('src')!==logo)im.setAttribute('src',logo);}
+      else{lo.classList.remove('has-logo-img');var i2=lo.querySelector('img.logo-img');if(i2&&i2.parentNode)i2.parentNode.removeChild(i2);if(mk&&name!==ORIG)mk.textContent=lt;}
+      if(jl&&jlH!=null)jl.innerHTML=jlH;
+    });
+  }catch(e){}
   if(document.title.indexOf('Meridyen')>=0||(il!=='İzmir'&&(document.title.indexOf('İzmir')>=0||document.title.indexOf('İZMİR')>=0)))document.title=rep(document.title);
   document.querySelectorAll('meta[content]').forEach(function(m){var v=m.getAttribute('content');if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0||v.indexOf('İZMİR')>=0))m.setAttribute('content',rep(v));});
   document.querySelectorAll('script[type="application/ld+json"]').forEach(function(s){var v=s.textContent;if(v&&(v.indexOf('Meridyen')>=0||(il!=='İzmir'&&(v.indexOf('İzmir')>=0||v.indexOf('İZMİR')>=0))))s.textContent=rep(v);});

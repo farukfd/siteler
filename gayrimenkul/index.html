@@ -182,6 +182,18 @@ header .bar{display:flex;align-items:center;gap:22px;height:74px}
 .logo .mark{width:42px;height:42px;border-radius:11px;background:var(--grad-hero);color:#fff;display:grid;place-items:center;font-size:21px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
 .logo .mark::after{content:"";position:absolute;inset:auto -6px -10px auto;width:26px;height:26px;background:var(--green);border-radius:50%;opacity:.85}
 .logo .lo2{color:var(--accent)}
+/* Yüklenen logo görseli — standart web logo boyutu (üst menü ~40px, footer ~34px); yazı+işaret gizlenir */
+.logo .logo-img{height:40px;width:auto;max-width:200px;object-fit:contain;display:block}
+.logo.has-logo-img{gap:0}
+.logo.has-logo-img .mark,.logo.has-logo-img .js-logo,.logo.has-logo-img>span:not(.logo-img){display:none}
+footer .logo .logo-img{height:34px;max-width:180px}
+/* Admin logo önizleme (açık + koyu zemin) */
+.logo-prev{margin-top:10px}
+.logo-prev-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+.logo-prev-in{display:inline-flex;align-items:center;justify-content:center;border-radius:10px;padding:10px 16px;min-height:58px;border:1px solid var(--line)}
+.logo-prev-in.light{background:#fff}
+.logo-prev-in.dark{background:var(--grad-hero,linear-gradient(135deg,#0f1f3d,#1e40af))}
+.logo-prev-in img{height:40px;width:auto;max-width:190px;object-fit:contain;display:block}
 nav.main{display:flex;gap:4px;margin-left:6px}
 nav.main a{padding:9px 13px;font-weight:600;font-size:15px;color:var(--ink-2);border-radius:9px;transition:.15s}
 nav.main a:hover{color:var(--accent);background:var(--surface)}
@@ -648,8 +660,8 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
 .br-page.open{display:flex;animation:brFade .25s ease}
 @keyframes brFade{from{opacity:0}to{opacity:1}}
 .br-hd{flex:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 26px;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
-.br-hd .logo{display:flex;align-items:center;gap:10px;font-family:var(--head);font-weight:800;font-size:18px;color:var(--ink)}
-.br-hd .logo .mark{width:34px;height:34px;border-radius:9px;background:var(--grad-blue);display:grid;place-items:center;color:#fff;font-weight:800}
+.br-hd .logo{display:flex;align-items:center;gap:11px;font-family:var(--head);font-weight:800;font-size:21px;color:var(--ink)}
+.br-hd .logo .mark{width:42px;height:42px;border-radius:11px;background:var(--grad-hero);display:grid;place-items:center;color:#fff;font-weight:800;font-size:21px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
 .br-hd .logo .lo2{color:var(--accent)}
 .br-back{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;color:var(--ink-2);font-weight:700;font-size:13.5px;padding:9px 15px;border-radius:10px;cursor:pointer;transition:.15s}
 .br-back:hover{border-color:var(--accent);color:var(--accent)}
@@ -1279,7 +1291,7 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
 <footer class="siteFooter"><div class="wrap">
   <div class="fcols">
     <div>
-      <div class="logo"><span class="mark">M</span><span>Meridyen<span class="lo2"> Gayrimenkul</span></span></div>
+      <div class="logo"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Gayrimenkul</span></span></div>
       <p>Veri odaklı emlak danışmanlığı. İzmir ve Ege'de satılık, kiralık konut, ofis ve arsa portföyü. Her ilanda gerçek bölge endeksi.</p>
       <div class="fsocial"><a href="https://facebook.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a><a href="https://instagram.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a><a href="https://x.com/meridyengm" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg></a><a href="https://www.linkedin.com/company/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg></a><a href="https://www.youtube.com/@meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a><a href="https://nsosyal.com" target="_blank" rel="noopener noreferrer" aria-label="NEXT Sosyal (Türkiye)" title="NEXT Sosyal — Türkiye'nin yerli sosyal medya platformu"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg></a></div><div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
     </div>
@@ -2075,6 +2087,14 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
             <div class="afield"><label>Yetkili Kişi <span style="color:var(--muted);font-weight:400">(sözleşmeleri imzalayan)</span></label><input id="cf_yetkili" placeholder="Ad Soyad · Unvan"></div>
           </div>
         </div>
+        <div class="adm-card"><h3>Logo <span style="color:var(--muted);font-weight:400;font-size:13px">· üst menü + footer</span></h3><div class="csub"><b>Bilgisayarınızdan logonuzu yükleyin</b>; üst menüde ve footer'da standart web boyutunda (yükseklik ~40px) görünür. Şeffaf zeminli PNG/SVG en iyi sonucu verir. Yazı logoya geri dönmek için “Kaldır”a basın.</div>
+          <div class="afield"><label>Logo Görseli</label>
+            <div class="aupload" onclick="document.getElementById('cf_logoFile').click()">🖼 Bilgisayardan logo yükle · PNG / SVG / JPG (maks ~2MB)</div>
+            <input type="file" id="cf_logoFile" accept="image/png,image/svg+xml,image/jpeg,image/webp,image/*" style="display:none" onchange="saasLogoFile(this,'logo')">
+            <div id="cf_logoPrev" class="logo-prev" style="display:none"></div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="abtn" onclick="saasLogoRemove()">Logoyu Kaldır</button><span class="csub" style="margin:0;align-self:center">Ayrıntılı ayar (URL, favicon): <b>Tema & Renk</b> sekmesi.</span></div>
+        </div>
         <div class="adm-card">
           <h3><span style="display:inline-flex;vertical-align:-4px;color:#1e7e3a;margin-right:6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="M9 12l2 2 4-4"/></svg></span>EİDS — Elektronik İlan Doğrulama Yetkisi</h3>
           <div class="csub">Ticaret Bakanlığı EİDS zorunluluğu (satılık konutta 1 Şubat 2026). Yayınlanan her emlak ilanı, işletmenizin <b>Taşınmaz Ticareti Yetki Belgesi</b> ile e-Devlet üzerinden doğrulanır. Yetki tamamlanmadan yalnızca <b>Özel Portföy</b> (ön tanıtım) kaydı eklenebilir; açık ilan yayınlanamaz.</div>
@@ -2120,10 +2140,22 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
           <div class="colorrow"><input type="color" id="cc_green" value="#34a853" onchange="customColor()"><span class="cl">Yeşil (CTA, "değer arttı")</span></div>
           <div class="colorrow"><input type="color" id="cc_navy" value="#0f1f3d" onchange="customColor()"><span class="cl">Lacivert (hero, footer)</span></div>
         </div>
-        <div class="adm-card"><h3>Logo & Tarayıcı Sekmesi</h3><div class="csub">Bayi logonuzu girin; kurumsal renk paleti logoya göre otomatik uyarlanır (saasAutoThemeFromLogo). Favicon, tarayıcı sekmesinde anında değişir.</div>
-          <div class="afield"><label>Şirket Logo URL</label><input id="sl_logo" placeholder="https://.../logo.png"></div>
-          <div class="afield"><label>Favicon URL (tarayıcı sekme ikonu)</label><input id="sl_favicon" placeholder="https://.../favicon.png"></div>
-          <button class="btn btn-primary btn-sm" style="margin-top:6px" onclick="saasApplyLogo()">Logoyu Uygula & Temayı Uyarla</button>
+        <div class="adm-card"><h3>Logo & Tarayıcı Sekmesi</h3><div class="csub"><b>Bilgisayarınızdan logo yükleyin</b> — üst menü ve footer'da standart web boyutunda (yükseklik ~40px) anında görünür. Şeffaf zeminli PNG/SVG önerilir. İsterseniz URL de girebilirsiniz. Favicon tarayıcı sekmesinde değişir.</div>
+          <div class="afield"><label>Şirket Logosu <span style="color:var(--muted);font-weight:400">(üst menü + footer)</span></label>
+            <div class="aupload" onclick="document.getElementById('sl_logoFile').click()">🖼 Bilgisayardan logo yüklemek için tıklayın · PNG / SVG / JPG (maks ~2MB)</div>
+            <input type="file" id="sl_logoFile" accept="image/png,image/svg+xml,image/jpeg,image/webp,image/*" style="display:none" onchange="saasLogoFile(this,'logo')">
+            <div id="sl_logoPrev" class="logo-prev" style="display:none"></div>
+          </div>
+          <div class="afield"><label>Logo URL <span style="color:var(--muted);font-weight:400">(alternatif)</span></label><input id="sl_logo" placeholder="https://.../logo.png"></div>
+          <div class="afield"><label>Favicon <span style="color:var(--muted);font-weight:400">(tarayıcı sekme ikonu · kare)</span></label>
+            <div class="aupload" onclick="document.getElementById('sl_favFile').click()">🔖 Bilgisayardan favicon yükle · 32×32 / 64×64 PNG</div>
+            <input type="file" id="sl_favFile" accept="image/png,image/x-icon,image/svg+xml,image/*" style="display:none" onchange="saasLogoFile(this,'favicon')">
+            <input id="sl_favicon" placeholder="https://.../favicon.png" style="margin-top:8px">
+          </div>
+          <div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap">
+            <button class="btn btn-primary btn-sm" onclick="saasApplyLogo()">URL'den Uygula & Temayı Uyarla</button>
+            <button class="abtn" onclick="saasLogoRemove()">Logoyu Kaldır (yazı logoya dön)</button>
+          </div>
         </div>
       </div>
       <!-- YEDEK -->
@@ -2850,7 +2882,7 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
 <footer class="siteFooter"><div class="wrap">
   <div class="fcols">
     <div>
-      <div class="logo"><span class="mark">M</span><span>Meridyen<span class="lo2"> Gayrimenkul</span></span></div>
+      <div class="logo"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Gayrimenkul</span></span></div>
       <p>Veri odaklı emlak danışmanlığı. İzmir ve Ege'de satılık, kiralık konut, ofis ve arsa portföyü. Her ilanda gerçek bölge endeksi.</p>
       <div class="fsocial"><a href="https://facebook.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a><a href="https://instagram.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a><a href="https://x.com/meridyengm" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg></a><a href="https://www.linkedin.com/company/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg></a><a href="https://www.youtube.com/@meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a><a href="https://nsosyal.com" target="_blank" rel="noopener noreferrer" aria-label="NEXT Sosyal (Türkiye)" title="NEXT Sosyal — Türkiye'nin yerli sosyal medya platformu"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg></a></div><div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
     </div>
@@ -5364,7 +5396,7 @@ function brandSweep(root){try{if(brandName()===BRAND_ORIG&&wlCityOff())return;ro
   nodes.forEach(function(t){var base=_wlBase.has(t)?_wlBase.get(t):(_wlBase.set(t,t.nodeValue),t.nodeValue);var out=wlReplace(base);if(t.nodeValue!==out)t.nodeValue=out;});
   var attrs=['title','alt','placeholder','aria-label','value'];
   root.querySelectorAll('[title],[alt],[placeholder],[aria-label]').forEach(function(el){var c=el.__wlBaseAttrs;attrs.forEach(function(a){var cur=el.getAttribute&&el.getAttribute(a);if(cur==null)return;var cached=c&&(a in c);if(!cached&&!_hit(cur))return;if(!c)c=el.__wlBaseAttrs={};var base=cached?c[a]:(c[a]=cur);var out=wlReplace(base);if(cur!==out)el.setAttribute(a,out);});});
-  try{var mk=document.querySelector('.logo .mark');if(mk&&brandShort())mk.textContent=brandShort().charAt(0).toLocaleUpperCase('tr');var jl=document.querySelector('.js-logo');if(jl){var bn=brandName();if(bn!==BRAND_ORIG){var ps=bn.split(/\s+/);var last=ps.length>1?ps[ps.length-1]:'';var head=ps.length>1?ps.slice(0,-1).join(' '):bn;var esc=function(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');};jl.innerHTML=esc(head)+(last?'<span class="lo2"> '+esc(last)+'</span>':'');}}}catch(e){}
+  try{brandLogos();}catch(e){}   /* TÜM logolar (üst + overlay + footer) tek kaynaktan — tekil querySelector bug'ı giderildi */
   try{if(document.title.indexOf('Meridyen')>=0||document.title.indexOf('İzmir')>=0)document.title=wlReplace(document.title);
     document.querySelectorAll('meta[content]').forEach(function(m){var v=m.getAttribute('content');if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0))m.setAttribute('content',wlReplace(v));});document.querySelectorAll('script[type="application/ld+json"]').forEach(function(s){var v=s.textContent;if(v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0||v.indexOf('İZMİR')>=0))s.textContent=wlReplace(v);});}catch(e){}
   if(_brandObs&&brandName()!==BRAND_ORIG)_brandObs.observe(document.body,{childList:true,subtree:true});
@@ -5404,6 +5436,42 @@ function applyFirma(){
   document.querySelectorAll('.js-adres').forEach(e=>e.textContent=FIRMA.adres);
   if(FIRMA.wa){document.querySelectorAll('a[href^="https://wa.me/905000000000"]').forEach(a=>{a.href=a.href.replace('905000000000',FIRMA.wa);});}
 }
+/* ===== TEK KAYNAK LOGO — üst menü + tüm overlay header'ları + footer BİREBİR =====
+   Kök neden: eski kod document.querySelector('.logo .mark') (TEKİL) kullanıyordu →
+   yalnız İLK logo (ana header) güncelleniyor, overlay/footer logoları "M" kalıyordu.
+   brandLogos() BÜTÜN .logo öğelerini aynı anda günceller: yüklü logo görseli varsa
+   standart boyutlu <img>, yoksa marka baş harfi + ada göre bölünmüş yazı. */
+function brandActiveLogo(){
+  try{ if(typeof FIRMA==='object'&&FIRMA&&FIRMA.logo){var v=''+FIRMA.logo; if(v.indexOf('data:')===0||v.indexOf('http')===0||v.indexOf('/')===0)return v; if(typeof IMG!=='undefined'&&IMG[v])return IMG[v]; if(v)return v; } }catch(e){}
+  try{ if(typeof saasResolve==='function'){var s=saasResolve('logoUrl'); if(s)return s;} }catch(e){}
+  return '';
+}
+function brandLogos(){
+  try{
+    var img=brandActiveLogo();
+    var name=(typeof brandName==='function'?brandName():BRAND_ORIG);
+    var isDef=(name===BRAND_ORIG);
+    var esc=function(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');};
+    var jlHtml=null;
+    if(!isDef){var ps=name.split(/\s+/);var last=ps.length>1?ps[ps.length-1]:'';var head=ps.length>1?ps.slice(0,-1).join(' '):name;jlHtml=esc(head)+(last?'<span class="lo2"> '+esc(last)+'</span>':'');}
+    var letter=((typeof brandShort==='function'?brandShort():'')||'').charAt(0).toLocaleUpperCase('tr');
+    document.querySelectorAll('.logo').forEach(function(lo){
+      var mk=lo.querySelector('.mark'), jl=lo.querySelector('.js-logo');
+      if(img){
+        lo.classList.add('has-logo-img');
+        var im=lo.querySelector('img.logo-img');
+        if(!im){im=document.createElement('img');im.className='logo-img';im.setAttribute('alt',name||'logo');im.setAttribute('decoding','async');lo.insertBefore(im,lo.firstChild);}
+        if(im.getAttribute('src')!==img)im.setAttribute('src',img);
+      }else{
+        lo.classList.remove('has-logo-img');
+        var im2=lo.querySelector('img.logo-img'); if(im2&&im2.parentNode)im2.parentNode.removeChild(im2);
+        if(mk&&letter)mk.textContent=letter;
+      }
+      if(jl&&jlHtml!=null)jl.innerHTML=jlHtml;
+    });
+  }catch(e){}
+}
+window.brandLogos=brandLogos;window.brandActiveLogo=brandActiveLogo;
 
 /* ============ ADMIN: SÖZLEŞMELER ============ */
 const CT_LABEL={aracilik:'Aracılık (Tellaliye)',['yer-gosterme']:'Yer Gösterme',kira:'Kira Sözleşmesi',['satis-vaadi']:'Satış Ön Protokolü',yetki:'Münhasır Portföy Yetkisi'};
@@ -6898,7 +6966,7 @@ const SITE_NAV=`
 const SITE_FOOTER=`<div class="wrap">
   <div class="fcols">
     <div>
-      <div class="logo"><span class="mark">M</span><span>Meridyen<span class="lo2"> Gayrimenkul</span></span></div>
+      <div class="logo"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Gayrimenkul</span></span></div>
       <p>Veri odaklı emlak danışmanlığı. İzmir ve Ege'de satılık, kiralık konut, ofis ve arsa portföyü. Her ilanda gerçek bölge endeksi.</p>
       <div class="fsocial"><a href="https://facebook.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a><a href="https://instagram.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a><a href="https://x.com/meridyengm" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg></a><a href="https://www.linkedin.com/company/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg></a><a href="https://www.youtube.com/@meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a><a href="https://nsosyal.com" target="_blank" rel="noopener noreferrer" aria-label="NEXT Sosyal (Türkiye)" title="NEXT Sosyal — Türkiye'nin yerli sosyal medya platformu"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg></a></div><div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
     </div>
@@ -7388,10 +7456,9 @@ function applySaaSSettings(){
     const gsv=saasResolve('googleSiteVerification'); if(gsv)_saasMeta('google-site-verification',(''+gsv).replace(/^google-site-verification=/,''));
     /* Tarayıcı sekme logosu: favicon + apple-touch-icon */
     const fav=saasResolve('faviconUrl'); if(fav){_saasLink('icon',fav);_saasLink('apple-touch-icon',fav);}
-    /* Şirket logoları */
-    const logo=saasResolve('logoUrl');
-    if(logo){document.querySelectorAll('img.logo-img, .js-logo img').forEach(im=>im.src=logo);
-      document.querySelectorAll('.logo .mark').forEach(mk=>{mk.innerHTML='<img class="logo-img" src="'+logo+'" alt="logo" style="width:100%;height:100%;object-fit:contain;border-radius:inherit">';});}
+    /* Şirket logoları — üst menü + overlay header'ları + footer TEK KAYNAK (brandLogos) */
+    if(typeof brandLogos==='function')brandLogos();
+    if(typeof renderLogoPrev==='function')renderLogoPrev();
     /* Google Analytics (gtag) — bir kez enjekte */
     const ga=saasResolve('googleAnalytics');
     if(ga&&!document.getElementById('saas-gtag')){
@@ -7410,7 +7477,42 @@ window.applySaaSSettings=applySaaSSettings;
 function saasSaveGoogle(){const v=id=>{const e=document.getElementById(id);return e?e.value.trim():'';};const t=SAAS_CONFIG.tenantSettings;
   t.googleAnalytics=v('g_ga4');t.googleSiteVerification=v('g_gsc');t.googleMapsKey=v('g_maps');applySaaSSettings();if(typeof toast==='function')toast('Google ayarları uygulandı — sayfa yenilenmeden.');}
 function saasApplyLogo(){const v=id=>{const e=document.getElementById(id);return e?e.value.trim():'';};const t=SAAS_CONFIG.tenantSettings;
-  const logo=v('sl_logo'),fav=v('sl_favicon');if(logo){t.logoUrl=logo;if(typeof saasAutoThemeFromLogo==='function')saasAutoThemeFromLogo(logo);}if(fav)t.faviconUrl=fav;applySaaSSettings();if(typeof toast==='function')toast('Logo & favicon uygulandı; tema logoya göre uyarlandı.');}
+  const logo=v('sl_logo'),fav=v('sl_favicon');
+  if(logo){t.logoUrl=logo;try{if(FIRMA)FIRMA.logo=logo;if(typeof saveAll==='function')saveAll();}catch(x){}if(typeof saasAutoThemeFromLogo==='function')saasAutoThemeFromLogo(logo);}
+  if(fav)t.faviconUrl=fav;
+  applySaaSSettings();if(typeof brandLogos==='function')brandLogos();if(typeof renderLogoPrev==='function')renderLogoPrev();
+  if(typeof toast==='function')toast('Logo & favicon uygulandı; tema logoya göre uyarlandı.');}
+/* --- Bilgisayardan logo/favicon yükleme (üst menü + footer tek seferde) --- */
+function _logoPrevEls(){return ['sl_logoPrev','cf_logoPrev'].map(id=>document.getElementById(id)).filter(Boolean);}
+function renderLogoPrev(){var img=(typeof brandActiveLogo==='function')?brandActiveLogo():'';
+  _logoPrevEls().forEach(function(el){
+    if(img){el.style.display='';el.innerHTML='<div class="logo-prev-row"><div class="logo-prev-in light"><img src="'+img+'" alt="logo"></div><div class="logo-prev-in dark"><img src="'+img+'" alt="logo"></div></div><span class="csub" style="margin:0">Aktif logo · üst menü (açık) + footer (koyu). Kaldır\'a basınca yazı logoya döner.</span>';}
+    else{el.style.display='none';el.innerHTML='';}
+  });}
+function saasLogoFile(input,which){
+  var f=input&&input.files&&input.files[0]; if(!f){return;}
+  if(!/^image\//.test(f.type||'')){if(typeof toast==='function')toast('Lütfen bir görsel dosyası seçin (PNG/SVG/JPG).');input.value='';return;}
+  if(f.size>2*1024*1024){if(typeof toast==='function')toast('Dosya çok büyük (maks ~2MB). Daha küçük/optimize bir logo yükleyin.');input.value='';return;}
+  var rd=new FileReader();
+  rd.onload=function(e){var url=e.target.result;
+    if(which==='favicon'){try{SAAS_CONFIG.tenantSettings.faviconUrl=url;}catch(x){}var fi=document.getElementById('sl_favicon');if(fi)fi.value=url;if(typeof applySaaSSettings==='function')applySaaSSettings();if(typeof toast==='function')toast('✓ Favicon yüklendi ve tarayıcı sekmesine uygulandı.');return;}
+    try{if(FIRMA)FIRMA.logo=url;}catch(x){}try{SAAS_CONFIG.tenantSettings.logoUrl=url;}catch(x){}
+    if(typeof saveAll==='function')saveAll();
+    if(typeof brandLogos==='function')brandLogos();
+    renderLogoPrev();
+    if(typeof toast==='function')toast('✓ Logo yüklendi · üst menü ve footer standart boyutta güncellendi.');
+  };
+  rd.readAsDataURL(f); input.value='';
+}
+function saasLogoRemove(){
+  try{if(FIRMA)FIRMA.logo='';}catch(x){}try{SAAS_CONFIG.tenantSettings.logoUrl='';}catch(x){}
+  if(typeof saveAll==='function')saveAll();
+  if(typeof brandLogos==='function')brandLogos();
+  var f=document.getElementById('sl_logo');if(f)f.value='';
+  renderLogoPrev();
+  if(typeof toast==='function')toast('Logo kaldırıldı — yazı logo geri geldi.');
+}
+window.saasLogoFile=saasLogoFile;window.saasLogoRemove=saasLogoRemove;window.renderLogoPrev=renderLogoPrev;
 function saasSaveProxPrompt(){const e=document.getElementById('sp_custom');SAAS_CONFIG.tenantSettings.customPrompt=e?e.value.trim():'';if(typeof toast==='function')toast('Bayi özel ProX promptu kaydedildi.');}
 function saasFillReportSelect(){const e=document.getElementById('sr_prop');if(!e)return;let o='<option value="">Mülk seçin…</option>';
   (typeof OZEL!=='undefined'?OZEL:[]).forEach(x=>o+='<option value="ozel-'+x.id+'">Özel Portföy · '+x.tip+' · '+x.mah+', '+x.ilce+'</option>');
