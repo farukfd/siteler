@@ -58,10 +58,10 @@ function buildsOk(file, extractBiggestInline){
 }
 ok('tr-grammar.js derlenir', buildsOk('tr-grammar.js'));
 ok('wl.js derlenir', buildsOk('wl.js'));
-ok('gayrimenkul.html ana script derlenir', buildsOk('gayrimenkul.html', true));
+ok('gayrimenkul.html ana script derlenir', buildsOk('gayrimenkul/index.html', true));
 
 /* ---- 3) Yapısal değişmezler (kritik özellikler yerinde mi) ---- */
-const gm = readFileSync('gayrimenkul.html','utf8');
+const gm = readFileSync('gayrimenkul/index.html','utf8');
 const invariants = [
   ["BRAND_ORIG sabiti", "BRAND_ORIG='Meridyen Gayrimenkul'"],
   ["Özel Portföy analyze fiyatı", "function proxAnalyzePrice"],
@@ -77,7 +77,7 @@ const invariants = [
   ["Çok dilli (gmLang)", "async function gmLang"],
   ["Proxy güvenlik modu", "EMLAK_PROXY_MODE"],
   ["Süper-admin bayi paneli", "function openSuperAdmin"],
-  ["tr-grammar.js yüklenir", 'src="tr-grammar.js'],
+  ["tr-grammar.js yüklenir", 'src="../tr-grammar.js'],
   ["EİDS yayın kapısı", "function eidsVerify"],
   ["Portföy birleşik sayfa", 'id="portfoyPage"'],
   ["Portföy açma motoru", "function portfoyOpen"],
@@ -90,11 +90,11 @@ const invariants = [
 for(const [name, needle] of invariants) ok("değişmez: "+name, gm.includes(needle));
 
 /* ---- 4) Alt sayfa entegrasyonu ---- */
-for(const f of ['hizmetlerimiz.html','nedenbiz.html']){
+for(const f of ['gayrimenkul/hizmetlerimiz.html','gayrimenkul/nedenbiz.html']){
   const h = readFileSync(f,'utf8');
-  ok(f+' → wl.js', h.includes('src="wl.js'));
-  ok(f+' → tr-grammar.js', h.includes('src="tr-grammar.js'));
-  ok(f+' → tr-iller.js', h.includes('src="tr-iller.js'));
+  ok(f+' → wl.js', h.includes('src="../wl.js'));
+  ok(f+' → tr-grammar.js', h.includes('src="../tr-grammar.js'));
+  ok(f+' → tr-iller.js', h.includes('src="../tr-iller.js'));
   ok(f+' inline WL kalıntısı yok', !/White-label senkron|Çalışma-zamanı canonical/.test(h));
 }
 
