@@ -4040,8 +4040,19 @@ const SAAS_THEMES={
 };
 /* 1) DİNAMİK TEMA — merkezden gelen renk tek saniyede uygulanır */
 function initSaaSTheme(){
-  const color=(saasResolve('themeColor')||SAAS_CONFIG.themeColor);
-  const t=SAAS_THEMES[color]||SAAS_THEMES['Kurumsal'],s=document.documentElement.style;
+  /* TEMA MİMARİSİ: statik theme.css = temel tasarım (tema = dosya takası).
+     initSaaSTheme YALNIZCA açık bir tema seçimi (bayi SAAS_THEMES / admin) varsa
+     token'ları inline yazar (theme.css'i EZER). Seçim yoksa inline'ları temizler →
+     theme.css yönetir. Böylece her satılan site kendi theme.css dosyasıyla gelir,
+     admin renk seçici isterse üstüne runtime override koyar. */
+  const s=document.documentElement.style;
+  const sel=(typeof saasResolve==='function')?saasResolve('themeColor'):'';
+  const top=(SAAS_CONFIG.themeColor&&SAAS_CONFIG.themeColor!=='Kurumsal')?SAAS_CONFIG.themeColor:'';
+  const override=sel||top;
+  if(!override||!SAAS_THEMES[override]){
+    ['--accent','--accent-2','--grad-cta'].forEach(v=>s.removeProperty(v));return;
+  }
+  const t=SAAS_THEMES[override];
   s.setProperty('--accent',t.accent);s.setProperty('--accent-2',t.accent2);s.setProperty('--grad-cta',t.grad);
 }
 /* 2) NORMALİZASYON + API SİMÜLASYONU (emlakekspertizi.com merkez API) */

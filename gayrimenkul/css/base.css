@@ -1,22 +1,4 @@
-/* gayrimenkul · app.css — tüm <style> blokları BELGE SIRASINDA birleştirildi (P1) */
-:root{
-  /* emlakekspertizi aile renkleri */
-  --c-bg-deep:#0a1631; --c-bg-navy:#0f1f3d; --c-bg-slate:#1e2742;
-  --accent:#1e40af; --accent-2:#3b82f6; --blue-g:#4285f4;
-  --green:#34a853; --green-700:#1e7e3a; --green-200:#7ed598;
-  --yellow:#fbbc04;
-  --ink:#0f1f3d; --ink-2:#334155; --muted:#64748b; --line:#e2e8f0; --line-2:#eef2f7;
-  --surface:#f5f7fa; --surface-2:#eef3f9; --white:#ffffff;
-  --head:'Poppins'; --body:'Inter'; --num:'Space Grotesk';
-  --radius:16px; --radius-lg:22px; --radius-sm:11px; --maxw:1240px;
-  --shadow:0 22px 60px -28px rgba(13,30,60,.40);
-  --shadow-sm:0 10px 30px -18px rgba(13,30,60,.30);
-  --shadow-card:0 14px 36px -20px rgba(13,30,60,.22);
-  --grad-hero:linear-gradient(135deg,#0f1f3d 0%,#0a1631 58%,#16306b 100%);
-  --grad-cta:linear-gradient(135deg,#34a853 0%,#1e7e3a 100%);
-  --grad-blue:linear-gradient(135deg,#3b82f6 0%,#1e40af 100%);
-  --grad-ai:linear-gradient(135deg,#10b981 0%,#0284c7 50%,#8b5cf6 100%);
-}
+/* gayrimenkul · base.css — yapi/layout (token'lari var(--x) ile kullanir; renk theme.css'ten gelir) */
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;font-family:var(--body),system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--white);color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden}
@@ -1768,3 +1750,4 @@ body.tenant-dan #searchbar,body.tenant-dan .hero .hero-eye,body.tenant-dan .hero
 #saasPortalModal .sp-logout{width:100%;padding:11px;border:1px solid rgba(255,255,255,.16);border-radius:11px;background:transparent;color:#a9b8d2;font-family:inherit;font-weight:700;font-size:13.5px;cursor:pointer;transition:.16s}
 #saasPortalModal .sp-logout:hover{color:#fff;border-color:rgba(255,255,255,.34)}
 @media(max-width:560px){#saasPortalModal .sp-pane{padding:22px 18px}#saasPortalModal .sp-h{font-size:17px}}
+

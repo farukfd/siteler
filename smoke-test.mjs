@@ -65,14 +65,16 @@ ok('gayrimenkul app.js derlenir (P1 harici JS)', buildsOk('gayrimenkul/js/app.js
    Değişmezleri üçünün birleşiminde ararız (fonksiyon/const app.js'de, CSS app.css'te). */
 const gm = readFileSync('gayrimenkul/index.html','utf8');
 const gmjs = readFileSync('gayrimenkul/js/app.js','utf8');
-const gmcss = readFileSync('gayrimenkul/css/app.css','utf8');
+const gmtheme = readFileSync('gayrimenkul/css/theme.css','utf8');
+const gmbase = readFileSync('gayrimenkul/css/base.css','utf8');
+const gmcss = gmbase + '\n' + gmtheme;
 const gmAll = gm + '\n' + gmjs + '\n' + gmcss;
-/* ---- 3.0) P1 varlık-ayrıştırma değişmezleri ---- */
-ok('P1: index.html → css/app.css link', gm.includes('href="css/app.css"'));
+/* ---- 3.0) P1/P2 varlık-ayrıştırma değişmezleri ---- */
+ok('P2: index.html → theme.css + base.css link', gm.includes('href="css/theme.css"') && gm.includes('href="css/base.css"'));
 ok('P1: index.html → js/app.js script', gm.includes('src="js/app.js"'));
 ok('P1: index.html ince kabuk (<2600 satır)', gm.split('\n').length < 2600);
 ok('P1: app.js ana motor (goView+brandLogos)', gmjs.includes('function goView') && gmjs.includes('function brandLogos'));
-ok('P1: app.css token katmanı (:root/--accent)', gmcss.includes(':root') && gmcss.includes('--accent'));
+ok('P2: theme.css token katmanı ayrık (:root/--accent, base.css\'te :root yok)', gmtheme.includes(':root') && gmtheme.includes('--accent') && !gmbase.includes(':root{'));
 ok('P1: ana motor index.html\'den çıktı (app.js\'e taşındı)', !gm.includes('function goView') && !gm.includes('function brandLogos') && !gm.includes('function portfoyOpen'));
 const invariants = [
   ["BRAND_ORIG sabiti", "BRAND_ORIG='Meridyen Gayrimenkul'"],
