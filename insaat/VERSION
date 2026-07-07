@@ -1,0 +1,5 @@
+v3.0
+
+Meridyen Yapı (insaat) — tam yayın sürümü.
+Public sayfalar + admin CMS + SEO (gerçek indekslenebilir sayfalar, JSON-LD, sitemap/robots) + güvenlik sıkılaştırma (istemci secret kaldırıldı, şifre ipucu kaldırıldı).
+Detay: git tag v3.0 · docs/SAAS-SUNUCU-AJAN-NOTLARI.md

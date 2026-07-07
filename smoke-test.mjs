@@ -129,12 +129,18 @@ ok('insaat: yükleyici stub dizinleri', ['hizmetler','projeler','bolge','iletisi
 /* ---- 3a3) insaat GERÇEK SEO sayfaları (indekslenebilir) ---- */
 for(const pg of ['hizmetlerimiz','projelerimiz','soru-cevap','bolge']){
   let h=''; try{h=readFileSync('insaat/'+pg+'.html','utf8');}catch(e){}
-  ok('insaat SEO '+pg+': indekslenebilir + canonical', !!h && !/noindex/.test(h) && h.includes('rel="canonical" href="'+pg+'.html"'));
+  ok('insaat SEO '+pg+': indekslenebilir + mutlak canonical', !!h && !/noindex/.test(h) && new RegExp('rel="canonical" href="https://[^"]*/'+pg+'\\.html"').test(h) && /og:image" content="https:/.test(h));
   ok('insaat SEO '+pg+': JSON-LD + chrome birebir', h.includes('application/ld+json') && h.includes('id="hdr"') && h.includes('insaatFooter'));
 }
 ok('insaat SEO: soru-cevap FAQPage rich-result', /"@type"\s*:\s*"FAQPage"/.test(readFileSync('insaat/soru-cevap.html','utf8')));
 ok('insaat SEO: sitemap.xml + robots.txt', (()=>{try{return readFileSync('insaat/sitemap.xml','utf8').includes('hizmetlerimiz.html') && readFileSync('insaat/robots.txt','utf8').includes('Sitemap:');}catch(e){return false}})());
 ok('insaat SEO: nav+footer → gerçek sayfalar (interlink)', insCore.includes('href="hizmetlerimiz.html"') && insCore.includes('href="projelerimiz.html"') && insCore.includes('href="bolge.html"'));
+/* ---- 3a5) GÜVENLİK regresyon kilitleri (v3.0 yayın) ---- */
+ok('GÜVENLİK: DeepSeek secret istemciye gömülü DEĞİL', (()=>{try{const u=readFileSync('insaat/js/app-ui.js','utf8');return !/sk-[0-9a-f]{16,}/.test(u) && u.includes("_DS_KEY_DEFAULT=''");}catch(e){return false}})());
+ok('GÜVENLİK: admin şifre ipucu görünür DEĞİL', !insHtml.includes('Demo şifre'));
+ok('insaat SEO: index Organization NAP (adres/telefon/geo)', /PostalAddress/.test(insHtml) && /GeoCoordinates/.test(insHtml) && /telephone/.test(insHtml));
+ok('insaat SEO: index robots + favicon', /name="robots"/.test(insHtml) && /rel="icon"/.test(insHtml));
+ok('insaat: footer Veri Ortağı kaldırıldı', !insCore.includes('Veri Ortağı') && !insHtml.includes('Veri Ortağı'));
 /* ---- 3a3b) danisman gerçek SEO sayfaları ---- */
 for(const pg of ['hakkimizda','sss']){
   let h=''; try{h=readFileSync('danisman/'+pg+'.html','utf8');}catch(e){}

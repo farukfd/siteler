@@ -226,10 +226,11 @@
     }).catch(function(e){ stat('Dosya okunamadı: '+((e&&e.message)||e),'err'); });
   };
   /* ========== ProX — dosyanın Alan Cetvelindeki GERÇEK veriyi okur (sıfır uydurma) ========== */
-  // NOT: Kurgusal tanıtım demosu. ProX metin motoru anahtarı istemcide görünür ve geçicidir;
-  // kalıcı kullanımda localStorage.setItem('deepseek_key', '...') ile ezin veya bir proxy arkasına alın.
-  var _DS_KEY_DEFAULT='sk-65f4199efefa475e9378805538afdfbd';
-  function _dsKey(){var k='';try{k=localStorage.getItem('deepseek_key')||'';}catch(e){}return k||_DS_KEY_DEFAULT;}
+  // GÜVENLİK: ProX/DeepSeek anahtarı İSTEMCİYE GÖMÜLMEZ (tarayıcıdan görülüp fatura üretilebilir).
+  // Anahtar YALNIZCA çalışma-zamanında girilir: localStorage.setItem('deepseek_key','sk-...') VEYA
+  // window.PROX_DS_KEY. Yayında: sunucu-taraflı proxy arkasına alın. Anahtar yoksa DWG-AI özelliği pasif kalır.
+  var _DS_KEY_DEFAULT='';
+  function _dsKey(){var k='';try{k=localStorage.getItem('deepseek_key')||'';}catch(e){}if(!k&&typeof window!=='undefined'&&window.PROX_DS_KEY)k=window.PROX_DS_KEY;return k||_DS_KEY_DEFAULT;}
   function _esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   // ProX marka rozeti (footer stiliyle: X yeşil kutuda)
   function _prox(sz){sz=sz||14;return '<span style="display:inline-flex;align-items:center;font-family:var(--head);font-weight:800;vertical-align:middle;font-size:'+sz+'px"><span style="color:var(--ink,#e8eefc)">Pro</span><span style="display:inline-flex;align-items:center;justify-content:center;min-width:1.35em;height:1.35em;background:#16a34a;color:#07130a;border-radius:5px;margin-left:2px">X</span></span>';}
