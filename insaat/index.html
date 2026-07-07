@@ -1,0 +1,2291 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridyen Yapı · Kurumsal İnşaat, Tadilat ve Gayrimenkul Geliştirme</title>
+<meta name="description" content="Meridyen Yapı — konut, ticari ve karma projelerde anahtar teslim inşaat, kentsel dönüşüm, kat karşılığı, tadilat ve renovasyon. ISO sertifikalı, deprem yönetmeliğine tam uyumlu kurumsal müteahhitlik.">
+
+<!-- ===== ProX API-first SaaS çekirdeği (additive) ===== -->
+<script>
+window.EMLAK_API_BASE = "https://www.emlakekspertizi.com";
+window.EMLAK_TENANT = { id:"construction", tenant_id:"construction", tenant_key:"prox_construction_910783dfb8dd6be9cb9549bc818a60ee", domain:location.hostname, sector:"construction_company", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"PRO", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"construction", legalMode:"standard" };
+window.EMLAK_PACKAGES = {
+  BASIC:["canUseMarketAnalysis","canUsePriceEstimate","canUseLeadCRM","canUseSvgGraphics"],
+  PRO:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent"],
+  BUSINESS:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent","canUseAdvancedProX","canUseCustomDomain","canUseBlogAutomation","canUsePremiumTheme"],
+  ENTERPRISE:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent","canUseAdvancedProX","canUseCustomDomain","canUseBlogAutomation","canUsePremiumTheme","canUseWhiteLabelFull"]
+};
+window.EMLAK_TENANT.enabledFeatures = window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode] || window.EMLAK_PACKAGES.PRO;
+window.hasFeature = function(f){ return window.EMLAK_TENANT.enabledFeatures.indexOf(f)!==-1; };
+window.requireFeature = function(f){ if(window.hasFeature(f)) return true; var m="Bu özellik mevcut paketinizde aktif değildir. Kurumsal paketinizi yükseltin."; if(typeof toast==="function")toast(m); else alert(m); return false; };
+async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ const res=await fetch(window.EMLAK_API_BASE+path,{method,mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id,"X-Tenant-Key":window.EMLAK_TENANT.tenant_key,...headers},body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
+function proxFallback(path,options={}){ return { fallback:true, message:"API baglantisi yok. Demo/fallback veri kullaniliyor.", path, data:(window.EMLAK_FALLBACK?window.EMLAK_FALLBACK(path,options):null) }; }
+async function submitLead(lead){ lead=lead||{}; /* Canlı /lead body: {sourcePage,formType,name,phone,email,message,extra} */ var body={ sourcePage:lead.sourcePage||"insaat", formType:lead.formType||"", name:lead.name||"", phone:lead.phone||"", email:lead.email||"", message:lead.message||"", extra:Object.assign({ tenant_id:window.EMLAK_TENANT.tenant_id, sector:window.EMLAK_TENANT.sector, location:lead.location||"", requestedService:lead.requestedService||"" }, lead.extra||{}) }; try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:body}); if(!r||r.fallback||r.success!==true)throw new Error("fallback"); return {ok:true,online:r.online!==false,data:r,lead_id:r.lead_id}; }catch(e){ try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(Object.assign({id:"lead_"+Date.now(),createdAt:new Date().toISOString(),status:"new"},body));localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:body}; } }
+window.injectSchema=function(o){try{var s=document.createElement("script");s.type="application/ld+json";s.text=JSON.stringify(o);document.head.appendChild(s);}catch(e){}};
+window.proxSubmitLead = submitLead; /* API-first lead gönderici (alias; sayfa içi submitLead(src) UI handler'ı ile çakışmasın) */
+
+/* Canlı backend feature kısa adı → dahili canUse* eşlemesi */
+window.EMLAK_FEATURE_MAP = {
+  locations:["canUseMarketAnalysis"],
+  endeks:["canUseMarketAnalysis","canUsePriceEstimate"],
+  prox_analyze:["canUseInvestmentScore","canUseMarketAnalysis"],
+  prox_ai:["canUseMarketingContent","canUseSeoContent"],
+  pdf:["canUsePdfReports"],
+  lead:["canUseLeadCRM"]
+};
+/* /bootstrap: paket + özellikleri uygula. ⚠️ theme.accent ile CSS rengi REPAINT EDİLMEZ — turuncu (#ff7a2f) korunur. */
+async function proxBootstrap(){
+  try{
+    if(typeof proxApi!=="function")return;
+    var r=await proxApi("/api/v1/tenant/bootstrap");
+    if(!r||r.fallback||r.success!==true)return; /* boş/fail → mevcut PRO varsayılanı korunur */
+    if(r.package)window.EMLAK_TENANT.packageCode=r.package;
+    var feats=[];
+    if(Array.isArray(r.enabled_features)){
+      r.enabled_features.forEach(function(f){ var mapped=window.EMLAK_FEATURE_MAP[f]; if(mapped)mapped.forEach(function(c){ if(feats.indexOf(c)===-1)feats.push(c); }); else if(feats.indexOf(f)===-1)feats.push(f); });
+    }
+    window.EMLAK_TENANT.enabledFeatures = feats.length ? feats : (window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode]||window.EMLAK_PACKAGES.PRO);
+    if(r.branding&&r.branding.powered_by)window.EMLAK_TENANT.poweredBy=r.branding.powered_by;
+    /* theme.accent KASITLI olarak uygulanmaz — turuncu marka rengi korunur */
+    if(typeof window.proxApplyFeatureGates==="function")try{window.proxApplyFeatureGates();}catch(_){}
+  }catch(_){}
+}
+window.proxBootstrap=proxBootstrap;
+/* Premium butonlarını paket'e göre kapat — yalnızca data-feature işaretli öğeler (mevcut UI bozulmaz) */
+window.proxApplyFeatureGates=function(){
+  try{
+    document.querySelectorAll('[data-feature]').forEach(function(el){
+      var ok=window.hasFeature&&window.hasFeature(el.getAttribute('data-feature'));
+      if(!ok){ el.setAttribute('disabled','disabled'); el.style.opacity='.5'; el.style.cursor='not-allowed'; if(!el.title)el.title='Bu özellik mevcut paketinizde aktif değil.'; }
+      else { el.removeAttribute('disabled'); el.style.opacity=''; el.style.cursor=''; }
+    });
+  }catch(_){}
+};
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",function(){proxBootstrap();});
+else proxBootstrap();
+</script>
+
+<!-- ===== SEO: canonical + OpenGraph + Twitter ===== -->
+<link rel="canonical" href="https://www.meridyenyapi.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Meridyen Yapı">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="Meridyen Yapı · Kurumsal İnşaat, Tadilat ve Gayrimenkul Geliştirme">
+<meta property="og:description" content="Konut, ticari ve karma projelerde anahtar teslim inşaat, kentsel dönüşüm, kat karşılığı, tadilat ve renovasyon. ISO sertifikalı, deprem yönetmeliğine tam uyumlu kurumsal müteahhitlik.">
+<meta property="og:url" content="https://www.meridyenyapi.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Meridyen Yapı · Kurumsal İnşaat, Tadilat ve Gayrimenkul Geliştirme">
+<meta name="twitter:description" content="Anahtar teslim inşaat, kentsel dönüşüm, kat karşılığı ve tadilat hizmetlerinde kurumsal müteahhitlik.">
+
+<!-- ===== JSON-LD: Organization + LocalBusiness + Service ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.meridyenyapi.com/#organization",
+      "name": "Meridyen Yapı",
+      "url": "https://www.meridyenyapi.com/",
+      "description": "Kurumsal inşaat firması: anahtar teslim konut, ticari ve karma projeler, kentsel dönüşüm, kat karşılığı ve tadilat.",
+      "areaServed": "TR",
+      "knowsAbout": ["Anahtar teslim inşaat","Kentsel dönüşüm","Kat karşılığı inşaat","Tadilat ve renovasyon","Proje fizibilitesi"]
+    },
+    {
+      "@type": "LocalBusiness",
+      "@id": "https://www.meridyenyapi.com/#localbusiness",
+      "name": "Meridyen Yapı",
+      "url": "https://www.meridyenyapi.com/",
+      "image": "https://www.meridyenyapi.com/og-image.jpg",
+      "priceRange": "$$$",
+      "areaServed": { "@type": "Country", "name": "Türkiye" },
+      "parentOrganization": { "@id": "https://www.meridyenyapi.com/#organization" }
+    },
+    {
+      "@type": "Service",
+      "@id": "https://www.meridyenyapi.com/#hizmet",
+      "serviceType": "Kurumsal İnşaat ve Proje Geliştirme",
+      "provider": { "@id": "https://www.meridyenyapi.com/#organization" },
+      "areaServed": "TR",
+      "name": "Anahtar Teslim İnşaat, Kentsel Dönüşüm ve Kat Karşılığı",
+      "description": "Konum analizi, fizibilite ve uçtan uca proje yönetimiyle anahtar teslim inşaat, kentsel dönüşüm, kat karşılığı ortaklık ve tadilat hizmetleri.",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "İnşaat Hizmetleri",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Anahtar teslim inşaat" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Kentsel dönüşüm" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Kat karşılığı inşaat" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Tadilat ve renovasyon" } }
+        ]
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&family=Manrope:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<style id="rv-style">
+/* Hata-toleranslı scroll-reveal (yalnız JS eklerse gizlenir; aksi halde görünür) */
+.rv-on{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.75,.2,1),transform .7s cubic-bezier(.2,.75,.2,1);will-change:opacity,transform}
+.rv-on.rv-in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv-on{opacity:1!important;transform:none!important}}
+/* ---- Yeni üst menü: Neden [X] Biz, WhatsApp, Dil, Giriş ---- */
+.nb-x{display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;background:#16a34a;color:#08130a;border-radius:6px;font-weight:800;font-size:.9em;line-height:1;vertical-align:middle;position:relative;top:-1px;margin:0 3px}
+.nav-wa{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;color:#25d366;border:1px solid var(--line);background:rgba(255,255,255,.05);transition:.2s;text-decoration:none}
+.nav-wa:hover{background:rgba(37,211,102,.16)}
+.nav-wa svg{width:20px;height:20px}
+.lang-sw{display:inline-flex;align-items:center;gap:5px}
+.lang-sw>svg{width:17px;height:17px;color:var(--muted)}
+.lang-sel{border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:9px;padding:7px 8px;font-family:var(--body);font-weight:700;font-size:12.5px;color:#fff;cursor:pointer;outline:none}
+header.scrolled .lang-sel{color:var(--ink)}
+.lang-sel option{color:#111}
+@media(max-width:980px){.nav-wa,.lang-sw{display:none}}
+.gmodal{position:fixed;inset:0;z-index:3000;display:none}
+.gmodal.on{display:block}
+.gm-ov{position:absolute;inset:0;background:rgba(6,8,14,.72);backdrop-filter:blur(3px)}
+.gm-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,92vw);background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
+.gm-x{position:absolute;right:14px;top:12px;background:none;border:0;color:var(--muted);font-size:20px;cursor:pointer}
+.gm-head{display:flex;align-items:center;gap:10px;margin-bottom:16px;font-family:var(--head);font-weight:800;font-size:17px;color:var(--on-surface)}
+.gm-head .mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-weight:800}
+.gm-tabs{display:flex;gap:8px;margin-bottom:14px}
+.gm-tabs button{flex:1;background:var(--surface-2);border:1px solid var(--line);color:var(--on-surface-mut);border-radius:10px;padding:9px;font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;transition:.15s}
+.gm-tabs button.act{background:var(--accent);color:var(--on-accent);border-color:transparent}
+.gm-pane .sub{font-size:12.5px;color:var(--on-surface-mut);margin:0 0 6px}
+.gm-pane label{display:block;font-size:12.5px;color:var(--on-surface-mut);margin:10px 0 5px;font-weight:600}
+.gm-pane input{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:11px 12px;color:var(--on-surface);font-size:14px;outline:none}
+.gm-btn{width:100%;margin-top:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--on-accent);border:0;border-radius:10px;padding:12px;font-family:var(--body);font-weight:700;font-size:14px;cursor:pointer}
+.gm-err{color:#ff8a8a;font-size:12.5px;margin-top:8px;min-height:16px}
+.gm-note{font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.5}
+/* Footer alt şerit + Powered by ProX (X yeşil kutu) */
+.fbrand{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 16px;margin-top:14px;padding:16px 0 4px;border-top:1px solid rgba(255,255,255,.09);font-size:12px;color:#8fa0bd;text-align:center}
+.fbrand .fvo{color:#b9c6dc;font-weight:600}
+.fprox{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.fprox .fprox-mark{display:inline-flex;align-items:center}
+.fprox .fprox-lead{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#7f8ea8;font-weight:600}
+.fprox .fprox-pro{font-family:var(--head);font-weight:800;font-size:15px;color:#fff}
+.fprox .fprox-x{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;height:1.4em;background:#16a34a;color:#0b1220;border-radius:6px;font-family:var(--head);font-weight:800;font-size:14px;margin-left:2px}
+.fprox:hover .fprox-x{background:#1fb155}
+.fvo{color:#b9c6dc;font-weight:600}
+.fsocial{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.fsocial a{width:38px;height:38px;border-radius:11px;display:inline-grid;place-items:center;padding:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);color:#b9c6dc;transition:.2s ease}
+.fsocial a:hover{background:var(--accent);border-color:transparent;color:#fff;transform:translateY(-2px);box-shadow:0 8px 20px -8px var(--accent)}
+.fsocial svg{width:17px;height:17px;fill:currentColor;display:block}
+.flegal{display:flex;flex-wrap:wrap;align-items:center;gap:8px 8px;font-size:12.5px;margin-top:14px}
+.fportals{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:16px}
+.fportals .fp-lead{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8fa0bb;margin-right:2px}
+.fportals .fp{font-family:var(--head);font-weight:800;font-size:12.5px;letter-spacing:-.01em;line-height:1;padding:7px 12px;border-radius:8px;text-decoration:none;transition:.2s ease;box-shadow:0 4px 12px -6px rgba(0,0,0,.5)}
+.fportals .fp:hover{transform:translateY(-2px);filter:brightness(1.05)}
+.fportals .fp-sah{background:#ffe800;color:#12100a}
+.fportals .fp-hep{background:#ff5000;color:#fff}
+.fportals .fp-ejt{background:#0a4bd6;color:#fff}
+.fportals .fp-ejt b{font-weight:800}
+.flegal a{display:inline-block;position:relative;color:#8fa0bd;padding:2px 0;font-size:12.5px;transition:color .15s}
+.flegal a:not(:last-child)::after{content:"·";color:#4a5876;margin-left:8px}
+.flegal a:hover{color:#fff}
+.fbot{justify-content:center;align-items:center;text-align:center;gap:6px 16px}
+.fbot .fcopy{color:#8fa0bb}
+.dwg-kpi{background:var(--surface-2,var(--surface));border:1px solid var(--line);border-radius:9px;padding:6px 12px;font-size:12px;color:var(--muted)}
+.dwg-kpi b{color:var(--accent);font-family:var(--head);font-size:15px;margin-right:4px}
+.dwg-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.dwg-tbl td{padding:5px 8px;border-bottom:1px solid var(--line);color:var(--on-surface,var(--ink))}
+.dwg-tbl tr:last-child td{border-bottom:0}
+</style>
+</head>
+<body>
+
+<!-- ============ PUBLIC SITE ============ -->
+<div id="site">
+<header id="hdr"><div class="wrap bar">
+  <a class="logo" href="#"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
+  <nav class="main insaatNav">
+    <a href="#hizmetler" onclick="event.preventDefault();openHizmetlerPage()">Hizmetlerimiz</a>
+    <a href="neden-biz.html">Neden <span class="nb-x">?</span> Biz</a>
+    <a href="#projeler" onclick="event.preventDefault();openProjelerPage()">Projeler</a>
+    <a href="#bolge" onclick="event.preventDefault();openBolgePage()">Bölge Zekası</a>
+  </nav>
+  <div class="nav-cta insaatCta">
+    <a class="nav-wa" href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg></a>
+    <button class="btn btn-primary" onclick="openTeklif()">Ücretsiz Keşif</button>
+    <div class="lang-sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg><select class="lang-sel" aria-label="Dil / Language" onchange="applyLang(this.value)"><option value="tr">TR</option><option value="en">EN</option></select></div>
+    <a class="btn btn-ghost js-giris" href="#giris" onclick="event.preventDefault();openGiris()">Giriş</a>
+    <button class="burger" onclick="document.getElementById('mnav').classList.add('open')"><span></span><span></span><span></span></button>
+  </div>
+</div></header>
+
+<div class="mnav" id="mnav" onclick="if(event.target.id==='mnav')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
+
+<!-- HERO: cinematic image carousel -->
+<section class="hero">
+  <div class="hero-bg">
+    <img class="hero-img on" id="hi0" alt="Meridyen Yapı projesi" fetchpriority="high" decoding="async">
+    <img class="hero-img" id="hi1" alt="Meridyen Yapı projesi" fetchpriority="low" decoding="async">
+    <img class="hero-img" id="hi2" alt="Meridyen Yapı projesi" fetchpriority="low" decoding="async">
+    <img class="hero-img" id="hi3" alt="Meridyen Yapı projesi" fetchpriority="low" decoding="async">
+  </div>
+  <div class="hero-grad"></div>
+  <div class="wrap">
+    <div class="hero-content">
+      <div class="eyebrow">Meridyen Yapı · 1986'dan beri</div>
+      <h1 class="js-h1">Şehrin silüetini <span class="hl">güvenle</span> yeniden inşa ediyoruz</h1>
+      <p class="lead js-sub">Konut, ticari ve karma projelerde anahtar teslim mühendislik; kentsel dönüşüm, kat karşılığı ve tadilat hizmetlerinde 38 yıllık güven.</p>
+      <div class="cta">
+        <button class="btn btn-primary" onclick="openTeklif()">Ücretsiz Keşif & Teklif →</button>
+        <a class="btn btn-ghost" href="#projeler" onclick="event.preventDefault();openProjelerPage()">Projelerimiz</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">↓ KEŞFEDİN</div>
+  <div class="hero-stats"><div class="wrap"><div class="row">
+    <div class="it"><div class="n" data-stat="yil">38</div><div class="l">YIL TECRÜBE</div></div>
+    <div class="it"><div class="n" data-stat="konut">8.400+</div><div class="l">TESLİM EDİLEN KONUT</div></div>
+    <div class="it"><div class="n" data-stat="alan">2,1M m²</div><div class="l">TOPLAM İNŞA ALANI</div></div>
+    <div class="it"><div class="n" data-stat="santiye">12</div><div class="l">AKTİF ŞANTİYE</div></div>
+  </div></div></div>
+</section>
+
+<section class="live-build"><div class="wrap"><div class="lb-grid">
+  <div class="lb-anim">
+  <div class="lb-poster" id="lbPoster" aria-hidden="true"><svg viewBox="0 0 220 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 130h200"/><rect x="34" y="74" width="40" height="56"/><rect x="84" y="50" width="46" height="80"/><rect x="140" y="88" width="34" height="42"/><path d="M44 84h6M44 96h6M44 108h6M60 84h6M60 96h6M94 62h8M94 78h8M94 94h8M112 62h8M112 78h8M112 94h8M150 100h6M162 100h6"/><path d="M104 50V30h44"/><path d="M148 30l16 8"/><path d="M148 38v6"/></svg></div>
+  <canvas id="buildScene"></canvas>
+  <div class="lb-label"><span class="lb-lbl-prefix">İnşa Halinde</span> · <span id="lbBldName" class="lb-lbl-name">Konut Projesi</span></div>
+</div>
+  <div class="lb-content">
+    <div class="eyebrow">Şu An Sahada</div>
+    <h2>Bu cümleyi okuduğunuz şu anda, ekibimiz <span class="amber">12 şantiyede</span> üretim yapıyor.</h2>
+    <p>Meridyen Yapı'nın gücü konuşmak değil, üretmektir. Sözleşmelerimiz takvimle yürür; teslimimiz tarihinde gerçekleşir.</p>
+    <div class="lb-stats">
+      <div class="lb-stat"><div class="n" data-lb="12">12</div><div class="l">Aktif şantiye</div></div>
+      <div class="lb-stat"><div class="n" data-lb="240">240+</div><div class="l">Sahada işçi / mühendis</div></div>
+      <div class="lb-stat"><div class="n" data-lb="318">318</div><div class="l">Bu ay teslim edilen daire</div></div>
+    </div>
+  </div>
+</div></div></section>
+
+<section id="hakkimizda"><div class="wrap about">
+  <div class="imgs">
+    <img id="img-about" alt="Meridyen Yapı şantiye ve mühendislik ekibi" loading="lazy" decoding="async">
+    <div class="badge"><div class="y" data-stat="yil">38</div><div class="t">yıllık kesintisiz<br>mühendislik tecrübesi</div></div>
+  </div>
+  <div>
+    <div class="eyebrow">Kurumsal</div>
+    <h2>Mühendislik disiplinini yaşanabilir mimariyle buluşturuyoruz</h2>
+    <p class="js-about">Meridyen Yapı; 1986'da temellerini attığı kurumsal kültürünü üç kuşaktır aynı titizlikle sürdüren bir yapı ve gayrimenkul geliştirme şirketidir. Arsa analizinden anahtar teslime kadar her aşamayı kendi mühendis kadromuzla yönetir; deprem güvenliği, malzeme kalitesi ve teslim takvimini taviz verilmez ilkeler olarak görürüz.</p>
+    <p>Bugüne kadar 8.400'ün üzerinde konutu sahiplerine teslim ettik; her projede şeffaf süreç, denetlenebilir kalite ve uzun ömürlü değer ürettik.</p>
+    <div class="vmv">
+      <div class="c"><div class="i">◎</div><h4>Vizyon</h4><p>Türkiye'nin en güvenilir yapı markası olmak.</p></div>
+      <div class="c"><div class="i">⚐</div><h4>Misyon</h4><p>Kaliteyi zamanında teslim ve şeffaflıkla buluşturmak.</p></div>
+      <div class="c"><div class="i">♦</div><h4>Değerler</h4><p>Güven, dürüstlük, iş güvenliği, sürdürülebilirlik.</p></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="statsband"><div class="wrap"><div class="grid">
+  <div><div class="n" data-stat="yil" data-count="38">0</div><div class="l">Yıllık Tecrübe</div></div>
+  <div><div class="n" data-stat="konut" data-count="8400" data-suf="+">0</div><div class="l">Teslim Edilen Konut</div></div>
+  <div><div class="n" data-stat="proje" data-count="146">0</div><div class="l">Tamamlanan Proje</div></div>
+  <div><div class="n" data-stat="santiye" data-count="12">0</div><div class="l">Aktif Şantiye</div></div>
+  <div><div class="n" data-stat="alan" data-count="2100000" data-fmt="m2">0</div><div class="l">Toplam İnşa Alanı</div></div>
+</div></div></section>
+
+<section id="hizmetler"><div class="wrap">
+  <div class="sec-head"><div class="eyebrow">Hizmetlerimiz</div>
+    <h2>Fikirden teslime, uçtan uca yapı çözümleri</h2>
+    <p>Her hizmet; ayrı proje yönetimi, kendi mühendis ekibi ve kalite kontrol süreciyle yürütülür.</p></div>
+  <div class="svc-grid" id="svcGrid"></div>
+</div></section>
+
+
+<section class="tech-showcase">
+  <div class="wrap">
+    <div class="ts-grid">
+      <div class="ts-text">
+        <div class="eyebrow">Mühendislik Hassasiyeti</div>
+        <h2>Fikirden teslime,<br>uçtan uca yapı çözümleri</h2>
+        <p>Her proje, çizimden temele, kabadan kaba inşaat ve ince işçiliğe kadar tek bir disiplin altında ilerler. Bağımsız yapı denetimi, statik koordinasyon ve son model BIM teknolojisiyle her aşamada şeffaflık sağlanır.</p>
+        <div class="ts-pillars">
+          <div class="ts-p"><div class="n">01</div><div class="t">Kaba İnşaat</div><div class="d">Çelik · betonarme · prefabrik</div></div>
+          <div class="ts-p"><div class="n">02</div><div class="t">Tadilat & Renovasyon</div><div class="d">Tarihi yapı · kentsel dönüşüm</div></div>
+          <div class="ts-p"><div class="n">03</div><div class="t">Kentsel Dönüşüm</div><div class="d">Riskli yapı · 6306 sayılı kanun</div></div>
+          <div class="ts-p"><div class="n">04</div><div class="t">Anahtar Teslim Yapılar</div><div class="d">Konut · ticari · karma</div></div>
+          <div class="ts-p"><div class="n">05</div><div class="t">Kat Karşılığı Yapım</div><div class="d">Arsa sahibi · müteahhit modeli</div></div>
+          <div class="ts-p"><div class="n">06</div><div class="t">Endüstriyel Tesis</div><div class="d">Fabrika · depo · lojistik</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projeler" style="background:var(--surface-2)"><div class="wrap">
+  <div class="proj-head">
+    <div class="sec-head" style="margin-bottom:0"><div class="eyebrow">Projelerimiz</div>
+      <h2>Hayata geçirdiğimiz ve yükselen projeler</h2>
+      <p>Devam eden, tamamlanan ve planlanan projelerimizi keşfedin.</p></div>
+    <div class="filters" id="filters">
+      <button class="active" data-f="all">Tümü</button><button data-f="devam">Devam Eden</button>
+      <button data-f="tamam">Tamamlanan</button><button data-f="plan">Planlanan</button>
+    </div>
+  </div>
+  <div class="proj-grid" id="projGrid"></div>
+  <div style="text-align:center;margin-top:34px"><button class="btn btn-primary" onclick="openProjelerPage()">Tüm Projeleri Görüntüle →</button></div>
+</div></section>
+
+<section class="why" id="neden-biz"><div class="wrap">
+  <div class="sec-head center"><div class="eyebrow">Neden Meridyen Yapı?</div>
+    <h2>Güveni rastlantıya bırakmıyoruz</h2>
+    <p style="margin-left:auto;margin-right:auto">Her projede aynı standartları uygulayan, denetlenebilir bir kalite sistemi.</p></div>
+  <div class="why-grid">
+    <div class="c"><div class="i">🛡️</div><h3>Deprem Güvenliği</h3><p>Tüm projeler TBDY 2018 ve zemin etüdü raporlarına tam uyumlu tasarlanır, bağımsız denetimden geçer.</p></div>
+    <div class="c"><div class="i">📐</div><h3>Mühendislik Kalitesi</h3><p>Statik, mimari ve mekanik projeler kendi kadromuzca üretilir; her metrekare yapı denetimiyle belgelenir.</p></div>
+    <div class="c"><div class="i">⏱️</div><h3>Zamanında Teslim</h3><p>Sözleşmeye bağlı teslim takvimi; aylık ilerleme raporları ve şantiye kamerasıyla şeffaf takip.</p></div>
+    <div class="c"><div class="i">👷</div><h3>İş Sağlığı & Güvenliği</h3><p>ISO 45001 sertifikalı İSG sistemi; sıfır kaza hedefiyle eğitimli saha ekipleri.</p></div>
+    <div class="c"><div class="i">🌿</div><h3>Sürdürülebilirlik</h3><p>Enerji verimli tasarım, geri dönüştürülebilir malzeme ve düşük karbonlu üretim.</p></div>
+    <div class="c"><div class="i">🔍</div><h3>Şeffaf Süreç</h3><p>Ödeme planından malzeme seçimine her aşama yazılı, izlenebilir ve müşteriyle paylaşılır.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head center"><div class="eyebrow">Nasıl Çalışırız</div><h2>Arsadan teslime, 6 ölçülebilir aşama</h2></div>
+  <div class="steps">
+    <div class="step"><h4>Arsa & Fizibilite</h4><p>Konum analizi, zemin etüdü, imar ve yatırım fizibilitesi.</p></div>
+    <div class="step"><h4>Mimari Tasarım</h4><p>Konsept, statik ve mekanik projelerin üretimi.</p></div>
+    <div class="step"><h4>Ruhsat & İzin</h4><p>Belediye onayları ve yapı ruhsatı süreçleri.</p></div>
+    <div class="step"><h4>İnşaat</h4><p>Kalite kontrollü, takvime bağlı saha üretimi.</p></div>
+    <div class="step"><h4>Denetim & Kalite</h4><p>Bağımsız yapı denetimi ve test süreçleri.</p></div>
+    <div class="step"><h4>İskan & Teslim</h4><p>İskan raporu, anahtar teslim ve satış sonrası destek.</p></div>
+  </div>
+  <!-- Yatırım Değer Artışı Eğrisi (additive SVG · turuncu tema · responsive) -->
+  <div style="margin-top:34px">
+    <div class="sec-head center" style="margin-bottom:14px"><div class="eyebrow">Yatırım Perspektifi</div><h3 style="font-size:clamp(20px,2.4vw,28px)">Lansmandan teslime tahmini değer artışı</h3></div>
+    <svg viewBox="0 0 800 300" width="100%" role="img" aria-label="Proje lansmanından anahtar teslime kadar tahmini yatırım değer artışı eğrisi" preserveAspectRatio="xMidYMid meet" style="max-width:880px;display:block;margin:0 auto;height:auto">
+      <defs>
+        <linearGradient id="yatirimFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.32"/>
+          <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <line x1="60" y1="250" x2="770" y2="250" stroke="var(--line)" stroke-width="1.5"/>
+      <line x1="60" y1="40" x2="60" y2="250" stroke="var(--line)" stroke-width="1.5"/>
+      <path d="M60 235 C190 225 270 200 360 165 C460 128 560 92 770 55 L770 250 L60 250 Z" fill="url(#yatirimFill)"/>
+      <path d="M60 235 C190 225 270 200 360 165 C460 128 560 92 770 55" fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round"/>
+      <g fill="var(--accent)">
+        <circle cx="60" cy="235" r="5"/><circle cx="360" cy="165" r="5"/><circle cx="770" cy="55" r="5.5"/>
+      </g>
+      <g font-family="var(--head,inherit)" font-size="12.5" fill="var(--muted)" text-anchor="middle">
+        <text x="60" y="272">Lansman</text>
+        <text x="225" y="272">Ruhsat</text>
+        <text x="360" y="272">İnşaat</text>
+        <text x="560" y="272">İnce İş</text>
+        <text x="755" y="272">Teslim</text>
+      </g>
+      <text x="770" y="42" text-anchor="end" font-family="var(--head,inherit)" font-size="13" font-weight="700" fill="var(--accent)">+ Değer Artışı</text>
+    </svg>
+    <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px;max-width:620px;margin-inline:auto">Temsili eğri; lokasyon, proje tipi ve piyasa koşullarına göre değişir.</p>
+  </div>
+</div></section>
+
+<section id="bolge" class="region"><div class="wrap region-grid">
+  <div>
+    <div class="eyebrow">Bölge Zekası · Veriyle Yatırım</div>
+    <h2>Her projemizin altında, bölgenin gerçek verisi var</h2>
+    <p>Sıradan müteahhitlerden farkımız: her projeyi mahalle bazlı fiyat endeksi, 5 yıllık değer trendi, yatırım skoru ve deprem/fay analiziyle sunuyoruz. Yatırımınızı duyguyla değil, veriyle yapın.</p>
+    <div class="partner">🔗 Canlı Bölge Veri Ağı · 81 il · 50.000+ mahalle endeksi</div>
+    <div style="margin-top:22px"><button class="btn btn-primary" onclick="openBolgePage()">Bölge Zekası & Saha Gücümüz →</button></div>
+  </div>
+  <div class="dataw">
+    <div class="top"><div><div class="mh">Levent, Beşiktaş / İstanbul</div><div class="sub">Güncel bölge analizi · örnek veri</div></div>
+      <span class="badge-risk">Fay hattına uzak · Düşük risk</span></div>
+    <div class="dw-row">
+      <div class="dw-cell"><div class="k">Ortalama m² Fiyatı</div><div class="v">142.500₺</div></div>
+      <div class="dw-cell"><div class="k">5 Yıllık Değişim</div><div class="v">+218<span class="up">%</span></div></div>
+      <div class="dw-cell"><div class="k">Yatırım Skoru</div><div class="gauge">
+        <svg width="54" height="54" viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="7"/><circle cx="28" cy="28" r="24" fill="none" stroke="#34d399" stroke-width="7" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="27" transform="rotate(-90 28 28)"/></svg>
+        <div class="v" style="font-size:23px">82<span style="font-size:13px;color:#9fb0ca">/100</span></div></div></div>
+      <div class="dw-cell"><div class="k">5 Yıllık Trend</div>
+        <svg width="100%" height="38" viewBox="0 0 120 40" preserveAspectRatio="none" style="margin-top:6px">
+          <polyline points="0,34 20,30 40,26 60,18 80,14 100,8 120,4" fill="none" stroke="#60a5fa" stroke-width="2.5"/>
+          <polyline points="0,34 20,30 40,26 60,18 80,14 100,8 120,4 120,40 0,40" fill="rgba(96,165,250,.15)" stroke="none"/></svg></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="medya"><div class="wrap">
+  <div class="sec-head center"><div class="eyebrow">Referanslar & İş Ortakları</div><h2>Bize güvenen kurumlar</h2></div>
+  <div class="logos">
+    <div class="l">ANKA<br>HOLDİNG</div><div class="l">Vega<br>İnşaat</div><div class="l">Marmara<br>GYO</div>
+    <div class="l">Nova<br>Yapı</div><div class="l">Atlas<br>Mimarlık</div><div class="l">Kıyı<br>Bank</div>
+  </div>
+  <div class="tst-grid">
+    <div class="tst"><div class="stars">★★★★★</div><p>"Teslim takvimine harfiyen uydular. Aylık ilerleme raporları ve şeffaf süreç sayesinde yatırımımıza güvenle baktık."</p>
+      <div class="who"><div class="av">AY</div><div><b>Ahmet Yıldırım</b><span>Konut Yatırımcısı · Levent</span></div></div></div>
+    <div class="tst"><div class="stars">★★★★★</div><p>"Kentsel dönüşüm sürecinde her aşamada bilgilendirildik. Mühendislik kalitesi gerçekten fark ediliyor."</p>
+      <div class="who"><div class="av">SK</div><div><b>Seda Kaya</b><span>Bina Temsilcisi · Kadıköy</span></div></div></div>
+    <div class="tst"><div class="stars">★★★★★</div><p>"Tadilat projemiz planlanan sürede, bütçeyi aşmadan tamamlandı. Profesyonel ve veri odaklı bir ekip."</p>
+      <div class="who"><div class="av">MT</div><div><b>Murat Tekin</b><span>İşyeri Sahibi · Şişli</span></div></div></div>
+  </div>
+</div></section>
+
+<section style="background:var(--surface-2)"><div class="wrap">
+  <div class="sec-head"><div class="eyebrow">Bilgi Merkezi</div><h2>Sektörden haberler ve rehberler</h2>
+    <p>İnşaat, tadilat, yatırım ve kentsel dönüşüm üzerine uzman içerikler.</p></div>
+  <div class="blog-grid" id="blogGrid"></div>
+</div></section>
+
+<section><div class="wrap"><div class="cta-band">
+  <div><h2>Geleceğin şehirlerini birlikte inşa edelim</h2><p>Mühendis, mimar ve saha ekibi pozisyonları için ekibimize katılın.</p></div>
+  <a class="btn btn-light" href="#" onclick="event.preventDefault();openDoc('kariyer')">Açık Pozisyonlar →</a>
+</div></div></section>
+
+<section id="iletisim" style="background:var(--surface-2)"><div class="wrap">
+  <div class="sec-head"><div class="eyebrow">İletişim & Teklif</div><h2>Projenizi konuşalım</h2>
+    <p>Ücretsiz keşif, fiyat teklifi, tadilat veya kat karşılığı görüşmesi için bize ulaşın.</p></div>
+  <div class="contact-grid">
+    <div class="cinfo">
+      <div class="row"><div class="i">📍</div><div><div class="k">Genel Merkez</div><div class="v js-adr">Levent Mah. Yapı Cad. No:1, Beşiktaş / İstanbul</div></div></div>
+      <div class="row"><div class="i">📞</div><div><div class="k">Telefon</div><div class="v js-tel">+90 212 000 00 00</div></div></div>
+      <div class="row"><div class="i">✉</div><div><div class="k">E-posta</div><div class="v js-mail">info@meridyenyapi.com</div></div></div>
+      <div class="row"><div class="i">🕘</div><div><div class="k">Çalışma Saatleri</div><div class="v">Hafta içi 09:00–18:00 · Cmt 10:00–14:00</div></div></div>
+      <div class="cmap"><div class="pin">📍</div></div>
+    </div>
+    <div class="formcard">
+      <h3>Teklif Talebi Oluştur</h3><div class="fhint">Formu doldurun, 24 saat içinde uzman ekibimiz sizi arasın.</div>
+      <div class="fld2">
+        <div class="field"><label>Ad Soyad</label><input type="text" id="f_ad" placeholder="Adınız Soyadınız"></div>
+        <div class="field"><label>Telefon</label><input type="text" id="f_tel" placeholder="05__ ___ __ __"></div>
+      </div>
+      <div class="field"><label>E-posta</label><input type="text" id="f_mail" placeholder="ornek@eposta.com"></div>
+      <div class="field"><label>İlgilendiğiniz konu</label>
+        <select id="f_konu"><option>Konut projesi / daire</option><option>Tadilat & Renovasyon</option><option>Kat karşılığı inşaat</option><option>Kentsel dönüşüm</option><option>Ticari yapı / taahhüt</option><option>Kariyer</option><option>Diğer</option></select></div>
+      <div class="field"><label>Mesajınız</label><textarea id="f_msg" placeholder="Projeniz veya talebiniz hakkında kısaca bilgi verin..."></textarea></div>
+      <div class="kvkk"><input type="checkbox" id="f_kvkk"><label for="f_kvkk">KVKK Aydınlatma Metni kapsamında kişisel verilerimin işlenmesini onaylıyorum.</label></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="submitLead('iletisim')">Teklif Talebini Gönder</button>
+    </div>
+  </div>
+</div></section>
+
+<!-- ===== /PROJELER LISTE SAYFASI ===== -->
+<div id="projelerPage">
+  <header id="hdr2" class="pp-hdr"><div class="wrap bar">
+    <a class="logo" href="#" onclick="event.preventDefault();closeProjelerPage()"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
+    <nav class="main insaatNav">
+      <a href="#hakkimizda" onclick="return ppGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();openHizmetlerPage();closeProjelerPage()">Hizmetler</a><a href="#projeler" onclick="event.preventDefault();var p=document.getElementById('projelerPage');if(p)p.scrollTo({top:0,behavior:'smooth'})">Projeler</a>
+      <a href="#bolge" onclick="return ppGo('bolge')">Bölge Zekası</a><a href="#medya" onclick="return ppGo('medya')">Medya</a><a href="#iletisim" onclick="return ppGo('iletisim')">İletişim</a>
+    </nav>
+    <div class="nav-cta insaatCta">
+      <a class="btn btn-ghost" href="#projeler" onclick="event.preventDefault();document.getElementById('projelerPage').scrollTo({top:0,behavior:'smooth'})">Projeler</a>
+      <button class="btn btn-primary" onclick="openTeklif()">Teklif Al</button>
+      <button class="burger" onclick="document.getElementById('mnav2').classList.add('open')"><span></span><span></span><span></span></button>
+    </div>
+  </div></header>
+
+  <div class="mnav" id="mnav2" onclick="if(event.target.id==='mnav2')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
+
+  <div class="pp-hero">
+    <div class="eyebrow">Portföyümüz</div>
+    <h1>Yükselen ve Teslim Edilen Projelerimiz</h1>
+    <p>Devam eden, tamamlanan ve planlama aşamasındaki tüm projelerimizi inceleyin. Her projede daire seçimi, kat planları ve detaylı bilgilere ulaşabilirsiniz.</p>
+  </div>
+
+  <div class="pp-toolbar">
+    <div class="pp-filters" id="ppFilters">
+      <button class="ppf active" data-f="all">Tümü</button>
+      <button class="ppf" data-f="devam">Devam Eden</button>
+      <button class="ppf" data-f="tamam">Tamamlanan</button>
+      <button class="ppf" data-f="plan">Planlanan</button>
+    </div>
+    <div class="pp-search">🔍<input type="text" id="ppSearch" placeholder="Proje veya konum ara..." oninput="renderProjelerPage()"></div>
+  </div>
+  <div class="pp-count" id="ppCount"></div>
+  <div class="pp-grid" id="ppGrid"></div>
+
+  <footer class="insaatFooter"></footer>
+</div>
+
+<!-- ===== /HIZMETLER SAYFASI ===== -->
+<div id="hizmetlerPage">
+  <header id="hdr3" class="pp-hdr"><div class="wrap bar">
+    <a class="logo" href="#" onclick="event.preventDefault();closeHizmetlerPage()"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
+    <nav class="main insaatNav">
+      <a href="#hakkimizda" onclick="return hpGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();document.getElementById('hizmetlerPage').scrollTo({top:0,behavior:'smooth'})">Hizmetler</a><a href="#projeler" onclick="event.preventDefault();openProjelerPage();closeHizmetlerPage()">Projeler</a>
+      <a href="#bolge" onclick="return hpGo('bolge')">Bölge Zekası</a><a href="#medya" onclick="return hpGo('medya')">Medya</a><a href="#iletisim" onclick="return hpGo('iletisim')">İletişim</a>
+    </nav>
+    <div class="nav-cta insaatCta">
+      <a class="btn btn-ghost" href="#projeler" onclick="event.preventDefault();openProjelerPage();closeHizmetlerPage()">Projeler</a>
+      <button class="btn btn-primary" onclick="openTeklif()">Teklif Al</button>
+      <button class="burger" onclick="document.getElementById('mnav3').classList.add('open')"><span></span><span></span><span></span></button>
+    </div>
+  </div></header>
+
+  <div class="mnav" id="mnav3" onclick="if(event.target.id==='mnav3')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
+
+  <div class="hp-body" id="hpGrid"></div>
+  <div class="hp-cta"><div class="box">
+    <h3>Projeniz için doğru hizmeti birlikte belirleyelim</h3>
+    <p>Ücretsiz keşif ve teklif için bize ulaşın; size en uygun çözümü sunalım.</p>
+    <button class="btn" onclick="openTeklif()">Ücretsiz Keşif & Teklif Al →</button>
+  </div></div>
+
+
+  <!-- Kurumsal tanıtım (başlık + istatistik + standartlar) — sayfa altına taşındı -->
+  <div class="hp-hero">
+    <div class="eyebrow">Hizmetlerimiz</div>
+    <h1>Fikirden Teslime, Uçtan Uca Yapı Çözümleri</h1>
+    <p>Her hizmet; ayrı proje yönetimi, kendi mühendis ekibi ve kalite kontrol süreciyle yürütülür. Her hizmet sayfasında derin analiz, süreç akışı, mevzuat, risk yönetimi ve sık sorulan soruları bulacaksınız.</p>
+  </div>
+  <section class="statsband hp-stats sd-rv"><div class="wrap"><div class="grid">
+    <div><div class="n" data-stat="yil" data-count="38">0</div><div class="l">Yıllık Tecrübe</div></div>
+    <div><div class="n" data-stat="konut" data-count="8400" data-suf="+">0</div><div class="l">Teslim Edilen Konut</div></div>
+    <div><div class="n" data-stat="proje" data-count="146">0</div><div class="l">Tamamlanan Proje</div></div>
+    <div><div class="n" data-stat="santiye" data-count="12">0</div><div class="l">Aktif Şantiye</div></div>
+    <div><div class="n" data-stat="alan" data-count="2100000" data-fmt="m2">0</div><div class="l">Toplam İnşa Alanı</div></div>
+  </div></div></section>
+  <div class="hp-trust sd-rv"><span class="ht-lead">🛡️ Standartlarımız</span><span class="ht-chip">TBDY 2018</span><span class="ht-chip">Yapı Denetimli · 4708</span><span class="ht-chip">6306 Kentsel Dönüşüm</span><span class="ht-chip">ISO 9001 · 14001 · 45001</span><span class="ht-chip">BIM Koordinasyon</span></div>
+
+  <footer class="insaatFooter"></footer>
+</div>
+
+<!-- ===== /BOLGE ZEKASI SAYFASI ===== -->
+<div id="bolgePage">
+  <header id="hdr6" class="pp-hdr"><div class="wrap bar">
+    <a class="logo" href="#" onclick="event.preventDefault();closeBolgePage()"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
+    <nav class="main insaatNav">
+      <a href="#hakkimizda" onclick="return bzGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();openHizmetlerPage();closeBolgePage()">Hizmetler</a><a href="#projeler" onclick="event.preventDefault();openProjelerPage();closeBolgePage()">Projeler</a>
+      <a href="#bolge" onclick="event.preventDefault();document.getElementById('bolgePage').scrollTo({top:0,behavior:'smooth'})">Bölge Zekası</a><a href="#medya" onclick="return bzGo('medya')">Medya</a><a href="#iletisim" onclick="return bzGo('iletisim')">İletişim</a>
+    </nav>
+    <div class="nav-cta insaatCta">
+      <button class="btn btn-primary" onclick="openTeklif()">Teklif Al</button>
+      <button class="burger" onclick="document.getElementById('mnav6').classList.add('open')"><span></span><span></span><span></span></button>
+    </div>
+  </div></header>
+
+  <div class="mnav" id="mnav6" onclick="if(event.target.id==='mnav6')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
+
+  <div class="bz-body" id="bzBody"></div>
+
+  <footer class="insaatFooter"></footer>
+</div>
+
+<!-- ===== HIZMET DETAY OVERLAY ===== -->
+<div id="svcDetail">
+  <header id="hdr4" class="pp-hdr"><div class="wrap bar">
+    <a class="logo" href="#" onclick="event.preventDefault();closeSvcDetail();closeHizmetlerPage()"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
+    <nav class="main insaatNav">
+      <a href="#hakkimizda" onclick="return sdGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();sdBackToHizmetler()">Hizmetler</a><a href="#projeler" onclick="event.preventDefault();closeSvcDetail();openProjelerPage();closeHizmetlerPage()">Projeler</a>
+      <a href="#bolge" onclick="return sdGo('bolge')">Bölge Zekası</a><a href="#medya" onclick="return sdGo('medya')">Medya</a><a href="#iletisim" onclick="return sdGo('iletisim')">İletişim</a>
+    </nav>
+    <div class="nav-cta insaatCta">
+      <a class="btn btn-ghost" href="#hizmetler" onclick="event.preventDefault();sdBackToHizmetler()">Tüm Hizmetler</a>
+      <button class="btn btn-primary" onclick="openTeklif()">Teklif Al</button>
+      <button class="burger" onclick="document.getElementById('mnav4').classList.add('open')"><span></span><span></span><span></span></button>
+    </div>
+  </div></header>
+
+  <div class="mnav" id="mnav4" onclick="if(event.target.id==='mnav4')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
+
+  <div class="sd-back"><a href="#hizmetler" onclick="event.preventDefault();sdBackToHizmetler()">← Tüm Hizmetler</a></div>
+  <div class="sd-hero"><div class="wrap">
+    <div class="ic" id="sdIc"></div>
+    <h1 id="sdTitle"></h1>
+    <p id="sdLong"></p>
+  </div></div>
+  <div class="sd-body" id="sdBody"></div>
+
+  <footer class="insaatFooter"></footer>
+</div>
+
+<!-- ===== PROJE DETAY OVERLAY ===== -->
+<div id="pjDetail">
+  <header id="hdr5" class="pp-hdr"><div class="wrap bar">
+    <a class="logo" href="#" onclick="event.preventDefault();closeProjectDetail();closeProjelerPage()"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
+    <nav class="main insaatNav">
+      <a href="#hakkimizda" onclick="return jdGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();closeProjectDetail();openHizmetlerPage();closeProjelerPage()">Hizmetler</a><a href="#projeler" onclick="event.preventDefault();jdBackToProjeler()">Projeler</a>
+      <a href="#bolge" onclick="return jdGo('bolge')">Bölge Zekası</a><a href="#medya" onclick="return jdGo('medya')">Medya</a><a href="#iletisim" onclick="return jdGo('iletisim')">İletişim</a>
+    </nav>
+    <div class="nav-cta insaatCta">
+      <a class="btn btn-ghost" href="#projeler" onclick="event.preventDefault();jdBackToProjeler()">Tüm Projeler</a>
+      <button class="btn btn-primary" onclick="openTeklif()">Teklif Al</button>
+      <button class="burger" onclick="document.getElementById('mnav5').classList.add('open')"><span></span><span></span><span></span></button>
+    </div>
+  </div></header>
+
+  <div class="mnav" id="mnav5" onclick="if(event.target.id==='mnav5')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
+
+  <div class="pd-hero">
+    <img id="pdHeroImg" src="" alt="" loading="lazy" decoding="async">
+    <div class="pd-hero-grad"></div>
+    <div class="pd-hero-c"><div class="wrap">
+      <a class="pd-back" href="#projeler" onclick="event.preventDefault();jdBackToProjeler()">← Tüm Projeler</a>
+      <span class="st" id="pdStatus"></span>
+      <h1 id="pdTitle"></h1>
+      <div class="loc" id="pdLoc"></div>
+    </div></div>
+  </div>
+  <div class="pd-body" id="pdBody"></div>
+
+  <footer class="insaatFooter"></footer>
+</div>
+
+<!-- ===== İLETİŞİM SAYFASI ===== -->
+<div id="iletisimPage">
+  <header id="hdr7" class="pp-hdr"><div class="wrap bar">
+    <a class="logo" href="#" onclick="event.preventDefault();closeIletisimPage()"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
+    <nav class="main insaatNav"></nav>
+    <div class="nav-cta insaatCta"></div>
+  </div></header>
+  <div class="mnav" id="mnav7" onclick="if(event.target.id==='mnav7')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
+  <div class="il-body" id="iletisimBody"></div>
+  <footer class="insaatFooter"></footer>
+</div>
+
+<!-- ===== KURUMSAL / YASAL DOKÜMAN SAYFASI ===== -->
+<div id="docPage">
+  <header id="hdr8" class="pp-hdr"><div class="wrap bar">
+    <a class="logo" href="#" onclick="event.preventDefault();closeDoc()"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
+    <nav class="main insaatNav"></nav>
+    <div class="nav-cta insaatCta"></div>
+  </div></header>
+  <div class="mnav" id="mnav8" onclick="if(event.target.id==='mnav8')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
+  <div class="doc-body" id="docBody"></div>
+  <footer class="insaatFooter"></footer>
+</div>
+
+<div id="faqPage">
+  <header id="hdr9" class="pp-hdr"><div class="wrap bar">
+    <a class="logo" href="#" onclick="event.preventDefault();closeFaqPage()"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
+    <nav class="main insaatNav"></nav>
+    <div class="nav-cta insaatCta"></div>
+  </div></header>
+  <div class="mnav" id="mnav9" onclick="if(event.target.id==='mnav9')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
+  <div class="faq-body" id="faqBody"></div>
+  <footer class="insaatFooter"></footer>
+</div>
+
+<footer class="insaatFooter"></footer>
+<button class="totop" id="totop" onclick="_totopClick()" aria-label="Sayfa başına dön" title="Yukarı çık">↑</button>
+<nav class="mdock" aria-label="Hızlı erişim">
+  <a href="#" onclick="event.preventDefault();closeAllInsaatOverlays();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openHizmetlerPage()" aria-label="Hizmetlerimiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a6 6 0 0 1 6-6"/><path d="M14 6a6 6 0 0 1 6 6v3"/></svg><span>Hizmetler</span></a>
+  <a href="#" onclick="event.preventDefault();closeAllInsaatOverlays();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openProjelerPage()" aria-label="Projeler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4M10 10h4M10 14h4M10 18h4"/></svg><span>Projeler</span></a>
+  <a href="neden-biz.html" aria-label="Neden Biz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg><span>Neden Biz</span></a>
+  <a class="mdwa" href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg><span>WhatsApp</span></a>
+</nav>
+<div class="cookie" id="cookie" style="display:none">
+  <div class="cwrap">
+    <div class="ctext"><b>Çerez Kullanımı</b> — Deneyiminizi iyileştirmek ve site trafiğini analiz etmek için çerez kullanıyoruz. KVKK kapsamında tercihinizi belirleyebilirsiniz.</div>
+    <div class="r">
+      <button style="background:var(--surface-2);color:var(--ink)" onclick="cookieChoice('reject')">Reddet</button>
+      <button style="background:var(--brand);color:#fff" onclick="cookieChoice('accept')">Kabul Et</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  try{
+    if(!localStorage.getItem('cookieChoice')){
+      var c=document.getElementById('cookie');
+      if(c){c.style.display='block';document.body.classList.add('cookie-on');}
+    }
+  }catch(e){
+    var c=document.getElementById('cookie');
+    if(c){c.style.display='block';document.body.classList.add('cookie-on');}
+  }
+})();
+function cookieChoice(v){
+  try{localStorage.setItem('cookieChoice',v);}catch(e){}
+  var c=document.getElementById('cookie');
+  if(c)c.style.display='none';
+  document.body.classList.remove('cookie-on');
+}
+</script>
+</div><!-- /site -->
+
+<!-- TEKLIF MODAL -->
+<div class="modal" id="teklifModal" onclick="if(event.target.id==='teklifModal')closeTeklif()"><div class="box">
+  <button class="x" onclick="closeTeklif()">✕</button>
+  <h3>Ücretsiz Keşif & Teklif</h3><div class="fhint">Bilgilerinizi bırakın, uzman ekibimiz 24 saat içinde dönüş yapsın.</div>
+  <div class="fld2">
+    <div class="field"><label>Ad Soyad</label><input type="text" id="m_ad" placeholder="Adınız Soyadınız"></div>
+    <div class="field"><label>Telefon</label><input type="text" id="m_tel" placeholder="05__ ___ __ __"></div>
+  </div>
+  <div class="field"><label>İlgilendiğiniz hizmet</label>
+    <select id="m_konu"><option>Konut projesi / daire</option><option>Tadilat & Renovasyon</option><option>Kat karşılığı inşaat</option><option>Kentsel dönüşüm</option><option>Ticari yapı / taahhüt</option><option>Diğer</option></select></div>
+  <div class="field"><label>Mesajınız (opsiyonel)</label><textarea id="m_msg" placeholder="Kısaca talebiniz..."></textarea></div>
+  <div class="kvkk"><input type="checkbox" id="m_kvkk"><label for="m_kvkk">KVKK kapsamında verilerimin işlenmesini onaylıyorum.</label></div>
+  <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="submitLead('modal')">Teklif Talebini Gönder</button>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ============ ADMIN APP (/#admin) ============ -->
+<div id="adminApp">
+  <div class="adm-login">
+    <div class="card">
+      <div class="lg"><span class="mark">M</span>Meridyen Yönetim</div>
+      <p>Firma yönetici paneline giriş yapın.</p>
+      <div class="err" id="admErr">Hatalı şifre. Tekrar deneyin.</div>
+      <input type="text" id="admUser" placeholder="Kullanıcı adı (admin)" value="admin">
+      <input type="password" id="admPass" placeholder="Şifre" onkeydown="if(event.key==='Enter')admLogin()">
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="admLogin()">Giriş Yap</button>
+      <div class="hint">Demo şifre: <b>meridyen2026</b> · Gerçek sistemde güvenli kimlik doğrulama kullanılır.</div>
+      <div class="hint"><a href="#" onclick="closeAdmin();return false" style="color:var(--accent)">← Siteye dön</a></div>
+    </div>
+  </div>
+  <div class="adm-dash">
+    <div class="adm-side">
+      <div class="lg"><span class="mark">M</span>Meridyen</div>
+      <button class="on" data-pane="dash" onclick="admNav('dash',this)">📊 Genel Bakış</button>
+      <button data-pane="content" onclick="admNav('content',this)">✏️ Site İçeriği</button>
+      <button data-pane="brand" onclick="admNav('brand',this)">🖼️ Marka & Logo</button>
+      <button data-pane="menutext" onclick="admNav('menutext',this)">🔤 Menü & Footer Yazıları</button>
+      <button data-pane="ads" onclick="admNav('ads',this)">🔌 Google & Reklam</button>
+      <button data-pane="diller" onclick="admNav('diller',this)">🌐 Diller & İçerik (TR/EN)</button>
+      <button data-pane="iletisim" onclick="admNav('iletisim',this)">📞 İletişim Sayfası & Konum</button>
+      <button data-pane="faq" onclick="admNav('faq',this)">❓ İnşaat Soru-Cevap</button>
+      <button data-pane="social" onclick="admNav('social',this)">🔗 Sosyal & İlan Linkleri</button>
+      <button data-pane="stats" onclick="admNav('stats',this)">📊 İstatistik & Sertifika</button>
+      <button data-pane="projects" onclick="admNav('projects',this)">🏗️ Projeler</button>
+      <button data-pane="services" onclick="admNav('services',this)">🧰 Hizmetler</button>
+      <button data-pane="arsa" onclick="admNav('arsa',this)">🤝 Kat Karşılığı Hesap</button>
+      <button data-pane="proje3d" onclick="admNav('proje3d',this)">🏗️ 3D Proje Üretici (Kat Karşılığı)</button>
+      <button data-pane="dwgproje" onclick="admNav('dwgproje',this)">📐 DWG Mimari Proje</button>
+      <button data-pane="contracts" onclick="admNav('contracts',this)">📋 Sözleşmeler</button>
+      <button data-pane="leads" onclick="admNav('leads',this)">👥 Müşteriler / Teklifler</button>
+      <button data-pane="theme" onclick="admNav('theme',this)">🎨 Tema & Renk</button>
+      <button data-pane="settings" onclick="admNav('settings',this)">⚙️ Ayarlar & Güvenlik</button>
+      <div class="sp"></div>
+      <button onclick="closeAdmin()">🌐 Siteyi Görüntüle</button>
+      <button onclick="admLogout()">🚪 Çıkış Yap</button>
+    </div>
+    <div class="adm-main">
+      <div class="adm-pane on" id="pane-dash">
+        <h2>Genel Bakış</h2><div class="crumb">Hoş geldiniz, Yönetici · Meridyen Yapı</div>
+        <div class="kpi" id="kpi"></div>
+        <div class="panelcard"><h3>Son Teklif Talepleri</h3><div id="dashLeads"></div></div>
+      </div>
+      <div class="adm-pane" id="pane-content">
+        <h2>Site İçeriği</h2><div class="crumb">Ana sayfa metinleri ve marka bilgileri</div>
+        <div class="panelcard">
+          <label>Firma Adı</label><input type="text" id="a_brand" value="Meridyen Yapı">
+          <label>Telefon</label><input type="text" id="a_tel" value="+90 212 000 00 00">
+          <label>Hero Başlığı</label><textarea id="a_h1" rows="2">Şehrin silüetini güvenle yeniden inşa ediyoruz</textarea>
+          <label>Hero Alt Metni</label><textarea id="a_sub" rows="2">Konut, ticari ve karma projelerde anahtar teslim mühendislik; kentsel dönüşüm, kat karşılığı ve tadilat hizmetlerinde 38 yıllık güven.</textarea>
+          <label>Hakkımızda Metni</label><textarea id="a_about" rows="4">Meridyen Yapı; 1986'da temellerini attığı kurumsal kültürünü üç kuşaktır aynı titizlikle sürdüren bir yapı ve gayrimenkul geliştirme şirketidir. Arsa analizinden anahtar teslime kadar her aşamayı kendi mühendis kadromuzla yönetir; deprem güvenliği, malzeme kalitesi ve teslim takvimini taviz verilmez ilkeler olarak görürüz.</textarea>
+          <button class="btn btn-primary" style="margin-top:16px" onclick="saveContent()">Değişiklikleri Kaydet</button>
+        </div>
+      </div>
+      <div class="adm-pane" id="pane-brand">
+        <h2>Marka & Logo</h2><div class="crumb">Logoyu bilgisayarınızdan yükleyin — üst menü, alt menü ve tüm sayfalara uygulanır. "Yayınla" ile kaydedilir ve neden-biz dâhil her sayfaya işlenir.</div>
+        <div class="panelcard">
+          <label>Üst Menü Logosu (header)</label>
+          <div style="display:flex;gap:16px;align-items:center;margin:8px 0 4px">
+            <div id="bp_logo" style="width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-weight:800;font-size:24px;overflow:hidden;flex-shrink:0">M</div>
+            <div style="flex:1"><input type="file" id="f_logo" accept="image/*" onchange="brandUpload(this,'logo')"><div style="font-size:12px;color:#888;margin-top:4px">PNG/SVG · şeffaf zemin önerilir · <a href="#" onclick="brandClear('logo');return false" style="color:var(--accent)">kaldır (M harfine dön)</a></div></div>
+          </div>
+          <label style="margin-top:16px;display:block">Alt Menü Logosu (footer) — boş bırakılırsa üst logo kullanılır</label>
+          <div style="display:flex;gap:16px;align-items:center;margin:8px 0 4px">
+            <div id="bp_logoFooter" style="width:64px;height:44px;border-radius:10px;background:#14161c;display:grid;place-items:center;color:#9aa0ab;font-size:12px;overflow:hidden;flex-shrink:0">—</div>
+            <div style="flex:1"><input type="file" id="f_logoFooter" accept="image/*" onchange="brandUpload(this,'logoFooter')"><div style="font-size:12px;color:#888;margin-top:4px"><a href="#" onclick="brandClear('logoFooter');return false" style="color:var(--accent)">kaldır</a></div></div>
+          </div>
+          <label style="margin-top:16px;display:block">Favicon (tarayıcı sekme ikonu)</label>
+          <div style="display:flex;gap:16px;align-items:center;margin:8px 0 4px">
+            <div id="bp_favicon" style="width:36px;height:36px;border-radius:8px;background:#14161c;display:grid;place-items:center;color:#9aa0ab;font-size:16px;overflow:hidden;flex-shrink:0">★</div>
+            <div style="flex:1"><input type="file" id="f_favicon" accept="image/*" onchange="brandUpload(this,'favicon')"><div style="font-size:12px;color:#888;margin-top:4px"><a href="#" onclick="brandClear('favicon');return false" style="color:var(--accent)">kaldır</a></div></div>
+          </div>
+          <label style="margin-top:16px;display:block">Marka Adı (yazı — logo yanında/altında)</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><input type="text" id="b_name" placeholder="Meridyen" oninput="BRAND.name=this.value;applyBrand()"><input type="text" id="b_name2" placeholder=" Yapı" oninput="BRAND.name2=this.value;applyBrand()"></div>
+          <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;align-items:center">
+            <button class="btn btn-primary" onclick="publishSite()">🚀 Yayınla</button>
+            <span style="font-size:12.5px;color:#888">Kaydedilir ve neden-biz dâhil tüm sayfalara uygulanır.</span>
+          </div>
+        </div>
+      </div>
+      <div class="adm-pane" id="pane-menutext">
+        <h2>Menü & Footer Yazıları</h2><div class="crumb">Üst menü, mobil menü ve footer yazıları — değiştir, canlı görün, "Yayınla" ile tüm sayfalara (neden-biz dâhil) uygula.</div>
+        <div class="panelcard">
+          <h3 style="margin-top:0">Üst Menü</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 12px">
+            <div><label>Hizmetler</label><input id="m_hizmetler" oninput="MENU.hizmetler=this.value;applyMenuText()"></div>
+            <div><label>Neden ? Biz (? vurgulu kalır)</label><input id="m_nedenBiz" oninput="MENU.nedenBiz=this.value;applyMenuText()"></div>
+            <div><label>Projeler</label><input id="m_projeler" oninput="MENU.projeler=this.value;applyMenuText()"></div>
+            <div><label>Bölge Zekası</label><input id="m_bolge" oninput="MENU.bolge=this.value;applyMenuText()"></div>
+            <div><label>Giriş</label><input id="m_giris" oninput="MENU.giris=this.value;applyMenuText()"></div>
+            <div><label>Teklif butonu</label><input id="m_teklif" oninput="MENU.teklif=this.value;applyMenuText()"></div>
+          </div>
+        </div>
+        <div class="panelcard">
+          <h3 style="margin-top:0">Footer (Alt Menü)</h3>
+          <label>Marka açıklaması</label><textarea id="fo_desc" rows="2" oninput="FOOT.desc=this.value;applyMenuText()"></textarea>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+            <div><label>Kolon 1 başlığı</label><input id="fo_k" oninput="FOOT.colKurumsal=this.value;applyMenuText()"></div>
+            <div><label>Kolon 2 başlığı</label><input id="fo_h" oninput="FOOT.colHizmetler=this.value;applyMenuText()"></div>
+            <div><label>Kolon 3 başlığı</label><input id="fo_i" oninput="FOOT.colIletisim=this.value;applyMenuText()"></div>
+          </div>
+          <label>Adres (satır için &lt;br&gt; kullanın)</label><input id="fo_adres" oninput="FOOT.adres=this.value;applyMenuText()">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div><label>Telefon</label><input id="fo_tel" oninput="FOOT.tel=this.value;applyMenuText()"></div>
+            <div><label>E-posta</label><input id="fo_email" oninput="FOOT.email=this.value;applyMenuText()"></div>
+          </div>
+          <label>Telif metni (copyright)</label><input id="fo_copy" oninput="FOOT.copyright=this.value;applyMenuText()">
+          <div style="margin-top:18px"><button class="btn btn-primary" onclick="publishSite()">🚀 Yayınla</button></div>
+        </div>
+      </div>
+      <div class="adm-pane" id="pane-ads">
+        <h2>Google & Reklam</h2><div class="crumb">Google Analytics, Search Console ve reklam/izleme kodları — "Yayınla" ile tüm sayfalara uygulanır.</div>
+        <div class="panelcard">
+          <h3 style="margin-top:0">Google</h3>
+          <label>Google Analytics ID (G-XXXX)</label><input id="ad_ga" placeholder="G-XXXXXXXXXX" oninput="SETTINGS.googleAnalytics=this.value">
+          <label>Google Search Console doğrulama</label><input id="ad_gsv" placeholder="google-site-verification içeriği" oninput="SETTINGS.googleSiteVerif=this.value">
+          <div style="font-size:12px;color:#888;margin-top:6px">Yayınlayınca sayfaya gtag.js ve doğrulama meta etiketi otomatik eklenir.</div>
+        </div>
+        <div class="panelcard">
+          <h3 style="margin-top:0">Reklam / İzleme Kodu (kod yazmadan yapıştırın)</h3>
+          <label>&lt;head&gt; kodu — AdSense yükleyici, Google Tag Manager, piksel vb.</label>
+          <textarea id="ads_head" rows="4" placeholder="&lt;script async src=&quot;https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXX&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;" oninput="ADS.head=this.value"></textarea>
+          <label>Sayfa içi reklam / kod (body)</label>
+          <textarea id="ads_body" rows="4" placeholder="&lt;ins class=&quot;adsbygoogle&quot; ...&gt;&lt;/ins&gt;" oninput="ADS.body=this.value"></textarea>
+          <div style="font-size:12px;color:#888;margin-top:6px">⚠ Buraya yapıştırılan &lt;script&gt; kodları sayfada çalıştırılır — yalnızca güvendiğiniz kaynakları ekleyin.</div>
+        </div>
+        <div><button class="btn btn-primary" onclick="publishAds()">🚀 Yayınla</button></div>
+      </div>
+      <div class="adm-pane" id="pane-diller">
+        <h2>Diller & İçerik (TR / EN)</h2><div class="crumb">Ana sayfadaki her başlık ve paragraf otomatik listelenir. Türkçesini düzenleyin, İngilizcesini girin — üstteki TR/EN düğmesiyle önizleyin, "Yayınla" ile kaydedin.</div>
+        <div class="panelcard">
+          <div id="dillerList"></div>
+          <button class="btn btn-primary" style="margin-top:14px" onclick="publishSite()">🚀 Yayınla</button>
+        </div>
+      </div>
+      <div class="adm-pane" id="pane-iletisim">
+        <h2>İletişim Sayfası & Konum</h2><div class="crumb">İletişim sayfasındaki harita konumu, iletişim bilgileri ve yasal şirket künyesi. Kaydedince sayfaya anında yansır.</div>
+        <div class="panelcard">
+          <h3 style="margin-top:0">📍 Harita Konumu (Google Maps)</h3>
+          <label>Konum — adres ya da "enlem,boylam"</label><input id="il_mapq" placeholder="Levent Mah., Beşiktaş, İstanbul">
+          <div style="font-size:12px;color:#888;margin-top:6px">Buraya yazdığınız adres/koordinat İletişim sayfasındaki haritada gösterilir. Google API anahtarı gerekmez.</div>
+          <div style="margin-top:12px"><button class="btn-mini" onclick="ilMapPreview()">🔍 Haritada Önizle</button></div>
+          <div id="il_mapprev" style="margin-top:12px;border-radius:12px;overflow:hidden;display:none"><iframe style="width:100%;height:220px;border:0"></iframe></div>
+        </div>
+        <div class="panelcard">
+          <h3 style="margin-top:0">İletişim Bilgileri</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label>Adres</label><input id="il_adres"></div><div><label>Telefon</label><input id="il_tel"></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label>E-posta</label><input id="il_email"></div><div><label>WhatsApp No</label><input id="il_wa" placeholder="905001234567"></div></div>
+          <label>Çalışma Saatleri</label><input id="il_calisma">
+        </div>
+        <div class="panelcard">
+          <h3 style="margin-top:0">Yasal Künye (Türk Ticaret Kanunu)</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label>Ünvan</label><input id="il_unvan"></div><div><label>Yetkili</label><input id="il_yetkili"></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label>Vergi Dairesi</label><input id="il_vd"></div><div><label>Vergi No</label><input id="il_vno"></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label>MERSİS No</label><input id="il_mersis"></div><div><label>Ticaret Sicil No</label><input id="il_tsicil"></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label>Ticaret Odası</label><input id="il_oda"></div><div><label>KEP Adresi</label><input id="il_kep"></div></div>
+          <div style="margin-top:16px"><button class="btn btn-primary" onclick="saveIletisimInfo()">🚀 Kaydet & Yayınla</button></div>
+        </div>
+      </div>
+      <div class="adm-pane" id="pane-faq">
+        <h2>❓ İnşaat Soru-Cevap (S.S.S.)</h2><div class="crumb">Google'dan organik ziyaretçi çeken inşaat rehberi. Soru ekleyin, düzenleyin, silin. "Kaydet & Yayınla" ile siteye ve arama motoru yapısal verisine (FAQ Schema) anında yansır.</div>
+        <div class="panelcard">
+          <h3 style="margin-top:0">➕ Yeni Soru Ekle</h3>
+          <label>Kategori</label><select id="faqNewCat"></select>
+          <label>Soru</label><input id="faqNewQ" placeholder="ör: Villa yaptırmak ne kadar sürer?">
+          <label>Cevap <span style="color:#888;font-weight:400">(HTML: &lt;b&gt; &lt;ul&gt; &lt;li&gt; &lt;br&gt;)</span></label><textarea id="faqNewA" style="min-height:90px"></textarea>
+          <div style="margin-top:12px"><button class="btn btn-primary" onclick="faqAdd()">+ Soruyu Ekle</button></div>
+        </div>
+        <div class="panelcard">
+          <div class="fadm-bar">
+            <input id="faqAdminSearch" type="search" placeholder="🔍 Soru ara..." oninput="renderFaqAdmin()">
+            <select id="faqAdminCat" onchange="renderFaqAdmin()"></select>
+            <span class="fadm-count" id="faqAdminCount">0</span>
+            <button class="btn btn-primary" onclick="faqSaveAll()">💾 Kaydet & Yayınla</button>
+          </div>
+          <div id="faqAdminList" class="fadm-list"></div>
+        </div>
+      </div>
+      <div class="adm-pane" id="pane-social">
+        <h2>🔗 Sosyal Medya & İlan Portalleri</h2><div class="crumb">Footer'daki sosyal medya ikonları ve ilan sitesi linkleri (sahibinden · hepsiemlak · emlakjet) buradan yönetilir. Boş bırakılan ikon sitede otomatik gizlenir. "Kaydet & Uygula" tüm sayfalara yansır.</div>
+        <div class="panelcard">
+          <h3 style="margin-top:0">Sosyal Medya Hesapları</h3>
+          <div class="soc-grid">
+            <div><label>Facebook</label><input id="soc_facebook" placeholder="https://facebook.com/meridyenyapi"></div>
+            <div><label>Instagram</label><input id="soc_instagram" placeholder="https://instagram.com/meridyenyapi"></div>
+            <div><label>X (Twitter)</label><input id="soc_x" placeholder="https://x.com/meridyenyapi"></div>
+            <div><label>LinkedIn</label><input id="soc_linkedin" placeholder="https://linkedin.com/company/meridyenyapi"></div>
+            <div><label>YouTube</label><input id="soc_youtube" placeholder="https://youtube.com/@meridyenyapi"></div>
+            <div><label>NEXT Sosyal</label><input id="soc_nsosyal" placeholder="https://nsosyal.com/meridyenyapi"></div>
+          </div>
+        </div>
+        <div class="panelcard">
+          <h3 style="margin-top:0">İlan Portalleri</h3>
+          <div class="soc-grid">
+            <div><label>sahibinden.com</label><input id="soc_sahibinden" placeholder="https://sahibinden.com/magaza/..."></div>
+            <div><label>hepsiemlak</label><input id="soc_hepsiemlak" placeholder="https://hepsiemlak.com/emlak-ofisi/..."></div>
+            <div><label>emlakjet</label><input id="soc_emlakjet" placeholder="https://emlakjet.com/emlak-ofisi/..."></div>
+          </div>
+          <div style="margin-top:16px"><button class="btn btn-primary" onclick="saveSocial()">🚀 Kaydet & Uygula</button></div>
+        </div>
+      </div>
+      <div class="adm-pane" id="pane-stats">
+        <h2>📊 İstatistikler & Sertifikalar</h2><div class="crumb">Ana sayfa ve Hizmetler sayfasındaki kurumsal rakamlar + standart/sertifika rozetleri. Rakamı sade sayı girin; site otomatik biçimlendirir (8400 → 8.400+, 2100000 → 2,1M m²). "Kaydet & Uygula" tüm sayfalara yansır.</div>
+        <div class="panelcard">
+          <h3 style="margin-top:0">Kurumsal Rakamlar</h3>
+          <div class="soc-grid">
+            <div><label>Yıllık Tecrübe</label><input id="st_yil" type="number" min="0"></div>
+            <div><label>Teslim Edilen Konut</label><input id="st_konut" type="number" min="0"></div>
+            <div><label>Tamamlanan Proje</label><input id="st_proje" type="number" min="0"></div>
+            <div><label>Aktif Şantiye</label><input id="st_santiye" type="number" min="0"></div>
+            <div><label>Toplam İnşa Alanı (m²)</label><input id="st_alan" type="number" min="0"></div>
+          </div>
+        </div>
+        <div class="panelcard">
+          <h3 style="margin-top:0">Standartlar & Sertifikalar</h3>
+          <label>Her satıra bir rozet yazın</label>
+          <textarea id="st_certs" style="min-height:130px" placeholder="TBDY 2018&#10;ISO 9001 · 14001 · 45001&#10;BIM Koordinasyon"></textarea>
+          <div style="margin-top:16px"><button class="btn btn-primary" onclick="saveStats()">🚀 Kaydet & Uygula</button></div>
+        </div>
+      </div>
+      <div class="adm-pane" id="pane-projects">
+        <h2>Projeler</h2><div class="crumb">Projeleri ekleyin, düzenleyin veya silin · değişiklikler otomatik kaydedilir, ana sayfaya anında yansır</div>
+        <div class="adm-toolbar">
+          <button class="btn-mini" onclick="exportData()">⬇ Tüm Veriyi Yedekle (JSON)</button>
+          <button class="btn-mini" onclick="document.getElementById('importFile').click()">⬆ Yedekten Geri Yükle</button>
+          <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importData(this)">
+        </div>
+        <div class="panelcard"><div id="admPjList"></div>
+          <button class="miniadd" onclick="admAddProject()">+ Yeni Proje Ekle</button></div>
+      </div>
+      <div class="adm-pane" id="pane-services">
+        <h2>Hizmetler</h2><div class="crumb">Hizmet kartlarını yönetin</div>
+        <div class="panelcard"><div id="admSvcList"></div>
+          <button class="miniadd" onclick="admAddSvc()">+ Yeni Hizmet Ekle</button></div>
+      </div>
+      <div class="adm-pane" id="pane-leads">
+        <h2>Müşteriler / Teklif Talepleri</h2><div class="crumb">Siteden gelen teklif ve iletişim talepleri</div>
+        <div class="panelcard"><table class="adm-tbl"><thead><tr><th>Ad Soyad</th><th>Telefon</th><th>Konu</th><th>Kaynak</th><th>Tarih</th></tr></thead>
+          <tbody id="leadsBody"></tbody></table><div id="leadsEmpty" style="color:var(--muted);font-size:14px;padding:14px 4px">Henüz teklif talebi yok. Sitedeki formdan gelen talepler burada listelenir.</div></div>
+      </div>
+      <!-- ARSA & BAĞIMSIZ BÖLÜM YÖNETİMİ -->
+      <div class="adm-pane" id="pane-arsa">
+        <h2>Kat Karşılığı Hesaplama & Fizibilite</h2>
+        <div class="crumb">Arsa m² + imar durumu girin → tahmini daire adedi, arsa sahibi/müteahhit paylaşımı, satış geliri ve net kâr otomatik hesaplansın.</div>
+        <div class="adm-toolbar">
+          <button class="btn-mini" onclick="admAddArsa()">+ Yeni Fizibilite Hesabı</button>
+        </div>
+        <div id="arsaList"></div>
+      </div>
+      <!-- 3D PROJE ÜRETİCİ & FİZİBİLİTE RAPORU -->
+      <div class="adm-pane" id="pane-proje3d">
+        <h2>3D Proje Üretici & Fizibilite Raporu</h2>
+        <div class="crumb">Müşterinizin arsasını girin → 3D model + dükkan/daire dağılımı + kat karşılığı pay paylaşımı + arsa payına kadar detaylı rapor → 4 görsel & not ekleyin → PDF indirin / gönderin.</div>
+        <div class="p3d-layout">
+          <div class="p3d-controls">
+            <div class="panelcard">
+              <h3 style="margin:0 0 12px">👤 Müşteri & Arsa Bilgileri</h3>
+              <label>Müşteri Adı Soyadı</label><input type="text" id="p3_musteri" value="" placeholder="Örn. Mehmet Yılmaz" oninput="updateProje3D()">
+              <label>Proje / Arsa Adı</label><input type="text" id="p3_ad" value="Müşteri Arsası" oninput="updateProje3D()">
+              <div class="ed3">
+                <div><label>İl</label><input type="text" id="p3_il" value="İstanbul" oninput="updateProje3D()"></div>
+                <div><label>İlçe</label><input type="text" id="p3_ilce" value="" oninput="updateProje3D()"></div>
+                <div><label>Mahalle</label><input type="text" id="p3_mah" value="" oninput="updateProje3D()"></div>
+              </div>
+              <div class="ed2">
+                <div><label>Ada</label><input type="text" id="p3_ada" value="" placeholder="Örn. 1234" oninput="updateProje3D()"></div>
+                <div><label>Parsel</label><input type="text" id="p3_parsel" value="" placeholder="Örn. 56" oninput="updateProje3D()"></div>
+              </div>
+            </div>
+            <div class="panelcard" style="margin-top:14px">
+              <h3 style="margin:0 0 12px">📐 İmar & Yapı</h3>
+              <label>Arsa m²</label><input type="number" id="p3_m2" value="1500" oninput="updateProje3D()">
+              <div class="ed2">
+                <div><label>Emsal (KAKS)</label><input type="number" step="0.01" id="p3_emsal" value="2.0" oninput="updateProje3D()"></div>
+                <div><label>TAKS</label><input type="number" step="0.01" id="p3_taks" value="0.40" oninput="updateProje3D()"></div>
+              </div>
+              <div class="ed2">
+                <div><label>Kat Adedi</label><input type="number" id="p3_kat" value="6" oninput="updateProje3D()"></div>
+                <div><label>Blok Sayısı</label><input type="number" id="p3_blok" value="2" min="1" max="6" oninput="updateProje3D()"></div>
+              </div>
+              <label>Bina Tipi</label>
+              <select id="p3_tip" onchange="updateProje3D()">
+                <option value="konut">Konut (Apartman)</option>
+                <option value="rezidans">Rezidans (Yüksek Kat)</option>
+                <option value="villa">Villa Sitesi</option>
+                <option value="ticari">Ticari / Karma</option>
+              </select>
+            </div>
+            <div class="panelcard" style="margin-top:14px;border:1px solid var(--accent)">
+              <h3 style="margin:0 0 8px">🏛️ Gerçek Mimari Proje (GLB/glTF)</h3>
+              <p style="font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.5">Mimarınızın 3D modelini (Revit/ArchiCAD/SketchUp/Lumion → <b>.glb</b> export) yükleyin. Müşteriye gerçek projeyi 3D olarak gösterin. Konsept kütle yerine gerçek model görünür.</p>
+              <input type="file" id="glbInput" accept=".glb,.gltf" style="display:none" onchange="loadGLBModel(this)">
+              <button class="btn-mini" style="width:100%" onclick="document.getElementById('glbInput').click()">📤 Mimari Model Yükle (.glb)</button>
+              <div id="glbStatus" style="font-size:12px;margin-top:8px;color:var(--muted)"></div>
+              <button class="btn-mini" id="glbClearBtn" style="width:100%;margin-top:8px;display:none" onclick="clearGLBModel()">🗑️ Modeli Kaldır (konsepte dön)</button>
+            </div>
+            <div class="panelcard" style="margin-top:14px">
+              <h3 style="margin:0 0 12px">🏬 Bağımsız Bölüm Dağılımı</h3>
+              <div class="ed2">
+                <div><label>Zemin Dükkan Sayısı</label><input type="number" id="p3_dukkan" value="4" min="0" oninput="updateProje3D()"></div>
+                <div><label>Ort. Dükkan m²</label><input type="number" id="p3_dukkanM2" value="60" oninput="updateProje3D()"></div>
+              </div>
+              <div class="ed2">
+                <div><label>Ort. Daire m²</label><input type="number" id="p3_daireM2" value="115" oninput="updateProje3D()"></div>
+                <div><label>Daire/Kat (blok başı)</label><input type="number" id="p3_daireKat" value="4" oninput="updateProje3D()"></div>
+              </div>
+            </div>
+            <div class="panelcard" style="margin-top:14px">
+              <h3 style="margin:0 0 12px">🤝 Kat Karşılığı Paylaşımı</h3>
+              <div class="ed2">
+                <div><label>Arsa Sahibi Payı %</label><input type="number" id="p3_payArsa" value="45" oninput="updateProje3D()"></div>
+                <div><label>Müteahhit Payı %</label><input type="number" id="p3_payMut" value="55" readonly style="opacity:.7"></div>
+              </div>
+              <div class="ed2">
+                <div><label>Daire Satış ₺/m²</label><input type="number" id="p3_satisM2" value="75000" oninput="updateProje3D()"></div>
+                <div><label>İnşaat ₺/m² Maliyet</label><input type="number" id="p3_maliyetM2" value="18000" oninput="updateProje3D()"></div>
+              </div>
+            </div>
+            <div class="panelcard" style="margin-top:14px">
+              <h3 style="margin:0 0 12px">🖼️ Rapor Görselleri (max 4)</h3>
+              <div class="p3img-grid" id="p3imgGrid"></div>
+              <input type="file" id="p3imgInput" accept="image/*" style="display:none" onchange="addReportImage(this)">
+              <button class="btn-mini" style="margin-top:8px;width:100%" onclick="document.getElementById('p3imgInput').click()">+ Görsel Ekle</button>
+            </div>
+            <div class="panelcard" style="margin-top:14px">
+              <h3 style="margin:0 0 12px">📝 Rapor Notu</h3>
+              <textarea class="adm-ta" rows="3" id="p3_not" placeholder="Müşteriye özel notlar, öneriler, açıklamalar..." oninput="saveP3Note()"></textarea>
+            </div>
+            <button class="btn-mini" data-feature="canUsePdfReports" style="margin-top:14px;width:100%;background:var(--accent);color:#0e0f13;border-color:var(--accent);font-weight:700" onclick="generateReport()">📄 Fizibilite Raporu Oluştur (PDF)</button>
+            <button class="btn-mini" style="margin-top:8px;width:100%" onclick="sendProje3DWhatsApp()">📱 Özeti WhatsApp'tan Gönder</button>
+            <button class="btn-mini" style="margin-top:8px;width:100%" onclick="showKatPlani()">📐 Kat Planı Oluştur (m² · daire/dükkan)</button>
+            <button class="btn-mini" style="margin-top:8px;width:100%" onclick="captureProje3D()">📸 3D Görüntüyü İndir (PNG)</button>
+          </div>
+          <div class="p3d-right">
+            <div class="p3d-stage">
+              <canvas id="adminBuild3d"></canvas>
+              <div class="p3d-hint">🖱️ Döndür · tekerlek ile yakınlaştır</div>
+            </div>
+            <div class="panelcard" style="margin-top:14px">
+              <h3 style="margin:0 0 10px">📊 Anlık Fizibilite Özeti</h3>
+              <div id="p3_stats"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- DWG MİMARİ PROJE -->
+      <div class="adm-pane" id="pane-dwgproje">
+        <h2>📐 DWG Mimari Proje → Projeler</h2>
+        <div class="crumb">Mimarın <b>.dwg</b> dosyasını yükleyin → çizim <b>eksiksiz okunur</b> (2B gerçek vektör plan) → <b>Pro<span style="background:#16a34a;color:#07130a;border-radius:4px;padding:0 5px;font-weight:800">X</span></b> dosyanın <b>Alan Cetvelinden</b> gerçek verileri (kat · bağımsız bölüm · toplam inşaat alanı · m²) okur — <b>hiçbir şey uydurmaz</b> + <b>gerçek kat planları görsele</b> çevrilir (her kat ayrı) → <b>Projeler</b> sayfasına kaydedilir. Daire tipleri/fiyatlar admin panelde tamamlanır.</div>
+        <div class="p3d-layout">
+          <div class="p3d-controls">
+            <div class="panelcard">
+              <h3 style="margin:0 0 12px">🏷️ Proje Bilgileri</h3>
+              <label>Proje Adı</label><input type="text" id="dwg_ad" placeholder="Örn. Fatih Menteşe Konutları">
+              <div class="ed3">
+                <div><label>İl</label><input type="text" id="dwg_il" value="İstanbul"></div>
+                <div><label>İlçe</label><input type="text" id="dwg_ilce" value="" placeholder="Örn. Kadıköy"></div>
+                <div><label>Mahalle</label><input type="text" id="dwg_mah" value=""></div>
+              </div>
+              <div class="ed2">
+                <div><label>Ada</label><input type="text" id="dwg_ada" value="" placeholder="Örn. 1234"></div>
+                <div><label>Parsel</label><input type="text" id="dwg_parsel" value="" placeholder="Örn. 56"></div>
+              </div>
+            </div>
+            <div class="panelcard" style="margin-top:14px;border:1px solid var(--accent)">
+              <h3 style="margin:0 0 8px">📤 Mimari Proje Yükle</h3>
+              <p style="font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.5"><b>.dwg</b> (veya .dxf) seçin → <b>Yapıyı Otomatik Çöz</b> ile kat/mahal/m² + 2B plan çıkar. (libredwg-web · WASM · arayüz donmaz)</p>
+              <input type="file" id="apsFile" accept=".dwg,.dxf" style="display:none" onchange="if(this.files[0])window.dwgLocalPreview(this.files[0]);this.value=''">
+              <button class="btn-mini" style="width:100%;background:var(--accent);color:#0e0f13;border-color:var(--accent);font-weight:700" onclick="document.getElementById('apsFile').click()">📤 .dwg / .dxf Seç</button>
+              <div id="apsStatus" style="font-size:12px;margin-top:8px;color:var(--muted);line-height:1.45"></div>
+              <div id="apsPreview" style="margin-top:8px"></div>
+              <button class="btn-mini" id="apsBackBtn" style="width:100%;margin-top:8px;display:none" onclick="apsCloseViewer()">← Planı Kapat</button>
+            </div>
+          </div>
+          <div class="p3d-right">
+            <div id="apsViewerWrap" style="display:none">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <b style="font-family:var(--head)">📐 Gerçek Vektör Kat Planı (.dwg)</b>
+                <button class="btn-mini" onclick="apsCloseViewer()" style="width:auto">✕ Kapat</button>
+              </div>
+              <div id="apsViewer" style="position:relative;width:100%;height:560px;background:#0b0d12;border:1px solid var(--line);border-radius:12px;overflow:hidden"></div>
+              <p style="font-size:11.5px;color:var(--muted);margin:8px 0 0">Gerçek vektör kat planı. Sağ üstteki <b>＋ / －</b> ile yakınlaştırıp kaydırarak inceleyin.</p>
+            </div>
+            <div id="dwgAnalyz"></div>
+            <div id="dwgFloorPlans"></div>
+            <div id="dwgAiResult"></div>
+            <div class="panelcard" id="dwgHint" style="margin-top:14px">
+              <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.6">💡 <b>1)</b> Soldan bir <b>.dwg</b> yükleyip <b>🏗️ Yapıyı Otomatik Çöz</b>'e basın (2B plan açılır). <b>2)</b> <b>Pro<span style="background:#16a34a;color:#07130a;border-radius:3px;padding:0 4px;font-weight:800">X</span> ile Çözümle</b> ile Alan Cetvelinden gerçek veriler okunur (uydurma yok). <b>3)</b> <b>Portföye Ekle</b> ile kaydedin; daire tipi/fiyat admin panelde tamamlanır. Büyük dosyalar Web Worker'da işlenir (arayüz donmaz); ilk seferde ~9 MB motor iner.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- SÖZLEŞMELER -->
+      <div class="adm-pane" id="pane-contracts">
+        <h2>Sözleşmeler</h2>
+        <div class="crumb">İnşaat, kat karşılığı ve taşeron sözleşmelerini tek yerden yönetin.</div>
+        <div class="adm-toolbar">
+          <button class="btn-mini" onclick="admAddContract('insaat')">+ İnşaat Sözleşmesi</button>
+          <button class="btn-mini" onclick="admAddContract('kat-karsiligi')">+ Kat Karşılığı Sözleşmesi</button>
+          <button class="btn-mini" onclick="admAddContract('taseron')">+ Taşeron Sözleşmesi</button>
+        </div>
+        <div id="contractList"></div>
+      </div>
+      <!-- AYARLAR -->
+      <div class="adm-pane" id="pane-settings">
+        <h2>Ayarlar & Güvenlik</h2>
+        <div class="crumb">Yönetici şifresi, Google entegrasyonları ve site meta ayarları.</div>
+        <div class="panelcard">
+          <h3 style="margin:0 0 14px">🔐 Yönetici Girişi</h3>
+          <div class="ed2">
+            <div><label>Kullanıcı Adı</label><input type="text" id="set_user"></div>
+            <div><label>Mevcut Şifre (doğrulama)</label><input type="password" id="set_curpass" placeholder="Mevcut şifreniz"></div>
+          </div>
+          <div class="ed2">
+            <div><label>Yeni Şifre</label><input type="password" id="set_newpass" placeholder="Yeni şifre"></div>
+            <div><label>Yeni Şifre (tekrar)</label><input type="password" id="set_newpass2" placeholder="Tekrar"></div>
+          </div>
+          <button class="btn-mini" style="margin-top:12px" onclick="changePassword()">🔑 Şifreyi Değiştir</button>
+          <div id="passMsg" style="margin-top:8px;font-size:13px"></div>
+        </div>
+        <div class="panelcard" style="margin-top:16px">
+          <h3 style="margin:0 0 14px">🏢 Firma Bilgileri (sözleşmelerde otomatik kullanılır)</h3>
+          <div class="ed2">
+            <div><label>Firma Ünvanı</label><input type="text" id="set_funvan"></div>
+            <div><label>Vergi No</label><input type="text" id="set_fvergi"></div>
+          </div>
+          <div class="ed2">
+            <div><label>MERSİS No</label><input type="text" id="set_fmersis"></div>
+            <div><label>Yetkili</label><input type="text" id="set_fyetkili"></div>
+          </div>
+          <label>Firma Adresi</label><input type="text" id="set_fadres">
+          <div class="ed2">
+            <div><label>Telefon</label><input type="text" id="set_ftel"></div>
+            <div><label>E-posta</label><input type="text" id="set_femail"></div>
+          </div>
+          <button class="btn-mini" style="margin-top:12px" onclick="saveFirmaInfo()">💾 Firma Bilgilerini Kaydet</button>
+        </div>
+        <div class="panelcard" style="margin-top:16px">
+          <h3 style="margin:0 0 14px">🌐 Google & Entegrasyonlar</h3>
+          <label>Google Maps API Anahtarı</label><input type="text" id="set_gmaps" placeholder="AIza...">
+          <label>Google Analytics ID (G-XXXX)</label><input type="text" id="set_ga" placeholder="G-XXXXXXX">
+          <label>Google Search Console Doğrulama Kodu</label><input type="text" id="set_gsv" placeholder="google-site-verification içeriği">
+          <label>reCAPTCHA Site Anahtarı</label><input type="text" id="set_recaptcha" placeholder="6Lc...">
+          <button class="btn-mini" style="margin-top:12px" onclick="saveGoogleSettings()">💾 Entegrasyonları Kaydet</button>
+        </div>
+        <div class="panelcard" style="margin-top:16px">
+          <h3 style="margin:0 0 14px">🔎 SEO & Meta</h3>
+          <label>Site Başlığı (meta title)</label><input type="text" id="set_mtitle">
+          <label>Site Açıklaması (meta description)</label><textarea class="adm-ta" rows="2" id="set_mdesc"></textarea>
+          <label>WhatsApp Numarası (90 ile, başında + yok)</label><input type="text" id="set_wa" placeholder="905001234567">
+          <button class="btn-mini" style="margin-top:12px" onclick="saveSeoSettings()">💾 SEO Ayarlarını Kaydet</button>
+        </div>
+      </div>
+      <div class="adm-pane" id="pane-theme">
+        <h2>Tema & Renk</h2><div class="crumb">Site renk şemasını seçin · 10 hazır tema + özel renk</div>
+        <div class="panelcard"><h3>Hazır Temalar</h3><div class="swatches" id="admSwatches"></div>
+          <label>Özel vurgu renkleri (ana / ikincil)</label>
+          <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+            <input type="color" id="a_accent" value="#2563eb" oninput="setVar('--accent',this.value)" style="width:48px;height:40px;border:1px solid var(--line);border-radius:9px">
+            <input type="color" id="a_accent2" value="#c8962f" oninput="setVar('--accent-2',this.value)" style="width:48px;height:40px;border:1px solid var(--line);border-radius:9px">
+            <button class="btn btn-ghost" style="border-color:var(--line);color:var(--ink);padding:8px 14px;font-size:13px" onclick="applyMode('dark')">Koyu Mod</button>
+            <button class="btn btn-ghost" style="border-color:var(--line);color:var(--ink);padding:8px 14px;font-size:13px" onclick="applyMode('light')">Açık Mod</button>
+          </div>
+          <label style="margin-top:16px">Zemin renkleri (genel / koyu şeritler / kart)</label>
+          <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+            <input type="color" id="a_bg" value="#0e0f13" oninput="setVar('--bg',this.value)" title="Sayfa zemini" style="width:48px;height:40px;border:1px solid var(--line);border-radius:9px">
+            <input type="color" id="a_brand" value="#0e0f13" oninput="setVar('--brand',this.value)" title="Koyu şeritler (istatistik / bölge)" style="width:48px;height:40px;border:1px solid var(--line);border-radius:9px">
+            <input type="color" id="a_surface" value="#181a20" oninput="setVar('--surface',this.value)" title="Kart zemini" style="width:48px;height:40px;border:1px solid var(--line);border-radius:9px">
+          </div>
+          <div class="crumb" style="margin-top:8px">Renk değiştirdiğinizde yazı renkleri okunabilirlik için otomatik ayarlanır.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/app-core.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="module">
+// ========== ADVANCED CONSTRUCTION SCENE — apartment/villa/factory/tower morphing ==========
+let _heroBooted=false;
+async function bootBuildScene(){
+if(_heroBooted) return; _heroBooted=true;
+const T=await import('three');
+const {EffectComposer}=await import('three/addons/postprocessing/EffectComposer.js');
+const {RenderPass}=await import('three/addons/postprocessing/RenderPass.js');
+const {UnrealBloomPass}=await import('three/addons/postprocessing/UnrealBloomPass.js');
+const {OutputPass}=await import('three/addons/postprocessing/OutputPass.js');
+const {RoomEnvironment}=await import('three/addons/environments/RoomEnvironment.js');
+const canvas=document.getElementById('buildScene');
+if(!canvas) return;
+try{
+const renderer=new T.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
+renderer.setSize(canvas.clientWidth,canvas.clientHeight,false);
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
+renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
+renderer.shadowMap.autoUpdate=true;
+renderer.outputColorSpace=T.SRGBColorSpace;
+renderer.setClearColor(0x000000,0);
+
+const scene=new T.Scene();scene.fog=new T.FogExp2(0x0e0f13,0.018);
+const pmrem=new T.PMREMGenerator(renderer);
+scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture;
+const camera=new T.PerspectiveCamera(34,canvas.clientWidth/canvas.clientHeight,0.1,300);
+camera.position.set(22,14,26);camera.lookAt(0,5,0);
+
+const sun=new T.DirectionalLight(0xffe8c0,2.6);
+sun.position.set(20,28,16);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
+const sd=24;Object.assign(sun.shadow.camera,{left:-sd,right:sd,top:sd,bottom:-sd,near:1,far:90});
+sun.shadow.bias=-0.0003;scene.add(sun);
+scene.add(new T.HemisphereLight(0xa5c0e8,0x1a1d24,0.5));
+const fill=new T.DirectionalLight(0x88a3d8,0.55);fill.position.set(-12,9,-10);scene.add(fill);
+
+// ====== PROCEDURAL CANVAS TEXTURES (PBR-style realism) ======
+function makeNoiseCanvas(size,baseColor,noiseAmt,extraDarkPatch){
+  const c=document.createElement('canvas');c.width=c.height=size;
+  const ctx=c.getContext('2d');
+  // Base color
+  ctx.fillStyle=baseColor;ctx.fillRect(0,0,size,size);
+  // Add noise (per-pixel grain)
+  const img=ctx.getImageData(0,0,size,size);
+  const d=img.data;
+  for(let i=0;i<d.length;i+=4){
+    const v=(Math.random()-0.5)*noiseAmt*255;
+    d[i]=Math.max(0,Math.min(255,d[i]+v));
+    d[i+1]=Math.max(0,Math.min(255,d[i+1]+v));
+    d[i+2]=Math.max(0,Math.min(255,d[i+2]+v));
+  }
+  ctx.putImageData(img,0,0);
+  // Add darker patches for weathering
+  if(extraDarkPatch){
+    ctx.globalCompositeOperation='multiply';
+    for(let k=0;k<6;k++){
+      const x=Math.random()*size,y=Math.random()*size,r=20+Math.random()*40;
+      const g=ctx.createRadialGradient(x,y,0,x,y,r);
+      g.addColorStop(0,'rgba(180,180,180,1)');g.addColorStop(1,'rgba(255,255,255,1)');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+    }
+    ctx.globalCompositeOperation='source-over';
+  }
+  const tex=new T.CanvasTexture(c);
+  tex.wrapS=tex.wrapT=T.RepeatWrapping;
+  tex.colorSpace=T.SRGBColorSpace;
+  tex.anisotropy=8;
+  return tex;
+}
+function makeRoughnessCanvas(size,baseValue,variance){
+  const c=document.createElement('canvas');c.width=c.height=size;
+  const ctx=c.getContext('2d');
+  const img=ctx.createImageData(size,size);
+  for(let i=0;i<img.data.length;i+=4){
+    const v=Math.max(0,Math.min(255,(baseValue+(Math.random()-0.5)*variance)*255));
+    img.data[i]=img.data[i+1]=img.data[i+2]=v;img.data[i+3]=255;
+  }
+  ctx.putImageData(img,0,0);
+  const tex=new T.CanvasTexture(c);tex.wrapS=tex.wrapT=T.RepeatWrapping;return tex;
+}
+// Generate shared texture library
+const TEX={
+  concrete:{
+    color:makeNoiseCanvas(256,'#c8cad0',0.08,true),
+    rough:makeRoughnessCanvas(128,0.85,0.25)
+  },
+  concrete_warm:{
+    color:makeNoiseCanvas(256,'#e0dcce',0.07,true),
+    rough:makeRoughnessCanvas(128,0.88,0.2)
+  },
+  asphalt:{
+    color:makeNoiseCanvas(256,'#2a2d33',0.12,false),
+    rough:makeRoughnessCanvas(128,0.92,0.15)
+  },
+  brick:{color:(()=>{
+    const c=document.createElement('canvas');c.width=256;c.height=128;
+    const ctx=c.getContext('2d');
+    // base mortar
+    ctx.fillStyle='#3a342e';ctx.fillRect(0,0,256,128);
+    // bricks
+    const bw=32,bh=14;
+    for(let y=0;y<128/bh;y++){
+      const offset=(y%2)*bw/2;
+      for(let x=-1;x<=256/bw;x++){
+        const px=x*bw+offset+1,py=y*bh+1;
+        // brick color variation
+        const tint=180+Math.random()*40;
+        ctx.fillStyle=`rgb(${Math.floor(tint*0.8)},${Math.floor(tint*0.5)},${Math.floor(tint*0.35)})`;
+        ctx.fillRect(px,py,bw-2,bh-2);
+        // wear
+        if(Math.random()>0.85){ctx.fillStyle='rgba(0,0,0,0.15)';ctx.fillRect(px+Math.random()*bw,py+Math.random()*bh,Math.random()*4,Math.random()*3);}
+      }
+    }
+    const tex=new T.CanvasTexture(c);tex.wrapS=tex.wrapT=T.RepeatWrapping;tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;
+    return tex;
+  })(),rough:makeRoughnessCanvas(128,0.9,0.15)},
+  metal_panel:{
+    color:makeNoiseCanvas(256,'#a0a4ad',0.06,false),
+    rough:makeRoughnessCanvas(128,0.4,0.3)
+  }
+};
+
+function mkSlab(w,h,d,color,roughness,tex){
+  const matOpts={color,roughness:roughness||0.85,metalness:0.05};
+  if(tex){matOpts.map=tex.color;matOpts.roughnessMap=tex.rough;}
+  const m=new T.Mesh(new T.BoxGeometry(w,h,d),new T.MeshStandardMaterial(matOpts));
+  m.castShadow=true;m.receiveShadow=true;return m;
+}
+function texMat(color,roughness,metalness,tex){
+  const o={color,roughness:roughness||0.85,metalness:metalness||0.05};
+  if(tex){o.map=tex.color;o.roughnessMap=tex.rough;}
+  return new T.MeshStandardMaterial(o);
+}
+
+const groundMat=new T.MeshStandardMaterial({color:0x1a1d24,roughness:0.92,metalness:0.05,transparent:true,opacity:0.92});
+groundMat.map=TEX.asphalt.color;groundMat.roughnessMap=TEX.asphalt.rough;
+if(TEX.asphalt.color){TEX.asphalt.color.repeat.set(8,8);TEX.asphalt.rough.repeat.set(8,8);}
+const ground=new T.Mesh(new T.CircleGeometry(50,64),groundMat);
+ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+
+const bpMat=new T.LineBasicMaterial({color:0x5fcdff,transparent:true,opacity:0,toneMapped:false});
+let bpOutline=new T.Line(new T.BufferGeometry(),bpMat);scene.add(bpOutline);
+function setBpRect(w,d){const p=[new T.Vector3(-w/2,0.01,-d/2),new T.Vector3(w/2,0.01,-d/2),new T.Vector3(w/2,0.01,d/2),new T.Vector3(-w/2,0.01,d/2),new T.Vector3(-w/2,0.01,-d/2)];bpOutline.geometry.dispose();bpOutline.geometry=new T.BufferGeometry().setFromPoints(p);}
+
+
+
+function mkWindow(w,h,d,emissive){const mat=new T.MeshStandardMaterial({color:0x12161e,emissive:emissive||0xffb070,emissiveIntensity:0,roughness:0.15,metalness:0.6});return {mesh:new T.Mesh(new T.BoxGeometry(w,h,d),mat),mat};}
+let windowMats=[];
+
+function makeApartment(){
+  const g=new T.Group(),slots=[],FW=9,FD=7,N=8,FH=1.4;
+  const found=mkSlab(FW+0.6,0.4,FD+0.6,0x4a4f58,0.9);found.position.y=0.2;slots.push(found);g.add(found);
+  for(let i=0;i<N;i++){
+    const f=new T.Group();
+    const slab=mkSlab(FW,0.15,FD,0xa0a4ad,0.75);slab.position.y=FH-0.075;f.add(slab);
+    const wM=texMat(0xd0cfc8,0.88,0.04,TEX.concrete);
+    if(TEX.concrete.color){TEX.concrete.color.repeat.set(3,1);TEX.concrete.rough.repeat.set(3,1);}
+    [[0,FD/2-0.06,FW,FH*0.95,0.12],[0,-FD/2+0.06,FW,FH*0.95,0.12],[-FW/2+0.06,0,0.12,FH*0.95,FD],[FW/2-0.06,0,0.12,FH*0.95,FD]].forEach(([x,z,w,h,d])=>{
+      const w1=new T.Mesh(new T.BoxGeometry(w,h,d),wM);w1.position.set(x,FH*0.475,z);w1.castShadow=true;w1.receiveShadow=true;f.add(w1);
+    });
+    for(let k=0;k<5;k++){
+      const w=mkWindow(0.85,FH*0.55,0.05);w.mesh.position.set(-FW/2+1.05+k*1.78,FH*0.5,FD/2-0.01);f.add(w.mesh);windowMats.push(w.mat);
+      const w2=mkWindow(0.85,FH*0.55,0.05);w2.mesh.position.set(-FW/2+1.05+k*1.78,FH*0.5,-FD/2+0.01);f.add(w2.mesh);windowMats.push(w2.mat);
+    }
+    f.position.y=0.4+i*FH;slots.push(f);g.add(f);
+  }
+  // Balconies on front face (each floor except ground)
+  for(let i=1;i<N;i++){
+    const balc=new T.Mesh(new T.BoxGeometry(FW-0.5,0.1,1.2),new T.MeshStandardMaterial({color:0xb8b6ae,roughness:0.7}));
+    balc.position.set(0,0.4+i*FH-0.02,FD/2+0.5);balc.castShadow=true;balc.receiveShadow=true;slots.push(balc);g.add(balc);
+    // Railings (3 thin vertical bars per balcony)
+    for(let r=0;r<4;r++){
+      const rail=new T.Mesh(new T.BoxGeometry(0.04,0.55,0.04),new T.MeshStandardMaterial({color:0x2a2d35,metalness:0.7,roughness:0.4}));
+      rail.position.set(-FW/2+1.5+r*((FW-3)/3),0.4+i*FH+0.27,FD/2+1.05);slots.push(rail);g.add(rail);
+    }
+    const railTop=new T.Mesh(new T.BoxGeometry(FW-0.5,0.05,0.05),new T.MeshStandardMaterial({color:0x2a2d35,metalness:0.7,roughness:0.4}));
+    railTop.position.set(0,0.4+i*FH+0.52,FD/2+1.05);slots.push(railTop);g.add(railTop);
+  }
+  // AC units on side walls
+  for(let i=1;i<N;i++){
+    const ac=new T.Mesh(new T.BoxGeometry(0.18,0.35,0.55),new T.MeshStandardMaterial({color:0xe8e5dd,roughness:0.6}));
+    ac.position.set(FW/2+0.1,0.4+i*FH+0.4,-FD/2+1.5);ac.castShadow=true;slots.push(ac);g.add(ac);
+    const ac2=ac.clone();ac2.position.set(-FW/2-0.1,0.4+i*FH+0.4,FD/2-1.5);slots.push(ac2);g.add(ac2);
+  }
+  // Entrance door + canopy (ground floor center)
+  const door=new T.Mesh(new T.BoxGeometry(1.4,FH*0.85,0.08),new T.MeshStandardMaterial({color:0x3a3530,roughness:0.5,metalness:0.4,emissive:0xff7a2f,emissiveIntensity:0.15}));
+  door.position.set(0,0.4+FH*0.425,FD/2+0.01);slots.push(door);g.add(door);
+  const canopy=new T.Mesh(new T.BoxGeometry(3.2,0.12,0.9),new T.MeshStandardMaterial({color:0x4a4f58,roughness:0.6,metalness:0.4}));
+  canopy.position.set(0,0.4+FH*0.95,FD/2+0.5);canopy.castShadow=true;slots.push(canopy);g.add(canopy);
+  const roof=mkSlab(FW*0.9,0.3,FD*0.9,0x5a606b,0.6);roof.position.y=0.4+N*FH+0.15;slots.push(roof);g.add(roof);
+  // Rooftop water tank
+  const tank=new T.Mesh(new T.CylinderGeometry(0.7,0.7,1.2,16),new T.MeshStandardMaterial({color:0xb0adA8,roughness:0.5,metalness:0.4}));
+  tank.position.set(-2,0.4+N*FH+0.9,1);tank.castShadow=true;slots.push(tank);g.add(tank);
+  // Antenna
+  const antMast=new T.Mesh(new T.CylinderGeometry(0.04,0.04,2.5,8),new T.MeshStandardMaterial({color:0xff7a2f,emissive:0xff7a2f,emissiveIntensity:0.12,roughness:0.4,metalness:0.7}));
+  antMast.position.set(2.5,0.4+N*FH+1.55,0);slots.push(antMast);g.add(antMast);
+  // Satellite dish
+  const dish=new T.Mesh(new T.SphereGeometry(0.35,12,8,0,Math.PI*2,0,Math.PI/2.4),new T.MeshStandardMaterial({color:0xe8e5dd,roughness:0.5,metalness:0.5,side:T.DoubleSide}));
+  dish.rotation.x=-1.2;dish.position.set(2,0.4+N*FH+0.6,-1.5);slots.push(dish);g.add(dish);
+  return {group:g,slots,height:0.4+N*FH+2.8,fw:FW,fd:FD,type:'apartment',cam:{r:24,h:11,fov:34}};
+}
+
+function makeVilla(){
+  const g=new T.Group(),slots=[],FW=12,FD=9,FH=1.6;
+  const found=mkSlab(FW+0.6,0.4,FD+0.6,0x4a4f58,0.9);found.position.y=0.2;slots.push(found);g.add(found);
+  const pool=new T.Mesh(new T.BoxGeometry(3,0.05,2),new T.MeshStandardMaterial({color:0x2a90c0,emissive:0x2a90c0,emissiveIntensity:0.25,roughness:0.2,metalness:0.4}));
+  pool.position.set(FW/2+2.5,0.42,0);slots.push(pool);g.add(pool);
+  const poolFrame=new T.Mesh(new T.BoxGeometry(3.4,0.15,2.4),new T.MeshStandardMaterial({color:0xc8cad0,roughness:0.7}));
+  poolFrame.position.set(FW/2+2.5,0.34,0);poolFrame.receiveShadow=true;slots.push(poolFrame);g.add(poolFrame);
+  for(let i=0;i<2;i++){
+    const f=new T.Group();const w=i===0?FW:FW-1.4,d=i===0?FD:FD-1.0;
+    const slab=mkSlab(w,0.15,d,0xb8babf,0.75);slab.position.y=FH-0.075;f.add(slab);
+    const wM=texMat(0xe8e5dd,0.88,0.04,TEX.concrete_warm);
+    if(TEX.concrete_warm.color){TEX.concrete_warm.color.repeat.set(2,1);TEX.concrete_warm.rough.repeat.set(2,1);}
+    [[0,d/2-0.06,w,FH*0.92,0.12],[0,-d/2+0.06,w,FH*0.92,0.12],[-w/2+0.06,0,0.12,FH*0.92,d],[w/2-0.06,0,0.12,FH*0.92,d]].forEach(([x,z,ww,h,dd])=>{
+      const wl=new T.Mesh(new T.BoxGeometry(ww,h,dd),wM);wl.position.set(x,FH*0.46,z);wl.castShadow=true;wl.receiveShadow=true;f.add(wl);
+    });
+    const winCount=i===0?6:4;
+    for(let k=0;k<winCount;k++){
+      const ww=mkWindow(1.0,FH*0.6,0.05);ww.mesh.position.set(-w/2+1.0+k*(w-2)/(winCount-1),FH*0.5,d/2-0.01);f.add(ww.mesh);windowMats.push(ww.mat);
+      const ww2=mkWindow(1.0,FH*0.6,0.05);ww2.mesh.position.set(-w/2+1.0+k*(w-2)/(winCount-1),FH*0.5,-d/2+0.01);f.add(ww2.mesh);windowMats.push(ww2.mat);
+    }
+    f.position.y=0.4+i*FH;slots.push(f);g.add(f);
+  }
+  const roofH=1.8,roofW=FW-1.0,roofD=FD-0.6;
+  const roofGeo=new T.BufferGeometry();
+  const v=new Float32Array([-roofW/2,0,-roofD/2,roofW/2,0,-roofD/2,roofW/2,0,roofD/2,-roofW/2,0,roofD/2,-roofW/2+1.0,roofH,0,roofW/2-1.0,roofH,0]);
+  const idx=[0,1,4,1,5,4,1,2,5,5,2,3,5,3,4,4,3,0,0,3,2,0,2,1];
+  roofGeo.setAttribute('position',new T.BufferAttribute(v,3));roofGeo.setIndex(idx);roofGeo.computeVertexNormals();
+  const roof=new T.Mesh(roofGeo,new T.MeshStandardMaterial({color:0xb04a2a,roughness:0.7,metalness:0.1,side:T.DoubleSide}));
+  roof.position.y=0.4+2*FH;roof.castShadow=true;roof.receiveShadow=true;slots.push(roof);g.add(roof);
+  for(let k=0;k<3;k++){
+    const tree=new T.Group();
+    const trunk=new T.Mesh(new T.CylinderGeometry(0.1,0.13,0.8,8),new T.MeshStandardMaterial({color:0x6a4525,roughness:0.9}));
+    trunk.position.y=0.8;trunk.castShadow=true;tree.add(trunk);
+    const leaves=new T.Mesh(new T.IcosahedronGeometry(0.65,1),new T.MeshStandardMaterial({color:0x4a8050,roughness:0.85,flatShading:true}));
+    leaves.position.y=1.6;leaves.castShadow=true;tree.add(leaves);
+    tree.position.set(-FW/2-1.5,0.4,-2+k*2);slots.push(tree);g.add(tree);
+  }
+  // Front door + porch
+  const door=new T.Mesh(new T.BoxGeometry(1.0,FH*0.9,0.08),new T.MeshStandardMaterial({color:0x3a2818,roughness:0.5,emissive:0xffb070,emissiveIntensity:0.18}));
+  door.position.set(0,0.4+FH*0.45,FD/2+0.01);slots.push(door);g.add(door);
+  const porch=new T.Mesh(new T.BoxGeometry(2.4,0.1,1.4),new T.MeshStandardMaterial({color:0xc8cad0,roughness:0.7}));
+  porch.position.set(0,0.4,FD/2+0.7);porch.castShadow=true;porch.receiveShadow=true;slots.push(porch);g.add(porch);
+  // Porch columns
+  for(let k=0;k<2;k++){
+    const col=new T.Mesh(new T.CylinderGeometry(0.08,0.08,FH*0.95,12),new T.MeshStandardMaterial({color:0xe8e5dd,roughness:0.7}));
+    col.position.set(-1.1+k*2.2,0.4+FH*0.475,FD/2+1.3);col.castShadow=true;slots.push(col);g.add(col);
+  }
+  const porchRoof=new T.Mesh(new T.BoxGeometry(2.6,0.08,1.5),new T.MeshStandardMaterial({color:0x8a3a20,roughness:0.7}));
+  porchRoof.position.set(0,0.4+FH*1.0,FD/2+0.7);porchRoof.castShadow=true;slots.push(porchRoof);g.add(porchRoof);
+  // Chimney
+  const chimney=new T.Mesh(new T.BoxGeometry(0.7,1.6,0.7),new T.MeshStandardMaterial({color:0xc8cad0,roughness:0.85}));
+  chimney.position.set(-FW/2+2.2,0.4+2*FH+1.0,1.5);chimney.castShadow=true;slots.push(chimney);g.add(chimney);
+  // Path of stones
+  for(let k=0;k<5;k++){
+    const stone=new T.Mesh(new T.BoxGeometry(0.7,0.05,0.5),new T.MeshStandardMaterial({color:0x8a8580,roughness:0.9}));
+    stone.position.set(0,0.41,FD/2+2.0+k*0.8);stone.receiveShadow=true;slots.push(stone);g.add(stone);
+  }
+  // Bushes (varied)
+  for(let k=0;k<4;k++){
+    const bush=new T.Mesh(new T.IcosahedronGeometry(0.4+Math.random()*0.2,1),new T.MeshStandardMaterial({color:0x3a6038,roughness:0.85,flatShading:true}));
+    bush.position.set(-FW/2+1+k*0.9,0.6,FD/2+1.8);bush.castShadow=true;slots.push(bush);g.add(bush);
+  }
+  return {group:g,slots,height:0.4+2*FH+roofH+0.5,fw:FW,fd:FD,type:'villa',cam:{r:21,h:8,fov:36}};
+}
+
+function makeFactory(){
+  const g=new T.Group(),slots=[],FW=18,FD=8,WH=3.2;
+  const found=mkSlab(FW+0.6,0.4,FD+0.6,0x4a4f58,0.9);found.position.y=0.2;slots.push(found);g.add(found);
+  const body=new T.Group();
+  const wM=texMat(0xc8b09a,0.85,0.05,TEX.brick);
+  if(TEX.brick.color){TEX.brick.color.repeat.set(6,2);}
+  [[0,FD/2-0.06,FW,WH,0.12],[0,-FD/2+0.06,FW,WH,0.12],[-FW/2+0.06,0,0.12,WH,FD],[FW/2-0.06,0,0.12,WH,FD]].forEach(([x,z,w,h,d])=>{
+    const wl=new T.Mesh(new T.BoxGeometry(w,h,d),wM);wl.position.set(x,WH/2,z);wl.castShadow=true;wl.receiveShadow=true;body.add(wl);
+  });
+  body.position.y=0.4;slots.push(body);g.add(body);
+  for(let i=0;i<5;i++){
+    const seg=new T.Group();const w=FW/5;
+    const back=new T.Mesh(new T.BoxGeometry(w-0.15,0.15,FD),new T.MeshStandardMaterial({color:0xc44a2a,roughness:0.65,metalness:0.15}));
+    back.position.y=WH+0.5;back.position.x=-FW/2+w/2+i*w;back.rotation.z=0.55;back.castShadow=true;seg.add(back);
+    const winS=new T.Mesh(new T.BoxGeometry(w-0.4,0.7,FD-0.4),new T.MeshStandardMaterial({color:0x2a4060,emissive:0x88c0ff,emissiveIntensity:0,roughness:0.2,metalness:0.6,transparent:true,opacity:0.85}));
+    winS.position.set(-FW/2+w/2+i*w-0.55,WH+0.95,0);seg.add(winS);windowMats.push(winS.material);
+    slots.push(seg);g.add(seg);
+  }
+  for(let k=0;k<2;k++){
+    const stack=new T.Group();
+    const cyl=new T.Mesh(new T.CylinderGeometry(0.35,0.4,4.5,16),new T.MeshStandardMaterial({color:0xd0d0d0,roughness:0.6,metalness:0.3}));
+    cyl.position.y=WH+2.25;cyl.castShadow=true;stack.add(cyl);
+    const ring=new T.Mesh(new T.CylinderGeometry(0.38,0.38,0.5,16),new T.MeshStandardMaterial({color:0xc83020,roughness:0.5}));
+    ring.position.y=WH+3.5;stack.add(ring);
+    stack.position.set(-3.5+k*7,0.4,-FD/2+1);slots.push(stack);g.add(stack);
+  }
+  // Silo (large cylinder)
+  const silo=new T.Mesh(new T.CylinderGeometry(1.2,1.4,5,20),new T.MeshStandardMaterial({color:0xd0d0d0,roughness:0.55,metalness:0.4}));
+  silo.position.set(-FW/2-2,2.9,0);silo.castShadow=true;silo.receiveShadow=true;slots.push(silo);g.add(silo);
+  // Silo dome top
+  const siloDome=new T.Mesh(new T.SphereGeometry(1.25,16,8,0,Math.PI*2,0,Math.PI/2),new T.MeshStandardMaterial({color:0xb0adA8,roughness:0.5,metalness:0.5}));
+  siloDome.position.set(-FW/2-2,5.4,0);siloDome.castShadow=true;slots.push(siloDome);g.add(siloDome);
+  // Loading dock platform
+  const dock=new T.Mesh(new T.BoxGeometry(5,0.4,2.5),new T.MeshStandardMaterial({color:0x4a4f58,roughness:0.85}));
+  dock.position.set(FW/2-1,0.6,FD/2+1.25);dock.castShadow=true;dock.receiveShadow=true;slots.push(dock);g.add(dock);
+  // Truck (simple box)
+  const truck=new T.Group();
+  const cab=new T.Mesh(new T.BoxGeometry(1.4,1.3,1.6),new T.MeshStandardMaterial({color:0xc83020,roughness:0.5,metalness:0.4}));
+  cab.position.y=0.9;cab.castShadow=true;truck.add(cab);
+  const trailer=new T.Mesh(new T.BoxGeometry(3.5,2,1.8),new T.MeshStandardMaterial({color:0xe8e5dd,roughness:0.6,metalness:0.3}));
+  trailer.position.set(-2.3,1.2,0);trailer.castShadow=true;truck.add(trailer);
+  truck.position.set(FW/2+2.5,0.4,FD/2+2);slots.push(truck);g.add(truck);
+  // Company sign on wall
+  const sign=new T.Mesh(new T.BoxGeometry(4,0.6,0.06),new T.MeshStandardMaterial({color:0x1a1d24,emissive:0xff7a2f,emissiveIntensity:0.6,roughness:0.5}));
+  sign.position.set(-3,WH-0.5,FD/2+0.07);slots.push(sign);g.add(sign);
+  return {group:g,slots,height:WH+5,fw:FW,fd:FD,type:'factory',cam:{r:26,h:9,fov:38},hasSmoke:true,smokeOrigins:[[-3.5,WH+5,-3],[3.5,WH+5,-3]]};
+}
+
+function makeTower(){
+  const g=new T.Group(),slots=[],FW=7,FD=7,N=12,FH=1.3;
+  const found=mkSlab(FW+1.2,0.4,FD+1.2,0x4a4f58,0.9);found.position.y=0.2;slots.push(found);g.add(found);
+  const plaza=mkSlab(FW+1,0.08,FD+1,0xb0adA8,0.75);plaza.position.y=0.42;slots.push(plaza);g.add(plaza);
+  for(let i=0;i<N;i++){
+    const f=new T.Group();
+    const slab=mkSlab(FW,0.12,FD,0x9aa0ab,0.55);slab.position.y=FH-0.06;f.add(slab);
+    const glassMat=new T.MeshStandardMaterial({color:0x2a3a52,emissive:0xa0c8ff,emissiveIntensity:0,roughness:0.05,metalness:0.85,transparent:true,opacity:0.78});
+    windowMats.push(glassMat);
+    [[0,FD/2,FW,FH*0.9,0.12],[0,-FD/2,FW,FH*0.9,0.12],[-FW/2,0,0.12,FH*0.9,FD],[FW/2,0,0.12,FH*0.9,FD]].forEach(([x,z,w,h,d])=>{
+      const w1=new T.Mesh(new T.BoxGeometry(w,h,d),glassMat);w1.position.set(x,FH*0.45,z);w1.castShadow=true;f.add(w1);
+    });
+    f.position.y=0.5+i*FH;slots.push(f);g.add(f);
+  }
+  const ant=new T.Mesh(new T.CylinderGeometry(0.05,0.08,2.5,8),new T.MeshStandardMaterial({color:0xff7a2f,emissive:0xff7a2f,emissiveIntensity:0.15,roughness:0.3,metalness:0.7}));
+  ant.position.y=0.5+N*FH+1.25;slots.push(ant);g.add(ant);
+  const crown=mkSlab(FW*0.7,0.2,FD*0.7,0x5a606b,0.5);crown.position.y=0.5+N*FH;slots.push(crown);g.add(crown);
+  // Lobby entrance (taller ground floor look)
+  const lobby=new T.Mesh(new T.BoxGeometry(FW*0.7,FH*0.8,0.08),new T.MeshStandardMaterial({color:0x2a3a52,emissive:0xa0c8ff,emissiveIntensity:0.35,roughness:0.05,metalness:0.85,transparent:true,opacity:0.85}));
+  lobby.position.set(0,0.5+FH*0.4,FD/2+0.01);slots.push(lobby);g.add(lobby);
+  // Mechanical floor (mid-building, slightly darker)
+  const mech=new T.Mesh(new T.BoxGeometry(FW+0.3,0.6,FD+0.3),new T.MeshStandardMaterial({color:0x3a3f48,roughness:0.7,metalness:0.5}));
+  mech.position.y=0.5+Math.floor(N/2)*FH;mech.castShadow=true;slots.push(mech);g.add(mech);
+  // Observation deck near top
+  const obs=new T.Mesh(new T.BoxGeometry(FW+0.5,0.3,FD+0.5),new T.MeshStandardMaterial({color:0x5a606b,roughness:0.4,metalness:0.6}));
+  obs.position.y=0.5+(N-2)*FH;obs.castShadow=true;slots.push(obs);g.add(obs);
+  // Navigation lights (3 emissive red dots up the antenna)
+  for(let k=0;k<3;k++){
+    const nav=new T.Mesh(new T.SphereGeometry(0.09,8,8),new T.MeshBasicMaterial({color:0xff3030,toneMapped:false}));
+    nav.position.set(0,0.5+N*FH+0.5+k*0.8,0);slots.push(nav);g.add(nav);
+  }
+  return {group:g,slots,height:0.5+N*FH+2.5,fw:FW,fd:FD,type:'tower',cam:{r:22,h:14,fov:38}};
+}
+
+const crane=new T.Group();scene.add(crane);
+function buildCrane(buildingFW,buildingFD,buildingH){
+  crane.position.set(-buildingFW/2-3.2,0,buildingFD/2+1.8);
+  while(crane.children.length){const c=crane.children[0];crane.remove(c);if(c.geometry&&c.geometry.dispose)c.geometry.dispose();}
+  const MAST_H=buildingH+2.5;
+  const mastMat=new T.MeshStandardMaterial({color:0xff7a2f,roughness:0.5,metalness:0.6,emissive:0xff7a2f,emissiveIntensity:0.06});
+  const cbase=new T.Mesh(new T.BoxGeometry(1.8,0.4,1.8),new T.MeshStandardMaterial({color:0x5a606b,roughness:0.9}));
+  cbase.position.y=0.2;cbase.castShadow=true;crane.add(cbase);
+  const mastCore=new T.Mesh(new T.BoxGeometry(0.45,MAST_H,0.45),mastMat);
+  mastCore.position.y=MAST_H/2+0.4;mastCore.castShadow=true;crane.add(mastCore);
+  for(let y=0;y<MAST_H-0.5;y+=0.6){
+    const l1=new T.Mesh(new T.BoxGeometry(0.06,0.6,0.06),mastMat);l1.position.set(0.25,0.4+y+0.3,0.25);l1.rotation.z=0.5;crane.add(l1);
+    const l2=l1.clone();l2.position.x=-0.25;l2.rotation.z=-0.5;crane.add(l2);
+  }
+  const cab=new T.Mesh(new T.BoxGeometry(0.9,0.65,0.9),new T.MeshStandardMaterial({color:0xffb070,roughness:0.4,metalness:0.6}));
+  cab.position.y=MAST_H+0.4+0.32;crane.add(cab);
+  const opLight=new T.Mesh(new T.SphereGeometry(0.08,8,8),new T.MeshBasicMaterial({color:0xff7a2f,toneMapped:false}));
+  opLight.position.set(0.4,MAST_H+0.55,0.4);crane.add(opLight);
+  // Top warning lights on jib (red blink)
+  const warnLight=new T.Mesh(new T.SphereGeometry(0.1,8,8),new T.MeshBasicMaterial({color:0xff3030,toneMapped:false}));
+  warnLight.position.set(0,MAST_H+0.8,0);crane.add(warnLight);crane.userData.warnLight=warnLight;
+  // Spotlight aimed at building
+  const spotL=new T.SpotLight(0xfff2dd,2.5,18,0.4,0.5,1.2);
+  spotL.position.set(0.5,MAST_H+0.3,0.5);spotL.target.position.set(buildingFW/2+3,buildingH/2,-buildingFD/2);
+  crane.add(spotL);crane.add(spotL.target);
+  const jib=new T.Group();jib.position.y=MAST_H+0.4+0.65;crane.add(jib);crane.userData.jib=jib;
+  const mainJib=new T.Mesh(new T.BoxGeometry(10,0.13,0.28),mastMat);mainJib.position.set(3.5,0,0);mainJib.castShadow=true;jib.add(mainJib);
+  const topChord=new T.Mesh(new T.BoxGeometry(10,0.07,0.07),mastMat);topChord.position.set(3.5,0.35,0);jib.add(topChord);
+  for(let i=0;i<9;i++){const d=new T.Mesh(new T.BoxGeometry(0.5,0.04,0.04),mastMat);d.position.set(-1+i*1.0,0.18,0);d.rotation.z=i%2?0.7:-0.7;jib.add(d);}
+  const counterJib=new T.Mesh(new T.BoxGeometry(2.5,0.13,0.28),mastMat);counterJib.position.set(-1.25,0,0);jib.add(counterJib);
+  const counterWeight=new T.Mesh(new T.BoxGeometry(0.55,0.45,0.55),new T.MeshStandardMaterial({color:0x3a3f48,roughness:0.7,metalness:0.3}));
+  counterWeight.position.set(-2.5,-0.2,0);counterWeight.castShadow=true;jib.add(counterWeight);
+  const trolley=new T.Mesh(new T.BoxGeometry(0.45,0.18,0.55),new T.MeshStandardMaterial({color:0xff9a4f,roughness:0.4,metalness:0.6}));
+  trolley.position.set(4.5,-0.13,0);trolley.castShadow=true;jib.add(trolley);crane.userData.trolley=trolley;
+  const cablePts=new Float32Array([0,0,0,0,-2,0]);
+  const cableGeo=new T.BufferGeometry();cableGeo.setAttribute('position',new T.BufferAttribute(cablePts,3));
+  const cable=new T.Line(cableGeo,new T.LineBasicMaterial({color:0xc0c4cb}));trolley.add(cable);
+  crane.userData.cable=cable;crane.userData.cablePts=cablePts;
+  const load=new T.Mesh(new T.BoxGeometry(0.6,0.35,0.6),new T.MeshStandardMaterial({color:0x6a7080,roughness:0.85,metalness:0.2}));
+  load.position.set(0,-2,0);load.castShadow=true;trolley.add(load);crane.userData.load=load;
+}
+
+const DUST_N=70;
+const dustGeo=new T.BufferGeometry();
+const dustPos=new Float32Array(DUST_N*3);
+const dustVel=[];
+for(let i=0;i<DUST_N;i++){
+  dustPos[i*3]=(Math.random()-0.5)*14;dustPos[i*3+1]=Math.random()*6;dustPos[i*3+2]=(Math.random()-0.5)*12;
+  dustVel.push({vx:(Math.random()-0.5)*0.005,vy:0.006+Math.random()*0.012,vz:(Math.random()-0.5)*0.005,life:Math.random()});
+}
+dustGeo.setAttribute('position',new T.BufferAttribute(dustPos,3));
+const dustMat=new T.PointsMaterial({color:0xc8c5bc,size:0.13,transparent:true,opacity:0.35,blending:T.AdditiveBlending,depthWrite:false,sizeAttenuation:true});
+const dust=new T.Points(dustGeo,dustMat);scene.add(dust);
+
+const SMOKE_N=40;
+const smokeGeo=new T.BufferGeometry();
+const smokePos=new Float32Array(SMOKE_N*3);
+const smokeData=[];
+for(let i=0;i<SMOKE_N;i++){smokePos[i*3]=0;smokePos[i*3+1]=-100;smokePos[i*3+2]=0;smokeData.push({origin:null,life:Math.random()});}
+smokeGeo.setAttribute('position',new T.BufferAttribute(smokePos,3));
+const smokeMat=new T.PointsMaterial({color:0x9aa0ab,size:0.55,transparent:true,opacity:0,blending:T.NormalBlending,depthWrite:false,sizeAttenuation:true});
+const smoke=new T.Points(smokeGeo,smokeMat);scene.add(smoke);
+
+const composer=new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene,camera));
+const bloom=new UnrealBloomPass(new T.Vector2(canvas.clientWidth,canvas.clientHeight),0.55,0.65,0.82);
+composer.addPass(bloom);composer.addPass(new OutputPass());
+
+const TYPES=['apartment','villa','factory','tower'];
+const builders={apartment:makeApartment,villa:makeVilla,factory:makeFactory,tower:makeTower};
+const BUILD_DUR=11.0,HOLD_DUR=4.0,TRANSITION=1.3,CYCLE=BUILD_DUR+HOLD_DUR+TRANSITION;
+function ease(t){return t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+function eIn(t){return t*t*t;}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+let current=null,currentType=null,startT=performance.now();
+function buildCurrent(type){
+  if(current){scene.remove(current.group);current.group.traverse(o=>{if(o.geometry&&o.geometry.dispose)o.geometry.dispose();});}
+  windowMats=[]; // reset window mat refs (old building's lights gone)
+  current=builders[type]();
+  current.slots.forEach(s=>s.scale.set(0.001,0.001,0.001));
+  setBpRect(current.fw+0.4,current.fd+0.4);
+  scene.add(current.group);
+  buildCrane(current.fw,current.fd,current.height);
+  currentType=type;
+}
+buildCurrent('apartment');
+
+function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);composer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();}
+
+let raf;
+function animate(now){
+  raf=requestAnimationFrame(animate);resize();
+  const totalT=(now-startT)/1000;
+  const cycleIdx=Math.floor(totalT/CYCLE)%TYPES.length;
+  const t=totalT%CYCLE;
+  const targetType=TYPES[cycleIdx];
+  if(targetType!==currentType && typeof builders[targetType]==='function') buildCurrent(targetType);
+  const buildP=clamp(t/BUILD_DUR,0,1);
+  const holdP=clamp((t-BUILD_DUR)/HOLD_DUR,0,1);
+  const outP=clamp((t-BUILD_DUR-HOLD_DUR)/TRANSITION,0,1);
+  bpMat.opacity=0.85*clamp(buildP*4,0,1)*(1-clamp((buildP-0.2)*1.5,0,1));
+  const slotDur=BUILD_DUR/current.slots.length;
+  current.slots.forEach((slot,i)=>{
+    const p=clamp((t-i*slotDur)/(slotDur*0.85),0,1);
+    let s=Math.max(0.001,ease(p));
+    if(outP>0) s*=Math.max(0.001,1-eIn(outP));
+    slot.scale.set(s,s,s);
+  });
+  let lightP=0;
+  if(buildP>0.7) lightP=clamp((buildP-0.7)/0.3,0,1);
+  if(holdP>0) lightP=1;
+  if(outP>0) lightP=Math.max(0,1-outP*1.5);
+  windowMats.forEach((m,i)=>{if(m){
+    // Per-window personality: some windows are darker (unoccupied), some brighter (occupied)
+    const personality=0.4+0.6*((i*2654435761>>>0)/0xFFFFFFFF); // hash-based deterministic randomness
+    m.emissiveIntensity=lightP*1.6*personality*(0.94+0.06*Math.sin(now*0.003+i*0.7));
+  }});
+  if(current.type==='factory'&&current.smokeOrigins){
+    smokeMat.opacity=0.5*holdP;
+    const pos=smokeGeo.attributes.position;
+    for(let i=0;i<SMOKE_N;i++){
+      const d=smokeData[i];if(!d.origin)d.origin=current.smokeOrigins[i%current.smokeOrigins.length];
+      d.life+=0.012;
+      if(d.life>1){d.life=0;pos.array[i*3]=d.origin[0]+(Math.random()-0.5)*0.4;pos.array[i*3+1]=d.origin[1];pos.array[i*3+2]=d.origin[2]+(Math.random()-0.5)*0.4;}
+      else{pos.array[i*3+1]+=0.03;pos.array[i*3]+=(Math.random()-0.5)*0.04;pos.array[i*3+2]+=(Math.random()-0.5)*0.04;}
+    }
+    pos.needsUpdate=true;
+  }else{smokeMat.opacity=0;smokeData.forEach(d=>d.origin=null);}
+  dustMat.opacity=Math.max(0.2,buildP*0.6+holdP*0.2)+(outP>0?(1-outP)*0.4:0);
+  const dpos=dustGeo.attributes.position;
+  for(let i=0;i<DUST_N;i++){
+    const v=dustVel[i];v.life+=0.006;
+    dpos.array[i*3]+=v.vx;dpos.array[i*3+1]+=v.vy;dpos.array[i*3+2]+=v.vz;
+    if(dpos.array[i*3+1]>10||v.life>1){dpos.array[i*3]=(Math.random()-0.5)*14;dpos.array[i*3+1]=0;dpos.array[i*3+2]=(Math.random()-0.5)*12;v.life=0;}
+  }
+  dpos.needsUpdate=true;
+  if(crane.userData.warnLight){
+    crane.userData.warnLight.material.color.setRGB(1,0.18+0.4*(Math.sin(now*0.005)>0?1:0),0.18);
+  }
+  if(crane.userData.jib){
+    crane.userData.jib.rotation.y=Math.sin(now*0.0003)*0.7+0.4;
+    crane.userData.trolley.position.x=4.5+Math.sin(now*0.0009)*3;
+    const hookY=-1.5-Math.abs(Math.sin(now*0.00135))*4.5;
+    crane.userData.load.position.y=hookY;
+    if(crane.userData.cablePts){crane.userData.cablePts[4]=hookY;crane.userData.cable.geometry.attributes.position.needsUpdate=true;}
+  }
+  const craneFade=outP>0?Math.max(0.001,1-eIn(outP)):1;
+  const craneS=Math.max(0.001,buildP>0.05?ease(clamp(buildP*5,0,1)):0);
+  crane.scale.set(craneS*craneFade,craneS*craneFade,craneS*craneFade);
+  const camR=(current.cam?.r||23)+Math.sin(totalT*0.07)*2;
+  const camH=(current.cam?.h||10)+Math.sin(totalT*0.11)*1.5;
+  const camFov=current.cam?.fov||35;
+  if(Math.abs(camera.fov-camFov)>0.2){camera.fov+=(camFov-camera.fov)*0.05;camera.updateProjectionMatrix();}
+  const orbitA=totalT*0.10+(outP>0?outP*0.8:0);
+  const shake=outP>0?(Math.random()-0.5)*0.15*outP:0;
+  camera.position.set(Math.cos(orbitA)*camR+shake,camH+shake,Math.sin(orbitA)*camR+shake);
+  camera.lookAt(0,current.height*0.35,0);
+  composer.render();
+}
+raf=requestAnimationFrame(animate);
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){if(!raf){startT=performance.now();raf=requestAnimationFrame(animate);}}else{cancelAnimationFrame(raf);raf=null;}});},{threshold:0.05});
+io.observe(canvas);
+document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf);raf=null;}else if(!raf){startT=performance.now();raf=requestAnimationFrame(animate);}});
+}catch(e){console.warn('3D init err',e);const c=document.getElementById('buildScene');if(c)c.style.display='none';}
+}
+/* — tembel başlatma: bölüm görünüre yaklaşınca three indirilir + sahne kurulur — */
+(function(){
+  const host=document.getElementById('buildScene');
+  if(!host) return;
+  const poster=document.getElementById('lbPoster');
+  const done=()=>{ if(poster) poster.classList.add('done'); };
+  const start=()=>bootBuildScene().then(done).catch(e=>console.warn('hero3D yüklenemedi',e));
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const save=navigator.connection&&navigator.connection.saveData;
+  if(reduce||save) return; // hareket/veri tasarrufunda statik poster kalır
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver((es,o)=>{es.forEach(e=>{if(e.isIntersecting){o.disconnect();start();}});},{rootMargin:'400px'});
+    io.observe(host);
+  } else { addEventListener('load',()=>setTimeout(start,1200)); }
+})();
+</script>
+
+
+
+
+<script type="module">
+// ========== ADMIN 3D PROJE ÜRETİCİ (parametrik kütle) ==========
+let p3State=null;
+window.initProje3D=async function(){
+  if(p3State){p3State.onShow();return;}
+  const canvas=document.getElementById('adminBuild3d');
+  if(!canvas)return;
+  try{
+  const T=await import('three');
+  const {OrbitControls}=await import('three/addons/controls/OrbitControls.js');
+  const {RoomEnvironment}=await import('three/addons/environments/RoomEnvironment.js');
+  const {GLTFLoader}=await import('three/addons/loaders/GLTFLoader.js');
+  const renderer=new T.WebGLRenderer({canvas,antialias:true,alpha:false});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
+  renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
+  renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.0;
+  renderer.outputColorSpace=T.SRGBColorSpace;renderer.setClearColor(0x0a0d14,1);
+  const scene=new T.Scene();scene.fog=new T.FogExp2(0x0a0d14,0.012);
+  const pmrem=new T.PMREMGenerator(renderer);
+  scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture;
+  const camera=new T.PerspectiveCamera(40,1,0.1,500);camera.position.set(40,30,45);
+  const controls=new OrbitControls(camera,canvas);
+  controls.enableDamping=true;controls.dampingFactor=0.08;
+  controls.maxPolarAngle=Math.PI/2.1;controls.minDistance=15;controls.maxDistance=160;
+  const sun=new T.DirectionalLight(0xffe8c0,2.6);sun.position.set(30,45,25);sun.castShadow=true;
+  sun.shadow.mapSize.set(2048,2048);const sd=60;Object.assign(sun.shadow.camera,{left:-sd,right:sd,top:sd,bottom:-sd,near:1,far:200});sun.shadow.bias=-0.0003;scene.add(sun);
+  scene.add(new T.HemisphereLight(0xa5c0e8,0x1a1d24,0.5));
+  const fill=new T.DirectionalLight(0x88a3d8,0.5);fill.position.set(-20,15,-15);scene.add(fill);
+  let buildingGroup=null,plotMesh=null,groundMesh=null,plotEdges=null;
+  function clearScene(){
+    [buildingGroup,plotMesh,groundMesh,plotEdges].forEach(o=>{if(o){scene.remove(o);o.traverse&&o.traverse(c=>{if(c.geometry)c.geometry.dispose();});if(o.geometry)o.geometry.dispose();}});
+  }
+  function buildScene(p){
+    clearScene();
+    const ratio=1.4;
+    const plotW=Math.sqrt(p.m2*ratio),plotD=p.m2/plotW;
+    groundMesh=new T.Mesh(new T.CircleGeometry(Math.max(plotW,plotD)*1.9,48),new T.MeshStandardMaterial({color:0x12151b,roughness:0.95}));
+    groundMesh.rotation.x=-Math.PI/2;groundMesh.position.y=-0.05;groundMesh.receiveShadow=true;scene.add(groundMesh);
+    // plot (asphalt/grass)
+    plotMesh=new T.Mesh(new T.BoxGeometry(plotW,0.1,plotD),new T.MeshStandardMaterial({color:0x232a22,roughness:0.92}));
+    plotMesh.receiveShadow=true;scene.add(plotMesh);
+    plotEdges=new T.LineSegments(new T.EdgesGeometry(new T.BoxGeometry(plotW,0.12,plotD)),new T.LineBasicMaterial({color:0xff7a2f}));
+    plotEdges.position.y=0.03;scene.add(plotEdges);
+    buildingGroup=new T.Group();scene.add(buildingGroup);
+    const tip=p.tip;
+    const FH=tip==='ticari'?4.0:(tip==='rezidans'?3.4:3.0);
+    let floors=tip==='villa'?Math.min(p.kat,3):p.kat;
+    const totalFootprint=p.m2*p.taks, perBlock=totalFootprint/p.blok;
+    const bW0=Math.sqrt(perBlock*1.25),bD0=perBlock/bW0;
+    const cols=Math.ceil(Math.sqrt(p.blok)),rows=Math.ceil(p.blok/cols);
+    const gapX=plotW/(cols+1),gapZ=plotD/(rows+1);
+
+    // ---- material helpers ----
+    const matWall=(c)=>new T.MeshStandardMaterial({color:c,roughness:0.62,metalness:0.12});
+    const matGlass=(c,e)=>new T.MeshStandardMaterial({color:c||0x1c2a3a,emissive:e||0x4a90d0,emissiveIntensity:0.32,roughness:0.06,metalness:0.85,transparent:true,opacity:0.82});
+    const matAccent=new T.MeshStandardMaterial({color:0xff7a2f,roughness:0.45,metalness:0.5,emissive:0xff7a2f,emissiveIntensity:0.12});
+    const matRoof=new T.MeshStandardMaterial({color:0x4a4f58,roughness:0.7,metalness:0.2});
+
+    function addWindowsBand(g,bx,bz,bw,bd,y,hgt,isShop){
+      const cw=Math.max(2,Math.floor(bw/2.0));
+      const mat=isShop?matGlass(0x152230,0x55d6ff):matGlass(0x223247,0xffca80);
+      for(let w=0;w<cw;w++){
+        const wx=bx-bw/2+(bw/cw)*(w+0.5);
+        const win=new T.Mesh(new T.BoxGeometry((bw/cw)*0.78,hgt,0.06),mat);
+        win.position.set(wx,y,bz+bd/2+0.02);g.add(win);
+        const win2=win.clone();win2.position.z=bz-bd/2-0.02;g.add(win2);
+      }
+    }
+
+    let bi=0;
+    for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+      if(bi>=p.blok)break;
+      const bx=-plotW/2+gapX*(c+1),bz=-plotD/2+gapZ*(r+1);
+      const bg=new T.Group();buildingGroup.add(bg);
+
+      if(tip==='villa'){
+        // MODERN VILLA: 2 floors, flat + cantilever, large glazing, pitched accent
+        const bw=bW0*1.1,bd=bD0*1.1,bH=floors*FH;
+        // ground floor (wider, stone base)
+        const base=new T.Mesh(new T.BoxGeometry(bw,FH,bd),matWall(0xe8e4da));
+        base.position.set(bx,FH/2,bz);base.castShadow=base.receiveShadow=true;bg.add(base);
+        // upper floor cantilevered + offset
+        if(floors>1){
+          const up=new T.Mesh(new T.BoxGeometry(bw*0.85,FH,bd*1.15),matWall(0xd8d2c6));
+          up.position.set(bx+bw*0.08,FH*1.5,bz);up.castShadow=up.receiveShadow=true;bg.add(up);
+          addWindowsBand(bg,bx+bw*0.08,bz,bw*0.85,bd*1.15,FH*1.5,FH*0.6,false);
+        }
+        // big ground-floor glazing
+        const glz=new T.Mesh(new T.BoxGeometry(bw*0.6,FH*0.7,0.08),matGlass(0x1a2a38,0x88c0ff));
+        glz.position.set(bx,FH*0.42,bz+bd/2+0.02);bg.add(glz);
+        // flat roof + parapet
+        const roof=new T.Mesh(new T.BoxGeometry(bw*0.9,0.25,bd*1.2),matRoof);
+        roof.position.set(bx+bw*0.08,floors*FH+0.1,bz);roof.castShadow=true;bg.add(roof);
+        // wood accent slats on facade
+        for(let s=0;s<5;s++){const sl=new T.Mesh(new T.BoxGeometry(0.12,FH*0.8,0.06),new T.MeshStandardMaterial({color:0x8a5a2a,roughness:0.7}));sl.position.set(bx-bw*0.3+s*0.35,FH*0.5,bz+bd/2+0.05);bg.add(sl);}
+        // pool + garden
+        const pool=new T.Mesh(new T.BoxGeometry(bw*0.5,0.06,bd*0.4),new T.MeshStandardMaterial({color:0x2a90c0,emissive:0x2a90c0,emissiveIntensity:0.3,roughness:0.1,metalness:0.5}));
+        pool.position.set(bx,0.12,bz+bd*0.85);bg.add(pool);
+        // tree
+        const tr=new T.Group();const trunk=new T.Mesh(new T.CylinderGeometry(0.12,0.16,1,8),new T.MeshStandardMaterial({color:0x6a4525}));trunk.position.y=0.5;tr.add(trunk);const lv=new T.Mesh(new T.IcosahedronGeometry(0.8,1),new T.MeshStandardMaterial({color:0x3a7045,flatShading:true,roughness:0.85}));lv.position.y=1.4;tr.add(lv);tr.position.set(bx-bw*0.7,0.1,bz+bd*0.6);tr.children.forEach(o=>o.castShadow=true);bg.add(tr);
+
+      }else if(tip==='rezidans'){
+        // MODERN SKYSCRAPER: tall, setbacks, full glass curtain wall, crown
+        const bw=bW0*0.85,bd=bD0*0.85;
+        const setbackEvery=Math.max(3,Math.floor(floors/3));
+        let curW=bw,curD=bd,yBase=0;
+        for(let seg=0;seg<floors;seg++){
+          if(seg>0&&seg%setbackEvery===0){curW*=0.86;curD*=0.86;}
+          const slab=new T.Mesh(new T.BoxGeometry(curW,FH,curD),matGlass(0x24364d,0xa8d0ff));
+          slab.position.set(bx,seg*FH+FH/2,bz);slab.castShadow=true;bg.add(slab);
+          // floor divider
+          const div=new T.Mesh(new T.BoxGeometry(curW+0.08,0.1,curD+0.08),new T.MeshStandardMaterial({color:0x3a4350,metalness:0.6,roughness:0.4}));
+          div.position.set(bx,seg*FH,bz);bg.add(div);
+          // vertical mullions (accent)
+          if(seg%setbackEvery===0){
+            const ml=new T.Mesh(new T.BoxGeometry(0.12,FH*setbackEvery,curD+0.1),matAccent);
+            ml.position.set(bx-curW/2,seg*FH+FH*setbackEvery/2,bz);bg.add(ml);
+            const ml2=ml.clone();ml2.position.x=bx+curW/2;bg.add(ml2);
+          }
+        }
+        // glowing crown
+        const crown=new T.Mesh(new T.BoxGeometry(curW*0.7,0.5,curD*0.7),matAccent);
+        crown.position.set(bx,floors*FH+0.25,bz);crown.castShadow=true;bg.add(crown);
+        const ant=new T.Mesh(new T.CylinderGeometry(0.04,0.06,3,8),matAccent);
+        ant.position.set(bx,floors*FH+1.5,bz);bg.add(ant);
+        const navL=new T.Mesh(new T.SphereGeometry(0.12,8,8),new T.MeshBasicMaterial({color:0xff3030,toneMapped:false}));
+        navL.position.set(bx,floors*FH+3,bz);bg.add(navL);
+
+      }else if(tip==='ticari'){
+        // MODERN FACTORY/COMMERCIAL: long low body, sawtooth roof, clerestory, loading docks
+        const bw=bW0*1.5,bd=bD0*0.9,WH=FH*1.2;
+        const body=new T.Mesh(new T.BoxGeometry(bw,WH,bd),matWall(0xc4b9a8));
+        body.position.set(bx,WH/2,bz);body.castShadow=body.receiveShadow=true;bg.add(body);
+        // sawtooth roof
+        const segs=6;
+        for(let s=0;s<segs;s++){
+          const sw=bw/segs;
+          const slope=new T.Mesh(new T.BoxGeometry(sw-0.1,0.12,bd),matRoof);
+          slope.position.set(bx-bw/2+sw*(s+0.5),WH+0.45,bz);slope.rotation.z=0.5;slope.castShadow=true;bg.add(slope);
+          const cw=new T.Mesh(new T.BoxGeometry(sw-0.3,0.55,bd-0.3),matGlass(0x2a4060,0x88c0ff));
+          cw.position.set(bx-bw/2+sw*(s+0.5)-0.4,WH+0.78,bz);bg.add(cw);
+        }
+        // metal cladding stripes
+        for(let s=0;s<8;s++){const st=new T.Mesh(new T.BoxGeometry(bw,0.06,0.04),matAccent);st.position.set(bx,0.5+s*(WH/8),bz+bd/2+0.03);bg.add(st);}
+        // loading dock doors
+        for(let d=0;d<3;d++){const dr=new T.Mesh(new T.BoxGeometry(bw*0.18,WH*0.6,0.1),new T.MeshStandardMaterial({color:0x4a4f58,metalness:0.5,roughness:0.5}));dr.position.set(bx-bw*0.3+d*bw*0.3,WH*0.3,bz+bd/2+0.05);bg.add(dr);}
+        // smokestacks
+        for(let k=0;k<2;k++){const cyl=new T.Mesh(new T.CylinderGeometry(0.35,0.42,WH*1.4,16),new T.MeshStandardMaterial({color:0xd0d0d0,roughness:0.6,metalness:0.3}));cyl.position.set(bx-bw*0.3+k*bw*0.6,WH*0.7,bz-bd*0.3);cyl.castShadow=true;bg.add(cyl);const ring=new T.Mesh(new T.CylinderGeometry(0.38,0.38,0.4,16),new T.MeshStandardMaterial({color:0xc83020}));ring.position.set(bx-bw*0.3+k*bw*0.6,WH*1.3,bz-bd*0.3);bg.add(ring);}
+        floors=1;
+
+      }else{
+        // MODERN APARTMENT: mid-rise, ground shops, balconies, varied facade
+        const bw=bW0,bd=bD0,bH=floors*FH;
+        const hasShops=(p.dukkan>0)&&(bi===0);
+        // main body — two-tone facade
+        const body=new T.Mesh(new T.BoxGeometry(bw,bH,bd),matWall(0xd2d4d8));
+        body.position.set(bx,bH/2,bz);body.castShadow=body.receiveShadow=true;bg.add(body);
+        // accent vertical column (stairwell)
+        const acc=new T.Mesh(new T.BoxGeometry(bw*0.18,bH,bd*0.5),matWall(0x8a7a6a));
+        acc.position.set(bx+bw*0.32,bH/2,bz+bd*0.25);bg.add(acc);
+        // floor dividers + windows + balconies
+        for(let f=0;f<floors;f++){
+          const div=new T.Mesh(new T.BoxGeometry(bw+0.1,0.1,bd+0.1),new T.MeshStandardMaterial({color:0x9aa0ab,roughness:0.6}));
+          div.position.set(bx,f*FH,bz);bg.add(div);
+          if(f===0&&hasShops){
+            // storefronts
+            const cw=Math.max(2,Math.floor(bw/2.0));
+            for(let w=0;w<cw;w++){const wx=bx-bw/2+(bw/cw)*(w+0.5);const sh=new T.Mesh(new T.BoxGeometry((bw/cw)*0.82,FH*0.72,0.06),matGlass(0x152230,0x55d6ff));sh.position.set(wx,FH*0.4,bz+bd/2+0.03);bg.add(sh);const shb=sh.clone();shb.position.z=bz-bd/2-0.03;bg.add(shb);}
+            const awn=new T.Mesh(new T.BoxGeometry(bw+0.2,0.1,0.7),matAccent);awn.position.set(bx,FH*0.8,bz+bd/2+0.35);awn.castShadow=true;bg.add(awn);
+          }else{
+            addWindowsBand(bg,bx,bz,bw,bd,f*FH+FH*0.55,FH*0.5,false);
+            // balconies (front)
+            const balc=new T.Mesh(new T.BoxGeometry(bw*0.85,0.08,1.0),new T.MeshStandardMaterial({color:0xc8c5be,roughness:0.6}));
+            balc.position.set(bx,f*FH+0.05,bz+bd/2+0.5);balc.castShadow=true;bg.add(balc);
+            const rail=new T.Mesh(new T.BoxGeometry(bw*0.85,0.45,0.04),matGlass(0x88aacc,0x3a5a7a));
+            rail.position.set(bx,f*FH+0.27,bz+bd/2+0.98);bg.add(rail);
+          }
+        }
+        // roof + parapet + rooftop unit
+        const roof=new T.Mesh(new T.BoxGeometry(bw+0.1,0.3,bd+0.1),matRoof);roof.position.set(bx,bH+0.15,bz);roof.castShadow=true;bg.add(roof);
+        const ru=new T.Mesh(new T.BoxGeometry(bw*0.3,0.8,bd*0.3),matWall(0xb0adA8));ru.position.set(bx-bw*0.2,bH+0.55,bz);ru.castShadow=true;bg.add(ru);
+      }
+      bi++;
+    }
+    const span=Math.max(plotW,plotD);
+    controls.target.set(0,floors*FH*0.35,0);controls.update();
+  }
+  function readParams(){const g=id=>document.getElementById(id);const v=(id,d)=>{const e=g(id);return e?e.value:d;};const n=(id,d)=>{const e=g(id);return e?+e.value:d;};
+    // sync müteahhit pay
+    const pa=n('p3_payArsa',45);const pm=g('p3_payMut');if(pm)pm.value=100-pa;
+    return{musteri:v('p3_musteri',''),ad:v('p3_ad','Müşteri Arsası'),il:v('p3_il','İstanbul'),ilce:v('p3_ilce',''),mah:v('p3_mah',''),ada:v('p3_ada',''),parsel:v('p3_parsel',''),
+      m2:n('p3_m2',1500),emsal:n('p3_emsal',2),taks:n('p3_taks',0.4),kat:Math.max(1,n('p3_kat',6)),blok:Math.max(1,Math.min(6,n('p3_blok',2))),tip:v('p3_tip','konut'),
+      dukkan:n('p3_dukkan',4),dukkanM2:n('p3_dukkanM2',60),daireM2:n('p3_daireM2',115),daireKat:n('p3_daireKat',4),
+      payArsa:pa,payMut:100-pa,satisM2:n('p3_satisM2',75000),maliyetM2:n('p3_maliyetM2',18000)};}
+  function fizibilite(p){
+    const insaat=p.m2*p.emsal, taban=p.m2*p.taks;
+    const dukkanAlan=p.dukkan*p.dukkanM2;
+    const daireAlan=Math.max(0,insaat-dukkanAlan);
+    const daireSayisi=p.daireM2?Math.floor(daireAlan/p.daireM2):0;
+    const toplamBB=p.dukkan+daireSayisi;
+    // kat karşılığı paylaşım (m² bazlı)
+    const arsaPayDaire=Math.round(daireSayisi*p.payArsa/100);
+    const mutDaire=daireSayisi-arsaPayDaire;
+    const arsaPayDukkan=Math.round(p.dukkan*p.payArsa/100);
+    const mutDukkan=p.dukkan-arsaPayDukkan;
+    // değerler
+    const daireDeger=p.daireM2*p.satisM2;
+    const dukkanDeger=p.dukkanM2*p.satisM2*1.3; // dükkan ~1.3x
+    const toplamSatis=daireSayisi*daireDeger+p.dukkan*dukkanDeger;
+    const toplamMaliyet=insaat*p.maliyetM2;
+    const arsaSahibiDeger=arsaPayDaire*daireDeger+arsaPayDukkan*dukkanDeger;
+    const mutDeger=mutDaire*daireDeger+mutDukkan*dukkanDeger;
+    const mutNetKar=mutDeger-toplamMaliyet;
+    // arsa payı (pay/payda) — toplam payda = toplam değer / 1000 birim
+    const paydaBirim=1000;
+    return {insaat,taban,dukkanAlan,daireAlan,daireSayisi,toplamBB,arsaPayDaire,mutDaire,arsaPayDukkan,mutDukkan,
+      daireDeger,dukkanDeger,toplamSatis,toplamMaliyet,arsaSahibiDeger,mutDeger,mutNetKar,paydaBirim};
+  }
+  function fmtTL3(n){if(!isFinite(n))return '-';return n>=1e6?(n/1e6).toFixed(1)+'M ₺':Math.round(n).toLocaleString('tr-TR')+' ₺';}
+  function updateStats(p){
+    const f=fizibilite(p);
+    const el=document.getElementById('p3_stats');
+    if(el)el.innerHTML=
+      '<div class="si"><span>Toplam İnşaat Alanı</span><b>'+f.insaat.toLocaleString('tr-TR')+' m²</b></div>'+
+      '<div class="si"><span>Zemin Dükkan</span><b>'+p.dukkan+' adet ('+f.dukkanAlan.toLocaleString('tr-TR')+' m²)</b></div>'+
+      '<div class="si"><span>Tahmini Daire</span><b>'+f.daireSayisi+' adet</b></div>'+
+      '<div class="si"><span>Toplam Bağımsız Bölüm</span><b>'+f.toplamBB+'</b></div>'+
+      '<div class="si" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px"><span>↳ Arsa Sahibi ('+p.payArsa+'%)</span><b style="color:#a78bfa">'+f.arsaPayDaire+' daire + '+f.arsaPayDukkan+' dükkan</b></div>'+
+      '<div class="si"><span>↳ Müteahhit ('+p.payMut+'%)</span><b style="color:#60a5fa">'+f.mutDaire+' daire + '+f.mutDukkan+' dükkan</b></div>'+
+      '<div class="si" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px"><span>Toplam Satış Geliri</span><b>'+fmtTL3(f.toplamSatis)+'</b></div>'+
+      '<div class="si"><span>Müteahhit Net Kâr</span><b style="color:'+(f.mutNetKar>=0?'#34d399':'#f0698c')+'">'+fmtTL3(f.mutNetKar)+'</b></div>';
+  }
+  window.updateProje3D=function(){const p=readParams();buildScene(p);updateStats(p);};
+  window.sendProje3DWhatsApp=function(){
+    var p=readParams(),f=fizibilite(p);
+    var firma=(window.SETTINGS&&SETTINGS.firmaUnvan)||'Meridyen Yapı';
+    var txt='*'+firma+'* — Kat Karşılığı Fizibilite Özeti\n\n'+'👤 '+(p.musteri||'Müşteri')+'\n'+'📍 '+p.ad+' ('+p.il+'/'+p.ilce+')\n'+'📋 Ada/Parsel: '+(p.ada||'-')+'/'+(p.parsel||'-')+'\n'+'📐 Arsa: '+p.m2+' m² · Emsal '+p.emsal+'\n'+'🏗️ Toplam inşaat: '+f.insaat.toLocaleString('tr-TR')+' m²\n'+'🏬 '+p.dukkan+' dükkan + '+f.daireSayisi+' daire\n\n'+'🤝 PAYLAŞIM ('+p.payArsa+'/'+p.payMut+')\n'+'• Arsa Sahibi: '+f.arsaPayDaire+' daire + '+f.arsaPayDukkan+' dükkan\n'+'• Müteahhit: '+f.mutDaire+' daire + '+f.mutDukkan+' dükkan\n\n'+'Detaylı PDF rapor hazırlanmıştır. İletişim için bize ulaşın.';
+    window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank','noopener,noreferrer');
+  };
+  window.__p3images=window.__p3images||[];
+  window.addReportImage=function(input){
+    var file=input.files[0];if(!file)return;
+    if(window.__p3images.length>=4){alert('En fazla 4 görsel ekleyebilirsiniz.');return;}
+    if(file.size>3*1024*1024){alert('Görsel 3MB den küçük olmalı.');return;}
+    var r=new FileReader();r.onload=function(){window.__p3images.push(r.result);window.renderReportImages();};r.readAsDataURL(file);
+    input.value='';
+  };
+  window.renderReportImages=function(){
+    var grid=document.getElementById('p3imgGrid');if(!grid)return;
+    grid.innerHTML=window.__p3images.map(function(src,i){return '<div class="p3img"><img src="'+src+'"><button onclick="window.__p3images.splice('+i+',1);renderReportImages()">✕</button></div>';}).join('');
+  };
+  window.saveP3Note=function(){window.__p3note=(document.getElementById('p3_not')||{}).value||'';};
+  window.generateReport=async function(){
+    var p=readParams(),f=fizibilite(p);
+    if(typeof requireFeature==='function' && !requireFeature('canUsePdfReports'))return; /* paket kapısı */
+    var firma=(window.SETTINGS&&SETTINGS.firmaUnvan)||'Meridyen Yapı';
+    var S=window.SETTINGS||{};
+    var note=window.__p3note||(document.getElementById('p3_not')||{}).value||'';
+    var imgs=window.__p3images||[];
+    var snap='';try{renderer.render(scene,camera);snap=renderer.domElement.toDataURL('image/png');}catch(e){}
+    var today=new Date().toLocaleDateString('tr-TR');
+    var tipLabel=({konut:'Konut (Apartman)',rezidans:'Rezidans',villa:'Villa Sitesi',ticari:'Ticari/Karma'})[p.tip]||p.tip;
+    var H="";
+    H+='<!DOCTYPE html><html><head><meta charset="utf-8"><title>Fizibilite Raporu</title><style>';
+    H+='@page{size:A4;margin:16mm}body{font-family:Arial,sans-serif;color:#1a1d24;line-height:1.5;font-size:12px}';
+    H+='.rhead{display:flex;align-items:center;gap:14px;border-bottom:3px solid #ff7a2f;padding-bottom:14px;margin-bottom:18px}';
+    H+='.rlogo{width:54px;height:54px;border-radius:10px;background:#ff7a2f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700}';
+    H+='.rfirma{font-size:20px;font-weight:700}.rsub{font-size:11px;color:#666;margin-top:2px}';
+    H+='.rtitle{font-size:17px;font-weight:700;margin:18px 0 4px}';
+    H+='.rmeta{background:#f5f5f0;border-radius:8px;padding:12px 14px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr;gap:5px 20px;font-size:12px}';
+    H+='.rmeta div{display:flex;justify-content:space-between;border-bottom:1px dotted #ddd;padding:3px 0}';
+    H+='.sec{font-size:14px;font-weight:700;color:#ff7a2f;margin:18px 0 8px;border-left:4px solid #ff7a2f;padding-left:8px}';
+    H+='table{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:11.5px}th,td{border:1px solid #ddd;padding:7px 9px;text-align:left}th{background:#0e0f13;color:#fff}tr:nth-child(even){background:#faf9f7}';
+    H+='.share{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}.sbox{padding:14px;border-radius:9px}.sarsa{background:#f3eefe;border:1px solid #c9b3f5}.smut{background:#eaf1fc;border:1px solid #aecbf2}';
+    H+='.sbox .sl{font-size:11px;font-weight:700;color:#666}.sbox .sn{font-size:21px;font-weight:700;margin:4px 0}.sbox .sd{font-size:12px;color:#444}';
+    H+='.imgrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}.imgrow img{width:100%;border-radius:8px;border:1px solid #ddd}';
+    H+='.snap{width:100%;border-radius:10px;border:1px solid #ddd;margin-bottom:14px}';
+    H+='.note{background:#fff8f2;border-left:3px solid #ff7a2f;padding:12px 14px;border-radius:0 8px 8px 0;font-size:12px;margin-bottom:14px;white-space:pre-wrap}';
+    H+='.disc{font-size:9.5px;color:#999;font-style:italic;margin-top:8px}.rfoot{margin-top:22px;border-top:1px solid #ccc;padding-top:10px;font-size:9.5px;color:#888;text-align:center}';
+    H+='@media print{.noprint{display:none}}</style></head><body>';
+    H+='<div class="rhead"><div class="rlogo">'+(firma[0]||"M")+'</div><div><div class="rfirma">'+firma+'</div><div class="rsub">'+(S.firmaAdres||"")+' · '+(S.firmaTel||"")+' · '+(S.firmaEmail||"")+'</div></div></div>';
+    H+='<div class="rtitle">KAT KARŞILIĞI FİZİBİLİTE & PROJE RAPORU</div><div class="rsub" style="margin-bottom:14px">Rapor Tarihi: '+today+'</div>';
+    H+='<div class="rmeta">';
+    H+='<div><span>Müşteri</span><b>'+(p.musteri||"-")+'</b></div>';
+    H+='<div><span>Proje/Arsa</span><b>'+p.ad+'</b></div>';
+    H+='<div><span>Konum</span><b>'+p.il+' / '+p.ilce+' / '+p.mah+'</b></div>';
+    H+='<div><span>Ada / Parsel</span><b>'+(p.ada||"-")+' / '+(p.parsel||"-")+'</b></div>';
+    H+='<div><span>Arsa Alanı</span><b>'+p.m2.toLocaleString("tr-TR")+' m²</b></div>';
+    H+='<div><span>İmar (Emsal/TAKS)</span><b>'+p.emsal+' / '+p.taks+'</b></div>';
+    H+='<div><span>Kat Adedi</span><b>'+p.kat+'</b></div>';
+    H+='<div><span>Bina Tipi</span><b>'+tipLabel+'</b></div></div>';
+    if(snap)H+='<div class="sec">3D Konsept Görünüm</div><img class="snap" src="'+snap+'">';
+    H+='<div class="sec">İmar & Yapı Analizi</div><table><tr><th>Kalem</th><th>Değer</th></tr>';
+    H+='<tr><td>Toplam İnşaat Alanı (m²×emsal)</td><td>'+f.insaat.toLocaleString("tr-TR")+' m²</td></tr>';
+    H+='<tr><td>Taban Oturum Alanı (m²×TAKS)</td><td>'+f.taban.toLocaleString("tr-TR")+' m²</td></tr>';
+    H+='<tr><td>Zemin Dükkan Alanı</td><td>'+f.dukkanAlan.toLocaleString("tr-TR")+' m² ('+p.dukkan+' adet)</td></tr>';
+    H+='<tr><td>Daire Alanı</td><td>'+f.daireAlan.toLocaleString("tr-TR")+' m² ('+f.daireSayisi+' adet ~'+p.daireM2+'m²)</td></tr>';
+    H+='<tr><td>Toplam Bağımsız Bölüm</td><td>'+f.toplamBB+' adet</td></tr></table>';
+    H+='<div class="sec">Kat Karşılığı Paylaşım ('+p.payArsa+'% / '+p.payMut+'%)</div><div class="share">';
+    H+='<div class="sbox sarsa"><div class="sl">ARSA SAHİBİ — '+(p.musteri||"")+' ('+p.payArsa+'%)</div><div class="sn">'+f.arsaPayDaire+' daire + '+f.arsaPayDukkan+' dükkan</div><div class="sd">≈ '+fmtTL3(f.arsaSahibiDeger)+' değer</div></div>';
+    H+='<div class="sbox smut"><div class="sl">MÜTEAHHİT — '+firma+' ('+p.payMut+'%)</div><div class="sn">'+f.mutDaire+' daire + '+f.mutDukkan+' dükkan</div><div class="sd">≈ '+fmtTL3(f.mutDeger)+' değer</div></div></div>';
+    H+='<div class="sec">Bağımsız Bölüm Paylaşım Tablosu</div><table><tr><th>Tip</th><th>Toplam</th><th>Arsa Sahibi</th><th>Müteahhit</th><th>Birim m²</th></tr>';
+    H+='<tr><td>Zemin Dükkan</td><td>'+p.dukkan+'</td><td>'+f.arsaPayDukkan+'</td><td>'+f.mutDukkan+'</td><td>'+p.dukkanM2+' m²</td></tr>';
+    H+='<tr><td>Daire</td><td>'+f.daireSayisi+'</td><td>'+f.arsaPayDaire+'</td><td>'+f.mutDaire+'</td><td>'+p.daireM2+' m²</td></tr></table>';
+    H+='<div class="sec">Finansal Fizibilite</div><table><tr><th>Kalem</th><th>Tutar</th></tr>';
+    H+='<tr><td>Tahmini Toplam Satış Geliri</td><td>'+fmtTL3(f.toplamSatis)+'</td></tr>';
+    H+='<tr><td>Tahmini Toplam İnşaat Maliyeti</td><td>'+fmtTL3(f.toplamMaliyet)+'</td></tr>';
+    H+='<tr><td>Arsa Sahibi Pay Değeri</td><td>'+fmtTL3(f.arsaSahibiDeger)+'</td></tr>';
+    H+='<tr><td>Müteahhit Pay Değeri</td><td>'+fmtTL3(f.mutDeger)+'</td></tr>';
+    H+='<tr style="font-weight:700"><td>Müteahhit Tahmini Net Kâr</td><td>'+fmtTL3(f.mutNetKar)+'</td></tr></table>';
+    if(imgs.length){H+='<div class="sec">Proje Görselleri</div><div class="imgrow">';for(var k=0;k<imgs.length;k++){H+='<img src="'+imgs[k]+'">';}H+='</div>';}
+    if(note)H+='<div class="sec">Notlar</div><div class="note">'+note.replace(/</g,"&lt;")+'</div>';
+    H+='<div class="disc">⚠️ Bu rapor ön fizibilite amaçlıdır. Kesin daire adedi, paylaşım ve değerler onaylı mimari projeye, belediye imar durumuna ve piyasa koşullarına göre değişir. Resmi sözleşme için hukuki danışmanlık alınmalıdır.</div>';
+    H+='<div class="rfoot">'+firma+' · '+(S.firmaEmail||"")+' · '+today+'</div>';
+    H+='<div class="noprint" style="text-align:center;margin-top:20px"><button onclick="window.print()" style="background:#ff7a2f;color:#fff;border:0;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">🖨️ PDF Olarak Kaydet / Yazdır</button></div>';
+    H+='</body></html>';
+    /* API-first: canlı /pdf/generate {title,pages:[{id,html}],css} → {success,pdf_base64} dönerse blob indir; aksi halde yerel yazdırılabilir pencere fallback. */
+    var _apiDone=false;
+    try{
+      if(typeof proxApi==='function'){
+        var _r=await proxApi('/api/v1/tenant/pdf/generate',{method:'POST',body:{title:'Fizibilite Raporu - '+(p.ad||firma),pages:[{id:'fizibilite',html:H}],css:''}});
+        if(_r && !_r.fallback && _r.success===true && _r.pdf_base64){
+          var _bin=atob(_r.pdf_base64); var _len=_bin.length; var _arr=new Uint8Array(_len); for(var _i=0;_i<_len;_i++)_arr[_i]=_bin.charCodeAt(_i);
+          var _blob=new Blob([_arr],{type:'application/pdf'}); var _u=URL.createObjectURL(_blob);
+          var _a=document.createElement('a'); _a.href=_u; _a.download='fizibilite-raporu.pdf'; document.body.appendChild(_a); _a.click(); _a.remove();
+          setTimeout(function(){URL.revokeObjectURL(_u);},4000);
+          _apiDone=true;
+          if(typeof toast==='function')toast('📄 Fizibilite raporu (PDF) indirildi.');
+        }
+      }
+    }catch(_){ _apiDone=false; }
+    if(!_apiDone){ var w=window.open("","_blank"); if(w){ w.document.write(H); w.document.close(); } } /* yerel print fallback korunur */
+  };
+  window.captureProje3D=function(){renderer.render(scene,camera);const a=document.createElement('a');a.href=renderer.domElement.toDataURL('image/png');a.download='3d-proje-onerisi.png';a.click();};
+  // ===== GERÇEK MİMARİ MODEL (GLB/glTF) =====
+  var glbModel=null, glbLoader=null;
+  window.loadGLBModel=function(input){
+    var file=input.files[0];if(!file)return;
+    var status=document.getElementById('glbStatus');
+    if(status)status.textContent='⏳ Model yükleniyor...';
+    var url=URL.createObjectURL(file);
+    if(!glbLoader)glbLoader=new GLTFLoader();
+    glbLoader.load(url,function(gltf){
+      // remove previous
+      if(glbModel){scene.remove(glbModel);}
+      glbModel=gltf.scene;
+      // center + scale to fit scene
+      var box=new T.Box3().setFromObject(glbModel);
+      var size=box.getSize(new T.Vector3());
+      var center=box.getCenter(new T.Vector3());
+      var maxDim=Math.max(size.x,size.y,size.z)||1;
+      var scl=22/maxDim;
+      glbModel.scale.setScalar(scl);
+      glbModel.position.sub(center.multiplyScalar(scl));
+      glbModel.position.y+= (size.y*scl)/2; // sit on ground
+      glbModel.traverse(function(o){if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
+      scene.add(glbModel);
+      // hide procedural mass
+      if(buildingGroup)buildingGroup.visible=false;
+      controls.target.set(0,(size.y*scl)/2,0);controls.update();
+      URL.revokeObjectURL(url);
+      if(status)status.innerHTML='✓ <b style="color:#34d399">Gerçek model yüklendi</b> ('+file.name+')';
+      var cb=document.getElementById('glbClearBtn');if(cb)cb.style.display='block';
+    },
+    function(xhr){if(status&&xhr.total)status.textContent='⏳ Yükleniyor %'+Math.round(xhr.loaded/xhr.total*100);},
+    function(err){if(status)status.innerHTML='✕ <b style="color:#f0698c">Model yüklenemedi.</b> Geçerli bir .glb/.gltf dosyası seçin.';console.warn('glb err',err);URL.revokeObjectURL(url);});
+  };
+  window.clearGLBModel=function(){
+    if(glbModel){scene.remove(glbModel);glbModel=null;}
+    if(buildingGroup)buildingGroup.visible=true;
+    var status=document.getElementById('glbStatus');if(status)status.textContent='';
+    var cb=document.getElementById('glbClearBtn');if(cb)cb.style.display='none';
+    var p=readParams();controls.target.set(0,3,0);controls.update();
+  };
+
+  // ===== KAT PLANI ÜRETİCİ (SVG) =====
+  window.showKatPlani=function(){
+    var p=readParams(),f=fizibilite(p);
+    var firma=(window.SETTINGS&&SETTINGS.firmaUnvan)||'Meridyen Yapı';
+    // plot dims
+    var ratio=1.4, plotW=Math.sqrt(p.m2*ratio), plotD=p.m2/plotW;
+    // SVG canvas scale
+    var SC=520/Math.max(plotW,plotD);
+    var W=Math.round(plotW*SC), D=Math.round(plotD*SC);
+    var pad=60;
+    // colors
+    var cArsa='#a78bfa', cMut='#60a5fa', cShop='#ff9a4f', cCore='#cbd5e1';
+    function svgFloor(title, units, isGround){
+      var svg='<svg width="'+(W+pad*2)+'" height="'+(D+pad*2+30)+'" xmlns="http://www.w3.org/2000/svg" style="background:#fff">';
+      // title
+      svg+='<text x="'+(pad)+'" y="'+(pad-25)+'" font-family="Arial" font-size="16" font-weight="700" fill="#0e0f13">'+title+'</text>';
+      // plot border
+      svg+='<rect x="'+pad+'" y="'+pad+'" width="'+W+'" height="'+D+'" fill="#f5f5f0" stroke="#0e0f13" stroke-width="2"/>';
+      // central core (stairs+elevator+corridor) vertical strip in middle
+      var coreW=W*0.16, coreX=pad+W/2-coreW/2;
+      svg+='<rect x="'+coreX+'" y="'+(pad+D*0.12)+'" width="'+coreW+'" height="'+(D*0.76)+'" fill="'+cCore+'" stroke="#0e0f13" stroke-width="1"/>';
+      svg+='<text x="'+(coreX+coreW/2)+'" y="'+(pad+D*0.3)+'" font-family="Arial" font-size="9" fill="#333" text-anchor="middle" transform="rotate(-90 '+(coreX+coreW/2)+' '+(pad+D*0.3)+')">MERDİVEN · ASANSÖR · KORİDOR</text>';
+      // units arranged left and right of core
+      var n=units.length;
+      var leftCount=Math.ceil(n/2), rightCount=n-leftCount;
+      function place(list, side){
+        var x0=side==='L'?pad+4:coreX+coreW+4;
+        var availW=side==='L'?(coreX-pad-8):(pad+W-(coreX+coreW)-8);
+        var cnt=list.length; if(!cnt)return '';
+        var uh=(D-8)/cnt; var s='';
+        for(var i=0;i<cnt;i++){
+          var u=list[i];
+          var y=pad+4+i*uh;
+          var fill=u.taraf==='arsa'?cArsa:(u.tip==='Dükkan'?cShop:cMut);
+          s+='<rect x="'+x0+'" y="'+y+'" width="'+availW+'" height="'+(uh-4)+'" fill="'+fill+'" fill-opacity="0.35" stroke="#0e0f13" stroke-width="1"/>';
+          s+='<text x="'+(x0+availW/2)+'" y="'+(y+uh/2-4)+'" font-family="Arial" font-size="11" font-weight="700" fill="#0e0f13" text-anchor="middle">'+u.no+'</text>';
+          s+='<text x="'+(x0+availW/2)+'" y="'+(y+uh/2+10)+'" font-family="Arial" font-size="9" fill="#333" text-anchor="middle">'+u.tip+' · '+u.m2+' m²</text>';
+          s+='<text x="'+(x0+availW/2)+'" y="'+(y+uh/2+22)+'" font-family="Arial" font-size="8" fill="#555" text-anchor="middle">'+(u.taraf==='arsa'?'Arsa Sahibi':'Müteahhit')+'</text>';
+        }
+        return s;
+      }
+      svg+=place(units.slice(0,leftCount),'L');
+      svg+=place(units.slice(leftCount),'R');
+      // scale note
+      svg+='<text x="'+pad+'" y="'+(pad+D+22)+'" font-family="Arial" font-size="10" fill="#888">Ölçek yaklaşıktır · Konsept şematik kat planı</text>';
+      svg+='</svg>';
+      return svg;
+    }
+    // Build ground floor units (shops)
+    var groundUnits=[];
+    for(var i=0;i<p.dukkan;i++){groundUnits.push({no:'Z-'+(i+1),tip:'Dükkan',m2:p.dukkanM2,taraf:(i<f.arsaPayDukkan?'arsa':'mut')});}
+    // Build typical floor units (apartments) — show one typical floor
+    var perFloor=Math.max(1,p.daireKat||4);
+    var typUnits=[];
+    for(var j=0;j<perFloor;j++){
+      var label=String.fromCharCode(65+j);
+      typUnits.push({no:'1-'+label,tip:p.tip==='villa'?'Villa':'Daire',m2:p.daireM2,taraf:(j<Math.round(perFloor*p.payArsa/100)?'arsa':'mut')});
+    }
+    var w=window.open('','_blank');
+    var html='<!DOCTYPE html><html><head><meta charset="utf-8"><title>Kat Planı</title><style>'+
+      'body{font-family:Arial,sans-serif;padding:24px;background:#fafafa;color:#1a1d24}'+
+      '.kh{display:flex;align-items:center;gap:12px;border-bottom:3px solid #ff7a2f;padding-bottom:12px;margin-bottom:18px}'+
+      '.kl{width:46px;height:46px;border-radius:9px;background:#ff7a2f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700}'+
+      '.kf{font-size:18px;font-weight:700}.ks{font-size:11px;color:#666}'+
+      '.legend{display:flex;gap:18px;margin:14px 0;flex-wrap:wrap;font-size:12px}'+
+      '.lg{display:flex;align-items:center;gap:6px}.sw{width:18px;height:18px;border-radius:3px;border:1px solid #0e0f13}'+
+      '.plans{display:flex;gap:30px;flex-wrap:wrap;justify-content:center}'+
+      '.pcard{background:#fff;border-radius:10px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,.08)}'+
+      '.meta{font-size:12px;color:#444;margin-bottom:8px}'+
+      '@media print{.noprint{display:none}body{background:#fff}}'+
+      '</style></head><body>'+
+      '<div class="kh"><div class="kl">'+(firma[0]||'M')+'</div><div><div class="kf">'+firma+'</div><div class="ks">Şematik Kat Planları · '+(p.musteri||'')+' · '+p.ad+'</div></div></div>'+
+      '<div class="meta">📐 Arsa: '+p.m2+' m² · Emsal '+p.emsal+' · Toplam inşaat '+f.insaat.toLocaleString('tr-TR')+' m² · '+p.dukkan+' dükkan + '+f.daireSayisi+' daire · '+p.kat+' kat</div>'+
+      '<div class="legend">'+
+        '<div class="lg"><span class="sw" style="background:#a78bfa"></span> Arsa Sahibi payı</div>'+
+        '<div class="lg"><span class="sw" style="background:#60a5fa"></span> Müteahhit payı (daire)</div>'+
+        '<div class="lg"><span class="sw" style="background:#ff9a4f"></span> Dükkan</div>'+
+        '<div class="lg"><span class="sw" style="background:#cbd5e1"></span> Ortak alan (merdiven/asansör)</div>'+
+      '</div>'+
+      '<div class="plans">'+
+        (p.dukkan>0?'<div class="pcard">'+svgFloor('ZEMİN KAT — Dükkanlar',groundUnits,true)+'</div>':'')+
+        '<div class="pcard">'+svgFloor('TİP KAT — Daireler ('+perFloor+' daire/kat)',typUnits,false)+'</div>'+
+      '</div>'+
+      '<div class="noprint" style="text-align:center;margin-top:20px"><button onclick="window.print()" style="background:#ff7a2f;color:#fff;border:0;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">🖨️ Kat Planını Yazdır / PDF</button></div>'+
+      '</body></html>';
+    w.document.write(html);w.document.close();
+  };
+
+  function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+  let raf,running=false;
+  function loop(){if(!running)return;raf=requestAnimationFrame(loop);resize();controls.update();renderer.render(scene,camera);}
+  p3State={onShow(){if(!running){running=true;resize();loop();}},onHide(){running=false;cancelAnimationFrame(raf);}};
+  window.__p3hide=()=>p3State&&p3State.onHide();
+  window.updateProje3D();p3State.onShow();
+  }catch(e){console.warn('proje3d init err',e);}
+};
+</script>
+<script>
+/* Hata-toleranslı scroll-reveal — mevcut yapıyı bozmaz; içerik asla gizli kalmaz */
+(function () {
+  try {
+    if (!('IntersectionObserver' in window)) return;
+    function run() {
+      var secs = [].slice.call(document.querySelectorAll('body > section')).filter(function (s) {
+        return !s.classList.contains('hero') && s.offsetParent !== null;
+      });
+      if (!secs.length) return;
+      secs.forEach(function (s) { s.classList.add('rv-on'); });
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('rv-in'); io.unobserve(e.target); } });
+      }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+      secs.forEach(function (s) { io.observe(s); });
+      requestAnimationFrame(function () { var vh = window.innerHeight || 800; secs.forEach(function (s) { if (s.getBoundingClientRect().top < vh * 0.92) s.classList.add('rv-in'); }); });
+      setTimeout(function () { secs.forEach(function (s) { s.classList.add('rv-in'); }); }, 2600);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  } catch (e) { try { document.querySelectorAll('.rv-on').forEach(function (s) { s.classList.add('rv-in'); }); } catch (_) {} }
+})();
+</script>
+
+<!-- Giriş modalı (Personel + Müşteri Anahtar) -->
+<div class="gmodal" id="girisModal">
+  <div class="gm-ov" onclick="closeGiris()"></div>
+  <div class="gm-card">
+    <button class="gm-x" onclick="closeGiris()" aria-label="Kapat">✕</button>
+    <div class="gm-head"><span class="mark">M</span>Meridyen Yapı · Giriş</div>
+    <div class="gm-tabs"><button class="act" id="gt_personel" onclick="girisTab('personel')">Personel Girişi</button><button id="gt_musteri" onclick="girisTab('musteri')">Müşteri (Anahtar)</button></div>
+    <div class="gm-pane" id="gp_personel">
+      <p class="sub">Yetkili personel ve yönetim erişimi. Giriş sonrası yönetim paneline yönlendirilirsiniz.</p>
+      <button class="gm-btn" onclick="closeGiris();openAdmin()">Yönetim Paneline Giriş →</button>
+      <div class="gm-note">Erişim, yönetici parolasıyla doğrulanır. Parola panelde saklanır; bu ekranda gösterilmez.</div>
+    </div>
+    <div class="gm-pane" id="gp_musteri" hidden>
+      <p class="sub">Proje takip anahtarınızla giriş. Anahtar, proje ekibiniz tarafından iletilir.</p>
+      <label>Erişim Anahtarı</label><input id="gm_key" placeholder="örn. PRJ-2026-XXXX">
+      <button class="gm-btn" onclick="musteriGiris()">Anahtarla Giriş →</button>
+      <div class="gm-err" id="gm_err"></div>
+      <div class="gm-note">Anahtar yalnızca tarayıcınızda kullanılır; kayıt/günlüğe yazılmaz.</div>
+    </div>
+  </div>
+</div>
+<script>
+function openGiris(){var m=document.getElementById('girisModal');if(m)m.classList.add('on');}
+function closeGiris(){var m=document.getElementById('girisModal');if(m)m.classList.remove('on');}
+function girisTab(t){
+  var pB=document.getElementById('gt_personel'),mB=document.getElementById('gt_musteri');
+  var pP=document.getElementById('gp_personel'),mP=document.getElementById('gp_musteri');
+  if(pB)pB.classList.toggle('act',t==='personel'); if(mB)mB.classList.toggle('act',t==='musteri');
+  if(pP)pP.hidden=(t!=='personel'); if(mP)mP.hidden=(t!=='musteri');
+}
+function musteriGiris(){
+  var i=document.getElementById('gm_key'),e=document.getElementById('gm_err');var k=(i&&i.value||'').trim();
+  if(!k){e.style.color='#ff8a8a';e.textContent='⚠ Lütfen erişim anahtarınızı girin.';return;}
+  e.style.color='#7bdca0';e.textContent='✓ Anahtar alındı. Proje takip erişimi yakında aktifleşecek.';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris();});
+</script>
+
+<script src="js/app-ui.js"></script>
+
+</body>
+</html>
+

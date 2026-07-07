@@ -122,6 +122,17 @@ const wl = readFileSync('wl.js','utf8');
 ok('wl.js logo: querySelectorAll(.logo)', wl.includes("querySelectorAll('.logo')"));
 ok('wl.js: yüklenen logo görseli desteği', wl.includes('logo-img') && wl.includes('d.FIRMA&&d.FIRMA.logo'));
 ok('wl.js: tekil .logo .mark querySelector kaldırıldı', !wl.includes("var mk=document.querySelector('.logo .mark')"));
+/* ---- 3c) insaat restructure (P1: bağımsız dizin + ayrık dosyalar) ---- */
+ok('insaat app-core.js derlenir', buildsOk('insaat/js/app-core.js'));
+ok('insaat app-ui.js derlenir', buildsOk('insaat/js/app-ui.js'));
+const ins = readFileSync('insaat/index.html','utf8');
+ok('insaat: css/base.css link', ins.includes('href="css/base.css"'));
+ok('insaat: js/app-core.js + app-ui.js', ins.includes('src="js/app-core.js"') && ins.includes('src="js/app-ui.js"'));
+ok('insaat: importmap + module (Three.js) korundu', ins.includes('type="importmap"') && ins.includes('type="module"'));
+ok('insaat: ince kabuk (<3000 satır)', ins.split('\n').length < 3000);
+ok('insaat: kök insaat.html redirect stub', (()=>{const s=readFileSync('insaat.html','utf8');return s.includes('insaat/index.html') && s.includes('noindex') && s.length<1500;})());
+ok('insaat: neden-biz.html → index.html (eski insaat.html değil)', (()=>{const s=readFileSync('insaat/neden-biz.html','utf8');return s.includes('href="index.html"') && !s.includes('href="insaat.html"');})());
+ok('insaat: kök index seçici insaat/index.html', readFileSync('index.html','utf8').includes('href="insaat/index.html"'));
 
 /* ---- 4) Alt sayfa entegrasyonu (portfoy.html gerçek SEO sayfası dahil) ---- */
 for(const f of ['gayrimenkul/hizmetlerimiz.html','gayrimenkul/nedenbiz.html','gayrimenkul/portfoy.html']){
