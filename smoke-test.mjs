@@ -135,6 +135,14 @@ for(const pg of ['hizmetlerimiz','projelerimiz','soru-cevap','bolge']){
 ok('insaat SEO: soru-cevap FAQPage rich-result', /"@type"\s*:\s*"FAQPage"/.test(readFileSync('insaat/soru-cevap.html','utf8')));
 ok('insaat SEO: sitemap.xml + robots.txt', (()=>{try{return readFileSync('insaat/sitemap.xml','utf8').includes('hizmetlerimiz.html') && readFileSync('insaat/robots.txt','utf8').includes('Sitemap:');}catch(e){return false}})());
 ok('insaat SEO: nav+footer → gerçek sayfalar (interlink)', insCore.includes('href="hizmetlerimiz.html"') && insCore.includes('href="projelerimiz.html"') && insCore.includes('href="bolge.html"'));
+/* ---- 3a3b) danisman gerçek SEO sayfaları ---- */
+for(const pg of ['hakkimizda','sss']){
+  let h=''; try{h=readFileSync('danisman/'+pg+'.html','utf8');}catch(e){}
+  ok('danisman SEO '+pg+': indekslenebilir + canonical + base.css', !!h && !/noindex/.test(h) && h.includes('rel="canonical" href="'+pg+'.html"') && h.includes('css/base.css'));
+  ok('danisman SEO '+pg+': JSON-LD', h.includes('application/ld+json'));
+}
+ok('danisman SEO: sss FAQPage', /"@type"\s*:\s*"FAQPage"/.test(readFileSync('danisman/sss.html','utf8')));
+ok('danisman SEO: nav+footer interlink', (()=>{try{return readFileSync('danisman/index.html','utf8').includes('href="hakkimizda.html"') && readFileSync('danisman/js/app.js','utf8').includes('href="hakkimizda.html"');}catch(e){return false}})());
 /* ---- 3a4) TÜM sitelerde sitemap.xml + robots.txt ---- */
 for(const [site,minUrl] of [['insaat',5],['gayrimenkul',4],['degerleme',20],['danisman',1]]){
   ok(site+' SEO: sitemap.xml + robots.txt', (()=>{try{
