@@ -70,7 +70,7 @@ function applyFeatureGates(){
 window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 </script>
 <!-- ===== /EMLAK API-FIRST SAAS CORE ===== -->
-<script src="tr-grammar.js?v=2"></script><!-- Türkçe gramer tek kaynak (SPA + wl.js ortak) -->
+<script src="tr-grammar.js?v=3"></script><!-- Türkçe gramer tek kaynak (SPA + wl.js ortak) -->
 
 <!-- ===== SEO: canonical + OpenGraph + Twitter (additive) ===== -->
 <link rel="canonical" href="https://www.emlakekspertizi.com/">
@@ -301,10 +301,10 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
     <button style="background:none;border:0;font-size:24px;cursor:pointer;color:var(--muted)" onclick="document.getElementById('mnav').classList.remove('open')" aria-label="Kapat">✕</button></div>
   <a href="hizmetlerimiz.html" onclick="closeAllOverlays();mclose()">Hizmetlerimiz</a>
   <a href="nedenbiz.html" onclick="closeAllOverlays();mclose()">Neden <span class="nb-x">?</span> Biz</a>
-  <a href="#ilanlar" onclick="closeAllOverlays();mclose()">Portföy</a>
+  <a href="#" onclick="closeAllOverlays();portfoyOpen();mclose();return false">Portföy</a>
   <a href="#" onclick="closeAllOverlays();brOpen();mclose();return false">Analiz Merkezi</a>
   <div class="mnav-div">Al · Sat · Kirala</div>
-  <a href="#ilanlar" onclick="closeAllOverlays();mclose()">İlanlar</a><a href="#" onclick="closeAllOverlays();ozOpen();mclose();return false">Özel Portföy</a>
+  <a href="#" onclick="closeAllOverlays();portfoyOpen('ilan');mclose();return false">İlanlar</a><a href="#" onclick="closeAllOverlays();portfoyOpen('ozel');mclose();return false">Özel Portföy</a>
   <a href="#" onclick="closeAllOverlays();satOpen();mclose();return false">Sat ve Kirala</a>
   <a href="#danismanlar" onclick="closeAllOverlays();mclose()">Danışmanlar</a>
   <a href="#" onclick="closeAllOverlays();openSaasPortal();mclose();return false">Giriş / Müşteri Portalı</a>
@@ -443,7 +443,7 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
     <span class="fcount" id="fcount"></span>
   </div>
   <div class="lgrid" id="lgrid"></div>
-  <div class="lst-foot"><button class="btn btn-line" onclick="toast('Tüm portföy için tıklayın — admin panelinden ilan ekleyebilirsiniz.')">Tüm İlanları Listele (1.240) →</button></div>
+  <div class="lst-foot"><button class="btn btn-line" onclick="portfoyOpen('ilan')">Tüm Portföyü Aç →</button></div>
 </div></section>
 
 
@@ -1318,7 +1318,7 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
 @media(max-width:760px){.wafloat{display:none!important}}
 </style>
 <div class="mbar" aria-label="Mobil menü">
-  <a href="#ilanlar" onclick="closeAllOverlays()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 9v11h14V9"/><path d="M9 20v-6h6v6"/></svg><span>Portföy</span></a>
+  <a href="#" onclick="closeAllOverlays();portfoyOpen();return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 9v11h14V9"/><path d="M9 20v-6h6v6"/></svg><span>Portföy</span></a>
   <a href="nedenbiz.html" onclick="closeAllOverlays()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg><span>Neden <span class="nb-x">?</span> Biz</span></a>
   <a href="#" onclick="closeAllOverlays();brOpen();return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 14l3-3 3 3 4-5"/></svg><span>Analiz</span></a>
   <a class="wa" href="https://wa.me/905000000000" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg><span>WhatsApp</span></a>
@@ -2047,8 +2047,8 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
           <h3><span style="display:inline-flex;vertical-align:-4px;color:#1e7e3a;margin-right:6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="M9 12l2 2 4-4"/></svg></span>ProX Yapay Zeka · Kurumsal Kimlik Sihirbazı</h3>
           <div class="csub">Firma adınızı ve ilinizi girin; <b>ProX yapay zeka (emlakekspertizi.com · DeepSeek)</b> sitenizin tüm sayfalarını kontrol ederek markanızı, hakkımızda metninizi ve sloganınızı oluşturur. <b>“Meridyen Gayrimenkul” geçen her yer firmanızla değişir</b> — üst menü, footer, hakkımızda, WhatsApp, yetki belgesi dahil.</div>
           <div class="ed3">
-            <div class="afield"><label>Firma Adı</label><input id="ki_name" placeholder="örn. Samsun Gayrimenkul"></div>
-            <div class="afield"><label>İl</label><select id="ki_il"></select></div>
+            <div class="afield"><label>Firma Adı</label><input id="ki_name" placeholder="örn. Samsun Gayrimenkul veya Kaya Gayrimenkul" oninput="kiNameIl()"></div>
+            <div class="afield"><label>İl <span style="color:var(--muted);font-weight:400">(adda yoksa siz seçin)</span></label><select id="ki_il"></select></div>
             <div class="afield"><label>Uzmanlık / Ton <span style="color:var(--muted);font-weight:400">(ops.)</span></label><input id="ki_hint" placeholder="lüks konut · sahil · yatırım"></div>
           </div>
           <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;align-items:center">
@@ -2571,14 +2571,186 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
 </div>
 
 <!-- ============ ÖZEL PORTFÖY (tam sayfa) ============ -->
-<div class="br-page oz-page" id="ozPage" role="dialog" aria-label="Özel Portföy">
+<style>
+/* ============ PORTFÖY — kinetik / veri-odaklı 2026 ============ */
+#portfoyPage .pf-hero{position:relative;overflow:hidden;background:var(--grad-hero);color:#fff;padding:clamp(46px,7vw,92px) 0 clamp(30px,4vw,52px);isolation:isolate}
+#portfoyPage .pf-hero .wrap{position:relative;z-index:3}
+#portfoyPage .pf-hero-viz{position:absolute;inset:0;z-index:0;opacity:.55;pointer-events:none}
+#portfoyPage .pf-hero-viz svg{width:100%;height:100%;display:block}
+#portfoyPage .pf-hero::after{content:"";position:absolute;z-index:1;inset:0;background:radial-gradient(1100px 440px at 80% -12%,rgba(52,168,83,.24),transparent 60%),radial-gradient(760px 400px at 5% 116%,rgba(59,130,246,.20),transparent 62%);pointer-events:none}
+#portfoyPage .pf-eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--green-200);background:rgba(52,168,83,.12);border:1px solid rgba(126,213,152,.30);padding:7px 15px;border-radius:99px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#portfoyPage .pf-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--green-200);animation:pfPulse 2.2s infinite}
+@keyframes pfPulse{0%{box-shadow:0 0 0 0 rgba(126,213,152,.55)}70%{box-shadow:0 0 0 9px rgba(126,213,152,0)}100%{box-shadow:0 0 0 0 rgba(126,213,152,0)}}
+#portfoyPage .pf-hero h1{font-size:clamp(31px,5.4vw,60px);line-height:1.03;margin:16px 0 14px;max-width:16ch;text-wrap:balance;color:#fff}
+#portfoyPage .pf-hero h1 .hl{background:linear-gradient(115deg,var(--green-200) 10%,var(--accent-2) 92%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#portfoyPage .pf-hero .lead{max-width:58ch;color:#c7d3ea;font-size:clamp(15px,1.7vw,18px);line-height:1.62}
+#portfoyPage .pf-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:30px 0 24px}
+@media(max-width:820px){#portfoyPage .pf-stats{grid-template-columns:repeat(2,1fr)}}
+#portfoyPage .pf-stat{position:relative;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);border-radius:16px;padding:15px 16px 13px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);overflow:hidden}
+#portfoyPage .pf-stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--green-200),var(--accent-2))}
+#portfoyPage .pf-stat .v{font-family:var(--num);font-weight:700;font-size:clamp(23px,3.3vw,33px);letter-spacing:-.02em;line-height:1;color:#fff;font-variant-numeric:tabular-nums}
+#portfoyPage .pf-stat .v small{font-size:.5em;color:var(--green-200);margin-left:3px;font-weight:600;letter-spacing:0}
+#portfoyPage .pf-stat .k{font-size:12px;color:#9fb2d4;margin-top:7px;font-weight:600}
+#portfoyPage .pf-stat .spark{position:absolute;right:11px;top:13px;width:50px;height:18px}
+#portfoyPage .pf-hcta{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+#portfoyPage .pf-hbtn{display:inline-flex;align-items:center;gap:9px;padding:13px 24px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;border:0;transition:.18s;text-decoration:none}
+#portfoyPage .pf-hbtn.primary{background:var(--grad-cta);color:#fff;box-shadow:0 12px 30px -12px rgba(52,168,83,.65)}
+#portfoyPage .pf-hbtn.primary:hover{transform:translateY(-2px);box-shadow:0 18px 38px -14px rgba(52,168,83,.7)}
+#portfoyPage .pf-hbtn.ghost{background:rgba(255,255,255,.07);color:#fff;border:1px solid rgba(255,255,255,.22)}
+#portfoyPage .pf-hbtn.ghost:hover{background:rgba(255,255,255,.13)}
+/* sticky segmented pill sub-nav */
+#portfoyPage .pf-subnav{position:sticky;top:0;z-index:7;display:flex;justify-content:center;padding:12px 0;pointer-events:none}
+#portfoyPage .pf-subnav .inner{position:relative;display:inline-flex;gap:2px;background:rgba(10,22,49,.82);border:1px solid rgba(255,255,255,.14);padding:5px;border-radius:99px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 16px 40px -18px rgba(0,0,0,.6);pointer-events:auto}
+#portfoyPage .pf-pill{position:relative;z-index:2;border:0;background:transparent;color:#c7d3ea;font-weight:700;font-size:14px;padding:9px 22px;border-radius:99px;cursor:pointer;transition:color .28s;white-space:nowrap}
+#portfoyPage .pf-pill.act{color:#08210f}
+#portfoyPage .pf-pill-ind{position:absolute;z-index:1;top:5px;left:0;bottom:5px;border-radius:99px;background:linear-gradient(120deg,var(--green-200),var(--green));box-shadow:0 6px 16px -6px rgba(52,168,83,.75);transition:transform .4s cubic-bezier(.5,1.35,.4,1),width .4s cubic-bezier(.5,1.35,.4,1)}
+/* sections */
+#portfoyPage .pf-sec{background:var(--white);padding:clamp(40px,5vw,74px) 0;position:relative}
+#portfoyPage .pf-sec.alt{background:var(--surface)}
+#portfoyPage .pf-sechead{max-width:660px;margin-bottom:22px}
+#portfoyPage .pf-sechead h2{font-size:clamp(24px,3.4vw,38px);margin:9px 0 8px}
+#portfoyPage .pf-sechead h2 .hl{color:var(--green-700)}
+#portfoyPage .pf-sechead p{color:var(--muted);font-size:15.5px;line-height:1.6}
+#portfoyPage .pf-filter{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:24px}
+#portfoyPage .pf-chip{padding:9px 16px;border-radius:99px;border:1.5px solid var(--line);background:#fff;color:var(--ink-2);font-weight:600;font-size:14px;cursor:pointer;transition:.16s}
+#portfoyPage .pf-chip:hover{border-color:var(--accent-2);color:var(--accent)}
+#portfoyPage .pf-chip.act{background:var(--ink);color:#fff;border-color:var(--ink)}
+#portfoyPage .pf-sep{width:1px;height:24px;background:var(--line)}
+#portfoyPage .pf-sort{margin-left:auto;padding:9px 14px;border:1.5px solid var(--line);border-radius:11px;font-family:inherit;font-weight:600;font-size:14px;color:var(--ink);background:#fff;cursor:pointer}
+#portfoyPage .pf-count{font-size:13.5px;color:var(--muted);font-weight:600}
+#portfoyPage .pf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;margin-top:20px}
+#portfoyPage .pf-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-card);cursor:pointer;transition:transform .32s cubic-bezier(.2,.7,.3,1),box-shadow .32s;transform-style:preserve-3d;will-change:transform}
+#portfoyPage .pf-card:hover{box-shadow:0 34px 64px -30px rgba(13,30,60,.52)}
+#portfoyPage .pf-ph{position:relative;aspect-ratio:16/11;overflow:hidden;background:var(--surface-2)}
+#portfoyPage .pf-ph img{width:100%;height:100%;object-fit:cover;transition:transform .55s cubic-bezier(.2,.7,.3,1)}
+#portfoyPage .pf-card:hover .pf-ph img{transform:scale(1.06)}
+#portfoyPage .pf-ph::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,22,49,.4),transparent 42%)}
+#portfoyPage .pf-tags{position:absolute;top:12px;left:12px;z-index:2;display:flex;gap:6px;flex-wrap:wrap}
+#portfoyPage .pf-tag{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:99px;color:#fff;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+#portfoyPage .pf-tag.op-sat{background:rgba(52,168,83,.92)}
+#portfoyPage .pf-tag.op-kir{background:rgba(59,130,246,.92)}
+#portfoyPage .pf-tag.feat{background:rgba(251,188,4,.95);color:#3a2c00}
+#portfoyPage .pf-tag.eids{background:rgba(15,31,61,.86)}
+#portfoyPage .pf-fav{position:absolute;top:11px;right:11px;z-index:2;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:#e5484d;font-size:16px;cursor:pointer;display:grid;place-items:center;transition:.16s}
+#portfoyPage .pf-fav:hover{background:#fff;transform:scale(1.1)}
+#portfoyPage .pf-score{position:absolute;bottom:11px;right:11px;z-index:2;font-size:11.5px;font-weight:600;color:#fff;background:rgba(10,22,49,.62);padding:5px 10px;border-radius:99px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+#portfoyPage .pf-score b{font-family:var(--num);color:var(--green-200)}
+#portfoyPage .pf-body{padding:16px 17px 17px}
+#portfoyPage .pf-top{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+#portfoyPage .pf-price{font-family:var(--num);font-weight:700;font-size:22px;letter-spacing:-.02em;color:var(--ink)}
+#portfoyPage .pf-price small{font-size:.6em;color:var(--muted);font-weight:600}
+#portfoyPage .pf-spark{width:82px;height:28px;flex:none}
+#portfoyPage .pf-body h3{font-size:16.5px;margin:9px 0 5px;line-height:1.25}
+#portfoyPage .pf-loc{font-size:13.5px;color:var(--muted);display:flex;align-items:center;gap:5px}
+#portfoyPage .pf-specs{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:12px 0 0;padding-top:12px;border-top:1px solid var(--line-2);font-size:13px;color:var(--ink-2);font-weight:600}
+#portfoyPage .pf-specs .up{margin-left:auto;color:var(--green-700)}
+#portfoyPage .pf-idx{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;padding:9px 12px;border-radius:11px;background:linear-gradient(120deg,#f0fdf4,#eff6ff);border:1px solid #dcece0;font-size:12.5px;color:var(--ink-2);font-weight:600}
+#portfoyPage .pf-idx b{font-family:var(--num);color:var(--green-700)}
+#portfoyPage .pf-cta{display:flex;gap:8px;margin-top:13px}
+#portfoyPage .pf-cta a{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px;border-radius:10px;font-weight:700;font-size:13.5px;transition:.16s}
+#portfoyPage .pf-cta .wa{background:rgba(52,168,83,.12);color:var(--green-700)}
+#portfoyPage .pf-cta .wa:hover{background:var(--green);color:#fff}
+#portfoyPage .pf-cta .tel{background:var(--surface-2);color:var(--ink-2)}
+#portfoyPage .pf-cta .tel:hover{background:var(--ink);color:#fff}
+#portfoyPage .pf-none{grid-column:1/-1;text-align:center;color:var(--muted);padding:44px 20px;font-size:15px}
+/* özel portföy köprü şeridi */
+#portfoyPage .pf-ozintro{max-width:660px;margin-bottom:6px}
+/* reveal + reduced motion */
+#portfoyPage .pf-reveal{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.3,1)}
+#portfoyPage .pf-reveal.in{opacity:1;transform:none}
+#portfoyPage .pf-hero-viz .pf-trend{stroke-dasharray:2600;stroke-dashoffset:2600;animation:pfDraw 2.4s ease .25s forwards}
+@keyframes pfDraw{to{stroke-dashoffset:0}}
+#portfoyPage .pf-hero-viz .pf-area{opacity:0;animation:pfFade 1.3s ease 1.5s forwards}
+@keyframes pfFade{to{opacity:1}}
+#portfoyPage .pf-hero-viz .pf-node{transform-box:fill-box;transform-origin:center;animation:pfFloat 4.4s ease-in-out infinite}
+#portfoyPage .pf-hero-viz .pf-node:nth-child(2n){animation-duration:5.6s}
+#portfoyPage .pf-hero-viz .pf-node:nth-child(3n){animation-duration:6.4s}
+@keyframes pfFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+#portfoyPage .pf-hero-viz .pf-bar{transform-box:fill-box;transform-origin:bottom;animation:pfBar 3.6s ease-in-out infinite}
+#portfoyPage .pf-hero-viz .pf-bar:nth-child(2n){animation-duration:4.4s}
+@keyframes pfBar{0%,100%{transform:scaleY(.72)}50%{transform:scaleY(1)}}
+@media(prefers-reduced-motion:reduce){#portfoyPage .pf-reveal{opacity:1;transform:none;transition:none}#portfoyPage .pf-hero-viz *{animation:none!important}#portfoyPage .pf-hero-viz .pf-area{opacity:1}#portfoyPage .pf-hero-viz .pf-trend{stroke-dashoffset:0}#portfoyPage .pf-card{transition:none}}
+@media(max-width:600px){#portfoyPage .pf-grid{grid-template-columns:1fr}#portfoyPage .pf-sort{margin-left:0;width:100%}}
+</style>
+<div class="br-page oz-page pf-page" id="portfoyPage" role="dialog" aria-label="Portföy">
   <div class="br-hd oz-hd">
     <a class="logo" href="#" onclick="closeAllOverlays();return false"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Gayrimenkul</span></span></a>
     <nav class="main siteNav"></nav>
     <div class="nav-cta siteCta"></div>
   </div>
   <div class="br-scroll" id="ozScroll">
-    <section class="oz-hero">
+    <!-- ===== KİNETİK VERİ HERO ===== -->
+    <section class="pf-hero" id="pfTop">
+      <div class="pf-hero-viz" aria-hidden="true">
+        <svg viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice">
+          <g stroke="rgba(255,255,255,.06)" stroke-width="1">
+            <line x1="0" y1="125" x2="1200" y2="125"/><line x1="0" y1="250" x2="1200" y2="250"/><line x1="0" y1="375" x2="1200" y2="375"/>
+            <line x1="200" y1="0" x2="200" y2="500"/><line x1="400" y1="0" x2="400" y2="500"/><line x1="600" y1="0" x2="600" y2="500"/><line x1="800" y1="0" x2="800" y2="500"/><line x1="1000" y1="0" x2="1000" y2="500"/>
+          </g>
+          <g class="pf-bars" fill="rgba(126,213,152,.14)">
+            <rect class="pf-bar" x="70" y="360" width="34" height="140"/><rect class="pf-bar" x="250" y="320" width="34" height="180"/><rect class="pf-bar" x="430" y="290" width="34" height="210"/><rect class="pf-bar" x="610" y="240" width="34" height="260"/><rect class="pf-bar" x="790" y="200" width="34" height="300"/><rect class="pf-bar" x="970" y="150" width="34" height="350"/><rect class="pf-bar" x="1120" y="120" width="34" height="380"/>
+          </g>
+          <path class="pf-area" d="M0 380 L150 352 L300 362 L450 300 L600 322 L750 250 L900 268 L1050 188 L1200 208 L1200 500 L0 500 Z" fill="rgba(52,168,83,.20)"/>
+          <path class="pf-trend" d="M0 380 L150 352 L300 362 L450 300 L600 322 L750 250 L900 268 L1050 188 L1200 208" fill="none" stroke="rgba(126,213,152,.9)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <g fill="#7ed598">
+            <circle class="pf-node" cx="150" cy="352" r="5"/><circle class="pf-node" cx="450" cy="300" r="5"/><circle class="pf-node" cx="750" cy="250" r="5"/><circle class="pf-node" cx="1050" cy="188" r="6"/>
+          </g>
+        </svg>
+      </div>
+      <div class="wrap">
+        <span class="pf-eyebrow"><span class="dot"></span> Portföy · Canlı Bölge Endeksiyle</span>
+        <h1>Tüm portföyümüz, <span class="hl">veriyle görünür</span></h1>
+        <p class="lead">Açık ilanlarımız ve mahremiyeti korunan Özel Portföy'ümüz tek yerde. Her kayıtta gerçek m² endeksi, yatırım skoru ve 5 yıllık trend — duyguyla değil, veriyle karar verin.</p>
+        <div class="pf-stats">
+          <div class="pf-stat pf-reveal"><svg class="spark" viewBox="0 0 50 18" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14 L10 12 L20 13 L30 8 L40 9 L50 4" fill="none" stroke="var(--green-200)" stroke-width="2" stroke-linecap="round"/></svg><div class="v"><span class="n" id="pfsIlan" data-to="0">0</span></div><div class="k">aktif portföy ilanı</div></div>
+          <div class="pf-stat pf-reveal"><svg class="spark" viewBox="0 0 50 18" preserveAspectRatio="none" aria-hidden="true"><path d="M0 12 L10 13 L20 9 L30 10 L40 6 L50 5" fill="none" stroke="var(--green-200)" stroke-width="2" stroke-linecap="round"/></svg><div class="v"><span class="n" id="pfsOzel" data-to="0">0</span></div><div class="k">özel portföy kaydı</div></div>
+          <div class="pf-stat pf-reveal"><svg class="spark" viewBox="0 0 50 18" preserveAspectRatio="none" aria-hidden="true"><path d="M0 15 L10 11 L20 12 L30 7 L40 8 L50 3" fill="none" stroke="var(--green-200)" stroke-width="2" stroke-linecap="round"/></svg><div class="v"><span class="n" id="pfsM2" data-to="0">0</span> <small>₺/m²</small></div><div class="k">ortalama bölge endeksi</div></div>
+          <div class="pf-stat pf-reveal"><svg class="spark" viewBox="0 0 50 18" preserveAspectRatio="none" aria-hidden="true"><path d="M0 13 L10 10 L20 11 L30 9 L40 6 L50 5" fill="none" stroke="var(--green-200)" stroke-width="2" stroke-linecap="round"/></svg><div class="v"><span class="n" id="pfsBolge" data-to="0">0</span></div><div class="k">aktif bölge / ilçe</div></div>
+        </div>
+        <div class="pf-hcta">
+          <a class="pf-hbtn primary" href="#" onclick="pfGo('ilan');return false">İlanları keşfet →</a>
+          <a class="pf-hbtn ghost" href="#" onclick="pfGo('ozel');return false">Özel Portföy'ü gör</a>
+        </div>
+      </div>
+    </section>
+    <!-- ===== YAPIŞKAN BÖLÜM PİLİ ===== -->
+    <nav class="pf-subnav" aria-label="Portföy bölümleri"><div class="inner" id="pfPillWrap">
+      <span class="pf-pill-ind" id="pfPillInd"></span>
+      <button class="pf-pill act" data-sec="ilan" onclick="pfGo('ilan')">İlanlarımız</button>
+      <button class="pf-pill" data-sec="ozel" onclick="pfGo('ozel')">Özel Portföy</button>
+    </div></nav>
+    <!-- ===== İLANLARIMIZ ===== -->
+    <section class="pf-sec" id="pfIlanlar">
+      <div class="wrap">
+        <div class="pf-sechead pf-reveal">
+          <div class="eyebrow">Açık Portföy</div>
+          <h2>İlanlarımız — <span class="hl">veriyle doğrulanmış</span></h2>
+          <p>Satılık ve kiralık açık ilanlarımız. Her kartta bölgenin gerçek m² endeksi, yatırım skoru ve 5 yıllık trend mini-grafiği yer alır.</p>
+        </div>
+        <div class="pf-filter pf-reveal">
+          <button class="pf-chip op act" data-f="op" data-v="" onclick="pfFilt(this)">Tüm İşlemler</button>
+          <button class="pf-chip op" data-f="op" data-v="Satılık" onclick="pfFilt(this)">Satılık</button>
+          <button class="pf-chip op" data-f="op" data-v="Kiralık" onclick="pfFilt(this)">Kiralık</button>
+          <span class="pf-sep"></span>
+          <button class="pf-chip ty act" data-f="ty" data-v="" onclick="pfFilt(this)">Tüm Tipler</button>
+          <button class="pf-chip ty" data-f="ty" data-v="Daire" onclick="pfFilt(this)">Daire</button>
+          <button class="pf-chip ty" data-f="ty" data-v="Villa" onclick="pfFilt(this)">Villa</button>
+          <button class="pf-chip ty" data-f="ty" data-v="Ofis / İş Yeri" onclick="pfFilt(this)">Ofis</button>
+          <button class="pf-chip ty" data-f="ty" data-v="Arsa" onclick="pfFilt(this)">Arsa</button>
+          <select class="pf-sort" id="pfSort" onchange="renderPfIlan()">
+            <option value="feat">Öne çıkanlar</option>
+            <option value="price-asc">Fiyat (artan)</option>
+            <option value="price-desc">Fiyat (azalan)</option>
+            <option value="m2-desc">m² (büyükten)</option>
+            <option value="score">Yatırım skoru</option>
+          </select>
+        </div>
+        <div class="pf-count" id="pfCount"></div>
+        <div class="pf-grid" id="pfGrid"></div>
+      </div>
+    </section>
+    <!-- ===== ÖZEL PORTFÖY (mahremiyet + sahip formu) ===== -->
+    <section class="oz-hero" id="pfOzel">
       <div class="bg"></div>
       <div class="in">
         <div class="eyebrow"><span class="dot"></span> Özel Portföy · Mahremiyete Saygı</div>
@@ -3366,9 +3538,138 @@ function ozAlarmSubmit(){const g=id=>document.getElementById(id).value.trim();
   ['oza_ad','oza_tel','oza_bolge','oza_butce'].forEach(i=>{const e=document.getElementById(i);if(e)e.value='';});
   toast('🔔 Talebiniz alındı! Uygun özel portföy çıktığında ilk siz haberdar olacaksınız.');
 }
-function ozOpen(){if(!document.getElementById('ozPage'))return;document.body.style.overflow='hidden';document.getElementById('ozPage').classList.add('open');document.getElementById('ozScroll').scrollTop=0;if(typeof renderOzel==='function')renderOzel();if(typeof ozHero==='function')ozHero();}
-function ozClose(){const e=document.getElementById('ozPage');if(e)e.classList.remove('open');document.body.style.overflow='';}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){const o=document.getElementById('ozPage');if(o&&o.classList.contains('open'))ozClose();}});
+/* ============ PORTFÖY — birleşik sayfa motoru (İlanlar + Özel Portföy) ============ */
+/* Deterministik 5 yıllık trend mini-grafiği (kart başına, id'den tohumlu) */
+function pfSpark(it){
+  var seed=((it.id*2654435761)>>>0)||1,rnd=function(){seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff;};
+  var n=7,pts=[],v=9+rnd()*5;
+  for(var i=0;i<n;i++){v+=rnd()*5-1.6;v=Math.max(3,Math.min(23,v));pts.push(v);}
+  pts[n-1]=Math.max(pts[n-1],pts[0]+2.5);
+  var W=82,H=28,st=W/(n-1);
+  var d=pts.map(function(p,i){return (i?'L':'M')+(i*st).toFixed(1)+' '+(H-p).toFixed(1);}).join(' ');
+  return '<svg class="pf-spark" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" aria-hidden="true"><path d="'+d+' L'+W+' '+H+' L0 '+H+' Z" fill="rgba(52,168,83,.13)"/><path d="'+d+'" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+function pfCardHtml(it){
+  var s=ilanScore(it),opc=it.op==='Satılık'?'sat':'kir';
+  var priceStr=it.op==='Kiralık'?fmt(it.price)+' ₺<small>/ay</small>':fmt(it.price)+' ₺';
+  var eids=it.eids&&it.eids.status==='dogrulandi';
+  var wa=((typeof FIRMA!=='undefined'&&FIRMA.wa)||'905000000000');
+  var tel=(((typeof FIRMA!=='undefined'&&FIRMA.tel)||'').replace(/[^0-9+]/g,''));
+  return '<article class="pf-card pf-reveal" onclick="openDet('+it.id+')">'
+    +'<div class="pf-ph"><img src="'+imgSrc(it.img)+'" alt="'+(it.title||'')+'" loading="lazy" decoding="async">'
+      +'<div class="pf-tags"><span class="pf-tag op-'+opc+'">'+it.op+'</span>'+(it.feat?'<span class="pf-tag feat">★ Öne Çıkan</span>':'')+(eids?'<span class="pf-tag eids">'+eidsShieldSvg(11)+' EİDS</span>':'')+'</div>'
+      +'<button class="pf-fav" onclick="event.stopPropagation();toast(\'Favorilere eklendi ♥\')" aria-label="Favorilere ekle">♡</button>'
+      +'<div class="pf-score">Skor <b>'+s.score+'</b></div></div>'
+    +'<div class="pf-body">'
+      +'<div class="pf-top"><div class="pf-price">'+priceStr+'</div>'+pfSpark(it)+'</div>'
+      +'<h3>'+(it.title||'')+'</h3>'
+      +'<div class="pf-loc">'+ozIco(OZI.pin,13)+' '+it.mah+', '+it.ilce+(it.il?' / '+it.il:'')+'</div>'
+      +'<div class="pf-specs"><span>🛏 '+it.oda+'</span><span>📐 '+it.m2+' m²</span>'+(it.kat&&it.kat!=='-'?'<span>🏢 '+it.kat+'. kat</span>':'')+'<span class="up">↗ %'+s.chg+' / 5y</span></div>'
+      +'<div class="pf-idx"><span>Bölge m² endeksi</span><b>'+fmt(s.m2)+' ₺/m²</b></div>'
+      +'<div class="pf-cta"><a class="wa" onclick="event.stopPropagation()" href="https://wa.me/'+wa+'?text='+encodeURIComponent('Merhaba, '+it.title+' ('+it.mah+', '+it.ilce+') ilanı hakkında bilgi almak istiyorum.')+'" target="_blank" rel="noopener noreferrer">'+ozIco(OZI.wa,15)+' WhatsApp</a>'
+        +'<a class="tel" onclick="event.stopPropagation()" href="tel:'+tel+'">'+ozIco(OZI.phone,15)+' Ara</a></div>'
+    +'</div></article>';
+}
+var pfFilter={op:'',ty:''};
+function pfFilt(btn){var f=btn.dataset.f,v=btn.dataset.v;pfFilter[f]=v;
+  document.querySelectorAll('#pfIlanlar .pf-chip.'+f).forEach(function(b){b.classList.toggle('act',b===btn);});renderPfIlan();}
+function renderPfIlan(){
+  var g=document.getElementById('pfGrid');if(!g||typeof ILANLAR==='undefined')return;
+  var arr=ILANLAR.filter(function(i){return i.status==='aktif';});
+  if(pfFilter.op)arr=arr.filter(function(i){return i.op===pfFilter.op;});
+  if(pfFilter.ty)arr=arr.filter(function(i){return i.type===pfFilter.ty;});
+  var sort=(document.getElementById('pfSort')||{}).value||'feat';
+  arr.sort(function(a,b){
+    if(sort==='price-asc')return a.price-b.price;
+    if(sort==='price-desc')return b.price-a.price;
+    if(sort==='m2-desc')return b.m2-a.m2;
+    if(sort==='score')return ilanScore(b).score-ilanScore(a).score;
+    return (b.feat||0)-(a.feat||0);
+  });
+  var cnt=document.getElementById('pfCount');if(cnt)cnt.textContent=arr.length+' ilan listeleniyor';
+  if(!arr.length){g.innerHTML='<div class="pf-none">Bu filtreye uygun ilan bulunamadı. Filtreyi değiştirin ya da bizimle iletişime geçin.</div>';return;}
+  g.innerHTML=arr.map(pfCardHtml).join('');
+  var cards=g.querySelectorAll('.pf-card');cards.forEach(function(c,i){c.style.transitionDelay=((i%9)*0.05).toFixed(2)+'s';});
+  /* white-label: taze kartları hemen yerelleştir (İzmir ilçe/marka), observer gecikmesine güvenme */
+  try{if(typeof brandSweep==='function')brandSweep(g);}catch(e){}
+  pfReveal();pfTilt();
+}
+/* hero canlı istatistikler + say-yukarı animasyonu */
+function pfStats(){
+  var aktif=(typeof ILANLAR!=='undefined'?ILANLAR.filter(function(i){return i.status==='aktif';}):[]);
+  var oz=(typeof OZEL!=='undefined'?OZEL:[]);
+  var ilset={};aktif.forEach(function(i){if(i.ilce)ilset[i.ilce]=1;});oz.forEach(function(o){if(o.ilce)ilset[o.ilce]=1;});
+  var m2s=aktif.map(function(i){return ilanScore(i).m2;}).filter(function(x){return x>0;});
+  var avg=m2s.length?Math.round(m2s.reduce(function(a,b){return a+b;},0)/m2s.length):0;
+  var map={pfsIlan:aktif.length,pfsOzel:oz.length,pfsM2:avg,pfsBolge:Object.keys(ilset).length};
+  Object.keys(map).forEach(function(id){var el=document.getElementById(id);if(el)el.setAttribute('data-to',map[id]);});
+  pfCountUp();
+}
+function pfCountUp(){
+  var rm=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+  document.querySelectorAll('#portfoyPage .pf-stat .v .n[data-to]').forEach(function(el){
+    var to=+el.getAttribute('data-to')||0;
+    if(rm){el.textContent=fmt(to);return;}
+    var start=null,dur=1100;
+    function tick(ts){if(!start)start=ts;var p=Math.min(1,(ts-start)/dur);var e=1-Math.pow(1-p,3);el.textContent=fmt(Math.round(to*e));if(p<1)requestAnimationFrame(tick);}
+    requestAnimationFrame(tick);
+    setTimeout(function(){el.textContent=fmt(to);},1250);   /* rAF arka-plan sekmede kısıtlıysa yine de doğru değeri göster */
+  });
+}
+/* scroll-reveal (kaydırınca beliren) */
+var _pfIO=null;
+function pfReveal(){
+  var sc=document.getElementById('ozScroll');if(!sc)return;
+  var sr=sc.getBoundingClientRect(),vh=sc.clientHeight;
+  /* Görüş alanındakileri ANINDA aç — IO gecikmesi/yarışı olmadan (bölüme atlarken kritik) */
+  document.querySelectorAll('#portfoyPage .pf-reveal:not(.in)').forEach(function(el){
+    var r=el.getBoundingClientRect();if(r.top<sr.top+vh*0.96&&r.bottom>sr.top)el.classList.add('in');
+  });
+  if('IntersectionObserver' in window){
+    if(!_pfIO)_pfIO=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');_pfIO.unobserve(en.target);}});},{root:sc,threshold:.08,rootMargin:'0px 0px -5% 0px'});
+    document.querySelectorAll('#portfoyPage .pf-reveal:not(.in)').forEach(function(el){_pfIO.observe(el);});
+  }else document.querySelectorAll('#portfoyPage .pf-reveal').forEach(function(el){el.classList.add('in');});
+}
+/* 3B tilt (yalnız ince işaretçi + hareket açıksa) */
+function pfTilt(){
+  if(window.matchMedia&&(matchMedia('(prefers-reduced-motion:reduce)').matches||!matchMedia('(pointer:fine)').matches))return;
+  document.querySelectorAll('#portfoyPage .pf-card').forEach(function(c){
+    if(c._pfTilt)return;c._pfTilt=1;
+    c.addEventListener('pointermove',function(e){var r=c.getBoundingClientRect();var x=(e.clientX-r.left)/r.width-0.5,y=(e.clientY-r.top)/r.height-0.5;c.style.transform='perspective(900px) rotateX('+(-y*5).toFixed(2)+'deg) rotateY('+(x*6).toFixed(2)+'deg) translateY(-4px)';});
+    c.addEventListener('pointerleave',function(){c.style.transform='';});
+  });
+}
+/* segment pili + bölüme kaydırma */
+function pfPillSet(section){
+  var wrap=document.getElementById('pfPillWrap');if(!wrap)return;var act=null;
+  wrap.querySelectorAll('.pf-pill').forEach(function(b){var on=b.dataset.sec===section;b.classList.toggle('act',on);if(on)act=b;});
+  var ind=document.getElementById('pfPillInd');
+  if(ind&&act){if(!act.offsetWidth){requestAnimationFrame(function(){pfPillSet(section);});return;}ind.style.width=act.offsetWidth+'px';ind.style.transform='translateX('+act.offsetLeft+'px)';}
+}
+function pfGo(section,instant){
+  var el=document.getElementById(section==='ozel'?'pfOzel':'pfIlanlar'),sc=document.getElementById('ozScroll');
+  if(el&&sc)sc.scrollTo({top:Math.max(0,el.offsetTop-58),behavior:instant?'auto':'smooth'});
+  pfPillSet(section);
+}
+function portfoyOpen(section){
+  var p=document.getElementById('portfoyPage');if(!p)return;
+  document.body.style.overflow='hidden';p.classList.add('open');
+  var sc=document.getElementById('ozScroll');if(sc)sc.scrollTop=0;
+  try{renderPfIlan();}catch(e){}
+  try{if(typeof renderOzel==='function')renderOzel();}catch(e){}
+  try{if(typeof ozHero==='function')ozHero();}catch(e){}
+  try{pfStats();}catch(e){}
+  try{if(typeof brandSweep==='function')brandSweep(p);}catch(e){}   /* white-label: tüm sayfayı yerelleştir */
+  try{pfReveal();}catch(e){}
+  requestAnimationFrame(function(){pfPillSet(section==='ozel'?'ozel':'ilan');});
+  if(sc&&!sc._pfScroll){sc._pfScroll=1;sc.addEventListener('scroll',function(){var oz=document.getElementById('pfOzel');if(!oz)return;var cur=(sc.scrollTop+120>=oz.offsetTop)?'ozel':'ilan';if(cur!==sc._pfCur){sc._pfCur=cur;pfPillSet(cur);}},{passive:true});}
+  if(section==='ilan'||section==='ozel')setTimeout(function(){pfGo(section,true);},90);
+}
+function pfOpenOp(op){portfoyOpen('ilan');setTimeout(function(){var b=document.querySelector('#pfIlanlar .pf-chip.op[data-v="'+(op||'')+'"]');if(b)pfFilt(b);},130);}
+function portfoyClose(){var e=document.getElementById('portfoyPage');if(e)e.classList.remove('open');document.body.style.overflow='';}
+function ozOpen(){portfoyOpen('ozel');}   /* geriye dönük: mnav / oz-funnel / runSearch */
+function ozClose(){portfoyClose();}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){var o=document.getElementById('portfoyPage');if(o&&o.classList.contains('open'))portfoyClose();}});
 function renderOzTalep(){const t=document.getElementById('ozTalepRows');if(!t)return;const arr=(typeof LEADS!=='undefined'?LEADS:[]).filter(l=>l.src==='Özel Portföy Talebi');
   t.innerHTML=arr.length?arr.map(l=>`<tr><td>${l.date||'-'}</td><td>${l.entryLabel||l.konu||'-'}</td><td><b>${l.ad||'-'}</b></td><td>${l.tel||'-'}</td><td>${l.mail||'-'}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">Henüz detay talebi yok.</td></tr>';}
 function renderOzAlarm(){const t=document.getElementById('ozAlarmRows');if(!t)return;const arr=(typeof LEADS!=='undefined'?LEADS:[]).filter(l=>l.src==='Bölge Alıcı Talebi');
@@ -4831,6 +5132,18 @@ function fillFirmaForm(){
 function kiFillIl(){var sel=document.getElementById("ki_il");if(!sel)return;var cur=(typeof PROX!=="undefined"&&PROX.il)||"İzmir";
   sel.innerHTML=trIlList().sort(function(a,b){return a.localeCompare(b,"tr");}).map(function(il){return "<option"+(il===cur?" selected":"")+">"+il+"</option>";}).join("");
   var nm=document.getElementById("ki_name");if(nm&&!nm.value&&FIRMA&&FIRMA.name&&FIRMA.name!==BRAND_ORIG)nm.value=FIRMA.name;}
+/* Firma adı yazılırken içinde il geçiyorsa İl seçimini otomatik ayarla; geçmiyorsa dokunma. */
+function kiNameIl(){var nm=(document.getElementById("ki_name")||{}).value||"";var il=(typeof detectIlFromName==="function")?detectIlFromName(nm):null;var sel=document.getElementById("ki_il");if(il&&sel){for(var i=0;i<sel.options.length;i++){if(sel.options[i].value===il){sel.value=il;break;}}}}
+/* ProX AI erişilemezse yerel şablonla KURUMSAL KİMLİK üret — rebrand asla takılmasın. */
+function kiLocalIdentity(name,il){var sh=(name||"").split(/\s+/)[0]||name;
+  return {name:name,il:il,
+    slogan:name+" — "+il+"'de veriyle doğru gayrimenkul kararı",
+    hero1:"Doğru gayrimenkulü,",hero2:"doğru veriyle bulun",
+    herodesc:il+" ve çevresinde satılık & kiralık konut, arsa ve ticari portföy; her bölgede gerçek m² endeksi ve yatırım skoruyla veri odaklı danışmanlık.",
+    about:name+", "+il+" ve çevresinde konut, arsa, ticari gayrimenkul, kiralama, değerleme, yatırım ve miras/intikal alanlarında hizmet veren veri odaklı bir gayrimenkul ofisidir. Her ilan ve danışmanlıkta bölgenin gerçek fiyat endeksini, yatırım skorunu ve trend analizini esas alır; müşterilerinin duyguyla değil, doğrulanabilir veriyle karar vermesini sağlar. Şeffaf süreç, yerinde bölge bilgisi ve müşteri odaklı yaklaşımla "+il+"'de güvenilir bir çözüm ortağıdır.",
+    seotitle:name+" · "+il+" Gayrimenkul & Emlak Ofisi",
+    seodesc:name+" — "+il+" ve çevresinde satılık & kiralık konut, arsa, ticari gayrimenkul; değerleme, yatırım ve miras/intikal danışmanlığı.",
+    seokw:il+" emlak, "+il+" satılık daire, "+il+" kiralık, "+il+" arsa, "+il+" ticari gayrimenkul, gayrimenkul değerleme, miras intikal, yatırım danışmanlığı"};}
 /* ===== AI GÜVENLİK KORKULUĞU — tüm ProX/DeepSeek üretimini + sohbeti kapsar =====
    1) aiGuard(prompt): her isteme uydurma-yasağı kuralını ekler (idempotent).
    2) aiRiskScan/aiGuardBadge: üretilen metni riskli iddialar için tarar,
@@ -4856,13 +5169,13 @@ async function kurumsalGenerate(){
   var text=null;
   try{var r=await proxApi("/api/v1/tenant/prox/ai",{method:"POST",body:{persona:"office",tool:"kurumsal",prompt:aiGuard(prompt)}});
     if(r&&!r.fallback&&r.success!==false)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;}catch(e){}
-  if(!text){out.innerHTML='<div class="eids-yetki off" style="margin:0"><span class="ic">⚠️</span><div>ProX AI yanıt vermedi. Anahtarı kontrol edin veya tekrar deneyin.</div></div>';return;}
-  function pick(k){var m=new RegExp(k+"\\s*:?\\s*([\\s\\S]+?)(?:\\n\\s*(?:SLOGAN|HERO1|HERO2|HERODESC|HAKKINDA|SEOTITLE|SEODESC|SEOKW)\\s*:|$)","i").exec(text);return m?m[1].trim().replace(/^["“]+|["”]+$/g,"").trim():"";}
-  var res={name:name,il:il,slogan:pick("SLOGAN"),hero1:pick("HERO1"),hero2:pick("HERO2"),herodesc:pick("HERODESC"),about:pick("HAKKINDA"),seotitle:pick("SEOTITLE"),seodesc:pick("SEODESC"),seokw:pick("SEOKW")};
-  if(!res.about||res.about.length<40)res.about=text;
+  var _local=!text;   /* ProX AI erişilemedi → yerel şablonla DEVAM (rebrand asla takılmaz) */
+  function pick(k){if(!text)return"";var m=new RegExp(k+"\\s*:?\\s*([\\s\\S]+?)(?:\\n\\s*(?:SLOGAN|HERO1|HERO2|HERODESC|HAKKINDA|SEOTITLE|SEODESC|SEOKW)\\s*:|$)","i").exec(text);return m?m[1].trim().replace(/^["“]+|["”]+$/g,"").trim():"";}
+  var res=_local?kiLocalIdentity(name,il):{name:name,il:il,slogan:pick("SLOGAN"),hero1:pick("HERO1"),hero2:pick("HERO2"),herodesc:pick("HERODESC"),about:pick("HAKKINDA"),seotitle:pick("SEOTITLE"),seodesc:pick("SEODESC"),seokw:pick("SEOKW")};
+  if(!res.about||res.about.length<40)res.about=text||res.about;
   window._kiResult=res;
   out.innerHTML='<div class="eids-box" style="margin:0"><div class="eh"><span class="shield">'+eidsShieldSvg(16)+'</span> Kurumsal Kimlik · '+name+' ('+il+') — düzenleyebilirsiniz</div>'
-   +'<div class="csub">ProX yapay zeka üretti. İstediğiniz alanı düzenleyip kaydedin; sitenin tüm sayfalarına uygulanır. Sonradan İçerik ve SEO bölümlerinden de düzenlenebilir.</div>'
+   +'<div class="csub">'+(_local?'⚠ ProX AI şu an erişilemedi — <b>yerel şablonla</b> hazırlandı. Yine de düzenleyip <b>tüm siteye uygulayabilirsiniz</b>; marka ve il dönüşümü çalışır. Bağlantı gelince “Yeniden Üret” ile AI metnini alabilirsiniz.':'ProX yapay zeka üretti. İstediğiniz alanı düzenleyip kaydedin; sitenin tüm sayfalarına uygulanır. Sonradan İçerik ve SEO bölümlerinden de düzenlenebilir.')+'</div>'
    +'<div class="afield"><label>Slogan</label><input id="ki_slogan"></div>'
    +'<div class="ed2"><div class="afield"><label>Hero 1. satır</label><input id="ki_hero1"></div><div class="afield"><label>Hero 2. satır</label><input id="ki_hero2"></div></div>'
    +'<div class="afield"><label>Hero açıklaması</label><textarea id="ki_herodesc" class="adm-ta" rows="2"></textarea></div>'
@@ -4920,7 +5233,16 @@ function kurumsalApply(){var res=window._kiResult;if(!res){toast("Önce oluştur
 function saveFirma(){const g=id=>document.getElementById(id).value.trim();
   var _pe=(FIRMA&&FIRMA.eids)||{};FIRMA={name:g('cf_name')||FIRMA.name,tel:g('cf_tel'),mail:g('cf_mail'),wa:g('cf_wa').replace(/[^0-9]/g,''),adres:g('cf_adres'),hours:g('cf_hours'),vergi:(document.getElementById('cf_vergi')?g('cf_vergi'):(FIRMA.vergi||'')),yetkili:(document.getElementById('cf_yetkili')?g('cf_yetkili'):(FIRMA.yetkili||'')),eids:{connected:_pe.connected||false,firmaKod:_pe.firmaKod||'',kullaniciKodu:_pe.kullaniciKodu||'',belgeNo:(document.getElementById('cf_eidsBelge')?g('cf_eidsBelge').replace(/[^0-9]/g,''):(_pe.belgeNo||'')),unvan:(document.getElementById('cf_eidsUnvan')?g('cf_eidsUnvan'):(_pe.unvan||''))}};
   FIRMA.eids.yetkili=!!(FIRMA.eids.belgeNo&&FIRMA.eids.belgeNo.length===7&&FIRMA.eids.connected);
-  saveAll();applyFirma();if(typeof renderEidsYetki==='function')renderEidsYetki();if(typeof renderIlanRows==='function')renderIlanRows();if(typeof applySchema==='function')applySchema();toast('✓ Firma bilgileri kaydedildi ve siteye uygulandı.');}
+  saveAll();
+  /* AI'YE GEREK YOK — sadece isim yazıp Kaydet: tüm site markası + (varsa) ili dönüşür.
+     Adında il geçiyorsa (Konya Gayrimenkul) o ile geç; geçmiyorsa (Kaya/Romix) mevcut ili KORU, hata verme. */
+  var _il=(typeof detectIlFromName==='function')?detectIlFromName(FIRMA.name):null;
+  if(_il&&typeof applyProvince==='function'&&(typeof PROVINCE==='undefined'||!PROVINCE||_il!==PROVINCE.name)){try{applyProvince(_il,true);}catch(e){}
+    try{if(_il!=='İzmir'&&typeof rebuildOzelFromProx==='function'&&(typeof wlStale!=='function'||wlStale('wl_ozel_ts',_il)))rebuildOzelFromProx(_il,true);}catch(e){}
+    try{if(_il!=='İzmir'&&typeof wlBuildBolge==='function'&&(typeof wlStale!=='function'||wlStale('wl_bolge',_il)))wlBuildBolge(_il,true);}catch(e){}}
+  if(typeof applyBrand==='function')applyBrand(FIRMA.name); else applyFirma();
+  if(typeof renderEidsYetki==='function')renderEidsYetki();if(typeof renderIlanRows==='function')renderIlanRows();if(typeof applySchema==='function')applySchema();
+  toast('✓ Firma bilgileri kaydedildi ve siteye uygulandı'+(_il?' · il: '+_il:'')+'.');}
 function eidsConnect(){var e=(FIRMA.eids||(FIRMA.eids={}));var bno=document.getElementById('cf_eidsBelge');if(bno)e.belgeNo=(bno.value||'').replace(/[^0-9]/g,'');toast('e-Devlet EİDS oturumu açılıyor…');setTimeout(function(){e.connected=true;if(!e.firmaKod)e.firmaKod=eidsGuid();e.kullaniciKodu=eidsGuid();e.yetkili=!!(e.belgeNo&&e.belgeNo.length===7&&e.connected);saveAll();fillFirmaForm();if(typeof renderIlanRows==='function')renderIlanRows();toast(e.yetkili?'✓ e-Devlet ile bağlanıldı · Kullanıcı Kodu üretildi · Yetki aktif.':'e-Devlet bağlandı. Geçerli 7 haneli yetki belgesi girip kaydedin.');},900);}
 function renderEidsYetki(){var box=document.getElementById('eidsYetkiBox');if(!box)return;var e=(FIRMA&&FIRMA.eids)||{};if(e.yetkili){box.innerHTML='<div class="eids-yetki on"><span class="ic"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z\"/><path d=\"M9 12l2 2 4-4\"/></svg></span><div>EİDS Yetkisi Aktif — açık ilan yayınlayabilirsiniz.<div style="font-weight:500;font-size:12px;opacity:.85">Yetki Belgesi No '+(e.belgeNo||'—')+' · e-Devlet bağlı'+(e.kullaniciKodu?' · Kullanıcı '+e.kullaniciKodu.slice(0,8)+'…':'')+'</div></div></div>';}else{box.innerHTML='<div class="eids-yetki off"><span class="ic">⚠️</span><div>EİDS Yetkisi Yok — yalnızca Özel Portföy kaydı eklenebilir.<div style="font-weight:500;font-size:12px;opacity:.85">7 haneli yetki belgesi girin ve e-Devlet ile bağlanın.</div></div></div>';}}
 /* ===== KUSURSUZ MARKA MOTORU (white-label · Meridyen -> firma adı) ===== */
@@ -4931,6 +5253,21 @@ function brandReplace(s){if(!s||typeof s!=='string')return s;var n=brandName();i
 /* Şablonu (Meridyen…) VERİLEN ada göre markalar — re-brand'ı tersinir kılmak için. */
 function brandShortOf(nm){return (((nm||'').trim().split(/\s+/)[0])||BRAND_ORIG_SHORT);}
 function brandReplaceWith(s,nm){if(!s||typeof s!=='string'||!nm||nm===BRAND_ORIG||s.indexOf('Meridyen')<0)return s;return s.split(BRAND_ORIG).join(nm).split(BRAND_ORIG_SHORT).join(brandShortOf(nm));}
+/* Firma adında bir Türkiye ili geçiyor mu? (kelime-bazlı, en uzun eşleşme). Yoksa null —
+   böylece "Konya Gayrimenkul" → il=Konya; "Kaya/Romix Gayrimenkul" → null (il korunur, HATA YOK). */
+function detectIlFromName(name){
+  if(!name||typeof name!=='string')return null;
+  try{
+    var list=(typeof trIlList==='function')?trIlList():((typeof TR_ILILCE!=='undefined'&&TR_ILILCE)?Object.keys(TR_ILILCE):[]);
+    var low=name.toLocaleLowerCase('tr'),best=null;
+    list.forEach(function(il){
+      var esc=il.toLocaleLowerCase('tr').replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+      var re=new RegExp('(^|[^0-9a-zçğıöşü])'+esc+'([^0-9a-zçğıöşü]|$)');
+      if(re.test(low)&&(!best||il.length>best.length))best=il;
+    });
+    return best;
+  }catch(e){return null;}
+}
 function wlCityOff(){return (typeof PROVINCE==='undefined'||!PROVINCE||PROVINCE.name==='İzmir');}
 function trLastVowel(w){var m=(w||'').toLowerCase().match(/[aeıioöuü]/g);return m?m[m.length-1]:'a';}
 function trBack(v){return 'aıou'.indexOf(v)>=0;}
@@ -5415,7 +5752,8 @@ function routeHash(){
     if(h==='#admin')return openAdmin();
     if(h==='#analiz')return brOpen();
     if(h==='#blog')return blogOpen();
-    if(h==='#ozel')return ozOpen();
+    if(h==='#ozel')return portfoyOpen('ozel');
+    if(h==='#portfoy'||h==='#portfoy-ilan')return portfoyOpen('ilan');
     if(h==='#sat')return satOpen();
     if(h==='#portal')return openSaasPortal();
     if(h==='#kvkk')return openKvkk();
@@ -6292,7 +6630,7 @@ function ozToggleFav(id,el){let a=ozFavGet();const i=a.indexOf(id);if(i>=0){a.sp
 
 /* — karşılaştırma — */
 function ozCmpToggle(id,el){const i=ozCmp.indexOf(id);if(i>=0)ozCmp.splice(i,1);else{if(ozCmp.length>=3){toast('En fazla 3 kayıt karşılaştırılabilir.');if(el)el.checked=false;return;}ozCmp.push(id);}ozCmpBar();}
-function ozCmpBar(){const page=document.getElementById('ozPage');let bar=document.getElementById('ozCmpBar');
+function ozCmpBar(){const page=document.getElementById('portfoyPage');let bar=document.getElementById('ozCmpBar');
   if(!ozCmp.length){if(bar)bar.classList.remove('on');document.querySelectorAll('.ozcmp input').forEach(c=>{c.checked=false;});return;}
   if(!bar&&page){bar=document.createElement('div');bar.id='ozCmpBar';bar.className='ozcmpbar';page.appendChild(bar);}
   if(!bar)return;bar.classList.add('on');
@@ -6462,12 +6800,12 @@ function satCalc(){var v=function(id){var e=document.getElementById(id);return e
 /* ====================================================================
    STANDART SİTE ÇERÇEVESİ — tek kaynaktan üst menü + footer (tüm sayfalar)
    ==================================================================== */
-function closeAllOverlays(){['ozPage','brPage','satPage','blogPage'].forEach(function(id){var e=document.getElementById(id);if(e)e.classList.remove('open');});var d=document.getElementById('brDetail');if(d)d.classList.remove('open');document.body.style.overflow='';}
+function closeAllOverlays(){['portfoyPage','brPage','satPage','blogPage'].forEach(function(id){var e=document.getElementById(id);if(e)e.classList.remove('open');});var d=document.getElementById('brDetail');if(d)d.classList.remove('open');document.body.style.overflow='';}
 function openMnav(){var m=document.getElementById('mnav');if(m)m.classList.add('open');}
 const SITE_NAV=`
   <a href="hizmetlerimiz.html" onclick="closeAllOverlays()">Hizmetlerimiz</a>
   <a href="nedenbiz.html" onclick="closeAllOverlays()">Neden <span class="nb-x">?</span> Biz</a>
-  <a href="#ilanlar" onclick="closeAllOverlays()">Portföy</a>
+  <a href="#" onclick="closeAllOverlays();portfoyOpen();return false">Portföy</a>
   <a href="#" onclick="closeAllOverlays();brOpen();return false">Analiz Merkezi</a>`;
 const SITE_FOOTER=`<div class="wrap">
   <div class="fcols">
@@ -6485,8 +6823,8 @@ const SITE_FOOTER=`<div class="wrap">
       <li><a href="#iletisim" onclick="closeAllOverlays()">İletişim</a></li>
     </ul></div>
     <div><h4>Hizmetler</h4><ul>
-      <li><a href="#ilanlar" onclick="closeAllOverlays()">Satılık İlanlar</a></li>
-      <li><a href="#ilanlar" onclick="closeAllOverlays()">Kiralık İlanlar</a></li>
+      <li><a href="#" onclick="closeAllOverlays();pfOpenOp('Satılık');return false">Satılık İlanlar</a></li>
+      <li><a href="#" onclick="closeAllOverlays();pfOpenOp('Kiralık');return false">Kiralık İlanlar</a></li>
       <li><a href="#" onclick="closeAllOverlays();ozOpen();return false">Özel Portföy</a></li>
       <li><a href="#" onclick="closeAllOverlays();satOpen();return false">Sat ve Kirala</a></li>
       <li><a href="#degerleme" onclick="closeAllOverlays()">Ücretsiz Değerleme</a></li>
@@ -6794,7 +7132,7 @@ function mountSaaSMenu(){
   const c=SAAS_CONFIG,m=c.modules||{},chev='<svg class="nav-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
   let nav='<a href="hizmetlerimiz.html" onclick="closeAllOverlays()">Hizmetlerimiz</a>'
     + '<a href="nedenbiz.html" onclick="closeAllOverlays()">Neden <span class="nb-x">?</span> Biz</a>'
-    + '<a href="#ilanlar" onclick="closeAllOverlays()">Portföy</a>';
+    + '<a href="#" onclick="closeAllOverlays();portfoyOpen();return false">Portföy</a>';
   if(m.bolge!==false) nav+='<a href="#" onclick="closeAllOverlays();brOpen();return false">Analiz Merkezi</a>';
   document.querySelectorAll('.siteNav').forEach(n=>n.innerHTML=nav);
   const cta='<a class="nav-wa-ic" aria-label="WhatsApp" title="WhatsApp" href="https://wa.me/'+((typeof saasResolve==='function'&&saasResolve('whatsapp'))||c.whatsapp||'905000000000')+'" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg></a><button class="btn btn-primary btn-sm hide-xs" onclick="satScrollForm(\'Satmak istiyorum\')">Ücretsiz Ekspertiz</button><div class="lang-sw" title="Dil / Language"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg><select aria-label="Dil / Language" onchange="gmLang(this.value)"><option value="tr">TR</option><option value="en">EN</option><option value="ar">AR</option></select></div><a class="btn btn-line btn-sm js-giris" onclick="closeAllOverlays();openSaasPortal()" role="button" tabindex="0" onkeydown="if(event.key===\'Enter\'){openSaasPortal()}">Giriş</a><button class="burger" onclick="openMnav()" aria-label="Menü"><span></span><span></span><span></span></button>';

@@ -79,6 +79,10 @@ const invariants = [
   ["Süper-admin bayi paneli", "function openSuperAdmin"],
   ["tr-grammar.js yüklenir", 'src="tr-grammar.js'],
   ["EİDS yayın kapısı", "function eidsVerify"],
+  ["Portföy birleşik sayfa", 'id="portfoyPage"'],
+  ["Portföy açma motoru", "function portfoyOpen"],
+  ["Portföy İlan render", "function renderPfIlan"],
+  ["Portföy overlay kapanış listesinde", "'portfoyPage'"],
 ];
 for(const [name, needle] of invariants) ok("değişmez: "+name, gm.includes(needle));
 

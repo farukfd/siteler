@@ -34,7 +34,7 @@ function city(s,c){if(!s||typeof s!=='string'||!c||(s.indexOf('İzmir')<0&&s.ind
   return s;}
 /* İçerikteki İzmir ilçe/semt adlarını → hedef ilin ilçelerine (konumsal, deterministik) çevirir.
    White-label'da "Konak, Karşıyaka, Bornova…" gibi sabit İzmir yerleri seçilen ile uyarlanır. */
-var IZMIR_PLACES=['Konak','Karşıyaka','Bornova','Buca','Çeşme','Bayraklı','Gaziemir','Karabağlar','Menemen','Torbalı','Urla','Bayındır','Ödemiş','Tire','Foça','Aliağa','Çiğli','Narlıdere','Balçova','Güzelbahçe','Seferihisar','Selçuk','Bergama','Menderes','Kemalpaşa','Alsancak','Bostanlı','Göztepe','Mavişehir','Güzelyalı','Bergama'];
+var IZMIR_PLACES=['Konak','Karşıyaka','Bornova','Buca','Çeşme','Bayraklı','Gaziemir','Karabağlar','Menemen','Torbalı','Urla','Bayındır','Ödemiş','Tire','Foça','Aliağa','Çiğli','Narlıdere','Balçova','Güzelbahçe','Seferihisar','Selçuk','Bergama','Menderes','Kemalpaşa','Karaburun','Alsancak','Bostanlı','Göztepe','Mavişehir','Güzelyalı','Alaçatı','Zeytinalanı','Kazımdirik','Gümüldür','Şirinyer','Bademler','Atıfbey','Erzene','Mordoğan','Hacımemiş'];
 var _trLet='a-zçğıöşüA-ZÇĞİÖŞÜ';
 var _izReCache=new RegExp('(?:'+IZMIR_PLACES.join('|')+')');
 function hasIzmirPlace(s){return typeof s==='string'&&_izReCache.test(s);}
