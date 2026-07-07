@@ -1,0 +1,11 @@
+# Meridyen Yapı — robots.txt
+User-agent: *
+Allow: /
+# Temiz-URL yükleyici stub dizinleri (noindex redirect) — taranmasına gerek yok
+Disallow: /hizmetler/
+Disallow: /projeler/
+Disallow: /bolge/
+Disallow: /iletisim/
+Disallow: /soru-cevap/
+
+Sitemap: https://www.meridyenyapi.com/sitemap.xml

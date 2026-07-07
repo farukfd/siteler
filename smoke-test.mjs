@@ -126,6 +126,15 @@ ok('insaat: _INS_OV route tablosu', insCore.includes('_INS_OV') && insCore.inclu
 ok('insaat: nav temiz href (# overlay hash yok)', !/href="#(hizmetler|projeler|bolge|iletisim|sss)"/.test(insHtml) && !/href="#(hizmetler|projeler|bolge|iletisim|sss)"/.test(insNb));
 ok('insaat: neden-biz kırık insaat.html linki yok', !/(href=|location\.href=)['"]insaat\.html/.test(insNb));
 ok('insaat: yükleyici stub dizinleri', ['hizmetler','projeler','bolge','iletisim','soru-cevap'].every(s=>{try{return readFileSync('insaat/'+s+'/index.html','utf8').includes("_ins_ov")}catch(e){return false}}));
+/* ---- 3a3) insaat GERÇEK SEO sayfaları (indekslenebilir) ---- */
+for(const pg of ['hizmetlerimiz','projelerimiz','soru-cevap','bolge']){
+  let h=''; try{h=readFileSync('insaat/'+pg+'.html','utf8');}catch(e){}
+  ok('insaat SEO '+pg+': indekslenebilir + canonical', !!h && !/noindex/.test(h) && h.includes('rel="canonical" href="'+pg+'.html"'));
+  ok('insaat SEO '+pg+': JSON-LD + chrome birebir', h.includes('application/ld+json') && h.includes('id="hdr"') && h.includes('insaatFooter'));
+}
+ok('insaat SEO: soru-cevap FAQPage rich-result', /"@type"\s*:\s*"FAQPage"/.test(readFileSync('insaat/soru-cevap.html','utf8')));
+ok('insaat SEO: sitemap.xml + robots.txt', (()=>{try{return readFileSync('insaat/sitemap.xml','utf8').includes('hizmetlerimiz.html') && readFileSync('insaat/robots.txt','utf8').includes('Sitemap:');}catch(e){return false}})());
+ok('insaat SEO: nav+footer → gerçek sayfalar (interlink)', insCore.includes('href="hizmetlerimiz.html"') && insCore.includes('href="projelerimiz.html"') && insCore.includes('href="bolge.html"'));
 /* ---- 3b) wl.js logo tek-kaynak (footer dahil) ---- */
 const wl = readFileSync('wl.js','utf8');
 ok('wl.js logo: querySelectorAll(.logo)', wl.includes("querySelectorAll('.logo')"));
