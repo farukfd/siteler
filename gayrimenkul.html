@@ -878,6 +878,10 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
 .ozprice b{font-size:21px;font-weight:800;color:var(--green-700);font-variant-numeric:tabular-nums}
 .ozprice small{font-size:12px;color:var(--muted)}
 .ozprice .den{font-size:13px;color:var(--ink-2);font-weight:700}
+.ozort{font-size:12px;color:var(--ink-2);font-weight:600;margin-top:3px;display:flex;align-items:center;gap:6px}
+.ozort b{font-variant-numeric:tabular-nums;color:var(--ink)}
+.ozort .kat{margin-left:auto;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--accent);background:rgba(59,130,246,.09);padding:2px 8px;border-radius:99px}
+.ozsahil{position:absolute;top:46px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;color:#063b52;background:linear-gradient(135deg,#7dd3fc,#38bdf8);padding:5px 10px;border-radius:99px;box-shadow:0 4px 12px -4px rgba(2,132,199,.5)}
 .oznote{font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:6px;padding-top:9px;border-top:1px dashed var(--line);margin-top:auto;line-height:1.4}
 .oznote .ico{flex:none;color:var(--accent)}
 .ozcta{display:flex;gap:8px;margin-top:8px}
@@ -3721,21 +3725,57 @@ function ozScene(t){const k=ozCatKey(t);const W='rgba(255,255,255,.16)';
   if(k==='bag')return ozSvg(`<g fill="rgba(255,255,255,.1)"><circle cx="108" cy="92" r="16"/><circle cx="160" cy="84" r="19"/><circle cx="212" cy="92" r="16"/></g><g stroke-width="2"><line x1="108" y1="108" x2="108" y2="132"/><line x1="160" y1="103" x2="160" y2="132"/><line x1="212" y1="108" x2="212" y2="132"/></g><line x1="60" y1="132" x2="260" y2="132"/><path d="M84 124 Q160 112 236 124" stroke-width="1.3" opacity=".6"/>`);
   return ozSvg(`<rect x="122" y="52" width="76" height="80" rx="3" fill="rgba(255,255,255,.07)"/><g fill="${W}"><rect x="132" y="62" width="13" height="13"/><rect x="152" y="62" width="13" height="13"/><rect x="172" y="62" width="13" height="13"/><rect x="132" y="84" width="13" height="13"/><rect x="152" y="84" width="13" height="13"/><rect x="172" y="84" width="13" height="13"/></g><rect x="150" y="108" width="20" height="24" fill="rgba(255,255,255,.22)"/><line x1="70" y1="132" x2="250" y2="132"/>`);
 }
+/* Denize kıyısı olan iller → bilinen sahil ilçeleri (gerçek coğrafi veri).
+   White-label'da o ilin sahil ilçelerinde "Denize yakın" rozeti + villa kategorisi çıkar. */
+var SAHIL_ILCE={
+ 'İzmir':['Konak','Karşıyaka','Bostanlı','Mavişehir','Çeşme','Urla','Seferihisar','Foça','Dikili','Karaburun','Menderes','Narlıdere','Balçova','Güzelbahçe','Mordoğan','Çiğli','Aliağa','Bayraklı','Selçuk','Güzelyalı'],
+ 'Antalya':['Muratpaşa','Konyaaltı','Alanya','Manavgat','Serik','Kemer','Kumluca','Finike','Demre','Kaş','Gazipaşa'],
+ 'Muğla':['Bodrum','Marmaris','Fethiye','Datça','Milas','Ortaca','Dalaman','Köyceğiz','Seydikemer'],
+ 'Aydın':['Kuşadası','Didim','Söke'],
+ 'Balıkesir':['Ayvalık','Edremit','Burhaniye','Gömeç','Erdek','Bandırma','Marmara','Ayvacık'],
+ 'Mersin':['Mezitli','Erdemli','Silifke','Anamur','Bozyazı','Aydıncık','Akdeniz','Tarsus'],
+ 'Hatay':['İskenderun','Arsuz','Samandağ','Dörtyol','Payas','Erzin'],
+ 'Rize':['Merkez','Rize-il Merkezi','Ardeşen','Çayeli','Fındıklı','Pazar','Derepazarı','İyidere','Kalkandere'],
+ 'Trabzon':['Ortahisar','Akçaabat','Araklı','Sürmene','Of','Yomra','Arsin','Vakfıkebir','Beşikdüzü','Çarşıbaşı'],
+ 'Samsun':['İlkadım','Atakum','Bafra','Çarşamba','Terme','Tekkeköy','19 Mayıs','Alaçam','Yakakent'],
+ 'Ordu':['Altınordu','Ünye','Fatsa','Perşembe','Gülyalı'],
+ 'Giresun':['Giresun-il Merkezi','Merkez','Bulancak','Espiye','Görele','Tirebolu','Piraziz','Keşap','Eynesil'],
+ 'Sinop':['Sinop-il Merkezi','Merkez','Gerze','Ayancık','Türkeli','Erfelek'],
+ 'Zonguldak':['Ereğli','Kilimli','Kozlu','Çaycuma','Alaplı'],
+ 'Bartın':['Amasra','Merkez','Kurucaşile'],
+ 'Kastamonu':['İnebolu','Cide','Abana','Bozkurt','Çatalzeytin','Doğanyurt'],
+ 'Kocaeli':['İzmit','Gölcük','Karamürsel','Başiskele','Körfez','Derince','Kandıra'],
+ 'Yalova':['Merkez','Yalova-il Merkezi','Çınarcık','Armutlu','Altınova','Termal'],
+ 'Tekirdağ':['Süleymanpaşa','Marmaraereğlisi','Şarköy','Kapaklı'],
+ 'Çanakkale':['Merkez','Çanakkale-il Merkezi','Gelibolu','Ayvacık','Eceabat','Bozcaada','Gökçeada','Ezine','Lapseki'],
+ 'Sakarya':['Karasu','Kocaali','Ferizli'],
+ 'Düzce':['Akçakoca'],
+ 'Edirne':['Enez','Keşan'],
+ 'İstanbul':['Kadıköy','Kartal','Maltepe','Pendik','Tuzla','Beşiktaş','Sarıyer','Beykoz','Üsküdar','Bakırköy','Büyükçekmece','Silivri','Beylikdüzü','Avcılar','Zeytinburnu','Adalar','Fatih','Bakırköy'],
+ 'Kırklareli':['Demirköy','Vize']
+};
+function isSahil(il,ilce){try{var a=SAHIL_ILCE[il];if(!a)return false;var ic=(''+ilce).replace(/\s*\(.*\)$/,'').trim();return a.indexOf(ic)>=0;}catch(e){return false;}}
+function ozSahilBadge(){return '<span class="ozsahil"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s2.5-2 5-2 4 2 6 2 3.5-2 5-2 4 2 4 2"/><path d="M2 17s2.5-2 5-2 4 2 6 2 3.5-2 5-2 4 2 4 2"/></svg> Denize yakın</span>';}
 function ozCardHTML(o){
-  const opc=o.op==='Satılık'?'sat':'kir';
-  const price=`<div class="ozprice"><span class="from">başlangıç</span><b>${fmt(o.fiyat)} ₺</b>${o.op==='Kiralık'?'<small>/ay</small>':''}<span class="den">'den</span></div>`;
+  const opc=o.op==='Satılık'?'sat':'kir';const kira=o.op==='Kiralık';
+  const price=`<div class="ozprice"><span class="from">başlangıç</span><b>${fmt(o.fiyat)} ₺</b>${kira?'<small>/ay</small>':''}<span class="den">'den</span></div>`;
+  const avg=o.ort||(function(){var st=kira?500:1000;return Math.max(o.fiyat+st,Math.round(o.fiyat*1.18/st)*st);})();
+  const ort=`<div class="ozort">${ozIco(OZI.info,12)} Bölge ortalaması <b>${fmt(avg)} ₺${kira?'/ay':''}</b><span class="kat">${o.op} ${o.tip}</span></div>`;
+  const sahil=(o.sahil||isSahil(o.il||(typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name)||'İzmir',o.ilce))?ozSahilBadge():'';
   return `<div class="ozcard">
       <div class="ozmask ${ozCatClass(o.tip)}">
         ${ozScene(o.tip)}
         <span class="ozbadge ${opc}">${o.op}</span>
         <span class="ozcat">${o.tip}</span>
         <span class="ozlock">${ozIco(OZI.lock,12)} Özel Portföy</span>
+        ${sahil}
         <div class="ozmeta"><span class="loc">${ozIco(OZI.pin,13)} ${o.mah}, ${o.ilce}</span><span class="m2">${o.m2} m²${o.oda&&o.oda!=='-'?' · '+o.oda:''}</span></div>
       </div>
       <div class="ozbody">
         <div class="ozcadde">${ozIco(OZI.road,15)} ${o.cadde} <span>civarı</span></div>
         ${price}
-        <div class="oznote">${ozIco(OZI.info,13)} Tam adres, kat ve bina bilgisi danışmanla paylaşılır.</div>
+        ${ort}
+        <div class="oznote">${ozIco(OZI.info,13)} Bölge ortalama/başlangıç değeridir; belirli bir ilana ait değildir. Tam adres, kat ve bina bilgisi danışmanla paylaşılır.</div>
         <div class="ozcta"><button class="btn btn-primary btn-sm" onclick="ozLead('${o.id}')">Detay İste</button><a class="ozic wa" href="${ozWaLink(o)}" target="_blank" rel="noopener noreferrer" title="WhatsApp">${ozIco(OZI.wa,16)}</a><a class="ozic tel" href="tel:${((typeof FIRMA!=='undefined'&&FIRMA.tel)||'').replace(/[^0-9+]/g,'')}" title="Ara">${ozIco(OZI.phone,16)}</a></div>
       </div></div>`;
 }
@@ -3822,7 +3862,7 @@ function saHasCat(kw){if(!SERVICE_AREA||!SERVICE_AREA.kategoriler)return true;va
 async function rebuildOzelFromProx(il,silent){
   if(_ozBusy)return;_ozBusy=true;il=il||PROVINCE.name;
   try{
-    var work=saWorkList(7);   // çok-illi: primary + ek hizmet illeri (SERVICE_AREA'daki aktif il/ilçe)
+    var work=saWorkList(9);   // çok-illi: primary + ek hizmet illeri (SERVICE_AREA'daki aktif il/ilçe)
     var illerSet={};work.forEach(function(w){illerSet[w.il]=1;});
     try{await Promise.all(Object.keys(illerSet).map(function(x){return loadMahalle(x);}));}catch(e){}
     var cKonut=saHasCat('konut'),cKira=saHasCat('kira'),cTicari=(saHasCat('ticari')||saHasCat('ofis')||saHasCat('dükkan')||saHasCat('dukkan')),cArsa=saHasCat('arsa');
@@ -3833,11 +3873,18 @@ async function rebuildOzelFromProx(il,silent){
     function rp(v,step){v=Math.round(v/step)*step;return Math.max(step,v);}
     /* 1) İlan spec'leri (çok-illi + kategori-farkında) */
     var specs=[],mi=0,ci=0,primary=(SERVICE_AREA&&SERVICE_AREA.primary)||il;
-    work.forEach(function(w,i){var il2=w.il,ilce=w.ilce;var rm=realMah(il2,ilce,8),rmi=0;
-      if(cKonut)specs.push({il:il2,op:'Satılık',durum:'satilik',tip:'Daire',ilce:ilce,mah:(rm[rmi++]||mahs[mi++%mahs.length]),cadde:cads[ci++%cads.length],m2:110,oda:'3+1'});
-      if(cKira||cKonut)specs.push({il:il2,op:'Kiralık',durum:'kiralik',tip:'Daire',ilce:ilce,mah:(rm[rmi++]||mahs[mi++%mahs.length]),cadde:cads[ci++%cads.length],m2:90,oda:'2+1'});
-      if(i<3){var t=(i===0&&cTicari)?'Ofis':(i===1&&cTicari)?'Dükkan':cArsa?'Arsa':cTicari?'Ofis':null;
-        if(t)specs.push({il:il2,op:(t==='Dükkan'?'Kiralık':'Satılık'),durum:(t==='Dükkan'?'kiralik':'satilik'),tip:t,ilce:ilce,mah:(rm[rmi++]||mahs[mi++%mahs.length]),cadde:cads[ci++%cads.length],m2:(t==='Arsa'?400:120),oda:'-'});}
+    work.forEach(function(w,i){var il2=w.il,ilce=w.ilce;var rm=realMah(il2,ilce,10),rmi=0;var coast=isSahil(il2,ilce);
+      var nextMah=function(){return rm[rmi++]||mahs[mi++%mahs.length];};var nextCad=function(){return cads[ci++%cads.length];};
+      /* her bölgede kategori bazlı: satılık + kiralık daire (merkez mahalle) */
+      if(cKonut)specs.push({il:il2,op:'Satılık',durum:'satilik',tip:'Daire',ilce:ilce,mah:nextMah(),cadde:nextCad(),m2:110,oda:'3+1'});
+      if(cKira||cKonut)specs.push({il:il2,op:'Kiralık',durum:'kiralik',tip:'Daire',ilce:ilce,mah:nextMah(),cadde:nextCad(),m2:90,oda:'2+1'});
+      /* il-merkez / ilk bölgeler: farklı mahallede ikinci (geniş) daire — il-merkez mahalle çeşitliliği */
+      if(i<3&&cKonut)specs.push({il:il2,op:'Satılık',durum:'satilik',tip:'Daire',ilce:ilce,mah:nextMah(),cadde:nextCad(),m2:145,oda:'4+1'});
+      /* sahil ilçe: denize yakın villa kategorisi */
+      if(coast&&cKonut)specs.push({il:il2,op:'Satılık',durum:'satilik',tip:'Villa',ilce:ilce,mah:nextMah(),cadde:(nextCad()),m2:210,oda:'4+1',sahil:true});
+      /* ticari (ofis/dükkan) + arsa — daha fazla bölgeye yayılmış rotasyon */
+      if(i<6){var rot=i%3;var t=(rot===0&&cTicari)?'Ofis':(rot===1&&cTicari)?'Dükkan':cArsa?'Arsa':cTicari?'Ofis':null;
+        if(t)specs.push({il:il2,op:(t==='Dükkan'?'Kiralık':'Satılık'),durum:(t==='Dükkan'?'kiralik':'satilik'),tip:t,ilce:ilce,mah:nextMah(),cadde:(t==='Arsa'?'İmarlı parsel bölgesi':nextCad()),m2:(t==='Arsa'?400:130),oda:'-'});}
     });
     /* 2) analyze başlangıç fiyatı + endeks m² — PARALEL (her spec kendi ilini kullanır) */
     var priced=await _wlPMap(specs,async function(s){
@@ -3858,11 +3905,17 @@ async function rebuildOzelFromProx(il,silent){
         else{var smv=em||baseSat;fiyat=rp(smv*s.m2*(s.tip==='Arsa'?0.35:0.9),s.tip==='Arsa'?5000:1000);}
         src='m2';
       }
+      /* bölge ORTALAMASI: analyze strongest_value (tipik) veya (min+max)/2; yoksa başlangıç×~1.2 */
+      var ort=0;
+      if(src==='analyze'){ort=(az.strong>0?az.strong:(az.max>az.min?Math.round((az.min+az.max)/2):Math.round(fiyat*1.18)));}
+      else{ort=Math.round(fiyat*1.2);}
+      ort=rp(ort,s.durum==='kiralik'?500:1000);
+      if(ort<=fiyat)ort=rp(Math.round(fiyat*1.12),s.durum==='kiralik'?500:1000);
       var m2info=em?('ProX '+(s.durum==='kiralik'?'kira':'satış')+' m²: '+fmt(em)+' ₺/m²'):'ProX bölge verisi';
       var not=(src==='analyze')
-        ? (s.mah+' Mah., '+s.cadde+'’de ProX analiz başlangıç değeri'+band+((az.conf!=null)?' · güven '+az.conf+'/100':'')+' · '+m2info)
-        : (m2info+' · '+s.mah+' Mah., '+s.cadde+' civarı');
-      out.push({id:'o'+(id++),op:s.op,tip:s.tip,ilce:s.ilce+(ekIl?' ('+s.il+')':''),mah:s.mah,cadde:s.cadde,m2:s.m2,oda:s.oda,fiyat:fiyat,durum:'aktif',basla:(src==='analyze'),il:s.il,not:not});
+        ? (s.mah+' Mah., '+s.cadde+'’de ProX analiz başlangıç değeri'+band+' · bölge ort. '+fmt(ort)+' ₺'+((az.conf!=null)?' · güven '+az.conf+'/100':'')+' · '+m2info)
+        : (m2info+' · bölge ort. '+fmt(ort)+' ₺ · '+s.mah+' Mah., '+s.cadde+' civarı');
+      out.push({id:'o'+(id++),op:s.op,tip:s.tip,ilce:s.ilce+(ekIl?' ('+s.il+')':''),mah:s.mah,cadde:s.cadde,m2:s.m2,oda:s.oda,fiyat:fiyat,ort:ort,sahil:(s.sahil||isSahil(s.il,s.ilce)),durum:'aktif',basla:(src==='analyze'),il:s.il,not:not});
     });
     OZEL=out;saveAll();
     try{localStorage.setItem('wl_ozel_ts',JSON.stringify({il:il,ts:Date.now(),n:out.length,real:realCount}));}catch(e){}
@@ -6654,7 +6707,11 @@ function ozCardHTML(o){
   const opc=o.op==='Satılık'?'sat':'kir';
   const oda=(o.oda&&o.oda!=='-')?' · '+o.oda:'';
   const fav=ozIsFav(o.id),dog=ozDog(o);
-  const price='<div class="ozprice"><span class="from">başlangıç</span><b>'+fmt(o.fiyat)+' ₺</b>'+(o.op==='Kiralık'?'<small>/ay</small>':'')+'<span class="den">\'den</span></div>';
+  const kira=o.op==='Kiralık';
+  const price='<div class="ozprice"><span class="from">başlangıç</span><b>'+fmt(o.fiyat)+' ₺</b>'+(kira?'<small>/ay</small>':'')+'<span class="den">\'den</span></div>';
+  const avg=o.ort||(function(){var st=kira?500:1000;return Math.max(o.fiyat+st,Math.round(o.fiyat*1.18/st)*st);})();
+  const ortHTML='<div class="ozort">'+ozIco(OZI.info,12)+' Bölge ortalaması <b>'+fmt(avg)+' ₺'+(kira?'/ay':'')+'</b><span class="kat">'+o.op+' '+o.tip+'</span></div>';
+  const sahil=(o.sahil||isSahil(o.il||(typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name)||'İzmir',o.ilce))?ozSahilBadge():'';
   const facts=ozFacts(o);
   const factsHTML='<div class="ozfacts">'+facts.map(f=>'<div><span>'+f.k+'</span><b>'+f.v+'</b></div>').join('')+(o.not?'<p class="ozfnote">“'+o.not+'”</p>':'')+'</div>';
   const verified=dog?'<span class="ozver" title="e-Devlet yetkilendirmesi tamamlandı">'+ozIco(OZI.shield,12)+' Doğrulanmış</span>':'<span class="ozver pend" title="Yetkilendirme sürecinde">Yetki sürecinde</span>';
@@ -6663,13 +6720,14 @@ function ozCardHTML(o){
     +'<span class="ozbadge '+opc+'">'+o.op+'</span>'
     +'<span class="ozcat">'+o.tip+'</span>'
     +'<span class="ozlock">'+ozIco(OZI.lock,12)+' Özel Portföy</span>'
+    +sahil
     +'<div class="ozmeta"><span class="loc">'+ozIco(OZI.pin,13)+' '+o.mah+', '+o.ilce+'</span><span class="m2">'+o.m2+' m²'+oda+'</span></div>'
     +'</div>'
     +'<div class="ozbody">'
     +'<div class="oztoprow"><div class="ozcadde">'+ozIco(OZI.road,15)+' '+o.cadde+' <span>civarı</span></div>'+verified+'</div>'
-    +price+ozValBadge(o)
+    +price+ortHTML+ozValBadge(o)
     +'<div class="ozdetail">'+factsHTML+'</div>'
-    +'<div class="oznote">'+ozIco(OZI.info,13)+' Tam adres, kat ve bina bilgisi danışmanla paylaşılır. <span class="ozrefn">Ref '+ozRefOf(o)+'</span></div>'
+    +'<div class="oznote">'+ozIco(OZI.info,13)+' Bölge ortalama/başlangıç değeridir; belirli bir ilana ait değildir. Tam adres, kat ve bina danışmanla paylaşılır. <span class="ozrefn">Ref '+ozRefOf(o)+'</span></div>'
     +'<div class="ozcta">'
     +'<button class="btn btn-primary btn-sm" onclick="ozLead(\''+o.id+'\')">Detay İste</button>'
     +'<button class="ozdt" onclick="ozToggleDetail(this)" title="Özellikleri göster"><span>Özellikler</span>'+ozIco(OZI.chev,15)+'</button>'
