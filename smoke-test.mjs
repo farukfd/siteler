@@ -58,10 +58,22 @@ function buildsOk(file, extractBiggestInline){
 }
 ok('tr-grammar.js derlenir', buildsOk('tr-grammar.js'));
 ok('wl.js derlenir', buildsOk('wl.js'));
-ok('gayrimenkul.html ana script derlenir', buildsOk('gayrimenkul/index.html', true));
+ok('gayrimenkul app.js derlenir (P1 harici JS)', buildsOk('gayrimenkul/js/app.js'));
 
-/* ---- 3) Yapısal değişmezler (kritik özellikler yerinde mi) ---- */
+/* ---- 3) Yapısal değişmezler (kritik özellikler yerinde mi) ----
+   P1 ayrıştırması sonrası: HTML=index.html, JS=js/app.js, CSS=css/app.css.
+   Değişmezleri üçünün birleşiminde ararız (fonksiyon/const app.js'de, CSS app.css'te). */
 const gm = readFileSync('gayrimenkul/index.html','utf8');
+const gmjs = readFileSync('gayrimenkul/js/app.js','utf8');
+const gmcss = readFileSync('gayrimenkul/css/app.css','utf8');
+const gmAll = gm + '\n' + gmjs + '\n' + gmcss;
+/* ---- 3.0) P1 varlık-ayrıştırma değişmezleri ---- */
+ok('P1: index.html → css/app.css link', gm.includes('href="css/app.css"'));
+ok('P1: index.html → js/app.js script', gm.includes('src="js/app.js"'));
+ok('P1: index.html ince kabuk (<2600 satır)', gm.split('\n').length < 2600);
+ok('P1: app.js ana motor (goView+brandLogos)', gmjs.includes('function goView') && gmjs.includes('function brandLogos'));
+ok('P1: app.css token katmanı (:root/--accent)', gmcss.includes(':root') && gmcss.includes('--accent'));
+ok('P1: ana motor index.html\'den çıktı (app.js\'e taşındı)', !gm.includes('function goView') && !gm.includes('function brandLogos') && !gm.includes('function portfoyOpen'));
 const invariants = [
   ["BRAND_ORIG sabiti", "BRAND_ORIG='Meridyen Gayrimenkul'"],
   ["Özel Portföy analyze fiyatı", "function proxAnalyzePrice"],
@@ -94,9 +106,9 @@ const invariants = [
   ["has-logo-img gizleme kuralı", ".logo.has-logo-img .mark"],
   ["brandSweep tekil querySelector kaldırıldı", "try{brandLogos();}catch(e){}"],
 ];
-for(const [name, needle] of invariants) ok("değişmez: "+name, gm.includes(needle));
+for(const [name, needle] of invariants) ok("değişmez: "+name, gmAll.includes(needle));
 /* Tekil logo bug'ının GERİ GELMEDİĞİ (regresyon kilidi) */
-ok("değişmez: brandSweep artık .logo .mark tekil güncellemiyor", !gm.includes("var mk=document.querySelector('.logo .mark')"));
+ok("değişmez: brandSweep artık .logo .mark tekil güncellemiyor", !gmAll.includes("var mk=document.querySelector('.logo .mark')"));
 /* ---- 3b) wl.js logo tek-kaynak (footer dahil) ---- */
 const wl = readFileSync('wl.js','utf8');
 ok('wl.js logo: querySelectorAll(.logo)', wl.includes("querySelectorAll('.logo')"));
