@@ -85,18 +85,25 @@ const invariants = [
   ["Portföy overlay kapanış listesinde", "'portfoyPage'"],
   ["Portföy SEO hash yönlendirme", "function goPortfoy"],
   ["Portföy #portfoy route", "h==='#portfoy'"],
-  ["Portföy nav SEO href", 'href="#portfoy"'],
+  ["Portföy nav → portfoy.html gerçek sayfa", 'href="portfoy.html"'],
 ];
 for(const [name, needle] of invariants) ok("değişmez: "+name, gm.includes(needle));
 
-/* ---- 4) Alt sayfa entegrasyonu ---- */
-for(const f of ['gayrimenkul/hizmetlerimiz.html','gayrimenkul/nedenbiz.html']){
+/* ---- 4) Alt sayfa entegrasyonu (portfoy.html gerçek SEO sayfası dahil) ---- */
+for(const f of ['gayrimenkul/hizmetlerimiz.html','gayrimenkul/nedenbiz.html','gayrimenkul/portfoy.html']){
   const h = readFileSync(f,'utf8');
   ok(f+' → wl.js', h.includes('src="../wl.js'));
   ok(f+' → tr-grammar.js', h.includes('src="../tr-grammar.js'));
   ok(f+' → tr-iller.js', h.includes('src="../tr-iller.js'));
   ok(f+' inline WL kalıntısı yok', !/White-label senkron|Çalışma-zamanı canonical/.test(h));
 }
+/* ---- 4b) portfoy.html içerik + SEO ---- */
+const pf = readFileSync('gayrimenkul/portfoy.html','utf8');
+ok('portfoy.html SEO title', /<title>Portföy[^<]*Meridyen/.test(pf));
+ok('portfoy.html breadcrumb "Portföy"', pf.includes('"position": 2, "name": "Portföy"'));
+ok('portfoy.html İlanlar CTA → app overlay', pf.includes('index.html#portfoy-ilan'));
+ok('portfoy.html Özel Portföy CTA → app overlay', pf.includes('index.html#ozel'));
+ok('portfoy.html canonical portfoy.html', pf.includes('gayrimenkul/portfoy.html'));
 
 /* ---- Özet ---- */
 console.log('\n'+pass+' geçti, '+fail+' başarısız'+(fail? '  → '+fails.join(' | ') : ' ✓'));
