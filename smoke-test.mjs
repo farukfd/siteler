@@ -84,7 +84,8 @@ const invariants = [
   ["Portföy İlan render", "function renderPfIlan"],
   ["Portföy overlay kapanış listesinde", "'portfoyPage'"],
   ["Portföy SEO hash yönlendirme", "function goPortfoy"],
-  ["Portföy #portfoy route", "h==='#portfoy'"],
+  ["Temiz URL router (goView)", "function goView"],
+  ["Overlay yükleyici (ovBoot)", "function ovBoot"],
   ["Portföy nav → portfoy.html gerçek sayfa", 'href="portfoy.html"'],
 ];
 for(const [name, needle] of invariants) ok("değişmez: "+name, gm.includes(needle));
@@ -101,8 +102,8 @@ for(const f of ['gayrimenkul/hizmetlerimiz.html','gayrimenkul/nedenbiz.html','ga
 const pf = readFileSync('gayrimenkul/portfoy.html','utf8');
 ok('portfoy.html SEO title', /<title>Portföy[^<]*Meridyen/.test(pf));
 ok('portfoy.html breadcrumb "Portföy"', pf.includes('"position": 2, "name": "Portföy"'));
-ok('portfoy.html İlanlar CTA → app overlay', pf.includes('index.html#portfoy-ilan'));
-ok('portfoy.html Özel Portföy CTA → app overlay', pf.includes('index.html#ozel'));
+ok('portfoy.html İlanlar CTA → temiz yol (ilanlar)', pf.includes('href="ilanlar"'));
+ok('portfoy.html Özel Portföy CTA → temiz yol (ozel)', pf.includes('href="ozel"'));
 ok('portfoy.html canonical portfoy.html', pf.includes('gayrimenkul/portfoy.html'));
 
 /* ---- Özet ---- */
