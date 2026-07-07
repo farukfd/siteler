@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Meridyen Değerleme — indekslenebilir sayfalar. Deploy'da domain kiracıya göre değişir. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.emlakekspertizi.com/degerleme/basvuru.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/bilgi-servisi.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/bilgi-toplumu.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/blog.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/cerez.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/etik-ilkeler.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/gizlilik.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/hizmetler.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/iletisim.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/kariyer.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/kvkk.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/metodoloji.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/neden-biz.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/organizasyon-semasi.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/rapor-turleri.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/raporu-kim-imzalar.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/referans.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/sertifikalar.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/sikayet.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/spk-guven-merkezi.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/sss.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/degerleme/surekli-bilgilendirme.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+</urlset>

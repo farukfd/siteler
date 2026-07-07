@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /degerleme/admin.html
+
+Sitemap: https://www.emlakekspertizi.com/degerleme/sitemap.xml
