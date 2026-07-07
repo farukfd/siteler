@@ -1085,7 +1085,7 @@ function closePage(){const ov=document.getElementById('pageOverlay');ov.classLis
 function goHome(){closeNav();closePage();window.scrollTo(0,0);}
 function navGo(k){closeNav();openPage(k);}
 function contactLead(){if(typeof submitLead==='function')submitLead({sourcePage:'danisman',formType:'contact',name:'',phone:'',email:'',location:'',message:'İletişim bölümünden randevu talebi',requestedService:'Ücretsiz Analiz'});navGo('randevu');}
-function leadFor(name){if(typeof submitLead==='function')submitLead({sourcePage:'danisman',formType:'vip',name:'',phone:'',email:'',location:name,message:name+' (ücretsiz analiz talebi)',requestedService:'Ücretsiz Analiz'});openPage('randevu',{note:name+' (ücretsiz analiz talebi)'});toast('🔍 <b>'+name+'</b> için ücretsiz analiz randevusuna yönlendirildiniz.');}
+function leadFor(name){if(typeof closeNav==='function')closeNav();if(typeof submitLead==='function')submitLead({sourcePage:'danisman',formType:'vip',name:'',phone:'',email:'',location:name,message:name+' (ücretsiz analiz talebi)',requestedService:'Ücretsiz Analiz'});openPage('randevu',{note:name+' (ücretsiz analiz talebi)'});toast('🔍 <b>'+name+'</b> için ücretsiz analiz randevusuna yönlendirildiniz.');}
 
 /* =====================================================================
    AKILLI RANDEVU (takvim tabanlı)
@@ -1358,7 +1358,7 @@ function _saasPortalPanelHTML(){ var u=window.SAAS_USER.clientProfile||{}; var r
   +'<div class="sp-profile"><b>'+((u.companyName||'Kurumsal Üye')+'')+'</b><div class="role">'+((u.role||'Kurumsal Yönetici')+'')+'</div>'
     +'<div class="sp-chips">'+(regions.length?regions.map(function(r){return '<span>'+r+'</span>';}).join(''):'<span>Yetki bölgesi tanımlı değil</span>')+'</div></div>'
   +'<div class="sp-actions">'
-    +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'iletisim\')"><b>ProX AI Pazar Analizi</b><span>Sözleşmeli mülk değer & prim analizi</span></div>'
+    +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'surec\')"><b>ProX AI Pazar Analizi</b><span>Sözleşmeli mülk değer & prim analizi</span></div>'
     +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'iletisim\')"><b>Performans Grafikleri</b><span>Portföy değer seyri & likidite</span></div>'
     +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'vip\')"><b>Sözleşmeli Mülkler</b><span>Yetki belgeli portföy kayıtları</span></div>'
     +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'randevu\')"><b>Ücretsiz Analiz</b><span>Danışman görüşmesi planlayın</span></div>'
