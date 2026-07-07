@@ -1689,7 +1689,7 @@ header.scrolled .lang-sel{color:var(--ink)}
 
 <section><div class="wrap"><div class="cta-band">
   <div><h2>Geleceğin şehirlerini birlikte inşa edelim</h2><p>Mühendis, mimar ve saha ekibi pozisyonları için ekibimize katılın.</p></div>
-  <a class="btn btn-light" href="#iletisim">Açık Pozisyonlar →</a>
+  <a class="btn btn-light" href="#" onclick="event.preventDefault();openDoc('kariyer')">Açık Pozisyonlar →</a>
 </div></div></section>
 
 <section id="iletisim" style="background:var(--surface-2)"><div class="wrap">
@@ -1724,7 +1724,7 @@ header.scrolled .lang-sel{color:var(--ink)}
   <header id="hdr2" class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="#" onclick="event.preventDefault();closeProjelerPage()"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav">
-      <a href="#hakkimizda" onclick="return ppGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();closeProjelerPage();setTimeout(openHizmetlerPage,90)">Hizmetler</a><a href="#projeler" onclick="event.preventDefault()">Projeler</a>
+      <a href="#hakkimizda" onclick="return ppGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();openHizmetlerPage();closeProjelerPage()">Hizmetler</a><a href="#projeler" onclick="event.preventDefault();var p=document.getElementById('projelerPage');if(p)p.scrollTo({top:0,behavior:'smooth'})">Projeler</a>
       <a href="#bolge" onclick="return ppGo('bolge')">Bölge Zekası</a><a href="#medya" onclick="return ppGo('medya')">Medya</a><a href="#iletisim" onclick="return ppGo('iletisim')">İletişim</a>
     </nav>
     <div class="nav-cta insaatCta">
@@ -1762,11 +1762,11 @@ header.scrolled .lang-sel{color:var(--ink)}
   <header id="hdr3" class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="#" onclick="event.preventDefault();closeHizmetlerPage()"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav">
-      <a href="#hakkimizda" onclick="return hpGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();document.getElementById('hizmetlerPage').scrollTo({top:0,behavior:'smooth'})">Hizmetler</a><a href="#projeler" onclick="event.preventDefault();closeHizmetlerPage();setTimeout(openProjelerPage,90)">Projeler</a>
+      <a href="#hakkimizda" onclick="return hpGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();document.getElementById('hizmetlerPage').scrollTo({top:0,behavior:'smooth'})">Hizmetler</a><a href="#projeler" onclick="event.preventDefault();openProjelerPage();closeHizmetlerPage()">Projeler</a>
       <a href="#bolge" onclick="return hpGo('bolge')">Bölge Zekası</a><a href="#medya" onclick="return hpGo('medya')">Medya</a><a href="#iletisim" onclick="return hpGo('iletisim')">İletişim</a>
     </nav>
     <div class="nav-cta insaatCta">
-      <a class="btn btn-ghost" href="#projeler" onclick="event.preventDefault();closeHizmetlerPage();setTimeout(openProjelerPage,90)">Projeler</a>
+      <a class="btn btn-ghost" href="#projeler" onclick="event.preventDefault();openProjelerPage();closeHizmetlerPage()">Projeler</a>
       <button class="btn btn-primary" onclick="openTeklif()">Teklif Al</button>
       <button class="burger" onclick="document.getElementById('mnav3').classList.add('open')"><span></span><span></span><span></span></button>
     </div>
@@ -1805,7 +1805,7 @@ header.scrolled .lang-sel{color:var(--ink)}
   <header id="hdr6" class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="#" onclick="event.preventDefault();closeBolgePage()"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav">
-      <a href="#hakkimizda" onclick="return bzGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();closeBolgePage();setTimeout(openHizmetlerPage,90)">Hizmetler</a><a href="#projeler" onclick="event.preventDefault();closeBolgePage();setTimeout(openProjelerPage,90)">Projeler</a>
+      <a href="#hakkimizda" onclick="return bzGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();openHizmetlerPage();closeBolgePage()">Hizmetler</a><a href="#projeler" onclick="event.preventDefault();openProjelerPage();closeBolgePage()">Projeler</a>
       <a href="#bolge" onclick="event.preventDefault();document.getElementById('bolgePage').scrollTo({top:0,behavior:'smooth'})">Bölge Zekası</a><a href="#medya" onclick="return bzGo('medya')">Medya</a><a href="#iletisim" onclick="return bzGo('iletisim')">İletişim</a>
     </nav>
     <div class="nav-cta insaatCta">
@@ -1826,7 +1826,7 @@ header.scrolled .lang-sel{color:var(--ink)}
   <header id="hdr4" class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="#" onclick="event.preventDefault();closeSvcDetail();closeHizmetlerPage()"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav">
-      <a href="#hakkimizda" onclick="return sdGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();sdBackToHizmetler()">Hizmetler</a><a href="#projeler" onclick="event.preventDefault();closeSvcDetail();closeHizmetlerPage();setTimeout(openProjelerPage,90)">Projeler</a>
+      <a href="#hakkimizda" onclick="return sdGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();sdBackToHizmetler()">Hizmetler</a><a href="#projeler" onclick="event.preventDefault();closeSvcDetail();openProjelerPage();closeHizmetlerPage()">Projeler</a>
       <a href="#bolge" onclick="return sdGo('bolge')">Bölge Zekası</a><a href="#medya" onclick="return sdGo('medya')">Medya</a><a href="#iletisim" onclick="return sdGo('iletisim')">İletişim</a>
     </nav>
     <div class="nav-cta insaatCta">
@@ -1854,7 +1854,7 @@ header.scrolled .lang-sel{color:var(--ink)}
   <header id="hdr5" class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="#" onclick="event.preventDefault();closeProjectDetail();closeProjelerPage()"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav">
-      <a href="#hakkimizda" onclick="return jdGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();closeProjectDetail();closeProjelerPage();setTimeout(openHizmetlerPage,90)">Hizmetler</a><a href="#projeler" onclick="event.preventDefault();jdBackToProjeler()">Projeler</a>
+      <a href="#hakkimizda" onclick="return jdGo('hakkimizda')">Kurumsal</a><a href="#hizmetler" onclick="event.preventDefault();closeProjectDetail();openHizmetlerPage();closeProjelerPage()">Hizmetler</a><a href="#projeler" onclick="event.preventDefault();jdBackToProjeler()">Projeler</a>
       <a href="#bolge" onclick="return jdGo('bolge')">Bölge Zekası</a><a href="#medya" onclick="return jdGo('medya')">Medya</a><a href="#iletisim" onclick="return jdGo('iletisim')">İletişim</a>
     </nav>
     <div class="nav-cta insaatCta">
@@ -3385,7 +3385,7 @@ function _bzAnimate(){
 
 // ===== /HIZMETLER SAYFASI =====
 function hpGo(id){
-  if(id==='bolge'){closeHizmetlerPage();setTimeout(openBolgePage,90);return false;}
+  if(id==='bolge'){openBolgePage();closeHizmetlerPage();return false;}
   closeHizmetlerPage();
   setTimeout(()=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},150);
   return false;
@@ -3568,7 +3568,7 @@ function closeSvcDetail(){
 }
 // hizmet detayından ana sayfada bölüme git
 function sdGo(id){
-  if(id==='bolge'){closeSvcDetail();closeHizmetlerPage();setTimeout(openBolgePage,90);return false;}
+  if(id==='bolge'){closeSvcDetail();openBolgePage();closeHizmetlerPage();return false;}
   closeSvcDetail();closeHizmetlerPage();
   setTimeout(()=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},250);
   return false;
@@ -3677,7 +3677,7 @@ document.addEventListener('keydown',e=>{
 // ===== /PROJELER LISTE SAYFASI =====
 let _ppFilter='all';
 function ppGo(id){
-  if(id==='bolge'){closeProjelerPage();setTimeout(openBolgePage,90);return false;}
+  if(id==='bolge'){openBolgePage();closeProjelerPage();return false;}
   closeProjelerPage();
   setTimeout(()=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},150);
   return false;
@@ -4021,7 +4021,7 @@ function closeProjectDetail(){
 }
 // proje detayından ana sayfada bölüme git
 function jdGo(id){
-  if(id==='bolge'){closeProjectDetail();closeProjelerPage();setTimeout(openBolgePage,90);return false;}
+  if(id==='bolge'){closeProjectDetail();openBolgePage();closeProjelerPage();return false;}
   closeProjectDetail();closeProjelerPage();
   setTimeout(()=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},250);
   return false;
@@ -4230,7 +4230,7 @@ function buildSwatches(){const el=document.getElementById('admSwatches');if(!el)
 (function(){try{if(typeof window.__pendingTheme==='number'&&THEMES[window.__pendingTheme]){applyTheme(THEMES[window.__pendingTheme]);markSw&&markSw(window.__pendingTheme);}}catch(e){}initContrast();})();
 
 /* ---------------- ADMIN ---------------- */
-function openAdmin(){location.hash='admin';showAdmin();}
+function openAdmin(){try{history.replaceState(null,'','#admin');}catch(e){}showAdmin();}
 function showAdmin(){document.getElementById('adminApp').classList.add('show');document.body.style.overflow='hidden';buildSwatches();}
 function closeAdmin(){document.getElementById('adminApp').classList.remove('show');document.body.style.overflow='';if(location.hash==='#admin')try{history.replaceState(null,'',location.pathname);}catch(e){};}
 function admLogin(){const p=document.getElementById('admPass').value;const u=document.getElementById('admUser').value;if(p===(SETTINGS&&SETTINGS.admPass||'meridyen2026')){document.getElementById('adminApp').classList.add('authed');document.getElementById('admErr').style.display='none';refreshAdmin();}else{document.getElementById('admErr').style.display='block';}}
