@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı</title>
+<meta name="description" content="Yetki belgeli butik emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy, ücretsiz mülk değer analizi ve ProX AI danışman.">
+<meta name="keywords" content="lüks konut danışmanı, özel portföy, yalı, penthouse, butik emlak, ücretsiz mülk analizi, gizli satış">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<!-- ============ ProX SaaS API ÇEKİRDEĞİ (additive, single-file) ============ -->
+<script>
+window.EMLAK_API_BASE = "https://www.emlakekspertizi.com";
+window.EMLAK_TENANT = { id:"consultant", tenant_id:"consultant", tenant_key:"prox_consultant_a383eb07bb544ce3db7323150370bb46", domain:location.hostname, sector:"real_estate_consultant", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"PRO", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"consultant", legalMode:"standard" };
+window.EMLAK_PACKAGES = {
+  BASIC:["canUseMarketAnalysis","canUsePriceEstimate","canUseLeadCRM","canUseSvgGraphics"],
+  PRO:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent"],
+  BUSINESS:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent","canUseAdvancedProX","canUseCustomDomain","canUseBlogAutomation","canUsePremiumTheme"],
+  ENTERPRISE:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent","canUseAdvancedProX","canUseCustomDomain","canUseBlogAutomation","canUsePremiumTheme","canUseWhiteLabelFull"]
+};
+window.EMLAK_TENANT.enabledFeatures = window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode] || window.EMLAK_PACKAGES.PRO;
+window.hasFeature = function(f){ return window.EMLAK_TENANT.enabledFeatures.indexOf(f)!==-1; };
+window.requireFeature = function(f){ if(window.hasFeature(f)) return true; var m="Bu özellik mevcut paketinizde aktif değildir. Kurumsal paketinizi yükseltin."; if(typeof toast==="function")toast(m); else alert(m); return false; };
+async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ var _base=(window.EMLAK_PROXY_MODE&&window.EMLAK_PROXY_URL)?window.EMLAK_PROXY_URL:window.EMLAK_API_BASE; var _h={"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id}; if(!window.EMLAK_PROXY_MODE)_h["X-Tenant-Key"]=window.EMLAK_TENANT.tenant_key; /* proxy modunda gizli anahtar istemciden GÖNDERİLMEZ */ Object.assign(_h,headers); const res=await fetch(_base+path,{method,mode:"cors",headers:_h,body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); try{var _qm=new Date().toISOString().slice(0,7),_q=JSON.parse(localStorage.getItem("dn_quota")||"null");if(!_q||_q.month!==_qm)_q={month:_qm,count:0};_q.count++;localStorage.setItem("dn_quota",JSON.stringify(_q));}catch(_e){} const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
+function proxFallback(path,options={}){ return { fallback:true, message:"API baglantisi yok. Demo/fallback veri kullaniliyor.", path, data:(window.EMLAK_FALLBACK?window.EMLAK_FALLBACK(path,options):null) }; }
+async function submitLead(lead){ lead=lead||{}; var payload={ sourcePage:lead.sourcePage||"danisman", formType:lead.formType||"contact", name:lead.name||"", phone:lead.phone||"", email:lead.email||"", message:lead.message||"", extra:lead.extra||{ location:lead.location||"", requestedService:lead.requestedService||"", sector:window.EMLAK_TENANT.sector } }; try{if(typeof trackEvent==='function')trackEvent('generate_lead',{source:payload.formType||'lead'});}catch(_t){} try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:payload}); if(r&&r.fallback)throw new Error("fallback"); if(r&&r.success===false)throw new Error("lead reddedildi"); return {ok:true,online:(r&&r.online!==false),data:r}; }catch(e){ try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(Object.assign({id:"lead_"+Date.now(),createdAt:new Date().toISOString()},payload));localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:payload}; } }
+window.injectSchema=function(o){try{var s=document.createElement("script");s.type="application/ld+json";s.text=JSON.stringify(o);document.head.appendChild(s);}catch(e){}};
+/* Canlı paket/özellik senkronu — theme.accent ile CSS REPAINT EDILMEZ (siyah/altın korunur). */
+async function proxBootstrap(){ try{ var r=await proxApi("/api/v1/tenant/bootstrap",{method:"GET"}); if(!r||r.fallback||r.success===false)return false; if(r.package)window.EMLAK_TENANT.packageCode=r.package; if(Array.isArray(r.enabled_features)&&r.enabled_features.length)window.EMLAK_TENANT.enabledFeatures=r.enabled_features; else if(window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode])window.EMLAK_TENANT.enabledFeatures=window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode]; return true; }catch(e){ return false; } }
+window.proxBootstrap=proxBootstrap;
+</script>
+
+<!-- ============ SEO · canonical / OpenGraph / Twitter ============ -->
+<link rel="canonical" href="https://www.emlakekspertizi.com/danisman">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı">
+<meta property="og:title" content="Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı">
+<meta property="og:description" content="Yetki belgeli butik emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy, ücretsiz mülk değer analizi ve ProX AI danışman.">
+<meta property="og:url" content="https://www.emlakekspertizi.com/danisman">
+<meta property="og:locale" content="tr_TR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı">
+<meta name="twitter:description" content="Yetki belgeli butik emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy, ücretsiz mülk değer analizi ve ProX AI danışman.">
+
+<!-- ============ JSON-LD · Person + ProfessionalService ============ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "name": "Selin Meridyen",
+      "jobTitle": "Lüks Konut & Portföy Danışmanı",
+      "worksFor": { "@type": "Organization", "name": "Selin Meridyen Danışmanlık" },
+      "areaServed": "İstanbul",
+      "knowsAbout": ["lüks konut", "özel portföy", "gayrimenkul danışmanlığı", "yatırım analizi"]
+    },
+    {
+      "@type": "ProfessionalService",
+      "name": "Selin Meridyen · Lüks Konut & Özel Portföy Danışmanlığı",
+      "description": "Yetki belgeli butik emlak danışmanlığı; güncel lüks ilanlar, davet usulü VIP portföy ve ücretsiz mülk değer analizi.",
+      "areaServed": { "@type": "City", "name": "İstanbul" },
+      "serviceType": "Lüks gayrimenkul danışmanlığı",
+      "provider": { "@type": "Person", "name": "Selin Meridyen" }
+    }
+  ]
+}
+</script>
+  <link rel="stylesheet" href="css/base.css">
+<script src="../tr-grammar.js?v=3"></script>
+<script src="../tr-iller.js?v=2"></script><!-- Türkçe gramer tek kaynak (gayrimenkul.html ile ortak) -->
+</head>
+<body>
+
+<!-- ============ TEK SABİT NAV (her sayfada birebir aynı) ============ -->
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <div class="brand" onclick="goHome()">
+      <span class="mark" id="brandMark">M</span>
+      <span><b id="brandName">Selin Meridyen</b><small>Lüks Portföy Danışmanı</small></span>
+    </div>
+    <nav class="nav-links" id="navLinks">
+      <a class="lnk" data-k="ilanlar" onclick="navGo('ilanlar')">İlanlar</a>
+      <a class="lnk" data-k="vip" onclick="navGo('vip')">VIP Portföy</a>
+      <a class="lnk" data-k="surec" onclick="navGo('surec')">Süreç</a>
+      <a class="lnk" data-k="randevu" onclick="navGo('randevu')">Randevu</a>
+      <a class="lnk" data-k="iletisim" onclick="navGo('iletisim')">İletişim</a>
+      <a id="saasPortalTriggerM" class="portal-trigger" onclick="openSaasPortal()">Müşteri Portalı</a>
+      <select class="lnk lang-sel" onchange="gmLang(this.value)" aria-label="Dil / Language" style="background:transparent;border:1px solid var(--line-soft);border-radius:8px;color:inherit;padding:4px 9px;font:inherit;font-size:13px;cursor:pointer"><option value="tr">TR</option><option value="en">EN</option><option value="ar">AR</option></select>
+    </nav>
+    <div class="nav-cta">
+      <a class="nav-wa" href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.21 8.21 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.4-8.24 8.4Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z"/></svg>
+      </a>
+      <a class="btn btn-gold" onclick="navGo('randevu')">Ücretsiz Analiz</a>
+      <a id="saasPortalTrigger" class="portal-trigger" onclick="openSaasPortal()">Müşteri Portalı</a>
+      <button class="burger" id="burger" onclick="toggleNav()" aria-label="Menü"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ DİNAMİK SAYFA OVERLAY ============ -->
+<div id="pageOverlay"></div>
+
+<!-- ============ ANA SAYFA ============ -->
+<div id="homeView">
+
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <svg class="hero-arch" viewBox="0 0 600 600" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round">
+    <path d="M120 560V250l180-120 180 120v310" opacity=".7"/><path d="M120 250 300 130 480 250"/>
+    <path d="M170 560V330h70v230M360 560V330h70v230"/><path d="M270 560V440h60v120"/>
+    <path d="M180 300h40M380 300h40M180 360h40M380 360h40M180 420h40M380 420h40" opacity=".6"/>
+    <path d="M60 560h480"/><circle cx="300" cy="92" r="26" opacity=".5"/>
+  </svg>
+  <div class="wrap hero-in">
+    <div class="eyebrow">Butik Emlak Danışmanlığı · Yetki Belgeli</div>
+    <h1>Mülkünüz Bir Değerdir.<em>Onu Doğru İsimle Taçlandırın.</em></h1>
+    <p class="lede">Güncel lüks ilanlardan davet usulü gizli VIP portföye; doğru konumlandırma, tam gizlilik ve kusursuz müzakere ile mülkünüzü hak ettiği değere taşırım.</p>
+    <div class="hero-cta">
+      <a class="btn btn-gold" onclick="navGo('ilanlar')">Güncel İlanları Gör</a>
+      <a class="btn btn-line" onclick="navGo('randevu')">Ücretsiz Analiz</a>
+    </div>
+    <div id="eidsPublicBadge" style="margin-top:24px;animation:rise 1s .7s both"></div>
+  </div>
+  <div class="hero-scroll">Keşfet<i></i></div>
+</section>
+
+<section class="trust">
+  <div class="wrap" style="padding:0"><div class="trust-in">
+    <div class="t"><b>18+</b><span>Yıl Tecrübe</span></div>
+    <div class="t"><b>₺7,4 Mr</b><span>Aracılık Edilen Değer</span></div>
+    <div class="t"><b>%100</b><span>Yetki Belgeli Portföy</span></div>
+    <div class="t"><b>Gizli</b><span>Adres & Kimlik Mahremiyeti</span></div>
+  </div></div>
+</section>
+
+<section class="about sec-pad" id="hakkimda">
+  <div class="wrap about-grid">
+    <div class="about-portrait">
+      <div class="frame"></div>
+      <svg viewBox="0 0 200 240" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="100" cy="78" r="40"/><path d="M40 220c0-44 27-74 60-74s60 30 60 74"/><path d="M70 120c10 14 50 14 60 0" opacity=".5"/></svg>
+      <div class="sig">Selin Meridyen</div>
+    </div>
+    <div class="about">
+      <div class="eyebrow">Kişisel Temsil</div>
+      <h2>Mülkünüzü bir portföy numarasına değil, bir <span class="serif-it gold">imzaya</span> emanet edin.</h2>
+      <div class="role">Kıdemli Lüks Konut & Portföy Danışmanı</div>
+      <p>Her mülk, doğru alıcısıyla buluşmayı hak eder. Açık portföyümde şeffaf, tam bilgili güncel ilanlar; özel portföyümde ise yalnızca yetki belgeli, mahremiyeti korunan ayrıcalıklı mülkler yer alır.</p>
+      <div class="quote">“Doğru danışman, fiyatı savunmaz; değeri görünür kılar.”</div>
+      <div class="about-meta">
+        <div><b>Davet Usulü</b><span>Seçili alıcı havuzu</span></div>
+        <div><b>Tam Gizlilik</b><span>Adres & kimlik koruması</span></div>
+        <div><b>Tek Muhatap</b><span>Baştan sona aynı isim</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GÜNCEL İLANLAR (ön yüz, tam şeffaf) -->
+<section class="sec-pad" id="ilanlar">
+  <div class="wrap">
+    <div class="sec-h">
+      <div class="eyebrow" style="display:block">Güncel İlanlar</div>
+      <h2>Açık portföy · tam şeffaf bilgi</h2>
+      <p>Fiyat, oda, metrekare ve bölge bilgisi açıkça paylaşılan güncel lüks ilanlar. Detaylı bilgi ve ücretsiz değer analizi için bana ulaşın.</p>
+    </div>
+    <div class="card-grid" id="homeListings"></div>
+    <div style="text-align:center;margin-top:40px"><a class="btn btn-line" onclick="navGo('ilanlar')">Tüm İlanları Aç</a></div>
+  </div>
+</section>
+
+<!-- VIP PORTFÖY (gizemli, adres gizli) -->
+<section class="vault sec-pad" id="vault">
+  <div class="wrap">
+    <div class="sec-h">
+      <div class="divider-orn"><span>RÉSERVÉ</span></div>
+      <div class="eyebrow" style="display:block">Kişisel VIP Portföyüm</div>
+      <h2>Herkese açık olmayan, davet usulü mülkler</h2>
+      <p>Yalnızca cadde/sokak ismi ve başlangıç değeri paylaşılır; tam adres ve kimlik bilgileri mahremiyet gereği yalnızca ön analiz sonrası açıklanır.</p>
+    </div>
+    <div class="card-grid" id="vaultGrid"></div>
+    <div class="vault-note">🔒 Tüm kayıtlarda <b>adres gizliliği</b> esastır · Net konum ve detaylar yalnızca <b>ücretsiz analiz görüşmesinde</b> paylaşılır.</div>
+  </div>
+</section>
+
+<!-- SÜREÇ -->
+<section class="sec-pad" id="surec">
+  <div class="wrap">
+    <div class="sec-h"><div class="eyebrow" style="display:block">Süreç & Temsil</div><h2>Mülkünüzü değere taşıyan beş aşama</h2></div>
+    <div class="proc-grid">
+      <div class="proc"><div class="no">01</div><h4>Değer Analizi</h4><p>Mülkün gerçek pazar konumunu analiz eder, hedef alıcı profilini ve fiyat stratejisini birlikte belirleriz.</p></div>
+      <div class="proc"><div class="no">02</div><h4>Sahneleme</h4><p>Profesyonel görsel, mimari sunum dosyası ve mahremiyeti koruyan tanıtım materyali hazırlanır.</p></div>
+      <div class="proc"><div class="no">03</div><h4>Konumlandırma</h4><p>Açık ilan ya da davet usulü gizli pazarlama; mülkün niteliğine göre doğru kanal seçilir.</p></div>
+      <div class="proc"><div class="no">04</div><h4>Müzakere</h4><p>Tek muhatap olarak tüm görüşmeleri yürütür, teklifleri değerinizi koruyacak şekilde müzakere ederim.</p></div>
+      <div class="proc"><div class="no">05</div><h4>Kusursuz Kapanış</h4><p>Tapu, hukuki ve mali süreçler uçtan uca koordine edilir; devir gününe kadar yanınızdayım.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ÜCRETSİZ ANALİZ CTA BAND -->
+<section class="analiz sec-pad">
+  <div class="wrap"><div class="analiz-band">
+    <div>
+      <div class="eyebrow" style="display:block">Ücretsiz Mülk Değer Analizi</div>
+      <h3>Mülkünüzün gerçek değerini birlikte keşfedelim.</h3>
+      <p>Bağlayıcı olmayan, gizli bir ön değer analizi için randevu oluşturun; doğru fiyat ve doğru strateji ile başlayın.</p>
+      <svg role="img" aria-label="Referans ve güven mührü" viewBox="0 0 120 40" width="120" height="40" style="margin-top:14px;color:var(--gold);max-width:100%;height:auto" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="20" cy="20" r="13" opacity=".85"/><path d="M20 13v7l4.5 3" opacity=".6"/><path d="M14.5 20l3.5 3.5 7-7" stroke-width="1.8"/>
+        <path d="M44 14h62M44 26h44" opacity=".35"/><path d="M44 20h54" opacity=".55"/>
+        <path d="M108 12l2.4 4.8 5.3.8-3.8 3.7.9 5.3-4.8-2.5-4.8 2.5.9-5.3-3.8-3.7 5.3-.8L108 12Z" fill="currentColor" opacity=".9" stroke="none"/>
+      </svg>
+    </div>
+    <a class="btn btn-gold" onclick="navGo('randevu')">Ücretsiz Analiz Randevusu</a>
+  </div></div>
+</section>
+
+<!-- PROX AI -->
+<section class="prox sec-pad">
+  <div class="wrap"><div class="prox-card">
+    <div class="prox-h"><div class="av">Px</div><div><b>ProX AI · Danışman Konsiyerj</b><span>Lüks Konut & Yatırım Uzmanı</span></div></div>
+    <p class="prox-sub">Bir bölge, mülk tipi veya yatırım sorun; portföyümü sizin için tarayıp prim potansiyelini anlatayım, ardından ücretsiz analiz randevunuzu planlayalım.</p>
+    <div class="prox-log" id="proxLog"></div>
+    <div class="prox-in">
+      <input id="proxIn" placeholder="Örn: Levent’te penthouse var mı? Yatırımlık ne önerirsiniz?" onkeydown="if(event.key==='Enter')proxSend()">
+      <button class="btn btn-gold" onclick="proxSend()">Gönder</button>
+    </div>
+    <div class="prox-chips">
+      <button onclick="proxQuick('Levent’te penthouse var mı?')">Levent penthouse</button>
+      <button onclick="proxQuick('Yatırımlık prim potansiyeli yüksek ne önerirsiniz?')">Prim potansiyeli</button>
+      <button onclick="proxQuick('Boğaz’da yalı portföyünüz var mı?')">Boğaz yalısı</button>
+      <button onclick="proxQuick('Mülkümü gizlilikle nasıl satarsınız?')">Gizli satış</button>
+    </div>
+  </div></div>
+</section>
+
+<!-- İLETİŞİM -->
+<section class="sec-pad" id="iletisim"><div class="wrap" id="homeContact"></div></section>
+
+<div id="siteFooter"></div>
+</div><!-- /homeView -->
+
+<script src="js/app.js"></script>
+</body>
+</html>
+

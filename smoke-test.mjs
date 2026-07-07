@@ -133,6 +133,16 @@ ok('insaat: ince kabuk (<3000 satır)', ins.split('\n').length < 3000);
 ok('insaat: kök insaat.html redirect stub', (()=>{const s=readFileSync('insaat.html','utf8');return s.includes('insaat/index.html') && s.includes('noindex') && s.length<1500;})());
 ok('insaat: neden-biz.html → index.html (eski insaat.html değil)', (()=>{const s=readFileSync('insaat/neden-biz.html','utf8');return s.includes('href="index.html"') && !s.includes('href="insaat.html"');})());
 ok('insaat: kök index seçici insaat/index.html', readFileSync('index.html','utf8').includes('href="insaat/index.html"'));
+/* ---- 3d) danisman restructure (P1) ---- */
+ok('danisman app.js derlenir', buildsOk('danisman/js/app.js'));
+const dan2 = readFileSync('danisman/index.html','utf8');
+const danApp = readFileSync('danisman/js/app.js','utf8');
+ok('danisman: css/base.css + js/app.js link', dan2.includes('href="css/base.css"') && dan2.includes('src="js/app.js"'));
+ok('danisman: shared js ../ (tr-grammar/tr-iller)', dan2.includes('src="../tr-grammar.js') && dan2.includes('src="../tr-iller.js'));
+ok('danisman: ince kabuk (<400 satır)', dan2.split('\n').length < 400);
+ok('danisman: kök danisman.html redirect stub', (()=>{const s=readFileSync('danisman.html','utf8');return s.includes('danisman/index.html') && s.includes('noindex') && s.length<1500;})());
+ok('danisman: kök index seçici danisman/index.html', readFileSync('index.html','utf8').includes('href="danisman/index.html"'));
+ok('danisman: D1/D2 nav düzeltmeleri korundu (app.js)', danApp.includes("function leadFor(name){if(typeof closeNav") && danApp.includes("surec"));
 
 /* ---- 4) Alt sayfa entegrasyonu (portfoy.html gerçek SEO sayfası dahil) ---- */
 for(const f of ['gayrimenkul/hizmetlerimiz.html','gayrimenkul/nedenbiz.html','gayrimenkul/portfoy.html']){
