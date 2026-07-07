@@ -83,6 +83,9 @@ const invariants = [
   ["Portföy açma motoru", "function portfoyOpen"],
   ["Portföy İlan render", "function renderPfIlan"],
   ["Portföy overlay kapanış listesinde", "'portfoyPage'"],
+  ["Portföy SEO hash yönlendirme", "function goPortfoy"],
+  ["Portföy #portfoy route", "h==='#portfoy'"],
+  ["Portföy nav SEO href", 'href="#portfoy"'],
 ];
 for(const [name, needle] of invariants) ok("değişmez: "+name, gm.includes(needle));
 
