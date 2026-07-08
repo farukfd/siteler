@@ -295,6 +295,12 @@ header.scrolled .burger span{background:var(--ink)}
   repeating-linear-gradient(0deg,var(--surface-2),var(--surface-2) 18px,var(--surface) 18px,var(--surface) 19px),
   repeating-linear-gradient(90deg,var(--surface-2),var(--surface-2) 18px,var(--surface) 18px,var(--surface) 19px)}
 .cmap .pin{position:absolute;left:50%;top:48%;transform:translate(-50%,-100%);color:var(--accent);font-size:34px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.3))}
+.cmap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.cmap .cmap-tag{position:absolute;left:10px;top:10px;z-index:2;background:rgba(9,14,24,.82);color:#fff;font-size:12px;font-weight:700;padding:5px 10px;border-radius:8px;border:1px solid var(--line);pointer-events:none;display:inline-flex;gap:6px;align-items:center;max-width:calc(100% - 20px)}
+/* Leaflet admin seçici — panel içinde taşma/katman güvenliği */
+#il_pickmap .leaflet-pane,#il_pickmap .leaflet-top,#il_pickmap .leaflet-bottom{z-index:1}
+#il_pickmap .leaflet-control-attribution{font-size:10px;background:rgba(9,14,24,.7);color:#9fb0cc}
+#il_pickmap .leaflet-control-attribution a{color:var(--accent)}
 .formcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-sm)}
 .formcard h3{font-size:20px;margin-bottom:4px}.formcard .fhint{color:var(--muted);font-size:14px;margin-bottom:14px}
 .fld2{display:grid;grid-template-columns:1fr 1fr;gap:14px}

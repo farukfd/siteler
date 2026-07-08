@@ -155,7 +155,7 @@ let SETTINGS={
   firmaEmail:'info@meridyenyapi.com', firmaYetkili:'Genel Müdür',
   firmaVergiDairesi:'Beşiktaş Vergi Dairesi', firmaTicaretSicil:'İstanbul · 123456-5', firmaOda:'İstanbul Ticaret Odası',
   firmaKep:'meridyenyapi@hs01.kep.tr', firmaCalisma:'Hafta içi 09:00–18:00 · Cmt 10:00–14:00',
-  mapQuery:'Levent Mah., Beşiktaş, İstanbul',
+  mapQuery:'41.0812,29.0094', // Levent/Beşiktaş — JSON-LD geo ile aynı; admin haritadan tıklayarak değiştirir
   statYil:38, statKonut:8400, statProje:146, statSantiye:12, statAlan:2100000,
   certChips:['TBDY 2018','Yapı Denetimli · 4708','6306 Kentsel Dönüşüm','ISO 9001 · 14001 · 45001','BIM Koordinasyon']
 };
@@ -233,12 +233,41 @@ function applyStats(){try{var s=SETTINGS;var map={yil:s.statYil,konut:s.statKonu
   });
 }catch(e){}}
 function applyCerts(){try{var c=SETTINGS.certChips;if(!c||!c.length)return;document.querySelectorAll('.hp-trust').forEach(function(t){var lead=t.querySelector('.ht-lead');var h=lead?lead.outerHTML:'';h+=c.map(function(x){return '<span class="ht-chip">'+_brandEsc(x)+'</span>';}).join('');t.innerHTML=h;});}catch(e){}}
+// ===== Harita gömme (OpenStreetMap — resmî embed, anahtar gerekmez, X-Frame engeli yok) =====
+function _osmEmbedSrc(lat,lng){
+  lat=+lat;lng=+lng;var d=0.0075;
+  var bbox=(lng-d).toFixed(6)+','+(lat-d).toFixed(6)+','+(lng+d).toFixed(6)+','+(lat+d).toFixed(6);
+  return 'https://www.openstreetmap.org/export/embed.html?bbox='+bbox+'&layer=mapnik&marker='+lat.toFixed(6)+','+lng.toFixed(6);
+}
+// container'a harita basar. mapQuery "enlem,boylam" ise anında; adres ise tek seferlik Nominatim geocode ile.
+function _fillMapEmbed(cm,tagCls,mapQuery,addr){
+  if(!cm)return;
+  var esc=(typeof _brandEsc==='function')?_brandEsc:function(x){return String(x==null?'':x);};
+  var lbl=String(addr||mapQuery||'Konum').split(',')[0]||'Konum';
+  var put=function(lat,lng){
+    var src=_osmEmbedSrc(lat,lng);
+    var fr=cm.querySelector('iframe');
+    if(fr){ if(fr.getAttribute('src')!==src)fr.setAttribute('src',src);
+      var tg=cm.querySelector('.'+tagCls); if(tg)tg.innerHTML='📍 '+esc(lbl); }
+    else cm.innerHTML='<div class="'+tagCls+'">📍 '+esc(lbl)+'</div>'
+      +'<iframe title="Harita — '+esc(lbl)+'" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="'+src+'"></iframe>';
+  };
+  var ll=(typeof _parseLatLng==='function')?_parseLatLng(mapQuery):null;
+  if(ll){ put(ll[0],ll[1]); return; }
+  var q=mapQuery||addr||'İstanbul';
+  fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=tr&accept-language=tr&q='+encodeURIComponent(q))
+    .then(function(r){return r.json();})
+    .then(function(a){ if(a&&a[0])put(+a[0].lat,+a[0].lon); else put(41.0812,29.0094); })
+    .catch(function(){ put(41.0812,29.0094); });
+}
 function applyContactAll(){try{var s=SETTINGS;
   var wn=String(s.waNumber||'').replace(/[^0-9]/g,'')||'905001234567';
   document.querySelectorAll('a[href*="wa.me/"]').forEach(function(a){a.href=a.href.replace(/wa\.me\/\d+/,'wa.me/'+wn);});
   if(s.firmaAdres)document.querySelectorAll('.cinfo .js-adr').forEach(function(e){e.textContent=s.firmaAdres;});
   if(s.firmaEmail)document.querySelectorAll('.cinfo .js-mail').forEach(function(e){e.textContent=s.firmaEmail;});
   if(s.firmaTel)document.querySelectorAll('.cinfo .js-tel').forEach(function(e){e.textContent=s.firmaTel;});
+  // Ana sayfa iletişim haritası — İletişim sayfasıyla aynı mapQuery kaynağından (OpenStreetMap, API anahtarı gerekmez)
+  try{document.querySelectorAll('.cmap').forEach(function(cm){_fillMapEmbed(cm,'cmap-tag',s.mapQuery,s.firmaAdres);});}catch(em){}
   try{var FT=(typeof FOOT!=='undefined')?FOOT:{};
   if(FT.tel)document.querySelectorAll('.insaatFooter a.js-tel').forEach(function(a){a.href='tel:'+String(FT.tel).replace(/[^0-9+]/g,'');});
   if(FT.email)document.querySelectorAll('.insaatFooter a[href^="mailto:"]').forEach(function(a){a.href='mailto:'+FT.email;});}catch(e2){}
@@ -773,7 +802,7 @@ function renderIletisimPage(){
   h+='<div class="il-card il-rv"><div class="ic">🕘</div><div><div class="k">'+esc(t.hours)+'</div><div class="v">'+esc(s.firmaCalisma||'')+'</div></div></div>';
   h+='<div class="il-card il-rv"><div class="ic" style="background:rgba(37,211,102,.14)">💬</div><div><div class="k">'+esc(t.wa)+'</div><a class="v" href="https://wa.me/'+wa+'" target="_blank" rel="noopener noreferrer">+'+esc(wa)+'</a></div></div>';
   h+='</div>';
-  h+='<div class="il-map il-rv"><div class="il-map-tag">📍 '+esc((s.firmaAdres||'').split(',')[0]||'Konum')+'</div><iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q='+mapQ+'&z=15&output=embed"></iframe></div></div>';
+  h+='<div class="il-map il-rv"></div></div>';
   h+='<div class="il-formcard il-rv"><h3>'+esc(t.formT)+'</h3><div class="fhint">'+esc(t.formH)+'</div>';
   h+='<div class="fld2"><div class="field"><label>'+(en?'Full Name':'Ad Soyad')+'</label><input type="text" id="il_ad" placeholder="'+(en?'Your Full Name':'Adınız Soyadınız')+'"></div><div class="field"><label>'+(en?'Phone':'Telefon')+'</label><input type="text" id="il_tel" placeholder="05__ ___ __ __"></div></div>';
   h+='<div class="field"><label>'+(en?'E-mail':'E-posta')+'</label><input type="text" id="il_mail" placeholder="'+(en?'example@email.com':'ornek@eposta.com')+'"></div>';
@@ -786,6 +815,7 @@ function renderIletisimPage(){
   LF.forEach(function(f){if(f[1])h+='<div class="lg"><div class="k">'+esc(f[0])+'</div><div class="v">'+esc(f[1])+'</div></div>';});
   h+='</div><div class="il-note">'+esc(t.note)+'</div></div>';
   document.getElementById('iletisimBody').innerHTML=h;
+  try{_fillMapEmbed(document.querySelector('#iletisimBody .il-map'),'il-map-tag',s.mapQuery,s.firmaAdres);}catch(e){}
   var root=document.getElementById('iletisimPage');
   try{var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{root:root,threshold:.1});root.querySelectorAll('.il-rv').forEach(function(el){io.observe(el);});}catch(e){}
   setTimeout(function(){root.querySelectorAll('.il-rv').forEach(function(el){var r=el.getBoundingClientRect();if(r.top<window.innerHeight*1.15)el.classList.add('in');});},80);
@@ -2201,14 +2231,84 @@ function loadIletisimUI(){var s=SETTINGS,g=function(id){return document.getEleme
   if(g('il_mapq'))g('il_mapq').value=s.mapQuery||'';
   if(g('il_adres'))g('il_adres').value=s.firmaAdres||'';if(g('il_tel'))g('il_tel').value=s.firmaTel||'';if(g('il_email'))g('il_email').value=s.firmaEmail||'';if(g('il_wa'))g('il_wa').value=s.waNumber||'';if(g('il_calisma'))g('il_calisma').value=s.firmaCalisma||'';
   if(g('il_unvan'))g('il_unvan').value=s.firmaUnvan||'';if(g('il_yetkili'))g('il_yetkili').value=s.firmaYetkili||'';if(g('il_vd'))g('il_vd').value=s.firmaVergiDairesi||'';if(g('il_vno'))g('il_vno').value=s.firmaVergiNo||'';if(g('il_mersis'))g('il_mersis').value=s.firmaMersis||'';if(g('il_tsicil'))g('il_tsicil').value=s.firmaTicaretSicil||'';if(g('il_oda'))g('il_oda').value=s.firmaOda||'';if(g('il_kep'))g('il_kep').value=s.firmaKep||'';
+  setTimeout(function(){try{ilMapPickerInit();}catch(e){}},80);
 }
 function saveIletisimInfo(){var s=SETTINGS,v=function(id){var e=document.getElementById(id);return e?e.value:'';};
   s.mapQuery=v('il_mapq');s.firmaAdres=v('il_adres');s.firmaTel=v('il_tel');s.firmaEmail=v('il_email');var wa=(v('il_wa')||'').replace(/[^0-9]/g,'');if(wa)s.waNumber=wa;s.firmaCalisma=v('il_calisma');
   s.firmaUnvan=v('il_unvan');s.firmaYetkili=v('il_yetkili');s.firmaVergiDairesi=v('il_vd');s.firmaVergiNo=v('il_vno');s.firmaMersis=v('il_mersis');s.firmaTicaretSicil=v('il_tsicil');s.firmaOda=v('il_oda');s.firmaKep=v('il_kep');
   saveAll();try{if(document.getElementById('iletisimPage').classList.contains('on'))renderIletisimPage();}catch(e){}
+  try{if(typeof applyContactAll==='function')applyContactAll();}catch(e){} // ana sayfa haritası + iletişim bilgileri anında senkron
   var el=document.getElementById('saveToast');if(el)el.textContent='🚀 İletişim sayfası & künye güncellendi';
 }
-function ilMapPreview(){var q=encodeURIComponent(document.getElementById('il_mapq').value||'İstanbul');var w=document.getElementById('il_mapprev');var f=w.querySelector('iframe');f.src='https://maps.google.com/maps?q='+q+'&z=15&output=embed';w.style.display='block';}
+// ===== Leaflet tıkla-seç harita (admin konum seçici) — CDN'den tembel yükleme, offline'da metin girişine düşer =====
+var _ilLeaflet={map:null,marker:null,loading:false};
+function _loadLeaflet(cb){
+  if(window.L){cb();return;}
+  if(_ilLeaflet.loading){var t=setInterval(function(){if(window.L){clearInterval(t);cb();}},120);setTimeout(function(){clearInterval(t);},9000);return;}
+  _ilLeaflet.loading=true;
+  var css=document.createElement('link');css.rel='stylesheet';css.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(css);
+  var sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';
+  sc.onload=function(){_ilLeaflet.loading=false;cb();};
+  sc.onerror=function(){_ilLeaflet.loading=false;var ph=document.getElementById('il_pickmap_ph');if(ph){ph.style.display='flex';ph.innerHTML='⚠ İnteraktif harita yüklenemedi (çevrimdışı olabilirsiniz). Aşağıya adres ya da "enlem,boylam" yazıp <b>Adresten bul</b> / <b>Google önizle</b> ile devam edebilirsiniz.';}};
+  document.head.appendChild(sc);
+}
+function _parseLatLng(q){var m=String(q||'').match(/^\s*(-?\d{1,2}(?:\.\d+)?)\s*,\s*(-?\d{1,3}(?:\.\d+)?)\s*$/);if(m){var la=parseFloat(m[1]),ln=parseFloat(m[2]);if(la>=-90&&la<=90&&ln>=-180&&ln<=180)return[la,ln];}return null;}
+function ilMapPickerInit(){
+  var box=document.getElementById('il_pickmap'); if(!box)return;
+  _loadLeaflet(function(){
+    var L=window.L; if(!L)return;
+    var q=document.getElementById('il_mapq'); var ll=_parseLatLng(q&&q.value)||[41.0812,29.0094];
+    if(_ilLeaflet.map){ setTimeout(function(){try{_ilLeaflet.map.invalidateSize();_ilLeaflet.map.setView(ll,15);_ilSetMarker(ll[0],ll[1],false);}catch(e){}},60); return; }
+    var ph=document.getElementById('il_pickmap_ph'); if(ph)ph.style.display='none';
+    var map=L.map(box,{scrollWheelZoom:true,zoomControl:true}).setView(ll,15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap katkıcıları'}).addTo(map);
+    _ilLeaflet.map=map;
+    map.on('click',function(e){_ilSetMarker(e.latlng.lat,e.latlng.lng,true);});
+    _ilSetMarker(ll[0],ll[1],false);
+    [140,500,1200].forEach(function(d){setTimeout(function(){try{map.invalidateSize();}catch(e){}},d);});
+    // KURŞUN-GEÇİRMEZ: konteyner (pane açılışında) boyut kazanınca haritayı yeniden çiz
+    try{ if(window.ResizeObserver){ var ro=new ResizeObserver(function(){ if(box.clientWidth>0&&box.clientHeight>0){ try{map.invalidateSize();}catch(e){} } }); ro.observe(box); } }catch(e){}
+  });
+}
+function _ilSetMarker(lat,lng,doGeocode){
+  var L=window.L,map=_ilLeaflet.map; if(!L||!map)return;
+  if(_ilLeaflet.marker)_ilLeaflet.marker.setLatLng([lat,lng]);
+  else _ilLeaflet.marker=L.marker([lat,lng],{draggable:true}).addTo(map).on('dragend',function(ev){var p=ev.target.getLatLng();_ilSetMarker(p.lat,p.lng,true);});
+  var q=document.getElementById('il_mapq'); if(q)q.value=(+lat).toFixed(6)+','+(+lng).toFixed(6);
+  var info=document.getElementById('il_pickinfo'); if(info)info.textContent='📍 Seçilen konum: '+(+lat).toFixed(6)+', '+(+lng).toFixed(6)+(doGeocode?' — adres alınıyor…':'');
+  if(doGeocode)_ilReverseGeocode(lat,lng);
+}
+function _ilReverseGeocode(lat,lng){
+  var info=document.getElementById('il_pickinfo');
+  var esc=(typeof _brandEsc==='function')?_brandEsc:function(x){return String(x==null?'':x);};
+  fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+lat+'&lon='+lng+'&accept-language=tr',{headers:{'Accept':'application/json'}})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var name=d&&d.display_name?d.display_name:'';
+      if(name){var adr=document.getElementById('il_adres'); if(adr)adr.value=name;
+        if(info)info.innerHTML='📍 '+(+lat).toFixed(6)+', '+(+lng).toFixed(6)+' — <b>'+esc(name)+'</b> <span style="color:#5fd08a">(adres alanına yazıldı)</span>';}
+      else if(info)info.textContent='📍 '+(+lat).toFixed(6)+', '+(+lng).toFixed(6)+' (adres bulunamadı — elle girebilirsiniz)';
+    })
+    .catch(function(){if(info)info.textContent='📍 '+(+lat).toFixed(6)+', '+(+lng).toFixed(6)+' (adres servisi yanıt vermedi — koordinat kaydedildi)';});
+}
+function ilMapSearch(){
+  var q=document.getElementById('il_mapq'); var val=q?q.value.trim():''; if(!val)return;
+  var esc=(typeof _brandEsc==='function')?_brandEsc:function(x){return String(x==null?'':x);};
+  var ll=_parseLatLng(val);
+  if(ll){ if(_ilLeaflet.map)_ilLeaflet.map.setView(ll,16); _ilSetMarker(ll[0],ll[1],true); return; }
+  var info=document.getElementById('il_pickinfo'); if(info)info.textContent='🔎 Adres aranıyor…';
+  fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=tr&limit=1&accept-language=tr&q='+encodeURIComponent(val))
+    .then(function(r){return r.json();})
+    .then(function(a){
+      if(a&&a[0]){var la=parseFloat(a[0].lat),ln=parseFloat(a[0].lon);
+        if(_ilLeaflet.map)_ilLeaflet.map.setView([la,ln],16);
+        _ilSetMarker(la,ln,false);
+        var adr=document.getElementById('il_adres'); if(adr&&a[0].display_name)adr.value=a[0].display_name;
+        if(info)info.innerHTML='✅ Bulundu: <b>'+esc(a[0].display_name||val)+'</b>';}
+      else{ if(info)info.textContent='⚠ Adres bulunamadı — haritaya tıklayarak da seçebilirsiniz.'; }
+    })
+    .catch(function(){if(info)info.textContent='⚠ Arama servisi yanıt vermedi — haritaya tıklayarak seçebilirsiniz.';});
+}
 function loadSettingsUI(){
   const g=id=>document.getElementById(id);
   if(g('set_funvan'))g('set_funvan').value=SETTINGS.firmaUnvan||'';
