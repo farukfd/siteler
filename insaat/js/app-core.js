@@ -1487,6 +1487,7 @@ function mountInsaatMenu(){
   if(typeof applyStats==='function')applyStats();
   if(typeof applyCerts==='function')applyCerts();
   if(typeof applyFaqSeo==='function')applyFaqSeo();
+  if(typeof applyAuthUI==='function')applyAuthUI(); /* üyelik: mount sonrası nav 'Giriş' → isim/oturum durumu */
 }
 function initMdock(){
   var d=document.querySelector('.mdock'); if(!d||d._i)return; d._i=1;

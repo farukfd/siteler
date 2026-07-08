@@ -124,6 +124,15 @@ header.scrolled .lang-sel{color:var(--ink)}
 .gm-btn{width:100%;margin-top:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--on-accent);border:0;border-radius:10px;padding:12px;font-family:var(--body);font-weight:700;font-size:14px;cursor:pointer}
 .gm-err{color:#ff8a8a;font-size:12.5px;margin-top:8px;min-height:16px}
 .gm-note{font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.5}
+.gm-note a{text-decoration:none}
+.gm-kvkk{display:flex;gap:8px;align-items:flex-start;margin-top:12px;font-size:12px;color:var(--muted)}
+.gm-kvkk input{width:auto;margin:2px 0 0;flex:0 0 auto}
+.gm-kvkk label{margin:0;font-weight:400;font-size:12px}
+.au-prof{display:flex;align-items:center;gap:14px;padding:8px 0 2px}
+.au-av{width:52px;height:52px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-weight:800;font-size:22px;font-family:var(--head);flex:0 0 auto}
+.au-pname{font-family:var(--head);font-weight:700;font-size:17px;color:var(--on-surface)}
+.au-pmail{font-size:13px;color:var(--muted)}
+.js-giris.logged::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#19c37d;margin-right:7px;vertical-align:middle}
 /* Footer alt şerit + Powered by ProX (X yeşil kutu) */
 .fbrand{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 16px;margin-top:14px;padding:16px 0 4px;border-top:1px solid rgba(255,255,255,.09);font-size:12px;color:#8fa0bd;text-align:center}
 .fbrand .fvo{color:#b9c6dc;font-weight:600}
@@ -2252,37 +2261,89 @@ window.initProje3D=async function(){
   <div class="gm-ov" onclick="closeGiris()"></div>
   <div class="gm-card">
     <button class="gm-x" onclick="closeGiris()" aria-label="Kapat">✕</button>
-    <div class="gm-head"><span class="mark">M</span>Meridyen Yapı · Giriş</div>
-    <div class="gm-tabs"><button class="act" id="gt_personel" onclick="girisTab('personel')">Personel Girişi</button><button id="gt_musteri" onclick="girisTab('musteri')">Müşteri (Anahtar)</button></div>
-    <div class="gm-pane" id="gp_personel">
+    <div class="gm-head"><span class="mark">M</span><span id="gm_title">Meridyen Yapı · Üye Girişi</span></div>
+    <div class="gm-tabs" id="gm_authtabs"><button class="act" id="gt_login" onclick="girisTab('login')">Giriş Yap</button><button id="gt_register" onclick="girisTab('register')">Kayıt Ol</button></div>
+    <div class="gm-pane" id="gp_login">
+      <label>E-posta</label><input id="au_lemail" type="email" placeholder="ornek@eposta.com" autocomplete="email">
+      <label>Şifre</label><input id="au_lpass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')authDoLogin()">
+      <button class="gm-btn" onclick="authDoLogin()">Giriş Yap →</button>
+      <div class="gm-err" id="au_lerr"></div>
+      <div class="gm-note">Hesabın yok mu? <a href="#" onclick="girisTab('register');return false">Kayıt ol</a> · <a href="#" onclick="girisTab('personel');return false">Personel girişi</a></div>
+    </div>
+    <div class="gm-pane" id="gp_register" hidden>
+      <label>Ad Soyad</label><input id="au_rname" placeholder="Adınız Soyadınız" autocomplete="name">
+      <label>E-posta</label><input id="au_remail" type="email" placeholder="ornek@eposta.com" autocomplete="email">
+      <label>Şifre <span style="opacity:.6">(en az 6 karakter)</span></label><input id="au_rpass" type="password" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')authDoRegister()">
+      <div class="gm-kvkk"><input type="checkbox" id="au_rkvkk"><label for="au_rkvkk">KVKK Aydınlatma Metni kapsamında kişisel verilerimin işlenmesini onaylıyorum.</label></div>
+      <button class="gm-btn" onclick="authDoRegister()">Hesap Oluştur →</button>
+      <div class="gm-err" id="au_rerr"></div>
+      <div class="gm-note">Zaten üye misin? <a href="#" onclick="girisTab('login');return false">Giriş yap</a></div>
+    </div>
+    <div class="gm-pane" id="gp_profile" hidden>
+      <div class="au-prof"><div class="au-av" id="au_pav">M</div><div><div class="au-pname" id="au_pname">—</div><div class="au-pmail" id="au_pmail">—</div></div></div>
+      <div class="gm-note" style="margin-top:14px">Üye bilgileriniz yalnızca bu tarayıcıda güvenle saklanır (şifre SHA-256 ile korunur). Teklif/iletişim formları bilgilerinizle otomatik dolar.</div>
+      <button class="gm-btn" onclick="authDoLogout()" style="background:var(--surface-2);color:var(--on-surface);border:1px solid var(--line)">Çıkış Yap</button>
+    </div>
+    <div class="gm-pane" id="gp_personel" hidden>
       <p class="sub">Yetkili personel ve yönetim erişimi. Giriş sonrası yönetim paneline yönlendirilirsiniz.</p>
       <button class="gm-btn" onclick="closeGiris();openAdmin()">Yönetim Paneline Giriş →</button>
-      <div class="gm-note">Erişim, yönetici parolasıyla doğrulanır. Parola panelde saklanır; bu ekranda gösterilmez.</div>
-    </div>
-    <div class="gm-pane" id="gp_musteri" hidden>
-      <p class="sub">Proje takip anahtarınızla giriş. Anahtar, proje ekibiniz tarafından iletilir.</p>
-      <label>Erişim Anahtarı</label><input id="gm_key" placeholder="örn. PRJ-2026-XXXX">
-      <button class="gm-btn" onclick="musteriGiris()">Anahtarla Giriş →</button>
-      <div class="gm-err" id="gm_err"></div>
-      <div class="gm-note">Anahtar yalnızca tarayıcınızda kullanılır; kayıt/günlüğe yazılmaz.</div>
+      <div class="gm-note">Erişim yönetici parolasıyla doğrulanır. <a href="#" onclick="girisTab('login');return false">← Üye girişi</a></div>
     </div>
   </div>
 </div>
 <script>
-function openGiris(){var m=document.getElementById('girisModal');if(m)m.classList.add('on');}
+/* ===== Gerçek üyelik sistemi (client-side, localStorage; şifre SHA-256+salt). Üretimde sunucu/ProX ile beslenir. ===== */
+var AUTH_USERS='insaat_users_v1', AUTH_SESS='insaat_session_v1';
+async function _authHash(pw,salt){var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(salt+'::'+pw));return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');}
+function _authUsers(){try{return JSON.parse(localStorage.getItem(AUTH_USERS)||'{}');}catch(e){return {};}}
+function _authSaveUsers(u){try{localStorage.setItem(AUTH_USERS,JSON.stringify(u));}catch(e){}}
+function authSession(){try{return JSON.parse(localStorage.getItem(AUTH_SESS)||'null');}catch(e){return null;}}
+function _authSetSession(s){try{if(s)localStorage.setItem(AUTH_SESS,JSON.stringify(s));else localStorage.removeItem(AUTH_SESS);}catch(e){}applyAuthUI();}
+async function authRegister(name,email,pw){
+  name=(name||'').trim();email=(email||'').trim().toLowerCase();
+  if(name.length<2)return{err:'Lütfen ad soyad girin.'};
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return{err:'Geçerli bir e-posta girin.'};
+  if((pw||'').length<6)return{err:'Şifre en az 6 karakter olmalı.'};
+  var users=_authUsers();if(users[email])return{err:'Bu e-posta zaten kayıtlı. Giriş yapın.'};
+  var salt='s'+Date.now().toString(36)+Math.random().toString(36).slice(2);
+  users[email]={name:name,email:email,salt:salt,hash:await _authHash(pw,salt),createdAt:new Date().toISOString()};
+  _authSaveUsers(users);_authSetSession({email:email,name:name,ts:Date.now()});return{ok:true};
+}
+async function authLogin(email,pw){
+  email=(email||'').trim().toLowerCase();var u=_authUsers()[email];
+  if(!u)return{err:'Bu e-postayla kayıt bulunamadı. Önce kayıt olun.'};
+  if(await _authHash(pw,u.salt)!==u.hash)return{err:'E-posta veya şifre hatalı.'};
+  _authSetSession({email:email,name:u.name,ts:Date.now()});return{ok:true};
+}
+function authLogout(){_authSetSession(null);}
+function applyAuthUI(){
+  var s=authSession();
+  document.querySelectorAll('.js-giris').forEach(function(g){
+    if(s){g.textContent=(s.name||'').split(' ')[0]||'Hesabım';g.classList.add('logged');g.setAttribute('title',s.name+' · '+s.email);}
+    else{g.textContent=(typeof MENU!=='undefined'&&MENU.giris)||'Giriş';g.classList.remove('logged');g.removeAttribute('title');}
+  });
+  _authPrefill();
+}
+function _authPrefill(){var s=authSession();if(!s)return;[['f_ad','f_mail'],['il_ad','il_mail']].forEach(function(p){var n=document.getElementById(p[0]),m=document.getElementById(p[1]);if(n&&!n.value)n.value=s.name;if(m&&!m.value)m.value=s.email;});}
+function openGiris(){var m=document.getElementById('girisModal');if(!m)return;m.classList.add('on');var s=authSession();if(s){_authFillProfile();girisTab('profile');}else girisTab('login');}
 function closeGiris(){var m=document.getElementById('girisModal');if(m)m.classList.remove('on');}
+function _authFillProfile(){var s=authSession();if(!s)return;var n=document.getElementById('au_pname'),e=document.getElementById('au_pmail'),a=document.getElementById('au_pav');if(n)n.textContent=s.name;if(e)e.textContent=s.email;if(a)a.textContent=((s.name||'M').trim()[0]||'M').toUpperCase();}
 function girisTab(t){
-  var pB=document.getElementById('gt_personel'),mB=document.getElementById('gt_musteri');
-  var pP=document.getElementById('gp_personel'),mP=document.getElementById('gp_musteri');
-  if(pB)pB.classList.toggle('act',t==='personel'); if(mB)mB.classList.toggle('act',t==='musteri');
-  if(pP)pP.hidden=(t!=='personel'); if(mP)mP.hidden=(t!=='musteri');
+  ['login','register','profile','personel'].forEach(function(p){var el=document.getElementById('gp_'+p);if(el)el.hidden=(p!==t);});
+  var lb=document.getElementById('gt_login'),rb=document.getElementById('gt_register'),tabs=document.getElementById('gm_authtabs');
+  if(lb)lb.classList.toggle('act',t==='login');if(rb)rb.classList.toggle('act',t==='register');
+  if(tabs)tabs.style.display=(t==='login'||t==='register')?'flex':'none';
+  var tt=document.getElementById('gm_title');
+  if(tt)tt.textContent=(t==='register')?'Meridyen Yapı · Kayıt Ol':(t==='profile')?'Hesabım':(t==='personel')?'Meridyen Yapı · Personel':'Meridyen Yapı · Üye Girişi';
 }
-function musteriGiris(){
-  var i=document.getElementById('gm_key'),e=document.getElementById('gm_err');var k=(i&&i.value||'').trim();
-  if(!k){e.style.color='#ff8a8a';e.textContent='⚠ Lütfen erişim anahtarınızı girin.';return;}
-  e.style.color='#7bdca0';e.textContent='✓ Anahtar alındı. Proje takip erişimi yakında aktifleşecek.';
-}
+async function authDoLogin(){var err=document.getElementById('au_lerr');err.style.color='#ff8a8a';var r=await authLogin((document.getElementById('au_lemail')||{}).value,(document.getElementById('au_lpass')||{}).value);if(r.err){err.textContent='⚠ '+r.err;return;}err.style.color='#7bdca0';err.textContent='✓ Giriş başarılı, hoş geldiniz.';setTimeout(closeGiris,650);}
+async function authDoRegister(){var err=document.getElementById('au_rerr');err.style.color='#ff8a8a';var kv=document.getElementById('au_rkvkk');if(kv&&!kv.checked){err.textContent='⚠ Lütfen KVKK onayı verin.';return;}var r=await authRegister((document.getElementById('au_rname')||{}).value,(document.getElementById('au_remail')||{}).value,(document.getElementById('au_rpass')||{}).value);if(r.err){err.textContent='⚠ '+r.err;return;}err.style.color='#7bdca0';err.textContent='✓ Hesabınız oluşturuldu, giriş yapıldı.';setTimeout(closeGiris,750);}
+function authDoLogout(){authLogout();closeGiris();}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGiris();});
+try{applyAuthUI();}catch(e){}
+addEventListener('DOMContentLoaded',function(){try{applyAuthUI();}catch(e){}});
+/* menü mount'u geç çalışabilir → oturum durumunu birkaç kez yeniden uygula (nav 'Giriş'→isim) */
+[350,900,1800].forEach(function(d){setTimeout(function(){try{applyAuthUI();}catch(e){}},d);});
 </script>
 
 <script src="js/app-ui.js"></script>
