@@ -176,10 +176,6 @@ a{color:inherit;text-decoration:none}
 .eyebrow::before{content:"";width:30px;height:1px;background:linear-gradient(90deg,var(--accent),transparent)}
 /* grain */
 .grain{position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:.045;mix-blend-mode:soft-light;filter:url(#grainf)}
-/* cursor */
-.cur{position:fixed;top:0;left:0;width:34px;height:34px;border:1px solid var(--accent);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:9999;transition:width .25s,height .25s,background .25s,opacity .3s;mix-blend-mode:difference}
-.cur.big{width:64px;height:64px;background:rgba(255,122,47,.12)}
-@media(pointer:coarse){.cur{display:none}}
 /* progress */
 .prog{position:fixed;left:0;top:0;height:2px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));z-index:100}
 /* header */
@@ -295,7 +291,6 @@ nav.main a:hover::after,nav.main a.on::after{transform:scaleX(1);transform-origi
 <body>
 <svg width="0" height="0"><filter id="grainf"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter></svg>
 <div class="grain"></div>
-<div class="cur" id="cur"></div>
 <div class="prog" id="prog"></div>
 
 <header id="hdr"><div class="wrap bar">
@@ -780,6 +775,10 @@ document.addEventListener('DOMContentLoaded',function(){try{nbHarvest();nbLang(N
   if(!window.gsap){ document.documentElement.classList.remove('has-js'); return; }
   // FAILSAFE: 4sn içinde animasyonlar başlamazsa içeriği görünür kıl (garanti)
   setTimeout(function(){ if(!window.__animOK) document.documentElement.classList.remove('has-js'); },4000);
+  // KURŞUN-GEÇİRMEZ: reveal'leri (ve içindeki opacity:0 kalmış alt-elemanları) elle görünür yap.
+  function pjForceReveals(){ document.querySelectorAll('.reveal').forEach(function(el){el.style.opacity='1';el.style.transform='none';
+    el.querySelectorAll('*').forEach(function(k){ if(k.style && getComputedStyle(k).opacity==='0'){k.style.opacity='1';k.style.transform='none';} }); }); }
+  setTimeout(pjForceReveals,2600); // 2.6sn sonra hiçbir içerik (alt-eleman dâhil) gizli kalamaz
   gsap.registerPlugin(ScrollTrigger);
 
   // smooth scroll
@@ -791,16 +790,12 @@ document.addEventListener('DOMContentLoaded',function(){try{nbHarvest();nbLang(N
   addEventListener('scroll',function(){var y=scrollY; hdr.classList.toggle('scrolled',y>24);
     prog.style.width=(y/(document.body.scrollHeight-innerHeight)*100)+'%';},{passive:true});
 
-  // custom cursor + magnetic
+  // magnetik butonlar (imleç kaldırıldı — normal fare imleci kullanılır)
   if(FINE && !RM){
-    var cur=document.getElementById('cur');
-    var cx=gsap.quickTo(cur,'x',{duration:.18,ease:'power3'}), cy=gsap.quickTo(cur,'y',{duration:.18,ease:'power3'});
-    addEventListener('mousemove',function(e){cx(e.clientX);cy(e.clientY);});
-    document.querySelectorAll('[data-cur],a,button').forEach(function(el){el.addEventListener('mouseenter',function(){cur.classList.add('big');});el.addEventListener('mouseleave',function(){cur.classList.remove('big');});});
     document.querySelectorAll('.magnet').forEach(function(el){var xt=gsap.quickTo(el,'x',{duration:.4,ease:'power3'}),yt=gsap.quickTo(el,'y',{duration:.4,ease:'power3'});
       el.addEventListener('mousemove',function(e){var r=el.getBoundingClientRect();xt((e.clientX-r.left-r.width/2)*.4);yt((e.clientY-r.top-r.height/2)*.4);});
       el.addEventListener('mouseleave',function(){xt(0);yt(0);});});
-  } else { var c=document.getElementById('cur'); if(c)c.style.display='none'; }
+  }
 
   document.fonts.ready.then(function(){
     window.__animOK=true; // animasyon motoru çalıştı → failsafe iptal
