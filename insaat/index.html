@@ -605,6 +605,38 @@ header.scrolled .lang-sel{color:var(--ink)}
   <footer class="insaatFooter"></footer>
 </div>
 
+<!-- ===== ProX ASİSTAN — TAM SAYFA YAPAY ZEKA ===== -->
+<div id="proxAsistanPage">
+  <header class="pp-hdr"><div class="wrap bar">
+    <a class="logo" href="./" onclick="insHome(event)"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
+    <nav class="main insaatNav"></nav>
+    <div class="nav-cta insaatCta"></div>
+  </div></header>
+  <div class="mnav" id="mnavAI" onclick="if(event.target.id==='mnavAI')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
+  <div class="pa-body"><div class="wrap pa-grid">
+    <aside class="pa-side">
+      <div class="pa-brand"><span class="prox-logo">Pro<span class="prox-x">X</span></span> <b>Asistan</b></div>
+      <p class="pa-lead">Meridyen Yapı yapay zeka danışmanı. İnşaat, kentsel dönüşüm, kat karşılığı, fiyat ve bölge analizi hakkında sorun — ProX veri ağıyla yanıtlar.</p>
+      <div class="pa-caps">
+        <div class="pa-cap">🏗️ Anahtar teslim · tadilat · kentsel dönüşüm süreçleri</div>
+        <div class="pa-cap">📊 Bölge m² fiyatı · yatırım skoru · değer trendi</div>
+        <div class="pa-cap">📄 Fizibilite · kat karşılığı pay · maliyet tahmini</div>
+      </div>
+      <div class="pa-suggests" id="paSuggests"></div>
+      <div class="pa-poweredby"><span class="prox-logo">Pro<span class="prox-x">X</span></span> yapay zekâsıyla güçlendirildi</div>
+    </aside>
+    <section class="pa-chat">
+      <div class="pa-log" id="paLog"></div>
+      <form class="pa-form" onsubmit="return paSend(event)">
+        <textarea id="paInput" rows="1" placeholder="Sorunuzu yazın… (ör. Beşiktaş'ta kat karşılığı oranı ne olur?)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();paSend(event)}"></textarea>
+        <button type="submit" class="pa-send" aria-label="Gönder">➤</button>
+      </form>
+      <div class="pa-disc">ProX Asistan bilgilendirme amaçlıdır; kesin teklif için ekibimizle görüşün.</div>
+    </section>
+  </div></div>
+  <footer class="insaatFooter"></footer>
+</div>
+
 <!-- ===== KURUMSAL / YASAL DOKÜMAN SAYFASI ===== -->
 <div id="docPage">
   <header id="hdr8" class="pp-hdr"><div class="wrap bar">

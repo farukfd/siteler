@@ -749,6 +749,48 @@ function closeIletisimPage(){
   document.getElementById('iletisimPage').classList.remove('on');document.body.style.overflow='';
   /* URL: temiz router yönetir */
 }
+/* ===== ProX Asistan — tam sayfa yapay zeka (canlı: POST /api/v1/tenant/prox/ai; tenant key ile, çevrimdışı fallback) ===== */
+var _paMsgs=[], _paBusy=false;
+var PA_SUGGESTS=['Kat karşılığında müteahhit oranı nasıl belirlenir?','Kentsel dönüşüm süreci ne kadar sürer?','Beşiktaş bölgesinde ortalama m² fiyatı nedir?','Anahtar teslim proje maliyeti neye göre değişir?'];
+function _paEsc(x){return (typeof _brandEsc==='function')?_brandEsc(x):String(x==null?'':x);}
+function renderProxAsistanPage(){
+  var sug=document.getElementById('paSuggests');
+  if(sug&&!sug.dataset.done){sug.innerHTML=PA_SUGGESTS.map(function(s){return '<span class="pa-chip" onclick="paAsk(this.textContent)">'+_paEsc(s)+'</span>';}).join('');sug.dataset.done='1';}
+  if(!_paMsgs.length)_paPush('bot','Merhaba! Ben ProX Asistan — Meridyen Yapı’nın yapay zekâ danışmanı. İnşaat, kentsel dönüşüm, kat karşılığı, tadilat, bölge ve m² fiyat analizi hakkında size yardımcı olabilirim. Nasıl yardımcı olayım?');
+}
+function _paPush(role,text){_paMsgs.push({role:role,text:text});_paRender();}
+function _paRender(){
+  var log=document.getElementById('paLog');if(!log)return;
+  log.innerHTML=_paMsgs.map(function(m){
+    var me=m.role==='me';
+    var body=m.typing?'<span class="pa-typing"><i></i><i></i><i></i></span>':_paEsc(m.text);
+    return '<div class="pa-msg '+(me?'me':'bot')+'"><div class="av">'+(me?'S':'X')+'</div><div class="pa-bubble">'+body+'</div></div>';
+  }).join('');
+  log.scrollTop=log.scrollHeight;
+}
+function paAsk(q){var i=document.getElementById('paInput');if(i)i.value=q;paSend();}
+async function paSend(ev){
+  if(ev&&ev.preventDefault)ev.preventDefault();
+  if(_paBusy)return false;
+  var inp=document.getElementById('paInput');var q=((inp&&inp.value)||'').trim();if(!q)return false;
+  inp.value='';inp.style.height='';_paPush('me',q);
+  _paBusy=true;var btn=document.querySelector('#proxAsistanPage .pa-send');if(btn)btn.disabled=true;
+  _paMsgs.push({role:'bot',typing:true});_paRender();
+  var persona=(window.EMLAK_TENANT&&EMLAK_TENANT.proxPersona)||'construction';
+  var sys='Sen Meridyen Yapı kurumsal inşaat firmasının ProX yapay zekâ asistanısın. Türkçe, kısa, net, profesyonel ve yardımsever yanıt ver. Uzmanlık: anahtar teslim inşaat, kentsel dönüşüm, kat karşılığı, tadilat, bölge/m² fiyat analizi, fizibilite, yatırım. Kesin fiyat/taahhüt verme; tahmini bilgi ver, gerektiğinde ücretsiz keşif öner. İnşaat dışı/uygunsuz sorularda kibarca konuya yönlendir.';
+  try{
+    var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:persona,context:'default',prompt:sys,message:q}});
+    _paMsgs=_paMsgs.filter(function(m){return !m.typing;});
+    var ans=(r&&(r.answer||(r.data&&r.data.answer)))||'';
+    if(!ans||r&&r.fallback)ans=_paFallback();
+    _paPush('bot',ans);
+  }catch(e){_paMsgs=_paMsgs.filter(function(m){return !m.typing;});_paPush('bot',_paFallback());}
+  _paBusy=false;if(btn)btn.disabled=false;
+  return false;
+}
+function _paFallback(){return 'Şu an canlı yapay zekâ servisine ulaşılamıyor gibi görünüyor. Sorunuzu aldım — dilerseniz “Ücretsiz Keşif” formundan bize ulaşın, uzman ekibimiz 24 saat içinde net yanıt versin. WhatsApp hattımızdan da yazabilirsiniz.';}
+function openProxAsistanPage(){var ov=document.getElementById('proxAsistanPage');if(!ov)return;renderProxAsistanPage();ov.classList.add('on');try{_insSyncUrl('asistan');}catch(e){}document.body.style.overflow='hidden';ov.scrollTop=0;setTimeout(function(){var i=document.getElementById('paInput');if(i)i.focus();},90);}
+function closeProxAsistanPage(){var ov=document.getElementById('proxAsistanPage');if(ov)ov.classList.remove('on');document.body.style.overflow='';}
 var DOC={
  "vizyon":{t:"Vizyon & Misyon", h:"<h2>Vizyonumuz</h2><p>1986'dan bu yana İstanbul'un mimari hafızasına değer katan Meridyen Yapı İnşaat A.Ş. olarak vizyonumuz; mühendislik disiplinini estetik anlayışla buluşturarak, nesiller boyu ayakta kalacak, güvenli ve sürdürülebilir yaşam alanları inşa etmektir. Ülkemizin gelişen şehircilik anlayışına öncülük etmeyi, deprem güvenliğini bir tercih değil temel bir zorunluluk olarak konumlandırmayı ve inşa ettiğimiz her yapıda kalıcı bir değer yaratmayı hedefliyoruz. Yerel köklerimizden aldığımız güçle uluslararası standartlarda projeler üretmeyi sürdürüyoruz.</p><h2>Misyonumuz</h2><p>Misyonumuz; kentsel dönüşümden anahtar teslim konut projelerine, kat karşılığı iş birliklerinden kurumsal tadilata kadar üstlendiğimiz her işi; şeffaflık, zamanında teslim ve kusursuz işçilik ilkeleriyle hayata geçirmektir. Yatırımcılarımızın, iş ortaklarımızın ve son kullanıcılarımızın güvenini korumayı en değerli sermayemiz sayıyoruz. Çalışanlarımızın gelişimini destekleyen, iş güvenliğini önceleyen ve çevreye saygılı bir üretim kültürünü tüm süreçlerimize yerleştiriyoruz.</p><h2>Değerlerimiz</h2><ul><li><b>Güven:</b> Verdiğimiz her sözü yazılı taahhüdümüz kadar bağlayıcı sayar, uzun soluklu ilişkiler kurarız.</li><li><b>Dürüstlük:</b> Fiyatlandırmadan malzeme seçimine kadar her aşamada açık ve doğru bilgi paylaşırız.</li><li><b>İş Güvenliği:</b> Şantiyelerimizde 'sıfır kaza' hedefiyle çalışır, insan hayatını her şeyin üzerinde tutarız.</li><li><b>Sürdürülebilirlik:</b> Enerji verimli, çevreye duyarlı ve gelecek nesillere karşı sorumlu bir üretim benimseriz.</li><li><b>Mühendislik Disiplini:</b> Her kararı hesaba, standarda ve bilimsel yönteme dayandırırız.</li><li><b>Şeffaflık:</b> Proje süreçlerini iş ortaklarımızla düzenli olarak ve eksiksiz biçimde paylaşırız.</li></ul>"},
  "yonetim":{t:"Yönetim Kadrosu", h:"<h2>Yönetim Kadromuz</h2><p>Meridyen Yapı İnşaat A.Ş., inşaat sektöründe onlarca yıllık deneyime sahip, alanında uzman bir yönetim kadrosu tarafından yönetilmektedir. Ekibimiz; mühendislik, mimarlık ve kurumsal yönetim disiplinlerini bir araya getirerek projelerimizi en yüksek standartlarda hayata geçirmektedir.</p><h3>Yönetim Kurulu Başkanı — Mehmet Şükrü Aydın</h3><p>Kurucumuz ve Yönetim Kurulu Başkanımız, şirketimizin stratejik yönünü belirler ve kurumsal değerlerimizin bekçiliğini yapar. Otuz yılı aşkın sektör tecrübesiyle Meridyen Yapı'yı güvenilir bir marka haline getirmiştir.</p><h3>Genel Müdür — Elif Nurhan Demirtaş</h3><p>Şirketin günlük operasyonlarını ve ticari stratejilerini yöneten Genel Müdürümüz, kurumsal büyüme ve iş ortaklıklarının sürdürülebilir biçimde geliştirilmesinden sorumludur.</p><h3>Teknik Koordinatör / İnşaat Müdürü — Hakan Yılmaz Öztürk</h3><p>Sahadaki tüm inşaat süreçlerinin planlanması, denetimi ve zamanında teslimi Teknik Koordinatörümüzün sorumluluğundadır. Kalite ve iş güvenliği standartlarının şantiyede eksiksiz uygulanmasını gözetir.</p><h3>Mimari Tasarım Direktörü — Selin Beyza Korkmaz</h3><p>Projelerimizin estetik kimliğini ve fonksiyonel tasarımını yöneten Direktörümüz, modern mimari anlayışı ile kullanıcı konforunu bir araya getiren yaşam alanları tasarlar.</p><h3>Mali İşler & İdari Direktör — Ahmet Kerem Sarıoğlu</h3><p>Şirketin mali yönetimi, bütçeleme, insan kaynakları ve idari süreçlerinin koordinasyonundan sorumludur. Şeffaf ve hesap verebilir bir mali yapının sürdürülmesini sağlar.</p>"},
@@ -1363,10 +1405,10 @@ function openInsaatMobile(){var ov=document.querySelector('#projelerPage.on,#hiz
 const INSAAT_NAV=`<a href="hizmetlerimiz.html" onclick="return goPage('hizmetler',event)">Hizmetlerimiz</a>`
   +`<a href="neden-biz.html">Neden <span class="nb-x">?</span> Biz</a>`
   +`<a href="projelerimiz.html" onclick="return goPage('projeler',event)">Projeler</a>`
-  +`<a href="bolge.html" onclick="return goPage('bolge',event)">Bölge Zekası</a>`;
+  +`<a href="bolge.html" onclick="return goPage('bolge',event)">Bölge Zekası</a>`
+  +`<a href="index.html#asistan" onclick="return goPage('asistan',event)" class="nav-asistan"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a>`;
 const INSAAT_CTA=`<a class="nav-wa" href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg></a>`
   +`<button class="btn btn-primary" onclick="openTeklif()">Ücretsiz Keşif</button>`
-  +`<div class="lang-sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><select class="lang-sel" aria-label="Dil / Language" onchange="applyLang(this.value)"><option value="tr">TR</option><option value="en">EN</option></select></div>`
   +`<a class="btn btn-ghost js-giris" href="#giris" onclick="openGiris();return false">Giriş</a>`
   +`<button class="burger" onclick="openInsaatMobile()" aria-label="Menü"><span></span><span></span><span></span></button>`;
 const INSAAT_MNAV=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><b style="font-family:var(--head)">Menü</b><button style="background:none;border:0;font-size:22px;cursor:pointer;color:inherit" onclick="this.closest('.mnav').classList.remove('open')" aria-label="Kapat">✕</button></div>`
@@ -1374,8 +1416,10 @@ const INSAAT_MNAV=`<div style="display:flex;justify-content:space-between;align-
   +`<a href="neden-biz.html">Neden <span class="nb-x">?</span> Biz</a>`
   +`<a href="projelerimiz.html" onclick="document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});return goPage('projeler',event)">Projeler</a>`
   +`<a href="bolge.html" onclick="document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});return goPage('bolge',event)">Bölge Zekası</a>`
+  +`<a href="index.html#asistan" onclick="document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});return goPage('asistan',event)"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a>`
   +`<a href="#" onclick="event.preventDefault();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openGiris()">Giriş</a>`
-  +`<button class="btn btn-primary" style="margin-top:14px;justify-content:center" onclick="document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openTeklif()">Ücretsiz Keşif</button>`;
+  +`<button class="btn btn-primary" style="margin-top:14px;justify-content:center" onclick="document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openTeklif()">Ücretsiz Keşif</button>`
+  +`<div class="mnav-lang"><span>Dil / Language</span><select class="lang-sel" aria-label="Dil / Language" onchange="applyLang(this.value)"><option value="tr">TR</option><option value="en">EN</option></select></div>`;
 const INSAAT_FOOTER=`<div class="wrap">
   <div class="fgrid">
     <div><div class="lo">Meridyen<span class="lo2"> Yapı</span></div>
@@ -1399,10 +1443,12 @@ const INSAAT_FOOTER=`<div class="wrap">
       <a href="tel:+902120000000" class="js-tel">+90 212 000 00 00</a>
       <a href="mailto:info@meridyenyapi.com">info@meridyenyapi.com</a>
       <a href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer">💬 WhatsApp Hattı</a>
+      <a href="index.html#asistan" onclick="return goPage('asistan',event)" style="display:inline-flex;align-items:center;gap:6px"><span class="prox-logo" style="font-size:.95em">Pro<span class="prox-x">X</span></span> Asistan · 7/24 yapay zekâ</a>
     </div>
   </div>
   <div class="fbot">
     <div class="fcopy">© 2026 Meridyen Yapı A.Ş. · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span></div>
+    <div class="flang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><select class="lang-sel" aria-label="Dil / Language" onchange="applyLang(this.value)"><option value="tr">TR</option><option value="en">EN</option></select></div>
     <a class="fprox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a>
   </div>
 </div>`;
@@ -2491,7 +2537,8 @@ var _INS_OV={
   projeler:{t:'Projeler',el:'projelerPage',fn:function(){openProjelerPage();}},
   bolge:{t:'Bölge Zekası',el:'bolgePage',fn:function(){openBolgePage();}},
   iletisim:{t:'İletişim',el:'iletisimPage',fn:function(){openIletisimPage();}},
-  'soru-cevap':{t:'Soru-Cevap',el:'faqPage',fn:function(){openFaqPage();}}
+  'soru-cevap':{t:'Soru-Cevap',el:'faqPage',fn:function(){openFaqPage();}},
+  asistan:{t:'ProX Asistan',el:'proxAsistanPage',fn:function(){openProxAsistanPage();}}
 };
 function _insBrand(){try{var e=document.querySelector('.js-logo');return (e&&e.textContent&&e.textContent.trim())||'Meridyen Yapı';}catch(_){return 'Meridyen Yapı';}}
 function _insCloseDom(){try{if(typeof closeAllInsaatOverlays==='function')closeAllInsaatOverlays();}catch(e){}}
@@ -2510,7 +2557,7 @@ function checkHash(){if(location.hash==='#admin')showAdmin();else if((location.h
 function insBoot(){
   var target=null;
   try{var s=sessionStorage.getItem('_ins_ov');if(s){sessionStorage.removeItem('_ins_ov');if(_INS_OV[s])target=s;}}catch(e){}
-  if(!target){try{var hs=(location.hash||'').replace(/^#/,'');var hm={hizmetler:'hizmetler',projeler:'projeler',bolge:'bolge',iletisim:'iletisim',sss:'soru-cevap','soru-cevap':'soru-cevap',faq:'soru-cevap'};if(hm[hs]&&_INS_OV[hm[hs]]){history.replaceState({},'',_INS_BASE);target=hm[hs];}}catch(e){}}
+  if(!target){try{var hs=(location.hash||'').replace(/^#/,'');var hm={hizmetler:'hizmetler',projeler:'projeler',bolge:'bolge',iletisim:'iletisim',sss:'soru-cevap','soru-cevap':'soru-cevap',faq:'soru-cevap',asistan:'asistan',ai:'asistan'};if(hm[hs]&&_INS_OV[hm[hs]]){history.replaceState({},'',_INS_BASE);target=hm[hs];}}catch(e){}}
   if(!target){try{var seg=decodeURIComponent(location.pathname.slice(_INS_BASE.length)).replace(/\/$/,'').replace(/^index\.html$/,'');if(_INS_OV[seg])target=seg;}catch(e){}}
   if(target){try{document.documentElement.classList.add('ov-boot');}catch(e){}try{if(location.pathname!==_INS_BASE+target)history.replaceState({p:target},'',_INS_BASE+target);}catch(e){}_insApply(target);var _rm=function(){try{document.documentElement.classList.remove('ov-boot');}catch(e){}};try{requestAnimationFrame(function(){requestAnimationFrame(_rm);});}catch(e){}setTimeout(_rm,120);}
   checkHash();

@@ -1125,6 +1125,55 @@ body.cookie-on .wa{bottom:86px}
 /* ==== İLETİŞİM SAYFASI ==== */
 #iletisimPage{position:fixed;inset:0;z-index:115;background:var(--bg);overflow-y:auto;display:none;color:var(--ink)}
 #iletisimPage.on{display:block;animation:pdIn .3s ease}
+/* ===== ProX marka logosu (X yeşil kutu — gerçek logo tarzı) ===== */
+.prox-logo{font-family:var(--head);font-weight:800;letter-spacing:.2px;color:var(--ink);white-space:nowrap;display:inline-flex;align-items:center}
+.prox-x{display:inline-flex;align-items:center;justify-content:center;background:#19c37d;color:#04140c;border-radius:6px;padding:.02em .28em;margin-left:2px;line-height:1}
+/* ===== ProX Asistan — tam sayfa yapay zeka ===== */
+#proxAsistanPage{position:fixed;inset:0;z-index:115;background:var(--bg);overflow-y:auto;display:none;color:var(--ink)}
+#proxAsistanPage.on{display:block;animation:pdIn .3s ease}
+.pa-body{padding:clamp(22px,3.5vw,40px) 0 56px}
+.pa-grid{display:grid;grid-template-columns:330px 1fr;gap:26px;align-items:start}
+.pa-side{position:sticky;top:96px}
+.pa-brand{font-size:25px;display:flex;align-items:center;gap:8px;margin:0 0 12px}
+.pa-brand b{font-family:var(--head);font-weight:700}
+.pa-lead{color:var(--muted);line-height:1.62;margin:0 0 18px;font-size:14.5px}
+.pa-caps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.pa-cap{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 13px;font-size:13.5px;color:var(--ink)}
+.pa-suggests{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.pa-chip{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:12.5px;cursor:pointer;transition:.18s;color:var(--ink)}
+.pa-chip:hover{border-color:#19c37d;color:#19c37d}
+.pa-poweredby{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.pa-chat{display:flex;flex-direction:column;height:calc(100vh - 200px);min-height:460px;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.pa-log{flex:1;overflow-y:auto;padding:22px;display:flex;flex-direction:column;gap:16px}
+.pa-msg{display:flex;gap:12px;max-width:88%}
+.pa-msg .av{flex:0 0 34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;font-family:var(--head)}
+.pa-msg.bot .av{background:#19c37d;color:#04140c}
+.pa-msg.me{align-self:flex-end;flex-direction:row-reverse}
+.pa-msg.me .av{background:var(--accent);color:#160a03}
+.pa-bubble{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px 15px;line-height:1.6;font-size:14.5px;white-space:pre-wrap;word-break:break-word}
+.pa-msg.me .pa-bubble{background:rgba(255,122,47,.12);border-color:rgba(255,122,47,.3)}
+.pa-form{display:flex;gap:10px;padding:14px;border-top:1px solid var(--line);background:var(--bg)}
+.pa-form textarea{flex:1;resize:none;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--ink);font:inherit;font-size:14.5px;max-height:130px;line-height:1.5}
+.pa-form textarea:focus{outline:none;border-color:#19c37d}
+.pa-send{flex:0 0 46px;height:46px;border:0;border-radius:12px;background:#19c37d;color:#04140c;font-size:18px;cursor:pointer;transition:.18s;display:flex;align-items:center;justify-content:center}
+.pa-send:hover{filter:brightness(1.08)}
+.pa-send:disabled{opacity:.5;cursor:default}
+.pa-disc{font-size:11.5px;color:var(--muted);text-align:center;padding:9px 14px 0}
+.pa-typing{display:inline-flex;gap:4px;padding:3px 0}
+.pa-typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:paBlink 1.2s infinite}
+.pa-typing i:nth-child(2){animation-delay:.2s}.pa-typing i:nth-child(3){animation-delay:.4s}
+@keyframes paBlink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+.nav-asistan{display:inline-flex;align-items:center}
+.nav-asistan .prox-x{font-size:.88em}
+/* Footer dil seçici (fbot ortası) */
+.flang{display:inline-flex;align-items:center;gap:7px;color:var(--muted)}
+.flang svg{width:16px;height:16px;flex:0 0 16px}
+.flang select{background:var(--surface-2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:5px 8px;font:inherit;font-size:13px;cursor:pointer}
+.flang select:focus{outline:none;border-color:var(--accent)}
+/* Mobil menü dil seçici */
+.mnav-lang{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+.mnav-lang select{background:var(--surface-2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 10px;font:inherit;cursor:pointer}
+@media(max-width:860px){.pa-grid{grid-template-columns:1fr}.pa-side{position:static}.pa-chat{height:auto;min-height:66vh}}
 .il-body{max-width:var(--maxw);margin:0 auto;padding:46px 5vw 96px}
 .il-rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .75s cubic-bezier(.2,.7,.2,1)}
 .il-rv.in{opacity:1;transform:none}
