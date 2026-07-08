@@ -749,47 +749,68 @@ function closeIletisimPage(){
   document.getElementById('iletisimPage').classList.remove('on');document.body.style.overflow='';
   /* URL: temiz router yönetir */
 }
-/* ===== ProX Asistan — tam sayfa yapay zeka (canlı: POST /api/v1/tenant/prox/ai; tenant key ile, çevrimdışı fallback) ===== */
-var _paMsgs=[], _paBusy=false;
-var PA_SUGGESTS=['Kat karşılığında müteahhit oranı nasıl belirlenir?','Kentsel dönüşüm süreci ne kadar sürer?','Beşiktaş bölgesinde ortalama m² fiyatı nedir?','Anahtar teslim proje maliyeti neye göre değişir?'];
+/* ===== ProX Asistan — bağımsız tam-ekran kilitli AI uygulaması + konuşma geçmişi (localStorage) ===== */
+var _paMsgs=[], _paBusy=false, _paConvos=[], _paCurId=null;
+var PA_STORE='prox_asistan_convos_v1';
+var PA_SUGGESTS=['Kat karşılığında müteahhit oranı nasıl belirlenir?','Kentsel dönüşüm süreci ne kadar sürer?','İstanbul’da ortalama m² inşaat maliyeti nedir?','Anahtar teslim proje süreci nasıl işler?'];
+var PA_GREET='Meridyen Yapı yapay zekâ danışmanına hoş geldiniz. İnşaat, kentsel dönüşüm, kat karşılığı, tadilat, bölge ve m² fiyat analizi hakkında sorularınızı yanıtlarım.';
+var PA_SYS='Sen Meridyen Yapı kurumsal inşaat firmasının ProX yapay zekâ asistanısın. Türkçe, kısa, net, profesyonel ve yardımsever yanıt ver. Uzmanlık: anahtar teslim inşaat, kentsel dönüşüm, kat karşılığı, tadilat, bölge/m² fiyat analizi, fizibilite, yatırım. Kesin fiyat/taahhüt verme; tahmini bilgi ver, gerektiğinde ücretsiz keşif öner. İnşaat dışı/uygunsuz sorularda kibarca konuya yönlendir.';
 function _paEsc(x){return (typeof _brandEsc==='function')?_brandEsc(x):String(x==null?'':x);}
-function renderProxAsistanPage(){
-  var sug=document.getElementById('paSuggests');
-  if(sug&&!sug.dataset.done){sug.innerHTML=PA_SUGGESTS.map(function(s){return '<span class="pa-chip" onclick="paAsk(this.textContent)">'+_paEsc(s)+'</span>';}).join('');sug.dataset.done='1';}
-  if(!_paMsgs.length)_paPush('bot','Merhaba! Ben ProX Asistan — Meridyen Yapı’nın yapay zekâ danışmanı. İnşaat, kentsel dönüşüm, kat karşılığı, tadilat, bölge ve m² fiyat analizi hakkında size yardımcı olabilirim. Nasıl yardımcı olayım?');
+function _paLoadStore(){try{_paConvos=JSON.parse(localStorage.getItem(PA_STORE)||'[]');if(!Array.isArray(_paConvos))_paConvos=[];}catch(e){_paConvos=[];}}
+function _paSaveStore(){try{localStorage.setItem(PA_STORE,JSON.stringify(_paConvos.slice(0,50)));}catch(e){}}
+function _paCur(){for(var i=0;i<_paConvos.length;i++){if(_paConvos[i].id===_paCurId)return _paConvos[i];}return null;}
+function _paSyncCur(){var c=_paCur();if(!c)return;c.msgs=_paMsgs.filter(function(m){return !m.typing;});c.ts=Date.now();var f=null;for(var i=0;i<c.msgs.length;i++){if(c.msgs[i].role==='me'){f=c.msgs[i];break;}}if(f)c.title=f.text.slice(0,42);_paSaveStore();}
+function renderProxAsistanPage(){_paRenderHistory();_paRenderLog();_paSetTitle();}
+function _paRenderHistory(){
+  var h=document.getElementById('paHistory');if(!h)return;
+  if(!_paConvos.length){h.innerHTML='<div class="pa-hist-empty">Henüz konuşma yok — yeni bir sohbet başlatın.</div>';return;}
+  h.innerHTML=_paConvos.map(function(c){
+    return '<div class="pa-hist'+(c.id===_paCurId?' act':'')+'" onclick="paLoadConvo(\''+c.id+'\')"><span class="t">'+_paEsc(c.title||'Sohbet')+'</span><button class="del" onclick="paDelConvo(\''+c.id+'\',event)" aria-label="Sil">🗑</button></div>';
+  }).join('');
 }
-function _paPush(role,text){_paMsgs.push({role:role,text:text});_paRender();}
-function _paRender(){
+function _paRenderLog(){
   var log=document.getElementById('paLog');if(!log)return;
-  log.innerHTML=_paMsgs.map(function(m){
+  var real=_paMsgs.filter(function(m){return !m.typing;});
+  if(!real.length){
+    log.innerHTML='<div class="pa-welcome"><div class="w-logo">💬</div><h2><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</h2><p>'+_paEsc(PA_GREET)+'</p><div class="pa-suggests">'+PA_SUGGESTS.map(function(s){return '<div class="pa-chip" onclick="paAsk(this.textContent)">'+_paEsc(s)+'</div>';}).join('')+'</div></div>';
+    return;
+  }
+  log.innerHTML='<div class="pa-log-inner">'+_paMsgs.map(function(m){
     var me=m.role==='me';
     var body=m.typing?'<span class="pa-typing"><i></i><i></i><i></i></span>':_paEsc(m.text);
     return '<div class="pa-msg '+(me?'me':'bot')+'"><div class="av">'+(me?'S':'X')+'</div><div class="pa-bubble">'+body+'</div></div>';
-  }).join('');
+  }).join('')+'</div>';
   log.scrollTop=log.scrollHeight;
 }
+function _paSetTitle(){var t=document.getElementById('paTitle');if(!t)return;var c=_paCur();t.innerHTML=(c&&c.title)?_paEsc(c.title):'<span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan';}
+function paNewChat(){_paCurId=null;_paMsgs=[];_paRenderLog();_paRenderHistory();_paSetTitle();var sb=document.getElementById('paSb');if(sb)sb.classList.remove('open');var i=document.getElementById('paInput');if(i){i.value='';i.focus();}}
+function paLoadConvo(id){var c=null;for(var i=0;i<_paConvos.length;i++){if(_paConvos[i].id===id)c=_paConvos[i];}if(!c)return;_paCurId=id;_paMsgs=(c.msgs||[]).slice();_paRenderLog();_paRenderHistory();_paSetTitle();var sb=document.getElementById('paSb');if(sb)sb.classList.remove('open');}
+function paDelConvo(id,ev){if(ev){ev.stopPropagation();ev.preventDefault();}_paConvos=_paConvos.filter(function(c){return c.id!==id;});_paSaveStore();if(_paCurId===id)paNewChat();else _paRenderHistory();}
 function paAsk(q){var i=document.getElementById('paInput');if(i)i.value=q;paSend();}
 async function paSend(ev){
   if(ev&&ev.preventDefault)ev.preventDefault();
   if(_paBusy)return false;
   var inp=document.getElementById('paInput');var q=((inp&&inp.value)||'').trim();if(!q)return false;
-  inp.value='';inp.style.height='';_paPush('me',q);
+  inp.value='';inp.style.height='';
+  if(!_paCurId){_paCurId='c'+Date.now();_paConvos.unshift({id:_paCurId,title:q.slice(0,42),msgs:[],ts:Date.now()});}
+  _paMsgs.push({role:'me',text:q});_paRenderLog();_paSyncCur();_paRenderHistory();_paSetTitle();
   _paBusy=true;var btn=document.querySelector('#proxAsistanPage .pa-send');if(btn)btn.disabled=true;
-  _paMsgs.push({role:'bot',typing:true});_paRender();
+  _paMsgs.push({role:'bot',typing:true});_paRenderLog();
   var persona=(window.EMLAK_TENANT&&EMLAK_TENANT.proxPersona)||'construction';
-  var sys='Sen Meridyen Yapı kurumsal inşaat firmasının ProX yapay zekâ asistanısın. Türkçe, kısa, net, profesyonel ve yardımsever yanıt ver. Uzmanlık: anahtar teslim inşaat, kentsel dönüşüm, kat karşılığı, tadilat, bölge/m² fiyat analizi, fizibilite, yatırım. Kesin fiyat/taahhüt verme; tahmini bilgi ver, gerektiğinde ücretsiz keşif öner. İnşaat dışı/uygunsuz sorularda kibarca konuya yönlendir.';
   try{
-    var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:persona,context:'default',prompt:sys,message:q}});
+    var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:persona,context:'default',prompt:PA_SYS,message:q}});
     _paMsgs=_paMsgs.filter(function(m){return !m.typing;});
     var ans=(r&&(r.answer||(r.data&&r.data.answer)))||'';
-    if(!ans||r&&r.fallback)ans=_paFallback();
-    _paPush('bot',ans);
-  }catch(e){_paMsgs=_paMsgs.filter(function(m){return !m.typing;});_paPush('bot',_paFallback());}
+    if(!ans||(r&&r.fallback))ans=_paFallback();
+    _paMsgs.push({role:'bot',text:ans});
+  }catch(e){_paMsgs=_paMsgs.filter(function(m){return !m.typing;});_paMsgs.push({role:'bot',text:_paFallback()});}
+  _paRenderLog();_paSyncCur();
   _paBusy=false;if(btn)btn.disabled=false;
   return false;
 }
 function _paFallback(){return 'Şu an canlı yapay zekâ servisine ulaşılamıyor gibi görünüyor. Sorunuzu aldım — dilerseniz “Ücretsiz Keşif” formundan bize ulaşın, uzman ekibimiz 24 saat içinde net yanıt versin. WhatsApp hattımızdan da yazabilirsiniz.';}
-function openProxAsistanPage(){var ov=document.getElementById('proxAsistanPage');if(!ov)return;renderProxAsistanPage();ov.classList.add('on');try{_insSyncUrl('asistan');}catch(e){}document.body.style.overflow='hidden';ov.scrollTop=0;setTimeout(function(){var i=document.getElementById('paInput');if(i)i.focus();},90);}
+function paExit(ev){if(ev&&ev.preventDefault)ev.preventDefault();closeProxAsistanPage();try{insHome(ev);}catch(e){try{location.href='./';}catch(_){}}return false;}
+function openProxAsistanPage(){var ov=document.getElementById('proxAsistanPage');if(!ov)return;_paLoadStore();renderProxAsistanPage();ov.classList.add('on');try{_insSyncUrl('asistan');}catch(e){}document.body.style.overflow='hidden';setTimeout(function(){var i=document.getElementById('paInput');if(i)i.focus();},90);}
 function closeProxAsistanPage(){var ov=document.getElementById('proxAsistanPage');if(ov)ov.classList.remove('on');document.body.style.overflow='';}
 var DOC={
  "vizyon":{t:"Vizyon & Misyon", h:"<h2>Vizyonumuz</h2><p>1986'dan bu yana İstanbul'un mimari hafızasına değer katan Meridyen Yapı İnşaat A.Ş. olarak vizyonumuz; mühendislik disiplinini estetik anlayışla buluşturarak, nesiller boyu ayakta kalacak, güvenli ve sürdürülebilir yaşam alanları inşa etmektir. Ülkemizin gelişen şehircilik anlayışına öncülük etmeyi, deprem güvenliğini bir tercih değil temel bir zorunluluk olarak konumlandırmayı ve inşa ettiğimiz her yapıda kalıcı bir değer yaratmayı hedefliyoruz. Yerel köklerimizden aldığımız güçle uluslararası standartlarda projeler üretmeyi sürdürüyoruz.</p><h2>Misyonumuz</h2><p>Misyonumuz; kentsel dönüşümden anahtar teslim konut projelerine, kat karşılığı iş birliklerinden kurumsal tadilata kadar üstlendiğimiz her işi; şeffaflık, zamanında teslim ve kusursuz işçilik ilkeleriyle hayata geçirmektir. Yatırımcılarımızın, iş ortaklarımızın ve son kullanıcılarımızın güvenini korumayı en değerli sermayemiz sayıyoruz. Çalışanlarımızın gelişimini destekleyen, iş güvenliğini önceleyen ve çevreye saygılı bir üretim kültürünü tüm süreçlerimize yerleştiriyoruz.</p><h2>Değerlerimiz</h2><ul><li><b>Güven:</b> Verdiğimiz her sözü yazılı taahhüdümüz kadar bağlayıcı sayar, uzun soluklu ilişkiler kurarız.</li><li><b>Dürüstlük:</b> Fiyatlandırmadan malzeme seçimine kadar her aşamada açık ve doğru bilgi paylaşırız.</li><li><b>İş Güvenliği:</b> Şantiyelerimizde 'sıfır kaza' hedefiyle çalışır, insan hayatını her şeyin üzerinde tutarız.</li><li><b>Sürdürülebilirlik:</b> Enerji verimli, çevreye duyarlı ve gelecek nesillere karşı sorumlu bir üretim benimseriz.</li><li><b>Mühendislik Disiplini:</b> Her kararı hesaba, standarda ve bilimsel yönteme dayandırırız.</li><li><b>Şeffaflık:</b> Proje süreçlerini iş ortaklarımızla düzenli olarak ve eksiksiz biçimde paylaşırız.</li></ul>"},
