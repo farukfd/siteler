@@ -75,7 +75,7 @@
 .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--on-accent);box-shadow:var(--shadow-sm)}
 .btn-primary:hover{transform:translateY(-2px)}
 .btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff}
-header#hdr{position:fixed;top:0;left:0;right:0;z-index:60;transition:.25s;background:transparent}
+header#hdr{position:sticky;top:0;z-index:60;transition:.25s;background:transparent}
 header#hdr .bar{display:flex;align-items:center;justify-content:space-between;height:72px}
 header#hdr .logo{display:flex;align-items:center;gap:11px;font-family:var(--head);font-weight:800;font-size:22px;letter-spacing:-.02em;color:#fff}
 header#hdr .logo .mark{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-size:19px;box-shadow:var(--shadow-sm)}
@@ -138,7 +138,7 @@ footer.insaatFooter .fbot{border-top:1px solid rgba(255,255,255,.1);padding:18px
 .fvo{color:#b9c6dc;font-weight:600}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
 h1,h2,h3,h4{font-family:var(--head);margin:0;line-height:1.05;letter-spacing:-.025em;font-weight:600}
 a{color:inherit;text-decoration:none}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
@@ -299,7 +299,7 @@ table.bz-table .scorepill{display:inline-flex;align-items:center;justify-content
     <button class="btn btn-primary" onclick="openTeklif()">Ücretsiz Keşif</button>
     <div class="lang-sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg><select class="lang-sel" aria-label="Dil / Language" onchange="bzLang(this.value)"><option value="tr">TR</option><option value="en">EN</option></select></div>
     <a class="btn btn-ghost js-giris" href="#giris" onclick="event.preventDefault();openGiris()">Giriş</a>
-    <button class="burger" onclick="document.getElementById('mnav').classList.add('open')"><span></span><span></span><span></span></button>
+    <button class="burger" onclick="document.getElementById('mnav').classList.add('open')" aria-label="Menü"><span></span><span></span><span></span></button>
   </div>
 </div></header>
 <div class="mnav" id="mnav" onclick="if(event.target.id==='mnav')this.classList.remove('open')"><div class="panel">

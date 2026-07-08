@@ -54,7 +54,7 @@ header.scrolled{background:var(--surface);box-shadow:0 6px 24px -16px rgba(13,30
 header.scrolled .logo{color:var(--ink)}
 header.scrolled nav.main a{color:var(--muted)}header.scrolled nav.main a:hover{color:var(--ink)}
 header.scrolled .btn-ghost{border-color:rgba(16,26,43,.22);color:var(--ink)}
-.burger{display:none;background:none;border:0;cursor:pointer;width:42px;height:42px}
+.burger{display:none;background:none;border:0;cursor:pointer;width:44px;height:44px}
 .burger span{display:block;height:2px;background:#fff;margin:5px 0;transition:.2s}
 header.scrolled .burger span{background:var(--ink)}
 @media(max-width:980px){nav.main,.nav-cta .btn-ghost{display:none}.burger{display:block}}
