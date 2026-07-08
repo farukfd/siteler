@@ -753,8 +753,8 @@ function closeIletisimPage(){
 var _paMsgs=[], _paBusy=false, _paConvos=[], _paCurId=null;
 var PA_STORE='prox_asistan_convos_v1';
 var PA_SUGGESTS=['Kat karşılığında müteahhit oranı nasıl belirlenir?','Kentsel dönüşüm süreci ne kadar sürer?','İstanbul’da ortalama m² inşaat maliyeti nedir?','Anahtar teslim proje süreci nasıl işler?'];
-var PA_GREET='Meridyen Yapı yapay zekâ danışmanına hoş geldiniz. İnşaat, kentsel dönüşüm, kat karşılığı, tadilat, bölge ve m² fiyat analizi hakkında sorularınızı yanıtlarım.';
-var PA_SYS='Sen Meridyen Yapı kurumsal inşaat firmasının ProX yapay zekâ asistanısın. Türkçe, kısa, net, profesyonel ve yardımsever yanıt ver. Uzmanlık: anahtar teslim inşaat, kentsel dönüşüm, kat karşılığı, tadilat, bölge/m² fiyat analizi, fizibilite, yatırım. Kesin fiyat/taahhüt verme; tahmini bilgi ver, gerektiğinde ücretsiz keşif öner. İnşaat dışı/uygunsuz sorularda kibarca konuya yönlendir.';
+var PA_GREET='Meridyen Yapı akıllı danışmanına hoş geldiniz. Yanıtlarım, Türkiye’nin en kapsamlı emlak veritabanı ProX’un +1 milyar doğrulanmış veri noktasına dayanır. İnşaat, kentsel dönüşüm, kat karşılığı, tadilat, bölge ve m² fiyat analizini gerçek verilerle yanıtlarım.';
+var PA_SYS='Sen Meridyen Yapı kurumsal inşaat firmasının akıllı danışmanısın. Yanıtların ProX emlak veritabanına dayanır: ProX Türkiye’nin en büyük, en kapsamlı emlak veritabanıdır; +1 milyardan fazla GERÇEK ve DOĞRULANMIŞ veri noktasıyla çalışır. ProX bir yapay zekâ veya veri üreticisi DEĞİLDİR — veri uydurmazsın, yalnızca doğrulanmış gerçek verilere dayanırsın. Türkçe, kısa, net, profesyonel yanıt ver. Uzmanlık: anahtar teslim inşaat, kentsel dönüşüm, kat karşılığı, tadilat, bölge/m² fiyat analizi, fizibilite, yatırım. Kesin fiyat/taahhüt verme; tahmini bilgi ver, gerektiğinde ücretsiz keşif öner. Konu dışı/uygunsuz sorularda kibarca yönlendir.';
 function _paEsc(x){return (typeof _brandEsc==='function')?_brandEsc(x):String(x==null?'':x);}
 function _paLoadStore(){try{_paConvos=JSON.parse(localStorage.getItem(PA_STORE)||'[]');if(!Array.isArray(_paConvos))_paConvos=[];}catch(e){_paConvos=[];}}
 function _paSaveStore(){try{localStorage.setItem(PA_STORE,JSON.stringify(_paConvos.slice(0,50)));}catch(e){}}
@@ -808,7 +808,7 @@ async function paSend(ev){
   _paBusy=false;if(btn)btn.disabled=false;
   return false;
 }
-function _paFallback(){return 'Şu an canlı yapay zekâ servisine ulaşılamıyor gibi görünüyor. Sorunuzu aldım — dilerseniz “Ücretsiz Keşif” formundan bize ulaşın, uzman ekibimiz 24 saat içinde net yanıt versin. WhatsApp hattımızdan da yazabilirsiniz.';}
+function _paFallback(){return 'Şu an ProX veri servisine ulaşılamıyor gibi görünüyor. Sorunuzu aldım — dilerseniz “Ücretsiz Keşif” formundan bize ulaşın, uzman ekibimiz 24 saat içinde net yanıt versin. WhatsApp hattımızdan da yazabilirsiniz.';}
 function paExit(ev){if(ev&&ev.preventDefault)ev.preventDefault();closeProxAsistanPage();try{insHome(ev);}catch(e){try{location.href='./';}catch(_){}}return false;}
 function openProxAsistanPage(){var ov=document.getElementById('proxAsistanPage');if(!ov)return;_paLoadStore();renderProxAsistanPage();ov.classList.add('on');try{_insSyncUrl('asistan');}catch(e){}document.body.style.overflow='hidden';setTimeout(function(){var i=document.getElementById('paInput');if(i)i.focus();},90);}
 function closeProxAsistanPage(){var ov=document.getElementById('proxAsistanPage');if(ov)ov.classList.remove('on');document.body.style.overflow='';}
@@ -1421,7 +1421,7 @@ const SAAS_THEMES={
 function initSaaSTheme(){const color=(typeof saasResolve==='function'&&saasResolve('themeColor'))||SAAS_CONFIG.themeColor;const t=SAAS_THEMES[color]||SAAS_THEMES['Turuncu'],s=document.documentElement.style;s.setProperty('--accent',t.accent);s.setProperty('--accent-2',t.accent2);}
 window.saasSetTheme=function(name){SAAS_CONFIG.themeColor=name;initSaaSTheme();};
 /* 2) GLOBAL DİNAMİK MENÜ — 6 statik navbar yerine tek kaynak */
-function closeAllInsaatOverlays(){['closeProjelerPage','closeHizmetlerPage','closeSvcDetail','closeProjectDetail','closeBolgePage','closeIletisimPage','closeDoc','closeFaqPage'].forEach(fn=>{try{if(typeof window[fn]==='function')window[fn]();}catch(e){}});document.body.style.overflow='';}
+function closeAllInsaatOverlays(){['closeProjelerPage','closeHizmetlerPage','closeSvcDetail','closeProjectDetail','closeBolgePage','closeIletisimPage','closeDoc','closeFaqPage','closeProxAsistanPage'].forEach(fn=>{try{if(typeof window[fn]==='function')window[fn]();}catch(e){}});document.body.style.overflow='';}
 function openInsaatMobile(){var ov=document.querySelector('#projelerPage.on,#hizmetlerPage.on,#bolgePage.on,#svcDetail.on,#pjDetail.on,#iletisimPage.on,#docPage.on,#faqPage.on');var m=ov?ov.querySelector('.mnav'):document.getElementById('mnav');if(m)m.classList.add('open');}
 const INSAAT_NAV=`<a href="hizmetlerimiz.html" onclick="return goPage('hizmetler',event)">Hizmetlerimiz</a>`
   +`<a href="neden-biz.html">Neden <span class="nb-x">?</span> Biz</a>`
@@ -1464,7 +1464,7 @@ const INSAAT_FOOTER=`<div class="wrap">
       <a href="tel:+902120000000" class="js-tel">+90 212 000 00 00</a>
       <a href="mailto:info@meridyenyapi.com">info@meridyenyapi.com</a>
       <a href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer">💬 WhatsApp Hattı</a>
-      <a href="index.html#asistan" onclick="return goPage('asistan',event)" style="display:inline-flex;align-items:center;gap:6px"><span class="prox-logo" style="font-size:.95em">Pro<span class="prox-x">X</span></span> Asistan · 7/24 yapay zekâ</a>
+      <a href="index.html#asistan" onclick="return goPage('asistan',event)" style="display:inline-flex;align-items:center;gap:6px"><span class="prox-logo" style="font-size:.95em">Pro<span class="prox-x">X</span></span> Asistan · +1 milyar doğrulanmış emlak verisi</a>
     </div>
   </div>
   <div class="fbot">
