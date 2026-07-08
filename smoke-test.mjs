@@ -125,7 +125,7 @@ ok('insaat: temiz URL router (goPage/insBoot)', insCore.includes('function goPag
 ok('insaat: _INS_OV route tablosu', insCore.includes('_INS_OV') && insCore.includes("'soru-cevap'"));
 ok('insaat: nav temiz href (# overlay hash yok)', !/href="#(hizmetler|projeler|bolge|iletisim|sss)"/.test(insHtml) && !/href="#(hizmetler|projeler|bolge|iletisim|sss)"/.test(insNb));
 ok('insaat: neden-biz kırık insaat.html linki yok', !/(href=|location\.href=)['"]insaat\.html/.test(insNb));
-ok('insaat: yükleyici stub dizinleri', ['hizmetler','projeler','bolge','iletisim','soru-cevap'].every(s=>{try{return readFileSync('insaat/'+s+'/index.html','utf8').includes("_ins_ov")}catch(e){return false}}));
+ok('insaat: yükleyici stub dizinleri (yönlendirme)', ['hizmetler','projeler','bolge','iletisim','soru-cevap'].every(s=>{try{var h=readFileSync('insaat/'+s+'/index.html','utf8');return h.includes('location.replace')&&(h.includes('_ins_ov')||h.includes('.html'))}catch(e){return false}}));
 /* ---- 3a3) insaat GERÇEK SEO sayfaları (indekslenebilir) ---- */
 for(const pg of ['hizmetlerimiz','projelerimiz','soru-cevap','bolge']){
   let h=''; try{h=readFileSync('insaat/'+pg+'.html','utf8');}catch(e){}

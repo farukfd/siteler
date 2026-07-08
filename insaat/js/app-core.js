@@ -147,7 +147,7 @@ let CONTRACTS=[
    il:'İstanbul',ilce:'Beşiktaş',mahalle:'Bebek',ada:'220',parsel:'14',arsaM2:1200,payArsa:0,payMuteahhit:0,sureAy:24,gecikmeTL:'80.000',tarih:'2025-06-01',durum:'aktif',ozelMetin:''},
 ];
 let SETTINGS={
-  admUser:'admin', admPass:'meridyen2026',
+  admUser:'admin', admPass:'1234',
   googleMapsKey:'', googleAnalytics:'', googleSiteVerif:'', recaptchaKey:'',
   waNumber:'905001234567', metaTitle:'Meridyen Yapı – Kurumsal İnşaat', metaDesc:'38 yıllık güven, anahtar teslim mühendislik.',
   firmaUnvan:'Meridyen Yapı İnşaat A.Ş.', firmaVergiNo:'1234567890', firmaMersis:'0123456789012345',
@@ -1880,7 +1880,7 @@ function buildSwatches(){const el=document.getElementById('admSwatches');if(!el)
 function openAdmin(){try{history.replaceState(null,'','#admin');}catch(e){}showAdmin();}
 function showAdmin(){document.getElementById('adminApp').classList.add('show');document.body.style.overflow='hidden';buildSwatches();}
 function closeAdmin(){document.getElementById('adminApp').classList.remove('show');document.body.style.overflow='';if(location.hash==='#admin')try{history.replaceState(null,'',location.pathname);}catch(e){};}
-function admLogin(){const p=document.getElementById('admPass').value;const u=document.getElementById('admUser').value;if(p===(SETTINGS&&SETTINGS.admPass||'meridyen2026')){document.getElementById('adminApp').classList.add('authed');document.getElementById('admErr').style.display='none';refreshAdmin();}else{document.getElementById('admErr').style.display='block';}}
+function admLogin(){const p=document.getElementById('admPass').value;const u=document.getElementById('admUser').value;if(p===(SETTINGS&&SETTINGS.admPass||'1234')){document.getElementById('adminApp').classList.add('authed');document.getElementById('admErr').style.display='none';refreshAdmin();}else{document.getElementById('admErr').style.display='block';}}
 function admLogout(){document.getElementById('adminApp').classList.remove('authed');document.getElementById('admPass').value='';}
 function admNav(pane,btn){document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('on'));document.getElementById('pane-'+pane).classList.add('on');document.querySelectorAll('.adm-side button[data-pane]').forEach(b=>b.classList.remove('on'));btn.classList.add('on');if(pane==='leads')renderLeads();if(pane==='dash')renderKpi();if(pane==='arsa')renderArsa();if(pane==='contracts')renderContracts();if(pane==='settings')loadSettingsUI();if(pane==='brand')loadBrandUI();if(pane==='menutext')loadMenuUI();if(pane==='ads')loadAdsUI();if(pane==='diller')renderDiller();if(pane==='iletisim')loadIletisimUI();if(pane==='faq')renderFaqAdmin();if(pane==='social')loadSocialUI();if(pane==='stats')loadStatsUI();if(pane==='proje3d'&&window.initProje3D)setTimeout(()=>window.initProje3D(),60);if(pane!=='proje3d'&&window.__p3hide)window.__p3hide();}
 function refreshAdmin(){renderKpi();admPjList();admSvcList();renderLeads();try{renderArsa();renderContracts();loadSettingsUI();loadBrandUI();loadMenuUI();loadAdsUI();loadSocialUI();}catch(e){}}
@@ -2562,26 +2562,31 @@ var _INS_OV={
   'soru-cevap':{t:'Soru-Cevap',el:'faqPage',fn:function(){openFaqPage();}},
   asistan:{t:'ProX Asistan',el:'proxAsistanPage',fn:function(){openProxAsistanPage();}}
 };
+/* Overlay slug → GERÇEK statik .html sayfası (varsa). Böylece nav overlay açarken URL gerçek
+   sayfaya işaret eder; doğrudan erişim/reload'da stub yerine gerçek sayfa yüklenir → RELOAD SIÇRAMASI YOK. */
+var _INS_FILE={hizmetler:'hizmetlerimiz.html',projeler:'projelerimiz.html',bolge:'bolge.html','soru-cevap':'soru-cevap.html'};
+function _insUrl(slug){return _INS_BASE+(_INS_FILE[slug]||slug);}
+function _insSlug(seg){seg=(seg||'').replace(/\/$/,'');if(seg===''||seg==='index.html')return '';for(var k in _INS_FILE){if(_INS_FILE[k]===seg)return k;}return _INS_OV[seg]?seg:'';}
 function _insBrand(){try{var e=document.querySelector('.js-logo');return (e&&e.textContent&&e.textContent.trim())||'Meridyen Yapı';}catch(_){return 'Meridyen Yapı';}}
 function _insCloseDom(){try{if(typeof closeAllInsaatOverlays==='function')closeAllInsaatOverlays();}catch(e){}}
 /* HER openXPage sonunda çağrılır. Nav'dan gelince (routing=false) temiz URL push + başlık;
    router/boot/geçiş içinden gelince (routing=true) URL zaten doğru → dokunma. Onclick MİGRASYONU GEREKMEZ. */
-function _insSyncUrl(slug){if(_insRouting)return;var v=_INS_OV[slug];if(!v)return;if(_insBaseTitle===null)_insBaseTitle=document.title;try{if(location.pathname!==_INS_BASE+slug)history.pushState({p:slug},'',_INS_BASE+slug);}catch(e){}try{document.title=v.t+' · '+_insBrand();}catch(e){}}
+function _insSyncUrl(slug){if(_insRouting)return;var v=_INS_OV[slug];if(!v)return;if(_insBaseTitle===null)_insBaseTitle=document.title;try{if(location.pathname!==_insUrl(slug))history.pushState({p:slug},'',_insUrl(slug));}catch(e){}try{document.title=v.t+' · '+_insBrand();}catch(e){}}
 function _insApply(slug){var v=_INS_OV[slug];if(!v)return;if(_insBaseTitle===null)_insBaseTitle=document.title;_insRouting=true;try{_insCloseDom();v.fn();document.title=v.t+' · '+_insBrand();}catch(e){}_insRouting=false;}
 function goPage(slug,ev){ev=ev||window.event;var v=_INS_OV[slug];if(!v)return true;
   /* overlay bu sayfada yoksa (statik SEO sayfası) → engelleme, href ile normal git */
   if(v.el&&!document.getElementById(v.el))return true;
-  try{if(ev&&ev.preventDefault)ev.preventDefault();}catch(e){}_insApply(slug);try{if(location.pathname!==_INS_BASE+slug)history.pushState({p:slug},'',_INS_BASE+slug);}catch(e){}return false;}
+  try{if(ev&&ev.preventDefault)ev.preventDefault();}catch(e){}_insApply(slug);try{if(location.pathname!==_insUrl(slug))history.pushState({p:slug},'',_insUrl(slug));}catch(e){}return false;}
 function insHome(ev){ev=ev||window.event;try{if(ev&&ev.preventDefault)ev.preventDefault();}catch(e){}if(_insBaseTitle!==null){document.title=_insBaseTitle;_insBaseTitle=null;}try{if(location.pathname!==_INS_BASE&&!/\/index\.html$/.test(location.pathname))history.pushState({},'',_INS_BASE);}catch(e){}_insRouting=true;try{_insCloseDom();}catch(e){}_insRouting=false;return false;}
-function insRoute(){var seg=decodeURIComponent(location.pathname.slice(_INS_BASE.length)).replace(/\/$/,'').replace(/^index\.html$/,'');if(_INS_OV[seg])_insApply(seg);else{_insRouting=true;try{_insCloseDom();}catch(e){}_insRouting=false;if(_insBaseTitle!==null){document.title=_insBaseTitle;_insBaseTitle=null;}}}
+function insRoute(){var slug=_insSlug(decodeURIComponent(location.pathname.slice(_INS_BASE.length)));if(slug&&_INS_OV[slug])_insApply(slug);else{_insRouting=true;try{_insCloseDom();}catch(e){}_insRouting=false;if(_insBaseTitle!==null){document.title=_insBaseTitle;_insBaseTitle=null;}}}
 /* legacy #admin / #doc- (SEO-dışı modallar) hâlâ hash ile */
 function checkHash(){if(location.hash==='#admin')showAdmin();else if((location.hash||'').indexOf('#doc-')===0)openDoc(location.hash.slice(5));}
 function insBoot(){
   var target=null;
   try{var s=sessionStorage.getItem('_ins_ov');if(s){sessionStorage.removeItem('_ins_ov');if(_INS_OV[s])target=s;}}catch(e){}
   if(!target){try{var hs=(location.hash||'').replace(/^#/,'');var hm={hizmetler:'hizmetler',projeler:'projeler',bolge:'bolge',iletisim:'iletisim',sss:'soru-cevap','soru-cevap':'soru-cevap',faq:'soru-cevap',asistan:'asistan',ai:'asistan'};if(hm[hs]&&_INS_OV[hm[hs]]){history.replaceState({},'',_INS_BASE);target=hm[hs];}}catch(e){}}
-  if(!target){try{var seg=decodeURIComponent(location.pathname.slice(_INS_BASE.length)).replace(/\/$/,'').replace(/^index\.html$/,'');if(_INS_OV[seg])target=seg;}catch(e){}}
-  if(target){try{document.documentElement.classList.add('ov-boot');}catch(e){}try{if(location.pathname!==_INS_BASE+target)history.replaceState({p:target},'',_INS_BASE+target);}catch(e){}_insApply(target);var _rm=function(){try{document.documentElement.classList.remove('ov-boot');}catch(e){}};try{requestAnimationFrame(function(){requestAnimationFrame(_rm);});}catch(e){}setTimeout(_rm,120);}
+  if(!target){try{var slug=_insSlug(decodeURIComponent(location.pathname.slice(_INS_BASE.length)));if(slug&&_INS_OV[slug])target=slug;}catch(e){}}
+  if(target){try{document.documentElement.classList.add('ov-boot');}catch(e){}try{if(location.pathname!==_insUrl(target))history.replaceState({p:target},'',_insUrl(target));}catch(e){}_insApply(target);var _rm=function(){try{document.documentElement.classList.remove('ov-boot');}catch(e){}};try{requestAnimationFrame(function(){requestAnimationFrame(_rm);});}catch(e){}setTimeout(_rm,120);}
   checkHash();
 }
 window.addEventListener('popstate',insRoute);
