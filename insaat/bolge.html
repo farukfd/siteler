@@ -657,13 +657,84 @@ function bzScroll(id){var el=document.getElementById(id);if(el)el.scrollIntoView
 })();
 /* bölge zekası i18n (TR/EN) — kaynak-metin anahtar */
 var BZ_LANG='tr'; try{BZ_LANG=localStorage.getItem('meridyen_lang')||'tr';}catch(e){}
-var BZ_SEL='.bz-hero .eyebrow,.bz-hero h1,.bz-lead,.sh-txt h2,.sh-txt p,.bz-card h3,.bz-card p.note,.bz-mcard h3,.bz-mcard p,.bz-fresh,.bz-finalcta .eyebrow,.bz-finalcta h2,.bz-finalcta p,.bz-stat .k,.bz-fig .fl,.bz-mcard,table.bz-table th';
+var BZ_SEL='.bz-crumb a,.bz-crumb b,.bz-hero .eyebrow,.bz-hero h1,.bz-lead,.bz-hero .actions .btn,.bz-hero .actions .bz-ghost,.bz-stat .k,.sh-txt h2,.sh-txt p,.bz-card h3,.bz-card .loc,.bz-fig .fl,.bz-spark .lbl span,.bz-score .l,.bz-card p.note,.bz-tag,.cardcta .btn,table.bz-table th,.bz-table td.reg,.bz-mcard h3,.bz-mcard p,.bz-fresh,.bz-finalcta .eyebrow,.bz-finalcta h2,.bz-finalcta p,.bz-finalcta .actions .btn,.bz-finalcta .actions .bz-ghost';
 var BZ_EN={
+ /* hero + breadcrumb */
+ "Ana Sayfa":"Home",
+ "Bölge Zekası":"Regional Intelligence",
  "İnşaat Değer Endeksi":"Construction Value Index",
- "Bölge bölge değer profili":"Value profile, region by region",
- "Endeksi tek tabloda karşılaştırın":"Compare the index in one table",
+ "Bölge Zekası —İnşaat Değer Endeksi":"Regional Intelligence —<br><span class=\"mk\">Construction Value Index</span>",
+ "İl, ilçe ve mahalle bazında konut ve inşaat değerini tek bir yerde görün. Ortalama m² fiyatı, son 5 yıllık değer trendi, yatırım skoru, yaşam kalitesi ve deprem/fay analizi — hepsi ProX endeksinin 372M+ kayıtlık veri havuzundan. Kararınızı duyguyla değil veriyle verin: kazancı da riski de önceden görün.":"See residential and construction value by province, district and neighbourhood in one place. Average price per m², the 5-year value trend, an investment score, quality of life and earthquake/fault analysis — all from the 372M+ record data pool of the ProX index. Decide with <b style=\"color:var(--ink)\">data</b>, not emotion: see both the gain and the risk in advance.",
+ "Bölge Endeksini Görün →":"See the Regional Index →",
  "Endeks nasıl hesaplanır?":"How is the index calculated?",
- "Bölgeniz için canlı analiz":"Live analysis for your region"
+ /* hero strip descriptions */
+ "Detaylı endeks profili":"Detailed index profile",
+ "Kayıtlık ProX veri havuzu":"record ProX data pool",
+ "Kapsam (genişleyen)":"Coverage (expanding)",
+ "Değer trendi derinliği":"Value trend depth",
+ /* section 01 head */
+ "Bölge bölge değer profili":"Value profile, region by region",
+ "Her bölge için ortalama m² fiyatı, 5 yıllık değer değişimi, yatırım skoru ve konum riskleri. Rakamlar temsilîdir; canlıda ProX endeksiyle güncellenir.":"For each region: average price per m², 5-year value change, investment score and location risks. Figures are illustrative; live, they are updated with the ProX index.",
+ /* region cards — figure labels & score */
+ "Ortalama m²":"Average m²",
+ "5 Yıl Değişim":"5-yr change",
+ "Skor":"Score",
+ "m² Trendi":"m² Trend",
+ /* region card locations */
+ "Beşiktaş / İstanbul":"Beşiktaş / İstanbul",
+ "Ataşehir / İstanbul":"Ataşehir / İstanbul",
+ "Çekmeköy / İstanbul":"Çekmeköy / İstanbul",
+ "Büyükçekmece / İstanbul":"Büyükçekmece / İstanbul",
+ /* Levent */
+ "Boğaz siluetli prestij mahallesi. En yüksek yatırım skoru ve güçlü tapu devir artışı (+%18). Girişte metrekare yüksek olsa da likidite ve talep (92/100) katmerli değer koruması sağlar.":"A prestige neighbourhood with a Bosphorus skyline. The highest investment score and strong growth in title transfers (+18%). Although the entry price per m² is high, liquidity and demand (92/100) provide layered value protection.",
+ "Fay hattına ~19 km · orta mesafe":"~19 km to the fault line · mid distance",
+ "Metro M2 + metrobüs · çok güçlü":"Metro M2 + metrobus · very strong",
+ "Boğaza ~1,2 km":"~1.2 km to the Bosphorus",
+ "Levent için canlı analiz →":"Live analysis for Levent →",
+ /* Ataşehir */
+ "Finans merkezi çevresinde dengeli giriş–getiri profili. Kira getirisi (~%4,0) Levent'e göre daha yüksek; M4 metrosu ve TEM/D-100 erişimi kurumsal kiracı talebini besler. Fay hattına uzak konumu risk primini düşürür.":"A balanced entry-yield profile around the financial centre. Rental yield (~4.0%) is higher than Levent's; the M4 metro and TEM/D-100 access feed corporate tenant demand. Its distance from the fault line lowers the risk premium.",
+ "Fay hattına ~24 km · uzak":"~24 km to the fault line · far",
+ "Metro M4 + TEM/D-100 · güçlü":"Metro M4 + TEM/D-100 · strong",
+ "Marmara'ya ~9 km · orta":"~9 km to the Marmara Sea · mid",
+ "Ataşehir için canlı analiz →":"Live analysis for Ataşehir →",
+ /* Çekmeköy */
+ "Yeşil dokusu yüksek, aile odaklı gelişen bölge. Aydos Ormanı'na ~1 km yakınlık yaşam kalitesini (80/100) yukarı çeker; en güçlü tapu devir ivmesi (+%21) yeni arz cazibesini gösterir. Uygun giriş, uzun vadeli büyüme adayı.":"A family-oriented, developing area with abundant greenery. Its ~1 km proximity to Aydos Forest lifts quality of life (80/100); the strongest title-transfer momentum (+21%) signals the appeal of new supply. Affordable entry, a long-term growth candidate.",
+ "Fay hattına ~31 km · uzak":"~31 km to the fault line · far",
+ "Metro M5 + TEM · gelişen":"Metro M5 + TEM · developing",
+ "Aydos Ormanı'na ~1 km · yüksek yeşil":"~1 km to Aydos Forest · high greenery",
+ "Çekmeköy için canlı analiz →":"Live analysis for Çekmeköy →",
+ /* Büyükçekmece */
+ "Sahil erişimi (~0,3 km) ve en yüksek kira getirisi beklentisiyle (~%4,8) öne çıkar. Ancak fay hattına ~12 km yakınlık nedeniyle özel temel ve TBDY 2018 uyumlu güçlendirilmiş zemin çözümü gerektirir — riski önden fiyatlayın.":"Stands out with coastal access (~0.3 km) and the highest expected rental yield (~4.8%). However, its ~12 km proximity to the fault line requires a special foundation and a TBDY 2018-compliant reinforced ground solution — price the risk in upfront.",
+ "Fay hattına ~12 km · yakın, özel temel":"~12 km to the fault line · near, special foundation",
+ "E-5 + Marmaray · orta":"E-5 + Marmaray · mid",
+ "Sahile ~0,3 km · sahil":"~0.3 km to the shore · coastal",
+ "Büyükçekmece için canlı analiz →":"Live analysis for Büyükçekmece →",
+ /* section 02 head + table */
+ "Endeksi tek tabloda karşılaştırın":"Compare the index in one table",
+ "m² fiyatı, 5 yıllık değişim, yatırım skoru, yaşam kalitesi ve tapu devir ivmesi yan yana. Yatay kaydırarak tüm sütunları görün.":"Price per m², 5-year change, investment score, quality of life and title-transfer momentum side by side. Scroll horizontally to see all columns.",
+ "Bölge":"Region",
+ "Yatırım Skoru":"Investment Score",
+ "Yaşam Kalitesi":"Quality of Life",
+ "Tapu Devri":"Title Transfers",
+ "LeventBeşiktaş / İstanbul":"Levent<small>Beşiktaş / İstanbul</small>",
+ "AtaşehirAtaşehir / İstanbul":"Ataşehir<small>Ataşehir / İstanbul</small>",
+ "ÇekmeköyÇekmeköy / İstanbul":"Çekmeköy<small>Çekmeköy / İstanbul</small>",
+ "BüyükçekmeceBüyükçekmece / İstanbul":"Büyükçekmece<small>Büyükçekmece / İstanbul</small>",
+ /* section 03 head + methodology */
+ "Kısa ve dürüst: neyi ölçüyoruz, veriyi nereden alıyoruz, ne kadar temsilî.":"Short and honest: what we measure, where the data comes from, and how illustrative it is.",
+ "1 · m² Fiyat Endeksi":"1 · Price-per-m² Index",
+ "İlan, satış ve tapu devir verilerinden mahalle bazında gerçekleşen ortalama metrekare fiyatı türetilir; aykırı değerler ayıklanarak medyana yakın bir gösterge üretilir.":"The realised average price per square metre at neighbourhood level is derived from listing, sale and title-transfer data; outliers are filtered out to produce an indicator close to the median.",
+ "2 · 5 Yıllık Trend":"2 · 5-Year Trend",
+ "Aynı bölgenin geçmiş dönem endeks noktaları zaman serisine dizilir; yıllık bileşik değişim ve momentum, değer artış hızını gösterir.":"The region's historical index points are arranged into a time series; the annual compound change and momentum reveal the pace of value growth.",
+ "3 · Yatırım Skoru":"3 · Investment Score",
+ "Değer artışı, kira getirisi, talep/arz dengesi, ulaşım ve deprem/fay yakınlığı ağırlıklı olarak birleştirilir; 0–100 arası tek bir kıyaslanabilir skora indirgenir.":"Value appreciation, rental yield, supply/demand balance, transport and earthquake/fault proximity are combined with weights; reduced to a single comparable score from 0 to 100.",
+ "Veri tazeliği: Bu sayfadaki rakamlar temsilî niteliktedir ve tanıtım amaçlıdır. Canlı yayında her bölge, ProX / emlakekspertizi.com endeks servisinden (/endeks) il–ilçe–mahalle sorgusuyla güncellenir; erişilemediğinde bu temsilî değerler korunur. Yatırım kararı öncesi bölgeye özel güncel ekspertiz talep edin.":"<b>Data freshness:</b> The figures on this page are illustrative and for promotional purposes. In live production, each region is updated from the ProX / emlakekspertizi.com index service (<b>/endeks</b>) via a province–district–neighbourhood query; when unreachable, these illustrative values are retained. Before making an investment decision, request a current, region-specific appraisal.",
+ /* final CTA */
+ "Bölgeniz için canlı analiz":"Live analysis for your region",
+ "Kendi bölgeniz içingüncel değer raporu alın":"Get an up-to-date value report<br>for your own region",
+ "İl, ilçe ve mahallenizi söyleyin; ProX endeksinden beslenen güncel m² fiyatı, değer trendi, yatırım skoru ve deprem/fay analizini içeren bölge raporunu birlikte çıkaralım.":"Tell us your province, district and neighbourhood; together we will produce a regional report with the current price per m², value trend, investment score and earthquake/fault analysis, powered by the ProX index.",
+ "Canlı Bölge Analizini Aç →":"Open Live Regional Analysis →",
+ "Ücretsiz Keşif Talep Et":"Request a Free Survey"
 };
 function _bzK(el){return (el.textContent||'').replace(/\s+/g,' ').trim();}
 function bzHarvest(){document.querySelectorAll(BZ_SEL).forEach(function(el){if(el.closest('header,footer,.mnav,.mdock'))return;if(el.hasAttribute('data-ik'))return;var k=_bzK(el);if(!k||k.length>600)return;el.setAttribute('data-io',el.innerHTML);el.setAttribute('data-ik',k);});}

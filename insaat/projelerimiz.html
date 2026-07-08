@@ -645,9 +645,118 @@ function closeAllInsaatOverlays(){}
     }
   }catch(e){}
 })();
-/* projelerimiz i18n (TR/EN) — kaynak-metin anahtar */
+/* projelerimiz i18n (TR/EN) — kaynak-metin anahtar (neden-biz deseni) */
 var NB_LANG='tr'; try{NB_LANG=localStorage.getItem('meridyen_lang')||'tr';}catch(e){}
-function nbLang(lang){NB_LANG=(lang==='en')?'en':'tr';try{localStorage.setItem('meridyen_lang',NB_LANG);}catch(e){}
+var NB_SEL='.pj-hero-copy .eyebrow,.pj-hero-copy h1,.pj-hero-copy .lead,.pj-hero-copy .actions .btn,.pj-hero-copy .actions .ghost,'
++'.sh-txt h2,.sh-txt p,.pj-catband .ct,.pj-catband .cn,'
++'.pj-badge,.pj-prog .pl span:first-child,.pj-type,.pj-card h3,.pj-loc,.pj-desc,.pj-meta .ml,.pj-meta .mv,.pj-price,.pj-cardcta,'
++'.pj-step h4,.pj-step p,.pj-stat .k,'
++'.fcta .eyebrow,.fcta h2,.fcta .sub,.fcta .actions .btn,.fcta .actions .ghost';
+var NB_EN={
+ /* hero */
+ "Referans Projeler":"Reference Projects",
+ "Çizdiğimiz her hattın gerçek bir karşılığı var.":"Every line we draw has a <span class=\"mk\">real-world counterpart</span>.",
+ "Levent'ten Kadıköy'e, lüks rezidanstan kentsel dönüşüme — teslim ettiğimiz ve inşa etmekte olduğumuz projeleri gerçek verileriyle inceleyin. Her biri TBDY 2018 uyumlu mühendislik, bağımsız yapı denetimi ve sözleşmeli bir teslim takviminin ürünü.":"From Levent to Kadıköy, from luxury residences to urban transformation — explore the projects we have delivered and those under construction, with their real data. Each is the product of TBDY 2018-compliant engineering, independent building inspection and a contractual delivery schedule.",
+ "Ücretsiz Keşif Talep Edin →":"Request a Free Survey →",
+ "Projeleri Gör":"View Projects",
+ /* statistics */
+ "Yıllık saha deneyimi":"Years of field experience",
+ "Teslim edilen konut":"Homes delivered",
+ "İnşa edilen alan":"Area built",
+ "Sözleşmeli sürede teslim":"Delivered on contractual time",
+ /* section headings */
+ "Konut & Rezidans Projeleri":"Residential & Residence Projects",
+ "Şehrin merkezinden doğayla iç içe vadilere; lüks rezidanstan sahil konağına kadar yaşanabilir, değerini koruyan konut projeleri. Her daire ve villa, veri odaklı yatırım analiziyle sunulur.":"From the heart of the city to valleys embraced by nature; from luxury residences to seaside mansions — liveable housing projects that hold their value. Every flat and villa is presented with a data-driven investment analysis.",
+ "Ticari & Ofis Projeleri":"Commercial & Office Projects",
+ "İş dünyasının merkezinde, A+ sınıfı akıllı bina standartlarıyla üretilen ticari yapılar. Yüksek kira getirisi ve prestij için tasarlanmış, kurumsal kiracıya hazır ofis çözümleri.":"Commercial buildings produced at the heart of the business world to A+ class smart-building standards. Office solutions designed for high rental yield and prestige, ready for corporate tenants.",
+ "Kentsel Dönüşüm Projeleri":"Urban Transformation Projects",
+ "6306 sayılı kanun kapsamında riskli yapıların yenilenmesi. Hak sahiplerinin haklarını koruyan şeffaf sözleşmeler, adil paylaşım ve deprem güvenli yeni yaşam alanları.":"Renewal of risky buildings under Law No. 6306. Transparent contracts that protect the rights of property owners, fair distribution and earthquake-safe new living spaces.",
+ "Bir projeyi nasıl inşa ediyoruz?":"How do we build a project?",
+ "Arsanın ilk analizinden anahtar teslime kadar; her aşama yazılı, denetlenebilir ve sizinle paylaşılır. Kanıta bağlı, sürprizsiz bir süreç.":"From the first analysis of the plot to turnkey handover; every stage is written, auditable and shared with you. An evidence-based process with no surprises.",
+ /* category bands */
+ "Rezidans & Apartman":"Residence & Apartment",
+ "Villa & Müstakil":"Villa & Detached",
+ "2 proje":"2 projects",
+ /* badges */
+ "Devam Ediyor":"In Progress",
+ "Tamamlandı":"Completed",
+ "Yeni Lansman":"New Launch",
+ "Planlama":"Planning",
+ /* progress labels */
+ "Tamamlanma":"Completion",
+ /* meta labels */
+ "Alan":"Area",
+ "Kapasite":"Capacity",
+ "Teslim":"Delivery",
+ "Durum":"Status",
+ "Tip":"Type",
+ /* meta values (status/text) */
+ "Devam ediyor":"In progress",
+ "Teslim edildi":"Delivered",
+ "Yeni lansman":"New launch",
+ "A+ ofis katları":"A+ office floors",
+ /* card CTAs */
+ "Detaylı incele & keşif randevusu →":"Explore in detail & book a survey →",
+ "Detaylı incele →":"Explore in detail →",
+ "Ön talep & bilgi al →":"Pre-register & get info →",
+ "Kiralama & bilgi al →":"Leasing & get info →",
+ "Hak sahibi görüşmesi talep et →":"Request an owner meeting →",
+ /* ---- Levent Rezidans ---- */
+ "Konut · 2+1/4+1":"Residential · 2+1/4+1",
+ "Meridyen Levent Rezidans":"Meridyen Levent Residence",
+ "Levent, İstanbul":"Levent, Istanbul",
+ "Levent'in merkezinde, modern mimari ve akıllı bina teknolojisiyle donatılmış prestijli rezidans projesi. 48.000 m² inşaat alanı, C30/37 betonarme taşıyıcı sistem ve A sınıfı enerji performansı.":"A prestigious residence project in the heart of Levent, equipped with modern architecture and smart-building technology. 48,000 m² of construction area, a C30/37 reinforced-concrete structural system and class-A energy performance.",
+ "8.500.000 ₺'den başlayan":"Starting from ₺8,500,000",
+ /* ---- Bosphorus Loft ---- */
+ "Lüks Konut":"Luxury Residential",
+ "Bosphorus Loft":"Bosphorus Loft",
+ "Beşiktaş, İstanbul":"Beşiktaş, Istanbul",
+ "Boğaz manzaralı, loft konseptli lüks yaşam alanları. Yüksek tavanlı, ferah kurgusuyla şehir hayatını su ile buluşturan seçkin bir konut projesi.":"Luxury living spaces with a loft concept and Bosphorus views. A distinguished residential project that brings city life together with the water through a high-ceilinged, spacious layout.",
+ "14.200.000 ₺'den başlayan":"Starting from ₺14,200,000",
+ /* ---- Vadi Evleri ---- */
+ "Villa · Müstakil":"Villa · Detached",
+ "Meridyen Vadi Evleri":"Meridyen Valley Homes",
+ "Çekmeköy, İstanbul":"Çekmeköy, Istanbul",
+ "Doğayla iç içe, müstakil bahçeli villa yaşamı. Teslim edilmiş, sakinlerine kavuşmuş; şehrin gürültüsünden uzak, geniş yeşil alanlar içinde konumlanan bir yaşam projesi.":"Detached villa living with private gardens, embraced by nature. Delivered and now home to its residents; a living project set within large green areas, away from the noise of the city.",
+ "22.000.000 ₺'den başlayan":"Starting from ₺22,000,000",
+ /* ---- Marmara Sahil Konakları ---- */
+ "Villa · Sahil":"Villa · Seaside",
+ "Marmara Sahil Konakları":"Marmara Seaside Mansions",
+ "Büyükçekmece, İstanbul":"Büyükçekmece, Istanbul",
+ "Sahil şeridinde özel iskeleli lüks konaklar. Marmara'nın kıyısında, özel yaşam alanları ve peyzajıyla sınırlı sayıda üretilecek prestijli bir sahil projesi.":"Luxury mansions with private jetties along the shoreline. A prestigious seaside project on the coast of the Marmara, to be produced in limited numbers with private living areas and landscaping.",
+ "35.000.000 ₺'den başlayan":"Starting from ₺35,000,000",
+ /* ---- Anadolu Ofis Kule ---- */
+ "Ticari · Ofis":"Commercial · Office",
+ "Anadolu Ofis Kule":"Anadolu Office Tower",
+ "Ataşehir, İstanbul":"Ataşehir, Istanbul",
+ "Finans merkezinde A+ sınıfı akıllı ofis kulesi. Esnek kat planları, LEED odaklı verimlilik ve kurumsal kiracıya hazır altyapısıyla ticari yatırımın referans projesi.":"An A+ class smart office tower in the financial centre. A reference project for commercial investment, with flexible floor plans, LEED-focused efficiency and infrastructure ready for corporate tenants.",
+ "Fiyat için iletişime geçin":"Contact us for pricing",
+ /* ---- Yeni Ufuk Kentsel Dönüşüm ---- */
+ "Kentsel Dönüşüm":"Urban Transformation",
+ "Yeni Ufuk Kentsel Dönüşüm":"Yeni Ufuk Urban Transformation",
+ "Kadıköy, İstanbul":"Kadıköy, Istanbul",
+ "6306 sayılı kanun kapsamında riskli yapı dönüşümü. Hak sahipleriyle şeffaf sözleşme, kira yardımı süreci ve deprem güvenli modern konutlarla mahalleyi baştan inşa eden bir dönüşüm projesi.":"Risky-building transformation under Law No. 6306. A transformation project that rebuilds the neighbourhood from the ground up with transparent contracts with property owners, a rent-assistance process and earthquake-safe modern homes.",
+ "Hak sahiplerine özel":"Exclusive to property owners",
+ /* process steps */
+ "Keşif & Fizibilite":"Survey & Feasibility",
+ "Arsa / imar analizi, zemin etüdü ve gider-gelir fizibilitesiyle projenin sağlam temeli atılır.":"The solid foundation of the project is laid with plot / zoning analysis, a geotechnical survey and a cost-revenue feasibility study.",
+ "Proje & Ruhsat":"Design & Permit",
+ "Mimari, statik, mekanik ve elektrik projeleri kendi kadromuzca üretilir; yapı ruhsatı alınır.":"Architectural, structural, mechanical and electrical designs are produced by our own staff; the building permit is obtained.",
+ "İnşaat & Denetim":"Construction & Inspection",
+ "C30/37 betonarme karkas, bağımsız yapı denetimi ve aylık ilerleme raporlarıyla şeffaf üretim.":"Transparent production with a C30/37 reinforced-concrete frame, independent building inspection and monthly progress reports.",
+ "İskân & Teslim":"Occupancy & Handover",
+ "İnce işçilik, peyzaj, iskân belgesi ve garantiyle birlikte anahtar teslim tamamlanır.":"Turnkey handover is completed with fine workmanship, landscaping, the occupancy certificate and a warranty.",
+ /* final CTA */
+ "İletişim":"Contact",
+ "Sıradaki projeyibirlikte inşa edelim":"Let's build the next project<br>together",
+ "Arsanız, dönüşüm hakkınız ya da yatırım hedefiniz için ücretsiz keşif ve fizibilite talep edin. Uzman ekibimiz aynı gün size dönüş yapsın.":"Request a free survey and feasibility study for your plot, your transformation rights or your investment goal. Our expert team will get back to you the same day.",
+ "Ücretsiz Keşif Talep Et →":"Request a Free Survey →",
+ "Hizmetlerimizi İncele":"Explore Our Services"
+};
+function _nbK(el){return (el.textContent||'').replace(/\s+/g,' ').trim();}
+function nbHarvest(){document.querySelectorAll(NB_SEL).forEach(function(el){if(el.closest('header,footer,.mnav,.mdock'))return;if(el.hasAttribute('data-ik'))return;var k=_nbK(el);if(!k||k.length>600)return;el.setAttribute('data-io',el.innerHTML);el.setAttribute('data-ik',k);});}
+function nbLang(lang){NB_LANG=(lang==='en')?'en':'tr';try{localStorage.setItem('meridyen_lang',NB_LANG);}catch(e){}document.documentElement.setAttribute('lang',NB_LANG);
+ document.querySelectorAll('[data-ik]').forEach(function(el){var k=el.getAttribute('data-ik'),orig=el.getAttribute('data-io');var v=(NB_LANG==='en')?(NB_EN[k]||orig):orig;if(v!=null)el.innerHTML=v;});
  document.querySelectorAll('.lang-sel').forEach(function(s){try{s.value=NB_LANG;}catch(e){}});
  var en=(NB_LANG==='en');
  var nl=en?['Services','Why ? Us','Projects','Regional Intelligence']:['Hizmetlerimiz','Neden ? Biz','Projeler','Bölge Zekası'];
@@ -659,7 +768,7 @@ function nbLang(lang){NB_LANG=(lang==='en')?'en':'tr';try{localStorage.setItem('
  document.querySelectorAll('.nav-cta .btn-primary,#mnav .btn-primary').forEach(function(b){b.textContent=en?'Free Survey':'Ücretsiz Keşif';});
  var gr=document.querySelector('.js-giris');if(gr)gr.textContent=en?'Sign In':'Giriş';
 }
-document.addEventListener('DOMContentLoaded',function(){try{nbLang(NB_LANG);}catch(e){}});
+document.addEventListener('DOMContentLoaded',function(){try{nbHarvest();nbLang(NB_LANG);}catch(e){}});
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>

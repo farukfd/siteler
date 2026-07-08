@@ -141,6 +141,11 @@ ok('GÜVENLİK: admin şifre ipucu görünür DEĞİL', !insHtml.includes('Demo 
 ok('insaat SEO: index Organization NAP (adres/telefon/geo)', /PostalAddress/.test(insHtml) && /GeoCoordinates/.test(insHtml) && /telephone/.test(insHtml));
 ok('insaat SEO: index robots + favicon', /name="robots"/.test(insHtml) && /rel="icon"/.test(insHtml));
 ok('insaat: footer Veri Ortağı kaldırıldı', !insCore.includes('Veri Ortağı') && !insHtml.includes('Veri Ortağı'));
+/* ---- 3a6) insaat EN i18n (yeni SEO sayfalarında gerçek çeviri, stub değil) ---- */
+for(const pg of ['hizmetlerimiz','projelerimiz','soru-cevap','bolge']){
+  let h=''; try{h=readFileSync('insaat/'+pg+'.html','utf8');}catch(e){}
+  ok('insaat EN '+pg+': gerçek i18n (harvest + sözlük)', /data-ik/.test(h) && /(NB_EN|BZ_EN)\s*=/.test(h) && /(nbHarvest|_nbK|data-io)/.test(h));
+}
 /* ---- 3a3b) danisman gerçek SEO sayfaları ---- */
 for(const pg of ['hakkimizda','sss']){
   let h=''; try{h=readFileSync('danisman/'+pg+'.html','utf8');}catch(e){}
