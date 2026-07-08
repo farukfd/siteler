@@ -846,7 +846,7 @@ document.addEventListener('DOMContentLoaded',function(){try{nbHarvest();nbLang(N
 
     // İSKELE — sıkı yatay-kaydırma şeridi (pinsiz; boşluk yaratmaz). Wheel dikey → yatay çevir.
     var iskPin=document.getElementById('iskPin');
-    iskPin.addEventListener('wheel',function(e){ if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){ iskPin.scrollLeft+=e.deltaY; e.preventDefault(); } },{passive:false});
+    if(iskPin){ iskPin.addEventListener('wheel',function(e){ if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){ iskPin.scrollLeft+=e.deltaY; e.preventDefault(); } },{passive:false}); }
 
     // comparison bars
     ScrollTrigger.create({trigger:'#cmp',start:'top 80%',once:true,onEnter:function(){

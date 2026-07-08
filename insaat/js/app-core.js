@@ -2470,7 +2470,7 @@ var FAQ_CATS=[
 function _faqCatLabel(k){for(var i=0;i<FAQ_CATS.length;i++){if(FAQ_CATS[i].k===k)return FAQ_CATS[i].l;}return k;}
 function _faqCatIcon(k){for(var i=0;i<FAQ_CATS.length;i++){if(FAQ_CATS[i].k===k)return FAQ_CATS[i].i;}return '•';}
 var _faqCat='all', _faqQ='';
-function openFaqPage(){renderFaqPage();var ov=document.getElementById('faqPage');ov.classList.add('on');_insSyncUrl('soru-cevap');document.body.style.overflow='hidden';ov.scrollTop=0;if(typeof i18nInit==='function')i18nInit();try{history.replaceState(null,'','#sss');}catch(e){}}
+function openFaqPage(){renderFaqPage();var ov=document.getElementById('faqPage');ov.classList.add('on');_insSyncUrl('soru-cevap');document.body.style.overflow='hidden';ov.scrollTop=0;if(typeof i18nInit==='function')i18nInit();}
 function closeFaqPage(){document.getElementById('faqPage').classList.remove('on');document.body.style.overflow='';var h=location.hash||'';if(h==='#sss'||h==='#soru-cevap'||h==='#faq')try{history.replaceState(null,'',location.pathname);}catch(e){}}
 function renderFaqPage(){
   var en=(typeof LANG!=='undefined'&&LANG==='en');
