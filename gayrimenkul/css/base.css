@@ -336,7 +336,9 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
 @keyframes brFade{from{opacity:0}to{opacity:1}}
 /* G3: derin-link/yükleme açılışında (ov-boot) overlay SOLMADAN opak açılır → ana sayfa flash etmez */
 html.ov-boot .br-page.open,html.ov-boot #portfoyPage.open,html.ov-boot #brPage.open,html.ov-boot #satPage.open,html.ov-boot #blogPage.open{animation:none!important;opacity:1!important}
-.br-hd{flex:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 26px;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+/* Overlay/tam-ekran sayfa header'ı — ANA SAYFA header#hdr + .wrap.bar ile BİREBİR:
+   içerik --maxw(1240px) ortalı, 74px yükseklik, 22px gap; arka plan tam genişlik (calc-padding). */
+.br-hd{flex:none;display:flex;align-items:center;gap:22px;height:74px;padding:0 max(24px,calc((100% - var(--maxw,1240px))/2 + 24px));background:rgba(255,255,255,.92);backdrop-filter:saturate(150%) blur(12px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:90}
 .br-hd .logo{display:flex;align-items:center;gap:11px;font-family:var(--head);font-weight:800;font-size:21px;color:var(--ink)}
 .br-hd .logo .mark{width:42px;height:42px;border-radius:11px;background:var(--grad-hero);display:grid;place-items:center;color:#fff;font-weight:800;font-size:21px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
 .br-hd .logo .lo2{color:var(--accent)}

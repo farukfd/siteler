@@ -305,15 +305,11 @@
       +'<div class="gm-pane" id="gp_kurumsal" hidden><p class="gm-sub">Yetkili personel/yönetim ve sözleşmeli mülk sahibi erişimi.</p><button class="gm-btn" onclick="closeGiris();if(typeof openAdmin===\'function\')openAdmin()">Yönetim Paneline Giriş →</button><button class="gm-btn gm-btn2" onclick="closeGiris();if(typeof openSaasPortal===\'function\')openSaasPortal()">Müşteri Portalı (Mülk Sahibi) →</button><div class="gm-note"><a href="#" onclick="girisTab(\'login\');return false">← Üye girişi</a></div></div>'
       +'</div></div>'
       /* ProX Asistan tam ekran */
-      +'<div id="proxAsistanPage"><header class="uas-hdr"><a class="uas-logo" onclick="closeProxAsistanPage();gmHomeSafe()"><span class="mark">M</span> Meridyen <b>Gayrimenkul</b></a>'
-      +'<nav class="uas-nav"><a href="hizmetlerimiz.html">Hizmetlerimiz</a><a href="nedenbiz.html">Neden <span class="nb-x">?</span> Biz</a><a href="portfoy.html">Portföy</a><a href="#" onclick="closeProxAsistanPage();if(typeof goView===\'function\')goView(\'analiz\');return false">Analiz Merkezi</a></nav>'
-      +'<div class="uas-hdr-r"><a class="uas-hlink js-giris" onclick="closeProxAsistanPage();girisOrHesap()">Giriş</a><button class="uas-close" onclick="closeProxAsistanPage();gmHomeSafe()" aria-label="Kapat">✕</button></div></header>'
+      +'<div id="proxAsistanPage"><div class="br-hd oz-hd"><a class="logo" href="#" onclick="closeProxAsistanPage();gmHomeSafe();return false"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Gayrimenkul</span></span></a><nav class="main siteNav"></nav><div class="nav-cta siteCta"></div></div>'
       +'<div class="pa-app"><aside class="pa-sb" id="paSb"><div class="pa-sb-head"><button class="pa-newchat" onclick="paNewChat()"><span>＋</span> Yeni sohbet</button><button class="pa-sb-x" onclick="document.getElementById(\'paSb\').classList.remove(\'open\')" aria-label="Kapat">✕</button></div><div class="pa-hist-lbl">Konuşma geçmişi</div><div class="pa-history" id="paHistory"></div><div class="pa-sb-foot"><div class="pa-poweredby"><span class="prox-logo" style="font-size:.9em">Pro<span class="prox-x">X</span></span> · +1 milyar doğrulanmış emlak verisi</div></div></aside>'
       +'<main class="pa-main"><div class="pa-appbar"><button class="pa-menu" onclick="document.getElementById(\'paSb\').classList.toggle(\'open\')" aria-label="Konuşma geçmişi">☰</button><div class="pa-title" id="paTitle"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</div></div><div class="pa-log" id="paLog"></div><div class="pa-composer"><form class="pa-form" onsubmit="return paSend(event)"><textarea id="paInput" rows="1" placeholder="Mesajınızı yazın…" onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();paSend(event)}"></textarea><button type="submit" class="pa-send" aria-label="Gönder">➤</button></form><div class="pa-disc">ProX Asistan, ProX’un +1 milyar doğrulanmış emlak verisine dayanır; bilgilendirme amaçlıdır, kesin teklif için danışmanımızla görüşün.</div></div></main></div></div>'
       /* Hesap sayfası */
-      +'<div id="hesapPage"><header class="uas-hdr"><a class="uas-logo" onclick="closeHesap();gmHomeSafe()"><span class="mark">M</span> Meridyen <b>Gayrimenkul</b></a>'
-      +'<nav class="uas-nav"><a href="hizmetlerimiz.html">Hizmetlerimiz</a><a href="nedenbiz.html">Neden <span class="nb-x">?</span> Biz</a><a href="portfoy.html">Portföy</a><a href="#" onclick="closeHesap();openProxAsistanPage();return false"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a></nav>'
-      +'<div class="uas-hdr-r"><button class="uas-close" onclick="closeHesap();gmHomeSafe()" aria-label="Kapat">✕</button></div></header>'
+      +'<div id="hesapPage"><div class="br-hd oz-hd"><a class="logo" href="#" onclick="closeHesap();gmHomeSafe();return false"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Gayrimenkul</span></span></a><nav class="main siteNav"></nav><div class="nav-cta siteCta"></div></div>'
       +'<div class="hs-body"><div class="hs-wrap">'
       +'<div class="hs-top hs-rv"><div class="hs-avatar" id="hs_av">M</div><div class="hs-hi"><div class="h">Hoş geldiniz, <b id="hs_welcome">—</b></div><div class="s">Meridyen Gayrimenkul üye paneli</div></div><div class="hs-kpis"><div class="hs-kpi"><b id="hs_favcount">0</b><span>Favori</span></div><div class="hs-kpi"><b id="hs_qcount">0</b><span>Talep</span></div></div><button class="hs-logout" onclick="authDoLogout();closeHesap()">Çıkış Yap</button></div>'
       +'<div class="hs-tabs hs-rv"><button id="hst_profil" onclick="_hesapTab(\'profil\')">👤 Profilim</button><button id="hst_favoriler" onclick="_hesapTab(\'favoriler\')">❤️ Favorilerim</button><button id="hst_teklifler" class="act" onclick="_hesapTab(\'teklifler\')">📋 Tekliflerim</button></div>'
@@ -360,6 +356,8 @@
   function uasBoot(){
     uasEnsureDom();
     _patch('mountSaaSMenu',uasEnhanceNav);
+    /* Enjekte edilen ProX Asistan/Hesap sayfalarındaki .siteNav/.siteCta'yı doldur (ana sayfa navı ile birebir) */
+    try{if(typeof mountSaaSMenu==='function')mountSaaSMenu();}catch(e){}
     _patch('renderIlanlar',uasBindFavs);
     if(typeof renderOzel==='function')_patch('renderOzel',uasBindFavs);
     uasEnhanceNav();uasBindFavs();uasInjectAdminPane();
