@@ -17,7 +17,8 @@
     s.textContent =
       '.prox-logo{font-family:var(--head,"Space Grotesk",system-ui,sans-serif);font-weight:800;letter-spacing:.2px;color:inherit;white-space:nowrap;display:inline-flex;align-items:center}' +
       '.prox-x{display:inline-flex;align-items:center;justify-content:center;background:#19c37d;color:#04140c;border-radius:6px;padding:.02em .28em;margin-left:2px;line-height:1;font-size:.9em}' +
-      '.js-giris.logged::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#19c37d;margin-right:7px;vertical-align:middle}';
+      '.js-giris.logged::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#19c37d;margin-right:7px;vertical-align:middle}' +
+      'footer.insaatFooter .fbot .lang-sw{display:inline-flex!important;align-items:center}'; // dil seçici footer'da her ekranda görünür
     (document.head || document.documentElement).appendChild(s);
   }
 
@@ -72,7 +73,16 @@
     });
   }
 
-  function run() { try { injectCSS(); injectAsistan(); applyAuth(); } catch (e) { /* chrome enjeksiyonu SEO içeriğini asla bozmamalı */ } }
+  // Dil seçiciyi nav'dan footer'a taşı (SPA ile aynı: [© copy] [dil] [Powered by ProX]).
+  function relocateLang() {
+    var sw = document.querySelector('header .lang-sw, .nav-cta .lang-sw, .bar .lang-sw');
+    var fbot = document.querySelector('footer.insaatFooter .fbot');
+    if (!sw || !fbot || fbot.querySelector('.lang-sw')) return;
+    var prox = fbot.querySelector('.fprox');
+    if (prox) fbot.insertBefore(sw, prox); else fbot.appendChild(sw);
+  }
+
+  function run() { try { injectCSS(); injectAsistan(); relocateLang(); applyAuth(); } catch (e) { /* chrome enjeksiyonu SEO içeriğini asla bozmamalı */ } }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // window.load, sayfanın kendi DOMContentLoaded i18n'inden SONRA çalışır → üyelik adı kazanır.
   window.addEventListener('load', function () { try { applyAuth(); watchAuth(); } catch (e) {} });
