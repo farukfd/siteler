@@ -93,6 +93,8 @@ function loadAll(){
     if(d.ARSALAR&&Array.isArray(d.ARSALAR))ARSALAR.splice(0,ARSALAR.length,...d.ARSALAR);
     if(d.CONTRACTS&&Array.isArray(d.CONTRACTS))CONTRACTS.splice(0,CONTRACTS.length,...d.CONTRACTS);
     if(d.SETTINGS)Object.assign(SETTINGS,d.SETTINGS);
+    /* GÖÇ: eski admin şifresini (ör. meridyen2026) 1234'e sıfırla — tek sefer; sonraki değişikliklere dokunmaz */
+    try{if(!localStorage.getItem('ins_admpass_reset_1234')){SETTINGS.admPass='1234';d.SETTINGS=Object.assign({},d.SETTINGS||{},{admPass:'1234'});localStorage.setItem(STORE_KEY,JSON.stringify(d));localStorage.setItem('ins_admpass_reset_1234','1');}}catch(e){}
     if(d.BRAND)Object.assign(BRAND,d.BRAND);
     if(d.MENU)Object.assign(MENU,d.MENU);
     if(d.FOOT)Object.assign(FOOT,d.FOOT);
@@ -2648,28 +2650,33 @@ var _INS_OV={
 /* Overlay slug → GERÇEK statik .html sayfası (varsa). Böylece nav overlay açarken URL gerçek
    sayfaya işaret eder; doğrudan erişim/reload'da stub yerine gerçek sayfa yüklenir → RELOAD SIÇRAMASI YOK. */
 var _INS_FILE={hizmetler:'hizmetlerimiz.html',projeler:'projelerimiz.html',bolge:'bolge.html','soru-cevap':'soru-cevap.html'};
-function _insUrl(slug){return _INS_BASE+(_INS_FILE[slug]||slug);}
+/* Overlay URL'leri HASH tabanlı: /insaat/#bolge. Reload'da index.html + insBoot overlay'i yeniden açar
+   → statik forklu sayfa YÜKLENMEZ, "eski yapı" sıçraması OLMAZ, sunucu rewrite'a bağımlı değil. */
+function _insUrl(slug){return _INS_BASE+'#'+slug;}
+function _insCurUrl(){return location.pathname+(location.hash||'');}
+var _INS_HM={hizmetler:'hizmetler',projeler:'projeler',bolge:'bolge',iletisim:'iletisim',sss:'soru-cevap','soru-cevap':'soru-cevap',faq:'soru-cevap',asistan:'asistan',ai:'asistan'};
+function _insSlugFromHash(){var hs=(location.hash||'').replace(/^#/,'');return (_INS_HM[hs]&&_INS_OV[_INS_HM[hs]])?_INS_HM[hs]:'';}
 function _insSlug(seg){seg=(seg||'').replace(/\/$/,'');if(seg===''||seg==='index.html')return '';for(var k in _INS_FILE){if(_INS_FILE[k]===seg)return k;}return _INS_OV[seg]?seg:'';}
 function _insBrand(){try{var e=document.querySelector('.js-logo');return (e&&e.textContent&&e.textContent.trim())||'Meridyen Yapı';}catch(_){return 'Meridyen Yapı';}}
 function _insCloseDom(){try{if(typeof closeAllInsaatOverlays==='function')closeAllInsaatOverlays();}catch(e){}}
 /* HER openXPage sonunda çağrılır. Nav'dan gelince (routing=false) temiz URL push + başlık;
    router/boot/geçiş içinden gelince (routing=true) URL zaten doğru → dokunma. Onclick MİGRASYONU GEREKMEZ. */
-function _insSyncUrl(slug){if(_insRouting)return;var v=_INS_OV[slug];if(!v)return;if(_insBaseTitle===null)_insBaseTitle=document.title;try{if(location.pathname!==_insUrl(slug))history.pushState({p:slug},'',_insUrl(slug));}catch(e){}try{document.title=v.t+' · '+_insBrand();}catch(e){}}
+function _insSyncUrl(slug){if(_insRouting)return;var v=_INS_OV[slug];if(!v)return;if(_insBaseTitle===null)_insBaseTitle=document.title;try{if(_insCurUrl()!==_insUrl(slug))history.pushState({p:slug},'',_insUrl(slug));}catch(e){}try{document.title=v.t+' · '+_insBrand();}catch(e){}}
 function _insApply(slug){var v=_INS_OV[slug];if(!v)return;if(_insBaseTitle===null)_insBaseTitle=document.title;_insRouting=true;try{_insCloseDom();v.fn();document.title=v.t+' · '+_insBrand();}catch(e){}_insRouting=false;}
 function goPage(slug,ev){ev=ev||window.event;var v=_INS_OV[slug];if(!v)return true;
   /* overlay bu sayfada yoksa (statik SEO sayfası) → engelleme, href ile normal git */
   if(v.el&&!document.getElementById(v.el))return true;
-  try{if(ev&&ev.preventDefault)ev.preventDefault();}catch(e){}_insApply(slug);try{if(location.pathname!==_insUrl(slug))history.pushState({p:slug},'',_insUrl(slug));}catch(e){}return false;}
-function insHome(ev){ev=ev||window.event;try{if(ev&&ev.preventDefault)ev.preventDefault();}catch(e){}if(_insBaseTitle!==null){document.title=_insBaseTitle;_insBaseTitle=null;}try{if(location.pathname!==_INS_BASE&&!/\/index\.html$/.test(location.pathname))history.pushState({},'',_INS_BASE);}catch(e){}_insRouting=true;try{_insCloseDom();}catch(e){}_insRouting=false;return false;}
-function insRoute(){var slug=_insSlug(decodeURIComponent(location.pathname.slice(_INS_BASE.length)));if(slug&&_INS_OV[slug])_insApply(slug);else{_insRouting=true;try{_insCloseDom();}catch(e){}_insRouting=false;if(_insBaseTitle!==null){document.title=_insBaseTitle;_insBaseTitle=null;}}}
-/* legacy #admin / #doc- (SEO-dışı modallar) hâlâ hash ile */
-function checkHash(){if(location.hash==='#admin')showAdmin();else if((location.hash||'').indexOf('#doc-')===0)openDoc(location.hash.slice(5));}
+  try{if(ev&&ev.preventDefault)ev.preventDefault();}catch(e){}_insApply(slug);try{if(_insCurUrl()!==_insUrl(slug))history.pushState({p:slug},'',_insUrl(slug));}catch(e){}return false;}
+function insHome(ev){ev=ev||window.event;try{if(ev&&ev.preventDefault)ev.preventDefault();}catch(e){}if(_insBaseTitle!==null){document.title=_insBaseTitle;_insBaseTitle=null;}try{if(location.hash||(location.pathname!==_INS_BASE&&!/\/index\.html$/.test(location.pathname)))history.pushState({},'',_INS_BASE);}catch(e){}_insRouting=true;try{_insCloseDom();}catch(e){}_insRouting=false;return false;}
+function insRoute(){var slug=_insSlugFromHash();if(!slug){try{slug=_insSlug(decodeURIComponent(location.pathname.slice(_INS_BASE.length)));}catch(e){slug='';}}if(slug&&_INS_OV[slug])_insApply(slug);else{_insRouting=true;try{_insCloseDom();}catch(e){}_insRouting=false;if(_insBaseTitle!==null){document.title=_insBaseTitle;_insBaseTitle=null;}}}
+/* #admin / #doc- / #giris (SEO-dışı modallar) hash ile açılır */
+function checkHash(){var h=location.hash||'';if(h==='#admin')showAdmin();else if(h.indexOf('#doc-')===0)openDoc(h.slice(5));else if((h==='#giris'||h==='#uye')&&typeof openGiris==='function')openGiris();else if(h==='#hesap'&&typeof girisOrHesap==='function')girisOrHesap();}
 function insBoot(){
   var target=null;
   try{var s=sessionStorage.getItem('_ins_ov');if(s){sessionStorage.removeItem('_ins_ov');if(_INS_OV[s])target=s;}}catch(e){}
-  if(!target){try{var hs=(location.hash||'').replace(/^#/,'');var hm={hizmetler:'hizmetler',projeler:'projeler',bolge:'bolge',iletisim:'iletisim',sss:'soru-cevap','soru-cevap':'soru-cevap',faq:'soru-cevap',asistan:'asistan',ai:'asistan'};if(hm[hs]&&_INS_OV[hm[hs]]){history.replaceState({},'',_INS_BASE);target=hm[hs];}}catch(e){}}
+  if(!target)target=_insSlugFromHash();
   if(!target){try{var slug=_insSlug(decodeURIComponent(location.pathname.slice(_INS_BASE.length)));if(slug&&_INS_OV[slug])target=slug;}catch(e){}}
-  if(target){try{document.documentElement.classList.add('ov-boot');}catch(e){}try{if(location.pathname!==_insUrl(target))history.replaceState({p:target},'',_insUrl(target));}catch(e){}_insApply(target);var _rm=function(){try{document.documentElement.classList.remove('ov-boot');}catch(e){}};try{requestAnimationFrame(function(){requestAnimationFrame(_rm);});}catch(e){}setTimeout(_rm,120);}
+  if(target){try{document.documentElement.classList.add('ov-boot');}catch(e){}try{if(_insCurUrl()!==_insUrl(target))history.replaceState({p:target},'',_insUrl(target));}catch(e){}_insApply(target);var _rm=function(){try{document.documentElement.classList.remove('ov-boot');}catch(e){}};try{requestAnimationFrame(function(){requestAnimationFrame(_rm);});}catch(e){}setTimeout(_rm,120);}
   checkHash();
 }
 window.addEventListener('popstate',insRoute);
