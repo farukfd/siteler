@@ -1357,6 +1357,7 @@ function renderProjelerPage(){
       <div class="img">${src?`<img src="${src}" alt="${p.t}" loading="lazy" decoding="async">`:''}
         <span class="st ${p.st}">${ST_LABEL[p.st]||p.st}</span>
         ${p.progress!=null?`<div class="prog"><i style="width:${p.progress}%"></i></div>`:''}
+        <button class="pp-fav${(typeof authIsFav==='function'&&authIsFav(i))?' on':''}" data-fid="${i}" onclick="event.stopPropagation();hesapToggleFav(${i},this)" aria-label="Favorilere ekle" title="Favorilere ekle">♥</button>
         <div class="ov">Detayları Gör →</div>
       </div>
       <div class="body">
@@ -1421,7 +1422,7 @@ const SAAS_THEMES={
 function initSaaSTheme(){const color=(typeof saasResolve==='function'&&saasResolve('themeColor'))||SAAS_CONFIG.themeColor;const t=SAAS_THEMES[color]||SAAS_THEMES['Turuncu'],s=document.documentElement.style;s.setProperty('--accent',t.accent);s.setProperty('--accent-2',t.accent2);}
 window.saasSetTheme=function(name){SAAS_CONFIG.themeColor=name;initSaaSTheme();};
 /* 2) GLOBAL DİNAMİK MENÜ — 6 statik navbar yerine tek kaynak */
-function closeAllInsaatOverlays(){['closeProjelerPage','closeHizmetlerPage','closeSvcDetail','closeProjectDetail','closeBolgePage','closeIletisimPage','closeDoc','closeFaqPage','closeProxAsistanPage'].forEach(fn=>{try{if(typeof window[fn]==='function')window[fn]();}catch(e){}});document.body.style.overflow='';}
+function closeAllInsaatOverlays(){['closeProjelerPage','closeHizmetlerPage','closeSvcDetail','closeProjectDetail','closeBolgePage','closeIletisimPage','closeDoc','closeFaqPage','closeProxAsistanPage','closeHesap'].forEach(fn=>{try{if(typeof window[fn]==='function')window[fn]();}catch(e){}});document.body.style.overflow='';}
 function openInsaatMobile(){var ov=document.querySelector('#projelerPage.on,#hizmetlerPage.on,#bolgePage.on,#svcDetail.on,#pjDetail.on,#iletisimPage.on,#docPage.on,#faqPage.on');var m=ov?ov.querySelector('.mnav'):document.getElementById('mnav');if(m)m.classList.add('open');}
 const INSAAT_NAV=`<a href="hizmetlerimiz.html" onclick="return goPage('hizmetler',event)">Hizmetlerimiz</a>`
   +`<a href="neden-biz.html">Neden <span class="nb-x">?</span> Biz</a>`
@@ -1430,7 +1431,7 @@ const INSAAT_NAV=`<a href="hizmetlerimiz.html" onclick="return goPage('hizmetler
   +`<a href="index.html#asistan" onclick="return goPage('asistan',event)" class="nav-asistan"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a>`;
 const INSAAT_CTA=`<a class="nav-wa" href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg></a>`
   +`<button class="btn btn-primary" onclick="openTeklif()">Ücretsiz Keşif</button>`
-  +`<a class="btn btn-ghost js-giris" href="#giris" onclick="openGiris();return false">Giriş</a>`
+  +`<a class="btn btn-ghost js-giris" href="#giris" onclick="girisOrHesap();return false">Giriş</a>`
   +`<button class="burger" onclick="openInsaatMobile()" aria-label="Menü"><span></span><span></span><span></span></button>`;
 const INSAAT_MNAV=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><b style="font-family:var(--head)">Menü</b><button style="background:none;border:0;font-size:22px;cursor:pointer;color:inherit" onclick="this.closest('.mnav').classList.remove('open')" aria-label="Kapat">✕</button></div>`
   +`<a href="hizmetlerimiz.html" onclick="document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});return goPage('hizmetler',event)">Hizmetlerimiz</a>`
@@ -1438,7 +1439,7 @@ const INSAAT_MNAV=`<div style="display:flex;justify-content:space-between;align-
   +`<a href="projelerimiz.html" onclick="document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});return goPage('projeler',event)">Projeler</a>`
   +`<a href="bolge.html" onclick="document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});return goPage('bolge',event)">Bölge Zekası</a>`
   +`<a href="index.html#asistan" onclick="document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});return goPage('asistan',event)"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a>`
-  +`<a href="#" onclick="event.preventDefault();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openGiris()">Giriş</a>`
+  +`<a href="#" class="js-giris" onclick="event.preventDefault();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});girisOrHesap()">Giriş</a>`
   +`<button class="btn btn-primary" style="margin-top:14px;justify-content:center" onclick="document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openTeklif()">Ücretsiz Keşif</button>`
   +`<div class="mnav-lang"><span>Dil / Language</span><select class="lang-sel" aria-label="Dil / Language" onchange="applyLang(this.value)"><option value="tr">TR</option><option value="en">EN</option></select></div>`;
 const INSAAT_FOOTER=`<div class="wrap">
