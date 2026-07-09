@@ -196,7 +196,7 @@
     +'.uas-asistan .prox-x,#uasRoot .prox-x{display:inline-flex;align-items:center;justify-content:center;background:'+GREEN+';color:#04140c;border-radius:6px;padding:.02em .30em;margin-left:2px;line-height:1;font-size:.9em;font-weight:900}'
     +'.uas-asistan{display:inline-flex;align-items:center}'
     +'.siteCta .lang-sw{display:none!important}' /* dil üst menüden gizli — footer'da */
-    +'.uas-footlang{display:inline-flex!important;align-items:center;gap:5px}.uas-footlang select{cursor:pointer}'
+    +'.uas-footlang{display:inline-flex!important;align-items:center;gap:6px;margin-left:auto;margin-right:14px;opacity:.9}.uas-footlang select{cursor:pointer;background:transparent;border:1px solid currentColor;border-radius:8px;padding:3px 7px;font-weight:700;font-size:12px;color:inherit}'
     /* Giriş modal */
     +'.gmodal{position:fixed;inset:0;z-index:400;display:none;align-items:center;justify-content:center;padding:18px}.gmodal.on{display:flex}'
     +'.gm-ov{position:absolute;inset:0;background:rgba(4,8,18,.72);backdrop-filter:blur(3px)}'
