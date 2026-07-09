@@ -752,9 +752,12 @@ function closeIletisimPage(){
 /* ===== ProX Asistan — bağımsız tam-ekran kilitli AI uygulaması + konuşma geçmişi (localStorage) ===== */
 var _paMsgs=[], _paBusy=false, _paConvos=[], _paCurId=null;
 var PA_STORE='prox_asistan_convos_v1';
-var PA_SUGGESTS=['Kat karşılığında müteahhit oranı nasıl belirlenir?','Kentsel dönüşüm süreci ne kadar sürer?','İstanbul’da ortalama m² inşaat maliyeti nedir?','Anahtar teslim proje süreci nasıl işler?'];
-var PA_GREET='Meridyen Yapı akıllı danışmanına hoş geldiniz. Yanıtlarım, Türkiye’nin en kapsamlı emlak veritabanı ProX’un +1 milyar doğrulanmış veri noktasına dayanır. İnşaat, kentsel dönüşüm, kat karşılığı, tadilat, bölge ve m² fiyat analizini gerçek verilerle yanıtlarım.';
-var PA_SYS='Sen Meridyen Yapı kurumsal inşaat firmasının akıllı danışmanısın. Yanıtların ProX emlak veritabanına dayanır: ProX Türkiye’nin en büyük, en kapsamlı emlak veritabanıdır; +1 milyardan fazla GERÇEK ve DOĞRULANMIŞ veri noktasıyla çalışır. ProX bir yapay zekâ veya veri üreticisi DEĞİLDİR — veri uydurmazsın, yalnızca doğrulanmış gerçek verilere dayanırsın. Türkçe, kısa, net, profesyonel yanıt ver. Uzmanlık: anahtar teslim inşaat, kentsel dönüşüm, kat karşılığı, tadilat, bölge/m² fiyat analizi, fizibilite, yatırım. Kesin fiyat/taahhüt verme; tahmini bilgi ver, gerektiğinde ücretsiz keşif öner. Konu dışı/uygunsuz sorularda kibarca yönlendir.';
+var PA_SUGGESTS=['Daire / konut satın almak istiyorum','Arsamı kat karşılığı vermek istiyorum','Binamız için kentsel dönüşüm düşünüyoruz','Yatırımlık proje önerisi istiyorum'];
+var PA_GREET='Merhaba, ben Meridyen Yapı ProX Asistanı 👋 Size nasıl yardımcı olabilirim? Daire mi arıyorsunuz, arsanızı kat karşılığı mı değerlendirmek istiyorsunuz, yoksa kentsel dönüşüm mü düşünüyorsunuz? Sizi dinliyorum — doğru projeye birlikte ulaşalım. Yanıtlarım, Türkiye’nin en kapsamlı emlak veritabanı ProX’un +1 milyar doğrulanmış veri noktasına dayanır.';
+var PA_SYS='Sen Meridyen Yapı kurumsal inşaat firmasının ProX Asistanısın — sıcak, samimi ve SATIŞ ODAKLI bir müşteri danışmanı. ANA GÖREVİN: ziyaretçiyi DİNLEYEREK gerçek ihtiyacını anlamak ve onu Meridyen Yapı’nın projeleri, ilanları ve hizmetleriyle eşleştirerek MÜŞTERİYE dönüştürmek.\n\nDAVRANIŞ KURALLARI:\n1) SELAMLAŞMA yalnızca konuşmanın İLK yanıtında olur: kısa selam ver, kendini tanıt ("Ben Meridyen Yapı ProX Asistanı") ve müşteriye ne aradığını SOR. "Önceki konuşma" verilmişse ARTIK selamlaşma/kendini tekrar tanıtma — doğrudan konuya devam et. ASLA hazır uzun keşif/fizibilite metni veya pitch DÖKME.\n2) Önce NİYETİ anla: müşteri (a) daire/konut satın mı almak istiyor, (b) arsasını KAT KARŞILIĞI mı vermek istiyor, (c) KENTSEL DÖNÜŞÜM mü, (d) tadilat/anahtar teslim mi, (e) yatırım mı? Emin olamıyorsan 1-2 KISA soruyla netleştir (konum, bütçe, m², daire mi arsa mı).\n3) İhtiyacı anladıkça İLGİLİ projeleri/hizmetleri kısa ve çekici tanıt; müşteriyi bir sonraki adıma (projeyi görme, ücretsiz keşif, teklif) yönlendir. Güven ver, baskı yapma.\n4) Uygun her fırsatta müşteriyi CANLI müşteri temsilcimize yönlendir: "Dilerseniz müşteri temsilcimiz sizi arasın; telefon numaranızı bırakırsanız kısa sürede size ulaşırız."\n5) Müşteri telefon numarası PAYLAŞIRSA: teşekkür et ve "Müşteri temsilcimiz kısa sürede sizinle iletişime geçecek" de.\n\nÜSLUP: Türkçe, kısa (2-4 cümle), sıcak, samimi, profesyonel. Yanıtların ProX’un +1 milyardan fazla GERÇEK ve DOĞRULANMIŞ emlak verisine dayanır; ProX bir yapay zekâ veya veri üreticisi DEĞİLDİR, veri uydurmazsın. Kesin fiyat/taahhüt verme; tahmini bilgi ver ve ücretsiz keşif öner. Konu dışı sorularda kibarca inşaat/gayrimenkul konusuna yönlendir.';
+function _paBizContext(){try{var pj=(typeof PROJECTS!=='undefined'&&PROJECTS&&PROJECTS.length)?PROJECTS.slice(0,8).map(function(p){return '• '+(p.t||'')+' ('+[p.loc,p.type,p.price,p.st].filter(Boolean).join(', ')+')';}).join('\n'):'';var svc='HİZMETLER: Anahtar teslim inşaat, kat karşılığı, kentsel dönüşüm, tadilat/renovasyon, fizibilite ve proje danışmanlığı.';return (pj?('MERİDYEN YAPI GÜNCEL PROJELER (müşteriye uygun olanı tanıt):\n'+pj+'\n\n'):'')+svc;}catch(e){return '';}}
+function _paPrompt(){var b=_paBizContext();return PA_SYS+(b?('\n\n'+b):'');}
+function _paHistCtx(){try{var h=_paMsgs.filter(function(m){return !m.typing&&m.text;});var prior=h.slice(0,-1).slice(-6).map(function(m){return (m.role==='me'?'Müşteri':'Asistan')+': '+m.text;}).join('\n');return prior;}catch(e){return '';}}
 function _paEsc(x){return (typeof _brandEsc==='function')?_brandEsc(x):String(x==null?'':x);}
 function _paLoadStore(){try{_paConvos=JSON.parse(localStorage.getItem(PA_STORE)||'[]');if(!Array.isArray(_paConvos))_paConvos=[];}catch(e){_paConvos=[];}}
 function _paSaveStore(){try{localStorage.setItem(PA_STORE,JSON.stringify(_paConvos.slice(0,50)));}catch(e){}}
@@ -792,13 +795,17 @@ async function paSend(ev){
   if(_paBusy)return false;
   var inp=document.getElementById('paInput');var q=((inp&&inp.value)||'').trim();if(!q)return false;
   inp.value='';inp.style.height='';
-  if(!_paCurId){_paCurId='c'+Date.now();_paConvos.unshift({id:_paCurId,title:q.slice(0,42),msgs:[],ts:Date.now()});}
+  var _ps=(typeof authSession==='function')&&authSession();
+  if(!_paCurId){_paCurId='c'+Date.now();_paConvos.unshift({id:_paCurId,title:q.slice(0,42),msgs:[],ts:Date.now(),user:_ps?_ps.name:'',email:_ps?_ps.email:''});}
   _paMsgs.push({role:'me',text:q});_paRenderLog();_paSyncCur();_paRenderHistory();_paSetTitle();
+  /* Telefon paylaşıldıysa → temsilci araması için lead yakala + görüşmeyi işaretle */
+  try{var _ph=q.match(/(?:\+?90[\s.\-]?)?0?5\d{2}[\s.\-]?\d{3}[\s.\-]?\d{2}[\s.\-]?\d{2}/);if(_ph&&typeof proxSubmitLead==='function'){var _pn=_ph[0].replace(/[^\d+]/g,'');proxSubmitLead({sourcePage:'asistan',formType:'prox-asistan',name:_ps?_ps.name:'ProX Asistan ziyaretçisi',phone:_pn,email:_ps?_ps.email:'',message:q,requestedService:'ProX Asistan görüşmesi — geri arama talebi'});var _cc=_paCur();if(_cc){_cc.lead=true;_cc.phone=_pn;_paSaveStore();}}}catch(e){}
   _paBusy=true;var btn=document.querySelector('#proxAsistanPage .pa-send');if(btn)btn.disabled=true;
   _paMsgs.push({role:'bot',typing:true});_paRenderLog();
   var persona=(window.EMLAK_TENANT&&EMLAK_TENANT.proxPersona)||'construction';
+  var _hist=_paHistCtx();
   try{
-    var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:persona,context:'default',prompt:PA_SYS,message:q}});
+    var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:persona,context:_hist||'default',prompt:_paPrompt(),message:(_hist?('Önceki konuşma:\n'+_hist+'\n\nMüşterinin yeni mesajı: '):'')+q}});
     _paMsgs=_paMsgs.filter(function(m){return !m.typing;});
     var ans=(r&&(r.answer||(r.data&&r.data.answer)))||'';
     if(!ans||(r&&r.fallback))ans=_paFallback();
@@ -1883,7 +1890,7 @@ function showAdmin(){document.getElementById('adminApp').classList.add('show');d
 function closeAdmin(){document.getElementById('adminApp').classList.remove('show');document.body.style.overflow='';if(location.hash==='#admin')try{history.replaceState(null,'',location.pathname);}catch(e){};}
 function admLogin(){const p=document.getElementById('admPass').value;const u=document.getElementById('admUser').value;if(p===(SETTINGS&&SETTINGS.admPass||'1234')){document.getElementById('adminApp').classList.add('authed');document.getElementById('admErr').style.display='none';refreshAdmin();}else{document.getElementById('admErr').style.display='block';}}
 function admLogout(){document.getElementById('adminApp').classList.remove('authed');document.getElementById('admPass').value='';}
-function admNav(pane,btn){document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('on'));document.getElementById('pane-'+pane).classList.add('on');document.querySelectorAll('.adm-side button[data-pane]').forEach(b=>b.classList.remove('on'));btn.classList.add('on');if(pane==='leads')renderLeads();if(pane==='dash')renderKpi();if(pane==='arsa')renderArsa();if(pane==='contracts')renderContracts();if(pane==='settings')loadSettingsUI();if(pane==='brand')loadBrandUI();if(pane==='menutext')loadMenuUI();if(pane==='ads')loadAdsUI();if(pane==='diller')renderDiller();if(pane==='iletisim')loadIletisimUI();if(pane==='faq')renderFaqAdmin();if(pane==='social')loadSocialUI();if(pane==='stats')loadStatsUI();if(pane==='proje3d'&&window.initProje3D)setTimeout(()=>window.initProje3D(),60);if(pane!=='proje3d'&&window.__p3hide)window.__p3hide();}
+function admNav(pane,btn){document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('on'));document.getElementById('pane-'+pane).classList.add('on');document.querySelectorAll('.adm-side button[data-pane]').forEach(b=>b.classList.remove('on'));btn.classList.add('on');if(pane==='leads')renderLeads();if(pane==='gorusmeler')renderGorusmeler();if(pane==='dash')renderKpi();if(pane==='arsa')renderArsa();if(pane==='contracts')renderContracts();if(pane==='settings')loadSettingsUI();if(pane==='brand')loadBrandUI();if(pane==='menutext')loadMenuUI();if(pane==='ads')loadAdsUI();if(pane==='diller')renderDiller();if(pane==='iletisim')loadIletisimUI();if(pane==='faq')renderFaqAdmin();if(pane==='social')loadSocialUI();if(pane==='stats')loadStatsUI();if(pane==='proje3d'&&window.initProje3D)setTimeout(()=>window.initProje3D(),60);if(pane!=='proje3d'&&window.__p3hide)window.__p3hide();}
 function refreshAdmin(){renderKpi();admPjList();admSvcList();renderLeads();try{renderArsa();renderContracts();loadSettingsUI();loadBrandUI();loadMenuUI();loadAdsUI();loadSocialUI();}catch(e){}}
 function renderKpi(){
   const k=document.getElementById('kpi');if(!k)return;
@@ -1893,6 +1900,81 @@ function renderKpi(){
   dl.innerHTML=LEADS.length?('<table class="adm-tbl"><thead><tr><th>Ad</th><th>Telefon</th><th>Konu</th><th>Tarih</th></tr></thead><tbody>'+LEADS.slice(0,5).map(l=>`<tr><td>${l.ad}</td><td>${l.tel}</td><td>${l.konu}</td><td>${l.date}</td></tr>`).join('')+'</tbody></table>'):'<div style="color:var(--muted);font-size:14px">Henüz teklif talebi yok.</div>';
 }
 function renderLeads(){const b=document.getElementById('leadsBody');if(!b)return;b.innerHTML=LEADS.map(l=>`<tr><td>${l.ad}</td><td>${l.tel}</td><td>${l.konu}</td><td>${l.src}</td><td>${l.date}</td></tr>`).join('');document.getElementById('leadsEmpty').style.display=LEADS.length?'none':'block';renderKpi();}
+/* ===== GÖRÜŞMELER & TEKLİFLER — yetkili takip panosu ===== */
+function _gEsc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function _gJSON(k,f){try{var v=JSON.parse(localStorage.getItem(k)||'null');return v==null?f:v;}catch(e){return f;}}
+function _gDate(x){try{var d=(typeof x==='number')?new Date(x):new Date(x);return d.toLocaleString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
+function renderGorusmeler(){
+  var host=document.getElementById('gorusmelerBody');if(!host)return;
+  var convos=_gJSON('prox_asistan_convos_v1',[]);if(!Array.isArray(convos))convos=[];
+  var users=_gJSON('insaat_users_v1',{})||{};
+  var quotes=[];try{for(var i=0;i<localStorage.length;i++){var kk=localStorage.key(i);if(kk&&kk.indexOf('insaat_quotes_')===0){var em=kk.slice(14);var arr=_gJSON(kk,[]);if(Array.isArray(arr))arr.forEach(function(q){quotes.push(Object.assign({_email:em},q));});}}}catch(e){}
+  quotes.sort(function(a,b){return String(b.date||'').localeCompare(String(a.date||''));});
+  var fbLeads=_gJSON('emlak_leads_fallback',[]);if(!Array.isArray(fbLeads))fbLeads=[];
+  /* Geri arama talepleri: asistanda telefon bırakan görüşmeler + CRM fallback lead'ler */
+  var cb=[];
+  convos.forEach(function(c){if(c.lead&&c.phone)cb.push({name:c.user||'ProX Asistan ziyaretçisi',phone:c.phone,when:c.ts,note:(c.title||''),src:'ProX Asistan'});});
+  fbLeads.forEach(function(l){cb.push({name:l.name||'—',phone:l.phone||'',when:l.createdAt,note:l.requestedService||l.message||l.formType||'',src:(l.formType||l.sourcePage||'form')});});
+  cb.sort(function(a,b){return (new Date(b.when||0))-(new Date(a.when||0));});
+  var memberList=Object.keys(users).map(function(e){return Object.assign({email:e},users[e]||{});});
+  memberList.sort(function(a,b){return String(b.createdAt||'').localeCompare(String(a.createdAt||''));});
+  var uname=function(e){return (users[e]&&users[e].name)||e;};
+  var uphone=function(e){return (users[e]&&users[e].phone)||'';};
+
+  var H='';
+  /* KPI şeridi */
+  H+='<div class="g-kpis">'
+    +'<div class="g-kpi"><b>'+convos.length+'</b><span>ProX görüşmesi</span></div>'
+    +'<div class="g-kpi"><b>'+quotes.length+'</b><span>Teklif talebi</span></div>'
+    +'<div class="g-kpi"><b>'+memberList.length+'</b><span>Kayıtlı üye</span></div>'
+    +'<div class="g-kpi'+(cb.length?' hot':'')+'"><b>'+cb.length+'</b><span>Geri arama talebi</span></div>'
+    +'</div>';
+
+  /* Geri arama talepleri (en aksiyon alınabilir) */
+  H+='<div class="g-sec"><h3>📞 Geri Arama Talepleri</h3>';
+  if(!cb.length){H+='<div class="g-empty">Telefon bırakan müşteri yok. Müşteri asistanda numarasını paylaşınca burada listelenir ve temsilci arayabilir.</div>';}
+  else{H+='<div class="panelcard" style="padding:0"><table class="adm-tbl"><thead><tr><th>Ad</th><th>Telefon</th><th>Talep / Konu</th><th>Kaynak</th><th>Tarih</th><th></th></tr></thead><tbody>';
+    cb.forEach(function(x){var tel=_gEsc(x.phone);H+='<tr><td>'+_gEsc(x.name)+'</td><td><b>'+tel+'</b></td><td>'+_gEsc(x.note)+'</td><td>'+_gEsc(x.src)+'</td><td>'+_gEsc(_gDate(x.when))+'</td><td>'+(x.phone?'<a class="g-call" href="tel:'+tel.replace(/[^\\d+]/g,'')+'">Ara</a>':'')+'</td></tr>';});
+    H+='</tbody></table></div>';}
+  H+='</div>';
+
+  /* ProX Asistan görüşmeleri — tam transkript */
+  H+='<div class="g-sec"><h3>💬 ProX Asistan Görüşmeleri</h3>';
+  if(!convos.length){H+='<div class="g-empty">Henüz görüşme yok. Kullanıcılar ProX Asistan ile konuştukça tam dökümleri burada görünür.</div>';}
+  else{convos.forEach(function(c){
+    var msgs=(c.msgs||[]).filter(function(m){return m&&m.text;});
+    var who=c.user?(_gEsc(c.user)+(c.email?(' <'+_gEsc(c.email)+'>'):'')):'Anonim ziyaretçi';
+    H+='<details class="g-convo"'+(c.lead?' data-lead="1"':'')+'><summary><span class="g-ct">'+_gEsc(c.title||'Sohbet')+'</span><span class="g-cm">'+who+' · '+_gEsc(_gDate(c.ts))+' · '+msgs.length+' mesaj'+(c.lead?' · <b class="g-leadtag">📞 '+_gEsc(c.phone||'telefon bıraktı')+'</b>':'')+'</span></summary><div class="g-transcript">';
+    if(!msgs.length){H+='<div class="g-empty">Boş görüşme.</div>';}
+    msgs.forEach(function(m){var me=m.role==='me';H+='<div class="g-line '+(me?'me':'bot')+'"><span class="who">'+(me?'Müşteri':'ProX')+'</span><span class="tx">'+_gEsc(m.text)+'</span></div>';});
+    H+='</div></details>';
+  });}
+  H+='</div>';
+
+  /* Üye teklifleri */
+  H+='<div class="g-sec"><h3>🧾 Üye Teklif Talepleri</h3>';
+  if(!quotes.length){H+='<div class="g-empty">Henüz teklif talebi yok. Üyeler hesabından “Hızlı Teklif Al” gönderince burada listelenir.</div>';}
+  else{quotes.forEach(function(q){
+    var st=q.status==='answered';
+    H+='<div class="g-quote"><div class="g-qhead"><b>'+_gEsc(q.konu||'Genel')+'</b><span class="g-qst '+(st?'ok':'wait')+'">'+(st?'✓ Yanıtlandı':'⏳ Bekliyor')+'</span></div>'
+      +'<div class="g-qmeta">'+_gEsc(uname(q._email))+' · '+_gEsc(q._email)+(uphone(q._email)?(' · '+_gEsc(uphone(q._email))):'')+' · '+_gEsc(_gDate(q.date))+'</div>'
+      +(q.mesaj?'<div class="g-qmsg">“'+_gEsc(q.mesaj)+'”</div>':'<div class="g-qmsg g-muted">(mesaj bırakılmadı)</div>')
+      +(q.cevap?'<div class="g-qcevap"><b>ProX yanıtı:</b> '+_gEsc(q.cevap)+'</div>':'')
+      +'</div>';
+  });}
+  H+='</div>';
+
+  /* Üyeler */
+  H+='<div class="g-sec"><h3>👤 Kayıtlı Üyeler</h3>';
+  if(!memberList.length){H+='<div class="g-empty">Henüz kayıtlı üye yok.</div>';}
+  else{H+='<div class="panelcard" style="padding:0"><table class="adm-tbl"><thead><tr><th>Ad Soyad</th><th>E-posta</th><th>Telefon</th><th>Kayıt</th></tr></thead><tbody>';
+    memberList.forEach(function(u){H+='<tr><td>'+_gEsc(u.name||'—')+'</td><td>'+_gEsc(u.email)+'</td><td>'+_gEsc(u.phone||'—')+'</td><td>'+_gEsc(_gDate(u.createdAt))+'</td></tr>';});
+    H+='</tbody></table></div>';}
+  H+='</div>';
+
+  H+='<div class="g-note">🔒 Bu veriler bu tarayıcıda saklanır. Canlı yayında tüm kullanıcıların görüşme ve teklifleri ProX CRM’de merkezî olarak toplanır; yetkili panelinden tüm cihazlardan takip edilir.</div>';
+  host.innerHTML=H;
+}
 /* content save */
 function saveContent(){
   const g=id=>document.getElementById(id).value;
