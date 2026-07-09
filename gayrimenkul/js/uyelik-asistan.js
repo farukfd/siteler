@@ -193,7 +193,7 @@
         SHAD='var(--shadow-card,0 14px 36px -20px rgba(13,30,60,.22))';
     var css=''
     +'#uasRoot .prox-logo{font-weight:800;letter-spacing:.2px;color:inherit;white-space:nowrap;display:inline-flex;align-items:center;font-family:'+HEAD+'}'
-    +'.uas-asistan .prox-x,#uasRoot .prox-x{display:inline-flex;align-items:center;justify-content:center;background:'+GREEN+';color:#04140c;border-radius:6px;padding:.02em .30em;margin-left:2px;line-height:1;font-size:.9em;font-weight:900}'
+    +'.uas-asistan .prox-x,#uasRoot .prox-x{display:inline-flex;align-items:center;justify-content:center;background:#19c37d;color:#04140c;border-radius:6px;padding:.02em .28em;margin-left:2px;line-height:1;font-size:.9em;font-weight:900}'
     +'.uas-asistan{display:inline-flex;align-items:center}'
     +'.siteCta .lang-sw{display:none!important}' /* dil üst menüden gizli — footer'da */
     +'.uas-footlang{display:inline-flex!important;align-items:center;gap:6px;margin-left:auto;margin-right:14px;opacity:.9}.uas-footlang select{cursor:pointer;background:transparent;border:1px solid currentColor;border-radius:8px;padding:3px 7px;font-weight:700;font-size:12px;color:inherit}'
