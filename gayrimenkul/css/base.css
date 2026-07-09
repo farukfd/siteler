@@ -810,6 +810,12 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
 .gm-prox-lead{font-size:12px;opacity:.75}
 .gm-prox-mark{display:inline-flex;align-items:center;font-family:var(--head);font-weight:800;font-size:15px;color:#fff}
 .gm-prox-x{display:inline-grid;place-items:center;width:1.35em;height:1.35em;background:var(--green);color:#08130a;border-radius:6px;margin-left:3px;font-weight:900;font-size:.92em}.fbot a:hover{color:#fff}
+/* ProX Asistan nav linki (statik — app.js kaynağında, flash yok) */
+.prox-logo{font-weight:800;display:inline-flex;align-items:center;color:inherit;white-space:nowrap}
+.prox-x{display:inline-grid;place-items:center;width:1.3em;height:1.3em;background:var(--green,#34a853);color:#04140c;border-radius:6px;margin-left:2px;font-weight:900;font-size:.85em}
+/* footer dil seçici — sağa dayalı, şık */
+.fbot .lang-sw{margin-left:auto;margin-right:14px;opacity:.92}
+.fbot .lang-sw select{cursor:pointer;background:transparent;border:1px solid currentColor;border-radius:8px;padding:3px 7px;font-weight:700;font-size:12px;color:inherit}
 .fsoc{display:flex;gap:10px}
 .fsoc a{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.07);display:grid;place-items:center;font-size:16px}
 .fsoc a:hover{background:var(--accent)}

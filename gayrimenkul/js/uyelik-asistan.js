@@ -326,10 +326,8 @@
 
   /* ===================== 6) NAV/ADMIN/FAVORİ BAĞLAMA + BOOT ===================== */
   function uasEnhanceNav(){
-    /* ProX Asistan linkini nav'a ekle (bir kez, her .siteNav'a) */
-    document.querySelectorAll('.siteNav').forEach(function(nav){if(nav.querySelector('[data-uas-asistan]'))return;var a=document.createElement('a');a.href='#';a.setAttribute('data-uas-asistan','1');a.className='uas-asistan';a.onclick=function(e){if(e&&e.preventDefault)e.preventDefault();openProxAsistanPage();return false;};a.innerHTML='<span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan';nav.appendChild(a);});
-    /* Giriş butonunu üyeliğe bağla */
-    document.querySelectorAll('.js-giris').forEach(function(g){g.onclick=function(e){if(e&&e.preventDefault)e.preventDefault();try{if(typeof closeAllOverlays==='function')closeAllOverlays();}catch(_){}girisOrHesap();return false;};});
+    /* ProX Asistan linki + Giriş yönlendirmesi artık app.js mountSaaSMenu KAYNAĞINDA (statik, flash yok).
+       Burada yalnızca footer dil + üyelik durumu (isim/yeşil nokta) uygulanır. */
     uasFooterLang();
     try{applyAuthUI();}catch(e){}
   }
