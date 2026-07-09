@@ -49,11 +49,19 @@
   }
 
   var _pcResults = [];
-  function _card(x) {
+  function pcOpenMatch(x) {
+    if (!x) return;
+    try {
+      var raw = String(x.id || '');
+      if (x.ozel) { var oid = raw.replace(/^ozel-/, ''); if (typeof ozLead === 'function') return ozLead(oid); if (typeof ozOpen === 'function') return ozOpen(); }
+      var iid = +raw.replace(/^ilan-/, ''); if (typeof openDet === 'function') return openDet(iid);
+    } catch (e) {}
+  }
+  function _card(x, i) {
     var img = '';
     try { if (!x.ozel && x.img && typeof imgSrc === 'function') img = imgSrc(x.img); } catch (e) {}
     var reasons = (x._reasons || []).slice(0, 2).map(function (r) { return '<li>' + esc(r) + '</li>'; }).join('');
-    return '<div class="pcr-card' + (x.ozel ? ' oz' : '') + '">' +
+    return '<div class="pcr-card' + (x.ozel ? ' oz' : '') + '" data-i="' + i + '" role="button" tabindex="0">' +
       '<div class="pcr-ph">' + (img ? '<img src="' + img + '" alt="' + esc(x.title || x.tip) + '" loading="lazy">' : '<div class="pcr-oz"><span>🔒</span>Özel Portföy</div>') +
       '<span class="pcr-score">%' + x._score + '</span>' +
       '<span class="pcr-src">' + esc(x.source) + '</span></div>' +
@@ -91,6 +99,13 @@
     bindSeg('pc_butce', 'butce', function (v) { return +v || 0; });
     var bg = $('pc_bolge'); if (bg) bg.addEventListener('change', function () { PCA.bolge = bg.value; pcUpdate(false); });
     var pr = $('pc_oncelik'); if (pr) pr.addEventListener('input', function () { PCA.oncelik = +pr.value; pcUpdate(true); });
+    var rg = $('pc_results');
+    if (rg) {
+      rg.addEventListener('click', function (e) { var c = e.target.closest('.pcr-card'); if (!c) return; pcOpenMatch(_pcResults[+c.getAttribute('data-i')]); });
+      rg.addEventListener('keydown', function (e) { if (e.key !== 'Enter' && e.key !== ' ') return; var c = e.target.closest('.pcr-card'); if (!c) return; e.preventDefault(); pcOpenMatch(_pcResults[+c.getAttribute('data-i')]); });
+    }
+    /* en iyi Özel Portföy fırsat kartı → tıkla → Detay İste */
+    var ozc = $('pc_ozel'); if (ozc) ozc.addEventListener('click', function () { var oz = null; for (var i = 0; i < _pcResults.length; i++) { if (_pcResults[i].ozel) { oz = _pcResults[i]; break; } } pcOpenMatch(oz); });
     pcUpdate(true);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(pcInit, 60); });
