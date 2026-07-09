@@ -19,7 +19,8 @@ birkaç **güvenlik/rotasyon** maddesi.
 ```
 insaat/
 ├── index.html              ← ANA SPA kabuğu (tüm overlay'ler + admin paneli + inline üyelik/hesap script)
-├── js/app-core.js          ← Motor (nav/footer, router, PROJECTS/SERVICES, admin, ProX, i18n)  ~2680 satır
+├── js/app-core.js          ← Motor (nav/footer, router, PROJECTS/SERVICES, admin, ProX, i18n)  ~2700 satır
+├── js/insaat-seo-chrome.js ← Statik SEO sayfaları için ORTAK hafif chrome (ProX Asistan + üyelik enjekte)
 ├── css/base.css            ← Ana stil    │  css/theme*.css → tema dosyaları (initSaaSTheme dosya takası)
 ├── img/insaat/…            ← Görseller (proje/hero). Yol: img/insaat/*.jpg
 ├── bolge.html              ← STATİK SEO sayfası (Bölge Zekası)         ┐
@@ -149,10 +150,12 @@ admin 1234 + 10 panel, i18n TR↔EN, OSM harita, hash router + geri/ileri, F5-ye
 ---
 
 ## 10) BİLİNEN SINIRLAMALAR / SIRADAKİ İŞLER (öncelik sırasıyla)
-- **P1 — Statik sayfa chrome un-fork:** 5 statik SEO sayfasının KENDİ header/footer'ı hâlâ forklu (ProX Asistan
-  linki + canlı üyelik durumu YOK; kendi CSS'i). Nav artık SPA'ya yönleniyor ama sayfaya İLK düşüşte eski chrome
-  görünür. Kalıcı çözüm: statik sayfaları `base.css` + `app-core.js`'e bağlayıp `mountInsaatMenu()` ile ortak
-  header/footer'ı kullandırmak (fork'u bitir). Büyük ama net iş.
+- **P3 (indirildi) — Statik sayfa CSS/gövde un-fork:** 5 statik SEO sayfasının DİNAMİK chrome'u artık ORTAK
+  `js/insaat-seo-chrome.js` ile yönetiliyor: ProX Asistan linki + canlı üyelik durumu (giriş adı) enjekte ediliyor,
+  nav SPA'ya yönleniyor → chrome SPA ile TUTARLI. Geriye yalnızca her sayfanın KENDİ inline CSS'i (~200-280 satır,
+  base.css'ten forklanmış ama token'ları birleşik) + kendi gövde renderer'ı kalıyor. Bunları da base.css'e
+  taşımak SEO gövdesini riske atar; **düşük öncelik**. Not: app-core.js'i bu sayfalara doğrudan yükleme
+  (CSS cascade + global çakışması → RİSKLİ); gerekirse chrome'u yine `insaat-seo-chrome.js` üzerinden genişlet.
 - **P1 — Merkezî görüşme/teklif takibi:** admin panosunu localStorage yerine ProX CRM API'sinden okut
   (lead'ler zaten `/api/v1/tenant/lead`'e gidiyor; okuma ucu + panoya bağlama gerek).
 - **P2 — Sunucu-tarafı üyelik/oturum** (şu an istemci SHA-256 + localStorage; tek-cihaz).
