@@ -121,7 +121,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <!-- TEMA: themes kütüphanesinden seç (tenant başına değiştir). Aktif: Meridyen -->
   <link rel="stylesheet" href="../themes/gayrimenkul/meridyen.css">
-  <link rel="stylesheet" href="css/base.css?v=5">
+  <link rel="stylesheet" href="css/base.css?v=6">
 </head>
 <body>
 <div id="site">
@@ -162,33 +162,71 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
     <h1><span class="js-heroTitle">Doğru evi,</span> <span class="hl js-heroTitle2">doğru veriyle buluşturuyoruz</span></h1>
     <p class="lead js-heroDesc">Satılık ve kiralık portföyümüzün her ilanında mahalle fiyat endeksi, yatırım skoru ve bölge analizi var. Duyguyla değil; veriyle karar verin.</p>
 
-    <div class="searchbar" id="searchbar">
-      <div class="tabs">
-        <button class="tab act" data-op="Satılık" onclick="setOp(this)">Satılık</button>
-        <button class="tab" data-op="Kiralık" onclick="setOp(this)">Kiralık</button>
-        <button class="tab" data-op="Günlük" onclick="setOp(this)">Günlük Kiralık</button>
-<button class="tab" data-op="Özel" onclick="setOp(this)">Özel Portföy</button>
+    <div class="pcw" id="pusulaHero">
+      <div class="pc-controls">
+        <div class="pc-seg" id="pc_amac" role="tablist">
+          <button class="on" data-a="Satılık">Satılık</button>
+          <button data-a="Kiralık">Kiralık</button>
+          <button data-a="Günlük">Günlük</button>
+        </div>
+        <div class="pc-chips" id="pc_butce">
+          <button class="on" data-b="0">Bütçe: Farketmez</button>
+          <button data-b="5000000">≤5M</button>
+          <button data-b="10000000">≤10M</button>
+          <button data-b="20000000">≤20M</button>
+          <button data-b="50000000">≤50M</button>
+        </div>
+        <select id="pc_bolge" class="pc-sel" aria-label="Bölge">
+          <option value="">Tüm Bölgeler</option><option>Konak</option><option>Karşıyaka</option><option>Bornova</option><option>Buca</option><option>Çeşme</option><option>Urla</option>
+        </select>
       </div>
-      <div class="fields">
-        <div class="fld"><label>Emlak Tipi</label>
-          <select id="s_tip"><option value="">Tümü</option><option>Daire</option><option>Villa</option><option>Müstakil Ev</option><option>Ofis / İş Yeri</option><option>Arsa</option></select></div>
-        <div class="fld"><label>Lokasyon</label>
-          <select id="s_loc"><option value="">Tüm Bölgeler</option><option>Konak</option><option>Karşıyaka</option><option>Bornova</option><option>Buca</option><option>Çeşme</option><option>Urla</option></select></div>
-        <div class="fld"><label>Maks. Fiyat</label>
-          <select id="s_fiy"><option value="">Farketmez</option><option value="5000000">5.000.000 ₺</option><option value="10000000">10.000.000 ₺</option><option value="20000000">20.000.000 ₺</option><option value="50000000">50.000.000 ₺</option></select></div>
-        <button class="go" onclick="runSearch()"><svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg> İlanları Gör</button>
-      </div>
-    </div>
 
-    <div class="hero-stats">
-      <div class="it"><div class="v num" data-count="1240">0</div><div class="k">Aktif portföy ilanı</div></div>
-      <div class="it"><div class="v num"><span data-count="3800">0</span><small>+</small></div><div class="k">Tamamlanan işlem</div></div>
-      <div class="it"><div class="v num" data-count="18">0</div><div class="k">Yıllık tecrübe</div></div>
-      <div class="it"><div class="v num"><span data-count="98">0</span><small>%</small></div><div class="k">Müşteri memnuniyeti</div></div>
-    </div>
-    <div class="trustline">
-      <span class="vp">✓ Her ilanda canlı bölge endeksi</span><span>·</span>
-      <span>Gayrimenkul Karar Analizi ve Emlak Ekspertiz Hizmetleri</span><span>·</span><span>KVKK uyumlu</span>
+      <div class="pc-compass" id="pc_compass">
+        <svg class="pc-rose" viewBox="0 0 320 320" fill="none" aria-hidden="true">
+          <circle cx="160" cy="160" r="151" stroke="rgba(255,255,255,.08)" stroke-width="1.5"/>
+          <circle cx="160" cy="160" r="140" stroke="rgba(255,255,255,.30)" stroke-width="7" stroke-dasharray="2 16.3" stroke-linecap="round"/>
+          <circle cx="160" cy="160" r="112" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+          <path d="M160 30 L166 46 L160 42 L154 46 Z" fill="rgba(126,213,152,.9)"/>
+          <circle cx="160" cy="160" r="90" fill="rgba(9,20,44,.45)" stroke="rgba(255,255,255,.10)" stroke-width="1.5"/>
+          <g stroke="rgba(255,255,255,.16)" stroke-width="1.4"><path d="M160 60 V78 M160 242 V260 M60 160 H78 M242 160 H260"/></g>
+        </svg>
+        <span class="pc-lbl pc-n">Bütçe</span>
+        <span class="pc-lbl pc-e">Yatırım<small>Getiri</small></span>
+        <span class="pc-lbl pc-s">Bölge</span>
+        <span class="pc-lbl pc-w">Yaşam<small>Konfor</small></span>
+        <div class="pc-needle" id="pc_needle">
+          <svg viewBox="0 0 26 210" width="26" height="210" aria-hidden="true">
+            <defs><linearGradient id="pcn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset=".5" stop-color="#3b82f6"/><stop offset="1" stop-color="#1e40af"/></linearGradient></defs>
+            <path d="M13 8 L21 100 L13 118 L5 100 Z" fill="url(#pcn)"/>
+            <path d="M13 118 L18 176 L13 202 L8 176 Z" fill="rgba(255,255,255,.28)"/>
+            <circle cx="13" cy="105" r="9" fill="#fff"/><circle cx="13" cy="105" r="4.5" fill="#1e40af"/>
+          </svg>
+        </div>
+        <div class="pc-core">
+          <div class="pc-count" id="pc_count">—</div>
+          <div class="pc-count-lbl">canlı eşleşme</div>
+          <div class="pc-best" id="pc_best">Seçiminizi yapın; pusula en uygun evinizi göstersin.</div>
+        </div>
+      </div>
+
+      <div class="pc-prio">
+        <span class="pc-prio-l">🏡 Yaşam · Konfor</span>
+        <input type="range" id="pc_oncelik" min="0" max="100" value="50" aria-label="Öncelik: Yaşam ↔ Yatırım">
+        <span class="pc-prio-r">Yatırım · Getiri 📈</span>
+      </div>
+
+      <div class="pc-ozel" id="pc_ozel" hidden></div>
+
+      <div class="pc-actions">
+        <button class="pc-cta" onclick="pcGoResults()">Sonuçları Gör <span aria-hidden="true">→</span></button>
+        <button class="pc-ghost" onclick="pcAllListings()">Tüm portföyü gör</button>
+        <span class="pc-trust">Ücretsiz · 30 sn · kayıt yok · 372M+ veri</span>
+      </div>
+
+      <div class="pc-results-panel" id="pc_resultsPanel" hidden>
+        <div class="pc-results-head">Size en uygun ilk eşleşmeler</div>
+        <div class="pc-results" id="pc_results"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1871,6 +1909,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 </div>
 
   <script src="js/app.js?v=3"></script>
+  <script src="js/hero-pusula.js?v=1"></script>
   <script src="js/uyelik-asistan.js?v=10"></script>
 </body>
 </html>
