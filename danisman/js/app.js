@@ -567,6 +567,7 @@ function apptSubmit(){const ad=(document.getElementById('ap_ad')||{}).value?docu
   if(!ad||!tel){toast('⚠ Lütfen ad ve telefon bilgisi girin.');return;}
   const not=(document.getElementById('ap_not')||{}).value||'';
   if(typeof submitLead==='function')submitLead({sourcePage:'danisman',formType:'randevu',name:ad,phone:tel,email:'',location:'',message:'Randevu: '+_apptState.day+' '+_apptState.slot+(not?(' · '+not):''),requestedService:'Ücretsiz Analiz'});
+  dnPushLead({name:ad,phone:tel,konu:'Ücretsiz Analiz Randevusu',msg:_apptState.day+' '+_apptState.slot+(not?(' · '+not):''),src:'Randevu Formu'});/* admin görüşme panosu kaydı */
   toast('✦ Teşekkürler <b>'+ad+'</b> — ücretsiz analiz randevunuz <b>'+_apptState.day+' / '+_apptState.slot+'</b> için alındı.');
   const s=document.getElementById('apptSummary');if(s)s.innerHTML='✓ Talebiniz iletildi: <b>'+_apptState.day+' · '+_apptState.slot+'</b>. Onay için sizi arayacağız.';}
 
@@ -616,6 +617,41 @@ function _proxReply(q){
   return 'Çok değerli bir soru. Mülkünüzün niteliğine ve beklentinize göre size özel bir yol haritası çıkarırım; genel-geçer değil, kişiye özel.'+cta;
 }
 function _proxPush(role,html){const l=document.getElementById('proxLog');if(!l)return;let extra='';if(role==='a')extra='<div><button class="pm-cta" onclick="proxToAnaliz()">📅 Ücretsiz Analiz Randevusu Al</button></div>';l.insertAdjacentHTML('beforeend','<div class="pm '+role+'">'+(role==='a'?'<b>Selin Meridyen — ProX:</b> ':'')+html+extra+'</div>');l.scrollTop=l.scrollHeight;}
+/* ===== D3: TAM KAYIT — ProX Asistan yazışmaları + iletişim/randevu talepleri admin panosuna =====
+   Yapay zeka yazışmaları dn_asistan_convos'a, form talepleri dn_leads'e; admin "Görüşmeler & Talepler". */
+var _dnConvoId=null;
+function _dnLogConvo(role,raw){
+  if(!raw)return;var t=String(raw).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();if(!t)return;
+  try{var KEY='dn_asistan_convos';var arr=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(arr))arr=[];
+    var c=_dnConvoId?arr.filter(function(x){return x&&x.id===_dnConvoId;})[0]:null;
+    if(!c){_dnConvoId='c'+Date.now();c={id:_dnConvoId,title:'ProX Asistan Görüşmesi',ts:Date.now(),msgs:[]};arr.unshift(c);}
+    c.msgs.push({role:(role==='u'?'me':'bot'),text:t});c.ts=Date.now();
+    if(role==='u'){var ph=t.match(/(?:\+?90[\s.\-]?)?0?5\d{2}[\s.\-]?\d{3}[\s.\-]?\d{2}[\s.\-]?\d{2}/);if(ph){c.lead=true;c.phone=ph[0].replace(/[^\d+]/g,'');dnPushLead({name:'ProX Asistan ziyaretçisi',phone:c.phone,konu:'ProX Asistan — geri arama',msg:t,src:'ProX Asistan'});}}
+    localStorage.setItem(KEY,JSON.stringify(arr.slice(0,200)));
+  }catch(e){}
+  try{renderGorusmelerD();}catch(e){}
+}
+function dnPushLead(o){o=o||{};try{var KEY='dn_leads';var arr=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(arr))arr=[];arr.unshift(Object.assign({id:'l'+Date.now(),ts:Date.now(),date:new Date().toLocaleString('tr-TR')},o));localStorage.setItem(KEY,JSON.stringify(arr.slice(0,300)));}catch(e){}try{renderGorusmelerD();}catch(e){}}
+function _gDDate(x){try{return new Date(x).toLocaleString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
+function renderGorusmelerD(){
+  var host=document.getElementById('dnGorusmelerBody');if(!host)return;
+  var convos=[],leads=[];try{convos=JSON.parse(localStorage.getItem('dn_asistan_convos')||'[]');}catch(e){}try{leads=JSON.parse(localStorage.getItem('dn_leads')||'[]');}catch(e){}
+  if(!Array.isArray(convos))convos=[];if(!Array.isArray(leads))leads=[];
+  var cb=convos.filter(function(c){return c&&c.lead&&c.phone;}).length;
+  var H='<div class="dng-kpis"><div class="dng-k"><b>'+convos.length+'</b><span>ProX görüşmesi</span></div><div class="dng-k"><b>'+leads.length+'</b><span>Talep / mesaj</span></div><div class="dng-k'+(cb?' hot':'')+'"><b>'+cb+'</b><span>Geri arama</span></div></div>';
+  H+='<h5 class="dng-h">📥 Gelen Talepler</h5>';
+  if(!leads.length)H+='<div class="dng-empty">Henüz talep yok. İletişim/randevu formları ve telefon bırakan ziyaretçiler burada listelenir.</div>';
+  else H+='<div class="dng-leads">'+leads.map(function(l){return '<div class="dng-lead"><div class="dng-lt"><b>'+_leD(l.name||'—')+'</b><span>'+_leD(l.src||'form')+' · '+_leD(_gDDate(l.ts))+'</span></div><div class="dng-lb">'+(l.phone?('📞 '+_leD(l.phone)+' · '):'')+_leD(l.konu||'')+(l.msg?(' — '+_leD(l.msg)):'')+'</div></div>';}).join('')+'</div>';
+  H+='<h5 class="dng-h">💬 ProX Asistan Görüşmeleri (tam döküm)</h5>';
+  if(!convos.length)H+='<div class="dng-empty">Henüz görüşme yok. Ziyaretçiler ProX Asistan ile konuştukça tam dökümleri burada görünür.</div>';
+  else convos.forEach(function(c){var msgs=(c.msgs||[]).filter(function(m){return m&&m.text;});
+    H+='<details class="dng-convo"'+(c.lead?' data-lead="1"':'')+'><summary><span class="dng-ct">'+_leD(c.title||'Sohbet')+'</span><span class="dng-cm">'+_leD(_gDDate(c.ts))+' · '+msgs.length+' mesaj'+(c.lead?' · <b class="dng-tag">📞 '+_leD(c.phone||'telefon')+'</b>':'')+'</span></summary><div class="dng-tr">';
+    if(!msgs.length)H+='<div class="dng-empty">Boş görüşme.</div>';
+    msgs.forEach(function(m){var me=m.role==='me';H+='<div class="dng-line '+(me?'me':'bot')+'"><span class="who">'+(me?'Ziyaretçi':'ProX')+'</span><span class="tx">'+_leD(m.text)+'</span></div>';});
+    H+='</div></details>';});
+  host.innerHTML=H;
+}
+try{window.renderGorusmelerD=renderGorusmelerD;window.dnPushLead=dnPushLead;}catch(e){}
 /* Canlı ProX: /prox/ai (answer) + yatırım/portföy sorularında /prox/analyze. Boş/başarısız → yerel _proxReply.
    Sağlayıcı adı ASLA gösterilmez/loglanmaz — yalnızca "ProX". Değer SADECE API'den gelir. */
 function _proxAnalyzeHTML(a){
@@ -660,7 +696,7 @@ async function _proxResolveReply(q){
     return _proxReply(q);
   }catch(e){ return _proxReply(q); }
 }
-function proxSend(){const i=document.getElementById('proxIn');if(!i)return;const q=i.value.trim();if(!q)return;_proxPush('u',q.replace(/</g,'&lt;'));i.value='';setTimeout(function(){_proxResolveReply(q).then(function(html){_proxPush('a',html);});},440);}
+function proxSend(){const i=document.getElementById('proxIn');if(!i)return;const q=i.value.trim();if(!q)return;_proxPush('u',q.replace(/</g,'&lt;'));_dnLogConvo('u',q);i.value='';setTimeout(function(){_proxResolveReply(q).then(function(html){_proxPush('a',html);_dnLogConvo('a',html);});},440);}
 function proxQuick(q){const i=document.getElementById('proxIn');if(i)i.value=q;proxSend();}
 function proxToAnaliz(){navGo('randevu');}
 function proxAiQuery(q){const base=SAAS_CONFIG.proxAiPrompts.persona;const custom=saasResolve('customPrompt');console.log('[ProX persona]',(base+(custom?(' Ek ton: '+custom):'')).slice(0,90)+'…');return _proxReply(q);}
@@ -694,7 +730,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();cl
    ===================================================================== */
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='sta-modal';
   el.innerHTML='<div class="sta-ov" onclick="closeSaasAdmin()"></div><div class="sta-card"><div class="sta-hd"><b>ProX SaaS · '+SAAS_CONFIG.tenantName+'</b><button onclick="openOnboarding()" title="Kurulum Sihirbazı" style="margin-left:auto;margin-right:10px;background:none;border:1px solid var(--line-soft);border-radius:8px;color:var(--gold);padding:4px 11px;cursor:pointer;font:inherit;font-size:12.5px">🚀 Sihirbaz</button><button onclick="closeSaasAdmin()">✕</button></div>'
-   +'<div class="sta-tabs"><button class="act" data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="hizmetalani" onclick="staTab(this)">Hizmet Alanı</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
+   +'<div class="sta-tabs"><button class="act" data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="hizmetalani" onclick="staTab(this)">Hizmet Alanı</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button><button data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button></div><div class="sta-body">'
    /* MARKA & LOGO */
    +'<div class="sta-pane" data-p="marka"><h4>Marka, Logo & Tema</h4><p class="sub">Logo/favicon yükleyin veya URL girin; altın/şampanya tema tonunu ayarlayın.</p>'
      +'<div class="logo-prev"><div class="box" id="adLogoPrev">M</div><span>Mevcut logo önizleme</span></div>'
@@ -740,6 +776,10 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
      +'<div class="sta-row2"><div class="sta-f"><label>Açık İlan</label><input value="'+LISTINGS.length+' güncel ilan" readonly></div><div class="sta-f"><label>VIP Portföy</label><input value="'+VIP_PORTFOLIO.length+' yetki belgeli (adres gizli)" readonly></div></div>'
      +'<button class="btn btn-gold sta-go" onclick="rebuildVipFromProx()">⟳ ProX Gerçek Fiyatlarla Oluştur</button>'
      +'<p class="sub" style="margin-top:10px">EİDS yetkisi açık ilan yayını içindir; VIP portföy davet usulüdür (adres gizli).</p></div>'
+   /* GÖRÜŞMELER & TALEPLER (tam kayıt) */
+   +'<div class="sta-pane" data-p="gorusmeler" hidden><h4>Görüşmeler & Talepler</h4><p class="sub">Ziyaretçilerin ProX Asistan yazışmaları (tam döküm) ve iletişim/randevu talepleri — yetkili olarak tam takip edin. Telefon bırakanlar geri-arama olarak işaretlenir.</p>'
+     +'<div style="margin-bottom:10px"><button class="btn btn-line" onclick="renderGorusmelerD()">↻ Yenile</button></div>'
+     +'<div id="dnGorusmelerBody"></div></div>'
    +'</div></div>';
   document.body.appendChild(el);return el;}
 function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');
@@ -750,7 +790,7 @@ function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');
   set('sp_base',SAAS_CONFIG.proxAiPrompts.persona);set('sp_custom',SAAS_CONFIG.tenantSettings.customPrompt);
   set('dn_dskey',_dsKey());set('dn_dsmodel',_dsModel());try{aiDsStatus();}catch(e){}
   set('ed_belge',eidsFirma().eids.belgeNo);try{eidsRenderAdmin();}catch(e){}
-  try{renderSA();renderVipStatus();}catch(e){}
+  try{renderSA();renderVipStatus();renderGorusmelerD();}catch(e){}
   try{staGate();}catch(e){}
   _refreshLogoPrev();
 }

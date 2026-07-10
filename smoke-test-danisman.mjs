@@ -81,6 +81,14 @@ const invariants = [
   ["DeepSeek test", "function aiDsTest"],
   ["Asistan aiChat'ten geçer", "aiChat({prompt:_persona"],
   ["AI korkuluğu persona'da", "aiGuard(("],
+  /* ---- D3: tam kayıt + admin görüşme panosu (yeni) ---- */
+  ["Sohbet kaydı (_dnLogConvo)", "function _dnLogConvo"],
+  ["Talep kaydı (dnPushLead)", "function dnPushLead"],
+  ["Görüşme panosu (renderGorusmelerD)", "function renderGorusmelerD"],
+  ["ProX Asistan kayıt deposu", "dn_asistan_convos"],
+  ["Görüşmeler admin sekmesi", 'data-t="gorusmeler"'],
+  ["Görüşme panosu öğesi", 'id="dnGorusmelerBody"'],
+  ["proxSend kayıt bağlı", "_dnLogConvo('u',q)"],
 ];
 for(const [name, needle] of invariants) ok("değişmez: "+name, dn.includes(needle));
 
