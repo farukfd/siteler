@@ -503,7 +503,7 @@ function apptModuleHTML(){return '<div class="appt-card">'
 
 /* ---------- footer (tek kaynak, her sayfada birebir aynı) ---------- */
 function footerHTML(){return '<footer><div class="wrap"><div class="fcols">'
-  +'<div><div class="brand" onclick="goHome()"><span class="mark">'+(saasResolve('brandName')||'M').trim().charAt(0)+'</span><span><b>'+(saasResolve('brandName')||'Selin Meridyen')+'</b><small>Lüks Portföy Danışmanı</small></span></div><p>Yetki belgeli butik emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy ve ücretsiz mülk değer analizi.</p></div>'
+  +'<div><div class="brand" onclick="goHome()"><span class="mark">'+_leD((saasResolve('brandName')||'M').trim().charAt(0))+'</span><span><b>'+_leD(saasResolve('brandName')||'Selin Meridyen')+'</b><small>Lüks Portföy Danışmanı</small></span></div><p>Yetki belgeli butik emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy ve ücretsiz mülk değer analizi.</p></div>'
   +'<div><h4>Keşfet</h4><ul><li><a onclick="navGo(\'ilanlar\')">İlanlar</a></li><li><a onclick="navGo(\'vip\')">VIP Portföy</a></li><li><a onclick="navGo(\'surec\')">Süreç</a></li><li><a onclick="navGo(\'randevu\')">Ücretsiz Analiz</a></li></ul></div>'
   +'<div><h4>Kurumsal</h4><ul><li><a onclick="goHome()">Ana Sayfa</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="sss.html">S.S.S</a></li><li><a onclick="navGo(\'iletisim\')">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>'
   +'<div><h4>Yasal</h4><ul><li><a onclick="openKvkk()">KVKK Aydınlatma</a></li><li><a onclick="openCerez()">Çerez Politikası</a></li><li><a onclick="openMesafeli()">Mesafeli Hizmet & Kullanım</a></li><li><a onclick="openAdminGate()">Yönetim Paneli</a></li></ul></div>'
@@ -696,7 +696,7 @@ async function _proxResolveReply(q){
     return _proxReply(q);
   }catch(e){ return _proxReply(q); }
 }
-function proxSend(){const i=document.getElementById('proxIn');if(!i)return;const q=i.value.trim();if(!q)return;_proxPush('u',q.replace(/</g,'&lt;'));_dnLogConvo('u',q);i.value='';setTimeout(function(){_proxResolveReply(q).then(function(html){_proxPush('a',html);_dnLogConvo('a',html);});},440);}
+function proxSend(){const i=document.getElementById('proxIn');if(!i)return;const q=i.value.trim();if(!q)return;_proxPush('u',_leD(q));_dnLogConvo('u',q);i.value='';setTimeout(function(){_proxResolveReply(q).then(function(html){_proxPush('a',html);_dnLogConvo('a',html);});},440);}/* D4/XSS: kullanıcı echo'su tam _leD escape (kısmi <-only değil) */
 function proxQuick(q){const i=document.getElementById('proxIn');if(i)i.value=q;proxSend();}
 function proxToAnaliz(){navGo('randevu');}
 function proxAiQuery(q){const base=SAAS_CONFIG.proxAiPrompts.persona;const custom=saasResolve('customPrompt');console.log('[ProX persona]',(base+(custom?(' Ek ton: '+custom):'')).slice(0,90)+'…');return _proxReply(q);}
