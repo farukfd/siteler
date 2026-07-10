@@ -19,7 +19,7 @@
   function _authUsers(){try{return JSON.parse(localStorage.getItem(GM_USERS)||'{}');}catch(e){return {};}}
   function _authSaveUsers(u){try{localStorage.setItem(GM_USERS,JSON.stringify(u));}catch(e){}}
   function authSession(){try{return JSON.parse(localStorage.getItem(GM_SESS)||'null');}catch(e){return null;}}
-  function _authSetSession(s){try{if(s)localStorage.setItem(GM_SESS,JSON.stringify(s));else localStorage.removeItem(GM_SESS);}catch(e){}applyAuthUI();}
+  function _authSetSession(s){try{if(s)localStorage.setItem(GM_SESS,JSON.stringify(s));else localStorage.removeItem(GM_SESS);}catch(e){}applyAuthUI();try{if(s)_mergeGuestFavs();if(typeof gmFavReflect==='function')gmFavReflect();}catch(e){}}
   async function authRegister(name,email,pw){
     name=(name||'').trim();email=(email||'').trim().toLowerCase();
     if(name.length<2)return{err:'Lütfen ad soyad girin.'};
@@ -68,6 +68,22 @@
   function authFavs(){var f=_uGet('fav',[]);return Array.isArray(f)?f:[];}
   function authIsFav(id){return authFavs().indexOf(String(id))>=0;}
   function authToggleFav(id){id=String(id);var f=authFavs(),i=f.indexOf(id);if(i>=0)f.splice(i,1);else f.unshift(id);_uSet('fav',f);return i<0;}
+  /* ---- GLOBAL FAVORİ API (misafir dahil çalışır; giriş sonrası birleşir) ---- */
+  function _guestFavs(){try{var a=JSON.parse(localStorage.getItem('gm_fav_guest')||'[]');return Array.isArray(a)?a:[];}catch(e){return[];}}
+  function _guestFavsSet(a){try{localStorage.setItem('gm_fav_guest',JSON.stringify(a));}catch(e){}}
+  function gmAllFavs(){return authSession()?authFavs():_guestFavs();}
+  function gmIsFav(id){return gmAllFavs().indexOf(String(id))>=0;}
+  function gmFav(id,el){id=String(id);var on;
+    if(authSession()){on=authToggleFav(id);}
+    else{var g=_guestFavs(),i=g.indexOf(id);if(i>=0){g.splice(i,1);on=false;}else{g.unshift(id);on=true;}_guestFavsSet(g);}
+    try{document.querySelectorAll('[data-fid="'+id+'"]').forEach(function(b){b.classList.toggle('on',on);if(/^[♡♥]$/.test(b.textContent.trim()))b.innerHTML=on?'♥':'♡';});}catch(e){}
+    if(el){el.classList.toggle('on',on);if(/^[♡♥]$/.test(el.textContent.trim()))el.innerHTML=on?'♥':'♡';}
+    if(typeof toast==='function')toast(on?'Favorilere eklendi ♥':'Favoriden çıkarıldı');
+    var fp=document.getElementById('hs_favoriler');if(fp&&!fp.hidden)_hesapRenderFavs();
+  }
+  function gmFavReflect(){try{var f=gmAllFavs();document.querySelectorAll('.fav[data-fid],.pf-fav[data-fid],.lc-fav[data-fid]').forEach(function(b){var id=b.getAttribute('data-fid');var on=f.indexOf(id)>=0;b.classList.toggle('on',on);if(/^[♡♥]$/.test(b.textContent.trim()))b.innerHTML=on?'♥':'♡';});}catch(e){}}
+  function _mergeGuestFavs(){try{var g=_guestFavs();if(g.length&&authSession()){var f=authFavs();g.forEach(function(id){if(f.indexOf(id)<0)f.unshift(id);});_uSet('fav',f);_guestFavsSet([]);}}catch(e){}}
+  window.gmFav=gmFav;window.gmIsFav=gmIsFav;window.gmFavReflect=gmFavReflect;
   function _ilanById(id){try{if(typeof ILANLAR==='undefined')return null;for(var i=0;i<ILANLAR.length;i++){if(String(ILANLAR[i].id)===String(id))return ILANLAR[i];}}catch(e){}return null;}
   function _ilanImg(it){try{return (typeof imgSrc==='function')?imgSrc(it.img):(it.img||'');}catch(e){return '';}}
   function _priceTL(p){try{return (typeof p==='number')?p.toLocaleString('tr-TR')+' ₺':(p||'');}catch(e){return p||'';}}
@@ -75,8 +91,10 @@
   async function authAddQuote(konu,mesaj){var s=authSession();if(!s)return{err:'Giriş yapın.'};var q={id:'q'+Date.now(),konu:konu||'Genel',mesaj:(mesaj||'').trim(),date:new Date().toISOString(),status:'pending',cevap:''};var arr=authQuotes();arr.unshift(q);_uSet('quotes',arr);
     try{if(typeof proxSubmitLead==='function'){var u=(_authUsers()[s.email]||{});proxSubmitLead({sourcePage:'hesap',formType:'teklif-talebi',name:s.name,email:s.email,phone:u.phone||'',message:q.mesaj,requestedService:q.konu});}}catch(e){}
     _quoteRespond(q.id,q.konu,q.mesaj);return{ok:true,id:q.id};}
+  /* YZ çağrısı: admin DeepSeek anahtarı girdiyse app.js aiChat (DeepSeek) ile, yoksa ProX sunucu AI'si. */
+  function _uasAiCall(body){return (typeof window!=='undefined'&&window.aiChat)?window.aiChat(body):proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:body});}
   async function _quoteRespond(id,konu,mesaj){var reply='';var m=(mesaj||'').trim();
-    try{var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',context:'default',prompt:'Sen Meridyen Gayrimenkul\'ün ProX Asistanısın — sıcak, satış odaklı bir emlak danışmanı. Müşteri "'+konu+'" konusunda bir talep formu doldurdu. GÖREV: mesajı DİKKATLE oku, gerçekte ne istediğini anla. Mesaj yalnızca selam ya da çok kısa/boşsa: kibarca selam ver, kendini tanıt ("Ben Meridyen Gayrimenkul ProX Asistanı") ve "'+konu+'" için ihtiyacı netleştirecek 1-2 KISA soru sor (konum/ilçe, bütçe, m², oda, satılık/kiralık) — hazır uzun metin DÖKME. Gerçek talep varsa: 2-3 cümlelik samimi ön değerlendirme ver ve müşteriyi ilanı görme / ücretsiz ekspertiz / portföy talebi gibi bir sonraki adıma yönlendir. Her durumda canlı danışmana davet et: telefon bırakırsa danışmanımız kısa sürede arar. Türkçe, kısa. Kesin fiyat verme, ücretsiz ekspertiz öner. Yanıtın ProX\'un doğrulanmış emlak verisine dayanır.',message:konu+' — '+(m||'(müşteri mesaj bırakmadı)')}});reply=(r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text))))||'';}catch(e){}
+    try{var r=await _uasAiCall({persona:'office',context:'default',prompt:'Sen Meridyen Gayrimenkul\'ün ProX Asistanısın — sıcak, satış odaklı bir emlak danışmanı. Müşteri "'+konu+'" konusunda bir talep formu doldurdu. GÖREV: mesajı DİKKATLE oku, gerçekte ne istediğini anla. Mesaj yalnızca selam ya da çok kısa/boşsa: kibarca selam ver, kendini tanıt ("Ben Meridyen Gayrimenkul ProX Asistanı") ve "'+konu+'" için ihtiyacı netleştirecek 1-2 KISA soru sor (konum/ilçe, bütçe, m², oda, satılık/kiralık) — hazır uzun metin DÖKME. Gerçek talep varsa: 2-3 cümlelik samimi ön değerlendirme ver ve müşteriyi ilanı görme / ücretsiz ekspertiz / portföy talebi gibi bir sonraki adıma yönlendir. Her durumda canlı danışmana davet et: telefon bırakırsa danışmanımız kısa sürede arar. Türkçe, kısa. Kesin fiyat verme, ücretsiz ekspertiz öner. Yanıtın ProX\'un doğrulanmış emlak verisine dayanır.',message:konu+' — '+(m||'(müşteri mesaj bırakmadı)')});reply=(r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text))))||'';}catch(e){}
     if(!reply){reply=(m.length<8)?('Merhaba, ben Meridyen Gayrimenkul ProX Asistanı 👋 “'+konu+'” konusunda yardımcı olmak isterim. Kısaca ihtiyacınızı anlatır mısınız — hangi ilçe, bütçe, kaç oda? Dilerseniz telefon numaranızı bırakın, danışmanımız kısa sürede sizi arasın.'):('Talebinizi aldık. “'+konu+'” için uzman danışmanımız ProX verisiyle ön değerlendirme yapıp en kısa sürede size dönecek. Dilerseniz ücretsiz ekspertiz planlayalım ya da telefon numaranızı bırakın, sizi arayalım.');}
     var arr=authQuotes();for(var i=0;i<arr.length;i++){if(arr[i].id===id){arr[i].status='answered';arr[i].cevap=reply;break;}}_uSet('quotes',arr);
     try{var hp=document.getElementById('hesapPage');if(hp&&hp.classList.contains('on')&&!document.getElementById('hs_teklifler').hidden)_hesapRenderQuotes();}catch(e){}}
@@ -129,7 +147,7 @@
     var _hist=_paHistCtx();
     var _messages=_paMsgs.filter(function(m){return !m.typing&&m.text;}).map(function(m){return {role:(m.role==='me'?'user':'assistant'),content:m.text};});
     try{
-      var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:persona,context:_hist||'default',prompt:_paPrompt(),messages:_messages,message:(_hist?('Önceki konuşma:\n'+_hist+'\n\nMüşterinin yeni mesajı: '):'')+q}});
+      var r=await _uasAiCall({persona:persona,context:_hist||'default',prompt:_paPrompt(),messages:_messages,message:(_hist?('Önceki konuşma:\n'+_hist+'\n\nMüşterinin yeni mesajı: '):'')+q});
       _paMsgs=_paMsgs.filter(function(m){return !m.typing;});
       var ans=(r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text))))||'';
       if(!ans||(r&&r.fallback))ans=_paFallback();
@@ -358,9 +376,11 @@
     _patch('mountSaaSMenu',uasEnhanceNav);
     /* Enjekte edilen ProX Asistan/Hesap sayfalarındaki .siteNav/.siteCta'yı doldur (ana sayfa navı ile birebir) */
     try{if(typeof mountSaaSMenu==='function')mountSaaSMenu();}catch(e){}
-    _patch('renderIlanlar',uasBindFavs);
-    if(typeof renderOzel==='function')_patch('renderOzel',uasBindFavs);
-    uasEnhanceNav();uasBindFavs();uasInjectAdminPane();
+    /* favori butonları inline gmFav çağırır; render sonrası SADECE durum yansıt (♥/♡) */
+    _patch('renderIlanlar',gmFavReflect);
+    if(typeof renderPfIlan==='function')_patch('renderPfIlan',gmFavReflect);
+    if(typeof renderOzel==='function')_patch('renderOzel',gmFavReflect);
+    uasEnhanceNav();gmFavReflect();uasInjectAdminPane();
     /* hash kısayolları (#giris/#hesap/#asistan) — temiz-URL router'a dokunmadan */
     function hashRoute(){var h=location.hash||'';if(h==='#asistan')openProxAsistanPage();else if(h==='#hesap')girisOrHesap();else if(h==='#giris'||h==='#uye')openGiris();}
     window.addEventListener('hashchange',hashRoute);setTimeout(hashRoute,300);

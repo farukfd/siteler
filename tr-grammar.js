@@ -43,7 +43,28 @@ function districts(s,targetIl){if(!s||typeof s!=='string'||!targetIl||targetIl==
   for(var i=0;i<IZMIR_PLACES.length;i++){var pl=IZMIR_PLACES[i];if(s.indexOf(pl)<0)continue;var repl=tgt[i%tgt.length];
     try{s=s.replace(new RegExp(pl+'(?![' +_trLet+ '])','g'),repl);}catch(e){s=s.split(pl).join(repl);}}
   return s;}
-/* Marka-dışı tam yerelleştirme: şehir grameri + ilçe adları */
-function localize(s,targetIl){return districts(city(s,targetIl),targetIl);}
-window.TRG={lastVowel:lastVowel,back:back,round:round,I:I,A:A,endsVowel:endsVowel,hard:hard,suffix:suffix,city:city,districts:districts,localize:localize,hasIzmirPlace:hasIzmirPlace,IZMIR_PLACES:IZMIR_PLACES};
+/* H9: İl → coğrafi bölge (7 bölge). "Ege / Ege Bölgesi" ifadelerini hedef ilin bölgesine çevirir
+   (İzmir→Ankara'da "Ankara, Ege Bölgesi" gibi coğrafi yanlışı önler). Hedef zaten Ege'deyse dokunmaz. */
+var _REGIONS={
+ 'Marmara':['Balıkesir','Bilecik','Bursa','Çanakkale','Edirne','İstanbul','Kırklareli','Kocaeli','Sakarya','Tekirdağ','Yalova'],
+ 'Ege':['Afyonkarahisar','Aydın','Denizli','İzmir','Kütahya','Manisa','Muğla','Uşak'],
+ 'Akdeniz':['Adana','Antalya','Burdur','Hatay','Isparta','Kahramanmaraş','Mersin','Osmaniye'],
+ 'İç Anadolu':['Aksaray','Ankara','Çankırı','Eskişehir','Karaman','Kayseri','Kırıkkale','Kırşehir','Konya','Nevşehir','Niğde','Sivas','Yozgat'],
+ 'Karadeniz':['Amasya','Artvin','Bartın','Bayburt','Bolu','Çorum','Düzce','Giresun','Gümüşhane','Karabük','Kastamonu','Ordu','Rize','Samsun','Sinop','Tokat','Trabzon','Zonguldak'],
+ 'Doğu Anadolu':['Ağrı','Ardahan','Bingöl','Bitlis','Elazığ','Erzincan','Erzurum','Hakkâri','Hakkari','Iğdır','Kars','Malatya','Muş','Tunceli','Van'],
+ 'Güneydoğu Anadolu':['Adıyaman','Batman','Diyarbakır','Gaziantep','Kilis','Mardin','Siirt','Şanlıurfa','Şırnak']
+};
+var _IL2REGION=(function(){var m={},k;for(k in _REGIONS){_REGIONS[k].forEach(function(x){m[x]=k;});}return m;})();
+function regionOf(il){return _IL2REGION[il]||'';}
+function region(s,c){
+  if(!s||typeof s!=='string'||!c||c==='İzmir'||s.indexOf('Ege')<0)return s;
+  var rg=regionOf(c);if(!rg||rg==='Ege')return s;            // hedef zaten Ege bölgesindeyse "Ege" doğru
+  s=s.split('Ege Bölgesi').join(rg+' Bölgesi').split('Ege bölgesi').join(rg+' bölgesi');
+  s=s.replace(/Ege['’]nin\b/g,rg+"'"+suffix(rg,'gen')).replace(/Ege['’]den\b/g,rg+"'"+suffix(rg,'abl')).replace(/Ege['’]de\b/g,rg+"'"+suffix(rg,'loc')).replace(/Ege['’]ye\b/g,rg+"'"+suffix(rg,'dat')).replace(/Ege['’](yi|yı)\b/g,rg+"'"+suffix(rg,'acc'));
+  s=s.replace(/\bEge\b/g,rg);
+  return s;
+}
+/* Marka-dışı tam yerelleştirme: şehir grameri + ilçe adları + bölge (Ege→hedef bölge) */
+function localize(s,targetIl){return region(districts(city(s,targetIl),targetIl),targetIl);}
+window.TRG={lastVowel:lastVowel,back:back,round:round,I:I,A:A,endsVowel:endsVowel,hard:hard,suffix:suffix,city:city,districts:districts,region:region,regionOf:regionOf,localize:localize,hasIzmirPlace:hasIzmirPlace,IZMIR_PLACES:IZMIR_PLACES};
 })();

@@ -70,7 +70,7 @@ const gmbase = readFileSync('gayrimenkul/css/base.css','utf8');
 const gmcss = gmbase + '\n' + gmtheme;
 const gmAll = gm + '\n' + gmjs + '\n' + gmcss;
 /* ---- 3.0) P1/P2/P3 varlık-ayrıştırma değişmezleri ---- */
-ok('P3: index.html → themes kütüphanesi + base.css link', gm.includes('href="../themes/gayrimenkul/meridyen.css"') && /href="css\/base\.css(\?v=\d+)?"/.test(gm));
+ok('P3: index.html → themes kütüphanesi + base.css link', /href="\.\.\/themes\/gayrimenkul\/meridyen\.css(\?v=\d+)?"/.test(gm) && /href="css\/base\.css(\?v=\d+)?"/.test(gm));
 ok('P3: tema kütüphanesi ≥4 tema (:root token)', ['meridyen','sahil','altin-lux','gece-mor'].every(t=>{try{return readFileSync('themes/gayrimenkul/'+t+'.css','utf8').includes(':root')}catch(e){return false}}));
 ok('P1: index.html → js/app.js script', /src="js\/app\.js(\?v=\d+)?"/.test(gm));
 ok('P1: index.html ince kabuk (<2600 satır)', gm.split('\n').length < 2600);

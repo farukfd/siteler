@@ -14,7 +14,7 @@
   --shadow-sm:0 10px 30px -18px rgba(13,30,60,.30);
   --shadow-card:0 14px 36px -20px rgba(13,30,60,.22);
   --grad-hero:linear-gradient(135deg,#0f1f3d 0%,#0a1631 58%,#16306b 100%);
-  --grad-cta:linear-gradient(135deg,#34a853 0%,#1e7e3a 100%);
+  --grad-cta:linear-gradient(135deg,#1e40af 0%,#3b82f6 100%);
   --grad-blue:linear-gradient(135deg,#3b82f6 0%,#1e40af 100%);
   --grad-ai:linear-gradient(135deg,#10b981 0%,#0284c7 50%,#8b5cf6 100%);
 }

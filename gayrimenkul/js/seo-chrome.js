@@ -13,6 +13,13 @@
         st.textContent = '.js-giris.logged::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green,#34a853);margin-right:7px;vertical-align:middle}';
         (document.head || document.documentElement).appendChild(st);
       }
+      /* Admin'de değiştirilen firma WhatsApp'ını statik sayfalardaki hardcoded linklere uygula */
+      try {
+        var _d = JSON.parse(localStorage.getItem('meridyenGM_v1') || 'null'), _f = _d && _d.FIRMA;
+        if (_f && _f.wa && _f.wa !== '905000000000') {
+          document.querySelectorAll('a[href*="wa.me/905000000000"]').forEach(function (a) { a.href = a.href.replace('905000000000', _f.wa); });
+        }
+      } catch (e) {}
       var s = session();
       document.querySelectorAll('.js-giris').forEach(function (g) {
         if (s) {

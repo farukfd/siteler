@@ -6,7 +6,10 @@ const HERO_KEYS=['hero1','hero2','hero3'];
 const LIST_IMGS=['l1','l2','l3','l4','l5','l6'];
 
 /* ============ DEFAULT DATA ============ */
-const DEF_FIRMA={name:'Meridyen Gayrimenkul',tel:'+90 232 000 00 00',mail:'info@meridyengm.com',wa:'905000000000',adres:'Alsancak Mah. Kıbrıs Şehitleri Cad. No:00, Konak / İzmir',hours:'Hafta içi 09:00–19:00 · Cumartesi 10:00–17:00',vergi:'',yetkili:'',eids:{yetkili:true,connected:true,belgeNo:'4827193',unvan:'Meridyen Gayrimenkul Danışmanlık Ltd. Şti.',firmaKod:'',kullaniciKodu:''}};
+const DEF_FIRMA={name:'Meridyen Gayrimenkul',tel:'+90 232 000 00 00',mail:'info@meridyengm.com',wa:'905000000000',adres:'Alsancak Mah. Kıbrıs Şehitleri Cad. No:00, Konak / İzmir',hours:'Hafta içi 09:00–19:00 · Cumartesi 10:00–17:00',vergi:'6100000000',yetkili:'',
+  kurulus:2007,vergiDaire:'Konak Vergi Dairesi',mersis:'0648010000000000',ticaretSicil:'İzmir Ticaret Sicil · 000000',oda:'İzmir Ticaret Odası · Üye No 00000',kep:'meridyengm@hs01.kep.tr',calisan:42,
+  lat:38.4322,lng:27.1419,
+  eids:{yetkili:true,connected:true,belgeNo:'4827193',unvan:'Meridyen Gayrimenkul Danışmanlık Ltd. Şti.',firmaKod:'',kullaniciKodu:''}};
 // ₺/m² baz fiyatlar (örnek, emlakekspertizi endeksine bağlanır)
 /* ============ İL VERİ KATMANI (swappable: İzmir → Ankara renk+veri) ============ */
 const IZMIR_PROVINCE={
@@ -52,7 +55,7 @@ const IZMIR_PROVINCE={
     'Beydağ':{group:'ic',m2:16000,chg:150,score:56,risk:'Kırsal · Tarım',mah:['Aktepe','Cumhuriyet','Yenice','Çamlık','Gökçen','Palamutçuk']}
   }
 };
-let PROVINCE=IZMIR_PROVINCE;
+let PROVINCE=clone(IZMIR_PROVINCE);/* C2: IZMIR_PROVINCE bir ŞABLON — asla doğrudan kullanma; her zaman klon dağıt (aşağıdaki delete/mutasyonlar şablonu bozmasın) */
 /* ===== WHITE-LABEL İL MOTORU (ProX endeks beslemeli) ===== */
 const TR_ILILCE={"Adana":{"plate":1,"ilce":["Aladağ","Ceyhan","Çukurova","Feke","İmamoğlu","Karaisalı","Karataş","Kozan","Pozantı","Saimbeyli","Sarıçam","Seyhan","Tufanbeyli","Yumurtalık","Yüreğir"]},"Adıyaman":{"plate":2,"ilce":["Adıyaman-il Merkezi","Besni","Çelikhan","Gerger","Gölbaşı","Kahta","Merkez","Samsat","Sincik","Tut"]},"Afyonkarahisar":{"plate":3,"ilce":["Afyonkarahisar","Başmakçı","Bayat","Bolvadin","Çay","Çobanlar","Dazkırı","Dinar","Emirdağ","Evciler","Hocalar","İhsaniye","İscehisar","Kızılören","Merkez","Sandıklı","Sinanpaşa","Sultandağı","Şuhut"]},"Ağrı":{"plate":4,"ilce":["Ağrı-il Merkezi","Diyadin","Doğubayazıt","Eleşkirt","Hamur","Patnos","Taşlıçay","Tutak"]},"Aksaray":{"plate":68,"ilce":["Ağaçören","Aksaray-il Merkezi","Eskil","Gülağaç","Güzelyurt","Merkez","Ortaköy","Sarıyahşi","Sultanhanı"]},"Amasya":{"plate":5,"ilce":["Amasya-il Merkezi","Göynücek","Gümüşhacıköy","Hamamözü","Merkez","Merzifon","Suluova","Taşova"]},"Ankara":{"plate":6,"ilce":["Akyurt","Altındağ","Ayaş","Bala","Beypazarı","Çamlıdere","Çankaya","Çubuk","Elmadağ","Etimesgut","Evren","Gölbaşı","Güdül","Haymana","Kahramankazan","Kalecik","Keçiören","Kızılcahamam","Mamak","Nallıhan","Polatlı","Pursaklar","Sincan","Şereflikoçhisar","Yenimahalle"]},"Antalya":{"plate":7,"ilce":["Akseki","Aksu","Alanya","Demre","Döşemealtı","Elmalı","Finike","Gazipaşa","Gündoğmuş","İbradı","Kaş","Kemer","Kepez","Konyaaltı","Korkuteli","Kumluca","Manavgat","Muratpaşa","Serik"]},"Ardahan":{"plate":75,"ilce":["Ardahan-il Merkezi","Çıldır","Damal","Göle","Hanak","Posof"]},"Artvin":{"plate":8,"ilce":["Ardanuç","Arhavi","Artvin-il Merkezi","Borçka","Hopa","Kemalpaşa","Murgul","Şavşat","Yusufeli"]},"Aydın":{"plate":9,"ilce":["Bozdoğan","Buharkent","Çine","Didim","Efeler","Germencik","İncirliova","Karacasu","Karpuzlu","Koçarlı","Köşk","Kuşadası","Kuyucak","Nazilli","Söke","Sultanhisar","Yenipazar"]},"Balıkesir":{"plate":10,"ilce":["Altıeylül","Ayvalık","Balya","Bandırma","Bigadiç","Burhaniye","Dursunbey","Edremit","Erdek","Gömeç","Gönen","Havran","İvrindi","Karesi","Kepsut","Manyas","Marmara","Savaştepe","Sındırgı","Susurluk"]},"Bartın":{"plate":74,"ilce":["Amasra","Bartın-il Merkezi","Kurucaşile","Merkez","Ulus"]},"Batman":{"plate":72,"ilce":["Batman-il Merkezi","Beşiri","Gercüş","Hasankeyf","Kozluk","Merkez","Sason"]},"Bayburt":{"plate":69,"ilce":["Aydıntepe","Bayburt-il Merkezi","Demirözü","Merkez"]},"Bilecik":{"plate":11,"ilce":["Bilecik-il Merkezi","Bozüyük","Gölpazarı","İnhisar","Merkez","Osmaneli","Pazaryeri","Söğüt","Yenipazar"]},"Bingöl":{"plate":12,"ilce":["Adaklı","Bingöl-il Merkezi","Genç","Karlıova","Kiğı","Merkez","Solhan","Yayladere","Yedisu"]},"Bitlis":{"plate":13,"ilce":["Adilcevaz","Ahlat","Bitlis-il Merkezi","Güroymak","Hizan","Merkez","Mutki","Tatvan"]},"Bolu":{"plate":14,"ilce":["Bolu-il Merkezi","Dörtdivan","Gerede","Göynük","Kıbrıscık","Mengen","Merkez","Mudurnu","Seben","Yeniçağa"]},"Burdur":{"plate":15,"ilce":["Ağlasun","Altınyayla","Bucak","Burdur-il Merkezi","Çavdır","Çeltikçi","Gölhisar","Karamanlı","Kemer","Tefenni","Yeşilova"]},"Bursa":{"plate":16,"ilce":["Büyükorhan","Gemlik","Gürsu","Harmancık","İnegöl","İznik","Karacabey","Keles","Kestel","Mudanya","Mustafakemalpaşa","Nilüfer","Orhaneli","Orhangazi","Osmangazi","Yenişehir","Yıldırım"]},"Çanakkale":{"plate":17,"ilce":["Ayvacık","Bayramiç","Biga","Bozcaada","Çan","Çanakkale-il Merkezi","Eceabat","Ezine","Gelibolu","Gökçeada","Lapseki","Merkez","Yenice"]},"Çankırı":{"plate":18,"ilce":["Atkaracalar","Bayramören","Çankırı-il Merkezi","Çerkeş","Eldivan","Ilgaz","Kızılırmak","Korgun","Kurşunlu","Orta","Şabanözü","Yapraklı"]},"Çorum":{"plate":19,"ilce":["Alaca","Bayat","Boğazkale","Çorum-il Merkezi","Dodurga","İskilip","Kargı","Laçin","Mecitözü","Merkez","Oğuzlar","Ortaköy","Osmancık","Sungurlu","Uğurludağ"]},"Denizli":{"plate":20,"ilce":["Acıpayam","Babadağ","Baklan","Bekilli","Beyağaç","Bozkurt","Buldan","Çal","Çameli","Çardak","Çivril","Güney","Honaz","Kale","Merkezefendi","Pamukkale","Sarayköy","Serinhisar","Tavas"]},"Diyarbakır":{"plate":21,"ilce":["Bağlar","Bismil","Çermik","Çınar","Çüngüş","Dicle","Eğil","Ergani","Hani","Hazro","Kayapınar","Kocaköy","Kulp","Lice","Silvan","Sur","Yenişehir"]},"Düzce":{"plate":81,"ilce":["Akçakoca","Cumayeri","Çilimli","Düzce-il Merkezi","Gölyaka","Gümüşova","Kaynaşlı","Merkez","Yığılca"]},"Edirne":{"plate":22,"ilce":["Edirne-il Merkezi","Enez","Havsa","İpsala","Keşan","Lalapaşa","Meriç","Süloğlu","Uzunköprü"]},"Elazığ":{"plate":23,"ilce":["Ağın","Alacakaya","Arıcak","Baskil","Elazığ-il Merkezi","Karakoçan","Keban","Kovancılar","Maden","Merkez","Palu","Sivrice"]},"Erzincan":{"plate":24,"ilce":["Çayırlı","Erzincan-il Merkezi","İliç","Kemah","Kemaliye","Merkez","Otlukbeli","Refahiye","Tercan","Üzümlü"]},"Erzurum":{"plate":25,"ilce":["Aşkale","Aziziye","Çat","Hınıs","Horasan","İspir","Karaçoban","Karayazı","Köprüköy","Narman","Oltu","Olur","Palandöken","Pasinler","Pazaryolu","Şenkaya","Tekman","Tortum","Uzundere","Yakutiye"]},"Eskişehir":{"plate":26,"ilce":["Alpu","Beylikova","Çifteler","Günyüzü","Han","İnönü","Mahmudiye","Mihalgazi","Mihalıççık","Odunpazarı","Sarıcakaya","Seyitgazi","Sivrihisar","Tepebaşı"]},"Gaziantep":{"plate":27,"ilce":["Araban","İslahiye","Karkamış","Nizip","Nurdağı","Oğuzeli","Şahinbey","Şehitkamil","Yavuzeli"]},"Giresun":{"plate":28,"ilce":["Alucra","Bulancak","Çamoluk","Çanakçı","Dereli","Doğankent","Espiye","Eynesil","Giresun-il Merkezi","Görele","Güce","Keşap","Merkez","Piraziz","Şebinkarahisar","Tirebolu","Yağlıdere"]},"Gümüşhane":{"plate":29,"ilce":["Gümüşhane-il Merkezi","Kelkit","Köse","Kürtün","Merkez","Şiran","Torul"]},"Hakkari":{"plate":30,"ilce":["Çukurca","Derecik","Hakkari-il Merkezi","Merkez","Şemdinli","Yüksekova"]},"Hatay":{"plate":31,"ilce":["Altınözü","Antakya","Arsuz","Belen","Defne","Dörtyol","Erzin","Hassa","İskenderun","Kırıkhan","Kumlu","Payas","Reyhanlı","Samandağ","Yayladağı"]},"Iğdır":{"plate":76,"ilce":["Aralık","Iğdır-il Merkezi","Karakoyunlu","Merkez","Tuzluca"]},"Isparta":{"plate":32,"ilce":["Aksu","Atabey","Eğirdir","Gelendost","Gönen","Isparta-il Merkezi","Keçiborlu","Merkez","Senirkent","Sütçüler","Şarkikaraağaç","Uluborlu","Yalvaç","Yenişarbademli"]},"İstanbul":{"plate":34,"ilce":["Adalar","Arnavutköy","Ataşehir","Avcılar","Bağcılar","Bahçelievler","Bakırköy","Başakşehir","Bayrampaşa","Beşiktaş","Beykoz","Beylikdüzü","Beyoğlu","Büyükçekmece","Çatalca","Çekmeköy","Esenler","Esenyurt","Eyüpsultan","Fatih","Gaziosmanpaşa","Güngören","Kadıköy","Kağıthane","Kartal","Küçükçekmece","Maltepe","Pendik","Sancaktepe","Sarıyer","Silivri","Sultanbeyli","Sultangazi","Şile","Şişli","Tuzla","Ümraniye","Üsküdar","Zeytinburnu"]},"İzmir":{"plate":35,"ilce":["Aliağa","Balçova","Bayındır","Bayraklı","Bergama","Beydağ","Bornova","Buca","Çeşme","Çiğli","Dikili","Foça","Gaziemir","Güzelbahçe","Karabağlar","Karaburun","Karşıyaka","Kemalpaşa","Kınık","Kiraz","Konak","Menderes","Menemen","Narlıdere","Ödemiş","Seferihisar","Selçuk","Tire","Torbalı","Urla"]},"Kahramanmaraş":{"plate":46,"ilce":["Afşin","Andırın","Çağlayancerit","Dulkadiroğlu","Ekinözü","Elbistan","Göksun","Nurhak","Onikişubat","Pazarcık","Türkoğlu"]},"Karabük":{"plate":78,"ilce":["Eflani","Eskipazar","Karabük-il Merkezi","Ovacık","Safranbolu","Yenice"]},"Karaman":{"plate":70,"ilce":["Ayrancı","Başyayla","Ermenek","Karaman-il Merkezi","Kazımkarabekir","Merkez","Sarıveliler"]},"Kars":{"plate":36,"ilce":["Akyaka","Arpaçay","Digor","Kağızman","Kars-il Merkezi","Sarıkamış","Selim","Susuz"]},"Kastamonu":{"plate":37,"ilce":["Abana","Ağlı","Araç","Azdavay","Bozkurt","Cide","Çatalzeytin","Daday","Devrekani","Doğanyurt","Hanönü","İhsangazi","İnebolu","Kastamonu-il Merkezi","Küre","Pınarbaşı","Seydiler","Şenpazar","Taşköprü","Tosya"]},"Kayseri":{"plate":38,"ilce":["Akkışla","Bünyan","Develi","Felahiye","Hacılar","İncesu","Kocasinan","Melikgazi","Özvatan","Pınarbaşı","Sarıoğlan","Sarız","Talas","Tomarza","Yahyalı","Yeşilhisar"]},"Kırıkkale":{"plate":71,"ilce":["Bahşılı","Balışeyh","Çelebi","Delice","Karakeçili","Keskin","Kırıkkale-il Merkezi","Merkez","Sulakyurt","Yahşihan"]},"Kırklareli":{"plate":39,"ilce":["Babaeski","Demirköy","Kırklareli-il Merkezi","Kofçaz","Lüleburgaz","Merkez","Pehlivanköy","Pınarhisar","Vize"]},"Kırşehir":{"plate":40,"ilce":["Akçakent","Akpınar","Boztepe","Çiçekdağı","Kaman","Kırşehir-il Merkezi","Merkez","Mucur"]},"Kilis":{"plate":79,"ilce":["Elbeyli","Kilis-il Merkezi","Musabeyli","Polateli"]},"Kocaeli":{"plate":41,"ilce":["Başiskele","Çayırova","Darıca","Derince","Dilovası","Gebze","Gölcük","İzmit","Kandıra","Karamürsel","Kartepe","Körfez"]},"Konya":{"plate":42,"ilce":["Ahırlı","Akören","Akşehir","Altınekin","Beyşehir","Bozkır","Cihanbeyli","Çeltik","Çumra","Derbent","Derebucak","Doğanhisar","Emirgazi","Ereğli","Güneysınır","Hadim","Halkapınar","Hüyük","Ilgın","Kadınhanı","Karapınar","Karatay","Kulu","Meram","Sarayönü","Selçuklu","Seydişehir","Taşkent","Tuzlukçu","Yalıhüyük","Yunak"]},"Kütahya":{"plate":43,"ilce":["Altıntaş","Aslanapa","Çavdarhisar","Domaniç","Dumlupınar","Emet","Gediz","Hisarcık","Kütahya-il Merkezi","Merkez","Pazarlar","Simav","Şaphane","Tavşanlı"]},"Malatya":{"plate":44,"ilce":["Akçadağ","Arapgir","Arguvan","Battalgazi","Darende","Doğanşehir","Doğanyol","Hekimhan","Kale","Kuluncak","Pütürge","Yazıhan","Yeşilyurt"]},"Manisa":{"plate":45,"ilce":["Ahmetli","Akhisar","Alaşehir","Demirci","Gölmarmara","Gördes","Kırkağaç","Köprübaşı","Kula","Salihli","Sarıgöl","Saruhanlı","Selendi","Soma","Şehzadeler","Turgutlu","Yunusemre"]},"Mardin":{"plate":47,"ilce":["Artuklu","Dargeçit","Derik","Kızıltepe","Mazıdağı","Midyat","Nusaybin","Ömerli","Savur","Yeşilli"]},"Mersin":{"plate":33,"ilce":["Akdeniz","Anamur","Aydıncık","Bozyazı","Çamlıyayla","Erdemli","Gülnar","Mezitli","Mut","Silifke","Tarsus","Toroslar","Yenişehir"]},"Muğla":{"plate":48,"ilce":["Bodrum","Dalaman","Datça","Fethiye","Kavaklıdere","Köyceğiz","Marmaris","Menteşe","Milas","Ortaca","Seydikemer","Ula","Yatağan"]},"Muş":{"plate":49,"ilce":["Bulanık","Hasköy","Korkut","Malazgirt","Merkez","Muş-il Merkezi","Varto"]},"Nevşehir":{"plate":50,"ilce":["Acıgöl","Avanos","Derinkuyu","Gülşehir","Hacıbektaş","Kozaklı","Merkez","Nevşehir-il Merkezi","Ürgüp"]},"Niğde":{"plate":51,"ilce":["Altunhisar","Bor","Çamardı","Çiftlik","Merkez","Niğde-il Merkezi","Ulukışla"]},"Ordu":{"plate":52,"ilce":["Akkuş","Altınordu","Aybastı","Çamaş","Çatalpınar","Çaybaşı","Fatsa","Gölköy","Gülyalı","Gürgentepe","İkizce","Kabadüz","Kabataş","Korgan","Kumru","Mesudiye","Perşembe","Ulubey","Ünye"]},"Osmaniye":{"plate":80,"ilce":["Bahçe","Düziçi","Hasanbeyli","Kadirli","Merkez","Osmaniye-il Merkezi","Sumbas","Toprakkale"]},"Rize":{"plate":53,"ilce":["Ardeşen","Çamlıhemşin","Çayeli","Derepazarı","Fındıklı","Güneysu","Hemşin","İkizdere","İyidere","Kalkandere","Merkez","Pazar","Rize-il Merkezi"]},"Sakarya":{"plate":54,"ilce":["Adapazarı","Akyazı","Arifiye","Erenler","Ferizli","Geyve","Hendek","Karapürçek","Karasu","Kaynarca","Kocaali","Pamukova","Sapanca","Serdivan","Söğütlü","Taraklı"]},"Samsun":{"plate":55,"ilce":["19 Mayıs","Alaçam","Asarcık","Atakum","Ayvacık","Bafra","Canik","Çarşamba","Havza","İlkadım","Kavak","Ladik","Salıpazarı","Tekkeköy","Terme","Vezirköprü","Yakakent"]},"Siirt":{"plate":56,"ilce":["Baykan","Eruh","Kurtalan","Merkez","Pervari","Siirt-il Merkezi","Şirvan","Tillo"]},"Sinop":{"plate":57,"ilce":["Ayancık","Boyabat","Dikmen","Durağan","Erfelek","Gerze","Saraydüzü","Sinop-il Merkezi","Türkeli"]},"Sivas":{"plate":58,"ilce":["Akıncılar","Altınyayla","Divriği","Doğanşar","Gemerek","Gölova","Gürün","Hafik","İmranlı","Kangal","Koyulhisar","Merkez","Sivas-il Merkezi","Suşehri","Şarkışla","Ulaş","Yıldızeli","Zara"]},"Şanlıurfa":{"plate":63,"ilce":["Akçakale","Birecik","Bozova","Ceylanpınar","Eyyübiye","Halfeti","Haliliye","Harran","Hilvan","Karaköprü","Siverek","Suruç","Viranşehir"]},"Şırnak":{"plate":73,"ilce":["Beytüşşebap","Cizre","Güçlükonak","İdil","Merkez","Silopi","Şırnak-il Merkezi","Uludere"]},"Tekirdağ":{"plate":59,"ilce":["Çerkezköy","Çorlu","Ergene","Hayrabolu","Kapaklı","Malkara","Marmaraereğlisi","Muratlı","Saray","Süleymanpaşa","Şarköy"]},"Tokat":{"plate":60,"ilce":["Almus","Artova","Başçiftlik","Erbaa","Merkez","Niksar","Pazar","Reşadiye","Sulusaray","Tokat-il Merkezi","Turhal","Yeşilyurt","Zile"]},"Trabzon":{"plate":61,"ilce":["Akçaabat","Araklı","Arsin","Beşikdüzü","Çarşıbaşı","Çaykara","Dernekpazarı","Düzköy","Hayrat","Köprübaşı","Maçka","Of","Ortahisar","Sürmene","Şalpazarı","Tonya","Vakfıkebir","Yomra"]},"Tunceli":{"plate":62,"ilce":["Çemişgezek","Hozat","Mazgirt","Nazımiye","Ovacık","Pertek","Pülümür","Tunceli-il Merkezi"]},"Uşak":{"plate":64,"ilce":["Banaz","Eşme","Karahallı","Sivaslı","Ulubey","Uşak-il Merkezi"]},"Van":{"plate":65,"ilce":["Bahçesaray","Başkale","Çaldıran","Çatak","Edremit","Erciş","Gevaş","Gürpınar","İpekyolu","Muradiye","Özalp","Saray","Tuşba"]},"Yalova":{"plate":77,"ilce":["Altınova","Armutlu","Çınarcık","Çiftlikköy","Merkez","Termal","Yalova-il Merkezi"]},"Yozgat":{"plate":66,"ilce":["Akdağmadeni","Aydıncık","Boğazlıyan","Çandır","Çayıralan","Çekerek","Kadışehri","Saraykent","Sarıkaya","Sorgun","Şefaatli","Yenifakılı","Yerköy","Yozgat-il Merkezi"]},"Zonguldak":{"plate":67,"ilce":["Alaplı","Çaycuma","Devrek","Ereğli","Gökçebey","Kilimli","Kozlu","Merkez","Zonguldak-il Merkezi"]}};window.TR_ILILCE=window.TR_ILILCE||TR_ILILCE;
 /* ===== GERÇEK MAHALLE VERİ KATMANI (talep-üzerine yükleme) ===== */
@@ -83,8 +86,8 @@ function realMah(il,ilce,n){n=n||3;var out=[],seen={};
   for(var i=0;i<arr.length&&out.length<n;i++){var m=arr[i];if(!seen[m]){seen[m]=1;out.push(m);}}return out;}
 function trIlList(){return Object.keys(TR_ILILCE);}
 function makeProvince(il){
-  if(il==='İzmir'||!il)return IZMIR_PROVINCE;
-  var rec=TR_ILILCE[il];if(!rec)return IZMIR_PROVINCE;
+  if(il==='İzmir'||!il)return clone(IZMIR_PROVINCE);/* C2: klon dağıt, şablonu koru */
+  var rec=TR_ILILCE[il];if(!rec)return clone(IZMIR_PROVINCE);
   var ilceler=rec.ilce,districts={},POOL=(typeof COMMON_MAH!=='undefined'?COMMON_MAH:['Merkez','Cumhuriyet','Atatürk','Yeni','Fatih']);
   var mc=Math.max(3,Math.round(ilceler.length*0.3));
   ilceler.forEach(function(d,i){var r=bzRng(bzSeed(il+'|'+d));
@@ -136,10 +139,12 @@ function deriveTenantId(key){var m=/^prox_(.+)_[a-f0-9]{16,}$/i.exec(key||'');re
 function proxEnsure(){if(Array.isArray(ILANLAR))ILANLAR.forEach(function(it){if(!it.il)it.il='İzmir';});if(typeof PROX!=='object'||!PROX)return;if(!PROX.key)PROX.key=DEF_PROX.key;if(!PROX.base)PROX.base=DEF_PROX.base;if(!PROX.il)PROX.il=PROX.region||'İzmir';}
 function applyProxTenant(){try{proxEnsure();
   var pu=((PROX&&PROX.proxyUrl)||'').trim();
-  if(pu){ /* PROXY/EDGE MODU: gizli anahtar istemcide TUTULMAZ/GÖNDERİLMEZ; base=proxy, sadece public tenant id */
+  if(pu){ /* PROXY/EDGE MODU (ÜRETİM İÇİN ÖNERİLEN): gizli anahtar istemcide TUTULMAZ/GÖNDERİLMEZ; base=proxy, sadece public tenant id.
+             Edge/sunucu X-Tenant-Key'i kendisi ekler. Yayında proxyUrl AYARLANMALI ve statik pakete anahtar gömülmemelidir. */
     window.EMLAK_API_BASE=pu.replace(/\/+$/,''); window.EMLAK_PROXY_MODE=true;
     var tid=((PROX&&PROX.tenantId)||'').trim()||(PROX.key?deriveTenantId(PROX.key):'');
     if(tid)window.EMLAK_TENANT.tenant_id=tid;
+    try{window.EMLAK_TENANT.tenant_key='';if(PROX)PROX.key='';}catch(e){} /* güvenlik: proxy modunda gizli anahtarı istemci belleğinden temizle */
   }else{
     window.EMLAK_PROXY_MODE=false;
     if(PROX.base)window.EMLAK_API_BASE=PROX.base;
@@ -216,7 +221,7 @@ const DEF_SEO={title:'Meridyen Gayrimenkul · İzmir Emlak & Gayrimenkul Ofisi',
 const DEF_GOOGLE={ga4:'',gtm:'',gsc:'',maps:'',recaptcha:'',business:'',aiseo:true,ab:false};
 const DEF_MODULES=[{k:'emlak_endeks',n:'Emlak Endeksi',d:'Mahalle m² fiyat ve trend',on:true},{k:'yatirim_skoru',n:'Yatırım Skoru',d:'0-100 bölge skoru',on:true},{k:'risk_analiz',n:'Fay/Deprem Risk',d:'Coğrafi risk rozeti',on:true},{k:'degerleme',n:'Online Değerleme',d:'"Evimin değeri ne?" aracı',on:true},{k:'portfoy3d',n:'3D Portföy & Tur',d:'GLB model + sanal tur',on:true},{k:'ai_asistan',n:'AI Asistan',d:'ProX yapay zeka asistanı',on:true},{k:'pdf_rapor',n:'Logolu PDF Rapor',d:'Şirket logolu endeks raporu',on:true},{k:'fiyat_alarmi',n:'Fiyat Alarmı',d:'Bölge fiyat değişim bildirimi',on:true},{k:'blog_feed',n:'Blog Akışı',d:'emlakekspertizi blog beslemesi',on:true},{k:'whatsapp',n:'WhatsApp Destek',d:'Tek dokunuş iletişim',on:true}];
 const DEF_PROX={key:'prox_emlaktahadimkoy_com_5d318fd5639d630018d37e2b219cbd0c',base:'https://www.emlakekspertizi.com',proxyUrl:'',tenantId:'',il:'İzmir',region:'İzmir',quotaUsed:3420,quotaMax:10000,modules:clone(DEF_MODULES)};
-const DEF_AICFG={enable:true,greet:'Merhaba! Ben Meridyen ProX Asistanı. Bölge, fiyat veya portföy hakkında sorabilirsiniz.',persona:'Meridyen Gayrimenkul\'ün yardımcı, profesyonel emlak danışmanısın. Türkçe, kısa ve net yanıt ver. Bölge fiyat verisi sorulursa örnek olduğunu belirt.'};
+const DEF_AICFG={enable:true,greet:'Merhaba! Ben Meridyen ProX Asistanı. Bölge, fiyat veya portföy hakkında sorabilirsiniz.',persona:'Meridyen Gayrimenkul\'ün yardımcı, profesyonel emlak danışmanısın. Türkçe, kısa ve net yanıt ver. Bölge fiyat verisi sorulursa örnek olduğunu belirt.',dsKey:'',dsModel:'deepseek-chat'};/* dsKey: kullanıcının kendi DeepSeek anahtarı — girilirse tüm YZ üretimi doğrudan DeepSeek ile çalışır (yoksa ProX sunucu AI'si). ProX anahtarı ise veri/endeks/analiz/PDF içindir. */
 const DEF_CONTRACTS=[
  {id:'c1',tip:'aracilik',baslik:'Konak 3+1 — Satış Aracılık',durum:'aktif',tarih:'2026-06-12',karsiTaraf:'Okan Demir',karsiTC:'12345678901',karsiAdres:'Alsancak Mah. Kıbrıs Şehitleri Cad. No:00 D:0, Konak / İzmir',il:'İzmir',ilce:'Konak',mahalle:'Alsancak',tasinmazAdres:'Kıbrıs Şehitleri Cad. No:00 Daire:0',tasinmazTip:'Daire',m2:'140',islem:'Satılık',bedel:'14.500.000',komisyon:'2',sureAy:'6',ozelMetin:''},
  {id:'c2',tip:'kira',baslik:'Bornova 1+1 — Kira',durum:'aktif',tarih:'2026-06-19',karsiTaraf:'Ali Vural',karsiTC:'98765432109',karsiAdres:'Kazımdirik Mah. No:00 D:0, Bornova / İzmir',il:'İzmir',ilce:'Bornova',mahalle:'Kazımdirik',tasinmazAdres:'Kazımdirik Mah. Stüdyo No:00',tasinmazTip:'Daire',m2:'55',islem:'Kiralık',bedel:'38.000',komisyon:'',sureAy:'12',ozelMetin:''}
@@ -244,15 +249,37 @@ const DEF_OZEL=[
  {id:'o20',op:'Satılık',tip:'Bağ-Bahçe',ilce:'Urla',mah:'Bademler',cadde:'Bağ yolu',m2:2100,oda:'-',fiyat:3900000,durum:'aktif',not:'Zeytinlik + bağ, su mevcut.'}
 ];
 function loadAll(){
-  try{const d=JSON.parse(localStorage.getItem(LS));if(d){FIRMA=d.FIRMA||{...DEF_FIRMA};ILANLAR=d.ILANLAR||clone(DEF_ILANLAR);DANISMANLAR=d.DANISMANLAR||clone(DEF_DAN);LEADS=d.LEADS||[];THEME=d.THEME||null;
-    CONTENT=d.CONTENT||{...DEF_CONTENT};BLOGS=d.BLOGS||clone(DEF_BLOGS);REFS=d.REFS||clone(DEF_REFS);SEO=d.SEO||{...DEF_SEO};GOOGLE=d.GOOGLE||{...DEF_GOOGLE};PROX=d.PROX||clone(DEF_PROX);AICFG=d.AICFG||{...DEF_AICFG};P3=d.P3||{};
+  try{const d=JSON.parse(localStorage.getItem(LS));if(d){/* H2: nesne-config'ler varsayılanın ÜZERİNE birleşir → sonradan eklenen alanlar (lat/lng/mersis/kep…) eski kayıtlarda da dolu gelir; diziler wholesale */
+    FIRMA={...DEF_FIRMA,...(d.FIRMA||{})};ILANLAR=d.ILANLAR||clone(DEF_ILANLAR);DANISMANLAR=d.DANISMANLAR||clone(DEF_DAN);LEADS=d.LEADS||[];THEME=d.THEME||null;
+    CONTENT={...DEF_CONTENT,...(d.CONTENT||{})};BLOGS=d.BLOGS||clone(DEF_BLOGS);REFS=d.REFS||clone(DEF_REFS);SEO={...DEF_SEO,...(d.SEO||{})};GOOGLE={...DEF_GOOGLE,...(d.GOOGLE||{})};PROX={...clone(DEF_PROX),...(d.PROX||{})};AICFG={...DEF_AICFG,...(d.AICFG||{})};P3=d.P3||{};
     KISILER=d.KISILER||clone(DEF_KISILER);DEALS=d.DEALS||clone(DEF_DEALS);TASKS=d.TASKS||clone(DEF_TASKS);COMMS=d.COMMS||clone(DEF_COMMS);RENTS=d.RENTS||clone(DEF_RENTS);MSGLOG=d.MSGLOG||[];RAPORLOG=d.RAPORLOG||[];ACT=d.ACT||{};CONTRACTS=d.CONTRACTS||clone(DEF_CONTRACTS);
     OZEL=d.OZEL||clone(DEF_OZEL);if(!PROX.modules)PROX.modules=clone(DEF_MODULES);return;}}catch(e){}
   FIRMA={...DEF_FIRMA};ILANLAR=clone(DEF_ILANLAR);DANISMANLAR=clone(DEF_DAN);LEADS=[];THEME=null;
   CONTENT={...DEF_CONTENT};BLOGS=clone(DEF_BLOGS);REFS=clone(DEF_REFS);SEO={...DEF_SEO};GOOGLE={...DEF_GOOGLE};PROX=clone(DEF_PROX);AICFG={...DEF_AICFG};P3={};
   KISILER=clone(DEF_KISILER);DEALS=clone(DEF_DEALS);TASKS=clone(DEF_TASKS);COMMS=clone(DEF_COMMS);RENTS=clone(DEF_RENTS);MSGLOG=[];RAPORLOG=[];ACT={};CONTRACTS=clone(DEF_CONTRACTS);OZEL=clone(DEF_OZEL);
 }
-function saveAll(){try{localStorage.setItem(LS,JSON.stringify({FIRMA,ILANLAR,DANISMANLAR,LEADS,THEME,CONTENT,BLOGS,REFS,SEO,GOOGLE,PROX,AICFG,P3,KISILER,DEALS,TASKS,COMMS,RENTS,MSGLOG,RAPORLOG,ACT,CONTRACTS,OZEL}));}catch(e){}}
+function saveAll(){
+  var payload={FIRMA,ILANLAR,DANISMANLAR,LEADS,THEME,CONTENT,BLOGS,REFS,SEO,GOOGLE,PROX,AICFG,P3,KISILER,DEALS,TASKS,COMMS,RENTS,MSGLOG,RAPORLOG,ACT,CONTRACTS,OZEL};
+  try{localStorage.setItem(LS,JSON.stringify(payload));return true;}
+  catch(e){
+    /* H3: Kota aşımı ESKİDEN sessizce yutuluyordu → görünmez veri kaybı. Artık: büyük gömülü
+       görselleri (data: URI) ayıklayıp metin verisini KURTAR, sonra admin'i AÇIKÇA uyar. */
+    try{
+      var lite=JSON.parse(JSON.stringify(payload)),stripped=0;
+      (function strip(o){if(!o||typeof o!=='object')return;
+        Object.keys(o).forEach(function(k){var v=o[k];
+          if(typeof v==='string'&&v.length>2000&&/^data:/.test(v)){o[k]='';stripped++;}
+          else if(v&&typeof v==='object')strip(v);});
+      })(lite);
+      localStorage.setItem(LS,JSON.stringify(lite));
+      if(typeof toast==='function')toast('⚠ Depolama doldu — '+stripped+' büyük görsel KALICI kaydedilemedi (metin verisi kaydedildi). Görselleri küçültün.');
+      return false;
+    }catch(e2){
+      if(typeof toast==='function')toast('⚠ Depolama kotası doldu — değişiklikler kaydedilemedi. Görselleri küçültün ya da eski kayıt silin.');
+      return false;
+    }
+  }
+}
 function clone(o){return JSON.parse(JSON.stringify(o));}
 /* ============ EİDS — Elektronik İlan Doğrulama Sistemi ============ */
 function eidsGuid(){var s='';for(var i=0;i<32;i++){s+=Math.floor(Math.random()*16).toString(16);if(i===7||i===11||i===15||i===19)s+='-';}return s;}
@@ -262,7 +289,10 @@ function eidsCins(t){return {'Daire':'Mesken (Kat Mülkiyeti)','Villa':'Müstaki
 function eidsAddMonths(m){var d=new Date();d.setMonth(d.getMonth()+m);return d.toISOString().slice(0,10);}
 function eidsDemoRec(it){return {status:'dogrulandi',kod:eidsKod(),tasinmazNo:eidsTasinmazNo(),ada:100+Math.floor(Math.random()*4900),parsel:1+Math.floor(Math.random()*400),bagimsiz:(it&&(it.type==='Arsa'||it.type==='Tarla'))?'-':1+Math.floor(Math.random()*40),cins:eidsCins(it&&it.type),malikTip:'Yetkili İşletme',yetkiBitis:eidsAddMonths(3+Math.floor(Math.random()*10)),tarih:new Date().toISOString().slice(0,10)};}
 function eidsEnsure(){var ch=false;
-  if(typeof FIRMA==='object'&&FIRMA){ if(!FIRMA.eids){FIRMA.eids={yetkili:true,connected:true,belgeNo:'4827193',unvan:'Meridyen Gayrimenkul Danışmanlık Ltd. Şti.',firmaKod:'',kullaniciKodu:''};ch=true;}
+  if(typeof FIRMA==='object'&&FIRMA){
+    /* Hakkımızda yasal künye alanları (eski kayıtlara migrasyon: eksik/boş → varsayılan) */
+    ['kurulus','vergiDaire','mersis','ticaretSicil','oda','kep','calisan','vergi','lat','lng'].forEach(function(k){ if(FIRMA[k]==null||FIRMA[k]==='') { FIRMA[k]=DEF_FIRMA[k]; ch=true; } });
+    if(!FIRMA.eids){FIRMA.eids={yetkili:true,connected:true,belgeNo:'4827193',unvan:'Meridyen Gayrimenkul Danışmanlık Ltd. Şti.',firmaKod:'',kullaniciKodu:''};ch=true;}
     if(FIRMA.eids.connected){ if(!FIRMA.eids.firmaKod){FIRMA.eids.firmaKod=eidsGuid();ch=true;} if(!FIRMA.eids.kullaniciKodu){FIRMA.eids.kullaniciKodu=eidsGuid();ch=true;} } }
   if(Array.isArray(ILANLAR))ILANLAR.forEach(function(it){ if(!it.eids){it.eids=eidsDemoRec(it);ch=true;} });
   if(ch&&typeof saveAll==='function')saveAll();
@@ -275,7 +305,7 @@ function bolgeOf(ilce){return BAZ[ilce]||{m2:90000,chg:160,score:75,risk:'Veri h
 /* ============ RENDER: HERO ============ */
 function initHero(){
   HERO_KEYS.forEach((k,i)=>{const el=document.getElementById('hi'+i);if(el)el.src=imgSrc(k);});
-  let idx=0;setInterval(()=>{const imgs=document.querySelectorAll('.hero-bg img');if(!imgs.length)return;imgs[idx].classList.remove('on');idx=(idx+1)%imgs.length;imgs[idx].classList.add('on');},5000);
+  if(!window._heroInt){let idx=0;window._heroInt=setInterval(()=>{const imgs=document.querySelectorAll('.hero-bg img');if(!imgs.length)return;imgs[idx].classList.remove('on');idx=(idx+1)%imgs.length;imgs[idx].classList.add('on');},5000);}/* H1: tek interval — initHero iki kez çağrılıyor, mükerrer setInterval sızıntısı önlendi */
   const ai=document.getElementById('aboutImg');if(ai)ai.src=imgSrc('about');
 }
 
@@ -293,18 +323,18 @@ function renderIlanlar(){
   g.innerHTML=arr.map(it=>{const s=ilanScore(it);const opc=it.op==='Satılık'?'sat':'kir';
     const priceStr=it.op==='Kiralık'?fmt(it.price)+' ₺<small>/ay</small>':fmt(it.price)+' ₺';
     return `<div class="lcard" onclick='openDet(${it.id})'>
-      <div class="ph"><img src="${imgSrc(it.img)}" alt="${it.title}" loading="lazy" decoding="async">
-        <div class="tags"><span class="ltag ${opc}">${it.op}</span>${it.feat?'<span class="ltag featured">★ Öne Çıkan</span>':''}${it.eids&&it.eids.status==='dogrulandi'?`<span class="ltag eids">${eidsShieldSvg(11)} EİDS</span>`:''}</div>
-        <button class="fav" onclick="event.stopPropagation();toast('Favorilere eklendi ♥')">♡</button>
+      <div class="ph"><img src="${imgSrc(it.img)}" alt="${_le(it.title)}" loading="lazy" decoding="async">
+        <div class="tags"><span class="ltag ${opc}">${_le(it.op)}</span>${it.feat?'<span class="ltag featured">★ Öne Çıkan</span>':''}${it.eids&&it.eids.status==='dogrulandi'?`<span class="ltag eids">${eidsShieldSvg(11)} EİDS</span>`:''}</div>
+        <button class="fav" data-fid="${it.id}" onclick="event.stopPropagation();(typeof gmFav==='function'?gmFav(${it.id},this):toast('Favoriler için giriş yapın'))" aria-label="Favorilere ekle">${(typeof gmIsFav==='function'&&gmIsFav(it.id))?'♥':'♡'}</button>
         <div class="score">Skor <b>${s.score}</b>/100</div></div>
       <div class="body">
         <div class="price num">${priceStr}</div>
-        <h3>${it.title}</h3>
-        <div class="loc">📍 ${it.mah}, ${it.ilce}${it.il?' / '+it.il:''}</div>
-        <div class="specs"><span>🛏 ${it.oda}</span><span>📐 ${it.m2} m²</span>${it.kat!=='-'?`<span>🏢 ${it.kat}. kat</span>`:''}
+        <h3>${_le(it.title)}</h3>
+        <div class="loc">📍 ${_le(it.mah)}, ${_le(it.ilce)}${it.il?' / '+_le(it.il):''}</div>
+        <div class="specs"><span>🛏 ${_le(it.oda)}</span><span>📐 ${it.m2} m²</span>${it.kat!=='-'?`<span>🏢 ${_le(it.kat)}. kat</span>`:''}
           <span class="trend" style="margin-left:auto">↗ %${s.chg} / 5y</span></div>
         <div class="lqc">
-          <a class="lqc-wa" onclick="event.stopPropagation()" href="https://wa.me/${(typeof FIRMA!=='undefined'&&FIRMA.wa)||'905000000000'}?text=${encodeURIComponent('Merhaba, '+it.title+' ('+it.mah+', '+it.ilce+') ilanı hakkında bilgi almak istiyorum.')}" target="_blank" rel="noopener noreferrer">${ozIco(OZI.wa,15)} WhatsApp</a>
+          <a class="lqc-wa" onclick="event.stopPropagation()" href="${waHref('Merhaba, '+it.title+' ('+it.mah+', '+it.ilce+') ilanı hakkında bilgi almak istiyorum.')}" target="_blank" rel="noopener noreferrer">${ozIco(OZI.wa,15)} WhatsApp</a>
           <a class="lqc-tel" onclick="event.stopPropagation()" href="tel:${((typeof FIRMA!=='undefined'&&FIRMA.tel)||'').replace(/[^0-9+]/g,'')}">${ozIco(OZI.phone,15)} Ara</a>
         </div>
       </div></div>`;}).join('');
@@ -332,7 +362,14 @@ const OZI={
 };
 function ozIco(p,s){return `<svg class="ico" width="${s||16}" height="${s||16}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;}
 function ozCat(btn){ozF.op=btn.dataset.op;ozF.tip=btn.dataset.tip;document.querySelectorAll('.oztabs button').forEach(b=>b.classList.toggle('act',b===btn));renderOzel();}
-function ozWaLink(o){const txt=encodeURIComponent(`Merhaba, Özel Portföy — ${o.op} ${o.tip} (${o.mah}, ${o.cadde}) hakkında bilgi almak istiyorum.`);return 'https://wa.me/'+(FIRMA&&FIRMA.wa||'905000000000')+'?text='+txt;}
+/* Özel Portföy başlangıç-fiyat kartından tıkla → varsa ilgili kategori sekmesini aç + listeye kaydır */
+function ozCatJump(op,tip){var tabs=document.querySelectorAll('.oztabs button'),matched=null;tabs.forEach(function(b){if((b.dataset.op||'')===(op||'')&&(b.dataset.tip||'')===(tip||''))matched=b;});if(matched&&typeof ozCat==='function')ozCat(matched);var f=document.getElementById('ozFilter');if(f)setTimeout(function(){f.scrollIntoView({behavior:'smooth',block:'start'});},50);}
+window.ozCatJump=ozCatJump;
+/* M9: WhatsApp numarası ayarlanmamışsa (site varsayılanı 905000000000) wa.me linki ÖLÜ olur.
+   Yapılandırıldıysa wa.me linki; değilse ofis telefonuna (tel:) düşerek buton yine işlevli kalır. */
+function waNum(adv){var n=(adv&&adv.wa)||((typeof FIRMA!=='undefined'&&FIRMA&&FIRMA.wa)||'');n=String(n).replace(/[^0-9]/g,'');return (n&&n!=='905000000000')?n:'';}
+function waHref(text,adv){var n=waNum(adv);if(n)return 'https://wa.me/'+n+(text?('?text='+encodeURIComponent(text)):'');var t=((typeof FIRMA!=='undefined'&&FIRMA&&FIRMA.tel)||'').replace(/[^0-9+]/g,'');return t?('tel:'+t):'#';}
+function ozWaLink(o){return waHref(`Merhaba, Özel Portföy — ${o.op} ${o.tip} (${o.mah}, ${o.cadde}) hakkında bilgi almak istiyorum.`);}
 function ozLead(id){const o=OZEL.find(x=>x.id===id);if(!o)return;window._ozRef=o;
   document.getElementById('ozTalepRef').textContent=`${o.op} · ${o.tip} · ${o.mah}, ${o.ilce} — ${o.cadde} civarı · ${o.m2} m²${o.oda&&o.oda!=='-'?' · '+o.oda:''}`;
   document.getElementById('ozTalepForm').style.display='block';document.getElementById('ozTalepOk').style.display='none';
@@ -377,20 +414,19 @@ function pfCardHtml(it){
   var s=ilanScore(it),opc=it.op==='Satılık'?'sat':'kir';
   var priceStr=it.op==='Kiralık'?fmt(it.price)+' ₺<small>/ay</small>':fmt(it.price)+' ₺';
   var eids=it.eids&&it.eids.status==='dogrulandi';
-  var wa=((typeof FIRMA!=='undefined'&&FIRMA.wa)||'905000000000');
-  var tel=(((typeof FIRMA!=='undefined'&&FIRMA.tel)||'').replace(/[^0-9+]/g,''));
+  var tel=(((typeof FIRMA!=='undefined'&&FIRMA.tel)||'').replace(/[^0-9+]/g,''));/* M9: WhatsApp href artık waHref() ile üretilir (ayarsızsa tel: fallback) */
   return '<article class="pf-card pf-reveal" onclick="openDet('+it.id+')">'
-    +'<div class="pf-ph"><img src="'+imgSrc(it.img)+'" alt="'+(it.title||'')+'" loading="lazy" decoding="async">'
-      +'<div class="pf-tags"><span class="pf-tag op-'+opc+'">'+it.op+'</span>'+(it.feat?'<span class="pf-tag feat">★ Öne Çıkan</span>':'')+(eids?'<span class="pf-tag eids">'+eidsShieldSvg(11)+' EİDS</span>':'')+'</div>'
-      +'<button class="pf-fav" onclick="event.stopPropagation();toast(\'Favorilere eklendi ♥\')" aria-label="Favorilere ekle">♡</button>'
+    +'<div class="pf-ph"><img src="'+imgSrc(it.img)+'" alt="'+_le(it.title||'')+'" loading="lazy" decoding="async">'
+      +'<div class="pf-tags"><span class="pf-tag op-'+opc+'">'+_le(it.op)+'</span>'+(it.feat?'<span class="pf-tag feat">★ Öne Çıkan</span>':'')+(eids?'<span class="pf-tag eids">'+eidsShieldSvg(11)+' EİDS</span>':'')+'</div>'
+      +'<button class="pf-fav" data-fid="'+it.id+'" onclick="event.stopPropagation();(typeof gmFav===\'function\'?gmFav('+it.id+',this):toast(\'Favoriler için giriş yapın\'))" aria-label="Favorilere ekle">'+((typeof gmIsFav==='function'&&gmIsFav(it.id))?'♥':'♡')+'</button>'
       +'<div class="pf-score">Skor <b>'+s.score+'</b></div></div>'
     +'<div class="pf-body">'
       +'<div class="pf-top"><div class="pf-price">'+priceStr+'</div>'+pfSpark(it)+'</div>'
-      +'<h3>'+(it.title||'')+'</h3>'
-      +'<div class="pf-loc">'+ozIco(OZI.pin,13)+' '+it.mah+', '+it.ilce+(it.il?' / '+it.il:'')+'</div>'
-      +'<div class="pf-specs"><span>🛏 '+it.oda+'</span><span>📐 '+it.m2+' m²</span>'+(it.kat&&it.kat!=='-'?'<span>🏢 '+it.kat+'. kat</span>':'')+'<span class="up">↗ %'+s.chg+' / 5y</span></div>'
+      +'<h3>'+_le(it.title||'')+'</h3>'
+      +'<div class="pf-loc">'+ozIco(OZI.pin,13)+' '+_le(it.mah)+', '+_le(it.ilce)+(it.il?' / '+_le(it.il):'')+'</div>'
+      +'<div class="pf-specs"><span>🛏 '+_le(it.oda)+'</span><span>📐 '+it.m2+' m²</span>'+(it.kat&&it.kat!=='-'?'<span>🏢 '+_le(it.kat)+'. kat</span>':'')+'<span class="up">↗ %'+s.chg+' / 5y</span></div>'
       +'<div class="pf-idx"><span>Bölge m² endeksi</span><b>'+fmt(s.m2)+' ₺/m²</b></div>'
-      +'<div class="pf-cta"><a class="wa" onclick="event.stopPropagation()" href="https://wa.me/'+wa+'?text='+encodeURIComponent('Merhaba, '+it.title+' ('+it.mah+', '+it.ilce+') ilanı hakkında bilgi almak istiyorum.')+'" target="_blank" rel="noopener noreferrer">'+ozIco(OZI.wa,15)+' WhatsApp</a>'
+      +'<div class="pf-cta"><a class="wa" onclick="event.stopPropagation()" href="'+waHref('Merhaba, '+it.title+' ('+it.mah+', '+it.ilce+') ilanı hakkında bilgi almak istiyorum.')+'" target="_blank" rel="noopener noreferrer">'+ozIco(OZI.wa,15)+' WhatsApp</a>'
         +'<a class="tel" onclick="event.stopPropagation()" href="tel:'+tel+'">'+ozIco(OZI.phone,15)+' Ara</a></div>'
     +'</div></article>';
 }
@@ -478,6 +514,9 @@ function pfGo(section,instant){
 function portfoyOpen(section){
   var p=document.getElementById('portfoyPage');if(!p)return;
   document.body.style.overflow='hidden';p.classList.add('open');
+  /* İlan ve Özel Portföy AYRI odaklı sayfalar: aktif olmayan bölüm + pil gizlenir (chrome birebir aynı kalır) */
+  p.classList.remove('pf-only-ilan','pf-only-ozel');
+  p.classList.add(section==='ozel'?'pf-only-ozel':'pf-only-ilan');
   var sc=document.getElementById('ozScroll');if(sc)sc.scrollTop=0;
   try{renderPfIlan();}catch(e){}
   try{if(typeof renderOzel==='function')renderOzel();}catch(e){}
@@ -511,6 +550,17 @@ function ozHero(){
   const max=top.length?top[0].n:1;
   const chips=[...new Set(OZEL.map(o=>o.mah))];
   const mc=(typeof PROVINCE!=='undefined'&&PROVINCE.mahCount)||'1.300+';
+  const _M=n=>n>=1e6?(n/1e6).toLocaleString('tr-TR',{maximumFractionDigits:2})+'M ₺':fmt(n)+' ₺';
+  const catDefs=[
+    {k:'Satılık Daire',op:'Satılık',tip:'Daire',f:o=>o.op==='Satılık'&&/Daire|Villa|Müstakil/i.test(o.tip)},
+    {k:'Kiralık Daire',op:'Kiralık',tip:'Daire',kir:1,f:o=>o.op==='Kiralık'&&/Daire|Villa|Müstakil/i.test(o.tip)},
+    {k:'İşyeri & Ofis',op:'',tip:'İşyeri',f:o=>/İşyeri|Ofis|Dükkan|Bina|Depo/i.test(o.tip)},
+    {k:'Arsa & Tarla',op:'',tip:'',f:o=>/Arsa|Tarla|Bağ/i.test(o.tip)}
+  ];
+  const catCards=catDefs.map(c=>{const items=OZEL.filter(c.f);if(!items.length)return '';
+    const min=Math.min.apply(null,items.map(o=>o.fiyat));
+    return `<button class="ozc-cat" onclick="ozCatJump('${c.op}','${c.tip}')"><span class="ck">${c.k}</span><span class="cv">${_M(min)}${c.kir?'<i>/ay</i>':''}<small>’den başlayan</small></span><span class="cn">${items.length} kayıt →</span></button>`;
+  }).filter(Boolean).join('');
   host.innerHTML=`
    <div class="ozc-stats">
      <div class="s"><div class="v">${ilceler.length}</div><div class="l">aktif ilçe</div></div>
@@ -522,6 +572,7 @@ function ozHero(){
      <div class="ozc-h">En çok özel portföyümüz olan bölgeler</div>
      ${top.map(t=>`<div class="ozc-row"><span class="d">${t.d}</span><span class="t"><span class="f" data-w="${(t.n/max*100).toFixed(0)}"></span></span><span class="n">${t.n}</span></div>`).join('')}
    </div>
+   ${catCards?`<div class="ozc-cats"><div class="ozc-h">Kategori bazında başlangıç fiyatları</div><div class="ozc-catg">${catCards}</div></div>`:''}
    <div class="ozc-chips"><span class="lbl">Aktif bölgelerimiz:</span> ${chips.slice(0,12).map(c=>`<i>${c}</i>`).join('')}</div>`;
   requestAnimationFrame(()=>{host.querySelectorAll('.ozc-bars .f').forEach(e=>e.style.width=e.dataset.w+'%');});
 }
@@ -580,49 +631,9 @@ var SAHIL_ILCE={
 };
 function isSahil(il,ilce){try{var a=SAHIL_ILCE[il];if(!a)return false;var ic=(''+ilce).replace(/\s*\(.*\)$/,'').trim();return a.indexOf(ic)>=0;}catch(e){return false;}}
 function ozSahilBadge(){return '<span class="ozsahil"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s2.5-2 5-2 4 2 6 2 3.5-2 5-2 4 2 4 2"/><path d="M2 17s2.5-2 5-2 4 2 6 2 3.5-2 5-2 4 2 4 2"/></svg> Denize yakın</span>';}
-function ozCardHTML(o){
-  const opc=o.op==='Satılık'?'sat':'kir';const kira=o.op==='Kiralık';
-  const price=`<div class="ozprice"><span class="from">başlangıç</span><b>${fmt(o.fiyat)} ₺</b>${kira?'<small>/ay</small>':''}<span class="den">'den</span></div>`;
-  const avg=o.ort||(function(){var st=kira?500:1000;return Math.max(o.fiyat+st,Math.round(o.fiyat*1.18/st)*st);})();
-  const ort=`<div class="ozort">${ozIco(OZI.info,12)} Bölge ortalaması <b>${fmt(avg)} ₺${kira?'/ay':''}</b><span class="kat">${o.op} ${o.tip}</span></div>`;
-  const sahil=(o.sahil||isSahil(o.il||(typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name)||'İzmir',o.ilce))?ozSahilBadge():'';
-  return `<div class="ozcard">
-      <div class="ozmask ${ozCatClass(o.tip)}">
-        ${ozScene(o.tip)}
-        <span class="ozbadge ${opc}">${o.op}</span>
-        <span class="ozcat">${o.tip}</span>
-        <span class="ozlock">${ozIco(OZI.lock,12)} Özel Portföy</span>
-        ${sahil}
-        <div class="ozmeta"><span class="loc">${ozIco(OZI.pin,13)} ${o.mah}, ${o.ilce}</span><span class="m2">${o.m2} m²${o.oda&&o.oda!=='-'?' · '+o.oda:''}</span></div>
-      </div>
-      <div class="ozbody">
-        <div class="ozcadde">${ozIco(OZI.road,15)} ${o.cadde} <span>civarı</span></div>
-        ${price}
-        ${ort}
-        <div class="oznote">${ozIco(OZI.info,13)} Bölge ortalama/başlangıç değeridir; belirli bir ilana ait değildir. Tam adres, kat ve bina bilgisi danışmanla paylaşılır.</div>
-        <div class="ozcta"><button class="btn btn-primary btn-sm" onclick="ozLead('${o.id}')">Detay İste</button><a class="ozic wa" href="${ozWaLink(o)}" target="_blank" rel="noopener noreferrer" title="WhatsApp">${ozIco(OZI.wa,16)}</a><a class="ozic tel" href="tel:${((typeof FIRMA!=='undefined'&&FIRMA.tel)||'').replace(/[^0-9+]/g,'')}" title="Ara">${ozIco(OZI.phone,16)}</a></div>
-      </div></div>`;
-}
-function renderOzHome(){const g=document.getElementById('ozHomeGrid');if(!g||typeof OZEL==='undefined')return;
-  const arr=OZEL.slice(0,6);
-  g.innerHTML=arr.length?arr.map(ozCardHTML).join(''):'<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:30px">Henüz özel portföy kaydı yok.</div>';
-}
-function renderOzel(){
-  const g=document.getElementById('ozgrid');if(!g)return;
-  let arr=OZEL.filter(o=>o.durum==='aktif');
-  if(ozF.op)arr=arr.filter(o=>o.op===ozF.op);
-  if(ozF.tip)arr=arr.filter(o=>o.tip===ozF.tip);
-  const cnt=document.getElementById('ozcount');if(cnt)cnt.textContent=arr.length+' özel portföy kaydı · açık adres ve görsel paylaşılmaz';
-  if(!arr.length){g.innerHTML='<div class="no-res" style="grid-column:1/-1;text-align:center;color:var(--muted);padding:44px">Bu kategoride özel portföy bulunmuyor. Talebinizi iletin, sizin için arayalım.</div>';return;}
-  g.innerHTML=arr.map(ozCardHTML).join('');
-}
-/* admin */
-function newOzel(){ozEditId=null;document.getElementById('ozEditTitle').textContent='Yeni Kayıt';['oz_ilce','oz_mah','oz_cadde','oz_m2','oz_oda','oz_fiyat','oz_not'].forEach(i=>{const e=document.getElementById(i);if(e)e.value='';});document.getElementById('oz_op').value='Satılık';document.getElementById('oz_tip').value='Daire';document.getElementById('oz_durum').value='aktif';document.getElementById('ozEditCard').style.display='block';}
-function editOzel(id){const o=OZEL.find(x=>x.id===id);if(!o)return;ozEditId=id;document.getElementById('ozEditTitle').textContent='Kaydı Düzenle';document.getElementById('oz_op').value=o.op;document.getElementById('oz_tip').value=o.tip;document.getElementById('oz_durum').value=o.durum;document.getElementById('oz_ilce').value=o.ilce;document.getElementById('oz_mah').value=o.mah;document.getElementById('oz_cadde').value=o.cadde;document.getElementById('oz_m2').value=o.m2;document.getElementById('oz_oda').value=o.oda||'';document.getElementById('oz_fiyat').value=o.fiyat;document.getElementById('oz_not').value=o.not||'';document.getElementById('ozEditCard').style.display='block';}
-function saveOzel(){const g=id=>{const e=document.getElementById(id);return e?e.value.trim():'';};
-  const obj={op:g('oz_op'),tip:g('oz_tip'),durum:g('oz_durum'),ilce:g('oz_ilce')||'-',mah:g('oz_mah')||'-',cadde:g('oz_cadde')||'-',m2:+g('oz_m2')||0,oda:g('oz_oda')||'-',fiyat:+g('oz_fiyat')||0,not:g('oz_not')};
-  if(ozEditId){const o=OZEL.find(x=>x.id===ozEditId);if(o)Object.assign(o,obj);}else{obj.id='o'+Date.now();OZEL.unshift(obj);}
-  saveAll();renderOzel();renderOzelRows();document.getElementById('ozEditCard').style.display='none';toast('Özel portföy kaydedildi.');}
+/* M1: ozCardHTML/renderOzHome/renderOzel/newOzel/editOzel/saveOzel'in ESKİ/BASİT kopyaları buradaydı;
+   gelişmiş sürümleri aşağıda (~3655-3768) tanımlı ve fonksiyon-hoisting ile onlar aktif. Ölü mükerrer
+   tanımlar kaldırıldı (davranış değişmez). delOzel yalnızca burada tanımlı → korunur. */
 function delOzel(id){if(!confirm('Bu özel portföy kaydı silinsin mi?'))return;OZEL=OZEL.filter(x=>x.id!==id);saveAll();renderOzel();renderOzelRows();toast('Kayıt silindi.');}
 var _wlM2Cache={};
 async function proxEndeksM2(il,ilce,durum){var k=il+'|'+ilce+'|'+durum;if(_wlM2Cache[k]!==undefined)return _wlM2Cache[k];var v=null;try{var r=await proxApi('/api/v1/tenant/endeks?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce)+'&kategori=konut&durum='+durum);if(r&&r.success&&r.data&&+r.data.m2>0)v=+r.data.m2;}catch(e){}_wlM2Cache[k]=v;return v;}
@@ -664,7 +675,7 @@ async function wlBuildBolge(il,silent){
     ];
     var insights=[];
     try{var pr='Sen '+il+' ilinde çalışan yerel emlak uzmanısın. Alıcı ve satıcıların bilmesi gereken, YEREL uzmanın gözünden 5 GENEL içgörü yaz (cephe/kat farkı, zemin/deprem, ulaşım/altyapı yakınlığı, sezonluk kira, kentsel dönüşüm gibi genel emlak dinamikleri). '+il+'’e özgü UYDURMA proje adı veya kesin rakam VERME. Her satır tam olarak: Başlık | 1-2 cümle açıklama. SADECE 5 satır.';
-      var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',tool:'bolge',prompt:aiGuard(pr)}});
+      var r=await aiChat({persona:'office',tool:'bolge',prompt:aiGuard(pr)});
       var txt=r&&(r.answer||r.text||(r.data&&r.data.answer));
       if(txt)txt.split('\n').forEach(function(l){var p=l.split('|');if(p.length>=2&&p[0].trim().length>2&&p[0].length<60)insights.push({baslik:p[0].replace(/[*#]/g,'').replace(/^[-\d.\s]+/,'').trim(),metin:p.slice(1).join('|').replace(/[*#]/g,'').trim()});});}catch(e){}
     if(insights.length<3)insights=[{baslik:'Cephe ve kat değeri',metin:'Aynı binada cephe yönü ve kat, m² fiyatını belirgin değiştirir; veriyle doğru konumlandırırız.'},{baslik:'Zemin ve yapı kalitesi',metin:'Zemin etüdü ve yapı yaşı, değerin ve satılabilirliğin kritik bileşenidir.'},{baslik:'Ulaşım yakınlığı',metin:'Ana arter, toplu taşıma ve altyapıya yakınlık kira ve satış talebini yükseltir.'},{baslik:'Sezonluk kira dinamiği',metin:'Bölgeye göre kira talebi sezonsal değişir; doğru zamanlama getiriyi artırır.'},{baslik:'Kentsel dönüşüm etkisi',metin:'Dönüşüm bölgelerinde eski yapı stoku ile yeni proje arasında değer farkı oluşur.'}];
@@ -739,12 +750,22 @@ async function rebuildOzelFromProx(il,silent){
       var not=(src==='analyze')
         ? (s.mah+' Mah., '+s.cadde+'’de ProX analiz başlangıç değeri'+band+' · bölge ort. '+fmt(ort)+' ₺'+((az.conf!=null)?' · güven '+az.conf+'/100':'')+' · '+m2info)
         : (m2info+' · bölge ort. '+fmt(ort)+' ₺ · '+s.mah+' Mah., '+s.cadde+' civarı');
-      out.push({id:'o'+(id++),op:s.op,tip:s.tip,ilce:s.ilce+(ekIl?' ('+s.il+')':''),mah:s.mah,cadde:s.cadde,m2:s.m2,oda:s.oda,fiyat:fiyat,ort:ort,sahil:(s.sahil||isSahil(s.il,s.ilce)),durum:'aktif',basla:(src==='analyze'),il:s.il,not:not});
+      out.push({id:'og'+(id++),op:s.op,tip:s.tip,ilce:s.ilce+(ekIl?' ('+s.il+')':''),mah:s.mah,cadde:s.cadde,m2:s.m2,oda:s.oda,fiyat:fiyat,ort:ort,sahil:(s.sahil||isSahil(s.il,s.ilce)),durum:'aktif',basla:(src==='analyze'),il:s.il,not:not,_gen:true});/* C3: id 'og…' (o1-o6 çakışması bitti) + _gen:true (üretilmiş işareti) */
     });
-    OZEL=out;saveAll();
+    /* C3: admin'in ELLE eklediği (_gen olmayan) kayıtları KORU; sadece üretilmiş (_gen) olanları tazele.
+       rebuild yalnızca İzmir-DIŞI illerde çalışır → kapsam dışı (eski il/İzmir demo) elle kayıtları düşür. */
+    var _scopeIc={};
+    try{work.forEach(function(w){_scopeIc[w.ilce]=1;});}catch(e){}
+    try{Object.keys(PROVINCE.districts||{}).forEach(function(k){_scopeIc[k]=1;});}catch(e){}
+    var _manual=(Array.isArray(OZEL)?OZEL:[]).filter(function(x){
+      if(!x||x._gen)return false;                                   // üretilmiş → tazelenecek
+      var ic=String(x.ilce||'').replace(/\s*\([^)]*\)\s*$/,'').trim();// "Ortahisar (Trabzon)" → "Ortahisar"
+      return _scopeIc[ic]===1||_scopeIc[x.ilce]===1;                 // yalnızca aktif il/ilçe kapsamındaki elle kayıtlar
+    });
+    OZEL=_manual.concat(out);saveAll();
     try{localStorage.setItem('wl_ozel_ts',JSON.stringify({il:il,ts:Date.now(),n:out.length,real:realCount}));}catch(e){}
     try{if(typeof renderOzel==='function')renderOzel();if(typeof renderOzHome==='function')renderOzHome();if(typeof ozHero==='function')ozHero();if(typeof renderOzelRows==='function')renderOzelRows();if(typeof proxRenderStatus==='function')proxRenderStatus();}catch(e){}
-    if(!silent)toast('✓ Özel Portföy '+il+': '+out.length+' kayıt ('+realCount+' gerçek ProX analiz fiyatı).');
+    if(!silent)toast('✓ Özel Portföy '+il+': '+out.length+' yeni ProX kaydı ('+realCount+' gerçek analiz fiyatı)'+(_manual.length?' · '+_manual.length+' elle kayıt korundu':'')+'.');
   }catch(e){if(!silent)toast('Özel Portföy güncellenemedi.');}
   _ozBusy=false;
 }
@@ -766,20 +787,21 @@ function renderDan(){
   const arr=DANISMANLAR.slice().sort((a,b)=>(b.feat||0)-(a.feat||0));
   g.innerHTML=arr.map((d,i)=>{const c=DAN_COLORS[i%DAN_COLORS.length];const ini=d.name.split(' ').map(x=>x[0]).slice(0,2).join('');
     const photo=d.foto?(IMG[d.foto]||(d.foto.startsWith&&d.foto.startsWith('data:')?d.foto:'')):'';
-    const avatar=photo?`<img src="${photo}" alt="${d.name}" loading="lazy" decoding="async">`:`<div class="circ" style="background:linear-gradient(135deg,${c},${shade(c)})">${ini}</div>`;
+    const avatar=photo?`<img src="${photo}" alt="${_le(d.name)}" loading="lazy" decoding="async">`:`<div class="circ" style="background:linear-gradient(135deg,${c},${shade(c)})">${_le(ini)}</div>`;
     return `<div class="dcard${d.feat?' feat':''}">
       ${d.feat?'<span class="dfeat">★ Yıldız Danışman</span>':''}
       <div class="av${photo?' has-photo':''}" style="background:linear-gradient(135deg,${c}22,${c}08)">${avatar}</div>
-      <div class="body"><h3>${d.name}</h3><div class="role">${d.role}</div>
-        <div class="area">📍 ${d.area}</div>
-        ${d.bio?`<p class="dbio">${d.bio}</p>`:''}
+      <div class="body"><h3>${_le(d.name)}</h3><div class="role">${_le(d.role)}</div>
+        <div class="area">📍 ${_le(d.area)}</div>
+        ${d.bio?`<p class="dbio">${_le(d.bio)}</p>`:''}
         <div class="dstat"><div><div class="n num">${d.sales}</div><div class="l">İşlem</div></div><div><div class="n num">★${(d.rating||4.9).toFixed(1)}</div><div class="l">Puan</div></div><div><div class="n num">${d.exp||5}<small>yıl</small></div><div class="l">Tecrübe</div></div></div>
-        <div class="dactions"><a class="wa" href="https://wa.me/${d.wa}" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>${d.tel?`<a class="dtel" href="tel:${d.tel.replace(/[^0-9+]/g,'')}" aria-label="Ara">📞</a>`:''}</div></div></div>`;}).join('');
+        <div class="dactions"><a class="wa" href="${waHref('Merhaba, '+(d.name||'')+' ile görüşmek istiyorum.',d)}" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>${d.tel?`<a class="dtel" href="tel:${d.tel.replace(/[^0-9+]/g,'')}" aria-label="Ara">📞</a>`:''}</div></div></div>`;}).join('');
 }
 function shade(hex){const n=parseInt(hex.slice(1),16);let r=(n>>16)-30,g=((n>>8)&255)-30,b=(n&255)-30;r=Math.max(0,r);g=Math.max(0,g);b=Math.max(0,b);return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);}
 
 /* ============ RENDER: BÖLGE ============ */
 function renderBolgePick(){
+  if(!document.getElementById('bolgePick')||!document.getElementById('popGrid'))return; // ana sayfa #bolge widget'ı kaldırıldı → no-op (tam analiz Analiz Merkezi'nde)
   const keys=Object.keys(BAZ).slice(0,6);
   document.getElementById('bolgePick').innerHTML=keys.map((k,i)=>`<button class="bp${i===0?' act':''}" onclick="selBolge('${k}',this)">${k}</button>`).join('');
   document.getElementById('popGrid').innerHTML=keys.slice(0,4).map(k=>{const b=BAZ[k];
@@ -812,7 +834,9 @@ function bzSplit(parts,r){ // normalize an array of weights to sum 100 (1 decima
   rounded[0]=Math.round((rounded[0]+diff)*10)/10;return rounded;
 }
 function bzGrowthSeries(end,totalPct,n,r){
-  const start=end/(1+totalPct/100);const arr=[];
+  n=Math.max(2,n|0);                                   // M5: n<2 → i/(n-1) sıfıra bölme
+  const tp=Math.max(-95,+totalPct||0);                 // M5: totalPct≤-100 → payda≤0 (negatif/Infinity seri); güvenli tabana kıstla
+  const start=Math.max(1,end/(1+tp/100));const arr=[];
   for(let i=0;i<n;i++){const t=i/(n-1);const base=start*Math.pow(end/start,t);arr.push(base*(1+(r()*0.05-0.025)));}
   arr[0]=start;arr[n-1]=end;return arr.map(v=>Math.round(v));
 }
@@ -1271,10 +1295,9 @@ function brCmpHTML(d){
 function brAdvisorHTML(d){
   let adv=null;
   if(typeof DANISMANLAR!=='undefined'){adv=DANISMANLAR.find(x=>brLow(x.area||'').includes(brLow(d.ilce)))||DANISMANLAR.find(x=>x.feat)||DANISMANLAR[0];}
-  const wa=(adv&&adv.wa)||FIRMA.wa||'905000000000';
   const tel=(adv&&adv.tel)||FIRMA.tel||'';
   const init=(adv?adv.name:FIRMA.name).split(' ').map(s=>s[0]).slice(0,2).join('');
-  const txt=encodeURIComponent(`Merhaba, ${d.mah} (${d.ilce}) bölgesi hakkında bilgi almak istiyorum.`);
+  const msg=`Merhaba, ${d.mah} (${d.ilce}) bölgesi hakkında bilgi almak istiyorum.`;/* M9: waHref → danışman no yoksa firma, o da yoksa tel: */
   return `<div class="br-adv">
     <div class="ah">Bu bölgenin uzmanı</div>
     <div class="ap">
@@ -1282,7 +1305,7 @@ function brAdvisorHTML(d){
       <div><div class="an">${adv?adv.name:FIRMA.name}</div><div class="ar">${adv?adv.role:'Emlak Danışmanlığı'}</div><div class="aa">${adv?adv.area:'İzmir · Konak'}</div></div>
     </div>
     <div class="abtns">
-      <a class="w" href="https://wa.me/${wa}?text=${txt}" target="_blank" rel="noopener noreferrer">${brIco('<path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.2-5.3A8.5 8.5 0 1 1 21 11.5Z"/>',15)} WhatsApp</a>
+      <a class="w" href="${waHref(msg, adv)}" target="_blank" rel="noopener noreferrer">${brIco('<path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.2-5.3A8.5 8.5 0 1 1 21 11.5Z"/>',15)} WhatsApp</a>
       <a class="t" href="tel:${tel.replace(/[^0-9+]/g,'')}">${brIco('<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.5-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2Z"/>',15)} Ara</a>
     </div>
   </div>`;
@@ -1444,8 +1467,9 @@ function hesaplaDeger(){
   document.getElementById('valRange').innerHTML=`Aralık: <b>${fmt(lo)} ₺</b> – <b>${fmt(hi)} ₺</b> · Bölge yatırım skoru <b style="color:var(--green-700)">${b.score}/100</b>`;
   document.getElementById('valResult').classList.add('show');
   document.getElementById('valLead').classList.add('show');
-  window._lastVal={il,tip,m2,val};
-  refineDegerFromAnalyze(il,tip,m2,b);                           // canlı: değer /prox/analyze'dan; local zaten gösterildi (fallback)
+  const _mah=(document.getElementById('v_mah')&&document.getElementById('v_mah').value)||'';
+  window._lastVal={il,tip,m2,mah:_mah,val};                      // H5: mah dahil → mahalle değişince eski async sonuç uygulanmaz
+  refineDegerFromAnalyze(il,tip,m2,b,_mah);                      // canlı: değer /prox/analyze'dan; local zaten gösterildi (fallback)
 }
 /* mülk tipi -> backend kategori enum'u {konut,arsa,ticari,bina,turistik_tesis} */
 function proxKategoriOf(tip){
@@ -1456,15 +1480,15 @@ function proxKategoriOf(tip){
 /* API-first DEĞER: /prox/analyze. Ana değer=strongest_value, bant=range.min_value–max_value,
    karar_ozeti+risk_ozeti+confidence gösterilir. Değer SADECE API'den; YZ ile fiyat üretilmez.
    API yok/boş → mevcut local hesap korunur (görsel/akış bozulmaz). */
-async function refineDegerFromAnalyze(il,tip,m2,localB){
+async function refineDegerFromAnalyze(il,tip,m2,localB,mah){
   try{
-    const mah=(document.getElementById('v_mah')&&document.getElementById('v_mah').value)||'';
+    mah=(mah!=null?mah:((document.getElementById('v_mah')&&document.getElementById('v_mah').value)||''));
     const r=await proxApi('/api/v1/tenant/prox/analyze',{method:'POST',body:{
       il:((typeof PROVINCE!=='undefined'&&PROVINCE.name)||'İzmir'),ilce:il,mahalle:mah,kategori:proxKategoriOf(tip),durum:'satilik',brut_m2:m2,attrs:{}
     }});
     if(!r||r.fallback||r.success!==true)return;                  // API yok → local sonuç korunur
     const val=+r.strongest_value;if(!val||!isFinite(val))return;
-    if(!window._lastVal||window._lastVal.il!==il||window._lastVal.m2!==m2)return; // kullanıcı değiştirdiyse dokunma
+    if(!window._lastVal||window._lastVal.il!==il||window._lastVal.m2!==m2||window._lastVal.tip!==tip||window._lastVal.mah!==mah)return; // H5: kullanıcı il/m²/tip/MAH değiştirdiyse eski sonucu uygulama
     const rg=r.range||{};const lo=+rg.min_value,hi=+rg.max_value;
     document.getElementById('valBig').textContent=fmt(val)+' ₺';
     const conf=(r.confidence!=null)?(' · Güven <b>'+r.confidence+'/100</b>'+(r.confidence_band?(' ('+r.confidence_band+')'):'')):'';
@@ -1479,7 +1503,7 @@ async function refineDegerFromAnalyze(il,tip,m2,localB){
       const ri=r.risk_ozeti?('<div style="margin-top:4px"><b style="color:var(--ink)">Risk:</b> '+r.risk_ozeti+'</div>'):'';
       info.innerHTML=ko+ri;
     }
-    window._lastVal={il,tip,m2,val};
+    window._lastVal={il,tip,m2,mah,val};
   }catch(e){/* sessiz: local sonuç korunur */}
 }
 function valLead(){const ad=document.getElementById('vl_ad').value,tel=document.getElementById('vl_tel').value,kvkk=document.getElementById('vl_kvkk').checked;
@@ -1544,7 +1568,7 @@ function createAlarm(){const b=document.getElementById('al_bolge').value,m=docum
 function openLead(t){document.getElementById('leadTitle').textContent=t||'İletişim';if(t&&document.getElementById('m_konu')){const s=document.getElementById('m_konu');for(let o of s.options){if(o.text===t){s.value=o.value;break;}}}document.getElementById('leadModal').classList.add('open');}
 function closeLead(){document.getElementById('leadModal').classList.remove('open');}
 /* ===== YASAL METİN MOTORU — firma künyesinden otomatik dolar (per-firma) ===== */
-function _le(s){return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function _le(s){return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function firmaKunye(){var f=(typeof FIRMA==='object'&&FIRMA)||{};var e=f.eids||{};
   return {name:f.name||e.unvan||'—',unvan:e.unvan||f.name||'—',adres:f.adres||'—',mail:f.mail||'—',tel:f.tel||'—',vergi:f.vergi||'',belge:e.belgeNo||''};}
 function legalKunyeRows(){var k=firmaKunye();
@@ -1582,15 +1606,15 @@ function closeKvkk(){document.getElementById('kvkkModal').classList.remove('open
 function eidsQrSvg(seed){var s=0,i;for(i=0;i<(seed||'x').length;i++)s=(s*31+seed.charCodeAt(i))>>>0;var n=7,r='',x,y;for(y=0;y<n;y++)for(x=0;x<n;x++){s=(s*1103515245+12345)>>>0;var on=((s>>16)&1)||(x<2&&y<2)||(x>n-3&&y<2)||(x<2&&y>n-3);if(on)r+='<rect x="'+(x*7)+'" y="'+(y*7)+'" width="7" height="7"/>';}return '<svg viewBox="0 0 49 49" width="100%" height="100%" fill="#0f1f3d" aria-hidden="true">'+r+'</svg>';}
 function detEidsHtml(it){var e=it.eids;return '<div class="det-eids"><div class="deh"><span class="sh">'+eidsShieldSvg(17)+'</span> EİDS ile Doğrulanmış İlan</div><div class="dnote">Bu ilan T.C. Ticaret Bakanlığı Elektronik İlan Doğrulama Sistemi (EİDS) ile doğrulanmıştır. İl/ilçe/ada/parsel resmi kayıttan gelir ve değiştirilemez.</div><div class="dcode"><div><div class="kod">'+e.kod+'</div><div style="font-size:11.5px;color:var(--muted);margin-top:6px">Taşınmaz No '+e.tasinmazNo+' · Ada '+e.ada+' / Parsel '+e.parsel+' · Yetki bitiş '+e.yetkiBitis+'</div></div><div class="qr" onclick="eidsSorgu(\''+e.kod+'\','+it.id+')" title="Doğrulama sonucunu gör">'+eidsQrSvg(e.kod)+'</div></div><button class="verifybtn" style="margin-top:8px" onclick="eidsSorgu(\''+e.kod+'\','+it.id+')">Doğrulama sonucunu görüntüle →</button></div>';}
 function eidsSorgu(kod,id){var it=ILANLAR.find(function(x){return x.id===id;});var e=it&&it.eids;if(!e)return;var b=document.getElementById('eidsQBody');if(!b)return;
-  b.innerHTML='<div class="qrow"><b>İlan</b><span class="val" style="max-width:58%;text-align:right;font-family:inherit">'+it.title+'</span></div>'
-   +'<div class="qrow"><b>Doğrulama Kodu</b><span class="val">'+e.kod+'</span></div>'
-   +'<div class="qrow"><b>Taşınmaz No</b><span class="val">'+e.tasinmazNo+'</span></div>'
-   +'<div class="qrow"><b>İl / İlçe</b><span class="val" style="font-family:inherit">'+(e.il||'İzmir')+' / '+(e.ilce||it.ilce)+'</span></div>'
-   +'<div class="qrow"><b>Ada / Parsel</b><span class="val">'+e.ada+' / '+e.parsel+'</span></div>'
-   +'<div class="qrow"><b>Cins</b><span class="val" style="font-family:inherit">'+e.cins+'</span></div>'
-   +'<div class="qrow"><b>İlan Veren</b><span class="val" style="font-family:inherit">'+(e.malikTip||'Yetkili İşletme')+'</span></div>'
-   +'<div class="qrow"><b>Yetki Belgesi No</b><span class="val">'+((typeof FIRMA!=='undefined'&&FIRMA.eids&&FIRMA.eids.belgeNo)||'—')+'</span></div>'
-   +'<div class="qrow"><b>Geçerlilik</b><span class="val">'+e.yetkiBitis+'</span></div>'
+  b.innerHTML='<div class="qrow"><b>İlan</b><span class="val" style="max-width:58%;text-align:right;font-family:inherit">'+_le(it.title)+'</span></div>'
+   +'<div class="qrow"><b>Doğrulama Kodu</b><span class="val">'+_le(e.kod)+'</span></div>'
+   +'<div class="qrow"><b>Taşınmaz No</b><span class="val">'+_le(e.tasinmazNo)+'</span></div>'
+   +'<div class="qrow"><b>İl / İlçe</b><span class="val" style="font-family:inherit">'+_le(e.il||'İzmir')+' / '+_le(e.ilce||it.ilce)+'</span></div>'
+   +'<div class="qrow"><b>Ada / Parsel</b><span class="val">'+_le(e.ada)+' / '+_le(e.parsel)+'</span></div>'
+   +'<div class="qrow"><b>Cins</b><span class="val" style="font-family:inherit">'+_le(e.cins)+'</span></div>'
+   +'<div class="qrow"><b>İlan Veren</b><span class="val" style="font-family:inherit">'+_le(e.malikTip||'Yetkili İşletme')+'</span></div>'
+   +'<div class="qrow"><b>Yetki Belgesi No</b><span class="val">'+_le((typeof FIRMA!=='undefined'&&FIRMA.eids&&FIRMA.eids.belgeNo)||'—')+'</span></div>'
+   +'<div class="qrow"><b>Geçerlilik</b><span class="val">'+_le(e.yetkiBitis)+'</span></div>'
    +'<div class="qok">'+eidsShieldSvg(15)+' Bu ilan EİDS ile doğrulanmıştır · statusCode 200</div>';
   document.getElementById('eidsQ').classList.add('open');}
 function eidsSorguClose(){var q=document.getElementById('eidsQ');if(q)q.classList.remove('open');}
@@ -1661,11 +1685,24 @@ function openSuperAdmin(){var list=superSeed(),st=superStats(list),pct=st.mx?Mat
     +'<div style="overflow:auto;border:1px solid var(--line);border-radius:12px"><table class="atable" style="margin:0"><thead><tr><th>Bayi</th><th>İl</th><th>Paket</th><th>Kota (aylık)</th><th>Durum</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'
     +'<div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="superAddDealer()">+ Yeni Bayi</button><button class="abtn" onclick="superReset()">Demo Verilerini Sıfırla</button></div></div>';
   m.classList.add('open');}
+var _superPrevSnap=null;
 function superPreview(id){var t=superSeed().filter(function(x){return x.id===id;})[0];if(!t)return;
+  /* H4: önizleme kendi kiracının CANLI durumunu bozuyordu (FIRMA.name/PROX/marka/il) + geri dönüş yoktu.
+     İLK önizlemede anlık görüntü al, çıkış çubuğu ile geri yükle. Not: saveAll çağrılmaz → reload zaten orijinali getirir; bu bar reload gerektirmeden geri alır. */
+  try{if(!_superPrevSnap){_superPrevSnap={name:(typeof FIRMA!=='undefined'?FIRMA.name:''),il:(typeof PROX!=='undefined'?PROX.il:''),region:(typeof PROX!=='undefined'?PROX.region:''),prov:(typeof PROVINCE!=='undefined'&&PROVINCE?PROVINCE.name:'İzmir')};}}catch(e){}
   try{if(typeof FIRMA!=='undefined')FIRMA.name=t.firma;if(typeof applyBrand==='function')applyBrand(t.firma);}catch(e){}
   try{if(typeof PROX!=='undefined'){PROX.il=t.il;PROX.region=t.il;}if(typeof applyProvince==='function')applyProvince(t.il);}catch(e){}
   var m=document.getElementById('superAdmin');if(m)m.classList.remove('open');
-  if(typeof toast==='function')toast('Önizleme: '+t.firma+' · '+t.il+' ('+t.paket+')');}
+  _superPrevBar(t.firma+' · '+t.il+' ('+t.paket+')');
+  if(typeof toast==='function')toast('Önizleme: '+t.firma+' · '+t.il+' ('+t.paket+') — çıkmak için üstteki çubuğu kullanın.');}
+function superPreviewExit(){var b=document.getElementById('superPrevBar');if(b)b.remove();
+  if(!_superPrevSnap)return;var s=_superPrevSnap;_superPrevSnap=null;
+  try{if(typeof FIRMA!=='undefined')FIRMA.name=s.name;if(typeof applyBrand==='function')applyBrand(s.name);}catch(e){}
+  try{if(typeof PROX!=='undefined'){PROX.il=s.il;PROX.region=s.region;}if(typeof applyProvince==='function')applyProvince(s.prov);}catch(e){}
+  if(typeof toast==='function')toast('Önizlemeden çıkıldı — kendi siteniz geri yüklendi.');}
+function _superPrevBar(txt){var b=document.getElementById('superPrevBar');
+  if(!b){b=document.createElement('div');b.id='superPrevBar';b.style.cssText='position:fixed;left:0;right:0;top:0;z-index:99999;background:#0f1f3d;color:#fff;padding:9px 16px;display:flex;gap:12px;align-items:center;justify-content:center;font:600 13px/1.4 system-ui,-apple-system,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.28)';document.body.appendChild(b);}
+  b.innerHTML='👁 Bayi önizlemesi: '+_le(txt)+' <button onclick="superPreviewExit()" style="margin-left:14px;background:#fff;color:#0f1f3d;border:0;border-radius:6px;padding:5px 13px;font-weight:700;cursor:pointer">← Önizlemeden çık</button>';}
 function superAddDealer(){var firma=prompt('Yeni bayi firma adı:');if(!firma)return;var il=prompt('İl:','İstanbul')||'İstanbul';
   var list=superSeed();list.push({id:firma.toLocaleLowerCase('tr').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,''),firma:firma,il:il,paket:'PRO',domain:'',kotaKullanim:0,kotaMax:10000,durum:'deneme'});
   try{localStorage.setItem('wl_super_tenants',JSON.stringify(list));}catch(e){}openSuperAdmin();if(typeof toast==='function')toast('✓ Bayi eklendi: '+firma);}
@@ -1824,7 +1861,7 @@ function renderKpis(){
   const today=new Date().toISOString().slice(0,10);
   const acikFirsat=(typeof DEALS!=='undefined')?DEALS.filter(d=>d.stage!=='sozlesme').length:0;
   const pipeVal=(typeof DEALS!=='undefined')?DEALS.filter(d=>d.stage!=='sozlesme').reduce((a,b)=>a+(+b.value||0),0):0;
-  const bugunGorev=(typeof TASKS!=='undefined')?TASKS.filter(t=>!t.done&&t.date.slice(0,10)<=today).length:0;
+  const bugunGorev=(typeof TASKS!=='undefined')?TASKS.filter(t=>!t.done&&t.date&&t.date.slice(0,10)<=today).length:0;/* M4: t.date null koruması */
   const gecikenKira=(typeof RENTS!=='undefined')?RENTS.filter(r=>r.status==='gecikti').length:0;
   const kpis=[
     {n:(typeof KISILER!=='undefined'?KISILER.length:0),l:'Kişi (CRM)',i:'👤',c:'var(--accent)'},
@@ -1841,7 +1878,7 @@ function renderKpis(){
 function renderRecentLeads(){
   const box=document.getElementById('recentLeads');if(!box)return;
   if(!LEADS.length){box.innerHTML='<div class="empty">Henüz lead yok. Sitedeki formlar, değerleme aracı ve fiyat alarmından gelen talepler burada listelenir.</div>';return;}
-  box.innerHTML=LEADS.slice(0,5).map(l=>`<div class="lrow"><div><b>${l.ad}</b> · <span class="src">${l.src}</span><div class="lk">${l.konu||''}</div></div><div class="ld">${l.date}</div></div>`).join('');
+  box.innerHTML=LEADS.slice(0,5).map(l=>`<div class="lrow"><div><b>${_be(l.ad)}</b> · <span class="src">${_be(l.src)}</span><div class="lk">${_be(l.konu||'')}</div></div><div class="ld">${_be(l.date)}</div></div>`).join('');
 }
 
 /* ============ ADMIN: İLAN CRUD ============ */
@@ -1932,7 +1969,7 @@ function renderIlanRows(){
   const tb=document.getElementById('ilanRows');if(!tb)return;
   if(!ILANLAR.length){tb.innerHTML='<tr><td colspan="6" class="empty">Henüz ilan yok.</td></tr>';return;}
   tb.innerHTML=ILANLAR.map(it=>`<tr>
-    <td><div class="trow"><img src="${imgSrc(it.img)}" class="tthumb" loading="lazy" decoding="async"><div><b>${it.title}</b><div class="tsub">${it.type} · ${it.oda} · ${it.m2}m²</div></div></div></td>
+    <td><div class="trow"><img src="${imgSrc(it.img)}" class="tthumb" loading="lazy" decoding="async"><div><b>${_le(it.title)}</b><div class="tsub">${_le(it.type)} · ${_le(it.oda)} · ${it.m2}m²</div></div></div></td>
     <td><span class="atag ${it.op==='Satılık'?'sat':'kir'}">${it.op}</span></td>
     <td class="num">${fmt(it.price)} ₺</td>
     <td>${it.mah}, ${it.ilce}${it.il?`<div class="tsub">${it.il}</div>`:''}</td>
@@ -1983,14 +2020,14 @@ function renderDanRows(){const tb=document.getElementById('danRows');if(!tb)retu
   if(!DANISMANLAR.length){tb.innerHTML='<tr><td colspan="5" class="empty">Henüz danışman yok.</td></tr>';return;}
   tb.innerHTML=DANISMANLAR.map(d=>{const src=d.foto?(IMG[d.foto]||d.foto):'';const ini=d.name.split(' ').map(x=>x[0]).slice(0,2).join('');
     const av=src?`<img src="${src}" class="tthumb" loading="lazy" decoding="async" style="border-radius:50%;width:38px;height:38px">`:`<span class="tthumb" style="border-radius:50%;width:38px;height:38px;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:12px;font-weight:700">${ini}</span>`;
-    return `<tr><td><div class="trow">${av}<div><b>${d.name}</b>${d.feat?' <span class="atag" style="background:#fef3c7;color:#92400e">★</span>':''}</div></div></td><td>${d.role}</td><td>${d.area}</td><td class="num">${d.sales}</td>
+    return `<tr><td><div class="trow">${av}<div><b>${_le(d.name)}</b>${d.feat?' <span class="atag" style="background:#fef3c7;color:#92400e">★</span>':''}</div></div></td><td>${_le(d.role)}</td><td>${_le(d.area)}</td><td class="num">${d.sales}</td>
     <td class="ta"><button class="ico-btn" onclick="editDan(${d.id})">✎</button><button class="ico-btn del" onclick="delDan(${d.id})">🗑</button></td></tr>`;}).join('');}
 
 /* ============ ADMIN: LEADLER ============ */
 function leadSyncBadge(s){if(s==='online')return '<span title="ProX CRM iletildi" style="color:var(--green-700,#1a7f4b);font-weight:600">☁ Online</span>';if(s==='offline')return '<span title="Cevrimdisi — yeniden denenecek" style="color:#b26a00;font-weight:600">⧗ Beklemede</span>';return '<span class="tsub">⋯</span>';}
 function renderLeads(){const tb=document.getElementById('leadRows');if(!tb)return;
   if(!LEADS.length){tb.innerHTML='<tr><td colspan="6" class="empty">Henüz lead yok.</td></tr>';return;}
-  tb.innerHTML=LEADS.map(l=>`<tr><td class="tsub">${l.date}</td><td><b>${l.ad}</b></td><td class="num">${l.tel||'-'}</td><td>${l.konu||'-'}${l.msg?`<div class="tsub">${l.msg}</div>`:''}</td><td><span class="src">${l.src}</span></td><td>${leadSyncBadge(l.sync)}</td></tr>`).join('');}
+  tb.innerHTML=LEADS.map(l=>`<tr><td class="tsub">${_be(l.date)}</td><td><b>${_be(l.ad)}</b></td><td class="num">${_be(l.tel||'-')}</td><td>${_be(l.konu||'-')}${l.msg?`<div class="tsub">${_be(l.msg)}</div>`:''}</td><td><span class="src">${_be(l.src)}</span></td><td>${leadSyncBadge(l.sync)}</td></tr>`).join('');}
 function clearLeads(){if(!LEADS.length){toast('Temizlenecek lead yok.');return;}if(!confirm('Tüm lead kayıtları silinecek. Emin misiniz?'))return;
   LEADS=[];saveAll();renderLeads();renderRecentLeads();renderKpis();toast('Tüm lead\'ler temizlendi.');}
 
@@ -2005,6 +2042,8 @@ function fillFirmaForm(){
   document.getElementById('cf_name').value=FIRMA.name||'';document.getElementById('cf_tel').value=FIRMA.tel||'';
   document.getElementById('cf_mail').value=FIRMA.mail||'';document.getElementById('cf_wa').value=FIRMA.wa||'';
   document.getElementById('cf_adres').value=FIRMA.adres||'';document.getElementById('cf_hours').value=FIRMA.hours||'';
+  if(document.getElementById('cf_lat'))document.getElementById('cf_lat').value=(FIRMA.lat!=null?FIRMA.lat:'');
+  if(document.getElementById('cf_lng'))document.getElementById('cf_lng').value=(FIRMA.lng!=null?FIRMA.lng:'');
   if(document.getElementById('cf_vergi'))document.getElementById('cf_vergi').value=FIRMA.vergi||'';
   if(document.getElementById('cf_yetkili'))document.getElementById('cf_yetkili').value=FIRMA.yetkili||'';var _e=(FIRMA&&FIRMA.eids)||{};if(document.getElementById('cf_eidsBelge'))document.getElementById('cf_eidsBelge').value=_e.belgeNo||'';if(document.getElementById('cf_eidsUnvan'))document.getElementById('cf_eidsUnvan').value=_e.unvan||'';if(document.getElementById('cf_eidsFirma'))document.getElementById('cf_eidsFirma').value=_e.firmaKod||'';if(document.getElementById('cf_eidsKullanici'))document.getElementById('cf_eidsKullanici').value=_e.kullaniciKodu||'';if(typeof renderEidsYetki==='function')renderEidsYetki();if(typeof kiFillIl==='function')kiFillIl();}
 function kiFillIl(){var sel=document.getElementById("ki_il");if(!sel)return;var cur=(typeof PROX!=="undefined"&&PROX.il)||"İzmir";
@@ -2028,6 +2067,63 @@ function kiLocalIdentity(name,il){var sh=(name||"").split(/\s+/)[0]||name;
       insan onayı için görsel uyarı üretir. */
 var AI_GUARD_RULE='\n\n[KESİN KURALLAR — UYDURMA YASAK] Gerçek olmayan proje/site/marka adı, kesin fiyat/rakam, "%X garanti/net getiri", sahte istatistik, ödül, sertifika veya referans ÜRETME. Emin olmadığın sayısal veriyi "ProX endeksiyle teyit edilmeli" diye işaretle. Yalnızca genel, doğrulanabilir emlak bilgisi ver; abartıdan kaçın.';
 function aiGuard(p){p=(p==null?'':''+p);return p.indexOf('[KESİN KURALLAR')>=0?p:(p+AI_GUARD_RULE);}
+/* ===== DEEPSEEK-ÖNCELİKLİ YZ YÖNLENDİRME =====
+   Admin bir DeepSeek anahtarı (AICFG.dsKey) girdiyse TÜM yapay zeka ÜRETİMİ doğrudan DeepSeek ile çalışır;
+   yoksa ProX sunucu AI'sine (/prox/ai) düşülür. ProX API anahtarı (PROX.key) yalnızca VERİ uçları
+   (endeks/analiz/PDF/rapor) içindir — YZ ve veri anahtarları AYRI çalışır. DeepSeek CORS istemci
+   çağrılarına açıktır; anahtar admin'in kendi anahtarıdır (yayında sunucu-proxy önerilir). */
+function _dsKey(){try{return ((typeof AICFG!=='undefined'&&AICFG&&AICFG.dsKey)||'').trim();}catch(e){return '';}}
+function _dsModel(){try{return ((typeof AICFG!=='undefined'&&AICFG&&AICFG.dsModel)||'deepseek-chat').trim()||'deepseek-chat';}catch(e){return 'deepseek-chat';}}
+function _dsMessages(body){
+  body=body||{};
+  var SYS_GEN='Sen profesyonel bir Türk emlak içerik/danışmanlık yapay zekasısın. Türkçe ve net yaz; yalnızca doğrulanabilir emlak bilgisi ver; kesin fiyat/garanti getiri UYDURMA.';
+  /* Asistan/sohbet: prompt=sistem talimatı, messages=geçmiş (veya message=son tur) */
+  if((Array.isArray(body.messages)&&body.messages.length)||body.message!=null){
+    var msgs=[{role:'system',content:body.prompt||SYS_GEN}];
+    if(Array.isArray(body.messages)&&body.messages.length){
+      body.messages.forEach(function(m){if(m&&m.content)msgs.push({role:(m.role==='assistant'?'assistant':(m.role==='system'?'system':'user')),content:String(m.content)});});
+    }else{msgs.push({role:'user',content:String(body.message)});}
+    return msgs;
+  }
+  /* Araç üretimi (blog/bölge/kurumsal/rapor): prompt görevin tamamı */
+  return [{role:'system',content:SYS_GEN},{role:'user',content:String(body.prompt||'')}];
+}
+async function _deepseekChat(body,opts){
+  opts=opts||{};var key=_dsKey();if(!key)return null;
+  var ctrl=(typeof AbortController!=='undefined')?new AbortController():null;
+  var to=ctrl?setTimeout(function(){try{ctrl.abort();}catch(e){}},opts.timeout||45000):null;
+  try{
+    var res=await fetch('https://api.deepseek.com/chat/completions',{method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({model:_dsModel(),messages:_dsMessages(body),temperature:(opts.temperature!=null?opts.temperature:0.7),max_tokens:(opts.max_tokens||2048),stream:false}),
+      signal:ctrl?ctrl.signal:undefined});
+    if(to)clearTimeout(to);
+    if(!res.ok){return {_dsErr:true,status:res.status};}
+    var j=await res.json();var t=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;
+    if(t&&t.trim())return {answer:t.trim(),success:true,_via:'deepseek'};
+    return {_dsErr:true,status:0};
+  }catch(e){if(to)clearTimeout(to);return {_dsErr:true,status:-1,err:String(e&&e.message||e)};}
+}
+/* Birleşik YZ çağrısı: DeepSeek anahtarı varsa onunla, yoksa (veya DeepSeek hata verirse) ProX ile. */
+async function aiChat(body,opts){
+  if(_dsKey()){var d=await _deepseekChat(body,opts);if(d&&d.answer)return d;/* DeepSeek hata → ProX'e düş */}
+  return await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:body});
+}
+try{window.aiChat=aiChat;window._deepseekChat=_deepseekChat;}catch(e){}
+/* Admin: DeepSeek anahtar testi + durum rozeti */
+async function aiDsTest(){
+  var el=document.getElementById('ai_dsstatus');var inp=document.getElementById('ai_dskey');
+  var key=(inp&&inp.value.trim())||_dsKey();
+  if(!key){if(el)el.innerHTML='<div class="eids-yetki off" style="margin:0"><span class="ic">⚠️</span><div>DeepSeek anahtarı girilmedi. Boşsa YZ, ProX sunucu AI\'si ile çalışır.</div></div>';return;}
+  if(el)el.innerHTML='<div class="csub">● DeepSeek bağlantısı test ediliyor…</div>';
+  var _prev=(typeof AICFG!=='undefined'&&AICFG&&AICFG.dsKey)||'';try{if(typeof AICFG!=='undefined'&&AICFG)AICFG.dsKey=key;}catch(e){}
+  var r=await _deepseekChat({message:'Sadece "OK" yaz.'},{max_tokens:8,temperature:0});
+  try{if(typeof AICFG!=='undefined'&&AICFG)AICFG.dsKey=_prev;}catch(e){}
+  if(r&&r.answer){if(el)el.innerHTML='<div class="eids-yetki on" style="margin:0"><span class="ic">◉</span><div>DeepSeek bağlı ✓ · model '+_dsModel()+'<div style="font-weight:500;font-size:12px;opacity:.85">Kaydet\'e basınca tüm yapay zeka DeepSeek ile çalışır.</div></div></div>';}
+  else{var st=(r&&r.status);var msg=st===401?'anahtar geçersiz (401)':st===402?'bakiye/kota yetersiz (402)':st===429?'hız limiti (429)':'bağlantı kurulamadı';if(el)el.innerHTML='<div class="eids-yetki off" style="margin:0"><span class="ic">⚠️</span><div>DeepSeek testi başarısız · '+msg+'. Anahtarı kontrol edin.</div></div>';}
+}
+function aiDsStatus(){var el=document.getElementById('ai_dsstatus');if(!el)return;var k=_dsKey();
+  el.innerHTML=k?'<div class="eids-yetki on" style="margin:0"><span class="ic">◉</span><div>DeepSeek anahtarı kayıtlı · YZ üretimi DeepSeek ('+_dsModel()+') ile çalışıyor.</div></div>':'<div class="eids-yetki off" style="margin:0"><span class="ic">○</span><div>DeepSeek anahtarı yok · YZ, ProX sunucu AI\'si ile çalışıyor.</div></div>';}
 var AI_RISK_PATTERNS=[
   {re:/(garanti|kesin|net)\s*(getiri|kazanç|kâr|kar)|(getiri|kazanç)\s*(garanti|kesin)/i,t:'garanti getiri iddiası'},
   {re:/\d[\d.\s]{5,}\s*(tl|₺|lira)/i,t:'kesin fiyat rakamı'},
@@ -2045,7 +2141,7 @@ async function kurumsalGenerate(){
   out.innerHTML='<div class="eids-yetki on" style="margin:0"><span class="ic">⏳</span><div>ProX yapay zeka kapsamlı kurumsal kimliğinizi oluşturuyor…<div style="font-weight:500;font-size:12px;opacity:.85">DeepSeek · '+name+' · '+il+'</div></div></div>';
   var prompt="Sen ProX kurumsal kimlik ve Google SEO uzmanısın (emlakekspertizi.com). "+name+" adlı, "+il+" ilinde faaliyet gösteren TAM KAPSAMLI bir gayrimenkul/emlak ofisi için içerik üret. Ofis tüm alanlarda hizmet verir: konut (daire, villa, müstakil ev), arsa ve arazi, ticari & ofis/dükkan, kiralama, gayrimenkul değerleme, yatırım danışmanlığı ve miras/intikal işlemleri."+(hint?(" Öne çıkan uzmanlık: "+hint+"."):"")+" Profesyonel, güven veren, Google SEO uyumlu Türkçe kullan. Belirli tek bir nişe (sadece sahil/daire) sıkışma; tüm kategorileri kapsa. SADECE şu formatta yanıtla, başka açıklama ekleme:\nSLOGAN: <il ismi geçen tek cümle vurucu slogan>\nHERO1: <ana sayfa başlığı 1. satır, 2-4 kelime>\nHERO2: <ana sayfa başlığı 2. satır, 2-4 kelime>\nHERODESC: <hero alt açıklaması 20-30 kelime, veri odaklı, birkaç kategoriye atıf>\nHAKKINDA: <160-200 kelime kapsamlı hakkımızda; "+name+", "+il+", konut+arsa+ticari+miras+değerleme+yatırım hizmetleri, veri odaklı yaklaşım>\nSEOTITLE: <55-60 karakter; "+name+" + "+il+" + gayrimenkul/emlak>\nSEODESC: <150-155 karakter; hizmet çeşitliliği ("+il+" satılık/kiralık konut, arsa, ticari, değerleme, miras)>\nSEOKW: <virgülle 10-12 anahtar kelime; "+il+" emlak, "+il+" satılık daire, "+il+" kiralık, "+il+" arsa, "+il+" ticari gayrimenkul, "+il+" gayrimenkul değerleme, miras intikal, yatırım danışmanlığı>";
   var text=null;
-  try{var r=await proxApi("/api/v1/tenant/prox/ai",{method:"POST",body:{persona:"office",tool:"kurumsal",prompt:aiGuard(prompt)}});
+  try{var r=await aiChat({persona:"office",tool:"kurumsal",prompt:aiGuard(prompt)});
     if(r&&!r.fallback&&r.success!==false)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;}catch(e){}
   var _local=!text;   /* ProX AI erişilemedi → yerel şablonla DEVAM (rebrand asla takılmaz) */
   function pick(k){if(!text)return"";var m=new RegExp(k+"\\s*:?\\s*([\\s\\S]+?)(?:\\n\\s*(?:SLOGAN|HERO1|HERO2|HERODESC|HAKKINDA|SEOTITLE|SEODESC|SEOKW)\\s*:|$)","i").exec(text);return m?m[1].trim().replace(/^["“]+|["”]+$/g,"").trim():"";}
@@ -2109,7 +2205,12 @@ function kurumsalApply(){var res=window._kiResult;if(!res){toast("Önce oluştur
 }
 
 function saveFirma(){const g=id=>document.getElementById(id).value.trim();
-  var _pe=(FIRMA&&FIRMA.eids)||{};FIRMA={name:g('cf_name')||FIRMA.name,tel:g('cf_tel'),mail:g('cf_mail'),wa:g('cf_wa').replace(/[^0-9]/g,''),adres:g('cf_adres'),hours:g('cf_hours'),vergi:(document.getElementById('cf_vergi')?g('cf_vergi'):(FIRMA.vergi||'')),yetkili:(document.getElementById('cf_yetkili')?g('cf_yetkili'):(FIRMA.yetkili||'')),eids:{connected:_pe.connected||false,firmaKod:_pe.firmaKod||'',kullaniciKodu:_pe.kullaniciKodu||'',belgeNo:(document.getElementById('cf_eidsBelge')?g('cf_eidsBelge').replace(/[^0-9]/g,''):(_pe.belgeNo||'')),unvan:(document.getElementById('cf_eidsUnvan')?g('cf_eidsUnvan'):(_pe.unvan||''))}};
+  var _pe=(FIRMA&&FIRMA.eids)||{};var _prev=FIRMA||{};
+  var _lat=document.getElementById('cf_lat')?parseFloat(document.getElementById('cf_lat').value):_prev.lat;
+  var _lng=document.getElementById('cf_lng')?parseFloat(document.getElementById('cf_lng').value):_prev.lng;
+  FIRMA=Object.assign({},_prev,{name:g('cf_name')||FIRMA.name,tel:g('cf_tel'),mail:g('cf_mail'),wa:g('cf_wa').replace(/[^0-9]/g,''),adres:g('cf_adres'),hours:g('cf_hours'),
+    lat:(isFinite(_lat)?_lat:_prev.lat),lng:(isFinite(_lng)?_lng:_prev.lng),
+    vergi:(document.getElementById('cf_vergi')?g('cf_vergi'):(FIRMA.vergi||'')),yetkili:(document.getElementById('cf_yetkili')?g('cf_yetkili'):(FIRMA.yetkili||'')),eids:{connected:_pe.connected||false,firmaKod:_pe.firmaKod||'',kullaniciKodu:_pe.kullaniciKodu||'',belgeNo:(document.getElementById('cf_eidsBelge')?g('cf_eidsBelge').replace(/[^0-9]/g,''):(_pe.belgeNo||'')),unvan:(document.getElementById('cf_eidsUnvan')?g('cf_eidsUnvan'):(_pe.unvan||''))}});
   FIRMA.eids.yetkili=!!(FIRMA.eids.belgeNo&&FIRMA.eids.belgeNo.length===7&&FIRMA.eids.connected);
   saveAll();
   /* AI'YE GEREK YOK — sadece isim yazıp Kaydet: tüm site markası + (varsa) ili dönüşür.
@@ -2158,7 +2259,7 @@ function citySuffix(city,type){if(window.TRG)return window.TRG.suffix(city,type)
   switch(type){case 'gen':return (vwl?'n':'')+trI(v)+'n';case 'dat':return (vwl?'y':'')+trA(v);
    case 'acc':return (vwl?'y':'')+trI(v);case 'loc':return D+trA(v);case 'abl':return D+trA(v)+'n';
    case 'li':return 'l'+trI(v);}return '';}
-function wlCity(s){if(!s||typeof s!=='string'||wlCityOff())return s;var c=PROVINCE.name;if(window.TRG&&window.TRG.city){if(s.indexOf('İzmir')>=0||s.indexOf('İZMİR')>=0)s=window.TRG.city(s,c);if(window.TRG.districts)s=window.TRG.districts(s,c);return s;}if(s.indexOf('İzmir')<0&&s.indexOf('İZMİR')<0)return s;
+function wlCity(s){if(!s||typeof s!=='string'||wlCityOff())return s;var c=PROVINCE.name;if(window.TRG&&window.TRG.city){if(s.indexOf('İzmir')>=0||s.indexOf('İZMİR')>=0)s=window.TRG.city(s,c);if(window.TRG.districts)s=window.TRG.districts(s,c);if(window.TRG.region)s=window.TRG.region(s,c);/* H9: Ege→hedef bölge */return s;}if(s.indexOf('İzmir')<0&&s.indexOf('İZMİR')<0)return s;
   s=s.split('İzmir ve Ege bölgesi').join(c+' ve çevresi').split('İzmir ve Ege').join(c+' ve çevresi').split('İzmir & Ege').join(c+' & çevresi').split('İzmir ve çevresi').join(c+' ve çevresi');
   s=s.replace(/İzmir['’](nin|nın|nun|nün|in|ın|un|ün)\b/g,c+"'"+citySuffix(c,'gen'));
   s=s.replace(/İzmir['’](den|dan|ten|tan)\b/g,c+"'"+citySuffix(c,'abl'));
@@ -2178,7 +2279,7 @@ var _brandObs=null,_brandTO=null;
 var _wlBase=(window._wlBase=window._wlBase||new WeakMap());
 function brandSweep(root){try{if(brandName()===BRAND_ORIG&&wlCityOff())return;root=root||document.body;if(!root)return;
   if(_brandObs)_brandObs.disconnect();
-  var _hit=function(v){return v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0||v.indexOf('İZMİR')>=0||(!wlCityOff()&&window.TRG&&window.TRG.hasIzmirPlace&&window.TRG.hasIzmirPlace(v)));};
+  var _hit=function(v){return v&&(v.indexOf('Meridyen')>=0||v.indexOf('İzmir')>=0||v.indexOf('İZMİR')>=0||(!wlCityOff()&&(v.indexOf('Ege')>=0||(window.TRG&&window.TRG.hasIzmirPlace&&window.TRG.hasIzmirPlace(v)))));};/* H9: Ege da yakala */
   var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null,false),nodes=[],nn;
   while(nn=w.nextNode()){if(_wlBase.has(nn)||_hit(nn.nodeValue))nodes.push(nn);}
   nodes.forEach(function(t){var base=_wlBase.has(t)?_wlBase.get(t):(_wlBase.set(t,t.nodeValue),t.nodeValue);var out=wlReplace(base);if(t.nodeValue!==out)t.nodeValue=out;});
@@ -2607,6 +2708,8 @@ function customColor(){const a=document.getElementById('cc_accent').value,gr=doc
   setTheme(a,gr,nv);THEME={id:'ozel',accent:a,green:gr,navy:nv};saveAll();
   document.querySelectorAll('.tcard').forEach(c=>c.classList.remove('act'));}
 function setTheme(accent,green,navy){
+  if(!accent||typeof accent!=='string'||accent.charAt(0)!=='#')return;/* L: accent yoksa lighten/darken hex.slice çökerdi — güvenli çıkış */
+  green=green||'#34a853';navy=navy||'#0f1f3d';
   const r=document.documentElement.style;
   r.setProperty('--accent',accent);
   r.setProperty('--accent-2',lighten(accent,18));
@@ -2617,7 +2720,7 @@ function lighten(hex,amt){const n=parseInt(hex.slice(1),16);let r=Math.min(255,(
 function darken(hex,amt){const n=parseInt(hex.slice(1),16);let r=Math.max(0,(n>>16)-amt),g=Math.max(0,((n>>8)&255)-amt),b=Math.max(0,(n&255)-amt);return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);}
 
 /* ============ ADMIN: YEDEK ============ */
-function exportData(){const data={FIRMA,ILANLAR,DANISMANLAR,LEADS,THEME,CONTENT,BLOGS,REFS,SEO,GOOGLE,PROX,AICFG,P3,_exported:new Date().toISOString(),_brand:'Meridyen Gayrimenkul'};
+function exportData(){const data={FIRMA,ILANLAR,DANISMANLAR,LEADS,THEME,CONTENT,BLOGS,REFS,SEO,GOOGLE,PROX,AICFG,P3,KISILER,DEALS,TASKS,COMMS,RENTS,MSGLOG,RAPORLOG,ACT,CONTRACTS,OZEL,_exported:new Date().toISOString(),_brand:'Meridyen Gayrimenkul'};/* M2: CRM + Özel Portföy dilimleri de yedeklenir (import zaten okuyordu → parite) */
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='meridyen-gm-yedek-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(url);
   toast('✓ Yedek indirildi.');}
@@ -2626,15 +2729,22 @@ function importData(inp){const f=inp.files[0];if(!f)return;const r=new FileReade
     if(d.FIRMA)FIRMA=d.FIRMA;if(d.ILANLAR)ILANLAR=d.ILANLAR;if(d.DANISMANLAR)DANISMANLAR=d.DANISMANLAR;if(d.LEADS)LEADS=d.LEADS;if(d.THEME)THEME=d.THEME;
     if(d.CONTENT)CONTENT=d.CONTENT;if(d.BLOGS)BLOGS=d.BLOGS;if(d.REFS)REFS=d.REFS;if(d.SEO)SEO=d.SEO;if(d.GOOGLE)GOOGLE=d.GOOGLE;if(d.PROX)PROX=d.PROX;if(d.AICFG)AICFG=d.AICFG;if(d.P3)P3=d.P3;
     if(d.KISILER)KISILER=d.KISILER;if(d.DEALS)DEALS=d.DEALS;if(d.TASKS)TASKS=d.TASKS;if(d.COMMS)COMMS=d.COMMS;if(d.RENTS)RENTS=d.RENTS;if(d.MSGLOG)MSGLOG=d.MSGLOG;if(d.RAPORLOG)RAPORLOG=d.RAPORLOG;if(d.ACT)ACT=d.ACT;
+    if(d.CONTRACTS)CONTRACTS=d.CONTRACTS;if(d.OZEL)OZEL=d.OZEL;/* M2: sözleşme + Özel Portföy de içe aktarılır */
     if(PROX&&!PROX.modules)PROX.modules=clone(DEF_MODULES);
     saveAll();applyFirma();applyContent();if(THEME)setTheme(THEME.accent,THEME.green,THEME.navy);
     renderIlanlar();renderDan();renderBlogFeed();renderRefGrid();applyModuleVisibility();initAiAssistant();
+    try{if(typeof renderOzel==='function')renderOzel();if(typeof renderOzHome==='function')renderOzHome();if(typeof ozHero==='function')ozHero();if(typeof renderOzelRows==='function')renderOzelRows();}catch(e){}/* M2: içe aktarılan Özel Portföy'ü de bas */
     renderIlanRows();renderDanRows();renderLeads();renderRecentLeads();renderKpis();renderBolgeRows();fillFirmaForm();renderThemeGrid();
     renderP3();render3dForm();fillContent();renderBlogRows();renderRefRows();fillSeo();fillGoogle();fillProx();renderModules();renderEpRows();fillAiCfg();renderAllCrm();
     toast('✓ Yedek başarıyla içe aktarıldı.');}catch(err){toast('Geçersiz yedek dosyası.');}};
   r.readAsText(f);inp.value='';}
 function resetData(){if(!confirm('Tüm değişiklikler silinip demo verisine dönülecek. Emin misiniz?'))return;
-  localStorage.removeItem(LS);loadAll();eidsEnsure();applyProxTenant();try{if(typeof applyCanonical==='function')applyCanonical();}catch(e){}try{if(PROX&&PROX.il&&PROX.il!==PROVINCE.name)applyProvince(PROX.il,true);}catch(e){}try{if(typeof FIRMA!=='undefined'&&FIRMA.name!==BRAND_ORIG&&typeof applySeoHead==='function')applySeoHead();}catch(e){}try{if(typeof applySchema==='function')applySchema();}catch(e){}applyFirma();applyContent();document.documentElement.removeAttribute('style');
+  localStorage.removeItem(LS);
+  /* M3: white-label kalıntılarını da temizle — yoksa bölge paketi/dil/özel-ts/i18n cache demo'ya sızar */
+  try{['wl_bolge','wl_ozel_ts','wl_lang','wl_super_tenants','wl_brand_applied'].forEach(function(k){localStorage.removeItem(k);});
+    Object.keys(localStorage).forEach(function(k){if(k.indexOf('wl_i18n_')===0)localStorage.removeItem(k);});
+    document.documentElement.setAttribute('dir','ltr');document.documentElement.lang='tr';}catch(e){}
+  loadAll();eidsEnsure();applyProxTenant();try{if(typeof applyCanonical==='function')applyCanonical();}catch(e){}try{if(PROX&&PROX.il&&PROX.il!==PROVINCE.name)applyProvince(PROX.il,true);}catch(e){}try{if(typeof FIRMA!=='undefined'&&FIRMA.name!==BRAND_ORIG&&typeof applySeoHead==='function')applySeoHead();}catch(e){}try{if(typeof applySchema==='function')applySchema();}catch(e){}applyFirma();applyContent();document.documentElement.removeAttribute('style');
   renderIlanlar();renderDan();renderBlogFeed();renderRefGrid();applyModuleVisibility();initAiAssistant();
   renderIlanRows();renderDanRows();renderLeads();renderRecentLeads();renderKpis();renderBolgeRows();fillFirmaForm();renderThemeGrid();
   renderP3();render3dForm();fillContent();renderBlogRows();renderRefRows();fillSeo();fillGoogle();fillProx();renderModules();renderEpRows();fillAiCfg();renderAllCrm();
@@ -2693,8 +2803,8 @@ function saveContent(){const g=id=>document.getElementById(id).value;
 /* ---------- BLOG ---------- */
 function renderBlogFeed(){const g=document.getElementById('blogFeed');if(!g)return;
   var posts=(typeof blogAllPosts==='function'?blogAllPosts():BLOGS).slice(0,6);
-  g.innerHTML=posts.map(b=>`<div class="bpost" onclick="if(typeof blogOpen==='function')blogOpen('${b.id}')" style="cursor:pointer">
-    <div class="bi">${b.icon||'📄'}</div><div class="bbody"><div class="cat">${b.cat}${b.src==='prox'?' · ProX':b.src==='ai'?' · AI':''}</div><h3>${b.title}</h3><p>${b.sum}</p><div class="meta"><span>${b.meta||''}</span></div></div></div>`).join('');}
+  g.innerHTML=posts.map(b=>`<div class="bpost" data-bid="${_be(b.id)}" onclick="if(typeof blogOpen==='function')blogOpen(this.getAttribute('data-bid'))" style="cursor:pointer">
+    <div class="bi">${_be(b.icon||'📄')}</div><div class="bbody"><div class="cat">${_be(b.cat)}${b.src==='prox'?' · ProX':b.src==='ai'?' · AI':''}</div><h3>${_be(b.title)}</h3><p>${_be(b.sum)}</p><div class="meta"><span>${_be(b.meta||'')}</span></div></div></div>`).join('');}
 /* ProX blog akışı — /api/blog/feed (sunucuda eklenecek; 404→[] fallback). Normalize + cache. */
 var _proxBlogCache=null;
 async function proxBlogFeed(force){if(_proxBlogCache&&!force)return _proxBlogCache;var out=[];
@@ -2711,7 +2821,7 @@ async function blogFetchProx(){var btn=document.getElementById('blFetchBtn');if(
   toast(posts.length?('✓ ProX blog akışından '+posts.length+' yazı çekildi.'):'ProX blog akışı ucu henüz aktif değil — sunucuda eklenince otomatik gelir (PROX-BLOG-GEREKSINIM-NOTU.md).');}
 window.proxBlogFeed=proxBlogFeed;window.blogAllPosts=blogAllPosts;window.blogFetchProx=blogFetchProx;
 /* /blog sayfası (overlay) — liste + tam makale detayı */
-function _be(s){return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function _be(s){return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 async function blogOpen(id){var p=document.getElementById('blogPage');if(!p)return;
   _ovCloseDom();p.classList.add('open');document.body.style.overflow='hidden';
   try{if(typeof mountSiteChrome==='function')mountSiteChrome();}catch(e){}
@@ -2754,7 +2864,7 @@ async function blogAiGen(){var konu=((document.getElementById('bl_konu')||{}).va
   var il=(typeof PROVINCE!=='undefined'&&PROVINCE.name)||'İzmir';
   var prompt='Sen '+il+' ilinde çalışan uzman bir emlak içerik editörüsün. "'+konu+'" konusunda SEO uyumlu, özgün ve bilgilendirici bir blog makalesi yaz. SADECE şu formatta yanıtla, başka açıklama ekleme:\nBASLIK: <60 karakter etkileyici başlık>\nKATEGORI: <tek kelime: Yatırım/Kredi/Hukuk/Bölge/Rehber>\nOZET: <140-160 karakter özet>\nGOVDE: <4-6 paragraf akıcı Türkçe makale; paragraflar arası boş satır>';
   var text=null;
-  try{var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',tool:'blog',prompt:aiGuard(prompt)}});if(r&&!r.fallback)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text));}catch(e){}
+  try{var r=await aiChat({persona:'office',tool:'blog',prompt:aiGuard(prompt)});if(r&&!r.fallback)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text));}catch(e){}
   if(!text){try{if(typeof callClaude==='function')text=await callClaude([{role:'user',content:aiGuard(prompt)}],'Sadece istenen formatta yanıt ver, ön söz ekleme.');}catch(e){}}
   if(btn){btn.disabled=false;btn.textContent='🤖 ProX AI ile Makale Oluştur';}
   if(!text){toast('ProX AI yanıt vermedi. Anahtarı kontrol edip tekrar deneyin.');return;}
@@ -2885,7 +2995,7 @@ async function aiGenerate(){
     var _ls=_al==='en'?'\n\nWrite the entire output in fluent, professional English for foreign real-estate investors.':_al==='ar'?'\n\nاكتب المحتوى بالكامل باللغة العربية الفصحى الاحترافية للمستثمرين العقاريين الأجانب.':'';
     var _fullPrompt=prompts[curAiTool]+_ls;
     try{                                                  // API-first ProX AI; fallback = callClaude
-      const r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',prompt:aiGuard(_fullPrompt),tool:curAiTool}});
+      const r=await aiChat({persona:'office',prompt:aiGuard(_fullPrompt),tool:curAiTool});
       if(r&&!r.fallback)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;
     }catch(_){}
     if(!text)text=await callClaude([{role:'user',content:_fullPrompt}],'Yardımcı, profesyonel bir emlak içerik asistanısın. Sadece istenen içeriği ve istenen dilde üret, ön söz ekleme.');
@@ -2905,9 +3015,15 @@ function aiToBlog(){var _t=aiOutText();if(!_t)return;const lines=_t.split('\n').
   var g=document.getElementById('bl_guard');if(g&&typeof aiGuardBadge==='function')g.innerHTML=aiGuardBadge(_t);
   editingBlog=null;document.querySelector('.adm-nav[data-p="icerik"]').click();document.getElementById('blogEditCard').style.display='block';
   toast('İçerik blog formuna aktarıldı — düzenleyip "Kaydet & Yayınla" deyin.');}
-function fillAiCfg(){document.getElementById('ai_enable').checked=AICFG.enable;document.getElementById('ai_greet').value=AICFG.greet;document.getElementById('ai_persona').value=AICFG.persona;}
-function saveAiCfg(){AICFG={enable:document.getElementById('ai_enable').checked,greet:document.getElementById('ai_greet').value,persona:document.getElementById('ai_persona').value};
-  saveAll();initAiAssistant();toast('✓ AI asistan ayarları kaydedildi.');}
+function fillAiCfg(){document.getElementById('ai_enable').checked=AICFG.enable;document.getElementById('ai_greet').value=AICFG.greet;document.getElementById('ai_persona').value=AICFG.persona;
+  var dk=document.getElementById('ai_dskey');if(dk)dk.value=AICFG.dsKey||'';
+  var dm=document.getElementById('ai_dsmodel');if(dm)dm.value=AICFG.dsModel||'deepseek-chat';
+  if(typeof aiDsStatus==='function')aiDsStatus();}
+function saveAiCfg(){var _dk=document.getElementById('ai_dskey'),_dm=document.getElementById('ai_dsmodel');
+  AICFG={enable:document.getElementById('ai_enable').checked,greet:document.getElementById('ai_greet').value,persona:document.getElementById('ai_persona').value,
+    dsKey:(_dk?_dk.value.trim():(AICFG.dsKey||'')),dsModel:(_dm&&_dm.value?_dm.value.trim():(AICFG.dsModel||'deepseek-chat'))};
+  saveAll();initAiAssistant();if(typeof aiDsStatus==='function')aiDsStatus();
+  toast('✓ AI asistan ayarları kaydedildi.'+(AICFG.dsKey?' · DeepSeek anahtarı aktif (YZ artık DeepSeek ile çalışır).':' · YZ ProX sunucu AI\'si ile çalışır.'));}
 function toggleAiFab(){AICFG.enable=document.getElementById('ai_enable').checked;saveAll();initAiAssistant();}
 
 /* shared Claude API caller (works in Claude artifact runtime; in production → emlakekspertizi ProX AI proxy) */
@@ -2923,6 +3039,19 @@ async function callClaude(messages,system){
 
 /* ---------- PUBLIC AI ASSISTANT ---------- */
 let aiHistory=[];
+/* Yüzen AI balonu görüşmelerini de admin "Görüşmeler & Teklifler" panosuna (PA_STORE) kaydet —
+   tam-ekran ProX Asistan ile aynı depo; böylece TÜM yapay zeka yazışmaları kayıt altında olur. */
+var _fabConvoId=null;
+function _fabLog(who,text){
+  if(!text)return;var KEY='prox_asistan_gm_convos_v1';
+  try{var arr=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(arr))arr=[];
+    var c=_fabConvoId?arr.filter(function(x){return x&&x.id===_fabConvoId;})[0]:null;
+    if(!c){_fabConvoId='fab'+Date.now();c={id:_fabConvoId,title:'Site AI Balonu',user:'',email:'',ts:Date.now(),msgs:[],src:'fab'};arr.unshift(c);}
+    c.msgs.push({role:(who==='user'?'me':'bot'),text:String(text)});c.ts=Date.now();
+    if(who==='user'){var ph=String(text).match(/(?:\+?90[\s.\-]?)?0?5\d{2}[\s.\-]?\d{3}[\s.\-]?\d{2}[\s.\-]?\d{2}/);if(ph){c.lead=true;c.phone=ph[0].replace(/[^\d+]/g,'');}}
+    localStorage.setItem(KEY,JSON.stringify(arr.slice(0,200)));
+  }catch(e){}
+}
 function initAiAssistant(){
   const fab=document.getElementById('aiFab');if(!fab)return;
   const on=AICFG&&AICFG.enable;fab.style.display=on?'grid':'none';
@@ -2936,7 +3065,7 @@ function addAiMsg(who,text){const b=document.getElementById('aiChatBody');const 
 function aiQuick(t){document.getElementById('aiChatIn').value=t;aiSend();}
 async function aiSend(){
   const inp=document.getElementById('aiChatIn');const txt=inp.value.trim();if(!txt)return;
-  addAiMsg('user',txt);inp.value='';aiHistory.push({role:'user',content:txt});
+  addAiMsg('user',txt);inp.value='';aiHistory.push({role:'user',content:txt});_fabLog('user',txt);/* admin kaydı */
   document.getElementById('aiQuick').style.display='none';
   const b=document.getElementById('aiChatBody');const typ=document.createElement('div');typ.className='ai-typing';typ.innerHTML='<i></i><i></i><i></i>';b.appendChild(typ);b.scrollTop=b.scrollHeight;
   // context: inject sample region data so the assistant can reference it
@@ -2944,11 +3073,11 @@ async function aiSend(){
   try{
     let text=null;
     try{                                                  // API-first ProX AI; fallback = callClaude
-      const r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',prompt:aiGuard(AICFG.persona+'\n\nElindeki referans veri: '+ctx),messages:aiHistory.slice(-8),message:txt}});
+      const r=await aiChat({persona:'office',prompt:aiGuard(AICFG.persona+'\n\nElindeki referans veri: '+ctx),messages:aiHistory.slice(-8),message:txt});
       if(r&&!r.fallback)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;
     }catch(_){}
     if(!text)text=await callClaude(aiHistory.slice(-8),AICFG.persona+'\n\nElindeki referans veri: '+ctx);
-    typ.remove();addAiMsg('bot',text);aiHistory.push({role:'assistant',content:text});
+    typ.remove();addAiMsg('bot',text);aiHistory.push({role:'assistant',content:text});_fabLog('bot',text);/* admin kaydı */
   }catch(e){
     typ.remove();
     addAiMsg('bot','Şu an yapay zeka servisine ulaşılamıyor. Canlı yayında bu asistan ProX AI servisine bağlıdır. Bu arada bir danışmanımıza WhatsApp\'tan ulaşabilirsiniz.');
@@ -3085,7 +3214,7 @@ function renderKisiRows(){const tb=document.getElementById('kisiRows');if(!tb)re
   tb.innerHTML=arr.map(k=>{const mc=matchCount(k);
     const talep=k.type==='satici'?'<span class="tsub">Satıcı portföyü</span>:'+'':(k.op||'Farketmez')+' · '+(k.tip||'Her tip')+(k.max?` · ≤${fmtK(k.max)}₺`:'');
     const mcell=mc===null?'<span class="tsub">—</span>':`<span class="matchbar"><span class="mb"><span class="mbf" style="width:${Math.min(100,mc*25)}%"></span></span><b>${mc}</b></span>`;
-    return `<tr><td><div><b style="cursor:pointer;color:var(--accent)" onclick="openKisiDet(${k.id})">${k.name}</b></div><div class="kcontact">${k.tel}</div></td>
+    return `<tr><td><div><b style="cursor:pointer;color:var(--accent)" onclick="openKisiDet(${k.id})">${_le(k.name)}</b></div><div class="kcontact">${_le(k.tel)}</div></td>
       <td><span class="tagpill tp-${k.type}">${TYPE_LBL[k.type]}</span></td>
       <td class="tsub">${k.type==='satici'?'Satıcı portföyü':talep}</td>
       <td>${danName(k.dan)}</td>
@@ -3117,7 +3246,7 @@ function runMatch(){const id=+document.getElementById('es_kisi').value;const k=K
   let head=`<div class="crm-detail"><div class="cdrow"><span>Talep</span><b>${k.op||'Farketmez'} · ${k.tip||'Her tip'} · ${k.max?fmtK(k.min)+'–'+fmtK(k.max)+'₺':'bütçe yok'} · ${(k.ilceler||[]).join(', ')||'her bölge'}</b></div></div>`;
   if(!scored.length){box.innerHTML=head+'<div class="empty">Uygun ilan bulunamadı. Talep kriterlerini genişletin.</div>';return;}
   box.innerHTML=head+'<table class="atable" style="margin-top:12px"><thead><tr><th>İlan</th><th>Fiyat</th><th>Uyum</th><th></th></tr></thead><tbody>'+
-    scored.map(({it,s})=>`<tr><td><div class="trow"><img src="${imgSrc(it.img)}" class="tthumb" loading="lazy" decoding="async"><div><b>${it.title}</b><div class="tsub">${it.mah}, ${it.ilce} · ${it.oda} · ${it.m2}m²</div></div></div></td>
+    scored.map(({it,s})=>`<tr><td><div class="trow"><img src="${imgSrc(it.img)}" class="tthumb" loading="lazy" decoding="async"><div><b>${_le(it.title)}</b><div class="tsub">${_le(it.mah)}, ${_le(it.ilce)} · ${_le(it.oda)} · ${it.m2}m²</div></div></div></td>
       <td class="num">${fmt(it.price)} ₺</td>
       <td><span class="matchbar"><span class="mb"><span class="mbf" style="width:${s}%"></span></span><b>%${s}</b></span></td>
       <td class="ta"><button class="ico-btn" onclick="matchWa(${k.id},${it.id})" title="WhatsApp gönder">💬</button><button class="ico-btn" onclick="matchToDeal(${k.id},${it.id})" title="Fırsata ekle">＋</button></td></tr>`).join('')+'</tbody></table>';}
@@ -3135,7 +3264,7 @@ function renderKanban(){const k=document.getElementById('kanban');if(!k)return;
     return `<div class="kcol${st.k==='sozlesme'?' kstage-won':''}" data-stage="${st.k}" ondragover="kanOver(event,this)" ondragleave="this.classList.remove('over')" ondrop="kanDrop(event,this)">
       <h4 style="color:${st.c}">${st.n} <span class="cnt">${ds.length}</span></h4>
       ${ds.map(d=>`<div class="kdeal" draggable="true" ondragstart="kanStart(event,${d.id})" ondragend="this.classList.remove('drag')" onclick="editDeal(${d.id})">
-        <h5>${d.title}</h5><div class="kv">${fmt(d.value)} ₺</div>
+        <h5>${_le(d.title)}</h5><div class="kv">${fmt(d.value)} ₺</div>
         <div class="km"><span>👤 ${danName(d.danId)}</span><span>%${d.prob||0}</span></div></div>`).join('')}
       ${ds.length?`<div class="tsub" style="text-align:right;padding:4px 6px">Σ ${fmtK(sum)}₺</div>`:''}
     </div>`;}).join('');}
@@ -3160,11 +3289,11 @@ let editingTask=null;
 function renderTasks(){const box=document.getElementById('taskList');if(!box)return;
   const arr=TASKS.slice().sort((a,b)=>new Date(a.date)-new Date(b.date));const now=new Date();const today=now.toISOString().slice(0,10);
   if(!arr.length){box.innerHTML='<div class="empty">Görev yok.</div>';return;}
-  box.innerHTML=arr.map(t=>{const d=new Date(t.date);const isToday=t.date.slice(0,10)===today;const over=!t.done&&d<now&&!isToday;
+  box.innerHTML=arr.map(t=>{const d=new Date(t.date||0);const isToday=(t.date||'').slice(0,10)===today;const over=!t.done&&!!t.date&&d<now&&!isToday;/* M4: t.date null koruması */
     const dl=d.toLocaleString('tr-TR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
     return `<div class="tk ${t.done?'done':''} ${over?'overdue':''} ${isToday&&!t.done?'today':''}">
       <div class="tkchk" onclick="toggleTask(${t.id})">${t.done?'✓':''}</div>
-      <div class="tkbody"><b>${t.title}</b><div class="tkmeta"><span class="tktype">${TASK_LBL[t.type]||t.type}</span><span>👤 ${kisiName(t.kisiId)}</span><span>🧑‍💼 ${danName(t.danId)}</span>${t.note?`<span>📝 ${t.note}</span>`:''}</div></div>
+      <div class="tkbody"><b>${_le(t.title)}</b><div class="tkmeta"><span class="tktype">${_le(TASK_LBL[t.type]||t.type)}</span><span>👤 ${_le(kisiName(t.kisiId))}</span><span>🧑‍💼 ${_le(danName(t.danId))}</span>${t.note?`<span>📝 ${_le(t.note)}</span>`:''}</div></div>
       <div class="tkdate">${dl}${over?' · gecikti':''}<div class="ta" style="margin-top:4px"><button class="ico-btn" onclick="editTask(${t.id})">✎</button><button class="ico-btn del" onclick="delTask(${t.id})">🗑</button></div></div></div>`;}).join('');}
 function toggleTask(id){const t=TASKS.find(x=>x.id===id);if(t){t.done=!t.done;saveAll();renderTasks();renderKpis();}}
 function newTask(){editingTask=null;fillKisiSelects();fillDanSelects();['t_title','t_note'].forEach(i=>document.getElementById(i).value='');document.getElementById('t_type').value='arama';document.getElementById('t_date').value=_td(1);
@@ -3187,7 +3316,7 @@ function renderFinKpi(){const box=document.getElementById('finKpi');if(!box)retu
   const items=[['Toplam Komisyon',fmt(toplam)+' ₺','var(--accent)'],['Tahsil Edilen',fmt(tahsil)+' ₺','var(--green-700)'],['Bekleyen',fmt(bekleyen)+' ₺','#b45309'],['İşlem Cirosu',fmtK(ciro)+' ₺','#8b5cf6']];
   box.innerHTML=items.map(it=>`<div class="fin-card"><div class="fl">${it[0]}</div><div class="fv" style="color:${it[2]}">${it[1]}</div></div>`).join('');}
 function renderCommRows(){const tb=document.getElementById('commRows');if(!tb)return;
-  tb.innerHTML=COMMS.length?COMMS.map(c=>`<tr><td><b>${c.title}</b><div class="tsub">${c.date||''} · ${c.side==='her'?'Her iki taraf':c.side==='alici'?'Alıcı':'Satıcı'}</div></td><td>${danName(c.danId)}</td><td class="num">${fmt(c.amount)} ₺</td><td class="num" style="color:var(--green-700)">${fmt(commVal(c))} ₺ <span class="tsub">(%${c.rate})</span></td>
+  tb.innerHTML=COMMS.length?COMMS.map(c=>`<tr><td><b>${_le(c.title)}</b><div class="tsub">${c.date||''} · ${c.side==='her'?'Her iki taraf':c.side==='alici'?'Alıcı':'Satıcı'}</div></td><td>${danName(c.danId)}</td><td class="num">${fmt(c.amount)} ₺</td><td class="num" style="color:var(--green-700)">${fmt(commVal(c))} ₺ <span class="tsub">(%${c.rate})</span></td>
     <td>${c.status==='tahsil'?'<span class="atag akt">Tahsil edildi</span>':'<span class="atag pas">Beklemede</span>'}</td>
     <td class="ta"><button class="ico-btn" onclick="editComm(${c.id})">✎</button><button class="ico-btn del" onclick="delComm(${c.id})">🗑</button></td></tr>`).join(''):'<tr><td colspan="6" class="empty">Kayıt yok.</td></tr>';}
 function newComm(){editingComm=null;fillDanSelects();['c_title','c_amount'].forEach(i=>document.getElementById(i).value='');document.getElementById('c_rate').value='2';document.getElementById('c_side').value='satici';document.getElementById('c_status').value='beklemede';
@@ -3389,7 +3518,7 @@ function openKisiDet(id){const k=KISILER.find(x=>x.id===id);if(!k)return;curKisi
   const scColor=sc>=75?'#15803d':sc>=50?'#b45309':'#64748b';
   const deals=DEALS.filter(d=>d.kisiId===id);const tasks=TASKS.filter(t=>t.kisiId===id);const acts=(ACT[id]||[]);
   document.getElementById('kisiDetBody').innerHTML=`
-    <div class="kd-head"><div class="kd-av">${ini}</div><div><h3>${k.name}</h3><div class="kcontact"><span class="tagpill tp-${k.type}">${TYPE_LBL[k.type]}</span> · ${k.tel} · ${k.source||''}</div></div></div>
+    <div class="kd-head"><div class="kd-av">${ini}</div><div><h3>${_le(k.name)}</h3><div class="kcontact"><span class="tagpill tp-${k.type}">${TYPE_LBL[k.type]}</span> · ${_le(k.tel)} · ${_le(k.source||'')}</div></div></div>
     <div class="kd-score"><div class="kss" style="background:${scColor}">${sc}</div><div class="ksl"><b>AI Lead Skoru: ${sc}/100</b><p>${sc>=75?'Sıcak müşteri — öncelikli takip':sc>=50?'Orta — takipte kalın':'Soğuk — besleme gerekiyor'}</p></div>
       <button class="abtn" style="margin-left:auto" onclick="kisiPortfoyPdf(${id})">📄 Portföy Sunumu</button></div>
     <div class="kd-tabs"><button class="act" onclick="kdTab(event,'ozet')">Özet</button><button onclick="kdTab(event,'firsat')">Fırsatlar (${deals.length})</button><button onclick="kdTab(event,'gorev')">Görevler (${tasks.length})</button><button onclick="kdTab(event,'akt')">Aktivite (${acts.length})</button></div>
@@ -3399,12 +3528,12 @@ function openKisiDet(id){const k=KISILER.find(x=>x.id===id);if(!k)return;curKisi
       <div class="cdrow"><span>Bölgeler</span><b>${(k.ilceler||[]).join(', ')||'-'}</b></div>
       <div class="cdrow"><span>Danışman</span><b>${danName(k.dan)}</b></div>
       <div class="cdrow"><span>Uygun ilan</span><b>${matchCount(k)||0} eşleşme</b></div></div>
-      ${k.note?`<div class="rep-sec" style="margin-top:12px"><h4>📝 Not</h4><p>${k.note}</p></div>`:''}
+      ${k.note?`<div class="rep-sec" style="margin-top:12px"><h4>📝 Not</h4><p>${_le(k.note)}</p></div>`:''}
       <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="matchFromKisi(${id});closeKisiDet()">🎯 Eşleştir</button><a class="abtn" href="https://wa.me/${(k.tel||'').replace(/[^0-9]/g,'')}" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a><button class="abtn" onclick="aiKisiInsight(${id})">✨ AI Analizi</button></div>
       <div id="kdInsight"></div>
     </div>
-    <div class="kd-pane" id="kd-firsat">${deals.length?deals.map(d=>`<div class="kd-act"><div class="kdi">🪜</div><div><b>${d.title}</b> · <span class="tagpill" style="background:${STAGES.find(s=>s.k===d.stage).c}22;color:${STAGES.find(s=>s.k===d.stage).c}">${STAGES.find(s=>s.k===d.stage).n}</span><div class="kdt">${fmt(d.value)} ₺ · %${d.prob}</div></div></div>`).join(''):'<div class="empty">Fırsat yok.</div>'}</div>
-    <div class="kd-pane" id="kd-gorev">${tasks.length?tasks.map(t=>`<div class="kd-act"><div class="kdi">${(TASK_LBL[t.type]||'').split(' ')[0]}</div><div><b>${t.title}</b><div class="kdt">${new Date(t.date).toLocaleString('tr-TR')} ${t.done?'· ✓ tamam':''}</div></div></div>`).join(''):'<div class="empty">Görev yok.</div>'}</div>
+    <div class="kd-pane" id="kd-firsat">${deals.length?deals.map(d=>`<div class="kd-act"><div class="kdi">🪜</div><div><b>${_le(d.title)}</b> · <span class="tagpill" style="background:${STAGES.find(s=>s.k===d.stage).c}22;color:${STAGES.find(s=>s.k===d.stage).c}">${STAGES.find(s=>s.k===d.stage).n}</span><div class="kdt">${fmt(d.value)} ₺ · %${d.prob}</div></div></div>`).join(''):'<div class="empty">Fırsat yok.</div>'}</div>
+    <div class="kd-pane" id="kd-gorev">${tasks.length?tasks.map(t=>`<div class="kd-act"><div class="kdi">${(TASK_LBL[t.type]||'').split(' ')[0]}</div><div><b>${_le(t.title)}</b><div class="kdt">${new Date(t.date).toLocaleString('tr-TR')} ${t.done?'· ✓ tamam':''}</div></div></div>`).join(''):'<div class="empty">Görev yok.</div>'}</div>
     <div class="kd-pane" id="kd-akt">
       <div style="display:flex;gap:8px;margin-bottom:12px"><input id="actInput" placeholder="Görüşme notu ekle..." style="flex:1;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;font-family:inherit"><button class="btn btn-primary btn-sm" onclick="addAct(${id})">Ekle</button></div>
       <div id="actList">${acts.length?acts.map(a=>`<div class="kd-act"><div class="kdi">📌</div><div><b>${a.text}</b><div class="kdt">${a.date}</div></div></div>`).join(''):'<div class="empty">Aktivite kaydı yok.</div>'}</div>
@@ -3422,12 +3551,12 @@ async function aiKisiInsight(id){const k=KISILER.find(x=>x.id===id);const box=do
   catch(e){box.innerHTML=`<div class="rep-sec" style="margin-top:14px"><h4>✨ AI Aksiyon Önerisi</h4><p>${matchCount(k)?'Uygun ilanlar mevcut — hemen WhatsApp ile portföy sunumu gönderin ve gösterim randevusu ayarlayın.':'Talep kriterlerini netleştirin ve bütçe bilgisini güncelleyin. Düzenli takip araması planlayın.'}</p></div>`;}}
 function kisiPortfoyPdf(id){const k=KISILER.find(x=>x.id===id);const scored=ILANLAR.map(it=>({it,s:matchScore(k,it)})).filter(x=>x.s>=45).sort((a,b)=>b.s-a.s).slice(0,5);
   const logo=(IMG[FIRMA.logo]||'');const win=window.open('','_blank');if(!win){toast('Pop-up engellendi.');return;}
-  win.document.write(`<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>Portföy Sunumu - ${k.name}</title>
+  win.document.write(`<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>Portföy Sunumu - ${_le(k.name)}</title>
   <style>*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}.hd{background:linear-gradient(135deg,#0f1f3d,#1e40af);color:#fff;padding:30px 40px}.hd h1{font-size:22px}.hd .s{color:#bcd;font-size:13px;margin-top:5px}
   .body{padding:30px 40px}.card{display:flex;gap:16px;border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin-bottom:14px}.card img{width:140px;height:100px;object-fit:cover;border-radius:8px}
   .card h3{font-size:16px;color:#0f1f3d}.card .loc{color:#64748b;font-size:13px;margin:4px 0}.card .pr{font-size:18px;font-weight:800;color:#1e7e3a}.card .sc{font-size:12px;color:#1e40af;font-weight:700}
   .ft{padding:18px 40px;background:#f5f7fa;font-size:11.5px;color:#64748b}@media print{.noprint{display:none}}</style></head><body>
-  <div class="hd"><h1>${logo?`<img src="${logo}" style="height:34px;vertical-align:middle"> `:''}Size Özel Portföy Sunumu</h1><div class="s">${k.name} için seçilmiş ${scored.length} gayrimenkul · ${FIRMA.name}</div></div>
+  <div class="hd"><h1>${logo?`<img src="${logo}" style="height:34px;vertical-align:middle"> `:''}Size Özel Portföy Sunumu</h1><div class="s">${_le(k.name)} için seçilmiş ${scored.length} gayrimenkul · ${_le(FIRMA.name)}</div></div>
   <div class="body">${scored.map(({it,s})=>`<div class="card"><img src="${imgSrc(it.img)}"><div><h3>${it.title}</h3><div class="loc">📍 ${it.mah}, ${it.ilce} · ${it.oda} · ${it.m2}m²</div><div class="pr">${fmt(it.price)} ₺</div><div class="sc">Uyum: %${s}</div></div></div>`).join('')||'<p>Uygun ilan bulunamadı.</p>'}</div>
   <div class="ft"><b>${FIRMA.name}</b> · ${FIRMA.tel||''} · <svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="M9 12l2 2 4-4"/></svg> Saha Veri Ortağı</div>
   <div class="noprint" style="padding:20px 40px;text-align:center"><button onclick="window.print()" style="background:#1e40af;color:#fff;border:0;padding:12px 28px;border-radius:10px;font-size:15px;cursor:pointer">🖨 PDF olarak kaydet</button></div></body></html>`);
@@ -3563,26 +3692,26 @@ function ozToggleDetail(btn){const c=btn.closest('.ozcard');if(c)c.classList.tog
 /* — geliştirilmiş kart — */
 function ozCardHTML(o){
   const opc=o.op==='Satılık'?'sat':'kir';
-  const oda=(o.oda&&o.oda!=='-')?' · '+o.oda:'';
+  const oda=(o.oda&&o.oda!=='-')?' · '+_le(o.oda):'';
   const fav=ozIsFav(o.id),dog=ozDog(o);
   const kira=o.op==='Kiralık';
   const price='<div class="ozprice"><span class="from">başlangıç</span><b>'+fmt(o.fiyat)+' ₺</b>'+(kira?'<small>/ay</small>':'')+'<span class="den">\'den</span></div>';
   const avg=o.ort||(function(){var st=kira?500:1000;return Math.max(o.fiyat+st,Math.round(o.fiyat*1.18/st)*st);})();
-  const ortHTML='<div class="ozort">'+ozIco(OZI.info,12)+' Bölge ortalaması <b>'+fmt(avg)+' ₺'+(kira?'/ay':'')+'</b><span class="kat">'+o.op+' '+o.tip+'</span></div>';
+  const ortHTML='<div class="ozort">'+ozIco(OZI.info,12)+' Bölge ortalaması <b>'+fmt(avg)+' ₺'+(kira?'/ay':'')+'</b><span class="kat">'+_le(o.op)+' '+_le(o.tip)+'</span></div>';
   const sahil=(o.sahil||isSahil(o.il||(typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name)||'İzmir',o.ilce))?ozSahilBadge():'';
   const facts=ozFacts(o);
-  const factsHTML='<div class="ozfacts">'+facts.map(f=>'<div><span>'+f.k+'</span><b>'+f.v+'</b></div>').join('')+(o.not?'<p class="ozfnote">“'+o.not+'”</p>':'')+'</div>';
+  const factsHTML='<div class="ozfacts">'+facts.map(f=>'<div><span>'+_le(f.k)+'</span><b>'+_le(f.v)+'</b></div>').join('')+(o.not?'<p class="ozfnote">“'+_le(o.not)+'”</p>':'')+'</div>';
   const verified=dog?'<span class="ozver" title="e-Devlet yetkilendirmesi tamamlandı">'+ozIco(OZI.shield,12)+' Doğrulanmış</span>':'<span class="ozver pend" title="Yetkilendirme sürecinde">Yetki sürecinde</span>';
   return '<div class="ozcard" data-id="'+o.id+'">'
     +'<div class="ozmask '+ozCatClass(o.tip)+'">'+ozScene(o.tip)
-    +'<span class="ozbadge '+opc+'">'+o.op+'</span>'
-    +'<span class="ozcat">'+o.tip+'</span>'
+    +'<span class="ozbadge '+opc+'">'+_le(o.op)+'</span>'
+    +'<span class="ozcat">'+_le(o.tip)+'</span>'
     +'<span class="ozlock">'+ozIco(OZI.lock,12)+' Özel Portföy</span>'
     +sahil
-    +'<div class="ozmeta"><span class="loc">'+ozIco(OZI.pin,13)+' '+o.mah+', '+o.ilce+'</span><span class="m2">'+o.m2+' m²'+oda+'</span></div>'
+    +'<div class="ozmeta"><span class="loc">'+ozIco(OZI.pin,13)+' '+_le(o.mah)+', '+_le(o.ilce)+'</span><span class="m2">'+o.m2+' m²'+oda+'</span></div>'
     +'</div>'
     +'<div class="ozbody">'
-    +'<div class="oztoprow"><div class="ozcadde">'+ozIco(OZI.road,15)+' '+o.cadde+' <span>civarı</span></div>'+verified+'</div>'
+    +'<div class="oztoprow"><div class="ozcadde">'+ozIco(OZI.road,15)+' '+_le(o.cadde)+' <span>civarı</span></div>'+verified+'</div>'
     +price+ortHTML+ozValBadge(o)
     +'<div class="ozdetail">'+factsHTML+'</div>'
     +'<div class="oznote">'+ozIco(OZI.info,13)+' Bölge ortalama/başlangıç değeridir; belirli bir ilana ait değildir. Tam adres, kat ve bina danışmanla paylaşılır. <span class="ozrefn">Ref '+ozRefOf(o)+'</span></div>'
@@ -3679,6 +3808,47 @@ function saveOzel(){const g=id=>{const e=document.getElementById(id);return e?e.
 /* — Sat / Kirala (mülk sahibi) tam sayfa — */
 function satOpen(){const p=document.getElementById('satPage');if(!p)return;document.body.style.overflow='hidden';p.classList.add('open');const s=document.getElementById('satScroll');if(s)s.scrollTop=0;setOverlayPage('Sat & Kirala','#sat');}
 function satClose(){const p=document.getElementById('satPage');if(p)p.classList.remove('open');document.body.style.overflow='';}
+/* ============ HAKKIMIZDA (kurumsal · yasal künye · ekip · iletişim) ============ */
+function hakkimizdaOpen(){var p=document.getElementById('hakkimizdaPage');if(!p)return;
+  document.body.style.overflow='hidden';p.classList.add('open');
+  var s=document.getElementById('hkScroll');if(s)s.scrollTop=0;
+  /* nav/footer init'te mount edilir (diğer overlay'ler gibi); burada YENİDEN mount ETME —
+     mountSiteChrome, mountSaaSMenu'nün ProX Asistan linkini ezerdi. Sadece içeriği doldur. */
+  try{hkRender();}catch(e){}
+  try{if(typeof brandSweep==='function')brandSweep(p);}catch(e){}
+  setOverlayPage('Hakkımızda','#hakkimizda');}
+function hkRender(){
+  var f=(typeof FIRMA==='object'&&FIRMA)||{},e=f.eids||{};
+  var kur=+f.kurulus||2007,yil=Math.max(1,(new Date().getFullYear())-kur);
+  var hs=document.getElementById('hkHeroStats');
+  if(hs)hs.innerHTML=[['~'+yil,'yıllık tecrübe'],
+    [((typeof DANISMANLAR!=='undefined'?DANISMANLAR.length:0)||f.calisan||0)+'+','uzman danışman'],
+    [((typeof PROVINCE!=='undefined'&&PROVINCE.mahCount)||'1.300+'),'mahalle veri kapsamı'],
+    ['%98','tavsiye oranı']
+  ].map(function(x){return '<div class="hks"><div class="v">'+x[0]+'</div><div class="l">'+x[1]+'</div></div>';}).join('');
+  var rows=[['Ünvan',e.unvan||f.name||'—'],
+    ['Taşınmaz Ticareti Yetki Belgesi No',e.belgeNo||'—'],
+    ['MERSİS No',f.mersis||'—'],['Ticaret Sicil No',f.ticaretSicil||'—'],
+    ['Vergi Dairesi / No',(f.vergiDaire||'—')+' · '+(f.vergi||'—')],
+    ['Bağlı Meslek Odası',f.oda||'—'],['KEP Adresi',f.kep||'—'],
+    ['Merkez Adres',f.adres||'—'],['Telefon',f.tel||'—'],['E-posta',f.mail||'—'],
+    ['Çalışma Saatleri',f.hours||'—'],['Veri Sorumlusu (KVKK)',e.unvan||f.name||'—']];
+  var kn=document.getElementById('hkKunye');
+  if(kn)kn.innerHTML=rows.map(function(r){return '<div class="hk-krow"><span class="k">'+_le(r[0])+'</span><span class="v">'+_le(r[1])+'</span></div>';}).join('');
+  var tm=document.getElementById('hkTeam');
+  if(tm&&typeof DANISMANLAR!=='undefined'){tm.innerHTML=DANISMANLAR.map(function(d){
+    var photo=d.foto?((typeof IMG!=='undefined'&&IMG[d.foto])||((''+d.foto).indexOf('data:')===0?d.foto:'')):'';
+    var av=photo?'<img src="'+photo+'" alt="'+_le(d.name)+'" loading="lazy">':'<span>'+_le((d.name||'?').slice(0,1))+'</span>';
+    return '<div class="hk-tc"><div class="av">'+av+'</div><div class="ti"><div class="nm">'+_le(d.name)+'</div><div class="rl">'+_le(d.role||'')+'</div><div class="ar">📍 '+_le(d.area||'')+'</div>'+
+      (d.exp?'<div class="mt">'+d.exp+' yıl deneyim · ⭐ '+(d.rating||'—')+'</div>':'')+
+      '<div class="tcta"><a href="tel:'+_le(d.tel||'')+'">Ara</a><a href="https://wa.me/'+_le(d.wa||'')+'" target="_blank" rel="noopener noreferrer">WhatsApp</a></div></div></div>';}).join('');}
+  var ct=document.getElementById('hkContact');
+  if(ct)ct.innerHTML=
+    '<a class="hk-cc" href="tel:'+_le(f.tel||'')+'"><div class="ic">📞</div><div><b>Telefon</b><span>'+_le(f.tel||'—')+'</span></div></a>'+
+    '<a class="hk-cc" href="mailto:'+_le(f.mail||'')+'"><div class="ic">✉️</div><div><b>E-posta</b><span>'+_le(f.mail||'—')+'</span></div></a>'+
+    '<a class="hk-cc" href="https://wa.me/'+_le(f.wa||'')+'" target="_blank" rel="noopener noreferrer"><div class="ic">💬</div><div><b>WhatsApp</b><span>Hızlı yanıt hattı</span></div></a>'+
+    '<div class="hk-cc static"><div class="ic">📍</div><div><b>Merkez Ofis</b><span>'+_le(f.adres||'—')+'</span></div></div>';}
+window.hakkimizdaOpen=hakkimizdaOpen;
 function satScrollForm(amac){if(!document.getElementById('satPage').classList.contains('open'))satOpen();if(amac){const a=document.getElementById('sk_amac');if(a)a.value=amac;}const f=document.getElementById('skForm');if(f)f.scrollIntoView({behavior:'smooth'});const ad=document.getElementById('sk_ad');if(ad)setTimeout(()=>ad.focus(),350);}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const p=document.getElementById('satPage');if(p&&p.classList.contains('open'))satClose();}});
 function skSubmit(){const g=id=>{const e=document.getElementById(id);return e?e.value.trim():'';};
@@ -3731,20 +3901,21 @@ var _OV={
   ilanlar:{t:'İlanlar · Portföy',fn:function(){portfoyOpen('ilan');}},
   ozel:{t:'Özel Portföy',fn:function(){portfoyOpen('ozel');}},
   sat:{t:'Sat & Kirala',fn:function(){satOpen();}},
-  blog:{t:'Blog · Bilgi Merkezi',fn:function(){blogOpen();}}
+  blog:{t:'Blog · Bilgi Merkezi',fn:function(){blogOpen();}},
+  hakkimizda:{t:'Hakkımızda',fn:function(){hakkimizdaOpen();}}
 };
-function _ovCloseDom(){['portfoyPage','brPage','satPage','blogPage'].forEach(function(id){var e=document.getElementById(id);if(e)e.classList.remove('open');});var d=document.getElementById('brDetail');if(d)d.classList.remove('open');document.body.style.overflow='';}
+function _ovCloseDom(){['portfoyPage','brPage','satPage','blogPage','hakkimizdaPage'].forEach(function(id){var e=document.getElementById(id);if(e)e.classList.remove('open');});var d=document.getElementById('brDetail');if(d)d.classList.remove('open');document.body.style.overflow='';}
 function _applyView(slug){var v=_OV[slug];if(!v)return;if(_ovBaseTitle===null)_ovBaseTitle=document.title;_ovRouting=true;try{_ovCloseDom();v.fn();document.title=v.t+' · '+_ovBrand();}catch(e){}_ovRouting=false;}
 function goView(slug,ev){ev=ev||window.event;try{if(ev&&ev.preventDefault)ev.preventDefault();}catch(e){}if(!_OV[slug])return false;try{var u=_OVBASE+'#'+slug;if((location.pathname+location.hash)!==u)history.pushState({v:slug},'',u);}catch(e){}_applyView(slug);return false;}
 function goHome(){if(_ovBaseTitle!==null){document.title=_ovBaseTitle;_ovBaseTitle=null;}else{try{document.title=_ovHomeTitle();}catch(e){}}try{if(location.hash||(location.pathname!==_OVBASE&&!/\/index\.html$/.test(location.pathname)))history.pushState({},'',_OVBASE);}catch(e){}_ovRouting=true;try{_ovCloseDom();}catch(e){}_ovRouting=false;}
-var _OV_HM={analiz:'analiz',sat:'sat',blog:'blog',portfoy:'portfoy','portfoy-ilan':'ilanlar',ozel:'ozel','portfoy-ozel':'ozel',ilanlar:'ilanlar'};
+var _OV_HM={analiz:'analiz',sat:'sat',blog:'blog',portfoy:'portfoy','portfoy-ilan':'ilanlar',ozel:'ozel','portfoy-ozel':'ozel',ilanlar:'ilanlar',hakkimizda:'hakkimizda'};
 function ovRoute(){var hs=(location.hash||'').replace(/^#/,'');var seg=(_OV_HM[hs]&&_OV[_OV_HM[hs]])?_OV_HM[hs]:decodeURIComponent(location.pathname.slice(_OVBASE.length)).replace(/\/$/,'').replace(/^index\.html$/,'');if(_OV[seg])_applyView(seg);else{_ovRouting=true;try{_ovCloseDom();}catch(e){}_ovRouting=false;if(_ovBaseTitle!==null){document.title=_ovBaseTitle;_ovBaseTitle=null;}}}
 function ovBoot(){
   /* Hedef görünümü TEK yerden hesapla; varsa 'ov-boot' bayrağı ile overlay'i
      SOLMA animasyonu OLMADAN aç → arkadaki ana sayfa asla flash etmez (G3). */
   var target=null;
   try{var s=sessionStorage.getItem('_ov');if(s){sessionStorage.removeItem('_ov');if(_OV[s])target=s;}}catch(e){}
-  if(!target){try{var hs=(location.hash||'').replace(/^#/,'');var hm={analiz:'analiz',sat:'sat',blog:'blog',portfoy:'portfoy','portfoy-ilan':'ilanlar',ozel:'ozel','portfoy-ozel':'ozel'};if(hm[hs]&&_OV[hm[hs]]){history.replaceState({},'',_OVBASE);target=hm[hs];}}catch(e){}}
+  if(!target){try{var hs=(location.hash||'').replace(/^#/,'');var hm={analiz:'analiz',sat:'sat',blog:'blog',portfoy:'portfoy','portfoy-ilan':'ilanlar',ozel:'ozel','portfoy-ozel':'ozel',hakkimizda:'hakkimizda',iletisim:'iletisim',danismanlar:'danismanlar',degerleme:'degerleme',referans:'referans',alarm:'alarm',kvkk:'kvkk',cerez:'cerez',mesafeli:'mesafeli'};if(hm[hs]&&_OV[hm[hs]]){history.replaceState({},'',_OVBASE);target=hm[hs];}}catch(e){}}
   if(!target){try{var seg=decodeURIComponent(location.pathname.slice(_OVBASE.length)).replace(/\/$/,'').replace(/^index\.html$/,'');if(_OV[seg])target=seg;}catch(e){}}
   if(!target){ovRoute();return;}
   try{document.documentElement.classList.add('ov-boot');}catch(e){}
@@ -3761,7 +3932,7 @@ const SITE_NAV=`
   <a href="hizmetlerimiz.html" onclick="closeAllOverlays()">Hizmetlerimiz</a>
   <a href="nedenbiz.html" onclick="closeAllOverlays()">Neden <span class="nb-x">?</span> Biz</a>
   <a href="portfoy.html" onclick="closeAllOverlays()">Portföy</a>
-  <a href="#" onclick="goView('analiz')">Analiz Merkezi</a>`;
+  <a href="index.html#asistan" class="nav-asistan" onclick="if(typeof openProxAsistanPage==='function'){openProxAsistanPage();return false}"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>`;
 const SITE_FOOTER=`<div class="wrap">
   <div class="fcols">
     <div>
@@ -3770,26 +3941,26 @@ const SITE_FOOTER=`<div class="wrap">
       <div class="fsocial"><a href="https://facebook.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a><a href="https://instagram.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a><a href="https://x.com/meridyengm" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg></a><a href="https://www.linkedin.com/company/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg></a><a href="https://www.youtube.com/@meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a><a href="https://nsosyal.com" target="_blank" rel="noopener noreferrer" aria-label="NEXT Sosyal (Türkiye)" title="NEXT Sosyal — Türkiye'nin yerli sosyal medya platformu"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg></a></div><div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
     </div>
     <div><h4>Kurumsal</h4><ul>
-      <li><a href="#hakkimizda" onclick="closeAllOverlays()">Hakkımızda</a></li>
-      <li><a href="#danismanlar" onclick="closeAllOverlays()">Danışmanlar</a></li>
+      <li><a href="#" onclick="goView('hakkimizda')">Hakkımızda</a></li>
+      <li><a href="#" onclick="goView('danismanlar')">Danışmanlar</a></li>
       <li><a href="hizmetlerimiz.html" onclick="closeAllOverlays()">Hizmetler</a></li>
-      <li><a href="#referans" onclick="closeAllOverlays()">Referanslar</a></li>
+      <li><a href="#" onclick="goView('referans')">Referanslar</a></li>
       <li><a href="#blog" onclick="goView('blog')">Blog</a></li>
-      <li><a href="#iletisim" onclick="closeAllOverlays()">İletişim</a></li>
+      <li><a href="#" onclick="goView('iletisim')">İletişim</a></li>
     </ul></div>
     <div><h4>Hizmetler</h4><ul>
       <li><a href="#" onclick="closeAllOverlays();pfOpenOp('Satılık');return false">Satılık İlanlar</a></li>
       <li><a href="#" onclick="closeAllOverlays();pfOpenOp('Kiralık');return false">Kiralık İlanlar</a></li>
       <li><a href="#" onclick="goView('ozel')">Özel Portföy</a></li>
       <li><a href="#" onclick="goView('sat')">Sat ve Kirala</a></li>
-      <li><a href="#degerleme" onclick="closeAllOverlays()">Ücretsiz Değerleme</a></li>
-      <li><a href="#" onclick="goView('analiz')">Bölge Analizi</a></li>
-      <li><a href="#alarm" onclick="closeAllOverlays()">Fiyat Alarmı</a></li>
+      <li><a href="#" onclick="goView('degerleme')">Ücretsiz Değerleme</a></li>
+      <li><a href="#" onclick="goView('analiz')">Analiz Merkezi</a></li>
+      <li><a href="#" onclick="goView('alarm')">Fiyat Alarmı</a></li>
     </ul></div>
     <div><h4>Yasal & Araçlar</h4><ul>
-      <li><a href="#" onclick="closeAllOverlays();openKvkk();return false">KVKK Aydınlatma Metni</a></li>
-      <li><a href="#" onclick="openCerez();return false">Çerez Politikası</a></li>
-      <li><a href="#" onclick="openMesafeli();return false">Mesafeli Hizmet & Kullanım</a></li>
+      <li><a href="#" onclick="goView('kvkk')">KVKK Aydınlatma Metni</a></li>
+      <li><a href="#" onclick="goView('cerez')">Çerez Politikası</a></li>
+      <li><a href="#" onclick="goView('mesafeli')">Mesafeli Hizmet &amp; Kullanım</a></li>
       <li><a href="https://parselsorgu.tkgm.gov.tr" target="_blank" rel="noopener noreferrer">TKGM Ada/Parsel Sorgu ↗</a></li>
       <li><a href="#" onclick="closeAllOverlays();openSaasPortal();return false">Müşteri Portalı / Giriş</a></li><li><a href="#" onclick="closeAllOverlays();openAdmin();return false">Yönetim Paneli</a></li>
     </ul></div>
@@ -3816,7 +3987,7 @@ async function gmLang(v){var sel=document.querySelectorAll('.lang-sw select');
   var langName=v==='ar'?'Modern Standard Arabic':'English';
   var prompt='Translate these Turkish real-estate website UI strings to '+langName+'. Keep the brand name "'+firma+'" and city/proper nouns unchanged. Return ONLY a numbered list, exactly one translation per line, SAME count and order, no extra commentary:\n'+texts.map(function(t,i){return (i+1)+'. '+t;}).join('\n');
   var outTxt=null;
-  try{var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',tool:'translate',prompt:prompt}});if(r&&!r.fallback)outTxt=r.answer||r.text||(r.data&&(r.data.answer||r.data.text));}catch(e){}
+  try{var r=await aiChat({persona:'office',tool:'translate',prompt:prompt});if(r&&!r.fallback)outTxt=r.answer||r.text||(r.data&&(r.data.answer||r.data.text));}catch(e){}
   if(!outTxt){try{toast('Çeviri servisi şu an kullanılamıyor.');}catch(e){}document.documentElement.setAttribute('dir','ltr');document.documentElement.lang='tr';sel.forEach(function(s){s.value='tr';});return;}
   var lines=outTxt.split('\n').map(function(l){return l.replace(/^\s*\d+[.)]\s*/,'').trim();}).filter(function(l){return l;});
   var applied=_i18nOrig.map(function(o,i){var t=lines[i]||o.txt;if(lines[i])o.el.textContent=lines[i];return t;});
@@ -4099,7 +4270,7 @@ function mountSaaSMenu(){
   let nav='<a href="hizmetlerimiz.html" onclick="closeAllOverlays()">Hizmetlerimiz</a>'
     + '<a href="nedenbiz.html" onclick="closeAllOverlays()">Neden <span class="nb-x">?</span> Biz</a>'
     + '<a href="portfoy.html" onclick="closeAllOverlays()">Portföy</a>';
-  if(m.bolge!==false) nav+='<a href="#" onclick="goView(\'analiz\')">Analiz Merkezi</a>';
+  /* Analiz Merkezi + Hakkımızda ÜST menüde DEĞİL → alt menüde (footer). Üst menü sade: 4 öğe. */
   nav+='<a href="index.html#asistan" class="nav-asistan" onclick="if(typeof openProxAsistanPage===\'function\'){openProxAsistanPage();return false}"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>';
   document.querySelectorAll('.siteNav').forEach(n=>n.innerHTML=nav);
   const cta='<a class="nav-wa-ic" aria-label="WhatsApp" title="WhatsApp" href="https://wa.me/'+((typeof saasResolve==='function'&&saasResolve('whatsapp'))||c.whatsapp||'905000000000')+'" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg></a><button class="btn btn-primary btn-sm hide-xs" onclick="satScrollForm(\'Satmak istiyorum\')">Ücretsiz Ekspertiz</button><a class="btn btn-line btn-sm js-giris" href="index.html#giris" onclick="if(typeof girisOrHesap===\'function\'){girisOrHesap();return false}else{openSaasPortal()}" role="button" tabindex="0" onkeydown="if(event.key===\'Enter\'){if(typeof girisOrHesap===\'function\'){girisOrHesap()}else{openSaasPortal()}}">Giriş</a><button class="burger" onclick="openMnav()" aria-label="Menü"><span></span><span></span><span></span></button>';
@@ -4178,7 +4349,7 @@ async function proxAiQuery(userMessage,contextType){
   console.log('[ProX AI →] '+SAAS_CONFIG.tenantName+' · ctx='+ctx+' · prompt="'+prompt.slice(0,46)+'…" · soru: '+userMessage);
   let answer=null;
   try{                                                   // API-first ProX AI; fallback = local _proxSimulate
-    const r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'office',prompt:aiGuard(prompt),context:ctx,message:userMessage}});
+    const r=await aiChat({persona:'office',prompt:aiGuard(prompt),context:ctx,message:userMessage});
     if(r&&!r.fallback){answer=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;}
   }catch(e){/* sessiz: local simülasyona düş */}
   if(!answer){

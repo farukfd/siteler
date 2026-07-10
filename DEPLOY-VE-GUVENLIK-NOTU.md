@@ -1,5 +1,10 @@
 # Çok-Kiracı Deploy & Tenant Anahtar Güvenliği (SUNUCU/DEVOPS EKİBİNE)
 
+> **🔴 ACİL (P0 · denetim bulgusu C4).** `index.html` içindeki demo tenant anahtarı (`prox_office_...` / `prox_emlaktahadimkoy_com_...`) **git geçmişinde açık** ve varsayılan modda istemciden `X-Tenant-Key` olarak gönderiliyor. Yayına almadan önce:
+> 1. **Sızan anahtarı ROTATE edin** (emlakekspertizi.com'da iptal + yeni anahtar üret).
+> 2. **Proxy/Edge modunu zorunlu yapın** — her tenant için `proxyUrl` ayarlayın; anahtar statik pakete GÖMÜLMESİN.
+> 3. Kod tarafı hazır: proxy modunda istemci artık `window.EMLAK_TENANT.tenant_key` + `PROX.key`'i **bellekten temizliyor** (`applyProxTenant`) ve `X-Tenant-Key` GÖNDERMİYOR; secret yalnızca edge sunucuda durur.
+
 > Bu belge, white-label gayrimenkul sitesinin (`gayrimenkul.html` + `hizmetlerimiz.html` + `nedenbiz.html` + `wl.js`) her müşteri için ayrı domainde, ProX API anahtarı **istemcide sızmadan** yayınlanmasını anlatır.
 
 ## 1) Sorun: İstemci-taraflı tenant anahtarı

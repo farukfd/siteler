@@ -70,9 +70,9 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 </script>
 <!-- ===== /EMLAK API-FIRST SAAS CORE ===== -->
 <!-- ===== SEO: canonical + OpenGraph + Twitter (additive) ===== -->
-<link rel="canonical" href="https://www.emlakekspertizi.com/">
+<!-- H7: mükerrer kök canonical kaldırıldı; sayfa-özel canonical aşağıda (tek kaynak) -->
 <meta property="og:site_name" content="Meridyen Gayrimenkul">
-<meta property="og:url" content="https://www.emlakekspertizi.com/">
+<meta property="og:url" content="https://www.emlakekspertizi.com/nedenbiz.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Meridyen Gayrimenkul · Veriyle Emlak">
 <meta name="twitter:description" content="Veri odaklı emlak danışmanlığı. Mahalle endeksi, yatırım skoru, ücretsiz değerleme.">
@@ -131,7 +131,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   --shadow-sm:0 10px 30px -18px rgba(13,30,60,.30);
   --shadow-card:0 14px 36px -20px rgba(13,30,60,.22);
   --grad-hero:linear-gradient(135deg,#0f1f3d 0%,#0a1631 58%,#16306b 100%);
-  --grad-cta:linear-gradient(135deg,#34a853 0%,#1e7e3a 100%);
+  --grad-cta:linear-gradient(135deg,#1e40af 0%,#3b82f6 100%);
   --grad-blue:linear-gradient(135deg,#3b82f6 0%,#1e40af 100%);
   --grad-ai:linear-gradient(135deg,#10b981 0%,#0284c7 50%,#8b5cf6 100%);
 }
@@ -146,8 +146,8 @@ button{font-family:inherit}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
 .eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:13px 22px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;border:0;transition:.18s;font-family:var(--body);white-space:nowrap}
-.btn-primary{background:var(--grad-cta);color:#fff;box-shadow:0 10px 26px -12px rgba(52,168,83,.6)}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 34px -12px rgba(52,168,83,.7)}
+.btn-primary{background:var(--grad-cta);color:#fff;box-shadow:0 10px 26px -12px rgba(30,64,175,.5)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 34px -12px rgba(30,64,175,.55)}
 .btn-blue{background:var(--grad-blue);color:#fff;box-shadow:0 10px 26px -14px rgba(30,64,175,.7)}
 .btn-blue:hover{transform:translateY(-2px)}
 .btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,.42);color:#fff}
@@ -218,7 +218,7 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
 .searchbar .fld{flex:1;min-width:130px;display:flex;flex-direction:column;gap:3px;padding:8px 12px;background:var(--surface);border-radius:11px}
 .searchbar .fld label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .searchbar .fld select,.searchbar .fld input{border:0;background:none;font-family:inherit;font-size:15px;font-weight:600;color:var(--ink);outline:none;width:100%;padding:1px 0}
-.searchbar .go{padding:0 26px;border-radius:11px;background:var(--grad-cta);color:#fff;border:0;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:54px;box-shadow:0 10px 26px -12px rgba(52,168,83,.6)}
+.searchbar .go{padding:0 26px;border-radius:11px;background:var(--grad-cta);color:#fff;border:0;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:54px;box-shadow:0 10px 26px -12px rgba(30,64,175,.5)}
 .searchbar .go:hover{transform:translateY(-1px)}
 /* hero stats */
 .hero-stats{margin-top:38px;display:flex;gap:30px;flex-wrap:wrap}
@@ -229,7 +229,7 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
 .trustline .vp{display:inline-flex;align-items:center;gap:7px;background:rgba(52,168,83,.14);border:1px solid rgba(126,213,152,.3);color:var(--green-200);padding:6px 13px;border-radius:99px;font-weight:600}
 @media(max-width:640px){.searchbar .go{width:100%;justify-content:center}.hero .wrap{padding-top:40px}}
 .siteNav a{white-space:nowrap}
-.nb-x{display:inline-flex;align-items:center;justify-content:center;width:1.35em;height:1.35em;background:#34a853;color:#08130a;border-radius:6px;font-weight:800;font-size:.82em;line-height:1;vertical-align:middle;position:relative;top:-1px;margin:0 3px}
+.nb-x{display:inline-flex;align-items:center;justify-content:center;width:1.35em;height:1.35em;background:var(--accent,#1e40af);color:#fff;border-radius:6px;font-weight:800;font-size:.82em;line-height:1;vertical-align:middle;position:relative;top:-1px;margin:0 3px}.nav-cta .btn-primary,.mnav .panel .btn-primary{background:linear-gradient(135deg,var(--accent,#1e40af),var(--accent-2,#3b82f6));box-shadow:0 10px 26px -12px rgba(30,64,175,.55)}.nav-cta .btn-primary:hover,.mnav .panel .btn-primary:hover{box-shadow:0 16px 34px -12px rgba(30,64,175,.7)}
 .lang-sw{display:inline-flex;align-items:center;gap:5px;color:var(--muted,#64748b);padding:6px 8px;border:1px solid var(--line,#e2e8f0);border-radius:9px}
 .lang-sw svg{width:16px;height:16px;flex:none}
 .lang-sw select{border:0;background:transparent;color:var(--ink,#0f172a);font:inherit;font-size:13px;font-weight:600;cursor:pointer;outline:none}
@@ -870,7 +870,7 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
   repeating-linear-gradient(0deg,transparent 0 38px,rgba(15,31,61,.05) 38px 39px),
   repeating-linear-gradient(90deg,transparent 0 38px,rgba(15,31,61,.05) 38px 39px)}
 .mapbox .pin{position:relative;z-index:1;text-align:center}
-.mapbox .pin .p{width:46px;height:46px;border-radius:50% 50% 50% 0;background:var(--grad-cta);transform:rotate(-45deg);margin:0 auto 14px;box-shadow:0 12px 26px -10px rgba(52,168,83,.7);display:grid;place-items:center}
+.mapbox .pin .p{width:46px;height:46px;border-radius:50% 50% 50% 0;background:var(--grad-cta);transform:rotate(-45deg);margin:0 auto 14px;box-shadow:0 12px 26px -10px rgba(30,64,175,.55);display:grid;place-items:center}
 .mapbox .pin .p::after{content:"";width:16px;height:16px;border-radius:50%;background:#fff;transform:rotate(45deg)}
 .mapbox .pin b{display:block;color:var(--ink);font-family:var(--head)}
 .mapbox .pin span{color:var(--muted);font-size:13px}
@@ -926,11 +926,11 @@ footer ul a{color:#9fb0d0;font-size:14px}footer ul a:hover{color:#fff}
 .mbar .nb-x{width:1.05em;height:1.05em;font-size:.8em;margin:0 1px}
 .mbar .wa{color:#34a853}
 .nav-wa-ic{width:38px;height:38px;border-radius:10px;display:inline-grid;place-items:center;background:#34a853;color:#fff;flex:none;transition:.18s}
-.nav-wa-ic:hover{transform:translateY(-1px);box-shadow:0 6px 16px -6px rgba(52,168,83,.6)}
+.nav-wa-ic:hover{transform:translateY(-1px);box-shadow:0 6px 16px -6px rgba(30,64,175,.5)}
 .nav-wa-ic svg{width:18px;height:18px}
 @media(max-width:760px){.mbar{display:flex}body{padding-bottom:72px}}
 /* whatsapp float */
-.wafloat{position:fixed;right:18px;bottom:18px;z-index:75;width:56px;height:56px;border-radius:50%;background:#34a853;display:grid;place-items:center;font-size:28px;box-shadow:0 14px 30px -8px rgba(52,168,83,.6);transition:.2s;color:#fff}
+.wafloat{position:fixed;right:18px;bottom:18px;z-index:75;width:56px;height:56px;border-radius:50%;background:#34a853;display:grid;place-items:center;font-size:28px;box-shadow:0 14px 30px -8px rgba(30,64,175,.5);transition:.2s;color:#fff}
 .wafloat:hover{transform:scale(1.08)}
 @media(max-width:760px){.wafloat{display:none!important}}
 
@@ -1775,7 +1775,7 @@ body.tenant-dan #searchbar,body.tenant-dan .hero .hero-eye,body.tenant-dan .hero
 <body>
 <header id="hdr"><div class="wrap bar">
   <a class="logo" href="index.html"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Gayrimenkul</span></span></a>
-  <nav class="main siteNav"><a href="hizmetlerimiz.html" onclick="closeAllOverlays()">Hizmetlerimiz</a><a href="nedenbiz.html" onclick="closeAllOverlays()" class="active">Neden <span class="nb-x">?</span> Biz</a><a href="portfoy.html" onclick="closeAllOverlays()">Portföy</a><a href="#" onclick="closeAllOverlays();brOpen();return false">Analiz Merkezi</a><a href="index.html#asistan" class="nav-asistan" onclick="if(typeof openProxAsistanPage==='function'){openProxAsistanPage();return false}"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a></nav>
+  <nav class="main siteNav"><a href="hizmetlerimiz.html" onclick="closeAllOverlays()">Hizmetlerimiz</a><a href="nedenbiz.html" onclick="closeAllOverlays()" class="active">Neden <span class="nb-x">?</span> Biz</a><a href="portfoy.html" onclick="closeAllOverlays()">Portföy</a><a href="index.html#asistan" class="nav-asistan" onclick="if(typeof openProxAsistanPage==='function'){openProxAsistanPage();return false}"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a></nav>
   <div class="nav-cta siteCta"><a class="nav-wa-ic" aria-label="WhatsApp" title="WhatsApp" href="https://wa.me/905000000000" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"></path></svg></a><button class="btn btn-primary btn-sm hide-xs" onclick="satScrollForm('Satmak istiyorum')">Ücretsiz Ekspertiz</button><a class="btn btn-line btn-sm js-giris" href="index.html#giris" onclick="if(typeof girisOrHesap==='function'){girisOrHesap();return false}else{location.href='index.html#giris'}" role="button" tabindex="0">Giriş</a><button class="burger" onclick="openMnav()" aria-label="Menü"><span></span><span></span><span></span></button></div>
 </div></header>
 <div class="mnav" id="mnav" onclick="if(event.target.id==='mnav')this.classList.remove('open')"><div class="panel">
@@ -1784,19 +1784,19 @@ body.tenant-dan #searchbar,body.tenant-dan .hero .hero-eye,body.tenant-dan .hero
   <a href="hizmetlerimiz.html" onclick="closeAllOverlays();mclose()">Hizmetlerimiz</a>
   <a href="nedenbiz.html" onclick="closeAllOverlays();mclose()">Neden <span class="nb-x">?</span> Biz</a>
   <a href="portfoy.html" onclick="closeAllOverlays();mclose()">Portföy</a>
-  <a href="#" onclick="closeAllOverlays();brOpen();mclose();return false">Analiz Merkezi</a>
+  <a href="#" class="mnav-asistan" onclick="if(typeof openProxAsistanPage==='function'){openProxAsistanPage();mclose();return false}"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>
   <div class="mnav-div">Al · Sat · Kirala</div>
   <a href="ilanlar" onclick="closeAllOverlays();mclose()">İlanlar</a><a href="#" onclick="closeAllOverlays();ozOpen();mclose();return false">Özel Portföy</a>
   <a href="#" onclick="closeAllOverlays();satOpen();mclose();return false">Sat ve Kirala</a>
   <a href="index.html#danismanlar" onclick="closeAllOverlays();mclose()">Danışmanlar</a>
-  <a href="#" onclick="closeAllOverlays();openSaasPortal();mclose();return false">Giriş / Müşteri Portalı</a>
+  <div class="mnav-div">Kurumsal</div><a href="#" onclick="closeAllOverlays();brOpen();mclose();return false">Analiz Merkezi</a><a href="index.html#hakkimizda">Hakkımızda</a><a href="index.html#giris" onclick="mclose()">Üye Girişi / Hesabım</a>
   <button class="btn btn-primary" style="margin-top:14px" onclick="satScrollForm('Satmak istiyorum');mclose()">Ücretsiz Ekspertiz</button>
   <a class="btn btn-line" style="margin-top:8px" href="https://wa.me/905000000000" target="_blank" rel="noopener noreferrer">WhatsApp ile Yaz</a>
 </div></div>
 <div class="mbar" aria-label="Mobil menü">
   <a href="ilanlar" onclick="closeAllOverlays()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 9v11h14V9"/><path d="M9 20v-6h6v6"/></svg><span>Portföy</span></a>
   <a href="nedenbiz.html" onclick="closeAllOverlays()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg><span>Neden <span class="nb-x">?</span> Biz</span></a>
-  <a href="#" onclick="closeAllOverlays();brOpen();return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 14l3-3 3 3 4-5"/></svg><span>Analiz</span></a>
+  <a href="#" onclick="if(typeof openProxAsistanPage==='function'){openProxAsistanPage();return false}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/></svg><span>ProX Asistan</span></a>
   <a class="wa" href="https://wa.me/905000000000" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg><span>WhatsApp</span></a>
 </div>
 
@@ -1836,7 +1836,7 @@ body.tenant-dan #searchbar,body.tenant-dan .hero .hero-eye,body.tenant-dan .hero
 .nb-cta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:22px}
 .nb-cta .btn{padding:13px 22px;border-radius:12px;font-weight:700;font-size:14.5px;text-decoration:none;display:inline-flex;align-items:center;gap:9px;cursor:pointer;border:0;transition:transform .16s}
 .nb-cta .btn:hover{transform:translateY(-2px)}
-.nb-cta .b-green{background:var(--grad-cta,linear-gradient(135deg,#34a853,#1e7e3a));color:#fff;box-shadow:0 14px 34px -14px rgba(52,168,83,.6)}
+.nb-cta .b-green{background:var(--grad-cta,linear-gradient(135deg,#34a853,#1e7e3a));color:#fff;box-shadow:0 14px 34px -14px rgba(30,64,175,.5)}
 .nb-cta .b-ghost{background:rgba(255,255,255,.07);color:#fff;border:1px solid rgba(255,255,255,.22)}
 .nb-microtrust{display:flex;align-items:center;gap:9px;color:#9fb2cf;font-size:13px}
 .nb-microtrust svg{width:16px;height:16px;color:var(--green-200,#7ed598)}
@@ -2026,7 +2026,7 @@ body.tenant-dan #searchbar,body.tenant-dan .hero .hero-eye,body.tenant-dan .hero
       <li><a href="#" onclick="closeAllOverlays();ozOpen();return false">Özel Portföy</a></li>
       <li><a href="#" onclick="closeAllOverlays();satOpen();return false">Sat ve Kirala</a></li>
       <li><a href="index.html#degerleme" onclick="closeAllOverlays()">Ücretsiz Değerleme</a></li>
-      <li><a href="#" onclick="closeAllOverlays();brOpen();return false">Bölge Analizi</a></li>
+      <li><a href="#" onclick="closeAllOverlays();brOpen();return false">Analiz Merkezi</a></li>
       <li><a href="index.html#alarm" onclick="closeAllOverlays()">Fiyat Alarmı</a></li>
     </ul></div>
     <div><h4>Yasal & Araçlar</h4><ul>
@@ -2079,9 +2079,9 @@ document.addEventListener('DOMContentLoaded',function(){ if(location.hash){var e
   setTimeout(function(){[].slice.call(document.querySelectorAll('.reveal')).forEach(reveal);},3500);
 })();
 </script>
-<script src="../tr-grammar.js?v=3"></script>
+<script src="../tr-grammar.js?v=4"></script>
 <script src="../tr-iller.js?v=2"></script>
-<script src="../wl.js?v=3"></script>
-<script src="js/seo-chrome.js?v=2"></script>
+<script src="../wl.js?v=4"></script>
+<script src="js/seo-chrome.js?v=3"></script>
 </body>
 </html>
