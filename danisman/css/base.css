@@ -550,3 +550,19 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 .pulse-chips .pl .prox-x{font-size:.85em}
 @media(max-width:700px){.pulse-chips span:nth-child(n+3):not(.pl){display:none}.pulse-chips .pl{margin-left:12px}}
 @media(prefers-reduced-motion:reduce){.pulse-line path{stroke-dashoffset:0;animation:none}}
+
+/* Kart 3B-tilt (ileri hover) */
+.card-grid{perspective:1500px}
+.vcard{transition:transform .16s ease-out,box-shadow .4s,border-color .4s;will-change:transform;transform-style:preserve-3d}
+.vcard .vcard-body,.vcard .vcard-img{transform:translateZ(0)}
+
+/* ============ SÜREÇ → animasyonlu timeline (altın ray + düğümler) ============ */
+#surec .proc-grid{position:relative;border:0;border-radius:0;overflow:visible;background:transparent;gap:14px;padding-top:24px}
+/* Masaüstü tek-satırda ince altın ray — badge merkezlerinden geçer; wrap olan dar ekranlarda gizli */
+@media(min-width:961px){#surec .proc-grid:before{content:"";position:absolute;left:11%;right:11%;top:47px;height:2px;background:linear-gradient(90deg,transparent,var(--gold-soft) 18%,var(--gold),var(--gold-soft) 82%,transparent);opacity:.5;z-index:0}}
+#surec .proc{position:relative;background:transparent;border:0;padding:24px 20px 16px;border-radius:16px;transition:transform .34s cubic-bezier(.2,.7,.2,1),background .34s,box-shadow .34s;z-index:1}
+#surec .proc:hover{transform:translateY(-6px);background:var(--panel);box-shadow:0 20px 44px rgba(10,53,39,.11)}
+#surec .proc .no{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;font-family:var(--serif);font-size:17px;letter-spacing:.02em;color:var(--gold-deep);font-weight:700;background:var(--panel);border:1.5px solid var(--gold-soft);box-shadow:0 6px 18px rgba(10,53,39,.09);margin-bottom:16px;transition:.34s cubic-bezier(.2,.7,.2,1)}
+#surec .proc:hover .no{background:var(--grad-gold);color:#2a1e05;border-color:var(--gold);box-shadow:0 10px 24px rgba(195,155,69,.44);transform:rotate(-5deg) scale(1.07)}
+#surec .proc h4{font-size:19px;margin-bottom:9px;transition:.25s}
+#surec .proc:hover h4{color:var(--em)}

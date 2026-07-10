@@ -951,3 +951,17 @@ window.addEventListener('load',function(){try{
   }
   if(document.readyState!=='loading')setTimeout(heroBoot,60);else window.addEventListener('DOMContentLoaded',function(){setTimeout(heroBoot,60);});
 })();
+
+/* ===================== Kart 3B-tilt (ileri hover mikro-etkileşim) ===================== */
+(function(){
+  var RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(RM||!(window.matchMedia&&window.matchMedia('(hover:hover) and (pointer:fine)').matches))return;
+  function bind(card){if(card._tilt)return;card._tilt=1;
+    card.addEventListener('mousemove',function(e){var r=card.getBoundingClientRect(),px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
+      card.style.transform='perspective(1000px) rotateY('+(px*6.5).toFixed(2)+'deg) rotateX('+(-py*7.5).toFixed(2)+'deg) translateY(-8px)';},{passive:true});
+    card.addEventListener('mouseleave',function(){card.style.transform='';});
+  }
+  function scan(){[].forEach.call(document.querySelectorAll('.vcard'),bind);}
+  if(document.readyState!=='loading')setTimeout(scan,220);else window.addEventListener('load',function(){setTimeout(scan,220);});
+  if('MutationObserver' in window){var t;new MutationObserver(function(){clearTimeout(t);t=setTimeout(scan,180);}).observe(document.body,{childList:true,subtree:true});}
+})();
