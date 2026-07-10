@@ -19,7 +19,7 @@ const SAAS_CONFIG={
     metaKeywords:'lüks konut danışmanı, özel portföy, yalı, penthouse, butik emlak, ücretsiz mülk analizi',
     googleAnalytics:'', googleSiteVerification:'', googleMapsKey:''
   },
-  tenantSettings:{ customPrompt:'' },
+  tenantSettings:{ customPrompt:'', dsKey:'', dsModel:'deepseek-chat' },/* dsKey: danışmanın kendi DeepSeek anahtarı — girilirse tüm YZ DeepSeek ile; boşsa ProX sunucu AI'si. ProX anahtarı ise veri/endeks/analiz içindir (ayrı çalışır). */
   proxAiPrompts:{
     persona:'Sen, üst segment gayrimenkulde 18 yıllık tecrübeli, son derece elit, vizyoner ve güven veren bir lüks konut broker’ısın (Selin Meridyen). Üslubun zarif, sakin ve danışan odaklıdır; agresif satış yapmaz, değeri görünür kılarsın. Kullanıcı bir bölge/mülk/yatırım sorduğunda hafızandaki portföyü tarar, uygun mülkleri ve prim (değer artışı) potansiyelini anlatır, kesin fiyat vaadi vermez ve her görüşmeyi nazikçe ücretsiz analiz randevusuna yönlendirirsin.'
   },
@@ -92,6 +92,61 @@ window.openLegal=openLegal;window.closeLegal=closeLegal;window.openKvkk=openKvkk
 /* ===================== AI GÜVENLİK KORKULUĞU — ProX/DeepSeek çıktısı ===================== */
 var AI_GUARD_RULE='\n\n[KESİN KURALLAR — UYDURMA YASAK] Gerçek olmayan proje/marka adı, kesin fiyat/rakam, "%X garanti/net getiri", sahte istatistik, ödül veya referans ÜRETME. Emin olmadığın sayısal veriyi "ProX endeksiyle teyit edilmeli" diye işaretle. Yalnızca genel, doğrulanabilir bilgi ver; abartıdan kaçın.';
 function aiGuard(p){p=(p==null?'':''+p);return p.indexOf('[KESİN KURALLAR')>=0?p:(p+AI_GUARD_RULE);}
+/* ===== DEEPSEEK-ÖNCELİKLİ YZ YÖNLENDİRME (danışman) =====
+   Admin bir DeepSeek anahtarı (SAAS_CONFIG.tenantSettings.dsKey) girdiyse TÜM yapay zeka ÜRETİMİ
+   doğrudan DeepSeek ile çalışır; yoksa/başarısızsa ProX sunucu AI'sine (/prox/ai) düşülür.
+   ProX API anahtarı (EMLAK_TENANT.tenant_key) yalnızca VERİ uçları (endeks/analiz) içindir. DeepSeek CORS açık. */
+function _dsLoad(){try{var k=localStorage.getItem('dn_dskey');if(k!=null)SAAS_CONFIG.tenantSettings.dsKey=k;var m=localStorage.getItem('dn_dsmodel');if(m)SAAS_CONFIG.tenantSettings.dsModel=m;}catch(e){}}
+function _dsSave(){try{localStorage.setItem('dn_dskey',SAAS_CONFIG.tenantSettings.dsKey||'');localStorage.setItem('dn_dsmodel',SAAS_CONFIG.tenantSettings.dsModel||'deepseek-chat');}catch(e){}}
+function _dsKey(){try{return (SAAS_CONFIG.tenantSettings.dsKey||'').trim();}catch(e){return '';}}
+function _dsModel(){try{return (SAAS_CONFIG.tenantSettings.dsModel||'deepseek-chat').trim()||'deepseek-chat';}catch(e){return 'deepseek-chat';}}
+function _dsMessages(body){
+  body=body||{};
+  var SYS_GEN='Sen zarif, üst segment bir Türk lüks gayrimenkul danışmanı yapay zekasısın. Türkçe, sakin ve net yaz; yalnızca doğrulanabilir emlak bilgisi ver; kesin fiyat/garanti getiri UYDURMA.';
+  if((Array.isArray(body.messages)&&body.messages.length)||body.message!=null){
+    var msgs=[{role:'system',content:body.prompt||SYS_GEN}];
+    if(Array.isArray(body.messages)&&body.messages.length){body.messages.forEach(function(m){if(m&&m.content)msgs.push({role:(m.role==='assistant'?'assistant':(m.role==='system'?'system':'user')),content:String(m.content)});});}
+    else{msgs.push({role:'user',content:String(body.message)});}
+    return msgs;
+  }
+  return [{role:'system',content:SYS_GEN},{role:'user',content:String(body.prompt||'')}];
+}
+async function _deepseekChat(body,opts){
+  opts=opts||{};var key=_dsKey();if(!key)return null;
+  var ctrl=(typeof AbortController!=='undefined')?new AbortController():null;
+  var to=ctrl?setTimeout(function(){try{ctrl.abort();}catch(e){}},opts.timeout||45000):null;
+  try{
+    var res=await fetch('https://api.deepseek.com/chat/completions',{method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({model:_dsModel(),messages:_dsMessages(body),temperature:(opts.temperature!=null?opts.temperature:0.7),max_tokens:(opts.max_tokens||2048),stream:false}),
+      signal:ctrl?ctrl.signal:undefined});
+    if(to)clearTimeout(to);
+    if(!res.ok)return {_dsErr:true,status:res.status};
+    var j=await res.json();var t=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;
+    if(t&&t.trim())return {answer:t.trim(),success:true,_via:'deepseek'};
+    return {_dsErr:true,status:0};
+  }catch(e){if(to)clearTimeout(to);return {_dsErr:true,status:-1};}
+}
+async function aiChat(body,opts){
+  if(_dsKey()){var d=await _deepseekChat(body,opts);if(d&&d.answer)return d;}
+  return await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:body});
+}
+try{window.aiChat=aiChat;window._deepseekChat=_deepseekChat;}catch(e){}
+/* Admin: DeepSeek anahtar testi + durum rozeti */
+async function aiDsTest(){
+  var el=document.getElementById('dn_dsstatus');var inp=document.getElementById('dn_dskey');
+  var key=(inp&&inp.value.trim())||_dsKey();
+  if(!key){if(el)el.innerHTML='<div class="ds-off">⚠ DeepSeek anahtarı girilmedi. Boşsa YZ, ProX sunucu AI\'si ile çalışır.</div>';return;}
+  if(el)el.innerHTML='<div class="ds-wait">● DeepSeek bağlantısı test ediliyor…</div>';
+  var _prev=SAAS_CONFIG.tenantSettings.dsKey;SAAS_CONFIG.tenantSettings.dsKey=key;
+  var r=await _deepseekChat({message:'Sadece "OK" yaz.'},{max_tokens:8,temperature:0});
+  SAAS_CONFIG.tenantSettings.dsKey=_prev;
+  if(r&&r.answer){if(el)el.innerHTML='<div class="ds-on">◉ DeepSeek bağlı ✓ · model '+_dsModel()+' — Kaydet\'e basınca tüm YZ DeepSeek ile çalışır.</div>';}
+  else{var st=(r&&r.status),m=st===401?'anahtar geçersiz (401)':st===402?'bakiye/kota yetersiz (402)':st===429?'hız limiti (429)':'bağlantı kurulamadı';if(el)el.innerHTML='<div class="ds-off">⚠ DeepSeek testi başarısız · '+m+'. Anahtarı kontrol edin.</div>';}
+}
+function aiDsStatus(){var el=document.getElementById('dn_dsstatus');if(!el)return;var k=_dsKey();
+  el.innerHTML=k?'<div class="ds-on">◉ DeepSeek anahtarı kayıtlı · YZ üretimi DeepSeek ('+_dsModel()+') ile çalışıyor.</div>':'<div class="ds-off">○ DeepSeek anahtarı yok · YZ, ProX sunucu AI\'si ile çalışıyor.</div>';}
+try{window.aiDsTest=aiDsTest;window.aiDsStatus=aiDsStatus;}catch(e){}
 var AI_RISK_PATTERNS=[
   {re:/(garanti|kesin|net)\s*(getiri|kazanç|kâr|kar)|(getiri|kazanç)\s*(garanti|kesin)/i,t:'garanti getiri iddiası'},
   {re:/\d[\d.\s]{5,}\s*(tl|₺|lira)/i,t:'kesin fiyat rakamı'},
@@ -141,7 +196,7 @@ async function gmLang(v){var sel=document.querySelectorAll('.lang-sel');
   try{toast(v==='ar'?'Arapça çeviri hazırlanıyor…':'İngilizce çeviri hazırlanıyor…');}catch(e){}
   var langName=v==='ar'?'Modern Standard Arabic':'English';
   var prompt='Translate these Turkish luxury real-estate website UI strings to '+langName+'. Keep the brand name "'+firma+'" and proper nouns unchanged. Return ONLY a numbered list, exactly one translation per line, SAME count and order, no commentary:\n'+texts.map(function(t,i){return (i+1)+'. '+t;}).join('\n');
-  var out=null;try{var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{prompt:prompt,context:'ui-translation'}});if(r&&!r.fallback)out=r.answer||r.text||(r.data&&(r.data.answer||r.data.text));}catch(e){}
+  var out=null;try{var r=await aiChat({prompt:prompt,context:'ui-translation',tool:'translate'});if(r&&!r.fallback)out=r.answer||r.text||(r.data&&(r.data.answer||r.data.text));}catch(e){}
   if(!out){try{toast('Çeviri servisi şu an kullanılamıyor.');}catch(e){}document.documentElement.setAttribute('dir','ltr');document.documentElement.lang='tr';sel.forEach(function(s){s.value='tr';});return;}
   var lines=out.split('\n').map(function(l){return l.replace(/^\s*\d+[.)]\s*/,'').trim();}).filter(function(l){return l;});
   var applied=_i18nOrig.map(function(o,i){if(lines[i])o.el.textContent=lines[i];return lines[i]||o.txt;});
@@ -452,7 +507,7 @@ function footerHTML(){return '<footer><div class="wrap"><div class="fcols">'
   +'<div><h4>Keşfet</h4><ul><li><a onclick="navGo(\'ilanlar\')">İlanlar</a></li><li><a onclick="navGo(\'vip\')">VIP Portföy</a></li><li><a onclick="navGo(\'surec\')">Süreç</a></li><li><a onclick="navGo(\'randevu\')">Ücretsiz Analiz</a></li></ul></div>'
   +'<div><h4>Kurumsal</h4><ul><li><a onclick="goHome()">Ana Sayfa</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="sss.html">S.S.S</a></li><li><a onclick="navGo(\'iletisim\')">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>'
   +'<div><h4>Yasal</h4><ul><li><a onclick="openKvkk()">KVKK Aydınlatma</a></li><li><a onclick="openCerez()">Çerez Politikası</a></li><li><a onclick="openMesafeli()">Mesafeli Hizmet & Kullanım</a></li><li><a onclick="openAdminGate()">Yönetim Paneli</a></li></ul></div>'
-  +'</div><div class="fbot"><span>© 2026 Selin Meridyen · Lüks Konut & Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span><span>emlakekspertizi.com kurumsal altyapısıyla üretilmiştir.</span></div></div></footer>';}
+  +'</div><div class="fbot"><span>© 2026 Selin Meridyen · Lüks Konut & Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span><a class="gm-prox" href="https://emlakekspertizi.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span>Powered by</span><span class="prox-logo">Pro<span class="prox-x">X</span></span></a></div></div></footer>';}
 
 /* =====================================================================
    DİNAMİK SAYFA ROUTER (overlay — üst+alt menü birebir tutarlı)
@@ -592,7 +647,8 @@ async function _proxResolveReply(q){
   try{
     const t=_norm(q);
     const wantsAnalyze=/(yatırım|yatirim|prim|değer|deger|fiyat|kaça|ne kadar|kıymet|kiymet|getiri)/.test(t);
-    const ai=await proxApi("/api/v1/tenant/prox/ai",{method:"POST",body:{prompt:aiGuard(q),context:"persona=consultant; sector="+window.EMLAK_TENANT.sector}});
+    const _persona=aiGuard(((SAAS_CONFIG.proxAiPrompts&&SAAS_CONFIG.proxAiPrompts.persona)||'')+(saasResolve('customPrompt')?('\n\nEk ton: '+saasResolve('customPrompt')):''));
+    const ai=await aiChat({prompt:_persona,message:q,context:"persona=consultant; sector="+window.EMLAK_TENANT.sector});/* DeepSeek: persona=sistem, soru=kullanıcı; yoksa ProX'e düşer */
     var answer=(ai&&!ai.fallback&&ai.success!==false&&ai.answer)?ai.answer:'';
     var analyzeHTML='';
     if(wantsAnalyze){
@@ -659,6 +715,12 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
    +'<div class="sta-pane" data-p="prox" hidden><h4>ProX AI — Danışman Promptu</h4><p class="sub">Lüks broker personasına eklenir / düzenlenir. Conversion motoru bu tonu kullanır.</p>'
      +'<div class="sta-f"><label>Ana Persona (sistem)</label><textarea id="sp_base" rows="4" readonly></textarea></div>'
      +'<div class="sta-f"><label>Kuruma Özel Ek Ton (override)</label><textarea id="sp_custom" rows="3" placeholder="Örn: Boğaz hattı yalıları ve marka rezidanslarda uzmanız..."></textarea></div>'
+     +'<div class="sta-ds"><div class="sta-ds-h">🧠 DeepSeek Yapay Zeka Anahtarı <span class="sta-opt">opsiyonel</span></div>'
+       +'<p class="sub" style="margin:2px 0 8px">Kendi DeepSeek API anahtarınızı girerseniz <b>tüm yapay zeka üretimi</b> (danışman asistanı + çeviri) doğrudan <b>DeepSeek</b> ile çalışır. Boş bırakırsanız ProX sunucu yapay zekası kullanılır. <b>ProX API anahtarı</b> (EİDS/ProX sekmesi) ise emlak endeksi ve değerleme verileri içindir — ikisi ayrı çalışır.</p>'
+       +'<div class="sta-row2"><div class="sta-f"><label>DeepSeek API Anahtarı (sk-...)</label><input id="dn_dskey" type="password" placeholder="sk-..." autocomplete="off"></div>'
+       +'<div class="sta-f"><label>Model</label><select id="dn_dsmodel"><option value="deepseek-chat">deepseek-chat (V3)</option><option value="deepseek-reasoner">deepseek-reasoner (R1)</option></select></div></div>'
+       +'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-line" type="button" onclick="aiDsTest()">Bağlan & Test Et</button><span class="sub" style="margin:0">Anahtar istemcide saklanır; yayında sunucu-proxy önerilir.</span></div>'
+       +'<div id="dn_dsstatus" style="margin-top:8px"></div></div>'
      +'<button class="btn btn-gold sta-go" onclick="saasSaveProxPrompt()">Kaydet</button></div>'
    /* EİDS */
    +'<div class="sta-pane" data-p="eids" hidden><h4>EİDS — Elektronik İlan Doğrulama</h4><p class="sub">Açık ilan yayınlamak için yetki belgesi gerekir; VIP (davet usulü) portföy serbesttir. Kamuya güven rozeti olarak gösterilir.</p>'
@@ -686,6 +748,7 @@ function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');
   set('sg_ga',saasResolve('googleAnalytics'));set('sg_gsc',saasResolve('googleSiteVerification'));set('sg_maps',saasResolve('googleMapsKey'));
   set('sm_title',saasResolve('metaTitle'));set('sm_desc',saasResolve('metaDescription'));set('sm_kw',saasResolve('metaKeywords'));
   set('sp_base',SAAS_CONFIG.proxAiPrompts.persona);set('sp_custom',SAAS_CONFIG.tenantSettings.customPrompt);
+  set('dn_dskey',_dsKey());set('dn_dsmodel',_dsModel());try{aiDsStatus();}catch(e){}
   set('ed_belge',eidsFirma().eids.belgeNo);try{eidsRenderAdmin();}catch(e){}
   try{renderSA();renderVipStatus();}catch(e){}
   try{staGate();}catch(e){}
@@ -715,7 +778,12 @@ function saasApplyBrand(){const t=SAAS_CONFIG.tenantSettings;const br=_v('sl_bra
   if(br)t.brandName=br;if(lu)t.logoUrl=lu;if(fu)t.faviconUrl=fu;if(ac)t.accent=ac;if(sf)t.accentSoft=sf;
   initSaaSTheme();applySaaSSettings();_refreshLogoPrev();toast('Marka, logo & tema uygulandı.');}
 function saasSaveSEO(){const t=SAAS_CONFIG.tenantSettings;t.googleAnalytics=_v('sg_ga');t.googleSiteVerification=_v('sg_gsc');t.googleMapsKey=_v('sg_maps');t.metaTitle=_v('sm_title')||t.metaTitle;t.metaDescription=_v('sm_desc');t.metaKeywords=_v('sm_kw');applySaaSSettings();toast('Google & SEO ayarları uygulandı.');}
-function saasSaveProxPrompt(){SAAS_CONFIG.tenantSettings.customPrompt=_v('sp_custom');toast('ProX danışman tonu kaydedildi.');}
+function saasSaveProxPrompt(){SAAS_CONFIG.tenantSettings.customPrompt=_v('sp_custom');
+  var dk=document.getElementById('dn_dskey'),dm=document.getElementById('dn_dsmodel');
+  if(dk)SAAS_CONFIG.tenantSettings.dsKey=dk.value.trim();
+  if(dm&&dm.value)SAAS_CONFIG.tenantSettings.dsModel=dm.value.trim();
+  _dsSave();try{aiDsStatus();}catch(e){}
+  toast('✓ ProX danışman tonu kaydedildi.'+(_dsKey()?' · DeepSeek anahtarı aktif (YZ artık DeepSeek ile).':' · YZ ProX sunucu AI\'si ile çalışır.'));}
 window.openSaasAdmin=openSaasAdmin;window.closeSaasAdmin=closeSaasAdmin;window.staTab=staTab;window.saasUploadImg=saasUploadImg;window.saasApplyBrand=saasApplyBrand;window.saasSaveSEO=saasSaveSEO;window.saasSaveProxPrompt=saasSaveProxPrompt;
 window.toggleNav=toggleNav;window.closeNav=closeNav;window.goHome=goHome;window.navGo=navGo;window.openPage=openPage;window.closePage=closePage;window.leadFor=leadFor;window.contactLead=contactLead;
 window.pickDay=pickDay;window.pickSlot=pickSlot;window.apptSubmit=apptSubmit;window.proxSend=proxSend;window.proxQuick=proxQuick;window.proxToAnaliz=proxToAnaliz;
@@ -773,6 +841,7 @@ window.openSaasPortal=openSaasPortal;window.closeSaasPortal=closeSaasPortal;wind
 
 /* ---------- INIT ---------- */
 window.addEventListener('load',function(){try{
+  _dsLoad();/* kalıcı DeepSeek anahtarını yükle (localStorage dn_dskey) */
   initSaaSTheme();applySaaSSettings();
   try{eidsRenderPublic();applySchema();applyProxyMode();abApply();}catch(e){}
   document.getElementById('homeListings').innerHTML=listingCardsHTML();

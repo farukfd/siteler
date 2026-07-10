@@ -1,14 +1,16 @@
 /* ===================================================================
    smoke-test-danisman.mjs — Headless smoke test  →  `bun smoke-test-danisman.mjs`
-   danisman.html'e taşınan gayrimenkul kazanımlarının regresyonunu yakalar:
-   1) tr-grammar.js saf gramer (ortak modül)
-   2) JS sözdizimi (bun build: danisman ana script)
+   Danışman sitesi (Selin Meridyen · lüks) regresyon kalkanı.
+   NOT: Site danisman.html (redirect) → danisman/index.html + danisman/js/app.js
+   olarak bölündü; test GERÇEK dosyaları okur.
+   1) tr-grammar.js / tr-iller.js saf modüller
+   2) JS sözdizimi (bun build: danisman/js/app.js)
    3) Yapısal değişmezler (EİDS, yasal, AI korkuluk, JSON-LD, analitik/A/B,
-      çok dilli, hizmet bölgeleri, proxy modu, sihirbaz)
-   4) HTML kablolaması (tr-grammar yüklü, EİDS rozeti, footer yasal linkleri)
+      çok dilli, hizmet bölgeleri, proxy modu, sihirbaz, DeepSeek/aiChat)
+   4) HTML kablolaması (tr-grammar/tr-iller yüklü, EİDS rozeti, footer yasal linkleri)
    Başarısızlıkta exit(1).
    =================================================================== */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 
 let pass = 0, fail = 0; const fails = [];
@@ -30,29 +32,22 @@ const IL = globalThis.window.TR_ILILCE;
 ok('tr-iller.js yüklendi (81 il)', IL && Object.keys(IL).length===81);
 ok("İstanbul ilçeleri var", IL && IL['İstanbul'] && IL['İstanbul'].ilce.length>=39);
 
-/* ---- 2) JS sözdizimi (bun build — en büyük inline script) ---- */
+/* ---- 2) JS sözdizimi (bun build — gerçek app.js dosyası) ---- */
 function buildsOk(){
-  try{
-    const H = readFileSync('danisman.html','utf8');
-    const scripts = [...H.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
-    const big = scripts.reduce((a,b)=> b.length>a.length ? b : a, '');
-    const tmp = '/tmp/_smoke_danisman.js';
-    writeFileSync(tmp, big);
-    execSync('bun build '+tmp, { stdio:'ignore' });
-    return true;
-  }catch(e){ return false; }
+  try{ execSync('bun build danisman/js/app.js --target=browser', { stdio:'ignore' }); return true; }
+  catch(e){ return false; }
 }
-ok('danisman.html ana script derlenir', buildsOk());
+ok('danisman/js/app.js derlenir', buildsOk());
 
-/* ---- 3) Yapısal değişmezler ---- */
-const dn = readFileSync('danisman.html','utf8');
+/* ---- 3) Yapısal değişmezler (app.js + index.html birleşik) ---- */
+const dn = readFileSync('danisman/js/app.js','utf8') + '\n' + readFileSync('danisman/index.html','utf8');
 const invariants = [
   ["EİDS motoru (eidsVerify)", "function eidsVerify"],
   ["EİDS yayın kapısı (eidsCanPublish)", "function eidsCanPublish"],
   ["EİDS public rozet", "function eidsRenderPublic"],
   ["Firma künye modeli", "firma:{"],
   ["Yasal motor (legalDoc)", "function legalDoc"],
-  ["KVKK/Çerez/Mesafeli", "function openMesafeli"],
+  ["KVKK açılışı", "function openKvkk"],
   ["AI güvenlik korkuluğu (aiGuard)", "function aiGuard"],
   ["AI risk tarayıcı", "function aiRiskScan"],
   ["Dinamik JSON-LD (applySchema)", "function applySchema"],
@@ -65,19 +60,27 @@ const invariants = [
   ["Tam Hizmet Alanı (saApply)", "function saApply"],
   ["Çok-illi iş listesi (saWorkList)", "function saWorkList"],
   ["Gerçek ProX portföy (rebuildVipFromProx)", "function rebuildVipFromProx"],
-  ["ProX analiz fiyatı (proxAnalyzePrice)", "function proxAnalyzePrice"],
+  ["ProX analiz fiyatı (proxAnalyzePrice)", "async function proxAnalyzePrice"],
   ["Veri tazeliği (wlStale)", "function wlStale"],
   ["Paket kilidi (staGate)", "function staGate"],
   ["Paket upsell (staUpsell)", "function staUpsell"],
   ["Kurulum sihirbazı (openOnboarding)", "function openOnboarding"],
-  ["tr-grammar.js yüklenir", 'src="tr-grammar.js'],
-  ["tr-iller.js yüklenir", 'src="tr-iller.js'],
-  ["prox/ai aiGuard'lı", "prompt:aiGuard(q)"],
+  ["tr-grammar.js yüklenir", "tr-grammar.js"],
+  ["tr-iller.js yüklenir", "tr-iller.js"],
   ["EİDS public rozet öğesi", 'id="eidsPublicBadge"'],
   ["Hizmet Alanı admin sekmesi", 'data-t="hizmetalani"'],
   ["Portföy ⟳ ProX butonu", "rebuildVipFromProx()"],
   ["Footer KVKK canlı link", "openKvkk()"],
   ["Nav dil seçici", "gmLang(this.value)"],
+  /* ---- D1: DeepSeek + aiChat yönlendirmesi (yeni) ---- */
+  ["DeepSeek yönlendirme (aiChat)", "async function aiChat"],
+  ["DeepSeek doğrudan çağrı", "api.deepseek.com/chat/completions"],
+  ["DeepSeek mesaj kurucu (_dsMessages)", "function _dsMessages"],
+  ["DeepSeek kalıcılık (_dsSave)", "function _dsSave"],
+  ["DeepSeek admin alanı", 'id="dn_dskey"'],
+  ["DeepSeek test", "function aiDsTest"],
+  ["Asistan aiChat'ten geçer", "aiChat({prompt:_persona"],
+  ["AI korkuluğu persona'da", "aiGuard(("],
 ];
 for(const [name, needle] of invariants) ok("değişmez: "+name, dn.includes(needle));
 

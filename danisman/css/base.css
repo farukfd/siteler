@@ -205,6 +205,13 @@ header.nav.scrolled{background:rgba(8,8,9,.9);backdrop-filter:blur(14px);border-
 .prox-h .av{width:46px;height:46px;border-radius:50%;background:var(--grad-gold);display:grid;place-items:center;color:#1a140a;font-family:var(--serif);font-weight:800;flex:none}
 .prox-h b{font-family:var(--serif);font-size:20px;display:block}
 .prox-h span{font-size:12px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase}
+/* ProX kurumsal kimlik — yeşil-X (#19c37d marka ortaklığı işareti; ALTIN temaya boyanmaz, altın kural) */
+.prox-logo{font-family:var(--serif,serif);font-weight:800;letter-spacing:.2px;color:inherit;white-space:nowrap;display:inline-flex;align-items:center}
+.prox-x{display:inline-flex;align-items:center;justify-content:center;background:#19c37d;color:#04140c;border-radius:6px;padding:.02em .26em;margin-left:2px;line-height:1;font-weight:800}
+.prox-h .prox-x,.prox-h .av .prox-x{color:#04140c}/* avatar/başlıkta altın rengi X'e sızmasın — yeşil üstünde koyu kalsın */
+.gm-prox{display:inline-flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;font-size:12px}
+.gm-prox:hover{color:var(--gold-soft)}
+.gm-prox .prox-x{font-size:.88em}
 .prox-sub{color:var(--muted);font-size:14px;margin:0 0 22px}
 .prox-log{min-height:90px;max-height:340px;overflow:auto;display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
 .pm{max-width:88%;padding:13px 16px;font-size:14px;line-height:1.62;border:1px solid var(--line-soft)}
@@ -298,6 +305,13 @@ footer{background:#060607;border-top:1px solid var(--line);padding:64px 0 30px}
 .sta-row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:560px){.sta-row2{grid-template-columns:1fr}}
 .sta-go{margin-top:6px}
+/* DeepSeek anahtar bloğu (ProX AI sekmesi) */
+.sta-ds{border-top:1px dashed var(--line);margin:14px 0 12px;padding-top:12px}
+.sta-ds-h{font-family:var(--serif,serif);font-size:15px;font-weight:600;margin-bottom:2px;color:var(--white)}
+.sta-opt{display:inline-block;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);border-radius:20px;padding:1px 8px;margin-left:6px;vertical-align:middle}
+.sta-ds .ds-on{font-size:12.5px;color:#7fdca0;background:rgba(60,180,110,.1);border:1px solid rgba(60,180,110,.28);border-radius:8px;padding:7px 10px}
+.sta-ds .ds-off{font-size:12.5px;color:var(--muted);background:rgba(255,255,255,.03);border:1px solid var(--line-soft);border-radius:8px;padding:7px 10px}
+.sta-ds .ds-wait{font-size:12.5px;color:var(--gold);padding:7px 2px}
 .logo-prev{display:flex;align-items:center;gap:14px;margin-bottom:14px}
 .logo-prev .box{width:60px;height:60px;border:1px solid var(--line);display:grid;place-items:center;color:var(--gold);font-family:var(--serif);font-weight:800;overflow:hidden}
 .logo-prev .box img{width:100%;height:100%;object-fit:contain;padding:4px}
