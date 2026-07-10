@@ -68,7 +68,7 @@ window.proxBootstrap=proxBootstrap;
   ]
 }
 </script>
-  <link rel="stylesheet" href="css/base.css?v=6d">
+  <link rel="stylesheet" href="css/base.css?v=10d">
 <script src="../tr-grammar.js?v=3"></script>
 <script src="../tr-iller.js?v=2"></script><!-- Türkçe gramer tek kaynak (gayrimenkul.html ile ortak) -->
 </head>
@@ -82,22 +82,17 @@ window.proxBootstrap=proxBootstrap;
       <span><b id="brandName">Selin Meridyen</b><small>Lüks Portföy Danışmanı</small></span>
     </div>
     <nav class="nav-links" id="navLinks">
-      <a class="lnk" data-k="ilanlar" onclick="navGo('ilanlar')">İlanlar</a>
-      <a class="lnk" data-k="vip" onclick="navGo('vip')">VIP Portföy</a>
-      <a class="lnk" data-k="surec" onclick="navGo('surec')">Süreç</a>
-      <a class="lnk" data-k="randevu" onclick="navGo('randevu')">Randevu</a>
-      <a class="lnk" data-k="iletisim" onclick="navGo('iletisim')">İletişim</a>
-      <a class="lnk" href="hakkimizda.html">Hakkımda</a>
-      <a class="lnk" href="sss.html">S.S.S</a>
-      <a id="saasPortalTriggerM" class="portal-trigger" onclick="openSaasPortal()">Müşteri Portalı</a>
-      <select class="lnk lang-sel" onchange="gmLang(this.value)" aria-label="Dil / Language" style="background:transparent;border:1px solid var(--line-soft);border-radius:8px;color:inherit;padding:4px 9px;font:inherit;font-size:13px;cursor:pointer"><option value="tr">TR</option><option value="en">EN</option><option value="ar">AR</option></select>
+      <a class="lnk" data-k="surec" onclick="navGo('surec')">Hizmetlerimiz</a>
+      <a class="lnk" data-k="ilanlar" onclick="navGo('ilanlar')">Portföy</a>
+      <a class="lnk" onclick="goHome();closeNav();setTimeout(function(){var e=document.querySelector('.analiz');if(e)e.scrollIntoView({behavior:'smooth',block:'start'});},90);return false">Bölge Analizi</a>
+      <a class="lnk nav-asistan" onclick="goHome();closeNav();setTimeout(function(){var e=document.querySelector('.prox');if(e)e.scrollIntoView({behavior:'smooth',block:'start'});},90);return false"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a>
+      <a class="lnk nav-giris" onclick="openSaasPortal();closeNav();return false">Giriş</a>
     </nav>
     <div class="nav-cta">
       <a class="nav-wa" href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.21 8.21 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.4-8.24 8.4Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z"/></svg>
       </a>
-      <a class="btn btn-gold" onclick="navGo('randevu')">Ücretsiz Analiz</a>
-      <a id="saasPortalTrigger" class="portal-trigger" onclick="openSaasPortal()">Müşteri Portalı</a>
+      <a class="btn btn-gold hide-mobile-cta" onclick="navGo('randevu')">Ücretsiz Ekspertiz</a>
       <button class="burger" id="burger" onclick="toggleNav()" aria-label="Menü"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -111,23 +106,56 @@ window.proxBootstrap=proxBootstrap;
 
 <section class="hero" id="home">
   <div class="hero-bg"></div>
-  <svg class="hero-arch" viewBox="0 0 600 600" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round">
-    <path d="M120 560V250l180-120 180 120v310" opacity=".7"/><path d="M120 250 300 130 480 250"/>
-    <path d="M170 560V330h70v230M360 560V330h70v230"/><path d="M270 560V440h60v120"/>
-    <path d="M180 300h40M380 300h40M180 360h40M380 360h40M180 420h40M380 420h40" opacity=".6"/>
-    <path d="M60 560h480"/><circle cx="300" cy="92" r="26" opacity=".5"/>
-  </svg>
-  <div class="wrap hero-in">
-    <div class="eyebrow">Butik Emlak Danışmanlığı · Yetki Belgeli</div>
-    <h1>Mülkünüz Bir Değerdir.<em>Onu Doğru İsimle Taçlandırın.</em></h1>
-    <p class="lede">Güncel lüks ilanlardan davet usulü gizli VIP portföye; doğru konumlandırma, tam gizlilik ve kusursuz müzakere ile mülkünüzü hak ettiği değere taşırım.</p>
-    <div class="hero-cta">
-      <a class="btn btn-gold" onclick="navGo('ilanlar')">Güncel İlanları Gör</a>
-      <a class="btn btn-line" onclick="navGo('randevu')">Ücretsiz Analiz</a>
+  <div class="hero-mesh" aria-hidden="true"></div>
+  <div class="hero-grain" aria-hidden="true"></div>
+  <div class="wrap hero-grid">
+    <div class="hero-in">
+      <div class="eyebrow"><span class="eb-dot"></span>Butik Emlak Danışmanlığı · Yetki Belgeli</div>
+      <h1 class="hero-title"><span class="hl">Mülkünüz</span> <span class="hl">Bir</span> <span class="hl">Değerdir.</span><em>Onu Doğru İsimle Taçlandırın.</em></h1>
+      <p class="lede">Güncel lüks ilanlardan davet usulü gizli VIP portföye; doğru konumlandırma, tam gizlilik ve kusursuz müzakere ile mülkünüzü hak ettiği değere taşırım.</p>
+      <div class="hero-cta">
+        <a class="btn btn-gold magnetic" onclick="navGo('ilanlar')"><span>Güncel İlanları Gör</span></a>
+        <a class="btn btn-line magnetic" onclick="navGo('randevu')"><span>Ücretsiz Analiz</span></a>
+      </div>
+      <div id="eidsPublicBadge" style="margin-top:24px;animation:rise 1s 1.1s both"></div>
     </div>
-    <div id="eidsPublicBadge" style="margin-top:24px;animation:rise 1s .7s both"></div>
+
+    <div class="hero-viz" aria-hidden="true">
+      <svg class="hero-draw" viewBox="0 0 520 520" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <path class="dp" style="--len:900" d="M70 470V250l190-130 190 130v220"/>
+        <path class="dp" style="--len:520" d="M70 250 260 120 450 250"/>
+        <path class="dp" style="--len:520" d="M130 470V300h80v170M310 470V300h80v170"/>
+        <path class="dp" style="--len:280" d="M235 470V360h50v110"/>
+        <path class="dp" style="--len:120" d="M150 285h40M330 285h40M150 340h40M330 340h40M150 400h40M330 400h40"/>
+        <path class="dp" style="--len:520" d="M30 470h460"/>
+        <circle class="dc" cx="260" cy="80" r="26"/>
+      </svg>
+      <div class="hcard hc1">
+        <div class="hc-l">ProX Bölge m² · Bebek</div>
+        <div class="hc-v"><b data-count="182000" data-suffix=" ₺">0 ₺</b></div>
+        <svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline class="spk" points="0,28 20,24 40,26 60,17 80,12 100,7 120,3"/></svg>
+        <div class="hc-m">5 yıl <b>▲ %212</b></div>
+      </div>
+      <div class="hcard hc2">
+        <div class="hc-badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 5 6v5c0 4 3 7 7 8 4-1 7-4 7-8V6z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <div><b>EİDS Doğrulandı</b><span>e-Devlet · yetki belgeli</span></div>
+      </div>
+      <div class="hcard hc3">
+        <div class="hc-ring"><svg viewBox="0 0 46 46"><circle class="rbg" cx="23" cy="23" r="19"/><circle class="rfg" cx="23" cy="23" r="19"/></svg><i>94</i></div>
+        <div><b>Yatırım Skoru</b><span>Boğaz hattı · güçlü</span></div>
+      </div>
+    </div>
   </div>
-  <div class="hero-scroll">Keşfet<i></i></div>
+  <div class="hero-pulse" aria-hidden="true">
+    <svg class="pulse-line" viewBox="0 0 1440 54" preserveAspectRatio="none"><path d="M0 27 L300 27 L322 9 L344 46 L366 20 L388 27 L680 27 L702 6 L724 50 L746 27 L1040 27 L1062 15 L1084 40 L1106 27 L1440 27"/></svg>
+    <div class="pulse-chips">
+      <span><i class="pd"></i>Bebek <b>▲ %2,1</b></span>
+      <span><i class="pd"></i>Etiler <b>▲ %1,7</b></span>
+      <span><i class="pd"></i>Zekeriyaköy <b>▲ %3,4</b></span>
+      <span><i class="pd"></i>Kandilli <b>▲ %2,8</b></span>
+      <span class="pl"><span class="prox-logo">Pro<span class="prox-x">X</span></span> canlı bölge endeksi</span>
+    </div>
+  </div>
 </section>
 
 <section class="trust">
@@ -244,7 +272,7 @@ window.proxBootstrap=proxBootstrap;
 <div id="siteFooter"></div>
 </div><!-- /homeView -->
 
-<script src="js/app.js?v=4d"></script>
+<script src="js/app.js?v=10d"></script>
 </body>
 </html>
 

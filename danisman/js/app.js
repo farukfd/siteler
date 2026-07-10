@@ -505,9 +505,9 @@ function apptModuleHTML(){return '<div class="appt-card">'
 function footerHTML(){return '<footer><div class="wrap"><div class="fcols">'
   +'<div><div class="brand" onclick="goHome()"><span class="mark">'+_leD((saasResolve('brandName')||'M').trim().charAt(0))+'</span><span><b>'+_leD(saasResolve('brandName')||'Selin Meridyen')+'</b><small>Lüks Portföy Danışmanı</small></span></div><p>Yetki belgeli butik emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy ve ücretsiz mülk değer analizi.</p></div>'
   +'<div><h4>Keşfet</h4><ul><li><a onclick="navGo(\'ilanlar\')">İlanlar</a></li><li><a onclick="navGo(\'vip\')">VIP Portföy</a></li><li><a onclick="navGo(\'surec\')">Süreç</a></li><li><a onclick="navGo(\'randevu\')">Ücretsiz Analiz</a></li></ul></div>'
-  +'<div><h4>Kurumsal</h4><ul><li><a onclick="goHome()">Ana Sayfa</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="sss.html">S.S.S</a></li><li><a onclick="navGo(\'iletisim\')">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>'
+  +'<div><h4>Kurumsal</h4><ul><li><a onclick="goHome()">Ana Sayfa</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="sss.html">S.S.S</a></li><li><a onclick="navGo(\'iletisim\')">İletişim</a></li><li><a onclick="openSaasPortal()">Müşteri Portalı</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>'
   +'<div><h4>Yasal</h4><ul><li><a onclick="openKvkk()">KVKK Aydınlatma</a></li><li><a onclick="openCerez()">Çerez Politikası</a></li><li><a onclick="openMesafeli()">Mesafeli Hizmet & Kullanım</a></li><li><a onclick="openAdminGate()">Yönetim Paneli</a></li></ul></div>'
-  +'</div><div class="fbot"><span>© 2026 Selin Meridyen · Lüks Konut & Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span><a class="gm-prox" href="https://emlakekspertizi.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span>Powered by</span><span class="prox-logo">Pro<span class="prox-x">X</span></span></a></div></div></footer>';}
+  +'</div><div class="fbot"><span>© 2026 Selin Meridyen · Lüks Konut & Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span><span class="fbot-lang">Dil: <select class="lang-sel" onchange="gmLang(this.value)" aria-label="Dil / Language"><option value="tr">Türkçe</option><option value="en">English</option><option value="ar">العربية</option></select></span><a class="gm-prox" href="https://emlakekspertizi.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span>Powered by</span><span class="prox-logo">Pro<span class="prox-x">X</span></span></a></div></div></footer>';}
 
 /* =====================================================================
    DİNAMİK SAYFA ROUTER (overlay — üst+alt menü birebir tutarlı)
@@ -894,3 +894,60 @@ window.addEventListener('load',function(){try{
   if(typeof proxBootstrap==='function')proxBootstrap();
   /* Ön yüzde harici yönetim butonu YOK — giriş yalnızca Footer › Yönetim Paneli › şifreli kapı (ekspertiz2026) ile. */
 }catch(e){console.warn('init',e);}});
+
+/* ===================== 2026 ANİMASYONLARI: scroll-reveal + özel imleç ===================== */
+(function(){
+  var RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function initReveal(){
+    if(RM)return;
+    var sel='.sec-h,.vcard,.proc,.appt-card,.analiz-band,.contact .row,.contact-cta,.prox-card,.about-grid>*,.trust-in>*';
+    var els=[].slice.call(document.querySelectorAll(sel)).filter(function(e){return !e.closest('.hero');});
+    els.forEach(function(e,i){e.classList.add('reveal');var d=(i%4);if(d)e.classList.add('d'+d);});
+    if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in');});return;}
+    var io=new IntersectionObserver(function(ents){ents.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(e){io.observe(e);});
+    setTimeout(function(){els.forEach(function(e){e.classList.add('in');});},1900); /* güvenlik: her koşulda görünür kıl */
+  }
+  function initCursor(){
+    if(RM||!(window.matchMedia&&window.matchMedia('(hover:hover) and (pointer:fine)').matches))return;
+    if(document.querySelector('.cursor-ring'))return;
+    var dot=document.createElement('div'),ring=document.createElement('div');
+    dot.className='cursor-dot';ring.className='cursor-ring';document.body.appendChild(dot);document.body.appendChild(ring);
+    var rx=0,ry=0,x=-50,y=-50;
+    document.addEventListener('mousemove',function(e){x=e.clientX;y=e.clientY;dot.style.transform='translate('+x+'px,'+y+'px)';},{passive:true});
+    (function loop(){rx+=(x-rx)*.18;ry+=(y-ry)*.18;ring.style.transform='translate('+rx+'px,'+ry+'px)';requestAnimationFrame(loop);})();
+    var HOT='a,button,.vcard,.lnk,.day,.slot,.prox-chips button,.sta-tabs button,.portal-trigger,input,select,textarea';
+    document.addEventListener('mouseover',function(e){if(e.target.closest&&e.target.closest(HOT))ring.classList.add('hot');},{passive:true});
+    document.addEventListener('mouseout',function(e){if(e.target.closest&&e.target.closest(HOT))ring.classList.remove('hot');},{passive:true});
+  }
+  function boot(){try{initCursor();}catch(e){}setTimeout(function(){try{initReveal();}catch(e){}},160);}
+  if(document.readyState==='complete')boot();else window.addEventListener('load',function(){setTimeout(boot,140);});
+})();
+
+/* ===================== İLERİ SEVİYE HERO — kart reveal + sayaç + manyetik + parallax ===================== */
+(function(){
+  var RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function fmtCount(el){var end=+el.getAttribute('data-count')||0,suf=el.getAttribute('data-suffix')||'';
+    if(RM){el.textContent=end.toLocaleString('tr-TR')+suf;return;}
+    var t0=null,dur=1500;requestAnimationFrame(function s(ts){if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/dur),e=1-Math.pow(1-p,3);el.textContent=Math.round(end*e).toLocaleString('tr-TR')+suf;if(p<1)requestAnimationFrame(s);});}
+  function heroBoot(){
+    var cards=[].slice.call(document.querySelectorAll('.hero-viz .hcard'));
+    cards.forEach(function(c,i){setTimeout(function(){c.classList.add('show');},RM?0:(700+i*180));});
+    setTimeout(function(){[].forEach.call(document.querySelectorAll('.hero [data-count]'),fmtCount);},RM?0:1100);
+    if(RM)return;
+    /* manyetik butonlar */
+    [].forEach.call(document.querySelectorAll('.hero .magnetic'),function(btn){
+      btn.addEventListener('mousemove',function(e){var r=btn.getBoundingClientRect(),mx=e.clientX-r.left-r.width/2,my=e.clientY-r.top-r.height/2;btn.style.transform='translate('+(mx*.16)+'px,'+(my*.3)+'px)';var s=btn.querySelector('span');if(s)s.style.transform='translate('+(mx*.1)+'px,'+(my*.2)+'px)';});
+      btn.addEventListener('mouseleave',function(){btn.style.transform='';var s=btn.querySelector('span');if(s)s.style.transform='';});
+    });
+    /* hero parallax (margin ile — floaty translate'i bozmadan) */
+    var hero=document.querySelector('.hero'),viz=document.querySelector('.hero-viz');
+    if(hero&&viz){var draw=viz.querySelector('.hero-draw');
+      hero.addEventListener('mousemove',function(e){var r=hero.getBoundingClientRect(),px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
+        cards.forEach(function(c,i){var f=(i+1)*7;c.style.marginLeft=(px*f)+'px';c.style.marginTop=(py*f)+'px';});
+        if(draw)draw.style.transform='translate('+(px*-16)+'px,'+(py*-16)+'px)';},{passive:true});
+      hero.addEventListener('mouseleave',function(){cards.forEach(function(c){c.style.marginLeft='';c.style.marginTop='';});if(draw)draw.style.transform='';});
+    }
+  }
+  if(document.readyState!=='loading')setTimeout(heroBoot,60);else window.addEventListener('DOMContentLoaded',function(){setTimeout(heroBoot,60);});
+})();
