@@ -68,7 +68,7 @@ window.proxBootstrap=proxBootstrap;
   ]
 }
 </script>
-  <link rel="stylesheet" href="css/base.css?v=14f">
+  <link rel="stylesheet" href="css/base.css?v=15a">
 <script src="../tr-grammar.js?v=3"></script>
 <script src="../tr-iller.js?v=2"></script><!-- Türkçe gramer tek kaynak (gayrimenkul.html ile ortak) -->
 </head>
@@ -105,21 +105,52 @@ window.proxBootstrap=proxBootstrap;
 <div id="homeView">
 
 <section class="hero" id="home">
-  <div class="hero-bg"></div>
-  <div class="hero-mesh" aria-hidden="true"></div>
-  <div class="hero-grain" aria-hidden="true"></div>
-  <div class="wrap hero-grid">
-    <div class="hero-in">
-      <div class="eyebrow"><span class="eb-dot"></span>Kişiye Özel Butik Emlak Danışmanlığı · Yetki Belgeli</div>
-      <h1 class="hero-title"><span class="hl">Gayrimenkulünüz,</span><em>gerçek değerine ulaşsın.</em></h1>
-      <p class="lede">18 yılı aşkın deneyim ve canlı ProX bölge verisiyle doğru fiyatı belirler, davet usulü gizli portföyle doğru alıcıyı bulur, kusursuz müzakereyle gayrimenkulünüzü hak ettiği değere taşırım.</p>
-      <div class="hero-cta">
-        <a class="btn btn-gold magnetic" onclick="navGo('ilanlar')"><span>Portföyü Gör</span></a>
-        <a class="btn btn-line magnetic" onclick="navGo('randevu')"><span>Ücretsiz Değer Analizi</span></a>
-      </div>
-      <div id="eidsPublicBadge" style="margin-top:22px;animation:rise 1s 1.1s both"></div>
+  <div class="hero-scene" aria-hidden="true">
+    <canvas class="hero-canvas" id="heroCanvas"></canvas>
+    <div class="hero-scrim"></div>
+    <div class="hero-grain"></div>
+  </div>
+  <div class="wrap hero-content">
+    <div class="eyebrow"><span class="eb-dot"></span>Kişiye Özel Butik Emlak Danışmanlığı · Yetki Belgeli</div>
+    <h1 class="hero-title"><span class="hl">Gayrimenkulünüz,</span><em>gerçek değerine ulaşsın.</em></h1>
+    <p class="lede">18 yılı aşkın deneyim ve canlı ProX bölge verisiyle; doğru fiyat, davet usulü gizli portföy ve kusursuz müzakereyle, İstanbul’un en özel adreslerinde yanınızdayım.</p>
+    <div class="hero-cta">
+      <a class="btn btn-gold magnetic" onclick="navGo('randevu')"><span>Ücretsiz Değer Analizi</span></a>
+      <a class="btn btn-line magnetic" onclick="navGo('ilanlar')"><span>Portföyü Keşfet</span></a>
     </div>
+    <div id="eidsPublicBadge" style="margin-top:22px;animation:rise 1s 1.1s both"></div>
+  </div>
+  <button class="hero-scroll" type="button" aria-label="Aşağı kaydır" onclick="(function(){var e=document.querySelector('.trust');if(e)e.scrollIntoView({behavior:'smooth'});})()"><span>Keşfet</span><i></i></button>
+  <div class="hero-pulse" aria-hidden="true">
+    <svg class="pulse-line" viewBox="0 0 1440 54" preserveAspectRatio="none"><path d="M0 27 L300 27 L322 9 L344 46 L366 20 L388 27 L680 27 L702 6 L724 50 L746 27 L1040 27 L1062 15 L1084 40 L1106 27 L1440 27"/></svg>
+    <div class="pulse-chips">
+      <span><i class="pd"></i>Bebek <b>▲ %2,1</b></span>
+      <span><i class="pd"></i>Etiler <b>▲ %1,7</b></span>
+      <span><i class="pd"></i>Zekeriyaköy <b>▲ %3,4</b></span>
+      <span><i class="pd"></i>Kandilli <b>▲ %2,8</b></span>
+      <span class="pl"><span class="prox-logo">Pro<span class="prox-x">X</span></span> canlı bölge endeksi</span>
+    </div>
+  </div>
+</section>
 
+<section class="trust">
+  <div class="wrap" style="padding:0"><div class="trust-in">
+    <div class="t"><b>18+</b><span>Yıl Tecrübe</span></div>
+    <div class="t"><b>₺7,4 Mr</b><span>Aracılık Edilen Değer</span></div>
+    <div class="t"><b>%100</b><span>Yetki Belgeli Portföy</span></div>
+    <div class="t"><b>Gizli</b><span>Adres & Kimlik Mahremiyeti</span></div>
+  </div></div>
+</section>
+
+<!-- CANLI ProX ZEKÂ BANDI (veri paneli hero'dan indi) -->
+<section class="intel-band">
+  <div class="wrap intel-wrap">
+    <div class="intel-copy reveal">
+      <div class="eyebrow" style="display:block">Canlı ProX Bölge Zekâsı</div>
+      <h2>Rakamlar konuşur, <span class="serif-it gold">ben yorumlarım.</span></h2>
+      <p>Her mahalle için güncel m² değeri, yıllık değişim ve yatırım skoru anlık güncellenir. Verinin gösterdiğini deneyimimle stratejiye çeviririm.</p>
+      <a class="btn btn-gold" onclick="(function(){var e=document.getElementById('bolgeAnaliz');if(e)e.scrollIntoView({behavior:'smooth'});})()">Detaylı Bölge Analizi</a>
+    </div>
     <aside class="hero-panel">
       <div class="hp-head">
         <span class="hp-live"><i></i>ProX · Canlı Bölge Zekâsı</span>
@@ -127,7 +158,7 @@ window.proxBootstrap=proxBootstrap;
       </div>
       <div class="hp-stat">
         <div class="hp-l">Ortalama m² değeri</div>
-        <div class="hp-v"><b data-count="182000" data-suffix=" ₺">0 ₺</b><span class="hp-d">▲ %14,2</span></div>
+        <div class="hp-v"><b>182.000 ₺</b><span class="hp-d">▲ %14,2</span></div>
         <svg class="hp-spark" viewBox="0 0 264 60" preserveAspectRatio="none">
           <defs><linearGradient id="hpG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--prox)" stop-opacity=".26"/><stop offset="1" stop-color="var(--prox)" stop-opacity="0"/></linearGradient></defs>
           <path class="hp-area" d="M0,50 L44,46 L88,42 L132,32 L176,24 L220,15 L264,8 L264,60 L0,60 Z" fill="url(#hpG)"/>
@@ -149,25 +180,6 @@ window.proxBootstrap=proxBootstrap;
       </div>
     </aside>
   </div>
-  <div class="hero-pulse" aria-hidden="true">
-    <svg class="pulse-line" viewBox="0 0 1440 54" preserveAspectRatio="none"><path d="M0 27 L300 27 L322 9 L344 46 L366 20 L388 27 L680 27 L702 6 L724 50 L746 27 L1040 27 L1062 15 L1084 40 L1106 27 L1440 27"/></svg>
-    <div class="pulse-chips">
-      <span><i class="pd"></i>Bebek <b>▲ %2,1</b></span>
-      <span><i class="pd"></i>Etiler <b>▲ %1,7</b></span>
-      <span><i class="pd"></i>Zekeriyaköy <b>▲ %3,4</b></span>
-      <span><i class="pd"></i>Kandilli <b>▲ %2,8</b></span>
-      <span class="pl"><span class="prox-logo">Pro<span class="prox-x">X</span></span> canlı bölge endeksi</span>
-    </div>
-  </div>
-</section>
-
-<section class="trust">
-  <div class="wrap" style="padding:0"><div class="trust-in">
-    <div class="t"><b>18+</b><span>Yıl Tecrübe</span></div>
-    <div class="t"><b>₺7,4 Mr</b><span>Aracılık Edilen Değer</span></div>
-    <div class="t"><b>%100</b><span>Yetki Belgeli Portföy</span></div>
-    <div class="t"><b>Gizli</b><span>Adres & Kimlik Mahremiyeti</span></div>
-  </div></div>
 </section>
 
 <section class="about sec-pad" id="hakkimda">
@@ -306,7 +318,7 @@ window.proxBootstrap=proxBootstrap;
 <div id="siteFooter"></div>
 </div><!-- /homeView -->
 
-<script src="js/app.js?v=13g"></script>
+<script src="js/app.js?v=14b"></script>
 </body>
 </html>
 

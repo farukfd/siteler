@@ -900,7 +900,7 @@ window.addEventListener('load',function(){try{
   var RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   function initReveal(){
     if(RM)return;
-    var sel='.sec-h,.vcard,.proc,.appt-card,.analiz-band,.contact .row,.contact-cta,.prox-card,.about-grid>*,.trust-in>*,.bz-wrap';
+    var sel='.sec-h,.vcard,.proc,.appt-card,.analiz-band,.contact .row,.contact-cta,.prox-card,.about-grid>*,.trust-in>*,.bz-wrap,.intel-copy';
     var els=[].slice.call(document.querySelectorAll(sel)).filter(function(e){return !e.closest('.hero');});
     els.forEach(function(e,i){e.classList.add('reveal');var d=(i%4);if(d)e.classList.add('d'+d);});
     if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in');});return;}
@@ -1123,4 +1123,49 @@ window.addEventListener('load',function(){try{
   }
   /* ilk Bebek animasyonu (CSS + heroBoot sayacı) bitsin, sonra dönmeye başla */
   setInterval(function(){ if(!vis)return; idx=(idx+1)%D.length; apply(idx); }, 3800);
+})();
+
+/* ===================== SİNEMATİK HERO SAHNESİ — canvas "Boğaz alacakaranlığı" (admin görsel kancalı) ===================== */
+(function heroScene(){
+  var cv=document.getElementById('heroCanvas'); if(!cv||!cv.getContext) return;
+  /* admin kendi görselini/videosunu koyduysa canvas yerine onu kullan */
+  var custom=''; try{ custom=(typeof saasResolve==='function' && (saasResolve('heroImage')||''))||''; }catch(e){ custom=''; }
+  if(custom){ var bg=document.createElement('div'); bg.className='hero-bgimg'; bg.style.display='block'; bg.style.backgroundImage='url("'+(''+custom).replace(/["\\]/g,'')+'")'; cv.parentNode.insertBefore(bg,cv); cv.style.display='none'; return; }
+  var ctx=cv.getContext('2d');
+  var RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var W=1,H=1,DPR=Math.min(window.devicePixelRatio||1,2),B=[],SH=[],t=0,GX=0,GY=0,GR=0,HZ=0;
+  function R(a,b){return a+Math.random()*(b-a);}
+  function build(){
+    HZ=Math.round(H*0.63); GX=W*0.72; GY=HZ*0.48; GR=Math.max(W,H)*0.58;
+    B=[]; var x=-30;
+    while(x<W+40){ var tower=Math.random()<0.13; var bw=tower?R(W*0.026,W*0.05):R(W*0.035,W*0.082); var bh=tower?R(H*0.30,H*0.47):R(H*0.09,H*0.26);
+      var cols=Math.max(2,Math.round(bw/15)), rows=Math.max(3,Math.round(bh/18)), wins=[];
+      for(var r=0;r<rows;r++)for(var c=0;c<cols;c++)if(Math.random()<0.40)wins.push([c,r,Math.random()<0.17,R(0,6.28)]);
+      B.push({x:x,w:bw,h:bh,top:HZ-bh,cols:cols,rows:rows,wins:wins}); x+=bw+R(1,9);
+    }
+    SH=[]; for(var i=0;i<30;i++){ SH.push({y:HZ+Math.pow(i/30,1.4)*(H-HZ), w:R(24,140), ph:R(0,6.28)}); }
+  }
+  function hill(base,amp,col,ph){ ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(0,base); for(var x=0;x<=W;x+=24){ ctx.lineTo(x, base-amp*0.5 - amp*0.5*Math.sin(x*0.0032+ph)); } ctx.lineTo(W,base); ctx.closePath(); ctx.fill(); }
+  function paint(){
+    ctx.clearRect(0,0,W,H);
+    var sky=ctx.createLinearGradient(0,0,0,HZ); sky.addColorStop(0,'#052519'); sky.addColorStop(.62,'#0b4a34'); sky.addColorStop(1,'#1a6e50');
+    ctx.fillStyle=sky; ctx.fillRect(0,0,W,HZ);
+    var g=ctx.createRadialGradient(GX,GY,0,GX,GY,GR); g.addColorStop(0,'rgba(224,193,120,.52)'); g.addColorStop(.42,'rgba(197,155,80,.15)'); g.addColorStop(1,'rgba(197,155,80,0)');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,HZ);
+    ctx.beginPath(); ctx.arc(GX,GY,Math.min(W,H)*0.045,0,6.29); ctx.fillStyle='rgba(237,209,148,.72)'; ctx.fill();
+    hill(HZ, H*0.12, '#0a3b29', .4); hill(HZ, H*0.065, '#072e1f', 1.3);
+    for(var i=0;i<B.length;i++){ var b=B[i]; ctx.fillStyle='#04140d'; ctx.fillRect(Math.round(b.x),Math.round(b.top),Math.ceil(b.w),b.h);
+      var pw=b.w/b.cols, ph=b.h/b.rows;
+      for(var w=0;w<b.wins.length;w++){ var q=b.wins[w]; if(q[2]){ var fl=0.55+0.4*Math.sin(t*0.05+q[3]); ctx.fillStyle='rgba(243,207,132,'+(0.42+0.5*fl).toFixed(3)+')'; } else ctx.fillStyle='rgba(232,200,142,.15)';
+        ctx.fillRect(b.x+q[0]*pw+pw*0.24, b.top+q[1]*ph+ph*0.22, Math.max(1,pw*0.5), Math.max(1,ph*0.42)); } }
+    var wt=ctx.createLinearGradient(0,HZ,0,H); wt.addColorStop(0,'#0a3c2b'); wt.addColorStop(1,'#03110b');
+    ctx.fillStyle=wt; ctx.fillRect(0,HZ,W,H-HZ);
+    var rg=ctx.createLinearGradient(0,HZ,0,H); rg.addColorStop(0,'rgba(224,193,120,.30)'); rg.addColorStop(1,'rgba(224,193,120,0)');
+    ctx.fillStyle=rg; ctx.fillRect(GX-W*0.11,HZ,W*0.22,H-HZ);
+    for(var s=0;s<SH.length;s++){ var sh=SH[s]; var al=0.04+0.06*(0.5+0.5*Math.sin(t*0.04+sh.ph)); ctx.strokeStyle='rgba(226,206,152,'+al.toFixed(3)+')'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(GX-sh.w,sh.y); ctx.lineTo(GX+sh.w,sh.y); ctx.stroke(); }
+  }
+  function resize(){ W=cv.clientWidth||window.innerWidth; H=cv.clientHeight||window.innerHeight; DPR=Math.min(window.devicePixelRatio||1,2); cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0); build(); paint(); }
+  resize();
+  window.addEventListener('resize',resize,{passive:true});
+  if(!RM){ (function loop(){ t++; if(t%2===0)paint(); requestAnimationFrame(loop); })(); }
 })();
