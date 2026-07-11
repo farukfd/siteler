@@ -84,7 +84,7 @@ window.proxBootstrap=proxBootstrap;
     <nav class="nav-links" id="navLinks">
       <a class="lnk" data-k="surec" onclick="navGo('surec')">Hizmetlerimiz</a>
       <a class="lnk" data-k="ilanlar" onclick="navGo('ilanlar')">Portföy</a>
-      <a class="lnk" onclick="goHome();closeNav();setTimeout(function(){var e=document.querySelector('.analiz');if(e)e.scrollIntoView({behavior:'smooth',block:'start'});},90);return false">Bölge Analizi</a>
+      <a class="lnk" onclick="goHome();closeNav();setTimeout(function(){var e=document.getElementById('bolgeAnaliz');if(e)e.scrollIntoView({behavior:'smooth',block:'start'});},90);return false">Bölge Analizi</a>
       <a class="lnk nav-asistan" onclick="goHome();closeNav();setTimeout(function(){var e=document.querySelector('.prox');if(e)e.scrollIntoView({behavior:'smooth',block:'start'});},90);return false"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a>
       <a class="lnk nav-giris" onclick="openSaasPortal();closeNav();return false">Giriş</a>
     </nav>
@@ -230,6 +230,37 @@ window.proxBootstrap=proxBootstrap;
   </div>
 </section>
 
+<!-- BÖLGE ANALİZİ · canlı ProX veri paneli -->
+<section class="sec-pad bz-sec" id="bolgeAnaliz">
+  <div class="wrap">
+    <div class="sec-h reveal">
+      <div class="eyebrow" style="display:block">ProX Veri · Canlı Bölge Zekâsı</div>
+      <h2>Bölgenizi rakamlarla tanıyın</h2>
+      <p>Her mahalle için güncel m² değeri, 12 aylık fiyat seyri, yatırım skoru ve likidite — kararınızı verilerle destekleyelim.</p>
+    </div>
+    <div class="bz-wrap reveal">
+      <div class="bz-panel">
+        <div class="bz-top">
+          <span class="bz-live"><span class="dot"></span>ProX Endeks · Canlı</span>
+          <div class="bz-tabs" id="bzTabs"></div>
+        </div>
+        <div class="bz-body">
+          <div class="bz-main" id="bzMain"></div>
+          <div class="bz-side" id="bzSide"></div>
+        </div>
+        <div class="bz-cmp">
+          <h4>Mahalle m² Karşılaştırması</h4>
+          <div id="bzCmp"></div>
+        </div>
+        <div class="bz-foot">
+          <span class="src">Kaynak: <b>ProX Emlak Endeksi</b> · temsili gösterge verileri</span>
+          <a class="btn btn-gold" onclick="navGo('randevu')">Bu bölgede ücretsiz analiz</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ÜCRETSİZ ANALİZ CTA BAND -->
 <section class="analiz sec-pad">
   <div class="wrap"><div class="analiz-band">
@@ -272,7 +303,7 @@ window.proxBootstrap=proxBootstrap;
 <div id="siteFooter"></div>
 </div><!-- /homeView -->
 
-<script src="js/app.js?v=11d"></script>
+<script src="js/app.js?v=12e"></script>
 </body>
 </html>
 
