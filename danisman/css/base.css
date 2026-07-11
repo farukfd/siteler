@@ -507,6 +507,7 @@ footer .brand small{color:var(--gold-soft)}
 .hp-spark{width:100%;height:54px;display:block}
 .hp-area{opacity:0;animation:hpFade 1.1s 1.25s forwards}
 @keyframes hpFade{to{opacity:1}}
+@keyframes hpSwap{from{opacity:.4}to{opacity:1}}
 .hp-line{fill:none;stroke:var(--prox);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:320;stroke-dashoffset:320;filter:drop-shadow(0 3px 8px rgba(25,195,125,.4));animation:draw 1.7s 1s ease forwards}
 .hp-sub{font-size:11.5px;color:var(--mut-on-em);margin-top:9px}
 .hp-sub b{color:#7fe3b0}
@@ -542,9 +543,10 @@ footer .brand small{color:var(--gold-soft)}
 .hero{align-items:stretch;padding-top:0}
 .hero-grid{align-content:center;padding-top:94px;padding-bottom:92px;min-height:100vh}
 @media(max-width:980px){.hero-grid{padding-top:104px;padding-bottom:118px;align-content:center}}
-.hero h1{font-size:clamp(32px,4.2vw,54px);line-height:1.06}
-.hero .eyebrow{margin-bottom:18px}
-.hero .lede{margin:24px 0 32px;max-width:540px}
+.hero h1{font-size:clamp(27px,3.1vw,42px);line-height:1.1}
+.hero h1 em{margin-top:2px}
+.hero .eyebrow{margin-bottom:16px;font-size:11px;letter-spacing:.2em}
+.hero .lede{margin:22px 0 30px;max-width:520px;font-size:clamp(15px,1.5vw,17px)}
 /* içerik dikey ortada — hero kompozisyonu açılışta kusursuz kadrajlansın */
 .hero-in{align-self:center;padding-top:0}
 /* nav her zaman hafif zemin — hero'yla dikişsiz, "boşluk" algısı yok */

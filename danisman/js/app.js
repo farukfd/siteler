@@ -929,7 +929,9 @@ window.addEventListener('load',function(){try{
   var RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   function fmtCount(el){var end=+el.getAttribute('data-count')||0,suf=el.getAttribute('data-suffix')||'';
     if(RM){el.textContent=end.toLocaleString('tr-TR')+suf;return;}
-    var t0=null,dur=1500;requestAnimationFrame(function s(ts){if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/dur),e=1-Math.pow(1-p,3);el.textContent=Math.round(end*e).toLocaleString('tr-TR')+suf;if(p<1)requestAnimationFrame(s);});}
+    var t0=null,dur=1500,done=false;function fin(){if(done)return;done=true;el.textContent=end.toLocaleString('tr-TR')+suf;}
+    requestAnimationFrame(function s(ts){if(done)return;if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/dur),e=1-Math.pow(1-p,3);el.textContent=Math.round(end*e).toLocaleString('tr-TR')+suf;if(p<1)requestAnimationFrame(s);else fin();});
+    setTimeout(fin,dur+250);/* RAF duraklarsa (arka plan sekme) son değeri garanti et */}
   function heroBoot(){
     var cards=[].slice.call(document.querySelectorAll('.hero-viz .hcard'));
     cards.forEach(function(c,i){setTimeout(function(){c.classList.add('show');},RM?0:(700+i*180));});
@@ -1064,4 +1066,61 @@ window.addEventListener('load',function(){try{
     setTimeout(fire,2400); /* güvenlik: her koşulda görünür/animasyonlu */
   }
   if(document.readyState!=='loading')setTimeout(boot,140);else window.addEventListener('DOMContentLoaded',function(){setTimeout(boot,140);});
+})();
+
+/* ===================== İLERİ SEVİYE HERO PANELİ — otomatik dönen canlı mahalle zekâsı ===================== */
+(function heroPanelCycle(){
+  var panel=document.querySelector('.hero-panel'); if(!panel) return;
+  var elTag=panel.querySelector('.hp-tag'),
+      elVal=panel.querySelector('.hp-v b'),
+      elDelta=panel.querySelector('.hp-d'),
+      elLine=panel.querySelector('.hp-line'),
+      elArea=panel.querySelector('.hp-area'),
+      elRingFg=panel.querySelector('.hp-ring .rfg'),
+      elRingNum=panel.querySelector('.hp-ring i'),
+      elScoreSub=panel.querySelector('.hp-rows .hp-row:last-child .hp-tx span'),
+      elScoreChip=panel.querySelector('.hp-rows .hp-row:last-child .hp-chip'),
+      elStat=panel.querySelector('.hp-stat');
+  if(!elTag||!elVal||!elLine||!elArea||!elRingFg) return;
+  var RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  /* Bölge Analizi paneliyle tutarlı temsili ProX göstergeleri */
+  var D=[
+    {n:'Bebek',       avg:182000, d:14.2, skor:92, zone:'Boğaz hattı · güçlü potansiyel',   sp:[166,169,172,175,178,180,182]},
+    {n:'Etiler',      avg:154000, d:11.8, skor:88, zone:'Prestij bölgesi · yüksek talep',   sp:[146,148,150,151,152,153,154]},
+    {n:'Zekeriyaköy', avg:96000,  d:16.5, skor:90, zone:'Villa koridoru · hızlı yükseliş',  sp:[90,91,92,93,94,95,96]},
+    {n:'Kandilli',    avg:128000, d:12.1, skor:85, zone:'Boğaz sırtı · sınırlı arz',        sp:[122,123,125,126,127,127,128]},
+    {n:'Levent',      avg:141000, d:9.8,  skor:87, zone:'İş merkezi · yüksek likidite',     sp:[135,136,138,139,140,140,141]}
+  ];
+  var RING=119; /* r=19 çevre */
+  function sparkPts(v){ var mn=Math.min.apply(null,v),mx=Math.max.apply(null,v),s=(mx-mn)||1; mn-=s*.30; mx+=s*.18; var r=mx-mn;
+    return v.map(function(val,i){ return (i*264/(v.length-1)).toFixed(1)+','+(52-(val-mn)/r*44).toFixed(1); }).join(' '); }
+  function areaFrom(pts){ return 'M0,60 L'+pts.split(' ').join(' L')+' L264,60 Z'; }
+  function apply(i){
+    var d=D[i], pts=sparkPts(d.sp);
+    /* değerler SENKRON ayarlanır — RAF/timer'a bağlı değil, her koşulda doğru gösterir */
+    elTag.textContent=d.n;
+    elVal.textContent=d.avg.toLocaleString('tr-TR')+' ₺';
+    elDelta.textContent='▲ %'+(''+d.d).replace('.',',');
+    elLine.setAttribute('points',pts);
+    elArea.setAttribute('d',areaFrom(pts));
+    /* çizgi: görünür sekmede yumuşak yeniden çizim; son durum (offset 0) her hâlükârda uygulanır */
+    if(!RM){ var L; try{L=elLine.getTotalLength();}catch(e){L=320;} elLine.style.transition='none'; elLine.style.strokeDasharray=L; elLine.style.strokeDashoffset=L; void elLine.getBoundingClientRect(); elLine.style.transition='stroke-dashoffset 1.15s ease'; }
+    elLine.style.strokeDashoffset='0';
+    var off=RING*(1-d.skor/100);
+    if(!RM)elRingFg.style.transition='stroke-dashoffset .9s cubic-bezier(.3,.8,.3,1)';
+    elRingFg.style.strokeDashoffset=off;
+    if(elRingNum)elRingNum.textContent=d.skor;
+    if(elScoreSub)elScoreSub.textContent=d.zone;
+    if(elScoreChip)elScoreChip.textContent=d.skor+'/100';
+    /* geçiş hissi: CSS animasyon yeniden başlat (timer YOK) */
+    if(elStat&&!RM){ elStat.style.animation='none'; void elStat.offsetWidth; elStat.style.animation='hpSwap .55s ease'; }
+  }
+  if(RM) return; /* dönme yok; ilk kart CSS ile zaten görünür */
+  var idx=0, vis=true;
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){vis=e.isIntersecting;});},{threshold:.25});
+    io.observe(panel);
+  }
+  /* ilk Bebek animasyonu (CSS + heroBoot sayacı) bitsin, sonra dönmeye başla */
+  setInterval(function(){ if(!vis)return; idx=(idx+1)%D.length; apply(idx); }, 3800);
 })();
