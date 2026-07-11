@@ -15,13 +15,13 @@ const SAAS_CONFIG={
     accent:'#b4975a', accent2:'#111111', accentSoft:'#d8c39a',
     logoUrl:'', faviconUrl:'',
     metaTitle:'Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı',
-    metaDescription:'Yetki belgeli butik emlak danışmanlığı; güncel lüks ilanlar, davet usulü VIP portföy ve ücretsiz mülk değer analizi.',
-    metaKeywords:'lüks konut danışmanı, özel portföy, yalı, penthouse, butik emlak, ücretsiz mülk analizi',
+    metaDescription:'Yetki belgeli butik emlak danışmanlığı; güncel lüks ilanlar, davet usulü VIP portföy ve ücretsiz gayrimenkul değer analizi.',
+    metaKeywords:'lüks konut danışmanı, özel portföy, yalı, penthouse, butik emlak, ücretsiz gayrimenkul analizi',
     googleAnalytics:'', googleSiteVerification:'', googleMapsKey:''
   },
   tenantSettings:{ customPrompt:'', dsKey:'', dsModel:'deepseek-chat' },/* dsKey: danışmanın kendi DeepSeek anahtarı — girilirse tüm YZ DeepSeek ile; boşsa ProX sunucu AI'si. ProX anahtarı ise veri/endeks/analiz içindir (ayrı çalışır). */
   proxAiPrompts:{
-    persona:'Sen, üst segment gayrimenkulde 18 yıllık tecrübeli, son derece elit, vizyoner ve güven veren bir lüks konut broker’ısın (Selin Meridyen). Üslubun zarif, sakin ve danışan odaklıdır; agresif satış yapmaz, değeri görünür kılarsın. Kullanıcı bir bölge/mülk/yatırım sorduğunda hafızandaki portföyü tarar, uygun mülkleri ve prim (değer artışı) potansiyelini anlatır, kesin fiyat vaadi vermez ve her görüşmeyi nazikçe ücretsiz analiz randevusuna yönlendirirsin.'
+    persona:'Sen, üst segment gayrimenkulde 18 yıllık tecrübeli, son derece elit, vizyoner ve güven veren bir lüks konut broker’ısın (Selin Meridyen). Üslubun zarif, sakin ve danışan odaklıdır; agresif satış yapmaz, değeri görünür kılarsın. Kullanıcı bir bölge/gayrimenkul/yatırım sorduğunda hafızandaki portföyü tarar, uygun gayrimenkulleri ve prim (değer artışı) potansiyelini anlatır, kesin fiyat vaadi vermez ve her görüşmeyi nazikçe ücretsiz analiz randevusuna yönlendirirsin.'
   },
   firma:{
     unvan:'Selin Meridyen Gayrimenkul Danışmanlık', vergi:'', adres:'Nişantaşı, Şişli / İstanbul',
@@ -73,7 +73,7 @@ function legalDoc(type){var k=firmaKune(),kn=legalKunyeRows();
     +'<p><b>Yönetim:</b> Tarayıcı ayarlarınızdan silebilir/engelleyebilirsiniz; zorunlu çerezler site işlevi için gereklidir.</p>'
     +'<p>Sorularınız için <b>'+_leD(k.mail)+'</b> adresine yazabilirsiniz.</p>'};
   if(type==='mesafeli')return {title:'Mesafeli Hizmet & Kullanım Koşulları',body:kn
-    +'<p><b>Hizmet Sağlayıcı:</b> '+_leD(k.unvan)+'. Bu site üzerinden lüks konut danışmanlığı, ücretsiz mülk değer analizi ve davet usulü VIP portföy erişimi sunulur.</p>'
+    +'<p><b>Hizmet Sağlayıcı:</b> '+_leD(k.unvan)+'. Bu site üzerinden lüks konut danışmanlığı, ücretsiz gayrimenkul değer analizi ve davet usulü VIP portföy erişimi sunulur.</p>'
     +'<p><b>Kapsam:</b> Değer/analiz bilgileri ön bilgi niteliğindedir; kesin değer, yerinde ekspertiz ve ProX endeksiyle teyit edilir.</p>'
     +'<p><b>İletişim & Şikayet:</b> '+_leD(k.mail)+' · '+_leD(k.tel)+'.</p>'};
   return {title:'KVKK Aydınlatma Metni',body:kn
@@ -331,11 +331,11 @@ async function rebuildVipFromProx(il,silent){if(_vipBusy)return;_vipBusy=true;sa
     try{localStorage.setItem('dn_vip_ts',JSON.stringify({il:primary,ts:Date.now(),n:out.length,real:real}));}catch(e){}
     try{var g=document.getElementById('vaultGrid');if(g)g.innerHTML=vipCardsHTML();}catch(e){}
     try{renderVipStatus();}catch(e){}
-    if(!silent&&typeof toast==='function')toast('✓ Özel Portföy '+primary+': '+out.length+' mülk ('+real+' gerçek ProX analiz fiyatı).');
+    if(!silent&&typeof toast==='function')toast('✓ Özel Portföy '+primary+': '+out.length+' gayrimenkul ('+real+' gerçek ProX analiz fiyatı).');
   }catch(e){if(!silent&&typeof toast==='function')toast('Portföy oluşturulamadı.');}
   _vipBusy=false;}
 function renderVipStatus(){var el=document.getElementById('vipStatus');if(!el)return;var q=null,ts=null;try{q=JSON.parse(localStorage.getItem('dn_quota')||'null');}catch(e){}try{ts=JSON.parse(localStorage.getItem('dn_vip_ts')||'null');}catch(e){}
-  el.innerHTML='<div style="font-size:12.5px;color:var(--muted);line-height:1.7">📦 Özel Portföy: '+(ts&&ts.ts?('<b style="color:var(--gold)">'+wlAgo(ts.ts)+'</b> · '+ts.n+' mülk / '+(ts.real||0)+' gerçek analiz fiyatı ('+ts.il+')'):'henüz ProX ile oluşturulmadı')+(q?(' &nbsp;·&nbsp; 📊 Kota: '+fmt(q.count)+' istek ('+q.month+')'):'')+'</div>';}
+  el.innerHTML='<div style="font-size:12.5px;color:var(--muted);line-height:1.7">📦 Özel Portföy: '+(ts&&ts.ts?('<b style="color:var(--gold)">'+wlAgo(ts.ts)+'</b> · '+ts.n+' gayrimenkul / '+(ts.real||0)+' gerçek analiz fiyatı ('+ts.il+')'):'henüz ProX ile oluşturulmadı')+(q?(' &nbsp;·&nbsp; 📊 Kota: '+fmt(q.count)+' istek ('+q.month+')'):'')+'</div>';}
 window.rebuildVipFromProx=rebuildVipFromProx;window.renderVipStatus=renderVipStatus;
 /* ===================== KURULUM SİHİRBAZI — danışman tek akış ===================== */
 var OB={step:1,advisor:'',brand:'',unvan:'',vergi:'',mail:'',tel:'',adres:'',belge:'',accent:'',logo:'',bolgeler:'',key:''};
@@ -488,22 +488,22 @@ function contactHTML(){return '<div class="contact-grid contact">'
   +'<div class="row"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></div><div><b>E-posta</b><span>ozel@selinmeridyen.com</span></div></div>'
   +'<div class="row"><div class="ic">'+_PIN+'</div><div><b>Ofis</b><span>Bebek · İstanbul (yalnızca randevulu)</span></div></div>'
   +'<div class="row"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg></div><div><b>Çalışma İlkesi</b><span>Şeffaf ilan · gizli portföy · tek muhatap</span></div></div></div>'
-  +'<div class="contact-cta"><div class="eyebrow" style="display:block">Ücretsiz Analiz</div><h3>Mülkünüzü konuşalım</h3><p>Bağlayıcı olmayan, gizli bir ön değer analizi için randevu oluşturun.</p><a class="btn btn-gold" onclick="contactLead()" style="width:100%;justify-content:center">Randevu Oluştur</a></div>'
+  +'<div class="contact-cta"><div class="eyebrow" style="display:block">Ücretsiz Analiz</div><h3>Gayrimenkulünüzü konuşalım</h3><p>Bağlayıcı olmayan, gizli bir ön değer analizi için randevu oluşturun.</p><a class="btn btn-gold" onclick="contactLead()" style="width:100%;justify-content:center">Randevu Oluştur</a></div>'
   +'</div>';}
 
 function apptModuleHTML(){return '<div class="appt-card">'
-  +'<div class="appt-head"><div class="info"><div class="eyebrow">Ücretsiz Mülk Değer Analizi</div><h3>Randevunuzu planlayın</h3><p>Size en uygun günü ve saati seçin; mülkünüzün değerini gizlilik içinde, ücretsiz olarak birlikte değerlendirelim.</p><ul><li>Bağlayıcı olmayan ön değer analizi</li><li>Yüz yüze veya özel video görüşme</li><li>Tam gizlilik · doğru fiyat stratejisi</li></ul></div>'
+  +'<div class="appt-head"><div class="info"><div class="eyebrow">Ücretsiz Gayrimenkul Değer Analizi</div><h3>Randevunuzu planlayın</h3><p>Size en uygun günü ve saati seçin; gayrimenkulünüzün değerini gizlilik içinde, ücretsiz olarak birlikte değerlendirelim.</p><ul><li>Bağlayıcı olmayan ön değer analizi</li><li>Yüz yüze veya özel video görüşme</li><li>Tam gizlilik · doğru fiyat stratejisi</li></ul></div>'
   +'<div class="vis"><svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="30" y="44" width="140" height="124" rx="4"/><path d="M30 78h140M64 30v28M136 30v28"/><path d="M54 100h20M90 100h20M126 100h20M54 126h20M90 126h20M126 126h20" opacity=".6"/><circle cx="100" cy="126" r="11" stroke="var(--gold)"/></svg></div></div>'
   +'<div class="appt-body"><div class="appt-step-h"><b>1</b> Gün seçin</div><div class="days" id="apptDays"></div>'
   +'<div class="appt-step-h"><b>2</b> Saat seçin</div><div class="slots" id="apptSlots"></div>'
   +'<div class="appt-step-h"><b>3</b> İletişim bilgileriniz</div>'
-  +'<div class="appt-form"><div class="fld"><label>Ad Soyad</label><input id="ap_ad" placeholder="Adınız Soyadınız"></div><div class="fld"><label>Telefon</label><input id="ap_tel" placeholder="05xx xxx xx xx"></div><div class="fld full"><label>Mülk / ilgilendiğiniz portföy</label><input id="ap_not" placeholder="Örn. Levent penthouse, satılık dairem..."></div></div>'
+  +'<div class="appt-form"><div class="fld"><label>Ad Soyad</label><input id="ap_ad" placeholder="Adınız Soyadınız"></div><div class="fld"><label>Telefon</label><input id="ap_tel" placeholder="05xx xxx xx xx"></div><div class="fld full"><label>Gayrimenkul / ilgilendiğiniz portföy</label><input id="ap_not" placeholder="Örn. Levent penthouse, satılık dairem..."></div></div>'
   +'<div class="appt-summary" id="apptSummary">Lütfen bir gün ve saat seçin.</div>'
   +'<button class="btn btn-gold" style="margin-top:20px;width:100%;justify-content:center" onclick="apptSubmit()">Ücretsiz Analiz Talebini Gönder</button></div></div>';}
 
 /* ---------- footer (tek kaynak, her sayfada birebir aynı) ---------- */
 function footerHTML(){return '<footer><div class="wrap"><div class="fcols">'
-  +'<div><div class="brand" onclick="goHome()"><span class="mark">'+_leD((saasResolve('brandName')||'M').trim().charAt(0))+'</span><span><b>'+_leD(saasResolve('brandName')||'Selin Meridyen')+'</b><small>Lüks Portföy Danışmanı</small></span></div><p>Yetki belgeli butik emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy ve ücretsiz mülk değer analizi.</p></div>'
+  +'<div><div class="brand" onclick="goHome()"><span class="mark">'+_leD((saasResolve('brandName')||'M').trim().charAt(0))+'</span><span><b>'+_leD(saasResolve('brandName')||'Selin Meridyen')+'</b><small>Lüks Portföy Danışmanı</small></span></div><p>Yetki belgeli butik emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy ve ücretsiz gayrimenkul değer analizi.</p></div>'
   +'<div><h4>Keşfet</h4><ul><li><a onclick="navGo(\'ilanlar\')">İlanlar</a></li><li><a onclick="navGo(\'vip\')">VIP Portföy</a></li><li><a onclick="navGo(\'surec\')">Süreç</a></li><li><a onclick="navGo(\'randevu\')">Ücretsiz Analiz</a></li></ul></div>'
   +'<div><h4>Kurumsal</h4><ul><li><a onclick="goHome()">Ana Sayfa</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="sss.html">S.S.S</a></li><li><a onclick="navGo(\'iletisim\')">İletişim</a></li><li><a onclick="openSaasPortal()">Müşteri Portalı</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>'
   +'<div><h4>Yasal</h4><ul><li><a onclick="openKvkk()">KVKK Aydınlatma</a></li><li><a onclick="openCerez()">Çerez Politikası</a></li><li><a onclick="openMesafeli()">Mesafeli Hizmet & Kullanım</a></li><li><a onclick="openAdminGate()">Yönetim Paneli</a></li></ul></div>'
@@ -513,19 +513,19 @@ function footerHTML(){return '<footer><div class="wrap"><div class="fcols">'
    DİNAMİK SAYFA ROUTER (overlay — üst+alt menü birebir tutarlı)
    ===================================================================== */
 const PAGES={
-  ilanlar:{eyebrow:'Güncel İlanlar',title:'Açık Portföy',em:'tam şeffaf bilgi',desc:'Fiyat, oda, metrekare ve bölge bilgisi açıkça paylaşılan güncel lüks ilanlar. Beğendiğiniz mülk için ücretsiz değer analizi talep edin.',
+  ilanlar:{eyebrow:'Güncel İlanlar',title:'Açık Portföy',em:'tam şeffaf bilgi',desc:'Fiyat, oda, metrekare ve bölge bilgisi açıkça paylaşılan güncel lüks ilanlar. Beğendiğiniz gayrimenkul için ücretsiz değer analizi talep edin.',
     body:()=>'<section class="sec-pad"><div class="wrap"><div class="card-grid">'+listingCardsHTML()+'</div><div class="vault-note" style="margin-top:36px">Tüm ilanlar yetki belgelidir · detaylı bilgi ve yerinde değerlendirme için <b>ücretsiz analiz</b> alın.</div></div></section>'},
   vip:{eyebrow:'Kişisel VIP Portföyüm',title:'Davet Usulü',em:'gizli özel portföy',desc:'Yalnızca cadde/sokak ismi ve başlangıç değeri paylaşılır. Tam adres, kimlik ve net fiyat mahremiyet gereği yalnızca ön analiz sonrası açıklanır.',
     body:()=>'<section class="vault sec-pad"><div class="wrap"><div class="card-grid">'+vipCardsHTML()+'</div><div class="vault-note" style="margin-top:36px">🔒 <b>Adres gizliliği</b> tüm kayıtlarda esastır · net konum yalnızca <b>ücretsiz analiz görüşmesinde</b> paylaşılır.</div></div></section>'},
-  surec:{eyebrow:'Süreç & Temsil',title:'Beş Aşamada',em:'değere taşıma',desc:'Mülkünüzü doğru alıcıyla, değerini koruyarak buluşturan uçtan uca temsil süreci.',
+  surec:{eyebrow:'Süreç & Temsil',title:'Beş Aşamada',em:'değere taşıma',desc:'Gayrimenkulünüzü doğru alıcıyla, değerini koruyarak buluşturan uçtan uca temsil süreci.',
     body:()=>'<section class="sec-pad"><div class="wrap"><div class="proc-grid">'
       +'<div class="proc"><div class="no">01</div><h4>Değer Analizi</h4><p>Konum, eşsiz nitelikler ve hedef alıcı profili analiz edilir; doğru fiyat stratejisi kurulur.</p></div>'
       +'<div class="proc"><div class="no">02</div><h4>Sahneleme</h4><p>Profesyonel görsel, mimari sunum dosyası ve mahremiyeti koruyan tanıtım hazırlanır.</p></div>'
-      +'<div class="proc"><div class="no">03</div><h4>Konumlandırma</h4><p>Açık ilan ya da davet usulü gizli pazarlama; mülkün niteliğine göre doğru kanal seçilir.</p></div>'
+      +'<div class="proc"><div class="no">03</div><h4>Konumlandırma</h4><p>Açık ilan ya da davet usulü gizli pazarlama; gayrimenkulün niteliğine göre doğru kanal seçilir.</p></div>'
       +'<div class="proc"><div class="no">04</div><h4>Müzakere</h4><p>Tek muhatap olarak tüm görüşmeler yürütülür, teklifler değeri koruyacak şekilde müzakere edilir.</p></div>'
       +'<div class="proc"><div class="no">05</div><h4>Kusursuz Kapanış</h4><p>Tapu, hukuki ve mali süreçler koordine edilir; devir gününe kadar yanınızdayım.</p></div>'
       +'</div><div style="text-align:center;margin-top:46px"><a class="btn btn-gold" onclick="navGo(\'randevu\')">Ücretsiz Analiz ile Başla</a></div></div></section>'},
-  randevu:{eyebrow:'Ücretsiz Analiz',title:'Mülk Değer',em:'analizi randevusu',desc:'Bağlayıcı olmayan, gizli bir ön değer analizi için size en uygun gün ve saati seçin.',
+  randevu:{eyebrow:'Ücretsiz Analiz',title:'Gayrimenkul Değer',em:'analizi randevusu',desc:'Bağlayıcı olmayan, gizli bir ön değer analizi için size en uygun gün ve saati seçin.',
     body:()=>'<section class="sec-pad"><div class="wrap">'+apptModuleHTML()+'</div></section>'},
   iletisim:{eyebrow:'İletişim',title:'Bağlantı',em:'kuralım',desc:'Doğrudan hat, e-posta ve randevulu ofis görüşmesi.',
     body:()=>'<section class="sec-pad"><div class="wrap">'+contactHTML()+'</div></section>'}
@@ -598,23 +598,23 @@ function _proxReply(q){
       html+='<ul class="pm-list">'+hits.map(h=>'<li><em>'+h.n+'</em> · '+h.b+' — '+h.f+(h.gizli?' <span style="color:var(--muted-2)">(adres gizli)</span>':'')+'</li>').join('')+'</ul>';
       const pr=_primFor(t);
       if(pr)html+='Bu bölgede (<b>'+pr.b+'</b>) son dönem yıllık değer artışı <b>'+pr.p+'</b> bandında seyretti; doğru zamanlama ve konumlandırmayla prim potansiyeli güçlü.';
-      else html+='Bu segmentte doğru konumlandırma, mülkü piyasada eritmeden değerini koruyarak güçlü bir prim potansiyeli sunar.';
+      else html+='Bu segmentte doğru konumlandırma, gayrimenkulü piyasada eritmeden değerini koruyarak güçlü bir prim potansiyeli sunar.';
       return html+cta;
     }
-    return 'Tam aradığınız profili portföyümde birebir göremedim; ancak ağımdaki davet usulü mülkler arasında size uygun bir eşleşme bulabilirim.'+cta;
+    return 'Tam aradığınız profili portföyümde birebir göremedim; ancak ağımdaki davet usulü gayrimenkuller arasında size uygun bir eşleşme bulabilirim.'+cta;
   }
   if(/(gizli|mahrem|adres|ifşa|deşifre)/.test(t))
-    return 'Gizlilik çalışmamın temelidir. Mülkünüz ilan panolarına açılmadan; yalnızca seçili ve önceden değerlendirilmiş alıcı havuzuna, adres ve kimlik paylaşılmadan sunulur. Detaylar yalnızca ciddi alıcıyla, onayınızla açıklanır.'+cta;
+    return 'Gizlilik çalışmamın temelidir. Gayrimenkulünüz ilan panolarına açılmadan; yalnızca seçili ve önceden değerlendirilmiş alıcı havuzuna, adres ve kimlik paylaşılmadan sunulur. Detaylar yalnızca ciddi alıcıyla, onayınızla açıklanır.'+cta;
   if(/(değer|fiyat|kaça|ne kadar|kıymet|ekspertiz|analiz)/.test(t))
-    return 'Değeri bir rakamla başlatmam; önce mülkün konumunu, eşsiz niteliklerini ve doğru alıcı profilini analiz ederim. Bu yüzden ilk adım her zaman yerinde, ücretsiz bir değer analizidir.'+cta;
+    return 'Değeri bir rakamla başlatmam; önce gayrimenkulün konumunu, eşsiz niteliklerini ve doğru alıcı profilini analiz ederim. Bu yüzden ilk adım her zaman yerinde, ücretsiz bir değer analizidir.'+cta;
   if(/(komisyon|ücret|hizmet|kapsam)/.test(t))
     return 'Hizmetim uçtan uca temsildir: değer analizi ve strateji, profesyonel sahneleme, doğru kanaldan pazarlama, tek elden müzakere ve tapuya kadar kusursuz kapanış. Şeffaf koşulları ön görüşmede netleştiririz.'+cta;
   if(/(sat|satmak|satıl|elden çıkar)/.test(t))
-    return 'Mülkünüzü en doğru alıcıyla, değerini koruyarak buluşturmak için buradayım. Doğru fiyat konumlandırması ve güçlü müzakere ile başlayalım.'+cta;
+    return 'Gayrimenkulünüzü en doğru alıcıyla, değerini koruyarak buluşturmak için buradayım. Doğru fiyat konumlandırması ve güçlü müzakere ile başlayalım.'+cta;
   if(/(randevu|görüş|buluş|ne zaman|takvim)/.test(t)){setTimeout(()=>{},0);return 'Memnuniyetle. Size en uygun günü ve saati randevu modülünden seçebilirsiniz — görüşmemiz bağlayıcı değildir ve tamamen size özeldir.'+cta;}
   if(/(merhaba|selam|iyi günler|nasıl)/.test(t))
-    return 'Hoş geldiniz, memnun oldum. Bir bölge ya da mülk tipi söyleyin; portföyümü tarayıp size en uygun seçenekleri ve prim potansiyelini paylaşayım.';
-  return 'Çok değerli bir soru. Mülkünüzün niteliğine ve beklentinize göre size özel bir yol haritası çıkarırım; genel-geçer değil, kişiye özel.'+cta;
+    return 'Hoş geldiniz, memnun oldum. Bir bölge ya da gayrimenkul tipi söyleyin; portföyümü tarayıp size en uygun seçenekleri ve prim potansiyelini paylaşayım.';
+  return 'Çok değerli bir soru. Gayrimenkulünüzün niteliğine ve beklentinize göre size özel bir yol haritası çıkarırım; genel-geçer değil, kişiye özel.'+cta;
 }
 function _proxPush(role,html){const l=document.getElementById('proxLog');if(!l)return;let extra='';if(role==='a')extra='<div><button class="pm-cta" onclick="proxToAnaliz()">📅 Ücretsiz Analiz Randevusu Al</button></div>';l.insertAdjacentHTML('beforeend','<div class="pm '+role+'">'+(role==='a'?'<b>Selin Meridyen — ProX:</b> ':'')+html+extra+'</div>');l.scrollTop=l.scrollHeight;}
 /* ===== D3: TAM KAYIT — ProX Asistan yazışmaları + iletişim/randevu talepleri admin panosuna =====
@@ -855,8 +855,8 @@ function _saasPortalHost(){ var el=document.getElementById('saasPortalModal'); i
   document.body.appendChild(el); return el; }
 function _saasPortalLoginHTML(){ return ''
   +'<div class="sp-lock"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="16" r="1.4"/></svg></div>'
-  +'<h3>Mülk Sahibi &amp; Yatırımcı Portföy Takip Girişi</h3>'
-  +'<div class="sp-sub">Kurumsal Mülk Yönetim Paneli: Sözleşmeli mülklerinizin ProX AI pazar analizlerine ve performans grafiklerine erişim sağlayın.</div>'
+  +'<h3>Gayrimenkul Sahibi &amp; Yatırımcı Portföy Takip Girişi</h3>'
+  +'<div class="sp-sub">Kurumsal Gayrimenkul Yönetim Paneli: Sözleşmeli gayrimenkullerinizin ProX AI pazar analizlerine ve performans grafiklerine erişim sağlayın.</div>'
   +'<div class="sp-f"><input id="spClientKey" placeholder="Kurumsal Anahtar (Client Key)" autocomplete="off"></div>'
   +'<div class="sp-f"><input id="spPass" type="password" placeholder="Güvenli Şifre" autocomplete="off" onkeydown="if(event.key===\'Enter\')saasPortalSubmit()"></div>'
   +'<button id="spGo" class="btn btn-gold sp-go" onclick="saasPortalSubmit()">Güvenli Giriş →</button>'
@@ -866,14 +866,14 @@ function _saasPortalLoginHTML(){ return ''
 function _saasPortalPanelHTML(){ var u=window.SAAS_USER.clientProfile||{}; var regions=Array.isArray(u.regionAuth)?u.regionAuth:[];
   return ''
   +'<div class="sp-lock"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg></div>'
-  +'<h3>Kurumsal Mülk Yönetim Paneli</h3>'
+  +'<h3>Kurumsal Gayrimenkul Yönetim Paneli</h3>'
   +'<div class="sp-sub">Sözleşmeli portföyünüze ProX AI pazar analizleri ve performans grafikleriyle erişin.</div>'
   +'<div class="sp-profile"><b>'+((u.companyName||'Kurumsal Üye')+'')+'</b><div class="role">'+((u.role||'Kurumsal Yönetici')+'')+'</div>'
     +'<div class="sp-chips">'+(regions.length?regions.map(function(r){return '<span>'+r+'</span>';}).join(''):'<span>Yetki bölgesi tanımlı değil</span>')+'</div></div>'
   +'<div class="sp-actions">'
-    +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'surec\')"><b>ProX AI Pazar Analizi</b><span>Sözleşmeli mülk değer & prim analizi</span></div>'
+    +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'surec\')"><b>ProX AI Pazar Analizi</b><span>Sözleşmeli gayrimenkul değer & prim analizi</span></div>'
     +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'iletisim\')"><b>Performans Grafikleri</b><span>Portföy değer seyri & likidite</span></div>'
-    +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'vip\')"><b>Sözleşmeli Mülkler</b><span>Yetki belgeli portföy kayıtları</span></div>'
+    +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'vip\')"><b>Sözleşmeli Gayrimenkuller</b><span>Yetki belgeli portföy kayıtları</span></div>'
     +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'randevu\')"><b>Ücretsiz Analiz</b><span>Danışman görüşmesi planlayın</span></div>'
   +'</div>'
   +'<button class="btn btn-line sp-go" onclick="saasPortalDisconnect()">Oturumu Kapat</button>'; }
@@ -888,7 +888,7 @@ window.addEventListener('load',function(){try{
   document.getElementById('vaultGrid').innerHTML=vipCardsHTML();
   document.getElementById('homeContact').innerHTML=contactHTML();
   document.getElementById('siteFooter').innerHTML=footerHTML();
-  _proxPush('a','Hoş geldiniz. Bir bölge ya da mülk tipi söyleyin — portföyümü tarayıp size en uygun seçenekleri ve prim potansiyelini paylaşayım.');
+  _proxPush('a','Hoş geldiniz. Bir bölge ya da gayrimenkul tipi söyleyin — portföyümü tarayıp size en uygun seçenekleri ve prim potansiyelini paylaşayım.');
   if(typeof saasPortalRenderNav==='function')saasPortalRenderNav();
   /* Canlı paket/özellik senkronu — yalnızca paket & özellik listesi; CSS rengi (siyah/altın) REPAINT EDILMEZ. */
   if(typeof proxBootstrap==='function')proxBootstrap();
