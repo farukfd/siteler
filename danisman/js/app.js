@@ -209,11 +209,35 @@ function bzSeed(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(
 function bzRng(seed){var x=seed||123456789;return function(){x^=x<<13;x>>>=0;x^=x>>>17;x^=x<<5;x>>>=0;return (x>>>0)/4294967296;};}
 var _mahCache={};
 function mahalleSlug(il){var m={'ç':'c','Ç':'c','ğ':'g','Ğ':'g','ı':'i','İ':'i','ö':'o','Ö':'o','ş':'s','Ş':'s','ü':'u','Ü':'u',' ':'-'};return (il||'').replace(/[çÇğĞıİöÖşŞüÜ ]/g,function(x){return m[x]||x;}).toLowerCase();}
-async function loadMahalle(il){if(!il)return null;if(_mahCache[il]!==undefined)return _mahCache[il];var out=null;
-  try{var r=await proxApi('/api/v1/tenant/locations?il='+encodeURIComponent(il));
-    if(r&&!r.fallback&&r.success===true){var t=r.ilceler||r.data||r.locations;
-      if(t&&typeof t==='object'){out={};Object.keys(t).forEach(function(ic){var a=t[ic]||[];out[ic]=(Array.isArray(a)?a:[]).map(function(m){return (''+m).replace(/\s+(Mah\.?|Mahallesi|Köyü)$/i,'').trim();}).filter(Boolean);});}}}catch(e){}
-  _mahCache[il]=out;return out;}
+function _mahClean(m){return (''+m).replace(/\s+(Mah\.?|Mahallesi|Köyü)$/i,'').trim();}
+/* Gerçek mahalle — ProX locations/mahalleler (tek ilçe, tembel yükleme + cache) */
+async function loadMahalleIlce(il,ilce){if(!il||!ilce)return null;
+  if(!_mahCache[il]||typeof _mahCache[il]!=='object')_mahCache[il]={};
+  if(_mahCache[il][ilce]!==undefined)return _mahCache[il][ilce];
+  _mahCache[il][ilce]=null;/* uçuşta işaretle → çift istek engeli */
+  var out=null;
+  try{var rm=await proxApi('/api/v1/tenant/locations/mahalleler?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce));
+    if(rm&&!rm.fallback&&rm.success===true&&Array.isArray(rm.data)&&rm.data.length){
+      out=rm.data.map(_mahClean).filter(Boolean);
+      /* yinelenenleri (Merkez vs Arnavutköy Merkez) tekilleştir, düzeni koru */
+      var seen={},uniq=[];out.forEach(function(m){var k=m.toLocaleLowerCase('tr');if(!seen[k]){seen[k]=1;uniq.push(m);}});out=uniq;}}catch(e){}
+  _mahCache[il][ilce]=out;return out;}
+/* Gerçek ilçe listesi — ProX (yoksa çevrimdışı TR_ILILCE) */
+async function proxIlceList(il){if(!il)return [];
+  try{var ri=await proxApi('/api/v1/tenant/locations/ilceler?il='+encodeURIComponent(il));
+    if(ri&&!ri.fallback&&ri.success===true&&Array.isArray(ri.data)&&ri.data.length)return ri.data.slice();}catch(e){}
+  var rec=TR_ILILCE[il];return (rec&&rec.ilce)?rec.ilce.slice():[];}
+/* Gerçek il listesi — ProX (yoksa TR_ILILCE) */
+async function proxIlList(){
+  try{var r=await proxApi('/api/v1/tenant/locations/iller');
+    if(r&&!r.fallback&&r.success===true&&Array.isArray(r.data)&&r.data.length)return r.data.slice();}catch(e){}
+  return trIlList();}
+/* Bir ilin ilçelerinin gerçek mahallelerini toplu ısıt (sınırlı eşzamanlılık) */
+async function loadMahalle(il,ilceList){if(!il)return _mahCache[il]||null;
+  var ilcs=(ilceList&&ilceList.length)?ilceList:(await proxIlceList(il)).slice(0,10);
+  try{await _wlPMap(ilcs,function(ic){return loadMahalleIlce(il,ic);},6);}catch(e){}
+  return _mahCache[il]||null;}
+window.loadMahalleIlce=loadMahalleIlce;window.proxIlceList=proxIlceList;window.proxIlList=proxIlList;window.loadMahalle=loadMahalle;
 var COMMON_MAH=['Cumhuriyet','Atatürk','Merkez','Yeni','Fatih','Bahçelievler','Yavuz Selim','İnönü','Yıldız','Gazi','Yeşiltepe','Bağlar','Çamlık','Güzelyalı','Hürriyet','Kurtuluş','Mimar Sinan','Zafer','Barbaros','Aydınlıkevler','Şirinevler','Esentepe','Yenimahalle','Karşıyaka','19 Mayıs'];
 function _mahHash(s){var h=0;for(var i=0;i<(s||'').length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
 function realMah(il,ilce,n){n=n||3;var out=[],seen={};
@@ -287,7 +311,9 @@ function saRemoveProvince(il){saLoad();if(il===SERVICE_AREA.primary){toast('Ana 
 function saSelectIl(il){saLoad();saCurIl=il;saCurIlce='';renderSA();}
 function saToggleIlce(ic){saLoad();var rec=SERVICE_AREA.iller[saCurIl];if(!rec||!rec.ilceler[ic])return;rec.ilceler[ic].aktif=(rec.ilceler[ic].aktif===false);renderSA();}
 function saAllIlce(on){saLoad();var rec=SERVICE_AREA.iller[saCurIl];if(!rec)return;Object.keys(rec.ilceler).forEach(function(ic){rec.ilceler[ic].aktif=!!on;});renderSA();toast(on?'Tüm ilçeler eklendi.':'Tüm ilçeler çıkarıldı.');}
-function saSelectIlce(ic){saLoad();saCurIlce=ic;renderSA();}
+function saSelectIlce(ic){saLoad();saCurIlce=ic;renderSA();
+  /* gerçek mahalle önerilerini ProX'ten getir, gelince yeniden çiz */
+  try{loadMahalleIlce(saCurIl,ic).then(function(m){if(m&&m.length&&saCurIlce===ic)renderSA();});}catch(e){}}
 function saAddMahalle(){var inp=document.getElementById('saAddMah');var v=inp&&inp.value.trim();if(v){saAddMahalleName(v);inp.value='';}}
 function saAddMahalleName(v){saLoad();if(!saCurIlce){toast('Önce bir ilçe seçin.');return;}var e=SERVICE_AREA.iller[saCurIl].ilceler[saCurIlce];e.mahalleler=e.mahalleler||[];if(e.mahalleler.indexOf(v)<0)e.mahalleler.push(v);renderSA();}
 function saRemoveMahalle(m){saLoad();var e=SERVICE_AREA.iller[saCurIl].ilceler[saCurIlce];if(e)e.mahalleler=(e.mahalleler||[]).filter(function(x){return x!==m;});renderSA();}
@@ -310,8 +336,9 @@ var VIP_CADDE=['Kuruçeşme Cad.','Abdi İpekçi Cad.','Bağdat Cad.','Sahil Yol
 var _vipBusy=false;
 async function rebuildVipFromProx(il,silent){if(_vipBusy)return;_vipBusy=true;saLoad();il=il||SERVICE_AREA.primary||PROVINCE.name;
   try{
-    var work=saWorkList(6);var illerSet={};work.forEach(function(w){illerSet[w.il]=1;});
-    try{await Promise.all(Object.keys(illerSet).map(function(x){return loadMahalle(x);}));}catch(e){}
+    var work=saWorkList(6);
+    /* gerçek mahalleleri yalnızca çalışılan (il,ilçe) çiftleri için ısıt — hedefli + hızlı */
+    try{await _wlPMap(work,function(w){return loadMahalleIlce(w.il,w.ilce);},6);}catch(e){}
     var cArsa=saHasCat('arsa');
     if(!silent&&typeof toast==='function')toast('ProX gerçek fiyatlarla Özel Portföy oluşturuluyor… ('+work.length+' bölge)');
     var specs=[],ti=0,ci=0,primary=SERVICE_AREA.primary;
