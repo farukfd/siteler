@@ -482,57 +482,71 @@ footer .brand small{color:var(--gold-soft)}
 .hero-title em{animation:hlRise 1s .55s both cubic-bezier(.2,.8,.2,1)}
 @keyframes hlRise{to{opacity:1;transform:none}}
 
-/* Sağ görsel katman */
-.hero-viz{position:relative;min-height:460px}
-@media(max-width:980px){.hero-viz{display:none}}
-.hero-draw{position:absolute;inset:0;margin:auto;width:88%;height:88%;color:rgba(220,195,137,.5);filter:drop-shadow(0 20px 40px rgba(0,0,0,.3))}
-.hero-draw .dp{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw 2.4s .3s ease forwards}
-.hero-draw .dp:nth-of-type(2){animation-delay:.5s}.hero-draw .dp:nth-of-type(3){animation-delay:.9s}.hero-draw .dp:nth-of-type(4){animation-delay:1.2s}.hero-draw .dp:nth-of-type(5){animation-delay:1.4s}
-.hero-draw .dc{stroke-dasharray:170;stroke-dashoffset:170;stroke:var(--prox);animation:draw 1.6s 1.6s ease forwards}
+/* Sağ görsel katman — TEK bütünleşik zekâ paneli (dağınık yüzen kart YOK) */
+.hero-viz{display:none}
 @keyframes draw{to{stroke-dashoffset:0}}
-.hcard{position:absolute;background:rgba(255,255,255,.09);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:15px 17px;box-shadow:0 24px 60px -30px rgba(0,0,0,.55);color:var(--cream-on-em);opacity:0;transform:translateY(18px)}
-.hcard.show{opacity:1;transform:none;transition:opacity .7s,transform .7s}
-.hcard b{color:#fff}
-.hc1{left:2%;top:14%;width:210px;animation:floaty 7s ease-in-out infinite}
-.hc2{right:0;top:44%;display:flex;align-items:center;gap:12px;width:230px;animation:floaty 8s ease-in-out .4s infinite}
-.hc3{left:8%;bottom:6%;display:flex;align-items:center;gap:13px;width:225px;animation:floaty 6.4s ease-in-out .8s infinite}
-@keyframes floaty{0%,100%{translate:0 0}50%{translate:0 -12px}}
-.hc-l{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut-on-em)}
-.hc-v{font-family:var(--serif);font-size:26px;font-weight:700;color:#fff;margin:3px 0 6px}
-.hc1 .spark{width:100%;height:30px;display:block}
-.spark .spk{fill:none;stroke:var(--prox);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:240;stroke-dashoffset:240;animation:draw 1.7s 1.1s ease forwards}
-.hc-m{font-size:11px;color:var(--mut-on-em);margin-top:7px}
-.hc-m b{color:#7fe3b0}
-.hc-badge{width:40px;height:40px;border-radius:11px;background:rgba(25,195,125,.18);border:1px solid rgba(25,195,125,.4);display:grid;place-items:center;color:#8ef0b0;flex:none}
-.hc2 b,.hc3 b{display:block;font-size:14px}
-.hc2 span,.hc3 span{font-size:11px;color:var(--mut-on-em)}
-.hc-ring{position:relative;width:46px;height:46px;flex:none}
-.hc-ring svg{width:46px;height:46px;transform:rotate(-90deg)}
-.hc-ring .rbg{fill:none;stroke:rgba(255,255,255,.14);stroke-width:4}
-.hc-ring .rfg{fill:none;stroke:var(--gold-soft);stroke-width:4;stroke-linecap:round;stroke-dasharray:119;stroke-dashoffset:119;animation:ringFill 1.4s 1.3s cubic-bezier(.3,.8,.3,1) forwards}
+.hero-panel{position:relative;align-self:center;justify-self:end;width:100%;max-width:430px;
+  background:linear-gradient(165deg,rgba(255,255,255,.12),rgba(255,255,255,.045));
+  backdrop-filter:blur(22px) saturate(1.3);-webkit-backdrop-filter:blur(22px) saturate(1.3);
+  border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:22px 22px 20px;
+  box-shadow:0 44px 100px -46px rgba(0,0,0,.78),inset 0 1px 0 rgba(255,255,255,.16);
+  color:var(--cream-on-em);animation:rise 1s .5s both}
+.hero-panel:before{content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
+  background:linear-gradient(160deg,rgba(220,195,137,.55),transparent 42%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+@media(max-width:980px){.hero-panel{display:none}}
+.hp-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}
+.hp-live{display:inline-flex;align-items:center;gap:9px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-soft)}
+.hp-live i{width:7px;height:7px;border-radius:50%;background:var(--prox);box-shadow:0 0 9px var(--prox);animation:pdotPulse 1.7s infinite}
+.hp-tag{font-size:11.5px;padding:4px 12px;border-radius:999px;background:rgba(220,195,137,.15);border:1px solid rgba(220,195,137,.34);color:var(--gold-soft);white-space:nowrap}
+.hp-stat{padding:15px 0 13px;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1)}
+.hp-l{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--mut-on-em)}
+.hp-v{display:flex;align-items:baseline;gap:11px;margin:6px 0 10px}
+.hp-v b{font-family:var(--serif);font-size:33px;font-weight:700;color:#fff;line-height:1}
+.hp-d{font-size:13px;color:#7fe3b0;font-weight:600}
+.hp-spark{width:100%;height:54px;display:block}
+.hp-area{opacity:0;animation:hpFade 1.1s 1.25s forwards}
+@keyframes hpFade{to{opacity:1}}
+.hp-line{fill:none;stroke:var(--prox);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:320;stroke-dashoffset:320;filter:drop-shadow(0 3px 8px rgba(25,195,125,.4));animation:draw 1.7s 1s ease forwards}
+.hp-sub{font-size:11.5px;color:var(--mut-on-em);margin-top:9px}
+.hp-sub b{color:#7fe3b0}
+.hp-rows{margin-top:15px;display:flex;flex-direction:column;gap:11px}
+.hp-row{display:flex;align-items:center;gap:12px}
+.hp-ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex:none}
+.hp-ic.ok{background:rgba(25,195,125,.16);border:1px solid rgba(25,195,125,.38);color:#8ef0b0}
+.hp-ring{position:relative;width:40px;height:40px;flex:none}
+.hp-ring svg{width:40px;height:40px;transform:rotate(-90deg)}
+.hp-ring .rbg{fill:none;stroke:rgba(255,255,255,.14);stroke-width:4}
+.hp-ring .rfg{fill:none;stroke:var(--gold-soft);stroke-width:4;stroke-linecap:round;stroke-dasharray:119;stroke-dashoffset:119;animation:ringFill 1.4s 1.2s cubic-bezier(.3,.8,.3,1) forwards}
 @keyframes ringFill{to{stroke-dashoffset:8}}/* ~94% */
-.hc-ring i{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:15px;color:#fff;font-style:normal}
+.hp-ring i{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:13px;color:#fff}
+.hp-tx{flex:1;display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.hp-tx b{color:#fff;font-size:13.5px}
+.hp-tx span{font-size:11.5px;color:var(--mut-on-em)}
+.hp-chip{font-size:10.5px;padding:4px 10px;border-radius:999px;background:rgba(25,195,125,.15);border:1px solid rgba(25,195,125,.33);color:#8ef0b0;white-space:nowrap;flex:none}
+.hp-chip.gold{background:rgba(220,195,137,.14);border-color:rgba(220,195,137,.33);color:var(--gold-soft)}
 
 /* Manyetik buton */
 .magnetic{will-change:transform}
 .magnetic>span{display:inline-block;pointer-events:none}
 @media(prefers-reduced-motion:reduce){
-  .hero-mesh,.hc1,.hc2,.hc3,.eb-dot{animation:none!important}
+  .hero-mesh,.eb-dot,.hp-live i{animation:none!important}
   .hero-title .hl,.hero-title em{opacity:1!important;transform:none!important;animation:none!important}
-  .hero-draw .dp,.hero-draw .dc,.spark .spk,.hc-ring .rfg{stroke-dashoffset:0!important;animation:none!important}
-  .hcard{opacity:1!important;transform:none!important}
+  .hp-line{stroke-dashoffset:0!important;animation:none!important}
+  .hp-ring .rfg{stroke-dashoffset:8!important;animation:none!important}
+  .hp-area{opacity:1!important;animation:none!important}
+  .hero-panel{opacity:1!important;transform:none!important;animation:none!important}
 }
 
-/* ============ HERO v2: boşluk YOK (menü altına yapışık) + sinematik + canlı pulse ============ */
+/* ============ HERO v3: sıkı çerçeve — açılışta tam otursun (menü altına yapışık) ============ */
 .hero{align-items:stretch;padding-top:0}
-.hero-grid{align-content:start;padding-top:118px;padding-bottom:104px;min-height:100vh}
-@media(max-width:980px){.hero-grid{padding-top:104px;padding-bottom:120px;align-content:center}}
-.hero h1{font-size:clamp(46px,8.2vw,96px);line-height:.98}
-.hero .eyebrow{margin-bottom:20px}
-.hero .lede{margin:30px 0 40px}
-.hero-viz{min-height:520px}
-/* içerik menü altında hemen başlasın: eyebrow'a hafif üst hizası */
-.hero-in{align-self:start;padding-top:6px}
+.hero-grid{align-content:center;padding-top:94px;padding-bottom:92px;min-height:100vh}
+@media(max-width:980px){.hero-grid{padding-top:104px;padding-bottom:118px;align-content:center}}
+.hero h1{font-size:clamp(32px,4.2vw,54px);line-height:1.06}
+.hero .eyebrow{margin-bottom:18px}
+.hero .lede{margin:24px 0 32px;max-width:540px}
+/* içerik dikey ortada — hero kompozisyonu açılışta kusursuz kadrajlansın */
+.hero-in{align-self:center;padding-top:0}
 /* nav her zaman hafif zemin — hero'yla dikişsiz, "boşluk" algısı yok */
 header.nav{background:linear-gradient(180deg,rgba(8,44,32,.55),transparent)}
 header.nav.scrolled{background:rgba(10,53,39,.94)}
