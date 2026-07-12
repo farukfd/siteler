@@ -829,3 +829,11 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 .rap-track{flex:1;height:14px;background:var(--cream-2);border-radius:6px;overflow:hidden}
 .rap-track i{display:block;height:100%;width:0;border-radius:6px;transition:width .6s cubic-bezier(.3,.8,.3,1)}
 .rap-v{width:32px;text-align:right;font-family:'Space Grotesk',var(--body);font-variant-numeric:tabular-nums;font-weight:700;color:var(--em)}
+.mt-score{font-family:'Space Grotesk',var(--body);font-weight:700;font-size:12px;color:var(--prox-deep);white-space:nowrap;padding:2px 9px;border-radius:999px;background:rgba(25,195,125,.1)}
+/* ilan görsel */
+.iln-img{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.iln-thumb{width:88px;height:64px;border-radius:9px;border:1px solid var(--line);background:var(--cream-2);display:grid;place-items:center;overflow:hidden;color:var(--muted-2);font-size:12px;flex-shrink:0}
+.iln-thumb img{width:100%;height:100%;object-fit:cover}
+.iln-eids{font-size:12px;padding:8px 11px;border-radius:9px;background:rgba(25,195,125,.08);border:1px solid rgba(25,195,125,.25);color:var(--prox-deep)}
+.iln-eids.no{background:var(--cream-2);border-color:var(--line);color:var(--muted)}
+.vcard-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
