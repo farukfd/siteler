@@ -486,7 +486,7 @@ const VIP_PORTFOLIO=[
 /* Bölgesel prim (değer artışı) ipuçları — ProX için */
 const PRIM={'Levent':'%13–15','Maslak':'%11–13','Zekeriyaköy':'%9–11','Nişantaşı':'%10–12','Cihangir':'%8–10','Bahçeşehir':'%7–9','Sarıyer':'%12–14','Beykoz':'%9–11','Beşiktaş':'%11–13','Üsküdar':'%9–11','Çeşme':'%12–15','Alaçatı':'%12–15','Boğaz':'%14–16'};
 
-function listingCardsHTML(){return LISTINGS.map(l=>{
+function listingCardsHTML(){return LISTINGS.filter(function(l){return l.status!=='pasif';}).map(l=>{
   const price=l.kira?fmt(l.fiyat)+' <span class="per">/ay</span>':fmt(l.fiyat);
   const nm=l.baslik.replace(/'/g,'’');
   return '<article class="vcard" onclick="leadFor(\''+nm+'\')">'
@@ -884,6 +884,56 @@ function crmSeedDemo(){crmLoad();if(_crm.kisiler.length&&!confirm('Mevcut CRM ve
 }
 function crmExport(){crmLoad();try{var blob=new Blob([JSON.stringify(_crm,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='meridyen-crm-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();toast('CRM verisi indirildi.');}catch(e){toast('Dışa aktarılamadı.');}}
 /* CRM fonksiyonları global scope'ta (function bildirimleri window'a bağlıdır) → onclick handler'ları bare isimle erişir. */
+/* ===================== İLAN YÖNETİMİ (açık portföy CRUD + EİDS yayın kapısı) ===================== */
+var ILN_KEY='dn_listings_v1';
+var ILN_TIP=[{k:'penthouse',t:'Penthouse'},{k:'rezidans',t:'Rezidans'},{k:'villa',t:'Villa'},{k:'yali',t:'Yalı'},{k:'loft',t:'Loft / Daire'},{k:'arsa',t:'Arsa'}];
+var ILN_DURUM=['Satılık','Kiralık'];
+function ilnTipT(k){var x=ILN_TIP.filter(function(t){return t.k===k;})[0];return x?x.t:k;}
+function ilanEnsureIds(){var mx=0;LISTINGS.forEach(function(l){if(l.id)mx=Math.max(mx,l.id);});LISTINGS.forEach(function(l){if(!l.id)l.id=++mx;if(!l.status)l.status='aktif';});return mx;}
+function ilanLoad(){try{var a=JSON.parse(localStorage.getItem(ILN_KEY)||'null');if(Array.isArray(a)){LISTINGS.length=0;a.forEach(function(x){LISTINGS.push(x);});}}catch(e){}ilanEnsureIds();}
+function ilanSave(){try{localStorage.setItem(ILN_KEY,JSON.stringify(LISTINGS));}catch(e){try{toast('Kayıt alanı dolu.');}catch(_){}}}
+function ilanBolge(l){return [l.ilce,l.mahalle].filter(Boolean).join(' · ')||l.bolge||'';}
+function ilanRefreshPublic(){try{var h=document.getElementById('homeListings');if(h)h.innerHTML=listingCardsHTML();}catch(e){}
+  try{if(typeof _OV!=='undefined'&&document.querySelector('#pageOverlay.on')){var g=document.querySelector('#pageOverlay .card-grid');/* ilanlar sayfası açıksa */}}catch(e){}}
+function ilanRenderAdmin(){var host=document.getElementById('ilanAdminBody');if(!host)return;ilanLoad();
+  var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsFirma().eids.yetkili);}catch(e){}
+  var akt=LISTINGS.filter(function(l){return l.status!=='pasif';}).length;
+  var H='<div class="crm-bar"><div class="sub" style="margin:0">'+LISTINGS.length+' ilan · '+akt+' yayında'+(eidsOk?'':' · <b style="color:#c0603a">EİDS yetkisi yok → yeni ilanlar pasif</b>')+'</div><button class="btn btn-gold crm-add" onclick="ilanEdit(0)">+ İlan Ekle</button></div>';
+  if(!LISTINGS.length)H+='<div class="crm-empty">İlan yok. "+ İlan Ekle" ile açık portföyünüzü oluşturun.</div>';
+  else H+='<div class="crm-list">'+LISTINGS.map(function(l){var kr=l.durum==='Kiralık';
+    return '<div class="crm-card"><div class="crm-card-top"><div><b>'+_leD(l.baslik||'—')+'</b><span class="crm-badge">'+_leD(l.durum||'')+'</span>'+(l.status==='pasif'?'<span class="crm-badge" style="background:rgba(192,96,58,.12);color:#c0603a">pasif</span>':'')+'</div><div class="crm-card-act"><button onclick="ilanTogglePub('+l.id+')" title="'+(l.status==='pasif'?'Yayınla':'Yayından kaldır')+'">'+(l.status==='pasif'?'▲':'▼')+'</button><button onclick="ilanEdit('+l.id+')" title="Düzenle">✎</button><button onclick="ilanDel('+l.id+')" title="Sil">🗑</button></div></div>'
+      +'<div class="crm-card-b">'+_leD(ilnTipT(l.tip))+' · '+_leD(ilanBolge(l))+'</div>'
+      +'<div class="crm-card-b sub">'+_leD((l.m2||'?')+' m²')+' · '+_leD(l.oda||'')+(l.kat?(' · '+_leD(l.kat)+'. kat'):'')+' · <b style="color:var(--em)">'+fmt(l.fiyat||0)+(kr?' ₺/ay':' ₺')+'</b>'+(l.eidsNo?(' · EİDS '+_leD(l.eidsNo)):'')+'</div></div>';
+  }).join('')+'</div>';
+  host.innerHTML=H;
+}
+function ilanEdit(id){ilanLoad();var l=id?LISTINGS.filter(function(x){return x.id===id;})[0]:{id:0,durum:'Satılık',tip:'villa',status:'aktif'};if(!l)return;
+  var F='<div class="crm-mh">'+(id?'İlanı Düzenle':'Yeni İlan')+'</div>'
+    +'<div class="crm-f"><label>Başlık</label><input id="il_baslik" value="'+_leD(l.baslik||'')+'" placeholder="Levent Çift Kat Penthouse"></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Durum</label><select id="il_durum">'+_crmOpt(ILN_DURUM,l.durum)+'</select></div><div class="crm-f"><label>Tip</label><select id="il_tip">'+ILN_TIP.map(function(t){return '<option value="'+t.k+'"'+(t.k===l.tip?' selected':'')+'>'+t.t+'</option>';}).join('')+'</select></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>İl</label><input id="il_il" value="'+_leD(l.il||'İstanbul')+'"></div><div class="crm-f"><label>İlçe</label><input id="il_ilce" value="'+_leD(l.ilce||'')+'"></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Mahalle</label><input id="il_mah" value="'+_leD(l.mahalle||'')+'"></div><div class="crm-f"><label>m²</label><input id="il_m2" type="number" value="'+(l.m2||'')+'"></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Oda</label><input id="il_oda" value="'+_leD(l.oda||'')+'" placeholder="4+1"></div><div class="crm-f"><label>Kat</label><input id="il_kat" value="'+_leD(l.kat||'')+'" placeholder="7"></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Fiyat (₺)</label><input id="il_fiyat" type="number" value="'+(l.fiyat||'')+'"></div><div class="crm-f"><label>EİDS Taşınmaz No</label><input id="il_eids" value="'+_leD(l.eidsNo||'')+'" placeholder="opsiyonel"></div></div>'
+    +'<div class="crm-f"><label>Yayın Durumu</label><select id="il_status"><option value="aktif"'+(l.status!=='pasif'?' selected':'')+'>Yayında (aktif)</option><option value="pasif"'+(l.status==='pasif'?' selected':'')+'>Pasif (yayında değil)</option></select></div>'
+    +'<div class="crm-mact"><button class="btn btn-gold" onclick="ilanSaveForm('+id+')">Kaydet</button><button class="btn btn-line" onclick="crmCloseModal()">Vazgeç</button>'+(id?'<button class="btn btn-line" style="margin-left:auto;color:#c0603a" onclick="ilanDel('+id+')">Sil</button>':'')+'</div>';
+  crmModal(F);
+}
+function ilanSaveForm(id){ilanLoad();var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
+  var o={durum:g('il_durum'),tip:g('il_tip'),baslik:g('il_baslik'),il:g('il_il'),ilce:g('il_ilce'),mahalle:g('il_mah'),m2:+g('il_m2')||0,oda:g('il_oda'),kat:g('il_kat'),fiyat:+g('il_fiyat')||0,eidsNo:g('il_eids'),status:g('il_status')};
+  if(!o.baslik){toast('İlan başlığı girin.');return;}
+  o.kira=(o.durum==='Kiralık');o.bolge=[o.ilce,o.mahalle].filter(Boolean).join(' · ');
+  /* EİDS yayın kapısı: yetki yoksa aktif ilan pasife düşer */
+  var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsFirma().eids.yetkili);}catch(e){}
+  if(o.status==='aktif'&&!eidsOk){o.status='pasif';toast('EİDS yetkisi olmadan açık ilan yayınlanamaz — pasif kaydedildi.');}
+  if(id){var l=LISTINGS.filter(function(x){return x.id===id;})[0];if(l)Object.assign(l,o);}
+  else{o.id=ilanEnsureIds()+1;LISTINGS.unshift(o);}
+  ilanSave();crmCloseModal();ilanRenderAdmin();ilanRefreshPublic();toast('✓ İlan kaydedildi.');
+}
+function ilanDel(id){if(!confirm('İlan silinsin mi?'))return;ilanLoad();for(var i=LISTINGS.length-1;i>=0;i--)if(LISTINGS[i].id===id)LISTINGS.splice(i,1);ilanSave();crmCloseModal();ilanRenderAdmin();ilanRefreshPublic();toast('İlan silindi.');}
+function ilanTogglePub(id){ilanLoad();var l=LISTINGS.filter(function(x){return x.id===id;})[0];if(!l)return;
+  if(l.status==='pasif'){var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsFirma().eids.yetkili);}catch(e){}if(!eidsOk){toast('EİDS yetkisi olmadan yayınlanamaz.');return;}l.status='aktif';}else l.status='pasif';
+  ilanSave();ilanRenderAdmin();ilanRefreshPublic();toast(l.status==='aktif'?'İlan yayınlandı.':'İlan yayından kaldırıldı.');}
 /* Canlı ProX: /prox/ai (answer) + yatırım/portföy sorularında /prox/analyze. Boş/başarısız → yerel _proxReply.
    Sağlayıcı adı ASLA gösterilmez/loglanmaz — yalnızca "ProX". Değer SADECE API'den gelir. */
 function _proxAnalyzeHTML(a){
@@ -962,7 +1012,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();cl
    ===================================================================== */
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='sta-modal';
   el.innerHTML='<div class="sta-ov" onclick="closeSaasAdmin()"></div><div class="sta-card"><div class="sta-hd"><b>ProX SaaS · '+SAAS_CONFIG.tenantName+'</b><button onclick="openOnboarding()" title="Kurulum Sihirbazı" style="margin-left:auto;margin-right:10px;background:none;border:1px solid var(--line-soft);border-radius:8px;color:var(--gold);padding:4px 11px;cursor:pointer;font:inherit;font-size:12.5px">🚀 Sihirbaz</button><button onclick="closeSaasAdmin()">✕</button></div>'
-   +'<div class="sta-tabs"><button class="act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><button data-t="crmkisi" onclick="staTab(this)">👥 Kişiler</button><button data-t="crmpipe" onclick="staTab(this)">📇 Satış Hattı</button><button data-t="crmtask" onclick="staTab(this)">✅ Görevler</button><button data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><button data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="hizmetalani" onclick="staTab(this)">Hizmet Alanı</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
+   +'<div class="sta-tabs"><button class="act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><button data-t="crmkisi" onclick="staTab(this)">👥 Kişiler</button><button data-t="crmpipe" onclick="staTab(this)">📇 Satış Hattı</button><button data-t="crmtask" onclick="staTab(this)">✅ Görevler</button><button data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><button data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="hizmetalani" onclick="staTab(this)">Hizmet Alanı</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
    /* CRM · PANEL */
    +'<div class="sta-pane" data-p="crmdash"><h4>Yönetim Paneli · CRM</h4><p class="sub">Kişiler, satış hattı, görevler ve gelen talepler tek bakışta. Gerçek görüşme ve talepler otomatik düşer.</p><div id="crmDash"></div></div>'
    /* CRM · KİŞİLER */
@@ -971,6 +1021,8 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
    +'<div class="sta-pane" data-p="crmpipe" hidden><h4>Satış Hattı (Pipeline)</h4><p class="sub">Fırsatları Yeni → İletişim → Görüşme → Teklif → Kazanıldı aşamalarında yönetin.</p><div id="crmPipe"></div></div>'
    /* CRM · GÖREVLER */
    +'<div class="sta-pane" data-p="crmtask" hidden><h4>Görev & Randevu</h4><p class="sub">Arama, yer gösterme, tapu ve takip görevlerinizi planlayın; geciken görevler işaretlenir.</p><div id="crmTasks"></div></div>'
+   /* İLAN YÖNETİMİ */
+   +'<div class="sta-pane" data-p="ilanlar" hidden><h4>İlan Yönetimi · Açık Portföy</h4><p class="sub">Açık ilanlarınızı ekleyin/düzenleyin/silin; yayın (aktif) için EİDS yetkisi gerekir (VIP Özel Portföy serbesttir). Değişiklikler siteye anında yansır.</p><div id="ilanAdminBody"></div></div>'
    /* MARKA & LOGO */
    +'<div class="sta-pane" data-p="marka" hidden><h4>Marka, Logo & Tema</h4><p class="sub">Logo/favicon yükleyin veya URL girin; altın/şampanya tema tonunu ayarlayın.</p>'
      +'<div class="logo-prev"><div class="box" id="adLogoPrev">M</div><span>Mevcut logo önizleme</span></div>'
@@ -1032,6 +1084,7 @@ function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');
   set('ed_belge',eidsFirma().eids.belgeNo);try{eidsRenderAdmin();}catch(e){}
   try{renderSA();renderVipStatus();renderGorusmelerD();}catch(e){}
   try{crmRenderAll();}catch(e){}
+  try{ilanRenderAdmin();}catch(e){}
   try{staGate();}catch(e){}
   _refreshLogoPrev();
 }
@@ -1125,6 +1178,7 @@ window.addEventListener('load',function(){try{
   _dsLoad();/* kalıcı DeepSeek anahtarını yükle (localStorage dn_dskey) */
   initSaaSTheme();applySaaSSettings();
   try{eidsRenderPublic();applySchema();applyProxyMode();abApply();}catch(e){}
+  try{ilanLoad();}catch(e){}/* admin'de kaydedilmiş açık ilanları yükle (dn_listings_v1) */
   document.getElementById('homeListings').innerHTML=listingCardsHTML();
   document.getElementById('vaultGrid').innerHTML=vipCardsHTML();
   document.getElementById('homeContact').innerHTML=contactHTML();
