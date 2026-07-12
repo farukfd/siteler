@@ -823,3 +823,9 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 .soz-sign{display:flex;justify-content:space-between;gap:34px;margin-top:34px}
 .soz-sign div{flex:1;font-size:13px;font-family:var(--body)}
 .soz-note{margin-top:22px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;font-family:var(--body)}
+/* raporlar barları */
+.rap-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;font-size:12.5px}
+.rap-l{width:118px;color:var(--ink-2);flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rap-track{flex:1;height:14px;background:var(--cream-2);border-radius:6px;overflow:hidden}
+.rap-track i{display:block;height:100%;width:0;border-radius:6px;transition:width .6s cubic-bezier(.3,.8,.3,1)}
+.rap-v{width:32px;text-align:right;font-family:'Space Grotesk',var(--body);font-variant-numeric:tabular-nums;font-weight:700;color:var(--em)}

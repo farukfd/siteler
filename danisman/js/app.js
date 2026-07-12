@@ -706,7 +706,7 @@ function crmKisi(id){crmLoad();return _crm.kisiler.filter(function(k){return k.i
 function crmStageT(k){var s=CRM_STAGES.filter(function(x){return x.k===k;})[0];return s?s.t:k;}
 function crmLeads(){var a=[];try{a=JSON.parse(localStorage.getItem('dn_leads')||'[]');}catch(e){}return Array.isArray(a)?a:[];}
 function _crmOpt(arr,sel){return arr.map(function(o){return '<option'+(o===sel?' selected':'')+'>'+_leD(o)+'</option>';}).join('');}
-function crmRenderAll(){try{crmRenderDash();}catch(e){}try{crmRenderKisiler();}catch(e){}try{crmRenderPipe();}catch(e){}try{crmRenderTasks();}catch(e){}try{crmRenderEkip();}catch(e){}try{crmRenderSoz();}catch(e){}try{crmRenderKomisyon();}catch(e){}try{crmRenderKira();}catch(e){}}
+function crmRenderAll(){try{crmRenderDash();}catch(e){}try{crmRenderKisiler();}catch(e){}try{crmRenderPipe();}catch(e){}try{crmRenderTasks();}catch(e){}try{crmRenderEkip();}catch(e){}try{crmRenderSoz();}catch(e){}try{crmRenderKomisyon();}catch(e){}try{crmRenderKira();}catch(e){}try{crmRenderRapor();}catch(e){}try{cmsRender();}catch(e){}}
 window.crmRenderAll=crmRenderAll;
 
 /* ---------- PANEL (Dashboard) ---------- */
@@ -1071,6 +1071,53 @@ function sozPrint(){var el=document.getElementById('sozDoc');if(!el)return;var w
   w.document.close();setTimeout(function(){try{w.print();}catch(e){}},250);
 }
 function sozDel(id){crmLoad();_crm.sozlesmeler=_crm.sozlesmeler.filter(function(s){return s.id!==id;});crmSave();crmRenderSoz();toast('Sözleşme silindi.');}
+/* ===================== RAPORLAR ===================== */
+function _rapBar(label,val,max,color){var w=max?Math.max(2,Math.round(val/max*100)):0;return '<div class="rap-row"><span class="rap-l">'+_leD(label)+'</span><div class="rap-track"><i style="width:'+w+'%;background:'+(color||'var(--em)')+'"></i></div><span class="rap-v">'+val+'</span></div>';}
+function _rapMonthly(){crmLoad();var months=[],d=new Date();for(var i=5;i>=0;i--){var m=new Date(d.getFullYear(),d.getMonth()-i,1);months.push(m.toISOString().slice(0,7));}
+  var counts=months.map(function(mo){return _crm.kisiler.filter(function(k){return (k.created||'').slice(0,7)===mo;}).length;});var mx=Math.max.apply(null,counts.concat([1]));
+  return months.map(function(mo,i){return _rapBar(mo.slice(5)+'/'+mo.slice(2,4),counts[i],mx,'var(--gold-deep)');}).join('');}
+function crmRenderRapor(){var host=document.getElementById('crmRapor');if(!host)return;crmLoad();var leads=crmLeads();
+  var stageCounts=CRM_STAGES.map(function(s){return {t:s.t,n:_crm.deals.filter(function(d){return d.stage===s.k;}).length};});var mxS=Math.max.apply(null,stageCounts.map(function(x){return x.n;}).concat([1]));
+  var srcMap={};leads.forEach(function(l){var s=l.src||'Diğer';srcMap[s]=(srcMap[s]||0)+1;});var srcArr=Object.keys(srcMap).map(function(k){return {t:k,n:srcMap[k]};}).sort(function(a,b){return b.n-a.n;});var mxSrc=Math.max.apply(null,srcArr.map(function(x){return x.n;}).concat([1]));
+  var tipMap={};_crm.kisiler.forEach(function(k){var t=k.tip||'—';tipMap[t]=(tipMap[t]||0)+1;});var tipArr=Object.keys(tipMap).map(function(k){return {t:k,n:tipMap[k]};});var mxT=Math.max.apply(null,tipArr.map(function(x){return x.n;}).concat([1]));
+  var tah=_crm.komisyon.filter(function(k){return k.durum==='tahsil';}).reduce(function(s,k){return s+(+k.tutar||0);},0),bek=_crm.komisyon.filter(function(k){return k.durum!=='tahsil';}).reduce(function(s,k){return s+(+k.tutar||0);},0);
+  var won=_crm.deals.filter(function(d){return d.stage==='kazanildi';}).length,lost=_crm.deals.filter(function(d){return d.stage==='kaybedildi';}).length,conv=(won+lost)?Math.round(won/(won+lost)*100):0;
+  var H='<div class="crm-kpis"><div class="crm-kpi"><b>%'+conv+'</b><span>Dönüşüm Oranı</span></div><div class="crm-kpi"><b>'+_crmTL(tah)+'</b><span>Tahsil Komisyon</span></div><div class="crm-kpi'+(bek>0?' hot':'')+'"><b>'+_crmTL(bek)+'</b><span>Bekleyen Komisyon</span></div><div class="crm-kpi"><b>'+leads.length+'</b><span>Toplam Talep</span></div></div>';
+  H+='<div class="crm-two"><div class="crm-sec"><div class="crm-sec-h">Satış Hattı Dağılımı</div>'+stageCounts.map(function(s){return _rapBar(s.t,s.n,mxS,'var(--gold)');}).join('')+'</div>'
+    +'<div class="crm-sec"><div class="crm-sec-h">Talep Kaynakları</div>'+(srcArr.length?srcArr.map(function(s){return _rapBar(s.t,s.n,mxSrc,'var(--em-2)');}).join(''):'<div class="crm-empty">Talep yok.</div>')+'</div></div>';
+  H+='<div class="crm-two"><div class="crm-sec"><div class="crm-sec-h">Kişi Tipleri</div>'+(tipArr.length?tipArr.map(function(s){return _rapBar(s.t,s.n,mxT,'var(--prox)');}).join(''):'<div class="crm-empty">Kişi yok.</div>')+'</div>'
+    +'<div class="crm-sec"><div class="crm-sec-h">Aylık Yeni Kişi (son 6 ay)</div>'+_rapMonthly()+'</div></div>';
+  host.innerHTML=H;
+}
+/* ===================== YEDEK / AKTAR ===================== */
+function crmDataExport(){var o={_ts:new Date().toISOString(),_site:'danisman-selin-meridyen'};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&(k.indexOf('dn_')===0||k==='emlak_leads_fallback'))o[k]=localStorage.getItem(k);}}catch(e){}
+  try{var blob=new Blob([JSON.stringify(o,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='meridyen-yedek-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();toast('✓ Tüm veriler yedeklendi (JSON).');}catch(e){toast('Yedeklenemedi.');}}
+function crmDataImport(input){var f=input.files&&input.files[0];if(!f)return;if(!confirm('Yedekteki veriler mevcut verinin üzerine yazılacak. Devam?')){input.value='';return;}
+  var r=new FileReader();r.onload=function(e){try{var o=JSON.parse(e.target.result);var n=0;Object.keys(o).forEach(function(k){if(k.indexOf('dn_')===0||k==='emlak_leads_fallback'){localStorage.setItem(k,o[k]);n++;}});_crm=null;toast('✓ '+n+' kayıt geri yüklendi. Yenileniyor…');setTimeout(function(){location.reload();},1000);}catch(err){toast('Geçersiz yedek dosyası.');}};r.readAsText(f);}
+function crmDataReset(){if(!confirm('CRM, ilan, sözleşme ve tüm yerel veriler silinsin mi? Önce yedek almanız önerilir — bu işlem geri alınamaz.'))return;
+  try{var rm=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('dn_')===0)rm.push(k);}rm.forEach(function(k){localStorage.removeItem(k);});}catch(e){}_crm=null;toast('Veriler sıfırlandı. Yenileniyor…');setTimeout(function(){location.reload();},1000);}
+/* ===================== İÇERİK CMS (ana sayfa hero metinleri) ===================== */
+var CMS_KEY='dn_content';
+function cmsGet(){try{return JSON.parse(localStorage.getItem(CMS_KEY)||'{}')||{};}catch(e){return {};}}
+function applyContent(){var c=cmsGet();
+  try{if(c.heroEb){var eb=document.querySelector('.hero .eyebrow');if(eb)eb.innerHTML='<span class="eb-dot"></span>'+_leD(c.heroEb);}}catch(e){}
+  try{if(c.heroT1){var t1=document.querySelector('.hero-title .hl');if(t1)t1.textContent=c.heroT1;}}catch(e){}
+  try{if(c.heroT2){var t2=document.querySelector('.hero-title em');if(t2)t2.textContent=c.heroT2;}}catch(e){}
+  try{if(c.heroLede){var ld=document.querySelector('.hero .lede');if(ld)ld.textContent=c.heroLede;}}catch(e){}
+}
+function cmsRender(){var host=document.getElementById('crmCms');if(!host)return;var c=cmsGet();
+  function cur(sel,attr){try{var e=document.querySelector(sel);if(!e)return '';return (attr==='eb')?e.textContent.trim():e.textContent.trim();}catch(x){return '';}}
+  var ebNow=c.heroEb||cur('.hero .eyebrow'),t1Now=c.heroT1||cur('.hero-title .hl'),t2Now=c.heroT2||cur('.hero-title em'),ldNow=c.heroLede||cur('.hero .lede');
+  var H='<div class="crm-f"><label>Hero Üst Etiket (eyebrow)</label><input id="cms_eb" value="'+_leD(ebNow)+'"></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Başlık 1. satır</label><input id="cms_t1" value="'+_leD(t1Now)+'"></div><div class="crm-f"><label>Başlık 2. satır (italik)</label><input id="cms_t2" value="'+_leD(t2Now)+'"></div></div>'
+    +'<div class="crm-f"><label>Hero Açıklama (lede)</label><textarea id="cms_lede" rows="3">'+_leD(ldNow)+'</textarea></div>'
+    +'<div class="crm-mact"><button class="btn btn-gold" onclick="cmsSave()">Kaydet & Uygula</button><button class="btn btn-line" onclick="cmsReset()">Varsayılana Dön</button></div>';
+  host.innerHTML=H;
+}
+function cmsSave(){var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
+  var c={heroEb:g('cms_eb'),heroT1:g('cms_t1'),heroT2:g('cms_t2'),heroLede:g('cms_lede')};
+  try{localStorage.setItem(CMS_KEY,JSON.stringify(c));}catch(e){}applyContent();toast('✓ İçerik güncellendi & siteye uygulandı.');}
+function cmsReset(){try{localStorage.removeItem(CMS_KEY);}catch(e){}toast('Varsayılana döndü. Yenileniyor…');setTimeout(function(){location.reload();},800);}
 /* Canlı ProX: /prox/ai (answer) + yatırım/portföy sorularında /prox/analyze. Boş/başarısız → yerel _proxReply.
    Sağlayıcı adı ASLA gösterilmez/loglanmaz — yalnızca "ProX". Değer SADECE API'den gelir. */
 function _proxAnalyzeHTML(a){
@@ -1149,7 +1196,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();cl
    ===================================================================== */
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='sta-modal';
   el.innerHTML='<div class="sta-ov" onclick="closeSaasAdmin()"></div><div class="sta-card"><div class="sta-hd"><b>ProX SaaS · '+SAAS_CONFIG.tenantName+'</b><button onclick="openOnboarding()" title="Kurulum Sihirbazı" style="margin-left:auto;margin-right:10px;background:none;border:1px solid var(--line-soft);border-radius:8px;color:var(--gold);padding:4px 11px;cursor:pointer;font:inherit;font-size:12.5px">🚀 Sihirbaz</button><button onclick="closeSaasAdmin()">✕</button></div>'
-   +'<div class="sta-tabs"><button class="act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><button data-t="crmkisi" onclick="staTab(this)">👥 Kişiler</button><button data-t="crmpipe" onclick="staTab(this)">📇 Satış Hattı</button><button data-t="crmtask" onclick="staTab(this)">✅ Görevler</button><button data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button data-t="ekip" onclick="staTab(this)">🧑‍💼 Ekip</button><button data-t="sozlesme" onclick="staTab(this)">📄 Sözleşmeler</button><button data-t="komisyon" onclick="staTab(this)">💰 Komisyon</button><button data-t="kira" onclick="staTab(this)">🔑 Kira</button><button data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><button data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="hizmetalani" onclick="staTab(this)">Hizmet Alanı</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
+   +'<div class="sta-tabs"><button class="act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><button data-t="crmkisi" onclick="staTab(this)">👥 Kişiler</button><button data-t="crmpipe" onclick="staTab(this)">📇 Satış Hattı</button><button data-t="crmtask" onclick="staTab(this)">✅ Görevler</button><button data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button data-t="ekip" onclick="staTab(this)">🧑‍💼 Ekip</button><button data-t="sozlesme" onclick="staTab(this)">📄 Sözleşmeler</button><button data-t="komisyon" onclick="staTab(this)">💰 Komisyon</button><button data-t="kira" onclick="staTab(this)">🔑 Kira</button><button data-t="rapor" onclick="staTab(this)">📈 Raporlar</button><button data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><button data-t="icerik" onclick="staTab(this)">📝 İçerik</button><button data-t="yedek" onclick="staTab(this)">💾 Yedek</button><button data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="hizmetalani" onclick="staTab(this)">Hizmet Alanı</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
    /* CRM · PANEL */
    +'<div class="sta-pane" data-p="crmdash"><h4>Yönetim Paneli · CRM</h4><p class="sub">Kişiler, satış hattı, görevler ve gelen talepler tek bakışta. Gerçek görüşme ve talepler otomatik düşer.</p><div id="crmDash"></div></div>'
    /* CRM · KİŞİLER */
@@ -1168,6 +1215,17 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
    +'<div class="sta-pane" data-p="komisyon" hidden><h4>Komisyon & Tahsilat</h4><p class="sub">İşlem komisyonlarınızı ve tahsilat durumlarını takip edin.</p><div id="crmKomisyon"></div></div>'
    /* KİRA */
    +'<div class="sta-pane" data-p="kira" hidden><h4>Kira Takibi</h4><p class="sub">Yönetimindeki kira sözleşmeleri, aylık tutarlar ve gecikmeler.</p><div id="crmKira"></div></div>'
+   /* RAPORLAR */
+   +'<div class="sta-pane" data-p="rapor" hidden><h4>Raporlar & Analitik</h4><p class="sub">Dönüşüm oranı, satış hattı dağılımı, talep kaynakları ve aylık trend — CRM verinizden canlı hesaplanır.</p><div id="crmRapor"></div></div>'
+   /* İÇERİK CMS */
+   +'<div class="sta-pane" data-p="icerik" hidden><h4>Sayfa İçerikleri</h4><p class="sub">Ana sayfa hero metinlerini düzenleyin; değişiklik siteye anında uygulanır.</p><div id="crmCms"></div></div>'
+   /* YEDEK / AKTAR */
+   +'<div class="sta-pane" data-p="yedek" hidden><h4>Yedek & Aktar</h4><p class="sub">Tüm CRM, ilan, sözleşme ve ayar verilerinizi JSON olarak yedekleyin, geri yükleyin veya sıfırlayın.</p>'
+     +'<div style="display:flex;flex-direction:column;gap:12px;max-width:460px">'
+     +'<button class="btn btn-gold sta-go" onclick="crmDataExport()">⬇ Tüm Veriyi Yedekle (JSON indir)</button>'
+     +'<label class="btn btn-line sta-go" style="cursor:pointer;text-align:center">⬆ Yedekten Geri Yükle<input type="file" accept="application/json,.json" onchange="crmDataImport(this)" style="display:none"></label>'
+     +'<button class="btn btn-line sta-go" style="color:#c0603a;border-color:rgba(192,96,58,.4)" onclick="crmDataReset()">🗑 Tüm Yerel Veriyi Sıfırla</button>'
+     +'<p class="sub" style="margin:2px 0 0">Veriler tarayıcınızda (localStorage) saklanır. Cihaz/ tarayıcı değiştirmeden önce yedek alın.</p></div></div>'
    /* MARKA & LOGO */
    +'<div class="sta-pane" data-p="marka" hidden><h4>Marka, Logo & Tema</h4><p class="sub">Logo/favicon yükleyin veya URL girin; altın/şampanya tema tonunu ayarlayın.</p>'
      +'<div class="logo-prev"><div class="box" id="adLogoPrev">M</div><span>Mevcut logo önizleme</span></div>'
@@ -1324,6 +1382,7 @@ window.addEventListener('load',function(){try{
   initSaaSTheme();applySaaSSettings();
   try{eidsRenderPublic();applySchema();applyProxyMode();abApply();}catch(e){}
   try{ilanLoad();}catch(e){}/* admin'de kaydedilmiş açık ilanları yükle (dn_listings_v1) */
+  try{applyContent();}catch(e){}/* CMS: admin'de düzenlenmiş hero metinlerini uygula (dn_content) */
   document.getElementById('homeListings').innerHTML=listingCardsHTML();
   document.getElementById('vaultGrid').innerHTML=vipCardsHTML();
   document.getElementById('homeContact').innerHTML=contactHTML();
