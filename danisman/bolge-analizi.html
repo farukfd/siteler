@@ -575,6 +575,7 @@ var RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').m
 /* ---- ProX (izole minimal kopya — yalnız VERİ uçları) ---- */
 var EMLAK_API_BASE="https://www.emlakekspertizi.com";
 var EMLAK_TENANT={tenant_id:"consultant",tenant_key:"prox_consultant_a383eb07bb544ce3db7323150370bb46"};
+try{var _dp=JSON.parse(localStorage.getItem('dn_prox')||'null');if(_dp&&_dp.key){EMLAK_TENANT.tenant_key=_dp.key;if(_dp.tenant)EMLAK_TENANT.tenant_id=_dp.tenant;}}catch(e){}/* admin ProX anahtarı (dn_prox) */
 async function proxApi(path){
   try{
     var res=await fetch(EMLAK_API_BASE+path,{method:"GET",mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":EMLAK_TENANT.tenant_id,"X-Tenant-Key":EMLAK_TENANT.tenant_key}});
