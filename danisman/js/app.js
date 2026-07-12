@@ -706,7 +706,7 @@ function crmKisi(id){crmLoad();return _crm.kisiler.filter(function(k){return k.i
 function crmStageT(k){var s=CRM_STAGES.filter(function(x){return x.k===k;})[0];return s?s.t:k;}
 function crmLeads(){var a=[];try{a=JSON.parse(localStorage.getItem('dn_leads')||'[]');}catch(e){}return Array.isArray(a)?a:[];}
 function _crmOpt(arr,sel){return arr.map(function(o){return '<option'+(o===sel?' selected':'')+'>'+_leD(o)+'</option>';}).join('');}
-function crmRenderAll(){try{crmRenderDash();}catch(e){}try{crmRenderKisiler();}catch(e){}try{crmRenderPipe();}catch(e){}try{crmRenderTasks();}catch(e){}try{crmRenderEkip();}catch(e){}try{crmRenderSoz();}catch(e){}try{crmRenderKomisyon();}catch(e){}try{crmRenderKira();}catch(e){}try{crmRenderRapor();}catch(e){}try{cmsRender();}catch(e){}try{crmRenderMatch();}catch(e){}}
+function crmRenderAll(){try{crmRenderDash();}catch(e){}try{crmRenderKisiler();}catch(e){}try{crmRenderPipe();}catch(e){}try{crmRenderTasks();}catch(e){}try{crmRenderEkip();}catch(e){}try{crmRenderSoz();}catch(e){}try{crmRenderKomisyon();}catch(e){}try{crmRenderKira();}catch(e){}try{crmRenderRapor();}catch(e){}try{cmsRender();}catch(e){}try{crmRenderMatch();}catch(e){}try{crmRenderFirma();}catch(e){}try{crmRenderIletisim();}catch(e){}}
 window.crmRenderAll=crmRenderAll;
 
 /* ---------- PANEL (Dashboard) ---------- */
@@ -1138,6 +1138,45 @@ function cmsSave(){var g=function(x){var e=document.getElementById(x);return e?e
   var c={heroEb:g('cms_eb'),heroT1:g('cms_t1'),heroT2:g('cms_t2'),heroLede:g('cms_lede')};
   try{localStorage.setItem(CMS_KEY,JSON.stringify(c));}catch(e){}applyContent();toast('✓ İçerik güncellendi & siteye uygulandı.');}
 function cmsReset(){try{localStorage.removeItem(CMS_KEY);}catch(e){}toast('Varsayılana döndü. Yenileniyor…');setTimeout(function(){location.reload();},800);}
+/* ===================== FİRMA KÜNYE (dn_firma → SAAS_CONFIG.firma) ===================== */
+function firmaLoad(){try{var f=JSON.parse(localStorage.getItem('dn_firma')||'null');if(f&&typeof f==='object'){SAAS_CONFIG.firma=Object.assign({},SAAS_CONFIG.firma||{},f);if(f.advisor)SAAS_CONFIG.advisorName=f.advisor;}}catch(e){}}
+function crmRenderFirma(){var host=document.getElementById('crmFirma');if(!host)return;var f=SAAS_CONFIG.firma||{};var e=f.eids||{};
+  var H='<div class="sta-row2"><div class="sta-f"><label>Danışman Adı</label><input id="cf_advisor" value="'+_leD(SAAS_CONFIG.advisorName||'')+'"></div><div class="sta-f"><label>Firma Ünvanı</label><input id="cf_unvan" value="'+_leD(f.unvan||'')+'"></div></div>'
+    +'<div class="sta-row2"><div class="sta-f"><label>Vergi No / Dairesi</label><input id="cf_vergi" value="'+_leD(f.vergi||'')+'"></div><div class="sta-f"><label>Yetki Belge No (EİDS)</label><input id="cf_belge" value="'+_leD(e.belgeNo||'')+'"></div></div>'
+    +'<div class="sta-f"><label>Adres</label><input id="cf_adres" value="'+_leD(f.adres||'')+'"></div>'
+    +'<div class="sta-row2"><div class="sta-f"><label>Telefon</label><input id="cf_tel" value="'+_leD(f.tel||'')+'"></div><div class="sta-f"><label>E-posta</label><input id="cf_mail" value="'+_leD(f.mail||'')+'"></div></div>'
+    +'<button class="btn btn-gold sta-go" onclick="crmSaveFirma()">Kaydet</button>'
+    +'<p class="sub" style="margin-top:10px">Bu bilgiler sözleşmeler, raporlar ve yasal metinlerde otomatik kullanılır.</p>';
+  host.innerHTML=H;
+}
+function crmSaveFirma(){var g=function(x){var el=document.getElementById(x);return el?el.value.trim():'';};
+  SAAS_CONFIG.firma=SAAS_CONFIG.firma||{};SAAS_CONFIG.firma.eids=SAAS_CONFIG.firma.eids||{};
+  SAAS_CONFIG.advisorName=g('cf_advisor')||SAAS_CONFIG.advisorName;
+  SAAS_CONFIG.firma.unvan=g('cf_unvan');SAAS_CONFIG.firma.vergi=g('cf_vergi');SAAS_CONFIG.firma.adres=g('cf_adres');SAAS_CONFIG.firma.tel=g('cf_tel');SAAS_CONFIG.firma.mail=g('cf_mail');
+  if(g('cf_belge'))SAAS_CONFIG.firma.eids.belgeNo=g('cf_belge');
+  try{localStorage.setItem('dn_firma',JSON.stringify({advisor:SAAS_CONFIG.advisorName,unvan:SAAS_CONFIG.firma.unvan,vergi:SAAS_CONFIG.firma.vergi,adres:SAAS_CONFIG.firma.adres,tel:SAAS_CONFIG.firma.tel,mail:SAAS_CONFIG.firma.mail,eids:{belgeNo:SAAS_CONFIG.firma.eids.belgeNo}}));}catch(e){}
+  toast('✓ Firma bilgileri kaydedildi.');}
+/* ===================== İLETİŞİM & WHATSAPP (dn_iletisim) ===================== */
+function iletLoad(){try{return JSON.parse(localStorage.getItem('dn_iletisim')||'{}')||{};}catch(e){return {};}}
+function applyIletisim(){var c=iletLoad();
+  try{if(c.wa){var num=(''+c.wa).replace(/[^\d]/g,'');[].forEach.call(document.querySelectorAll('a[href*="wa.me"]'),function(a){a.href='https://wa.me/'+num;});}}catch(e){}
+  try{if(c.tel){[].forEach.call(document.querySelectorAll('a[href^="tel:"]'),function(a){a.href='tel:'+(''+c.tel).replace(/\s+/g,'');});}}catch(e){}
+}
+function crmRenderIletisim(){var host=document.getElementById('crmIletisim');if(!host)return;var c=iletLoad();var f=SAAS_CONFIG.firma||{};
+  var H='<div class="sta-row2"><div class="sta-f"><label>WhatsApp Numarası (90…)</label><input id="ci_wa" value="'+_leD(c.wa||'905320000000')+'" placeholder="905320000000"></div><div class="sta-f"><label>Sabit / Cep Telefon</label><input id="ci_tel" value="'+_leD(c.tel||f.tel||'')+'"></div></div>'
+    +'<div class="sta-row2"><div class="sta-f"><label>E-posta</label><input id="ci_mail" value="'+_leD(c.mail||f.mail||'')+'"></div><div class="sta-f"><label>Adres</label><input id="ci_adres" value="'+_leD(c.adres||f.adres||'')+'"></div></div>'
+    +'<div class="sta-ds"><div class="sta-ds-h">💬 WhatsApp Hızlı Yanıt Şablonları</div>'
+    +'<div class="sta-f"><label>Şablon 1</label><textarea id="ci_t1" rows="2" placeholder="Merhaba, ilgilendiğiniz gayrimenkul için…">'+_leD(c.t1||'')+'</textarea></div>'
+    +'<div class="sta-f"><label>Şablon 2</label><textarea id="ci_t2" rows="2">'+_leD(c.t2||'')+'</textarea></div>'
+    +'<div class="sta-f"><label>Şablon 3</label><textarea id="ci_t3" rows="2">'+_leD(c.t3||'')+'</textarea></div></div>'
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-gold sta-go" onclick="crmSaveIletisim()">Kaydet & Siteye Uygula</button><button class="btn btn-line sta-go" onclick="iletTest()">WhatsApp Test Aç</button><button class="btn btn-line sta-go" onclick="staTab(document.querySelector(\'[data-t=gorusmeler]\'))">💬 Görüşmeleri Aç</button></div>'
+    +'<p class="sub" style="margin-top:10px">WhatsApp numarası; üst menü, iletişim ve footer\'daki tüm WhatsApp bağlantılarına anında uygulanır.</p>';
+  host.innerHTML=H;
+}
+function crmSaveIletisim(){var g=function(x){var el=document.getElementById(x);return el?el.value.trim():'';};
+  var c={wa:g('ci_wa').replace(/[^\d]/g,''),tel:g('ci_tel'),mail:g('ci_mail'),adres:g('ci_adres'),t1:g('ci_t1'),t2:g('ci_t2'),t3:g('ci_t3')};
+  try{localStorage.setItem('dn_iletisim',JSON.stringify(c));}catch(e){}applyIletisim();toast('✓ İletişim & WhatsApp güncellendi.');}
+function iletTest(){var c=iletLoad();var num=(''+(c.wa||'905320000000')).replace(/[^\d]/g,'');window.open('https://wa.me/'+num,'_blank');}
 /* ===================== AKILLI EŞLEŞTİRME (kişi kriterleri ↔ açık ilan) ===================== */
 function _matchScore(k,l){var kr=(k.tip==='Kiracı');
   if(kr&&l.durum!=='Kiralık')return 0;if(!kr&&l.durum!=='Satılık')return 0;var s=2;
@@ -1246,9 +1285,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();cl
 /* =====================================================================
    YÖNETİM PANELİ (#saasTenantAdmin) — tam fonksiyonlu
    ===================================================================== */
-function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='sta-modal';
-  el.innerHTML='<div class="sta-ov" onclick="closeSaasAdmin()"></div><div class="sta-card"><div class="sta-hd"><b>ProX SaaS · '+SAAS_CONFIG.tenantName+'</b><button onclick="openOnboarding()" title="Kurulum Sihirbazı" style="margin-left:auto;margin-right:10px;background:none;border:1px solid var(--line-soft);border-radius:8px;color:var(--gold);padding:4px 11px;cursor:pointer;font:inherit;font-size:12.5px">🚀 Sihirbaz</button><button onclick="closeSaasAdmin()">✕</button></div>'
-   +'<div class="sta-tabs"><button class="act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><button data-t="crmkisi" onclick="staTab(this)">👥 Kişiler</button><button data-t="crmpipe" onclick="staTab(this)">📇 Satış Hattı</button><button data-t="crmtask" onclick="staTab(this)">✅ Görevler</button><button data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button data-t="ekip" onclick="staTab(this)">🧑‍💼 Ekip</button><button data-t="sozlesme" onclick="staTab(this)">📄 Sözleşmeler</button><button data-t="komisyon" onclick="staTab(this)">💰 Komisyon</button><button data-t="kira" onclick="staTab(this)">🔑 Kira</button><button data-t="rapor" onclick="staTab(this)">📈 Raporlar</button><button data-t="eslesme" onclick="staTab(this)">🎯 Eşleştirme</button><button data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><button data-t="icerik" onclick="staTab(this)">📝 İçerik</button><button data-t="yedek" onclick="staTab(this)">💾 Yedek</button><button data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="hizmetalani" onclick="staTab(this)">Hizmet Alanı</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
+function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='adm-app';
+  el.innerHTML='<div class="adm-topbar"><div class="alogo"><span class="mark">M</span><span class="alogo-t">Selin Meridyen · <b>Pro<span class="ap-x">X</span> CRM</b></span></div><div class="adm-topbar-act"><button onclick="openOnboarding()">🚀 Sihirbaz</button><button onclick="closeSaasAdmin()">👁 Siteyi Gör</button><button class="adm-x" onclick="closeSaasAdmin()">✕</button></div></div><div class="adm-dash">'
+   +'<aside class="adm-side"><button class="adm-nav act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><div class="adm-group">CRM & Satış</div><button class="adm-nav" data-t="crmkisi" onclick="staTab(this)">👤 Kişiler & Talepler</button><button class="adm-nav" data-t="eslesme" onclick="staTab(this)">🎯 Akıllı Eşleştirme</button><button class="adm-nav" data-t="crmpipe" onclick="staTab(this)">🪜 Satış Hattı</button><button class="adm-nav" data-t="crmtask" onclick="staTab(this)">📅 Görev & Randevu</button><button class="adm-nav" data-t="komisyon" onclick="staTab(this)">💰 Komisyon & Finans</button><button class="adm-nav" data-t="kira" onclick="staTab(this)">🔑 Kira Takibi</button><button class="adm-nav" data-t="sozlesme" onclick="staTab(this)">📄 Sözleşmeler</button><button class="adm-nav" data-t="iletisim" onclick="staTab(this)">📣 İletişim & WhatsApp</button><button class="adm-nav" data-t="rapor" onclick="staTab(this)">📈 Raporlar</button><button class="adm-nav" data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><div class="adm-group">Portföy & İçerik</div><button class="adm-nav" data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button class="adm-nav" data-t="portfoy" onclick="staTab(this)">🔒 Özel Portföy</button><button class="adm-nav" data-t="ekip" onclick="staTab(this)">👥 Ekip / Danışmanlar</button><button class="adm-nav" data-t="hizmetalani" onclick="staTab(this)">🗺️ Hizmet Alanı</button><button class="adm-nav" data-t="icerik" onclick="staTab(this)">📝 İçerik & Sayfalar</button><div class="adm-group">Entegrasyon & ProX</div><button class="adm-nav" data-t="prox" onclick="staTab(this)">🤖 ProX AI & DeepSeek</button><button class="adm-nav" data-t="eids" onclick="staTab(this)">🛡️ EİDS Yetki</button><div class="adm-group">Pazarlama</div><button class="adm-nav" data-t="seo" onclick="staTab(this)">🔍 Google & SEO</button><div class="adm-group">Ayarlar</div><button class="adm-nav" data-t="firma" onclick="staTab(this)">🏢 Firma Bilgileri</button><button class="adm-nav" data-t="marka" onclick="staTab(this)">🎨 Marka & Tema</button><button class="adm-nav" data-t="yedek" onclick="staTab(this)">💾 Yedek / Aktar</button><div class="spacer"></div><button class="adm-nav exit" onclick="closeSaasAdmin()">⎋ Paneli Kapat</button></aside><main class="adm-main">'
    /* CRM · PANEL */
    +'<div class="sta-pane" data-p="crmdash"><h4>Yönetim Paneli · CRM</h4><p class="sub">Kişiler, satış hattı, görevler ve gelen talepler tek bakışta. Gerçek görüşme ve talepler otomatik düşer.</p><div id="crmDash"></div></div>'
    /* CRM · KİŞİLER */
@@ -1329,9 +1368,11 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
    +'<div class="sta-pane" data-p="gorusmeler" hidden><h4>Görüşmeler & Talepler</h4><p class="sub">Ziyaretçilerin ProX Asistan yazışmaları (tam döküm) ve iletişim/randevu talepleri — yetkili olarak tam takip edin. Telefon bırakanlar geri-arama olarak işaretlenir.</p>'
      +'<div style="margin-bottom:10px"><button class="btn btn-line" onclick="renderGorusmelerD()">↻ Yenile</button></div>'
      +'<div id="dnGorusmelerBody"></div></div>'
-   +'</div></div>';
+   +'<div class="sta-pane" data-p="iletisim" hidden><h4>İletişim & WhatsApp Yönetimi</h4><p class="sub">WhatsApp numaranız, iletişim bilgileriniz ve hızlı yanıt şablonları — footer ve iletişim alanlarında kullanılır.</p><div id="crmIletisim"></div></div>'
+   +'<div class="sta-pane" data-p="firma" hidden><h4>Firma Bilgileri · Künye</h4><p class="sub">Ünvan, vergi, adres ve iletişim; footer, sözleşme ve yasal metinlerde otomatik kullanılır.</p><div id="crmFirma"></div></div>'
+   +'</main></div>';
   document.body.appendChild(el);return el;}
-function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');
+function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');try{document.body.style.overflow='hidden';}catch(e){}
   const set=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||'';};
   set('sl_brand',saasResolve('brandName'));set('sl_accent',saasResolve('accent'));set('sl_soft',saasResolve('accentSoft'));
   set('sg_ga',saasResolve('googleAnalytics'));set('sg_gsc',saasResolve('googleSiteVerification'));set('sg_maps',saasResolve('googleMapsKey'));
@@ -1345,7 +1386,7 @@ function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');
   try{staGate();}catch(e){}
   _refreshLogoPrev();
 }
-function closeSaasAdmin(){const e=document.getElementById('saasTenantAdmin');if(e)e.classList.remove('on');}
+function closeSaasAdmin(){const e=document.getElementById('saasTenantAdmin');if(e)e.classList.remove('on');try{document.body.style.overflow='';}catch(_e){}}
 /* ===== PAKET / ÖZELLİK KİLİDİ (admin sekmeleri) — upsell'li ===== */
 var STA_TAB_FEAT={seo:'canUseAnalytics',prox:'canUseMarketingContent',portfoy:'canUseAdvancedProX'};
 var STA_FEAT_LABEL={canUseAnalytics:'Google & SEO / Analitik',canUseMarketingContent:'ProX AI İçerik',canUseAdvancedProX:'Gerçek ProX Özel Portföy'};
@@ -1361,7 +1402,7 @@ function staUpsell(t){var f=STA_TAB_FEAT[t];if(!f)return;var need=featMinPkgD(f)
   mm.innerHTML='<div style="position:absolute;inset:0;background:rgba(0,0,0,.75)" onclick="document.getElementById(\''+id+'\').style.display=\'none\'"></div><div style="position:relative;max-width:460px;background:var(--ink,#0b0b0c);border:1px solid var(--line-soft);border-radius:14px;padding:26px;text-align:center"><div style="font-size:32px">🔒</div><h3 style="font-family:var(--serif);color:var(--gold);margin:6px 0">'+_leD(label)+' · '+_leD(need)+' paketi</h3><div class="sub">Mevcut paket: <b>'+_leD(cur)+'</b>. Bu özellik <b>'+_leD(need)+'</b> ve üzeri paketlerde açıktır.</div><div style="text-align:left;background:var(--cream);border:1px solid var(--line-soft);border-radius:10px;padding:12px;margin:14px 0;font-size:13px;color:var(--muted)"><b style="color:var(--gold)">'+_leD(need)+' kapsamı:</b><br>'+_leD(PKG_KAPSAM_D[need]||'')+'</div><button class="btn btn-gold" style="width:100%" onclick="document.getElementById(\''+id+'\').style.display=\'none\';if(typeof toast===\'function\')toast(\''+_leD(need)+' paketi yükseltme talebiniz iletildi.\')">'+_leD(need)+' Paketine Yükselt</button></div>';
   mm.style.display='flex';}
 window.staGate=staGate;window.staUpsell=staUpsell;window.staTabGated=staTabGated;
-function staTab(b){var t=b.dataset.t;if(staTabGated(t)){staUpsell(t);return;}const m=b.closest('.sta-modal');m.querySelectorAll('.sta-tabs button').forEach(x=>x.classList.toggle('act',x===b));m.querySelectorAll('.sta-pane').forEach(p=>p.hidden=(p.dataset.p!==t));}
+function staTab(b){var t=b.dataset.t;if(staTabGated(t)){staUpsell(t);return;}const m=b.closest('.adm-app')||b.closest('.sta-modal')||document;m.querySelectorAll('.adm-nav,.sta-tabs button').forEach(x=>x.classList.toggle('act',x===b));m.querySelectorAll('.sta-pane').forEach(p=>p.hidden=(p.dataset.p!==t));var mn=m.querySelector('.adm-main');if(mn)mn.scrollTop=0;}
 function _v(id){const e=document.getElementById(id);return e?e.value.trim():'';}
 function _refreshLogoPrev(){const box=document.getElementById('adLogoPrev');if(!box)return;const logo=saasResolve('logoUrl');if(logo)box.innerHTML='<img src="'+logo+'" alt="logo">';else box.textContent=(saasResolve('brandName')||'M').trim().charAt(0);}
 function saasUploadImg(input,key){const f=input.files&&input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{SAAS_CONFIG.tenantSettings[key]=e.target.result;applySaaSSettings();_refreshLogoPrev();toast((key==='logoUrl'?'Logo':'Favicon')+' yüklendi & uygulandı.');};r.readAsDataURL(f);}
@@ -1436,7 +1477,9 @@ window.addEventListener('load',function(){try{
   initSaaSTheme();applySaaSSettings();
   try{eidsRenderPublic();applySchema();applyProxyMode();abApply();}catch(e){}
   try{ilanLoad();}catch(e){}/* admin'de kaydedilmiş açık ilanları yükle (dn_listings_v1) */
+  try{firmaLoad();}catch(e){}/* firma künye (dn_firma) → SAAS_CONFIG.firma */
   try{applyContent();}catch(e){}/* CMS: admin'de düzenlenmiş hero metinlerini uygula (dn_content) */
+  try{applyIletisim();}catch(e){}/* WhatsApp/telefon bağlantılarını admin değerine güncelle (dn_iletisim) */
   document.getElementById('homeListings').innerHTML=listingCardsHTML();
   document.getElementById('vaultGrid').innerHTML=vipCardsHTML();
   document.getElementById('homeContact').innerHTML=contactHTML();

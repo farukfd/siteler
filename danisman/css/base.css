@@ -837,3 +837,40 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 .iln-eids{font-size:12px;padding:8px 11px;border-radius:9px;background:rgba(25,195,125,.08);border:1px solid rgba(25,195,125,.25);color:var(--prox-deep)}
 .iln-eids.no{background:var(--cream-2);border-color:var(--line);color:var(--muted)}
 .vcard-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* ===================== TAM-SAYFA ADMIN · ProX CRM (sidebar düzen) ===================== */
+.adm-app{position:fixed;inset:0;z-index:590;background:var(--cream);display:none;flex-direction:column}
+.adm-app.on{display:flex}
+.adm-topbar{display:flex;align-items:center;gap:12px;padding:11px 20px;background:var(--em-deep);color:var(--cream-on-em);flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.08)}
+.adm-topbar .alogo{display:flex;align-items:center;gap:10px}
+.adm-topbar .alogo .mark{width:32px;height:32px;border-radius:8px;background:var(--grad-gold);color:#1a1206;display:grid;place-items:center;font-weight:800;font-size:16px;font-family:var(--serif)}
+.adm-topbar .alogo-t{font-size:15.5px;font-weight:500}
+.adm-topbar .alogo-t b{font-family:'Space Grotesk',var(--body);font-weight:700}
+.adm-topbar .ap-x{background:var(--prox);color:#04120c;border-radius:4px;padding:0 3px}
+.adm-topbar-act{margin-left:auto;display:flex;gap:8px}
+.adm-topbar-act button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:var(--cream-on-em);border-radius:8px;padding:6px 12px;cursor:pointer;font:inherit;font-size:12.5px;transition:.15s}
+.adm-topbar-act button:hover{background:rgba(255,255,255,.16)}
+.adm-topbar-act .adm-x{font-size:15px;padding:6px 11px}
+.adm-dash{flex:1;display:flex;min-height:0}
+.adm-side{width:236px;flex-shrink:0;background:var(--em-deep);overflow-y:auto;padding:12px 12px 20px;display:flex;flex-direction:column;gap:2px}
+.adm-side::-webkit-scrollbar{width:7px}.adm-side::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:6px}
+.adm-group{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--mut-on-em);font-weight:700;padding:15px 10px 5px}
+.adm-nav{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:0;padding:9px 12px;border-radius:9px;color:#cfe0d7;font:inherit;font-size:13.5px;font-weight:500;cursor:pointer;transition:.15s}
+.adm-nav:hover{background:rgba(255,255,255,.07);color:#fff}
+.adm-nav.act{background:var(--grad-gold);color:#1a1206;font-weight:700;box-shadow:0 6px 16px -8px rgba(195,155,69,.6)}
+.adm-nav .tlock{margin-left:auto;opacity:.7}
+.adm-nav.exit{color:#e9a48c}
+.adm-side .spacer{flex:1;min-height:8px}
+.adm-main{flex:1;overflow-y:auto;padding:28px 34px;min-width:0;background:var(--cream)}
+.adm-main .sta-pane{max-width:940px}
+.adm-main .sta-pane h4{font-family:var(--serif);font-weight:700;font-size:22px;margin:0 0 4px;color:var(--ink)}
+.adm-main .sta-pane>.sub{margin-bottom:20px}
+.sta-pane[hidden]{display:none}
+@media(max-width:860px){
+  .adm-dash{flex-direction:column}
+  .adm-side{width:auto;flex-direction:row;flex-wrap:wrap;gap:4px;padding:10px 12px;max-height:none;border-bottom:1px solid rgba(255,255,255,.1)}
+  .adm-side .adm-group{width:100%;padding:8px 6px 2px}
+  .adm-side .spacer{display:none}
+  .adm-nav{width:auto;font-size:12.5px;padding:7px 11px}
+  .adm-main{padding:18px}
+  .adm-topbar .alogo-t{font-size:13px}
+}
