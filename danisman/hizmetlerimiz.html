@@ -271,9 +271,9 @@
 <section class="hz-hero">
   <div class="wrap">
     <div>
-      <div class="eyebrow"><span class="eb-dot"></span>Kişiye Özel · Uçtan Uca Danışmanlık</div>
+      <div class="eyebrow" data-cms="hz_eyebrow"><span class="eb-dot"></span>Kişiye Özel · Uçtan Uca Danışmanlık</div>
       <h1><span class="w">Fikirden</span> <span class="w">tapuya,</span> <span class="w"><span class="it">veriyle</span></span> <span class="w">uçtan</span> <span class="w">uca</span> <span class="w">gayrimenkul.</span></h1>
-      <p class="lede">Alım-satımdan kiralamaya, değerlemeden yatırım analizine ve miras/intikale kadar; gayrimenkulünüzün her aşamasında canlı ProX bölge verisiyle konuşan, tek muhataplı ve tam gizlilikli bir danışmanlık.</p>
+      <p class="lede" data-cms="hz_lede">Alım-satımdan kiralamaya, değerlemeden yatırım analizine ve miras/intikale kadar; gayrimenkulünüzün her aşamasında canlı ProX bölge verisiyle konuşan, tek muhataplı ve tam gizlilikli bir danışmanlık.</p>
       <div class="hz-hcta">
         <a class="btn btn-gold magnetic" href="index.html#randevu"><span>Ücretsiz Değer Analizi</span></a>
         <a class="btn btn-line magnetic" href="#hz-map"><span>Tüm Hizmetler</span></a>
@@ -654,6 +654,9 @@
   if('IntersectionObserver' in window){var co=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){count(x.target);co.unobserve(x.target);}});},{threshold:.5});counters.forEach(function(c){co.observe(c);});setTimeout(function(){counters.forEach(count);},2400);}
   else counters.forEach(count);
 })();
+</script>
+<script>/* CMS içerik yükleyici — admin'de (dn_content) düzenlenen metinleri uygular */
+(function(){try{var c=JSON.parse(localStorage.getItem('dn_content')||'{}');if(!c)return;var esc=function(s){return String(s).replace(/[&<>]/g,function(x){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[x];});};[].forEach.call(document.querySelectorAll('[data-cms]'),function(el){var v=c[el.getAttribute('data-cms')];if(v==null||v==='')return;var dot=el.querySelector('.eb-dot');if(dot)el.innerHTML='<span class="eb-dot"></span>'+esc(v);else el.textContent=v;});}catch(e){}})();
 </script>
 </body>
 </html>

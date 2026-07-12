@@ -202,10 +202,10 @@
       <nav class="hk-crumb" aria-label="Sayfa yolu">
         <a href="index.html">Ana Sayfa</a> &nbsp;›&nbsp; <span>Hakkımda</span>
       </nav>
-      <div class="eyebrow">Kişisel Temsil · Yetki Belgeli</div>
+      <div class="eyebrow" data-cms="hk_eyebrow">Kişisel Temsil · Yetki Belgeli</div>
       <h1>Selin Meridyen<em>Lüks Konut Danışmanı</em></h1>
-      <div class="hk-role">Kıdemli Lüks Konut &amp; Özel Portföy Danışmanı · İstanbul</div>
-      <p class="hk-lede">Bir gayrimenkul, doğru isimle taçlandırıldığında değerine kavuşur. 18 yılı aşkın süredir İstanbul'un üst segment gayrimenkulünde; Boğaz yalılarından Nişantaşı rezidanslarına, Bağdat Caddesi konutlarından yatırımlık arsalara kadar gayrimenkul sahiplerini <strong style="color:var(--gold-soft);font-weight:400">tam gizlilik, veri odaklı fiyatlama ve tek muhataplı temsil</strong> ile hak ettikleri değere taşıyorum.</p>
+      <div class="hk-role" data-cms="hk_role">Kıdemli Lüks Konut &amp; Özel Portföy Danışmanı · İstanbul</div>
+      <p class="hk-lede" data-cms="hk_lede">Bir gayrimenkul, doğru isimle taçlandırıldığında değerine kavuşur. 18 yılı aşkın süredir İstanbul'un üst segment gayrimenkulünde; Boğaz yalılarından Nişantaşı rezidanslarına, Bağdat Caddesi konutlarından yatırımlık arsalara kadar gayrimenkul sahiplerini <strong style="color:var(--gold-soft);font-weight:400">tam gizlilik, veri odaklı fiyatlama ve tek muhataplı temsil</strong> ile hak ettikleri değere taşıyorum.</p>
       <div class="hk-hero-cta">
         <a class="btn btn-gold" href="index.html#randevu">Ücretsiz Değer Analizi</a>
         <a class="btn btn-line" href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp'tan Yazın</a>
@@ -424,5 +424,8 @@
 })();
 </script>
 
+<script>/* CMS içerik yükleyici — admin'de (dn_content) düzenlenen metinleri uygular */
+(function(){try{var c=JSON.parse(localStorage.getItem('dn_content')||'{}');if(!c)return;var esc=function(s){return String(s).replace(/[&<>]/g,function(x){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[x];});};[].forEach.call(document.querySelectorAll('[data-cms]'),function(el){var v=c[el.getAttribute('data-cms')];if(v==null||v==='')return;var dot=el.querySelector('.eb-dot');if(dot)el.innerHTML='<span class="eb-dot"></span>'+esc(v);else el.textContent=v;});}catch(e){}})();
+</script>
 </body>
 </html>

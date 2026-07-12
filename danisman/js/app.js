@@ -1119,24 +1119,34 @@ function crmDataReset(){if(!confirm('CRM, ilan, sözleşme ve tüm yerel veriler
 /* ===================== İÇERİK CMS (ana sayfa hero metinleri) ===================== */
 var CMS_KEY='dn_content';
 function cmsGet(){try{return JSON.parse(localStorage.getItem(CMS_KEY)||'{}')||{};}catch(e){return {};}}
+/* genel: [data-cms] işaretli tüm elemanları uygula (statik sayfalar da aynı motoru kullanır) */
+function dnApplyCms(c){c=c||cmsGet();try{[].forEach.call(document.querySelectorAll('[data-cms]'),function(el){var k=el.getAttribute('data-cms'),v=c[k];if(v==null||v==='')return;var dot=el.querySelector&&el.querySelector('.eb-dot');if(dot)el.innerHTML='<span class="eb-dot"></span>'+_leD(v);else el.textContent=v;});}catch(e){}}
 function applyContent(){var c=cmsGet();
   try{if(c.heroEb){var eb=document.querySelector('.hero .eyebrow');if(eb)eb.innerHTML='<span class="eb-dot"></span>'+_leD(c.heroEb);}}catch(e){}
   try{if(c.heroT1){var t1=document.querySelector('.hero-title .hl');if(t1)t1.textContent=c.heroT1;}}catch(e){}
   try{if(c.heroT2){var t2=document.querySelector('.hero-title em');if(t2)t2.textContent=c.heroT2;}}catch(e){}
   try{if(c.heroLede){var ld=document.querySelector('.hero .lede');if(ld)ld.textContent=c.heroLede;}}catch(e){}
+  try{dnApplyCms(c);}catch(e){}
 }
+/* CMS alan tanımı: [id, dn_content anahtarı, etiket, textarea?, placeholder] — sayfaya göre gruplu */
+var CMS_FIELDS={
+  home:[['cms_eb','heroEb','Hero Üst Etiket',0,'Kişiye Özel Emlak Danışmanlığı · Yetki Belgeli'],['cms_t1','heroT1','Hero Başlık 1. satır',0,'Gayrimenkulünüz,'],['cms_t2','heroT2','Hero Başlık 2. satır (italik)',0,'gerçek değerine ulaşsın.'],['cms_lede','heroLede','Hero Açıklama',1,'18 yılı aşkın deneyim ve canlı ProX bölge verisiyle…'],['cms_intel','intelText','"Rakamlar konuşur" bölüm metni',1,'Her mahalle için güncel m² değeri, yıllık değişim ve yatırım skoru…']],
+  hakkimizda:[['cms_hkeb','hk_eyebrow','Üst Etiket',0,'Kişisel Temsil · Yetki Belgeli'],['cms_hkrole','hk_role','Rol / Unvan satırı',0,'Kıdemli Lüks Konut & Özel Portföy Danışmanı · İstanbul'],['cms_hklede','hk_lede','Giriş Paragrafı',1,'Bir gayrimenkul, doğru isimle taçlandırıldığında…']],
+  hizmetlerimiz:[['cms_hzeb','hz_eyebrow','Üst Etiket',0,'Kişiye Özel · Uçtan Uca Danışmanlık'],['cms_hzlede','hz_lede','Hero Açıklama',1,'Alım-satımdan kiralamaya, değerlemeden yatırım analizine…']]
+};
 function cmsRender(){var host=document.getElementById('crmCms');if(!host)return;var c=cmsGet();
-  function cur(sel,attr){try{var e=document.querySelector(sel);if(!e)return '';return (attr==='eb')?e.textContent.trim():e.textContent.trim();}catch(x){return '';}}
-  var ebNow=c.heroEb||cur('.hero .eyebrow'),t1Now=c.heroT1||cur('.hero-title .hl'),t2Now=c.heroT2||cur('.hero-title em'),ldNow=c.heroLede||cur('.hero .lede');
-  var H='<div class="crm-f"><label>Hero Üst Etiket (eyebrow)</label><input id="cms_eb" value="'+_leD(ebNow)+'"></div>'
-    +'<div class="crm-frow"><div class="crm-f"><label>Başlık 1. satır</label><input id="cms_t1" value="'+_leD(t1Now)+'"></div><div class="crm-f"><label>Başlık 2. satır (italik)</label><input id="cms_t2" value="'+_leD(t2Now)+'"></div></div>'
-    +'<div class="crm-f"><label>Hero Açıklama (lede)</label><textarea id="cms_lede" rows="3">'+_leD(ldNow)+'</textarea></div>'
-    +'<div class="crm-mact"><button class="btn btn-gold" onclick="cmsSave()">Kaydet & Uygula</button><button class="btn btn-line" onclick="cmsReset()">Varsayılana Dön</button></div>';
+  function grp(title,note,rows){var b='<div class="crm-sec"><div class="crm-sec-h">'+title+'</div>'+(note?'<p class="sub" style="margin:-4px 0 12px">'+note+'</p>':'');
+    rows.forEach(function(f){var val=c[f[1]]!=null?c[f[1]]:'';b+='<div class="crm-f"><label>'+f[2]+'</label>'+(f[3]?('<textarea id="'+f[0]+'" rows="3" placeholder="'+_leD(f[4])+'">'+_leD(val)+'</textarea>'):('<input id="'+f[0]+'" value="'+_leD(val)+'" placeholder="'+_leD(f[4])+'">'))+'</div>';});
+    return b+'</div>';}
+  var H=grp('🏠 Ana Sayfa','Boş bırakılan alan varsayılan metni korur.',CMS_FIELDS.home)
+    +grp('👤 Hakkımda Sayfası','',CMS_FIELDS.hakkimizda)
+    +grp('🛠️ Hizmetlerimiz Sayfası','',CMS_FIELDS.hizmetlerimiz)
+    +'<div class="crm-mact"><button class="btn btn-gold" onclick="cmsSave()">Kaydet & Tüm Sayfalara Uygula</button><button class="btn btn-line" onclick="cmsReset()">Varsayılana Dön</button></div>';
   host.innerHTML=H;
 }
-function cmsSave(){var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
-  var c={heroEb:g('cms_eb'),heroT1:g('cms_t1'),heroT2:g('cms_t2'),heroLede:g('cms_lede')};
-  try{localStorage.setItem(CMS_KEY,JSON.stringify(c));}catch(e){}applyContent();toast('✓ İçerik güncellendi & siteye uygulandı.');}
+function cmsSave(){var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};var c={};
+  Object.keys(CMS_FIELDS).forEach(function(pg){CMS_FIELDS[pg].forEach(function(f){var v=g(f[0]);if(v)c[f[1]]=v;});});
+  try{localStorage.setItem(CMS_KEY,JSON.stringify(c));}catch(e){}applyContent();try{dnApplyCms(c);}catch(e){}toast('✓ İçerik kaydedildi & ana sayfaya uygulandı. Diğer sayfalar açılınca güncel görünür.');}
 function cmsReset(){try{localStorage.removeItem(CMS_KEY);}catch(e){}toast('Varsayılana döndü. Yenileniyor…');setTimeout(function(){location.reload();},800);}
 /* ===================== FİRMA KÜNYE (dn_firma → SAAS_CONFIG.firma) ===================== */
 function firmaLoad(){try{var f=JSON.parse(localStorage.getItem('dn_firma')||'null');if(f&&typeof f==='object'){SAAS_CONFIG.firma=Object.assign({},SAAS_CONFIG.firma||{},f);if(f.advisor)SAAS_CONFIG.advisorName=f.advisor;}}catch(e){}}
