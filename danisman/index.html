@@ -14,6 +14,8 @@
 <script>
 window.EMLAK_API_BASE = "https://www.emlakekspertizi.com";
 window.EMLAK_TENANT = { id:"consultant", tenant_id:"consultant", tenant_key:"prox_consultant_a383eb07bb544ce3db7323150370bb46", domain:location.hostname, sector:"real_estate_consultant", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"PRO", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"consultant", legalMode:"standard" };
+/* Admin'de girilen ProX API anahtarı (dn_prox) — TÜM ProX veri/PDF/AI-fallback çağrılarından ÖNCE uygulanır */
+try{var _dp=JSON.parse(localStorage.getItem('dn_prox')||'null');if(_dp&&_dp.key){window.EMLAK_TENANT.tenant_key=_dp.key;if(_dp.tenant)window.EMLAK_TENANT.tenant_id=_dp.tenant;}}catch(e){}
 window.EMLAK_PACKAGES = {
   BASIC:["canUseMarketAnalysis","canUsePriceEstimate","canUseLeadCRM","canUseSvgGraphics"],
   PRO:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent"],
