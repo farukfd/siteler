@@ -689,6 +689,201 @@ function renderGorusmelerD(){
   host.innerHTML=H;
 }
 try{window.renderGorusmelerD=renderGorusmelerD;window.dnPushLead=dnPushLead;}catch(e){}
+/* ===================== CRM · TAM FONKSİYONLU YÖNETİM (Panel · Kişiler · Satış Hattı · Görevler) =====================
+   Tek depo dn_crm_v1 = {seq, kisiler[], deals[], tasks[]}. Gelen talepler (dn_leads) kişiye dönüştürülür. */
+var CRM_KEY='dn_crm_v1';
+var CRM_STAGES=[{k:'yeni',t:'Yeni'},{k:'iletisim',t:'İletişim'},{k:'gorusme',t:'Görüşme'},{k:'teklif',t:'Teklif'},{k:'kazanildi',t:'Kazanıldı'},{k:'kaybedildi',t:'Kaybedildi'}];
+var CRM_TIP=['Alıcı','Satıcı','Kiracı','Kiralayan','Yatırımcı'];
+var CRM_KAYNAK=['Web Sitesi','ProX Asistan','Telefon','WhatsApp','Tavsiye','Portal','Randevu Formu'];
+var CRM_GOREV=['Arama','Yer Gösterme','Toplantı','Tapu / Sözleşme','Takip'];
+var _crm=null;
+function crmLoad(){if(_crm)return _crm;try{_crm=JSON.parse(localStorage.getItem(CRM_KEY)||'null');}catch(e){}if(!_crm||typeof _crm!=='object')_crm={seq:100,kisiler:[],deals:[],tasks:[]};_crm.kisiler=_crm.kisiler||[];_crm.deals=_crm.deals||[];_crm.tasks=_crm.tasks||[];_crm.seq=_crm.seq||100;return _crm;}
+function crmSave(){try{localStorage.setItem(CRM_KEY,JSON.stringify(_crm));}catch(e){try{toast('Kayıt alanı dolu; eski veriyi dışa aktarın.');}catch(_){}}}
+function crmId(){crmLoad();return ++_crm.seq;}
+function _crmTL(n){n=Math.round(+n||0);if(n>=1000000)return (Math.round(n/100000)/10).toLocaleString('tr-TR')+' Mn ₺';if(n>=1000)return n.toLocaleString('tr-TR')+' ₺';return n?n+' ₺':'—';}
+function _crmDate(x){try{return new Date(x).toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit',year:'2-digit'});}catch(e){return '';}}
+function crmKisi(id){crmLoad();return _crm.kisiler.filter(function(k){return k.id===id;})[0]||null;}
+function crmStageT(k){var s=CRM_STAGES.filter(function(x){return x.k===k;})[0];return s?s.t:k;}
+function crmLeads(){var a=[];try{a=JSON.parse(localStorage.getItem('dn_leads')||'[]');}catch(e){}return Array.isArray(a)?a:[];}
+function _crmOpt(arr,sel){return arr.map(function(o){return '<option'+(o===sel?' selected':'')+'>'+_leD(o)+'</option>';}).join('');}
+function crmRenderAll(){try{crmRenderDash();}catch(e){}try{crmRenderKisiler();}catch(e){}try{crmRenderPipe();}catch(e){}try{crmRenderTasks();}catch(e){}}
+window.crmRenderAll=crmRenderAll;
+
+/* ---------- PANEL (Dashboard) ---------- */
+function crmRenderDash(){var host=document.getElementById('crmDash');if(!host)return;crmLoad();
+  var leads=crmLeads();
+  var open=_crm.deals.filter(function(d){return d.stage!=='kazanildi'&&d.stage!=='kaybedildi';});
+  var won=_crm.deals.filter(function(d){return d.stage==='kazanildi';});
+  var pipe=open.reduce(function(s,d){return s+(+d.value||0);},0);
+  var wonVal=won.reduce(function(s,d){return s+(+d.value||0);},0);
+  var today=new Date();today.setHours(0,0,0,0);
+  var dueTasks=_crm.tasks.filter(function(t){return !t.done;});
+  var overdue=dueTasks.filter(function(t){return t.date&&new Date(t.date)<today;}).length;
+  var thisMonth=new Date().toISOString().slice(0,7);
+  var newKisi=_crm.kisiler.filter(function(k){return (k.created||'').slice(0,7)===thisMonth;}).length;
+  var nListings=(typeof LISTINGS!=='undefined'?LISTINGS.length:0)+(typeof VIP_PORTFOLIO!=='undefined'?VIP_PORTFOLIO.length:0);
+  function kpi(v,l,hot){return '<div class="crm-kpi'+(hot?' hot':'')+'"><b>'+v+'</b><span>'+l+'</span></div>';}
+  var H='<div class="crm-kpis">'
+    +kpi(_crm.kisiler.length,'Kişi')
+    +kpi(open.length,'Açık Fırsat')
+    +kpi(_crmTL(pipe),'Pipeline Değeri')
+    +kpi(dueTasks.length,'Açık Görev',overdue>0)
+    +kpi(leads.length,'Gelen Talep',leads.length>0)
+    +kpi(_crmTL(wonVal),'Kazanılan')
+    +'</div>';
+  /* pipeline özet çubuğu */
+  H+='<div class="crm-sec"><div class="crm-sec-h">Satış Hattı Özeti</div><div class="crm-funnel">';
+  CRM_STAGES.forEach(function(s){var n=_crm.deals.filter(function(d){return d.stage===s.k;}).length;
+    H+='<div class="crm-fn" data-s="'+s.k+'" onclick="staTab(document.querySelector(\'[data-t=crmpipe]\'))"><b>'+n+'</b><span>'+s.t+'</span></div>';});
+  H+='</div></div>';
+  /* yaklaşan görevler */
+  H+='<div class="crm-two"><div class="crm-sec"><div class="crm-sec-h">Yaklaşan Görevler</div>';
+  var up=dueTasks.slice().sort(function(a,b){return (a.date||'')<(b.date||'')?-1:1;}).slice(0,5);
+  if(!up.length)H+='<div class="crm-empty">Açık görev yok.</div>';
+  else H+=up.map(function(t){var od=t.date&&new Date(t.date)<today;var k=crmKisi(t.kisiId);
+    return '<div class="crm-mini"><label><input type="checkbox" onchange="crmToggleTask('+t.id+')"><span>'+_leD(t.title||t.tip||'Görev')+(k?' · '+_leD(k.name):'')+'</span></label><em'+(od?' class="od"':'')+'>'+(t.date?_crmDate(t.date):'')+'</em></div>';}).join('');
+  H+='</div>';
+  /* son gelen talepler */
+  H+='<div class="crm-sec"><div class="crm-sec-h">Son Gelen Talepler <span class="crm-h-act" onclick="staTab(document.querySelector(\'[data-t=gorusmeler]\'))">tümü →</span></div>';
+  if(!leads.length)H+='<div class="crm-empty">Talep yok. Formlar ve ProX Asistan telefon bırakanları buraya düşer.</div>';
+  else H+=leads.slice(0,5).map(function(l){return '<div class="crm-mini"><span>'+_leD(l.name||'—')+(l.phone?(' · 📞 '+_leD(l.phone)):'')+'<em class="src">'+_leD(l.src||'')+'</em></span><button class="crm-x2" onclick="crmFromLead(\''+_leD(l.id)+'\')">+ Kişi</button></div>';}).join('');
+  H+='</div></div>';
+  H+='<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-line" onclick="crmSeedDemo()">Örnek CRM verisi ekle</button><button class="btn btn-line" onclick="crmExport()">⬇ Dışa Aktar (JSON)</button></div>';
+  host.innerHTML=H;
+}
+/* ---------- KİŞİLER ---------- */
+var _crmKF={q:'',tip:''};
+function crmRenderKisiler(){var host=document.getElementById('crmKisiler');if(!host)return;crmLoad();
+  var q=_crmKF.q.toLocaleLowerCase('tr'),list=_crm.kisiler.filter(function(k){
+    if(_crmKF.tip&&k.tip!==_crmKF.tip)return false;
+    if(!q)return true;return ((k.name||'')+' '+(k.tel||'')+' '+(k.il||'')+' '+(k.ilce||'')).toLocaleLowerCase('tr').indexOf(q)>=0;});
+  var H='<div class="crm-bar"><input class="crm-search" placeholder="Ara: isim, telefon, bölge…" value="'+_leD(_crmKF.q)+'" oninput="_crmKF.q=this.value;crmRenderKisiler()"><select class="crm-selm" onchange="_crmKF.tip=this.value;crmRenderKisiler()"><option value="">Tüm tipler</option>'+CRM_TIP.map(function(t){return '<option'+(t===_crmKF.tip?' selected':'')+'>'+t+'</option>';}).join('')+'</select><button class="btn btn-gold crm-add" onclick="crmEditKisi(0)">+ Kişi Ekle</button></div>';
+  if(!list.length)H+='<div class="crm-empty">Kişi yok. "+ Kişi Ekle" ile ekleyin veya Panel/Görüşmeler\'den gelen talebi kişiye dönüştürün.</div>';
+  else H+='<div class="crm-list">'+list.map(function(k){var deals=_crm.deals.filter(function(d){return d.kisiId===k.id;});
+    return '<div class="crm-card"><div class="crm-card-top"><div><b>'+_leD(k.name||'—')+'</b><span class="crm-badge">'+_leD(k.tip||'—')+'</span></div><div class="crm-card-act"><button onclick="crmEditKisi('+k.id+')" title="Düzenle">✎</button><button onclick="crmDelKisi('+k.id+')" title="Sil">🗑</button></div></div>'
+      +'<div class="crm-card-b">'+(k.tel?('📞 '+_leD(k.tel)+' '):'')+(k.email?('· '+_leD(k.email)):'')+'</div>'
+      +'<div class="crm-card-b sub">'+[k.il,k.ilce].filter(Boolean).map(_leD).join(' / ')+(k.kategori?(' · '+_leD(k.kategori)):'')+(k.min||k.max?(' · '+_crmTL(k.min)+(k.max?('–'+_crmTL(k.max)):'')):'')+'</div>'
+      +'<div class="crm-card-f"><span class="crm-src">'+_leD(k.kaynak||'')+'</span><button class="crm-x2" onclick="crmNewDealFor('+k.id+')">+ Fırsat'+(deals.length?(' ('+deals.length+')'):'')+'</button></div></div>';
+  }).join('')+'</div>';
+  host.innerHTML=H;
+}
+function crmEditKisi(id){crmLoad();var k=id?crmKisi(id):{id:0,tip:'Alıcı',kaynak:'Web Sitesi'};if(!k)return;
+  var F='<div class="crm-mh">'+(id?'Kişiyi Düzenle':'Yeni Kişi')+'</div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Ad Soyad</label><input id="ck_name" value="'+_leD(k.name||'')+'"></div><div class="crm-f"><label>Telefon</label><input id="ck_tel" value="'+_leD(k.tel||'')+'"></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>E-posta</label><input id="ck_email" value="'+_leD(k.email||'')+'"></div><div class="crm-f"><label>Tip</label><select id="ck_tip">'+_crmOpt(CRM_TIP,k.tip)+'</select></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>İl</label><input id="ck_il" value="'+_leD(k.il||'')+'"></div><div class="crm-f"><label>İlçe</label><input id="ck_ilce" value="'+_leD(k.ilce||'')+'"></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Kategori / İlgi</label><input id="ck_kat" value="'+_leD(k.kategori||'')+'" placeholder="Konut, Villa, Arsa…"></div><div class="crm-f"><label>Kaynak</label><select id="ck_kaynak">'+_crmOpt(CRM_KAYNAK,k.kaynak)+'</select></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Bütçe Min (₺)</label><input id="ck_min" type="number" value="'+(k.min||'')+'"></div><div class="crm-f"><label>Bütçe Max (₺)</label><input id="ck_max" type="number" value="'+(k.max||'')+'"></div></div>'
+    +'<div class="crm-f"><label>Not</label><textarea id="ck_not" rows="2">'+_leD(k.not||'')+'</textarea></div>'
+    +'<div class="crm-mact"><button class="btn btn-gold" onclick="crmSaveKisi('+id+')">Kaydet</button><button class="btn btn-line" onclick="crmCloseModal()">Vazgeç</button></div>';
+  crmModal(F);
+}
+function crmSaveKisi(id){crmLoad();var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
+  var o={name:g('ck_name'),tel:g('ck_tel'),email:g('ck_email'),tip:g('ck_tip'),il:g('ck_il'),ilce:g('ck_ilce'),kategori:g('ck_kat'),kaynak:g('ck_kaynak'),min:+g('ck_min')||0,max:+g('ck_max')||0,not:g('ck_not')};
+  if(!o.name&&!o.tel){toast('En az ad veya telefon girin.');return;}
+  if(id){var k=crmKisi(id);if(k){Object.assign(k,o);k.updated=new Date().toISOString();}}
+  else{o.id=crmId();o.created=new Date().toISOString();_crm.kisiler.unshift(o);}
+  crmSave();crmCloseModal();crmRenderKisiler();crmRenderDash();toast('✓ Kişi kaydedildi.');
+}
+function crmDelKisi(id){if(!confirm('Bu kişi ve bağlı fırsatları silinsin mi?'))return;crmLoad();_crm.kisiler=_crm.kisiler.filter(function(k){return k.id!==id;});_crm.deals=_crm.deals.filter(function(d){return d.kisiId!==id;});crmSave();crmRenderKisiler();crmRenderPipe();crmRenderDash();toast('Kişi silindi.');}
+function crmFromLead(lid){crmLoad();var l=crmLeads().filter(function(x){return String(x.id)===String(lid);})[0];if(!l){toast('Talep bulunamadı.');return;}
+  var o={id:crmId(),name:l.name||'İsimsiz',tel:l.phone||'',email:l.email||'',tip:'Alıcı',kaynak:l.src||'Web Sitesi',not:(l.konu||'')+(l.msg?(' — '+l.msg):''),created:new Date().toISOString()};
+  _crm.kisiler.unshift(o);crmSave();
+  try{staTab(document.querySelector('[data-t=crmkisi]'));}catch(e){}
+  crmRenderKisiler();crmRenderDash();toast('✓ Talep kişiye eklendi: '+o.name);
+}
+/* ---------- SATIŞ HATTI (Pipeline / Kanban) ---------- */
+function crmRenderPipe(){var host=document.getElementById('crmPipe');if(!host)return;crmLoad();
+  var H='<div class="crm-bar"><div class="sub" style="margin:0">Fırsatları aşamalar arasında ◀ ▶ ile taşıyın; kartı düzenlemek için ✎.</div><button class="btn btn-gold crm-add" onclick="crmEditDeal(0)">+ Fırsat</button></div>';
+  H+='<div class="crm-kanban">';
+  CRM_STAGES.forEach(function(s,si){var col=_crm.deals.filter(function(d){return d.stage===s.k;});
+    var sum=col.reduce(function(a,d){return a+(+d.value||0);},0);
+    H+='<div class="crm-col" data-s="'+s.k+'"><div class="crm-col-h"><b>'+s.t+'</b><span>'+col.length+' · '+_crmTL(sum)+'</span></div>';
+    col.forEach(function(d){var k=crmKisi(d.kisiId);
+      H+='<div class="crm-deal"><div class="crm-deal-t">'+_leD(d.title||'Fırsat')+'</div>'
+        +'<div class="crm-deal-m">'+(k?_leD(k.name):'—')+(d.value?(' · '+_crmTL(d.value)):'')+'</div>'
+        +'<div class="crm-deal-f"><div class="crm-mv"><button onclick="crmMoveDeal('+d.id+',-1)"'+(si===0?' disabled':'')+'>◀</button><button onclick="crmMoveDeal('+d.id+',1)"'+(si===CRM_STAGES.length-1?' disabled':'')+'>▶</button></div><div class="crm-deal-a"><button onclick="crmEditDeal('+d.id+')">✎</button><button onclick="crmDelDeal('+d.id+')">🗑</button></div></div></div>';
+    });
+    if(!col.length)H+='<div class="crm-col-e">—</div>';
+    H+='</div>';
+  });
+  H+='</div>';
+  host.innerHTML=H;
+}
+function crmMoveDeal(id,dir){crmLoad();var d=_crm.deals.filter(function(x){return x.id===id;})[0];if(!d)return;
+  var i=CRM_STAGES.map(function(s){return s.k;}).indexOf(d.stage);i=Math.max(0,Math.min(CRM_STAGES.length-1,i+dir));
+  d.stage=CRM_STAGES[i].k;d.updated=new Date().toISOString();crmSave();crmRenderPipe();crmRenderDash();}
+function crmEditDeal(id,preKisi){crmLoad();var d=id?_crm.deals.filter(function(x){return x.id===id;})[0]:{id:0,stage:'yeni',kisiId:preKisi||0,prob:30};if(!d)return;
+  var kOpt='<option value="0">— Kişi seçin —</option>'+_crm.kisiler.map(function(k){return '<option value="'+k.id+'"'+(k.id===d.kisiId?' selected':'')+'>'+_leD(k.name||('#'+k.id))+'</option>';}).join('');
+  var sOpt=CRM_STAGES.map(function(s){return '<option value="'+s.k+'"'+(s.k===d.stage?' selected':'')+'>'+s.t+'</option>';}).join('');
+  var F='<div class="crm-mh">'+(id?'Fırsatı Düzenle':'Yeni Fırsat')+'</div>'
+    +'<div class="crm-f"><label>Başlık</label><input id="cd_title" value="'+_leD(d.title||'')+'" placeholder="Nişantaşı 3+1 — alıcı görüşmesi"></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Kişi</label><select id="cd_kisi">'+kOpt+'</select></div><div class="crm-f"><label>Aşama</label><select id="cd_stage">'+sOpt+'</select></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Değer (₺)</label><input id="cd_value" type="number" value="'+(d.value||'')+'"></div><div class="crm-f"><label>Olasılık (%)</label><input id="cd_prob" type="number" value="'+(d.prob||30)+'"></div></div>'
+    +'<div class="crm-f"><label>Not</label><textarea id="cd_not" rows="2">'+_leD(d.not||'')+'</textarea></div>'
+    +'<div class="crm-mact"><button class="btn btn-gold" onclick="crmSaveDeal('+id+')">Kaydet</button><button class="btn btn-line" onclick="crmCloseModal()">Vazgeç</button>'+(id?'<button class="btn btn-line" style="margin-left:auto;color:#c0603a" onclick="crmDelDeal('+id+')">Sil</button>':'')+'</div>';
+  crmModal(F);
+}
+function crmSaveDeal(id){crmLoad();var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
+  var o={title:g('cd_title'),kisiId:+g('cd_kisi')||0,stage:g('cd_stage')||'yeni',value:+g('cd_value')||0,prob:+g('cd_prob')||0,not:g('cd_not')};
+  if(!o.title){toast('Fırsat başlığı girin.');return;}
+  if(id){var d=_crm.deals.filter(function(x){return x.id===id;})[0];if(d){Object.assign(d,o);d.updated=new Date().toISOString();}}
+  else{o.id=crmId();o.created=new Date().toISOString();_crm.deals.unshift(o);}
+  crmSave();crmCloseModal();crmRenderPipe();crmRenderDash();toast('✓ Fırsat kaydedildi.');
+}
+function crmDelDeal(id){if(!confirm('Fırsat silinsin mi?'))return;crmLoad();_crm.deals=_crm.deals.filter(function(d){return d.id!==id;});crmSave();crmCloseModal();crmRenderPipe();crmRenderDash();toast('Fırsat silindi.');}
+function crmNewDealFor(kisiId){try{staTab(document.querySelector('[data-t=crmpipe]'));}catch(e){}crmEditDeal(0,kisiId);}
+/* ---------- GÖREVLER ---------- */
+function crmRenderTasks(){var host=document.getElementById('crmTasks');if(!host)return;crmLoad();
+  var today=new Date();today.setHours(0,0,0,0);
+  var open=_crm.tasks.filter(function(t){return !t.done;}).sort(function(a,b){return (a.date||'')<(b.date||'')?-1:1;});
+  var done=_crm.tasks.filter(function(t){return t.done;}).slice(0,20);
+  var H='<div class="crm-bar"><div class="sub" style="margin:0">'+open.length+' açık görev</div><button class="btn btn-gold crm-add" onclick="crmEditTask(0)">+ Görev</button></div>';
+  if(!open.length)H+='<div class="crm-empty">Açık görev yok. Arama, yer gösterme, tapu ve takip görevlerinizi buradan planlayın.</div>';
+  else H+='<div class="crm-list">'+open.map(function(t){var od=t.date&&new Date(t.date)<today;var k=crmKisi(t.kisiId);
+    return '<div class="crm-task"><label><input type="checkbox" onchange="crmToggleTask('+t.id+')"><span><b>'+_leD(t.title||t.tip||'Görev')+'</b><em class="tt">'+_leD(t.tip||'')+(k?(' · '+_leD(k.name)):'')+'</em></span></label><div class="crm-task-r"><em'+(od?' class="od"':'')+'>'+(t.date?_crmDate(t.date):'—')+'</em><button onclick="crmEditTask('+t.id+')">✎</button><button onclick="crmDelTask('+t.id+')">🗑</button></div></div>';}).join('')+'</div>';
+  if(done.length)H+='<div class="crm-sec-h" style="margin-top:18px">Tamamlanan</div><div class="crm-list">'+done.map(function(t){return '<div class="crm-task done"><label><input type="checkbox" checked onchange="crmToggleTask('+t.id+')"><span>'+_leD(t.title||t.tip||'Görev')+'</span></label><button onclick="crmDelTask('+t.id+')">🗑</button></div>';}).join('')+'</div>';
+  host.innerHTML=H;
+}
+function crmToggleTask(id){crmLoad();var t=_crm.tasks.filter(function(x){return x.id===id;})[0];if(!t)return;t.done=!t.done;crmSave();crmRenderTasks();crmRenderDash();}
+function crmEditTask(id){crmLoad();var t=id?_crm.tasks.filter(function(x){return x.id===id;})[0]:{id:0,tip:'Arama',date:new Date().toISOString().slice(0,10)};if(!t)return;
+  var kOpt='<option value="0">— (opsiyonel) —</option>'+_crm.kisiler.map(function(k){return '<option value="'+k.id+'"'+(k.id===t.kisiId?' selected':'')+'>'+_leD(k.name||('#'+k.id))+'</option>';}).join('');
+  var F='<div class="crm-mh">'+(id?'Görevi Düzenle':'Yeni Görev')+'</div>'
+    +'<div class="crm-f"><label>Başlık</label><input id="ct_title" value="'+_leD(t.title||'')+'" placeholder="Alıcıyı ara — Beşiktaş dairesi"></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Tür</label><select id="ct_tip">'+_crmOpt(CRM_GOREV,t.tip)+'</select></div><div class="crm-f"><label>Tarih</label><input id="ct_date" type="date" value="'+(t.date?String(t.date).slice(0,10):'')+'"></div></div>'
+    +'<div class="crm-f"><label>İlgili Kişi</label><select id="ct_kisi">'+kOpt+'</select></div>'
+    +'<div class="crm-mact"><button class="btn btn-gold" onclick="crmSaveTask('+id+')">Kaydet</button><button class="btn btn-line" onclick="crmCloseModal()">Vazgeç</button></div>';
+  crmModal(F);
+}
+function crmSaveTask(id){crmLoad();var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
+  var o={title:g('ct_title'),tip:g('ct_tip'),date:g('ct_date'),kisiId:+g('ct_kisi')||0};
+  if(!o.title&&!o.tip){toast('Görev başlığı girin.');return;}
+  if(id){var t=_crm.tasks.filter(function(x){return x.id===id;})[0];if(t)Object.assign(t,o);}
+  else{o.id=crmId();o.done=false;o.created=new Date().toISOString();_crm.tasks.unshift(o);}
+  crmSave();crmCloseModal();crmRenderTasks();crmRenderDash();toast('✓ Görev kaydedildi.');
+}
+function crmDelTask(id){crmLoad();_crm.tasks=_crm.tasks.filter(function(t){return t.id!==id;});crmSave();crmRenderTasks();crmRenderDash();}
+/* ---------- Modal + araçlar ---------- */
+function crmModal(html){var m=document.getElementById('crmModal');if(!m){m=document.createElement('div');m.id='crmModal';m.className='crm-modal';m.innerHTML='<div class="crm-modal-ov" onclick="crmCloseModal()"></div><div class="crm-modal-c"></div>';document.body.appendChild(m);}
+  m.querySelector('.crm-modal-c').innerHTML=html;m.classList.add('on');}
+function crmCloseModal(){var m=document.getElementById('crmModal');if(m)m.classList.remove('on');}
+function crmSeedDemo(){crmLoad();if(_crm.kisiler.length&&!confirm('Mevcut CRM verisinin üstüne örnek veri eklensin mi?'))return;
+  var k1=crmId(),k2=crmId(),k3=crmId();
+  _crm.kisiler.unshift(
+    {id:k1,name:'Örnek — Cem Aydın',tel:'0532 000 00 01',email:'cem@example.com',tip:'Alıcı',il:'İstanbul',ilce:'Beşiktaş',kategori:'Konut',min:8000000,max:14000000,kaynak:'ProX Asistan',not:'Boğaz manzaralı 3+1 arıyor.',created:new Date().toISOString()},
+    {id:k2,name:'Örnek — Deniz Yıldız',tel:'0532 000 00 02',tip:'Satıcı',il:'İstanbul',ilce:'Kadıköy',kategori:'Konut',kaynak:'Tavsiye',not:'Caddebostan 2+1 satılık.',created:new Date().toISOString()},
+    {id:k3,name:'Örnek — Ece Kaya',tel:'0532 000 00 03',tip:'Yatırımcı',il:'İstanbul',ilce:'Şişli',kategori:'Ticari',min:20000000,kaynak:'Web Sitesi',created:new Date().toISOString()});
+  _crm.deals.unshift(
+    {id:crmId(),title:'Beşiktaş 3+1 — Cem Aydın',kisiId:k1,stage:'gorusme',value:12500000,prob:55,created:new Date().toISOString()},
+    {id:crmId(),title:'Caddebostan 2+1 satış yetkisi',kisiId:k2,stage:'teklif',value:9800000,prob:70,created:new Date().toISOString()},
+    {id:crmId(),title:'Şişli ticari yatırım',kisiId:k3,stage:'yeni',value:22000000,prob:25,created:new Date().toISOString()});
+  _crm.tasks.unshift(
+    {id:crmId(),title:'Cem Bey\'i ara — yeni ilanlar',tip:'Arama',date:new Date().toISOString().slice(0,10),kisiId:k1,done:false,created:new Date().toISOString()},
+    {id:crmId(),title:'Caddebostan yer gösterme',tip:'Yer Gösterme',date:new Date(Date.now()+86400000).toISOString().slice(0,10),kisiId:k2,done:false,created:new Date().toISOString()});
+  crmSave();crmRenderAll();toast('✓ Örnek CRM verisi eklendi (silmekte özgürsünüz).');
+}
+function crmExport(){crmLoad();try{var blob=new Blob([JSON.stringify(_crm,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='meridyen-crm-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();toast('CRM verisi indirildi.');}catch(e){toast('Dışa aktarılamadı.');}}
+/* CRM fonksiyonları global scope'ta (function bildirimleri window'a bağlıdır) → onclick handler'ları bare isimle erişir. */
 /* Canlı ProX: /prox/ai (answer) + yatırım/portföy sorularında /prox/analyze. Boş/başarısız → yerel _proxReply.
    Sağlayıcı adı ASLA gösterilmez/loglanmaz — yalnızca "ProX". Değer SADECE API'den gelir. */
 function _proxAnalyzeHTML(a){
@@ -767,9 +962,17 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();cl
    ===================================================================== */
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='sta-modal';
   el.innerHTML='<div class="sta-ov" onclick="closeSaasAdmin()"></div><div class="sta-card"><div class="sta-hd"><b>ProX SaaS · '+SAAS_CONFIG.tenantName+'</b><button onclick="openOnboarding()" title="Kurulum Sihirbazı" style="margin-left:auto;margin-right:10px;background:none;border:1px solid var(--line-soft);border-radius:8px;color:var(--gold);padding:4px 11px;cursor:pointer;font:inherit;font-size:12.5px">🚀 Sihirbaz</button><button onclick="closeSaasAdmin()">✕</button></div>'
-   +'<div class="sta-tabs"><button class="act" data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="hizmetalani" onclick="staTab(this)">Hizmet Alanı</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button><button data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button></div><div class="sta-body">'
+   +'<div class="sta-tabs"><button class="act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><button data-t="crmkisi" onclick="staTab(this)">👥 Kişiler</button><button data-t="crmpipe" onclick="staTab(this)">📇 Satış Hattı</button><button data-t="crmtask" onclick="staTab(this)">✅ Görevler</button><button data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><button data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="hizmetalani" onclick="staTab(this)">Hizmet Alanı</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
+   /* CRM · PANEL */
+   +'<div class="sta-pane" data-p="crmdash"><h4>Yönetim Paneli · CRM</h4><p class="sub">Kişiler, satış hattı, görevler ve gelen talepler tek bakışta. Gerçek görüşme ve talepler otomatik düşer.</p><div id="crmDash"></div></div>'
+   /* CRM · KİŞİLER */
+   +'<div class="sta-pane" data-p="crmkisi" hidden><h4>Kişiler & Talepler</h4><p class="sub">Alıcı/satıcı/yatırımcı kişilerinizi yönetin; gelen talepleri tek tıkla kişiye dönüştürün.</p><div id="crmKisiler"></div></div>'
+   /* CRM · SATIŞ HATTI */
+   +'<div class="sta-pane" data-p="crmpipe" hidden><h4>Satış Hattı (Pipeline)</h4><p class="sub">Fırsatları Yeni → İletişim → Görüşme → Teklif → Kazanıldı aşamalarında yönetin.</p><div id="crmPipe"></div></div>'
+   /* CRM · GÖREVLER */
+   +'<div class="sta-pane" data-p="crmtask" hidden><h4>Görev & Randevu</h4><p class="sub">Arama, yer gösterme, tapu ve takip görevlerinizi planlayın; geciken görevler işaretlenir.</p><div id="crmTasks"></div></div>'
    /* MARKA & LOGO */
-   +'<div class="sta-pane" data-p="marka"><h4>Marka, Logo & Tema</h4><p class="sub">Logo/favicon yükleyin veya URL girin; altın/şampanya tema tonunu ayarlayın.</p>'
+   +'<div class="sta-pane" data-p="marka" hidden><h4>Marka, Logo & Tema</h4><p class="sub">Logo/favicon yükleyin veya URL girin; altın/şampanya tema tonunu ayarlayın.</p>'
      +'<div class="logo-prev"><div class="box" id="adLogoPrev">M</div><span>Mevcut logo önizleme</span></div>'
      +'<div class="sta-f"><label>Marka Adı (logo yazısı)</label><input id="sl_brand" placeholder="Selin Meridyen"></div>'
      +'<div class="sta-row2"><div class="sta-f"><label>Logo Yükle (dosya)</label><input type="file" accept="image/*" id="sl_logo_file" onchange="saasUploadImg(this,\'logoUrl\')"></div><div class="sta-f"><label>veya Logo URL</label><input id="sl_logo_url" placeholder="https://.../logo.png"></div></div>'
@@ -828,6 +1031,7 @@ function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');
   set('dn_dskey',_dsKey());set('dn_dsmodel',_dsModel());try{aiDsStatus();}catch(e){}
   set('ed_belge',eidsFirma().eids.belgeNo);try{eidsRenderAdmin();}catch(e){}
   try{renderSA();renderVipStatus();renderGorusmelerD();}catch(e){}
+  try{crmRenderAll();}catch(e){}
   try{staGate();}catch(e){}
   _refreshLogoPrev();
 }
