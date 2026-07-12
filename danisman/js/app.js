@@ -1221,23 +1221,25 @@ window.proxAiQuery=proxAiQuery;
 /* =====================================================================
    ŞİFRELİ GİRİŞ KAPISI (Admin Login Gate)
    ===================================================================== */
-const _ADMIN_PASS='ekspertiz2026';
+const _ADMIN_USER='admin';const _ADMIN_PASS='1234';/* istemci tarafı demo giriş — gerçek güvenlik için sunucu-taraf auth gerekir */
 function _adGateHost(){let el=document.getElementById('adGate');if(el)return el;el=document.createElement('div');el.id='adGate';el.className='adgate';
   el.innerHTML='<div class="adgate-ov" onclick="closeAdminGate()"></div><div class="adgate-card">'
    +'<button class="adgate-x" onclick="closeAdminGate()" aria-label="Kapat">✕</button>'
    +'<div class="adgate-lock"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="16" r="1.4"/></svg></div>'
-   +'<h3>Yönetim Paneli Girişi</h3><div class="sub">Bu alan yalnızca yetkili danışmana özeldir. Devam etmek için kurumsal erişim şifrenizi girin.</div>'
-   +'<div class="adgate-f"><input id="adPass" type="password" placeholder="Erişim şifresi" autocomplete="off" onkeydown="if(event.key===\'Enter\')adminLogin()"><button class="eye" type="button" onclick="_adToggleEye()" aria-label="Göster">👁</button></div>'
+   +'<h3>Yönetim Paneli Girişi</h3><div class="sub">Bu alan yalnızca yetkili danışmana özeldir. Devam etmek için kullanıcı adı ve erişim şifrenizi girin.</div>'
+   +'<div class="adgate-f"><input id="adUser" type="text" placeholder="Kullanıcı adı" autocomplete="username" onkeydown="if(event.key===\'Enter\'){var p=document.getElementById(\'adPass\');if(p)p.focus();}"></div>'
+   +'<div class="adgate-f"><input id="adPass" type="password" placeholder="Erişim şifresi" autocomplete="current-password" onkeydown="if(event.key===\'Enter\')adminLogin()"><button class="eye" type="button" onclick="_adToggleEye()" aria-label="Göster">👁</button></div>'
    +'<button class="btn btn-gold adgate-go" onclick="adminLogin()">Güvenli Giriş →</button>'
    +'<div class="adgate-err" id="adErr"></div>'
    +'<div class="adgate-foot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/></svg> KVKK uyumlu · oturum şifrelenir · erişim kayıt altına alınır</div></div>';
   document.body.appendChild(el);return el;}
-function openAdminGate(){const el=_adGateHost();el.classList.add('on');const i=document.getElementById('adPass');if(i){i.value='';setTimeout(()=>i.focus(),60);}const er=document.getElementById('adErr');if(er)er.textContent='';}
+function openAdminGate(){const el=_adGateHost();el.classList.add('on');const u=document.getElementById('adUser'),i=document.getElementById('adPass');if(u)u.value='';if(i)i.value='';setTimeout(()=>{(u||i)&&(u||i).focus();},60);const er=document.getElementById('adErr');if(er)er.textContent='';}
 function closeAdminGate(){const e=document.getElementById('adGate');if(e)e.classList.remove('on');}
 function _adToggleEye(){const i=document.getElementById('adPass');if(i)i.type=i.type==='password'?'text':'password';}
-function adminLogin(){const i=document.getElementById('adPass'),er=document.getElementById('adErr'),g=document.getElementById('adGate');if(!i)return;
-  if(i.value===_ADMIN_PASS){if(er)er.textContent='';closeAdminGate();openSaasAdmin();toast('✓ Yönetim paneline güvenli giriş yapıldı.');}
-  else{if(er)er.textContent='⚠ Hatalı şifre. Erişim reddedildi.';if(g){g.classList.add('shake');setTimeout(()=>g.classList.remove('shake'),460);}if(i){i.value='';i.focus();}}}
+function adminLogin(){const u=document.getElementById('adUser'),i=document.getElementById('adPass'),er=document.getElementById('adErr'),g=document.getElementById('adGate');if(!i)return;
+  var uv=(u?u.value:'').trim().toLocaleLowerCase('tr');
+  if(uv===_ADMIN_USER&&i.value===_ADMIN_PASS){if(er)er.textContent='';closeAdminGate();openSaasAdmin();toast('✓ Yönetim paneline güvenli giriş yapıldı.');}
+  else{if(er)er.textContent='⚠ Hatalı kullanıcı adı veya şifre. Erişim reddedildi.';if(g){g.classList.add('shake');setTimeout(()=>g.classList.remove('shake'),460);}if(i)i.value='';var f=(uv!==_ADMIN_USER&&u)?u:i;if(f)f.focus();}}
 window.openAdminGate=openAdminGate;window.closeAdminGate=closeAdminGate;window.adminLogin=adminLogin;window._adToggleEye=_adToggleEye;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();closeSaasAdmin();if(typeof closeSaasPortal==='function')closeSaasPortal();}});
 
