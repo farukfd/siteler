@@ -1044,7 +1044,7 @@ window.addEventListener('load',function(){try{
     mainEl.innerHTML=''
      +'<div class="bz-mhead"><div><div class="lbl">'+d.n+' · ortalama m²</div>'
        +'<div class="bz-big"><span data-c="'+d.avg+'">0</span> <small>₺/m²</small></div></div>'
-       +'<div class="bz-delta'+(d.yoy<0?' dn':'')+'">'+(d.yoy>=0?'▲ +':'▼ ')+d.yoy+'% <span style="color:var(--muted);font-weight:500">· 12 ay</span></div></div>'
+       +'<div class="bz-delta'+(Math.abs(d.yoy)<0.1?'':(d.yoy<0?' dn':''))+'">'+(Math.abs(d.yoy)<0.1?('● '+(d.skor>=90?'Çok güçlü':d.skor>=85?'Güçlü':d.skor>=75?'İstikrarlı':'Gelişen')+' bölge'):((d.yoy>=0?'▲ +':'▼ ')+d.yoy+'% <span style="color:var(--muted);font-weight:500">· 12 ay</span>'))+'</div></div>'
      +'<div class="bz-chart"><svg viewBox="0 0 '+W+' '+(H+18)+'" role="img" aria-label="'+d.n+' 12 aylık m² fiyat seyri">'
        +'<defs><linearGradient id="bzGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--gold)" stop-opacity=".30"/><stop offset="1" stop-color="var(--gold)" stop-opacity="0"/></linearGradient></defs>'
        +'<path class="bz-areaP" d="'+p.ar+'" fill="url(#bzGrad)" opacity="0"/>'
@@ -1103,6 +1103,14 @@ window.addEventListener('load',function(){try{
     setTimeout(fire,2400); /* güvenlik: her koşulda görünür/animasyonlu */
   }
   if(document.readyState!=='loading')setTimeout(boot,140);else window.addEventListener('DOMContentLoaded',function(){setTimeout(boot,140);});
+  /* canlı ProX verisi geldiğinde örnek D dizisini gerçekle değiştir (bzHomeLive çağırır) */
+  window.__bzLive=function(list){ if(!list||!list.length)return;
+    D=list.map(function(d){var ilan=d.ilan||0;return {n:d.n,avg:d.avg,yoy:d.delta,skor:d.score,likT:(ilan>800?'Yüksek':ilan>300?'Orta':'Düşük'),lik:Math.max(20,Math.min(95,Math.round(ilan/12))),tr:(d.trend&&d.trend.length>=6)?d.trend:[d.avg,d.avg,d.avg,d.avg,d.avg,d.avg,d.avg,d.avg,d.avg,d.avg,d.avg,d.avg]};});
+    maxAvg=Math.max.apply(null,D.map(function(d){return d.avg;}));cur=0;fired=false;
+    tabsEl.innerHTML=D.map(function(d,i){return '<button class="bz-tab'+(i===0?' on':'')+'" data-i="'+i+'">'+d.n+'</button>';}).join('');
+    [].forEach.call(tabsEl.querySelectorAll('.bz-tab'),function(t){t.addEventListener('click',function(){select(+t.getAttribute('data-i'));});});
+    renderMain(D[0]);renderSide(D[0]);renderCmp();fire();
+  };
 })();
 
 /* ===================== İLERİ SEVİYE HERO PANELİ — otomatik dönen canlı mahalle zekâsı ===================== */
@@ -1137,7 +1145,7 @@ window.addEventListener('load',function(){try{
     /* değerler SENKRON ayarlanır — RAF/timer'a bağlı değil, her koşulda doğru gösterir */
     elTag.textContent=d.n;
     elVal.textContent=d.avg.toLocaleString('tr-TR')+' ₺';
-    elDelta.textContent='▲ %'+(''+d.d).replace('.',',');
+    elDelta.textContent=(Math.abs(d.d)<0.1?('● '+(d.skor>=85?'Güçlü':d.skor>=75?'İstikrarlı':'Gelişen')+' bölge'):('▲ %'+(''+d.d).replace('.',',')));
     elLine.setAttribute('points',pts);
     elArea.setAttribute('d',areaFrom(pts));
     /* çizgi: görünür sekmede yumuşak yeniden çizim; son durum (offset 0) her hâlükârda uygulanır */
@@ -1152,6 +1160,11 @@ window.addEventListener('load',function(){try{
     /* geçiş hissi: CSS animasyon yeniden başlat (timer YOK) */
     if(elStat&&!RM){ elStat.style.animation='none'; void elStat.offsetWidth; elStat.style.animation='hpSwap .55s ease'; }
   }
+  /* canlı ProX verisi geldiğinde örnek D dizisini gerçekle değiştir (bzHomeLive çağırır) */
+  window.__hpLive=function(list){ if(!list||!list.length)return;
+    D=list.map(function(d){var sp=(d.trend&&d.trend.length>=7)?d.trend.slice(-7):[d.avg,d.avg,d.avg,d.avg,d.avg,d.avg,d.avg];return {n:d.n,avg:d.avg,d:d.delta,skor:d.score,zone:(d.ilan?('Canlı ProX · '+d.ilan.toLocaleString('tr-TR')+' ilan'):'Canlı ProX bölge verisi'),sp:sp};});
+    apply(0);
+  };
   if(RM) return; /* dönme yok; ilk kart CSS ile zaten görünür */
   var idx=0, vis=true;
   if('IntersectionObserver' in window){
@@ -1160,6 +1173,37 @@ window.addEventListener('load',function(){try{
   }
   /* ilk Bebek animasyonu (CSS + heroBoot sayacı) bitsin, sonra dönmeye başla */
   setInterval(function(){ if(!vis)return; idx=(idx+1)%D.length; apply(idx); }, 3800);
+})();
+
+/* ===================== ANA SAYFA BÖLGE PANELLERİ — canlı ProX (örnek D dizilerini gerçekle değiştirir) =====================
+   Küratörlü premium aday seti (~8 istek, ertelenmiş) → gerçek m²'ye göre top-5 → hem #bolgeAnaliz hem hero-panel. */
+(function bzHomeLive(){
+  if(typeof proxApi!=='function')return;
+  var PREMIUM={'İstanbul':['Beşiktaş','Kadıköy','Sarıyer','Şişli','Beykoz','Bakırköy','Üsküdar','Ataşehir'],
+    'İzmir':['Konak','Karşıyaka','Çeşme','Bornova','Narlıdere','Urla','Karabağlar','Bayraklı'],
+    'Ankara':['Çankaya','Yenimahalle','Keçiören','Etimesgut','Mamak','Gölbaşı'],
+    'Bursa':['Nilüfer','Osmangazi','Yıldırım','Mudanya','Gemlik'],
+    'Antalya':['Muratpaşa','Konyaaltı','Kepez','Alanya','Manavgat']};
+  function primaryIl(){try{if(typeof saLoad==='function'){var p=saLoad();if(p&&p.primary)return p.primary;}}catch(e){}try{return (SAAS_CONFIG.firma&&SAAS_CONFIG.firma.il)||'İstanbul';}catch(e){}return 'İstanbul';}
+  function synth(m2,delta){var g=(delta||6)/100,a=[];for(var i=0;i<12;i++){var t=(i-11)/11;a.push(Math.round(m2*(1+g*t)));}return a;}
+  async function endeks(il,ilce){try{var r=await proxApi('/api/v1/tenant/endeks?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce)+'&kategori=konut&durum=satilik');
+    if(r&&!r.fallback&&r.success===true&&r.data&&+r.data.m2>0){var d=r.data;return {n:ilce,avg:+d.m2,delta:+d.delta||0,score:+d.score||0,ilan:+d.ilan_sayisi||0,trend:(d.trend&&d.trend.length>=6)?d.trend.map(function(x){return +x.m2;}):synth(+d.m2,+d.delta||0)};}}catch(e){}return null;}
+  async function run(){
+    var il=primaryIl(),cand=PREMIUM[il];
+    if(!cand){try{cand=(typeof proxIlceList==='function')?(await proxIlceList(il)).slice(0,8):null;}catch(e){}}
+    if(!cand||!cand.length)return;
+    var results=[];try{results=(typeof _wlPMap==='function')?await _wlPMap(cand,function(ic){return endeks(il,ic);},5):[];}catch(e){}
+    var out=(results||[]).filter(Boolean);
+    if(out.length<3)return;/* yetersiz canlı veri → örnek fallback kalır */
+    out.sort(function(a,b){return b.avg-a.avg;});
+    var top=out.slice(0,5);
+    try{if(typeof window.__bzLive==='function')window.__bzLive(top);}catch(e){}
+    try{if(typeof window.__hpLive==='function')window.__hpLive(top);}catch(e){}
+    /* hero nabız şeridi: örnek Bebek/Etiler chip'lerini gerçek ilçe + m² ile değiştir (API delta=0 → % yerine gerçek ₺/m²) */
+    try{var chips=document.querySelectorAll('.hero-pulse .pulse-chips span:not(.pl)');
+      for(var i=0;i<chips.length;i++){var d=top[i%top.length];chips[i].innerHTML='<i class="pd"></i>'+d.n+' <b>'+Math.round(d.avg).toLocaleString('tr-TR')+' ₺</b>';}}catch(e){}
+  }
+  if(document.readyState!=='loading')setTimeout(run,600);else window.addEventListener('DOMContentLoaded',function(){setTimeout(run,600);});
 })();
 
 /* ===================== SİNEMATİK HERO SAHNESİ — canvas "Boğaz alacakaranlığı" (admin görsel kancalı) ===================== */

@@ -346,7 +346,7 @@ body{overflow-x:clip}
       </svg>
       <div class="ba-hv-foot">
         <div class="c">Ort. m²<b id="baHvF1">—</b></div>
-        <div class="c">Yıllık<b id="baHvF2">—</b></div>
+        <div class="c">Ort. Getiri<b id="baHvF2">—</b></div>
         <div class="c">Skor<b id="baHvF3">—</b></div>
         <div class="c">Likidite<b id="baHvF4">—</b></div>
       </div>
@@ -422,7 +422,7 @@ body{overflow-x:clip}
             </div>
           </div>
           <div class="ba-l2-side">
-            <div class="ba-kpi"><div class="k">Yıllık Değişim</div><div class="v" id="baKpiYoy">—<small>%</small></div></div>
+            <div class="ba-kpi"><div class="k">Veri Derinliği</div><div class="v" id="baKpiYoy">—<small>kayıt</small></div></div>
             <div class="ba-kpi"><div class="k">Brüt Getiri</div><div class="v" id="baKpiYield">—<small>%</small></div></div>
             <div class="ba-kpi"><div class="k">Yatırım Skoru</div><div class="ba-ring" id="baRing"><span class="rn" id="baRingN">—</span></div><div class="ba-ringcap"><b id="baRingCap">—</b></div></div>
             <div class="ba-kpi"><div class="k">Likidite</div><div class="v" id="baKpiIlan" style="font-size:19px">—</div><div class="ba-lik"><i id="baLik"></i></div></div>
@@ -751,9 +751,11 @@ function paintL2(ic,cur,sat,kir){
   var trend=(cur&&cur.trend&&cur.trend.length>=3)?cur.trend.map(function(t){return +t.m2;}):synthTrend(m2,delta||8);
   /* nihai değerler SENKRON */
   var m2El=document.getElementById('baL2M2');m2El.setAttribute('data-c',m2);m2El.textContent=TL(m2);
-  var dl=document.getElementById('baL2Delta');dl.textContent=(delta>=0?'▲ +':'▼ ')+fmtY(Math.abs(delta))+'% · 12 ay';dl.classList.toggle('dn',delta<0);
+  var dl=document.getElementById('baL2Delta');var strong=score>=90?'Çok güçlü':score>=85?'Güçlü':score>=75?'İstikrarlı':'Gelişen';
+  /* API 12-ay değişimi (delta) sağlamıyor (=0) → uydurma YASAK; skor tabanlı gerçek güç etiketi göster */
+  dl.textContent=(Math.abs(delta)<0.1?('● '+strong+' bölge'):((delta>=0?'▲ +':'▼ ')+fmtY(Math.abs(delta))+'% · 12 ay'));dl.classList.toggle('dn',delta<0&&Math.abs(delta)>=0.1);
   document.getElementById('baL2Lbl').textContent=ic+' · '+(DURUM==='satilik'?'satılık':'kiralık')+' ortalama m²';
-  var yoy=document.getElementById('baKpiYoy');yoy.innerHTML=(delta>=0?'+':'')+fmtY(delta)+'<small>%</small>';
+  var yoy=document.getElementById('baKpiYoy');yoy.innerHTML=((cur&&cur.veri)?TL(cur.veri):'—')+' <small>kayıt</small>';
   var yEl=document.getElementById('baKpiYield');yEl.innerHTML=(yld?fmtY(yld):'—')+'<small>%</small>';
   var ringN=document.getElementById('baRingN');ringN.textContent=score?Math.round(score):'—';
   document.getElementById('baRing').style.setProperty('--p',score||0);
@@ -839,7 +841,7 @@ function paintHero(sortedTop){
   document.getElementById('baHvLine').setAttribute('d',pth.ln);
   var end=document.getElementById('baHvEnd');end.setAttribute('cx',pth.ex.toFixed(1));end.setAttribute('cy',pth.ey.toFixed(1));
   document.getElementById('baHvF1').textContent=avg?TL(avg):'—';
-  document.getElementById('baHvF2').textContent='+'+fmtY(7.5)+'%';
+  document.getElementById('baHvF2').textContent=(avgYield?fmtY(avgYield):'—')+'%';
   document.getElementById('baHvF3').textContent=avgScore?Math.round(avgScore):'—';
   document.getElementById('baHvF4').textContent=ilanS?TL(ilanS):'—';
   document.getElementById('baHvBadge').textContent=LIVE?'● canlı':'● örnek';
