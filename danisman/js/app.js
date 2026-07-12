@@ -697,7 +697,7 @@ var CRM_TIP=['Alıcı','Satıcı','Kiracı','Kiralayan','Yatırımcı'];
 var CRM_KAYNAK=['Web Sitesi','ProX Asistan','Telefon','WhatsApp','Tavsiye','Portal','Randevu Formu'];
 var CRM_GOREV=['Arama','Yer Gösterme','Toplantı','Tapu / Sözleşme','Takip'];
 var _crm=null;
-function crmLoad(){if(_crm)return _crm;try{_crm=JSON.parse(localStorage.getItem(CRM_KEY)||'null');}catch(e){}if(!_crm||typeof _crm!=='object')_crm={seq:100,kisiler:[],deals:[],tasks:[]};_crm.kisiler=_crm.kisiler||[];_crm.deals=_crm.deals||[];_crm.tasks=_crm.tasks||[];_crm.seq=_crm.seq||100;return _crm;}
+function crmLoad(){if(_crm)return _crm;try{_crm=JSON.parse(localStorage.getItem(CRM_KEY)||'null');}catch(e){}if(!_crm||typeof _crm!=='object')_crm={seq:100,kisiler:[],deals:[],tasks:[]};_crm.kisiler=_crm.kisiler||[];_crm.deals=_crm.deals||[];_crm.tasks=_crm.tasks||[];_crm.ekip=_crm.ekip||[];_crm.sozlesmeler=_crm.sozlesmeler||[];_crm.komisyon=_crm.komisyon||[];_crm.kira=_crm.kira||[];_crm.seq=_crm.seq||100;return _crm;}
 function crmSave(){try{localStorage.setItem(CRM_KEY,JSON.stringify(_crm));}catch(e){try{toast('Kayıt alanı dolu; eski veriyi dışa aktarın.');}catch(_){}}}
 function crmId(){crmLoad();return ++_crm.seq;}
 function _crmTL(n){n=Math.round(+n||0);if(n>=1000000)return (Math.round(n/100000)/10).toLocaleString('tr-TR')+' Mn ₺';if(n>=1000)return n.toLocaleString('tr-TR')+' ₺';return n?n+' ₺':'—';}
@@ -706,7 +706,7 @@ function crmKisi(id){crmLoad();return _crm.kisiler.filter(function(k){return k.i
 function crmStageT(k){var s=CRM_STAGES.filter(function(x){return x.k===k;})[0];return s?s.t:k;}
 function crmLeads(){var a=[];try{a=JSON.parse(localStorage.getItem('dn_leads')||'[]');}catch(e){}return Array.isArray(a)?a:[];}
 function _crmOpt(arr,sel){return arr.map(function(o){return '<option'+(o===sel?' selected':'')+'>'+_leD(o)+'</option>';}).join('');}
-function crmRenderAll(){try{crmRenderDash();}catch(e){}try{crmRenderKisiler();}catch(e){}try{crmRenderPipe();}catch(e){}try{crmRenderTasks();}catch(e){}}
+function crmRenderAll(){try{crmRenderDash();}catch(e){}try{crmRenderKisiler();}catch(e){}try{crmRenderPipe();}catch(e){}try{crmRenderTasks();}catch(e){}try{crmRenderEkip();}catch(e){}try{crmRenderSoz();}catch(e){}try{crmRenderKomisyon();}catch(e){}try{crmRenderKira();}catch(e){}}
 window.crmRenderAll=crmRenderAll;
 
 /* ---------- PANEL (Dashboard) ---------- */
@@ -934,6 +934,143 @@ function ilanDel(id){if(!confirm('İlan silinsin mi?'))return;ilanLoad();for(var
 function ilanTogglePub(id){ilanLoad();var l=LISTINGS.filter(function(x){return x.id===id;})[0];if(!l)return;
   if(l.status==='pasif'){var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsFirma().eids.yetkili);}catch(e){}if(!eidsOk){toast('EİDS yetkisi olmadan yayınlanamaz.');return;}l.status='aktif';}else l.status='pasif';
   ilanSave();ilanRenderAdmin();ilanRefreshPublic();toast(l.status==='aktif'?'İlan yayınlandı.':'İlan yayından kaldırıldı.');}
+/* ===================== EKİP · SÖZLEŞMELER · KOMİSYON · KİRA (dn_crm_v1 içinde) ===================== */
+function _crmFirma(){var f={};try{f=SAAS_CONFIG.firma||{};}catch(e){}var e=f.eids||{};return {unvan:f.unvan||SAAS_CONFIG.tenantName||'Selin Meridyen Danışmanlık',advisor:SAAS_CONFIG.advisorName||'Selin Meridyen',vergi:f.vergi||'—',adres:f.adres||'—',tel:f.tel||'—',mail:f.mail||'—',belge:e.belgeNo||'—'};}
+/* ---------- EKİP ---------- */
+var CRM_ROL=['Kıdemli Danışman','Danışman','Satış Uzmanı','Asistan','İş Ortağı','Hukuk Danışmanı'];
+function crmRenderEkip(){var host=document.getElementById('crmEkip');if(!host)return;crmLoad();
+  var H='<div class="crm-bar"><div class="sub" style="margin:0">'+_crm.ekip.length+' ekip üyesi · fırsat & görevlerde sorumlu olarak atanabilir</div><button class="btn btn-gold crm-add" onclick="crmEditEkip(0)">+ Üye Ekle</button></div>';
+  if(!_crm.ekip.length)H+='<div class="crm-empty">Ekip üyesi yok. Selin Meridyen + asistan/iş ortaklarınızı ekleyin.</div>';
+  else H+='<div class="crm-list">'+_crm.ekip.map(function(m){var deals=_crm.deals.filter(function(d){return d.ekipId===m.id;}).length;
+    return '<div class="crm-card"><div class="crm-card-top"><div><b>'+_leD(m.name||'—')+'</b><span class="crm-badge">'+_leD(m.role||'')+'</span></div><div class="crm-card-act"><button onclick="crmEditEkip('+m.id+')">✎</button><button onclick="crmDelEkip('+m.id+')">🗑</button></div></div>'
+      +'<div class="crm-card-b">'+(m.tel?('📞 '+_leD(m.tel)+' '):'')+(m.wa?('· WhatsApp '+_leD(m.wa)):'')+'</div>'
+      +'<div class="crm-card-b sub">'+_leD(m.uzmanlik||'')+(deals?(' · '+deals+' fırsat'):'')+'</div></div>';}).join('')+'</div>';
+  host.innerHTML=H;
+}
+function crmEditEkip(id){crmLoad();var m=id?_crm.ekip.filter(function(x){return x.id===id;})[0]:{id:0,role:'Danışman'};if(!m)return;
+  var F='<div class="crm-mh">'+(id?'Ekip Üyesi':'Yeni Ekip Üyesi')+'</div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Ad Soyad</label><input id="cm_name" value="'+_leD(m.name||'')+'"></div><div class="crm-f"><label>Unvan</label><select id="cm_role">'+_crmOpt(CRM_ROL,m.role)+'</select></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Telefon</label><input id="cm_tel" value="'+_leD(m.tel||'')+'"></div><div class="crm-f"><label>WhatsApp</label><input id="cm_wa" value="'+_leD(m.wa||'')+'"></div></div>'
+    +'<div class="crm-f"><label>Uzmanlık / Bölge</label><input id="cm_uz" value="'+_leD(m.uzmanlik||'')+'" placeholder="Boğaz hattı · lüks konut"></div>'
+    +'<div class="crm-mact"><button class="btn btn-gold" onclick="crmSaveEkip('+id+')">Kaydet</button><button class="btn btn-line" onclick="crmCloseModal()">Vazgeç</button></div>';
+  crmModal(F);
+}
+function crmSaveEkip(id){crmLoad();var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
+  var o={name:g('cm_name'),role:g('cm_role'),tel:g('cm_tel'),wa:g('cm_wa'),uzmanlik:g('cm_uz')};
+  if(!o.name){toast('Ad girin.');return;}
+  if(id){var m=_crm.ekip.filter(function(x){return x.id===id;})[0];if(m)Object.assign(m,o);}else{o.id=crmId();_crm.ekip.unshift(o);}
+  crmSave();crmCloseModal();crmRenderEkip();toast('✓ Ekip üyesi kaydedildi.');
+}
+function crmDelEkip(id){crmLoad();_crm.ekip=_crm.ekip.filter(function(m){return m.id!==id;});crmSave();crmRenderEkip();toast('Üye silindi.');}
+/* ---------- KOMİSYON ---------- */
+function crmRenderKomisyon(){var host=document.getElementById('crmKomisyon');if(!host)return;crmLoad();
+  var tahsil=_crm.komisyon.filter(function(k){return k.durum==='tahsil';}).reduce(function(s,k){return s+(+k.tutar||0);},0);
+  var bekle=_crm.komisyon.filter(function(k){return k.durum!=='tahsil';}).reduce(function(s,k){return s+(+k.tutar||0);},0);
+  var H='<div class="crm-kpis"><div class="crm-kpi"><b>'+_crmTL(tahsil)+'</b><span>Tahsil Edilen</span></div><div class="crm-kpi'+(bekle>0?' hot':'')+'"><b>'+_crmTL(bekle)+'</b><span>Bekleyen</span></div><div class="crm-kpi"><b>'+_crm.komisyon.length+'</b><span>Kayıt</span></div></div>';
+  H+='<div class="crm-bar"><div class="sub" style="margin:0">Komisyon tahsilat takibi</div><button class="btn btn-gold crm-add" onclick="crmEditKom(0)">+ Komisyon</button></div>';
+  if(!_crm.komisyon.length)H+='<div class="crm-empty">Komisyon kaydı yok.</div>';
+  else H+='<div class="crm-list">'+_crm.komisyon.map(function(k){var tah=k.durum==='tahsil';
+    return '<div class="crm-card"><div class="crm-card-top"><div><b>'+_leD(k.baslik||'—')+'</b><span class="crm-badge" style="'+(tah?'background:rgba(25,195,125,.12);color:var(--prox-deep)':'background:rgba(195,155,69,.14);color:var(--gold-deep)')+'">'+(tah?'Tahsil':'Bekliyor')+'</span></div><div class="crm-card-act"><button onclick="crmKomToggle('+k.id+')" title="Durum">'+(tah?'↺':'✓')+'</button><button onclick="crmEditKom('+k.id+')">✎</button><button onclick="crmDelKom('+k.id+')">🗑</button></div></div>'
+      +'<div class="crm-card-b sub"><b style="color:var(--em)">'+_crmTL(k.tutar)+'</b>'+(k.oran?(' · %'+k.oran):'')+(k.taraf?(' · '+_leD(k.taraf)):'')+(k.tarih?(' · '+_crmDate(k.tarih)):'')+'</div></div>';}).join('')+'</div>';
+  host.innerHTML=H;
+}
+function crmEditKom(id){crmLoad();var k=id?_crm.komisyon.filter(function(x){return x.id===id;})[0]:{id:0,durum:'beklemede',taraf:'Satıcı',tarih:new Date().toISOString().slice(0,10)};if(!k)return;
+  var F='<div class="crm-mh">'+(id?'Komisyon':'Yeni Komisyon')+'</div>'
+    +'<div class="crm-f"><label>Başlık / İşlem</label><input id="kk_b" value="'+_leD(k.baslik||'')+'" placeholder="Levent penthouse satışı"></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Tutar (₺)</label><input id="kk_t" type="number" value="'+(k.tutar||'')+'"></div><div class="crm-f"><label>Oran (%)</label><input id="kk_o" type="number" step="0.1" value="'+(k.oran||'')+'"></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Taraf</label><select id="kk_tf">'+_crmOpt(['Satıcı','Alıcı','Her iki taraf'],k.taraf)+'</select></div><div class="crm-f"><label>Tarih</label><input id="kk_d" type="date" value="'+(k.tarih?String(k.tarih).slice(0,10):'')+'"></div></div>'
+    +'<div class="crm-f"><label>Durum</label><select id="kk_s">'+_crmOpt2([['beklemede','Bekliyor'],['tahsil','Tahsil Edildi']],k.durum)+'</select></div>'
+    +'<div class="crm-mact"><button class="btn btn-gold" onclick="crmSaveKom('+id+')">Kaydet</button><button class="btn btn-line" onclick="crmCloseModal()">Vazgeç</button></div>';
+  crmModal(F);
+}
+function crmSaveKom(id){crmLoad();var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
+  var o={baslik:g('kk_b'),tutar:+g('kk_t')||0,oran:+g('kk_o')||0,taraf:g('kk_tf'),tarih:g('kk_d'),durum:g('kk_s')};
+  if(!o.baslik){toast('Başlık girin.');return;}
+  if(id){var k=_crm.komisyon.filter(function(x){return x.id===id;})[0];if(k)Object.assign(k,o);}else{o.id=crmId();_crm.komisyon.unshift(o);}
+  crmSave();crmCloseModal();crmRenderKomisyon();crmRenderDash();toast('✓ Komisyon kaydedildi.');
+}
+function crmKomToggle(id){crmLoad();var k=_crm.komisyon.filter(function(x){return x.id===id;})[0];if(!k)return;k.durum=(k.durum==='tahsil'?'beklemede':'tahsil');crmSave();crmRenderKomisyon();toast(k.durum==='tahsil'?'Tahsil edildi.':'Bekliyor olarak işaretlendi.');}
+function crmDelKom(id){crmLoad();_crm.komisyon=_crm.komisyon.filter(function(k){return k.id!==id;});crmSave();crmRenderKomisyon();crmRenderDash();toast('Silindi.');}
+/* ---------- KİRA TAKİBİ ---------- */
+function crmRenderKira(){var host=document.getElementById('crmKira');if(!host)return;crmLoad();
+  var aylik=_crm.kira.reduce(function(s,k){return s+(+k.tutar||0);},0);
+  var gecik=_crm.kira.filter(function(k){return k.durum==='gecikti';}).length;
+  var H='<div class="crm-kpis"><div class="crm-kpi"><b>'+_crm.kira.length+'</b><span>Kira Sözleşmesi</span></div><div class="crm-kpi"><b>'+_crmTL(aylik)+'</b><span>Aylık Toplam</span></div><div class="crm-kpi'+(gecik?' hot':'')+'"><b>'+gecik+'</b><span>Geciken</span></div></div>';
+  H+='<div class="crm-bar"><div class="sub" style="margin:0">Kira tahsilat takvimi</div><button class="btn btn-gold crm-add" onclick="crmEditKira(0)">+ Kira</button></div>';
+  if(!_crm.kira.length)H+='<div class="crm-empty">Kira kaydı yok.</div>';
+  else H+='<div class="crm-list">'+_crm.kira.map(function(k){var st=k.durum||'bekliyor';var col=st==='odendi'?'background:rgba(25,195,125,.12);color:var(--prox-deep)':st==='gecikti'?'background:rgba(192,96,58,.12);color:#c0603a':'background:rgba(195,155,69,.14);color:var(--gold-deep)';var stT=st==='odendi'?'Ödendi':st==='gecikti'?'Gecikti':'Bekliyor';
+    return '<div class="crm-card"><div class="crm-card-top"><div><b>'+_leD(k.gm||'—')+'</b><span class="crm-badge" style="'+col+'">'+stT+'</span></div><div class="crm-card-act"><button onclick="crmKiraCycle('+k.id+')" title="Durum">⟳</button><button onclick="crmEditKira('+k.id+')">✎</button><button onclick="crmDelKira('+k.id+')">🗑</button></div></div>'
+      +'<div class="crm-card-b">'+(k.kiraci?('👤 '+_leD(k.kiraci)+' '):'')+'</div>'
+      +'<div class="crm-card-b sub"><b style="color:var(--em)">'+_crmTL(k.tutar)+'/ay</b>'+(k.vade?(' · her ayın '+_leD(k.vade)+'. günü'):'')+'</div></div>';}).join('')+'</div>';
+  host.innerHTML=H;
+}
+function crmEditKira(id){crmLoad();var k=id?_crm.kira.filter(function(x){return x.id===id;})[0]:{id:0,durum:'bekliyor',vade:'5'};if(!k)return;
+  var F='<div class="crm-mh">'+(id?'Kira Kaydı':'Yeni Kira')+'</div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Gayrimenkul</label><input id="kr_g" value="'+_leD(k.gm||'')+'" placeholder="Nişantaşı 2+1 daire"></div><div class="crm-f"><label>Kiracı</label><input id="kr_k" value="'+_leD(k.kiraci||'')+'"></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Aylık Kira (₺)</label><input id="kr_t" type="number" value="'+(k.tutar||'')+'"></div><div class="crm-f"><label>Vade Günü</label><input id="kr_v" type="number" min="1" max="31" value="'+(k.vade||'5')+'"></div></div>'
+    +'<div class="crm-f"><label>Durum</label><select id="kr_s">'+_crmOpt2([['bekliyor','Bekliyor'],['odendi','Ödendi'],['gecikti','Gecikti']],k.durum)+'</select></div>'
+    +'<div class="crm-mact"><button class="btn btn-gold" onclick="crmSaveKira('+id+')">Kaydet</button><button class="btn btn-line" onclick="crmCloseModal()">Vazgeç</button></div>';
+  crmModal(F);
+}
+function crmSaveKira(id){crmLoad();var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
+  var o={gm:g('kr_g'),kiraci:g('kr_k'),tutar:+g('kr_t')||0,vade:g('kr_v'),durum:g('kr_s')};
+  if(!o.gm){toast('Gayrimenkul girin.');return;}
+  if(id){var k=_crm.kira.filter(function(x){return x.id===id;})[0];if(k)Object.assign(k,o);}else{o.id=crmId();_crm.kira.unshift(o);}
+  crmSave();crmCloseModal();crmRenderKira();toast('✓ Kira kaydedildi.');
+}
+function crmKiraCycle(id){crmLoad();var k=_crm.kira.filter(function(x){return x.id===id;})[0];if(!k)return;var order=['bekliyor','odendi','gecikti'];var i=(order.indexOf(k.durum)+1)%3;k.durum=order[i];crmSave();crmRenderKira();}
+function crmDelKira(id){crmLoad();_crm.kira=_crm.kira.filter(function(k){return k.id!==id;});crmSave();crmRenderKira();toast('Silindi.');}
+function _crmOpt2(pairs,sel){return pairs.map(function(p){return '<option value="'+p[0]+'"'+(p[0]===sel?' selected':'')+'>'+p[1]+'</option>';}).join('');}
+/* ---------- SÖZLEŞMELER (5 şablon, firma bilgisiyle otomatik dolu) ---------- */
+var SOZ_TIP=[{k:'aracilik',t:'Aracılık (Hizmet) Sözleşmesi'},{k:'yergosterme',t:'Yer Gösterme Belgesi'},{k:'kira',t:'Kira Sözleşmesi'},{k:'satisvaadi',t:'Satış Vaadi Protokolü'},{k:'munhasir',t:'Münhasır Portföy Yetkisi'}];
+function sozTipT(k){var x=SOZ_TIP.filter(function(t){return t.k===k;})[0];return x?x.t:k;}
+function crmRenderSoz(){var host=document.getElementById('crmSoz');if(!host)return;crmLoad();
+  var H='<div class="crm-sec"><div class="crm-sec-h">Yeni Sözleşme Oluştur</div><div class="crm-funnel">'+SOZ_TIP.map(function(t){return '<div class="crm-fn" onclick="sozYeni(\''+t.k+'\')"><b>📄</b><span>'+t.t.split(' ')[0]+'</span></div>';}).join('')+'</div><p class="sub" style="margin:10px 0 0">Firma künyeniz (unvan, vergi, yetki belge no) otomatik doldurulur. Oluşturulan belge taslaktır; imzadan önce hukuki teyit önerilir.</p></div>';
+  H+='<div class="crm-sec-h" style="margin-top:6px">Kayıtlı Sözleşmeler</div>';
+  if(!_crm.sozlesmeler.length)H+='<div class="crm-empty">Henüz sözleşme yok.</div>';
+  else H+='<div class="crm-list">'+_crm.sozlesmeler.map(function(s){return '<div class="crm-card"><div class="crm-card-top"><div><b>'+_leD(sozTipT(s.tip))+'</b><span class="crm-badge">'+_leD(s.karsiAd||'—')+'</span></div><div class="crm-card-act"><button onclick="sozGoster('+s.id+')" title="Görüntüle/Yazdır">👁</button><button onclick="sozDel('+s.id+')">🗑</button></div></div><div class="crm-card-b sub">'+_crmDate(s.ts)+(s.bedel?(' · '+_crmTL(s.bedel)):'')+'</div></div>';}).join('')+'</div>';
+  host.innerHTML=H;
+}
+function sozYeni(tip){crmLoad();
+  var F='<div class="crm-mh">'+sozTipT(tip)+'</div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Karşı Taraf (Ad Soyad / Unvan)</label><input id="sz_ad"></div><div class="crm-f"><label>T.C. / Vergi No</label><input id="sz_tc"></div></div>'
+    +'<div class="crm-f"><label>Karşı Taraf Adresi</label><input id="sz_adr"></div>'
+    +'<div class="crm-f"><label>Gayrimenkul (adres / tanım)</label><input id="sz_gm" placeholder="Beşiktaş, Levent … 4+1, 320 m²"></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Bedel (₺)</label><input id="sz_bedel" type="number"></div><div class="crm-f"><label>Komisyon (%)</label><input id="sz_kom" type="number" step="0.1" value="2"></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Süre (ay)</label><input id="sz_sure" type="number" value="3"></div><div class="crm-f"><label>Tür</label><input value="'+_leD(sozTipT(tip))+'" readonly></div></div>'
+    +'<div class="crm-f"><label>Özel Şart (opsiyonel)</label><textarea id="sz_ozel" rows="2"></textarea></div>'
+    +'<div class="crm-mact"><button class="btn btn-gold" onclick="sozUret(\''+tip+'\')">Oluştur & Görüntüle</button><button class="btn btn-line" onclick="crmCloseModal()">Vazgeç</button></div>';
+  crmModal(F);
+}
+function _sozBody(tip,d,F){
+  var bedel=d.bedel?_crmTL(d.bedel):'…………';var kom=d.kom||'…';var sure=d.sure||'…';
+  var head='<p><b>'+sozTipT(tip)+'</b></p><p>İşbu belge; bir tarafta <b>'+_leD(F.unvan)+'</b> (Taşınmaz Ticareti Yetki Belge No: '+_leD(F.belge)+', Vergi No: '+_leD(F.vergi)+', Adres: '+_leD(F.adres)+') — bundan sonra “Danışman” — ile diğer tarafta <b>'+_leD(d.karsiAd||'…')+'</b> (T.C./Vergi No: '+_leD(d.karsiTC||'…')+', Adres: '+_leD(d.karsiAdres||'…')+') — bundan sonra “Müşteri” — arasında akdedilmiştir.</p>';
+  var gm='<p><b>Gayrimenkul:</b> '+_leD(d.gm||'…')+'</p>';
+  var clauses={
+    aracilik:'<p><b>1. Konu.</b> Danışman, Müşteri adına yukarıda tanımlı gayrimenkulün alım/satım/kiralama sürecinde aracılık ve danışmanlık hizmeti verir.</p><p><b>2. Hizmet Bedeli.</b> İşlem bedeli üzerinden <b>%'+kom+'</b> oranında hizmet bedeli, tapu devri/sözleşme imzası aşamasında muaccel olur.</p><p><b>3. Süre.</b> İşbu sözleşme imza tarihinden itibaren <b>'+sure+' ay</b> geçerlidir.</p>',
+    yergosterme:'<p><b>1.</b> Danışman, aşağıda imzası bulunan Müşteriye yukarıda belirtilen gayrimenkulü <b>'+_crmDate(d.ts||Date.now())+'</b> tarihinde göstermiştir.</p><p><b>2.</b> Müşteri, gösterilen gayrimenkulü Danışman aracılığıyla öğrendiğini kabul eder; Danışmanı devre dışı bırakarak doğrudan/dolaylı işlem yapması hâlinde hizmet bedeli muaccel olur.</p>',
+    kira:'<p><b>1. Konu.</b> Kiraya veren ile kiracı arasında yukarıdaki gayrimenkulün kiralanması. Aylık kira bedeli: <b>'+bedel+'</b>.</p><p><b>2. Süre.</b> Kira süresi <b>'+sure+' ay</b>; kira her ayın belirlenen gününde peşin ödenir.</p><p><b>3. Danışman.</b> '+_leD(F.unvan)+' aracılık hizmetini yürütür; hizmet bedeli %'+kom+'.</p>',
+    satisvaadi:'<p><b>1. Konu.</b> Taraflar, yukarıda tanımlı gayrimenkulün <b>'+bedel+'</b> bedelle satışı konusunda anlaşmış olup; işbu protokol satış vaadi niteliğindedir.</p><p><b>2. Kapora/Teminat.</b> ……………… tutarında kapora ödenmiştir/ödenecektir.</p><p><b>3. Süre.</b> Resmî tapu devri <b>'+sure+' ay</b> içinde yapılacaktır.</p>',
+    munhasir:'<p><b>1. Konu.</b> Müşteri, yukarıdaki gayrimenkulün pazarlanması için <b>'+_leD(F.unvan)+'</b>’a <b>münhasır (tek yetkili)</b> satış/kiralama yetkisi verir.</p><p><b>2. Süre.</b> Münhasır yetki <b>'+sure+' ay</b> geçerlidir; bu sürede gayrimenkul yalnızca Danışman aracılığıyla pazarlanır.</p><p><b>3. Hizmet Bedeli.</b> İşlem bedeli üzerinden %'+kom+'.</p>'
+  };
+  var ozel=d.ozel?('<p><b>Özel Şart.</b> '+_leD(d.ozel)+'</p>'):'';
+  var foot='<p style="margin-top:22px">İşbu belge iki nüsha düzenlenmiş olup taraflarca okunarak imzalanmıştır. Tarih: '+_crmDate(d.ts||Date.now())+'</p><div class="soz-sign"><div>Danışman<br><b>'+_leD(F.advisor)+'</b><br>'+_leD(F.unvan)+'<br>İmza</div><div>Müşteri<br><b>'+_leD(d.karsiAd||'…')+'</b><br>İmza</div></div><p class="soz-note">Bu belge bilgilendirme amaçlı bir taslaktır; bağlayıcı imzadan önce hukuki danışmanlık alınması önerilir.</p>';
+  return head+gm+(clauses[tip]||'')+ozel+foot;
+}
+function sozUret(tip){crmLoad();var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
+  var d={tip:tip,karsiAd:g('sz_ad'),karsiTC:g('sz_tc'),karsiAdres:g('sz_adr'),gm:g('sz_gm'),bedel:+g('sz_bedel')||0,kom:g('sz_kom'),sure:g('sz_sure'),ozel:g('sz_ozel'),ts:Date.now(),id:crmId()};
+  _crm.sozlesmeler.unshift(d);crmSave();crmRenderSoz();sozGoster(d.id);
+}
+function sozGoster(id){crmLoad();var d=_crm.sozlesmeler.filter(function(x){return x.id===id;})[0];if(!d)return;var F=_crmFirma();
+  var doc='<div class="soz-doc" id="sozDoc">'+_sozBody(d.tip,d,F)+'</div>';
+  var M='<div class="crm-mh">'+sozTipT(d.tip)+'</div>'+doc+'<div class="crm-mact"><button class="btn btn-gold" onclick="sozPrint()">🖨 Yazdır / PDF</button><button class="btn btn-line" onclick="crmCloseModal()">Kapat</button></div>';
+  crmModal(M);
+}
+function sozPrint(){var el=document.getElementById('sozDoc');if(!el)return;var w=window.open('','_blank');if(!w){toast('Açılır pencere engellendi.');return;}
+  w.document.write('<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>Sözleşme</title><style>body{font-family:Georgia,serif;max-width:760px;margin:40px auto;padding:0 24px;color:#111;line-height:1.7;font-size:14px}p{margin:0 0 10px}.soz-sign{display:flex;justify-content:space-between;margin-top:44px;gap:40px}.soz-sign div{flex:1;font-size:13px}.soz-note{margin-top:26px;font-size:11px;color:#777;border-top:1px solid #ddd;padding-top:10px}</style></head><body>'+el.innerHTML+'</body></html>');
+  w.document.close();setTimeout(function(){try{w.print();}catch(e){}},250);
+}
+function sozDel(id){crmLoad();_crm.sozlesmeler=_crm.sozlesmeler.filter(function(s){return s.id!==id;});crmSave();crmRenderSoz();toast('Sözleşme silindi.');}
 /* Canlı ProX: /prox/ai (answer) + yatırım/portföy sorularında /prox/analyze. Boş/başarısız → yerel _proxReply.
    Sağlayıcı adı ASLA gösterilmez/loglanmaz — yalnızca "ProX". Değer SADECE API'den gelir. */
 function _proxAnalyzeHTML(a){
@@ -1012,7 +1149,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();cl
    ===================================================================== */
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='sta-modal';
   el.innerHTML='<div class="sta-ov" onclick="closeSaasAdmin()"></div><div class="sta-card"><div class="sta-hd"><b>ProX SaaS · '+SAAS_CONFIG.tenantName+'</b><button onclick="openOnboarding()" title="Kurulum Sihirbazı" style="margin-left:auto;margin-right:10px;background:none;border:1px solid var(--line-soft);border-radius:8px;color:var(--gold);padding:4px 11px;cursor:pointer;font:inherit;font-size:12.5px">🚀 Sihirbaz</button><button onclick="closeSaasAdmin()">✕</button></div>'
-   +'<div class="sta-tabs"><button class="act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><button data-t="crmkisi" onclick="staTab(this)">👥 Kişiler</button><button data-t="crmpipe" onclick="staTab(this)">📇 Satış Hattı</button><button data-t="crmtask" onclick="staTab(this)">✅ Görevler</button><button data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><button data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="hizmetalani" onclick="staTab(this)">Hizmet Alanı</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
+   +'<div class="sta-tabs"><button class="act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><button data-t="crmkisi" onclick="staTab(this)">👥 Kişiler</button><button data-t="crmpipe" onclick="staTab(this)">📇 Satış Hattı</button><button data-t="crmtask" onclick="staTab(this)">✅ Görevler</button><button data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button data-t="ekip" onclick="staTab(this)">🧑‍💼 Ekip</button><button data-t="sozlesme" onclick="staTab(this)">📄 Sözleşmeler</button><button data-t="komisyon" onclick="staTab(this)">💰 Komisyon</button><button data-t="kira" onclick="staTab(this)">🔑 Kira</button><button data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><button data-t="marka" onclick="staTab(this)">Marka & Logo</button><button data-t="seo" onclick="staTab(this)">Google & SEO</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="eids" onclick="staTab(this)">EİDS Yetki</button><button data-t="hizmetalani" onclick="staTab(this)">Hizmet Alanı</button><button data-t="portfoy" onclick="staTab(this)">Portföy</button></div><div class="sta-body">'
    /* CRM · PANEL */
    +'<div class="sta-pane" data-p="crmdash"><h4>Yönetim Paneli · CRM</h4><p class="sub">Kişiler, satış hattı, görevler ve gelen talepler tek bakışta. Gerçek görüşme ve talepler otomatik düşer.</p><div id="crmDash"></div></div>'
    /* CRM · KİŞİLER */
@@ -1023,6 +1160,14 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
    +'<div class="sta-pane" data-p="crmtask" hidden><h4>Görev & Randevu</h4><p class="sub">Arama, yer gösterme, tapu ve takip görevlerinizi planlayın; geciken görevler işaretlenir.</p><div id="crmTasks"></div></div>'
    /* İLAN YÖNETİMİ */
    +'<div class="sta-pane" data-p="ilanlar" hidden><h4>İlan Yönetimi · Açık Portföy</h4><p class="sub">Açık ilanlarınızı ekleyin/düzenleyin/silin; yayın (aktif) için EİDS yetkisi gerekir (VIP Özel Portföy serbesttir). Değişiklikler siteye anında yansır.</p><div id="ilanAdminBody"></div></div>'
+   /* EKİP */
+   +'<div class="sta-pane" data-p="ekip" hidden><h4>Ekip Yönetimi</h4><p class="sub">Danışman, asistan ve iş ortaklarınızı yönetin; fırsat ve görevlerde sorumlu olarak atanabilir.</p><div id="crmEkip"></div></div>'
+   /* SÖZLEŞMELER */
+   +'<div class="sta-pane" data-p="sozlesme" hidden><h4>Sözleşmeler</h4><p class="sub">Aracılık, yer gösterme, kira, satış vaadi ve münhasır yetki şablonları — firma künyenizle otomatik dolar, yazdırın/PDF alın.</p><div id="crmSoz"></div></div>'
+   /* KOMİSYON */
+   +'<div class="sta-pane" data-p="komisyon" hidden><h4>Komisyon & Tahsilat</h4><p class="sub">İşlem komisyonlarınızı ve tahsilat durumlarını takip edin.</p><div id="crmKomisyon"></div></div>'
+   /* KİRA */
+   +'<div class="sta-pane" data-p="kira" hidden><h4>Kira Takibi</h4><p class="sub">Yönetimindeki kira sözleşmeleri, aylık tutarlar ve gecikmeler.</p><div id="crmKira"></div></div>'
    /* MARKA & LOGO */
    +'<div class="sta-pane" data-p="marka" hidden><h4>Marka, Logo & Tema</h4><p class="sub">Logo/favicon yükleyin veya URL girin; altın/şampanya tema tonunu ayarlayın.</p>'
      +'<div class="logo-prev"><div class="box" id="adLogoPrev">M</div><span>Mevcut logo önizleme</span></div>'

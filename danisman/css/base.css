@@ -817,3 +817,9 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 .crm-f label{font-size:11.5px;font-weight:600;color:var(--muted);margin-bottom:5px}
 .crm-f input,.crm-f select,.crm-f textarea{padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--cream);color:inherit;font:inherit;font-size:13.5px}
 .crm-mact{display:flex;gap:9px;align-items:center;margin-top:6px}
+/* sözleşme belgesi */
+.soz-doc{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:20px 22px;font-family:var(--serif-2),Georgia,serif;font-size:14px;line-height:1.75;color:var(--ink);max-height:52vh;overflow:auto;margin-bottom:14px}
+.soz-doc p{margin:0 0 10px}
+.soz-sign{display:flex;justify-content:space-between;gap:34px;margin-top:34px}
+.soz-sign div{flex:1;font-size:13px;font-family:var(--body)}
+.soz-note{margin-top:22px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;font-family:var(--body)}
