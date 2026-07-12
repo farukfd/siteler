@@ -910,6 +910,11 @@ function ilanEidsVerify(){var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsF
   var st=document.getElementById('il_eidsStatus');if(st)st.innerHTML=_ilnEidsHtml();
   var ne=document.getElementById('il_eids');if(ne&&!ne.value)ne.value=no;
   toast('✓ EİDS taşınmaz doğrulaması alındı.');}
+async function ilanAiDesc(){var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
+  var parts=[g('il_baslik'),ilnTipT(g('il_tip')),g('il_durum'),[g('il_ilce'),g('il_mah')].filter(Boolean).join(' '),(g('il_m2')?g('il_m2')+' m²':''),g('il_oda'),(g('il_fiyat')?fmt(+g('il_fiyat'))+' ₺':'')].filter(Boolean).join(' · ');
+  var ta=document.getElementById('il_desc');if(!ta)return;var old=ta.value;ta.value='ProX AI yazıyor…';
+  try{var txt=await aiChat({prompt:'Sen lüks gayrimenkul için metin yazarısın; abartısız, veri odaklı, gizlilik vurgulu.',message:'Şu ilan için 2-3 cümlelik çekici bir satış açıklaması yaz (Türkçe): '+parts,context:'ilan açıklaması'});
+    ta.value=(txt||'').replace(/<[^>]+>/g,'').trim()||old||parts;toast('✓ Açıklama üretildi.');}catch(e){ta.value=old||parts;toast('Üretilemedi.');}}
 function ilanRefreshPublic(){try{var h=document.getElementById('homeListings');if(h)h.innerHTML=listingCardsHTML();}catch(e){}
   try{if(typeof _OV!=='undefined'&&document.querySelector('#pageOverlay.on')){var g=document.querySelector('#pageOverlay .card-grid');/* ilanlar sayfası açıksa */}}catch(e){}}
 function ilanRenderAdmin(){var host=document.getElementById('ilanAdminBody');if(!host)return;ilanLoad();
@@ -934,12 +939,14 @@ function ilanEdit(id){ilanLoad();var l=id?LISTINGS.filter(function(x){return x.i
     +'<div class="crm-frow"><div class="crm-f"><label>Fiyat (₺)</label><input id="il_fiyat" type="number" value="'+(l.fiyat||'')+'"></div><div class="crm-f"><label>EİDS Taşınmaz No</label><input id="il_eids" value="'+_leD(l.eidsNo||'')+'" placeholder="opsiyonel"></div></div>'
     +'<div class="crm-f"><label>Görsel</label><div class="iln-img"><div class="iln-thumb" id="il_thumb">'+(_ilnImg?'<img src="'+_ilnImg+'" alt="">':'—')+'</div><label class="btn btn-line" style="cursor:pointer;font-size:12.5px">Görsel Yükle<input type="file" accept="image/*" onchange="ilanImgUpload(this)" style="display:none"></label><button class="btn btn-line" style="font-size:12.5px" type="button" onclick="ilanImgClear()">Kaldır</button></div></div>'
     +'<div class="crm-f"><label>EİDS Taşınmaz Doğrulama</label><div id="il_eidsStatus">'+_ilnEidsHtml()+'</div><button class="btn btn-line" style="margin-top:7px" type="button" onclick="ilanEidsVerify()">e-Devlet EİDS ile Doğrula</button></div>'
+    +'<div class="crm-f"><label>Açıklama <button type="button" class="crm-x2" style="margin-left:8px" onclick="ilanAiDesc()">🤖 ProX AI ile üret</button></label><textarea id="il_desc" rows="3" placeholder="İlan açıklaması…">'+_leD(l.desc||'')+'</textarea></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>360° Sanal Tur Linki</label><input id="il_tur" value="'+_leD(l.tur||'')+'" placeholder="Matterport / Kuula URL"></div><div class="crm-f"><label>Video Tur Linki</label><input id="il_video" value="'+_leD(l.video||'')+'" placeholder="YouTube / Vimeo URL"></div></div>'
     +'<div class="crm-f"><label>Yayın Durumu</label><select id="il_status"><option value="aktif"'+(l.status!=='pasif'?' selected':'')+'>Yayında (aktif)</option><option value="pasif"'+(l.status==='pasif'?' selected':'')+'>Pasif (yayında değil)</option></select></div>'
     +'<div class="crm-mact"><button class="btn btn-gold" onclick="ilanSaveForm('+id+')">Kaydet</button><button class="btn btn-line" onclick="crmCloseModal()">Vazgeç</button>'+(id?'<button class="btn btn-line" style="margin-left:auto;color:#c0603a" onclick="ilanDel('+id+')">Sil</button>':'')+'</div>';
   crmModal(F);
 }
 function ilanSaveForm(id){ilanLoad();var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
-  var o={durum:g('il_durum'),tip:g('il_tip'),baslik:g('il_baslik'),il:g('il_il'),ilce:g('il_ilce'),mahalle:g('il_mah'),m2:+g('il_m2')||0,oda:g('il_oda'),kat:g('il_kat'),fiyat:+g('il_fiyat')||0,eidsNo:(_ilnEids&&_ilnEids.tasinmazNo)||g('il_eids'),status:g('il_status'),img:_ilnImg||'',eids:_ilnEids||null};
+  var o={durum:g('il_durum'),tip:g('il_tip'),baslik:g('il_baslik'),il:g('il_il'),ilce:g('il_ilce'),mahalle:g('il_mah'),m2:+g('il_m2')||0,oda:g('il_oda'),kat:g('il_kat'),fiyat:+g('il_fiyat')||0,eidsNo:(_ilnEids&&_ilnEids.tasinmazNo)||g('il_eids'),status:g('il_status'),img:_ilnImg||'',eids:_ilnEids||null,desc:g('il_desc'),tur:g('il_tur'),video:g('il_video')};
   if(!o.baslik){toast('İlan başlığı girin.');return;}
   o.kira=(o.durum==='Kiralık');o.bolge=[o.ilce,o.mahalle].filter(Boolean).join(' · ');
   /* EİDS yayın kapısı: yetki yoksa aktif ilan pasife düşer */
