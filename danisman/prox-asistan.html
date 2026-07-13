@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css?v=16j">
+<link rel="stylesheet" href="css/base.css?v=16m">
 <style>
 /* ===================== PROX ASİSTAN · tam-sayfa kilitli sohbet (.pa-*) ===================== */
 html,body{height:100%}
@@ -52,7 +52,7 @@ html,body{height:100%}
 .pa-menu{display:none;background:none;border:0;color:var(--ink);font-size:20px;cursor:pointer}
 .pa-title{flex:1;font-family:var(--serif);font-weight:700;font-size:16px;display:flex;align-items:center;gap:7px;color:var(--ink)}
 .pa-title .prox-x{background:var(--prox);color:#04120c;border-radius:4px;padding:0 3px}
-.pa-online{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--prox-deep);font-weight:600}
+.pa-online{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#0b7a4f;font-weight:600}
 .pa-online i{width:7px;height:7px;border-radius:50%;background:var(--prox);box-shadow:0 0 0 0 rgba(25,195,125,.5);animation:paPulse 2.4s infinite}
 @keyframes paPulse{0%{box-shadow:0 0 0 0 rgba(25,195,125,.5)}70%{box-shadow:0 0 0 7px rgba(25,195,125,0)}100%{box-shadow:0 0 0 0 rgba(25,195,125,0)}}
 .pa-log{flex:1;overflow-y:auto;padding:26px clamp(14px,4vw,40px);display:flex;flex-direction:column;min-height:0}
@@ -107,16 +107,17 @@ html,body{height:100%}
     </div>
     <nav class="nav-links" id="navLinks">
       <a class="lnk" href="hizmetlerimiz.html">Hizmetlerimiz</a>
-      <a class="lnk" href="index.html#ilanlar">Portföy</a>
+      <a class="lnk" href="ilanlar.html">İlanlar</a>
+      <a class="lnk" href="ozel-portfoy.html">Özel Portföy</a>
       <a class="lnk" href="bolge-analizi.html">Bölge Analizi</a>
-      <a class="lnk" href="prox-asistan.html" aria-current="page" style="color:var(--gold)"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a>
+      <a class="lnk" href="prox-asistan.html" aria-current="page" style="color:var(--gold-soft)"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a>
     </nav>
     <div class="nav-cta">
       <a class="nav-wa" href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.21 8.21 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.4-8.24 8.4Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z"/></svg>
       </a>
       <a class="btn btn-gold hide-mobile-cta" href="index.html#randevu">Ücretsiz Ekspertiz</a>
-      <a class="nav-giris" href="index.html">Giriş</a>
+      <a class="nav-giris" href="index.html#giris">Giriş</a>
       <button class="burger" id="burger" aria-label="Menü"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -136,6 +137,7 @@ html,body{height:100%}
     </div>
   </aside>
   <main class="pa-main">
+    <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0">ProX Asistan · Selin Meridyen Gayrimenkul Danışmanı</h1>
     <div class="pa-appbar">
       <button class="pa-menu" onclick="document.getElementById('paSb').classList.toggle('open')" aria-label="Konuşma geçmişi">☰</button>
       <div class="pa-title"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</div>

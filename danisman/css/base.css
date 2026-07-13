@@ -9,12 +9,13 @@
   --em-deep:#0a3527; --em:#0e5e3e; --em-2:#14805a; --em-3:#1c9e72;
   /* İkincil altın (nadir, prestij vurgusu) */
   --gold:#c39b45; --gold-soft:#dcc389; --gold-deep:#a17e2d;
+  --gold-ink:#8a6a22;            /* krem/beyaz üstünde ALTIN METİN — WCAG AA 4.5:1 (küçük metin) */
   /* ProX yeşili (sabit) */
   --prox:#19c37d; --prox-deep:#0e8f5c;
   /* Zemin & yüzey (aydınlık, sıcak krem) */
   --cream:#faf7f0; --cream-2:#f2ecdf; --panel:#ffffff; --panel-2:#f7f3ea;
   --ink:#122a20;                 /* krem üstünde birincil metin (zümrüt-siyah) */
-  --ink-2:#3c4c43; --muted:#6f7d72; --muted-2:#9aa69c;
+  --ink-2:#3c4c43; --muted:#5d6a5f; --muted-2:#637065;   /* a11y AA: 4.5:1 krem+beyaz üstünde (eski 6f7d72/9aa69c ihlaliydi) */
   --line:#e8e0cf;                /* sıcak krem hairline */
   --line-2:#ded4c0;
   --cream-on-em:#f3efe2;         /* koyu zümrüt üstünde metin */
@@ -250,7 +251,7 @@ header.nav:not(.scrolled) .brand b,header.nav:not(.scrolled) .nav-links a.lnk,he
 /* Powered by ProX — inşaat sitesiyle BİREBİR aynı (.fprox) */
 .fprox{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
 .fprox .fprox-mark{display:inline-flex;align-items:center}
-.fprox .fprox-lead{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#7f8ea8;font-weight:600}
+.fprox .fprox-lead{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#adbdd6;font-weight:600}   /* a11y AA: koyu zümrüt üstünde 7.11:1 (eski #7f8ea8=4.08) */
 .fprox .fprox-pro{font-family:'Space Grotesk',var(--body);font-weight:800;font-size:15px;color:#fff}
 .fprox .fprox-x{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;height:1.4em;background:#16a34a;color:#0b1220;border-radius:6px;font-family:'Space Grotesk',var(--body);font-weight:800;font-size:14px;margin-left:2px}
 .fprox:hover .fprox-x{background:#1fb155}
@@ -310,7 +311,7 @@ footer .brand small{color:var(--gold-soft)}
 .fportals .fp{font-family:var(--body);font-weight:800;font-size:12.5px;letter-spacing:-.01em;line-height:1;padding:7px 12px;border-radius:8px;text-decoration:none;transition:.2s;box-shadow:0 4px 12px -6px rgba(0,0,0,.5)}
 .fportals .fp:hover{transform:translateY(-2px);filter:brightness(1.05)}
 .fportals .fp-sah{background:#ffe800;color:#12100a}
-.fportals .fp-hep{background:#ff5000;color:#fff}
+.fportals .fp-hep{background:#cc3d00;color:#fff}   /* a11y AA: beyaz metin 4.96:1 (eski #ff5000=3.28 ihlaldi) */
 .fportals .fp-ejt{background:#0a4bd6;color:#fff}
 .fportals .fp-ejt b{font-weight:800}
 
@@ -603,6 +604,7 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 .hero h1{font-size:clamp(33px,4.4vw,58px);line-height:1.08}
 .hero-scroll{position:absolute;left:50%;bottom:118px;transform:translateX(-50%);z-index:3;background:none;border:0;cursor:pointer;color:var(--gold-soft);font-family:var(--body);font-size:10px;letter-spacing:.3em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:.85;animation:rise 1s 1s both}
 .hero-scroll:hover{opacity:1}
+.hero-scroll span{color:var(--gold-soft)}   /* a11y: koyu zümrüt üstünde altın (miras rengini garanti et) */
 .hero-scroll i{width:1px;height:34px;background:linear-gradient(var(--gold-soft),transparent);display:block;animation:scrollpulse 2s infinite}
 @media(max-width:980px){.hero-content{padding-top:104px;padding-bottom:128px}.hero-scroll{display:none}}
 
@@ -653,7 +655,7 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 .bz-mhead .lbl{font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)}
 .bz-big{font-family:var(--serif);font-size:34px;color:var(--em);line-height:1.02;margin-top:4px}
 .bz-big small{font-family:var(--body);font-size:14px;color:var(--muted);font-weight:500}
-.bz-delta{font-size:13px;font-weight:700;color:var(--prox);white-space:nowrap}
+.bz-delta{font-size:13px;font-weight:700;color:#0b7a4f;white-space:nowrap}   /* a11y AA: erişilebilir koyu yeşil 5.4:1 (ProX logosu #19c37d dokunulmadı) */
 .bz-delta.dn{color:#c0603a}
 .bz-chart{margin-top:14px}
 .bz-chart svg{width:100%;height:auto;display:block;overflow:visible}
@@ -666,7 +668,7 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 .bz-kpi .k{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
 .bz-kpi .v{font-family:var(--serif);font-size:25px;color:var(--ink);line-height:1;font-variant-numeric:tabular-nums}
 .bz-kpi .v small{font-size:13px;color:var(--muted);font-family:var(--body)}
-.bz-kpi .v .pos{color:var(--prox)}
+.bz-kpi .v .pos{color:#0b7a4f}   /* a11y AA: erişilebilir koyu yeşil (ProX logosu #19c37d dokunulmadı) */
 .bz-ringwrap{display:flex;align-items:center;gap:12px}
 .bz-ring{width:52px;height:52px;border-radius:50%;flex:0 0 auto;background:conic-gradient(var(--gold) calc(var(--p,0)*1%),var(--line) 0);display:grid;place-items:center;transition:background .9s cubic-bezier(.2,.7,.2,1)}
 .bz-ring:after{content:"";width:38px;height:38px;border-radius:50%;background:var(--cream)}
@@ -727,7 +729,7 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 #homeView #surec .proc p{color:var(--mut-on-em)}
 #homeView #surec .proc:hover h4{color:var(--gold-soft)}
 #homeView #surec .proc:hover{background:rgba(255,255,255,.04)}
-#homeView #surec .proc .no{background:rgba(255,255,255,.06);border-color:var(--line-on-em)}
+#homeView #surec .proc .no{background:rgba(255,255,255,.06);border-color:var(--line-on-em);color:var(--gold-soft)}   /* a11y AA: koyu zümrüt üstünde açık altın 6.2:1 (gold-deep karanlıkta 2.99'du) */
 /* ProX kartı emerald zeminde ayrışsın */
 #homeView .prox-card{border-color:var(--line-on-em);box-shadow:0 40px 90px -50px rgba(0,0,0,.72)}
 /* İletişim */
@@ -874,3 +876,27 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
   .adm-main{padding:18px}
   .adm-topbar .alogo-t{font-size:13px}
 }
+
+/* ===================== FAVORİ ♡ (kart) + BLOG · HABERLER ===================== */
+.vc-fav{position:absolute;bottom:12px;right:12px;z-index:5;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.92);border:1px solid var(--line);color:var(--em);cursor:pointer;font-size:18px;line-height:1;display:grid;place-items:center;backdrop-filter:blur(4px);transition:.18s;box-shadow:0 6px 16px -8px rgba(10,53,39,.4)}
+.vc-fav:hover{transform:scale(1.08);border-color:var(--gold)}
+.vc-fav.on{background:var(--grad-em);color:#fff;border-color:transparent}
+/* blog liste */
+.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:900px){.bgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.bgrid{grid-template-columns:1fr}}
+.bcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius,16px);overflow:hidden;cursor:pointer;transition:.25s;display:flex;flex-direction:column;box-shadow:0 10px 30px -22px rgba(10,53,39,.35)}
+.bcard:hover{transform:translateY(-5px);border-color:var(--gold-soft);box-shadow:0 26px 50px -30px rgba(10,53,39,.5)}
+.bcard-ic{position:relative;height:120px;display:grid;place-items:center;font-size:44px;background:radial-gradient(90% 120% at 80% 10%,rgba(195,155,69,.18),transparent 55%),var(--grad-em);color:var(--cream-on-em)}
+.bcard-body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+.bcard-cat{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-deep)}
+.bcard-prox{font-weight:800;color:var(--em)}.bcard-prox span{display:inline-grid;place-items:center;background:var(--prox);color:#04140c;border-radius:4px;padding:0 .22em;margin-left:1px;font-size:.9em}
+.bcard h3{font-family:var(--serif);font-size:18.5px;line-height:1.25;margin:8px 0 8px}
+.bcard-body p{color:var(--muted);font-size:13.5px;line-height:1.6;margin:0 0 16px;flex:1}
+.bcard-meta{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.bcard-go{color:var(--em);font-weight:700}
+/* blog makale */
+.blog-article{font-size:16.5px;line-height:1.8;color:var(--ink-2)}
+.blog-article p:first-child{font-size:18px;color:var(--ink)}
+.blog-cta{margin-top:34px;padding:26px;background:var(--panel-2);border:1px solid var(--line);border-radius:16px;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
+.blog-cta b{font-family:var(--serif);font-size:19px;color:var(--ink)}

@@ -486,11 +486,18 @@ const VIP_PORTFOLIO=[
 /* Bölgesel prim (değer artışı) ipuçları — ProX için */
 const PRIM={'Levent':'%13–15','Maslak':'%11–13','Zekeriyaköy':'%9–11','Nişantaşı':'%10–12','Cihangir':'%8–10','Bahçeşehir':'%7–9','Sarıyer':'%12–14','Beykoz':'%9–11','Beşiktaş':'%11–13','Üsküdar':'%9–11','Çeşme':'%12–15','Alaçatı':'%12–15','Boğaz':'%14–16'};
 
+/* ---------- FAVORİ kimlik + ♡ buton (üye favorileri · uyelik.js dnFav motoru) ---------- */
+function _favSlug(s){return (''+(s||'')).toLocaleLowerCase('tr').replace(/[^0-9a-zçğıöşü]+/gi,'-').replace(/^-+|-+$/g,'').slice(0,52);}
+function listingFavId(l){return l&&(l.id?('ln-'+l.id):('ln-'+_favSlug(l.baslik||'')));}
+function vipFavId(p){return p&&(p.id?('vp-'+p.id):('vp-'+_favSlug(p.baslik||'')));}
+function _favBtn(id,type,snap){snap=snap||{};return '<button class="vc-fav" data-fid="'+_leD(id)+'" data-ftype="'+type+'" data-ft="'+_leD(snap.t||'')+'" data-fs="'+_leD(snap.s||'')+'" data-fp="'+_leD(snap.p||'')+'" data-fu="'+_leD(snap.u||'')+'" onclick="event.stopPropagation();window.dnFav&&dnFav(this.getAttribute(\'data-fid\'),this.getAttribute(\'data-ftype\'),this)" aria-label="Favorilere ekle" title="Favorilere ekle">♡</button>';}
+try{window.listingFavId=listingFavId;window.vipFavId=vipFavId;}catch(e){}
+
 function listingCardsHTML(){return LISTINGS.filter(function(l){return l.status!=='pasif';}).map(l=>{
   const price=l.kira?fmt(l.fiyat)+' <span class="per">/ay</span>':fmt(l.fiyat);
   const nm=l.baslik.replace(/'/g,'’');
   return '<article class="vcard" onclick="leadFor(\''+nm+'\')">'
-   +'<div class="vcard-img"><div class="glow"></div><span class="vcard-tag">'+l.durum+'</span>'+(l.img?'<img class="vcard-photo" src="'+l.img+'" alt="'+_leD(l.baslik||'')+'">':(_VIP_SVG[l.tip]||_VIP_SVG.villa))+'</div>'
+   +'<div class="vcard-img"><div class="glow"></div><span class="vcard-tag">'+l.durum+'</span>'+_favBtn(listingFavId(l),'ilan',{t:l.baslik,s:l.bolge+' · '+l.durum,p:(l.kira?fmt(l.fiyat)+' /ay':fmt(l.fiyat)),u:'ilanlar.html'})+(l.img?'<img class="vcard-photo" src="'+l.img+'" alt="'+_leD(l.baslik||'')+'">':(_VIP_SVG[l.tip]||_VIP_SVG.villa))+'</div>'
    +'<div class="vcard-body"><h3>'+l.baslik+'</h3>'
    +'<div class="vcard-loc">'+_PIN+l.bolge+'</div>'
    +'<div class="vcard-spec"><div><b>'+l.m2+' m²</b>Alan</div><div><b>'+l.oda+'</b>Oda</div><div><b>'+l.kat+'</b>Kat</div></div>'
@@ -501,7 +508,7 @@ function listingCardsHTML(){return LISTINGS.filter(function(l){return l.status!=
 function vipCardsHTML(){return VIP_PORTFOLIO.map(p=>{
   const nm=p.baslik.replace(/'/g,'’');
   return '<article class="vcard" onclick="leadFor(\''+nm+'\')">'
-   +'<div class="vcard-img"><div class="glow"></div><span class="vcard-tag">'+p.tag+'</span><span class="vcard-lock">'+_LCK+' No Gizli</span>'+(_VIP_SVG[p.tip]||'')+'</div>'
+   +'<div class="vcard-img"><div class="glow"></div><span class="vcard-tag">'+p.tag+'</span><span class="vcard-lock">'+_LCK+' No Gizli</span>'+_favBtn(vipFavId(p),'vip',{t:p.baslik,s:p.cadde+' · '+p.bolge,p:fmt(p.baslangic)+' başlangıç',u:'ozel-portfoy.html'})+(_VIP_SVG[p.tip]||'')+'</div>'
    +'<div class="vcard-body"><h3>'+p.baslik+'</h3>'
    +'<div class="vcard-loc">'+_PIN+p.cadde+' · '+p.bolge+'</div>'
    +'<div class="vcard-spec"><div><b>'+p.m2+'</b>Alan</div><div><b>'+p.oda+'</b>Tip</div><div><b>'+p.ozet+'</b>Ayrıcalık</div></div>'
@@ -541,10 +548,65 @@ function footerHTML(){return '<footer><div class="wrap"><div class="fcols">'
   +'</div>'
   +'<div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>'
   +'</div>'
-  +'<div><h4>Keşfet</h4><ul><li><a onclick="navGo(\'ilanlar\')">İlanlar</a></li><li><a onclick="navGo(\'vip\')">VIP Portföy</a></li><li><a onclick="navGo(\'surec\')">Süreç</a></li><li><a onclick="navGo(\'randevu\')">Ücretsiz Analiz</a></li></ul></div>'
-  +'<div><h4>Kurumsal</h4><ul><li><a onclick="goHome()">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="sss.html">S.S.S</a></li><li><a onclick="navGo(\'iletisim\')">İletişim</a></li><li><a onclick="openSaasPortal()">Müşteri Portalı</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>'
+  +'<div><h4>Keşfet</h4><ul><li><a href="ilanlar.html">İlanlar</a></li><li><a href="ozel-portfoy.html">Özel Portföy</a></li><li><a onclick="navGo(\'blog\')">Blog · Haberler</a></li><li><a onclick="navGo(\'surec\')">Süreç</a></li><li><a onclick="navGo(\'randevu\')">Ücretsiz Analiz</a></li></ul></div>'
+  +'<div><h4>Kurumsal</h4><ul><li><a onclick="goHome()">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="sss.html">S.S.S</a></li><li><a onclick="navGo(\'iletisim\')">İletişim</a></li><li><a onclick="if(typeof girisOrHesap===\'function\')girisOrHesap()">Üye Girişi / Hesabım</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>'
   +'<div><h4>Yasal</h4><ul><li><a onclick="openKvkk()">KVKK Aydınlatma</a></li><li><a onclick="openCerez()">Çerez Politikası</a></li><li><a onclick="openMesafeli()">Mesafeli Hizmet & Kullanım</a></li><li><a onclick="openAdminGate()">Yönetim Paneli</a></li></ul></div>'
   +'</div><div class="fbot"><span>© 2026 Selin Meridyen · Lüks Konut & Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span><span class="fbot-lang">Dil: <select class="lang-sel" onchange="gmLang(this.value)" aria-label="Dil / Language"><option value="tr">Türkçe</option><option value="en">English</option><option value="ar">العربية</option></select></span><a class="fprox" href="https://emlakekspertizi.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a></div></div></footer>';}
+
+/* =====================================================================
+   BLOG · HABERLER — ProX API veri beslemeli (/api/v1/tenant/blog/feed)
+   Yerel editör yazıları + ProX haber akışı birleşir; üyeler favoriye ekler.
+   ===================================================================== */
+const DN_BLOGS=[
+  {id:'d1',cat:'Piyasa',icon:'📊',title:'2026’da İstanbul’da lüks konutun yönü',date:'2026-06-24',meta:'7 dk okuma · Haz 2026',src:'firma',
+   sum:'Boğaz hattı ve prestij semtlerinde arz daralırken; doğru zamanlama ve doğru bölge, değeri koruyan iki temel unsur olmaya devam ediyor.',
+   body:'Lüks konut piyasası, genel konuttan farklı dinamiklerle hareket eder. Sınırlı arz, eşsiz konum ve mimari nitelik; fiyatı standart m² mantığının ötesine taşır.\n\n2026 itibarıyla Boğaz hattı, Nişantaşı ve Zekeriyaköy gibi prestij bölgelerinde nitelikli arz daralmaya devam ediyor. Bu daralma, doğru evrakla ve doğru fiyat stratejisiyle piyasaya çıkan gayrimenkullerin değerini koruyor.\n\nYatırım kararında bugünkü m² fiyatı kadar, bölgenin reel değişim eğilimi ve likiditesi de belirleyici. Kesin rakamlar için güncel ProX endeksiyle teyit almak, duygusal değil veriye dayalı bir karar sağlar.'},
+  {id:'d2',cat:'Yatırım',icon:'🏛️',title:'Boğaz’da yalı yatırımı: değeri koruyan 5 ilke',date:'2026-06-12',meta:'6 dk okuma · Haz 2026',src:'firma',
+   sum:'Yalı ve su üstü portföyünde likidite düşük, değer yüksektir. Doğru alım için beş temel ilke.',
+   body:'Yalı, Türkiye gayrimenkulünün en niş ve en değerli sınıfıdır. Arzı son derece sınırlı, alıcı havuzu özeldir.\n\n1) Tapu ve kıyı kenar çizgisi durumu netleştirilmeden ilerlenmez. 2) Restore edilmiş yalıda mimari onay geçmişi kritiktir. 3) İskele ve rıhtım hakları ayrıca değerlendirilir. 4) Bölgedeki son emsal satışlar ProX verisiyle teyit edilir. 5) Alım, tek muhatapla ve mahremiyet içinde yürütülür.\n\nBu sınıfta doğru danışman, fiyatın kendisi kadar değerlidir.'},
+  {id:'d3',cat:'Rehber',icon:'🔑',title:'Özel Portföy neden “davet usulü” çalışır?',date:'2026-05-28',meta:'5 dk okuma · May 2026',src:'firma',
+   sum:'Bazı gayrimenkuller ilan panolarında yer almaz. Mahremiyet, hem satıcıyı hem değeri korur.',
+   body:'Özel Portföy; mülk sahibinin mahremiyet, güvenlik ya da stratejik nedenlerle açık ilana çıkmadığı gayrimenkullerden oluşur.\n\nBu portföyde yalnızca cadde/sokak ismi ve başlangıç değeri paylaşılır; tam adres ve net fiyat, ancak ön analiz sonrası ve nitelikli alıcıya açıklanır. Bu yaklaşım, gereksiz teşhiri önler ve değeri korur.\n\nÖzel Portföye erişim davet usulüdür; ücretsiz analiz görüşmesiyle başlar.'},
+  {id:'d4',cat:'Rehber',icon:'📋',title:'Ekspertiz raporu satışı nasıl hızlandırır?',date:'2026-05-14',meta:'4 dk okuma · May 2026',src:'firma',
+   sum:'Bağımsız ekspertiz, alıcı güvenini artırır ve pazarlık süresini kısaltır.',
+   body:'Alıcı, fiyatın gerçekçi olduğuna ikna olduğunda süreç hızlanır. Bağımsız ve güncel bir ekspertiz raporu tam da bunu sağlar.\n\nRapor; m² değeri, bölge trendi, kıyaslanabilir emsaller ve gayrimenkulün nitelik puanını objektif biçimde ortaya koyar. Bu şeffaflık, pazarlık masasında satıcıyı güçlü kılar.\n\nProX doğrulanmış verisiyle hazırlanan bir ön değer analizi, doğru fiyat stratejisinin ilk adımıdır.'},
+  {id:'d5',cat:'Analiz',icon:'📈',title:'Kira getirisi mi, değer artışı mı?',date:'2026-04-30',meta:'6 dk okuma · Nis 2026',src:'firma',
+   sum:'İki strateji, iki farklı bölge profili. ProX verisiyle doğru dengeyi kurun.',
+   body:'Yatırımcının önündeki temel tercih: düzenli kira getirisi mi, yoksa orta vadeli değer artışı mı?\n\nYüksek kira çarpanına sahip bölgeler istikrarlı nakit akışı sunar; gelişim koridorundaki mahalleler ise daha yüksek prim potansiyeli taşır. İkisi nadiren aynı üründe zirve yapar.\n\nBrüt kira getirisi ile bölge prim eğilimini birlikte okumak, portföyü hedefe göre kurmayı sağlar. ProX endeksi, bu iki metriği aynı ekranda karşılaştırma imkânı verir.'}
+];
+var _dnBlogCache=null;
+/* ProX haber/blog akışı — /api/v1/tenant/blog/feed (ProX API anahtarıyla; uç yoksa []→yalnız yerel). */
+async function proxBlogFeed(force){
+  if(_dnBlogCache&&!force)return _dnBlogCache;var out=[];
+  try{var r=await proxApi('/api/v1/tenant/blog/feed');
+    if(r&&!r.fallback){var arr=r.posts||r.data||r.items||(Array.isArray(r)?r:[]);
+      out=(arr||[]).map(function(p,i){var bd=p.body||p.content||p.icerik||'';return {id:'px'+(p.id||i),title:p.title||p.baslik||'',cat:p.cat||p.category||p.kategori||'ProX Haber',sum:p.summary||p.ozet||p.excerpt||(''+bd).slice(0,150),body:bd,icon:'📰',date:p.date||p.published||'',meta:((p.date||p.published||'')+' · ProX Haber').trim(),src:'prox'};}).filter(function(p){return p.title;});}
+  }catch(e){}
+  _dnBlogCache=out;return out;}
+function dnBlogAll(){var px=_dnBlogCache||[];var seen={},all=[];
+  DN_BLOGS.concat(px).forEach(function(b){var k=(b.title||'').toLocaleLowerCase('tr');if(k&&!seen[k]){seen[k]=1;all.push(b);}});return all;}
+function dnBlogById(id){var a=dnBlogAll();for(var i=0;i<a.length;i++){if((''+a[i].id)===(''+id))return a[i];}return null;}
+function _dnBlogCard(b){return '<article class="bcard" onclick="dnBlogDetail(\''+_leD(b.id)+'\')">'
+  +'<div class="bcard-ic">'+(b.icon||'📄')+_favBtn('bl-'+b.id,'blog',{t:b.title,s:(b.cat||'')+' · '+(b.meta||''),p:'',u:'index.html#blog'})+'</div>'
+  +'<div class="bcard-body"><div class="bcard-cat">'+_leD(b.cat||'Genel')+(b.src==='prox'?' · <b class="bcard-prox">Pro<span>X</span></b>':'')+'</div>'
+  +'<h3>'+_leD(b.title||'')+'</h3><p>'+_leD(b.sum||'')+'</p>'
+  +'<div class="bcard-meta"><span>'+_leD(b.meta||'')+'</span><span class="bcard-go">Oku →</span></div></div></article>';}
+function dnBlogListHTML(){var posts=dnBlogAll();return '<section class="sec-pad"><div class="wrap"><div class="bgrid" id="dnBlogGrid">'+posts.map(_dnBlogCard).join('')+'</div>'
+  +'<div class="vault-note" style="margin-top:36px">📰 Güncel haber ve analizler <b>ProX doğrulanmış emlak verisiyle</b> beslenir · üye iseniz beğendiğiniz yazıyı <b>favorilerinize</b> ekleyebilirsiniz.</div></div></section>';}
+function dnBlogDetail(id){var b=dnBlogById(id);if(!b){navGo('blog');return;}
+  var body=(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p style="margin:0 0 17px">'+_leD(par).replace(/\n/g,'<br>')+'</p>';}).join('');
+  var ov=document.getElementById('pageOverlay');
+  ov.innerHTML='<div class="pov-band"><div class="wrap"><div class="eyebrow">Blog · '+_leD(b.cat||'Haber')+(b.src==='prox'?' · ProX Haber':'')+'</div><h1>'+_leD(b.title||'')+'</h1><p>'+_leD(b.meta||'')+'</p></div></div>'
+    +'<section class="sec-pad"><div class="wrap" style="max-width:780px"><button class="btn btn-line" onclick="navGo(\'blog\')" style="margin-bottom:22px">← Tüm yazılar</button>'
+    +'<div class="blog-article">'+body+'</div>'
+    +'<div class="blog-cta"><b>Bu konuda kişiye özel danışmanlık mı istiyorsunuz?</b><a class="btn btn-gold" onclick="navGo(\'randevu\')">Ücretsiz Analiz Randevusu</a></div>'
+    +'</div></section>'+footerHTML();
+  ov.classList.add('on');ov.scrollTop=0;document.body.classList.add('lock');
+  var hv=document.getElementById('homeView');if(hv)hv.style.display='none';
+  var nv=document.getElementById('nav');if(nv)nv.classList.add('scrolled');
+  try{setActiveNav(null);}catch(e){}
+  try{window.dnFavReflect&&dnFavReflect();}catch(e){}}
+try{window.proxBlogFeed=proxBlogFeed;window.dnBlogAll=dnBlogAll;window.dnBlogById=dnBlogById;window.dnBlogDetail=dnBlogDetail;window.dnBlogListHTML=dnBlogListHTML;}catch(e){}
 
 /* =====================================================================
    DİNAMİK SAYFA ROUTER (overlay — üst+alt menü birebir tutarlı)
@@ -554,6 +616,8 @@ const PAGES={
     body:()=>'<section class="sec-pad"><div class="wrap"><div class="card-grid">'+listingCardsHTML()+'</div><div class="vault-note" style="margin-top:36px">Tüm ilanlar yetki belgelidir · detaylı bilgi ve yerinde değerlendirme için <b>ücretsiz analiz</b> alın.</div></div></section>'},
   vip:{eyebrow:'Kişisel VIP Portföyüm',title:'Davet Usulü',em:'gizli özel portföy',desc:'Yalnızca cadde/sokak ismi ve başlangıç değeri paylaşılır. Tam adres, kimlik ve net fiyat mahremiyet gereği yalnızca ön analiz sonrası açıklanır.',
     body:()=>'<section class="vault sec-pad"><div class="wrap"><div class="card-grid">'+vipCardsHTML()+'</div><div class="vault-note" style="margin-top:36px">🔒 <b>Adres gizliliği</b> tüm kayıtlarda esastır · net konum yalnızca <b>ücretsiz analiz görüşmesinde</b> paylaşılır.</div></div></section>'},
+  blog:{eyebrow:'Blog · Haberler',title:'Bilgi & Piyasa',em:'ProX veri ışığında',desc:'Lüks konut, yatırım ve piyasa üzerine kişiye özel analizler; ProX doğrulanmış emlak verisiyle beslenen güncel haber akışı.',
+    body:()=>dnBlogListHTML()},
   surec:{eyebrow:'Süreç & Temsil',title:'Beş Aşamada',em:'değere taşıma',desc:'Gayrimenkulünüzü doğru alıcıyla, değerini koruyarak buluşturan uçtan uca temsil süreci.',
     body:()=>'<section class="sec-pad"><div class="wrap"><div class="proc-grid">'
       +'<div class="proc"><div class="no">01</div><h4>Değer Analizi</h4><p>Konum, eşsiz nitelikler ve hedef alıcı profili analiz edilir; doğru fiyat stratejisi kurulur.</p></div>'
@@ -577,6 +641,9 @@ function openPage(key,opts){
   document.getElementById('nav').classList.add('scrolled');
   setActiveNav(key);
   if(key==='randevu'){buildDays();buildSlots();if(opts&&opts.note){const n=document.getElementById('ap_not');if(n)n.value=opts.note;}}
+  if(key==='blog'){/* ProX haber akışını çek → listeyi tazele (uç yoksa yalnız yerel kalır) */
+    try{proxBlogFeed().then(function(px){if(px&&px.length){var g=document.getElementById('dnBlogGrid');if(g)g.innerHTML=dnBlogAll().map(_dnBlogCard).join('');}try{window.dnFavReflect&&dnFavReflect();}catch(e){}}).catch(function(){});}catch(e){}}
+  try{window.dnFavReflect&&dnFavReflect();}catch(e){}
 }
 function closePage(){const ov=document.getElementById('pageOverlay');ov.classList.remove('on');ov.innerHTML='';document.body.classList.remove('lock');document.getElementById('homeView').style.display='';document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);setActiveNav(null);}
 function goHome(){closeNav();closePage();window.scrollTo(0,0);}
@@ -951,14 +1018,18 @@ function ilanSaveForm(id){ilanLoad();var g=function(x){var e=document.getElement
   o.kira=(o.durum==='Kiralık');o.bolge=[o.ilce,o.mahalle].filter(Boolean).join(' · ');
   /* EİDS yayın kapısı: yetki yoksa aktif ilan pasife düşer */
   var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsFirma().eids.yetkili);}catch(e){}
-  if(o.status==='aktif'&&!eidsOk){o.status='pasif';toast('EİDS yetkisi olmadan açık ilan yayınlanamaz — pasif kaydedildi.');}
+  var propOk=!!(o.eids&&o.eids.status==='dogrulandi');/* o gayrimenkulde ilan yayınlama yetkisi = EİDS taşınmaz doğrulaması */
+  if(o.status==='aktif'&&(!eidsOk||!propOk)){o.status='pasif';toast(!eidsOk?'EİDS firma yetkisi yok — ilan pasif kaydedildi.':'Bu gayrimenkul için EİDS taşınmaz doğrulaması yapılmadan yayınlanamaz — pasif kaydedildi.');}
   if(id){var l=LISTINGS.filter(function(x){return x.id===id;})[0];if(l)Object.assign(l,o);}
   else{o.id=ilanEnsureIds()+1;LISTINGS.unshift(o);}
   ilanSave();crmCloseModal();ilanRenderAdmin();ilanRefreshPublic();toast('✓ İlan kaydedildi.');
 }
 function ilanDel(id){if(!confirm('İlan silinsin mi?'))return;ilanLoad();for(var i=LISTINGS.length-1;i>=0;i--)if(LISTINGS[i].id===id)LISTINGS.splice(i,1);ilanSave();crmCloseModal();ilanRenderAdmin();ilanRefreshPublic();toast('İlan silindi.');}
 function ilanTogglePub(id){ilanLoad();var l=LISTINGS.filter(function(x){return x.id===id;})[0];if(!l)return;
-  if(l.status==='pasif'){var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsFirma().eids.yetkili);}catch(e){}if(!eidsOk){toast('EİDS yetkisi olmadan yayınlanamaz.');return;}l.status='aktif';}else l.status='pasif';
+  if(l.status==='pasif'){var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsFirma().eids.yetkili);}catch(e){}var propOk=!!(l.eids&&l.eids.status==='dogrulandi');
+    if(!eidsOk){toast('EİDS firma yetkisi olmadan yayınlanamaz.');return;}
+    if(!propOk){toast('Bu gayrimenkul için EİDS taşınmaz doğrulaması gerekli — yayınlanamadı. İlanı düzenleyip "e-Devlet EİDS ile Doğrula" yapın.');return;}
+    l.status='aktif';}else l.status='pasif';
   ilanSave();ilanRenderAdmin();ilanRefreshPublic();toast(l.status==='aktif'?'İlan yayınlandı.':'İlan yayından kaldırıldı.');}
 /* ===================== EKİP · SÖZLEŞMELER · KOMİSYON · KİRA (dn_crm_v1 içinde) ===================== */
 function _crmFirma(){var f={};try{f=SAAS_CONFIG.firma||{};}catch(e){}var e=f.eids||{};return {unvan:f.unvan||SAAS_CONFIG.tenantName||'Selin Meridyen Danışmanlık',advisor:SAAS_CONFIG.advisorName||'Selin Meridyen',vergi:f.vergi||'—',adres:f.adres||'—',tel:f.tel||'—',mail:f.mail||'—',belge:e.belgeNo||'—'};}

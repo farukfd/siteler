@@ -13,7 +13,10 @@
 <!-- ============ ProX SaaS API ÇEKİRDEĞİ (additive, single-file) ============ -->
 <script>
 window.EMLAK_API_BASE = "https://www.emlakekspertizi.com";
-window.EMLAK_TENANT = { id:"consultant", tenant_id:"consultant", tenant_key:"prox_consultant_a383eb07bb544ce3db7323150370bb46", domain:location.hostname, sector:"real_estate_consultant", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"PRO", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"consultant", legalMode:"standard" };
+window.EMLAK_TENANT = { id:"consultant", tenant_id:"consultant", tenant_key:"prox_consultant_a383eb07bb544ce3db7323150370bb46", domain:location.hostname, sector:"real_estate_consultant", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"BUSINESS", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"consultant", legalMode:"standard" };
+/* SATIN ALINMIŞ PAKET TABANI — bu site BUSINESS müşterisine aittir; hiçbir alanda "yükselt" kilidi görünmez.
+   Sunucu bootstrap yalnızca YUKARI (BUSINESS→ENTERPRISE) yükseltebilir, aşağı düşüremez. */
+window.EMLAK_PACKAGE_FLOOR = "BUSINESS";
 /* Admin'de girilen ProX API anahtarı (dn_prox) — TÜM ProX veri/PDF/AI-fallback çağrılarından ÖNCE uygulanır */
 try{var _dp=JSON.parse(localStorage.getItem('dn_prox')||'null');if(_dp&&_dp.key){window.EMLAK_TENANT.tenant_key=_dp.key;if(_dp.tenant)window.EMLAK_TENANT.tenant_id=_dp.tenant;}}catch(e){}
 window.EMLAK_PACKAGES = {
@@ -30,7 +33,9 @@ function proxFallback(path,options={}){ return { fallback:true, message:"API bag
 async function submitLead(lead){ lead=lead||{}; var payload={ sourcePage:lead.sourcePage||"danisman", formType:lead.formType||"contact", name:lead.name||"", phone:lead.phone||"", email:lead.email||"", message:lead.message||"", extra:lead.extra||{ location:lead.location||"", requestedService:lead.requestedService||"", sector:window.EMLAK_TENANT.sector } }; try{if(typeof trackEvent==='function')trackEvent('generate_lead',{source:payload.formType||'lead'});}catch(_t){} try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:payload}); if(r&&r.fallback)throw new Error("fallback"); if(r&&r.success===false)throw new Error("lead reddedildi"); return {ok:true,online:(r&&r.online!==false),data:r}; }catch(e){ try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(Object.assign({id:"lead_"+Date.now(),createdAt:new Date().toISOString()},payload));localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:payload}; } }
 window.injectSchema=function(o){try{var s=document.createElement("script");s.type="application/ld+json";s.text=JSON.stringify(o);document.head.appendChild(s);}catch(e){}};
 /* Canlı paket/özellik senkronu — theme.accent ile CSS REPAINT EDILMEZ (siyah/altın korunur). */
-async function proxBootstrap(){ try{ var r=await proxApi("/api/v1/tenant/bootstrap",{method:"GET"}); if(!r||r.fallback||r.success===false)return false; if(r.package)window.EMLAK_TENANT.packageCode=r.package; if(Array.isArray(r.enabled_features)&&r.enabled_features.length)window.EMLAK_TENANT.enabledFeatures=r.enabled_features; else if(window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode])window.EMLAK_TENANT.enabledFeatures=window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode]; return true; }catch(e){ return false; } }
+function _pkgRank(p){var O=["BASIC","PRO","BUSINESS","ENTERPRISE"];var i=O.indexOf(String(p||"").toUpperCase());return i<0?1:i;}
+function _pkgFloor(p){var floor=window.EMLAK_PACKAGE_FLOOR||"BUSINESS";return (_pkgRank(p)>=_pkgRank(floor))?p:floor;}
+async function proxBootstrap(){ try{ var r=await proxApi("/api/v1/tenant/bootstrap",{method:"GET"}); if(!r||r.fallback||r.success===false){ window.EMLAK_TENANT.packageCode=_pkgFloor(window.EMLAK_TENANT.packageCode); if(window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode])window.EMLAK_TENANT.enabledFeatures=window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode]; return false; } if(r.package)window.EMLAK_TENANT.packageCode=_pkgFloor(r.package); /* sunucu tabanın altına düşüremez */ var feats=(Array.isArray(r.enabled_features)&&r.enabled_features.length)?r.enabled_features:null; var base=window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode]||[]; if(feats){ /* sunucu özelliklerini paket tabanıyla BİRLEŞTİR — taban özellikleri asla eksilmez */ base.forEach(function(f){ if(feats.indexOf(f)<0)feats.push(f); }); window.EMLAK_TENANT.enabledFeatures=feats; } else { window.EMLAK_TENANT.enabledFeatures=base; } return true; }catch(e){ window.EMLAK_TENANT.packageCode=_pkgFloor(window.EMLAK_TENANT.packageCode); if(window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode])window.EMLAK_TENANT.enabledFeatures=window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode]; return false; } }
 window.proxBootstrap=proxBootstrap;
 </script>
 
@@ -70,7 +75,7 @@ window.proxBootstrap=proxBootstrap;
   ]
 }
 </script>
-  <link rel="stylesheet" href="css/base.css?v=16j">
+  <link rel="stylesheet" href="css/base.css?v=16m">
   <style>/* ana sayfa tam yeşil — overscroll/alt beyaz ekranı önle */html,body{background:#0a3527;overscroll-behavior:none}</style>
 <script src="../tr-grammar.js?v=3"></script>
 <script src="../tr-iller.js?v=2"></script><!-- Türkçe gramer tek kaynak (gayrimenkul.html ile ortak) -->
@@ -86,7 +91,8 @@ window.proxBootstrap=proxBootstrap;
     </div>
     <nav class="nav-links" id="navLinks">
       <a class="lnk" href="hizmetlerimiz.html">Hizmetlerimiz</a>
-      <a class="lnk" data-k="ilanlar" onclick="navGo('ilanlar')">Portföy</a>
+      <a class="lnk" href="ilanlar.html">İlanlar</a>
+      <a class="lnk" href="ozel-portfoy.html">Özel Portföy</a>
       <a class="lnk" href="bolge-analizi.html">Bölge Analizi</a>
       <a class="lnk nav-asistan" href="prox-asistan.html"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a>
     </nav>
@@ -95,7 +101,7 @@ window.proxBootstrap=proxBootstrap;
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.21 8.21 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.4-8.24 8.4Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z"/></svg>
       </a>
       <a class="btn btn-gold hide-mobile-cta" onclick="navGo('randevu')">Ücretsiz Ekspertiz</a>
-      <a class="nav-giris" onclick="openSaasPortal();closeNav();return false">Giriş</a>
+      <a class="nav-giris js-giris" onclick="girisOrHesap();closeNav();return false">Giriş</a>
       <button class="burger" id="burger" onclick="toggleNav()" aria-label="Menü"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -321,7 +327,8 @@ window.proxBootstrap=proxBootstrap;
 <div id="siteFooter"></div>
 </div><!-- /homeView -->
 
-<script src="js/app.js?v=16n"></script>
+<script src="js/app.js?v=16q"></script>
+<script src="js/uyelik.js?v=4"></script>
 </body>
 </html>
 
