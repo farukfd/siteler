@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meridyen Gayrimenkul · Satılık & Kiralık Konut, Ofis ve Arsa · Veriyle Emlak</title>
-<meta name="description" content="Meridyen Gayrimenkul — İzmir ve çevresinde satılık/kiralık konut, ofis, arsa portföyü. Mahalle bazlı fiyat endeksi, yatırım skoru ve ücretsiz değerleme. Türkiye geneli endeks verisiyle güçlenen yerel uzmanlık.">
+<title>Meridyen Gayrimenkul · Satılık & Kiralık Konut, Ofis, Arsa</title>
+<meta name="description" content="Meridyen Gayrimenkul — İzmir ve çevresinde satılık/kiralık konut, ofis, arsa. Mahalle bazlı fiyat endeksi, yatırım skoru ve ücretsiz değerleme.">
 <meta name="theme-color" content="#0a1631">
 <meta property="og:title" content="Meridyen Gayrimenkul · Veriyle Emlak">
 <meta property="og:description" content="Veri odaklı emlak danışmanlığı. Mahalle endeksi, yatırım skoru, ücretsiz değerleme.">
@@ -121,7 +121,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <!-- TEMA: themes kütüphanesinden seç (tenant başına değiştir). Aktif: Meridyen -->
   <link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=2">
-  <link rel="stylesheet" href="css/base.css?v=18">
+  <link rel="stylesheet" href="css/base.css?v=19">
 </head>
 <body>
 <div id="site">
@@ -674,13 +674,13 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
     <main class="adm-main">
       <!-- GENEL -->
       <div class="adm-pane act" id="pane-genel">
-        <div class="adm-top"><h1>CRM Panosu</h1><span class="vsite" onclick="closeAdmin()">↗ Siteyi yeni sekmede gör</span></div>
+        <div class="adm-top"><h2>CRM Panosu</h2><span class="vsite" onclick="closeAdmin()">↗ Siteyi yeni sekmede gör</span></div>
         <div class="kpis" id="kpiBox"></div>
         <div class="adm-card"><h3>Son Gelen Lead'ler</h3><div class="csub">Formlar, değerleme ve fiyat alarmından gelen talepler</div><div id="recentLeads"></div></div>
       </div>
       <!-- İLANLAR -->
       <div class="adm-pane" id="pane-ilanlar">
-        <div class="adm-top"><h1>İlan Yönetimi</h1><button class="btn btn-primary btn-sm" onclick="newIlan()">+ Yeni İlan</button></div>
+        <div class="adm-top"><h2>İlan Yönetimi</h2><button class="btn btn-primary btn-sm" onclick="newIlan()">+ Yeni İlan</button></div>
         <div class="adm-card" id="ilanEditCard" style="display:none">
           <h3 id="ilanEditTitle">Yeni İlan</h3><div class="csub">Tüm alanları doldurun; ilan ana sayfada anında görünür.</div>
           <div class="ed2">
@@ -711,7 +711,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
           <div class="afield"><label>İlan Görseli</label>
             <div class="aupload" onclick="document.getElementById('i_imgInput').click()">📷 Görsel yüklemek için tıklayın (yoksa otomatik atanır)</div>
             <input type="file" id="i_imgInput" accept="image/*" style="display:none" onchange="ilanImg(this)">
-            <img id="i_imgPrev" class="athumb" style="display:none">
+            <img id="i_imgPrev" alt="Önizleme" class="athumb" style="display:none">
           </div>
           <div class="eids-box">
             <div class="eh"><span class="shield"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="M9 12l2 2 4-4"/></svg></span> EİDS İlan Doğrulama</div>
@@ -734,7 +734,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <!-- DANIŞMANLAR -->
       <!-- ÖZEL PORTFÖY -->
       <div class="adm-pane" id="pane-ozel">
-        <div class="adm-top"><h1>Özel Portföy Yönetimi</h1><div style="display:flex;gap:8px"><button class="abtn" onclick="rebuildOzelFromProx(PROVINCE.name)">⟳ ProX Gerçek Fiyatları Çek</button><button class="btn btn-primary btn-sm" onclick="newOzel()">+ Yeni Kayıt</button></div></div>
+        <div class="adm-top"><h2>Özel Portföy Yönetimi</h2><div style="display:flex;gap:8px"><button class="abtn" onclick="rebuildOzelFromProx(PROVINCE.name)">⟳ ProX Gerçek Fiyatları Çek</button><button class="btn btn-primary btn-sm" onclick="newOzel()">+ Yeni Kayıt</button></div></div>
         <div class="adm-card"><div class="csub">Açık ilan öncesi, e-Devlet yetkilendirmesi tamamlanmadan bölgedeki talebi ölçmek için cadde/sokak bazlı ön tanıtım kayıtları. Açık adres ve görsel içermez; net konum yalnızca talep gelince danışmanla paylaşılır.</div></div>
         <div class="adm-card" id="ozEditCard" style="display:none">
           <h3 id="ozEditTitle">Yeni Kayıt</h3>
@@ -768,14 +768,14 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
         <div class="adm-card"><h3 style="margin:0 0 4px">Mülk Sahibi Talepleri (Arz)</h3><div class="csub" style="margin-bottom:10px">"Sat / Kirala" ve "Özel Portföy'e ekle" formlarından gelen mülk sahipleri. Arayıp değerleme yapın; anlaşınca e-Devlet yetkilendirmesiyle özel portföye ekleyin.</div><table class="atable"><thead><tr><th>Tarih</th><th>Mülk</th><th>Konum</th><th>m²</th><th>Beklenen</th><th>Ad</th><th>Telefon</th></tr></thead><tbody id="ozOwnerRows"></tbody></table></div>
       </div>
       <div class="adm-pane" id="pane-danismanlar">
-        <div class="adm-top"><h1>Danışman Yönetimi</h1><button class="btn btn-primary btn-sm" onclick="newDan()">+ Yeni Danışman</button></div>
+        <div class="adm-top"><h2>Danışman Yönetimi</h2><button class="btn btn-primary btn-sm" onclick="newDan()">+ Yeni Danışman</button></div>
         <div id="danDemoBanner"></div>
         <div class="adm-card" id="danEditCard" style="display:none">
           <h3>Danışman</h3><div class="csub">Ekip vitrininde görünür. Fotoğraf ekleyin — fotoğraflı danışmanlar çok daha fazla güven ve dönüş alır.</div>
           <div class="afield"><label>Profil Fotoğrafı</label>
             <div class="aupload" onclick="document.getElementById('d_fotoIn').click()">📷 Danışman fotoğrafı yükleyin (kare, yüz ortada)</div>
             <input type="file" id="d_fotoIn" accept="image/*" style="display:none" onchange="danFoto(this)">
-            <img id="d_fotoPrev" class="athumb" style="display:none;width:120px;height:120px;border-radius:50%;aspect-ratio:1">
+            <img id="d_fotoPrev" alt="Önizleme" class="athumb" style="display:none;width:120px;height:120px;border-radius:50%;aspect-ratio:1">
           </div>
           <div class="ed2">
             <div class="afield"><label>Ad Soyad</label><input id="d_name" placeholder="Ahmet Yılmaz"></div>
@@ -801,18 +801,18 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       </div>
       <!-- LEADLER -->
       <div class="adm-pane" id="pane-leadler">
-        <div class="adm-top"><h1>Lead Gelen Kutusu</h1><button class="abtn" onclick="clearLeads()">Tümünü Temizle</button></div>
+        <div class="adm-top"><h2>Lead Gelen Kutusu</h2><button class="abtn" onclick="clearLeads()">Tümünü Temizle</button></div>
         <div class="adm-card"><table class="atable"><thead><tr><th>Tarih</th><th>Ad</th><th>Telefon</th><th>Konu</th><th>Kaynak</th><th>CRM</th></tr></thead><tbody id="leadRows"></tbody></table></div>
       </div>
       <!-- BÖLGE -->
       <div class="adm-pane" id="pane-bolge">
-        <div class="adm-top"><h1>Bölge Analizi İçeriği</h1></div>
+        <div class="adm-top"><h2>Bölge Analizi İçeriği</h2></div>
         <div class="adm-card"><h3>Bölge Verileri</h3><div class="csub">Ana sayfadaki "Bölge Zekası" widget'ında gösterilir. Canlı veride emlakekspertizi /api/emlak-endeksi/detail ucuna bağlanır.</div>
           <table class="atable"><thead><tr><th>Bölge</th><th>m² Fiyatı</th><th>5Y Değişim</th><th>Yatırım Skoru</th><th>Risk</th></tr></thead><tbody id="bolgeRows"></tbody></table></div>
       </div>
       <!-- HİZMET ALANI -->
       <div class="adm-pane" id="pane-hizmetalani">
-        <div class="adm-top"><h1>Hizmet Alanı Yönetimi</h1><button class="btn btn-primary btn-sm" onclick="saApply()">Kaydet & Siteye Uygula</button></div>
+        <div class="adm-top"><h2>Hizmet Alanı Yönetimi</h2><button class="btn btn-primary btn-sm" onclick="saApply()">Kaydet & Siteye Uygula</button></div>
         <div class="csub" style="margin-bottom:12px">Hizmet verdiğiniz <b>il · ilçe · mahalle · kategori</b>leri buradan yönetin. Çıkardıklarınız site genelinden (bölge, Özel Portföy, dropdown) kalkar; birden fazla il ekleyebilirsiniz.</div>
         <div class="adm-card"><h3>Hizmet İlleri</h3><div class="csub">Ana il + ek hizmet illeri. Bir ile tıklayıp ilçelerini düzenleyin.</div>
           <div id="saIlChips" style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0"></div>
@@ -833,7 +833,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       </div>
       <!-- FİRMA -->
       <div class="adm-pane" id="pane-firma">
-        <div class="adm-top"><h1>Firma Bilgileri</h1><button class="btn btn-primary btn-sm" onclick="saveFirma()">Kaydet & Siteye Uygula</button></div>
+        <div class="adm-top"><h2>Firma Bilgileri</h2><button class="btn btn-primary btn-sm" onclick="saveFirma()">Kaydet & Siteye Uygula</button></div>
         <div class="adm-card" style="border:2px solid var(--green);background:linear-gradient(180deg,rgba(52,168,83,.06),transparent)">
           <h3><span style="display:inline-flex;vertical-align:-4px;color:#1e7e3a;margin-right:6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="M9 12l2 2 4-4"/></svg></span>ProX Yapay Zeka · Kurumsal Kimlik Sihirbazı</h3>
           <div class="csub">Firma adınızı ve ilinizi girin; <b>ProX yapay zeka (emlakekspertizi.com · DeepSeek)</b> sitenizin tüm sayfalarını kontrol ederek markanızı, hakkımızda metninizi ve sloganınızı oluşturur. <b>“Meridyen Gayrimenkul” geçen her yer firmanızla değişir</b> — üst menü, footer, hakkımızda, WhatsApp, yetki belgesi dahil.</div>
@@ -905,7 +905,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       </div>
       <!-- SÖZLEŞMELER -->
       <div class="adm-pane" id="pane-contracts">
-        <div class="adm-top"><h1>Sözleşmeler</h1></div>
+        <div class="adm-top"><h2>Sözleşmeler</h2></div>
         <div class="adm-card">
           <h3>Yeni Sözleşme Oluştur</h3>
           <div class="csub">Hazır Türkçe şablonlardan tek tıkla sözleşme üretin. Firma bilgileri (unvan, adres, vergi no, yetkili) otomatik yerleşir; düzenleyip yazdırabilir veya WhatsApp ile gönderebilirsiniz.</div>
@@ -922,7 +922,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       </div>
       <!-- TEMA -->
       <div class="adm-pane" id="pane-tema">
-        <div class="adm-top"><h1>Tema & Renk</h1></div>
+        <div class="adm-top"><h2>Tema & Renk</h2></div>
         <div class="adm-card"><h3>Hazır Temalar</h3><div class="csub">emlakekspertizi aile paletinden hazır kombinasyonlar.</div><div class="theme-grid" id="themeGrid"></div></div>
         <div class="adm-card"><h3>Özel Renk</h3><div class="csub">Ana vurgu rengini değiştirin; tüm CTA ve vurgular otomatik uyum sağlar.</div>
           <div class="colorrow"><input type="color" id="cc_accent" value="#1e40af" onchange="customColor()"><span class="cl">Ana Mavi (linkler, vurgu)</span></div>
@@ -949,7 +949,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       </div>
       <!-- YEDEK -->
       <div class="adm-pane" id="pane-yedek">
-        <div class="adm-top"><h1>Yedek / Aktar</h1></div>
+        <div class="adm-top"><h2>Yedek / Aktar</h2></div>
         <div class="adm-card"><h3>Veri Yedekleme</h3><div class="csub">Tüm içeriğiniz (ilanlar, danışmanlar, lead'ler, ayarlar) tarayıcıda saklanır. JSON olarak dışa/içe aktarın.</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
             <button class="btn btn-primary btn-sm" onclick="exportData()">⬇ JSON Dışa Aktar</button>
@@ -961,7 +961,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       </div>
       <!-- 3D PORTFÖY -->
       <div class="adm-pane" id="pane-portfoy3d">
-        <div class="adm-top"><h1>3D Portföy & Sanal Tur <span class="badge-ai-feat">ProX</span></h1></div>
+        <div class="adm-top"><h2>3D Portföy & Sanal Tur <span class="badge-ai-feat">ProX</span></h2></div>
         <div class="adm-card"><h3>3D Daire / Bina Modeli</h3><div class="csub">Her ilana 3D model (GLB/glTF) veya 360° sanal tur bağlayın. Mimari ofisler Revit/SketchUp/Lumion'dan GLB dışa aktarır; alıcılar ilan detayında modeli döndürebilir.</div>
           <div class="afield"><label>İlan Seç</label><select id="p3_ilan" onchange="load3dForm()"></select></div>
           <div class="ed2">
@@ -983,7 +983,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
       <!-- İÇERİK & SAYFALAR -->
       <div class="adm-pane" id="pane-icerik">
-        <div class="adm-top"><h1>İçerik & Sayfalar</h1></div>
+        <div class="adm-top"><h2>İçerik & Sayfalar</h2></div>
         <div class="adm-card"><h3>Ana Sayfa Metinleri</h3><div class="csub">Hero başlığı ve hakkımızda bölümü doğrudan sitede güncellenir.</div>
           <div class="afield"><label>Hero Üst Rozet</label><input id="ct_heroEyebrow" placeholder="İzmir & Ege · 372M+ kayıtlık endeks ile çalışıyoruz"></div>
           <div class="ed2">
@@ -1019,7 +1019,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
       <!-- YAPAY ZEKA STÜDYO -->
       <div class="adm-pane" id="pane-ai">
-        <div class="adm-top"><h1>Yapay Zeka Stüdyo <span class="ai-badge">✨ Claude destekli</span></h1></div>
+        <div class="adm-top"><h2>Yapay Zeka Stüdyo <span class="ai-badge">✨ Claude destekli</span></h2></div>
         <div class="adm-card"><h3>AI İçerik Üretici</h3><div class="csub">Profesyonel ilan açıklaması, blog yazısı ve bölge analizi üretin. ProX paketinde emlakekspertizi AI servisleri (/api/ai/generate-content) ile çalışır.</div>
           <div class="ai-tools">
             <div class="ai-tool act" data-ai="ilan" onclick="selAiTool(this)"><div class="ti">🏠</div><h4>İlan Açıklaması</h4><p>Daire özelliklerinden satışa hazır, ikna edici açıklama.</p></div>
@@ -1052,7 +1052,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
             <!-- PROX RAPOR STÜDYOSU -->
       <div class="adm-pane" id="pane-rapor">
-        <div class="adm-top"><h1>ProX Rapor Stüdyosu <span class="ai-badge">✨ ProX</span></h1></div>
+        <div class="adm-top"><h2>ProX Rapor Stüdyosu <span class="ai-badge">✨ ProX</span></h2></div>
         <div class="adm-card"><h3>Rapor Tipi Seçin</h3><div class="csub">EmlakEkspertizi.com veri omurgası + ileri ML/MML ve ProX motoruyla bölgenize özel, veri destekli raporlar. Üretilen raporu PDF yapın veya tek tıkla ilana dönüştürün.</div>
           <div class="rep-grid" id="repGrid"></div>
         </div>
@@ -1079,7 +1079,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
       <!-- PROX API & MODÜLLER -->
       <div class="adm-pane" id="pane-prox">
-        <div class="adm-top"><h1>ProX API & Modüller</h1></div>
+        <div class="adm-top"><h2>ProX API & Modüller</h2></div>
         <div class="adm-card"><h3>emlakekspertizi API Bağlantısı</h3><div class="csub">Kurumsal API anahtarınız (ProX Corporate · 10.000 istek/ay). Anahtar sunucu tarafında saklanır, asla istemciye sızdırılmaz.</div>
           <div class="csub" style="margin-bottom:8px">Bu site <b>il il</b> teslim edilir. Aktif ili seçin; il/ilçe/mahalle endeks verisi ProX API üzerinden emlakekspertizi.com'dan canlı çekilir. Her müşteri kendi anahtarını girer.</div>
           <div class="ed2">
@@ -1117,14 +1117,14 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
       <!-- SEO -->
       <div class="adm-pane" id="pane-seo">
-        <div class="adm-top"><h1>SEO Yönetimi</h1><button class="btn btn-primary btn-sm" onclick="saveSeo()">Kaydet</button></div>
+        <div class="adm-top"><h2>SEO Yönetimi</h2><button class="btn btn-primary btn-sm" onclick="saveSeo()">Kaydet</button></div>
         <div class="adm-card"><h3>Site Meta Bilgileri</h3><div class="csub">Arama motorları ve sosyal paylaşımda görünen başlık/açıklama.</div>
           <div class="afield"><label>Sayfa Başlığı (title)</label><input id="seo_title" placeholder="Meridyen Gayrimenkul · İzmir Emlak Ofisi"><div class="tsub" id="seo_titleLen"></div></div>
           <div class="afield"><label>Meta Açıklama</label><textarea id="seo_desc" rows="2"></textarea><div class="tsub" id="seo_descLen"></div></div>
           <div class="afield"><label>Anahtar Kelimeler</label><input id="seo_kw" placeholder="istanbul emlak, satılık daire, gayrimenkul danışmanı"></div>
           <div class="afield"><label>OG Görseli (sosyal paylaşım)</label>
             <div class="aupload" onclick="document.getElementById('seo_ogIn').click()">🖼 Paylaşım görseli yükleyin (1200×630)</div>
-            <input type="file" id="seo_ogIn" accept="image/*" style="display:none" onchange="seoOg(this)"><img id="seo_ogPrev" class="athumb" style="display:none">
+            <input type="file" id="seo_ogIn" accept="image/*" style="display:none" onchange="seoOg(this)"><img id="seo_ogPrev" alt="Önizleme" class="athumb" style="display:none">
           </div>
         </div>
         <div class="adm-card"><h3>Yapısal Veri & AI Motorları</h3><div class="csub">Schema.org ve llms.txt — Google, GPT, Claude için okunabilirlik (ProX paket sözü).</div>
@@ -1139,7 +1139,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
       <!-- GOOGLE -->
       <div class="adm-pane" id="pane-google">
-        <div class="adm-top"><h1>Google Entegrasyonları</h1><button class="btn btn-primary btn-sm" onclick="saveGoogle();saasSaveGoogle()">Kaydet & Uygula</button></div>
+        <div class="adm-top"><h2>Google Entegrasyonları</h2><button class="btn btn-primary btn-sm" onclick="saveGoogle();saasSaveGoogle()">Kaydet & Uygula</button></div>
         <div class="adm-card"><h3>Analitik & İzleme</h3><div class="csub">Ziyaretçi ölçümü ve dönüşüm takibi.</div>
           <div class="ed2">
             <div class="afield"><label>Google Analytics (GA4) ID</label><input id="g_ga4" placeholder="G-XXXXXXXXXX"></div>
@@ -1163,7 +1163,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
       <!-- KİŞİLER & TALEPLER -->
       <div class="adm-pane" id="pane-kisiler">
-        <div class="adm-top"><h1>Kişiler & Talepler</h1><button class="btn btn-primary btn-sm" onclick="newKisi()">+ Yeni Kişi</button></div>
+        <div class="adm-top"><h2>Kişiler & Talepler</h2><button class="btn btn-primary btn-sm" onclick="newKisi()">+ Yeni Kişi</button></div>
         <div class="crm-filt" id="kisiFilt">
           <button class="cf act" data-t="" onclick="filtKisi(this)">Tümü</button>
           <button class="cf" data-t="alici" onclick="filtKisi(this)">Alıcı</button>
@@ -1202,7 +1202,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
       <!-- AKILLI EŞLEŞTİRME -->
       <div class="adm-pane" id="pane-eslestirme">
-        <div class="adm-top"><h1>Akıllı Eşleştirme <span class="ai-badge">✨ otomatik</span></h1></div>
+        <div class="adm-top"><h2>Akıllı Eşleştirme <span class="ai-badge">✨ otomatik</span></h2></div>
         <div class="adm-card"><h3>Talep → Portföy Eşleştirme</h3><div class="csub">Alıcı/kiracı taleplerini portföydeki ilanlarla otomatik eşleştirir. Bir kişi seçin; en uygun ilanlar skorlu listelenir.</div>
           <div class="afield"><label>Talep Sahibi Kişi</label><select id="es_kisi" onchange="runMatch()"></select></div>
           <div id="matchResult"></div>
@@ -1211,7 +1211,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
       <!-- SATIŞ HATTI -->
       <div class="adm-pane" id="pane-pipeline">
-        <div class="adm-top"><h1>Satış Hattı (Pipeline)</h1><button class="btn btn-primary btn-sm" onclick="newDeal()">+ Yeni Fırsat</button></div>
+        <div class="adm-top"><h2>Satış Hattı (Pipeline)</h2><button class="btn btn-primary btn-sm" onclick="newDeal()">+ Yeni Fırsat</button></div>
         <div class="adm-card" id="dealEditCard" style="display:none">
           <h3>Satış Fırsatı</h3>
           <div class="ed3">
@@ -1235,7 +1235,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
       <!-- RANDEVU & GÖREV -->
       <div class="adm-pane" id="pane-randevu">
-        <div class="adm-top"><h1>Randevu & Görev</h1><button class="btn btn-primary btn-sm" onclick="newTask()">+ Yeni Görev</button></div>
+        <div class="adm-top"><h2>Randevu & Görev</h2><button class="btn btn-primary btn-sm" onclick="newTask()">+ Yeni Görev</button></div>
         <div class="adm-card" id="taskEditCard" style="display:none">
           <h3>Görev / Randevu</h3>
           <div class="ed3">
@@ -1255,7 +1255,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
       <!-- KOMİSYON & FİNANS -->
       <div class="adm-pane" id="pane-komisyon">
-        <div class="adm-top"><h1>Komisyon & Finans</h1><button class="btn btn-primary btn-sm" onclick="newComm()">+ Komisyon Kaydı</button></div>
+        <div class="adm-top"><h2>Komisyon & Finans</h2><button class="btn btn-primary btn-sm" onclick="newComm()">+ Komisyon Kaydı</button></div>
         <div class="fin-grid" id="finKpi"></div>
         <div class="adm-card" id="commEditCard" style="display:none">
           <h3>Komisyon Kaydı</h3>
@@ -1276,7 +1276,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
       <!-- KİRA TAKİBİ -->
       <div class="adm-pane" id="pane-kira">
-        <div class="adm-top"><h1>Kira Takibi</h1><button class="btn btn-primary btn-sm" onclick="newRent()">+ Kira Sözleşmesi</button></div>
+        <div class="adm-top"><h2>Kira Takibi</h2><button class="btn btn-primary btn-sm" onclick="newRent()">+ Kira Sözleşmesi</button></div>
         <div class="adm-card" id="rentEditCard" style="display:none">
           <h3>Kira Sözleşmesi</h3>
           <div class="ed3">
@@ -1296,7 +1296,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
       <!-- İLETİŞİM MERKEZİ -->
       <div class="adm-pane" id="pane-iletisim2">
-        <div class="adm-top"><h1>İletişim Merkezi</h1></div>
+        <div class="adm-top"><h2>İletişim Merkezi</h2></div>
         <div class="adm-card"><h3>Toplu Mesaj Gönder</h3><div class="csub">WhatsApp / SMS / e-posta ile hedef kitleye toplu bilgilendirme. Yapay zeka ile metin önerisi alabilirsiniz.</div>
           <div class="chan-pick">
             <label><input type="radio" name="chan" value="whatsapp" checked><span>💬 WhatsApp</span></label>
@@ -1318,7 +1318,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
       <!-- RAPORLAR -->
       <div class="adm-pane" id="pane-raporlar">
-        <div class="adm-top"><h1>Raporlar & Analitik</h1></div>
+        <div class="adm-top"><h2>Raporlar & Analitik</h2></div>
         <div class="adm-card"><h3>Profesyonel 38 Kategorilik Endeks Raporu</h3><div class="csub">2005’ten bugüne emlakekspertizi.com endeks gücüyle; mülke özel fiyat endeksi, yatırım skoru, zemin/deprem riski, demografi ve 34 kategori daha.</div>
           <div class="ed2">
             <div class="afield"><label>Mülk seçin</label><select id="sr_prop"><option value="">Mülk seçin…</option></select></div>
@@ -1348,7 +1348,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <div class="in">
         <div class="left">
           <div class="eyebrow">Bölge Analizi · İzmir Geneli Mahalle Verisi</div>
-          <h1>İzmir'in her mahallesini<br><span class="hl">veriyle tanıyın</span></h1>
+          <h2>İzmir'in her mahallesini<br><span class="hl">veriyle tanıyın</span></h2>
           <p>Konak'tan Çeşme'ye, Bornova'dan Urla'ya — 30 ilçe ve yüzlerce mahallenin m² fiyatı, 5 yıllık değer değişimi, yatırım skoru, demografisi ve deprem/zemin risk durumu tek ekranda.</p>
           <div class="br-search">
             <svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
@@ -1431,7 +1431,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       </div>
       <div class="wrap">
         <span class="pf-eyebrow"><span class="dot"></span> Portföy · Canlı Bölge Endeksiyle</span>
-        <h1>Tüm portföyümüz, <span class="hl">veriyle görünür</span></h1>
+        <h2>Tüm portföyümüz, <span class="hl">veriyle görünür</span></h2>
         <p class="lead">Açık ilanlarımız ve mahremiyeti korunan Özel Portföy'ümüz tek yerde. Her kayıtta gerçek m² endeksi, yatırım skoru ve 5 yıllık trend — duyguyla değil, veriyle karar verin.</p>
         <div class="pf-stats">
           <div class="pf-stat pf-reveal"><svg class="spark" viewBox="0 0 50 18" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14 L10 12 L20 13 L30 8 L40 9 L50 4" fill="none" stroke="var(--green-200)" stroke-width="2" stroke-linecap="round"/></svg><div class="v"><span class="n" id="pfsIlan" data-to="0">0</span></div><div class="k">aktif portföy ilanı</div></div>
@@ -1486,7 +1486,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <div class="bg"></div>
       <div class="in">
         <div class="eyebrow"><span class="dot"></span> Özel Portföy · Mahremiyete Saygı</div>
-        <h1>Mülkünüzün satışta olduğu duyulmadan, doğru alıcıyla buluşun</h1>
+        <h2>Mülkünüzün satışta olduğu duyulmadan, doğru alıcıyla buluşun</h2>
         <p>Kişisel verilerinizi koruyoruz. Mülkünün satışa çıktığının komşuları, çevresi ya da kiracısı tarafından bilinmesini istemeyen mülk sahiplerimize saygı duyuyoruz. Açık adres ve fotoğraf paylaşmadan, yalnızca bölge ve başlangıç fiyatıyla; mahremiyetinizi koruyarak sizi doğru alıcıyla buluşturuyoruz.</p>
         <div class="oz-chips">
           <span><svg class="ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2.4"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> Kişisel veri koruması (KVKK)</span>
@@ -1612,7 +1612,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <div class="bg"></div>
       <div class="in">
         <div class="eyebrow"><span class="dot"></span> Mülk Sahibi · Meridyen ile</div>
-        <h1>Mülkünüzü <span>en doğru fiyata</span> satın ya da kiraya verin</h1>
+        <h2>Mülkünüzü <span>en doğru fiyata</span> satın ya da kiraya verin</h2>
         <p>İster satmak, ister kiraya vermek isteyin: Meridyen, 372M+ kayıtlık endeks ve doğrulanmış alıcı havuzuyla mülkünüzü doğru fiyata, doğru kişiyle buluşturur. İsterseniz Özel Portföy ile mülkünüz açık ilana çıkmadan değerlendirilir.</p>
         <div class="sat-hero-cta">
           <a class="ozh-btn primary" onclick="satScrollForm();return false" href="#skForm">Hemen Portföy Bırak</a>
@@ -1880,7 +1880,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <div class="br-hero-bg"></div><div class="grid-motif"></div>
       <div class="in">
         <div class="eyebrow" style="display:block;margin-bottom:10px">Bilgi Merkezi</div>
-        <h1 style="font-family:var(--head);font-size:clamp(30px,5vw,52px);line-height:1.05;margin-bottom:14px">Emlak &amp; Yatırım Blogu</h1>
+        <h2 style="font-family:var(--head);font-size:clamp(30px,5vw,52px);line-height:1.05;margin-bottom:14px">Emlak &amp; Yatırım Blogu</h2>
         <p style="max-width:640px;color:var(--muted);font-size:16px;line-height:1.6">Firma yazılarımız ve ProX güncel sektör içerikleri — veri odaklı rehberler, piyasa analizleri ve yatırım ipuçları.</p>
       </div>
     </section>
@@ -1904,7 +1904,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <div class="br-hero-bg"></div><div class="grid-motif"></div>
       <div class="in">
         <div class="eyebrow" style="display:block;margin-bottom:10px">Kurumsal · Hakkımızda</div>
-        <h1 style="font-family:var(--head);font-size:clamp(30px,5vw,52px);line-height:1.05;margin-bottom:14px">Veriyi güvenle birleştiren <span class="js-brand-name">Meridyen Gayrimenkul</span></h1>
+        <h2 style="font-family:var(--head);font-size:clamp(30px,5vw,52px);line-height:1.05;margin-bottom:14px">Veriyi güvenle birleştiren <span class="js-brand-name">Meridyen Gayrimenkul</span></h2>
         <p style="max-width:680px;color:var(--muted);font-size:16.5px;line-height:1.65">Yetkili taşınmaz ticareti belgesine sahip, KVKK uyumlu bir gayrimenkul danışmanlık kuruluşuyuz. Her ilan ve danışmanlığın arkasında Türkiye'nin en kapsamlı emlak endeks altyapısı var — müşterilerimize duyguyla değil, veriyle yol gösteriyoruz.</p>
         <div class="hk-hero-stats" id="hkHeroStats"></div>
       </div>
