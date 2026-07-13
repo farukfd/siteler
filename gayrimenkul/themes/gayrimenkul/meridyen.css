@@ -4,9 +4,9 @@
   /* emlakekspertizi aile renkleri */
   --c-bg-deep:#0a1631; --c-bg-navy:#0f1f3d; --c-bg-slate:#1e2742;
   --accent:#1e40af; --accent-2:#3b82f6; --blue-g:#4285f4;
-  --green:#34a853; --green-700:#1e7e3a; --green-200:#7ed598;
+  --green:#1e7e3a; --green-700:#155e2b; --green-200:#7ed598; --green-bright:#34a853;   /* a11y AA: --green metin+beyaz-buton 4.5:1 (eski #34a853=3.05); --green-bright dekoratif/büyük-alan için */
   --yellow:#fbbc04;
-  --ink:#0f1f3d; --ink-2:#334155; --muted:#64748b; --line:#e2e8f0; --line-2:#eef2f7;
+  --ink:#0f1f3d; --ink-2:#334155; --muted:#586475; --line:#e2e8f0; --line-2:#eef2f7;   /* a11y AA: --muted #64748b→#586475 (surface 5.6:1) */
   --surface:#f5f7fa; --surface-2:#eef3f9; --white:#ffffff;
   --head:'Poppins'; --body:'Inter'; --num:'Space Grotesk';
   --radius:16px; --radius-lg:22px; --radius-sm:11px; --maxw:1240px;

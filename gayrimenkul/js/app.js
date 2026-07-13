@@ -167,7 +167,7 @@ const DEF_ILANLAR=[
  {id:8,title:'Taş Mimari 3+1 Restorasyonlu',op:'Satılık',type:'Daire',m2:140,oda:'3+1',kat:'2',ilce:'Çeşme',mah:'Alaçatı',price:14500000,status:'aktif',feat:0,img:'l3',desc:'Karakteristik bina, yenilenmiş iç mekan.'},
  {id:9,title:'Sahil Yakını 2+1 Kiralık',op:'Kiralık',type:'Daire',m2:95,oda:'2+1',kat:'5',ilce:'Karşıyaka',mah:'Bostanlı',price:42000,status:'aktif',feat:0,img:'l2',desc:'Marina yakını, asansörlü, aydınlık.'}
 ];
-const DAN_COLORS=['#1e40af','#34a853','#8b5cf6','#0284c7','#f59e0b','#0f766e','#be185d','#1e7e3a'];
+const DAN_COLORS=['#1e40af','#1e7e3a','#8b5cf6','#0284c7','#f59e0b','#0f766e','#be185d','#1e7e3a'];
 const DEF_DAN=[
  {id:1,name:'Ahmet Yılmaz',role:'Kıdemli Emlak Danışmanı',area:'Karşıyaka · Bostanlı · Mavişehir',wa:'905000000001',tel:'+90 532 000 00 01',sales:142,rating:4.9,exp:12,feat:1,demo:1,foto:'dan1',bio:'12 yıllık tecrübe, Karşıyaka–Bostanlı hattının lüks konut uzmanı.'},
  {id:2,name:'Zeynep Aksoy',role:'Yatırım Danışmanı',area:'Konak · Alsancak · Göztepe',wa:'905000000002',tel:'+90 532 000 00 02',sales:118,rating:4.8,exp:9,feat:1,demo:1,foto:'dan2',bio:'Konak–Alsancak yatırım gayrimenkulleri ve getiri analizi.'},
@@ -1159,7 +1159,7 @@ function brHero(){
   document.getElementById('brHeroBars').innerHTML=top.map(x=>`<div class="hb" onclick="brJumpDistrict('${x.d}')"><span class="l">${x.d}</span><span class="t"><span class="f" data-w="${(x.m2/max*100).toFixed(1)}"></span></span><span class="v">${fmt(x.m2)}</span></div>`).join('');
   requestAnimationFrame(()=>{document.querySelectorAll('#brHeroBars .f').forEach(e=>e.style.width=e.dataset.w+'%');});
 }
-const BR_GCOL={metropol:'#3b82f6',sahil:'#34a853',ic:'#f59e0b'};
+const BR_GCOL={metropol:'#3b82f6',sahil:'#1e7e3a',ic:'#f59e0b'};
 function brDistrictChart(sort){
   sort=sort||BR.csort||'m2';BR.csort=sort;
   const host=document.getElementById('brMchart');if(!host)return;
@@ -1176,7 +1176,7 @@ function brDistrictChart(sort){
   host.innerHTML=`<div class="br-mc-card">
     <div class="br-mc-head"><div><h3>İzmir ilçe m² fiyat sıralaması</h3><div class="sub">30 ilçe · ${subt} göre</div></div>
       <div class="br-sort">${sb('m2','m² Fiyatı')}${sb('chg','5Y Değişim')}${sb('score','Skor')}</div></div>
-    <div class="br-legend"><span><i style="background:#3b82f6"></i>Metropol Merkez</span><span><i style="background:#34a853"></i>Sahil & Yarımada</span><span><i style="background:#f59e0b"></i>İç & Kuzey</span></div>
+    <div class="br-legend"><span><i style="background:#3b82f6"></i>Metropol Merkez</span><span><i style="background:#1e7e3a"></i>Sahil & Yarımada</span><span><i style="background:#f59e0b"></i>İç & Kuzey</span></div>
     <div class="br-mrows">${rows}</div>
     <div class="br-mavgnote"><i></i> İl ortalaması: <b>${avgtxt}</b> · ilçeye tıklayıp mahallelerini açın</div>
   </div>`;
@@ -1222,7 +1222,7 @@ function brCardHTML(ilce,mah,showIlce){
     <div class="top">
       <div><h4>${mah}</h4><div class="ilc">${showIlce?ilce+' · ':''}İzmir</div></div>
       <div class="br-ring">
-        <svg width="46" height="46" viewBox="0 0 46 46"><circle cx="23" cy="23" r="20" fill="none" stroke="var(--surface-2)" stroke-width="5"/><circle cx="23" cy="23" r="20" fill="none" stroke="#34a853" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 23 23)"/></svg>
+        <svg width="46" height="46" viewBox="0 0 46 46"><circle cx="23" cy="23" r="20" fill="none" stroke="var(--surface-2)" stroke-width="5"/><circle cx="23" cy="23" r="20" fill="none" stroke="#1e7e3a" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 23 23)"/></svg>
         <span class="rv">${d.score}</span>
       </div>
     </div>
@@ -2688,9 +2688,9 @@ function admAddContract(tip){
 
 /* ============ ADMIN: TEMA ============ */
 const THEMES=[
-  {id:'mavi',name:'Kurumsal Mavi',accent:'#1e40af',green:'#34a853',navy:'#0f1f3d',def:1},
+  {id:'mavi',name:'Kurumsal Mavi',accent:'#1e40af',green:'#1e7e3a',navy:'#0f1f3d',def:1},
   {id:'okyanus',name:'Okyanus',accent:'#0284c7',green:'#0d9488',navy:'#0c2230'},
-  {id:'zumrut',name:'Zümrüt',accent:'#1e7e3a',green:'#34a853',navy:'#0c1f17'},
+  {id:'zumrut',name:'Zümrüt',accent:'#1e7e3a',green:'#1e7e3a',navy:'#0c1f17'},
   {id:'safir',name:'Safir Gece',accent:'#3b82f6',green:'#22c55e',navy:'#0a1631'},
   {id:'bordo',name:'Prestij Bordo',accent:'#9f1239',green:'#15803d',navy:'#2a0e1a'},
   {id:'antrasit',name:'Antrasit',accent:'#0f766e',green:'#65a30d',navy:'#1c2128'}
@@ -2709,7 +2709,7 @@ function customColor(){const a=document.getElementById('cc_accent').value,gr=doc
   document.querySelectorAll('.tcard').forEach(c=>c.classList.remove('act'));}
 function setTheme(accent,green,navy){
   if(!accent||typeof accent!=='string'||accent.charAt(0)!=='#')return;/* L: accent yoksa lighten/darken hex.slice çökerdi — güvenli çıkış */
-  green=green||'#34a853';navy=navy||'#0f1f3d';
+  green=green||'#1e7e3a';navy=navy||'#0f1f3d';
   const r=document.documentElement.style;
   r.setProperty('--accent',accent);
   r.setProperty('--accent-2',lighten(accent,18));
@@ -2959,7 +2959,7 @@ function massing(holderId,opts){
     });
     // accent roof edge
     const top=[4,5,6,7].map(i=>P[i]);ctx.beginPath();top.forEach((p,k)=>k?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();
-    ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--green')||'#34a853';ctx.lineWidth=2;ctx.stroke();
+    ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--green')||'#1e7e3a';ctx.lineWidth=2;ctx.stroke();
   }
   function loop(){if(auto)ang+=0.006;draw();_massers[holderId].raf=requestAnimationFrame(loop);}
   _massers[holderId]={raf:0};
@@ -3180,7 +3180,7 @@ document.addEventListener('input',e=>{if(e.target&&(e.target.id==='seo_title'||e
 /* ============================================================
    PART 4 — GAYRİMENKUL CRM
    ============================================================ */
-const STAGES=[{k:'yeni',n:'Yeni',c:'#64748b'},{k:'iletisim',n:'İletişim',c:'#3b82f6'},{k:'gosterim',n:'Gösterim',c:'#8b5cf6'},{k:'teklif',n:'Teklif',c:'#f59e0b'},{k:'sozlesme',n:'Kapanış',c:'#34a853'}];
+const STAGES=[{k:'yeni',n:'Yeni',c:'#586475'},{k:'iletisim',n:'İletişim',c:'#3b82f6'},{k:'gosterim',n:'Gösterim',c:'#8b5cf6'},{k:'teklif',n:'Teklif',c:'#f59e0b'},{k:'sozlesme',n:'Kapanış',c:'#1e7e3a'}];
 const TYPE_LBL={alici:'Alıcı',satici:'Satıcı',kiraci:'Kiracı',yatirimci:'Yatırımcı'};
 const TASK_LBL={arama:'📞 Arama',gosterim:'🏠 Gösterim',toplanti:'🤝 Toplantı',tapu:'📋 Tapu/Söz.',takip:'🔔 Takip'};
 function danName(id){const d=DANISMANLAR.find(x=>x.id===id);return d?d.name:'—';}
@@ -3465,11 +3465,11 @@ function reportToPdf(){if(!lastReport)return;const R=lastReport;const st=R.st;
   .hd h1{font-size:23px}.hd .sub{color:#bcd;font-size:13px;margin-top:5px}.brand{font-weight:800;font-size:20px}
   .body{padding:34px 40px}
   .m{display:flex;gap:16px;margin:0 0 24px}.mc{flex:1;border:1px solid #e2e8f0;border-radius:12px;padding:16px;text-align:center}
-  .mc .v{font-size:22px;font-weight:800;color:#1e40af}.mc .l{font-size:12px;color:#64748b;margin-top:4px}
+  .mc .v{font-size:22px;font-weight:800;color:#1e40af}.mc .l{font-size:12px;color:#586475;margin-top:4px}
   h2{font-size:15px;color:#1e40af;margin:20px 0 8px;border-bottom:2px solid #e2e8f0;padding-bottom:6px}
   p{font-size:14px;line-height:1.7;margin-bottom:10px;color:#334155}
-  .ft{margin-top:30px;padding:20px 40px;background:#f5f7fa;font-size:11.5px;color:#64748b;border-top:1px solid #e2e8f0}
-  .badge{display:inline-block;background:#34a853;color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px}
+  .ft{margin-top:30px;padding:20px 40px;background:#f5f7fa;font-size:11.5px;color:#586475;border-top:1px solid #e2e8f0}
+  .badge{display:inline-block;background:#1e7e3a;color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px}
   @media print{.noprint{display:none}}</style></head><body>
   <div class="hd"><div><div class="brand">${logo?`<img src="${logo}" style="height:40px;vertical-align:middle"> `:''}${FIRMA.name}</div><div class="sub">${R.type.name} · ProX Rapor Motoru</div></div><div style="text-align:right"><div class="badge">ML/MML + ProX</div><div class="sub" style="margin-top:8px">${R.date.toLocaleDateString('tr-TR')}</div></div></div>
   <div class="body">
@@ -3515,7 +3515,7 @@ function leadScore(k){let s=20;if(k.max>0)s+=20;if(k.tel)s+=10;if(k.email)s+=8;i
 let curKisiDet=null;
 function openKisiDet(id){const k=KISILER.find(x=>x.id===id);if(!k)return;curKisiDet=id;
   const sc=leadScore(k);const ini=k.name.split(' ').map(x=>x[0]).slice(0,2).join('');
-  const scColor=sc>=75?'#15803d':sc>=50?'#b45309':'#64748b';
+  const scColor=sc>=75?'#15803d':sc>=50?'#b45309':'#586475';
   const deals=DEALS.filter(d=>d.kisiId===id);const tasks=TASKS.filter(t=>t.kisiId===id);const acts=(ACT[id]||[]);
   document.getElementById('kisiDetBody').innerHTML=`
     <div class="kd-head"><div class="kd-av">${ini}</div><div><h3>${_le(k.name)}</h3><div class="kcontact"><span class="tagpill tp-${k.type}">${TYPE_LBL[k.type]}</span> · ${_le(k.tel)} · ${_le(k.source||'')}</div></div></div>
@@ -3554,8 +3554,8 @@ function kisiPortfoyPdf(id){const k=KISILER.find(x=>x.id===id);const scored=ILAN
   win.document.write(`<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>Portföy Sunumu - ${_le(k.name)}</title>
   <style>*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}.hd{background:linear-gradient(135deg,#0f1f3d,#1e40af);color:#fff;padding:30px 40px}.hd h1{font-size:22px}.hd .s{color:#bcd;font-size:13px;margin-top:5px}
   .body{padding:30px 40px}.card{display:flex;gap:16px;border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin-bottom:14px}.card img{width:140px;height:100px;object-fit:cover;border-radius:8px}
-  .card h3{font-size:16px;color:#0f1f3d}.card .loc{color:#64748b;font-size:13px;margin:4px 0}.card .pr{font-size:18px;font-weight:800;color:#1e7e3a}.card .sc{font-size:12px;color:#1e40af;font-weight:700}
-  .ft{padding:18px 40px;background:#f5f7fa;font-size:11.5px;color:#64748b}@media print{.noprint{display:none}}</style></head><body>
+  .card h3{font-size:16px;color:#0f1f3d}.card .loc{color:#586475;font-size:13px;margin:4px 0}.card .pr{font-size:18px;font-weight:800;color:#1e7e3a}.card .sc{font-size:12px;color:#1e40af;font-weight:700}
+  .ft{padding:18px 40px;background:#f5f7fa;font-size:11.5px;color:#586475}@media print{.noprint{display:none}}</style></head><body>
   <div class="hd"><h1>${logo?`<img src="${logo}" style="height:34px;vertical-align:middle"> `:''}Size Özel Portföy Sunumu</h1><div class="s">${_le(k.name)} için seçilmiş ${scored.length} gayrimenkul · ${_le(FIRMA.name)}</div></div>
   <div class="body">${scored.map(({it,s})=>`<div class="card"><img src="${imgSrc(it.img)}"><div><h3>${it.title}</h3><div class="loc">📍 ${it.mah}, ${it.ilce} · ${it.oda} · ${it.m2}m²</div><div class="pr">${fmt(it.price)} ₺</div><div class="sc">Uyum: %${s}</div></div></div>`).join('')||'<p>Uygun ilan bulunamadı.</p>'}</div>
   <div class="ft"><b>${FIRMA.name}</b> · ${FIRMA.tel||''} · <svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="M9 12l2 2 4-4"/></svg> Saha Veri Ortağı</div>
@@ -4124,7 +4124,7 @@ function pwRender(){
   if(foot)foot.innerHTML='<button class="pw-back" onclick="pwBack()">‹ Geri</button><span class="sp"></span>'+(last?'<button class="pw-go" onclick="pwResults()">Sonuçları Gör ✦</button>':'');
 }
 function pwRing(s){const r=24,c=2*Math.PI*r,off=c*(1-s/100);
-  return '<svg width="54" height="54" viewBox="0 0 54 54"><circle cx="27" cy="27" r="24" fill="none" stroke="var(--line)" stroke-width="5"/><circle class="pwr-fg" cx="27" cy="27" r="24" fill="none" stroke="url(#pwg)" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+c.toFixed(1)+'" data-off="'+off.toFixed(1)+'"/><defs><linearGradient id="pwg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34a853"/><stop offset="1" stop-color="#1e7e3a"/></linearGradient></defs></svg>';}
+  return '<svg width="54" height="54" viewBox="0 0 54 54"><circle cx="27" cy="27" r="24" fill="none" stroke="var(--line)" stroke-width="5"/><circle class="pwr-fg" cx="27" cy="27" r="24" fill="none" stroke="url(#pwg)" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+c.toFixed(1)+'" data-off="'+off.toFixed(1)+'"/><defs><linearGradient id="pwg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e7e3a"/><stop offset="1" stop-color="#1e7e3a"/></linearGradient></defs></svg>';}
 function pwAnimRings(){const els=document.querySelectorAll('#pwBody .pwr-fg'),rm=pwReduce();
   els.forEach(c=>{const off=c.getAttribute('data-off');if(rm){c.setAttribute('stroke-dashoffset',off);}else{requestAnimationFrame(()=>requestAnimationFrame(()=>{c.style.strokeDashoffset=off;}));}});}
 function pwResCard(x){const price=fmt(x.fiyat)+' ₺'+(x.op==='Kiralık'?'/ay':'');
@@ -4214,10 +4214,10 @@ const SAAS_CONFIG={
   }
 };
 const SAAS_THEMES={
-  'Kurumsal':{accent:'#1e40af',accent2:'#3b82f6',grad:'linear-gradient(135deg,#34a853 0%,#1e7e3a 100%)'},
+  'Kurumsal':{accent:'#1e40af',accent2:'#3b82f6',grad:'linear-gradient(135deg,#1e7e3a 0%,#1e7e3a 100%)'},
   'Mavi':{accent:'#1e40af',accent2:'#3b82f6',grad:'linear-gradient(135deg,#3b82f6 0%,#1e40af 100%)'},
   'Turuncu':{accent:'#ea6a1e',accent2:'#ff9d4d',grad:'linear-gradient(135deg,#ff9d4d 0%,#ea6a1e 100%)'},
-  'Yeşil':{accent:'#1e7e3a',accent2:'#34a853',grad:'linear-gradient(135deg,#34a853 0%,#1e7e3a 100%)'},
+  'Yeşil':{accent:'#1e7e3a',accent2:'#1e7e3a',grad:'linear-gradient(135deg,#1e7e3a 0%,#1e7e3a 100%)'},
   'Mor':{accent:'#6d28d9',accent2:'#a78bfa',grad:'linear-gradient(135deg,#a78bfa 0%,#6d28d9 100%)'}
 };
 /* 1) DİNAMİK TEMA — merkezden gelen renk tek saniyede uygulanır */

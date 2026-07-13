@@ -120,8 +120,8 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <!-- TEMA: themes kütüphanesinden seç (tenant başına değiştir). Aktif: Meridyen -->
-  <link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=2">
-  <link rel="stylesheet" href="css/base.css?v=19">
+  <link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=3">
+  <link rel="stylesheet" href="css/base.css?v=20">
 </head>
 <body>
 <div id="site">
@@ -163,7 +163,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   <div class="wrap">
     <div class="pcw" id="pusulaHero">
       <div class="pc-controls">
-        <div class="pc-seg" id="pc_amac" role="tablist">
+        <div class="pc-seg" id="pc_amac" role="group" aria-label="Amaç">
           <button class="on" data-a="Satılık">Satılık</button>
           <button data-a="Kiralık">Kiralık</button>
           <button data-a="Günlük">Günlük</button>
@@ -251,8 +251,8 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   <div class="me-panel" id="mahEndeks">
     <div class="me-top">
       <div class="me-selrow">
-        <div class="me-sel"><label>İlçe</label><select id="me_ilce" onchange="mahEndeksIlce()"></select></div>
-        <div class="me-sel"><label>Mahalle</label><select id="me_mah" onchange="mahEndeksRender()"></select></div>
+        <div class="me-sel"><label>İlçe</label><select id="me_ilce" aria-label="İlçe" onchange="mahEndeksIlce()"></select></div>
+        <div class="me-sel"><label>Mahalle</label><select id="me_mah" aria-label="Mahalle" onchange="mahEndeksRender()"></select></div>
       </div>
       <div class="me-live" id="me_live"><span class="dot"></span> Canlı ProX endeksi bağlanıyor…</div>
     </div>
@@ -318,13 +318,13 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
     <div class="sub">Gayrimenkulünüzün bilgilerini girin</div>
     <div class="vrow">
       <div class="vfld"><label>İlçe</label>
-        <select id="v_ilce" onchange="valMahalle()"><option value="">Seçin</option></select></div>
+        <select id="v_ilce" aria-label="İlçe" onchange="valMahalle()"><option value="">Seçin</option></select></div>
       <div class="vfld"><label>Mahalle</label>
-        <select id="v_mah"><option value="">Önce ilçe seçin</option></select></div>
+        <select id="v_mah" aria-label="Mahalle"><option value="">Önce ilçe seçin</option></select></div>
     </div>
     <div class="vrow">
       <div class="vfld"><label>Emlak Tipi</label>
-        <select id="v_tip"><option>Daire</option><option>Villa</option><option>Müstakil Ev</option><option>Ofis / İş Yeri</option><option>Arsa</option></select></div>
+        <select id="v_tip" aria-label="Gayrimenkul türü"><option>Daire</option><option>Villa</option><option>Müstakil Ev</option><option>Ofis / İş Yeri</option><option>Arsa</option></select></div>
       <div class="vfld"><label>Brüt m²</label>
         <input id="v_m2" type="number" inputmode="numeric" placeholder="örn. 120" min="20" max="2000"></div>
     </div>
@@ -400,7 +400,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <p>Takip etmek istediğiniz bölgeyi seçin; m² fiyatı veya uygun ilan çıktığında size e-posta gönderelim. <span style="color:var(--green-200)">/api/price-alerts/create</span> ile çalışır.</p>
     </div>
     <div class="alarm-form">
-      <select id="al_bolge"><option value="">Bölge seçin</option><option>Konak</option><option>Karşıyaka</option><option>Bornova</option><option>Buca</option><option>Çeşme</option></select>
+      <select id="al_bolge" aria-label="Bölge"><option value="">Bölge seçin</option><option>Konak</option><option>Karşıyaka</option><option>Bornova</option><option>Buca</option><option>Çeşme</option></select>
       <input id="al_mail" type="email" placeholder="E-posta adresiniz">
       <button class="btn btn-primary" onclick="createAlarm()" style="min-width:130px">Alarm Kur</button>
     </div>
@@ -439,7 +439,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
     </div>
     <div class="cform">
       <div class="crow"><input id="f_ad" placeholder="Adınız Soyadınız *"><input id="f_tel" placeholder="Telefon *"></div>
-      <div class="crow"><input id="f_mail" placeholder="E-posta"><select id="f_konu"><option>Satılık ilan</option><option>Kiralık ilan</option><option>Evimi satmak istiyorum</option><option>Değerleme talebi</option><option>Yatırım danışmanlığı</option><option>Diğer</option></select></div>
+      <div class="crow"><input id="f_mail" placeholder="E-posta"><select id="f_konu" aria-label="Konu"><option>Satılık ilan</option><option>Kiralık ilan</option><option>Evimi satmak istiyorum</option><option>Değerleme talebi</option><option>Yatırım danışmanlığı</option><option>Diğer</option></select></div>
       <textarea id="f_msg" rows="3" placeholder="Mesajınız..." style="margin-bottom:12px"></textarea>
       <label class="kvkk"><input type="checkbox" id="f_kvkk" style="margin-top:3px"> <span><b>KVKK Aydınlatma Metni</b>'ni okudum, kişisel verilerimin işlenmesini onaylıyorum.</span></label>
       <button class="btn btn-primary" style="width:100%" onclick="submitLead('form')">Mesaj Gönder →</button>
@@ -926,7 +926,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
         <div class="adm-card"><h3>Hazır Temalar</h3><div class="csub">emlakekspertizi aile paletinden hazır kombinasyonlar.</div><div class="theme-grid" id="themeGrid"></div></div>
         <div class="adm-card"><h3>Özel Renk</h3><div class="csub">Ana vurgu rengini değiştirin; tüm CTA ve vurgular otomatik uyum sağlar.</div>
           <div class="colorrow"><input type="color" id="cc_accent" value="#1e40af" onchange="customColor()"><span class="cl">Ana Mavi (linkler, vurgu)</span></div>
-          <div class="colorrow"><input type="color" id="cc_green" value="#34a853" onchange="customColor()"><span class="cl">Yeşil (CTA, "değer arttı")</span></div>
+          <div class="colorrow"><input type="color" id="cc_green" value="#1e7e3a" onchange="customColor()"><span class="cl">Yeşil (CTA, "değer arttı")</span></div>
           <div class="colorrow"><input type="color" id="cc_navy" value="#0f1f3d" onchange="customColor()"><span class="cl">Lacivert (hero, footer)</span></div>
         </div>
         <div class="adm-card"><h3>Logo & Tarayıcı Sekmesi</h3><div class="csub"><b>Bilgisayarınızdan logo yükleyin</b> — üst menü ve footer'da standart web boyutunda (yükseklik ~40px) anında görünür. Şeffaf zeminli PNG/SVG önerilir. İsterseniz URL de girebilirsiniz. Favicon tarayıcı sekmesinde değişir.</div>
@@ -1646,7 +1646,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
           <div class="sat-chart-card">
             <svg viewBox="0 0 560 320" class="sat-chart" role="img" aria-label="Doğru ve yanlış fiyatlamanın alıcı ilgisine etkisi">
               <defs>
-                <linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34a853" stop-opacity=".28"/><stop offset="1" stop-color="#34a853" stop-opacity="0"/></linearGradient>
+                <linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e7e3a" stop-opacity=".28"/><stop offset="1" stop-color="#1e7e3a" stop-opacity="0"/></linearGradient>
               </defs>
               <g stroke="#e2e8f0" stroke-width="1">
                 <line x1="56" y1="40" x2="56" y2="260"/><line x1="56" y1="260" x2="528" y2="260"/>

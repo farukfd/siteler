@@ -34,7 +34,7 @@ try{if(!document.getElementById('wl-logo-css')){var _st=document.createElement('
 try{var TH=(d.THEME&&d.THEME.accent)?d.THEME:null;if(TH){
   var _lx=function(h,a){var n=parseInt(h.slice(1),16),r=Math.min(255,(n>>16)+a),g=Math.min(255,((n>>8)&255)+a),b=Math.min(255,(n&255)+a);return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);};
   var _dk=function(h,a){var n=parseInt(h.slice(1),16),r=Math.max(0,(n>>16)-a),g=Math.max(0,((n>>8)&255)-a),b=Math.max(0,(n&255)-a);return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);};
-  var rs=document.documentElement.style,ac=TH.accent,gr=TH.green||'#34a853',nv=TH.navy||'#0f1f3d';
+  var rs=document.documentElement.style,ac=TH.accent,gr=TH.green||'#1e7e3a',nv=TH.navy||'#0f1f3d';
   rs.setProperty('--accent',ac);rs.setProperty('--accent-2',_lx(ac,18));
   rs.setProperty('--green',gr);rs.setProperty('--green-700',_dk(gr,16));rs.setProperty('--green-200',_lx(gr,34));
   rs.setProperty('--c-bg-navy',nv);rs.setProperty('--c-bg-deep',_dk(nv,6));

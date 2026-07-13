@@ -206,8 +206,8 @@
     if(document.getElementById('uas-css'))return;
     /* GERÇEK gayrimenkul AÇIK marka paleti — beyaz zemin, lacivert metin, mavi accent, ProX yeşili.
        Bileşen CSS'i bu sabitlerle parametrik → hepsi tutarlı AÇIK tema. accent/green tenant'tan gelir. */
-    var A='var(--accent,#1e40af)',AC='var(--accent-2,#3b82f6)',INK='var(--ink,#0f1f3d)',MUT='var(--muted,#64748b)',LINE='var(--line,#e2e8f0)',
-        SURF='#ffffff',SURF2='var(--surface-2,#f1f5fb)',BG='#f6f8fc',GREEN='var(--green,#34a853)',HEAD='var(--head,"Poppins",system-ui,sans-serif)',
+    var A='var(--accent,#1e40af)',AC='var(--accent-2,#3b82f6)',INK='var(--ink,#0f1f3d)',MUT='var(--muted,#586475)',LINE='var(--line,#e2e8f0)',
+        SURF='#ffffff',SURF2='var(--surface-2,#f1f5fb)',BG='#f6f8fc',GREEN='var(--green,#1e7e3a)',HEAD='var(--head,"Poppins",system-ui,sans-serif)',
         SHAD='var(--shadow-card,0 14px 36px -20px rgba(13,30,60,.22))';
     var css=''
     +'#uasRoot .prox-logo{font-weight:800;letter-spacing:.2px;color:inherit;white-space:nowrap;display:inline-flex;align-items:center;font-family:'+HEAD+'}'

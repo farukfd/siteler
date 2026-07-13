@@ -229,7 +229,7 @@
     var cEl = $('me_cats');
     if (cEl) cEl.innerHTML =
       catCard('Daire · Satılık', M(per90), '90 m² · ' + fmt(ds.m2) + ' ₺/m²', ser(ds.m2), '#1e40af', yrTxt, ds.ilan, ds.live) +
-      catCard('Daire · Kiralık', fmt(kira90) + ' ₺<small>/ay</small>', '90 m² · ' + fmt(dk.m2) + ' ₺/m²·ay', ser(dk.m2, 0.6), '#34a853', yrTxt, dk.ilan, dk.live) +
+      catCard('Daire · Kiralık', fmt(kira90) + ' ₺<small>/ay</small>', '90 m² · ' + fmt(dk.m2) + ' ₺/m²·ay', ser(dk.m2, 0.6), '#1e7e3a', yrTxt, dk.ilan, dk.live) +
       catCard('İşyeri · Satılık', fmt(ts.m2) + ' ₺<small>/m²</small>', 'dükkan · ofis · vitrin', ser(ts.m2), '#0891b2', yrTxt, ts.ilan, ts.live) +
       catCard('İşyeri · Kiralık', fmt(tk.m2) + ' ₺<small>/m²·ay</small>', 'ticari kira', ser(tk.m2, 0.6), '#7c3aed', yrTxt, tk.ilan, tk.live) +
       catCard('Arsa', fmt(ar.m2) + ' ₺<small>/m²</small>', 'imarlı · yatırım', ser(ar.m2, 1.15), '#d4af37', yrTxt, ar.ilan, ar.live);

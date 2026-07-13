@@ -10,7 +10,7 @@
     try {
       if (!document.getElementById('gsc-auth-css')) {
         var st = document.createElement('style'); st.id = 'gsc-auth-css';
-        st.textContent = '.js-giris.logged::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green,#34a853);margin-right:7px;vertical-align:middle}';
+        st.textContent = '.js-giris.logged::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green,#1e7e3a);margin-right:7px;vertical-align:middle}';
         (document.head || document.documentElement).appendChild(st);
       }
       /* Admin'de değiştirilen firma WhatsApp'ını statik sayfalardaki hardcoded linklere uygula */
