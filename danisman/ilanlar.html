@@ -203,13 +203,19 @@ function enrich(l){var c=catOf(l.tip);
   return l;
 }
 function loadListings(){
-  var list=null;try{var a=JSON.parse(localStorage.getItem('dn_listings_v1')||'null');if(Array.isArray(a)&&a.length)list=a;}catch(e){}
+  var list=null,isSeed=false;
+  try{var a=JSON.parse(localStorage.getItem('dn_listings_v1')||'null');if(Array.isArray(a)&&a.length)list=a;}catch(e){}
   /* dn_listings_v1 yalnız boş varsayılanlardan ibaretse (görsel+açıklama yok) → zengin demo setini göster */
   if(list&&list.every(function(l){return !l.img&&!l.desc;}))list=null;
-  if(!list)list=SEED.slice();
-  /* yalnızca YAYINDA olan ilanlar (EİDS kapısı adminde uygulanır → pasif göstermeyiz) */
-  list=list.filter(function(l){return l&&l.status!=='pasif';});
-  list.forEach(function(l){if(!l.eids||!l.eids.kod)l.eids={status:'dogrulandi',kod:_eidsKod(l.id+(l.baslik||''))};if(!l.bolge)l.bolge=[l.ilce,l.mahalle].filter(Boolean).join(' · ');if(!l.ilanNo)l.ilanNo='İLN-'+(1000000+((l.id||1)*7919)%9000000);enrich(l);});
+  if(!list){list=SEED.slice();isSeed=true;}
+  /* DEMO seti küratörlüdür: EİDS-onaylı ve yayında kabul edilir (yalnız admin ilanı yokken). */
+  if(isSeed)list.forEach(function(l){l.status='aktif';if(!l.eids||!l.eids.kod)l.eids={status:'dogrulandi',kod:_eidsKod(l.id+(l.baslik||''))};});
+  /* ===== EİDS YAYIN KAPISI (public) — KESİN KURAL =====
+     Gerçek ilan YALNIZCA hem yayında (status='aktif') HEM DE taşınmaz-bazlı EİDS
+     doğrulaması (eids.status='dogrulandi') varsa görünür. EİDS yetkisi/doğrulaması
+     olmayan ilan ASLA yayına girmez — uydurma EİDS damgalanmaz. */
+  list=list.filter(function(l){return l&&l.status==='aktif'&&l.eids&&l.eids.status==='dogrulandi'&&l.eids.kod;});
+  list.forEach(function(l){if(!l.bolge)l.bolge=[l.ilce,l.mahalle].filter(Boolean).join(' · ');if(!l.ilanNo)l.ilanNo='İLN-'+(1000000+((l.id||1)*7919)%9000000);enrich(l);});
   return list;
 }
 var ALL=[], DUR='hepsi', KAT='tumu', IL='', ILCE='', ODA='', VIEW='liste';
