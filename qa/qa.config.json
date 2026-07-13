@@ -1,0 +1,52 @@
+{
+  "$comment": "TAŞINABİLİR QA KİTİ · yeni projede yalnız bu dosyayı düzenle. serveDir = scriptlerin çalıştığı kök (repo/proje kökü). pages = köke göre mutlak yollar.",
+  "serveDir": ".",
+  "port": 8765,
+  "baseUrl": "http://localhost:8765",
+  "sites": [
+    {
+      "name": "danisman",
+      "note": "AMİRAL — a11y (WCAG 2 AA) + SEO tam remediasyon uygulandı, yeşil.",
+      "pages": [
+        "/danisman/index.html",
+        "/danisman/ilanlar.html",
+        "/danisman/ozel-portfoy.html",
+        "/danisman/hizmetlerimiz.html",
+        "/danisman/hakkimizda.html",
+        "/danisman/sss.html",
+        "/danisman/bolge-analizi.html",
+        "/danisman/prox-asistan.html"
+      ]
+    },
+    {
+      "name": "gayrimenkul",
+      "note": "Kapsama eklendi — a11y/SEO remediasyonu HENÜZ yapılmadı (statik denetim raporu için).",
+      "pages": [
+        "/gayrimenkul/index.html",
+        "/gayrimenkul/hizmetlerimiz.html",
+        "/gayrimenkul/nedenbiz.html",
+        "/gayrimenkul/portfoy.html"
+      ]
+    },
+    {
+      "name": "insaat",
+      "note": "Kapsama eklendi — a11y/SEO remediasyonu HENÜZ yapılmadı (statik denetim raporu için).",
+      "pages": [
+        "/insaat/index.html",
+        "/insaat/hizmetlerimiz.html",
+        "/insaat/projelerimiz.html",
+        "/insaat/bolge.html",
+        "/insaat/neden-biz.html",
+        "/insaat/soru-cevap.html"
+      ]
+    }
+  ],
+  "seo": { "titleMin": 15, "titleMax": 70, "descMin": 60, "descMax": 165, "minLighthouse": 0.75 },
+  "a11y": { "failOn": ["critical", "serious"] },
+  "linkIgnore": [
+    "wa.me", "instagram.com", "facebook.com", "x.com", "twitter.com", "linkedin.com",
+    "youtube.com", "nsosyal.com", "sahibinden.com", "hepsiemlak.com", "emlakjet.com",
+    "emlakekspertizi.com", "unpkg.com", "openstreetmap.org", "tile.openstreetmap.org",
+    "googletagmanager.com", "fonts.googleapis.com", "fonts.gstatic.com", "localhost"
+  ]
+}

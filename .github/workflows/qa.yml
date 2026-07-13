@@ -1,0 +1,60 @@
+name: QA — E2E + a11y + görsel + SEO
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: bun kur
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      # ---- 1) Tarayıcısız statik kapı: SEO meta + JSON-LD + yapı (saniyeler) ----
+      - name: Statik SEO + schema denetimi
+        run: bun qa/static-check.mjs
+
+      - name: Node.js kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Bağımlılıkları kur
+        run: bun install --frozen-lockfile || bun install
+
+      - name: Playwright tarayıcıları
+        run: bunx playwright install --with-deps chromium
+
+      # ---- 2) BLOKLAYICI KAPI: E2E yükleme + a11y (axe) · deterministik ----
+      - name: E2E yükleme + a11y (WCAG 2 AA)
+        run: bunx playwright test -c qa/playwright.config.js --grep-invert "@visual"
+
+      # ---- 3) BİLGİLENDİRİCİ: görsel regresyon (dinamik veri gürültüsüne açık) ----
+      - name: Görsel regresyon
+        run: bunx playwright test -c qa/playwright.config.js --grep "@visual"
+        continue-on-error: true
+
+      # ---- 4) BİLGİLENDİRİCİ: kırık link + Lighthouse/SEO ----
+      - name: Link + SEO (linkinator + Unlighthouse)
+        run: bun qa/run.mjs
+        continue-on-error: true
+
+      - name: Raporları yükle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-raporlari
+          path: |
+            qa/.report/
+            qa/test-results/
+            .unlighthouse/
+          if-no-files-found: ignore
+          retention-days: 14

@@ -11,13 +11,27 @@
     "test:visual": "playwright test tests/visual/degerleme.visual.spec.ts",
     "test:visual:headed": "playwright test tests/visual/degerleme.visual.spec.ts --headed",
     "test:spk": "node scripts/check-spk-legal.mjs degerleme.html",
-    "test:all": "npm run test:spk && npm run test:visual"
+    "test:all": "npm run test:spk && npm run test:visual",
+    "qa:static": "bun qa/static-check.mjs",
+    "qa:e2e": "playwright test -c qa/playwright.config.js",
+    "qa:e2e:fast": "playwright test -c qa/playwright.config.js --grep-invert @visual",
+    "qa:e2e:update": "playwright test -c qa/playwright.config.js --update-snapshots",
+    "qa:e2e:report": "playwright show-report qa/.report",
+    "qa:web": "bun qa/run.mjs",
+    "qa:links": "bun qa/run.mjs --links",
+    "qa:seo": "bun qa/run.mjs --seo",
+    "qa:site": "bun run qa:static && bun run qa:e2e:fast && bun run qa:web",
+    "qa:setup": "playwright install --with-deps chromium"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "^1.61.1",
     "@types/bun": "latest",
+    "linkinator": "^7.6.1",
     "pixelmatch": "^7.2.0",
     "playwright-core": "^1.61.1",
-    "pngjs": "^7.0.0"
+    "pngjs": "^7.0.0",
+    "unlighthouse": "^0.18.0"
   },
   "peerDependencies": {
     "typescript": "^5"

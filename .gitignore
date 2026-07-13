@@ -5,3 +5,9 @@ node_modules/
 tests/reports/
 playwright-report/
 .cache/
+
+# QA kit artefaktları (baseline görselleri hariç: qa/__snapshots__ commit'lenir)
+qa/.report/
+qa/.artifacts/
+qa/test-results/
+.unlighthouse/
