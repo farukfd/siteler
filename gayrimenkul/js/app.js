@@ -1,7 +1,7 @@
 /* gayrimenkul · app.js — engine (P1 ayrıştırma; index.html'den çıkarıldı) */
 /* ============ IMAGE DATA ============ */
-const IMG = {"hero1": "../img/gayrimenkul/img1.webp", "hero2": "../img/gayrimenkul/img2.webp", "hero3": "../img/gayrimenkul/img3.webp", "l1": "../img/gayrimenkul/img4.webp", "l2": "../img/gayrimenkul/img5.webp", "l3": "../img/gayrimenkul/img6.webp", "l4": "../img/gayrimenkul/img7.webp", "l5": "../img/gayrimenkul/img8.webp", "l6": "../img/gayrimenkul/img9.webp", "bolge": "../img/gayrimenkul/img10.webp", "about": "../img/gayrimenkul/img11.webp"};
-Object.assign(IMG, {"dan1": "../img/gayrimenkul/img12.webp", "dan2": "../img/gayrimenkul/img13.webp", "dan3": "../img/gayrimenkul/img14.webp", "dan4": "../img/gayrimenkul/img15.webp", "pano": "../img/gayrimenkul/img16.webp"});
+const IMG = {"hero1": "img/gayrimenkul/img1.webp", "hero2": "img/gayrimenkul/img2.webp", "hero3": "img/gayrimenkul/img3.webp", "l1": "img/gayrimenkul/img4.webp", "l2": "img/gayrimenkul/img5.webp", "l3": "img/gayrimenkul/img6.webp", "l4": "img/gayrimenkul/img7.webp", "l5": "img/gayrimenkul/img8.webp", "l6": "img/gayrimenkul/img9.webp", "bolge": "img/gayrimenkul/img10.webp", "about": "img/gayrimenkul/img11.webp"};
+Object.assign(IMG, {"dan1": "img/gayrimenkul/img12.webp", "dan2": "img/gayrimenkul/img13.webp", "dan3": "img/gayrimenkul/img14.webp", "dan4": "img/gayrimenkul/img15.webp", "pano": "img/gayrimenkul/img16.webp"});
 const HERO_KEYS=['hero1','hero2','hero3'];
 const LIST_IMGS=['l1','l2','l3','l4','l5','l6'];
 
