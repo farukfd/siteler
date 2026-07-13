@@ -169,8 +169,8 @@ var ICO_ARR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-w
 var ICO_CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
 var ICO_SHIELD='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>';
 
-/* örnek görsel: gerçek gayrimenkul fotoğrafları (../img/gayrimenkul) */
-function imgURL(v){if(!v)return '../img/gayrimenkul/img2.webp';if((''+v).indexOf('data:')===0||(''+v).indexOf('http')===0||(''+v).charAt(0)==='/'||(''+v).indexOf('../')===0)return v;if(/^img\d+$/.test(v))return '../img/gayrimenkul/'+v+'.webp';return '../img/gayrimenkul/img2.webp';}
+/* örnek görsel: gerçek gayrimenkul fotoğrafları (img/gayrimenkul) */
+function imgURL(v){if(!v)return 'img/gayrimenkul/img2.webp';if((''+v).indexOf('data:')===0||(''+v).indexOf('http')===0||(''+v).charAt(0)==='/'||(''+v).indexOf('../')===0)return v;if(/^img\d+$/.test(v))return 'img/gayrimenkul/'+v+'.webp';return 'img/gayrimenkul/img2.webp';}
 function catOf(tip){tip=(tip||'').toLocaleLowerCase('tr');if(/arsa|tarla|parsel/.test(tip))return 'arsa';if(/ofis|iş ?yeri|isyeri|dükkan|dukkan|mağaza|magaza|depo|plaza|ticari/.test(tip))return 'ticari';return 'konut';}
 function _eidsKod(seed){var C='0123456789ABCDEFGHJKLMNPQRSTUVWXYZ',s='EIDS-',str=''+(seed||'x'),h=5381;for(var k=0;k<str.length;k++)h=(((h<<5)+h)+str.charCodeAt(k))>>>0;for(var i=0;i<3;i++){for(var j=0;j<4;j++){h=(h*1103515245+12345)>>>0;s+=C[h%C.length];}if(i<2)s+='-';}return s;}
 
@@ -334,7 +334,7 @@ function heroGo(i){_hi=i;
 function galleryFor(l){var main=imgURL(l.img);
   if(Array.isArray(l.gallery)&&l.gallery.length)return [main].concat(l.gallery.map(imgURL));
   var pool=['img7','img2','img5','img6','img9','img1','img3','img8'];var out=[main],seed=(l.id||1);
-  for(var i=0;i<5;i++){var u='../img/gayrimenkul/'+pool[(seed+i)%pool.length]+'.webp';if(out.indexOf(u)<0)out.push(u);}
+  for(var i=0;i<5;i++){var u='img/gayrimenkul/'+pool[(seed+i)%pool.length]+'.webp';if(out.indexOf(u)<0)out.push(u);}
   return out.slice(0,5);}
 function _tr(k,v,cls){return (v&&v!=='—'&&v!=='')?'<div class="ild-tr"><span class="k">'+esc(k)+'</span><span class="v'+(cls?' '+cls:'')+'">'+esc(v)+'</span></div>':'';}
 function ilDetail(id){var l=ALL.filter(function(x){return x.id===id;})[0];if(!l){return;}
