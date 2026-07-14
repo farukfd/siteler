@@ -188,9 +188,10 @@ function publishConfig(){
 function applyBrand(){
   try{
     var b=BRAND;
+    var _bi=(function(){try{var iv=(b.initial!=null&&(''+b.initial).trim())?(''+b.initial).trim():((b.name||'M').trim()||'M');return iv.charAt(0).toLocaleUpperCase('tr');}catch(e){return 'M';}})();  /* WHITE-LABEL: logo harfi marka adından (M→D), sabit 'M' değil */
     document.querySelectorAll('.logo .mark, .lg .mark').forEach(function(mk){
       if(b.logo){mk.innerHTML='<img src="'+b.logo+'" alt="logo" style="width:100%;height:100%;object-fit:contain;border-radius:inherit">';mk.style.background='transparent';mk.style.boxShadow='none';}
-      else{mk.innerHTML='M';mk.style.background='';mk.style.boxShadow='';}
+      else{mk.innerHTML=_brandEsc(_bi);mk.style.background='';mk.style.boxShadow='';}
     });
     document.querySelectorAll('.js-logo').forEach(function(el){el.innerHTML=_brandEsc(b.name)+'<span class="lo2">'+_brandEsc(b.name2)+'</span>';});
     document.querySelectorAll('footer.insaatFooter .lo').forEach(function(lo){
@@ -199,6 +200,9 @@ function applyBrand(){
       else{lo.innerHTML=_brandEsc(b.name)+'<span class="lo2">'+_brandEsc(b.name2)+'</span>';}
     });
     if(b.favicon){var l=document.querySelector('link[rel="icon"]');if(!l){l=document.createElement('link');l.rel='icon';document.head.appendChild(l);}l.href=b.favicon;}
+    /* WHITE-LABEL: favicon (harften üretilen) + Organization + görünür metin sweep'ini
+       brand.js tek kaynaktan (PUB_KEY.BRAND) yeniden uygular — canlı yenile */
+    try{if(window.insBrandRefresh)insBrandRefresh();}catch(e){}
   }catch(e){console.warn('applyBrand',e);}
 }
 function applyMenuText(){
