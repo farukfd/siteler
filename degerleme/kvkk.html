@@ -1027,6 +1027,7 @@ html{transition:none}
 @media(max-width:620px){.thm-grid{grid-template-columns:1fr 1fr}}
 
 </style>
+<script src="js/brand.js?v=1"></script>
 </head>
 <body>
 
@@ -2010,7 +2011,7 @@ html{transition:none}
       + '<div><b>' + min[0] + '</b><span><i class="il-l">en uygun</i> ₺' + degTL(min[1]) + '</span></div>';
   }
   function degRunInit() {
-    try { degApplySettings(); degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degApplySocial(); degCookieBar(); degI18nInit(); degNedenBiz(); degInitReveal(); degInitCount(); degHeroAnim(); degIndexBand(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); try{ if(/^#(yonetim|admin|panel)$/i.test(location.hash||'')) openDegAdmin(); }catch(_e){} } catch (e) {}
+    try { degApplySettings(); degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degApplySocial(); degCookieBar(); degI18nInit(); degNedenBiz(); degInitReveal(); degInitCount(); degHeroAnim(); degIndexBand(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); try{ if(/^#(yonetim|admin|panel)$/i.test(location.hash||'')) openDegAdmin(); }catch(_e){} try{if(window.degBrandRefresh)degBrandRefresh();}catch(_eb){} } catch (e) {}
   }
   // Yayınlanan ayarları (site-config.json) yükle, sonra tüm sayfaya uygula. Dosya yoksa sorunsuz devam eder.
   try {

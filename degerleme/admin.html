@@ -1021,6 +1021,7 @@ html{transition:none}
 @media(max-width:620px){.thm-grid{grid-template-columns:1fr 1fr}}
 
 </style>
+<script src="js/brand.js?v=1"></script>
 </head>
 <body class="crm">
 
@@ -1349,7 +1350,7 @@ html{transition:none}
     $('v_ayarlar').innerHTML = '<div class="crm-card" style="border:1px solid rgba(22,163,74,.45);background:rgba(22,163,74,.06)"><h3>🚀 Yayınla (Canlıya Al)</h3>'
       + '<p style="font-size:12.5px;color:#475569;margin:0 0 12px;line-height:1.6">Tüm ayarlarınızı (SEO &amp; reklam, logo, WhatsApp, SPK lisans, içerik) tek bir <b>site-config.json</b> dosyasına aktarır. Bu dosyayı sitenizin <code>degerleme/assets/data/</code> klasörüne yükleyin — ayarlar <b>tüm ziyaretçilerde ve Google\'da canlı</b> olur. Gizli bilgiler (ProX/DeepSeek anahtarları, personel, talepler) dosyaya <b>yazılmaz</b>.</p>'
       + '<button class="crm-btn" id="a_publish">⬇ site-config.json İndir</button><div class="crm-out" id="a_pubout"></div></div>'
-      + '<div class="crm-card"><h3>Tema & Logo</h3><div class="crm-f"><label>Site Teması — tüm sayfalara detaylı uygulanır</label><div class="thm-grid">' + [['Lacivert', '#0b1220', '#2f5bd0'], ['Antrasit', '#0d1117', '#4a5f85'], ['Bordo', '#2a0a15', '#a8324f'], ['Yeşil', '#052e1c', '#1d9e75'], ['Mor', '#1a1035', '#7c3aed'], ['Okyanus', '#062a33', '#06b6d4']].map(function (t) { return '<button type="button" class="thm' + ((s.theme || 'Lacivert') === t[0] ? ' on' : '') + '" data-thm="' + t[0] + '" style="--c1:' + t[1] + ';--c2:' + t[2] + '"><span class="thm-sw"></span>' + t[0] + '</button>'; }).join('') + '</div></div><div class="crm-f"><label>Favicon URL</label><input id="a_fav" value="' + v(s.favicon) + '"></div>'
+      + '<div class="crm-card"><h3>Tema & Logo</h3><div class="crm-f"><label>Marka Adı <span style="color:#94a3b8;font-weight:400">(white-label — tüm sayfalarda “Meridyen” yerine geçer; logo harfi + favicon otomatik döner)</span></label><input id="a_brand" value="' + v(s.brandName || '') + '" placeholder="Meridyen"></div><div class="crm-f"><label>Site Teması — tüm sayfalara detaylı uygulanır</label><div class="thm-grid">' + [['Lacivert', '#0b1220', '#2f5bd0'], ['Antrasit', '#0d1117', '#4a5f85'], ['Bordo', '#2a0a15', '#a8324f'], ['Yeşil', '#052e1c', '#1d9e75'], ['Mor', '#1a1035', '#7c3aed'], ['Okyanus', '#062a33', '#06b6d4']].map(function (t) { return '<button type="button" class="thm' + ((s.theme || 'Lacivert') === t[0] ? ' on' : '') + '" data-thm="' + t[0] + '" style="--c1:' + t[1] + ';--c2:' + t[2] + '"><span class="thm-sw"></span>' + t[0] + '</button>'; }).join('') + '</div></div><div class="crm-f"><label>Favicon URL</label><input id="a_fav" value="' + v(s.favicon) + '"></div>'
       + '<div class="crm-row2"><div class="crm-f"><label>Üst Menü Logosu (bilgisayardan)</label><input type="file" id="a_logoH" accept="image/*"><div id="a_logoHp" style="margin-top:8px">' + logoPrev(s.logoHeader, 'logoHeader') + '</div></div><div class="crm-f"><label>Alt Menü Logosu (bilgisayardan)</label><input type="file" id="a_logoF" accept="image/*"><div id="a_logoFp" style="margin-top:8px">' + logoPrev(s.logoFooter, 'logoFooter') + '</div></div></div>'
       + '<p style="font-size:12px;color:#94a3b8;margin:6px 0 10px">PNG · SVG · JPG · en fazla 1.5MB. Yüklenen logo üst ve alt menüde, tüm sayfalarda anında görünür.</p>'
       + '<button class="crm-btn" id="a_tsave">Kaydet & Uygula</button></div>'
@@ -1358,7 +1359,7 @@ html{transition:none}
       + '<div class="crm-card"><h3>İletişim & Adres</h3><div class="crm-row2"><div class="crm-f"><label>Firma</label><input id="a_firma" value="' + v(c.firma) + '"></div><div class="crm-f"><label>Telefon</label><input id="a_tel" value="' + v(c.tel) + '"></div></div><div class="crm-row2"><div class="crm-f"><label>WhatsApp</label><input id="a_wa" value="' + v(c.whatsapp) + '"></div><div class="crm-f"><label>E-posta</label><input id="a_mail" value="' + v(c.email) + '"></div></div><div class="crm-f"><label>Adres</label><input id="a_adres" value="' + v(c.adres) + '"></div><div class="crm-row2"><div class="crm-f"><label>Çalışma Saatleri</label><input id="a_saat" value="' + v(c.saat) + '"></div><div class="crm-f"><label>Harita (adres / enlem,boylam)</label><input id="a_harita" value="' + v(c.harita) + '"></div></div><button class="crm-btn" id="a_csave">Kaydet & Uygula</button><div class="crm-out" id="a_out"></div></div>';
     $('a_publish').addEventListener('click', function () {
       var s = DB.load(); var pub = {};
-      ['seo', 'logoHeader', 'logoFooter', 'contact', 'social', 'spkLicense', 'theme', 'favicon', 'metaTitle', 'metaDesc', 'content', 'pages'].forEach(function (k) { if (s[k] !== undefined && s[k] !== null && s[k] !== '') pub[k] = s[k]; });
+      ['seo', 'logoHeader', 'logoFooter', 'contact', 'social', 'spkLicense', 'theme', 'favicon', 'brandName', 'brandInitial', 'metaTitle', 'metaDesc', 'content', 'pages'].forEach(function (k) { if (s[k] !== undefined && s[k] !== null && s[k] !== '') pub[k] = s[k]; });
       delete pub.proxKey; delete pub.deepseekKey; delete pub.auth; delete pub.staff;
       var blob = new Blob([JSON.stringify(pub, null, 2)], { type: 'application/json' });
       var url = URL.createObjectURL(blob);
@@ -1368,7 +1369,7 @@ html{transition:none}
       toast('site-config.json indirildi.');
     });
     $('v_ayarlar').addEventListener('click', function (e) { var t = e.target.closest && e.target.closest('.thm'); if (!t) return; var box = t.parentNode; box.querySelectorAll('.thm').forEach(function (x) { x.classList.remove('on'); }); t.classList.add('on'); var s = DB.load(); s.theme = t.getAttribute('data-thm'); DB.save(s); toast(s.theme + ' teması uygulandı (site geneli).'); });
-    $('a_tsave').addEventListener('click', function () { var s = DB.load(); s.favicon = $('a_fav').value.trim(); var sel = document.querySelector('#v_ayarlar .thm.on'); if (sel) s.theme = sel.getAttribute('data-thm'); DB.save(s); toast('Tema & logo kaydedildi.'); });
+    $('a_tsave').addEventListener('click', function () { var s = DB.load(); s.favicon = $('a_fav').value.trim(); s.brandName = ($('a_brand') ? $('a_brand').value.trim() : (s.brandName || '')); var sel = document.querySelector('#v_ayarlar .thm.on'); if (sel) s.theme = sel.getAttribute('data-thm'); DB.save(s); try { if (window.degBrandRefresh) degBrandRefresh(); } catch (e) {} toast('Tema, marka & logo kaydedildi.'); });
     $('a_gsave').addEventListener('click', function () { var s = DB.load(); s.metaTitle = $('a_mt').value.trim(); s.metaDesc = $('a_md').value.trim(); DB.save(s); toast('Meta etiketleri kaydedildi.'); });
     $('a_spksave').addEventListener('click', function () { var s = DB.load(); s.spkLicense = ($('a_spk').value.trim() || 'DD-2024-0142'); DB.save(s); toast('SPK Lisans No kaydedildi (footer’a yansır).'); });
     $('a_csave').addEventListener('click', function () { var s = DB.load(); s.contact = { firma: $('a_firma').value.trim(), tel: $('a_tel').value.trim(), whatsapp: $('a_wa').value.trim(), email: $('a_mail').value.trim(), adres: $('a_adres').value.trim(), saat: $('a_saat').value.trim(), harita: $('a_harita').value.trim() }; DB.save(s); $('a_out').innerHTML = '<span class="ok">✓ İletişim & adres kaydedildi. WhatsApp numarası tüm sayfalardaki WhatsApp bağlantılarına uygulanır.</span>'; toast('İletişim güncellendi.'); });
@@ -2294,7 +2295,7 @@ html{transition:none}
       + '<div><b>' + min[0] + '</b><span><i class="il-l">en uygun</i> ₺' + degTL(min[1]) + '</span></div>';
   }
   function degRunInit() {
-    try { degApplySettings(); degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degApplySocial(); degCookieBar(); degI18nInit(); degNedenBiz(); degInitReveal(); degInitCount(); degHeroAnim(); degIndexBand(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); try{ if(/^#(yonetim|admin|panel)$/i.test(location.hash||'')) openDegAdmin(); }catch(_e){} } catch (e) {}
+    try { degApplySettings(); degApplyApiKeys(); degApplySeo(); degApplyLogo(); degSpkApply(); degMobileNav(); degApplyWhatsApp(); degApplySocial(); degCookieBar(); degI18nInit(); degNedenBiz(); degInitReveal(); degInitCount(); degHeroAnim(); degIndexBand(); degContactInit(); degLegalApply(); degContentApply(); degBlogPageInit(); degSikayetInit(); try{ if(/^#(yonetim|admin|panel)$/i.test(location.hash||'')) openDegAdmin(); }catch(_e){} try{if(window.degBrandRefresh)degBrandRefresh();}catch(_eb){} } catch (e) {}
   }
   // Yayınlanan ayarları (site-config.json) yükle, sonra tüm sayfaya uygula. Dosya yoksa sorunsuz devam eder.
   try {
