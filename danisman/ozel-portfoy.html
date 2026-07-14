@@ -203,11 +203,16 @@ var IC_KEY='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wi
 var IC_ISYERI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16l-1-4H5L4 9Z"/><path d="M5 9v11h14V9M9 20v-6h6v6"/></svg>';
 var IC_ARSA='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 9 4l6 2 5-2v14l-5 2-6-2-5 2V6Z"/><path d="M9 4v14M15 6v14"/></svg>';
 
-function ozRow(icon,nm,sub,fromMain,unit,m2,cls){
-  return '<div class="ozr '+cls+'"><span class="ozr-ic">'+icon+'</span>'
-    +'<span class="ozr-tx"><b>'+nm+'</b><i>'+sub+'</i></span>'
-    +'<span class="ozr-pr"><b class="ozr-from">'+fromMain+(unit?'<em>'+unit+'</em>':'')+'</b>'
-    +'<i class="ozr-src">ProX <span class="ozr-m2n">'+fmtNum(m2)+'</span> ₺/m²</i></span></div>';
+/* kategori mini-kartı — pct: bu kategorinin ₺/m² değerinin aynı işlem tipindeki en yükseğe oranı (gerçek büyüklük çubuğu) */
+function ozTile(icon,nm,sub,fromMain,unit,m2,cls,pct){
+  var w=Math.max(9,Math.min(100,Math.round(pct||0)));
+  return '<div class="ozt '+cls+'">'
+    +'<div class="ozt-h"><span class="ozt-ic">'+icon+'</span><span class="ozt-nm">'+nm+'</span></div>'
+    +'<div class="ozt-sub">'+sub+'</div>'
+    +'<div class="ozt-pr">'+fromMain+(unit?'<em>'+unit+'</em>':'')+'</div>'
+    +'<div class="ozt-mlbl">ProX <b>'+fmtNum(m2)+'</b> ₺/m²</div>'
+    +'<div class="ozt-bar" title="'+nm+' m² değeri — bölgedeki aynı tip içindeki payı"><i style="width:'+w+'%"></i></div>'
+    +'</div>';
 }
 /* ProX yatırım skoru — radyal kadran */
 function ozGauge(score){
@@ -224,11 +229,14 @@ async function regionData(il,ilce,mah){
 }
 function ozPanel(o){
   var d=o.data,rows=[];
-  if(catOn(['Konut','Yatırım'])&&d.ks&&d.ks.m2>0)rows.push(ozRow(IC_DAIRE,'Satılık Daire','~'+MIN_DSAT+' m²’den','≈ '+fmtFrom(d.ks.m2*MIN_DSAT),'’den',d.ks.m2,'k-konut'));
-  if(catOn(['Kiralık','Konut'])&&d.kk&&d.kk.m2>0)rows.push(ozRow(IC_KEY,'Kiralık Daire','aylık · ~'+MIN_DKIRA+' m²','≈ '+fmtFrom(d.kk.m2*MIN_DKIRA),'/ay',d.kk.m2,'k-kira'));
-  if(catOn(['Ticari & Ofis','Yatırım'])&&d.ts&&d.ts.m2>0)rows.push(ozRow(IC_ISYERI,'Satılık İşyeri / Ofis','~'+MIN_ISAT+' m²’den','≈ '+fmtFrom(d.ts.m2*MIN_ISAT),'’den',d.ts.m2,'k-ticari'));
-  if(catOn(['Ticari & Ofis','Kiralık'])&&d.tk&&d.tk.m2>0)rows.push(ozRow(IC_ISYERI,'Kiralık İşyeri','aylık · ~'+MIN_IKIRA+' m²','≈ '+fmtFrom(d.tk.m2*MIN_IKIRA),'/ay',d.tk.m2,'k-ticari'));
-  if(catOn(['Arsa','Yatırım'])&&d.as&&d.as.m2>0)rows.push(ozRow(IC_ARSA,'Arsa','imarlı','≈ '+fmtFrom(d.as.m2),'/m²',d.as.m2,'k-arsa'));
+  /* çubuk normalizasyonu: satılık ₺/m² kendi içinde, kiralık ₺/m²·ay kendi içinde (tip karışmasın) */
+  var satMax=Math.max((d.ks&&d.ks.m2)||0,(d.ts&&d.ts.m2)||0,(d.as&&d.as.m2)||0)||1;
+  var kiraMax=Math.max((d.kk&&d.kk.m2)||0,(d.tk&&d.tk.m2)||0)||1;
+  if(catOn(['Konut','Yatırım'])&&d.ks&&d.ks.m2>0)rows.push(ozTile(IC_DAIRE,'Satılık Daire','~'+MIN_DSAT+' m²’den','≈ '+fmtFrom(d.ks.m2*MIN_DSAT),'’den',d.ks.m2,'k-konut',d.ks.m2/satMax*100));
+  if(catOn(['Kiralık','Konut'])&&d.kk&&d.kk.m2>0)rows.push(ozTile(IC_KEY,'Kiralık Daire','aylık · ~'+MIN_DKIRA+' m²','≈ '+fmtFrom(d.kk.m2*MIN_DKIRA),'/ay',d.kk.m2,'k-kira',d.kk.m2/kiraMax*100));
+  if(catOn(['Ticari & Ofis','Yatırım'])&&d.ts&&d.ts.m2>0)rows.push(ozTile(IC_ISYERI,'Satılık İşyeri','~'+MIN_ISAT+' m²’den','≈ '+fmtFrom(d.ts.m2*MIN_ISAT),'’den',d.ts.m2,'k-ticari',d.ts.m2/satMax*100));
+  if(catOn(['Ticari & Ofis','Kiralık'])&&d.tk&&d.tk.m2>0)rows.push(ozTile(IC_ISYERI,'Kiralık İşyeri','aylık · ~'+MIN_IKIRA+' m²','≈ '+fmtFrom(d.tk.m2*MIN_IKIRA),'/ay',d.tk.m2,'k-ticari',d.tk.m2/kiraMax*100));
+  if(catOn(['Arsa','Yatırım'])&&d.as&&d.as.m2>0)rows.push(ozTile(IC_ARSA,'Arsa','imarlı','≈ '+fmtFrom(d.as.m2),'/m²',d.as.m2,'k-arsa',d.as.m2/satMax*100));
   if(!rows.length)return '';
   var score=Math.max((d.ks&&d.ks.score)||0,(d.kk&&d.kk.score)||0,(d.ts&&d.ts.score)||0,(d.as&&d.as.score)||0);
   var firsat=score>=68;
@@ -241,7 +249,7 @@ function ozPanel(o){
     +'<div class="ozc-head"><span class="ozc-mark">'+esc(o.name.trim().charAt(0))+'</span>'
       +'<span class="ozc-h"><b class="ozc-name">'+esc(o.name)+'</b><span class="ozc-sub">'+esc(o.sub)+(firsat?'<span class="ozc-hot">▲ Yükselen Fırsat</span>':'')+'</span></span>'
       +(score>0?ozGauge(score):'')+'</div>'
-    +'<div class="ozc-rows">'+rows.join('')+'</div>'
+    +'<div class="ozt-grid">'+rows.join('')+'</div>'
     +typo
     +'<div class="ozc-foot"><span class="ozc-live"><span class="ozc-dot"></span>Canlı ProX'+(veri?' · '+fmtNum(veri)+' veri':'')+'</span>'
       +'<button class="ozc-cta" onclick="event.stopPropagation();ozLead(\''+esc(o.name)+'\')">Değer Analizi '+ICO_ARR+'</button></div>'
@@ -318,23 +326,26 @@ function ozStyles(){if(document.getElementById('ozF1Style'))return;var s=documen
   '.ozr-gauge{flex:0 0 auto;margin-left:auto;line-height:0}',
   '.ozg-n{font-family:var(--serif-2);font-weight:700;font-size:12.5px;fill:var(--ink)}',
   '.ozg-l{font-size:4.4px;letter-spacing:.12em;fill:var(--muted);font-family:var(--body);font-weight:600}',
-  '.ozc-rows{padding:4px 20px 2px;display:flex;flex-direction:column}',
-  '.ozr{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}',
-  '.ozr:last-child{border-bottom:0}',
-  '.ozr-ic{width:38px;height:38px;flex:0 0 auto;border-radius:11px;display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line);color:var(--em-2)}',
-  '.ozr-ic svg{width:19px;height:19px}',
-  '.ozr-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}',
-  '.ozr-tx b{font-family:var(--body);font-weight:600;font-size:14px;color:var(--ink);line-height:1.15}',
-  '.ozr-tx i{font-style:normal;font-size:11px;color:var(--muted);letter-spacing:.01em}',
-  '.ozr-pr{flex:0 0 auto;text-align:right;display:flex;flex-direction:column;gap:3px;align-items:flex-end}',
-  '.ozr-from{font-family:var(--serif-2);font-weight:700;font-size:18px;color:var(--gold-deep);line-height:1;white-space:nowrap}',
-  '.ozr-from em{font-style:normal;font-size:.58em;color:var(--muted);font-weight:600;margin-left:2px}',
-  '.ozr-src{font-style:normal;font-size:10.5px;color:var(--muted);letter-spacing:.01em;white-space:nowrap}',
-  '.ozr-m2n{color:var(--em-2);font-weight:700}',
-  '.ozr.k-konut .ozr-ic{color:var(--em-2);background:rgba(20,128,90,.09);border-color:rgba(20,128,90,.2)}',
-  '.ozr.k-kira .ozr-ic{color:#b8912f;background:rgba(195,155,69,.1);border-color:rgba(195,155,69,.26)}',
-  '.ozr.k-ticari .ozr-ic{color:#2f6fb0;background:rgba(47,111,176,.08);border-color:rgba(47,111,176,.2)}',
-  '.ozr.k-arsa .ozr-ic{color:#5a7d3a;background:rgba(90,125,58,.1);border-color:rgba(90,125,58,.22)}',
+  '.ozt-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:15px 18px 6px}',
+  '.ozt{position:relative;border:1px solid var(--line);border-radius:14px;padding:12px 13px 13px;background:linear-gradient(180deg,#fff,#fcfaf4);display:flex;flex-direction:column;gap:5px;overflow:hidden;transition:border-color .2s,box-shadow .2s}',
+  '.ozt::before{content:"";position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--tint,#c39b45)}',
+  '.pf-cardw:hover .ozt{box-shadow:0 8px 18px -14px rgba(12,50,34,.4)}',
+  '.ozt:last-child:nth-child(odd){grid-column:1 / -1}',
+  '.ozt-h{display:flex;align-items:center;gap:9px}',
+  '.ozt-ic{width:30px;height:30px;flex:0 0 auto;border-radius:9px;display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line);color:var(--tint,#14805a)}',
+  '.ozt-ic svg{width:16px;height:16px}',
+  '.ozt-nm{font-family:var(--body);font-weight:600;font-size:12.5px;color:var(--ink);line-height:1.15}',
+  '.ozt-sub{font-size:10px;color:var(--muted);letter-spacing:.01em;margin:-1px 0 2px}',
+  '.ozt-pr{font-family:var(--serif-2);font-weight:700;font-size:19px;color:var(--gold-deep);line-height:1.05;white-space:nowrap}',
+  '.ozt-pr em{font-style:normal;font-size:.52em;color:var(--muted);font-weight:600;margin-left:2px}',
+  '.ozt-mlbl{font-size:10px;color:var(--muted);letter-spacing:.01em;white-space:nowrap}',
+  '.ozt-mlbl b{color:var(--em-2);font-weight:700}',
+  '.ozt-bar{height:4px;border-radius:99px;background:var(--panel-2);overflow:hidden;margin-top:2px}',
+  '.ozt-bar i{display:block;height:100%;border-radius:99px;background:var(--tint,#c39b45)}',
+  '.ozt.k-konut{--tint:#14805a}.ozt.k-konut .ozt-ic{background:rgba(20,128,90,.09);border-color:rgba(20,128,90,.2)}',
+  '.ozt.k-kira{--tint:#b8912f}.ozt.k-kira .ozt-ic{background:rgba(195,155,69,.1);border-color:rgba(195,155,69,.26)}',
+  '.ozt.k-ticari{--tint:#2f6fb0}.ozt.k-ticari .ozt-ic{background:rgba(47,111,176,.08);border-color:rgba(47,111,176,.2)}',
+  '.ozt.k-arsa{--tint:#5a7d3a}.ozt.k-arsa .ozt-ic{background:rgba(90,125,58,.1);border-color:rgba(90,125,58,.22)}',
   '.ozc-typo{margin:8px 20px 2px;padding:11px 14px;border:1px dashed var(--line);border-radius:12px;background:rgba(195,155,69,.05);display:flex;flex-wrap:wrap;gap:5px 14px;align-items:center}',
   '.ozc-typo-l{font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--gold-deep);font-weight:800;width:100%}',
   '.ozc-typo-i{font-size:11.5px;color:var(--muted)}.ozc-typo-i b{color:var(--ink);font-weight:700}',
