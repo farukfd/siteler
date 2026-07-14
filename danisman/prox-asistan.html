@@ -46,6 +46,10 @@ html,body{height:100%}
 .pa-back:hover{color:var(--gold-soft)}
 .pa-poweredby{font-size:11px;color:var(--mut-on-em);display:flex;align-items:center;gap:5px}
 .pa-poweredby .prox-x{background:var(--prox);color:#04120c;border-radius:4px;padding:0 3px}
+.pa-legal{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:11.5px}
+.pa-legal a{color:var(--mut-on-em);text-decoration:none;font-weight:500}
+.pa-legal a:hover{color:var(--gold-soft);text-decoration:underline}
+.pa-legal span{color:var(--mut-on-em);opacity:.6}
 /* main */
 .pa-main{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--cream)}
 .pa-appbar{display:flex;align-items:center;gap:12px;padding:12px 22px;border-bottom:1px solid var(--line);flex:0 0 auto;background:var(--panel)}
@@ -133,6 +137,7 @@ html,body{height:100%}
     <div class="pa-history" id="paHistory"></div>
     <div class="pa-sb-foot">
       <a class="pa-back" href="index.html">← Ana sayfaya dön</a>
+      <nav class="pa-legal" aria-label="Yasal"><a href="kvkk.html">KVKK</a><span>·</span><a href="cerez.html">Çerez</a><span>·</span><a href="kullanim.html">Kullanım</a></nav>
       <div class="pa-poweredby"><span class="prox-logo" style="font-size:.95em">Pro<span class="prox-x">X</span></span> · +1 milyar doğrulanmış emlak verisi</div>
     </div>
   </aside>
