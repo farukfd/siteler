@@ -1203,7 +1203,9 @@ function crmDataReset(){if(!confirm('CRM, ilan, sözleşme ve tüm yerel veriler
   try{var rm=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('dn_')===0)rm.push(k);}rm.forEach(function(k){localStorage.removeItem(k);});}catch(e){}_crm=null;toast('Veriler sıfırlandı. Yenileniyor…');setTimeout(function(){location.reload();},1000);}
 /* ===================== İÇERİK CMS (ana sayfa hero metinleri) ===================== */
 var CMS_KEY='dn_content';
-function cmsGet(){try{return JSON.parse(localStorage.getItem(CMS_KEY)||'{}')||{};}catch(e){return {};}}
+/* dn_content = yayınlanan içerik (DN_PUBLISHED.content) ⊕ admin taslağı (localStorage) — taslak üstün.
+   content.js ile aynı öncelik; deploy'da ziyaretçi yayınlanan içeriği görür. */
+function cmsGet(){try{var loc=JSON.parse(localStorage.getItem(CMS_KEY)||'{}')||{};var pub=(window.DN_PUBLISHED&&window.DN_PUBLISHED.content&&typeof window.DN_PUBLISHED.content==='object')?window.DN_PUBLISHED.content:{};return Object.assign({},pub,loc);}catch(e){return {};}}
 /* genel: [data-cms] işaretli tüm elemanları uygula (statik sayfalar da aynı motoru kullanır) */
 function dnApplyCms(c){c=c||cmsGet();try{[].forEach.call(document.querySelectorAll('[data-cms]'),function(el){var k=el.getAttribute('data-cms'),v=c[k];if(v==null||v==='')return;var dot=el.querySelector&&el.querySelector('.eb-dot');if(dot)el.innerHTML='<span class="eb-dot"></span>'+_leD(v);else el.textContent=v;});}catch(e){}}
 function applyContent(){var c=cmsGet();
@@ -1212,27 +1214,127 @@ function applyContent(){var c=cmsGet();
   try{if(c.heroT2){var t2=document.querySelector('.hero-title em');if(t2)t2.textContent=c.heroT2;}}catch(e){}
   try{if(c.heroLede){var ld=document.querySelector('.hero .lede');if(ld)ld.textContent=c.heroLede;}}catch(e){}
   try{dnApplyCms(c);}catch(e){}
+  try{dnApplyServices(c);}catch(e){}
 }
+/* AI/CRUD sonucunu dn_content'e BİRLEŞTİR (mevcut alanları koru) + uygula */
+function cmsMerge(part){var c=cmsGet();Object.keys(part||{}).forEach(function(k){var v=part[k];if(v!=null&&v!=='')c[k]=v;});
+  try{localStorage.setItem(CMS_KEY,JSON.stringify(c));}catch(e){}try{applyContent();}catch(e){}return c;}
 /* CMS alan tanımı: [id, dn_content anahtarı, etiket, textarea?, placeholder] — sayfaya göre gruplu */
 var CMS_FIELDS={
-  home:[['cms_eb','heroEb','Hero Üst Etiket',0,'Kişiye Özel Emlak Danışmanlığı · Yetki Belgeli'],['cms_t1','heroT1','Hero Başlık 1. satır',0,'Gayrimenkulünüz,'],['cms_t2','heroT2','Hero Başlık 2. satır (italik)',0,'gerçek değerine ulaşsın.'],['cms_lede','heroLede','Hero Açıklama',1,'18 yılı aşkın deneyim ve canlı ProX bölge verisiyle…'],['cms_intel','intelText','"Rakamlar konuşur" bölüm metni',1,'Her mahalle için güncel m² değeri, yıllık değişim ve yatırım skoru…']],
-  hakkimizda:[['cms_hkeb','hk_eyebrow','Üst Etiket',0,'Kişisel Temsil · Yetki Belgeli'],['cms_hkrole','hk_role','Rol / Unvan satırı',0,'Kıdemli Lüks Konut & Özel Portföy Danışmanı · İstanbul'],['cms_hklede','hk_lede','Giriş Paragrafı',1,'Bir gayrimenkul, doğru isimle taçlandırıldığında…']],
+  home:[['cms_eb','heroEb','Hero Üst Etiket',0,'Kişiye Özel Emlak Danışmanlığı · Yetki Belgeli'],['cms_t1','heroT1','Hero Başlık 1. satır',0,'Gayrimenkulünüz,'],['cms_t2','heroT2','Hero Başlık 2. satır (italik)',0,'gerçek değerine ulaşsın.'],['cms_lede','heroLede','Hero Açıklama',1,'18 yılı aşkın deneyim ve canlı ProX bölge verisiyle…'],['cms_intel','intelText','"Rakamlar konuşur" bölüm metni',1,'Her mahalle için güncel m² değeri, yıllık değişim ve yatırım skoru…'],['cms_habout','homeAboutBody','Ana Sayfa "Hakkımda" Paragrafı',1,'Her gayrimenkul, doğru alıcısıyla buluşmayı hak eder…']],
+  hakkimizda:[['cms_hkeb','hk_eyebrow','Üst Etiket',0,'Kişisel Temsil · Yetki Belgeli'],['cms_hkrole','hk_role','Rol / Unvan satırı',0,'Kıdemli Lüks Konut & Özel Portföy Danışmanı · İstanbul'],['cms_hklede','hk_lede','Giriş Paragrafı',1,'Bir gayrimenkul, doğru isimle taçlandırıldığında…'],['cms_hkbody','hk_body','Hakkımda Sayfası Ana Paragraf',1,'Kariyerime İstanbul\'un en rekabetçi pazarında başladım…']],
   hizmetlerimiz:[['cms_hzeb','hz_eyebrow','Üst Etiket',0,'Kişiye Özel · Uçtan Uca Danışmanlık'],['cms_hzlede','hz_lede','Hero Açıklama',1,'Alım-satımdan kiralamaya, değerlemeden yatırım analizine…']]
 };
-function cmsRender(){var host=document.getElementById('crmCms');if(!host)return;var c=cmsGet();
+function _cmsFieldHTML(c,f){var val=c[f[1]]!=null?c[f[1]]:'';return '<div class="crm-f"><label>'+f[2]+'</label>'+(f[3]?('<textarea id="'+f[0]+'" rows="3" placeholder="'+_leD(f[4])+'">'+_leD(val)+'</textarea>'):('<input id="'+f[0]+'" value="'+_leD(val)+'" placeholder="'+_leD(f[4])+'">'))+'</div>';}
+/* hizmet kartı CRUD satırları */
+function dnSvcListHTML(arr){arr=Array.isArray(arr)?arr:[];if(!arr.length)return '<p class="sub" style="margin:4px 0">Henüz hizmet kartı yok — <b>Kart Ekle</b> ya da yukarıdan <b>AI ile Üret</b>. (Boşsa sitede varsayılan kartlar görünür.)</p>';
+  var opts=Object.keys(DN_SVC_ICONS);
+  return arr.map(function(s,i){return '<div class="dn-svc-row" data-i="'+i+'" style="border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:rgba(0,0,0,.02)">'
+    +'<div class="crm-f" style="margin-bottom:8px"><label>Kart '+(i+1)+' — Başlık</label><input class="dn-svc-t" value="'+_leD(s.title||'')+'" placeholder="Hizmet adı"></div>'
+    +'<div class="crm-f" style="margin-bottom:8px"><label>Açıklama</label><textarea class="dn-svc-d" rows="2" placeholder="Kısa fayda cümlesi">'+_leD(s.desc||'')+'</textarea></div>'
+    +'<div style="display:flex;gap:8px;align-items:flex-end"><div class="crm-f" style="flex:1;margin:0"><label>İkon</label><select class="dn-svc-ic">'+opts.map(function(k){return '<option value="'+k+'"'+(s.icon===k?' selected':'')+'>'+k+'</option>';}).join('')+'</select></div><button class="btn btn-line" style="white-space:nowrap" onclick="dnSvcDel('+i+')">✕ Kaldır</button></div>'
+    +'</div>';}).join('');}
+function cmsRender(){var host=document.getElementById('crmCms');if(!host)return;var c=cmsGet();var id=dnIdentGet();
   function grp(title,note,rows){var b='<div class="crm-sec"><div class="crm-sec-h">'+title+'</div>'+(note?'<p class="sub" style="margin:-4px 0 12px">'+note+'</p>':'');
-    rows.forEach(function(f){var val=c[f[1]]!=null?c[f[1]]:'';b+='<div class="crm-f"><label>'+f[2]+'</label>'+(f[3]?('<textarea id="'+f[0]+'" rows="3" placeholder="'+_leD(f[4])+'">'+_leD(val)+'</textarea>'):('<input id="'+f[0]+'" value="'+_leD(val)+'" placeholder="'+_leD(f[4])+'">'))+'</div>';});
-    return b+'</div>';}
-  var H=grp('🏠 Ana Sayfa','Boş bırakılan alan varsayılan metni korur.',CMS_FIELDS.home)
+    rows.forEach(function(f){b+=_cmsFieldHTML(c,f);});return b+'</div>';}
+  /* 1) Kurumsal Kimlik + AI üretimi */
+  var ident='<div class="crm-sec"><div class="crm-sec-h">🏢 Kurumsal Kimlik → AI İçerik</div><p class="sub" style="margin:-4px 0 12px">Firmanızın bilgilerini girip <b>AI ile Üret</b>\'e basın; hero, hakkımda ve hizmet kartları markanıza özel <b>otomatik</b> yazılır. Sonra aşağıdan elle düzenleyebilirsiniz.</p>';
+  DN_IDENT_FIELDS.forEach(function(f){ident+=_cmsFieldHTML(id,f);});
+  ident+='<div class="crm-mact"><button class="btn btn-gold" id="dnGenBtn" onclick="dnGenAll()">✨ AI ile Tüm İçeriği Üret</button><button class="btn btn-line" onclick="dnIdentSaveForm()">Kimliği Kaydet</button></div><div id="dnGenOut" class="crm-out" style="margin-top:8px"></div></div>';
+  /* 2) metin alanları */
+  var texts=grp('🏠 Ana Sayfa','Boş bırakılan alan varsayılan metni korur.',CMS_FIELDS.home)
     +grp('👤 Hakkımda Sayfası','',CMS_FIELDS.hakkimizda)
-    +grp('🛠️ Hizmetlerimiz Sayfası','',CMS_FIELDS.hizmetlerimiz)
-    +'<div class="crm-mact"><button class="btn btn-gold" onclick="cmsSave()">Kaydet & Tüm Sayfalara Uygula</button><button class="btn btn-line" onclick="cmsReset()">Varsayılana Dön</button></div>';
-  host.innerHTML=H;
+    +grp('🛠️ Hizmetler — Başlık Metni','',CMS_FIELDS.hizmetlerimiz)
+    +'<div class="crm-mact"><button class="btn btn-gold" onclick="cmsSave()">Metinleri Kaydet & Uygula</button><button class="btn btn-line" onclick="cmsReset()">Varsayılana Dön</button></div>';
+  /* 3) hizmet kartı CRUD */
+  var svc='<div class="crm-sec"><div class="crm-sec-h">🗂️ Hizmet Kartları (ekle · düzenle · kaldır)</div><div id="dnSvcList">'+dnSvcListHTML(c.services)+'</div>'
+    +'<div class="crm-mact"><button class="btn btn-line" onclick="dnSvcAdd()">+ Kart Ekle</button><button class="btn btn-gold" onclick="dnSvcSave()">Kartları Kaydet & Uygula</button></div></div>';
+  host.innerHTML=ident+texts+svc;
 }
-function cmsSave(){var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};var c={};
-  Object.keys(CMS_FIELDS).forEach(function(pg){CMS_FIELDS[pg].forEach(function(f){var v=g(f[0]);if(v)c[f[1]]=v;});});
+/* ---- Kurumsal kimlik + AI üret + hizmet CRUD işleyicileri ---- */
+function dnIdentSaveForm(){var o=dnIdentGet();DN_IDENT_FIELDS.forEach(function(f){var e=document.getElementById(f[0]);if(e)o[f[1]]=e.value.trim();});dnIdentSave(o);if(window.toast)toast('Kurumsal kimlik kaydedildi.');return o;}
+async function dnGenAll(){var btn=document.getElementById('dnGenBtn'),out=document.getElementById('dnGenOut');
+  dnIdentSaveForm();
+  if(btn){btn.disabled=true;btn.textContent='✨ Üretiliyor…';}if(out)out.innerHTML='<span class="sub">ProX/DeepSeek içerik üretiyor… (10–40 sn)</span>';
+  try{var res=await dnGenContent();var data=res&&res.data;
+    if(!data){if(out)out.innerHTML='<span style="color:#c0392b">İçerik üretilemedi. <b>ProX AI</b> sekmesinden DeepSeek anahtarını kontrol edin veya tekrar deneyin.</span>';return;}
+    var part={};['heroEb','heroT1','heroT2','heroLede','intelText','homeAboutBody','hk_eyebrow','hk_role','hk_lede','hk_body','hz_eyebrow','hz_lede'].forEach(function(k){if(data[k])part[k]=(''+data[k]).trim();});
+    if(Array.isArray(data.services)&&data.services.length){part.services=data.services.slice(0,10).map(function(s){return {title:(''+(s.title||'')).trim(),desc:(''+(s.desc||'')).trim(),icon:(DN_SVC_ICONS[s.icon]?s.icon:'home')};}).filter(function(s){return s.title;});}
+    cmsMerge(part);
+    if(out)out.innerHTML='<span style="color:#1e7e3a">✓ İçerik üretildi ve uygulandı. Aşağıdan düzenleyip Kaydet\'e basın.</span>';
+    cmsRender();
+  }catch(e){if(out)out.innerHTML='<span style="color:#c0392b">Hata: '+_leD((e&&e.message)||e)+'</span>';}
+  finally{if(btn){btn.disabled=false;btn.textContent='✨ AI ile Tüm İçeriği Üret';}}
+}
+function _dnReadSvc(){var arr=[];[].forEach.call(document.querySelectorAll('#dnSvcList .dn-svc-row'),function(r){var t=r.querySelector('.dn-svc-t'),d=r.querySelector('.dn-svc-d'),ic=r.querySelector('.dn-svc-ic');var tt=t?t.value.trim():'';arr.push({title:tt,desc:d?d.value.trim():'',icon:ic?ic.value:'home'});});return arr;}
+function _dnPersistSvc(arr){var c=cmsGet();c.services=arr;try{localStorage.setItem(CMS_KEY,JSON.stringify(c));}catch(e){}return c;}
+function dnSvcAdd(){var arr=_dnReadSvc();arr.push({title:'',desc:'',icon:'home'});_dnPersistSvc(arr);var h=document.getElementById('dnSvcList');if(h)h.innerHTML=dnSvcListHTML(arr);}
+function dnSvcDel(i){var arr=_dnReadSvc();arr.splice(i,1);_dnPersistSvc(arr);var h=document.getElementById('dnSvcList');if(h)h.innerHTML=dnSvcListHTML(arr);}
+function dnSvcSave(){var arr=_dnReadSvc().filter(function(s){return s.title;});_dnPersistSvc(arr);try{applyContent();}catch(e){}if(window.toast)toast('✓ '+arr.length+' hizmet kartı kaydedildi & uygulandı.');}
+try{window.dnGenAll=dnGenAll;window.dnIdentSaveForm=dnIdentSaveForm;window.dnSvcAdd=dnSvcAdd;window.dnSvcDel=dnSvcDel;window.dnSvcSave=dnSvcSave;}catch(e){}
+function cmsSave(){var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};var c=cmsGet();/* services[] + AI ekstralarını KORU */
+  Object.keys(CMS_FIELDS).forEach(function(pg){CMS_FIELDS[pg].forEach(function(f){var e=document.getElementById(f[0]);if(!e)return;var v=g(f[0]);if(v)c[f[1]]=v;else delete c[f[1]];});});
   try{localStorage.setItem(CMS_KEY,JSON.stringify(c));}catch(e){}applyContent();try{dnApplyCms(c);}catch(e){}toast('✓ İçerik kaydedildi & ana sayfaya uygulandı. Diğer sayfalar açılınca güncel görünür.');}
 function cmsReset(){try{localStorage.removeItem(CMS_KEY);}catch(e){}toast('Varsayılana döndü. Yenileniyor…');setTimeout(function(){location.reload();},800);}
+/* ===================== KURUMSAL KİMLİK + AI İÇERİK ÜRETİMİ =====================
+   Reseller "Kurumsal Kimlik"i doldurur → DeepSeek/ProX ile hero + hakkımda +
+   hizmet kartları (services[]) üretilir → dn_content'e yazılır → tüm sayfalara uygulanır.
+   Hizmet kartları dn_content.services dizisinden DİNAMİK render (yoksa statik varsayılan). */
+var DN_IDENT_KEY='dn_identity';
+function dnIdentGet(){try{return JSON.parse(localStorage.getItem(DN_IDENT_KEY)||'{}')||{};}catch(e){return {};}}
+function dnIdentSave(o){try{localStorage.setItem(DN_IDENT_KEY,JSON.stringify(o||{}));}catch(e){}}
+var DN_IDENT_FIELDS=[
+  ['di_uzmanlik','uzmanlik','Uzmanlık Alanı',0,'Lüks konut, yalı ve rezidans satışı'],
+  ['di_sehir','sehir','Şehir / Bölge',0,'İstanbul · Boğaz Hattı'],
+  ['di_deneyim','deneyim','Deneyim (yıl)',0,'18'],
+  ['di_ton','ton','İçerik Tonu',0,'Prestijli, güven veren, sıcak'],
+  ['di_hizmetler','hizmetler','Öne Çıkan Hizmetler (virgülle)',1,'Konut alım-satım, kiralama, değerleme, yatırım danışmanlığı, arsa & arazi'],
+  ['di_kitle','hedefKitle','Hedef Kitle',0,'Üst segment konut alıcıları ve yatırımcılar'],
+  ['di_vaad','vaad','Temel Vaad / Slogan',0,'Gayrimenkulünüz gerçek değerine ulaşsın']
+];
+/* preset hizmet ikonları (statik kartlarla aynı görsel dil) */
+var DN_SVC_ICONS={
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>',
+  key:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><path d="m13 9 8 8-2 2-2-2-2 2-2-2"/></svg>',
+  building:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V6l8-3 8 3v14"/><path d="M4 20h16"/><path d="M9 9h.01M12 9h.01M15 9h.01M9 13h.01M12 13h.01M15 13h.01"/></svg>',
+  land:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg>',
+  chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16"/><rect x="7" y="12" width="3" height="5"/><rect x="12" y="8" width="3" height="9"/><rect x="17" y="5" width="3" height="12"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="M9 12l2 2 4-4"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.4l6.1-.8L12 3Z"/></svg>',
+  hand:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l4-4 5 3 5-5 4 4"/><path d="M3 12v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"/></svg>'
+};
+function dnSvcIcon(k){return DN_SVC_ICONS[k]||DN_SVC_ICONS.home;}
+/* hizmet kartlarını dn_content.services dizisinden DİNAMİK render (hizmetlerimiz sayfası) */
+function dnApplyServices(c){c=c||cmsGet();var arr=c.services;if(!Array.isArray(arr)||!arr.length)return;
+  var grid=document.querySelector('.hz-grid');if(!grid)return;
+  try{grid.innerHTML=arr.map(function(s,i){var no=('0'+(i+1)).slice(-2);
+    return '<a class="hz-card rv" href="#hz-'+no+'"><span class="no">'+no+'</span><span class="hz-ic">'+dnSvcIcon(s.icon)+'</span><h3>'+_leD(s.title||'')+'</h3><p>'+_leD(s.desc||'')+'</p><span class="go">İncele →</span></a>';
+  }).join('');}catch(e){}
+}
+/* AI çıktısındaki JSON'u toleranslı ayrıştır (markdown/çerçeve temizle) */
+function dnJsonParse(txt){if(!txt)return null;var s=(''+txt).replace(/```json/gi,'').replace(/```/g,'').trim();
+  var a=s.indexOf('{'),b=s.lastIndexOf('}');if(a<0||b<=a)return null;try{return JSON.parse(s.slice(a,b+1));}catch(e){return null;}}
+function dnContentPrompt(id,firm){id=id||{};
+  return '[GÖREV] Bir gayrimenkul DANIŞMANI web sitesi için Türkçe kurumsal içerik üret.\n'
+    +'Danışman/marka: "'+firm+'". Uzmanlık: "'+(id.uzmanlik||'lüks konut danışmanlığı')+'". '
+    +'Şehir/bölge: "'+(id.sehir||'İstanbul')+'". Deneyim: "'+(id.deneyim||'')+' yıl". '
+    +'Ton: "'+(id.ton||'prestijli, güven veren, sıcak')+'". Hedef kitle: "'+(id.hedefKitle||'üst segment alıcı ve yatırımcılar')+'". '
+    +'Öne çıkan hizmetler: "'+(id.hizmetler||'')+'". Temel vaad: "'+(id.vaad||'')+'".\n'
+    +'SADECE aşağıdaki şemada GEÇERLİ JSON döndür (markdown, açıklama, kod bloğu YOK):\n'
+    +'{"heroEb":"kısa üst etiket","heroT1":"hero başlık 1. satır","heroT2":"hero başlık 2. satır (italik tamamlayıcı)",'
+    +'"heroLede":"1-2 cümle hero açıklaması","intelText":"veri/güven odaklı 1 cümle","homeAboutBody":"ana sayfa hakkımda paragrafı (2 cümle)",'
+    +'"hk_eyebrow":"hakkımızda üst etiket","hk_role":"unvan/rol satırı","hk_lede":"hakkımızda giriş paragrafı (2-3 cümle)","hk_body":"hakkımızda sayfası ana paragraf (3-4 cümle)",'
+    +'"hz_eyebrow":"hizmetler üst etiket","hz_lede":"hizmetler hero açıklaması (1-2 cümle)",'
+    +'"services":[{"title":"hizmet adı","desc":"1 cümle fayda","icon":"home|key|building|land|chart|shield|star|hand"}]}\n'
+    +'6-8 hizmet üret. Gerçekçi ol; abartılı/yanıltıcı/garanti vaat YOK; SPK ve yasal mevzuata uygun; "en ucuz/kesin kâr" gibi ifadeler kullanma.';
+}
+function _dnPickAns(r){return r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||(typeof r==='string'?r:''));}
+async function dnGenContent(){
+  var id=dnIdentGet();var firm=(typeof saasResolve==='function'&&saasResolve('brandName'))||(typeof brandName==='function'&&brandName())||'firma';
+  var r=await aiChat({prompt:aiGuard(dnContentPrompt(id,firm))},{temperature:0.6,max_tokens:2400,timeout:60000});
+  var data=dnJsonParse(_dnPickAns(r));
+  return {data:data,raw:r};
+}
 /* ===================== FİRMA KÜNYE (dn_firma → SAAS_CONFIG.firma) ===================== */
 function firmaLoad(){try{var f=JSON.parse(localStorage.getItem('dn_firma')||'null');if(f&&typeof f==='object'){SAAS_CONFIG.firma=Object.assign({},SAAS_CONFIG.firma||{},f);if(f.advisor)SAAS_CONFIG.advisorName=f.advisor;}}catch(e){}}
 function crmRenderFirma(){var host=document.getElementById('crmFirma');if(!host)return;var f=SAAS_CONFIG.firma||{};var e=f.eids||{};
