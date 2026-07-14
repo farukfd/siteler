@@ -425,8 +425,8 @@ function obFinish(){obCollect();if(!(OB.brand||OB.advisor)){OB.step=1;obRender()
     obClose();toast('✓ Kurulum tamam! '+(OB.brand||OB.advisor)+' yayında.'+(OB.key?'':' (ProX anahtarını admin→ProX/EİDS\'ten ekleyebilirsiniz.)'));
   }catch(e){toast('Kurulumda hata: '+(e&&e.message||e));}}
 window.openOnboarding=openOnboarding;window.obGo=obGo;window.obClose=obClose;window.obFinish=obFinish;
-window.addEventListener('hashchange',function(){if(location.hash==='#kur')openOnboarding();});
-window.addEventListener('load',function(){try{if(location.hash==='#kur')setTimeout(openOnboarding,500);}catch(e){}});
+window.addEventListener('hashchange',function(){if(location.hash==='#kur')openOnboarding();if(location.hash==='#blog'&&typeof navGo==='function')navGo('blog');});
+window.addEventListener('load',function(){try{if(location.hash==='#kur')setTimeout(openOnboarding,500);if(location.hash==='#blog')setTimeout(function(){try{if(typeof navGo==='function')navGo('blog');}catch(e){}},450);}catch(e){}});
 function initSaaSTheme(){const r=document.documentElement.style;const a=saasResolve('accent'),a2=saasResolve('accent2'),as=saasResolve('accentSoft');if(a){r.setProperty('--accent',a);r.setProperty('--gold',a);}if(a2)r.setProperty('--accent-2',a2);if(as)r.setProperty('--gold-soft',as);}
 function applySaaSSettings(){
   const title=saasResolve('metaTitle');if(title)document.title=title;
@@ -1221,7 +1221,7 @@ function cmsMerge(part){var c=cmsGet();Object.keys(part||{}).forEach(function(k)
   try{localStorage.setItem(CMS_KEY,JSON.stringify(c));}catch(e){}try{applyContent();}catch(e){}return c;}
 /* CMS alan tanımı: [id, dn_content anahtarı, etiket, textarea?, placeholder] — sayfaya göre gruplu */
 var CMS_FIELDS={
-  home:[['cms_eb','heroEb','Hero Üst Etiket',0,'Kişiye Özel Emlak Danışmanlığı · Yetki Belgeli'],['cms_t1','heroT1','Hero Başlık 1. satır',0,'Gayrimenkulünüz,'],['cms_t2','heroT2','Hero Başlık 2. satır (italik)',0,'gerçek değerine ulaşsın.'],['cms_lede','heroLede','Hero Açıklama',1,'18 yılı aşkın deneyim ve canlı ProX bölge verisiyle…'],['cms_intel','intelText','"Rakamlar konuşur" bölüm metni',1,'Her mahalle için güncel m² değeri, yıllık değişim ve yatırım skoru…'],['cms_habout','homeAboutBody','Ana Sayfa "Hakkımda" Paragrafı',1,'Her gayrimenkul, doğru alıcısıyla buluşmayı hak eder…']],
+  home:[['cms_eb','heroEb','Hero Üst Etiket',0,'Kişiye Özel Emlak Danışmanlığı · Yetki Belgeli'],['cms_t1','heroT1','Hero Başlık 1. satır',0,'Gayrimenkulünüz,'],['cms_t2','heroT2','Hero Başlık 2. satır (italik)',0,'gerçek değerine ulaşsın.'],['cms_lede','heroLede','Hero Açıklama',1,'18 yılı aşkın deneyim ve canlı ProX bölge verisiyle…'],['cms_intel','intelText','"Rakamlar konuşur" bölüm metni',1,'Her mahalle için güncel m² değeri, yıllık değişim ve yatırım skoru…'],['cms_habout','homeAboutBody','Ana Sayfa "Hakkımda" Paragrafı',1,'Her gayrimenkul, doğru alıcısıyla buluşmayı hak eder…'],['cms_refeb','ref_eyebrow','Referanslar Üst Etiket',0,'Referanslar · Müşteri Deneyimi'],['cms_reft','ref_title','Referanslar Başlık',0,'Güven, sonuçla kazanılır.']],
   hakkimizda:[['cms_hkeb','hk_eyebrow','Üst Etiket',0,'Kişisel Temsil · Yetki Belgeli'],['cms_hkrole','hk_role','Rol / Unvan satırı',0,'Kıdemli Lüks Konut & Özel Portföy Danışmanı · İstanbul'],['cms_hklede','hk_lede','Giriş Paragrafı',1,'Bir gayrimenkul, doğru isimle taçlandırıldığında…'],['cms_hkbody','hk_body','Hakkımda Sayfası Ana Paragraf',1,'Kariyerime İstanbul\'un en rekabetçi pazarında başladım…']],
   hizmetlerimiz:[['cms_hzeb','hz_eyebrow','Üst Etiket',0,'Kişiye Özel · Uçtan Uca Danışmanlık'],['cms_hzlede','hz_lede','Hero Açıklama',1,'Alım-satımdan kiralamaya, değerlemeden yatırım analizine…']]
 };
