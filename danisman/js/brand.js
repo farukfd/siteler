@@ -88,6 +88,8 @@
     ['meta[name="description"]', 'meta[property="og:title"]', 'meta[property="og:description"]', 'meta[property="og:site_name"]', 'meta[name="author"]', 'meta[name="twitter:title"]', 'meta[name="twitter:description"]'].forEach(function (sel) {
       var m = document.querySelector(sel); if (m && m.content && m.content.indexOf(DEFAULT_NAME) >= 0) m.content = m.content.split(DEFAULT_NAME).join(nm);
     });
+    // JSON-LD yapısal veri (SEO markası) — kendi #dn-org-ld hariç sayfa şemalarını da yerelleştir
+    document.querySelectorAll('script[type="application/ld+json"]').forEach(function (s) { if (s.id === "dn-org-ld") return; var v = s.textContent; if (v && v.indexOf(DEFAULT_NAME) >= 0) s.textContent = v.split(DEFAULT_NAME).join(nm); });
     if (document.body) replaceTextNodes(document.body, DEFAULT_NAME, nm);
   }
 
