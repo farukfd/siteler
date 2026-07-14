@@ -31,6 +31,9 @@ const SAAS_CONFIG={
   }
 };
 function saasResolve(key){const t=SAAS_CONFIG.tenantSettings,s=SAAS_CONFIG.systemSettings;if(t&&t[key]!=null&&t[key]!=='')return t[key];return s?s[key]:undefined;}
+/* WHITE-LABEL logo harfi — tek kaynak (favicon/brand.js ile birebir aynı kural):
+   admin override (dn_brand.initial) > reseller adının ilk harfi > 'M' (Meridyen ailesi, varsayılan). */
+function _brandInitial(){try{var b=(window.dnGetBrand?dnGetBrand():{})||{};if(b.initial&&(''+b.initial).trim())return (''+b.initial).trim().charAt(0).toLocaleUpperCase('tr');}catch(e){}var bn=saasResolve('brandName')||'';if(!bn||bn==='Selin Meridyen')return 'M';return bn.trim().charAt(0).toLocaleUpperCase('tr');}
 /* ===================== EİDS — Elektronik İlan Doğrulama (danışman) =====================
    Açık ilan yayını EİDS yetkisi ister; VIP (davet usulü) portföy serbesttir.
    gerçek Bakanlık entegrasyonu için soyutlama: eidsConnect gerçek {firmaKod,kullaniciKodu}
@@ -435,7 +438,7 @@ function applySaaSSettings(){
   const bn=saasResolve('brandName');if(bn){const e=document.getElementById('brandName');if(e)e.textContent=bn;}
   /* logo görseli */
   const logo=saasResolve('logoUrl');const mark=document.getElementById('brandMark');
-  if(mark){if(logo){mark.classList.add('has-img');mark.innerHTML='<img src="'+logo+'" alt="logo">';}else{mark.classList.remove('has-img');mark.textContent=(bn||'M').trim().charAt(0).toUpperCase();}}
+  if(mark){if(logo){mark.classList.add('has-img');mark.innerHTML='<img src="'+logo+'" alt="logo">';}else{mark.classList.remove('has-img');mark.textContent=_brandInitial();}}
 }
 
 /* ---------- Toast ---------- */
@@ -537,7 +540,7 @@ function apptModuleHTML(){return '<div class="appt-card">'
 
 /* ---------- footer (tek kaynak, her sayfada birebir aynı) ---------- */
 function footerHTML(){return '<footer><div class="wrap"><div class="fcols">'
-  +'<div><div class="brand" onclick="goHome()"><span class="mark">'+_leD((saasResolve('brandName')||'M').trim().charAt(0))+'</span><span><b>'+_leD(saasResolve('brandName')||'Selin Meridyen')+'</b><small>Kişiye Özel Danışman</small></span></div><p>Yetki belgeli kişiye özel emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy ve ücretsiz gayrimenkul değer analizi.</p>'
+  +'<div><div class="brand" onclick="goHome()"><span class="mark">'+_leD(_brandInitial())+'</span><span><b>'+_leD(saasResolve('brandName')||'Selin Meridyen')+'</b><small>Kişiye Özel Danışman</small></span></div><p>Yetki belgeli kişiye özel emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy ve ücretsiz gayrimenkul değer analizi.</p>'
   +'<div class="fsocial">'
     +'<a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a>'
     +'<a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a>'
@@ -1431,7 +1434,7 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
    /* MARKA & LOGO */
    +'<div class="sta-pane" data-p="marka" hidden><h4>Marka, Logo & Tema</h4><p class="sub">Logo/favicon yükleyin veya URL girin; altın/şampanya tema tonunu ayarlayın.</p>'
      +'<div class="logo-prev"><div class="box" id="adLogoPrev">M</div><span>Mevcut logo önizleme</span></div>'
-     +'<div class="sta-f"><label>Marka Adı (logo yazısı)</label><input id="sl_brand" placeholder="Selin Meridyen"></div>'
+     +'<div class="sta-row2"><div class="sta-f"><label>Marka Adı <span style="color:var(--muted);font-weight:400">(white-label — TÜM sayfalarda “Selin Meridyen” yerine geçer)</span></label><input id="sl_brand" placeholder="Selin Meridyen"></div><div class="sta-f"><label>Logo Harfi <span style="color:var(--muted);font-weight:400">(boş = adın ilk harfi)</span></label><input id="sl_initial" maxlength="2" placeholder="M"></div></div>'
      +'<div class="sta-row2"><div class="sta-f"><label>Logo Yükle (dosya)</label><input type="file" accept="image/*" id="sl_logo_file" onchange="saasUploadImg(this,\'logoUrl\')"></div><div class="sta-f"><label>veya Logo URL</label><input id="sl_logo_url" placeholder="https://.../logo.png"></div></div>'
      +'<div class="sta-row2"><div class="sta-f"><label>🖥️ Tarayıcı Logosu · Favicon (dosya)</label><input type="file" accept="image/png,image/svg+xml,image/x-icon,image/*" id="sl_fav_file" onchange="dnBrandUpload(this,\'favicon\')"></div><div class="sta-f"><label>🔍 Google Arama Logosu (dosya)</label><input type="file" accept="image/png,image/jpeg,image/*" id="sl_glogo_file" onchange="dnBrandUpload(this,\'googleLogo\')"></div></div>'
      +'<div class="sta-ds ds-off" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px"><span style="flex:1;min-width:220px">Favicon; tarayıcı sekmesinde ve Google arama sonucu ikonunda görünür. Google logosu; arama bilgi panosunda (schema.org Organization) kullanılır. Yükleyince <b>anında tüm sayfalara</b> uygulanır — PNG/SVG, kare, ≤512 KB önerilir.</span><button type="button" class="btn btn-line" onclick="if(window.dnBrandReset)dnBrandReset()">↺ Varsayılana dön</button></div>'
@@ -1520,7 +1523,9 @@ function _refreshLogoPrev(){const box=document.getElementById('adLogoPrev');if(!
 function saasUploadImg(input,key){const f=input.files&&input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{SAAS_CONFIG.tenantSettings[key]=e.target.result;applySaaSSettings();_refreshLogoPrev();toast((key==='logoUrl'?'Logo':'Favicon')+' yüklendi & uygulandı.');};r.readAsDataURL(f);}
 function saasApplyBrand(){const t=SAAS_CONFIG.tenantSettings;const br=_v('sl_brand'),lu=_v('sl_logo_url'),fu=_v('sl_fav_url'),ac=_v('sl_accent'),sf=_v('sl_soft');
   if(br)t.brandName=br;if(lu)t.logoUrl=lu;if(fu)t.faviconUrl=fu;if(ac)t.accent=ac;if(sf)t.accentSoft=sf;
-  initSaaSTheme();applySaaSSettings();_refreshLogoPrev();toast('Marka, logo & tema uygulandı.');}
+  var li=_v('sl_initial');
+  if(window.dnSetBrand)dnSetBrand({name:(br||''),initial:(li||'')});  /* white-label: adı+logo harfini TÜM sayfalara (statik dahil) uygula */
+  initSaaSTheme();applySaaSSettings();_refreshLogoPrev();toast('Marka, logo & tema TÜM sayfalara uygulandı (white-label).');}
 function saasSaveSEO(){const t=SAAS_CONFIG.tenantSettings;t.googleAnalytics=_v('sg_ga');t.googleSiteVerification=_v('sg_gsc');t.googleMapsKey=_v('sg_maps');t.metaTitle=_v('sm_title')||t.metaTitle;t.metaDescription=_v('sm_desc');t.metaKeywords=_v('sm_kw');applySaaSSettings();toast('Google & SEO ayarları uygulandı.');}
 function saasSaveProxPrompt(){SAAS_CONFIG.tenantSettings.customPrompt=_v('sp_custom');
   var dk=document.getElementById('dn_dskey'),dm=document.getElementById('dn_dsmodel');
@@ -1586,6 +1591,10 @@ window.openSaasPortal=openSaasPortal;window.closeSaasPortal=closeSaasPortal;wind
 /* ---------- INIT ---------- */
 window.addEventListener('load',function(){try{
   _dsLoad();/* kalıcı DeepSeek anahtarını yükle (localStorage dn_dskey) */
+  /* WHITE-LABEL TEK KAYNAK: reseller adı yalnız dn_brand'de kalıcı (SAAS_CONFIG persist edilmez).
+     brand.js ile app.js'in AYNI adı kullanması için SAAS_CONFIG.brandName'i dn_brand'den senkronla;
+     yoksa app.js "Selin Meridyen" render eder, brand.js "Didem Keskin" → çakışma + geç-render sızıntısı. */
+  try{var _wl=JSON.parse(localStorage.getItem('dn_brand')||'{}');if(_wl&&_wl.name&&_wl.name.trim())SAAS_CONFIG.systemSettings.brandName=_wl.name.trim();}catch(e){}
   initSaaSTheme();applySaaSSettings();
   try{eidsRenderPublic();applySchema();applyProxyMode();abApply();}catch(e){}
   try{ilanLoad();}catch(e){}/* admin'de kaydedilmiş açık ilanları yükle (dn_listings_v1) */

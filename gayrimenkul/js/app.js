@@ -2358,6 +2358,9 @@ function brandLogos(){
       }
       if(jl&&jlHtml!=null)jl.innerHTML=jlHtml;
     });
+    /* white-label: marka adı değişince favicon + Google/Organization logosu da
+       (harften ÜRETİLEN) canlı yenilensin — brand.js tek doğruluk kaynağından türetir */
+    try{if(window.gmRefreshBrand)gmRefreshBrand();}catch(e){}
   }catch(e){}
 }
 window.brandLogos=brandLogos;window.brandActiveLogo=brandActiveLogo;
@@ -3993,7 +3996,10 @@ async function gmLang(v){var sel=document.querySelectorAll('.lang-sw select');
   var applied=_i18nOrig.map(function(o,i){var t=lines[i]||o.txt;if(lines[i])o.el.textContent=lines[i];return t;});
   try{localStorage.setItem(ckey,JSON.stringify({firma:firma,n:texts.length,tr:applied}));localStorage.setItem('wl_lang',v);}catch(e){}
   try{toast('✓ '+(v==='ar'?'العربية':'English')+' aktif.');}catch(e){}}
-function mountSiteChrome(){document.querySelectorAll('.siteNav').forEach(function(n){n.innerHTML=SITE_NAV;});document.querySelectorAll('.siteCta').forEach(function(c){c.innerHTML=SITE_CTA;});document.querySelectorAll('.siteFooter').forEach(function(f){f.innerHTML=SITE_FOOTER;});}
+function mountSiteChrome(){document.querySelectorAll('.siteNav').forEach(function(n){n.innerHTML=SITE_NAV;});document.querySelectorAll('.siteCta').forEach(function(c){c.innerHTML=SITE_CTA;});document.querySelectorAll('.siteFooter').forEach(function(f){f.innerHTML=SITE_FOOTER;});
+  /* white-label: geç enjekte edilen chrome (nav/footer/cta) SITE_FOOTER gibi sabit
+     "Meridyen Gayrimenkul" içeriyor → observer'a güvenmeden HEMEN yerelleştir */
+  try{if(typeof brandSweep==='function')brandSweep(document.body);}catch(e){}}
 mountSiteChrome();
 function gmDockSync(){try{var mb=document.querySelector('.mbar');if(!mb)return;var as=mb.querySelectorAll('a');for(var i=0;i<as.length;i++){if((as[i].className||'').indexOf('wa')<0)as[i].classList.remove('active');}var y=(window.scrollY||window.pageYOffset||0)+150;var il=document.getElementById('ilanlar'),hk=document.getElementById('hakkimizda');var idx=0;if(il&&y>=il.offsetTop)idx=0;if(hk&&y>=hk.offsetTop)idx=1;if(as[idx]&&(as[idx].className||'').indexOf('wa')<0)as[idx].classList.add('active');}catch(e){}}
 addEventListener('scroll',gmDockSync,{passive:true});setTimeout(gmDockSync,120);

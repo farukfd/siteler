@@ -124,7 +124,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   <link rel="stylesheet" href="css/base.css?v=21">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg">
-<script src="js/brand.js?v=1"></script>
+<script src="js/brand.js?v=2"></script>
 </head>
 <body>
 <div id="site">
@@ -943,6 +943,10 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
             <div class="aupload" onclick="document.getElementById('sl_favFile').click()">🔖 Bilgisayardan favicon yükle · 32×32 / 64×64 PNG</div>
             <input type="file" id="sl_favFile" accept="image/png,image/x-icon,image/svg+xml,image/*" style="display:none" onchange="saasLogoFile(this,'favicon')">
             <input id="sl_favicon" placeholder="https://.../favicon.png" style="margin-top:8px">
+          </div>
+          <div class="afield"><label>Logo Harfi <span style="color:var(--muted);font-weight:400">(otomatik: marka adının baş harfi · isterseniz elle)</span></label>
+            <input id="sl_initial" maxlength="1" placeholder="Otomatik (M → D)" style="max-width:130px;text-transform:uppercase" oninput="if(window.gmSetBrand)gmSetBrand({initial:this.value.trim()})">
+            <div class="csub" style="margin-top:6px">Firma künyesinde <b>Marka Adı</b>'nı değiştirince (ör. Meridyen → Didem Keskin) tarayıcı ve Google logosundaki harf <b>otomatik</b> döner. Görsel favicon yüklerseniz harf yerine o kullanılır.</div>
           </div>
           <div class="afield"><label>Google Arama Logosu <span style="color:var(--muted);font-weight:400">(Google bilgi panosu · schema.org Organization)</span></label>
             <div class="aupload" onclick="document.getElementById('sl_glogoFile').click()">🔍 Google arama logosu yükle · kare/dikdörtgen PNG (maks ~512KB)</div>
@@ -1957,11 +1961,11 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   </div>
 </div>
 
-  <script src="js/app.js?v=23"></script>
+  <script src="js/app.js?v=24"></script>
   <script src="js/hero-pusula.js?v=2"></script>
   <script src="js/mahalle-endeks.js?v=8"></script>
   <script src="js/kurumsal-sayfalar.js?v=4"></script>
-  <script src="js/uyelik-asistan.js?v=12"></script>
+  <script src="js/uyelik-asistan.js?v=13"></script>
 </body>
 </html>
 

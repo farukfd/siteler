@@ -53,7 +53,8 @@
     if(lb)lb.classList.toggle('act',t==='login');if(rb)rb.classList.toggle('act',t==='register');
     if(tabs)tabs.style.display=(t==='login'||t==='register')?'flex':'none';
     var tt=document.getElementById('gm_title');
-    if(tt)tt.textContent=(t==='register')?'Meridyen Gayrimenkul · Kayıt Ol':(t==='profile')?'Hesabım':(t==='kurumsal')?'Kurumsal Erişim':'Meridyen Gayrimenkul · Üye Girişi';
+    var _bn=(typeof brandName==='function'?brandName():'Meridyen Gayrimenkul');  /* white-label: sabit marka değil */
+    if(tt)tt.textContent=(t==='register')?(_bn+' · Kayıt Ol'):(t==='profile')?'Hesabım':(t==='kurumsal')?'Kurumsal Erişim':(_bn+' · Üye Girişi');
   }
   async function authDoLogin(){var err=document.getElementById('au_lerr');err.style.color='#ff8a8a';var r=await authLogin((document.getElementById('au_lemail')||{}).value,(document.getElementById('au_lpass')||{}).value);if(r.err){err.textContent='⚠ '+r.err;return;}err.style.color='#4ade80';err.textContent='✓ Giriş başarılı, hoş geldiniz.';setTimeout(closeGiris,650);}
   async function authDoRegister(){var err=document.getElementById('au_rerr');err.style.color='#ff8a8a';var kv=document.getElementById('au_rkvkk');if(kv&&!kv.checked){err.textContent='⚠ Lütfen KVKK onayı verin.';return;}var r=await authRegister((document.getElementById('au_rname')||{}).value,(document.getElementById('au_remail')||{}).value,(document.getElementById('au_rpass')||{}).value);if(r.err){err.textContent='⚠ '+r.err;return;}err.style.color='#4ade80';err.textContent='✓ Hesabınız oluşturuldu, giriş yapıldı.';setTimeout(closeGiris,750);}
@@ -336,6 +337,9 @@
       +'<div class="hs-pane hs-rv" id="hs_teklifler"><div class="hs-card hs-quickq"><h3>⚡ Hızlı Teklif / Talep</h3><label>Konu</label><select id="hq_konu"><option>Satılık ev / daire arıyorum</option><option>Kiralık arıyorum</option><option>Mülkümü satmak istiyorum</option><option>Mülkümü kiraya vermek istiyorum</option><option>Değerleme / ekspertiz</option><option>Yatırım danışmanlığı</option><option>Özel Portföy erişimi</option></select><label>Mesajınız</label><textarea id="hq_mesaj" placeholder="İlçe, bütçe, kaç oda, m²… kısaca yazın"></textarea><button class="hs-btn" onclick="hesapQuickQuote()">Gönder →</button><div class="hs-msg" id="hq_msg"></div><div class="hs-qnote">Talebiniz ProX doğrulanmış emlak verisiyle ön değerlendirilir; danışmanımız kısa sürede detaylandırır.</div></div><div class="hs-qlist" id="hs_qlist"></div></div>'
       +'</div></div></div>';
     document.body.appendChild(wrap);
+    /* white-label: modal/asistan/hesap içinde sabit "Meridyen Gayrimenkul" + logo (.js-logo/.mark)
+       geç enjekte edildi → observer'a güvenmeden HEMEN yerelleştir (default'ta no-op) */
+    try{if(typeof brandSweep==='function')brandSweep(document.body);}catch(e){}
   }
 
   /* ===================== 6) NAV/ADMIN/FAVORİ BAĞLAMA + BOOT ===================== */
