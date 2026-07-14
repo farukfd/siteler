@@ -900,3 +900,25 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 .blog-article p:first-child{font-size:18px;color:var(--ink)}
 .blog-cta{margin-top:34px;padding:26px;background:var(--panel-2);border:1px solid var(--line);border-radius:16px;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
 .blog-cta b{font-family:var(--serif);font-size:19px;color:var(--ink)}
+
+/* ================= İLAN / ÖZEL PORTFÖY KARTLARI — premium görsel (v2) ================= */
+.vcard{border:1px solid var(--line-on-em,rgba(220,195,137,.16));border-radius:15px;overflow:hidden;transition:transform .4s cubic-bezier(.2,.75,.2,1),box-shadow .4s,border-color .4s;background:linear-gradient(180deg,rgba(255,255,255,.015),transparent)}
+.vcard:hover{transform:translateY(-7px);box-shadow:0 26px 64px rgba(0,0,0,.42);border-color:rgba(220,195,137,.42)}
+.vault .vcard-img,#homeView #ilanlar .vcard-img,#ilanlar .vcard-img,.oz-grid .vcard-img,.il-grid .vcard-img,.vault .vcard-img{background:linear-gradient(158deg,#12684a 0%,#0c3f2c 52%,#08201a 100%)!important}
+/* mimari silüet katmanı — hero ile uyumlu, fotoğraf yoksa premium doku */
+.vcard-img::before{content:"";position:absolute;left:-2%;right:-2%;bottom:0;height:70%;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20400%20140%22%20fill%3D%22none%22%20stroke%3D%22%23dcc389%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M0%20140%20V95%20H34%20V70%20H70%20V112%20H96%20V55%20H128%20V86%20H150%20V40%20H186%20V78%20H210%20V102%20H240%20V60%20H272%20V90%20H300%20V48%20H336%20V82%20H364%20V108%20H400%20V140%22/%3E%3Cpath%20d%3D%22M150%2040%20L168%2024%20L186%2040%22/%3E%3Cpath%20d%3D%22M300%2048%20V38%22%20stroke-width%3D%221%22/%3E%3Cpath%20d%3D%22M128%2055%20V47%22%20stroke-width%3D%221%22/%3E%3Cg%20stroke-width%3D%220.9%22%20opacity%3D%220.75%22%3E%3Cpath%20d%3D%22M44%2084h14M44%2095h14%22/%3E%3Cpath%20d%3D%22M104%2068h16M104%2082h16M104%2096h16%22/%3E%3Cpath%20d%3D%22M158%2056h20M158%2068h20%22/%3E%3Cpath%20d%3D%22M218%2078h14M218%2090h14%22/%3E%3Cpath%20d%3D%22M280%2066h12M280%2078h12%22/%3E%3Cpath%20d%3D%22M344%2064h12M344%2078h12M344%2092h12%22/%3E%3C/g%3E%3C/svg%3E") no-repeat center bottom;background-size:104% auto;opacity:.42;pointer-events:none;transition:transform .6s cubic-bezier(.2,.75,.2,1),opacity .5s;z-index:0}
+.vcard:hover .vcard-img::before{opacity:.6;transform:scale(1.05) translateY(-2px)}
+.vcard-img>*{position:relative;z-index:1}
+/* rafine ikon (silüetin üstünde) */
+.vcard-img svg{width:36%!important;opacity:.5;filter:drop-shadow(0 8px 22px rgba(0,0,0,.35))}
+.vcard:hover .vcard-img svg{opacity:.72;transform:scale(1.04)}
+/* gerçek fotoğraf — silüeti örter */
+.vcard-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;transition:transform .7s cubic-bezier(.2,.75,.2,1)}
+.vcard:hover .vcard-photo{transform:scale(1.06)}
+/* alttan yumuşak koyu degrade — başlık okunurluğu + derinlik */
+.vcard-img::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(4,20,15,.55),transparent 46%);pointer-events:none;z-index:3}
+/* durum etiketi + kilit rozeti */
+.vcard-tag{z-index:4}
+.vcard-lock{z-index:4}
+/* faint alt-etiket okunurluğu (Başlangıç · Yetki Belgeli / SATILIK) */
+.vcard-price span{color:var(--gold-ink,#c9a94e)!important;opacity:.92!important;letter-spacing:.04em}
