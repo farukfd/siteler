@@ -76,3 +76,35 @@
     } else { ready(boot); }
   } catch (e) { ready(boot); }
 })();
+
+/* ===================================================================
+   ÇEREZ ONAY BANDI (KVKK/ePrivacy) — tüm sayfalarda; seçim localStorage.dn_cookie'de.
+   Bağımsız, hafif; app.js gerektirmez. Zorunlu/tüm çerez ayrımı.
+   =================================================================== */
+(function () {
+  function ready(fn) { if (document.body) fn(); else document.addEventListener("DOMContentLoaded", fn); }
+  var KEY = "dn_cookie";
+  function choice() { try { return localStorage.getItem(KEY); } catch (e) { return "1"; } }
+  window.dnCookieChoose = function (v) { try { localStorage.setItem(KEY, v); } catch (e) {} var el = document.getElementById("dnCookieBar"); if (el) el.classList.remove("on"); };
+  ready(function () {
+    if (choice()) return;
+    if (document.getElementById("dnCookieBar")) return;
+    var st = document.createElement("style");
+    st.textContent = "#dnCookieBar{position:fixed;left:16px;right:16px;bottom:16px;z-index:9998;max-width:760px;margin:0 auto;background:#0a3527;color:#f4efe4;border:1px solid rgba(220,195,137,.4);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.4);padding:18px 20px;display:none;font-family:'Jost',system-ui,sans-serif}"
+      + "#dnCookieBar.on{display:flex;flex-wrap:wrap;align-items:center;gap:14px}"
+      + "#dnCookieBar p{margin:0;flex:1;min-width:240px;font-size:14px;line-height:1.6;font-weight:300}"
+      + "#dnCookieBar a{color:#dcc389;text-decoration:underline}"
+      + "#dnCookieBar .dnck-act{display:flex;gap:10px;flex-wrap:wrap}"
+      + "#dnCookieBar button{cursor:pointer;border-radius:999px;padding:10px 18px;font-size:13.5px;font-weight:500;border:1px solid rgba(220,195,137,.5);background:transparent;color:#f4efe4;transition:.2s}"
+      + "#dnCookieBar button.p{background:linear-gradient(160deg,#dcc389,#b8912f);color:#0a3527;border-color:transparent}"
+      + "#dnCookieBar button:hover{transform:translateY(-1px)}"
+      + "@media(max-width:560px){#dnCookieBar .dnck-act{width:100%}#dnCookieBar button{flex:1}}";
+    document.head.appendChild(st);
+    var bar = document.createElement("div");
+    bar.id = "dnCookieBar"; bar.setAttribute("role", "dialog"); bar.setAttribute("aria-label", "Çerez tercihi");
+    bar.innerHTML = '<p>Bu sitede deneyiminizi iyileştirmek için çerezler kullanıyoruz. Ayrıntılar için <a href="cerez.html">Çerez Politikası</a>\'na göz atabilirsiniz.</p>'
+      + '<div class="dnck-act"><button onclick="dnCookieChoose(\'essential\')">Yalnızca Zorunlu</button><button class="p" onclick="dnCookieChoose(\'accept\')">Tümünü Kabul Et</button></div>';
+    document.body.appendChild(bar);
+    setTimeout(function () { bar.classList.add("on"); }, 900);
+  });
+})();
