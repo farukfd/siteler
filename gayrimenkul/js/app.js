@@ -4477,7 +4477,8 @@ function saasLogoFile(input,which){
   if(f.size>2*1024*1024){if(typeof toast==='function')toast('Dosya çok büyük (maks ~2MB). Daha küçük/optimize bir logo yükleyin.');input.value='';return;}
   var rd=new FileReader();
   rd.onload=function(e){var url=e.target.result;
-    if(which==='favicon'){try{SAAS_CONFIG.tenantSettings.faviconUrl=url;}catch(x){}var fi=document.getElementById('sl_favicon');if(fi)fi.value=url;if(typeof applySaaSSettings==='function')applySaaSSettings();if(typeof toast==='function')toast('✓ Favicon yüklendi ve tarayıcı sekmesine uygulandı.');return;}
+    if(which==='favicon'){try{SAAS_CONFIG.tenantSettings.faviconUrl=url;}catch(x){}var fi=document.getElementById('sl_favicon');if(fi)fi.value=url;if(typeof applySaaSSettings==='function')applySaaSSettings();if(window.gmSetBrand)gmSetBrand({favicon:url});if(typeof toast==='function')toast('✓ Tarayıcı logosu (favicon) yüklendi — TÜM sayfalara ve Google arama ikonuna uygulandı.');return;}
+    if(which==='googleLogo'){if(window.gmSetBrand)gmSetBrand({googleLogo:url});if(typeof toast==='function')toast('✓ Google arama logosu yüklendi (bilgi panosu / Organization).');return;}
     try{if(FIRMA)FIRMA.logo=url;}catch(x){}try{SAAS_CONFIG.tenantSettings.logoUrl=url;}catch(x){}
     if(typeof saveAll==='function')saveAll();
     if(typeof brandLogos==='function')brandLogos();

@@ -122,6 +122,9 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   <!-- TEMA: themes kütüphanesinden seç (tenant başına değiştir). Aktif: Meridyen -->
   <link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=3">
   <link rel="stylesheet" href="css/base.css?v=21">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg">
+<script src="js/brand.js?v=1"></script>
 </head>
 <body>
 <div id="site">
@@ -940,6 +943,11 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
             <div class="aupload" onclick="document.getElementById('sl_favFile').click()">🔖 Bilgisayardan favicon yükle · 32×32 / 64×64 PNG</div>
             <input type="file" id="sl_favFile" accept="image/png,image/x-icon,image/svg+xml,image/*" style="display:none" onchange="saasLogoFile(this,'favicon')">
             <input id="sl_favicon" placeholder="https://.../favicon.png" style="margin-top:8px">
+          </div>
+          <div class="afield"><label>Google Arama Logosu <span style="color:var(--muted);font-weight:400">(Google bilgi panosu · schema.org Organization)</span></label>
+            <div class="aupload" onclick="document.getElementById('sl_glogoFile').click()">🔍 Google arama logosu yükle · kare/dikdörtgen PNG (maks ~512KB)</div>
+            <input type="file" id="sl_glogoFile" accept="image/png,image/jpeg,image/svg+xml,image/*" style="display:none" onchange="saasLogoFile(this,'googleLogo')">
+            <div class="csub" style="margin-top:6px">Favicon + Google logosu <b>tüm sayfalara anında</b> uygulanır ve arama motorlarına (Organization JSON-LD) bildirilir.</div>
           </div>
           <div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap">
             <button class="btn btn-primary btn-sm" onclick="saasApplyLogo()">URL'den Uygula & Temayı Uyarla</button>
@@ -1949,7 +1957,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   </div>
 </div>
 
-  <script src="js/app.js?v=22"></script>
+  <script src="js/app.js?v=23"></script>
   <script src="js/hero-pusula.js?v=2"></script>
   <script src="js/mahalle-endeks.js?v=8"></script>
   <script src="js/kurumsal-sayfalar.js?v=4"></script>
