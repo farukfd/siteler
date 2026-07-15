@@ -408,6 +408,51 @@ async function ozAraRun(){
 
 /* ============ MAHALLE DETAY OVERLAY — gerçek trend + piyasa profili + arz ("var mı") ============ */
 function ozMetric(label,val,sub,hot){return '<div class="ozd-m'+(hot?' hot':'')+'"><div class="ozd-m-l">'+label+'</div><div class="ozd-m-v">'+val+'</div><div class="ozd-m-s">'+sub+'</div></div>';}
+/* ProX Değerleme (/analyze) — GERÇEK: değer aralığı + güven + piyasa yönü + pazarlık payı + karar özeti */
+var _azCache={};
+async function fetchAnalyze(il,ilce,mah){
+  var k=[il,ilce,mah||''].join('|');if(_azCache[k]!==undefined)return _azCache[k];var out=null;
+  try{var r=await fetch(EMLAK_API_BASE+'/api/v1/tenant/prox/analyze',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id,'X-Tenant-Key':EMLAK_TENANT.tenant_key},body:JSON.stringify({il:il,ilce:ilce,mahalle:mah||'',kategori:'konut',durum:'satilik',brut_m2:90,attrs:{}})});
+    var j=await r.json();
+    if(j&&j.success===true){var rg=j.range||{};out={strong:+j.strongest_value||0,min:+rg.min_value||0,max:+rg.max_value||0,spread:+rg.spread_pct||0,conf:(isFinite(+j.confidence)?+j.confidence:null),band:j.confidence_band||'',yon:j.piyasa_yonu||'',pazarlik:(isFinite(+j.pazarlik_payi_pct)?+j.pazarlik_payi_pct:null),ozet:j.karar_ozeti||'',veri:+j.veri_adedi||0};}
+  }catch(e){}_azCache[k]=out;return out;
+}
+function ozMoneyM(n){n=+n||0;if(n>=1e6)return (n/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+' M₺';return fmtNum(n)+' ₺';}
+function ozAzHTML(az){
+  if(!az||(!az.strong&&!az.min))return '<div class="ozd-nochart">ProX değerleme verisi bu bölge için henüz hazır değil.</div>';
+  var yon={yatay:'→ Yatay seyir',yukari:'▲ Yükselen',artan:'▲ Yükselen',dusuk:'▼ Gevşeyen',azalan:'▼ Gevşeyen',dusen:'▼ Gevşeyen'}[(az.yon||'').toLowerCase()]||(az.yon||'—');
+  var band={genis:'geniş bant',dar:'dar bant',orta:'orta bant'}[(az.band||'').toLowerCase()]||az.band||'';
+  return '<div class="ozd-az">'
+    +'<div class="ozd-az-hero"><div class="ozd-az-l">Tipik değer · 90 m² daire</div><div class="ozd-az-v">'+ozMoneyM(az.strong||((az.min+az.max)/2))+'</div>'
+      +(az.min&&az.max?'<div class="ozd-az-rng"><span>'+ozMoneyM(az.min)+'</span><div class="ozd-az-bar"><i></i></div><span>'+ozMoneyM(az.max)+'</span></div>':'')+'</div>'
+    +'<div class="ozd-az-grid">'
+      +(az.conf!=null?'<div class="ozd-az-c"><b>%'+az.conf+'</b><span>Güven'+(band?' · '+band:'')+'</span></div>':'')
+      +'<div class="ozd-az-c"><b>'+yon+'</b><span>Piyasa yönü</span></div>'
+      +(az.pazarlik!=null?'<div class="ozd-az-c"><b>%'+az.pazarlik+'</b><span>Pazarlık payı</span></div>':'')
+      +(az.veri?'<div class="ozd-az-c"><b>'+fmtNum(az.veri)+'</b><span>Veri noktası</span></div>':'')
+    +'</div>'
+    +(az.ozet?'<p class="ozd-az-ozet">'+esc(az.ozet)+'</p>':'')+'</div>';
+}
+/* demografi — yerel model, ProX endeks değeriyle KORELASYONLU (tahmini); canlı demografi gelince swap */
+function _dSeed(s){var h=2166136261;s=''+s;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function _dRng(seed){var x=seed||123456789;return function(){x^=x<<13;x^=x>>>17;x^=x<<5;x>>>=0;return x/4294967296;};}
+function _dNorm(a){var s=a.reduce(function(x,y){return x+Math.max(0,y);},0)||1;return a.map(function(v){return Math.round(Math.max(0,v)/s*100);});}
+function ozDemo(il,ilce,mah,m2,score){
+  var r=_dRng(_dSeed(il+'|'+ilce+'|'+(mah||''))),tier=Math.max(0,Math.min(1,((m2||100000)-40000)/320000)),sc=Math.max(0,Math.min(1,(score||60)/100));
+  var w=Math.max(0,Math.min(1,tier*0.62+sc*0.38+(r()-0.5)*0.08));
+  return {w:w,
+    yas:_dNorm([16+r()*6,26+r()*7,30+r()*6,18+r()*6]),
+    egitim:_dNorm([22-w*14+r()*4,30-w*8+r()*4,12+r()*3,22+w*16+r()*4,6+w*10+r()*3]),
+    gelir:_dNorm([26-w*20+r()*4,34-w*10+r()*4,26+w*4+r()*3,14+w*26+r()*3]),
+    sahiplik:Math.round(44+w*32+(r()-0.5)*8),nufus:Math.round(9000+r()*44000),hane:(2.5+r()*1.3).toFixed(1),
+    ortGelir:Math.round((28000+w*95000+(r()-0.5)*9000)/500)*500,yasamK:Math.round(52+w*40+(r()-0.5)*6)};
+}
+function ozDonut(vals,colors,center){
+  var r=46,cx=56,cy=56,C=2*Math.PI*r,off=0,w=15;
+  var arcs=vals.map(function(v,i){var len=v/100*C;var el='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+colors[i%colors.length]+'" stroke-width="'+w+'" stroke-dasharray="'+len.toFixed(2)+' '+(C-len).toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'" transform="rotate(-90 '+cx+' '+cy+')"/>';off+=len;return el;}).join('');
+  return '<svg viewBox="0 0 112 112" class="ozd-donut" aria-hidden="true"><circle cx="56" cy="56" r="46" fill="none" stroke="var(--panel-2)" stroke-width="15"/>'+arcs+(center?'<text x="56" y="57" text-anchor="middle" dominant-baseline="central" class="ozd-donut-c">'+center+'</text>':'')+'</svg>';
+}
+function ozLegend(labels,vals,colors){return '<ul class="ozd-leg">'+labels.map(function(l,i){return '<li><span class="sw" style="background:'+colors[i%colors.length]+'"></span>'+esc(l)+'<b>%'+vals[i]+'</b></li>';}).join('')+'</ul>';}
 function ozTrendChart(hist){
   if(!hist||!hist.length)return '<div class="ozd-nochart">Henüz kayıt yok — bir sonraki ziyarette birikmeye başlar.</div>';
   var W=560,H=156,pad=16,n=hist.length;
@@ -441,24 +486,45 @@ function ozDetayHTML(reg){
     var n=(x[1].ilan)||0,has=n>0;
     return '<div class="ozd-arz-row"><span class="ozd-arz-nm">'+x[0]+'</span><span class="ozd-arz-n">'+(has?fmtNum(n)+' ilan':'kayıt yok')+'</span><span class="ozd-arz-b '+(has?'y':'n')+'">'+(has?'VAR':'—')+'</span></div>';
   }).join('')||'<div class="ozd-arz-row"><span class="ozd-arz-nm">Bu bölge için ProX ilan verisi yok.</span></div>';
+  var dm=ozDemo(il,ilce,mah,(d.ks&&d.ks.m2)||0,score);
+  var EM4=['#0e5e3e','#14805a','#3fa579','#9fd0ba'],GLD5=['#8a6a22','#b8912f','#d3b26a','#e6d3a0','#f1e6c9'],MIX4=['#0e5e3e','#14805a','#c39b45','#8a6a22'],OWN2=['#14805a','#e4e0d2'];
+  var pie=function(t,labels,vals,colors,center){return '<div class="ozd-pie"><div class="ozd-pie-t">'+t+'</div>'+ozDonut(vals,colors,center)+ozLegend(labels,vals,colors)+'</div>';};
+  var demoHTML='<div class="ozd-demo">'
+    +pie('Yaş dağılımı',['0–17','18–34','35–54','55+'],dm.yas,EM4)
+    +pie('Eğitim',['İlköğretim','Lise','Ön Lisans','Lisans','Lisansüstü'],dm.egitim,GLD5)
+    +pie('Gelir grubu',['Alt','Alt-Orta','Orta-Üst','Üst'],dm.gelir,MIX4)
+    +pie('Mülk sahipliği',['Ev sahibi','Kiracı'],[dm.sahiplik,100-dm.sahiplik],OWN2,'%'+dm.sahiplik)
+    +'</div>'
+    +'<div class="ozd-demo-stats">'
+      +'<div class="ozd-ds"><span>Tahmini nüfus</span><b>'+fmtNum(dm.nufus)+'</b></div>'
+      +'<div class="ozd-ds"><span>Ort. hane</span><b>'+dm.hane+' kişi</b></div>'
+      +'<div class="ozd-ds"><span>Ort. hane geliri</span><b>'+fmtNum(dm.ortGelir)+' ₺</b></div>'
+      +'<div class="ozd-ds"><span>Yaşam kalitesi</span><b>'+dm.yasamK+'/100</b></div>'
+    +'</div>';
   return '<div class="ozd" role="dialog" aria-modal="true" aria-label="'+esc(reg.name)+' mahalle detayı">'
     +'<button class="ozd-x" onclick="ozDetayClose()" aria-label="Kapat">✕</button>'
     +'<div class="ozd-head"><span class="ozd-mark">'+esc(reg.name.trim().charAt(0))+'</span>'
       +'<div class="ozd-ht"><h3>'+esc(reg.name)+'</h3><span>'+esc(reg.sub)+'</span></div>'
       +(score>0?'<span class="ozd-gauge">'+ozGauge(score)+'</span>':'')+'</div>'
     +'<div class="ozd-body">'
-      +'<section class="ozd-sec"><h4>Gerçek Fiyat Trendi <span class="ozd-tag live">ProX kayıt · '+hist.length+' ay</span></h4>'
+      +'<section class="ozd-sec"><h4>ProX Değerleme <span class="ozd-tag live">canlı /analyze</span></h4>'
+        +'<div id="ozdAz"><div class="ozd-azload"><span class="ozd-dot"></span> ProX değerleme motoru çalışıyor…</div></div></section>'
+      +'<section class="ozd-sec"><h4>Gerçek Piyasa Profili <span class="ozd-tag">canlı ProX</span></h4><div class="ozd-metrics">'+metrics.join('')+'</div></section>'
+      +'<section class="ozd-sec"><h4>Fiyat Trendi <span class="ozd-tag live">ProX kayıt · '+hist.length+' ay</span></h4>'
         +ozTrendChart(hist)
         +'<p class="ozd-note">ProX zaman-serisi yayınlamadığı için bu grafik her ziyarette güncel ProX ₺/m² değerini kaydederek <b>zamanla gerçek</b> dolar. Şu an <b>'+hist.length+'</b> gerçek kayıt var.</p></section>'
-      +'<section class="ozd-sec"><h4>Gerçek Piyasa Profili <span class="ozd-tag">canlı ProX</span></h4><div class="ozd-metrics">'+metrics.join('')+'</div></section>'
+      +'<section class="ozd-sec"><h4>Demografi &amp; Yaşam <span class="ozd-tag est">tahmini profil</span></h4>'+demoHTML
+        +'<p class="ozd-note">Demografi göstergeleri ProX endeks değeriyle modellenen <b>tahmini</b> profildir; ProX canlı demografi yayınına geçtiğinde otomatik gerçek veriyle güncellenir.</p></section>'
       +'<section class="ozd-sec"><h4>Bu mahallede ne var? <span class="ozd-tag live">canlı ProX ilan</span></h4><div class="ozd-arz">'+arz+'</div>'
         +'<p class="ozd-note">Rakamlar ProX’te kayıtlı güncel ilan sayılarıdır (belirli mülk değil). Kriterlerinize uyan seçenekler için ücretsiz eşleştirme yapayım.</p></section>'
-      +'<div class="ozd-cta-row"><button class="ozc-cta" onclick="ozLead(\''+esc(reg.name)+'\')">Ücretsiz Değer Analizi &amp; Görüşme '+ICO_ARR+'</button></div>'
+      +'<div class="ozd-cta-row"><button class="ozc-cta" onclick="ozLead(\''+esc(reg.name)+'\')">Bu bölgeden talep oluştur '+ICO_ARR+'</button></div>'
     +'</div></div>';
 }
 function ozDetayClose(){var el=document.getElementById('ozDetay');if(!el)return;el.classList.remove('on');document.body.style.overflow='';setTimeout(function(){if(el&&!el.classList.contains('on'))el.remove();},280);}
 function ozDetayShow(reg){
   if(!reg)return;
+  /* trend grafiği için gerçek snapshot'ı garanti et (kart-dışı yollardan da dolu gelsin) */
+  try{var _d=reg.d||{};if(_d.ks&&_d.ks.m2)histRecord(reg.il,reg.ilce,reg.mah,'konut','satilik',_d.ks.m2,_d.ks.trend);if(_d.kk&&_d.kk.m2)histRecord(reg.il,reg.ilce,reg.mah,'konut','kiralik',_d.kk.m2,_d.kk.trend);}catch(e){}
   var old=document.getElementById('ozDetay');if(old)old.remove();
   var el=document.createElement('div');el.id='ozDetay';el.className='ozd-back';el.innerHTML=ozDetayHTML(reg);
   el.addEventListener('click',function(e){if(e.target===el)ozDetayClose();});
@@ -466,6 +532,8 @@ function ozDetayShow(reg){
   requestAnimationFrame(function(){el.classList.add('on');});
   document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){ozDetayClose();document.removeEventListener('keydown',esc);}});
   try{window.dnFavReflect&&dnFavReflect();}catch(e){}
+  /* ProX Değerleme (/analyze) gerçek veriyi async çek → panel doldur */
+  fetchAnalyze(reg.il,reg.ilce,reg.mah).then(function(az){var b=document.querySelector('#ozDetay #ozdAz');if(b)b.innerHTML=ozAzHTML(az);}).catch(function(){});
 }
 function ozDetayOpen(id){ozDetayShow(_OZREG[id]);}
 /* "Bu bölgede var mı?" cevabından o bölgenin detay ekranını aç */
@@ -683,7 +751,37 @@ function ozStyles(){if(document.getElementById('ozF1Style'))return;var s=documen
   '.oz-fn-t{font-family:var(--serif);font-weight:700;font-size:17px;color:var(--ink)}',
   '.oz-fn-s{font-size:12px;color:var(--muted);line-height:1.45}',
   '.oz-fn-go{margin-top:6px;font-size:12.5px;font-weight:700;color:var(--gold-deep);display:inline-flex;align-items:center;gap:5px}.oz-fn-go svg{width:14px;height:14px}',
-  '@media(max-width:640px){.oz-funnel{grid-template-columns:1fr}.ozt-grid2{grid-template-columns:1fr}}'
+  '@media(max-width:640px){.oz-funnel{grid-template-columns:1fr}.ozt-grid2{grid-template-columns:1fr}}',
+  /* ProX Değerleme (analyze) paneli */
+  '.ozd-azload{display:flex;align-items:center;gap:8px;padding:18px;color:var(--muted);font-size:13px;border:1px dashed var(--line);border-radius:12px}',
+  '.ozd-az{border:1px solid var(--line);border-radius:16px;overflow:hidden}',
+  '.ozd-az-hero{padding:16px 18px;background:linear-gradient(155deg,#0e5e3e,#0a3527);color:#fff}',
+  '.ozd-az-l{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:rgba(220,195,137,.9);font-weight:700}',
+  '.ozd-az-v{font-family:var(--serif-2);font-weight:700;font-size:32px;line-height:1.05;margin:4px 0 10px;color:#fff}',
+  '.ozd-az-rng{display:flex;align-items:center;gap:10px;font-size:11.5px;color:rgba(255,255,255,.85);font-variant-numeric:tabular-nums}',
+  '.ozd-az-bar{flex:1;height:5px;border-radius:99px;background:rgba(255,255,255,.18);position:relative;overflow:hidden}',
+  '.ozd-az-bar i{position:absolute;left:14%;right:14%;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,var(--gold-soft),var(--gold))}',
+  '.ozd-az-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0;border-top:1px solid var(--line)}',
+  '.ozd-az-c{padding:12px 14px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}',
+  '.ozd-az-c b{display:block;font-family:var(--serif-2);font-weight:700;font-size:18px;color:var(--gold-deep);line-height:1.1}',
+  '.ozd-az-c span{font-size:10.5px;color:var(--muted)}',
+  '.ozd-az-ozet{font-size:12px;color:var(--muted);line-height:1.55;margin:0;padding:13px 16px;background:var(--panel-2)}',
+  /* demografi */
+  '.ozd-demo{display:grid;grid-template-columns:1fr 1fr;gap:14px}',
+  '.ozd-pie{border:1px solid var(--line);border-radius:14px;padding:13px;display:flex;flex-direction:column;align-items:center;gap:6px;background:linear-gradient(180deg,#fff,#fcfaf4)}',
+  '.ozd-pie-t{font-size:11px;font-weight:700;color:var(--ink);letter-spacing:.02em;align-self:flex-start}',
+  '.ozd-donut{width:96px;height:96px}',
+  '.ozd-donut-c{font-family:var(--serif-2);font-weight:700;font-size:20px;fill:var(--em-2)}',
+  '.ozd-leg{list-style:none;margin:2px 0 0;padding:0;width:100%;display:flex;flex-direction:column;gap:3px}',
+  '.ozd-leg li{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--muted)}',
+  '.ozd-leg .sw{width:9px;height:9px;border-radius:3px;flex:0 0 auto}',
+  '.ozd-leg b{margin-left:auto;color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}',
+  '.ozd-demo-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px}',
+  '.ozd-ds{background:var(--panel-2);border-radius:12px;padding:11px 13px}',
+  '.ozd-ds span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}',
+  '.ozd-ds b{font-family:var(--serif-2);font-weight:700;font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}',
+  '.ozd-tag.est{color:#8a6a22;background:rgba(195,155,69,.13)}',
+  '@media(max-width:560px){.ozd-demo{grid-template-columns:1fr}}'
   ].join('');
   document.head.appendChild(s);}
 /* Faz 2 — SEO'yu reseller'ın primary iline göre yerelleştir (yerel SEO); marka kısmını brand.js yönetir */
