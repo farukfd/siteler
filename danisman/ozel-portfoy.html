@@ -300,13 +300,15 @@ async function ozAraRun(){
     out.className='oz-ara-sonuc ok';
     out.innerHTML='<div class="oza-ic">✓</div><div class="oza-tx">'
       +'<div class="oza-h"><b>Evet</b> — '+esc(konum)+' bölgesinde <b>'+esc(label)+'</b> için ProX’te <b>'+fmtNum(e.ilan)+' ilan</b> kayıtlı.</div>'
-      +'<div class="oza-sub">Başlangıç ≈ '+fiyat+' · ProX endeks '+fmtNum(e.m2)+' ₺/m²'+(e.veri?' · '+fmtNum(e.veri)+' veri':'')+'</div></div>'
+      +'<div class="oza-sub">Başlangıç ≈ '+fiyat+' · ProX endeks '+fmtNum(e.m2)+' ₺/m²'+(e.veri?' · '+fmtNum(e.veri)+' veri':'')+'</div>'
+      +'<button class="oza-detay" onclick="ozDetayFromAra()">Bölge detayını gör →</button></div>'
       +'<button class="oza-cta" onclick="ozLead(\''+lead+'\')">Ücretsiz eşleştir '+ICO_ARR+'</button>';
   }else if(e&&e.m2>0){
     out.className='oz-ara-sonuc warn';
     out.innerHTML='<div class="oza-ic">≈</div><div class="oza-tx">'
       +'<div class="oza-h">'+esc(konum)+' bölgesinde <b>'+esc(label)+'</b> için ProX’te şu an <b>kayıtlı ilan görünmüyor</b>.</div>'
-      +'<div class="oza-sub">Yine de piyasa aktif (endeks ≈ '+fmtNum(e.m2)+' ₺/m²). Yeni çıkacak / off-market seçenekler için sizi haberdar edeyim.</div></div>'
+      +'<div class="oza-sub">Yine de piyasa aktif (endeks ≈ '+fmtNum(e.m2)+' ₺/m²). Yeni çıkacak / off-market seçenekler için sizi haberdar edeyim.</div>'
+      +'<button class="oza-detay" onclick="ozDetayFromAra()">Bölge detayını gör →</button></div>'
       +'<button class="oza-cta" onclick="ozLead(\''+lead+'\')">Beni bilgilendir '+ICO_ARR+'</button>';
   }else{
     out.className='oz-ara-sonuc info';
@@ -365,14 +367,27 @@ function ozDetayHTML(reg){
     +'</div></div>';
 }
 function ozDetayClose(){var el=document.getElementById('ozDetay');if(!el)return;el.classList.remove('on');document.body.style.overflow='';setTimeout(function(){if(el&&!el.classList.contains('on'))el.remove();},280);}
-function ozDetayOpen(id){
-  var reg=_OZREG[id];if(!reg)return;
+function ozDetayShow(reg){
+  if(!reg)return;
   var old=document.getElementById('ozDetay');if(old)old.remove();
   var el=document.createElement('div');el.id='ozDetay';el.className='ozd-back';el.innerHTML=ozDetayHTML(reg);
   el.addEventListener('click',function(e){if(e.target===el)ozDetayClose();});
   document.body.appendChild(el);document.body.style.overflow='hidden';
   requestAnimationFrame(function(){el.classList.add('on');});
   document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){ozDetayClose();document.removeEventListener('keydown',esc);}});
+  try{window.dnFavReflect&&dnFavReflect();}catch(e){}
+}
+function ozDetayOpen(id){ozDetayShow(_OZREG[id]);}
+/* "Bu bölgede var mı?" cevabından o bölgenin detay ekranını aç */
+async function ozDetayFromAra(){
+  if(!OZILCE)return;
+  var il=OZIL,ilce=OZILCE,mah=OZMAH,name=mah||ilce,sub=mah?(il+' · '+ilce):(il+' İli');
+  var btn=document.querySelector('#ozAraSonuc .oza-detay');if(btn){btn.disabled=true;btn.textContent='Açılıyor…';}
+  var d=await regionData(il,ilce,mah);
+  if(d.ks&&d.ks.m2)histRecord(il,ilce,mah,'konut','satilik',d.ks.m2,d.ks.trend);
+  if(d.kk&&d.kk.m2)histRecord(il,ilce,mah,'konut','kiralik',d.kk.m2,d.kk.trend);
+  if(btn){btn.disabled=false;btn.textContent='Bölge detayını gör →';}
+  ozDetayShow({name:name,sub:sub,il:il,ilce:ilce,mah:mah,d:d});
 }
 
 var _ozSeq=0, _OZREG={};
@@ -535,14 +550,36 @@ function ozStyles(){if(document.getElementById('ozF1Style'))return;var s=documen
   '.oza-h{font-size:14.5px;color:var(--ink);line-height:1.45}.oza-h b{font-weight:700}',
   '.oz-ara-sonuc.ok .oza-h b{color:#0e5e3e}',
   '.oza-sub{font-size:12px;color:var(--muted);margin-top:4px}.oza-sub small{font-size:.85em}',
+  '.oza-detay{margin-top:8px;background:none;border:0;padding:0;cursor:pointer;font-family:var(--body);font-size:11.5px;font-weight:700;color:var(--gold-deep);text-decoration:underline;text-underline-offset:2px}',
+  '.oza-detay:hover{color:var(--ink)}.oza-detay:disabled{opacity:.6;cursor:default}',
   '.oza-cta{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;border:0;cursor:pointer;font-family:var(--body);font-weight:700;font-size:12.5px;color:#0a3527;background:var(--grad-gold);padding:9px 15px;border-radius:999px;white-space:nowrap;box-shadow:0 8px 18px -8px rgba(120,90,20,.5)}',
   '.oza-cta svg{width:14px;height:14px}.oza-cta:hover{transform:translateY(-1px)}',
   '@media(max-width:640px){.oz-ara-sonuc{flex-wrap:wrap}.oza-cta{width:100%;justify-content:center;margin-top:4px}.oz-ara-btn{width:100%;align-self:stretch}}'
   ].join('');
   document.head.appendChild(s);}
+/* Faz 2 — SEO'yu reseller'ın primary iline göre yerelleştir (yerel SEO); marka kısmını brand.js yönetir */
+function ozLocalizeSeo(il){
+  if(!il)return;
+  try{
+    var cur=document.title,brand=((cur.indexOf('·')>=0?cur.split('·').pop():'Selin Meridyen')||'').trim()||'Selin Meridyen';
+    document.title=il+' Mahalle Fiyat Endeksi & Fırsat Radarı — Özel Portföy · '+brand;
+    var desc=il+' genelinde hizmet verdiğim mahallelerde ProX canlı endeksinden satılık & kiralık konut, işyeri ve arsa başlangıç fiyatları, yatırım skoru ve yükselen fırsatlar. Ücretsiz değer analizi ve kişisel danışmanlık.';
+    var set=function(sel,val){var m=document.querySelector(sel);if(m)m.setAttribute('content',val);};
+    set('meta[name="description"]',desc);
+    set('meta[property="og:title"]',il+' Mahalle Fiyat Endeksi & Fırsat Radarı — Özel Portföy');
+    set('meta[property="og:description"]',desc);
+    set('meta[name="twitter:title"]','Özel Portföy — '+il+' Mahalle Fiyat Endeksi & Fırsat Radarı');
+    set('meta[name="twitter:description"]',il+' — mahalle mahalle ProX canlı endeksi, başlangıç fiyatları ve yükselen fırsatlar.');
+    var s=document.querySelector('script[type="application/ld+json"]');
+    if(s){var j=JSON.parse(s.textContent);j.name=il+' Mahalle Fiyat Endeksi & Fırsat Radarı — Özel Portföy';j.description=desc;
+      if(!j.spatialCoverage)j.spatialCoverage={"@type":"AdministrativeArea","name":il};else j.spatialCoverage.name=il;
+      s.textContent=JSON.stringify(j);}
+  }catch(e){}
+}
 function ozInit(){
   ozStyles();
   document.getElementById('ozHeroIl').textContent=OZIL;
+  ozLocalizeSeo(OZIL);
   try{if(window.propScene)document.getElementById('ozHeroArt').innerHTML=propScene('yali','ozhero');}catch(e){}
   var sel=document.getElementById('ozIl');var iller=Object.keys(TR_ILILCE).sort(function(a,b){return a.localeCompare(b,'tr');});
   if(!iller.length)iller=[OZIL];
