@@ -88,14 +88,18 @@
   </div>
 </section>
 
-<!-- ============ BÖLGE SEÇİMİ (il → ilçe → mahalle drill) ============ -->
+<!-- ============ BÖLGE + "BU BÖLGEDE VAR MI?" SORGUSU ============ -->
 <div class="pf-filters">
+  <div class="wrap"><div class="oz-ara-lead"><span class="oz-ara-q">Aradığınız gayrimenkul bu bölgede var mı?</span> Bölge ve kategori seçin — anında ProX canlı ilan verisinden öğrenin.</div></div>
   <div class="wrap pf-filt-in">
     <div class="pf-fg"><label>İl</label><select class="pf-select" id="ozIl" aria-label="İl seçin"></select></div>
     <div class="pf-fg"><label>İlçe</label><select class="pf-select" id="ozIlce" aria-label="İlçe seçin"></select></div>
     <div class="pf-fg"><label>Mahalle</label><select class="pf-select" id="ozMah" aria-label="Mahalle seçin"><option value="">Tüm Mahalleler</option></select></div>
+    <div class="pf-fg pf-fg-ara"><label>Ne arıyorsunuz?</label><select class="pf-select" id="ozAra" aria-label="Aradığınız kategori"><option value="">Kategori seçin…</option><option value="konut|kiralik">Kiralık Daire</option><option value="konut|satilik">Satılık Daire</option><option value="ticari|kiralik">Kiralık İşyeri</option><option value="ticari|satilik">Satılık İşyeri / Ofis</option><option value="arsa|satilik">Arsa</option></select></div>
+    <button class="oz-ara-btn" id="ozAraBtn" type="button">Bu bölgede var mı?</button>
     <div class="pf-livecount"><span class="pf-live"><span class="d"></span>ProX canlı</span> · <b id="ozCount">0</b> bölge</div>
   </div>
+  <div class="wrap"><div id="ozAraSonuc" class="oz-ara-sonuc" hidden aria-live="polite"></div></div>
 </div>
 
 <!-- ============ MAHALLE DEĞER PANOSU (ProX ortalama fiyatlar) ============ -->
@@ -273,6 +277,42 @@ function ozPanel(o){
 }
 function ozLead(ad){try{localStorage.setItem('dn_lead_pending',ad+' bölgesi için ücretsiz değer analizi talebi');}catch(e){}location.href='index.html#randevu';}
 function sumCard(k,v,d){return '<div class="pf-vsum-c pf-rv"><div class="k">'+k+'</div><div class="v">'+v+'</div><div class="d">'+esc(OZIL)+' · '+d+'</div></div>';}
+
+/* ============ "BU BÖLGEDE VAR MI?" — ziyaretçi arz sorgusu (gerçek ProX ilan_sayisi) ============ */
+var OZ_ARA_LBL={'konut|kiralik':'Kiralık Daire','konut|satilik':'Satılık Daire','ticari|kiralik':'Kiralık İşyeri','ticari|satilik':'Satılık İşyeri / Ofis','arsa|satilik':'Arsa'};
+function OZ_ARA_MIN(v){return {'konut|kiralik':MIN_DKIRA,'konut|satilik':MIN_DSAT,'ticari|kiralik':MIN_IKIRA,'ticari|satilik':MIN_ISAT,'arsa|satilik':1}[v]||1;}
+var _araSeq=0;
+async function ozAraRun(){
+  var sel=document.getElementById('ozAra'),out=document.getElementById('ozAraSonuc');if(!sel||!out)return;
+  var val=sel.value;
+  if(!val){out.hidden=true;out.className='oz-ara-sonuc';out.innerHTML='';return;}
+  var label=OZ_ARA_LBL[val]||'';
+  if(!OZILCE){out.hidden=false;out.className='oz-ara-sonuc info';out.innerHTML='<div class="oza-ic">↑</div><div class="oza-tx"><div class="oza-h">Önce yukarıdan bir <b>ilçe</b> (dilerseniz mahalle) seçin — <b>'+esc(label)+'</b> için o bölgede kayıt var mı, anında göstereyim.</div></div>';return;}
+  var konum=OZMAH?(OZMAH+' Mah., '+OZILCE):OZILCE;
+  var myseq=++_araSeq;
+  out.hidden=false;out.className='oz-ara-sonuc loading';out.innerHTML='<div class="oza-ic">…</div><div class="oza-tx"><div class="oza-h"><b>'+esc(konum)+'</b> için ProX sorgulanıyor…</div></div>';
+  var parts=val.split('|'),e=await fetchEndeks(OZIL,OZILCE,OZMAH,parts[0],parts[1]);
+  if(myseq!==_araSeq)return;
+  var isKira=parts[1]==='kiralik',isArsa=parts[0]==='arsa';
+  var fiyat=(e&&e.m2>0)?(isArsa?fmtFrom(e.m2)+'<small>/m²</small>':fmtFrom(e.m2*OZ_ARA_MIN(val))+(isKira?'<small>/ay’dan</small>':'<small>’den</small>')):'';
+  var lead=esc(konum+' — '+label);
+  if(e&&e.ilan>0){
+    out.className='oz-ara-sonuc ok';
+    out.innerHTML='<div class="oza-ic">✓</div><div class="oza-tx">'
+      +'<div class="oza-h"><b>Evet</b> — '+esc(konum)+' bölgesinde <b>'+esc(label)+'</b> için ProX’te <b>'+fmtNum(e.ilan)+' ilan</b> kayıtlı.</div>'
+      +'<div class="oza-sub">Başlangıç ≈ '+fiyat+' · ProX endeks '+fmtNum(e.m2)+' ₺/m²'+(e.veri?' · '+fmtNum(e.veri)+' veri':'')+'</div></div>'
+      +'<button class="oza-cta" onclick="ozLead(\''+lead+'\')">Ücretsiz eşleştir '+ICO_ARR+'</button>';
+  }else if(e&&e.m2>0){
+    out.className='oz-ara-sonuc warn';
+    out.innerHTML='<div class="oza-ic">≈</div><div class="oza-tx">'
+      +'<div class="oza-h">'+esc(konum)+' bölgesinde <b>'+esc(label)+'</b> için ProX’te şu an <b>kayıtlı ilan görünmüyor</b>.</div>'
+      +'<div class="oza-sub">Yine de piyasa aktif (endeks ≈ '+fmtNum(e.m2)+' ₺/m²). Yeni çıkacak / off-market seçenekler için sizi haberdar edeyim.</div></div>'
+      +'<button class="oza-cta" onclick="ozLead(\''+lead+'\')">Beni bilgilendir '+ICO_ARR+'</button>';
+  }else{
+    out.className='oz-ara-sonuc info';
+    out.innerHTML='<div class="oza-ic">i</div><div class="oza-tx"><div class="oza-h">'+esc(konum)+' için ProX verisi bulunamadı — başka mahalle deneyin.</div></div>';
+  }
+}
 
 /* ============ MAHALLE DETAY OVERLAY — gerçek trend + piyasa profili + arz ("var mı") ============ */
 function ozMetric(label,val,sub,hot){return '<div class="ozd-m'+(hot?' hot':'')+'"><div class="ozd-m-l">'+label+'</div><div class="ozd-m-v">'+val+'</div><div class="ozd-m-s">'+sub+'</div></div>';}
@@ -478,7 +518,26 @@ function ozStyles(){if(document.getElementById('ozF1Style'))return;var s=documen
   '.ozd-arz-b{font-size:10px;font-weight:800;letter-spacing:.04em;padding:3px 11px;border-radius:999px;min-width:46px;text-align:center}',
   '.ozd-arz-b.y{color:#0a3527;background:rgba(47,191,113,.18)}.ozd-arz-b.n{color:var(--muted);background:var(--panel-2)}',
   '.ozd-cta-row{padding:20px 0 2px;display:flex;justify-content:center}.ozd-cta-row .ozc-cta{font-size:14px;padding:12px 24px}',
-  '@media(max-width:560px){.ozd-body{padding:2px 16px 20px}.ozd-head{padding:18px;padding-right:56px}.ozd-ht h3{font-size:19px}}'
+  '@media(max-width:560px){.ozd-body{padding:2px 16px 20px}.ozd-head{padding:18px;padding-right:56px}.ozd-ht h3{font-size:19px}}',
+  '.oz-ara-lead{font-size:13px;color:var(--muted);margin:0 0 14px;line-height:1.5}',
+  '.oz-ara-q{font-family:var(--serif);font-weight:700;font-size:16px;color:var(--ink);margin-right:6px}',
+  '.pf-fg-ara{min-width:190px}',
+  '.oz-ara-btn{align-self:flex-end;border:0;cursor:pointer;font-family:var(--body);font-weight:700;font-size:13.5px;color:#0a3527;background:var(--grad-gold);padding:0 20px;height:46px;border-radius:12px;white-space:nowrap;box-shadow:0 8px 18px -8px rgba(120,90,20,.5);transition:transform .2s,box-shadow .2s}',
+  '.oz-ara-btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px -8px rgba(120,90,20,.6)}',
+  '.oz-ara-sonuc{display:flex;align-items:center;gap:14px;margin-top:16px;padding:15px 18px;border-radius:16px;border:1px solid var(--line);background:var(--panel-2);animation:ozAraIn .35s cubic-bezier(.22,1,.36,1)}',
+  '@keyframes ozAraIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}',
+  '.oz-ara-sonuc.ok{background:rgba(47,191,113,.07);border-color:rgba(47,191,113,.32)}',
+  '.oz-ara-sonuc.warn{background:rgba(195,155,69,.07);border-color:rgba(195,155,69,.34)}',
+  '.oza-ic{width:40px;height:40px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:19px;background:var(--panel);color:var(--muted)}',
+  '.oz-ara-sonuc.ok .oza-ic{background:rgba(47,191,113,.16);color:#12805a}',
+  '.oz-ara-sonuc.warn .oza-ic{background:rgba(195,155,69,.18);color:var(--gold-deep)}',
+  '.oza-tx{flex:1;min-width:0}',
+  '.oza-h{font-size:14.5px;color:var(--ink);line-height:1.45}.oza-h b{font-weight:700}',
+  '.oz-ara-sonuc.ok .oza-h b{color:#0e5e3e}',
+  '.oza-sub{font-size:12px;color:var(--muted);margin-top:4px}.oza-sub small{font-size:.85em}',
+  '.oza-cta{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;border:0;cursor:pointer;font-family:var(--body);font-weight:700;font-size:12.5px;color:#0a3527;background:var(--grad-gold);padding:9px 15px;border-radius:999px;white-space:nowrap;box-shadow:0 8px 18px -8px rgba(120,90,20,.5)}',
+  '.oza-cta svg{width:14px;height:14px}.oza-cta:hover{transform:translateY(-1px)}',
+  '@media(max-width:640px){.oz-ara-sonuc{flex-wrap:wrap}.oza-cta{width:100%;justify-content:center;margin-top:4px}.oz-ara-btn{width:100%;align-self:stretch}}'
   ].join('');
   document.head.appendChild(s);}
 function ozInit(){
@@ -488,11 +547,13 @@ function ozInit(){
   var sel=document.getElementById('ozIl');var iller=Object.keys(TR_ILILCE).sort(function(a,b){return a.localeCompare(b,'tr');});
   if(!iller.length)iller=[OZIL];
   sel.innerHTML=iller.map(function(i){return '<option value="'+esc(i)+'"'+(i===OZIL?' selected':'')+'>'+esc(i)+'</option>';}).join('');
-  sel.onchange=function(){OZIL=this.value;OZILCE='';OZMAH='';document.getElementById('ozHeroIl').textContent=OZIL;ozPopulateIlce();ozPopulateMah();ozRender();};
+  sel.onchange=function(){OZIL=this.value;OZILCE='';OZMAH='';document.getElementById('ozHeroIl').textContent=OZIL;ozPopulateIlce();ozPopulateMah();ozRender();ozAraRun();};
   var ilceSel=document.getElementById('ozIlce');
-  if(ilceSel)ilceSel.onchange=function(){OZILCE=this.value;OZMAH='';ozPopulateMah();ozRender();};
+  if(ilceSel)ilceSel.onchange=function(){OZILCE=this.value;OZMAH='';ozPopulateMah();ozRender();ozAraRun();};
   var mahSel=document.getElementById('ozMah');
-  if(mahSel)mahSel.onchange=function(){OZMAH=this.value;ozRender();};
+  if(mahSel)mahSel.onchange=function(){OZMAH=this.value;ozRender();ozAraRun();};
+  var araSel=document.getElementById('ozAra');if(araSel)araSel.onchange=ozAraRun;
+  var araBtn=document.getElementById('ozAraBtn');if(araBtn)araBtn.onclick=ozAraRun;
   ozPopulateIlce();ozPopulateMah();
   pfReveal();
   ozRender();
