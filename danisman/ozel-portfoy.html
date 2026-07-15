@@ -362,7 +362,7 @@ function ozTalepDone(viaWa){
     +'<p>'+(viaWa?'WhatsApp üzerinden danışmanınıza yönlendirildiniz. ':'')+'Bu bölge için size özel seçenekler hazırlanıp en kısa sürede dönüş yapılacak.</p>'
     +'<button class="ozt-send" type="button" onclick="ozTalepClose()">Tamam</button></div>';
 }
-function sumCard(k,v,d){return '<div class="pf-vsum-c pf-rv"><div class="k">'+k+'</div><div class="v">'+v+'</div><div class="d">'+esc(OZIL)+' · '+d+'</div></div>';}
+function sumCard(k,v,d){return '<div class="stk"><p class="stk-l">'+k+'</p><p class="stk-v">'+v+'</p><div class="stk-bar"><i></i></div><p class="stk-d">'+esc(OZIL)+' · '+d+'</p></div>';}
 
 /* ============ "BU BÖLGEDE VAR MI?" — ziyaretçi arz sorgusu (gerçek ProX ilan_sayisi) ============ */
 var OZ_ARA_LBL={'konut|kiralik':'Kiralık Daire','konut|satilik':'Satılık Daire','ticari|kiralik':'Kiralık İşyeri','ticari|satilik':'Satılık İşyeri / Ofis','arsa|satilik':'Arsa'};
@@ -867,7 +867,58 @@ function ozStyles(){if(document.getElementById('ozF1Style'))return;var s=documen
   '.stc-cta{border:1px solid #795901;background:#fff;color:#795901;font-family:"IBM Plex Sans";font-weight:600;font-size:12px;letter-spacing:.02em;padding:7px 16px;border-radius:4px;cursor:pointer;transition:background .15s,color .15s}',
   '.stc-cta:hover{background:#795901;color:#fff}',
   /* sayfa teması: cool near-white (hero hariç) */
-  '.pf-wrap,.pf-filters,.pf-invite{background:#f9f9f8}'
+  '.pf-wrap,.pf-filters,.pf-invite{background:#f9f9f8}',
+  /* ===== STITCH: KPI şeridi ===== */
+  '.pf-vsum{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:8px}',
+  '@media(max-width:900px){.pf-vsum{grid-template-columns:1fr 1fr}}@media(max-width:520px){.pf-vsum{grid-template-columns:1fr}}',
+  '.stk{background:#fff;border:1px solid #e1e3e2;border-radius:4px;padding:20px}',
+  '.stk-l{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#3f4942;font-weight:600;margin:0;font-family:"IBM Plex Sans"}',
+  '.stk-v{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:36px;line-height:1.05;color:#00452b;font-variant-numeric:tabular-nums;margin:8px 0 0}',
+  '.stk-v small{font-size:.32em!important;color:#795901!important;font-weight:600!important;font-family:"IBM Plex Sans"!important;letter-spacing:.02em}',
+  '.stk-bar{height:4px;background:#e1e3e2;border-radius:2px;overflow:hidden;margin:14px 0 6px}',
+  '.stk-bar i{display:block;height:100%;width:66%;background:#0e5e3e;border-radius:2px}',
+  '.stk-d{font-size:11px;color:#707972;margin:0;font-family:"IBM Plex Sans"}',
+  /* ===== STITCH: bölge sıralaması ===== */
+  '.ozrk{background:#fff;border:1px solid #e1e3e2;border-radius:8px;padding:24px}',
+  '.ozrk-t{font-family:"Playfair Display",Georgia,serif;font-weight:600;font-size:20px;color:#00452b}',
+  '.ozrk-tag{color:#3f4942;background:transparent;padding:0;letter-spacing:.04em}',
+  '.ozrk-dot{background:#0e5e3e}',
+  '.ozrk-row{grid-template-columns:100px 1fr 120px;gap:16px;padding:6px 0}',
+  '.ozrk-nm{font-size:14px;color:#3f4942;font-weight:500;font-family:"IBM Plex Sans"}',
+  '.ozrk-bar{height:32px;background:#e1e3e2;border-radius:4px}',
+  '.ozrk-bar i{background:#00452b;border-radius:4px}',
+  '.ozrk-v{font-family:"IBM Plex Sans";font-weight:700;font-size:14px;color:#00452b}',
+  /* ===== STITCH: bölge seçici + "var mı" ===== */
+  '.pf-filt-in{background:#fff;border:1px solid #e1e3e2;border-radius:8px;padding:20px}',
+  '.pf-fg label{font-size:11px;letter-spacing:.03em;color:#3f4942;font-weight:600;text-transform:none;font-family:"IBM Plex Sans"}',
+  '.pf-select{border:1px solid #bfc9c0!important;border-radius:4px!important;background:#f9f9f8!important;font-family:"IBM Plex Sans"!important;color:#191c1c!important}',
+  '.pf-select:focus{border-color:#00452b!important;box-shadow:0 0 0 2px rgba(0,69,43,.15)!important}',
+  '.oz-ara-btn{background:#00452b!important;color:#fff!important;border-radius:4px!important;font-family:"IBM Plex Sans"!important;box-shadow:none!important;height:44px}',
+  '.oz-ara-btn:hover{background:#0e5e3e!important;transform:none!important}',
+  '.oz-ara-lead .oz-ara-q{font-family:"Playfair Display",Georgia,serif;color:#00452b}',
+  '.pf-livecount{color:#3f4942;font-family:"IBM Plex Sans"}',
+  '.oz-ara-sonuc{border-radius:8px;font-family:"IBM Plex Sans"}',
+  '.oz-ara-sonuc.ok{background:rgba(14,94,62,.06);border-color:rgba(14,94,62,.28)}',
+  '.oz-ara-sonuc.ok .oza-ic{background:rgba(14,94,62,.14);color:#00452b}',
+  '.oz-ara-sonuc.ok .oza-h b,.oza-h b{color:#00452b}',
+  '.oza-cta{background:#00452b!important;color:#fff!important;border-radius:4px!important;box-shadow:none!important}',
+  '.oza-detay{color:#795901!important}',
+  /* ===== STITCH: 3 CTA (Hızlı İşlemler) ===== */
+  '.pf-invite-card{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;max-width:none!important;text-align:left!important}',
+  '.pf-invite-card .pf-kicker{justify-content:flex-start!important;color:#795901!important}',
+  '.pf-invite-card h2{font-family:"Playfair Display",Georgia,serif!important;color:#00452b!important;text-align:left!important}',
+  '.pf-invite-card>p{color:#3f4942!important;text-align:left!important;margin-left:0!important;font-family:"IBM Plex Sans"}',
+  '.oz-funnel{gap:16px;margin-top:24px}',
+  '.oz-fn{border-radius:8px!important;border:0!important;box-shadow:none!important;padding:28px!important;transition:opacity .2s,transform .2s}',
+  '.oz-fn:hover{transform:translateY(-2px)!important;box-shadow:none!important;border-color:transparent!important}',
+  '.oz-funnel .oz-fn:nth-child(1){background:#0e5e3e;color:#fff}',
+  '.oz-funnel .oz-fn:nth-child(2){background:#fed175;color:#785800}',
+  '.oz-funnel .oz-fn:nth-child(3){background:#e1e3e2;color:#191c1c}',
+  '.oz-fn-ic{background:transparent!important;color:inherit!important;opacity:.55;width:auto!important;height:auto!important;margin-bottom:8px;box-shadow:none!important}',
+  '.oz-fn-ic svg{width:32px;height:32px}',
+  '.oz-fn-t{font-family:"Playfair Display",Georgia,serif!important;color:inherit!important;font-size:20px}',
+  '.oz-fn-s{color:inherit!important;opacity:.85;font-family:"IBM Plex Sans"!important;font-size:14px}',
+  '.oz-fn-go{color:inherit!important;font-family:"IBM Plex Sans"!important;font-weight:700;margin-top:10px}'
   ].join('');
   document.head.appendChild(s);}
 /* Faz 2 — SEO'yu reseller'ın primary iline göre yerelleştir (yerel SEO); marka kısmını brand.js yönetir */
