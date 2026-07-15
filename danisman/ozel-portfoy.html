@@ -183,11 +183,18 @@ async function proxApi(path){try{var res=await fetch(EMLAK_API_BASE+path,{method
 var TR_ILILCE=window.TR_ILILCE||{};
 function adminPrimaryIl(){try{var sa=JSON.parse(localStorage.getItem('dn_service_area')||'null');if(sa&&sa.primary&&TR_ILILCE[sa.primary])return sa.primary;}catch(e){}return 'İstanbul';}
 var _c={};
-async function fetchEndeks(il,ilce,mah,kat,dur){var k=[il,ilce,mah||'',kat,dur].join('|');if(_c[k]!==undefined)return _c[k];_c[k]=null;
+/* localStorage TTL önbelleği — başarılı endeks 6s saklanır → reload + ilçe/mahalle gezinme anında (45 çağrı tekrarı yok) */
+var PROX_TTL=6*3600*1000;
+function _pcLoad(){try{return JSON.parse(localStorage.getItem('dn_prox_cache')||'{}');}catch(e){return {};}}
+function _pcSave(o){try{localStorage.setItem('dn_prox_cache',JSON.stringify(o));}catch(e){}}
+function _pcPut(k,v){try{var o=_pcLoad();o[k]={v:v,ts:Date.now()};var ks=Object.keys(o);if(ks.length>600){ks.sort(function(a,b){return (o[a].ts||0)-(o[b].ts||0);});ks.slice(0,ks.length-600).forEach(function(x){delete o[x];});}_pcSave(o);}catch(e){}}
+async function fetchEndeks(il,ilce,mah,kat,dur){var k=[il,ilce,mah||'',kat,dur].join('|');if(_c[k]!==undefined)return _c[k];
+  try{var pc=_pcLoad(),e=pc[k];if(e&&e.ts&&(Date.now()-e.ts)<PROX_TTL){_c[k]=e.v;return e.v;}}catch(e2){}
+  _c[k]=null;
   var q='/api/v1/tenant/endeks?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce)+(mah?'&mahalle='+encodeURIComponent(mah):'')+'&kategori='+kat+'&durum='+dur;
   var r=await proxApi(q),out=null;
   if(r&&!r.fallback&&r.success===true&&r.data&&+r.data.m2>0){out={m2:+r.data.m2,score:+r.data.score||0,veri:+r.data.veri_adedi||0,ilan:+r.data.ilan_sayisi||0,trend:Array.isArray(r.data.trend)?r.data.trend:[]};}
-  _c[k]=out;return out;}
+  _c[k]=out;if(out)_pcPut(k,out);return out;}
 /* ============ GERÇEK SNAPSHOT GEÇMİŞİ (dn_prox_hist) — ProX zaman-serisi vermez; her ziyarette gerçek m² kaydı biriktirir ============ */
 function _histKey(il,ilce,mah,kat,dur){return [il,ilce,mah||'',kat,dur].join('|');}
 function _histLoad(){try{return JSON.parse(localStorage.getItem('dn_prox_hist')||'{}');}catch(e){return {};}}
@@ -412,11 +419,12 @@ function ozMetric(label,val,sub,hot){return '<div class="ozd-m'+(hot?' hot':'')+
 /* ProX Değerleme (/analyze) — GERÇEK: değer aralığı + güven + piyasa yönü + pazarlık payı + karar özeti */
 var _azCache={};
 async function fetchAnalyze(il,ilce,mah){
-  var k=[il,ilce,mah||''].join('|');if(_azCache[k]!==undefined)return _azCache[k];var out=null;
+  var k='az|'+[il,ilce,mah||''].join('|');if(_azCache[k]!==undefined)return _azCache[k];var out=null;
+  try{var pc=_pcLoad(),e=pc[k];if(e&&e.ts&&(Date.now()-e.ts)<PROX_TTL){_azCache[k]=e.v;return e.v;}}catch(e2){}
   try{var r=await fetch(EMLAK_API_BASE+'/api/v1/tenant/prox/analyze',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id,'X-Tenant-Key':EMLAK_TENANT.tenant_key},body:JSON.stringify({il:il,ilce:ilce,mahalle:mah||'',kategori:'konut',durum:'satilik',brut_m2:90,attrs:{}})});
     var j=await r.json();
     if(j&&j.success===true){var rg=j.range||{};out={strong:+j.strongest_value||0,min:+rg.min_value||0,max:+rg.max_value||0,spread:+rg.spread_pct||0,conf:(isFinite(+j.confidence)?+j.confidence:null),band:j.confidence_band||'',yon:j.piyasa_yonu||'',pazarlik:(isFinite(+j.pazarlik_payi_pct)?+j.pazarlik_payi_pct:null),ozet:j.karar_ozeti||'',veri:+j.veri_adedi||0};}
-  }catch(e){}_azCache[k]=out;return out;
+  }catch(e){}_azCache[k]=out;if(out)_pcPut(k,out);return out;
 }
 function ozMoneyM(n){n=+n||0;if(n>=1e6)return (n/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+' M₺';return fmtNum(n)+' ₺';}
 function ozAzHTML(az){
