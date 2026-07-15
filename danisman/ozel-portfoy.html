@@ -116,9 +116,28 @@
   <div class="wrap">
     <div class="pf-invite-card pf-rv">
       <div class="pf-kicker" style="justify-content:center">Kişiye Özel Danışmanlık</div>
-      <h2>Bu bölgede doğru fırsatı birlikte bulalım.</h2>
-      <p>İhtiyacınızı ve bütçenizi paylaşın; ProX verisiyle bölgeyi analiz edip kriterlerinize uyan seçenekleri, ücretsiz değer analizi ve kişisel danışmanlıkla sizinle değerlendireyim.</p>
-      <a class="btn btn-gold" href="index.html#randevu">Ücretsiz Değer Analizi &amp; Görüşme</a>
+      <h2>Bu mahalle, cadde ve sokaktan ne arıyorsanız — danışmanınız bulsun.</h2>
+      <p>Aradığınız yeri ve kriterlerinizi bırakın; ProX verisiyle bölgeyi analiz edip size özel seçenekleri hazırlayıp <b>birebir</b> dönelim. Doğru fırsat, doğru danışmanla.</p>
+      <div class="oz-funnel">
+        <button type="button" class="oz-fn" onclick="ozTalepOpen({islem:'kiralik',tip:'Daire'})">
+          <span class="oz-fn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5"/><path d="m11.5 11.5 8 8M17 17l2-2M19 15l1.5 1.5"/></svg></span>
+          <span class="oz-fn-t">Kiralık Talep Et</span>
+          <span class="oz-fn-s">Bu bölgeden kiralık ev/işyeri arıyorum — danışmanım bulsun.</span>
+          <span class="oz-fn-go">Talep oluştur <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+        <button type="button" class="oz-fn" onclick="ozTalepOpen({islem:'satilik',tip:'Daire'})">
+          <span class="oz-fn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></svg></span>
+          <span class="oz-fn-t">Satılık Sor</span>
+          <span class="oz-fn-s">Satılık ev/işyeri/arsa bakıyorum — uygun olanları bana getirin.</span>
+          <span class="oz-fn-go">Talep oluştur <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+        <button type="button" class="oz-fn" onclick="ozTalepOpen({ozel:true,islem:'satilik',tip:'Daire'})">
+          <span class="oz-fn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
+          <span class="oz-fn-t">Özel Portföy Sor</span>
+          <span class="oz-fn-s">İlana çıkmayan, size özel mülkler için kriterlerimi bırakayım.</span>
+          <span class="oz-fn-go">Talep oluştur <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+      </div>
     </div>
   </div>
 </section>
@@ -275,7 +294,78 @@ function ozPanel(o){
       +'<button class="ozc-cta" onclick="event.stopPropagation();ozLead(\''+esc(o.name)+'\')">Değer Analizi '+ICO_ARR+'</button></div>'
     +'</div></div></div></div>';
 }
-function ozLead(ad){try{localStorage.setItem('dn_lead_pending',ad+' bölgesi için ücretsiz değer analizi talebi');}catch(e){}location.href='index.html#randevu';}
+/* ============ DANIŞMANA TALEP — LEAD FUNNEL (ana kurgu: kullanıcıyı danışmana yönlendir) ============ */
+function ozWaNum(){try{var c=JSON.parse(localStorage.getItem('dn_iletisim')||'null');if(c&&c.wa)return(''+c.wa).replace(/[^\d]/g,'');}catch(e){}return '905320000000';}
+function ozLeadStore(o){try{var K='dn_leads',a=JSON.parse(localStorage.getItem(K)||'[]');if(!Array.isArray(a))a=[];a.unshift(Object.assign({id:'l'+Date.now(),ts:Date.now(),date:new Date().toLocaleString('tr-TR')},o));localStorage.setItem(K,JSON.stringify(a.slice(0,300)));}catch(e){}}
+var OZ_TIPLER=['Daire','Villa','Müstakil Ev','Rezidans','İşyeri','Ofis','Dükkan','Depo','Arsa'];
+var OZ_TALEP={islem:'kiralik',tip:'Daire',konum:{},ozel:false};
+/* geriye dönük: tüm eski CTA'lar (Değer Analizi, eşleştir, bilgilendir) artık talep formunu açar */
+function ozLead(ctx){ozTalepOpen({not:(typeof ctx==='string'?ctx:'')});}
+function ozTalepOpen(p){
+  p=p||{};
+  OZ_TALEP.islem=p.islem||OZ_TALEP.islem||'kiralik';
+  OZ_TALEP.tip=p.tip||OZ_TALEP.tip||'Daire';
+  OZ_TALEP.konum={il:OZIL,ilce:OZILCE,mah:OZMAH};
+  OZ_TALEP.ozel=!!p.ozel;
+  var old=document.getElementById('ozTalep');if(old)old.remove();
+  var el=document.createElement('div');el.id='ozTalep';el.className='ozd-back ozt-back';el.innerHTML=ozTalepHTML(p);
+  el.addEventListener('click',function(e){if(e.target===el)ozTalepClose();});
+  document.body.appendChild(el);document.body.style.overflow='hidden';
+  requestAnimationFrame(function(){el.classList.add('on');});
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){ozTalepClose();document.removeEventListener('keydown',esc);}});
+  var f=document.getElementById('ozt_ad');if(f)setTimeout(function(){try{f.focus();}catch(e){}},140);
+}
+function ozTalepClose(){var el=document.getElementById('ozTalep');if(!el)return;el.classList.remove('on');document.body.style.overflow='';setTimeout(function(){if(el&&!el.classList.contains('on'))el.remove();},280);}
+function ozTalepIslem(v){OZ_TALEP.islem=v;var w=document.getElementById('ozTalep');if(!w)return;[].forEach.call(w.querySelectorAll('.ozt-seg[data-i]'),function(b){b.classList.toggle('on',b.getAttribute('data-i')===v);});}
+function ozTalepHTML(p){
+  var k=OZ_TALEP.konum,loc=[k.mah,k.ilce,k.il].filter(Boolean).join(' · ')||(k.il||'Bölge');
+  var title=OZ_TALEP.ozel?'Özel Portföy Talebi':'Danışmana Talep';
+  var lede=OZ_TALEP.ozel?'İlana koymadan sattığımız/kiraladığımız size özel mülkler için kriterlerinizi bırakın — danışmanınız birebir ulaşsın.':'Aradığınız gayrimenkulü belirtin; danışmanınız bu bölgede size özel seçenekleri bulup en kısa sürede dönsün.';
+  return '<div class="ozt" role="dialog" aria-modal="true" aria-label="'+esc(title)+'">'
+    +'<button class="ozd-x" onclick="ozTalepClose()" aria-label="Kapat">✕</button>'
+    +'<div class="ozt-head"><span class="ozt-badge">'+(OZ_TALEP.ozel?'Özel Portföy':'Talep')+'</span><h3>'+esc(title)+'</h3><span class="ozt-loc">'+ICO_PIN+esc(loc)+'</span></div>'
+    +'<div class="ozt-body">'
+      +'<p class="ozt-lede">'+lede+'</p>'
+      +'<div class="ozt-seg-row"><button type="button" class="ozt-seg'+(OZ_TALEP.islem==='kiralik'?' on':'')+'" data-i="kiralik" onclick="ozTalepIslem(\'kiralik\')">Kiralık</button><button type="button" class="ozt-seg'+(OZ_TALEP.islem==='satilik'?' on':'')+'" data-i="satilik" onclick="ozTalepIslem(\'satilik\')">Satılık</button></div>'
+      +'<div class="ozt-grid2">'
+        +'<label class="ozt-f"><span>Gayrimenkul tipi</span><select id="ozt_tip" class="pf-select">'+OZ_TIPLER.map(function(t){return '<option'+(t===OZ_TALEP.tip?' selected':'')+'>'+esc(t)+'</option>';}).join('')+'</select></label>'
+        +'<label class="ozt-f"><span>Oda (ops.)</span><select id="ozt_oda" class="pf-select"><option value="">Farketmez</option><option>1+1</option><option>2+1</option><option>3+1</option><option>4+1</option><option>5+</option></select></label>'
+      +'</div>'
+      +'<label class="ozt-f"><span>Cadde / Sokak — aradığınız yer</span><input id="ozt_cadde" class="pf-input" placeholder="ör. Nispetiye Caddesi, 12. Sokak…" value="'+esc(p.cadde||'')+'"></label>'
+      +'<label class="ozt-f"><span>Bütçe (ops.)</span><input id="ozt_butce" class="pf-input" placeholder="ör. 40.000 ₺/ay · 8.000.000 ₺"></label>'
+      +'<div class="ozt-grid2">'
+        +'<label class="ozt-f"><span>Ad Soyad *</span><input id="ozt_ad" class="pf-input" placeholder="Adınız Soyadınız"></label>'
+        +'<label class="ozt-f"><span>Telefon *</span><input id="ozt_tel" class="pf-input" inputmode="tel" placeholder="05xx xxx xx xx"></label>'
+      +'</div>'
+      +'<label class="ozt-f"><span>Not (ops.)</span><textarea id="ozt_not" class="pf-input" rows="2" placeholder="Eklemek istedikleriniz…">'+esc(p.not||'')+'</textarea></label>'
+      +'<div class="ozt-err" id="ozt_err" hidden>Lütfen adınızı ve geçerli bir telefon girin.</div>'
+      +'<div class="ozt-actions"><button class="ozt-wa" type="button" onclick="ozTalepSubmit(true)"><svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.1-1.3A10 10 0 1 0 12 2Zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5-.2-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5-.3.3c-.2.2-.3.4-.2.6.2.4.8 1.3 1.6 2 .9.8 1.7 1.1 2 1.2.2.1.4.1.6-.1l.7-.9c.2-.3.4-.2.6-.1l1.9.9c.3.1.4.2.5.3.1.2.1.8-.2 1.6Z"/></svg> WhatsApp’tan Gönder</button>'
+        +'<button class="ozt-send" type="button" onclick="ozTalepSubmit(false)">Talebi İlet</button></div>'
+      +'<p class="ozt-kvkk">Bilgileriniz yalnızca danışmanınıza iletilir; devam ederek iletişime geçilmesini kabul edersiniz.</p>'
+    +'</div></div>';
+}
+function ozTalepSubmit(viaWa){
+  var g=function(id){var e=document.getElementById(id);return e?(''+e.value).trim():'';};
+  var ad=g('ozt_ad'),tel=g('ozt_tel'),err=document.getElementById('ozt_err');
+  if(!ad||tel.replace(/\D/g,'').length<10){if(err)err.hidden=false;var t=document.getElementById(!ad?'ozt_ad':'ozt_tel');if(t)try{t.focus();}catch(e){}return;}
+  if(err)err.hidden=true;
+  var islem=OZ_TALEP.islem,tip=g('ozt_tip')||OZ_TALEP.tip,cadde=g('ozt_cadde'),butce=g('ozt_butce'),oda=g('ozt_oda'),not=g('ozt_not'),k=OZ_TALEP.konum||{};
+  var loc=[k.mah,k.ilce,k.il].filter(Boolean).join(', ')+(cadde?(' · '+cadde):'');
+  var konu=(OZ_TALEP.ozel?'Özel Portföy · ':'')+(islem==='kiralik'?'Kiralık':'Satılık')+' '+tip+' talebi';
+  var parts=['📍 '+loc];if(oda)parts.push('Oda '+oda);if(butce)parts.push('Bütçe '+butce);if(not)parts.push(not);
+  var msg=parts.join(' · ');
+  ozLeadStore({name:ad,phone:tel.replace(/[^\d+]/g,''),konu:konu,msg:msg,src:(OZ_TALEP.ozel?'Özel Portföy Talebi':'Bölge Talebi')});
+  try{fetch(EMLAK_API_BASE+'/api/v1/tenant/lead',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id,'X-Tenant-Key':EMLAK_TENANT.tenant_key},body:JSON.stringify({name:ad,phone:tel,konu:konu,mesaj:msg,il:k.il,ilce:k.ilce,mahalle:k.mah,cadde:cadde,islem:islem,tip:tip,butce:butce,oda:oda,kaynak:'ozel-portfoy'})}).catch(function(){});}catch(e){}
+  if(viaWa){var wt='Merhaba, '+loc+' bölgesinde '+(islem==='kiralik'?'kiralık':'satılık')+' '+tip+' arıyorum.'+(oda?(' Oda: '+oda+'.'):'')+(butce?(' Bütçe: '+butce+'.'):'')+(not?(' '+not):'')+' — '+ad+' ('+tel+')';window.open('https://wa.me/'+ozWaNum()+'?text='+encodeURIComponent(wt),'_blank');}
+  ozTalepDone(viaWa);
+}
+function ozTalepDone(viaWa){
+  var w=document.getElementById('ozTalep');if(!w)return;var b=w.querySelector('.ozt');if(!b)return;
+  b.innerHTML='<button class="ozd-x" onclick="ozTalepClose()" aria-label="Kapat">✕</button>'
+    +'<div class="ozt-done"><div class="ozt-done-ic">✓</div><h3>Talebiniz danışmanınıza iletildi</h3>'
+    +'<p>'+(viaWa?'WhatsApp üzerinden danışmanınıza yönlendirildiniz. ':'')+'Bu bölge için size özel seçenekler hazırlanıp en kısa sürede dönüş yapılacak.</p>'
+    +'<button class="ozt-send" type="button" onclick="ozTalepClose()">Tamam</button></div>';
+}
 function sumCard(k,v,d){return '<div class="pf-vsum-c pf-rv"><div class="k">'+k+'</div><div class="v">'+v+'</div><div class="d">'+esc(OZIL)+' · '+d+'</div></div>';}
 
 /* ============ "BU BÖLGEDE VAR MI?" — ziyaretçi arz sorgusu (gerçek ProX ilan_sayisi) ============ */
@@ -554,7 +644,46 @@ function ozStyles(){if(document.getElementById('ozF1Style'))return;var s=documen
   '.oza-detay:hover{color:var(--ink)}.oza-detay:disabled{opacity:.6;cursor:default}',
   '.oza-cta{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;border:0;cursor:pointer;font-family:var(--body);font-weight:700;font-size:12.5px;color:#0a3527;background:var(--grad-gold);padding:9px 15px;border-radius:999px;white-space:nowrap;box-shadow:0 8px 18px -8px rgba(120,90,20,.5)}',
   '.oza-cta svg{width:14px;height:14px}.oza-cta:hover{transform:translateY(-1px)}',
-  '@media(max-width:640px){.oz-ara-sonuc{flex-wrap:wrap}.oza-cta{width:100%;justify-content:center;margin-top:4px}.oz-ara-btn{width:100%;align-self:stretch}}'
+  '@media(max-width:640px){.oz-ara-sonuc{flex-wrap:wrap}.oza-cta{width:100%;justify-content:center;margin-top:4px}.oz-ara-btn{width:100%;align-self:stretch}}',
+  /* talep (lead) formu */
+  '.ozt{position:relative;width:560px;max-width:100%;background:var(--panel);border-radius:22px;border:1px solid var(--line);box-shadow:0 40px 90px -30px rgba(0,0,0,.5);transform:translateY(18px);transition:transform .3s cubic-bezier(.22,1,.36,1);overflow:hidden}',
+  '.ozt-back.on .ozt{transform:translateY(0)}',
+  '.ozt-head{padding:22px 24px 18px;padding-right:56px;background:linear-gradient(155deg,#0e5e3e,#0a3527);color:#fff}',
+  '.ozt-badge{display:inline-block;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:#0a3527;background:var(--gold-soft);padding:3px 10px;border-radius:999px}',
+  '.ozt-head h3{font-family:var(--serif);font-size:22px;margin:10px 0 6px;color:#fff;line-height:1.12}',
+  '.ozt-loc{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:rgba(220,195,137,.92)}.ozt-loc svg{width:14px;height:14px}',
+  '.ozt-body{padding:18px 24px 22px;max-height:70vh;overflow:auto}',
+  '.ozt-lede{font-size:13px;color:var(--muted);line-height:1.55;margin:0 0 16px}',
+  '.ozt-seg-row{display:flex;gap:8px;margin-bottom:14px}',
+  '.ozt-seg{flex:1;border:1px solid var(--line);background:var(--panel-2);color:var(--muted);font-family:var(--body);font-weight:700;font-size:14px;padding:11px;border-radius:11px;cursor:pointer;transition:.18s}',
+  '.ozt-seg.on{background:var(--grad-em);color:#fff;border-color:transparent;box-shadow:0 8px 18px -10px rgba(12,50,34,.6)}',
+  '.ozt-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}',
+  '.ozt-f{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}',
+  '.ozt-f>span{font-size:11px;font-weight:600;color:var(--ink);letter-spacing:.01em}',
+  '.pf-input{width:100%;border:1px solid var(--line);border-radius:11px;background:#fff;padding:11px 13px;font-family:var(--body);font-size:14px;color:var(--ink);transition:border-color .18s,box-shadow .18s}',
+  '.pf-input:focus,.ozt .pf-select:focus{outline:0;border-color:var(--em-2);box-shadow:0 0 0 3px rgba(20,128,90,.12)}',
+  'textarea.pf-input{resize:vertical;min-height:44px}',
+  '.ozt-err{font-size:12px;color:#b3261e;background:rgba(179,38,30,.08);border:1px solid rgba(179,38,30,.25);padding:8px 12px;border-radius:9px;margin:2px 0 12px}',
+  '.ozt-actions{display:flex;gap:10px;margin-top:6px}',
+  '.ozt-wa{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;font-family:var(--body);font-weight:700;font-size:14px;color:#fff;background:linear-gradient(150deg,#25b34d,#128c3c);padding:13px;border-radius:12px;box-shadow:0 10px 22px -10px rgba(18,140,60,.6);transition:transform .2s}',
+  '.ozt-wa:hover{transform:translateY(-2px)}',
+  '.ozt-send{flex:0 0 auto;border:1px solid var(--line);background:#fff;cursor:pointer;font-family:var(--body);font-weight:700;font-size:14px;color:var(--ink);padding:13px 18px;border-radius:12px;transition:.18s}',
+  '.ozt-send:hover{border-color:var(--gold-soft);color:var(--gold-deep)}',
+  '.ozt-kvkk{font-size:10.5px;color:var(--muted);line-height:1.5;margin:12px 0 0;text-align:center}',
+  '.ozt-done{padding:34px 26px 30px;text-align:center}',
+  '.ozt-done-ic{width:64px;height:64px;margin:0 auto 16px;border-radius:50%;background:rgba(47,191,113,.16);color:#12805a;display:grid;place-items:center;font-size:30px;font-weight:800}',
+  '.ozt-done h3{font-family:var(--serif);font-size:21px;color:var(--ink);margin:0 0 10px}',
+  '.ozt-done p{font-size:13.5px;color:var(--muted);line-height:1.6;margin:0 auto 20px;max-width:400px}',
+  '.ozt-done .ozt-send{display:inline-block}',
+  /* talep bandı (3 CTA) */
+  '.oz-funnel{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}',
+  '.oz-fn{display:flex;flex-direction:column;gap:6px;text-align:left;border:1px solid var(--line);background:linear-gradient(180deg,#fff,#fbf9f3);border-radius:16px;padding:18px;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s}',
+  '.oz-fn:hover{transform:translateY(-3px);box-shadow:0 18px 36px -22px rgba(12,50,34,.5);border-color:var(--gold-soft)}',
+  '.oz-fn-ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--grad-em);color:var(--gold-soft);margin-bottom:4px}.oz-fn-ic svg{width:21px;height:21px}',
+  '.oz-fn-t{font-family:var(--serif);font-weight:700;font-size:17px;color:var(--ink)}',
+  '.oz-fn-s{font-size:12px;color:var(--muted);line-height:1.45}',
+  '.oz-fn-go{margin-top:6px;font-size:12.5px;font-weight:700;color:var(--gold-deep);display:inline-flex;align-items:center;gap:5px}.oz-fn-go svg{width:14px;height:14px}',
+  '@media(max-width:640px){.oz-funnel{grid-template-columns:1fr}.ozt-grid2{grid-template-columns:1fr}}'
   ].join('');
   document.head.appendChild(s);}
 /* Faz 2 — SEO'yu reseller'ın primary iline göre yerelleştir (yerel SEO); marka kısmını brand.js yönetir */
