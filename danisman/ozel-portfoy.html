@@ -106,6 +106,7 @@
 <section class="pf-wrap">
   <div class="wrap">
     <div class="pf-vsum" id="ozSum"></div>
+    <div id="ozRank" class="ozrk" hidden></div>
     <div class="pf-grid" id="ozGrid"><div class="pf-skel">ProX mahalle fiyat endeksi hesaplanıyor…</div></div>
     <div class="pf-note" style="margin-top:34px"><b>Kaynak:</b> mahalle m² değerleri <b>ProX canlı endeksinden</b> (gerçek piyasa verisi); kategori <b>başlangıç fiyatları</b> ve segment/tipoloji göstergeleri bu endeksten türetilen <b>temsili</b> değerlerdir — kesin değerleme için ücretsiz analiz. <a href="index.html#randevu">Değer analizi isteyin</a>.</div>
   </div>
@@ -590,6 +591,17 @@ async function ozRender(){
   if(agg.ts.length)sc.push(sumCard('Ort. Ticari',fmtNum(avg(agg.ts))+' <small style="font-size:.5em;color:var(--gold-ink)">₺/m²</small>','işyeri'));
   if(agg.as.length)sc.push(sumCard('Ort. Arsa',fmtNum(avg(agg.as))+' <small style="font-size:.5em;color:var(--gold-ink)">₺/m²</small>','imarlı arsa'));
   document.getElementById('ozSum').innerHTML=sc.join('');
+  /* bölge m² sıralaması (dashboard bar grafiği · konut satılık ₺/m²) */
+  var rankEl=document.getElementById('ozRank');
+  if(rankEl){
+    var ranked=datas.filter(function(x){return x.d.ks&&x.d.ks.m2>0;}).map(function(x){return {name:x.rg.name,m2:x.d.ks.m2};}).sort(function(a,b){return b.m2-a.m2;}).slice(0,8);
+    if(ranked.length>=3){
+      var mx=ranked[0].m2||1;
+      rankEl.innerHTML='<div class="ozrk-h"><span class="ozrk-t">Bölge m² Sıralaması</span><span class="ozrk-tag"><span class="ozrk-dot"></span>canlı ₺/m² · konut satılık</span></div>'
+        +ranked.map(function(r){var pct=Math.max(7,Math.round(r.m2/mx*100));return '<div class="ozrk-row"><span class="ozrk-nm">'+esc(r.name)+'</span><div class="ozrk-bar"><i style="width:'+pct+'%"></i></div><span class="ozrk-v">'+fmtNum(r.m2)+'</span></div>';}).join('');
+      rankEl.hidden=false;
+    }else{rankEl.hidden=true;rankEl.innerHTML='';}
+  }
   try{window.dnFavReflect&&dnFavReflect();}catch(e){}
   pfReveal();
 }
@@ -781,7 +793,26 @@ function ozStyles(){if(document.getElementById('ozF1Style'))return;var s=documen
   '.ozd-ds span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}',
   '.ozd-ds b{font-family:var(--serif-2);font-weight:700;font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}',
   '.ozd-tag.est{color:#8a6a22;background:rgba(195,155,69,.13)}',
-  '@media(max-width:560px){.ozd-demo{grid-template-columns:1fr}}'
+  '@media(max-width:560px){.ozd-demo{grid-template-columns:1fr}}',
+  /* dashboard: bölge m² sıralaması bar grafiği */
+  '.ozrk{margin:14px 0 4px;background:linear-gradient(180deg,#fff,#fcfaf4);border:1px solid var(--line);border-radius:16px;padding:16px 18px}',
+  '.ozrk-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}',
+  '.ozrk-t{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--ink)}',
+  '.ozrk-tag{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.04em;text-transform:uppercase;font-weight:700;color:#12805a;background:rgba(47,191,113,.1);padding:4px 10px;border-radius:7px}',
+  '.ozrk-dot{width:7px;height:7px;border-radius:50%;background:#2fbf71}',
+  '.ozrk-row{display:grid;grid-template-columns:96px 1fr 78px;align-items:center;gap:11px;padding:5px 0}',
+  '.ozrk-nm{font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
+  '.ozrk-bar{height:22px;background:var(--panel-2);border-radius:6px;overflow:hidden}',
+  '.ozrk-bar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#0e5e3e,#1d9e75);transition:width .6s cubic-bezier(.22,1,.36,1)}',
+  '.ozrk-v{font-family:"Space Grotesk",var(--body);font-weight:600;font-size:12.5px;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}',
+  /* dashboard: sayıları Space Grotesk tabular (fintech his) */
+  '.pf-vsum-c .v{font-family:"Space Grotesk",var(--serif-2)!important;font-variant-numeric:tabular-nums;letter-spacing:-.01em}',
+  '.ozt-pr{font-family:"Space Grotesk",var(--serif-2);font-variant-numeric:tabular-nums;letter-spacing:-.01em;font-size:17px}',
+  '.ozt-pr em{font-family:var(--body)}',
+  '.ozt-mlbl b,.ozr-m2n{font-family:"Space Grotesk",var(--body);font-variant-numeric:tabular-nums}',
+  '.ozg-n{font-family:"Space Grotesk",var(--serif-2)}',
+  '.ozd-m-v,.ozd-ds b,.ozd-az-v,.ozd-az-c b{font-family:"Space Grotesk",var(--serif-2)!important;font-variant-numeric:tabular-nums;letter-spacing:-.01em}',
+  '.kpi-none{display:none}'
   ].join('');
   document.head.appendChild(s);}
 /* Faz 2 — SEO'yu reseller'ın primary iline göre yerelleştir (yerel SEO); marka kısmını brand.js yönetir */
