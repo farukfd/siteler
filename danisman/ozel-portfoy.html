@@ -329,7 +329,7 @@ function ozTalepHTML(p){
   var k=OZ_TALEP.konum,loc=[k.mah,k.ilce,k.il].filter(Boolean).join(' · ')||(k.il||'Bölge');
   var title=OZ_TALEP.ozel?'Özel Portföy Talebi':'Danışmana Talep';
   var lede=OZ_TALEP.ozel?'İlana koymadan sattığımız/kiraladığımız size özel mülkler için kriterlerinizi bırakın — danışmanınız birebir ulaşsın.':'Aradığınız gayrimenkulü belirtin; danışmanınız bu bölgede size özel seçenekleri bulup en kısa sürede dönsün.';
-  return '<div class="ozt" role="dialog" aria-modal="true" aria-label="'+esc(title)+'">'
+  return '<div class="oztf" role="dialog" aria-modal="true" aria-label="'+esc(title)+'">'
     +'<button class="ozd-x" onclick="ozTalepClose()" aria-label="Kapat">✕</button>'
     +'<div class="ozt-head"><span class="ozt-badge">'+(OZ_TALEP.ozel?'Özel Portföy':'Talep')+'</span><h3>'+esc(title)+'</h3><span class="ozt-loc">'+ICO_PIN+esc(loc)+'</span></div>'
     +'<div class="ozt-body">'
@@ -368,7 +368,7 @@ function ozTalepSubmit(viaWa){
   ozTalepDone(viaWa);
 }
 function ozTalepDone(viaWa){
-  var w=document.getElementById('ozTalep');if(!w)return;var b=w.querySelector('.ozt');if(!b)return;
+  var w=document.getElementById('ozTalep');if(!w)return;var b=w.querySelector('.oztf');if(!b)return;
   b.innerHTML='<button class="ozd-x" onclick="ozTalepClose()" aria-label="Kapat">✕</button>'
     +'<div class="ozt-done"><div class="ozt-done-ic">✓</div><h3>Talebiniz danışmanınıza iletildi</h3>'
     +'<p>'+(viaWa?'WhatsApp üzerinden danışmanınıza yönlendirildiniz. ':'')+'Bu bölge için size özel seçenekler hazırlanıp en kısa sürede dönüş yapılacak.</p>'
@@ -651,7 +651,8 @@ function ozStyles(){if(document.getElementById('ozF1Style'))return;var s=documen
   '.ozr-gauge{flex:0 0 auto;margin-left:auto;line-height:0}',
   '.ozg-n{font-family:var(--serif-2);font-weight:700;font-size:12.5px;fill:var(--ink)}',
   '.ozg-l{font-size:4.4px;letter-spacing:.12em;fill:var(--muted);font-family:var(--body);font-weight:600}',
-  '.ozt-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:15px 18px 6px}',
+  '.ozt-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:11px;padding:15px 18px 6px}',
+  '@media(max-width:560px){.ozt-grid{grid-template-columns:1fr}}',
   '.ozt{position:relative;border:1px solid var(--line);border-radius:14px;padding:12px 13px 13px;background:linear-gradient(180deg,#fff,#fcfaf4);display:flex;flex-direction:column;gap:5px;overflow:hidden;transition:border-color .2s,box-shadow .2s}',
   '.ozt::before{content:"";position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--tint,#c39b45)}',
   '.pf-cardw:hover .ozt{box-shadow:0 8px 18px -14px rgba(12,50,34,.4)}',
@@ -745,8 +746,8 @@ function ozStyles(){if(document.getElementById('ozF1Style'))return;var s=documen
   '.oza-cta svg{width:14px;height:14px}.oza-cta:hover{transform:translateY(-1px)}',
   '@media(max-width:640px){.oz-ara-sonuc{flex-wrap:wrap}.oza-cta{width:100%;justify-content:center;margin-top:4px}.oz-ara-btn{width:100%;align-self:stretch}}',
   /* talep (lead) formu */
-  '.ozt{position:relative;width:560px;max-width:100%;background:var(--panel);border-radius:22px;border:1px solid var(--line);box-shadow:0 40px 90px -30px rgba(0,0,0,.5);transform:translateY(18px);transition:transform .3s cubic-bezier(.22,1,.36,1);overflow:hidden}',
-  '.ozt-back.on .ozt{transform:translateY(0)}',
+  '.oztf{position:relative;width:560px;max-width:100%;background:var(--panel);border-radius:22px;border:1px solid var(--line);box-shadow:0 40px 90px -30px rgba(0,0,0,.5);transform:translateY(18px);transition:transform .3s cubic-bezier(.22,1,.36,1);overflow:hidden}',
+  '.ozt-back.on .oztf{transform:translateY(0)}',
   '.ozt-head{padding:22px 24px 18px;padding-right:56px;background:linear-gradient(155deg,#0e5e3e,#0a3527);color:#fff}',
   '.ozt-badge{display:inline-block;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:#0a3527;background:var(--gold-soft);padding:3px 10px;border-radius:999px}',
   '.ozt-head h3{font-family:var(--serif);font-size:22px;margin:10px 0 6px;color:#fff;line-height:1.12}',
@@ -760,7 +761,7 @@ function ozStyles(){if(document.getElementById('ozF1Style'))return;var s=documen
   '.ozt-f{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}',
   '.ozt-f>span{font-size:11px;font-weight:600;color:var(--ink);letter-spacing:.01em}',
   '.pf-input{width:100%;border:1px solid var(--line);border-radius:11px;background:#fff;padding:11px 13px;font-family:var(--body);font-size:14px;color:var(--ink);transition:border-color .18s,box-shadow .18s}',
-  '.pf-input:focus,.ozt .pf-select:focus{outline:0;border-color:var(--em-2);box-shadow:0 0 0 3px rgba(20,128,90,.12)}',
+  '.pf-input:focus,.oztf .pf-select:focus{outline:0;border-color:var(--em-2);box-shadow:0 0 0 3px rgba(20,128,90,.12)}',
   'textarea.pf-input{resize:vertical;min-height:44px}',
   '.ozt-err{font-size:12px;color:#b3261e;background:rgba(179,38,30,.08);border:1px solid rgba(179,38,30,.25);padding:8px 12px;border-radius:9px;margin:2px 0 12px}',
   '.ozt-actions{display:flex;gap:10px;margin-top:6px}',
