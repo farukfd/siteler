@@ -576,42 +576,53 @@ async function ozRender(){
     if(!ilceler.length){grid.innerHTML='<div class="pf-empty">Bu il için ilçe verisi bulunamadı.</div>';document.getElementById('ozCount').textContent='0';return;}
     regions=ilceler.map(function(ic){return {name:ic,sub:OZIL+' İli',ilce:ic,mah:null};});
   }
-  var datas=await Promise.all(regions.map(function(rg){return regionData(OZIL,rg.ilce,rg.mah).then(function(d){return {rg:rg,d:d};});}));
-  if(myseq!==_ozSeq)return;
-  var panels=[],agg={ks:[],kk:[],ts:[],as:[]};_OZREG={};
-  datas.forEach(function(row,i){
-    var rg=row.rg,d=row.d;
-    if(d.ks&&d.ks.m2)agg.ks.push(d.ks.m2);if(d.kk&&d.kk.m2)agg.kk.push(d.kk.m2);if(d.ts&&d.ts.m2)agg.ts.push(d.ts.m2);if(d.as&&d.as.m2)agg.as.push(d.as.m2);
-    if(d.ks&&d.ks.m2)histRecord(OZIL,rg.ilce,rg.mah,'konut','satilik',d.ks.m2,d.ks.trend);
-    if(d.kk&&d.kk.m2)histRecord(OZIL,rg.ilce,rg.mah,'konut','kiralik',d.kk.m2,d.kk.trend);
-    var id='vp-'+_slug(rg.name)+'-'+i;
-    _OZREG[id]={id:id,name:rg.name,sub:rg.sub,il:OZIL,ilce:rg.ilce,mah:rg.mah,d:d};
-    var html=ozPanel({id:id,name:rg.name,sub:rg.sub,data:d});
-    if(html)panels.push(html);
-  });
-  grid.innerHTML=panels.length?panels.join(''):'<div class="pf-empty">Bu bölge için ProX fiyat endeksi bulunamadı — başka ilçe / mahalle seçin.</div>';
-  document.getElementById('ozCount').textContent=panels.length;
-  document.getElementById('ozStatN').textContent=panels.length;
+  /* PROGRESSIVE RENDER: kartlar veri geldikçe tek tek belirir (ilk yük daha canlı) */
+  _OZREG={};
+  var total=regions.length,datas=new Array(total),agg={ks:[],kk:[],ts:[],as:[]},doneCount=0;
+  grid.innerHTML=regions.map(function(rg,i){return '<div class="pf-card oz-slot" data-slot="'+i+'"><div class="oz-slot-in"></div></div>';}).join('');
+  document.getElementById('ozCount').textContent='…';
   var avg=function(a){return a.length?Math.round(a.reduce(function(s,x){return s+x;},0)/a.length):0;};
-  var sc=[];
-  if(agg.ks.length)sc.push(sumCard('Ort. Satılık Daire',fmtNum(avg(agg.ks))+' <small style="font-size:.5em;color:var(--gold-ink)">₺/m²</small>','konut satılık'));
-  if(agg.kk.length)sc.push(sumCard('Ort. Kiralık Daire',fmtNum(avg(agg.kk))+' <small style="font-size:.5em;color:var(--gold-ink)">₺/m²·ay</small>','konut kiralık'));
-  if(agg.ts.length)sc.push(sumCard('Ort. Ticari',fmtNum(avg(agg.ts))+' <small style="font-size:.5em;color:var(--gold-ink)">₺/m²</small>','işyeri'));
-  if(agg.as.length)sc.push(sumCard('Ort. Arsa',fmtNum(avg(agg.as))+' <small style="font-size:.5em;color:var(--gold-ink)">₺/m²</small>','imarlı arsa'));
-  document.getElementById('ozSum').innerHTML=sc.join('');
-  /* bölge m² sıralaması (dashboard bar grafiği · konut satılık ₺/m²) */
-  var rankEl=document.getElementById('ozRank');
-  if(rankEl){
-    var ranked=datas.filter(function(x){return x.d.ks&&x.d.ks.m2>0;}).map(function(x){return {name:x.rg.name,m2:x.d.ks.m2};}).sort(function(a,b){return b.m2-a.m2;}).slice(0,8);
-    if(ranked.length>=3){
-      var mx=ranked[0].m2||1;
-      rankEl.innerHTML='<div class="ozrk-h"><span class="ozrk-t">Bölge m² Sıralaması</span><span class="ozrk-tag"><span class="ozrk-dot"></span>canlı ₺/m² · konut satılık</span></div>'
-        +ranked.map(function(r){var pct=Math.max(7,Math.round(r.m2/mx*100));return '<div class="ozrk-row"><span class="ozrk-nm">'+esc(r.name)+'</span><div class="ozrk-bar"><i style="width:'+pct+'%"></i></div><span class="ozrk-v">'+fmtNum(r.m2)+'</span></div>';}).join('');
-      rankEl.hidden=false;
-    }else{rankEl.hidden=true;rankEl.innerHTML='';}
-  }
-  try{window.dnFavReflect&&dnFavReflect();}catch(e){}
-  pfReveal();
+  var finalize=function(){
+    if(myseq!==_ozSeq)return;
+    [].forEach.call(grid.querySelectorAll('.oz-slot'),function(s){s.remove();});
+    var shown=grid.querySelectorAll('.ozcard').length;
+    if(!shown)grid.innerHTML='<div class="pf-empty">Bu bölge için ProX fiyat endeksi bulunamadı — başka ilçe / mahalle seçin.</div>';
+    document.getElementById('ozCount').textContent=shown;
+    document.getElementById('ozStatN').textContent=shown;
+    var sc=[];
+    if(agg.ks.length)sc.push(sumCard('Ort. Satılık Daire',fmtNum(avg(agg.ks))+' <small style="font-size:.5em;color:var(--gold-ink)">₺/m²</small>','konut satılık'));
+    if(agg.kk.length)sc.push(sumCard('Ort. Kiralık Daire',fmtNum(avg(agg.kk))+' <small style="font-size:.5em;color:var(--gold-ink)">₺/m²·ay</small>','konut kiralık'));
+    if(agg.ts.length)sc.push(sumCard('Ort. Ticari',fmtNum(avg(agg.ts))+' <small style="font-size:.5em;color:var(--gold-ink)">₺/m²</small>','işyeri'));
+    if(agg.as.length)sc.push(sumCard('Ort. Arsa',fmtNum(avg(agg.as))+' <small style="font-size:.5em;color:var(--gold-ink)">₺/m²</small>','imarlı arsa'));
+    document.getElementById('ozSum').innerHTML=sc.join('');
+    var rankEl=document.getElementById('ozRank');
+    if(rankEl){
+      var ranked=datas.filter(Boolean).filter(function(x){return x.d.ks&&x.d.ks.m2>0;}).map(function(x){return {name:x.rg.name,m2:x.d.ks.m2};}).sort(function(a,b){return b.m2-a.m2;}).slice(0,8);
+      if(ranked.length>=3){
+        var mx=ranked[0].m2||1;
+        rankEl.innerHTML='<div class="ozrk-h"><span class="ozrk-t">Bölge m² Sıralaması</span><span class="ozrk-tag"><span class="ozrk-dot"></span>canlı ₺/m² · konut satılık</span></div>'
+          +ranked.map(function(r){var pct=Math.max(7,Math.round(r.m2/mx*100));return '<div class="ozrk-row"><span class="ozrk-nm">'+esc(r.name)+'</span><div class="ozrk-bar"><i style="width:'+pct+'%"></i></div><span class="ozrk-v">'+fmtNum(r.m2)+'</span></div>';}).join('');
+        rankEl.hidden=false;
+      }else{rankEl.hidden=true;rankEl.innerHTML='';}
+    }
+    try{window.dnFavReflect&&dnFavReflect();}catch(e){}
+    pfReveal();
+  };
+  regions.forEach(function(rg,i){
+    regionData(OZIL,rg.ilce,rg.mah).then(function(d){
+      if(myseq!==_ozSeq)return;
+      datas[i]={rg:rg,d:d};
+      if(d.ks&&d.ks.m2)agg.ks.push(d.ks.m2);if(d.kk&&d.kk.m2)agg.kk.push(d.kk.m2);if(d.ts&&d.ts.m2)agg.ts.push(d.ts.m2);if(d.as&&d.as.m2)agg.as.push(d.as.m2);
+      if(d.ks&&d.ks.m2)histRecord(OZIL,rg.ilce,rg.mah,'konut','satilik',d.ks.m2,d.ks.trend);
+      if(d.kk&&d.kk.m2)histRecord(OZIL,rg.ilce,rg.mah,'konut','kiralik',d.kk.m2,d.kk.trend);
+      var id='vp-'+_slug(rg.name)+'-'+i;
+      _OZREG[id]={id:id,name:rg.name,sub:rg.sub,il:OZIL,ilce:rg.ilce,mah:rg.mah,d:d};
+      var html=ozPanel({id:id,name:rg.name,sub:rg.sub,data:d});
+      var slot=grid.querySelector('.oz-slot[data-slot="'+i+'"]');
+      if(html&&slot){var w=document.createElement('div');w.innerHTML=html;var card=w.firstChild;card.classList.add('in');slot.replaceWith(card);}
+      else if(slot){slot.remove();}
+    }).catch(function(){}).then(function(){doneCount++;if(doneCount>=total)finalize();});
+  });
 }
 
 async function ozPopulateIlce(){
@@ -820,7 +831,11 @@ function ozStyles(){if(document.getElementById('ozF1Style'))return;var s=documen
   '.ozt-mlbl b,.ozr-m2n{font-family:"Space Grotesk",var(--body);font-variant-numeric:tabular-nums}',
   '.ozg-n{font-family:"Space Grotesk",var(--serif-2)}',
   '.ozd-m-v,.ozd-ds b,.ozd-az-v,.ozd-az-c b{font-family:"Space Grotesk",var(--serif-2)!important;font-variant-numeric:tabular-nums;letter-spacing:-.01em}',
-  '.kpi-none{display:none}'
+  '.kpi-none{display:none}',
+  /* progressive render skeleton slot */
+  '.oz-slot{min-height:300px}',
+  '.oz-slot-in{width:100%;height:100%;min-height:300px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(100deg,var(--panel-2) 28%,#fff 50%,var(--panel-2) 72%);background-size:220% 100%;animation:ozshim 1.25s linear infinite}',
+  '@keyframes ozshim{0%{background-position:220% 0}100%{background-position:-220% 0}}'
   ].join('');
   document.head.appendChild(s);}
 /* Faz 2 — SEO'yu reseller'ın primary iline göre yerelleştir (yerel SEO); marka kısmını brand.js yönetir */
