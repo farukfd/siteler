@@ -359,9 +359,10 @@ async function rebuildVipFromProx(il,silent){if(_vipBusy)return;_vipBusy=true;sa
       if(az&&az.min>0){baslangic=Math.max(100000,Math.round(az.min/100000)*100000);real++;}
       else{var base=(BAZ[s.ilce]&&BAZ[s.ilce].m2)||30000;baslangic=Math.round(base*s.m2*1.4/100000)*100000;}
       var ekIl=(s.il!==primary);
-      out.push({tip:s.tip,tag:s.tag,baslik:s.mah+' '+s.tag,cadde:s.cadde,bolge:s.ilce+(ekIl?' · '+s.il:''),m2:s.m2+' m²',oda:s.oda,ozet:s.ozet,baslangic:baslangic});
+      out.push({il:s.il,ilce:s.ilce,mah:s.mah,tip:s.tip,tag:s.tag,baslik:s.mah+' '+s.tag,cadde:s.cadde,bolge:s.ilce+(ekIl?' · '+s.il:''),m2:s.m2+' m²',oda:s.oda,ozet:s.ozet,baslangic:baslangic});
     });
     if(out.length){VIP_PORTFOLIO.length=0;out.forEach(function(x){VIP_PORTFOLIO.push(x);});}
+    try{ozpMergeProx(out);renderOzp();}catch(e){}/* ProX üretimini kalıcı özel-portföy deposuna birleştir (manuel korunur) → ozel-portfoy.html canlı okur */
     try{localStorage.setItem('dn_vip_ts',JSON.stringify({il:primary,ts:Date.now(),n:out.length,real:real}));}catch(e){}
     /* #vaultGrid artık mahalle satılık/kiralık ProX endeksi gösterir (vaultIndexLoad); VIP_PORTFOLIO admin/aramada kullanılır */
     try{renderVipStatus();}catch(e){}
@@ -371,6 +372,49 @@ async function rebuildVipFromProx(il,silent){if(_vipBusy)return;_vipBusy=true;sa
 function renderVipStatus(){var el=document.getElementById('vipStatus');if(!el)return;var q=null,ts=null;try{q=JSON.parse(localStorage.getItem('dn_quota')||'null');}catch(e){}try{ts=JSON.parse(localStorage.getItem('dn_vip_ts')||'null');}catch(e){}
   el.innerHTML='<div style="font-size:12.5px;color:var(--muted);line-height:1.7">📦 Özel Portföy: '+(ts&&ts.ts?('<b style="color:var(--gold)">'+wlAgo(ts.ts)+'</b> · '+ts.n+' gayrimenkul / '+(ts.real||0)+' gerçek analiz fiyatı ('+ts.il+')'):'henüz ProX ile oluşturulmadı')+(q?(' &nbsp;·&nbsp; 📊 Kota: '+fmt(q.count)+' istek ('+q.month+')'):'')+'</div>';}
 window.rebuildVipFromProx=rebuildVipFromProx;window.renderVipStatus=renderVipStatus;
+/* ============ ÖZEL PORTFÖY — KALICI DEPO + ADMIN CRUD (dn_ozel_portoy) ============
+   Manuel giriş (mahalle/cadde/sokak/kategori) + ProX auto-üretim TEK depoda; her kayıt yayın-kontrollü.
+   ozel-portfoy.html bu depodan (yalnız yayındakiler) radar işaretleri + portföyü üretir → tam dinamik. */
+function ozpAll(){try{var a=JSON.parse(localStorage.getItem('dn_ozel_portoy')||'null');return Array.isArray(a)?a:[];}catch(e){return [];}}
+function ozpSave(a){try{localStorage.setItem('dn_ozel_portoy',JSON.stringify(a||[]));}catch(e){}}
+function ozpPublished(){return ozpAll().filter(function(p){return p&&p.yayin!==false;});}
+function _ozpNum(s){return parseInt((''+(s||'')).replace(/[^\d]/g,''),10)||0;}
+function _ozpHash(s){var h=0;s=''+s;for(var i=0;i<s.length;i++){h=((h<<5)-h+s.charCodeAt(i))|0;}return Math.abs(h);}
+function ozpAddManual(){
+  var g=function(id){var e=document.getElementById(id);return e?(''+e.value).trim():'';};
+  var il=g('ozp_il')||((typeof SERVICE_AREA!=='undefined'&&SERVICE_AREA&&SERVICE_AREA.primary)||'İstanbul');
+  var ilce=g('ozp_ilce'),mah=g('ozp_mah'),cadde=g('ozp_cadde'),kat=g('ozp_kat'),oda=g('ozp_oda'),m2=_ozpNum(g('ozp_m2')),fiyat=_ozpNum(g('ozp_fiyat'));
+  if(!ilce||!mah){if(window.toast)toast('İlçe ve mahalle zorunludur.');return;}
+  var a=ozpAll();
+  a.unshift({id:'ozp_'+Date.now()+'_'+Math.floor(Math.random()*1e4),il:il,ilce:ilce,mah:mah,cadde:cadde||'',kategori:kat||'Konut',tip:(kat||'konut').toLocaleLowerCase('tr'),tag:kat||'Özel Kayıt',oda:oda||'',m2:m2||0,baslangic:fiyat||0,yayin:true,src:'manual',ts:Date.now()});
+  ozpSave(a);['ozp_mah','ozp_cadde','ozp_oda','ozp_m2','ozp_fiyat'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  renderOzp();if(window.toast)toast('✓ Özel portföy eklendi ('+mah+') — yayında.');
+}
+function ozpToggle(id){var a=ozpAll(),p=a.filter(function(x){return x.id===id;})[0];if(!p)return;p.yayin=(p.yayin===false);ozpSave(a);renderOzp();if(window.toast)toast(p.yayin!==false?'✓ Yayına alındı.':'Yayından kaldırıldı.');}
+function ozpDel(id){var a=ozpAll().filter(function(x){return x.id!==id;});ozpSave(a);renderOzp();if(window.toast)toast('Kayıt silindi.');}
+/* ProX auto-üretimini depoya BİRLEŞTİR — manuel kayıtlar korunur, önceki ProX kayıtların yayın durumu saklanır */
+function ozpMergeProx(items){
+  var a=ozpAll();var keep=a.filter(function(p){return p.src==='manual';});
+  var prevY={};a.forEach(function(p){if(p.src==='prox')prevY[[p.il,p.ilce,p.mah,p.cadde,p.tag].join('|')]=p.yayin;});
+  (items||[]).forEach(function(o){var k=[o.il,o.ilce,o.mah,o.cadde,o.tag].join('|');
+    keep.push({id:'ozx_'+_ozpHash(k),il:o.il,ilce:o.ilce,mah:o.mah,cadde:o.cadde||'',kategori:o.tag,tip:o.tip,tag:o.tag,oda:o.oda||'',m2:_ozpNum(o.m2),baslangic:o.baslangic||0,yayin:(prevY[k]!==undefined?prevY[k]:true),src:'prox',ts:Date.now()});});
+  ozpSave(keep);
+}
+function renderOzp(){var host=document.getElementById('ozpAdmin');if(!host)return;var a=ozpAll();var pub=a.filter(function(p){return p.yayin!==false;}).length;
+  var kats=(typeof saKategoriler==='function'&&saKategoriler().length)?saKategoriler():['Konut','İşyeri','Arsa','Villa','Yalı','Rezidans','Penthouse'];
+  var iller=(typeof saActiveIller==='function'&&saActiveIller().length)?saActiveIller():[((typeof SERVICE_AREA!=='undefined'&&SERVICE_AREA&&SERVICE_AREA.primary)||'İstanbul')];
+  var form='<div class="ozp-form" style="border:1px solid var(--line-soft);border-radius:12px;padding:14px;background:rgba(0,0,0,.02)">'
+    +'<div class="sta-row2"><div class="sta-f"><label>İl</label><select id="ozp_il">'+iller.map(function(x){return '<option>'+_leD(x)+'</option>';}).join('')+'</select></div><div class="sta-f"><label>İlçe *</label><input id="ozp_ilce" placeholder="ör. Beşiktaş"></div></div>'
+    +'<div class="sta-row2"><div class="sta-f"><label>Mahalle *</label><input id="ozp_mah" placeholder="ör. Bebek"></div><div class="sta-f"><label>Cadde / Sokak</label><input id="ozp_cadde" placeholder="ör. Nispetiye Cad., 12. Sok."></div></div>'
+    +'<div class="sta-row2"><div class="sta-f"><label>Kategori</label><select id="ozp_kat">'+kats.map(function(x){return '<option>'+_leD(x)+'</option>';}).join('')+'</select></div><div class="sta-f"><label>Oda</label><input id="ozp_oda" placeholder="ör. 4+1"></div></div>'
+    +'<div class="sta-row2"><div class="sta-f"><label>m²</label><input id="ozp_m2" placeholder="ör. 220"></div><div class="sta-f"><label>Başlangıç ₺ (opsiyonel)</label><input id="ozp_fiyat" placeholder="ör. 25000000"></div></div>'
+    +'<button class="btn btn-gold sta-go" onclick="ozpAddManual()">+ Özel Portföy Ekle</button></div>';
+  var rows=a.length?a.map(function(p){return '<div class="ozp-row" style="display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid var(--line-soft);border-radius:10px;padding:10px 12px'+(p.yayin===false?';opacity:.55':'')+'">'
+      +'<div style="min-width:0"><b>'+_leD(p.mah)+'</b> <span class="sub">'+_leD(p.ilce)+(p.il&&p.il!=='İstanbul'?' · '+_leD(p.il):'')+'</span>'+(p.cadde?' · '+_leD(p.cadde):'')+'<br><span class="sub" style="font-size:11.5px">'+_leD(p.kategori||p.tag)+(p.oda?' · '+_leD(p.oda):'')+(p.m2?' · '+p.m2+' m²':'')+(p.baslangic?' · '+fmt(p.baslangic)+' başlangıç':'')+' · '+(p.src==='manual'?'✍️ manuel':'⚙️ ProX')+'</span></div>'
+      +'<div style="display:flex;gap:6px;flex:none"><button class="btn btn-line" style="font-size:12px;white-space:nowrap" onclick="ozpToggle(\''+p.id+'\')">'+(p.yayin!==false?'● Yayında':'○ Kaldırıldı')+'</button><button class="btn btn-line" style="font-size:12px" onclick="ozpDel(\''+p.id+'\')">Sil</button></div></div>';}).join(''):'<p class="sub">Henüz kayıt yok — yukarıdan manuel ekleyin ya da ProX ile otomatik üretin.</p>';
+  host.innerHTML='<div style="font-size:12.5px;color:var(--muted);margin-bottom:10px">Toplam <b style="color:var(--gold)">'+a.length+'</b> kayıt · <b style="color:var(--gold)">'+pub+'</b> yayında · <i>ozel-portfoy.html canlı okur</i></div>'+form+'<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;max-height:340px;overflow:auto">'+rows+'</div>';
+}
+try{window.ozpAddManual=ozpAddManual;window.ozpToggle=ozpToggle;window.ozpDel=ozpDel;window.renderOzp=renderOzp;window.ozpAll=ozpAll;window.ozpPublished=ozpPublished;window.ozpMergeProx=ozpMergeProx;}catch(e){}
 /* ===================== KURULUM SİHİRBAZI — danışman tek akış ===================== */
 var OB={step:1,advisor:'',brand:'',unvan:'',vergi:'',mail:'',tel:'',adres:'',belge:'',accent:'',logo:'',bolgeler:'',key:''};
 var OB_STEPS=['Danışman & Firma','EİDS Yetki','Marka & Logo','Hizmet Bölgeleri','ProX ile Kur'];
@@ -1653,11 +1697,11 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
      +'<div class="sta-f"><label>Kategoriler</label><div id="saKatChips" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0"></div><div class="sta-row2"><input id="saAddKat" placeholder="ör. Yalı" onkeydown="if(event.key===\'Enter\'){saAddKat();event.preventDefault();}"><button class="btn btn-line" onclick="saAddKat()">+ Ekle</button></div></div>'
      +'<button class="btn btn-gold sta-go" onclick="saApply()">Kaydet & Siteye Uygula</button></div>'
    /* PORTFOY */
-   +'<div class="sta-pane" data-p="portfoy" hidden><h4>Özel Portföy — ProX Gerçek Veri</h4><p class="sub">Hizmet alanınıza (il · ilçe · mahalle) göre ProX analiz (range.min) <b>gerçek başlangıç fiyatlarıyla</b> Özel Portföy (VIP) oluşturun.</p>'
-     +'<div id="vipStatus" style="margin:8px 0"></div>'
-     +'<div class="sta-row2"><div class="sta-f"><label>Açık İlan</label><input value="'+LISTINGS.length+' güncel ilan" readonly></div><div class="sta-f"><label>VIP Portföy</label><input value="'+VIP_PORTFOLIO.length+' yetki belgeli (adres gizli)" readonly></div></div>'
-     +'<button class="btn btn-gold sta-go" onclick="rebuildVipFromProx()">⟳ ProX Gerçek Fiyatlarla Oluştur</button>'
-     +'<p class="sub" style="margin-top:10px">EİDS yetkisi açık ilan yayını içindir; VIP portföy davet usulüdür (adres gizli).</p></div>'
+   +'<div class="sta-pane" data-p="portfoy" hidden><h4>Özel Portföy — Dinamik Yönetim</h4><p class="sub"><b>Manuel ekleyin</b> (mahalle · cadde/sokak · kategori) ya da <b>ProX</b> ile hizmet alanınızdaki tüm ilçe/mahalleye <b>gerçek fiyatla</b> otomatik üretin. Her kaydı <b>yayınla/kaldır</b>. <b>ozel-portfoy.html</b> yalnız yayındakileri canlı okur (radar + portföy).</p>'
+     +'<div id="ozpAdmin" style="margin:6px 0 16px"></div>'
+     +'<div style="border-top:1px solid var(--line-soft);padding-top:14px"><div id="vipStatus" style="margin:8px 0"></div>'
+     +'<button class="btn btn-gold sta-go" onclick="rebuildVipFromProx()">⟳ ProX Gerçek Fiyatlarla Otomatik Üret (Hizmet Alanı)</button>'
+     +'<p class="sub" style="margin-top:10px">Başka <b>il/ilçe</b> eklemek için <b>🗺️ Hizmet Alanı</b> sekmesini kullanın — oradan seçtiğiniz her ilçe ve bağlı mahalleye ProX otomatik üretir. EİDS açık ilan içindir; özel portföy davet usulüdür (adres gizli).</p></div></div>'
    /* GÖRÜŞMELER & TALEPLER (tam kayıt) */
    +'<div class="sta-pane" data-p="gorusmeler" hidden><h4>Görüşmeler & Talepler</h4><p class="sub">Ziyaretçilerin ProX Asistan yazışmaları (tam döküm) ve iletişim/randevu talepleri — yetkili olarak tam takip edin. Telefon bırakanlar geri-arama olarak işaretlenir.</p>'
      +'<div style="margin-bottom:10px"><button class="btn btn-line" onclick="renderGorusmelerD()">↻ Yenile</button></div>'
@@ -1674,7 +1718,7 @@ function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');try{do
   set('sp_base',SAAS_CONFIG.proxAiPrompts.persona);set('sp_custom',SAAS_CONFIG.tenantSettings.customPrompt);
   set('dn_dskey',_dsKey());set('dn_dsmodel',_dsModel());try{aiDsStatus();}catch(e){}
   set('ed_belge',eidsFirma().eids.belgeNo);try{eidsRenderAdmin();}catch(e){}
-  try{renderSA();renderVipStatus();renderGorusmelerD();}catch(e){}
+  try{renderSA();renderVipStatus();renderOzp();renderGorusmelerD();}catch(e){}
   try{crmRenderAll();}catch(e){}
   try{ilanRenderAdmin();}catch(e){}
   try{staGate();}catch(e){}

@@ -1258,10 +1258,24 @@ var OZ_KAPALI=['Bebek','Etiler','Nişantaşı','Caddebostan','Zekeriyaköy','Kan
 /* Portföyün yoğun olduğu ilçeler (haritada altın vurgu) */
 var OZ_HL={'Beşiktaş':1,'Şişli':1,'Kadıköy':1,'Sarıyer':1,'Üsküdar':1,'Beyoğlu':1};
 function ozTL(v){v=+v||0;if(v>=1e6)return (v/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+'M ₺';if(v>=1e3)return Math.round(v/1e3)+'B ₺';return Math.round(v).toLocaleString('tr-TR')+' ₺';}
-/* radar birleşik işaretler: GERÇEK İLANLAR (DN_ILAN) + özel KAPALI kayıtlar — gerçek konumlarda */
+/* Admin'in kalıcı özel-portföy deposu (dn_ozel_portoy) — yalnız YAYINDAKİLER (index admin ile paylaşımlı localStorage) */
+function ozpPublicList(){try{var a=JSON.parse(localStorage.getItem('dn_ozel_portoy')||'null');if(Array.isArray(a))return a.filter(function(p){return p&&p.yayin!==false;});}catch(e){}return null;}
+/* Mahalle koordinatı bilinmeyen kayıtlar için ilçe merkez noktası (gerçek GeoJSON'dan) */
+function ilceCentroid(ilce){try{var IST=window.IST_ILCE;if(!IST||!IST.d)return null;var d=IST.d.filter(function(x){return x.n===ilce;})[0];if(!d||!d.r||!d.r.length)return null;var sx=0,sy=0,n=0;d.r.forEach(function(ring){ring.forEach(function(p){sx+=p[0];sy+=p[1];n++;});});return n?{lng:sx/n,lat:sy/n,ilce:ilce}:null;}catch(e){return null;}}
+/* radar birleşik işaretler: GERÇEK İLANLAR (DN_ILAN) + admin ÖZEL PORTFÖY (dn_ozel_portoy, yayında) — gerçek konumlarda */
 function ozBuildMarkers(){
   var arr=[];
-  OZ_KAPALI.forEach(function(n){var c=MAH_COORD[n];if(c)arr.push({t:'ozel',n:n,ilce:c.ilce,lng:c.lng,lat:c.lat});});
+  var pub=ozpPublicList();
+  if(pub&&pub.length){ /* TAM DİNAMİK: admin'in eklediği/ürettiği yayındaki özel portföy */
+    var seen={};
+    pub.forEach(function(p){ if(p.il&&p.il!=='İstanbul')return;/* radar İstanbul haritası */
+      var c=MAH_COORD[p.mah]||ilceCentroid(p.ilce); if(!c)return;
+      var k=(seen[p.mah]||0); seen[p.mah]=k+1;
+      arr.push({t:'ozel',n:p.mah,ilce:p.ilce,lng:c.lng+(k?((k%2)?0.006:-0.006):0),lat:c.lat+(k?(((k%3)-1)*0.005):0),ozp:p});
+    });
+  } else { /* admin henüz eklemediyse — temsili varsayılan mahalleler */
+    OZ_KAPALI.forEach(function(n){var c=MAH_COORD[n];if(c)arr.push({t:'ozel',n:n,ilce:c.ilce,lng:c.lng,lat:c.lat});});
+  }
   try{if(window.DN_ILAN&&DN_ILAN.get){DN_ILAN.get().forEach(function(l,i){if(l.il==='İstanbul'){var c=MAH_COORD[l.mahalle];if(c)arr.push({t:'ilan',n:l.mahalle,ilce:c.ilce,lng:c.lng+((i%2)?0.007:-0.007),lat:c.lat+((i%3)-1)*0.006,ilan:l});}});}}catch(e){}
   return arr;
 }
@@ -1272,7 +1286,9 @@ function ozRadarInit(){
   var reduce=false; try{reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
   var lblEl=document.getElementById('ozRadarLbl'), nEl=document.getElementById('ozRadarN');
   var markers=ozBuildMarkers().map(function(m){return Object.assign({x:0,y:0,a:0,seen:false,flare:0},m);});
-  function mLabel(m){if(m.t==='ilan'&&m.ilan){var l=m.ilan;return m.n+' · '+l.durum+' '+(l.oda||l.tip)+' · '+ozTL(l.fiyat)+(l.kira?'/ay':'');}return m.n+' · özel kapalı kayıt';}
+  function mLabel(m){if(m.t==='ilan'&&m.ilan){var l=m.ilan;return m.n+' · '+l.durum+' '+(l.oda||l.tip)+' · '+ozTL(l.fiyat)+(l.kira?'/ay':'');}
+    if(m.ozp){var p=m.ozp;return p.mah+(p.cadde?' · '+p.cadde:'')+' · '+(p.kategori||'Özel')+(p.baslangic?' · '+ozTL(p.baslangic):'')+' · özel kapalı kayıt';}
+    return m.n+' · özel kapalı kayıt';}
   var W=0,H=0,dpr=Math.min(window.devicePixelRatio||1,2);
   var b=(IST&&IST.b)?IST.b:[27.97,40.80,29.96,41.59];
   var midLat=(b[1]+b[3])/2, cosLat=Math.cos(midLat*Math.PI/180);
