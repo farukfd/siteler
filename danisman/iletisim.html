@@ -32,6 +32,7 @@
 <link rel="apple-touch-icon" href="favicon.svg">
 <script src="js/brand.js?v=3"></script>
 <script src="js/content.js?v=3"></script>
+<script src="js/lead.js?v=1"></script>
 <script>document.documentElement.classList.add('js')</script>
 <style>
 /* ============ Yasal sayfa — scoped .lg-* (base.css bozulmadan) ============ */
@@ -164,10 +165,22 @@
   <script>
     function ctSubmit(e){e.preventDefault();var g=function(id){var el=document.getElementById(id);return el?el.value.trim():'';};
       var msg=document.getElementById('ct_msg');
-      var rec={name:g('ct_ad'),tel:g('ct_tel'),mail:g('ct_mail'),konu:g('ct_konu'),mesaj:g('ct_mesaj'),source:'iletisim',ts:Date.now()};
-      if(!rec.name||!rec.tel||!rec.mesaj){msg.className='ct-msg err';msg.textContent='Lütfen ad, telefon ve mesaj alanlarını doldurun.';return false;}
-      try{var arr=JSON.parse(localStorage.getItem('dn_leads')||'[]');if(!Array.isArray(arr))arr=[];arr.unshift(rec);if(arr.length>500)arr=arr.slice(0,500);localStorage.setItem('dn_leads',JSON.stringify(arr));}catch(_e){}
-      msg.className='ct-msg ok';msg.textContent='✓ Mesajınız alındı. En kısa sürede size dönüş yapılacaktır.';
+      var name=g('ct_ad'),tel=g('ct_tel'),mail=g('ct_mail'),konu=g('ct_konu'),mesaj=g('ct_mesaj');
+      var kvkk=document.getElementById('ct_kvkk');
+      if(!name||!tel||!mesaj){msg.className='ct-msg err';msg.textContent='Lütfen ad, telefon ve mesaj alanlarını doldurun.';return false;}
+      if(kvkk&&!kvkk.checked){msg.className='ct-msg err';msg.textContent='Devam etmek için KVKK Aydınlatma Metni onayını işaretleyin.';return false;}
+      /* Üç kanallı teslimat: admin panosu (dn_leads) + ProX sunucu + WhatsApp. */
+      var out=null;
+      if(window.dnLead&&typeof dnLead.submit==='function'){
+        out=dnLead.submit({name:name,phone:tel,email:mail,konu:konu,msg:mesaj,src:'İletişim Formu'});
+      }else{
+        /* Güvenli fallback: lead.js yüklenemese bile DOĞRU şemayla panoya yaz. */
+        try{var rec={id:'l'+Date.now(),ts:Date.now(),date:new Date().toLocaleString('tr-TR'),name:name,phone:tel,email:mail,konu:konu,msg:mesaj,src:'İletişim Formu'};
+          var arr=JSON.parse(localStorage.getItem('dn_leads')||'[]');if(!Array.isArray(arr))arr=[];arr.unshift(rec);localStorage.setItem('dn_leads',JSON.stringify(arr.slice(0,300)));}catch(_e){}
+      }
+      var wa=(out&&out.whatsappUrl)?out.whatsappUrl:'';
+      msg.className='ct-msg ok';
+      msg.innerHTML='✓ Talebiniz alındı ve danışmana iletildi. En kısa sürede dönüş yapılacaktır.'+(wa?(' <a href="'+wa+'" target="_blank" rel="noopener noreferrer" style="color:#128c4b;font-weight:700;text-decoration:underline">WhatsApp’tan hemen yazın →</a>'):'');
       document.getElementById('ctForm').reset();return false;}
   </script>
 </main>

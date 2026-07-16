@@ -26,6 +26,7 @@
 <link rel="apple-touch-icon" href="favicon.svg">
 <script src="js/brand.js?v=3"></script>
 <script src="js/content.js?v=3"></script>
+<script src="js/lead.js?v=1"></script>
 <style>
 /* ===================== PROX ASİSTAN · tam-sayfa kilitli sohbet (.pa-*) ===================== */
 html,body{height:100%}
@@ -199,7 +200,14 @@ function _save(){try{localStorage.setItem(STORE,JSON.stringify(_convos.slice(0,6
 function _cur(){for(var i=0;i<_convos.length;i++)if(_convos[i].id===_curId)return _convos[i];return null;}
 function _syncCur(){var c=_cur();if(c){c.msgs=_msgs.filter(function(m){return !m.typing;}).map(function(m){return {role:m.role==='me'?'me':'bot',text:m.text};});c.ts=Date.now();_save();}}
 function esc(s){return (''+s).replace(/[&<>"]/g,function(x){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[x];});}
-function pushLead(phone,msg){try{var K='dn_leads',a=JSON.parse(localStorage.getItem(K)||'[]');if(!Array.isArray(a))a=[];a.unshift({id:'l'+Date.now(),ts:Date.now(),date:new Date().toLocaleString('tr-TR'),name:'ProX Asistan ziyaretçisi',phone:phone,konu:'ProX Asistan — geri arama',msg:msg,src:'ProX Asistan'});localStorage.setItem(K,JSON.stringify(a.slice(0,300)));}catch(e){}}
+function pushLead(phone,msg){
+  /* Ortak teslimat: dn_leads (admin panosu) + ProX /tenant/lead (sunucu).
+     WhatsApp sohbeti bölmemek için otomatik açılmaz. */
+  if(window.dnLead&&typeof dnLead.submit==='function'){
+    dnLead.submit({name:'ProX Asistan ziyaretçisi',phone:phone,konu:'ProX Asistan — geri arama',msg:msg,src:'ProX Asistan'});
+    return;
+  }
+  try{var K='dn_leads',a=JSON.parse(localStorage.getItem(K)||'[]');if(!Array.isArray(a))a=[];a.unshift({id:'l'+Date.now(),ts:Date.now(),date:new Date().toLocaleString('tr-TR'),name:'ProX Asistan ziyaretçisi',phone:phone,konu:'ProX Asistan — geri arama',msg:msg,src:'ProX Asistan'});localStorage.setItem(K,JSON.stringify(a.slice(0,300)));}catch(e){}}
 
 function paRenderHistory(){var h=document.getElementById('paHistory');if(!h)return;
   if(!_convos.length){h.innerHTML='<div class="pa-hist-empty">Henüz sohbet yok. Sorunuzu yazın, ProX Asistan yardımcı olsun.</div>';return;}
