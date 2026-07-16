@@ -554,6 +554,8 @@ function ilInit(){
   document.querySelectorAll('#ilOda button').forEach(function(b){b.onclick=function(){document.querySelectorAll('#ilOda button').forEach(function(x){x.classList.remove('on');});b.classList.add('on');ODA=b.getAttribute('data-v');ilRender();};});
   heroInit();
   ilRender();
+  /* Deep-link: ana sayfa (index) ilan kartından ?ilan=<id> ile gelindiyse o ilanın detayını aç */
+  try{var _dl=new URLSearchParams(location.search).get('ilan');if(_dl){var _did=parseInt(_dl,10);if(!isNaN(_did)&&ALL.some(function(x){return x.id===_did;}))ilDetail(_did);}}catch(e){}
 }
 document.addEventListener('keydown',function(e){
   var lb=document.getElementById('ilbOverlay');

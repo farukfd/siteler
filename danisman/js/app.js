@@ -509,13 +509,13 @@ try{window.listingFavId=listingFavId;window.vipFavId=vipFavId;}catch(e){}
 
 function listingCardsHTML(){var _src=(window.DN_ILAN&&typeof DN_ILAN.get==='function')?DN_ILAN.get().slice(0,6):LISTINGS.filter(function(l){return l.status!=='pasif';});return _src.map(l=>{
   const price=l.kira?fmt(l.fiyat)+' <span class="per">/ay</span>':fmt(l.fiyat);
-  const nm=l.baslik.replace(/'/g,'’');
-  return '<article class="vcard" onclick="leadFor(\''+nm+'\')">'
+  const _u='ilanlar.html'+(l.id!=null?'?ilan='+encodeURIComponent(l.id):'');/* ana sayfa ilan kartı → İLANLAR sayfasında o ilanın detayı (index.html in-page randevu YOK) */
+  return '<article class="vcard" role="link" tabindex="0" onclick="location.href=\''+_u+'\'" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();location.href=\''+_u+'\';}">'
    +'<div class="vcard-img"><div class="glow"></div><span class="vcard-tag">'+l.durum+'</span>'+_favBtn(listingFavId(l),'ilan',{t:l.baslik,s:l.bolge+' · '+l.durum,p:(l.kira?fmt(l.fiyat)+' /ay':fmt(l.fiyat)),u:'ilanlar.html'})+(l.img?'<img class="vcard-photo" src="'+(l.imgUrl||l.img)+'" alt="'+_leD(l.baslik||'')+'">':(_VIP_SVG[l.tip]||_VIP_SVG.villa))+'</div>'
    +'<div class="vcard-body"><h3>'+l.baslik+'</h3>'
    +'<div class="vcard-loc">'+_PIN+l.bolge+'</div>'
    +'<div class="vcard-spec"><div><b>'+l.m2+' m²</b>Alan</div><div><b>'+l.oda+'</b>Oda</div><div><b>'+l.kat+'</b>Kat</div></div>'
-   +'<div class="vcard-ft"><div class="vcard-price">'+price+'<span>'+l.durum+'</span></div><div class="vcard-go">Ücretsiz Analiz'+_ARR+'</div></div>'
+   +'<div class="vcard-ft"><div class="vcard-price">'+price+'<span>'+l.durum+'</span></div><div class="vcard-go">İlanı İncele'+_ARR+'</div></div>'
    +'</div></article>';
 }).join('');}
 
