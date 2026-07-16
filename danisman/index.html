@@ -111,8 +111,13 @@ window.proxBootstrap=proxBootstrap;
 #homeView .about-meta div b{color:#00452b!important;font-family:'Playfair Display',Georgia,serif!important}
 #homeView .about-meta div span{color:#707972!important}
 #homeView .about-portrait{border-color:#e1e3e2!important;border-radius:8px!important;background:radial-gradient(80% 60% at 50% 20%,rgba(14,94,62,.12),transparent 60%),linear-gradient(160deg,#eef3ee,#e4ede7)!important}
-#homeView .about-portrait .frame{border-color:rgba(14,94,62,.22)!important}
+#homeView .about-portrait .frame{border-color:rgba(14,94,62,.22)!important;z-index:1}
 #homeView .about-portrait svg{color:#0e5e3e!important}
+/* Danışman portresi — admin yüklerse gerçek fotoğraf (object-fit cover), yoksa temsili illüstrasyon */
+#homeView .about-portrait .about-ph{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;border-radius:8px}
+#homeView .about-portrait .about-ph img{width:100%;height:100%;object-fit:cover;display:block}
+#homeView .about-portrait.has-photo::after{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(to top,rgba(10,53,39,.58),transparent 46%);pointer-events:none;z-index:1}
+#homeView .about-portrait.has-photo .sig{color:#fff!important;z-index:2;text-shadow:0 1px 10px rgba(0,0,0,.45)}
 /* İlanlar kartları (vcard) → beyaz Stitch (cam-emerald yerine) */
 #homeView #ilanlar .vcard{background:#fff!important;border-color:#e1e3e2!important;border-radius:8px!important;box-shadow:none!important;transition:border-color .2s!important}
 #homeView #ilanlar .vcard:hover{transform:none!important;border-color:#00452b!important;box-shadow:none!important}
@@ -289,17 +294,18 @@ window.proxBootstrap=proxBootstrap;
 
 <section class="about sec-pad" id="hakkimda">
   <div class="wrap about-grid">
-    <div class="about-portrait">
+    <!-- Portre: varsayılan görsel Pexels (ücretsiz/ticari lisans, atıf gerekmez · foto #20022702) — self-contained yerel dosya; admin "Danışman Görseli"nden danışmanın KENDİ fotoğrafı yüklenince değişir -->
+    <div class="about-portrait has-photo" id="aboutPortrait">
+      <div class="about-ph" id="aboutPhoto"><img src="img/danisman-portresi.jpg" alt="Selin Meridyen"></div>
       <div class="frame"></div>
-      <svg viewBox="0 0 200 240" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="100" cy="78" r="40"/><path d="M40 220c0-44 27-74 60-74s60 30 60 74"/><path d="M70 120c10 14 50 14 60 0" opacity=".5"/></svg>
-      <div class="sig">Selin Meridyen</div>
+      <div class="sig" data-cms="homeAboutSig">Selin Meridyen</div>
     </div>
     <div class="about">
-      <div class="eyebrow">Kişisel Temsil</div>
-      <h2>Gayrimenkulünüzü bir portföy numarasına değil, bir <span class="serif-it gold">imzaya</span> emanet edin.</h2>
-      <div class="role">Kıdemli Lüks Konut & Portföy Danışmanı</div>
+      <div class="eyebrow" data-cms="homeAboutEyebrow">Kişisel Temsil</div>
+      <h2 data-cms="homeAboutTitle">Gayrimenkulünüzü bir portföy numarasına değil, bir <span class="serif-it gold">imzaya</span> emanet edin.</h2>
+      <div class="role" data-cms="homeAboutRole">Kıdemli Lüks Konut & Portföy Danışmanı</div>
       <p data-cms="homeAboutBody">Her gayrimenkul, doğru alıcısıyla buluşmayı hak eder. Açık portföyümde şeffaf, tam bilgili güncel ilanlar; özel portföyümde ise yalnızca yetki belgeli, mahremiyeti korunan ayrıcalıklı gayrimenkuller yer alır.</p>
-      <div class="quote">“Doğru danışman, fiyatı savunmaz; değeri görünür kılar.”</div>
+      <div class="quote" data-cms="homeAboutQuote">“Doğru danışman, fiyatı savunmaz; değeri görünür kılar.”</div>
       <div class="about-meta">
         <div><b>Davet Usulü</b><span>Seçili alıcı havuzu</span></div>
         <div><b>Tam Gizlilik</b><span>Adres & kimlik koruması</span></div>
@@ -422,7 +428,7 @@ window.proxBootstrap=proxBootstrap;
 </div><!-- /homeView -->
 
 <script src="js/ilan-data.js?v=1"></script><!-- ortak gerçek ilan verisi (ilanlar.html ile paylaşımlı) -->
-<script src="js/app.js?v=26"></script>
+<script src="js/app.js?v=28"></script>
 <script src="js/uyelik.js?v=4"></script>
 </body>
 </html>

@@ -1266,12 +1266,25 @@ function applyContent(){var c=cmsGet();
   try{dnApplyCms(c);}catch(e){}
   try{dnApplyServices(c);}catch(e){}
 }
+/* ============ ANA SAYFA DANIŞMAN PORTRESİ (admin görsel yükleme) ============
+   Varsayılan: yerel gerçek portre (img/danisman-portresi.jpg — Pexels ücretsiz/ticari lisans).
+   Danışman admin'den KENDİ fotoğrafını yüklerse onu gösterir. Büyük base64 görsel
+   dn_content'i (yayın) ŞİŞİRMESİN diye AYRI anahtar: dn_portrait. */
+var PORTRAIT_KEY='dn_portrait';
+var _PORTRAIT_DEFAULT='img/danisman-portresi.jpg';
+function portraitGet(){try{return localStorage.getItem(PORTRAIT_KEY)||'';}catch(e){return '';}}
+function portraitSrc(){return portraitGet()||_PORTRAIT_DEFAULT;}
+function applyPortrait(){var host=document.getElementById('aboutPhoto');if(!host)return;var wrap=host.closest?host.closest('.about-portrait'):document.getElementById('aboutPortrait');var alt=_leD((cmsGet().homeAboutSig)||'Selin Meridyen');host.innerHTML='<img src="'+portraitSrc()+'" alt="'+alt+'">';if(wrap)wrap.classList.add('has-photo');}
+function _portraitPrev(){var box=document.getElementById('adPortraitPrev');if(!box)return;box.innerHTML='<img src="'+portraitSrc()+'" alt="portre" style="width:100%;height:100%;object-fit:cover">';}
+function portraitUpload(input){var f=input.files&&input.files[0];if(!f)return;if(!/^image\//.test(f.type||'')){toast('Lütfen bir görsel dosyası seçin.');return;}if(f.size>3*1024*1024){toast('Görsel çok büyük — lütfen ~3MB altını yükleyin.');return;}var r=new FileReader();r.onload=function(e){try{localStorage.setItem(PORTRAIT_KEY,e.target.result);}catch(err){toast('Kaydedilemedi — depolama dolu olabilir (daha küçük görsel deneyin).');return;}try{applyPortrait();}catch(_e){}try{_portraitPrev();}catch(_e){}toast('✓ Danışman görseli yüklendi & ana sayfaya uygulandı.');};r.readAsDataURL(f);}
+function portraitClear(){try{localStorage.removeItem(PORTRAIT_KEY);}catch(e){}try{applyPortrait();}catch(_e){}try{_portraitPrev();}catch(_e){}toast('Yüklenen görsel kaldırıldı — varsayılan portre geri geldi.');}
+try{window.applyPortrait=applyPortrait;window.portraitUpload=portraitUpload;window.portraitClear=portraitClear;}catch(e){}
 /* AI/CRUD sonucunu dn_content'e BİRLEŞTİR (mevcut alanları koru) + uygula */
 function cmsMerge(part){var c=cmsGet();Object.keys(part||{}).forEach(function(k){var v=part[k];if(v!=null&&v!=='')c[k]=v;});
   try{localStorage.setItem(CMS_KEY,JSON.stringify(c));}catch(e){}try{applyContent();}catch(e){}return c;}
 /* CMS alan tanımı: [id, dn_content anahtarı, etiket, textarea?, placeholder] — sayfaya göre gruplu */
 var CMS_FIELDS={
-  home:[['cms_eb','heroEb','Hero Üst Etiket',0,'Kişiye Özel Emlak Danışmanlığı · Yetki Belgeli'],['cms_t1','heroT1','Hero Başlık 1. satır',0,'Gayrimenkulünüz,'],['cms_t2','heroT2','Hero Başlık 2. satır (italik)',0,'gerçek değerine ulaşsın.'],['cms_lede','heroLede','Hero Açıklama',1,'18 yılı aşkın deneyim ve canlı ProX bölge verisiyle…'],['cms_intel','intelText','"Rakamlar konuşur" bölüm metni',1,'Her mahalle için güncel m² değeri, yıllık değişim ve yatırım skoru…'],['cms_habout','homeAboutBody','Ana Sayfa "Hakkımda" Paragrafı',1,'Her gayrimenkul, doğru alıcısıyla buluşmayı hak eder…'],['cms_refeb','ref_eyebrow','Referanslar Üst Etiket',0,'Referanslar · Müşteri Deneyimi'],['cms_reft','ref_title','Referanslar Başlık',0,'Güven, sonuçla kazanılır.']],
+  home:[['cms_eb','heroEb','Hero Üst Etiket',0,'Kişiye Özel Emlak Danışmanlığı · Yetki Belgeli'],['cms_t1','heroT1','Hero Başlık 1. satır',0,'Gayrimenkulünüz,'],['cms_t2','heroT2','Hero Başlık 2. satır (italik)',0,'gerçek değerine ulaşsın.'],['cms_lede','heroLede','Hero Açıklama',1,'18 yılı aşkın deneyim ve canlı ProX bölge verisiyle…'],['cms_intel','intelText','"Rakamlar konuşur" bölüm metni',1,'Her mahalle için güncel m² değeri, yıllık değişim ve yatırım skoru…'],['cms_habout_eb','homeAboutEyebrow','Kişisel Temsil — Üst Etiket',0,'Kişisel Temsil'],['cms_habout_ttl','homeAboutTitle','Kişisel Temsil — Başlık',1,'Gayrimenkulünüzü bir portföy numarasına değil, bir imzaya emanet edin.'],['cms_habout_role','homeAboutRole','Kişisel Temsil — Unvan',0,'Kıdemli Lüks Konut & Portföy Danışmanı'],['cms_habout','homeAboutBody','Kişisel Temsil — Paragraf',1,'Her gayrimenkul, doğru alıcısıyla buluşmayı hak eder…'],['cms_habout_q','homeAboutQuote','Kişisel Temsil — Alıntı',1,'“Doğru danışman, fiyatı savunmaz; değeri görünür kılar.”'],['cms_habout_sig','homeAboutSig','Kişisel Temsil — İmza (görsel altı)',0,'Selin Meridyen'],['cms_refeb','ref_eyebrow','Referanslar Üst Etiket',0,'Referanslar · Müşteri Deneyimi'],['cms_reft','ref_title','Referanslar Başlık',0,'Güven, sonuçla kazanılır.']],
   hakkimizda:[['cms_hkeb','hk_eyebrow','Üst Etiket',0,'Kişisel Temsil · Yetki Belgeli'],['cms_hkrole','hk_role','Rol / Unvan satırı',0,'Kıdemli Lüks Konut & Özel Portföy Danışmanı · İstanbul'],['cms_hklede','hk_lede','Giriş Paragrafı',1,'Bir gayrimenkul, doğru isimle taçlandırıldığında…'],['cms_hkbody','hk_body','Hakkımda Sayfası Ana Paragraf',1,'Kariyerime İstanbul\'un en rekabetçi pazarında başladım…']],
   hizmetlerimiz:[['cms_hzeb','hz_eyebrow','Üst Etiket',0,'Kişiye Özel · Uçtan Uca Danışmanlık'],['cms_hzlede','hz_lede','Hero Açıklama',1,'Alım-satımdan kiralamaya, değerlemeden yatırım analizine…']]
 };
@@ -1291,8 +1304,17 @@ function cmsRender(){var host=document.getElementById('crmCms');if(!host)return;
   var ident='<div class="crm-sec"><div class="crm-sec-h">🏢 Kurumsal Kimlik → AI İçerik</div><p class="sub" style="margin:-4px 0 12px">Firmanızın bilgilerini girip <b>AI ile Üret</b>\'e basın; hero, hakkımda ve hizmet kartları markanıza özel <b>otomatik</b> yazılır. Sonra aşağıdan elle düzenleyebilirsiniz.</p>';
   DN_IDENT_FIELDS.forEach(function(f){ident+=_cmsFieldHTML(id,f);});
   ident+='<div class="crm-mact"><button class="btn btn-gold" id="dnGenBtn" onclick="dnGenAll()">✨ AI ile Tüm İçeriği Üret</button><button class="btn btn-line" onclick="dnIdentSaveForm()">Kimliği Kaydet</button></div><div id="dnGenOut" class="crm-out" style="margin-top:8px"></div></div>';
-  /* 2) metin alanları */
+  /* 2a) Danışman görseli (Ana Sayfa · Kişisel Temsil) — admin yükleme */
+  var portraitBlock='<div class="crm-sec"><div class="crm-sec-h">🖼️ Danışman Görseli — Ana Sayfa · Kişisel Temsil</div>'
+    +'<p class="sub" style="margin:-4px 0 12px">Kendi profesyonel fotoğrafınızı yükleyin; ana sayfadaki portre alanında görünür ve varsayılan görselin yerini alır. Kaldırırsanız varsayılan portre geri gelir. (JPG / PNG · ~3 MB altı · dikey/portre en iyi sonucu verir)</p>'
+    +'<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">'
+    +'<div id="adPortraitPrev" style="width:76px;height:95px;border:1px solid var(--line);border-radius:8px;overflow:hidden;display:grid;place-items:center;background:rgba(0,0,0,.03);color:var(--em)"></div>'
+    +'<label class="btn btn-gold" style="cursor:pointer">⬆ Görsel Yükle<input type="file" accept="image/*" onchange="portraitUpload(this)" style="display:none"></label>'
+    +'<button class="btn btn-line" type="button" onclick="portraitClear()">Kaldır</button>'
+    +'</div></div>';
+  /* 2b) metin alanları */
   var texts=grp('🏠 Ana Sayfa','Boş bırakılan alan varsayılan metni korur.',CMS_FIELDS.home)
+    +portraitBlock
     +grp('👤 Hakkımda Sayfası','',CMS_FIELDS.hakkimizda)
     +grp('🛠️ Hizmetler — Başlık Metni','',CMS_FIELDS.hizmetlerimiz)
     +'<div class="crm-mact"><button class="btn btn-gold" onclick="cmsSave()">Metinleri Kaydet & Uygula</button><button class="btn btn-line" onclick="cmsReset()">Varsayılana Dön</button></div>';
@@ -1300,6 +1322,7 @@ function cmsRender(){var host=document.getElementById('crmCms');if(!host)return;
   var svc='<div class="crm-sec"><div class="crm-sec-h">🗂️ Hizmet Kartları (ekle · düzenle · kaldır)</div><div id="dnSvcList">'+dnSvcListHTML(c.services)+'</div>'
     +'<div class="crm-mact"><button class="btn btn-line" onclick="dnSvcAdd()">+ Kart Ekle</button><button class="btn btn-gold" onclick="dnSvcSave()">Kartları Kaydet & Uygula</button></div></div>';
   host.innerHTML=ident+texts+svc;
+  try{_portraitPrev();}catch(e){}
 }
 /* ---- Kurumsal kimlik + AI üret + hizmet CRUD işleyicileri ---- */
 function dnIdentSaveForm(){var o=dnIdentGet();DN_IDENT_FIELDS.forEach(function(f){var e=document.getElementById(f[0]);if(e)o[f[1]]=e.value.trim();});dnIdentSave(o);if(window.toast)toast('Kurumsal kimlik kaydedildi.');return o;}
@@ -1757,6 +1780,7 @@ window.addEventListener('load',function(){try{
   try{firmaLoad();}catch(e){}/* firma künye (dn_firma) → SAAS_CONFIG.firma */
   try{proxCfgLoad();}catch(e){}/* admin ProX API anahtarı (dn_prox) → EMLAK_TENANT */
   try{applyContent();}catch(e){}/* CMS: admin'de düzenlenmiş hero metinlerini uygula (dn_content) */
+  try{applyPortrait();}catch(e){}/* Ana sayfa Kişisel Temsil portresi (admin yüklediyse gerçek foto, yoksa temsili) */
   try{applyIletisim();}catch(e){}/* WhatsApp/telefon bağlantılarını admin değerine güncelle (dn_iletisim) */
   document.getElementById('homeListings').innerHTML=listingCardsHTML();
   try{vaultIndexLoad();}catch(e){document.getElementById('vaultGrid').innerHTML=vipCardsHTML();}
