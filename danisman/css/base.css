@@ -618,6 +618,9 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 .intel-copy p{color:var(--mut-on-em);font-size:16px;line-height:1.7;margin:0 0 26px;max-width:460px}
 .intel-band .hero-panel{margin:0;max-width:none;animation:rise 1s .3s both}
 @media(max-width:900px){.intel-band .hero-panel{max-width:430px}}
+/* Blanket .hero-panel{display:none} (≤980px) hero panelini gizler; intel-band'deki
+   canlı ProX paneli mobilde GÖRÜNMELİ (bölümün ana veri görselleştirmesi). */
+@media(max-width:980px){.intel-band .hero-panel{display:block;justify-self:center;margin:0 auto}}
 
 /* Kart 3B-tilt (ileri hover) */
 .card-grid{perspective:1500px}
