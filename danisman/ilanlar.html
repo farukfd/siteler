@@ -38,6 +38,56 @@
 <script src="js/content.js?v=3"></script>
 <script src="js/a11y.js?v=1"></script>
 <link rel="stylesheet" href="css/portfoy.css?v=8">
+<!-- ============ STITCH DÖNÜŞÜMÜ (ilanlar · ozel-portfoy "Aegean Heritage Wealth" diliyle hizalı) ============ -->
+<style id="ilStitch">
+/* Sayfa zemini — cool near-white */
+.pf-filters,.pf-wrap,.pf-mapview{background:#f9f9f8}
+.pf-filters{border-bottom:1px solid #e1e3e2!important;box-shadow:none!important}
+/* Filtre çubuğu — hairline + 4px + emerald focus */
+.pf-search input,.pf-adv-toggle,.pf-view,.pf-adv,.pf-adv input,.pf-adv select{
+  border-radius:4px!important;border:1px solid #e1e3e2!important;background:#fff!important;
+  color:#191c1c!important;font-family:'IBM Plex Sans',system-ui,sans-serif!important}
+.pf-search input::placeholder{color:#8a938c}
+.pf-search input:focus,.pf-adv input:focus,.pf-adv select:focus{
+  border-color:#00452b!important;box-shadow:0 0 0 3px rgba(0,69,43,.1)!important}
+.pf-adv-toggle:hover,.pf-adv-toggle.on{border-color:#00452b!important;color:#00452b!important;background:#fff!important}
+.pf-view button{color:#3f4942!important;border-radius:3px!important}
+.pf-view button.on{background:#00452b!important;color:#fff!important}
+.pf-adv label,.pf-adv .rng span{color:#3f4942!important}
+/* Kartlar — gölgesiz, hairline, 8px köşe, emerald hover sınır (yükselme yok) */
+.pf-cardw::before{display:none!important}
+.pf-cardw,.pf-inner{border-radius:8px!important}
+.pf-inner{background:#fff!important;border:1px solid #e1e3e2!important;box-shadow:none!important;
+  font-family:'IBM Plex Sans',system-ui,sans-serif!important;transition:border-color .2s!important}
+.pf-cardw{transition:none!important}
+.pf-cardw:hover{transform:none!important}
+.pf-cardw:hover .pf-inner{box-shadow:none!important;border-color:#00452b!important}
+/* Rozetler (gold korunur, ProX yeşili DOKUNULMAZ) */
+.pf-badge{border-radius:4px!important;backdrop-filter:none!important;background:rgba(255,255,255,.94)!important;
+  color:#00452b!important;border:1px solid #e1e3e2!important;font-family:'IBM Plex Sans'!important;
+  font-weight:600!important;letter-spacing:.05em!important}
+.pf-badge.gold{background:#c39b45!important;color:#00311e!important;border-color:transparent!important}
+/* İçerik tipografisi — Playfair başlık/fiyat, IBM Plex gövde */
+.pf-loc{color:#3f4942!important;font-family:'IBM Plex Sans'!important}
+.pf-title{font-family:'Playfair Display',Georgia,serif!important;color:#00452b!important;font-weight:600!important}
+.pf-desc{color:#707972!important;font-family:'IBM Plex Sans'!important}
+.pf-specs,.pf-foot{border-top-color:#e1e3e2!important}
+.pf-spec .val{font-family:'Playfair Display',Georgia,serif!important;color:#191c1c!important}
+.pf-spec .lbl{color:#707972!important}
+.pf-price{font-family:'Playfair Display',Georgia,serif!important;color:#00452b!important;font-weight:600!important}
+.pf-price .cur{color:#795901!important;font-family:'IBM Plex Sans'!important}
+.pf-price .sub,.pf-price .per{color:#707972!important;font-family:'IBM Plex Sans'!important}
+.pf-cta{color:#00452b!important;font-family:'IBM Plex Sans'!important}
+.pf-tag{border-radius:999px!important;border-color:#e1e3e2!important;background:#f3f4f3!important;color:#3f4942!important;font-family:'IBM Plex Sans'!important}
+.pf-tag.hl{color:#795901!important;border-color:#e6d5a8!important;background:#f6efdd!important}
+/* Not + değerleme özet kartları */
+.pf-note{background:#fff!important;border:1px solid #e1e3e2!important;border-radius:8px!important;color:#3f4942!important;font-family:'IBM Plex Sans'!important}
+.pf-note b{color:#191c1c!important}.pf-note a{color:#00452b!important}
+.pf-vsum-c{background:#fff!important;border:1px solid #e1e3e2!important;box-shadow:none!important;border-radius:8px!important}
+.pf-vsum-c .v{font-family:'Playfair Display',Georgia,serif!important;color:#00452b!important}
+/* Hero rozet köşe uyumu (görsel hero korunur) */
+.ilh-badge{border-radius:4px!important;font-family:'IBM Plex Sans'!important}
+</style>
 <script>document.documentElement.classList.add('js')</script>
 <!-- ============ Google Ölçüm & Reklam altyapısı (gtag + GTM dataLayer) ============ -->
 <script>
