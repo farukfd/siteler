@@ -39,6 +39,7 @@
 <script src="js/a11y.js?v=1"></script>
 <link rel="stylesheet" href="css/portfoy.css?v=8">
 <script src="js/ist-ilce.js?v=1"></script><!-- İstanbul ilçe sınırları (radar haritası · gerçek GeoJSON, sadeleştirilmiş) -->
+<script src="js/ilan-data.js?v=1"></script><!-- gerçek ilan verisi (radar işaretleri · DN_ILAN) -->
 <!-- ============ ÖZEL PORTFÖY HERO (ilana çıkmayan portföy + radar) · scoped ============ -->
 <style id="ozpHeroStyle">
 /* Üst menü (fixed ~100px) ile hero arası boşluğu sıkılaştır (önceki 158px → 120px) */
@@ -101,6 +102,42 @@
 .ozn-btn{cursor:pointer;white-space:nowrap;font-family:var(--body),sans-serif;font-size:15px;font-weight:700;padding:13px 24px;border-radius:10px;border:1px solid transparent;background:linear-gradient(150deg,#e7d19a,#c39b45);color:#0a3527;transition:transform .2s,box-shadow .2s}
 .ozn-btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.22)}
 .ozn-btn em{font-style:normal}
+/* radar gösterge (legend) */
+.pf-hero .ozh-legend{position:absolute;left:16px;bottom:12px;display:flex;gap:14px;z-index:2;font-family:var(--body),sans-serif;font-size:10.5px;color:rgba(244,239,228,.82)}
+.pf-hero .ozh-lg{display:inline-flex;align-items:center;gap:6px}
+.pf-hero .ozh-lg::before{content:'';width:8px;height:8px;border-radius:50%;box-shadow:0 0 6px currentColor}
+.pf-hero .lg-ilan{color:#7fe9c0}.pf-hero .lg-ilan::before{background:#7fe9c0}
+.pf-hero .lg-ozel{color:#dcc389}.pf-hero .lg-ozel::before{background:#dcc389}
+/* ===== Mahalle Fiyat Matrisi (canlı ProX kartlar · açık Stitch) ===== */
+.ozfx-sec{padding:52px 0;background:#fff;border-bottom:1px solid #e1e3e2}
+.ozfx-head{max-width:820px;margin-bottom:30px}
+.ozfx-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--body),sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#0b7a4f}
+.ozfx-eyebrow .d{width:8px;height:8px;border-radius:50%;background:#19c37d;box-shadow:0 0 0 3px rgba(25,195,125,.18)}
+.ozfx-title{font-family:var(--serif),serif;font-weight:700;font-size:clamp(25px,3.4vw,38px);line-height:1.1;color:#00452b;margin:12px 0 0}
+.ozfx-title i{font-family:var(--serif-2),serif;font-style:italic;font-weight:500;color:#c39b45}
+.ozfx-lede{font-family:var(--body),sans-serif;font-size:15.5px;line-height:1.65;color:#3f4942;margin:14px 0 0}
+.ozfx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:1080px){.ozfx-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.ozfx-grid{grid-template-columns:1fr}}
+.ozfx-skel{grid-column:1/-1;padding:40px;text-align:center;color:#707972;font-family:var(--body),sans-serif;font-size:14px;background:#f9f9f8;border:1px solid #e1e3e2;border-radius:10px}
+.ozfx-card{background:#f9f9f8;border:1px solid #e1e3e2;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:14px;transition:border-color .2s,transform .2s}
+.ozfx-card:hover{border-color:#0e5e3e;transform:translateY(-2px)}
+.ozfx-c-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.ozfx-c-head h3{font-family:var(--serif),serif;font-weight:600;font-size:20px;color:#00452b;margin:0}
+.ozfx-c-head span{font-family:var(--body),sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#707972}
+.ozfx-badge{margin-left:auto;font-family:var(--body),sans-serif;font-size:10.5px;font-weight:700;color:#04140c;background:#96f6c7;border-radius:6px;padding:3px 8px;white-space:nowrap}
+.ozfx-badge.oz{background:#fed175}
+.ozfx-rows{display:flex;flex-direction:column;gap:12px;border-top:1px solid #e1e3e2;padding-top:14px}
+.ozfx-row{display:flex;flex-direction:column;gap:2px}
+.ozfx-row .ozfx-k{font-family:var(--body),sans-serif;font-size:11.5px;color:#707972}
+.ozfx-row .ozfx-v{font-family:var(--serif),serif;font-weight:600;font-size:21px;color:#00452b;font-variant-numeric:tabular-nums;line-height:1.05}
+.ozfx-row .ozfx-v i{font-size:.52em;font-style:normal;color:#707972;font-family:var(--body),sans-serif;font-weight:600;margin-left:3px}
+.ozfx-row .ozfx-sub{font-family:var(--body),sans-serif;font-size:12px;color:#3f4942}
+.ozfx-row .ozfx-sub b{color:#795901;font-weight:700}
+.ozfx-row.dim .ozfx-v{color:#a2aaa5}
+.ozfx-cta{margin-top:auto;cursor:pointer;font-family:var(--body),sans-serif;font-size:12.5px;font-weight:600;color:#00452b;background:none;border:1px solid #cfd4d1;border-radius:8px;padding:10px 12px;transition:.2s;text-align:center}
+.ozfx-cta:hover{border-color:#0e5e3e;background:#0e5e3e;color:#fff}
+.ozfx-card .sh{color:#c3cbc6}
 </style>
 <script>document.documentElement.classList.add('js')</script>
 </head>
@@ -159,11 +196,24 @@
     <div class="pf-hero-art ozh-radar-wrap" id="ozHeroArt" aria-hidden="true">
       <canvas id="ozRadar"></canvas>
       <div class="ozh-hud">
-        <div class="ozh-hud-top"><span class="ozh-hud-dot"></span>CANLI · ÖZEL PORTFÖY RADARI</div>
-        <div class="ozh-hud-count"><b id="ozRadarN">0</b> mahallede kapalı kayıt</div>
+        <div class="ozh-hud-top"><span class="ozh-hud-dot"></span>CANLI · İSTANBUL İLÇE RADARI</div>
+        <div class="ozh-hud-count"><b id="ozRadarN">0</b> gerçek kayıt · ilan + özel</div>
         <div class="ozh-hud-lbl" id="ozRadarLbl">bölge taranıyor…</div>
       </div>
+      <div class="ozh-legend"><span class="ozh-lg lg-ilan">Güncel ilan</span><span class="ozh-lg lg-ozel">Özel kapalı kayıt</span></div>
     </div>
+  </div>
+</section>
+
+<!-- ============ MAHALLE FİYAT MATRİSİ (radar mahalleleri · canlı ProX) ============ -->
+<section class="ozfx-sec" id="ozFiyatMatris">
+  <div class="wrap">
+    <div class="ozfx-head">
+      <div class="ozfx-eyebrow"><span class="d"></span>Canlı ProX · Mahalle Fiyat Matrisi</div>
+      <h2 class="ozfx-title">Radardaki her mahallede <i>gerçek</i> m² fiyatları</h2>
+      <p class="ozfx-lede">Öne çıkan mahallelerde satılık &amp; kiralık konut ve satılık işyeri m² değerleri — <b>canlı ProX endeksinden</b>. Örnek 90 m² daire toplamları ve brüt kira getirisi bu endeksten türetilen temsili göstergelerdir; kesin değer için ücretsiz analiz.</p>
+    </div>
+    <div class="ozfx-grid" id="ozFxGrid"><div class="ozfx-skel">ProX mahalle fiyatları hesaplanıyor…</div></div>
   </div>
 </section>
 
@@ -1091,6 +1141,45 @@ function ozLocalizeSeo(il){
       s.textContent=JSON.stringify(j);}
   }catch(e){}
 }
+/* ============ MAHALLE FİYAT MATRİSİ — canlı ProX kartlar (satılık/kiralık konut + işyeri) ============ */
+var OZ_FX=['Bebek','Etiler','Nişantaşı','Levent','Caddebostan','Zekeriyaköy','Kandilli','Yeniköy'];
+var _ozFxSeq=0;
+function ozFxAsk(ilce,mah){try{OZILCE=ilce;OZMAH=mah;}catch(e){}ozTalepOpen({ozel:true,islem:'satilik',tip:'Daire'});}
+function _ozFxCard(mah,ilce,ilanN){
+  return '<article class="ozfx-card" data-mah="'+esc(mah)+'">'
+    +'<div class="ozfx-c-head"><h3>'+esc(mah)+'</h3><span>'+esc(ilce)+'</span>'+(ilanN?'<b class="ozfx-badge">'+ilanN+' güncel ilan</b>':'<b class="ozfx-badge oz">özel kayıt</b>')+'</div>'
+    +'<div class="ozfx-rows">'
+    +'<div class="ozfx-row"><span class="ozfx-k">Satılık konut</span><b class="ozfx-v"><span class="sh">•••</span></b><em class="ozfx-sub"></em></div>'
+    +'<div class="ozfx-row"><span class="ozfx-k">Kiralık konut</span><b class="ozfx-v"><span class="sh">•••</span></b><em class="ozfx-sub"></em></div>'
+    +'<div class="ozfx-row"><span class="ozfx-k">Satılık işyeri</span><b class="ozfx-v"><span class="sh">•••</span></b><em class="ozfx-sub"></em></div>'
+    +'</div>'
+    +'<button class="ozfx-cta" onclick="ozFxAsk(\''+esc(ilce)+'\',\''+esc(mah)+'\')">Bu mahallede özel portföy sor →</button>'
+    +'</article>';
+}
+function ozFxLoad(){
+  var host=document.getElementById('ozFxGrid'); if(!host) return;
+  var il=(typeof OZIL!=='undefined'&&OZIL)?OZIL:'İstanbul';
+  var list=OZ_FX.map(function(n){return {n:n,ilce:(MAH_COORD[n]||{}).ilce||''};}).filter(function(x){return x.ilce;});
+  var ilanBy={}; try{if(window.DN_ILAN&&DN_ILAN.get){DN_ILAN.get().forEach(function(l){if(l.il===il&&l.mahalle)ilanBy[l.mahalle]=(ilanBy[l.mahalle]||0)+1;});}}catch(e){}
+  host.innerHTML=list.map(function(x){return _ozFxCard(x.n,x.ilce,ilanBy[x.n]||0);}).join('');
+  if(typeof fetchEndeks!=='function')return;
+  var mine=++_ozFxSeq;
+  function setRow(row,m2,unit,subHtml){ if(!row)return; var v=row.querySelector('.ozfx-v'),sub=row.querySelector('.ozfx-sub');
+    if(m2>0){v.innerHTML=Math.round(m2).toLocaleString('tr-TR')+' <i>'+unit+'</i>';row.classList.remove('dim');}else{v.innerHTML='—';row.classList.add('dim');}
+    if(sub)sub.innerHTML=subHtml||''; }
+  list.forEach(function(x){
+    Promise.all([fetchEndeks(il,x.ilce,x.n,'konut','satilik'),fetchEndeks(il,x.ilce,x.n,'konut','kiralik'),fetchEndeks(il,x.ilce,x.n,'ticari','satilik')]).then(function(r){
+      if(mine!==_ozFxSeq)return;
+      var sat=r[0]&&r[0].m2,kir=r[1]&&r[1].m2,tic=r[2]&&r[2].m2;
+      var card=host.querySelector('.ozfx-card[data-mah="'+x.n+'"]'); if(!card)return;
+      var rows=card.querySelectorAll('.ozfx-row');
+      setRow(rows[0],sat,'₺/m²',sat?('90 m² daire ≈ <b>'+ozTL(sat*90)+'</b>'):'veri yok');
+      setRow(rows[1],kir,'₺/m²·ay',kir?('90 m² ≈ '+Math.round(kir*90).toLocaleString('tr-TR')+' ₺/ay'):'veri yok');
+      var sub2=(sat&&kir)?('brüt kira getirisi <b>%'+((kir*12/sat)*100).toLocaleString('tr-TR',{maximumFractionDigits:1})+'</b>'):(tic?'ticari m² değeri':'veri yok');
+      setRow(rows[2],tic,'₺/m²',sub2);
+    }).catch(function(){});
+  });
+}
 /* Üst menü (fixed) yüksekliği değişken → hero üst boşluğunu ona göre sabit ~24px tut */
 function ozHeroPad(){try{var nav=document.getElementById('nav'),hero=document.getElementById('pfHero');if(!nav||!hero)return;hero.style.setProperty('padding-top',(Math.round(nav.getBoundingClientRect().height)+24)+'px','important');}catch(e){}}
 function ozInit(){
@@ -1099,6 +1188,7 @@ function ozInit(){
   document.getElementById('ozHeroIl').textContent=OZIL;
   ozLocalizeSeo(OZIL);
   try{ozRadarInit();}catch(e){}/* hero: "Özel Portföy Radarı" canvas animasyonu (eski propScene yerine) */
+  try{ozFxLoad();}catch(e){}/* Mahalle Fiyat Matrisi — canlı ProX kartlar */
   var sel=document.getElementById('ozIl');var iller=Object.keys(TR_ILILCE).sort(function(a,b){return a.localeCompare(b,'tr');});
   if(!iller.length)iller=[OZIL];
   sel.innerHTML=iller.map(function(i){return '<option value="'+esc(i)+'"'+(i===OZIL?' selected':'')+'>'+esc(i)+'</option>';}).join('');
@@ -1120,24 +1210,36 @@ function ozInit(){
    parlar. prefers-reduced-motion'da statik çizilir. Marka: emerald + altın.
    ========================================================================== */
 var _ozRadarRAF=null;
-/* Öne çıkan mahalleler — GERÇEK koordinatlar (İstanbul prestij mahalleleri) */
-var OZ_MAH_PTS=[
-  {n:'Bebek',lng:29.0435,lat:41.0776},{n:'Etiler',lng:29.0335,lat:41.0808},
-  {n:'Nişantaşı',lng:28.9942,lat:41.0478},{n:'Caddebostan',lng:29.0620,lat:40.9630},
-  {n:'Zekeriyaköy',lng:29.0430,lat:41.1725},{n:'Kandilli',lng:29.0585,lat:41.0725},
-  {n:'Levent',lng:29.0100,lat:41.0817},{n:'Cihangir',lng:28.9830,lat:41.0320},
-  {n:'Yeniköy',lng:29.0640,lat:41.1130},{n:'Kuruçeşme',lng:29.0350,lat:41.0560},
-  {n:'Ulus',lng:29.0230,lat:41.0680},{n:'Vaniköy',lng:29.0640,lat:41.0680}
-];
+/* Mahalle → GERÇEK koordinat + ilçe (radar konumları + ProX sorguları) */
+var MAH_COORD={
+  'Bebek':{ilce:'Beşiktaş',lng:29.0435,lat:41.0776},'Etiler':{ilce:'Beşiktaş',lng:29.0335,lat:41.0808},
+  'Levent':{ilce:'Beşiktaş',lng:29.0100,lat:41.0817},'Kuruçeşme':{ilce:'Beşiktaş',lng:29.0350,lat:41.0560},
+  'Ulus':{ilce:'Beşiktaş',lng:29.0230,lat:41.0680},'Nişantaşı':{ilce:'Şişli',lng:28.9942,lat:41.0478},
+  'Caddebostan':{ilce:'Kadıköy',lng:29.0620,lat:40.9630},'Zekeriyaköy':{ilce:'Sarıyer',lng:29.0430,lat:41.1725},
+  'Yeniköy':{ilce:'Sarıyer',lng:29.0640,lat:41.1130},'Maslak':{ilce:'Sarıyer',lng:29.0175,lat:41.1120},
+  'Kandilli':{ilce:'Üsküdar',lng:29.0585,lat:41.0725},'Cihangir':{ilce:'Beyoğlu',lng:28.9830,lat:41.0320}
+};
+window.MAH_COORD=MAH_COORD;
+/* Özel Portföy (kapalı/davet-usulü kayıt) mahalleleri */
+var OZ_KAPALI=['Bebek','Etiler','Nişantaşı','Caddebostan','Zekeriyaköy','Kandilli','Yeniköy','Kuruçeşme','Ulus'];
 /* Portföyün yoğun olduğu ilçeler (haritada altın vurgu) */
-var OZ_HL={'Beşiktaş':1,'Şişli':1,'Kadıköy':1,'Sarıyer':1,'Üsküdar':1,'Beyoğlu':1,'Bakırköy':1};
+var OZ_HL={'Beşiktaş':1,'Şişli':1,'Kadıköy':1,'Sarıyer':1,'Üsküdar':1,'Beyoğlu':1};
+function ozTL(v){v=+v||0;if(v>=1e6)return (v/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+'M ₺';if(v>=1e3)return Math.round(v/1e3)+'B ₺';return Math.round(v).toLocaleString('tr-TR')+' ₺';}
+/* radar birleşik işaretler: GERÇEK İLANLAR (DN_ILAN) + özel KAPALI kayıtlar — gerçek konumlarda */
+function ozBuildMarkers(){
+  var arr=[];
+  OZ_KAPALI.forEach(function(n){var c=MAH_COORD[n];if(c)arr.push({t:'ozel',n:n,ilce:c.ilce,lng:c.lng,lat:c.lat});});
+  try{if(window.DN_ILAN&&DN_ILAN.get){DN_ILAN.get().forEach(function(l,i){if(l.il==='İstanbul'){var c=MAH_COORD[l.mahalle];if(c)arr.push({t:'ilan',n:l.mahalle,ilce:c.ilce,lng:c.lng+((i%2)?0.007:-0.007),lat:c.lat+((i%3)-1)*0.006,ilan:l});}});}}catch(e){}
+  return arr;
+}
 function ozRadarInit(){
   var cv=document.getElementById('ozRadar'); if(!cv) return;
   var IST=window.IST_ILCE;
   var wrap=cv.parentElement, ctx=cv.getContext('2d');
   var reduce=false; try{reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
   var lblEl=document.getElementById('ozRadarLbl'), nEl=document.getElementById('ozRadarN');
-  var markers=OZ_MAH_PTS.map(function(m){return {n:m.n,lng:m.lng,lat:m.lat,x:0,y:0,a:0,seen:false,flare:0};});
+  var markers=ozBuildMarkers().map(function(m){return Object.assign({x:0,y:0,a:0,seen:false,flare:0},m);});
+  function mLabel(m){if(m.t==='ilan'&&m.ilan){var l=m.ilan;return m.n+' · '+l.durum+' '+(l.oda||l.tip)+' · '+ozTL(l.fiyat)+(l.kira?'/ay':'');}return m.n+' · özel kapalı kayıt';}
   var W=0,H=0,dpr=Math.min(window.devicePixelRatio||1,2);
   var b=(IST&&IST.b)?IST.b:[27.97,40.80,29.96,41.59];
   var midLat=(b[1]+b[3])/2, cosLat=Math.cos(midLat*Math.PI/180);
@@ -1168,11 +1270,12 @@ function ozRadarInit(){
     });
   }
   function drawMarker(m,active){
-    if(m.flare>0){var pr=5+(1-m.flare)*26;ctx.beginPath();ctx.arc(m.x,m.y,pr,0,Math.PI*2);ctx.strokeStyle='rgba(220,195,137,'+(m.flare*.7)+')';ctx.lineWidth=1.4;ctx.stroke();}
+    var C=(m.t==='ilan')?'127,233,192':'220,195,137';/* ilan=mint · özel=altın */
+    if(m.flare>0){var pr=5+(1-m.flare)*26;ctx.beginPath();ctx.arc(m.x,m.y,pr,0,Math.PI*2);ctx.strokeStyle='rgba('+C+','+(m.flare*.7)+')';ctx.lineWidth=1.4;ctx.stroke();}
     ctx.beginPath();ctx.arc(m.x,m.y,m.seen?3.1:2,0,Math.PI*2);
-    ctx.fillStyle=m.seen?'#dcc389':'rgba(220,195,137,.4)';
-    if(active||m.flare>.3){ctx.shadowColor='#dcc389';ctx.shadowBlur=12;} ctx.fill(); ctx.shadowBlur=0;
-    if(m.seen){ctx.beginPath();ctx.arc(m.x,m.y,5,0,Math.PI*2);ctx.strokeStyle='rgba(220,195,137,.3)';ctx.lineWidth=1;ctx.stroke();}
+    ctx.fillStyle=m.seen?('rgb('+C+')'):('rgba('+C+',.4)');
+    if(active||m.flare>.3){ctx.shadowColor='rgb('+C+')';ctx.shadowBlur=12;} ctx.fill(); ctx.shadowBlur=0;
+    if(m.seen){ctx.beginPath();ctx.arc(m.x,m.y,5,0,Math.PI*2);ctx.strokeStyle='rgba('+C+',.3)';ctx.lineWidth=1;ctx.stroke();}
   }
   var ang=-Math.PI/2, seenCount=0, R=0;
   function frame(){
@@ -1186,14 +1289,14 @@ function ozRadarInit(){
     markers.forEach(function(m){
       var da=Math.atan2(Math.sin(ang-m.a),Math.cos(ang-m.a));
       var active=(da>0&&da<span);
-      if(active){ if(!m.seen){m.seen=true;seenCount++;if(nEl)nEl.textContent=seenCount;} m.flare=1; if(lblEl)lblEl.textContent=m.n+' · kapalı kayıt tespit edildi'; }
+      if(active){ if(!m.seen){m.seen=true;seenCount++;if(nEl)nEl.textContent=seenCount;} m.flare=1; if(lblEl)lblEl.textContent=mLabel(m); }
       if(m.flare>0){m.flare-=0.02;if(m.flare<0)m.flare=0;}
       drawMarker(m,active);
     });
     ang+=0.011; if(ang>Math.PI)ang-=Math.PI*2;
     _ozRadarRAF=requestAnimationFrame(frame);
   }
-  function drawStatic(){drawMap();markers.forEach(function(m){m.seen=true;drawMarker(m,false);});if(nEl)nEl.textContent=markers.length;if(lblEl)lblEl.textContent='her prestij mahallesinde kapalı kayıt';}
+  function drawStatic(){drawMap();markers.forEach(function(m){m.seen=true;drawMarker(m,false);});if(nEl)nEl.textContent=markers.length;if(lblEl)lblEl.textContent='gerçek ilan + özel kapalı kayıt';}
   window.addEventListener('resize',function(){size();if(reduce)drawStatic();});
   if(reduce){drawStatic();return;}
   if(_ozRadarRAF)cancelAnimationFrame(_ozRadarRAF);
