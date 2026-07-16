@@ -120,23 +120,37 @@
 @media(max-width:1080px){.ozfx-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.ozfx-grid{grid-template-columns:1fr}}
 .ozfx-skel{grid-column:1/-1;padding:40px;text-align:center;color:#707972;font-family:var(--body),sans-serif;font-size:14px;background:#f9f9f8;border:1px solid #e1e3e2;border-radius:10px}
-.ozfx-card{background:#f9f9f8;border:1px solid #e1e3e2;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:14px;transition:border-color .2s,transform .2s}
-.ozfx-card:hover{border-color:#0e5e3e;transform:translateY(-2px)}
-.ozfx-c-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.ozfx-c-head h3{font-family:var(--serif),serif;font-weight:600;font-size:20px;color:#00452b;margin:0}
-.ozfx-c-head span{font-family:var(--body),sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#707972}
-.ozfx-badge{margin-left:auto;font-family:var(--body),sans-serif;font-size:10.5px;font-weight:700;color:#04140c;background:#96f6c7;border-radius:6px;padding:3px 8px;white-space:nowrap}
+.ozfx-card{position:relative;background:#fff;border:1px solid #e1e3e2;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .25s,transform .25s,box-shadow .25s}
+.ozfx-card:hover{border-color:#0e5e3e;transform:translateY(-4px);box-shadow:0 18px 40px -18px rgba(10,53,39,.4)}
+.ozfx-accent{position:absolute;left:0;top:0;height:3px;width:100%;background:linear-gradient(90deg,#0e5e3e 0%,#14805a 45%,#c39b45 100%)}
+.ozfx-top{display:flex;align-items:center;gap:8px;padding:20px 20px 0}
+.ozfx-name h3{font-family:var(--serif),serif;font-weight:600;font-size:21px;color:#00452b;margin:0;line-height:1.05}
+.ozfx-name span{display:block;font-family:var(--body),sans-serif;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:#707972;margin-top:3px}
+.ozfx-badge{margin-left:auto;align-self:flex-start;font-family:var(--body),sans-serif;font-size:10px;font-weight:700;color:#04140c;background:#96f6c7;border-radius:20px;padding:4px 10px;white-space:nowrap}
 .ozfx-badge.oz{background:#fed175}
-.ozfx-rows{display:flex;flex-direction:column;gap:12px;border-top:1px solid #e1e3e2;padding-top:14px}
-.ozfx-row{display:flex;flex-direction:column;gap:2px}
-.ozfx-row .ozfx-k{font-family:var(--body),sans-serif;font-size:11.5px;color:#707972}
-.ozfx-row .ozfx-v{font-family:var(--serif),serif;font-weight:600;font-size:21px;color:#00452b;font-variant-numeric:tabular-nums;line-height:1.05}
-.ozfx-row .ozfx-v i{font-size:.52em;font-style:normal;color:#707972;font-family:var(--body),sans-serif;font-weight:600;margin-left:3px}
-.ozfx-row .ozfx-sub{font-family:var(--body),sans-serif;font-size:12px;color:#3f4942}
-.ozfx-row .ozfx-sub b{color:#795901;font-weight:700}
-.ozfx-row.dim .ozfx-v{color:#a2aaa5}
-.ozfx-cta{margin-top:auto;cursor:pointer;font-family:var(--body),sans-serif;font-size:12.5px;font-weight:600;color:#00452b;background:none;border:1px solid #cfd4d1;border-radius:8px;padding:10px 12px;transition:.2s;text-align:center}
-.ozfx-cta:hover{border-color:#0e5e3e;background:#0e5e3e;color:#fff}
+.ozfx-hero{padding:16px 20px 18px}
+.ozfx-hero-k{font-family:var(--body),sans-serif;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#707972}
+.ozfx-hero-v{display:flex;align-items:baseline;gap:7px;margin-top:6px}
+.ozfx-hero-v b{font-family:var(--serif),serif;font-weight:700;font-size:31px;color:#00452b;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.01em}
+.ozfx-hero-v>i{font-size:13px;font-style:normal;color:#707972;font-weight:600}
+.ozfx-delta{margin-left:auto;font-family:var(--body),sans-serif;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.ozfx-delta.up{color:#0b7a4f;background:rgba(25,195,125,.14)}
+.ozfx-delta.dn{color:#b23b3b;background:rgba(178,59,59,.12)}
+.ozfx-hero-sub{font-family:var(--body),sans-serif;font-size:12.5px;color:#3f4942;margin-top:7px}
+.ozfx-hero-sub b{color:#795901;font-weight:700}
+.ozfx-bar{height:6px;border-radius:20px;background:#eef1ef;overflow:hidden;margin-top:13px}
+.ozfx-bar span{display:block;height:100%;width:0;border-radius:20px;background:linear-gradient(90deg,#0e5e3e,#c39b45);transition:width .9s cubic-bezier(.2,.7,.2,1)}
+.ozfx-mini{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#e1e3e2;border-top:1px solid #e1e3e2;margin-top:auto}
+.ozfx-mini>div{background:#f9f9f8;padding:13px 16px}
+.ozfx-mini span{display:block;font-family:var(--body),sans-serif;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#707972}
+.ozfx-mini b{display:block;font-family:var(--serif),serif;font-weight:600;font-size:16.5px;color:#00452b;margin-top:4px;font-variant-numeric:tabular-nums;line-height:1.05}
+.ozfx-mini b>i{font-size:.6em;font-style:normal;color:#707972;font-family:var(--body),sans-serif;font-weight:600;margin-left:2px}
+.ozfx-mini em{display:block;font-family:var(--body),sans-serif;font-size:11px;color:#707972;margin-top:3px;font-style:normal}
+.ozfx-mini em b{color:#795901;font-weight:700}
+.ozfx-cta{cursor:pointer;font-family:var(--body),sans-serif;font-size:12.5px;font-weight:600;color:#00452b;background:#fff;border:none;border-top:1px solid #e1e3e2;padding:14px 16px;transition:.2s;text-align:center;display:flex;align-items:center;justify-content:center;gap:7px}
+.ozfx-cta em{font-style:normal;transition:transform .2s}
+.ozfx-cta:hover{background:#0e5e3e;color:#fff}
+.ozfx-cta:hover em{transform:translateX(3px)}
 .ozfx-card .sh{color:#c3cbc6}
 </style>
 <script>document.documentElement.classList.add('js')</script>
@@ -348,7 +362,7 @@ async function fetchEndeks(il,ilce,mah,kat,dur){var k=[il,ilce,mah||'',kat,dur].
   _c[k]=null;
   var q='/api/v1/tenant/endeks?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce)+(mah?'&mahalle='+encodeURIComponent(mah):'')+'&kategori='+kat+'&durum='+dur;
   var r=await proxApi(q),out=null;
-  if(r&&!r.fallback&&r.success===true&&r.data&&+r.data.m2>0){out={m2:+r.data.m2,score:+r.data.score||0,veri:+r.data.veri_adedi||0,ilan:+r.data.ilan_sayisi||0,trend:Array.isArray(r.data.trend)?r.data.trend:[]};}
+  if(r&&!r.fallback&&r.success===true&&r.data&&+r.data.m2>0){out={m2:+r.data.m2,score:+r.data.score||0,veri:+r.data.veri_adedi||0,ilan:+r.data.ilan_sayisi||0,delta:+r.data.delta||0,trend:Array.isArray(r.data.trend)?r.data.trend:[]};}
   _c[k]=out;if(out)_pcPut(k,out);return out;}
 /* ============ GERÇEK SNAPSHOT GEÇMİŞİ (dn_prox_hist) — ProX zaman-serisi vermez; her ziyarette gerçek m² kaydı biriktirir ============ */
 function _histKey(il,ilce,mah,kat,dur){return [il,ilce,mah||'',kat,dur].join('|');}
@@ -1147,13 +1161,19 @@ var _ozFxSeq=0;
 function ozFxAsk(ilce,mah){try{OZILCE=ilce;OZMAH=mah;}catch(e){}ozTalepOpen({ozel:true,islem:'satilik',tip:'Daire'});}
 function _ozFxCard(mah,ilce,ilanN){
   return '<article class="ozfx-card" data-mah="'+esc(mah)+'">'
-    +'<div class="ozfx-c-head"><h3>'+esc(mah)+'</h3><span>'+esc(ilce)+'</span>'+(ilanN?'<b class="ozfx-badge">'+ilanN+' güncel ilan</b>':'<b class="ozfx-badge oz">özel kayıt</b>')+'</div>'
-    +'<div class="ozfx-rows">'
-    +'<div class="ozfx-row"><span class="ozfx-k">Satılık konut</span><b class="ozfx-v"><span class="sh">•••</span></b><em class="ozfx-sub"></em></div>'
-    +'<div class="ozfx-row"><span class="ozfx-k">Kiralık konut</span><b class="ozfx-v"><span class="sh">•••</span></b><em class="ozfx-sub"></em></div>'
-    +'<div class="ozfx-row"><span class="ozfx-k">Satılık işyeri</span><b class="ozfx-v"><span class="sh">•••</span></b><em class="ozfx-sub"></em></div>'
+    +'<span class="ozfx-accent"></span>'
+    +'<div class="ozfx-top"><div class="ozfx-name"><h3>'+esc(mah)+'</h3><span>'+esc(ilce)+'</span></div>'+(ilanN?'<b class="ozfx-badge">'+ilanN+' güncel ilan</b>':'<b class="ozfx-badge oz">özel kayıt</b>')+'</div>'
+    +'<div class="ozfx-hero">'
+      +'<div class="ozfx-hero-k">Satılık konut · ort. m²</div>'
+      +'<div class="ozfx-hero-v"><b class="fx-sat sh">•••</b><i>₺/m²</i><em class="ozfx-delta fx-delta" hidden></em></div>'
+      +'<div class="ozfx-hero-sub fx-satsub">90 m² daire hesaplanıyor…</div>'
+      +'<div class="ozfx-bar"><span class="fx-bar"></span></div>'
     +'</div>'
-    +'<button class="ozfx-cta" onclick="ozFxAsk(\''+esc(ilce)+'\',\''+esc(mah)+'\')">Bu mahallede özel portföy sor →</button>'
+    +'<div class="ozfx-mini">'
+      +'<div><span>Kiralık konut</span><b class="fx-kir sh">•••</b><em class="fx-kirsub"></em></div>'
+      +'<div><span>Satılık işyeri</span><b class="fx-tic sh">•••</b><em class="fx-ticsub"></em></div>'
+    +'</div>'
+    +'<button class="ozfx-cta" onclick="ozFxAsk(\''+esc(ilce)+'\',\''+esc(mah)+'\')">Bu mahallede özel portföy sor <em>→</em></button>'
     +'</article>';
 }
 function ozFxLoad(){
@@ -1163,20 +1183,31 @@ function ozFxLoad(){
   var ilanBy={}; try{if(window.DN_ILAN&&DN_ILAN.get){DN_ILAN.get().forEach(function(l){if(l.il===il&&l.mahalle)ilanBy[l.mahalle]=(ilanBy[l.mahalle]||0)+1;});}}catch(e){}
   host.innerHTML=list.map(function(x){return _ozFxCard(x.n,x.ilce,ilanBy[x.n]||0);}).join('');
   if(typeof fetchEndeks!=='function')return;
-  var mine=++_ozFxSeq;
-  function setRow(row,m2,unit,subHtml){ if(!row)return; var v=row.querySelector('.ozfx-v'),sub=row.querySelector('.ozfx-sub');
-    if(m2>0){v.innerHTML=Math.round(m2).toLocaleString('tr-TR')+' <i>'+unit+'</i>';row.classList.remove('dim');}else{v.innerHTML='—';row.classList.add('dim');}
-    if(sub)sub.innerHTML=subHtml||''; }
+  var mine=++_ozFxSeq, REF=680000;/* premium bar referansı ₺/m² */
+  var nf=function(v){return Math.round(v).toLocaleString('tr-TR');};
   list.forEach(function(x){
     Promise.all([fetchEndeks(il,x.ilce,x.n,'konut','satilik'),fetchEndeks(il,x.ilce,x.n,'konut','kiralik'),fetchEndeks(il,x.ilce,x.n,'ticari','satilik')]).then(function(r){
       if(mine!==_ozFxSeq)return;
-      var sat=r[0]&&r[0].m2,kir=r[1]&&r[1].m2,tic=r[2]&&r[2].m2;
+      var sat=r[0]&&r[0].m2,kir=r[1]&&r[1].m2,tic=r[2]&&r[2].m2,dlt=(r[0]&&r[0].delta)||0;
       var card=host.querySelector('.ozfx-card[data-mah="'+x.n+'"]'); if(!card)return;
-      var rows=card.querySelectorAll('.ozfx-row');
-      setRow(rows[0],sat,'₺/m²',sat?('90 m² daire ≈ <b>'+ozTL(sat*90)+'</b>'):'veri yok');
-      setRow(rows[1],kir,'₺/m²·ay',kir?('90 m² ≈ '+Math.round(kir*90).toLocaleString('tr-TR')+' ₺/ay'):'veri yok');
-      var sub2=(sat&&kir)?('brüt kira getirisi <b>%'+((kir*12/sat)*100).toLocaleString('tr-TR',{maximumFractionDigits:1})+'</b>'):(tic?'ticari m² değeri':'veri yok');
-      setRow(rows[2],tic,'₺/m²',sub2);
+      var q=function(s){return card.querySelector(s);};
+      /* HERO — satılık konut */
+      var satEl=q('.fx-sat');
+      if(sat>0){ satEl.classList.remove('sh'); satEl.textContent=nf(sat);
+        q('.fx-satsub').innerHTML='90 m² daire ≈ <b>'+ozTL(sat*90)+'</b>';
+        var pct=Math.max(6,Math.min(100,sat/REF*100)); setTimeout(function(){var bar=q('.fx-bar');if(bar)bar.style.width=pct+'%';},60);
+        if(dlt&&Math.abs(dlt)>=0.1){var d=q('.fx-delta'); d.hidden=false; d.className='ozfx-delta fx-delta '+(dlt>0?'up':'dn'); d.textContent=(dlt>0?'▲ ':'▼ ')+'%'+Math.abs(dlt).toLocaleString('tr-TR',{maximumFractionDigits:1})+' / yıl';}
+      } else { satEl.textContent='—'; q('.fx-satsub').textContent='ProX verisi yok'; }
+      /* MINI — kiralık */
+      var kEl=q('.fx-kir');
+      if(kir>0){ kEl.classList.remove('sh'); kEl.innerHTML=nf(kir)+' <i>₺/m²·ay</i>'; q('.fx-kirsub').textContent='90 m² ≈ '+nf(kir*90)+' ₺/ay'; }
+      else { kEl.textContent='—'; }
+      /* MINI — işyeri + brüt getiri */
+      var tEl=q('.fx-tic');
+      if(tic>0){ tEl.classList.remove('sh'); tEl.innerHTML=nf(tic)+' <i>₺/m²</i>'; }
+      else { tEl.textContent='—'; }
+      var yld=(sat&&kir)?((kir*12/sat)*100):0;
+      q('.fx-ticsub').innerHTML=yld?('brüt getiri <b>%'+yld.toLocaleString('tr-TR',{maximumFractionDigits:1})+'</b>'):(tic?'ticari m² değeri':'—');
     }).catch(function(){});
   });
 }
