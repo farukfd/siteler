@@ -161,6 +161,24 @@ window.proxBootstrap=proxBootstrap;
 #homeView .bz-foot{background:#f9f9f8!important;border-top-color:#e1e3e2!important}
 .bz-cta{display:flex;gap:10px;flex-wrap:wrap}
 @media(max-width:560px){.bz-foot{flex-direction:column;align-items:stretch}.bz-cta{justify-content:stretch}.bz-cta .btn{flex:1;justify-content:center}}
+/* Özel Portföy · mahalle satılık/kiralık endeks kartları (emerald vault üstünde cam) */
+.oz-idx{background:rgba(255,255,255,.05);border:1px solid var(--line-on-em);border-radius:8px;padding:20px 22px;cursor:pointer;transition:border-color .2s;display:flex;flex-direction:column;gap:14px}
+.oz-idx:hover{border-color:var(--gold-soft)}
+.oz-idx-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.oz-idx-h b{font-family:'Playfair Display',Georgia,serif;font-weight:600;font-size:21px;color:#fff;line-height:1}
+.oz-idx-h span{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut-on-em)}
+.oz-idx-h .oz-idx-sc{margin-left:auto;font-family:var(--body);font-size:11px;font-weight:700;color:#04140c;background:var(--prox);border-radius:6px;padding:3px 8px;letter-spacing:0}
+.oz-idx-rows{display:flex;flex-direction:column;gap:9px;border-top:1px solid var(--line-on-em);border-bottom:1px solid var(--line-on-em);padding:13px 0}
+.oz-idx-r{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.oz-idx-r>span{font-family:var(--body);font-size:12px;color:var(--mut-on-em)}
+.oz-idx-r>b{font-family:'Playfair Display',Georgia,serif;font-weight:600;font-size:19px;color:var(--gold-soft);font-variant-numeric:tabular-nums;line-height:1;display:flex;align-items:baseline;gap:4px}
+.oz-idx-r>b i{font-size:.5em;font-style:normal;color:var(--mut-on-em);font-family:var(--body);font-weight:600}
+.oz-idx-r .oz-idx-d{font-size:11px;color:#96f6c7;font-family:var(--body);margin-left:4px}
+.oz-idx-f{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.oz-idx-y{font-family:var(--body);font-size:12.5px;color:#fff;font-weight:600}
+.oz-idx-go{font-family:var(--body);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--gold-soft);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.oz-idx-go svg{width:13px;height:13px}
+.oz-idx .sh{opacity:.4}
 </style>
 </head>
 <body>
@@ -308,13 +326,13 @@ window.proxBootstrap=proxBootstrap;
 <section class="vault sec-pad" id="vault">
   <div class="wrap">
     <div class="sec-h">
-      <div class="divider-orn"><span>RÉSERVÉ</span></div>
-      <div class="eyebrow" style="display:block">Kişisel VIP Portföyüm</div>
-      <h2>Herkese açık olmayan, davet usulü gayrimenkuller</h2>
-      <p>Yalnızca cadde/sokak ismi ve başlangıç değeri paylaşılır; tam adres ve kimlik bilgileri mahremiyet gereği yalnızca ön analiz sonrası açıklanır.</p>
+      <div class="divider-orn"><span>ÖZEL PORTFÖY</span></div>
+      <div class="eyebrow" style="display:block">Canlı ProX · Mahalle Endeksi</div>
+      <h2>Öncelikli mahallelerde satılık &amp; kiralık endeks</h2>
+      <p>Boğaz hattı ve prestij mahallelerinin güncel m² değeri, yıllık değişimi ve brüt kira getirisi — canlı ProX verisiyle. Bu mahallelerdeki davet usulü özel portföyüm için görüşelim.</p>
     </div>
     <div class="card-grid" id="vaultGrid"></div>
-    <div class="vault-note">🔒 Tüm kayıtlarda <b>adres gizliliği</b> esastır · Net konum ve detaylar yalnızca <b>ücretsiz analiz görüşmesinde</b> paylaşılır.</div>
+    <div class="vault-note">🔒 Özel portföy kayıtlarında <b>adres gizliliği</b> esastır · Tam konum ve gayrimenkul detayları yalnızca <b>ücretsiz ön analiz görüşmesinde</b> paylaşılır. <a href="ozel-portfoy.html" style="color:var(--gold-soft);font-weight:700;text-decoration:none">Tüm mahalle endekslerini aç →</a></div>
   </div>
 </section>
 
@@ -404,7 +422,7 @@ window.proxBootstrap=proxBootstrap;
 </div><!-- /homeView -->
 
 <script src="js/ilan-data.js?v=1"></script><!-- ortak gerçek ilan verisi (ilanlar.html ile paylaşımlı) -->
-<script src="js/app.js?v=23"></script>
+<script src="js/app.js?v=25"></script>
 <script src="js/uyelik.js?v=4"></script>
 </body>
 </html>

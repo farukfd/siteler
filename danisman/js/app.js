@@ -363,7 +363,7 @@ async function rebuildVipFromProx(il,silent){if(_vipBusy)return;_vipBusy=true;sa
     });
     if(out.length){VIP_PORTFOLIO.length=0;out.forEach(function(x){VIP_PORTFOLIO.push(x);});}
     try{localStorage.setItem('dn_vip_ts',JSON.stringify({il:primary,ts:Date.now(),n:out.length,real:real}));}catch(e){}
-    try{var g=document.getElementById('vaultGrid');if(g)g.innerHTML=vipCardsHTML();}catch(e){}
+    /* #vaultGrid artık mahalle satılık/kiralık ProX endeksi gösterir (vaultIndexLoad); VIP_PORTFOLIO admin/aramada kullanılır */
     try{renderVipStatus();}catch(e){}
     if(!silent&&typeof toast==='function')toast('✓ Özel Portföy '+primary+': '+out.length+' gayrimenkul ('+real+' gerçek ProX analiz fiyatı).');
   }catch(e){if(!silent&&typeof toast==='function')toast('Portföy oluşturulamadı.');}
@@ -529,6 +529,48 @@ function vipCardsHTML(){return VIP_PORTFOLIO.map(p=>{
    +'<div class="vcard-ft"><div class="vcard-price">'+fmt(p.baslangic)+'<span>Başlangıç · Yetki Belgeli</span></div><div class="vcard-go">Ücretsiz Analiz'+_ARR+'</div></div>'
    +'</div></article>';
 }).join('');}
+
+/* ============ ANA SAYFA ÖZEL PORTFÖY · MAHALLE SATILIK/KİRALIK ENDEKSİ (canlı ProX) ============
+   ozel-portfoy.html ile AYNI ProX mahalle endeksini teaser olarak gösterir. VIP_PORTFOLIO
+   admin/arama tarafında kullanılmaya devam eder; yalnız #vaultGrid gösterimi değişir. */
+var VAULT_MAH=[
+  {ilce:'Beşiktaş',mah:'Bebek'},{ilce:'Beşiktaş',mah:'Etiler'},
+  {ilce:'Şişli',mah:'Nişantaşı'},{ilce:'Kadıköy',mah:'Caddebostan'},
+  {ilce:'Sarıyer',mah:'Zekeriyaköy'},{ilce:'Üsküdar',mah:'Kandilli'}
+];
+var _vaultSeq=0;
+async function ozHomeEndeks(il,ilce,mah,durum){
+  try{var r=await proxApi('/api/v1/tenant/endeks?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce)+'&mahalle='+encodeURIComponent(mah)+'&kategori=konut&durum='+durum);
+    if(r&&r.success&&r.data&&+r.data.m2>0)return {m2:+r.data.m2,delta:+r.data.delta||0,score:+r.data.score||0};}catch(e){}
+  return null;
+}
+function ozIdxCard(o){
+  var yld=(o.sat&&o.kir)?((o.kir*12/o.sat)*100):0;
+  var deltaTxt=o.delta?((o.delta>0?'▲ %':'▼ %')+Math.abs(o.delta).toLocaleString('tr-TR',{maximumFractionDigits:1})):'';
+  return '<article class="oz-idx" data-slot="'+o.slot+'" onclick="leadFor(\''+(o.mah+' Özel Portföy').replace(/'/g,'’')+'\')">'
+    +'<div class="oz-idx-h"><b>'+_leD(o.mah)+'</b><span>'+_leD(o.ilce)+'</span>'+(o.score?'<span class="oz-idx-sc">Skor '+Math.round(o.score)+'</span>':'')+'</div>'
+    +'<div class="oz-idx-rows">'
+    +'<div class="oz-idx-r"><span>Satılık</span><b>'+(o.sat?Math.round(o.sat).toLocaleString('tr-TR'):'—')+' <i>₺/m²</i>'+(deltaTxt?'<em class="oz-idx-d">'+deltaTxt+'</em>':'')+'</b></div>'
+    +'<div class="oz-idx-r"><span>Kiralık</span><b>'+(o.kir?Math.round(o.kir).toLocaleString('tr-TR'):'—')+' <i>₺/m²·ay</i></b></div>'
+    +'</div>'
+    +'<div class="oz-idx-f"><span class="oz-idx-y">Brüt getiri '+(yld?('%'+yld.toLocaleString('tr-TR',{maximumFractionDigits:1})):'—')+'</span><span class="oz-idx-go">Özel portföy talep et'+_ARR+'</span></div>'
+    +'</article>';
+}
+function vaultIndexLoad(){
+  var g=document.getElementById('vaultGrid'); if(!g) return;
+  g.innerHTML=VAULT_MAH.map(function(m,i){return '<article class="oz-idx" data-slot="'+i+'"><div class="oz-idx-h"><b>'+_leD(m.mah)+'</b><span>'+_leD(m.ilce)+'</span></div><div class="oz-idx-rows"><div class="oz-idx-r"><span>Satılık</span><b class="sh">•••</b></div><div class="oz-idx-r"><span>Kiralık</span><b class="sh">•••</b></div></div><div class="oz-idx-f"><span class="oz-idx-y sh">ProX endeksi hesaplanıyor…</span></div></article>';}).join('');
+  if(typeof proxApi!=='function') return;
+  var il='İstanbul'; try{if(typeof saLoad==='function'){var p=saLoad();if(p&&p.primary)il=p.primary;}}catch(e){}
+  var mine=++_vaultSeq;
+  VAULT_MAH.forEach(function(def,idx){
+    Promise.all([ozHomeEndeks(il,def.ilce,def.mah,'satilik'),ozHomeEndeks(il,def.ilce,def.mah,'kiralik')]).then(function(r){
+      if(mine!==_vaultSeq) return;
+      var sat=r[0],kir=r[1]; if(!sat&&!kir) return;
+      var card=g.querySelector('.oz-idx[data-slot="'+idx+'"]'); if(!card) return;
+      card.outerHTML=ozIdxCard({slot:idx,mah:def.mah,ilce:def.ilce,sat:sat?sat.m2:0,kir:kir?kir.m2:0,delta:sat?sat.delta:0,score:sat?sat.score:0});
+    }).catch(function(){});
+  });
+}
 
 function contactHTML(){return '<div class="contact-grid contact">'
   +'<div><div class="eyebrow">İletişim</div><h2 style="font-size:clamp(28px,4vw,42px);margin-bottom:24px">Tek bir görüşme, doğru başlangıçtır.</h2>'
@@ -1717,7 +1759,7 @@ window.addEventListener('load',function(){try{
   try{applyContent();}catch(e){}/* CMS: admin'de düzenlenmiş hero metinlerini uygula (dn_content) */
   try{applyIletisim();}catch(e){}/* WhatsApp/telefon bağlantılarını admin değerine güncelle (dn_iletisim) */
   document.getElementById('homeListings').innerHTML=listingCardsHTML();
-  document.getElementById('vaultGrid').innerHTML=vipCardsHTML();
+  try{vaultIndexLoad();}catch(e){document.getElementById('vaultGrid').innerHTML=vipCardsHTML();}
   document.getElementById('homeContact').innerHTML=contactHTML();
   document.getElementById('siteFooter').innerHTML=footerHTML();
   _proxPush('a','Hoş geldiniz. Bir bölge ya da gayrimenkul tipi söyleyin — portföyümü tarayıp size en uygun seçenekleri ve prim potansiyelini paylaşayım.');
