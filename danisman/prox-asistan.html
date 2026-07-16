@@ -21,7 +21,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/base.css?v=18">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg">
@@ -107,6 +107,24 @@ html,body{height:100%}
   .pa-menu{display:flex}
   .pa-suggests{grid-template-columns:1fr}
 }
+</style>
+<!-- ============ STITCH DÖNÜŞÜMÜ (prox-asistan · ProX yeşili KORUNUR) ============ -->
+<style id="paStitch">
+/* Sohbet zemini → near-white; koyu emerald sidebar on-brand kalır */
+.pa-body,.pa-main{background:#f9f9f8!important}
+.pa-appbar{background:#fff!important;border-bottom-color:#e1e3e2!important}
+.pa-title{font-family:'Playfair Display',Georgia,serif!important;color:#00452b!important}
+.pa-welcome h2,.pa-welcome .w-logo{font-family:'Playfair Display',Georgia,serif!important;color:#00452b!important}
+.pa-welcome p{color:#3f4942!important;font-family:'IBM Plex Sans',system-ui,sans-serif!important}
+/* Öneri çipleri — beyaz hairline 8px; ProX yeşili hover KORUNUR (yükselme/gölge yok) */
+.pa-chip{background:#fff!important;border-color:#e1e3e2!important;border-radius:8px!important;color:#191c1c!important;font-family:'IBM Plex Sans',system-ui,sans-serif!important}
+.pa-chip:hover{transform:none!important;box-shadow:none!important;border-color:#19c37d!important}
+/* Bubble'lar — beyaz hairline 8px (ProX/gold avatarlar + prox-x DOKUNULMAZ) */
+.pa-bubble{background:#fff!important;border-color:#e1e3e2!important;border-radius:8px!important}
+.pa-msg.me .pa-bubble{background:#f6efdd!important;border-color:#e6d5a8!important}
+/* Composer — beyaz hairline; textarea beyaz (ProX focus/send DOKUNULMAZ) */
+.pa-composer{background:#fff!important;border-top-color:#e1e3e2!important}
+.pa-form textarea{background:#fff!important;border-color:#e1e3e2!important;border-radius:8px!important}
 </style>
 </head>
 <body class="pa-body">
