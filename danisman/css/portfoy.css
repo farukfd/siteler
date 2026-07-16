@@ -236,6 +236,11 @@ html:not(.js) .pf-rv{opacity:1;transform:none}
 .ilh-dot.on{background:var(--gold-soft);width:26px;border-radius:5px}
 .ilh-count{position:absolute;top:120px;right:28px;z-index:4;font-family:var(--body);font-size:12px;letter-spacing:.1em;color:var(--cream-on-em);background:rgba(8,20,14,.4);backdrop-filter:blur(8px);border:1px solid var(--line-on-em);border-radius:999px;padding:7px 14px}
 @media(max-width:640px){.ilh-in{padding-bottom:70px}.ilh-count{display:none}}
+/* Kısa/geniş viewport'ta bottom-align içerik sabit header (~78px) altına taşıyordu
+   (slide'lar position:absolute olduğu için .ilh padding-top'u yok sayılıyor).
+   Yüksekliği sınırlı ekranlarda içeriği header'ı temizleyecek şekilde ÜSTTEN hizala;
+   uzun ekranlarda özgün bottom-align tasarımı korunur. */
+@media(max-height:720px){.ilh-in{justify-content:flex-start;padding-top:100px;padding-bottom:28px}}
 /* GÜVEN ŞERİDİ (google landing) */
 .ilh-trust{background:var(--em-deep);border-bottom:1px solid var(--line-on-em)}
 .ilh-trust-in{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;gap:30px;flex-wrap:wrap;align-items:center;justify-content:center}
