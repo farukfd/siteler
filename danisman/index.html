@@ -8,7 +8,7 @@
 <meta name="keywords" content="lüks konut danışmanı, özel portföy, yalı, penthouse, kişiye özel emlak, ücretsiz gayrimenkul analizi, gizli satış">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
 <!-- ============ ProX SaaS API ÇEKİRDEĞİ (additive, single-file) ============ -->
 <script>
@@ -88,6 +88,73 @@ window.proxBootstrap=proxBootstrap;
   <style>/* ana sayfa tam yeşil — overscroll/alt beyaz ekranı önle */html,body{background:#0a3527;overscroll-behavior:none}</style>
 <script src="js/tr-grammar.js?v=3"></script>
 <script src="js/tr-iller.js?v=2"></script><!-- Türkçe gramer tek kaynak (gayrimenkul.html ile ortak) -->
+<!-- ============ STITCH DÖNÜŞÜMÜ (ana sayfa · hero/nav/footer HARİÇ tüm bölümler) ============ -->
+<style id="ixStitch">
+/* Konteyner koyu emerald → cool near-white; hero kendi .hero-bg'siyle KOYU KALIR */
+#homeView{background:#f9f9f8!important}
+/* Bölüm başlık/eyebrow/paragraf → açık-tema (koyu ink/emerald) */
+#homeView .sec-h h2{color:#00452b!important;font-family:'Playfair Display',Georgia,serif!important}
+#homeView .sec-h p{color:#3f4942!important}
+#homeView .eyebrow{color:#0e5e3e!important}
+/* Emerald feature bölümlerinde (vault/intel-band) başlık BEYAZ + gold eyebrow KALIR */
+#homeView .vault .sec-h h2,#homeView .intel-band h2,#homeView .intel-copy h2{color:#fff!important}
+#homeView .vault .eyebrow,#homeView .intel-band .eyebrow,#homeView .intel-copy .eyebrow{color:#fed175!important}
+/* Güven şeridi */
+#homeView .trust{border-color:#e1e3e2!important}
+#homeView .trust-in{color:#3f4942!important}
+#homeView .trust-in b{color:#00452b!important;font-family:'Playfair Display',Georgia,serif!important}
+/* Hakkımda */
+#homeView .about h2{color:#00452b!important;font-family:'Playfair Display',Georgia,serif!important}
+#homeView .about p{color:#3f4942!important}
+#homeView .about .role{color:#795901!important}
+#homeView .about .quote{color:#00452b!important;border-left-color:#c39b45!important}
+#homeView .about-meta div b{color:#00452b!important;font-family:'Playfair Display',Georgia,serif!important}
+#homeView .about-meta div span{color:#707972!important}
+#homeView .about-portrait{border-color:#e1e3e2!important;border-radius:8px!important;background:radial-gradient(80% 60% at 50% 20%,rgba(14,94,62,.12),transparent 60%),linear-gradient(160deg,#eef3ee,#e4ede7)!important}
+#homeView .about-portrait .frame{border-color:rgba(14,94,62,.22)!important}
+#homeView .about-portrait svg{color:#0e5e3e!important}
+/* İlanlar kartları (vcard) → beyaz Stitch (cam-emerald yerine) */
+#homeView #ilanlar .vcard{background:#fff!important;border-color:#e1e3e2!important;border-radius:8px!important;box-shadow:none!important;transition:border-color .2s!important}
+#homeView #ilanlar .vcard:hover{transform:none!important;border-color:#00452b!important;box-shadow:none!important}
+#homeView #ilanlar .vcard-img{background:linear-gradient(160deg,#eef3ee,#e2ebe5)!important;border-color:#e1e3e2!important}
+#homeView #ilanlar .vcard-img svg{color:#0e5e3e!important}
+#homeView #ilanlar .vcard-body h3{color:#00452b!important;font-family:'Playfair Display',Georgia,serif!important}
+#homeView #ilanlar .vcard-loc{color:#0e5e3e!important}
+#homeView #ilanlar .vcard-spec{border-color:#e1e3e2!important}
+#homeView #ilanlar .vcard-spec div{color:#707972!important}
+#homeView #ilanlar .vcard-spec div b{color:#191c1c!important;font-family:'Playfair Display',Georgia,serif!important}
+#homeView #ilanlar .vcard-price{color:#00452b!important;font-family:'Playfair Display',Georgia,serif!important}
+#homeView #ilanlar .vcard-price span{color:#707972!important}
+#homeView #ilanlar .vcard-go{color:#795901!important}
+#homeView #ilanlar .btn-line{border-color:#00452b!important;color:#00452b!important}
+#homeView #ilanlar .btn-line:hover{background:rgba(0,69,43,.06)!important;color:#00452b!important}
+/* Süreç timeline → beyaz hairline hücreler */
+#homeView #surec .proc-grid{border-color:#e1e3e2!important;border-radius:8px!important}
+#homeView #surec .proc{background:#fff!important;border-right-color:#e1e3e2!important;border-bottom-color:#e1e3e2!important}
+#homeView #surec .proc h4{color:#00452b!important;font-family:'Playfair Display',Georgia,serif!important}
+#homeView #surec .proc p{color:#707972!important}
+#homeView #surec .proc:hover{background:#f3f4f3!important}
+#homeView #surec .proc:hover h4{color:#00452b!important}
+#homeView #surec .proc .no{background:#f6efdd!important;border-color:#e6d5a8!important;color:#795901!important}
+/* Referans kartları → beyaz hairline 8px */
+.ref-card{background:#fff!important;border-color:#e1e3e2!important;border-radius:8px!important}
+.ref-head h2{font-family:'Playfair Display',Georgia,serif!important;color:#00452b!important}
+.ref-q{color:#3f4942!important}
+.ref-by{border-top-color:#e1e3e2!important}
+.ref-n{color:#191c1c!important}
+.ref-r{color:#707972!important}
+/* ProX kartı + analiz bandı (emerald feature) — köşe/gölge uyumu (ProX yeşili korunur) */
+#homeView .prox-card{border-color:rgba(255,255,255,.14)!important;box-shadow:none!important;border-radius:8px!important}
+.analiz-band{border-radius:8px!important}
+/* İletişim (homeContact) */
+#homeView .contact .row{border-color:#e1e3e2!important}
+#homeView .contact .row .ic{border-color:#e1e3e2!important;color:#0e5e3e!important;background:#f6efdd!important}
+#homeView .contact .row b{color:#191c1c!important}
+#homeView .contact .row span{color:#707972!important}
+#homeView .contact h2,#homeView .contact h3,#homeView .contact-cta h3{color:#00452b!important;font-family:'Playfair Display',Georgia,serif!important}
+#homeView .contact-cta{background:#fff!important;border-color:#e1e3e2!important}
+#homeView .contact-cta p{color:#3f4942!important}
+</style>
 </head>
 <body>
 
