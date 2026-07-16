@@ -377,7 +377,7 @@ body{overflow-x:clip}
     </div>
     <div class="ba-hero-viz">
       <div class="vh"><span>PROX · İL FİYAT ENDEKSİ</span><b id="baHvBadge">● canlı</b></div>
-      <svg id="baHeroSvg" viewBox="0 0 460 190" role="img" aria-label="İl geneli 12 aylık m² fiyat seyri">
+      <svg id="baHeroSvg" viewBox="0 0 460 190" role="img" aria-label="İl geneli m² fiyat eğilimi — canlı endeks ve yıllık değişimden türetilmiş gösterge">
         <g class="ba-hv-grid"><line x1="14" y1="48" x2="446" y2="48"/><line x1="14" y1="95" x2="446" y2="95"/><line x1="14" y1="142" x2="446" y2="142"/></g>
         <path class="ba-hv-line" id="baHvLine" d=""/>
         <circle class="ba-hv-end" id="baHvEnd" r="4.6" cx="0" cy="0"/>
@@ -803,7 +803,7 @@ function paintL2(ic,cur,sat,kir){
   var likW=Math.max(4,Math.min(100,Math.round((ilan/1200)*100)));document.getElementById('baLik').setAttribute('data-w',likW);
   /* mirror */
   var satM=sat?sat.m2:0,kirM=kir?kir.m2:0;var mmx=Math.max(satM,kirM*400)||1;
-  document.getElementById('baMbarSat').setAttribute('data-w',Math.min(100,satM/ (Math.max(satM,1))*100));
+  document.getElementById('baMbarSat').setAttribute('data-w',Math.min(100,satM/mmx*100));
   document.getElementById('baMbarKir').setAttribute('data-w',Math.min(100,kirM*400/mmx*100));
   document.getElementById('baMvalSat').textContent=satM?TL(satM)+' ₺/m²':'—';
   document.getElementById('baMvalKir').textContent=kirM?TL(kirM)+' ₺/m²·ay':'—';
