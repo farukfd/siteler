@@ -38,6 +38,65 @@
 <script src="js/content.js?v=3"></script>
 <script src="js/a11y.js?v=1"></script>
 <link rel="stylesheet" href="css/portfoy.css?v=8">
+<!-- ============ ÖZEL PORTFÖY HERO (ilana çıkmayan portföy + radar) · scoped ============ -->
+<style id="ozpHeroStyle">
+.pf-hero .ozh{align-items:center}
+.pf-hero .ozh-kick{color:var(--gold-soft,#dcc389)}
+.pf-hero .ozh-title{max-width:15ch}
+.pf-hero .ozh-lede{max-width:56ch}
+.pf-hero .ozh-lede b{color:var(--cream-on-em,#f4efe4);font-weight:600}
+.pf-hero .ozh-cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:30px}
+.pf-hero .ozh-btn-main{display:inline-flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;cursor:pointer;
+  padding:14px 26px;border-radius:12px;border:1px solid rgba(220,195,137,.5);
+  background:linear-gradient(150deg,#e7d19a,#c39b45);color:#0a3527;
+  transition:transform .2s,box-shadow .2s,filter .2s}
+.pf-hero .ozh-btn-main:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(195,155,69,.34);filter:brightness(1.03)}
+.pf-hero .ozh-btn-t{font-family:var(--serif,'Playfair Display'),serif;font-weight:700;font-size:16px;line-height:1.2}
+.pf-hero .ozh-btn-s{font-family:var(--body,'IBM Plex Sans'),sans-serif;font-size:12.5px;font-weight:600;opacity:.85;letter-spacing:.01em}
+.pf-hero .ozh-btn-s em{font-style:normal}
+.pf-hero .ozh-btn-alt{align-self:center;color:var(--cream-on-em,#f4efe4);font-family:var(--body),sans-serif;font-size:14px;font-weight:500;
+  text-decoration:none;border-bottom:1px solid rgba(244,239,228,.35);padding-bottom:2px;transition:.2s}
+.pf-hero .ozh-btn-alt:hover{color:var(--gold-soft,#dcc389);border-color:var(--gold-soft,#dcc389)}
+.pf-hero .ozh-chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.pf-hero .ozh-chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--body),sans-serif;font-size:12px;
+  color:var(--cream-on-em,#e9e2d2);background:rgba(255,255,255,.05);border:1px solid var(--line-on-em,rgba(220,195,137,.22));
+  border-radius:999px;padding:6px 13px}
+.pf-hero .ozh-chip svg{width:14px;height:14px;color:var(--gold-soft,#dcc389);flex:none}
+.pf-hero .ozh-chip b{color:var(--gold-soft,#dcc389);font-weight:700}
+.pf-hero .ozh-radar-wrap{position:relative;aspect-ratio:1/1;background:#08301f}
+.pf-hero .ozh-radar-wrap #ozRadar{position:absolute;inset:0;width:100%;height:100%;display:block}
+.pf-hero .ozh-hud{position:absolute;left:16px;top:14px;right:16px;pointer-events:none;font-family:var(--body),sans-serif;z-index:2}
+.pf-hero .ozh-hud-top{display:inline-flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.13em;font-weight:700;color:var(--gold-soft,#dcc389)}
+.pf-hero .ozh-hud-dot{width:7px;height:7px;border-radius:50%;background:#19c37d;animation:ozhPulse 1.8s infinite}
+@keyframes ozhPulse{0%{box-shadow:0 0 0 0 rgba(25,195,125,.5)}70%{box-shadow:0 0 0 8px rgba(25,195,125,0)}100%{box-shadow:0 0 0 0 rgba(25,195,125,0)}}
+.pf-hero .ozh-hud-count{margin-top:8px;font-family:var(--serif),serif;font-size:14px;color:#fff}
+.pf-hero .ozh-hud-count b{font-size:26px;color:var(--gold-soft,#dcc389);font-variant-numeric:tabular-nums;margin-right:5px}
+.pf-hero .ozh-hud-lbl{margin-top:2px;font-size:11px;color:rgba(244,239,228,.68);max-width:60%}
+@media(max-width:900px){.pf-hero .ozh-radar-wrap{max-width:400px;margin:4px auto 0;width:100%}}
+@media(prefers-reduced-motion:reduce){.pf-hero .ozh-hud-dot{animation:none}}
+/* ===== Özel Portföy nedir? açıklama bandı (açık Stitch) ===== */
+.ozn-sec{padding:52px 0;background:#f9f9f8;border-top:1px solid #e1e3e2;border-bottom:1px solid #e1e3e2}
+.ozn-head{max-width:780px}
+.ozn-eyebrow{font-family:var(--body),sans-serif;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#795901}
+.ozn-title{font-family:var(--serif),serif;font-weight:700;font-size:clamp(26px,3.6vw,40px);line-height:1.08;color:#00452b;margin:12px 0 0}
+.ozn-title i{font-family:var(--serif-2),serif;font-style:italic;font-weight:500;color:#c39b45}
+.ozn-lede{font-family:var(--body),sans-serif;font-size:16.5px;line-height:1.7;color:#3f4942;margin:16px 0 0}
+.ozn-lede b{color:#00452b;font-weight:600}
+.ozn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:32px}
+@media(max-width:820px){.ozn-grid{grid-template-columns:1fr}}
+.ozn-card{background:#fff;border:1px solid #e1e3e2;border-radius:10px;padding:24px 22px;transition:border-color .2s}
+.ozn-card:hover{border-color:#0e5e3e}
+.ozn-ic{width:42px;height:42px;border-radius:9px;background:#0e5e3e;display:grid;place-items:center;color:#fed175}
+.ozn-ic svg{width:22px;height:22px}
+.ozn-card h3{font-family:var(--serif),serif;font-weight:600;font-size:19px;color:#00452b;margin:16px 0 8px}
+.ozn-card p{font-family:var(--body),sans-serif;font-size:14px;line-height:1.62;color:#3f4942;margin:0}
+.ozn-cta{display:flex;align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap;margin-top:26px;background:linear-gradient(150deg,#0e5e3e,#0a3527);border-radius:12px;padding:22px 28px}
+.ozn-cta-txt b{display:block;font-family:var(--serif),serif;font-size:19px;color:#fff;font-weight:600}
+.ozn-cta-txt span{display:block;font-family:var(--body),sans-serif;font-size:13.5px;color:rgba(244,239,228,.82);margin-top:4px}
+.ozn-btn{cursor:pointer;white-space:nowrap;font-family:var(--body),sans-serif;font-size:15px;font-weight:700;padding:13px 24px;border-radius:10px;border:1px solid transparent;background:linear-gradient(150deg,#e7d19a,#c39b45);color:#0a3527;transition:transform .2s,box-shadow .2s}
+.ozn-btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.22)}
+.ozn-btn em{font-style:normal}
+</style>
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body class="pf-page">
@@ -73,19 +132,33 @@
 <!-- ============ HERO ============ -->
 <section class="pf-hero" id="pfHero">
   <div class="pf-hero-bg"></div>
-  <div class="wrap pf-hero-in">
-    <div class="pf-rv">
-      <div class="pf-kicker"><span class="dot g"></span>ProX Canlı Endeks · Mahalle Fiyat İstihbaratı</div>
-      <h1><span id="ozHeroIl">İstanbul</span> — mahalle mahalle <i>fiyat endeksi</i> &amp; fırsat radarı.</h1>
+  <div class="wrap pf-hero-in ozh">
+    <div class="pf-rv ozh-copy">
+      <div class="pf-kicker ozh-kick"><span class="dot g"></span>Davet Usulü · İlana Çıkmayan Portföy</div>
+      <h1 class="ozh-title">Aradığınız mahallede, <i>ilana çıkmayan</i> bir portföyüm olabilir.</h1>
       <div class="pf-rule"></div>
-      <p class="pf-lede">Hizmet verdiğim her mahallede <b>ProX canlı endeksinden</b> satılık ve kiralık konut, işyeri ve arsa için <b>başlangıç fiyatlarını</b> ve yükselen fırsatları görün. Yatırım kararınız için ücretsiz değer analizi ve kişisel danışmanlıkta yanınızdayım.</p>
-      <div class="pf-stats">
-        <div class="pf-stat"><b id="ozStatN">—</b><span>Bölge / Mahalle</span></div>
-        <div class="pf-stat"><b>Canlı</b><span>ProX Endeks</span></div>
-        <div class="pf-stat"><b>Ücretsiz</b><span>Değer Analizi</span></div>
+      <p class="pf-lede ozh-lede"><b>Özel Portföy</b> — herkese açık ilan sitelerinde yer almayan, mahremiyeti korunan gayrimenkuller. Satıcı gizlilik istediği için vitrine çıkmaz; doğru alıcıyla <b>birebir, davet usulü</b> eşleştirilir. <span id="ozHeroIl">İstanbul</span>'un her prestij mahallesinde bu kapalı kayıtlardan tutuyorum.</p>
+      <div class="ozh-cta">
+        <button type="button" class="ozh-btn-main" onclick="ozTalepOpen({ozel:true,islem:'satilik',tip:'Daire'})">
+          <span class="ozh-btn-t">Aradığınız mahallede özel portföyüm var mı?</span>
+          <span class="ozh-btn-s">Sorun — birebir dönelim <em>→</em></span>
+        </button>
+        <a class="ozh-btn-alt" href="#ozNedir">Özel Portföy nedir?</a>
+      </div>
+      <div class="ozh-chips">
+        <span class="ozh-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Tam gizlilik</span>
+        <span class="ozh-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3l2.4 5 5.6.6-4.2 3.9 1.2 5.5L12 16.8 6.8 18l1.2-5.5L3.8 8.6 9.4 8z"/></svg>Davet usulü</span>
+        <span class="ozh-chip"><b id="ozStatN">—</b> bölgede kapalı kayıt · birebir eşleştirme</span>
       </div>
     </div>
-    <div class="pf-hero-art pf-rv" id="ozHeroArt" aria-hidden="true"></div>
+    <div class="pf-hero-art ozh-radar-wrap" id="ozHeroArt" aria-hidden="true">
+      <canvas id="ozRadar"></canvas>
+      <div class="ozh-hud">
+        <div class="ozh-hud-top"><span class="ozh-hud-dot"></span>CANLI · ÖZEL PORTFÖY RADARI</div>
+        <div class="ozh-hud-count"><b id="ozRadarN">0</b> mahallede kapalı kayıt</div>
+        <div class="ozh-hud-lbl" id="ozRadarLbl">bölge taranıyor…</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -102,6 +175,32 @@
   </div>
   <div class="wrap"><div id="ozAraSonuc" class="oz-ara-sonuc" hidden aria-live="polite"></div></div>
 </div>
+
+<!-- ============ ÖZEL PORTFÖY NEDİR? (açıklama + ikna) ============ -->
+<section class="ozn-sec" id="ozNedir">
+  <div class="wrap">
+    <div class="ozn-head">
+      <div class="ozn-eyebrow">Özel Portföy Nedir?</div>
+      <h2 class="ozn-title">İlana çıkmayan gayrimenkuller — yalnızca <i>davet usulü</i>.</h2>
+      <p class="ozn-lede">Portallarda gördüğünüz ilanlar, buzdağının yalnızca görünen kısmıdır. Prestij mahallelerde satıcıların önemli bölümü; gizlilik, güvenlik ve doğru alıcıyla eşleşmek için gayrimenkulünü <b>hiç ilana çıkarmaz</b>. Bu kayıtlar yalnızca güvenilir bir danışman ağıyla, birebir el değiştirir.</p>
+    </div>
+    <div class="ozn-grid">
+      <article class="ozn-card"><div class="ozn-ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><line x1="4" y1="20" x2="20" y2="4"/></svg></div>
+        <h3>İlana Çıkmaz</h3><p>Portallarda ve açık sitelerde göremezsiniz. Portföy vitrine konmaz; yalnızca kriterine uyan alıcıya, doğru zamanda sunulur.</p></article>
+      <article class="ozn-card"><div class="ozn-ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Davet Usulü Eşleştirme</h3><p>Aradığınız mahalle ve kriterleriniz kayda alınır. Uygun bir kapalı kayıt çıktığında, aracı kalabalığı olmadan birebir size ulaşırım.</p></article>
+      <article class="ozn-card"><div class="ozn-ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
+        <h3>Tam Gizlilik</h3><p>Satıcının kimliği, tam adres ve şartlar yalnızca ciddi görüşme aşamasında paylaşılır. Her iki taraf da baştan sona korunur.</p></article>
+    </div>
+    <div class="ozn-cta">
+      <div class="ozn-cta-txt"><b>Aradığınız mahallede, size uygun kapalı bir kaydım olabilir.</b><span>Kriterlerinizi bırakın; bu bölgede özel portföyümde ne olduğunu birebir paylaşayım.</span></div>
+      <button type="button" class="ozn-btn" onclick="ozTalepOpen({ozel:true,islem:'satilik',tip:'Daire'})">Özel portföyümde sorun <em>→</em></button>
+    </div>
+  </div>
+</section>
 
 <!-- ============ MAHALLE DEĞER PANOSU (ProX ortalama fiyatlar) ============ -->
 <section class="pf-wrap">
@@ -317,7 +416,7 @@ function ozTalepIslem(v){OZ_TALEP.islem=v;var w=document.getElementById('ozTalep
 function ozTalepHTML(p){
   var k=OZ_TALEP.konum,loc=[k.mah,k.ilce,k.il].filter(Boolean).join(' · ')||(k.il||'Bölge');
   var title=OZ_TALEP.ozel?'Özel Portföy Talebi':'Danışmana Talep';
-  var lede=OZ_TALEP.ozel?'İlana koymadan sattığımız/kiraladığımız size özel mülkler için kriterlerinizi bırakın — danışmanınız birebir ulaşsın.':'Aradığınız gayrimenkulü belirtin; danışmanınız bu bölgede size özel seçenekleri bulup en kısa sürede dönsün.';
+  var lede=OZ_TALEP.ozel?'İlana koymadan sattığımız/kiraladığımız size özel gayrimenkuller için kriterlerinizi bırakın — danışmanınız birebir ulaşsın.':'Aradığınız gayrimenkulü belirtin; danışmanınız bu bölgede size özel seçenekleri bulup en kısa sürede dönsün.';
   return '<div class="oztf" role="dialog" aria-modal="true" aria-label="'+esc(title)+'">'
     +'<button class="ozd-x" onclick="ozTalepClose()" aria-label="Kapat">✕</button>'
     +'<div class="ozt-head"><span class="ozt-badge">'+(OZ_TALEP.ozel?'Özel Portföy':'Talep')+'</span><h3>'+esc(title)+'</h3><span class="ozt-loc">'+ICO_PIN+esc(loc)+'</span></div>'
@@ -991,7 +1090,7 @@ function ozInit(){
   ozStyles();
   document.getElementById('ozHeroIl').textContent=OZIL;
   ozLocalizeSeo(OZIL);
-  try{if(window.propScene)document.getElementById('ozHeroArt').innerHTML=propScene('yali','ozhero');}catch(e){}
+  try{ozRadarInit();}catch(e){}/* hero: "Özel Portföy Radarı" canvas animasyonu (eski propScene yerine) */
   var sel=document.getElementById('ozIl');var iller=Object.keys(TR_ILILCE).sort(function(a,b){return a.localeCompare(b,'tr');});
   if(!iller.length)iller=[OZIL];
   sel.innerHTML=iller.map(function(i){return '<option value="'+esc(i)+'"'+(i===OZIL?' selected':'')+'>'+esc(i)+'</option>';}).join('');
@@ -1005,6 +1104,80 @@ function ozInit(){
   ozPopulateIlce();ozPopulateMah();
   pfReveal();
   ozRender();
+}
+/* ============================================================================
+   ÖZEL PORTFÖY RADARI — hero canvas animasyonu
+   Metafor: danışmanın radarı, İstanbul'un mahallelerinde ilana çıkmayan (kapalı)
+   portföyleri tarar; süpürme çizgisi bir kayda değince altın "kapalı kayıt" işareti
+   parlar. prefers-reduced-motion'da statik çizilir. Marka: emerald + altın.
+   ========================================================================== */
+var _ozRadarRAF=null;
+function ozRadarInit(){
+  var cv=document.getElementById('ozRadar'); if(!cv) return;
+  var wrap=cv.parentElement; var ctx=cv.getContext('2d');
+  var reduce=false; try{reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
+  var MAH=['Bebek','Etiler','Nişantaşı','Caddebostan','Zekeriyaköy','Kandilli','Levent','Cihangir','Ulus','Yeniköy','Arnavutköy','Vaniköy','Kuruçeşme','Acarkent'];
+  var blips=[]; // {a:açı, r:0-1 yarıçap, name, seen, flare(0-1)}
+  var RN=Math.min(MAH.length, 11);
+  function rand(seed){var x=Math.sin(seed*99.13)*43758.5453;return x-Math.floor(x);}
+  for(var i=0;i<RN;i++){ blips.push({a:rand(i+1)*Math.PI*2, r:0.30+rand(i+7)*0.60, name:MAH[i%MAH.length], seen:false, flare:0}); }
+  var lblEl=document.getElementById('ozRadarLbl'), nEl=document.getElementById('ozRadarN');
+  var W=0,H=0,cx=0,cy=0,R=0,dpr=Math.min(window.devicePixelRatio||1,2);
+  function size(){ var b=wrap.getBoundingClientRect(); if(!b.width){return;} W=b.width;H=b.height; cv.width=W*dpr;cv.height=H*dpr; cv.style.width=W+'px';cv.style.height=H+'px'; ctx.setTransform(dpr,0,0,dpr,0,0); cx=W*0.5; cy=H*0.5; R=Math.min(W,H)*0.46; }
+  size();
+  var EM_D='#08301f', EM='#0e5e3e', LINE='rgba(150,246,199,.16)', GOLD='#dcc389', GOLDS='#c39b45';
+  function ring(r,alpha){ ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='rgba(150,246,199,'+alpha+')';ctx.lineWidth=1;ctx.stroke(); }
+  function drawBase(){
+    // zemin
+    var g=ctx.createRadialGradient(cx,cy,0,cx,cy,R*1.25); g.addColorStop(0,'#0f5a3d'); g.addColorStop(1,EM_D);
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    // halkalar
+    ring(R*0.34,.14); ring(R*0.62,.11); ring(R*0.9,.09); ring(R,.16);
+    // ışın çizgileri
+    ctx.strokeStyle=LINE; ctx.lineWidth=1;
+    for(var k=0;k<12;k++){ var an=k/12*Math.PI*2; ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(an)*R,cy+Math.sin(an)*R);ctx.stroke(); }
+    // merkez marka
+    ctx.beginPath();ctx.arc(cx,cy,4,0,Math.PI*2);ctx.fillStyle=GOLD;ctx.fill();
+  }
+  function drawBlip(b,active){
+    var x=cx+Math.cos(b.a)*R*b.r, y=cy+Math.sin(b.a)*R*b.r;
+    if(b.flare>0){ // parlama halkası
+      var pr=6+(1-b.flare)*30;
+      ctx.beginPath();ctx.arc(x,y,pr,0,Math.PI*2);ctx.strokeStyle='rgba(220,195,137,'+(b.flare*0.7)+')';ctx.lineWidth=1.5;ctx.stroke();
+    }
+    var seen=b.seen;
+    ctx.beginPath();ctx.arc(x,y,seen?3.2:2.2,0,Math.PI*2);
+    ctx.fillStyle=seen?GOLD:'rgba(220,195,137,.42)';
+    if(active||b.flare>.3){ ctx.shadowColor=GOLD; ctx.shadowBlur=12; } ctx.fill(); ctx.shadowBlur=0;
+    if(seen){ // altın kilit noktası kenarı
+      ctx.beginPath();ctx.arc(x,y,5.5,0,Math.PI*2);ctx.strokeStyle='rgba(220,195,137,.35)';ctx.lineWidth=1;ctx.stroke();
+    }
+  }
+  var ang=-Math.PI/2, seenCount=0;
+  function frame(){
+    drawBase();
+    // süpürme yelpazesi
+    var span=0.42;
+    var gx=cx+Math.cos(ang)*R, gy=cy+Math.sin(ang)*R;
+    var grad=ctx.createLinearGradient(cx,cy,gx,gy); grad.addColorStop(0,'rgba(220,195,137,.28)'); grad.addColorStop(1,'rgba(220,195,137,0)');
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,ang-span,ang);ctx.closePath();ctx.fillStyle=grad;ctx.fill();
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(gx,gy);ctx.strokeStyle='rgba(220,195,137,.55)';ctx.lineWidth=1.5;ctx.stroke();
+    // blipler + reveal
+    for(var i=0;i<blips.length;i++){ var b=blips[i];
+      var da=Math.atan2(Math.sin(ang-b.a),Math.cos(ang-b.a));
+      var active=(da>0&&da<span);
+      if(active&&!b.seen){ b.seen=true; b.flare=1; seenCount++; if(nEl)nEl.textContent=seenCount; if(lblEl)lblEl.textContent=b.name+' · kapalı kayıt tespit edildi'; }
+      if(b.flare>0){ b.flare-=0.02; if(b.flare<0)b.flare=0; }
+      drawBlip(b,active);
+    }
+    ang+=0.012; if(ang>Math.PI*1.5){ ang=-Math.PI/2; blips.forEach(function(b){b.seen=false;}); seenCount=0; if(lblEl)lblEl.textContent='bölge yeniden taranıyor…'; }
+    _ozRadarRAF=requestAnimationFrame(frame);
+  }
+  function drawStatic(){ drawBase(); blips.forEach(function(b){b.seen=true;drawBlip(b,false);}); if(nEl)nEl.textContent=blips.length; if(lblEl)lblEl.textContent='her prestij mahallesinde kapalı kayıt'; }
+  window.addEventListener('resize',function(){ size(); if(reduce)drawStatic(); });
+  if(reduce){ drawStatic(); return; }
+  if(_ozRadarRAF)cancelAnimationFrame(_ozRadarRAF);
+  frame();
 }
 if(document.readyState!=='loading')ozInit();else document.addEventListener('DOMContentLoaded',ozInit);
 </script>
