@@ -154,6 +154,13 @@ window.proxBootstrap=proxBootstrap;
 #homeView .contact h2,#homeView .contact h3,#homeView .contact-cta h3{color:#00452b!important;font-family:'Playfair Display',Georgia,serif!important}
 #homeView .contact-cta{background:#fff!important;border-color:#e1e3e2!important}
 #homeView .contact-cta p{color:#3f4942!important}
+/* Birleştirilmiş Canlı ProX Bölge Zekâsı paneli — beyaz hairline 8px gölgesiz (bz-top emerald + ProX yeşili korunur) */
+.bz-panel{background:#fff!important;border-color:#e1e3e2!important;border-radius:8px!important;box-shadow:none!important}
+.bz-main{border-right-color:#e1e3e2!important}
+.bz-cmp{border-top-color:#e1e3e2!important}
+#homeView .bz-foot{background:#f9f9f8!important;border-top-color:#e1e3e2!important}
+.bz-cta{display:flex;gap:10px;flex-wrap:wrap}
+@media(max-width:560px){.bz-foot{flex-direction:column;align-items:stretch}.bz-cta{justify-content:stretch}.bz-cta .btn{flex:1;justify-content:center}}
 </style>
 </head>
 <body>
@@ -228,42 +235,37 @@ window.proxBootstrap=proxBootstrap;
 </section>
 
 <!-- CANLI ProX ZEKÂ BANDI (veri paneli hero'dan indi) -->
-<section class="intel-band">
-  <div class="wrap intel-wrap">
-    <div class="intel-copy reveal">
+<!-- ============ CANLI ProX BÖLGE ZEKÂSI (birleştirilmiş · hero altı · canlı panel) ============ -->
+<section class="sec-pad bz-sec" id="bolgeAnaliz">
+  <div class="wrap">
+    <div class="sec-h reveal">
       <div class="eyebrow" style="display:block" data-cms="intelEyebrow">Canlı ProX Bölge Zekâsı</div>
       <h2>Rakamlar konuşur, <span class="serif-it gold">ben yorumlarım.</span></h2>
-      <p data-cms="intelText">Her mahalle için güncel m² değeri, yıllık değişim ve yatırım skoru anlık güncellenir. Verinin gösterdiğini deneyimimle stratejiye çeviririm.</p>
-      <a class="btn btn-gold" href="bolge-analizi.html">Detaylı Bölge Analizi</a>
+      <p data-cms="intelText">Her mahalle için güncel m² değeri, 12 aylık fiyat seyri, yatırım skoru ve likidite anlık güncellenir. Verinin gösterdiğini deneyimimle stratejiye çeviririm — kararınızı rakamlarla destekleyelim.</p>
     </div>
-    <aside class="hero-panel">
-      <div class="hp-head">
-        <span class="hp-live"><i></i>ProX · Canlı Bölge Zekâsı</span>
-        <span class="hp-tag">Bebek</span>
-      </div>
-      <div class="hp-stat">
-        <div class="hp-l">Ortalama m² değeri</div>
-        <div class="hp-v"><b>182.000 ₺</b><span class="hp-d">▲ %14,2</span></div>
-        <svg class="hp-spark" viewBox="0 0 264 60" preserveAspectRatio="none">
-          <defs><linearGradient id="hpG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--prox)" stop-opacity=".26"/><stop offset="1" stop-color="var(--prox)" stop-opacity="0"/></linearGradient></defs>
-          <path class="hp-area" d="M0,50 L44,46 L88,42 L132,32 L176,24 L220,15 L264,8 L264,60 L0,60 Z" fill="url(#hpG)"/>
-          <polyline class="hp-line" points="0,50 44,46 88,42 132,32 176,24 220,15 264,8"/>
-        </svg>
-        <div class="hp-sub">Son 5 yıl <b>▲ %212</b> · 12 aylık yükseliş trendi</div>
-      </div>
-      <div class="hp-rows">
-        <div class="hp-row">
-          <div class="hp-ic ok"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 5 6v5c0 4 3 7 7 8 4-1 7-4 7-8V6z"/><path d="m9 12 2 2 4-4"/></svg></div>
-          <div class="hp-tx"><b>EİDS Doğrulandı</b><span>e-Devlet · yetki belgeli danışman</span></div>
-          <span class="hp-chip">Aktif</span>
+    <div class="bz-wrap reveal">
+      <div class="bz-panel">
+        <div class="bz-top">
+          <span class="bz-live"><span class="dot"></span>ProX Endeks · Canlı</span>
+          <div class="bz-tabs" id="bzTabs"></div>
         </div>
-        <div class="hp-row">
-          <div class="hp-ring"><svg viewBox="0 0 46 46"><circle class="rbg" cx="23" cy="23" r="19"/><circle class="rfg" cx="23" cy="23" r="19"/></svg><i>92</i></div>
-          <div class="hp-tx"><b>Yatırım Skoru</b><span>Boğaz hattı · güçlü potansiyel</span></div>
-          <span class="hp-chip gold">92/100</span>
+        <div class="bz-body">
+          <div class="bz-main" id="bzMain"></div>
+          <div class="bz-side" id="bzSide"></div>
+        </div>
+        <div class="bz-cmp">
+          <h4>Mahalle m² Karşılaştırması</h4>
+          <div id="bzCmp"></div>
+        </div>
+        <div class="bz-foot">
+          <span class="src">Kaynak: <b>ProX Emlak Endeksi</b> · temsili gösterge verileri</span>
+          <div class="bz-cta">
+            <a class="btn btn-line" href="bolge-analizi.html">Detaylı Bölge Analizi</a>
+            <a class="btn btn-gold" onclick="navGo('randevu')">Bu bölgede ücretsiz analiz</a>
+          </div>
         </div>
       </div>
-    </aside>
+    </div>
   </div>
 </section>
 
@@ -331,36 +333,7 @@ window.proxBootstrap=proxBootstrap;
 </section>
 
 <!-- BÖLGE ANALİZİ · canlı ProX veri paneli -->
-<section class="sec-pad bz-sec" id="bolgeAnaliz">
-  <div class="wrap">
-    <div class="sec-h reveal">
-      <div class="eyebrow" style="display:block">ProX Veri · Canlı Bölge Zekâsı</div>
-      <h2>Bölgenizi rakamlarla tanıyın</h2>
-      <p>Her mahalle için güncel m² değeri, 12 aylık fiyat seyri, yatırım skoru ve likidite — kararınızı verilerle destekleyelim.</p>
-    </div>
-    <div class="bz-wrap reveal">
-      <div class="bz-panel">
-        <div class="bz-top">
-          <span class="bz-live"><span class="dot"></span>ProX Endeks · Canlı</span>
-          <div class="bz-tabs" id="bzTabs"></div>
-        </div>
-        <div class="bz-body">
-          <div class="bz-main" id="bzMain"></div>
-          <div class="bz-side" id="bzSide"></div>
-        </div>
-        <div class="bz-cmp">
-          <h4>Mahalle m² Karşılaştırması</h4>
-          <div id="bzCmp"></div>
-        </div>
-        <div class="bz-foot">
-          <span class="src">Kaynak: <b>ProX Emlak Endeksi</b> · temsili gösterge verileri</span>
-          <a class="btn btn-gold" onclick="navGo('randevu')">Bu bölgede ücretsiz analiz</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
+<!-- Canlı ProX Bölge Zekâsı bölümü hero altına taşındı (intel-band ile birleştirildi) -->
 <!-- ÜCRETSİZ ANALİZ CTA BAND -->
 <section class="analiz sec-pad">
   <div class="wrap"><div class="analiz-band">
