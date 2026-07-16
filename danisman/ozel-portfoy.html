@@ -45,13 +45,15 @@
 /* Üst menü (fixed ~100px) ile hero arası boşluğu sıkılaştır (önceki 158px → 120px) */
 .pf-hero{padding:120px 0 44px!important}
 @media(max-width:760px){.pf-hero{padding:104px 0 36px!important}}
-.pf-hero .ozh{align-items:start}
-.pf-hero .ozh-radar-wrap{margin-top:6px}
+.pf-hero .ozh{align-items:start;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:48px}
+@media(max-width:900px){.pf-hero .ozh{grid-template-columns:1fr;gap:26px}.pf-hero .ozh-radar-wrap{margin-top:0}}
+.pf-hero .ozh-radar-wrap{margin-top:8px}
 .pf-hero .ozh-kick{color:var(--gold-soft,#dcc389)}
-.pf-hero .ozh-title{max-width:15ch}
-.pf-hero .ozh-lede{max-width:56ch}
+.pf-hero .ozh-title{max-width:16ch;font-size:clamp(28px,3.4vw,46px)!important;line-height:1.08!important;margin-top:14px!important}
+.pf-hero .ozh-copy .pf-rule{margin:16px 0!important}
+.pf-hero .ozh-lede{max-width:52ch;font-size:16px!important;line-height:1.65!important}
 .pf-hero .ozh-lede b{color:var(--cream-on-em,#f4efe4);font-weight:600}
-.pf-hero .ozh-cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:30px}
+.pf-hero .ozh-cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:22px}
 .pf-hero .ozh-btn-main{display:inline-flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;cursor:pointer;
   padding:14px 26px;border-radius:12px;border:1px solid rgba(220,195,137,.5);
   background:linear-gradient(150deg,#e7d19a,#c39b45);color:#0a3527;
@@ -69,7 +71,7 @@
   border-radius:999px;padding:6px 13px}
 .pf-hero .ozh-chip svg{width:14px;height:14px;color:var(--gold-soft,#dcc389);flex:none}
 .pf-hero .ozh-chip b{color:var(--gold-soft,#dcc389);font-weight:700}
-.pf-hero .ozh-radar-wrap{position:relative;aspect-ratio:4/3;background:#08301f}
+.pf-hero .ozh-radar-wrap{position:relative;aspect-ratio:5/4;background:#08301f}
 .pf-hero .ozh-radar-wrap #ozRadar{position:absolute;inset:0;width:100%;height:100%;display:block}
 .pf-hero .ozh-hud{position:absolute;left:16px;top:14px;right:16px;pointer-events:none;font-family:var(--body),sans-serif;z-index:2}
 .pf-hero .ozh-hud-top{display:inline-flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.13em;font-weight:700;color:var(--gold-soft,#dcc389)}
