@@ -507,11 +507,11 @@ function vipFavId(p){return p&&(p.id?('vp-'+p.id):('vp-'+_favSlug(p.baslik||''))
 function _favBtn(id,type,snap){snap=snap||{};return '<button class="vc-fav" data-fid="'+_leD(id)+'" data-ftype="'+type+'" data-ft="'+_leD(snap.t||'')+'" data-fs="'+_leD(snap.s||'')+'" data-fp="'+_leD(snap.p||'')+'" data-fu="'+_leD(snap.u||'')+'" onclick="event.stopPropagation();window.dnFav&&dnFav(this.getAttribute(\'data-fid\'),this.getAttribute(\'data-ftype\'),this)" aria-label="Favorilere ekle" title="Favorilere ekle">♡</button>';}
 try{window.listingFavId=listingFavId;window.vipFavId=vipFavId;}catch(e){}
 
-function listingCardsHTML(){return LISTINGS.filter(function(l){return l.status!=='pasif';}).map(l=>{
+function listingCardsHTML(){var _src=(window.DN_ILAN&&typeof DN_ILAN.get==='function')?DN_ILAN.get().slice(0,6):LISTINGS.filter(function(l){return l.status!=='pasif';});return _src.map(l=>{
   const price=l.kira?fmt(l.fiyat)+' <span class="per">/ay</span>':fmt(l.fiyat);
   const nm=l.baslik.replace(/'/g,'’');
   return '<article class="vcard" onclick="leadFor(\''+nm+'\')">'
-   +'<div class="vcard-img"><div class="glow"></div><span class="vcard-tag">'+l.durum+'</span>'+_favBtn(listingFavId(l),'ilan',{t:l.baslik,s:l.bolge+' · '+l.durum,p:(l.kira?fmt(l.fiyat)+' /ay':fmt(l.fiyat)),u:'ilanlar.html'})+(l.img?'<img class="vcard-photo" src="'+l.img+'" alt="'+_leD(l.baslik||'')+'">':(_VIP_SVG[l.tip]||_VIP_SVG.villa))+'</div>'
+   +'<div class="vcard-img"><div class="glow"></div><span class="vcard-tag">'+l.durum+'</span>'+_favBtn(listingFavId(l),'ilan',{t:l.baslik,s:l.bolge+' · '+l.durum,p:(l.kira?fmt(l.fiyat)+' /ay':fmt(l.fiyat)),u:'ilanlar.html'})+(l.img?'<img class="vcard-photo" src="'+(l.imgUrl||l.img)+'" alt="'+_leD(l.baslik||'')+'">':(_VIP_SVG[l.tip]||_VIP_SVG.villa))+'</div>'
    +'<div class="vcard-body"><h3>'+l.baslik+'</h3>'
    +'<div class="vcard-loc">'+_PIN+l.bolge+'</div>'
    +'<div class="vcard-spec"><div><b>'+l.m2+' m²</b>Alan</div><div><b>'+l.oda+'</b>Oda</div><div><b>'+l.kat+'</b>Kat</div></div>'
