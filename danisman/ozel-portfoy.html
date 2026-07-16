@@ -135,7 +135,7 @@
         <button type="button" class="oz-fn" onclick="ozTalepOpen({ozel:true,islem:'satilik',tip:'Daire'})">
           <span class="oz-fn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
           <span class="oz-fn-t">Özel Portföy Sor</span>
-          <span class="oz-fn-s">İlana çıkmayan, size özel mülkler için kriterlerimi bırakayım.</span>
+          <span class="oz-fn-s">İlana çıkmayan, size özel gayrimenkuller için kriterlerimi bırakayım.</span>
           <span class="oz-fn-go">Talep oluştur <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         </button>
       </div>
@@ -490,7 +490,7 @@ function ozDetayHTML(reg){
     +pie('Yaş dağılımı',['0–17','18–34','35–54','55+'],dm.yas,EM4)
     +pie('Eğitim',['İlköğretim','Lise','Ön Lisans','Lisans','Lisansüstü'],dm.egitim,GLD5)
     +pie('Gelir grubu',['Alt','Alt-Orta','Orta-Üst','Üst'],dm.gelir,MIX4)
-    +pie('Mülk sahipliği',['Ev sahibi','Kiracı'],[dm.sahiplik,100-dm.sahiplik],OWN2,'%'+dm.sahiplik)
+    +pie('Gayrimenkul sahipliği',['Ev sahibi','Kiracı'],[dm.sahiplik,100-dm.sahiplik],OWN2,'%'+dm.sahiplik)
     +'</div>'
     +'<div class="ozd-demo-stats">'
       +'<div class="ozd-ds"><span>Tahmini nüfus</span><b>'+fmtNum(dm.nufus)+'</b></div>'
@@ -513,7 +513,7 @@ function ozDetayHTML(reg){
       +'<section class="ozd-sec"><h4>Demografi &amp; Yaşam <span class="ozd-tag est">tahmini profil</span></h4>'+demoHTML
         +'<p class="ozd-note">Demografi göstergeleri ProX endeks değeriyle modellenen <b>tahmini</b> profildir; ProX canlı demografi yayınına geçtiğinde otomatik gerçek veriyle güncellenir.</p></section>'
       +'<section class="ozd-sec"><h4>Bu mahallede ne var? <span class="ozd-tag live">canlı ProX ilan</span></h4><div class="ozd-arz">'+arz+'</div>'
-        +'<p class="ozd-note">Rakamlar ProX’te kayıtlı güncel ilan sayılarıdır (belirli mülk değil). Kriterlerinize uyan seçenekler için ücretsiz eşleştirme yapayım.</p></section>'
+        +'<p class="ozd-note">Rakamlar ProX’te kayıtlı güncel ilan sayılarıdır (belirli gayrimenkul değil). Kriterlerinize uyan seçenekler için ücretsiz eşleştirme yapayım.</p></section>'
       +'<div class="ozd-cta-row"><button class="ozc-cta" onclick="ozLead(\''+esc(reg.name)+'\')">Bu bölgeden talep oluştur '+ICO_ARR+'</button></div>'
     +'</div></div>';
 }
