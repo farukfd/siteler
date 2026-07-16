@@ -11,7 +11,7 @@
 <meta name="author" content="Selin Meridyen">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı">
 <meta property="og:title" content="EİDS Onaylı Satılık & Kiralık İlanlar — Selin Meridyen">
@@ -121,6 +121,62 @@ window.dnTrack=function(ev,params){try{gtag('event',ev,params||{});}catch(e){}tr
     <div class="pf-grid" id="ilGrid"><div class="pf-skel">İlanlar yükleniyor…</div></div>
     <div class="pf-mapview" id="ilMapView"><div id="ilLeaflet"></div></div>
     <div class="pf-note">Tüm ilanlar <b>EİDS onaylı ve yetki belgelidir</b> · yayına yalnızca ilan yayınlama yetkisi doğrulanmış gayrimenkuller girer. Detay ve yerinde inceleme için <a href="index.html#randevu">ücretsiz ekspertiz</a> alın.</div>
+  </div>
+</section>
+
+<!-- ============ ÖZEL PORTFÖY FUNNEL (davet usulü VIP köprüsü · Stitch dili) ============ -->
+<style id="ilxFunnelStyle">
+.ilx-funnel{background:#f9f9f8;padding:72px 20px 96px}
+.ilx-card{max-width:1120px;margin:0 auto;position:relative;border-radius:8px;overflow:hidden;
+  background:linear-gradient(135deg,#0e5e3e 0%,#0a3527 78%);color:#fff;
+  padding:52px 56px;display:grid;grid-template-columns:1.35fr .9fr;gap:48px;align-items:center;
+  font-family:'IBM Plex Sans',system-ui,sans-serif}
+.ilx-card::before{content:"";position:absolute;left:0;top:0;right:0;height:3px;
+  background:linear-gradient(90deg,#795901,#c39b45 42%,#fed175 62%,#c39b45)}
+.ilx-eyebrow{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:#fed175;margin-bottom:16px}
+.ilx-card h2{font-family:'Playfair Display',serif;font-weight:600;font-size:clamp(26px,3.2vw,38px);
+  line-height:1.16;letter-spacing:-.01em;margin:0 0 16px;color:#fff}
+.ilx-card h2 em{font-style:italic;color:#96f6c7}
+.ilx-card p{font-size:15.5px;line-height:1.72;color:rgba(255,255,255,.82);margin:0 0 26px;max-width:52ch}
+.ilx-card p b{color:#fff;font-weight:600}
+.ilx-cta{display:flex;flex-wrap:wrap;gap:12px}
+.ilx-btn{display:inline-flex;align-items:center;gap:9px;padding:13px 22px;border-radius:4px;
+  font-size:14.5px;font-weight:600;text-decoration:none;transition:.18s ease;line-height:1;font-family:inherit}
+.ilx-btn svg{width:17px;height:17px}
+.ilx-btn-gold{background:#c39b45;color:#00311e}
+.ilx-btn-gold:hover{background:#d9b45f;transform:translateX(2px)}
+.ilx-btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.42)}
+.ilx-btn-ghost:hover{border-color:#96f6c7;color:#96f6c7}
+.ilx-stats{display:flex;flex-direction:column;gap:2px;border-left:1px solid rgba(255,255,255,.16);padding-left:36px}
+.ilx-stat{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.ilx-stat:last-child{border-bottom:0}
+.ilx-stat b{display:block;font-family:'Playfair Display',serif;font-weight:600;font-size:21px;color:#fed175;
+  letter-spacing:.01em;margin-bottom:3px;font-variant-numeric:tabular-nums}
+.ilx-stat span{font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.7)}
+@media(max-width:820px){
+  .ilx-funnel{padding:48px 16px 64px}
+  .ilx-card{grid-template-columns:1fr;gap:32px;padding:38px 26px}
+  .ilx-stats{border-left:0;border-top:1px solid rgba(255,255,255,.16);padding-left:0;padding-top:8px}
+  .ilx-card p{max-width:none}
+}
+</style>
+<section class="ilx-funnel" aria-labelledby="ilxFunnelH">
+  <div class="ilx-card">
+    <div class="ilx-copy">
+      <span class="ilx-eyebrow">Davet Usulü · Kapalı Portföy</span>
+      <h2 id="ilxFunnelH">Aradığınız gayrimenkul vitrinde yoksa,<br>henüz <em>listelenmemiş</em> olabilir.</h2>
+      <p>Açık ilanlar, portföyümüzün yalnızca bir bölümü. Boğaz hattı yalıları, satışa çıkmadan el değiştiren <b>off-market</b> yatırım fırsatları ve gizlilik sözleşmeli gayrimenkuller <b>Özel Portföy</b> masasında — bölgenin canlı ProX endeksiyle birlikte, yalnızca davetle sunulur.</p>
+      <div class="ilx-cta">
+        <a class="ilx-btn ilx-btn-gold" href="ozel-portfoy.html">Özel Portföy'ü Keşfet <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="ilx-btn ilx-btn-ghost" href="index.html#randevu">Ücretsiz değer analizi</a>
+      </div>
+    </div>
+    <div class="ilx-stats" aria-hidden="false">
+      <div class="ilx-stat"><b>Off-market</b><span>Satışa çıkmadan el değiştiren gayrimenkuller</span></div>
+      <div class="ilx-stat"><b>Canlı ProX</b><span>Mahalle endeksi &amp; kira getirisi verisiyle</span></div>
+      <div class="ilx-stat"><b>Davetle</b><span>Gizlilik sözleşmeli, kişiye özel erişim</span></div>
+    </div>
   </div>
 </section>
 </main>
