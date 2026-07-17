@@ -488,7 +488,10 @@ function applySaaSSettings(){
   const fav=saasResolve('faviconUrl');
   if(fav){let l=document.querySelector('link[rel="icon"]');if(!l){l=document.createElement('link');l.rel='icon';document.head.appendChild(l);}l.href=fav;}
   const ga=saasResolve('googleAnalytics');
-  if(ga&&!window.__gaLoaded){window.__gaLoaded=true;const s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+ga;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config',ga);}
+  /* KVKK: GA yalnızca analitik çerez onayı verildiyse yüklenir (dnConsent); onay sonradan gelirse otomatik yüklenir */
+  const _loadGA=function(){if(ga&&!window.__gaLoaded&&(!window.dnConsent||window.dnConsent.allows('analytics'))){window.__gaLoaded=true;const s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+ga;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config',ga);}};
+  _loadGA();
+  if(ga&&window.dnConsent&&!window.__gaConsentHook){window.__gaConsentHook=1;try{window.dnConsent.onChange(_loadGA);}catch(e){}}
   /* marka adı */
   const bn=saasResolve('brandName');if(bn){const e=document.getElementById('brandName');if(e)e.textContent=bn;}
   /* logo görseli */

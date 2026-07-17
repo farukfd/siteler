@@ -33,6 +33,7 @@
 <link rel="apple-touch-icon" href="favicon.svg">
 <script src="js/brand.js?v=3"></script>
 <script src="js/content.js?v=3"></script>
+<script src="js/cerez.js?v=1"></script><!-- KVKK çerez onay bandı · tek kaynak -->
 <script src="js/a11y.js?v=1"></script>
 <script>document.documentElement.classList.add('js')</script>
 <style>
@@ -160,12 +161,15 @@
 
       <div class="lg-art">
         <h2><span class="n">4.</span> Çerez Tercihlerinizi Yönetme</h2>
-        <p>Tarayıcınızın ayarlarından çerezleri silebilir veya engelleyebilirsiniz. Yerel depolama verilerini de tarayıcınızın “site verilerini temizle” seçeneğiyle kaldırabilirsiniz. Zorunlu çerezleri engellemeniz durumunda sitenin bazı bölümleri düzgün çalışmayabilir.</p>
+        <p>Analitik ve pazarlama çerezleri yalnızca <b>açık onayınızla</b> çalışır; zorunlu çerezler sitenin çalışması için gereklidir. Tercihlerinizi aşağıdaki panelden dilediğiniz zaman güncelleyebilir veya geri çekebilirsiniz. Ayrıca tarayıcınızın ayarlarından çerezleri silebilir/engelleyebilir, yerel depolama verilerini “site verilerini temizle” seçeneğiyle kaldırabilirsiniz.</p>
+        <p style="margin-top:14px">
+          <button type="button" onclick="if(window.dnConsent)window.dnConsent.open()" style="font:600 13px/1 'IBM Plex Sans',system-ui,sans-serif;padding:12px 22px;border-radius:10px;border:none;cursor:pointer;background:linear-gradient(135deg,#0e5e3e,#14805a);color:#fff;box-shadow:0 8px 20px -9px rgba(14,94,62,.6)">Çerez Tercihlerini Yönet</button>
+        </p>
       </div>
 
       <div class="lg-note">
         <h3>Onay</h3>
-        <p>Siteyi kullanmaya devam ederek işlevsel çerezlerin kullanımına onay vermiş sayılırsınız. Kişisel verilerinizin işlenmesine ilişkin ayrıntı için <a href="kvkk.html">KVKK Aydınlatma Metni</a>’ni inceleyebilirsiniz.</p>
+        <p>Zorunlu çerezler dışındaki analitik ve pazarlama çerezleri, yalnızca çerez bandı üzerinden verdiğiniz açık onayla çalıştırılır ve onayınız zaman damgasıyla cihazınıza kaydedilir. Onayınızı yukarıdaki panelden dilediğiniz an geri çekebilirsiniz. Kişisel verilerinizin işlenmesine ilişkin ayrıntı için <a href="kvkk.html">KVKK Aydınlatma Metni</a>’ni inceleyebilirsiniz.</p>
       </div>
 
       <nav class="lg-links" aria-label="Yasal sayfalar">

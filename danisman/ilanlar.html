@@ -36,6 +36,7 @@
 <link rel="apple-touch-icon" href="favicon.svg">
 <script src="js/brand.js?v=3"></script>
 <script src="js/content.js?v=3"></script>
+<script src="js/cerez.js?v=1"></script><!-- KVKK çerez onay bandı · tek kaynak -->
 <script src="js/a11y.js?v=1"></script>
 <script src="js/share.js?v=2"></script>
 <link rel="stylesheet" href="css/portfoy.css?v=9">
@@ -127,7 +128,9 @@
 <script>
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
 gtag('js',new Date());
-try{var _gid=localStorage.getItem('dn_gtag_id')||'';if(_gid){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(_gid);document.head.appendChild(s);gtag('config',_gid);}}catch(e){}
+/* KVKK: gtag YALNIZCA analitik çerez onayı verildiyse yüklenir (dnConsent) */
+window.dnLoadGA=function(){try{if(window.__dnGA)return;var _gid=localStorage.getItem('dn_gtag_id')||'';if(_gid&&window.dnConsent&&window.dnConsent.allows('analytics')){window.__dnGA=1;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(_gid);document.head.appendChild(s);gtag('config',_gid);}}catch(e){}};
+dnLoadGA();try{if(window.dnConsent)window.dnConsent.onChange(function(){dnLoadGA();});}catch(e){}
 window.dnTrack=function(ev,params){try{gtag('event',ev,params||{});}catch(e){}try{dataLayer.push(Object.assign({event:ev},params||{}));}catch(e){}};
 /* Google/reklam trafiği: UTM + gclid yakala → lead'e iliştirilir */
 (function(){try{var p=new URLSearchParams(location.search),u={};['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid'].forEach(function(k){if(p.get(k))u[k]=p.get(k);});if(Object.keys(u).length){sessionStorage.setItem('dn_utm',JSON.stringify(u));dnTrack('campaign_visit',u);}}catch(e){}})();
