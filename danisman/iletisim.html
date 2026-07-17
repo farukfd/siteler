@@ -205,6 +205,65 @@
       msg.innerHTML='✓ Talebiniz alındı ve danışmana iletildi. En kısa sürede dönüş yapılacaktır.'+(wa?(' <a href="'+wa+'" target="_blank" rel="noopener noreferrer" style="color:#128c4b;font-weight:700;text-decoration:underline">WhatsApp’tan hemen yazın →</a>'):'');
       document.getElementById('ctForm').reset();return false;}
   </script>
+
+  <!-- ============ TİCARİ KÜNYE · YASAL BİLGİLER (dn_firma · admin'den düzenlenir) ============ -->
+  <style>
+    .lk-sec{background:#f9f9f8;border-top:1px solid #e1e3e2;padding:48px 0}
+    .lk-in{max-width:980px;margin:0 auto;padding:0 20px}
+    .lk-eyebrow{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#795901}
+    .lk-h2{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:clamp(23px,3vw,32px);color:#00452b;margin:10px 0 0;line-height:1.12}
+    .lk-lede{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:14.5px;line-height:1.65;color:#3f4942;margin:12px 0 0;max-width:720px}
+    .lk-lede b{color:#00452b}
+    .lk-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 40px;margin:26px 0 0;background:#fff;border:1px solid #e1e3e2;border-radius:12px;padding:8px 24px}
+    @media(max-width:720px){.lk-grid{grid-template-columns:1fr;padding:8px 18px}}
+    .lk-row{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:13px 0;border-bottom:1px solid #eef1ef}
+    .lk-k{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:12.5px;color:#707972;flex:none;max-width:52%}
+    .lk-v{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:13.5px;color:#191c1c;font-weight:500;text-align:right;word-break:break-word}
+    .lk-v a{color:#0b7a4f;text-decoration:none}
+    .lk-v .lk-empty{color:#a2aaa5;font-weight:400;font-style:italic}
+    .lk-foot{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:12px;color:#707972;line-height:1.6;margin:16px 0 0}
+    .lk-foot a{color:#795901}
+  </style>
+  <section class="lk-sec" id="legalKunye" aria-label="Ticari künye ve yasal bilgiler">
+    <div class="lk-in">
+      <div class="lk-eyebrow">Ticari Künye · Yasal Bilgiler</div>
+      <h2 class="lk-h2">Yetki belgeli gayrimenkul işletmesi künyesi</h2>
+      <p class="lk-lede">6585 sayılı Perakende Ticaretin Düzenlenmesi Hakkında Kanun ve <b>Taşınmaz Ticareti Hakkında Yönetmelik</b> kapsamında yayımlanmıştır. Bu site üzerinden <b>online satış yapılmaz</b>; gayrimenkul danışmanlığı, değerleme ve aracılık hizmeti sunulur.</p>
+      <div class="lk-grid" id="lkGrid"></div>
+      <p class="lk-foot">Künye bilgileri Taşınmaz Ticareti Bilgi Sistemi (TTBS) kaydı esas alınarak yayımlanır. Tüketici/alıcı hakları, cayma ve şikâyet süreçleri için <a href="kullanim.html">Kullanım Koşulları</a> ve <a href="kvkk.html">KVKK Aydınlatma Metni</a>.</p>
+    </div>
+  </section>
+  <script>
+  (function(){
+    function esc(s){return (''+(s==null?'':s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+    var f={}; try{f=JSON.parse(localStorage.getItem('dn_firma')||'{}')||{};}catch(e){}
+    var brand=((document.getElementById('brandName')||{}).textContent||'Selin Meridyen').trim();
+    var eids=(f.eids&&f.eids.belgeNo)||'';
+    var rows=[
+      ['Ticaret Ünvanı', f.unvan||(brand+' Gayrimenkul Danışmanlığı')],
+      ['İşletme Adı', f.isletme||brand],
+      ['Taşınmaz Ticareti Yetki Belgesi No', f.yetkiBelge, true],
+      ['Sorumlu Emlak Danışmanı', f.sorumlu||f.advisor||brand],
+      ['EİDS Yetki Belge No', eids, true],
+      ['MERSİS No', f.mersis, true],
+      ['Ticaret Sicil No', f.sicil, true],
+      ['Bağlı Oda', f.oda, true],
+      ['Vergi Dairesi', f.vergiDaire, true],
+      ['Vergi / TC Kimlik No', f.vergi, true],
+      ['KEP Adresi', f.kep, true, 'mailto'],
+      ['Adres', f.adres||(document.querySelector('[data-cms="ct_adres"]')||{}).textContent],
+      ['Telefon', f.tel, false, 'tel'],
+      ['E-posta', f.mail, false, 'mail']
+    ];
+    var g=document.getElementById('lkGrid'); if(!g)return;
+    g.innerHTML=rows.map(function(r){
+      var v=(r[1]||'').toString().trim(), lnk=r[3], val;
+      if(v){ if(lnk==='mail'||lnk==='mailto')val='<a href="mailto:'+esc(v)+'">'+esc(v)+'</a>'; else if(lnk==='tel')val='<a href="tel:'+esc(v.replace(/[^\d+]/g,''))+'">'+esc(v)+'</a>'; else val=esc(v); }
+      else { val='<span class="lk-empty">— yönetici tarafından girilecek</span>'; }
+      return '<div class="lk-row"><div class="lk-k">'+esc(r[0])+'</div><div class="lk-v">'+val+'</div></div>';
+    }).join('');
+  })();
+  </script>
 </main>
 
 

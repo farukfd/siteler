@@ -1455,21 +1455,32 @@ async function dnGenContent(){
 /* ===================== FİRMA KÜNYE (dn_firma → SAAS_CONFIG.firma) ===================== */
 function firmaLoad(){try{var f=JSON.parse(localStorage.getItem('dn_firma')||'null');if(f&&typeof f==='object'){SAAS_CONFIG.firma=Object.assign({},SAAS_CONFIG.firma||{},f);if(f.advisor)SAAS_CONFIG.advisorName=f.advisor;}}catch(e){}}
 function crmRenderFirma(){var host=document.getElementById('crmFirma');if(!host)return;var f=SAAS_CONFIG.firma||{};var e=f.eids||{};
-  var H='<div class="sta-row2"><div class="sta-f"><label>Danışman Adı</label><input id="cf_advisor" value="'+_leD(SAAS_CONFIG.advisorName||'')+'"></div><div class="sta-f"><label>Firma Ünvanı</label><input id="cf_unvan" value="'+_leD(f.unvan||'')+'"></div></div>'
-    +'<div class="sta-row2"><div class="sta-f"><label>Vergi No / Dairesi</label><input id="cf_vergi" value="'+_leD(f.vergi||'')+'"></div><div class="sta-f"><label>Yetki Belge No (EİDS)</label><input id="cf_belge" value="'+_leD(e.belgeNo||'')+'"></div></div>'
-    +'<div class="sta-f"><label>Adres</label><input id="cf_adres" value="'+_leD(f.adres||'')+'"></div>'
-    +'<div class="sta-row2"><div class="sta-f"><label>Telefon</label><input id="cf_tel" value="'+_leD(f.tel||'')+'"></div><div class="sta-f"><label>E-posta</label><input id="cf_mail" value="'+_leD(f.mail||'')+'"></div></div>'
-    +'<button class="btn btn-gold sta-go" onclick="crmSaveFirma()">Kaydet</button>'
-    +'<p class="sub" style="margin-top:10px">Bu bilgiler sözleşmeler, raporlar ve yasal metinlerde otomatik kullanılır.</p>';
+  function F(id,lab,val,ph){return '<div class="sta-f"><label>'+lab+'</label><input id="'+id+'" value="'+_leD(val||'')+'"'+(ph?' placeholder="'+_leD(ph)+'"':'')+'></div>';}
+  var H='<p class="sub" style="margin:-6px 0 12px">Taşınmaz Ticareti Yönetmeliği gereği web sitesinde bulunması gereken künye. <b>İletişim sayfası</b>, footer ve yasal metinler bu bilgileri otomatik kullanır. Boş alan İletişim künyesinde gösterilmez.</p>'
+    +'<div class="crm-sec-h" style="margin:2px 0 8px">🏢 Ticari Künye</div>'
+    +'<div class="sta-row2">'+F('cf_advisor','Danışman Adı',SAAS_CONFIG.advisorName)+F('cf_unvan','Ticaret Ünvanı',f.unvan,'X Gayrimenkul Danışmanlık Ltd. Şti.')+'</div>'
+    +'<div class="sta-row2">'+F('cf_isletme','İşletme Adı',f.isletme)+F('cf_sicil','Ticaret Sicil No',f.sicil)+'</div>'
+    +'<div class="sta-row2">'+F('cf_mersis','MERSİS No',f.mersis)+F('cf_oda','Bağlı Oda (Ticaret / Esnaf)',f.oda)+'</div>'
+    +'<div class="crm-sec-h" style="margin:16px 0 8px">🛡️ Yasal Belgeler</div>'
+    +'<div class="sta-row2">'+F('cf_yetki','Taşınmaz Ticareti Yetki Belgesi No',f.yetkiBelge)+F('cf_sorumlu','Sorumlu Emlak Danışmanı (Seviye 5)',f.sorumlu)+'</div>'
+    +'<div class="sta-row2">'+F('cf_belge','EİDS Yetki Belge No (ilan)',e.belgeNo)+F('cf_kep','KEP Adresi',f.kep,'firma@hs01.kep.tr')+'</div>'
+    +'<div class="sta-row2">'+F('cf_vdaire','Vergi Dairesi',f.vergiDaire)+F('cf_vergi','Vergi / TC Kimlik No',f.vergi)+'</div>'
+    +'<div class="crm-sec-h" style="margin:16px 0 8px">📍 İletişim</div>'
+    +F('cf_adres','Açık Adres',f.adres)
+    +'<div class="sta-row2">'+F('cf_tel','Telefon',f.tel)+F('cf_mail','E-posta',f.mail)+'</div>'
+    +'<button class="btn btn-gold sta-go" onclick="crmSaveFirma()">Kaydet & Yayınla</button>';
   host.innerHTML=H;
 }
 function crmSaveFirma(){var g=function(x){var el=document.getElementById(x);return el?el.value.trim():'';};
-  SAAS_CONFIG.firma=SAAS_CONFIG.firma||{};SAAS_CONFIG.firma.eids=SAAS_CONFIG.firma.eids||{};
+  var F=SAAS_CONFIG.firma=SAAS_CONFIG.firma||{};F.eids=F.eids||{};
   SAAS_CONFIG.advisorName=g('cf_advisor')||SAAS_CONFIG.advisorName;
-  SAAS_CONFIG.firma.unvan=g('cf_unvan');SAAS_CONFIG.firma.vergi=g('cf_vergi');SAAS_CONFIG.firma.adres=g('cf_adres');SAAS_CONFIG.firma.tel=g('cf_tel');SAAS_CONFIG.firma.mail=g('cf_mail');
-  if(g('cf_belge'))SAAS_CONFIG.firma.eids.belgeNo=g('cf_belge');
-  try{localStorage.setItem('dn_firma',JSON.stringify({advisor:SAAS_CONFIG.advisorName,unvan:SAAS_CONFIG.firma.unvan,vergi:SAAS_CONFIG.firma.vergi,adres:SAAS_CONFIG.firma.adres,tel:SAAS_CONFIG.firma.tel,mail:SAAS_CONFIG.firma.mail,eids:{belgeNo:SAAS_CONFIG.firma.eids.belgeNo}}));}catch(e){}
-  toast('✓ Firma bilgileri kaydedildi.');}
+  F.unvan=g('cf_unvan');F.isletme=g('cf_isletme');F.sicil=g('cf_sicil');F.mersis=g('cf_mersis');F.oda=g('cf_oda');
+  F.yetkiBelge=g('cf_yetki');F.sorumlu=g('cf_sorumlu');F.kep=g('cf_kep');F.vergiDaire=g('cf_vdaire');F.vergi=g('cf_vergi');
+  F.adres=g('cf_adres');F.tel=g('cf_tel');F.mail=g('cf_mail');
+  if(g('cf_belge'))F.eids.belgeNo=g('cf_belge');
+  try{localStorage.setItem('dn_firma',JSON.stringify({advisor:SAAS_CONFIG.advisorName,unvan:F.unvan,isletme:F.isletme,sicil:F.sicil,mersis:F.mersis,oda:F.oda,yetkiBelge:F.yetkiBelge,sorumlu:F.sorumlu,kep:F.kep,vergiDaire:F.vergiDaire,vergi:F.vergi,adres:F.adres,tel:F.tel,mail:F.mail,eids:{belgeNo:F.eids.belgeNo}}));}catch(e){}
+  try{applySchema();}catch(e){}
+  toast('✓ Firma künyesi kaydedildi — İletişim sayfası ve yasal metinlere yansıdı.');}
 /* ===================== İLETİŞİM & WHATSAPP (dn_iletisim) ===================== */
 function iletLoad(){try{return JSON.parse(localStorage.getItem('dn_iletisim')||'{}')||{};}catch(e){return {};}}
 function applyIletisim(){var c=iletLoad();
