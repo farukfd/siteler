@@ -46,6 +46,11 @@
     +'.dnsh-b.fb .ic{background:#1877f2}.dnsh-b.wa .ic{background:#25d366}.dnsh-b.x .ic{background:#111}.dnsh-b.tg .ic{background:#2aabee}.dnsh-b.li .ic{background:#0a66c2}.dnsh-b.cp .ic{background:#0e5e3e}.dnsh-b.ad .ic{background:#c39b45}.dnsh-b.im .ic{background:#795901}.dnsh-b.mr .ic{background:#3f4942}'
     +'.dnsh-hero{display:flex;align-items:center;gap:13px;width:100%;margin:0 0 14px;padding:15px 17px;border:none;border-radius:13px;background:linear-gradient(135deg,#0e5e3e,#14805a);color:#fff;cursor:pointer;text-align:left;font-family:inherit;transition:.18s;box-shadow:0 8px 22px -8px rgba(14,94,62,.6)}'
     +'.dnsh-hero:hover{filter:brightness(1.06);transform:translateY(-1px)}.dnsh-hero>svg{width:26px;height:26px;flex:none;color:#fed175}.dnsh-hero b{display:block;font-weight:700;font-size:14.5px;line-height:1.2}.dnsh-hero small{display:block;font-size:11.5px;opacity:.88;margin-top:2px}'
+    +'.dnsh-chk{display:flex;align-items:center;gap:9px;font-size:13px;color:#0f3d2e;margin:0 0 8px;font-weight:600}'
+    +'.dnsh-chk span{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#eef1ef;color:#8a968e;font-size:12px;flex:none}.dnsh-chk span.ok{background:#0e5e3e;color:#fff}.dnsh-chk span.err{background:#b3341f;color:#fff}'
+    +'.dnsh-ol{margin:15px 0 2px;padding-left:22px}.dnsh-ol li{font-size:12.9px;line-height:1.55;color:#404943;margin:0 0 9px}.dnsh-ol b{color:#0e5e3e}'
+    +'.dnsh-note{font-size:11.5px;color:#8a968e;line-height:1.5;margin:6px 0 0}'
+    +'.dnsh-gb{display:flex;gap:9px;margin-top:16px}.dnsh-mini{flex:1;padding:12px;border:1px solid #e1e3e2;border-radius:10px;background:#fff;color:#0e5e3e;font:600 12.5px inherit;cursor:pointer;transition:.16s}.dnsh-mini:hover{background:#f4faf6;border-color:#0e5e3e}.dnsh-mini.pri{background:linear-gradient(135deg,#0e5e3e,#14805a);color:#fff;border-color:transparent}'
     +'@media(max-width:420px){.dnsh-grid{grid-template-columns:repeat(3,1fr)}}';
     document.head.appendChild(s);
   }
@@ -59,9 +64,12 @@
   function rrect(x,rx,ry,w,h,r){x.beginPath();x.moveTo(rx+r,ry);x.arcTo(rx+w,ry,rx+w,ry+h,r);x.arcTo(rx+w,ry+h,rx,ry+h,r);x.arcTo(rx,ry+h,rx,ry,r);x.arcTo(rx,ry,rx+w,ry,r);x.closePath();}
   function wrapLines(x,text,maxW,max){var w=(''+(text||'')).split(/\s+/),ls=[],cur='';for(var i=0;i<w.length;i++){var t=cur?cur+' '+w[i]:w[i];if(x.measureText(t).width>maxW&&cur){ls.push(cur);cur=w[i];}else cur=t;}if(cur)ls.push(cur);if(ls.length>max){ls=ls.slice(0,max);ls[max-1]=ls[max-1].replace(/\s*\S*$/,'')+'…';}return ls;}
   /* İLAN GÖRSELİ: kapak fotoğrafı + başlık/konum/özellik/fiyat/marka tek görselde (canvas) */
+  /* dataURL → Blob (senkron, base64). NOT: canvas.toBlob() bazı Chromium sürümlerinde JPEG'de ~11sn sürüyor;
+     toDataURL('image/jpeg') ~45ms → dataURL'i temel al, Blob'u buradan türet. */
+  function dataURLtoBlob(du){try{var p=du.split(','),mime=((p[0].match(/:(.*?);/)||[])[1])||'image/jpeg',bin=atob(p[1]),n=bin.length,u8=new Uint8Array(n);while(n--)u8[n]=bin.charCodeAt(n);return new Blob([u8],{type:mime});}catch(e){return null;}}
   function composeShareImage(item){return new Promise(function(resolve,reject){
     var W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;var x=c.getContext('2d');var photoH=Math.round(H*0.62);
-    function finish(){try{c.toBlob(function(b){if(!b){reject();return;}var f=null;try{f=new File([b],slug(item.title)+'.jpg',{type:'image/jpeg'});}catch(e){}resolve({blob:b,dataUrl:c.toDataURL('image/jpeg',.9),file:f});},'image/jpeg',.9);}catch(e){reject();}}
+    function finish(){try{var dataUrl=c.toDataURL('image/jpeg',.9);var blob=dataURLtoBlob(dataUrl);var f=null;try{if(blob)f=new File([blob],slug(item.title)+'.jpg',{type:'image/jpeg'});}catch(e){}resolve({blob:blob,dataUrl:dataUrl,file:f});}catch(e){reject();}}
     function render(img){
       x.fillStyle='#0e5e3e';x.fillRect(0,0,W,H);
       if(img){var iw=img.naturalWidth||img.width,ih=img.naturalHeight||img.height,s=Math.max(W/iw,photoH/ih),dw=iw*s,dh=ih*s;try{x.drawImage(img,(W-dw)/2,(photoH-dh)/2,dw,dh);}catch(e){}}
@@ -93,6 +101,38 @@
       }
     },function(){toast('Görsel hazırlanamadı.');});
   }
+  /* Facebook rehberli akış: FB gönderi kutusuna DIŞARIDAN görsel/metin enjekte EDİLEMEZ (platform kısıtı).
+     Bu yüzden hazır kapak görselini indirir + metni kopyalar + FB'yi açar + yapıştırma adımlarını gösterir. */
+  function fbGuideHTML(item,state){
+    var imgReady=state.img===true, imgErr=state.img==='err';
+    var mark=imgReady?'<span class="ok">✓</span>':imgErr?'<span class="err">!</span>':'<span>…</span>';
+    var imgTxt=imgReady?'Kapak görseli indirildi (İndirilenler klasörü)':imgErr?'Görsel hazırlanamadı — “Görseli indir”i deneyin':'Kapak görseli hazırlanıyor…';
+    var attach=item.image?('<li>Açılan Facebook penceresinde <b>🖼️ Fotoğraf/Video</b>’ya tıklayıp indirilen görseli seçin.</li>'):'';
+    return '<button class="dnsh-x" aria-label="Kapat">&times;</button>'
+      +'<h4>Facebook’ta Paylaş</h4>'
+      +'<p>Facebook, gönderi kutusuna görsel ve yazıyı dışarıdan otomatik ekleyemez. Hazırladığımız iki parçayı açılan pencereye yapıştırmanız yeterli:</p>'
+      +(item.image?('<div class="dnsh-chk">'+mark+imgTxt+'</div>'):'')
+      +'<div class="dnsh-chk"><span class="ok">✓</span>İlan metni panoya kopyalandı</div>'
+      +'<ol class="dnsh-ol">'+attach
+      +'<li>Yazı alanına tıklayıp <b>⌘V</b> (Windows: <b>Ctrl+V</b>) ile metni yapıştırın.</li>'
+      +'<li><b>Paylaş</b>’a basın.</li></ol>'
+      +'<div class="dnsh-gb">'
+      +(item.image?'<button type="button" class="dnsh-mini" data-act="img">Görseli tekrar indir</button>':'')
+      +'<button type="button" class="dnsh-mini" data-act="ad">Metni tekrar kopyala</button></div>'
+      +'<p class="dnsh-note">Site yayına alındığında bağlantı kartı önizlemesi (görsel + başlık) Facebook’ta otomatik da görünür.</p>';
+  }
+  function renderGuide(back,item,state){ var box=back.querySelector('.dnsh'); if(box)box.innerHTML=fbGuideHTML(item,state); }
+  function shareFacebook(item,cap,url,back){
+    try{window.open('https://www.facebook.com/sharer/sharer.php?u='+enc(url),'_blank','noopener');}catch(e){}
+    copy(cap,'');                                   // metni panoya (sessiz)
+    renderGuide(back,item,{img:item.image?'wait':true});
+    if(item.image){
+      composeShareImage(item).then(function(r){
+        try{if(r&&r.dataUrl){var a=document.createElement('a');a.href=r.dataUrl;a.download=slug(item.title)+'.jpg';document.body.appendChild(a);a.click();a.remove();}}catch(e){}
+        renderGuide(back,item,{img:true});
+      },function(){ renderGuide(back,item,{img:'err'}); });
+    }
+  }
   window.dnShareCaption=caption; window.dnShareCompose=composeShareImage;
   window.dnShare=function(item){
     item=item||{}; ensureCSS();
@@ -105,14 +145,17 @@
       {k:'linkedin',c:'li',l:'LinkedIn',href:'https://www.linkedin.com/sharing/share-offsite/?url='+enc(url)}
     ];
     var back=document.createElement('div');back.className='dnsh-back';
-    var hero=item.image?('<button type="button" class="dnsh-hero" data-act="imgshare">'+svg('img',false)+'<span><b>Görsel + Bilgi ile Paylaş</b><small>Kapak fotoğrafı ve tüm özellikler tek görselde</small></span></button>'):'';
-    var btns=pop.map(function(p){return '<a class="dnsh-b '+p.c+'" href="'+p.href+'" target="_blank" rel="noopener noreferrer" data-close="1"><span class="ic">'+svg(p.k)+'</span>'+esc(p.l)+'</a>';}).join('');
+    var hero=item.image?('<button type="button" class="dnsh-hero" data-act="imgshare">'+svg('img',false)+'<span><b>Görsel + Bilgi ile Paylaş</b><small>Kapak fotoğrafı + tüm özellikler tek görselde (önerilen)</small></span></button>'):'';
+    var btns=pop.map(function(p){
+      if(p.k==='facebook')return '<button type="button" class="dnsh-b fb" data-act="fb"><span class="ic">'+svg('facebook')+'</span>Facebook</button>';
+      return '<a class="dnsh-b '+p.c+'" href="'+p.href+'" target="_blank" rel="noopener noreferrer" data-close="1"><span class="ic">'+svg(p.k)+'</span>'+esc(p.l)+'</a>';
+    }).join('');
     btns+='<button type="button" class="dnsh-b cp" data-act="link"><span class="ic">'+svg('link',false)+'</span>Bağlantı</button>';
     btns+='<button type="button" class="dnsh-b ad" data-act="ad"><span class="ic">'+svg('ad',false)+'</span>Reklam metni</button>';
     if(item.image)btns+='<button type="button" class="dnsh-b im" data-act="img"><span class="ic">'+svg('img',false)+'</span>Görseli indir</button>';
     if(navigator.share)btns+='<button type="button" class="dnsh-b mr" data-act="native"><span class="ic">'+svg('more')+'</span>Diğer</button>';
     back.innerHTML='<div class="dnsh" role="dialog" aria-modal="true" aria-label="Paylaş"><button class="dnsh-x" aria-label="Kapat">&times;</button>'
-      +'<h4>Paylaş</h4><p>'+esc(t)+' — <b>kapak fotoğrafı + özellikleriyle</b> paylaşmak için “Görsel + Bilgi ile Paylaş”. Sosyal ağ butonları bağlantı kartı paylaşır; reklam için metni/görseli kullanın.</p>'
+      +'<h4>Paylaş</h4><p>'+esc(t)+' — <b>kapak fotoğrafı + özellikleriyle</b> paylaşmak için “Görsel + Bilgi ile Paylaş”. Facebook seçeneği görseli indirir + metni kopyalar ve adım adım yönlendirir.</p>'
       +hero+'<div class="dnsh-grid">'+btns+'</div></div>';
     document.body.appendChild(back);
     requestAnimationFrame(function(){back.classList.add('on');});
@@ -122,6 +165,7 @@
       if(b.getAttribute('data-close')){ setTimeout(function(){close(back);},60); return; }
       var act=b.getAttribute('data-act');
       if(act==='imgshare'){ shareImage(item,cap,function(){close(back);}); }
+      else if(act==='fb'){ shareFacebook(item,cap,url,back); }
       else if(act==='link'){ copy(url,'Bağlantı kopyalandı.'); }
       else if(act==='ad'){ copy(cap,'Reklam metni kopyalandı — Facebook/Instagram reklamına yapıştırabilirsiniz.'); }
       else if(act==='img' && item.image){ composeShareImage(item).then(function(r){var a=document.createElement('a');a.href=r.dataUrl;a.download=slug(item.title)+'.jpg';document.body.appendChild(a);a.click();a.remove();toast('Kapak görseli (foto + özellik) indirildi.');},function(){toast('Görsel hazırlanamadı.');}); }
