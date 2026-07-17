@@ -37,10 +37,11 @@
 <script src="js/brand.js?v=3"></script>
 <script src="js/content.js?v=3"></script>
 <script src="js/a11y.js?v=1"></script>
-<link rel="stylesheet" href="css/portfoy.css?v=8">
+<link rel="stylesheet" href="css/portfoy.css?v=9">
 <script src="js/ist-ilce.js?v=1"></script><!-- İstanbul ilçe sınırları (radar haritası · gerçek GeoJSON, sadeleştirilmiş) -->
 <script src="js/ilan-data.js?v=1"></script><!-- gerçek ilan verisi (radar işaretleri · DN_ILAN) -->
 <script src="js/ist-mahalle.js?v=1"></script><!-- İstanbul 934 mahalle GERÇEK koordinatı (radar konumlama · OSM türevi) -->
+<script src="js/share.js?v=1"></script>
 <!-- ============ ÖZEL PORTFÖY HERO (ilana çıkmayan portföy + radar) · scoped ============ -->
 <style id="ozpHeroStyle">
 /* Üst menü (fixed ~100px) ile hero arası boşluğu sıkılaştır (önceki 158px → 120px) */
@@ -172,6 +173,8 @@
 .ozk-accent{position:absolute;left:0;top:0;height:3px;width:100%;background:linear-gradient(90deg,#0e5e3e,#c39b45)}
 .ozk-top{display:flex;align-items:center;gap:8px;justify-content:space-between}
 .ozk-tag{font-family:var(--body),sans-serif;font-size:10.5px;font-weight:700;color:#04311e;background:#fed175;border-radius:20px;padding:4px 10px;white-space:nowrap}
+.ozk-sh{margin-left:auto;background:none;border:none;cursor:pointer;color:#707972;padding:3px 4px;display:inline-flex;align-items:center;transition:color .2s}
+.ozk-sh:hover{color:#0e5e3e}
 .ozk-lock{display:inline-flex;align-items:center;gap:4px;font-family:var(--body),sans-serif;font-size:10.5px;color:#707972;white-space:nowrap}
 .ozk-lock svg{width:12px;height:12px;color:#795901}
 .ozk-loc{font-family:var(--serif),serif;font-weight:600;font-size:20px;color:#00452b;margin:2px 0 0;line-height:1.1}
@@ -1261,14 +1264,15 @@ function ozKayitLoad(){
   var sec=document.getElementById('ozKayitlar'),grid=document.getElementById('ozKayitGrid');if(!sec||!grid)return;
   var list=(typeof ozpPublicList==='function')?ozpPublicList():null;
   if(!list||!list.length){sec.hidden=true;return;}
-  sec.hidden=false;var nEl=document.getElementById('ozKayitN');if(nEl)nEl.textContent=list.length;
+  sec.hidden=false;var nEl=document.getElementById('ozKayitN');if(nEl)nEl.textContent=list.length;window._ozKayitList=list;
   var LCK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>';
   var PIN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s7-6.3 7-11a7 7 0 0 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>';
-  grid.innerHTML=list.map(function(p){
+  var SH='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.3M8.3 13.2l7.4 4.3"/></svg>';
+  grid.innerHTML=list.map(function(p,i){
     var price=p.baslangic?('Başlangıç <b>'+ozTL(p.baslangic)+'</b>'):'Davet usulü · fiyat ön analizle';
     var spec=[p.oda,(p.m2?p.m2+' m²':'')].filter(Boolean).join(' · ');
     return '<article class="ozk-card"><span class="ozk-accent"></span>'
-      +'<div class="ozk-top"><span class="ozk-tag">'+esc(p.kategori||p.tag||'Özel Kayıt')+'</span><span class="ozk-lock">'+LCK+'Adres gizli</span></div>'
+      +'<div class="ozk-top"><span class="ozk-tag">'+esc(p.kategori||p.tag||'Özel Kayıt')+'</span><button class="ozk-sh" type="button" title="Paylaş" onclick="ozKayitShare('+i+')">'+SH+'</button><span class="ozk-lock">'+LCK+'Adres gizli</span></div>'
       +'<h3 class="ozk-loc">'+esc(p.mah)+' <span>· '+esc(p.ilce)+(p.il&&p.il!=='İstanbul'?' · '+esc(p.il):'')+'</span></h3>'
       +(p.cadde?'<div class="ozk-cadde">'+PIN+esc(p.cadde)+'</div>':'')
       +(spec?'<div class="ozk-spec">'+esc(spec)+'</div>':'')
@@ -1277,6 +1281,11 @@ function ozKayitLoad(){
       +'</article>';
   }).join('');
 }
+function ozKayitShare(i){var p=(window._ozKayitList||[])[i];if(!p||!window.dnShare)return;
+  var bn=((document.getElementById('brandName')||{}).textContent||'Selin Meridyen').trim();
+  dnShare({title:(p.kategori||'Özel Kayıt')+' · '+p.mah, tag:'Özel Portföy · Davet Usulü', spec:[p.mah,p.ilce,p.cadde].filter(Boolean).join(' · '), price:(p.baslangic?ozTL(p.baslangic)+' başlangıç':'Davet usulü'), url:'ozel-portfoy.html', text:'İlana çıkmayan, mahremiyeti korunan özel portföy — tam adres ve net fiyat ön analizle paylaşılır.', brand:bn+' · Kişiye Özel Danışman'});
+}
+try{window.ozKayitShare=ozKayitShare;}catch(e){}
 /* Üst menü (fixed) yüksekliği değişken → hero üst boşluğunu ona göre sabit ~24px tut */
 function ozHeroPad(){try{var nav=document.getElementById('nav'),hero=document.getElementById('pfHero');if(!nav||!hero)return;hero.style.setProperty('padding-top',(Math.round(nav.getBoundingClientRect().height)+24)+'px','important');}catch(e){}}
 function ozInit(){

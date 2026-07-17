@@ -113,6 +113,9 @@ html:not(.js) .pf-rv{opacity:1;transform:none}
   background:rgba(8,20,14,.42);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(220,195,137,.3);transition:.2s}
 .pf-fav:hover{transform:scale(1.09);border-color:var(--gold-soft)}
 .pf-fav.on{background:var(--grad-gold);color:#3a2a08;border-color:transparent}
+.pf-share{position:absolute;top:11px;right:57px;z-index:5;width:38px;height:38px;border-radius:50%;cursor:pointer;
+  display:grid;place-items:center;color:var(--cream-on-em);background:rgba(8,20,14,.42);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(220,195,137,.3);transition:.2s;padding:0}
+.pf-share:hover{transform:scale(1.09);border-color:var(--gold-soft);color:var(--gold-soft)}
 /* ProX gerçek veri şeridi (media alt) */
 .pf-datatag{position:absolute;left:13px;bottom:12px;z-index:4;display:inline-flex;align-items:center;gap:6px;
   font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--cream-on-em);padding:5px 10px;border-radius:7px;
