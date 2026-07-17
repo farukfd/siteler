@@ -62,6 +62,7 @@ function pageHTML(l) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)} — Selin Meridyen</title>
 <meta name="description" content="${esc(desc)}">
+<meta name="robots" content="noindex,follow">
 <link rel="canonical" href="${esc(listingUrl)}">
 <!-- Open Graph (Facebook · WhatsApp · LinkedIn · Telegram) -->
 <meta property="og:type" content="website">
