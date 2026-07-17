@@ -139,14 +139,8 @@
     setTimeout(function(){if(barEl){barEl.remove();barEl=null;}},520); }
 
   /* ---- reopener ---- */
-  function showReopener(){
-    ensureCSS(); if(reopEl)return;
-    var r=document.createElement('button'); r.type='button'; r.className='dncz-reop';
-    r.setAttribute('aria-label','Çerez tercihlerini yönet');
-    r.innerHTML=COOKIE+'<span>Çerez</span>';
-    r.addEventListener('click',openSettings);
-    document.body.appendChild(r); reopEl=r;
-  }
+  /* Köşe pili KALDIRILDI — yeniden-açma her sayfada footer "Çerez Tercihleri" linkinde (dnConsent.open). */
+  function showReopener(){ /* no-op: footer linki devraldı */ }
 
   /* ---- settings modal ---- */
   var backEl=null;

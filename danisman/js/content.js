@@ -101,7 +101,7 @@
     + '</div>'
     + '<div><h4>Keşfet</h4><ul><li><a href="ilanlar.html">İlanlar</a></li><li><a href="ozel-portfoy.html">Özel Portföy</a></li><li><a href="bolge-analizi.html">Bölge Analizi</a></li><li><a href="index.html#blog">Blog · Haberler</a></li><li><a href="index.html#surec">Süreç</a></li><li><a href="index.html#randevu">Ücretsiz Analiz</a></li></ul></div>'
     + '<div><h4>Kurumsal</h4><ul><li><a href="index.html">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="sss.html">S.S.S</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="index.html#giris">Üye Girişi / Hesabım</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>'
-    + '<div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li><li><a href="index.html#admin">Yönetim Paneli</a></li></ul></div>'
+    + '<div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="#" onclick="if(window.dnConsent){dnConsent.open();}return false;">Çerez Tercihleri</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li><li><a href="index.html#admin">Yönetim Paneli</a></li></ul></div>'
     + '</div>'
     + '<div class="fbot"><span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span><a class="fprox" href="https://emlakekspertizi.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a></div>'
     + '</div>';
@@ -127,6 +127,83 @@
   }
   window.dnApplyWaLinks = applyWaLinks;
   ready(function () { applyWaLinks(); setTimeout(applyWaLinks, 350); });
+})();
+
+/* ===================================================================
+   HIZLI İLETİŞİM MODALI — "Ücretsiz Ekspertiz" üst CTA (tüm sayfalar).
+   window.dnQuickContact(); Ad+Telefon+not → WhatsApp'tan Gönder / Talebi Gönder.
+   Lead: dnLead.submit (varsa) → yoksa dn_leads. WhatsApp: dn_iletisim.wa.
+   =================================================================== */
+(function () {
+  function _ts() { try { return Date.now(); } catch (e) { return 0; } }
+  function _iso() { try { return new Date().toISOString(); } catch (e) { return ''; } }
+  function esc(s) { return ('' + (s == null ? '' : s)).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function waNum() { try { var c = JSON.parse(localStorage.getItem('dn_iletisim') || 'null'); if (c && c.wa) return ('' + c.wa).replace(/[^\d]/g, ''); } catch (e) {} return '905320000000'; }
+  function qcToast(m) { if (typeof window.toast === 'function') { window.toast(m); return; } var t = document.createElement('div'); t.textContent = m; t.style.cssText = 'position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#0e5e3e;color:#fff;padding:12px 18px;border-radius:10px;font:500 14px system-ui;z-index:2147483647;box-shadow:0 10px 30px rgba(0,0,0,.3)'; document.body.appendChild(t); setTimeout(function () { t.style.opacity = '0'; t.style.transition = 'opacity .4s'; setTimeout(function () { t.remove(); }, 400); }, 2400); }
+  function saveLead(rec) {
+    var lead = Object.assign({ id: 'q' + _ts(), ts: _ts(), date: _iso(), src: 'hizli-iletisim' }, rec);
+    try { if (window.dnLead && window.dnLead.submit) { window.dnLead.submit(lead); return true; } } catch (e) {}
+    try { var a = JSON.parse(localStorage.getItem('dn_leads') || '[]'); if (!Array.isArray(a)) a = []; a.unshift(lead); localStorage.setItem('dn_leads', JSON.stringify(a.slice(0, 500))); return true; } catch (e) {}
+    return false;
+  }
+  function css() {
+    if (document.getElementById('dnqc-css')) return;
+    var s = document.createElement('style'); s.id = 'dnqc-css';
+    s.textContent = [
+      '.dnqc-back{position:fixed;inset:0;z-index:2147483200;background:rgba(8,40,28,.5);display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;transition:.22s;font-family:"IBM Plex Sans",system-ui,sans-serif}',
+      '.dnqc-back.on{opacity:1}',
+      '.dnqc{background:#fff;border:1px solid #e1e3e2;border-radius:16px;max-width:440px;width:100%;max-height:92vh;overflow:auto;transform:translateY(14px);transition:.26s cubic-bezier(.2,.8,.2,1)}',
+      '.dnqc-back.on .dnqc{transform:none}',
+      '.dnqc-h{padding:22px 24px 6px;position:relative}',
+      '.dnqc-h h3{margin:0 0 5px;font:600 21px "Playfair Display",Georgia,serif;color:#0f3d2e}',
+      '.dnqc-h p{margin:0;font-size:12.8px;line-height:1.5;color:#5f6f66}',
+      '.dnqc-x{position:absolute;top:15px;right:16px;width:32px;height:32px;border-radius:9px;border:1px solid #e1e3e2;background:#fff;color:#5f6f66;font-size:19px;line-height:1;cursor:pointer}',
+      '.dnqc-x:hover{border-color:#0e5e3e;color:#0e5e3e}',
+      '.dnqc-b{padding:14px 24px 8px;display:flex;flex-direction:column;gap:11px}',
+      '.dnqc-f label{display:block;font-size:12px;font-weight:600;color:#0f3d2e;margin:0 0 5px}',
+      '.dnqc-f input,.dnqc-f textarea{width:100%;box-sizing:border-box;border:1px solid #e1e3e2;border-radius:9px;padding:11px 13px;font:400 14px "IBM Plex Sans",system-ui,sans-serif;color:#191c1c;background:#fbfbfa}',
+      '.dnqc-f input:focus,.dnqc-f textarea:focus{outline:none;border-color:#0e5e3e;background:#fff}',
+      '.dnqc-act{display:flex;gap:10px;padding:6px 24px 12px;flex-wrap:wrap}',
+      '.dnqc-btn{flex:1 1 auto;min-width:150px;padding:13px 16px;border-radius:10px;font:700 13px "IBM Plex Sans",system-ui,sans-serif;cursor:pointer;border:1.5px solid transparent;text-align:center;transition:.16s}',
+      '.dnqc-btn.wa{background:#0b7a4f;color:#fff}.dnqc-btn.wa:hover{filter:brightness(1.08)}',
+      '.dnqc-btn.go{background:linear-gradient(135deg,#0e5e3e,#14805a);color:#fff}.dnqc-btn.go:hover{filter:brightness(1.06)}',
+      '.dnqc-note{padding:0 24px 20px;font-size:11px;color:#8a968e;line-height:1.5}',
+      '@media(prefers-reduced-motion:reduce){.dnqc-back,.dnqc{transition:none}}'
+    ].join('');
+    document.head.appendChild(s);
+  }
+  var backEl = null;
+  function close() { if (!backEl) return; backEl.classList.remove('on'); var el = backEl; backEl = null; setTimeout(function () { el.remove(); }, 260); }
+  window.dnQuickContact = function (opts) {
+    opts = opts || {}; css(); if (backEl) return;
+    var b = document.createElement('div'); b.className = 'dnqc-back';
+    b.innerHTML = '<div class="dnqc" role="dialog" aria-modal="true" aria-label="Hızlı iletişim">'
+      + '<div class="dnqc-h"><button class="dnqc-x" aria-label="Kapat">&times;</button><h3>' + esc(opts.title || 'Ücretsiz Ekspertiz · Hızlı İletişim') + '</h3><p>' + esc(opts.sub || 'Bilgilerinizi bırakın, danışmanınız en kısa sürede ulaşsın. Dilerseniz WhatsApp’tan anında yazın.') + '</p></div>'
+      + '<div class="dnqc-b">'
+      + '<div class="dnqc-f"><label for="dnqc_ad">Ad Soyad *</label><input id="dnqc_ad" placeholder="Adınız Soyadınız" autocomplete="name"></div>'
+      + '<div class="dnqc-f"><label for="dnqc_tel">Telefon *</label><input id="dnqc_tel" inputmode="tel" placeholder="05xx xxx xx xx" autocomplete="tel"></div>'
+      + '<div class="dnqc-f"><label for="dnqc_not">Kısa not (ops.)</label><textarea id="dnqc_not" rows="2" placeholder="Gayrimenkul, bölge veya ihtiyacınız…"></textarea></div>'
+      + '</div>'
+      + '<div class="dnqc-act"><button type="button" class="dnqc-btn wa" data-a="wa">WhatsApp’tan Gönder</button><button type="button" class="dnqc-btn go" data-a="go">Talebi Gönder</button></div>'
+      + '<div class="dnqc-note">Bilgileriniz yalnızca danışmanınıza iletilir; devam ederek iletişime geçilmesini kabul edersiniz.</div>'
+      + '</div>';
+    document.body.appendChild(b); backEl = b;
+    requestAnimationFrame(function () { b.classList.add('on'); });
+    setTimeout(function () { var f = document.getElementById('dnqc_ad'); if (f) f.focus(); }, 120);
+    b.addEventListener('click', function (e) {
+      if (e.target === b || e.target.classList.contains('dnqc-x')) { close(); return; }
+      var btn = e.target.closest('[data-a]'); if (!btn) return;
+      var ad = (document.getElementById('dnqc_ad') || {}).value || '', tel = (document.getElementById('dnqc_tel') || {}).value || '', not = (document.getElementById('dnqc_not') || {}).value || '';
+      if (!ad.trim() || !tel.trim()) { qcToast('Lütfen ad ve telefon girin.'); return; }
+      saveLead({ name: ad, phone: tel, message: not, konu: 'Ücretsiz Ekspertiz' });
+      if (btn.getAttribute('data-a') === 'wa') {
+        var msg = 'Merhaba, ücretsiz ekspertiz/danışmanlık istiyorum.%0AAd: ' + encodeURIComponent(ad) + '%0ATelefon: ' + encodeURIComponent(tel) + (not ? '%0ANot: ' + encodeURIComponent(not) : '');
+        try { window.open('https://wa.me/' + waNum() + '?text=' + msg, '_blank', 'noopener'); } catch (e) {}
+        close();
+      } else { close(); qcToast('✓ Talebiniz alındı — danışmanınız en kısa sürede ulaşacak.'); }
+    });
+    document.addEventListener('keydown', function esc2(e) { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', esc2); } });
+  };
 })();
 
 /* ===================================================================
