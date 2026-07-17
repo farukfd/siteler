@@ -207,6 +207,31 @@
 })();
 
 /* ===================================================================
+   ÇOK-ALAN-ADI (500–5000 domain) — canonical + OG MEVCUT domaine göre ayarlanır.
+   Aynı statik paket her domainde servis edilir; her domain kendi canonical'ını
+   Google'a bildirir (aksi halde Google hepsini tek domaine birleştirir → SEO ölür).
+   Sunucu tarafı 'sub_filter' varsa crawler'lar da domain-doğru görür (AGENT-NOTES);
+   bu JS, sunucu ayarı OLMADAN da Google + tarayıcı için domain-doğru kılar.
+   ProX API tabanı (EMLAK_API_BASE) DEĞİŞMEZ — merkezî, X-Tenant-Id ile ayrışır.
+   =================================================================== */
+(function () {
+  function run() {
+    try {
+      var clean = location.origin + location.pathname;
+      var can = document.querySelector('link[rel="canonical"]');
+      if (!can) { can = document.createElement("link"); can.rel = "canonical"; document.head.appendChild(can); }
+      can.href = clean;
+      var ogu = document.querySelector('meta[property="og:url"]'); if (ogu) ogu.content = clean;
+      ['meta[property="og:image"]', 'meta[name="twitter:image"]'].forEach(function (sel) {
+        var m = document.querySelector(sel); if (!m || !m.content) return;
+        try { m.content = new URL(m.content.split("/").pop(), location.href).href; } catch (e) {}
+      });
+    } catch (e) {}
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run); else run();
+})();
+
+/* ===================================================================
    İL WHITE-LABEL — İstanbul → aktif il (GRAMER-FARKINDA), tüm sayfalar.
    Kaynak "İstanbul"; hedef dn_service_area.primary ya da dn_firma.il.
    Metin düğümleri + <title> + meta(desc/og/twitter/keywords) + JSON-LD.

@@ -91,3 +91,28 @@ REDDEDİLMİŞ. `window.dnConsent = {get, allows, open, reset, onChange}`. Anali
 Konsol hatası YOK (8 JS-yoğun sayfa) · kırık iç link/asset YOK · SEO/OG/robots/sitemap/favicon TAM ·
 çift çerez bandı düzeltildi · WhatsApp wiring tamam. Detaylı geçmiş: kullanıcı hafızası
 `danisman-denetim-backlog` + repo kökü `GAYRIMENKUL-DANISMAN-MIGRASYON-NOTU.md`.
+
+---
+
+## 11. ÇOK-ALAN-ADI (500–5000 domain) — multi-tenant SEO
+
+**Gereksinim:** Aynı statik `danisman/` paketi 500–5000 farklı alan adında AYNI ANDA servis edilir (giderek 5000).
+
+**Zaten domain-bağımsız (kod tarafı):**
+- Tüm asset yolları GÖRECELİ (herhangi bir domain/alt-yolda çalışır: `domain.com/` kökü de `domain.com/danisman/` de).
+- Kiracı kimliği domainden: `EMLAK_TENANT.domain = location.hostname`, ProX çağrıları `X-Tenant-Id`/`X-Tenant-Key` ile ayrışır.
+- **`EMLAK_API_BASE = https://www.emlakekspertizi.com` MERKEZÎ kalır** (tüm tenant'lar aynı ProX API'yi çağırır; domain başına değişMEZ). CORS açık.
+- **canonical + og:url + og:image + twitter:image → çalışma-zamanı JS ile MEVCUT domaine ayarlanır** (content.js, tüm ana sayfalar). Böylece her domain Google'a KENDİ canonical'ını bildirir (yoksa Google hepsini tek domaine birleştirir → SEO ölür). Sunucu ayarı GEREKMEZ.
+
+**Crawler-tam (Facebook OG kartları + sitemap) için sunucu tek-satır kuralı:**
+Facebook/WhatsApp OG crawler'ı JS çalıştırmaz; `p/<id>.html` paylaşım sayfaları ve `sitemap.xml`/`robots.txt`
+statik `https://www.emlakekspertizi.com` TEMPLATE origin'i içerir. Sunucu, Host'a göre bunu değiştirmeli:
+```nginx
+# nginx — html + xml + txt yanıtlarında template origin'i istek Host'una çevir
+sub_filter 'https://www.emlakekspertizi.com' 'https://$host';
+sub_filter_once off;
+sub_filter_types text/html application/xml text/plain;
+```
+(Cloudflare Worker / edge fonksiyonu ile de aynı `replace` yapılabilir.) Böylece TEK kural: main sayfa OG'si + `p/*.html` Facebook kartları + sitemap URL'leri hepsi domain-doğru olur. sub_filter YOKSA: JS zaten Google+tarayıcıyı domain-doğru kılar; yalnız Facebook per-ilan kartı template-domaini (emlakekspertizi.com) gösterir — görsel yine yüklenir (aynı API sunucusundan), link template-domaine gider.
+
+**gen-share-pages.mjs:** hâlâ tek origin argümanı alır (template için `https://www.emlakekspertizi.com` bırakılabilir; sub_filter Host'a çevirir). Ayrı bir "her domain için ayrı dosya" üretimine GEREK YOK — tek paket + sub_filter.
