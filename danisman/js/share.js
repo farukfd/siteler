@@ -108,38 +108,6 @@
       }
     },function(){toast('Görsel hazırlanamadı.');});
   }
-  /* Facebook rehberli akış: FB gönderi kutusuna DIŞARIDAN görsel/metin enjekte EDİLEMEZ (platform kısıtı).
-     Bu yüzden hazır kapak görselini indirir + metni kopyalar + FB'yi açar + yapıştırma adımlarını gösterir. */
-  function fbGuideHTML(item,state){
-    var imgReady=state.img===true, imgErr=state.img==='err';
-    var mark=imgReady?'<span class="ok">✓</span>':imgErr?'<span class="err">!</span>':'<span>…</span>';
-    var imgTxt=imgReady?'Kapak görseli indirildi (İndirilenler klasörü)':imgErr?'Görsel hazırlanamadı — “Görseli indir”i deneyin':'Kapak görseli hazırlanıyor…';
-    var attach=item.image?('<li>Açılan Facebook penceresinde <b>🖼️ Fotoğraf/Video</b>’ya tıklayıp indirilen görseli seçin.</li>'):'';
-    return '<button class="dnsh-x" aria-label="Kapat">&times;</button>'
-      +'<h4>Facebook’ta Paylaş</h4>'
-      +'<p>Facebook, gönderi kutusuna görsel ve yazıyı dışarıdan otomatik ekleyemez. Hazırladığımız iki parçayı açılan pencereye yapıştırmanız yeterli:</p>'
-      +(item.image?('<div class="dnsh-chk">'+mark+imgTxt+'</div>'):'')
-      +'<div class="dnsh-chk"><span class="ok">✓</span>İlan metni panoya kopyalandı</div>'
-      +'<ol class="dnsh-ol">'+attach
-      +'<li>Yazı alanına tıklayıp <b>⌘V</b> (Windows: <b>Ctrl+V</b>) ile metni yapıştırın.</li>'
-      +'<li><b>Paylaş</b>’a basın.</li></ol>'
-      +'<div class="dnsh-gb">'
-      +(item.image?'<button type="button" class="dnsh-mini" data-act="img">Görseli tekrar indir</button>':'')
-      +'<button type="button" class="dnsh-mini" data-act="ad">Metni tekrar kopyala</button></div>'
-      +'<p class="dnsh-note">Site yayına alındığında bağlantı kartı önizlemesi (görsel + başlık) Facebook’ta otomatik da görünür.</p>';
-  }
-  function renderGuide(back,item,state){ var box=back.querySelector('.dnsh'); if(box)box.innerHTML=fbGuideHTML(item,state); }
-  function shareFacebook(item,cap,url,back){
-    try{window.open('https://www.facebook.com/sharer/sharer.php?u='+enc(url),'_blank','noopener');}catch(e){}
-    copy(cap,'');                                   // metni panoya (sessiz)
-    renderGuide(back,item,{img:item.image?'wait':true});
-    if(item.image){
-      composeShareImage(item).then(function(r){
-        try{if(r&&r.dataUrl){var a=document.createElement('a');a.href=r.dataUrl;a.download=slug(item.title)+'.jpg';document.body.appendChild(a);a.click();a.remove();}}catch(e){}
-        renderGuide(back,item,{img:true});
-      },function(){ renderGuide(back,item,{img:'err'}); });
-    }
-  }
   window.dnShareCaption=caption; window.dnShareCompose=composeShareImage;
   /* Cihaz dosya paylaşımını (Web Share API L2) destekliyor mu? — senkron yetenek yoklaması */
   function canShareFiles(){try{return !!(navigator.canShare&&navigator.canShare({files:[new File([new Uint8Array([255,216,255])],'p.jpg',{type:'image/jpeg'})]}));}catch(e){return false;}}
@@ -173,7 +141,6 @@
     var back=document.createElement('div');back.className='dnsh-back';
     var hero=item.image?('<button type="button" class="dnsh-hero" data-act="imgshare">'+svg('img',false)+'<span><b>Görsel + Bilgi ile Paylaş</b><small>Kapak fotoğrafı + tüm özellikler tek görselde (önerilen)</small></span></button>'):'';
     var btns=pop.map(function(p){
-      if(p.k==='facebook')return '<button type="button" class="dnsh-b fb" data-act="fb"><span class="ic">'+svg('facebook')+'</span>Facebook</button>';
       return '<a class="dnsh-b '+p.c+'" href="'+p.href+'" target="_blank" rel="noopener noreferrer" data-close="1"><span class="ic">'+svg(p.k)+'</span>'+esc(p.l)+'</a>';
     }).join('');
     btns+='<button type="button" class="dnsh-b cp" data-act="link"><span class="ic">'+svg('link',false)+'</span>Bağlantı</button>';
@@ -181,7 +148,7 @@
     if(item.image)btns+='<button type="button" class="dnsh-b im" data-act="img"><span class="ic">'+svg('img',false)+'</span>Görseli indir</button>';
     if(navigator.share)btns+='<button type="button" class="dnsh-b mr" data-act="native"><span class="ic">'+svg('more')+'</span>Diğer</button>';
     back.innerHTML='<div class="dnsh" role="dialog" aria-modal="true" aria-label="Paylaş"><button class="dnsh-x" aria-label="Kapat">&times;</button>'
-      +'<h4>Paylaş</h4><p>'+esc(t)+' — <b>kapak fotoğrafı + özellikleriyle</b> paylaşmak için “Görsel + Bilgi ile Paylaş”. Facebook seçeneği görseli indirir + metni kopyalar ve adım adım yönlendirir.</p>'
+      +'<h4>Paylaş</h4><p>'+esc(t)+' — sosyal ağda paylaşınca <b>ilan kartı (kapak görseli + başlık + fiyat)</b> otomatik görünür. Mobilde “Görsel + Bilgi ile Paylaş” tek dokunuşla görseli de ekler.</p>'
       +hero+'<div class="dnsh-grid">'+btns+'</div></div>';
     document.body.appendChild(back);
     requestAnimationFrame(function(){back.classList.add('on');});
@@ -191,7 +158,6 @@
       if(b.getAttribute('data-close')){ setTimeout(function(){close(back);},60); return; }
       var act=b.getAttribute('data-act');
       if(act==='imgshare'){ shareImage(item,cap,function(){close(back);}); }
-      else if(act==='fb'){ shareFacebook(item,cap,url,back); }
       else if(act==='link'){ copy(url,'Bağlantı kopyalandı.'); }
       else if(act==='ad'){ copy(cap,'Reklam metni kopyalandı — Facebook/Instagram reklamına yapıştırabilirsiniz.'); }
       else if(act==='img' && item.image){ composeShareImage(item).then(function(r){var a=document.createElement('a');a.href=r.dataUrl;a.download=slug(item.title)+'.jpg';document.body.appendChild(a);a.click();a.remove();toast('Kapak görseli (foto + özellik) indirildi.');},function(){toast('Görsel hazırlanamadı.');}); }

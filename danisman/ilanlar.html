@@ -38,7 +38,7 @@
 <script src="js/content.js?v=3"></script>
 <script src="js/cerez.js?v=1"></script><!-- KVKK çerez onay bandı · tek kaynak -->
 <script src="js/a11y.js?v=1"></script>
-<script src="js/share.js?v=4"></script>
+<script src="js/share.js?v=5"></script>
 <link rel="stylesheet" href="css/portfoy.css?v=9">
 <!-- ============ STITCH DÖNÜŞÜMÜ (ilanlar · ozel-portfoy "Aegean Heritage Wealth" diliyle hizalı) ============ -->
 <style id="ilStitch">
@@ -400,7 +400,7 @@ function pfFav(l){var snap={t:l.baslik,s:(l.bolge||'')+' · '+l.durum,p:(l.kira?
 function pfShare(l){return '<button class="pf-share" onclick="event.stopPropagation();ilShare('+l.id+')" aria-label="Paylaş" title="Sosyal medyada paylaş"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.3M8.3 13.2l7.4 4.3"/></svg></button>';}
 function ilShare(id){var l=ALL.filter(function(x){return x.id===id;})[0];if(!l||!window.dnShare)return;
   var bn=((document.getElementById('brandName')||{}).textContent||'Selin Meridyen').trim();
-  dnShare({title:l.baslik, tag:l.durum, spec:[(l.oda||l.tip),(l.m2?l.m2+' m²':'')].filter(Boolean).join(' · '), price:fmtTL(l.fiyat)+(l.kira?' /ay':''), url:'ilanlar.html?ilan='+l.id, image:imgURL(l.img), text:(l.bolge||[l.mahalle,l.ilce].filter(Boolean).join(' · ')||l.il||''), brand:bn+' · Kişiye Özel Danışman'});
+  dnShare({title:l.baslik, tag:l.durum, spec:[(l.oda||l.tip),(l.m2?l.m2+' m²':'')].filter(Boolean).join(' · '), price:fmtTL(l.fiyat)+(l.kira?' /ay':''), url:'p/'+l.id+'.html', image:imgURL(l.img), text:(l.bolge||[l.mahalle,l.ilce].filter(Boolean).join(' · ')||l.il||''), brand:bn+' · Kişiye Özel Danışman'});
 }
 try{window.ilShare=ilShare;}catch(e){}
 
