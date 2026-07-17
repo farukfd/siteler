@@ -1366,6 +1366,23 @@ function ozRadarInit(){
   var cv=document.getElementById('ozRadar'); if(!cv) return;
   var IST=window.IST_ILCE;
   var wrap=cv.parentElement, ctx=cv.getContext('2d');
+  /* WHITE-LABEL: radar geodata İstanbul'a özel; başka ilde yanlış harita yerine temiz not + CTA korunur */
+  var _ozIl=(typeof OZIL!=='undefined'?OZIL:'İstanbul');
+  if(_ozIl && _ozIl!=='İstanbul'){
+    try{
+      cv.style.display='none';
+      if(wrap && !wrap.querySelector('.oz-radar-note')){
+        wrap.style.position='relative';
+        var nt=document.createElement('div'); nt.className='oz-radar-note';
+        nt.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:26px';
+        nt.innerHTML='<div style="width:52px;height:52px;border-radius:50%;border:1.5px solid rgba(220,195,137,.5);display:grid;place-items:center;color:#dcc389;font:600 20px \'Playfair Display\',Georgia,serif">'+_ozIl.charAt(0)+'</div>'
+          +'<div style="font:600 18px \'Playfair Display\',Georgia,serif;color:#fff">'+_ozIl+' · Özel Portföy Radarı</div>'
+          +'<div style="font-size:12.5px;line-height:1.55;color:#bcd4c2;max-width:300px">'+_ozIl+' için canlı bölge haritası hazırlanıyor. Aradığınız mahallede ilana çıkmayan portföyümüz için talebinizi bırakın — birebir dönelim.</div>';
+        wrap.appendChild(nt);
+      }
+    }catch(e){}
+    return;
+  }
   var reduce=false; try{reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
   var lblEl=document.getElementById('ozRadarLbl'), nEl=document.getElementById('ozRadarN');
   var markers=ozBuildMarkers().map(function(m){return Object.assign({x:0,y:0,a:0,seen:false,flare:0},m);});
