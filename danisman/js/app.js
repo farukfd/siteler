@@ -1636,8 +1636,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();cl
    ===================================================================== */
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='adm-app';
   el.innerHTML='<div class="adm-topbar"><div class="alogo"><span class="mark">'+_brandInitial()+'</span><span class="alogo-t">'+_leD(saasResolve('brandName')||'Selin Meridyen')+' · <b>Pro<span class="ap-x">X</span> CRM</b></span></div><div class="adm-topbar-act"><button onclick="openOnboarding()">🚀 Sihirbaz</button><button onclick="closeSaasAdmin()">👁 Siteyi Gör</button><button class="adm-x" onclick="closeSaasAdmin()">✕</button></div></div><div class="adm-dash">'
-   +'<aside class="adm-side"><button class="adm-nav act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><div class="adm-group">CRM & Satış</div><button class="adm-nav" data-t="crmkisi" onclick="staTab(this)">👤 Kişiler & Talepler</button><button class="adm-nav" data-t="eslesme" onclick="staTab(this)">🎯 Akıllı Eşleştirme</button><button class="adm-nav" data-t="crmpipe" onclick="staTab(this)">🪜 Satış Hattı</button><button class="adm-nav" data-t="crmtask" onclick="staTab(this)">📅 Görev & Randevu</button><button class="adm-nav" data-t="komisyon" onclick="staTab(this)">💰 Komisyon & Finans</button><button class="adm-nav" data-t="kira" onclick="staTab(this)">🔑 Kira Takibi</button><button class="adm-nav" data-t="sozlesme" onclick="staTab(this)">📄 Sözleşmeler</button><button class="adm-nav" data-t="iletisim" onclick="staTab(this)">📣 İletişim & WhatsApp</button><button class="adm-nav" data-t="rapor" onclick="staTab(this)">📈 Raporlar</button><button class="adm-nav" data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><div class="adm-group">Portföy & İçerik</div><button class="adm-nav" data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button class="adm-nav" data-t="portfoy" onclick="staTab(this)">🔒 Özel Portföy</button><button class="adm-nav" data-t="ekip" onclick="staTab(this)">👥 Ekip / Danışmanlar</button><button class="adm-nav" data-t="hizmetalani" onclick="staTab(this)">🗺️ Hizmet Alanı</button><button class="adm-nav" data-t="icerik" onclick="staTab(this)">📝 İçerik & Sayfalar</button><div class="adm-group">Entegrasyon & ProX</div><button class="adm-nav" data-t="prox" onclick="staTab(this)">🤖 ProX AI & DeepSeek</button><button class="adm-nav" data-t="proxapi" onclick="staTab(this)">🔌 ProX API & Anahtar</button><button class="adm-nav" data-t="eids" onclick="staTab(this)">🛡️ EİDS Yetki</button><div class="adm-group">Pazarlama</div><button class="adm-nav" data-t="seo" onclick="staTab(this)">🔍 Google & SEO</button><div class="adm-group">Ayarlar</div><button class="adm-nav" data-t="firma" onclick="staTab(this)">🏢 Firma Bilgileri</button><button class="adm-nav" data-t="marka" onclick="staTab(this)">🎨 Marka & Tema</button><button class="adm-nav" data-t="yedek" onclick="staTab(this)">💾 Yedek / Aktar</button><div class="spacer"></div><button class="adm-nav exit" onclick="closeSaasAdmin()">⎋ Paneli Kapat</button></aside><main class="adm-main">'
+   +'<aside class="adm-side"><button class="adm-nav" data-t="yayin" onclick="staTab(this)" style="margin-bottom:6px;background:linear-gradient(135deg,#0e5e3e,#14805a);color:#fff;font-weight:700">🚀 Yayın Hazırlığı</button><button class="adm-nav act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><div class="adm-group">CRM & Satış</div><button class="adm-nav" data-t="crmkisi" onclick="staTab(this)">👤 Kişiler & Talepler</button><button class="adm-nav" data-t="eslesme" onclick="staTab(this)">🎯 Akıllı Eşleştirme</button><button class="adm-nav" data-t="crmpipe" onclick="staTab(this)">🪜 Satış Hattı</button><button class="adm-nav" data-t="crmtask" onclick="staTab(this)">📅 Görev & Randevu</button><button class="adm-nav" data-t="komisyon" onclick="staTab(this)">💰 Komisyon & Finans</button><button class="adm-nav" data-t="kira" onclick="staTab(this)">🔑 Kira Takibi</button><button class="adm-nav" data-t="sozlesme" onclick="staTab(this)">📄 Sözleşmeler</button><button class="adm-nav" data-t="iletisim" onclick="staTab(this)">📣 İletişim & WhatsApp</button><button class="adm-nav" data-t="rapor" onclick="staTab(this)">📈 Raporlar</button><button class="adm-nav" data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><div class="adm-group">Portföy & İçerik</div><button class="adm-nav" data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button class="adm-nav" data-t="portfoy" onclick="staTab(this)">🔒 Özel Portföy</button><button class="adm-nav" data-t="ekip" onclick="staTab(this)">👥 Ekip / Danışmanlar</button><button class="adm-nav" data-t="hizmetalani" onclick="staTab(this)">🗺️ Hizmet Alanı</button><button class="adm-nav" data-t="icerik" onclick="staTab(this)">📝 İçerik & Sayfalar</button><div class="adm-group">Entegrasyon & ProX</div><button class="adm-nav" data-t="prox" onclick="staTab(this)">🤖 ProX AI & DeepSeek</button><button class="adm-nav" data-t="proxapi" onclick="staTab(this)">🔌 ProX API & Anahtar</button><button class="adm-nav" data-t="eids" onclick="staTab(this)">🛡️ EİDS Yetki</button><div class="adm-group">Pazarlama</div><button class="adm-nav" data-t="seo" onclick="staTab(this)">🔍 Google & SEO</button><div class="adm-group">Ayarlar</div><button class="adm-nav" data-t="firma" onclick="staTab(this)">🏢 Firma Bilgileri</button><button class="adm-nav" data-t="marka" onclick="staTab(this)">🎨 Marka & Tema</button><button class="adm-nav" data-t="yedek" onclick="staTab(this)">💾 Yedek / Aktar</button><div class="spacer"></div><button class="adm-nav exit" onclick="closeSaasAdmin()">⎋ Paneli Kapat</button></aside><main class="adm-main">'
    /* CRM · PANEL */
+   +'<div class="sta-pane" data-p="yayin" hidden><h4>🚀 Yayın Hazırlığı</h4><p class="sub">Siteniz yayına çıkmadan önce doldurmanız gereken bilgiler. Her eksik maddeyi tek tıkla ilgili bölüme gidip düzeltin.</p><div id="yayinBody"></div></div>'
    +'<div class="sta-pane" data-p="crmdash"><h4>Yönetim Paneli · CRM</h4><p class="sub">Kişiler, satış hattı, görevler ve gelen talepler tek bakışta. Gerçek görüşme ve talepler otomatik düşer.</p><div id="crmDash"></div></div>'
    /* CRM · KİŞİLER */
    +'<div class="sta-pane" data-p="crmkisi" hidden><h4>Kişiler & Talepler</h4><p class="sub">Alıcı/satıcı/yatırımcı kişilerinizi yönetin; gelen talepleri tek tıkla kişiye dönüştürün.</p><div id="crmKisiler"></div></div>'
@@ -1724,7 +1725,61 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
    +'<div class="sta-pane" data-p="firma" hidden><h4>Firma Bilgileri · Künye</h4><p class="sub">Ünvan, vergi, adres ve iletişim; footer, sözleşme ve yasal metinlerde otomatik kullanılır.</p><div id="crmFirma"></div></div>'
    +'</main></div>';
   document.body.appendChild(el);return el;}
+/* ===================== YAYIN HAZIRLIĞI (Launch Wizard) ===================== */
+function _yEsc(s){return (''+(s==null?'':s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function renderYayin(){
+  var host=document.getElementById('yayinBody');if(!host)return;
+  var il={};try{il=iletLoad()||{};}catch(e){}
+  var f={};try{f=JSON.parse(localStorage.getItem('dn_firma')||'{}')||{};}catch(e){}var eids=f.eids||{};
+  var realIlan=false;try{var a=JSON.parse(localStorage.getItem('dn_listings_v1')||'null');realIlan=Array.isArray(a)&&a.length>0;}catch(e){}
+  var portrait='';try{portrait=localStorage.getItem('dn_portrait')||'';}catch(e){}
+  var logo='';try{logo=saasResolve('logoUrl')||'';}catch(e){}
+  var ga='';try{ga=saasResolve('googleAnalytics')||'';}catch(e){}
+  var proxKey='';try{var pk=JSON.parse(localStorage.getItem('dn_prox')||'null');proxKey=(pk&&(pk.key||pk.apiKey))||'';}catch(e){}
+  function has(v){return !!(v&&(''+v).trim());}
+  var REQ=[
+    {l:'WhatsApp numarası',ok:has(il.wa),t:'iletisim',h:'Ziyaretçiler bu numaradan yazar; girilince tüm site otomatik güncellenir.'},
+    {l:'Telefon numarası',ok:has(il.tel),t:'iletisim',h:'“Danışmanı Ara” butonları bunu kullanır.'},
+    {l:'E-posta',ok:has(il.mail||f.mail),t:'iletisim',h:'İletişim alanında ve künyede görünür.'},
+    {l:'Ticaret Ünvanı',ok:has(f.unvan),t:'firma',h:'Yasal künye, footer ve sözleşmelerde kullanılır.'},
+    {l:'Taşınmaz Ticareti Yetki Belge No',ok:has(f.yetkiBelge),t:'firma',h:'6585 sK / Yönetmelik gereği sitede zorunlu.'},
+    {l:'Vergi No / Dairesi',ok:has(f.vergi),t:'firma',h:'Yasal künye için gerekli.'},
+    {l:'İşletme Adresi',ok:has(f.adres),t:'firma',h:'Ofis/işletme adresi künyede yer alır.'},
+    {l:'EİDS Belge No',ok:has(eids.belgeNo),t:'eids',h:'Açık ilan yayınlamak için gerekli; kamuya güven rozeti.'}
+  ];
+  var OPT=[
+    {l:'MERSİS No',ok:has(f.mersis),t:'firma',h:''},
+    {l:'KEP adresi',ok:has(f.kep),t:'firma',h:''},
+    {l:'En az 1 gerçek ilan',ok:realIlan,t:'ilanlar',h:realIlan?'':'Şu an temsili (demo) ilanlar görünüyor.'},
+    {l:'Danışman portre fotoğrafı',ok:has(portrait),t:'icerik',h:has(portrait)?'':'Kendi fotoğrafınızı yükleyin (şu an temsili).'},
+    {l:'Logo',ok:has(logo),t:'marka',h:''},
+    {l:'Google Analytics',ok:has(ga),t:'seo',h:''},
+    {l:'ProX API anahtarı',ok:has(proxKey),t:'proxapi',h:'Canlı endeks/değerleme için.'}
+  ];
+  var reqDone=REQ.filter(function(x){return x.ok;}).length,pct=Math.round(reqDone/REQ.length*100);
+  function row(x){
+    return '<div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid var(--line-soft,#e1e3e2);border-radius:10px;margin-bottom:8px;background:'+(x.ok?'rgba(14,94,62,.06)':'#fff')+'">'
+      +'<span style="flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;background:'+(x.ok?'#0e5e3e':'#f0d9d3')+';color:'+(x.ok?'#fff':'#b3341f')+'">'+(x.ok?'✓':'!')+'</span>'
+      +'<div style="flex:1;min-width:0"><b style="font-size:13.5px;color:var(--ink,#191c1c)">'+_yEsc(x.l)+'</b>'+(x.h?'<span style="display:block;font-size:11.5px;color:var(--muted,#6a786f);line-height:1.4">'+_yEsc(x.h)+'</span>':'')+'</div>'
+      +(x.ok?'<span style="flex:none;font-size:11.5px;color:#0e5e3e;font-weight:600">Tamam</span>':'<button class="btn btn-line" style="flex:none;padding:7px 14px;font-size:12px" onclick="staTab(document.querySelector(\'[data-t='+x.t+']\'))">Düzelt →</button>')
+      +'</div>';
+  }
+  var barColor=pct===100?'#0e5e3e':pct>=60?'#c39b45':'#b3341f';
+  host.innerHTML=
+    '<div style="background:var(--cream,#f9f9f8);border:1px solid var(--line-soft,#e1e3e2);border-radius:12px;padding:18px 20px;margin-bottom:18px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px"><b style="font-size:15px;color:var(--ink,#191c1c)">Yayına hazırlık</b><b style="font-size:24px;color:'+barColor+'">%'+pct+'</b></div>'
+    +'<div style="height:9px;border-radius:6px;background:#e1e3e2;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+barColor+';transition:.5s"></div></div>'
+    +'<div style="font-size:12px;color:var(--muted,#6a786f);margin-top:9px">'+(pct===100?'✓ Zorunlu bilgiler tamam — yayına hazırsınız.':reqDone+'/'+REQ.length+' zorunlu bilgi tamam. Kalan maddeleri doldurun.')+'</div>'
+    +'</div>'
+    +'<div style="font-size:11.5px;font-weight:700;letter-spacing:.05em;color:var(--muted,#6a786f);text-transform:uppercase;margin:0 0 10px">● Zorunlu — Yasal &amp; İletişim</div>'
+    +REQ.map(row).join('')
+    +'<div style="font-size:11.5px;font-weight:700;letter-spacing:.05em;color:var(--muted,#6a786f);text-transform:uppercase;margin:20px 0 10px">○ Önerilen</div>'
+    +OPT.map(row).join('')
+    +'<div style="margin-top:18px;padding:14px 16px;border:1px dashed var(--line-soft,#e1e3e2);border-radius:10px;font-size:12px;color:var(--muted,#6a786f);line-height:1.55">Tüm bilgiler tamamlandığında siteniz yayına hazırdır. Yayına aldıktan sonra sosyal medya paylaşımı (ilan kartları) otomatik çalışır.</div>';
+}
+window.renderYayin=renderYayin;
 function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');try{document.body.style.overflow='hidden';}catch(e){}
+  try{renderYayin();}catch(e){}
   const set=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||'';};
   set('sl_brand',saasResolve('brandName'));set('sl_accent',saasResolve('accent'));set('sl_soft',saasResolve('accentSoft'));
   set('sg_ga',saasResolve('googleAnalytics'));set('sg_gsc',saasResolve('googleSiteVerification'));set('sg_maps',saasResolve('googleMapsKey'));
