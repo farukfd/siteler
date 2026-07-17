@@ -134,7 +134,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg">
 <script src="js/brand.js?v=3"></script>
-<script src="js/content.js?v=5"></script>
+<script src="js/tr-grammar.js?v=3"></script><script src="js/content.js?v=6"></script>
 <script src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
 <script src="js/a11y.js?v=1"></script>
 <style>
@@ -392,7 +392,7 @@ body{overflow-x:clip}
   <div class="wrap">
     <div>
       <div class="eyebrow"><span class="ba-live-dot"></span>Canlı ProX Piyasa Zekâsı · Mahalle Bazında</div>
-      <h1 class="ba-h1"><span id="baHeroIl">İstanbul</span>'u <i>rakamla</i> okuyun.</h1>
+      <h1 class="ba-h1"><span id="baHeroIl">İstanbul'u</span> <i>rakamla</i> okuyun.</h1>
       <p class="ba-lede">39 ilçe, yüzlerce mahalle; canlı m² endeksi, brüt kira getirisi ve yatırım skoruyla. Nerede değer, nerede prestij — tahminle değil <b style="color:var(--cream-on-em)">veriyle</b>.</p>
       <div class="ba-hero-cta">
         <a class="btn btn-gold" href="index.html#randevu">Ücretsiz Bölge Raporu</a>
@@ -894,7 +894,7 @@ async function loadMahalleGrid(ic){
 
 /* ==================== HERO panorama + KPI ==================== */
 function paintHero(sortedTop){
-  document.getElementById('baHeroIl').textContent=IL;
+  document.getElementById('baHeroIl').textContent=IL+"'"+((window.TRG&&TRG.suffix)?TRG.suffix(IL,'acc'):'u');
   /* il ort m² = ilçelerin ortalaması */
   var vals=[],scoreS=0,ilanS=0,n=0,yldS=0,yn=0;
   ILCELER.forEach(function(ic){var d=ILCE_DATA[ic];if(d&&d.m2){vals.push(d.m2);scoreS+=d.score||0;ilanS+=d.ilan||0;n++;if(d.yield){yldS+=d.yield;yn++;}}});
@@ -972,7 +972,7 @@ function wireControls(){
     if(b.classList.contains('on'))return;[].forEach.call(document.querySelectorAll('.ba-kat button'),function(x){x.classList.remove('on');});b.classList.add('on');KAT=b.getAttribute('data-kat');reload();});});
   [].forEach.call(document.querySelectorAll('.ba-durum button'),function(b){b.addEventListener('click',function(){
     if(b.classList.contains('on'))return;[].forEach.call(document.querySelectorAll('.ba-durum button'),function(x){x.classList.remove('on');});b.classList.add('on');DURUM=b.getAttribute('data-durum');reload();});});
-  var sel=document.getElementById('baIlSel');if(sel)sel.addEventListener('change',function(){IL=sel.value;document.getElementById('baHeroIl').textContent=IL;reload();});
+  var sel=document.getElementById('baIlSel');if(sel)sel.addEventListener('change',function(){IL=sel.value;document.getElementById('baHeroIl').textContent=IL+"'"+((window.TRG&&TRG.suffix)?TRG.suffix(IL,'acc'):'u');reload();});
 }
 
 /* ---- burger + reveal + prog ---- */

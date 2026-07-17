@@ -207,6 +207,68 @@
 })();
 
 /* ===================================================================
+   İL WHITE-LABEL — İstanbul → aktif il (GRAMER-FARKINDA), tüm sayfalar.
+   Kaynak "İstanbul"; hedef dn_service_area.primary ya da dn_firma.il.
+   Metin düğümleri + <title> + meta(desc/og/twitter/keywords) + JSON-LD.
+   Gramer: window.TRG.suffix (tr-grammar.js) → "İstanbul'u"→"Ankara'yı" vb.
+   İsim (Selin Meridyen) yerelleştirmesi ayrı: js/brand.js.
+   =================================================================== */
+(function () {
+  function ready(fn) { if (document.body) fn(); else document.addEventListener("DOMContentLoaded", fn); }
+  var SRC = "İstanbul";
+  function activeIl() {
+    try { var sa = JSON.parse(localStorage.getItem("dn_service_area") || "null"); if (sa && sa.primary && ("" + sa.primary).trim()) return ("" + sa.primary).trim(); } catch (e) {}
+    try { var f = JSON.parse(localStorage.getItem("dn_firma") || "null"); if (f && f.il && ("" + f.il).trim()) return ("" + f.il).trim(); } catch (e) {}
+    return SRC;
+  }
+  function sfx(il, t) { try { if (window.TRG && TRG.suffix) return TRG.suffix(il, t); } catch (e) {} return ""; }
+  function ilText(s, il) {
+    if (!s || (s.indexOf(SRC) < 0 && s.indexOf("İSTANBUL") < 0)) return s;
+    if (il === SRC) return s;
+    s = s.split("İstanbul ve çevresi").join(il + " ve çevresi");
+    s = s.replace(/İstanbul['’](nin|nın|nun|nün|in|ın|un|ün)\b/g, il + "'" + sfx(il, "gen"));
+    s = s.replace(/İstanbul['’](den|dan|ten|tan)\b/g, il + "'" + sfx(il, "abl"));
+    s = s.replace(/İstanbul['’](deki|daki|teki|takı)\b/g, il + "'" + sfx(il, "loc") + "ki");
+    s = s.replace(/İstanbul['’](de|da|te|ta)\b/g, il + "'" + sfx(il, "loc"));
+    s = s.replace(/İstanbul['’](ya|ye|a|e)\b/g, il + "'" + sfx(il, "dat"));
+    s = s.replace(/İstanbul['’](yı|yi|yu|yü|ı|i|u|ü)\b/g, il + "'" + sfx(il, "acc"));
+    s = s.replace(/İstanbul['’]?l[iıuü]\b/g, il + sfx(il, "li"));
+    s = s.split("İSTANBUL").join((il || "").toLocaleUpperCase("tr"));
+    s = s.replace(/İstanbul/g, il);
+    return s;
+  }
+  window.dnIlText = ilText; window.dnActiveIl = activeIl;
+  var _running = false;
+  function localizeAll() {
+    var il = activeIl(); if (il === SRC) return;
+    _running = true;
+    try {
+      var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, { acceptNode: function (n) {
+        var v = n.nodeValue; if (!v || (v.indexOf("İstanbul") < 0 && v.indexOf("İSTANBUL") < 0)) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode; if (p && /^(SCRIPT|STYLE|TEXTAREA|INPUT|CODE|NOSCRIPT)$/.test(p.nodeName)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      } });
+      var nodes = [], x; while (x = w.nextNode()) nodes.push(x);
+      nodes.forEach(function (n) { var v = ilText(n.nodeValue, il); if (v !== n.nodeValue) n.nodeValue = v; });
+    } catch (e) {}
+    try { if (document.title && document.title.indexOf("İstanbul") >= 0) document.title = ilText(document.title, il); } catch (e) {}
+    try { ['meta[name="description"]', 'meta[property="og:title"]', 'meta[property="og:description"]', 'meta[name="twitter:title"]', 'meta[name="twitter:description"]', 'meta[name="keywords"]'].forEach(function (sel) {
+      document.querySelectorAll(sel).forEach(function (m) { if (m.content && m.content.indexOf("İstanbul") >= 0) m.content = ilText(m.content, il); });
+    }); } catch (e) {}
+    try { document.querySelectorAll('script[type="application/ld+json"]').forEach(function (s) { if (s.textContent && s.textContent.indexOf("İstanbul") >= 0) s.textContent = ilText(s.textContent, il); }); } catch (e) {}
+    _running = false;
+  }
+  window.dnLocalizeProvince = localizeAll;
+  ready(function () {
+    localizeAll(); setTimeout(localizeAll, 450);
+    try {
+      var mo = new MutationObserver(function () { if (_running || window.__dnLocTO) return; window.__dnLocTO = setTimeout(function () { window.__dnLocTO = 0; localizeAll(); }, 300); });
+      mo.observe(document.body, { childList: true, subtree: true, characterData: true });
+    } catch (e) {}
+  });
+})();
+
+/* ===================================================================
    ÇEREZ ONAY BANDI (KVKK/ePrivacy) — tüm sayfalarda; seçim localStorage.dn_cookie'de.
    Bağımsız, hafif; app.js gerektirmez. Zorunlu/tüm çerez ayrımı.
    =================================================================== */
