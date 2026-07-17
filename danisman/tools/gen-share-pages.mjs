@@ -21,7 +21,7 @@ import { fileURLToPath } from 'node:url';
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dir, '..');                 // danisman/
 // >>> Yayın alan adınızı buraya yazın veya CLI argümanı olarak verin <<<
-const ORIGIN = (process.argv[2] || 'https://www.selinmeridyen.com').replace(/\/+$/, '');
+const ORIGIN = (process.argv[2] || 'https://www.emlakekspertizi.com').replace(/\/+$/, '');
 const BASE = ORIGIN + '/danisman';
 
 // --- ilan verisini js/ilan-data.js'ten sandbox ile oku (tek kaynak) ---

@@ -117,6 +117,16 @@
   }
   window.dnMountFooters = mountFooters;
   ready(mountFooters);
+  /* WhatsApp/telefon bağlantılarını admin numarasına (dn_iletisim.wa) güncelle — TÜM sayfalar (nav+footer+CTA).
+     Numara girilmemişse placeholder kalır (danışman admin'den kendi numarasını girmeli). */
+  function waNumC() { try { var c = JSON.parse(localStorage.getItem("dn_iletisim") || "null"); if (c && c.wa) return ("" + c.wa).replace(/[^\d]/g, ""); } catch (e) {} return ""; }
+  function applyWaLinks() {
+    var n = waNumC(); if (!n) return;
+    [].forEach.call(document.querySelectorAll('a[href*="wa.me/"]'), function (a) { a.href = a.href.replace(/wa\.me\/\d+/, "wa.me/" + n); });
+    [].forEach.call(document.querySelectorAll('a[href^="tel:"]'), function (a) { a.href = "tel:+" + n; });
+  }
+  window.dnApplyWaLinks = applyWaLinks;
+  ready(function () { applyWaLinks(); setTimeout(applyWaLinks, 350); });
 })();
 
 /* ===================================================================
@@ -129,6 +139,7 @@
   function choice() { try { return localStorage.getItem(KEY); } catch (e) { return "1"; } }
   window.dnCookieChoose = function (v) { try { localStorage.setItem(KEY, v); } catch (e) {} var el = document.getElementById("dnCookieBar"); if (el) el.classList.remove("on"); };
   ready(function () {
+    return; /* ESKİ çerez bandı DEVRE DIŞI — KVKK granüler onay bandı artık js/cerez.js'te (dn_cerez_consent). Çift bant olmasın. */
     if (choice()) return;
     if (document.getElementById("dnCookieBar")) return;
     var st = document.createElement("style");
