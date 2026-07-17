@@ -220,12 +220,14 @@
       var clean = location.origin + location.pathname;
       var can = document.querySelector('link[rel="canonical"]');
       if (!can) { can = document.createElement("link"); can.rel = "canonical"; document.head.appendChild(can); }
+      var oldOrigin=null;try{if(can.href)oldOrigin=new URL(can.href).origin;}catch(e){}
       can.href = clean;
       var ogu = document.querySelector('meta[property="og:url"]'); if (ogu) ogu.content = clean;
       ['meta[property="og:image"]', 'meta[name="twitter:image"]'].forEach(function (sel) {
         var m = document.querySelector(sel); if (!m || !m.content) return;
         try { m.content = new URL(m.content.split("/").pop(), location.href).href; } catch (e) {}
       });
+      if(oldOrigin&&oldOrigin!==location.origin){try{document.querySelectorAll('script[type="application/ld+json"]').forEach(function(s){if(s.textContent&&s.textContent.indexOf(oldOrigin)>=0)s.textContent=s.textContent.split(oldOrigin).join(location.origin);});}catch(e){}}
     } catch (e) {}
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run); else run();
