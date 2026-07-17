@@ -44,6 +44,8 @@
     +'.dnsh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.dnsh-b{display:flex;flex-direction:column;align-items:center;gap:7px;padding:14px 6px;border:1px solid #e1e3e2;border-radius:12px;background:#fff;color:#00452b;font:600 12px inherit;cursor:pointer;text-decoration:none;transition:.18s}'
     +'.dnsh-b:hover{border-color:#0e5e3e;background:#f4faf6;transform:translateY(-2px)}.dnsh-b .ic{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff}'
     +'.dnsh-b.fb .ic{background:#1877f2}.dnsh-b.wa .ic{background:#25d366}.dnsh-b.x .ic{background:#111}.dnsh-b.tg .ic{background:#2aabee}.dnsh-b.li .ic{background:#0a66c2}.dnsh-b.cp .ic{background:#0e5e3e}.dnsh-b.ad .ic{background:#c39b45}.dnsh-b.im .ic{background:#795901}.dnsh-b.mr .ic{background:#3f4942}'
+    +'.dnsh-hero{display:flex;align-items:center;gap:13px;width:100%;margin:0 0 14px;padding:15px 17px;border:none;border-radius:13px;background:linear-gradient(135deg,#0e5e3e,#14805a);color:#fff;cursor:pointer;text-align:left;font-family:inherit;transition:.18s;box-shadow:0 8px 22px -8px rgba(14,94,62,.6)}'
+    +'.dnsh-hero:hover{filter:brightness(1.06);transform:translateY(-1px)}.dnsh-hero>svg{width:26px;height:26px;flex:none;color:#fed175}.dnsh-hero b{display:block;font-weight:700;font-size:14.5px;line-height:1.2}.dnsh-hero small{display:block;font-size:11.5px;opacity:.88;margin-top:2px}'
     +'@media(max-width:420px){.dnsh-grid{grid-template-columns:repeat(3,1fr)}}';
     document.head.appendChild(s);
   }
@@ -53,26 +55,65 @@
     function fallback(){ try{var ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast(okMsg||'Kopyalandı.');}catch(e){toast('Kopyalanamadı — elle kopyalayın.');} }
   }
   function close(el){ el.classList.remove('on'); setTimeout(function(){el.remove();},240); }
-  window.dnShareCaption=caption;
+  function slug(s){return (''+(s||'ilan')).toLowerCase().replace(/[çğıöşü]/g,function(c){return {'ç':'c','ğ':'g','ı':'i','ö':'o','ş':'s','ü':'u'}[c];}).replace(/[^\w]+/g,'-').replace(/^-+|-+$/g,'').slice(0,50)||'ilan';}
+  function rrect(x,rx,ry,w,h,r){x.beginPath();x.moveTo(rx+r,ry);x.arcTo(rx+w,ry,rx+w,ry+h,r);x.arcTo(rx+w,ry+h,rx,ry+h,r);x.arcTo(rx,ry+h,rx,ry,r);x.arcTo(rx,ry,rx+w,ry,r);x.closePath();}
+  function wrapLines(x,text,maxW,max){var w=(''+(text||'')).split(/\s+/),ls=[],cur='';for(var i=0;i<w.length;i++){var t=cur?cur+' '+w[i]:w[i];if(x.measureText(t).width>maxW&&cur){ls.push(cur);cur=w[i];}else cur=t;}if(cur)ls.push(cur);if(ls.length>max){ls=ls.slice(0,max);ls[max-1]=ls[max-1].replace(/\s*\S*$/,'')+'…';}return ls;}
+  /* İLAN GÖRSELİ: kapak fotoğrafı + başlık/konum/özellik/fiyat/marka tek görselde (canvas) */
+  function composeShareImage(item){return new Promise(function(resolve,reject){
+    var W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;var x=c.getContext('2d');var photoH=Math.round(H*0.62);
+    function finish(){try{c.toBlob(function(b){if(!b){reject();return;}var f=null;try{f=new File([b],slug(item.title)+'.jpg',{type:'image/jpeg'});}catch(e){}resolve({blob:b,dataUrl:c.toDataURL('image/jpeg',.9),file:f});},'image/jpeg',.9);}catch(e){reject();}}
+    function render(img){
+      x.fillStyle='#0e5e3e';x.fillRect(0,0,W,H);
+      if(img){var iw=img.naturalWidth||img.width,ih=img.naturalHeight||img.height,s=Math.max(W/iw,photoH/ih),dw=iw*s,dh=ih*s;try{x.drawImage(img,(W-dw)/2,(photoH-dh)/2,dw,dh);}catch(e){}}
+      var g=x.createLinearGradient(0,photoH*0.42,0,H);g.addColorStop(0,'rgba(8,48,31,0)');g.addColorStop(.5,'rgba(8,48,31,.72)');g.addColorStop(1,'#08301f');x.fillStyle=g;x.fillRect(0,0,W,H);
+      var bt=((item.badge||item.tag)||'').toString().toLocaleUpperCase('tr');
+      if(bt){x.font='700 34px "IBM Plex Sans",system-ui,sans-serif';var bw=x.measureText(bt).width+52;rrect(x,56,56,bw,64,12);x.fillStyle='#c39b45';x.fill();x.fillStyle='#0a3527';x.textBaseline='middle';x.textAlign='left';x.fillText(bt,82,56+33);}
+      x.textBaseline='alphabetic';x.textAlign='left';
+      var px=64,py=photoH+74;
+      var loc=((item.loc||item.text)||'').toString().toLocaleUpperCase('tr');
+      if(loc){x.fillStyle='#dcc389';x.font='600 30px "IBM Plex Sans",sans-serif';x.fillText(loc.slice(0,44),px,py);py+=68;}
+      x.fillStyle='#fff';x.font='700 60px "Playfair Display",Georgia,serif';
+      wrapLines(x,item.title||'',W-2*px,2).forEach(function(ln){x.fillText(ln,px,py);py+=70;});py+=10;
+      if(item.spec){x.fillStyle='rgba(244,239,228,.92)';x.font='500 34px "IBM Plex Sans",sans-serif';x.fillText((''+item.spec).slice(0,54),px,py);py+=72;}
+      if(item.price){x.fillStyle='#e7d19a';x.font='700 64px "Playfair Display",serif';x.fillText(''+item.price,px,py);}
+      x.fillStyle='rgba(220,195,137,.9)';x.font='600 30px "IBM Plex Sans",sans-serif';x.fillText((item.brand||'')+'   ·   EİDS Onaylı',px,H-52);
+      finish();
+    }
+    if(item.image){var im=new Image();im.crossOrigin='anonymous';var done=false;im.onload=function(){if(done)return;done=true;render(im);};im.onerror=function(){if(done)return;done=true;render(null);};im.src=abs(item.image);setTimeout(function(){if(!done){done=true;render(im.complete&&im.naturalWidth?im:null);}},4500);}
+    else render(null);
+  });}
+  function shareImage(item,cap,onDone){
+    composeShareImage(item).then(function(r){
+      if(r.file&&navigator.canShare&&navigator.canShare({files:[r.file]})){
+        navigator.share({files:[r.file],text:cap,title:item.title||''}).then(function(){onDone&&onDone();},function(){}).catch(function(){});
+      }else{
+        var a=document.createElement('a');a.href=r.dataUrl;a.download=slug(item.title)+'.jpg';document.body.appendChild(a);a.click();a.remove();
+        copy(cap,'📸 Kapak görseli (foto + özellikler) indirildi ve metin kopyalandı — Facebook/Instagram\'da yeni gönderi açıp görseli ekleyin, metni yapıştırın.');
+        onDone&&onDone();
+      }
+    },function(){toast('Görsel hazırlanamadı.');});
+  }
+  window.dnShareCaption=caption; window.dnShareCompose=composeShareImage;
   window.dnShare=function(item){
     item=item||{}; ensureCSS();
     var url=abs(item.url), cap=caption(item), t=item.title||item.tag||'Paylaş';
     var pop=[
-      {k:'facebook',c:'fb',l:'Facebook',href:'https://www.facebook.com/sharer/sharer.php?u='+enc(url)+'&quote='+enc(cap)},
+      {k:'facebook',c:'fb',l:'Facebook',href:'https://www.facebook.com/sharer/sharer.php?u='+enc(url)},
       {k:'whatsapp',c:'wa',l:'WhatsApp',href:'https://wa.me/?text='+enc(cap)},
       {k:'x',c:'x',l:'X',href:'https://twitter.com/intent/tweet?text='+enc((item.title||'')+(item.price?' · '+item.price:''))+'&url='+enc(url)},
       {k:'telegram',c:'tg',l:'Telegram',href:'https://t.me/share/url?url='+enc(url)+'&text='+enc(cap)},
       {k:'linkedin',c:'li',l:'LinkedIn',href:'https://www.linkedin.com/sharing/share-offsite/?url='+enc(url)}
     ];
     var back=document.createElement('div');back.className='dnsh-back';
+    var hero=item.image?('<button type="button" class="dnsh-hero" data-act="imgshare">'+svg('img',false)+'<span><b>Görsel + Bilgi ile Paylaş</b><small>Kapak fotoğrafı ve tüm özellikler tek görselde</small></span></button>'):'';
     var btns=pop.map(function(p){return '<a class="dnsh-b '+p.c+'" href="'+p.href+'" target="_blank" rel="noopener noreferrer" data-close="1"><span class="ic">'+svg(p.k)+'</span>'+esc(p.l)+'</a>';}).join('');
     btns+='<button type="button" class="dnsh-b cp" data-act="link"><span class="ic">'+svg('link',false)+'</span>Bağlantı</button>';
     btns+='<button type="button" class="dnsh-b ad" data-act="ad"><span class="ic">'+svg('ad',false)+'</span>Reklam metni</button>';
     if(item.image)btns+='<button type="button" class="dnsh-b im" data-act="img"><span class="ic">'+svg('img',false)+'</span>Görseli indir</button>';
     if(navigator.share)btns+='<button type="button" class="dnsh-b mr" data-act="native"><span class="ic">'+svg('more')+'</span>Diğer</button>';
     back.innerHTML='<div class="dnsh" role="dialog" aria-modal="true" aria-label="Paylaş"><button class="dnsh-x" aria-label="Kapat">&times;</button>'
-      +'<h4>Paylaş</h4><p>'+esc(t)+' — sosyal medyada paylaşın veya Facebook reklamı için metni/görseli kullanın.</p>'
-      +'<div class="dnsh-grid">'+btns+'</div></div>';
+      +'<h4>Paylaş</h4><p>'+esc(t)+' — <b>kapak fotoğrafı + özellikleriyle</b> paylaşmak için “Görsel + Bilgi ile Paylaş”. Sosyal ağ butonları bağlantı kartı paylaşır; reklam için metni/görseli kullanın.</p>'
+      +hero+'<div class="dnsh-grid">'+btns+'</div></div>';
     document.body.appendChild(back);
     requestAnimationFrame(function(){back.classList.add('on');});
     back.addEventListener('click',function(e){
@@ -80,9 +121,10 @@
       var b=e.target.closest('[data-act],[data-close]'); if(!b)return;
       if(b.getAttribute('data-close')){ setTimeout(function(){close(back);},60); return; }
       var act=b.getAttribute('data-act');
-      if(act==='link'){ copy(url,'Bağlantı kopyalandı.'); }
+      if(act==='imgshare'){ shareImage(item,cap,function(){close(back);}); }
+      else if(act==='link'){ copy(url,'Bağlantı kopyalandı.'); }
       else if(act==='ad'){ copy(cap,'Reklam metni kopyalandı — Facebook/Instagram reklamına yapıştırabilirsiniz.'); }
-      else if(act==='img' && item.image){ var a=document.createElement('a');a.href=abs(item.image);a.download=((item.title||'gorsel').replace(/[^\w\-]+/g,'_'))+'.jpg';a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();toast('Görsel açıldı/indirildi.'); }
+      else if(act==='img' && item.image){ composeShareImage(item).then(function(r){var a=document.createElement('a');a.href=r.dataUrl;a.download=slug(item.title)+'.jpg';document.body.appendChild(a);a.click();a.remove();toast('Kapak görseli (foto + özellik) indirildi.');},function(){toast('Görsel hazırlanamadı.');}); }
       else if(act==='native'){ try{navigator.share({title:item.title||'',text:cap,url:url}).catch(function(){});}catch(e){} close(back); }
     });
     document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){close(back);document.removeEventListener('keydown',esc);}});
