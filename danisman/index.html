@@ -93,6 +93,9 @@ window.proxBootstrap=proxBootstrap;
 <style id="ixStitch">
 /* Konteyner koyu emerald → cool near-white; hero kendi .hero-bg'siyle KOYU KALIR */
 #homeView{background:#f9f9f8!important}
+/* STICKY FOOTER — içerik kısa kalsa bile footer en alta yapışır; altta koyu-yeşil boşluk oluşmaz */
+#homeView{min-height:100vh;display:flex;flex-direction:column}
+#homeView>#siteFooter{margin-top:auto}
 /* Bölüm başlık/eyebrow/paragraf → açık-tema (koyu ink/emerald) */
 #homeView .sec-h h2{color:#00452b!important;font-family:'Playfair Display',Georgia,serif!important}
 #homeView .sec-h p{color:#3f4942!important}
