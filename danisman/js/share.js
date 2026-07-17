@@ -76,15 +76,22 @@
       var g=x.createLinearGradient(0,photoH*0.42,0,H);g.addColorStop(0,'rgba(8,48,31,0)');g.addColorStop(.5,'rgba(8,48,31,.72)');g.addColorStop(1,'#08301f');x.fillStyle=g;x.fillRect(0,0,W,H);
       var bt=((item.badge||item.tag)||'').toString().toLocaleUpperCase('tr');
       if(bt){x.font='700 34px "IBM Plex Sans",system-ui,sans-serif';var bw=x.measureText(bt).width+52;rrect(x,56,56,bw,64,12);x.fillStyle='#c39b45';x.fill();x.fillStyle='#0a3527';x.textBaseline='middle';x.textAlign='left';x.fillText(bt,82,56+33);}
+      /* marka monogramı (sağ üst · emerald disk + altın harf) */
+      var mono=(((item.brand||'M').replace(/[^A-Za-zÇĞİıÖŞÜçğöşü]/g,'')[0])||'M').toLocaleUpperCase('tr');
+      var mR=44,mX=W-56-mR,mY=56+mR;
+      x.beginPath();x.arc(mX,mY,mR,0,Math.PI*2);x.fillStyle='rgba(8,48,31,.5)';x.fill();x.lineWidth=2.5;x.strokeStyle='#c39b45';x.stroke();
+      x.fillStyle='#e7d19a';x.font='700 42px "Playfair Display",Georgia,serif';x.textAlign='center';x.textBaseline='middle';x.fillText(mono,mX,mY+3);
       x.textBaseline='alphabetic';x.textAlign='left';
       var px=64,py=photoH+74;
       var loc=((item.loc||item.text)||'').toString().toLocaleUpperCase('tr');
-      if(loc){x.fillStyle='#dcc389';x.font='600 30px "IBM Plex Sans",sans-serif';x.fillText(loc.slice(0,44),px,py);py+=68;}
+      if(loc){x.fillStyle='#dcc389';x.font='600 30px "IBM Plex Sans",sans-serif';x.fillText(loc.slice(0,44),px,py);py+=24;x.fillStyle='#c39b45';rrect(x,px,py,68,4,2);x.fill();py+=46;}
       x.fillStyle='#fff';x.font='700 60px "Playfair Display",Georgia,serif';
       wrapLines(x,item.title||'',W-2*px,2).forEach(function(ln){x.fillText(ln,px,py);py+=70;});py+=10;
       if(item.spec){x.fillStyle='rgba(244,239,228,.92)';x.font='500 34px "IBM Plex Sans",sans-serif';x.fillText((''+item.spec).slice(0,54),px,py);py+=72;}
-      if(item.price){x.fillStyle='#e7d19a';x.font='700 64px "Playfair Display",serif';x.fillText(''+item.price,px,py);}
-      x.fillStyle='rgba(220,195,137,.9)';x.font='600 30px "IBM Plex Sans",sans-serif';x.fillText((item.brand||'')+'   ·   EİDS Onaylı',px,H-52);
+      if(item.price){x.fillStyle='#e7d19a';x.font='700 64px "Playfair Display",serif';var pw=x.measureText(''+item.price).width;x.fillText(''+item.price,px,py);x.fillStyle='rgba(195,155,69,.55)';rrect(x,px,py+16,Math.min(pw,360),4,2);x.fill();}
+      /* alt marka şeridi + altın ayraç çizgisi */
+      x.fillStyle='rgba(195,155,69,.28)';x.fillRect(px,H-96,W-2*px,1.5);
+      x.fillStyle='rgba(220,195,137,.92)';x.font='600 29px "IBM Plex Sans",sans-serif';x.fillText((item.brand||'')+'   ·   EİDS Onaylı',px,H-50);
       finish();
     }
     if(item.image){var im=new Image();im.crossOrigin='anonymous';var done=false;im.onload=function(){if(done)return;done=true;render(im);};im.onerror=function(){if(done)return;done=true;render(null);};im.src=abs(item.image);setTimeout(function(){if(!done){done=true;render(im.complete&&im.naturalWidth?im:null);}},4500);}
@@ -134,7 +141,26 @@
     }
   }
   window.dnShareCaption=caption; window.dnShareCompose=composeShareImage;
+  /* Cihaz dosya paylaşımını (Web Share API L2) destekliyor mu? — senkron yetenek yoklaması */
+  function canShareFiles(){try{return !!(navigator.canShare&&navigator.canShare({files:[new File([new Uint8Array([255,216,255])],'p.jpg',{type:'image/jpeg'})]}));}catch(e){return false;}}
+  window.dnShareCanNative=canShareFiles;
+  /* 2026 TEK DOKUNUŞ: cihaz destekliyorsa doğrudan native paylaşım (görsel+metin ekli — indirme/kopyalama YOK);
+     desteklemiyorsa (çoğu masaüstü tarayıcı) yardımlı paylaşım sayfasına düşer. */
   window.dnShare=function(item){
+    item=item||{};
+    if(item.image && canShareFiles()){
+      var capN=caption(item);
+      try{toast('Görsel hazırlanıyor…');}catch(e){}
+      composeShareImage(item).then(function(r){
+        if(r&&r.file&&navigator.canShare&&navigator.canShare({files:[r.file]})){
+          navigator.share({files:[r.file],text:capN,title:item.title||''}).then(function(){},function(err){ if(!err||err.name!=='AbortError')openSheet(item); }).catch(function(){});
+        }else openSheet(item);
+      },function(){ openSheet(item); });
+      return;
+    }
+    openSheet(item);
+  };
+  function openSheet(item){
     item=item||{}; ensureCSS();
     var url=abs(item.url), cap=caption(item), t=item.title||item.tag||'Paylaş';
     var pop=[
