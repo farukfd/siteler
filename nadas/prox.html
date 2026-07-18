@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ProX — NADAS Akıllı Emlak Asistanı · Deterministik · Halüsinasyonsuz</title>
+<meta name="description" content="ProX, Nadas’ın 21 yıllık gayrimenkul veri altyapısı üzerine kurulu akıllı emlak asistanı. İl · ilçe · mahalle · cadde · sokak bazlı 480M+ kayıt, Resmi Gazete + TBMM canlı takip, gayrimenkul hukuku tam donanımlı. Deterministik, halüsinasyon sıfır.">
+<meta name="theme-color" content="#06101B">
+<link rel="canonical" href="https://www.nadas.com.tr/prox">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%2306101B'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%2338BDF8'%3EN%3C/text%3E%3C/svg%3E">
+<!-- Open Graph (Facebook · WhatsApp · LinkedIn · Telegram) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NADAS · ProX">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="ProX — NADAS Akıllı Emlak Asistanı">
+<meta property="og:description" content="İl · ilçe · mahalle · cadde · sokak bazlı 480M+ kayıt. Resmi Gazete + TBMM canlı. Deterministik, halüsinasyon sıfır.">
+<meta property="og:image" content="og-prox.png">
+<meta property="og:url" content="https://www.nadas.com.tr/prox">
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ProX — NADAS Akıllı Emlak Asistanı">
+<meta name="twitter:description" content="Deterministik · halüsinasyonsuz akıllı emlak asistanı. 480M+ kayıt · 21 yıllık zincir.">
+<meta name="twitter:image" content="og-prox.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"ProX","alternateName":"NADAS Akıllı Emlak Asistanı","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Türkiye gayrimenkul piyasası için deterministik, halüsinasyonsuz akıllı emlak asistanı. İl, ilçe, mahalle, cadde, sokak bazlı 480M+ kayıt; Resmi Gazete ve TBMM kararları canlı takip; gayrimenkul hukuku tam donanımlı.","provider":{"@type":"Organization","name":"NADAS Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti.","url":"https://www.nadas.com.tr"},"offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"TRY"},{"@type":"Offer","name":"Professional","price":"950","priceCurrency":"TRY"},{"@type":"Offer","name":"Investor","price":"1250","priceCurrency":"TRY"},{"@type":"Offer","name":"Corporate","price":"3750","priceCurrency":"TRY"}]}
+</script>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:#06101B;color:#F1F5F9;min-height:100vh;
+    font-family:'Inter Tight','Inter',system-ui,sans-serif;
+    font-feature-settings:"ss01","cv11";-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+  button{font-family:inherit}
+  ::selection{background:rgba(167,139,250,0.32)}
+
+  @keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  @keyframes nadasPulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+  @keyframes proxCursor { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+  @keyframes glowPulse { 0%,100% { box-shadow: 0 0 20px rgba(167,139,250,0.3); } 50% { box-shadow: 0 0 40px rgba(167,139,250,0.6); } }
+
+  .nadas-twocol { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+  @media (max-width: 900px) {
+    .nadas-twocol { grid-template-columns: 1fr !important; }
+    .nadas-prox-table-header { display: none !important; }
+    .nadas-prox-table-row { grid-template-columns: 1fr !important; gap: 8px !important; }
+    .nadas-tech-row { grid-template-columns: 1fr !important; gap: 4px !important; }
+    .nadas-eko-grid { grid-template-columns: 1fr !important; }
+    .nadas-feed-row { grid-template-columns: 1fr !important; gap: 4px !important; padding: 14px 16px !important; }
+  }
+  @media (max-width: 680px){ .nadas-pipeline-stages { grid-template-columns: 1fr 1fr !important; } }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- No-JS / crawler fallback (JS render bunu değiştirir) -->
+  <noscript>
+    <div style="max-width:900px;margin:0 auto;padding:48px 20px;font-family:'Sora',sans-serif">
+      <h1 style="color:#A78BFA">ProX — NADAS Akıllı Emlak Asistanı</h1>
+      <p style="color:#CBD5E1">İl · ilçe · mahalle · cadde · sokak bazlı 21 yıllık emlak verisi. Deterministik, halüsinasyonsuz. Bu sayfayı görüntülemek için JavaScript gereklidir.</p>
+      <p><a style="color:#A78BFA" href="https://www.emlakekspertizi.com/yapay-zeka">ProX’i dene →</a></p>
+    </div>
+  </noscript>
+</div>
+
+<script src="js/core.js?v=2"></script>
+<script>
+/* ============================================================================
+   ProX · NADAS merkez sitesi — kanonik menü core.js’ten (ALTIN KURAL).
+   React/JSX’ten çevrildi: css() yardımcısı stil objelerini birebir korur;
+   sekmeler / canlı sayaçlar / SVG pipeline vanilla-JS ile çalışır.
+   ========================================================================== */
+(function(){
+  "use strict";
+
+  /* ---- css(): JS stil objesi -> CSS string (React davranışını taklit eder) ---- */
+  var UNITLESS = {opacity:1,fontWeight:1,zIndex:1,lineHeight:1,flex:1,flexGrow:1,flexShrink:1,order:1,fontVariantNumeric:1};
+  function kebab(k){ return k.replace(/[A-Z]/g, function(m){ return '-'+m.toLowerCase(); }); }
+  function css(o){
+    if(!o) return '';
+    var out='';
+    for(var k in o){
+      if(!Object.prototype.hasOwnProperty.call(o,k)) continue;
+      var v=o[k];
+      if(v==null || v===false) continue;
+      if(typeof v==='number' && !UNITLESS[k]) v=v+'px';
+      out += kebab(k)+':'+v+';';
+    }
+    return out;
+  }
+  function attr(s){ return String(s==null?'':s).replace(/"/g,'&quot;'); }
+
+  /* ===== PALET ===== */
+  var C = {
+    base: "#06101B", raised: "#0A1626", elev: "#101F35", deep: "#020812",
+    primary: "#38BDF8", accent: "#34D399", warn: "#FBBF24", danger: "#F87171",
+    violet: "#A78BFA", proxDeep: "#7C3AED",
+    textPri: "#F1F5F9", textSec: "#CBD5E1", textMut: "#94A3B8", textFaint: "#64748B",
+    border: "rgba(255,255,255,0.08)", borderStrong: "rgba(255,255,255,0.14)",
+    mono: "'JetBrains Mono','SF Mono',ui-monospace,monospace",
+  };
+
+  /* ===== YARDIMCI BİLEŞENLER ===== */
+  function Eyebrow(children, color){
+    color = color || C.violet;
+    return '<div style="'+css({display:"inline-flex",alignItems:"center",gap:8,fontFamily:C.mono,fontSize:10.5,color:color,letterSpacing:"0.14em",textTransform:"uppercase",fontWeight:700,marginBottom:12})+'">'
+      + '<span style="'+css({width:14,height:1,background:color})+'"></span>'+children+'</div>';
+  }
+  function SectionDivider(index, title, subtitle){
+    return '<div style="'+css({position:"sticky",top:0,zIndex:30,background:C.base,borderTop:"1px solid "+C.violet,borderBottom:"1px solid "+C.borderStrong,padding:"14px 16px"})+'">'
+      + '<div style="'+css({maxWidth:1280,margin:"0 auto",display:"flex",alignItems:"center",gap:14})+'">'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:11,color:C.violet,fontWeight:700,letterSpacing:"0.16em"})+'">SECTION · '+index+'</span>'
+      + '<span style="'+css({fontFamily:"'Sora',sans-serif",fontSize:18,color:C.textPri,fontWeight:600,letterSpacing:"-0.01em"})+'">'+title+'</span>'
+      + '<span style="'+css({height:1,flex:1,background:C.borderStrong})+'"></span>'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.1em"})+'">'+subtitle+'</span>'
+      + '</div></div>';
+  }
+  function SubSection(num, title, eyebrow, children){
+    return '<section style="'+css({borderBottom:"1px solid "+C.border,padding:"32px 16px"})+'">'
+      + '<div style="'+css({maxWidth:1280,margin:"0 auto"})+'">'
+      + '<div style="'+css({display:"flex",alignItems:"baseline",gap:12,marginBottom:6})+'">'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:11,color:C.violet,fontWeight:700,letterSpacing:"0.1em"})+'">'+num+'</span>'
+      + '<h3 style="'+css({fontFamily:"'Sora',sans-serif",fontSize:"clamp(1.15rem,2.2vw,1.5rem)",color:C.textPri,fontWeight:600,letterSpacing:"-0.015em",margin:0})+'">'+title+'</h3>'
+      + '</div>'
+      + (eyebrow ? '<div style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.12em",marginBottom:18})+'">'+eyebrow+'</div>' : '')
+      + children + '</div></section>';
+  }
+
+  /* ===== TICKER ===== */
+  function Ticker(){
+    var items = [
+      ["ProX","AKILLI EMLAK ASİSTANI"],["MOTOR","DETERMİNİSTİK"],["HALÜSİNASYON","SIFIR"],
+      ["VERİ","480M+ KAYIT"],["TARİHSEL ZİNCİR","21 YIL · 257 AY"],["MAHALLE","50.000+"],
+      ["SOKAK BAZI","İL · İLÇE · MAH · CAD · SOK"],["RESMİ GAZETE","CANLI TAKİP"],
+      ["TBMM KARARI","CANLI TAKİP"],["HUKUK","TAM DONANIMLI"],["MOTOR","ML/MML"],
+      ["DİL","TÜRKÇE OPTİMİZE"],["ERİŞİM","ÜCRETSİZ · PRO · API"],["GÜVEN","%96 MEDYAN"],
+    ];
+    var list = items.concat(items);
+    var inner = list.map(function(it,i){
+      return '<div style="'+css({display:"inline-flex",alignItems:"center",gap:6,padding:"0 24px",fontFamily:C.mono,fontSize:10.5,letterSpacing:"0.06em"})+'">'
+        + '<span style="'+css({color:C.textFaint})+'">'+it[0]+'</span>'
+        + '<span style="'+css({color:C.violet,fontWeight:700})+'">'+it[1]+'</span>'
+        + '<span style="'+css({color:C.textFaint,marginLeft:8})+'">·</span></div>';
+    }).join('');
+    return '<div style="'+css({background:C.deep,borderBottom:"1px solid "+C.border,overflow:"hidden",padding:"8px 0"})+'">'
+      + '<div style="'+css({display:"flex",whiteSpace:"nowrap",animation:"tickerScroll 90s linear infinite"})+'">'+inner+'</div></div>';
+  }
+
+  /* ===== MASTHEAD ===== */
+  function Masthead(){
+    return '<div style="'+css({borderBottom:"1px solid "+C.borderStrong,padding:"10px 16px",background:C.base})+'">'
+      + '<div style="'+css({maxWidth:1280,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8})+'">'
+      + '<div style="'+css({display:"flex",alignItems:"center",gap:12})+'">'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:10,color:C.violet,fontWeight:700,letterSpacing:"0.16em"})+'">NADAS · ProX</span>'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.06em"})+'">· AKILLI EMLAK ASİSTANI · DETERMİNİSTİK</span>'
+      + '</div>'
+      + '<div style="'+css({display:"flex",alignItems:"center",gap:14,fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.08em"})+'">'
+      + '<span><span style="'+css({width:6,height:6,borderRadius:9999,background:C.violet,display:"inline-block",marginRight:6,animation:"nadasPulse 1.4s ease-in-out infinite"})+'"></span>ProX AKTİF</span>'
+      + '<span id="mast-time">--:--:--</span><span>TRT</span>'
+      + '</div></div></div>';
+  }
+
+  /* ===== NAV ===== */
+  function navHref(it){
+    var map = {"Veri Altyapısı":"veri-altyapisi.html","Çözümler":"cozumler.html","ProX":"prox.html","Research":"research.html","Hakkımızda":"hakkimizda.html","İletişim":"iletisim.html"};
+    return map[it] || "#";
+  }
+  function Nav(){
+    var items = ["Veri Altyapısı","Çözümler","ProX","Research","Hakkımızda","İletişim"];
+    var links = items.map(function(it){
+      var isActive = it === "ProX";
+      var activeColor = isActive ? C.violet : C.textMut;
+      return '<a href="'+navHref(it)+'" style="'+css({fontFamily:C.mono,fontSize:11,color:activeColor,fontWeight:isActive?700:500,letterSpacing:"0.08em",textDecoration:"none",padding:"4px 0",borderBottom:isActive?"1px solid "+C.violet:"1px solid transparent"})+'">'+it.toUpperCase()+'</a>';
+    }).join('');
+    return '<div style="'+css({borderBottom:"1px solid "+C.borderStrong,padding:"14px 16px",background:C.base,position:"sticky",top:0,zIndex:40,backdropFilter:"blur(12px)"})+'">'
+      + '<div style="'+css({maxWidth:1280,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:14})+'">'
+      + '<a href="index.html" style="'+css({display:"flex",alignItems:"center",gap:10,textDecoration:"none"})+'">'
+      + '<span style="'+css({width:28,height:28,border:"1.5px solid "+C.primary,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:C.primary,borderRadius:2})+'">N</span>'
+      + '<span style="'+css({fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:700,color:C.textPri,letterSpacing:"-0.02em"})+'">NADAS</span>'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:9,color:C.violet,letterSpacing:"0.18em",marginLeft:4,fontWeight:700})+'">ProX</span>'
+      + '</a>'
+      + '<nav style="'+css({display:"flex",gap:22,alignItems:"center",flexWrap:"wrap"})+'">'+links
+      + '<a href="https://www.emlakekspertizi.com/yapay-zeka" target="_blank" rel="noopener noreferrer" style="'+css({padding:"6px 14px",border:"1px solid "+C.violet,background:"rgba(167,139,250,0.08)",fontFamily:C.mono,fontSize:10.5,color:C.violet,fontWeight:700,letterSpacing:"0.1em",textDecoration:"none",borderRadius:2})+'">ProX’i DENE →</a>'
+      + '</nav></div></div>';
+  }
+
+  /* ===== HERO ===== */
+  function HeroProX(){
+    var kayitInit = (480234521).toLocaleString("tr-TR");
+    var aktifInit = Math.floor(Math.random()*(28-6)+6);
+    var guncInit = Math.floor(Math.random()*(7-1)+1);
+    var feed = [
+      "Sorgu: İSTANBUL · Kadıköy · konut 60-80m² · trend",
+      "Sorgu: ANKARA · Çankaya · ofis · ekspertiz",
+      "Sorgu: İZMİR · Konak · arsa · imar durumu",
+      "Sorgu: BURSA · Nilüfer · konut · 5 yıllık ROI",
+      "Sorgu: ANTALYA · Muratpaşa · turizm yatırımı",
+      "Sorgu: İSTANBUL · Beşiktaş · konut · 120m² · 1+1",
+      "Mevzuat tarama: Resmi Gazete · sayı 32847 · 3 madde işlendi",
+      "TBMM komisyon raporu işlendi: Konut Edinme Kanun Teklifi",
+      "Sorgu: İSTANBUL · Kadıköy · konut 60-80m² · trend",
+      "Sorgu: ANKARA · Çankaya · ofis · ekspertiz",
+      "Sorgu: İZMİR · Konak · arsa · imar durumu",
+    ].map(function(t){ return '<span style="'+css({paddingRight:32})+'">'+t+'</span>'; }).join('');
+
+    return '<section style="'+css({position:"relative",padding:"22px 16px 50px",background:C.base,borderBottom:"1px solid "+C.borderStrong,overflow:"hidden"})+'">'
+      + '<div style="'+css({position:"absolute",inset:0,backgroundImage:"radial-gradient(circle at 80% 20%, rgba(167,139,250,0.18), transparent 55%), radial-gradient(circle at 10% 80%, rgba(56,189,248,0.06), transparent 50%)"})+'"></div>'
+      + '<div style="'+css({position:"relative",maxWidth:1280,margin:"0 auto"})+'">'
+      + Eyebrow("◆ ProX · NADAS AKILLI EMLAK ASİSTANI · DETERMİNİSTİK · HALÜSİNASYONSUZ")
+      + '<h1 style="'+css({fontFamily:"'Sora',system-ui,sans-serif",fontSize:"clamp(2rem,5.6vw,3.6rem)",fontWeight:700,lineHeight:1.04,letterSpacing:"-0.025em",margin:0,color:C.textPri,maxWidth:1150})+'">'
+      + '<span style="'+css({color:C.violet})+'">ProX.</span><br>Türkiye gayrimenkul piyasası için<br><span style="'+css({color:C.violet})+'">akıllı emlak asistanı.</span></h1>'
+      + '<p style="'+css({marginTop:22,fontSize:16,lineHeight:1.7,color:C.textSec,maxWidth:960})+'">'
+      + '<strong style="'+css({color:C.textPri})+'">İl, ilçe, mahalle, cadde, sokak bazlı 21 yıllık emlak verisi.</strong> '
+      + 'Resmi Gazete ve TBMM kararlarını gerçek zamanlı takip eder. Gayrimenkul hukuku dahil tam donanımlı. '
+      + '<strong style="'+css({color:C.textPri})+'"> Halüsinasyon üretmez. Deterministiktir.</strong> '
+      + 'ML/MML matematiksel işleme katmanı ile çalışan, Nadas’ın 21 yıllık veri altyapısı üzerine inşa edilmiş <strong style="'+css({color:C.textPri})+'">akıllı emlak asistanı</strong>.</p>'
+      /* 3 rozet */
+      + '<div style="'+css({marginTop:22,display:"flex",gap:10,flexWrap:"wrap"})+'">'
+      + '<div style="'+css({display:"inline-flex",alignItems:"center",gap:10,padding:"10px 16px",border:"1px solid "+C.violet,background:"rgba(167,139,250,0.08)",borderRadius:2})+'">'
+      + '<span style="'+css({width:8,height:8,borderRadius:9999,background:C.violet,animation:"nadasPulse 1.4s ease-in-out infinite"})+'"></span>'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:11,color:C.violet,fontWeight:700,letterSpacing:"0.1em"})+'">DETERMİNİSTİK · HALÜSİNASYON: SIFIR</span></div>'
+      + '<div style="'+css({display:"inline-flex",alignItems:"center",gap:8,padding:"10px 14px",border:"1px solid "+C.primary,background:"rgba(56,189,248,0.06)",borderRadius:2})+'">'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:11,color:C.primary,fontWeight:700,letterSpacing:"0.1em"})+'">480M+ KAYIT · 21 YILLIK ZİNCİR</span></div>'
+      + '<div style="'+css({display:"inline-flex",alignItems:"center",gap:8,padding:"10px 14px",border:"1px solid "+C.accent,background:"rgba(52,211,153,0.06)",borderRadius:2})+'">'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:11,color:C.accent,fontWeight:700,letterSpacing:"0.1em"})+'">RESMİ GAZETE + TBMM · CANLI</span></div></div>'
+      /* Canlı sayaç paneli */
+      + '<div style="'+css({marginTop:36})+'">'
+      + '<div style="'+css({display:"flex",alignItems:"center",gap:10,marginBottom:14,fontFamily:C.mono,fontSize:10.5,letterSpacing:"0.12em"})+'">'
+      + '<span style="'+css({display:"inline-flex",alignItems:"center",gap:6,color:C.accent,fontWeight:700})+'">'
+      + '<span style="'+css({width:8,height:8,borderRadius:9999,background:C.accent,animation:"nadasPulse 1s ease-in-out infinite"})+'"></span>CANLI · ProX KAPASİTE</span>'
+      + '<span style="'+css({height:1,flex:1,background:C.borderStrong})+'"></span>'
+      + '<span style="'+css({color:C.textFaint})+'">SİSTEM SAATİ · GERÇEK ZAMANLI</span></div>'
+      + '<div style="'+css({display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:1,border:"1px solid "+C.borderStrong,background:C.borderStrong})+'">'
+      /* kayıt */
+      + '<div style="'+css({background:C.raised,padding:"20px 22px",position:"relative",overflow:"hidden"})+'">'
+      + '<div style="'+css({position:"absolute",top:10,right:12,display:"flex",alignItems:"center",gap:4})+'">'
+      + '<span style="'+css({width:5,height:5,borderRadius:9999,background:C.accent,animation:"nadasPulse 0.8s ease-in-out infinite"})+'"></span>'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:8.5,color:C.accent,fontWeight:700,letterSpacing:"0.08em"})+'">CANLI</span></div>'
+      + '<div id="prox-kayit" style="'+css({fontFamily:C.mono,fontSize:"clamp(1.2rem,2.6vw,1.7rem)",fontWeight:700,color:C.violet,letterSpacing:"-0.01em",lineHeight:1,marginBottom:8,fontVariantNumeric:"tabular-nums"})+'">'+kayitInit+'</div>'
+      + '<div style="'+css({fontFamily:C.mono,fontSize:10.5,color:C.textFaint,letterSpacing:"0.08em"})+'">Aktif veri kaydı</div></div>'
+      /* 50K */
+      + '<div style="'+css({background:C.raised,padding:"20px 22px",position:"relative"})+'">'
+      + '<div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:"clamp(1.8rem,3.5vw,2.6rem)",fontWeight:700,color:C.violet,letterSpacing:"-0.025em",lineHeight:1,marginBottom:8})+'">50K+</div>'
+      + '<div style="'+css({fontFamily:C.mono,fontSize:10.5,color:C.textFaint,letterSpacing:"0.08em"})+'">Mahalle granularity</div></div>'
+      /* aktif sorgu */
+      + '<div style="'+css({background:C.raised,padding:"20px 22px",position:"relative"})+'">'
+      + '<div style="'+css({position:"absolute",top:10,right:12,display:"flex",alignItems:"center",gap:4})+'">'
+      + '<span style="'+css({width:5,height:5,borderRadius:9999,background:C.primary,animation:"nadasPulse 1.2s ease-in-out infinite"})+'"></span>'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:8.5,color:C.primary,fontWeight:700,letterSpacing:"0.08em"})+'">ŞU AN</span></div>'
+      + '<div id="prox-aktif" style="'+css({fontFamily:"'Sora',sans-serif",fontSize:"clamp(1.8rem,3.5vw,2.6rem)",fontWeight:700,color:C.primary,letterSpacing:"-0.025em",lineHeight:1,marginBottom:8,fontVariantNumeric:"tabular-nums"})+'">'+aktifInit+'</div>'
+      + '<div style="'+css({fontFamily:C.mono,fontSize:10.5,color:C.textFaint,letterSpacing:"0.08em"})+'">Anlık aktif sorgu</div></div>'
+      /* güven */
+      + '<div style="'+css({background:C.raised,padding:"20px 22px",position:"relative"})+'">'
+      + '<div style="'+css({position:"absolute",top:10,right:12,display:"flex",alignItems:"center",gap:4})+'">'
+      + '<span style="'+css({width:5,height:5,borderRadius:9999,background:C.accent,animation:"nadasPulse 1.5s ease-in-out infinite"})+'"></span>'
+      + '<span id="prox-guncelleme" style="'+css({fontFamily:C.mono,fontSize:8.5,color:C.accent,fontWeight:700,letterSpacing:"0.08em"})+'">'+guncInit+'sn ÖNCE</span></div>'
+      + '<div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:"clamp(1.8rem,3.5vw,2.6rem)",fontWeight:700,color:C.accent,letterSpacing:"-0.025em",lineHeight:1,marginBottom:8})+'">%96</div>'
+      + '<div style="'+css({fontFamily:C.mono,fontSize:10.5,color:C.textFaint,letterSpacing:"0.08em"})+'">Sistem güven medyanı</div></div>'
+      + '</div>'
+      /* akan mini ticker */
+      + '<div style="'+css({marginTop:12,padding:"8px 14px",background:C.deep,border:"1px solid "+C.border,fontFamily:C.mono,fontSize:10.5,color:C.textMut,letterSpacing:"0.04em",display:"flex",alignItems:"center",gap:10,overflow:"hidden",whiteSpace:"nowrap"})+'">'
+      + '<span style="'+css({color:C.accent,fontWeight:700})+'">● CANLI</span><span style="'+css({color:C.textFaint})+'">›</span>'
+      + '<span style="'+css({flex:1,display:"flex",animation:"tickerScroll 60s linear infinite"})+'">'+feed+'</span></div>'
+      + '</div>'
+      /* CTA */
+      + '<div style="'+css({marginTop:28,display:"flex",gap:12,flexWrap:"wrap"})+'">'
+      + '<a href="https://www.emlakekspertizi.com/yapay-zeka" target="_blank" rel="noopener noreferrer" style="'+css({display:"inline-flex",alignItems:"center",gap:8,padding:"14px 24px",background:C.violet,color:"#fff",fontFamily:C.mono,fontSize:12,fontWeight:700,letterSpacing:"0.1em",textDecoration:"none",borderRadius:2,animation:"glowPulse 3s ease-in-out infinite"})+'">ProX’i ŞİMDİ DENE →</a>'
+      + '<a href="#erisim-paketleri" style="'+css({display:"inline-flex",alignItems:"center",gap:8,padding:"14px 24px",background:"transparent",color:C.violet,border:"1px solid "+C.violet,fontFamily:C.mono,fontSize:12,fontWeight:700,letterSpacing:"0.1em",textDecoration:"none",borderRadius:2})+'">ERİŞİM PAKETLERİ ↓</a>'
+      + '<a href="#veri-ekosistemi" style="'+css({display:"inline-flex",alignItems:"center",gap:8,padding:"14px 24px",background:"transparent",color:C.textSec,border:"1px solid "+C.borderStrong,fontFamily:C.mono,fontSize:12,fontWeight:700,letterSpacing:"0.1em",textDecoration:"none",borderRadius:2})+'">VERİ EKOSİSTEMİ ↓</a>'
+      + '</div>'
+      + '</div></section>';
+  }
+
+  /* ===== A.1 ProX NEDİR? ===== */
+  function ProXNedir(){
+    var body = ''
+      + '<div style="'+css({display:"grid",gridTemplateColumns:"minmax(0,1.5fr) minmax(0,1fr)",gap:28,alignItems:"start"})+'" class="nadas-twocol">'
+      + '<div style="'+css({fontSize:15,lineHeight:1.75,color:C.textSec})+'">'
+      + '<p style="'+css({margin:"0 0 18px"})+'"><strong style="'+css({color:C.violet,fontFamily:"'Sora',sans-serif",fontSize:17})+'">ProX</strong>, Nadas’ın 21 yıllık gayrimenkul veri altyapısı üzerine geliştirdiği <strong style="'+css({color:C.textPri})+'">akıllı emlak asistanıdır</strong>. Sıradan bir genel amaçlı asistan değildir; Türkiye gayrimenkul piyasasının her bir mahallesi, her bir caddesi, her bir sokağı için <strong style="'+css({color:C.textPri})+'">doğrulanmış veri üzerinden cevap verir</strong>.</p>'
+      + '<p style="'+css({margin:"0 0 18px"})+'">ProX’in temel disiplini <strong style="'+css({color:C.textPri})+'">deterministik çalışmasıdır</strong>: Aynı soruya, aynı veri durumunda, aynı yanıt verilir. Olasılıksal üretici modellerin tersine, ProX <strong style="'+css({color:C.textPri})+'">halüsinasyon üretmez</strong>; veri tabanında olmayan bir bilgi yaratmaz. Cevap yoksa "cevap yok" der; veri yetersizse veri yetersizliğini açıkça belirtir.</p>'
+      + '<p style="'+css({margin:"0 0 18px"})+'">ProX, ML/MML (Machine Learning + Mathematical Modeling Layer) matematiksel işleme katmanı üzerine inşa edilmiştir. Sorgu Türkçe doğal dilde alınır, <strong style="'+css({color:C.textPri})+'">katmanlar arasında matematiksel hesaplamaya dönüştürülür</strong>, ilgili veri çekilir, çapraz doğrulanır ve yanıt yine Türkçe olarak üretilir. Her yanıt için kaynak veri katmanı şeffaftır.</p>'
+      + '<p style="'+css({margin:"0 0 18px"})+'">ProX’in özel olduğu noktalar şunlardır: <strong style="'+css({color:C.textPri})+'"> il, ilçe, mahalle, cadde, sokak bazlı granular sorgulama</strong>; 257 ay’lık tarihsel zincire erişim; Resmi Gazete ve TBMM kararlarının gerçek zamanlı takibi; ve <strong style="'+css({color:C.textPri})+'"> gayrimenkul hukukunun tam donanımlı şekilde entegre edilmiş olması</strong>.</p>'
+      + '<p style="'+css({margin:0})+'">ProX bir <strong style="'+css({color:C.textPri})+'">chat arayüzü</strong> üzerinden bireysel kullanıcılara, <strong style="'+css({color:C.textPri})+'"> RESTful API</strong> üzerinden kurumsal müşterilere sunulur. emlakekspertizi.com platformunun temelini oluşturur; aynı zamanda white-label entegrasyonlarda da kullanılır.</p>'
+      + '</div>'
+      /* Sağ demo terminal */
+      + '<div style="'+css({position:"sticky",top:100})+'">'
+      + '<div style="'+css({background:C.deep,border:"1px solid "+C.violet,padding:"0",borderRadius:4,overflow:"hidden"})+'">'
+      + '<div style="'+css({background:C.elev,padding:"10px 14px",borderBottom:"1px solid "+C.violet,display:"flex",alignItems:"center",gap:10})+'">'
+      + '<span style="'+css({width:8,height:8,borderRadius:9999,background:"#FF5F57"})+'"></span>'
+      + '<span style="'+css({width:8,height:8,borderRadius:9999,background:"#FEBC2E"})+'"></span>'
+      + '<span style="'+css({width:8,height:8,borderRadius:9999,background:"#28C840"})+'"></span>'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:10,color:C.violet,fontWeight:700,letterSpacing:"0.1em",marginLeft:8})+'">ProX · NADAS AKILLI ASİSTANI</span></div>'
+      + '<div style="'+css({padding:"16px 16px",fontFamily:C.mono,fontSize:11.5,lineHeight:1.7,color:C.textSec,minHeight:320})+'">'
+      + '<div style="'+css({marginBottom:10})+'"><span style="'+css({color:C.textFaint,fontSize:10})+'">[16:42:18] KULLANICI ›</span><br><span style="'+css({color:C.textPri})+'">Kadıköy Caddebostan’da Bağdat Caddesi üzerinde 120 m² konutun bugünkü tahmini değeri?</span></div>'
+      + '<div style="'+css({marginBottom:10,padding:"10px 12px",background:"rgba(167,139,250,0.04)",borderLeft:"2px solid "+C.violet})+'">'
+      + '<span style="'+css({color:C.violet,fontSize:10,fontWeight:700})+'">[16:42:19] ProX ›</span><br><span style="'+css({color:C.textSec})+'">'
+      + '<span style="'+css({color:C.accent})+'">◆ KONUM:</span> İSTANBUL · Kadıköy · Caddebostan · Bağdat Cad.<br>'
+      + '<span style="'+css({color:C.accent})+'">◆ KATEGORİ:</span> Konut · Daire · 120 m²<br>'
+      + '<span style="'+css({color:C.accent})+'">◆ TAHMİN:</span> <strong style="'+css({color:C.violet})+'">19.18M – 25.95M ₺</strong><br>'
+      + '<span style="'+css({color:C.accent})+'">◆ M² ARALIK:</span> 159.853 – 216.272 ₺<br>'
+      + '<span style="'+css({color:C.accent})+'">◆ GÜVEN:</span> <strong style="'+css({color:C.accent})+'">%92.8</strong><br>'
+      + '<span style="'+css({color:C.accent})+'">◆ EMSAL:</span> 47 aktif kayıt · 240+ ay tarihsel<br>'
+      + '<span style="'+css({color:C.accent})+'">◆ KAYNAK:</span> ProX motoru · Nadas veri altyapısı<br><br>'
+      + 'Bölgede son 12 ayda <span style="'+css({color:C.accent})+'">↑ %14.6</span> artış kayıtlı.</span></div>'
+      + '<div style="'+css({display:"inline-flex",alignItems:"center",gap:3,color:C.violet,fontSize:11})+'">›&nbsp;<span style="'+css({display:"inline-block",width:7,height:12,background:C.violet,animation:"proxCursor 1s infinite"})+'"></span></div>'
+      + '</div>'
+      + '<div style="'+css({background:C.elev,padding:"8px 14px",borderTop:"1px solid "+C.border,display:"flex",justifyContent:"space-between",fontFamily:C.mono,fontSize:9,color:C.textFaint,letterSpacing:"0.08em"})+'"><span>● DETERMİNİSTİK</span><span>● HALÜSİNASYON: 0</span><span>● KAYNAK: ŞEFFAF</span></div>'
+      + '</div>'
+      + '<div style="'+css({marginTop:10,fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.04em",textAlign:"center",lineHeight:1.5})+'">⌬ Yukarıdaki örnek soru-cevap temsilî bir gösterimdir. Gerçek ProX çıktısı bu formatla aynı veriyi içerir.</div>'
+      + '</div></div>';
+    return SubSection("A.1","ProX nedir? · Akıllı emlak asistanı","EDITORIAL · TANIM · KONUMLANDIRMA", body);
+  }
+
+  /* ===== A.2 6 YETENEK ===== */
+  function ProX6Yetenek(){
+    var yetenekler = [
+      {sym:"◆",title:"GRANULAR SORGULAMA",sub:"İl → İlçe → Mahalle → Cadde → Sokak",desc:"Sokak adına kadar inebilen sorgulama. \"Bağdat Caddesi üzerindeki 1. Sokak’taki dairelerin son 5 yıllık trendi\" gibi spesifik sorulara cevap üretir."},
+      {sym:"Σ",title:"TARİHSEL ZİNCİR",sub:"257 ay’lık veri erişimi · 2005-2026",desc:"Her sorgu için ilgili coğrafyanın 257 ay’lık aylık endeks verisine erişir. Olay markırlarıyla (kriz, deprem, pandemi) bağlantılı analiz yapar."},
+      {sym:"⚖",title:"HUKUK DONANIMI",sub:"Gayrimenkul mevzuatı dahil",desc:"Tapu, kadastro, imar, kentsel dönüşüm, vergi, KDV, ekspertiz mevzuatı tam entegre. \"Bu işlem için hangi vergi geçerli?\" gibi sorulara doğru yasal çerçeveyle cevap verir."},
+      {sym:"⌬",title:"RESMİ GAZETE TAKİBİ",sub:"Canlı mevzuat değişiklik tespiti",desc:"Her gün yayımlanan Resmi Gazete ve TBMM kararları otomatik taranır, gayrimenkulü etkileyen maddeler veri katmanına işlenir. Mevzuat değişikliği anında ProX yanıtlarına yansır."},
+      {sym:"◉",title:"DETERMİNİSTİK ÇIKIŞ",sub:"Halüsinasyon: 0 · Aynı girdi, aynı çıktı",desc:"Olasılıksal değildir. Her sorgu için kaynak veri tabanına gider, hesaplama yapar, sonucu döndürür. Veri yoksa \"veri yok\" der; varsayım üretmez."},
+      {sym:"→",title:"ŞEFFAF KAYNAK",sub:"Her yanıt için kaynak veri katmanı",desc:"Her çıktıda hangi veri kaynağından (saha, ilan, kamu, emsal, mevzuat) hangi tarih aralığından beslendiği şeffaf olarak belirtilir. Denetlenebilir."},
+    ];
+    var cards = yetenekler.map(function(y,i){
+      return '<div style="'+css({background:C.raised,padding:"24px 22px"})+'">'
+        + '<div style="'+css({display:"flex",alignItems:"center",gap:12,marginBottom:14})+'">'
+        + '<span style="'+css({width:38,height:38,border:"1px solid "+C.violet,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:C.mono,fontSize:16,color:C.violet,borderRadius:2,background:"rgba(167,139,250,0.06)"})+'">'+y.sym+'</span>'
+        + '<div><div style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.14em"})+'">YETENEK '+String(i+1).padStart(2,"0")+'</div>'
+        + '<div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:13.5,fontWeight:700,color:C.violet,letterSpacing:"0.04em"})+'">'+y.title+'</div></div></div>'
+        + '<div style="'+css({fontFamily:C.mono,fontSize:11,color:C.primary,marginBottom:10,letterSpacing:"0.04em"})+'">'+y.sub+'</div>'
+        + '<p style="'+css({fontSize:12.5,color:C.textMut,lineHeight:1.6,margin:0})+'">'+y.desc+'</p></div>';
+    }).join('');
+    var body = '<div style="'+css({display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))",gap:1,border:"1px solid "+C.borderStrong,background:C.borderStrong})+'">'+cards+'</div>';
+    return SubSection("A.2","ProX · 6 temel yetenek","ÇEKİRDEK ÖZELLİKLER · TEKNİK DİSİPLİN", body);
+  }
+
+  /* ===== B.1 STANDART LLM DEĞİL ===== */
+  function NedenStandartLLMDegil(){
+    var comparison = [
+      {konu:"VERİ KAYNAĞI",llm:"Eğitim verisi (kapalı tarih). Cutoff’tan sonra güncellenmez.",prox:"Canlı veri tabanı. 257 ay tarihsel zincir + günlük güncelleme. Resmi Gazete, TBMM kararı, kamu verisi anlık."},
+      {konu:"ÇIKTI MODELİ",llm:"Olasılıksal token üretimi. Her seferinde farklı yanıt olası.",prox:"Deterministik hesaplama. Aynı girdi → aynı çıktı. Kaynak veri katmanına gider, hesaplar, döndürür."},
+      {konu:"HALÜSİNASYON",llm:"Olası. Bilinmeyen veriyi tahmin edebilir; kaynak göstermeyebilir.",prox:"Sıfır. Veri yoksa \"veri yok\" döner. Hiçbir koşulda kayıt dışı çıktı üretmez."},
+      {konu:"KAYNAK ŞEFFAFLIĞI",llm:"Kapalı kutu. Eğitim verisindeki kaynaklar bilinmez.",prox:"Her yanıt için kaynak veri katmanı, kayıt sayısı, tarih aralığı ve güven skoru şeffaf."},
+      {konu:"ALAN UZMANLIĞI",llm:"Genel amaçlı. Türkiye gayrimenkulü için spesifik değil.",prox:"Türkiye gayrimenkul piyasasına özel. Mahalle granularity, gayrimenkul hukuku, vergi-imar-tapu mevzuatı dahil."},
+      {konu:"DİL OPTİMİZASYONU",llm:"Çoğunlukla İngilizce optimize. Türkçe ikincil dil.",prox:"Türkçe doğal dil + Türkiye gayrimenkul terminolojisi optimize. Resmi terminoloji + halk dili tanır."},
+      {konu:"DENETLENEBİLİRLİK",llm:"Sorgu logları dağınık veya yok. Yeniden üretilebilirlik düşük.",prox:"Her sorgu + yanıt kayıt altında. Kurumsal müşteriler için denetim logu erişimi standart."},
+    ];
+    var rows = comparison.map(function(row,i){
+      return '<div style="'+css({display:"grid",gridTemplateColumns:"minmax(140px,1.5fr) minmax(0,2fr) minmax(0,2fr)",padding:"16px 16px",gap:16,background:i%2===0?C.raised:C.elev,borderBottom:i<comparison.length-1?"1px solid "+C.border:"none"})+'" class="nadas-prox-table-row">'
+        + '<div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:13,color:C.textPri,fontWeight:700,letterSpacing:"-0.005em"})+'">'+row.konu+'</div>'
+        + '<div style="'+css({fontSize:12.5,color:C.textMut,lineHeight:1.55})+'">'+row.llm+'</div>'
+        + '<div style="'+css({fontSize:12.5,color:C.textSec,lineHeight:1.55,borderLeft:"2px solid "+C.violet,paddingLeft:12})+'"><strong style="'+css({color:C.violet})+'">'+row.prox+'</strong></div></div>';
+    }).join('');
+    var body = ''
+      + '<p style="'+css({fontSize:14,lineHeight:1.65,color:C.textSec,marginBottom:22,maxWidth:940})+'">ProX, bir <strong style="'+css({color:C.textPri})+'">genel amaçlı dil modeli değildir</strong>. Türkiye gayrimenkul piyasasının 21 yıllık veri altyapısı üzerinde çalışan, deterministik, halüsinasyonsuz, alan-özel bir akıllı asistandır. Aşağıdaki tablo, standart bir LLM ile ProX arasındaki temel farkları gösterir.</p>'
+      + '<div style="'+css({overflow:"hidden",border:"1px solid "+C.violet})+'">'
+      + '<div style="'+css({display:"grid",gridTemplateColumns:"minmax(140px,1.5fr) minmax(0,2fr) minmax(0,2fr)",background:C.elev,borderBottom:"1px solid "+C.violet,padding:"12px 16px",gap:16})+'" class="nadas-prox-table-header">'
+      + '<div style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,fontWeight:700,letterSpacing:"0.14em"})+'">KONU</div>'
+      + '<div style="'+css({fontFamily:C.mono,fontSize:10,color:C.textMut,fontWeight:700,letterSpacing:"0.14em"})+'">◷ STANDART LLM</div>'
+      + '<div style="'+css({fontFamily:C.mono,fontSize:10,color:C.violet,fontWeight:700,letterSpacing:"0.14em"})+'">◆ ProX</div></div>'
+      + rows + '</div>';
+    return SubSection("B.1","ProX standart bir LLM değil · 7 fark","KARŞILAŞTIRMA · NİYE FARKLI · TEKNİK DİSİPLİN", body);
+  }
+
+  /* ===== C.1 VERİ ALTYAPISI ===== */
+  function ProXVeriAltyapisi(){
+    var stats = [
+      ["480M+","Aktif veri kaydı",C.violet],["257 ay","Tarihsel zincir",C.primary],
+      ["50K+","Mahalle veritabanı",C.violet],["38","DNA boyutu (mahalle)",C.primary],
+      ["7M+","Olay markırı",C.accent],["50 TB","Depolama hacmi",C.violet],
+      ["27","Veri kaynağı",C.primary],["%96","Güven medyanı",C.accent],
+    ].map(function(s){
+      return '<div style="'+css({background:C.raised,padding:"16px 16px"})+'">'
+        + '<div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:"1.6rem",fontWeight:700,color:s[2],letterSpacing:"-0.02em",lineHeight:1,marginBottom:6})+'">'+s[0]+'</div>'
+        + '<div style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.08em"})+'">'+s[1]+'</div></div>';
+    }).join('');
+    var hier = [
+      {l:"İL",v:"81",pad:0,w:"100%"},{l:"İLÇE",v:"973",pad:14,w:"92%"},
+      {l:"MAHALLE",v:"50.000+",pad:28,w:"82%"},{l:"CADDE",v:"~2M",pad:42,w:"68%"},{l:"SOKAK",v:"~8M",pad:56,w:"52%"},
+    ].map(function(row,i){
+      return '<div style="'+css({marginBottom:10,paddingLeft:row.pad})+'">'
+        + '<div style="'+css({display:"flex",justifyContent:"space-between",marginBottom:4})+'">'
+        + '<span style="'+css({fontFamily:C.mono,fontSize:11,color:C.textPri,fontWeight:700,letterSpacing:"0.06em"})+'">'+(i>0?'<span style="'+css({color:C.textFaint,marginRight:6})+'">↳</span>':'')+row.l+'</span>'
+        + '<span style="'+css({fontFamily:C.mono,fontSize:11,color:C.violet,fontWeight:700,letterSpacing:"0.04em"})+'">'+row.v+'</span></div>'
+        + '<div style="'+css({height:4,background:C.deep,position:"relative",overflow:"hidden"})+'"><div style="'+css({height:"100%",width:row.w,background:"linear-gradient(90deg, "+C.violet+", "+C.violet+"80)"})+'"></div></div></div>';
+    }).join('');
+    var body = ''
+      + '<div style="'+css({display:"grid",gridTemplateColumns:"minmax(0,1.4fr) minmax(0,1fr)",gap:24,alignItems:"start"})+'" class="nadas-twocol">'
+      + '<div>'
+      + '<p style="'+css({fontSize:14.5,lineHeight:1.7,color:C.textSec,margin:"0 0 18px"})+'">ProX’in çıktısı, doğrudan Nadas’ın 21 yıllık veri altyapısından beslenir. Sıradan bir LLM’in eğitim verisi gibi <strong style="'+css({color:C.textPri})+'"> dondurulmuş bilgi değildir</strong>; canlı, her gün güncellenen, mahalle bazlı doğrulanmış veridir.</p>'
+      + '<div style="'+css({display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:1,border:"1px solid "+C.borderStrong,background:C.borderStrong,marginBottom:20})+'">'+stats+'</div>'
+      + '<p style="'+css({fontSize:13.5,lineHeight:1.7,color:C.textSec,margin:0})+'">ProX, her sorgu için <strong style="'+css({color:C.textPri})+'">granular sorgulama hiyerarşisi</strong> kullanır: önce ilgili il, sonra ilçe, sonra mahalle, sonra cadde, sonra sokak. Her seviyede ilgili veri kaydı sayısı, güven skoru ve tarihsel derinlik kontrol edilir; yetersizlik durumunda bir üst granularity’e geçer ve bunu açıkça belirtir.</p>'
+      + '</div>'
+      + '<div style="'+css({background:C.raised,border:"1px solid "+C.violet,padding:"22px 22px"})+'">'
+      + '<div style="'+css({fontFamily:C.mono,fontSize:10.5,color:C.violet,fontWeight:700,letterSpacing:"0.14em",marginBottom:16})+'">◆ GRANULARITY HİYERARŞİSİ</div>'
+      + hier
+      + '<div style="'+css({marginTop:18,paddingTop:14,borderTop:"1px solid "+C.border,fontFamily:C.mono,fontSize:10.5,color:C.textFaint,lineHeight:1.6,letterSpacing:"0.02em"})+'">⌬ ProX, sorgu hassasiyetine göre uygun granularity seviyesini otomatik seçer. Veri yetersizse bir üst seviyeye geçer ve bunu yanıtta belirtir.</div>'
+      + '</div></div>';
+    return SubSection("C.1","ProX’in beslenmesi · Veri altyapısı","21 YILLIK ZİNCİR · 480M KAYIT · MAHALLE GRANULARITY", body);
+  }
+
+  /* ===== C.2 VERİ EKOSİSTEMİ (etkileşimli katman seçici) ===== */
+  var EKO_KATMANLAR = [
+    {tag:"KATMAN 1",title:"NADAS ÖZEL VERİ",sub:"Kendi altyapı · saha + ilan + uzman",color:C.violet,count:4,kaynaklar:[
+      {sym:"◆",name:"Saha Ekipleri",detay:"81 il + 973 ilçe · bölge uzmanı doğrulaması · aylık",freq:"Aylık"},
+      {sym:"◉",name:"İlan Ekosistemi (Bot)",detay:"Kendi VPN + kendi proxy ağı · 2009’dan beri · günlük tarama · duplikat tespit",freq:"Günlük"},
+      {sym:"⌬",name:"Mahalle DNA Modeli",detay:"38 boyutlu DNA vektörü · 50.000+ mahalle · sürekli yeniden hesaplama",freq:"Real-time"},
+      {sym:"→",name:"Olay Markırı Sistemi",detay:"9 kategori · 7M+ markır · mahalle bazında sönüm fonksiyonları",freq:"Real-time"},
+    ]},
+    {tag:"KATMAN 2",title:"RESMİ MEVZUAT",sub:"Resmi Gazete · TBMM · Cumhurbaşkanlığı",color:C.warn,count:3,kaynaklar:[
+      {sym:"📜",name:"T.C. Resmi Gazete",detay:"Günlük otomatik tarama · gayrimenkulü etkileyen kanun/yönetmelik/tebliğ",freq:"Günlük"},
+      {sym:"⚖",name:"TBMM Kararları",detay:"Komisyon raporları + Genel Kurul kararları · canlı entegrasyon",freq:"Günlük"},
+      {sym:"◈",name:"Cumhurbaşkanlığı Kararnameleri",detay:"Cumhurbaşkanlığı kararname ve genelgeleri · anlık takip",freq:"Real-time"},
+    ]},
+    {tag:"KATMAN 3",title:"KAMU KURUMLARI",sub:"TKGM · TOKİ · TÜİK · TCMB · BDDK · ...",color:C.primary,count:11,kaynaklar:[
+      {sym:"🏛",name:"TKGM · Tapu Kadastro Gn. Md.",detay:"MEGSİS · tapu tescil · kadastro · parsel · 1/5000 ortofoto",freq:"Resmi"},
+      {sym:"🏗",name:"TOKİ · Toplu Konut İdaresi",detay:"Sosyal konut envanteri · proje verileri · kura sonuçları",freq:"Aylık"},
+      {sym:"🏢",name:"Emlak Konut GYO",detay:"Kentsel dönüşüm projeleri · proje ilerleme · teslim takvimi",freq:"Çeyreklik"},
+      {sym:"📊",name:"TÜİK (ücretli mikro veri)",detay:"Konut Satış İst. · ADNKS · UDV · Tüketici Fiyat End. · LİSANSLI",freq:"Aylık",paid:true},
+      {sym:"💱",name:"TCMB · Merkez Bankası",detay:"Konut Fiyat Endeksi (KFE) · faiz · kur · enflasyon",freq:"Aylık"},
+      {sym:"🏦",name:"BDDK · Bankacılık",detay:"Konut kredisi istatistikleri · takip oranları · sektör verileri",freq:"Aylık"},
+      {sym:"💰",name:"Hazine ve Maliye · GİB",detay:"Emlak vergisi rayiçleri · KDV · değer artış kazancı",freq:"Yıllık"},
+      {sym:"📍",name:"UAVT · Ulusal Adres",detay:"T.C. resmi adres veri tabanı · standardize adres formatı",freq:"Real-time"},
+      {sym:"⚠",name:"AFAD · Afet Yönetimi",detay:"Deprem fay hattı · risk haritası · afet bölgesi sınırları",freq:"Real-time"},
+      {sym:"⚡",name:"EPDK · Enerji",detay:"Konut elektrik aboneliği · doğalgaz altyapısı · şebeke yoğunluğu",freq:"Aylık"},
+      {sym:"📈",name:"Borsa İstanbul · BİAŞ",detay:"GYO endeks · halka açık gayrimenkul şirket performansı",freq:"Real-time"},
+    ]},
+    {tag:"KATMAN 4",title:"BAKANLIKLAR",sub:"6 bakanlık · resmi veri paylaşım protokolleri",color:C.accent,count:6,kaynaklar:[
+      {sym:"🏛",name:"Çevre, Şehircilik ve İklim Değ.",detay:"İmar planları · yapı ruhsatı · kentsel dönüşüm · çevre düzeni planı",freq:"Aylık"},
+      {sym:"🌾",name:"Tarım ve Orman",detay:"Tarım arazisi sınıfı · orman alanları · mera tahsisi · arazi kullanım",freq:"Aylık"},
+      {sym:"🚆",name:"Ulaştırma ve Altyapı",detay:"Otoyol projesi · raylı sistem · havalimanı planlama · ulaşım yatırımı",freq:"Çeyreklik"},
+      {sym:"🏭",name:"Sanayi ve Teknoloji",detay:"OSB sınırları · sanayi alanları · teknoloji bölgesi · teşvik bölgeleri",freq:"Çeyreklik"},
+      {sym:"⚖",name:"Adalet",detay:"İcra-iflas satışları · mahkeme satış ilanları · kamu alacakları",freq:"Günlük"},
+      {sym:"🏠",name:"İçişleri · ADNKS",detay:"Mahalle muhtarlığı · adres kayıt sistemi · nüfus hareketi",freq:"Aylık"},
+    ]},
+    {tag:"KATMAN 5",title:"YEREL YÖNETİMLER",sub:"Büyükşehir + il + ilçe belediyeleri · açık veri",color:C.textMut,count:3,kaynaklar:[
+      {sym:"🏙",name:"İBB + Büyükşehir Açık Veri",detay:"İstanbul + 30 büyükşehir · imar durumu · yapı izni · şehir planlama",freq:"Aylık"},
+      {sym:"🏪",name:"81 İl Belediyesi",detay:"İmar durum belgesi · yapı izni · bölge planları",freq:"Aylık"},
+      {sym:"🏘",name:"973 İlçe Belediyesi",detay:"Mahalle bilgisi · ada-parsel · imar uygulaması · 1/1000 plan",freq:"Aylık"},
+    ]},
+  ];
+  var ekoActive = 0;
+  function VeriEkosistemi(){
+    var totalSources = EKO_KATMANLAR.reduce(function(s,k){ return s+k.count; },0);
+    var active = EKO_KATMANLAR[ekoActive];
+    var selector = EKO_KATMANLAR.map(function(k,idx){
+      var on = ekoActive===idx;
+      return '<button type="button" onclick="nxSetLayer('+idx+')" style="'+css({width:"100%",padding:"16px 22px",background:on?C.elev:"transparent",border:"none",borderLeft:on?"3px solid "+k.color:"3px solid transparent",cursor:"pointer",textAlign:"left",fontFamily:"inherit",transition:"all 0.2s",display:"block"})+'">'
+        + '<div style="'+css({display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:4})+'">'
+        + '<span style="'+css({fontFamily:C.mono,fontSize:10,color:on?k.color:C.textFaint,fontWeight:700,letterSpacing:"0.12em"})+'">'+k.tag+'</span>'
+        + '<span style="'+css({padding:"2px 8px",background:on?k.color:"transparent",color:on?C.deep:k.color,border:"1px solid "+k.color,fontFamily:C.mono,fontSize:9,fontWeight:700,letterSpacing:"0.06em"})+'">'+k.count+' KAYNAK</span></div>'
+        + '<div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:13.5,color:on?C.textPri:C.textSec,fontWeight:700,letterSpacing:"-0.005em",marginBottom:3})+'">'+k.title+'</div>'
+        + '<div style="'+css({fontFamily:C.mono,fontSize:10,color:C.textMut,letterSpacing:"0.04em",lineHeight:1.5})+'">'+k.sub+'</div></button>';
+    }).join('');
+    var kaynakCards = active.kaynaklar.map(function(k){
+      return '<div style="'+css({background:C.raised,border:"1px solid "+C.borderStrong,borderLeft:"2px solid "+active.color,padding:"14px 16px",position:"relative"})+'">'
+        + '<div style="'+css({position:"absolute",top:12,right:14,display:"flex",alignItems:"center",gap:5})+'">'
+        + (k.paid?'<span style="'+css({padding:"1px 5px",background:C.warn,color:C.deep,fontFamily:C.mono,fontSize:8,fontWeight:700,letterSpacing:"0.08em"})+'">LİSANSLI</span>':'')
+        + '<span style="'+css({width:6,height:6,borderRadius:9999,background:C.accent,animation:"nadasPulse 1.5s ease-in-out infinite"})+'"></span>'
+        + '<span style="'+css({fontFamily:C.mono,fontSize:9,color:C.accent,fontWeight:700,letterSpacing:"0.06em"})+'">CANLI</span></div>'
+        + '<div style="'+css({display:"flex",alignItems:"center",gap:8,marginBottom:8})+'">'
+        + '<span style="'+css({width:26,height:26,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,background:C.deep,border:"1px solid "+active.color,borderRadius:2})+'">'+k.sym+'</span>'
+        + '<div style="'+css({flex:1,paddingRight:50})+'"><div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:12.5,color:C.textPri,fontWeight:700,letterSpacing:"-0.005em",lineHeight:1.25})+'">'+k.name+'</div></div></div>'
+        + '<p style="'+css({fontSize:11,color:C.textMut,lineHeight:1.5,margin:"0 0 8px"})+'">'+k.detay+'</p>'
+        + '<div style="'+css({paddingTop:6,borderTop:"1px dashed "+C.border,display:"flex",justifyContent:"space-between",fontFamily:C.mono,fontSize:9.5,color:C.textFaint,letterSpacing:"0.06em"})+'"><span>● Frekans</span><span style="'+css({color:active.color,fontWeight:700})+'">'+k.freq+'</span></div></div>';
+    }).join('');
+    var body = ''
+      + '<p style="'+css({fontSize:14,lineHeight:1.65,color:C.textSec,marginBottom:22,maxWidth:980})+'">ProX’in beslendiği veri ekosistemi 5 katmandan oluşur. Her katman <strong style="'+css({color:C.textPri})+'">doğrulama mekanizması</strong> ile diğerleriyle çapraz kontrol edilir. <strong style="'+css({color:C.textPri})+'">Tek kaynaklı veri yoktur</strong>; her veri noktası en az iki kaynaktan doğrulanmış olarak ProX’e sunulur. TÜİK gibi <strong style="'+css({color:C.textPri})+'">ücretli mikro veri kaynakları</strong> lisanslı şekilde, kamu kuruluşları resmi protokollerle entegre edilmiştir.</p>'
+      + '<div id="veri-ekosistemi" style="'+css({display:"grid",gridTemplateColumns:"minmax(0,1fr) minmax(0,2fr)",gap:1,border:"1px solid "+C.borderStrong,background:C.borderStrong})+'" class="nadas-eko-grid">'
+      + '<div style="'+css({background:C.raised,padding:"20px 0"})+'">'
+      + '<div style="'+css({padding:"0 22px",fontFamily:C.mono,fontSize:10.5,color:C.violet,fontWeight:700,letterSpacing:"0.14em",marginBottom:14})+'">◆ 5 KATMAN · TIKLAYIN</div>'
+      + selector
+      + '<div style="'+css({margin:"16px 22px 0",padding:"12px 14px",background:C.deep,border:"1px solid "+C.violet,display:"flex",justifyContent:"space-between",alignItems:"center"})+'"><span style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.1em",fontWeight:700})+'">TOPLAM KAYNAK</span><span style="'+css({fontFamily:"'Sora',sans-serif",fontSize:22,color:C.violet,fontWeight:700,letterSpacing:"-0.02em"})+'">'+totalSources+'</span></div>'
+      + '</div>'
+      + '<div style="'+css({background:C.deep,padding:"22px 24px"})+'">'
+      + '<div style="'+css({display:"flex",alignItems:"center",gap:10,marginBottom:18})+'">'
+      + '<span style="'+css({width:10,height:10,borderRadius:9999,background:active.color})+'"></span>'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:10.5,color:active.color,fontWeight:700,letterSpacing:"0.14em"})+'">'+active.tag+' · '+active.title+'</span>'
+      + '<span style="'+css({height:1,flex:1,background:C.borderStrong})+'"></span>'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.08em"})+'">'+active.count+' AKTİF KAYNAK</span></div>'
+      + '<div style="'+css({display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:10})+'">'+kaynakCards+'</div>'
+      + '</div></div>'
+      + '<div style="'+css({marginTop:16,padding:"12px 16px",background:"rgba(167,139,250,0.04)",border:"1px dashed "+C.violet,fontFamily:C.mono,fontSize:11,color:C.textMut,lineHeight:1.6,letterSpacing:"0.02em"})+'">⌬ Her bir kaynağın güncelleme frekansı, lisans durumu ve veri kapsamı şeffaftır. TÜİK’in ücretli mikro veri kaynakları <strong style="'+css({color:C.warn})+'">LİSANSLI</strong> etiketi ile gösterilir; ProX’in kullandığı tüm TÜİK verisi <strong style="'+css({color:C.textSec})+'">Döner Sermaye İşletmesi tarifesine göre</strong> lisans altında alınmıştır.</div>';
+    return SubSection("C.2","Veri ekosistemi · 5 katman · "+totalSources+" kaynak","NADAS ÖZEL · RESMİ MEVZUAT · KAMU · BAKANLIKLAR · YEREL YÖNETİMLER", body);
+  }
+  window.nxSetLayer = function(i){ ekoActive=i; var m=document.getElementById('eko-mount'); if(m) m.innerHTML=VeriEkosistemi(); };
+
+  /* ===== C.3 VERİ PIPELINE (SVG/SMIL) ===== */
+  function VeriPipeline(){
+    var sources=[
+      {x:30,y:60,label:"TKGM",c:C.primary},{x:30,y:110,label:"TÜİK*",c:C.warn},
+      {x:30,y:160,label:"TCMB",c:C.primary},{x:30,y:210,label:"TOKİ",c:C.primary},
+      {x:30,y:260,label:"Emlak Konut",c:C.primary},{x:30,y:310,label:"BDDK",c:C.primary},
+      {x:30,y:360,label:"AFAD",c:C.primary},{x:30,y:410,label:"Bakanlıklar",c:C.accent},
+      {x:30,y:460,label:"Belediyeler",c:C.textMut},{x:30,y:510,label:"İlan Botu",c:C.violet},
+      {x:30,y:560,label:"Saha Ekipleri",c:C.violet},{x:30,y:610,label:"Resmi Gazete",c:C.warn},
+    ];
+    var outputs=[
+      {x:700,y:80,label:"ProX Chat",c:C.violet},{x:700,y:160,label:"Kurumsal API",c:C.accent},
+      {x:700,y:240,label:"Karar Analizi",c:C.primary},{x:700,y:320,label:"Banka Servisleri",c:C.accent,special:true},
+      {x:700,y:400,label:"Belediye Servisleri",c:C.accent,special:true},{x:700,y:480,label:"White-Label",c:C.violet},
+      {x:700,y:560,label:"Research",c:C.primary},
+    ];
+    var serverX=200,serverY=280,serverW=140,serverH=130;
+    var serverCenterX=serverX+serverW/2, serverCenterY=serverY+serverH/2;
+    var proxX=510,proxY=335;
+
+    var srcLines = sources.map(function(s,i){
+      var d = (2.5 + (i%4)*0.4);
+      return '<g><line x1="'+(s.x+100)+'" y1="'+s.y+'" x2="'+serverX+'" y2="'+serverCenterY+'" stroke="'+s.c+'" stroke-width="0.5" stroke-opacity="0.25"/>'
+        + '<circle r="2.5" fill="'+s.c+'"><animateMotion dur="'+d+'s" repeatCount="indefinite" begin="'+(i*0.15)+'s" path="M '+(s.x+100)+' '+s.y+' L '+serverX+' '+serverCenterY+'"/><animate attributeName="opacity" values="0;1;1;0" dur="'+d+'s" repeatCount="indefinite" begin="'+(i*0.15)+'s"/></circle></g>';
+    }).join('');
+    var svrParticles = [0,0.3,0.6,0.9,1.2,1.5].map(function(delay,i){
+      return '<circle r="3" fill="'+(i%2===0?C.violet:C.accent)+'"><animateMotion dur="1.8s" repeatCount="indefinite" begin="'+delay+'s" path="M '+(serverX+serverW)+' '+serverCenterY+' L '+(proxX-50)+' '+proxY+'"/><animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="'+delay+'s"/></circle>';
+    }).join('');
+    var outLines = outputs.map(function(o,i){
+      var d=(2.2+i*0.2);
+      return '<g><line x1="'+(proxX+50)+'" y1="'+proxY+'" x2="'+o.x+'" y2="'+o.y+'" stroke="'+o.c+'" stroke-width="0.6" stroke-opacity="0.3"/>'
+        + '<circle r="3" fill="'+o.c+'"><animateMotion dur="'+d+'s" repeatCount="indefinite" begin="'+(0.8+i*0.3)+'s" path="M '+(proxX+50)+' '+proxY+' L '+o.x+' '+o.y+'"/><animate attributeName="opacity" values="0;1;1;0" dur="'+d+'s" repeatCount="indefinite" begin="'+(0.8+i*0.3)+'s"/></circle></g>';
+    }).join('');
+    var srcBoxes = sources.map(function(s,i){
+      return '<g><rect x="'+s.x+'" y="'+(s.y-12)+'" width="100" height="24" fill="#0A1626" stroke="'+s.c+'" stroke-width="1" rx="2"/>'
+        + '<circle cx="'+(s.x+8)+'" cy="'+s.y+'" r="3" fill="'+C.accent+'"><animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" begin="'+(i*0.1)+'s"/></circle>'
+        + '<text x="'+(s.x+18)+'" y="'+(s.y+4)+'" fill="#CBD5E1" font-size="10" font-family="ui-monospace,monospace" font-weight="600">'+s.label+'</text></g>';
+    }).join('');
+    var outBoxes = outputs.map(function(o,i){
+      return '<g><rect x="'+(o.x-8)+'" y="'+(o.y-12)+'" width="120" height="24" fill="#0A1626" stroke="'+o.c+'" stroke-width="'+(o.special?"1.5":"1")+'" rx="2"/>'
+        + (o.special?'<rect x="'+(o.x-8)+'" y="'+(o.y-12)+'" width="3" height="24" fill="'+o.c+'"/>':'')
+        + '<text x="'+(o.x+4)+'" y="'+(o.y+4)+'" fill="'+(o.special?"#F1F5F9":"#CBD5E1")+'" font-size="10" font-family="ui-monospace,monospace" font-weight="'+(o.special?"700":"600")+'">'+o.label+'</text>'
+        + '<circle cx="'+(o.x+106)+'" cy="'+o.y+'" r="3" fill="'+o.c+'"><animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" begin="'+(i*0.15)+'s"/></circle></g>';
+    }).join('');
+    var svrBars = [0,1,2,3].map(function(i){
+      return '<rect x="'+(serverX+12+i*28)+'" y="'+(serverY+16)+'" width="20" height="3" fill="'+C.accent+'"><animate attributeName="opacity" values="0.3;1;0.3" dur="'+(1+i*0.2)+'s" repeatCount="indefinite"/></rect>';
+    }).join('');
+
+    var svg = '<svg viewBox="0 0 820 680" width="100%" style="display:block;max-height:620px" preserveAspectRatio="xMidYMid meet">'
+      + '<defs>'
+      + '<radialGradient id="proxCore2" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#A78BFA" stop-opacity="0.9"/><stop offset="60%" stop-color="#7C3AED" stop-opacity="0.6"/><stop offset="100%" stop-color="#7C3AED" stop-opacity="0"/></radialGradient>'
+      + '<radialGradient id="serverCore" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#34D399" stop-opacity="0.5"/><stop offset="100%" stop-color="#34D399" stop-opacity="0"/></radialGradient>'
+      + '<filter id="glow2"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
+      + '<pattern id="gridPattern2" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(167,139,250,0.04)" stroke-width="0.5"/></pattern>'
+      + '</defs>'
+      + '<rect width="820" height="680" fill="url(#gridPattern2)"/>'
+      + srcLines
+      + '<line x1="'+(serverX+serverW)+'" y1="'+serverCenterY+'" x2="'+(proxX-50)+'" y2="'+proxY+'" stroke="'+C.accent+'" stroke-width="1.5" stroke-opacity="0.5"/>'
+      + '<line x1="'+(serverX+serverW)+'" y1="'+(serverCenterY-4)+'" x2="'+(proxX-50)+'" y2="'+(proxY-4)+'" stroke="'+C.violet+'" stroke-width="1" stroke-opacity="0.4"/>'
+      + '<line x1="'+(serverX+serverW)+'" y1="'+(serverCenterY+4)+'" x2="'+(proxX-50)+'" y2="'+(proxY+4)+'" stroke="'+C.violet+'" stroke-width="1" stroke-opacity="0.4"/>'
+      + svrParticles
+      + outLines
+      + srcBoxes
+      /* SUNUCU */
+      + '<g><rect x="'+(serverX-8)+'" y="'+(serverY-8)+'" width="'+(serverW+16)+'" height="'+(serverH+16)+'" fill="url(#serverCore)" rx="4"/>'
+      + '<rect x="'+(serverX-4)+'" y="'+(serverY-4)+'" width="'+(serverW+8)+'" height="'+(serverH+8)+'" fill="none" stroke="'+C.accent+'" stroke-width="2" rx="3">'
+      + '<animate attributeName="opacity" values="0.8;0;0.8" dur="2.5s" repeatCount="indefinite"/>'
+      + '<animate attributeName="width" values="'+serverW+';'+(serverW+16)+';'+serverW+'" dur="2.5s" repeatCount="indefinite"/>'
+      + '<animate attributeName="height" values="'+serverH+';'+(serverH+16)+';'+serverH+'" dur="2.5s" repeatCount="indefinite"/>'
+      + '<animate attributeName="x" values="'+serverX+';'+(serverX-8)+';'+serverX+'" dur="2.5s" repeatCount="indefinite"/>'
+      + '<animate attributeName="y" values="'+serverY+';'+(serverY-8)+';'+serverY+'" dur="2.5s" repeatCount="indefinite"/></rect>'
+      + '<rect x="'+serverX+'" y="'+serverY+'" width="'+serverW+'" height="'+serverH+'" fill="#06101B" stroke="'+C.accent+'" stroke-width="1.5" rx="3"/>'
+      + '<g opacity="0.4">'+svrBars+'</g>'
+      + '<text x="'+serverCenterX+'" y="'+(serverY+42)+'" fill="'+C.accent+'" font-size="10" font-family="ui-monospace,monospace" font-weight="700" text-anchor="middle" letter-spacing="0.12em">VERİ SUNUCUSU</text>'
+      + '<text x="'+serverCenterX+'" y="'+(serverY+70)+'" fill="#F1F5F9" font-size="20" font-family="Sora,sans-serif" font-weight="700" text-anchor="middle" letter-spacing="-0.02em">480M+</text>'
+      + '<text x="'+serverCenterX+'" y="'+(serverY+84)+'" fill="#CBD5E1" font-size="9" font-family="ui-monospace,monospace" text-anchor="middle" letter-spacing="0.1em">VERİ KAYDI</text>'
+      + '<line x1="'+(serverX+14)+'" y1="'+(serverY+94)+'" x2="'+(serverX+serverW-14)+'" y2="'+(serverY+94)+'" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>'
+      + '<text x="'+serverCenterX+'" y="'+(serverY+106)+'" fill="#94A3B8" font-size="8" font-family="ui-monospace,monospace" text-anchor="middle" letter-spacing="0.08em">TOPLAMA · DOĞRULAMA</text>'
+      + '<text x="'+serverCenterX+'" y="'+(serverY+118)+'" fill="#64748B" font-size="8" font-family="ui-monospace,monospace" text-anchor="middle" letter-spacing="0.08em">50 TB · 27 KAYNAK</text></g>'
+      /* ProX motoru */
+      + '<g><circle cx="'+proxX+'" cy="'+proxY+'" r="60" fill="none" stroke="'+C.violet+'" stroke-width="0.5" stroke-opacity="0.3"/>'
+      + '<circle cx="'+proxX+'" cy="'+proxY+'" r="44" fill="none" stroke="'+C.violet+'" stroke-width="0.5" stroke-opacity="0.4"/>'
+      + '<circle cx="'+proxX+'" cy="'+proxY+'" r="48" fill="none" stroke="'+C.violet+'" stroke-width="2"><animate attributeName="r" values="38;58;38" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.8;0;0.8" dur="2.5s" repeatCount="indefinite"/></circle>'
+      + '<circle cx="'+proxX+'" cy="'+proxY+'" r="42" fill="url(#proxCore2)" filter="url(#glow2)"/>'
+      + '<circle cx="'+proxX+'" cy="'+proxY+'" r="32" fill="#06101B" stroke="'+C.violet+'" stroke-width="1.5"/>'
+      + '<text x="'+proxX+'" y="'+(proxY-4)+'" fill="'+C.violet+'" font-size="14" font-family="Sora,sans-serif" font-weight="700" text-anchor="middle" letter-spacing="0.04em">ProX</text>'
+      + '<text x="'+proxX+'" y="'+(proxY+8)+'" fill="#94A3B8" font-size="7" font-family="ui-monospace,monospace" text-anchor="middle" letter-spacing="0.1em">ML / MML</text>'
+      + '<text x="'+proxX+'" y="'+(proxY+18)+'" fill="#64748B" font-size="6.5" font-family="ui-monospace,monospace" text-anchor="middle" letter-spacing="0.06em">DETERMİNİSTİK</text></g>'
+      + outBoxes
+      + '<text x="80" y="660" fill="#64748B" font-size="9" font-family="ui-monospace,monospace" letter-spacing="0.1em">▸ KAYNAKLAR</text>'
+      + '<text x="'+(serverCenterX-35)+'" y="660" fill="'+C.accent+'" font-size="9" font-family="ui-monospace,monospace" letter-spacing="0.1em" font-weight="700">▸ SUNUCU · 480M+</text>'
+      + '<text x="'+(proxX-20)+'" y="660" fill="'+C.violet+'" font-size="9" font-family="ui-monospace,monospace" letter-spacing="0.1em" font-weight="700">▸ ProX</text>'
+      + '<text x="700" y="660" fill="#64748B" font-size="9" font-family="ui-monospace,monospace" letter-spacing="0.1em">▸ ÇIKTILAR · 7</text>'
+      + '</svg>';
+
+    var stagesTop = [
+      ["AŞAMA 1","◆ KAYNAKLAR","27 kaynak · 5 katman",C.primary],
+      ["AŞAMA 2","◆ SUNUCU","Toplama · doğrulama",C.accent],
+      ["AŞAMA 3","◆ ProX MOTOR","ML/MML · deterministik",C.violet],
+      ["AŞAMA 4","◆ ÇIKTILAR","7 kanal · banka/belediye/api",C.primary],
+    ].map(function(s){
+      return '<div style="'+css({textAlign:"center"})+'"><div style="'+css({fontFamily:C.mono,fontSize:9.5,color:C.textFaint,letterSpacing:"0.12em",fontWeight:700})+'">'+s[0]+'</div><div style="'+css({fontFamily:C.mono,fontSize:10.5,color:s[3],letterSpacing:"0.1em",fontWeight:700,marginTop:3})+'">'+s[1]+'</div><div style="'+css({fontFamily:C.mono,fontSize:9,color:C.textMut,letterSpacing:"0.04em",marginTop:2})+'">'+s[2]+'</div></div>';
+    }).join('');
+    var stagesBot = [
+      ["① KAYNAKLAR","27 kaynak · 5 katman · saha + ilan + kamu + bakanlık + belediye",C.primary],
+      ["② SUNUCU","480M+ kayıt · toplama · normalize · doğrulama · çapraz kontrol",C.accent],
+      ["③ ProX MOTOR","ML/MML matematiksel işleme · deterministik · halüsinasyon sıfır",C.violet],
+      ["④ ÇIKTILAR","7 kanal · chat + API + banka + belediye + white-label + research",C.primary],
+    ].map(function(s){
+      return '<div style="'+css({padding:"10px 12px",background:C.raised,borderLeft:"3px solid "+s[2]})+'"><div style="'+css({fontFamily:C.mono,fontSize:9.5,color:s[2],fontWeight:700,letterSpacing:"0.1em",marginBottom:4})+'">'+s[0]+'</div><div style="'+css({fontFamily:C.mono,fontSize:10,color:C.textMut,lineHeight:1.45,letterSpacing:"0.02em"})+'">'+s[1]+'</div></div>';
+    }).join('');
+
+    var body = ''
+      + '<p style="'+css({fontSize:14,lineHeight:1.65,color:C.textSec,marginBottom:22,maxWidth:980})+'">ProX’in çalışma mimarisi <strong style="'+css({color:C.textPri})+'">4 aşamalıdır</strong>: <strong style="'+css({color:C.violet})+'"> (1) Veri kaynakları</strong> önce Nadas sunucusuna akar. <strong style="'+css({color:C.violet})+'"> (2) Sunucuda 480 milyon kayıt</strong> toplanır, normalize edilir, doğrulanır ve çapraz kontrolden geçirilir. <strong style="'+css({color:C.violet})+'"> (3) ProX’in ML/MML deterministik hesaplama motoruna</strong> iletilir. <strong style="'+css({color:C.violet})+'"> (4) 7 farklı çıktı kanalı</strong> üzerinden bankalar, belediyeler, kurumsal müşteriler ve son kullanıcılara sunulur.</p>'
+      + '<div style="'+css({background:C.deep,border:"1px solid "+C.violet,padding:"24px 16px",position:"relative",overflow:"hidden"})+'">'
+      + '<div style="'+css({display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:12,marginBottom:18,padding:"0 8px"})+'" class="nadas-pipeline-stages">'+stagesTop+'</div>'
+      + svg
+      + '<div style="'+css({marginTop:16,display:"grid",gridTemplateColumns:"repeat(4, 1fr)",gap:8})+'" class="nadas-pipeline-stages">'+stagesBot+'</div>'
+      + '<div style="'+css({marginTop:12,padding:"10px 14px",background:"rgba(167,139,250,0.04)",border:"1px dashed "+C.violet,fontFamily:C.mono,fontSize:10.5,color:C.textMut,lineHeight:1.6,letterSpacing:"0.02em"})+'"><span style="'+css({color:C.violet,fontWeight:700})+'">◆ AKIŞ:</span> Veri kaynakları → Nadas sunucusunda toplanır + doğrulanır → ProX motoruna iletilir → 7 farklı kanaldan müşterilere sunulur. Her parçacık gerçek zamanlı veri akışını temsil eder. <span style="'+css({color:C.warn,marginLeft:8})+'">*TÜİK</span> — ücretli lisanslı mikro veri. <span style="'+css({color:C.accent,marginLeft:8})+'">● BANKA + BELEDİYE</span> — kurumsal müşteri segmentleri.</div>'
+      + '</div>';
+    return SubSection("C.3","Veri pipeline · 4 aşamalı işleyiş mimarisi","KAYNAKLAR → SUNUCU (480M+) → ProX ML/MML → 7 ÇIKTI KANALI", body);
+  }
+
+  /* ===== D.1 HUKUK + RESMİ GAZETE ===== */
+  function HukukResmiGazete(){
+    var rgList = ["İmar Kanunu değişiklikleri","Tapu Kanunu uygulamaları","Vergi düzenlemeleri (KDV, harçlar, emlak vergisi)","Kentsel dönüşüm mevzuatı","Konut finansmanı düzenlemeleri","Yabancı edinim kısıtlamaları"]
+      .map(function(f){ return '<li style="'+css({display:"flex",alignItems:"flex-start",gap:8,fontSize:12,color:C.textSec,lineHeight:1.5})+'"><span style="'+css({color:C.violet,fontFamily:C.mono})+'">●</span>'+f+'</li>'; }).join('');
+    var tbmmList = ["Yeni kanun teklifleri (gayrimenkul ilgili)","Komisyon raporları","Bütçe kanunu emlak vergi maddeleri","Kentsel dönüşüm yasaları","Konut finansmanı kanun değişiklikleri","Beklenen mevzuat değişikliği uyarıları"]
+      .map(function(f){ return '<li style="'+css({display:"flex",alignItems:"flex-start",gap:8,fontSize:12,color:C.textSec,lineHeight:1.5})+'"><span style="'+css({color:C.violet,fontFamily:C.mono})+'">●</span>'+f+'</li>'; }).join('');
+    var hukukGrid = [
+      {t:"Tapu & Kadastro",d:"Tapu Kanunu, Kadastro Kanunu, tescil, ferağ, takyidat"},
+      {t:"İmar Mevzuatı",d:"İmar Kanunu, plan değişiklikleri, izinler, kotalar"},
+      {t:"Vergi Mevzuatı",d:"Emlak vergisi, KDV, harç, gelir vergisi, değer artış kazancı"},
+      {t:"Kentsel Dönüşüm",d:"6306 sayılı Kanun, riskli yapı, dönüşüm hakları"},
+      {t:"Kira Hukuku",d:"Türk Borçlar Kanunu, kira artış sınırları, tahliye"},
+      {t:"Ekspertiz Mevzuatı",d:"SPK lisansı, değerleme standartları, raporlama"},
+      {t:"Yabancı Edinim",d:"2644 sayılı Kanun, mütekabiliyet, kısıtlama bölgeleri"},
+      {t:"İcra & İflas",d:"Tasfiye, satış, ihale prosedürü, alacaklı hakları"},
+    ].map(function(item){
+      return '<div style="'+css({padding:"12px 14px",background:C.deep,border:"1px solid "+C.border})+'"><div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:12.5,fontWeight:700,color:C.violet,marginBottom:4,letterSpacing:"0.02em"})+'">'+item.t+'</div><div style="'+css({fontFamily:C.mono,fontSize:10.5,color:C.textMut,lineHeight:1.5,letterSpacing:"0.02em"})+'">'+item.d+'</div></div>';
+    }).join('');
+    var body = ''
+      + '<p style="'+css({fontSize:14,lineHeight:1.65,color:C.textSec,marginBottom:22,maxWidth:940})+'">ProX’i sıradan bir asistandan ayıran kritik özellik: <strong style="'+css({color:C.textPri})+'">gayrimenkul mevzuatının tam entegre edilmiş olması</strong>. Resmi Gazete ve TBMM kararları gerçek zamanlı taranır; gayrimenkulü etkileyen her değişiklik veri katmanına işlenir ve <strong style="'+css({color:C.textPri})+'">aynı gün ProX yanıtlarına yansır</strong>.</p>'
+      + '<div style="'+css({display:"grid",gridTemplateColumns:"minmax(0,1fr) minmax(0,1fr)",gap:14,marginBottom:20})+'" class="nadas-twocol">'
+      + '<div style="'+css({background:C.raised,border:"1px solid "+C.violet,padding:"24px 22px"})+'">'
+      + '<div style="'+css({display:"flex",alignItems:"center",gap:10,marginBottom:14})+'"><span style="'+css({width:36,height:36,border:"1px solid "+C.violet,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:C.mono,fontSize:16,color:C.violet,borderRadius:2})+'">📜</span><div><div style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.12em"})+'">KATMAN D.1</div><div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:C.violet,letterSpacing:"0.04em"})+'">RESMİ GAZETE TAKİBİ</div></div></div>'
+      + '<p style="'+css({fontSize:13,color:C.textMut,lineHeight:1.65,margin:"0 0 14px"})+'">T.C. Resmi Gazete her gün otomatik taranır. Gayrimenkulü etkileyen kanunlar, yönetmelikler, tebliğler, KHK’lar ve Cumhurbaşkanlığı kararları tespit edilir; ilgili maddeler veri katmanına işlenir.</p>'
+      + '<ul style="'+css({listStyle:"none",padding:0,margin:0,display:"flex",flexDirection:"column",gap:6})+'">'+rgList+'</ul></div>'
+      + '<div style="'+css({background:C.raised,border:"1px solid "+C.violet,padding:"24px 22px"})+'">'
+      + '<div style="'+css({display:"flex",alignItems:"center",gap:10,marginBottom:14})+'"><span style="'+css({width:36,height:36,border:"1px solid "+C.violet,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:C.mono,fontSize:16,color:C.violet,borderRadius:2})+'">⚖</span><div><div style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.12em"})+'">KATMAN D.2</div><div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:C.violet,letterSpacing:"0.04em"})+'">TBMM KARARI TAKİBİ</div></div></div>'
+      + '<p style="'+css({fontSize:13,color:C.textMut,lineHeight:1.65,margin:"0 0 14px"})+'">TBMM komisyon raporları, genel kurul kararları, kabul edilen ve görüşülen kanun teklifleri canlı takip edilir. <strong style="'+css({color:C.textPri})+'"> Henüz Resmi Gazete’de yayımlanmamış</strong> ama TBMM’den geçmiş düzenlemeler bile ProX yanıtlarında dikkate alınır.</p>'
+      + '<ul style="'+css({listStyle:"none",padding:0,margin:0,display:"flex",flexDirection:"column",gap:6})+'">'+tbmmList+'</ul></div>'
+      + '</div>'
+      + '<div style="'+css({background:C.raised,border:"1px solid "+C.borderStrong,padding:"22px 24px"})+'">'
+      + '<div style="'+css({fontFamily:C.mono,fontSize:10.5,color:C.violet,fontWeight:700,letterSpacing:"0.14em",marginBottom:14})+'">◆ GAYRİMENKUL HUKUKU · TAM DONANIMLI ENTEGRASYON</div>'
+      + '<div style="'+css({display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:14})+'">'+hukukGrid+'</div></div>';
+    return SubSection("D.1","Hukuk + Resmi Gazete katmanı","MEVZUAT TAKİBİ · TBMM · GAYRİMENKUL HUKUKU · CANLI", body);
+  }
+
+  /* ===== D.3 RESMİ GAZETE CANLI TICKER ===== */
+  function ResmiGazeteTicker(){
+    var updates = [
+      {d:"2026-06-18",k:"RESMİ GAZETE",n:"Sayı 32847",t:"Konut Edinme Vergisi Tebliği · Madde 3 değişikliği",c:C.warn},
+      {d:"2026-06-17",k:"TBMM",n:"Komisyon",t:"Kentsel Dönüşüm Kanun Teklifi · 2. tur görüşme tamamlandı",c:C.warn},
+      {d:"2026-06-17",k:"RESMİ GAZETE",n:"Sayı 32846",t:"İmar Yönetmeliği · 14 maddelik değişiklik · ProX’e işlendi",c:C.warn},
+      {d:"2026-06-16",k:"ÇŞB",n:"Genelge",t:"Yapı Ruhsatı 2026/4 sayılı genelge · sokak bazı güncelleme",c:C.accent},
+      {d:"2026-06-15",k:"TCMB",n:"KFE",t:"Mayıs 2026 Konut Fiyat Endeksi yayımlandı · 38 il güncelleme",c:C.primary},
+      {d:"2026-06-14",k:"TKGM",n:"MEGSİS",t:"Yeni 47.000 parsel kaydı sisteme aktarıldı · Trakya bölgesi",c:C.primary},
+      {d:"2026-06-13",k:"TBMM",n:"Genel Kurul",t:"Konut Finansmanı Kanunu · 7. madde kabul edildi",c:C.warn},
+      {d:"2026-06-13",k:"TÜİK",n:"Konut Satış",t:"Mayıs 2026 konut satış istatistikleri yayımlandı · lisans güncellendi",c:C.warn},
+      {d:"2026-06-12",k:"AFAD",n:"Risk Haritası",t:"Marmara fay hattı risk seviyesi güncellendi · İstanbul 14 ilçe",c:C.danger},
+      {d:"2026-06-11",k:"BDDK",n:"Konut Kredi",t:"Mayıs 2026 konut kredisi takip oranları · sektör paylaşımı",c:C.primary},
+    ];
+    var rows = updates.map(function(u,i){
+      return '<div style="'+css({display:"grid",gridTemplateColumns:"100px 100px 120px 1fr",gap:14,padding:"12px 18px",borderBottom:i<updates.length-1?"1px solid "+C.border:"none",alignItems:"center"})+'" class="nadas-feed-row">'
+        + '<span style="'+css({fontFamily:C.mono,fontSize:11,color:C.textMut,letterSpacing:"0.04em"})+'">'+u.d+'</span>'
+        + '<span style="'+css({padding:"2px 8px",background:"transparent",color:u.c,border:"1px solid "+u.c,fontFamily:C.mono,fontSize:9.5,fontWeight:700,letterSpacing:"0.08em",textAlign:"center",whiteSpace:"nowrap",justifySelf:"start"})+'">'+u.k+'</span>'
+        + '<span style="'+css({fontFamily:C.mono,fontSize:10.5,color:C.textFaint,letterSpacing:"0.04em"})+'">'+u.n+'</span>'
+        + '<span style="'+css({fontFamily:"'Inter Tight',sans-serif",fontSize:13,color:C.textSec,lineHeight:1.45})+'">'+u.t+'</span></div>';
+    }).join('');
+    var body = ''
+      + '<p style="'+css({fontSize:14,lineHeight:1.65,color:C.textSec,marginBottom:22,maxWidth:980})+'">Aşağıdaki akış, son <strong style="'+css({color:C.textPri})+'">7 gün içinde ProX’e işlenen mevzuat ve veri güncellemelerini</strong> gösterir. Resmi Gazete’nin her sayısı, TBMM’in her kararı, kamu kurumlarının her aylık verisi otomatik olarak ProX’in cevap katmanına işlenir.</p>'
+      + '<div style="'+css({background:C.deep,border:"1px solid "+C.violet,overflow:"hidden"})+'">'
+      + '<div style="'+css({background:C.elev,padding:"12px 18px",borderBottom:"1px solid "+C.violet,display:"flex",alignItems:"center",gap:14})+'">'
+      + '<span style="'+css({display:"inline-flex",alignItems:"center",gap:6,fontFamily:C.mono,fontSize:10.5,color:C.accent,fontWeight:700,letterSpacing:"0.12em"})+'"><span style="'+css({width:8,height:8,borderRadius:9999,background:C.accent,animation:"nadasPulse 1s ease-in-out infinite"})+'"></span>CANLI · OTOMATIK İŞLENİYOR</span>'
+      + '<span style="'+css({height:1,flex:1,background:C.borderStrong})+'"></span>'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.08em"})+'">SON 7 GÜN · '+updates.length+' KAYIT</span></div>'
+      + '<div style="'+css({maxHeight:360,overflowY:"auto"})+'">'+rows+'</div>'
+      + '<div style="'+css({background:C.elev,padding:"10px 18px",borderTop:"1px solid "+C.border,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:8,fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.06em"})+'">'
+      + '<span>● BUGÜN İŞLENMİŞ: <span style="'+css({color:C.accent,fontWeight:700})+'">3 KAYIT</span></span>'
+      + '<span>● HAFTALIK ORTALAMA: <span style="'+css({color:C.violet,fontWeight:700})+'">~24 KAYIT</span></span>'
+      + '<span>● TAM YANSIMA: <span style="'+css({color:C.primary,fontWeight:700})+'">OTOMATIK · ANLIK</span></span></div>'
+      + '</div>';
+    return SubSection("D.3","Canlı mevzuat akışı · Son 10 işlenen kayıt","RESMİ GAZETE · TBMM · BAKANLIK · KAMU KURUMU · CANLI TAKİP", body);
+  }
+
+  /* ===== E.1 KULLANIM SENARYOLARI (sekmeli) ===== */
+  var SENARYOLAR = [
+    {tag:"BİREYSEL",title:"Birey · Konut Sahibi",icon:"◉",soru:"Beşiktaş’taki dairemi şu an satarsam ne kadara satabilirim? Bekleyeyim mi?",cevap:[
+      "◆ KONUM: İSTANBUL · Beşiktaş · [Mahalle bilgisi alındı]",
+      "◆ ŞU ANKİ DEĞER: 4.2M – 5.8M ₺ (m²: 87.500 ₺ medyan)",
+      "◆ SON 12 AY TREND: ↑ %11.8 (TR ortalama: %14.2 — bölge alt seyirli)",
+      "◆ SATIŞ SÜRESİ: Bölge medyanı 47 gün",
+      "◆ MEVZUAT: Değer artış kazancı vergisi · 5 yıl muafiyet kuralı geçerli",
+      "◆ TAVSİYE FAKTÖRÜ: Bölge momentum azalan trendde · Bekleme önerilmez",
+      "◆ GÜVEN: %94 · 84 emsal kayıt",
+    ]},
+    {tag:"PROFESYONEL",title:"Profesyonel · Emlak Ofisi",icon:"▦",soru:"Kadıköy Caddebostan’da son 30 günde en hızlı satılan 5 mahalle hangileri? Bu mahallelerde hangi metrekare aralığı en aktif?",cevap:[
+      "◆ KAPSAM: İSTANBUL · Kadıköy · Caddebostan ve çevre mahalleler",
+      "◆ EN HIZLI SATILAN 5 MAHALLE (son 30 gün):",
+      "   1. Caddebostan · medyan 22 gün · 156 satış",
+      "   2. Suadiye · 28 gün · 134 satış",
+      "   3. Bostancı · 31 gün · 121 satış",
+      "   4. Erenköy · 34 gün · 98 satış",
+      "   5. Fenerbahçe · 38 gün · 87 satış",
+      "◆ EN AKTİF METRE KARE: 110-140 m² (%62 işlem hacmi)",
+      "◆ FİYAT ARALIĞI: 8.5M – 14M ₺ · m²: 90K-115K ₺",
+      "◆ KAYNAK: ProX motoru · ilan + tapu çapraz doğrulama",
+    ]},
+    {tag:"KURUMSAL",title:"Banka · Teminat Değerleme",icon:"▦",soru:"API üzerinden 50 ilçe için son 60 ay aylık endeks, mahalle bazında çekilmek isteniyor. Format JSON.",cevap:[
+      "◆ İSTEK TİPİ: Kurumsal API · batch sorgu",
+      "◆ KAPSAM: 50 ilçe × ortalama 47 mahalle = ~2.350 endeks serisi",
+      "◆ ZAMAN ARALIĞI: M-198 → M-257 (son 60 ay)",
+      "◆ ÇIKTI: JSON · ISO 8601 tarih formatı · TL bazlı medyan m² ve birim",
+      "◆ İŞLEM BOYUTU: ~141K veri noktası · 8.7 MB sıkıştırılmış",
+      "◆ YANIT SÜRESİ: < 2.4 saniye (batch API · stream destekli)",
+      "◆ SLA: %99.95 uptime · 24/7 destek (Corporate tier)",
+      "◆ DENETİM LOGU: Tüm sorgu + yanıt audit log’a yazıldı",
+    ]},
+    {tag:"HUKUKİ",title:"Hukuki · Mevzuat Sorgusu",icon:"⚖",soru:"Beyoğlu’nda 1975 yılı öncesi yapılmış riskli yapı statüsündeki bir binayı yıkıp yenileme yaparsam, hangi vergi muafiyetlerinden yararlanırım?",cevap:[
+      "◆ MEVZUAT KAPSAMI: 6306 sayılı Afet Riski Altındaki Alanların Dönüştürülmesi Hakkında Kanun",
+      "◆ İLGİLİ MADDELER: Madde 7 (vergi, harç ve fon muafiyetleri)",
+      "◆ MUAFİYETLER:",
+      "   1. Damga vergisi muafiyeti (yapım/yıkım sözleşmeleri)",
+      "   2. KDV indirimi (yeni inşaat 150 m²’ye kadar %1)",
+      "   3. Harçlar muafiyeti (tapu, noter, belediye)",
+      "   4. Veraset ve intikal vergisi muafiyeti",
+      "◆ KOŞUL: Riskli yapı tespitinin onaylı olması (Bakanlık tarafından)",
+      "◆ RESMİ GAZETE GÜNCEL: Son değişiklik takip ediliyor · 2026-04-12",
+      "◆ DİKKAT: Vergi hukukçusu ile çalışılması önerilir. ProX yasal danışmanlık vermez.",
+    ]},
+  ];
+  var senaryoActive = 0;
+  function KullanimSenaryolari(){
+    var active = SENARYOLAR[senaryoActive];
+    var tabs = SENARYOLAR.map(function(s,i){
+      var on = senaryoActive===i;
+      return '<button type="button" onclick="nxSetTab('+i+')" style="'+css({flex:"1 1 200px",padding:"14px 16px",background:on?C.violet:C.raised,color:on?"#fff":C.textMut,border:"none",cursor:"pointer",fontFamily:C.mono,fontSize:11,fontWeight:700,letterSpacing:"0.1em",display:"flex",alignItems:"center",gap:8,justifyContent:"center"})+'"><span style="'+css({fontSize:14})+'">'+s.icon+'</span>'+s.tag+'</button>';
+    }).join('');
+    var lines = active.cevap.map(function(line){
+      var col = line.indexOf("◆")===0 ? C.violet : (line.indexOf("   ")===0 ? C.textMut : C.textSec);
+      var fw = line.indexOf("◆")===0 ? 600 : 400;
+      return '<div style="'+css({color:col,fontWeight:fw,marginBottom:3})+'">'+line+'</div>';
+    }).join('');
+    var body = ''
+      + '<p style="'+css({fontSize:14,lineHeight:1.65,color:C.textSec,marginBottom:22,maxWidth:940})+'">ProX’in gerçek dünya kullanım senaryolarından örnekler. Her senaryo, ilgili kullanıcı tipinin tipik bir sorusunu ve ProX’in yapılandırılmış yanıtını gösterir. Yanıtlar <strong style="'+css({color:C.textPri})+'">temsilîdir</strong>, gerçek çıktı formatına benzer.</p>'
+      + '<div style="'+css({display:"flex",gap:1,marginBottom:0,background:C.borderStrong,border:"1px solid "+C.borderStrong,flexWrap:"wrap"})+'">'+tabs+'</div>'
+      + '<div style="'+css({border:"1px solid "+C.violet,borderTop:"none",background:C.deep})+'">'
+      + '<div style="'+css({padding:"20px 24px",borderBottom:"1px solid "+C.border})+'">'
+      + '<div style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.12em",marginBottom:8,fontWeight:700})+'">● '+active.title.toUpperCase()+' · KULLANICI SORUSU</div>'
+      + '<div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:17,color:C.textPri,lineHeight:1.45,fontWeight:500,letterSpacing:"-0.01em"})+'">"'+active.soru+'"</div></div>'
+      + '<div style="'+css({padding:"20px 24px",background:"rgba(167,139,250,0.03)"})+'">'
+      + '<div style="'+css({display:"flex",alignItems:"center",gap:10,marginBottom:14})+'"><span style="'+css({padding:"3px 10px",background:C.violet,color:"#fff",fontFamily:C.mono,fontSize:10,fontWeight:700,letterSpacing:"0.1em"})+'">◆ ProX</span><span style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.06em"})+'">YANIT · DETERMİNİSTİK · KAYNAK ŞEFFAF</span></div>'
+      + '<div style="'+css({fontFamily:C.mono,fontSize:12.5,color:C.textSec,lineHeight:1.85,whiteSpace:"pre-wrap"})+'">'+lines+'</div></div>'
+      + '</div>'
+      + '<div style="'+css({marginTop:16,fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.04em",lineHeight:1.5,textAlign:"center"})+'">⌬ Yukarıdaki örnekler temsilîdir. Gerçek ProX yanıtlarının formatı, kaynak şeffaflığı ve veri detayları aynıdır.</div>';
+    return SubSection("E.1","Kullanım senaryoları · 4 tipik örnek","GERÇEK SORU-CEVAP · BİREY · PROFESYONEL · KURUMSAL · HUKUKİ", body);
+  }
+  window.nxSetTab = function(i){ senaryoActive=i; var m=document.getElementById('senaryo-mount'); if(m) m.innerHTML=KullanimSenaryolari(); };
+
+  /* ===== F.1 ERİŞİM PAKETLERİ ===== */
+  function ErisimPaketleri(){
+    var paketler = [
+      {name:"FREE",sub:"Ücretsiz · Kayıt olmadan",fiyat:"0 ₺",birim:"/ ay",desc:"ProX’i denemek için. Sınırlı sorgu hakkı, ana özellikler.",ozellikler:["5 ProX sorgusu / gün","İl + ilçe bazlı sorgular","Son 12 aylık veri erişimi","Temel hukuk bilgisi","Chat arayüzü"],cta:"ÜCRETSİZ DENE",href:"https://www.emlakekspertizi.com/yapay-zeka",color:C.textMut},
+      {name:"PROFESSIONAL",sub:"Bireysel profesyonel",fiyat:"950 ₺",birim:"/ ay",desc:"Emlak danışmanları, küçük ofisler, bireysel yatırımcılar için.",ozellikler:["200 ProX sorgusu / gün","Mahalle bazlı sorgular","Son 60 aylık veri erişimi","Gayrimenkul hukuku tam erişim","Resmi Gazete bildirimleri","PDF rapor çıktısı"],cta:"PROFESSIONAL AL",href:"https://www.emlakekspertizi.com/uyelik?tier=professional",color:C.primary},
+      {name:"INVESTOR",sub:"Yatırımcı paketi",fiyat:"1.250 ₺",birim:"/ ay",desc:"Profesyonel yatırımcılar için tam ProX yetenekleri + bölge analizi.",ozellikler:["Sınırsız ProX sorgu","Cadde + sokak bazlı sorgular","Tam 257 ay veri erişimi","Resmi Gazete + TBMM canlı takip","Mevzuat değişiklik uyarıları","Bölge momentum panelleri","Öncelikli destek · 4h"],cta:"INVESTOR AL",href:"https://www.emlakekspertizi.com/uyelik?tier=investor",color:C.violet,featured:true},
+      {name:"CORPORATE",sub:"Kurumsal · 10+ kullanıcı",fiyat:"3.750 ₺",birim:"/ ay",desc:"Şirketler, kurumsal yatırımcılar için tam Investor + ekip yetenekleri.",ozellikler:["Sınırsız ProX (10 kullanıcı)","Tüm Investor özellikleri","Ekip yönetimi paneli","Beyaz etiketli PDF","API erişimi (kısıtlı)","Aylık özel research raporu","Dedicated hesap yöneticisi"],cta:"CORPORATE AL",href:"https://www.emlakekspertizi.com/uyelik?tier=corporate",color:C.accent},
+      {name:"API · KURUMSAL",sub:"Geliştiriciler için",fiyat:"Özel",birim:"teklif",desc:"RESTful API üzerinden ProX’e doğrudan erişim. Banka, sigorta, büyük portföy yöneticileri için.",ozellikler:["RESTful API · JSON","Batch sorgu desteği","Stream API (gerçek zamanlı)","%99.95 SLA garantisi","Denetim log erişimi","Custom rate limit","Dedicated teknik destek"],cta:"TEKLİF AL",href:"mailto:bilgi@emlakekspertizi.com?subject=ProX%20API%20Teklif%20Talebi",color:C.warn},
+    ];
+    var cards = paketler.map(function(p){
+      var feats = p.ozellikler.map(function(o){ return '<li style="'+css({display:"flex",alignItems:"flex-start",gap:8,fontSize:11.5,color:C.textSec,lineHeight:1.55})+'"><span style="'+css({color:p.color,fontFamily:C.mono,fontSize:11,lineHeight:1.5})+'">✓</span>'+o+'</li>'; }).join('');
+      return '<div style="'+css({background:p.featured?C.elev:C.raised,padding:"26px 22px",position:"relative",borderTop:p.featured?"3px solid "+p.color:"3px solid transparent",display:"flex",flexDirection:"column"})+'">'
+        + (p.featured?'<div style="'+css({position:"absolute",top:-3,right:12,padding:"3px 10px",background:p.color,color:"#fff",fontFamily:C.mono,fontSize:9,fontWeight:700,letterSpacing:"0.12em"})+'">⭐ POPÜLER</div>':'')
+        + '<div style="'+css({marginBottom:14})+'"><div style="'+css({fontFamily:C.mono,fontSize:11,color:p.color,fontWeight:700,letterSpacing:"0.12em",marginBottom:4})+'">'+p.name+'</div><div style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.06em"})+'">'+p.sub+'</div></div>'
+        + '<div style="'+css({marginBottom:14,paddingBottom:14,borderBottom:"1px solid "+C.border})+'"><div style="'+css({display:"flex",alignItems:"baseline",gap:6})+'"><span style="'+css({fontFamily:"'Sora',sans-serif",fontSize:"1.8rem",fontWeight:700,color:C.textPri,letterSpacing:"-0.02em",lineHeight:1})+'">'+p.fiyat+'</span><span style="'+css({fontFamily:C.mono,fontSize:11,color:C.textFaint,letterSpacing:"0.04em"})+'">'+p.birim+'</span></div></div>'
+        + '<p style="'+css({fontSize:12,color:C.textMut,lineHeight:1.55,margin:"0 0 14px"})+'">'+p.desc+'</p>'
+        + '<ul style="'+css({listStyle:"none",padding:0,margin:"0 0 18px",display:"flex",flexDirection:"column",gap:6,flex:1})+'">'+feats+'</ul>'
+        + '<a href="'+p.href+'" target="_blank" rel="noopener noreferrer" style="'+css({display:"block",textAlign:"center",padding:"11px 12px",background:p.featured?p.color:"transparent",color:p.featured?"#fff":p.color,border:"1px solid "+p.color,fontFamily:C.mono,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textDecoration:"none",borderRadius:2})+'">'+p.cta+' →</a></div>';
+    }).join('');
+    var body = ''
+      + '<div id="erisim-paketleri" style="'+css({display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:1,border:"1px solid "+C.borderStrong,background:C.borderStrong})+'">'+cards+'</div>'
+      + '<div style="'+css({marginTop:22,padding:"18px 22px",background:"linear-gradient(135deg, "+C.elev+" 0%, "+C.raised+" 100%)",border:"1px solid "+C.violet,display:"flex",alignItems:"center",justifyContent:"space-between",gap:16,flexWrap:"wrap"})+'">'
+      + '<div><div style="'+css({fontFamily:C.mono,fontSize:10.5,color:C.violet,fontWeight:700,letterSpacing:"0.12em",marginBottom:4})+'">◆ TÜM PAKETLER · ORTAK ÖZELLİKLER</div><p style="'+css({fontSize:12.5,color:C.textMut,margin:0,lineHeight:1.55})+'">Deterministik motor · halüsinasyon sıfır · şeffaf kaynak · Türkçe optimize · sorgu denetim logu · KVKK uyumlu</p></div>'
+      + '<a href="https://www.emlakekspertizi.com/yapay-zeka" style="'+css({display:"inline-flex",alignItems:"center",gap:8,padding:"12px 22px",background:C.violet,color:"#fff",fontFamily:C.mono,fontSize:11.5,fontWeight:700,letterSpacing:"0.1em",textDecoration:"none",borderRadius:2,whiteSpace:"nowrap"})+'">ProX’i ŞİMDİ DENE →</a></div>';
+    return SubSection("F.1","ProX erişim paketleri · Free → API","5 PAKET · BİREYSEL · PROFESYONEL · KURUMSAL · API", body);
+  }
+
+  /* ===== G.1 TEKNİK ÖZELLİKLER ===== */
+  function TeknikOzellikler(){
+    var ozellikler = [
+      {k:"Motor tipi",v:"ML/MML (Machine Learning + Mathematical Modeling Layer)",c:C.violet},
+      {k:"Çıkış modeli",v:"Deterministik · aynı girdi = aynı çıktı",c:C.violet},
+      {k:"Halüsinasyon",v:"Sıfır · veri tabanı dışı üretim yapmaz",c:C.accent},
+      {k:"Dil",v:"Türkçe optimize (resmi + halk dili)",c:C.primary},
+      {k:"Sorgu süresi",v:"Tipik 0.8 – 2.4 saniye",c:C.primary},
+      {k:"Veri kaynağı",v:"27 katman · Nadas özel + kamu + saha + ilan + mevzuat",c:C.primary},
+      {k:"Veri kapasitesi",v:"480M+ aktif kayıt · 50 TB depolama",c:C.violet},
+      {k:"Tarihsel zincir",v:"257 ay · 2005-01 → 2026-05 · kesintisiz",c:C.violet},
+      {k:"Granularity",v:"İl → İlçe → Mahalle → Cadde → Sokak",c:C.primary},
+      {k:"Coğrafi kapsam",v:"81 il · 973 ilçe · 50.000+ mahalle",c:C.primary},
+      {k:"Hukuk donanımı",v:"Tapu · İmar · Vergi · Kira · Kentsel Dönüşüm · SPK · İcra",c:C.violet},
+      {k:"Resmi Gazete takibi",v:"Günlük otomatik tarama · ilgili maddeler veri katmanına işlenir",c:C.accent},
+      {k:"TBMM takibi",v:"Komisyon + Genel Kurul kararları · canlı entegrasyon",c:C.accent},
+      {k:"Kaynak şeffaflığı",v:"Her yanıt için katman + kayıt sayısı + tarih + güven skoru",c:C.violet},
+      {k:"Güven skoru aralığı",v:"%92.4 – %98.2 (sistem-wide medyan: %96)",c:C.accent},
+      {k:"Erişim arayüzü",v:"Chat (web) · RESTful API · Stream API (batch)",c:C.primary},
+      {k:"API SLA",v:"%99.95 uptime (Corporate ve API paketleri)",c:C.warn},
+      {k:"Denetim",v:"Sorgu + yanıt audit log · kurumsal müşterilerde tam erişim",c:C.primary},
+      {k:"KVKK uyum",v:"Tüm sorgu + yanıt KVKK uyumlu · kişisel veri işleme açıklaması",c:C.accent},
+      {k:"Marka",v:"ProX · Nadas akıllı emlak asistanı",c:C.violet},
+    ];
+    var rows = ozellikler.map(function(row,i){
+      return '<div style="'+css({display:"grid",gridTemplateColumns:"minmax(160px,1fr) minmax(0,3fr)",gap:16,padding:"12px 20px",borderBottom:i<ozellikler.length-1?"1px solid "+C.border:"none",background:i%2===0?C.raised:"rgba(0,0,0,0.15)"})+'" class="nadas-tech-row">'
+        + '<div style="'+css({fontFamily:C.mono,fontSize:11,color:C.textMut,letterSpacing:"0.04em"})+'">'+row.k+'</div>'
+        + '<div style="'+css({fontFamily:C.mono,fontSize:11.5,color:row.c,fontWeight:600,letterSpacing:"0.02em"})+'">'+row.v+'</div></div>';
+    }).join('');
+    var body = '<div style="'+css({border:"1px solid "+C.borderStrong,background:C.raised})+'">'+rows+'</div>';
+    return SubSection("G.1","Teknik özellikler · Tam liste","MOTOR · VERİ · ERİŞİM · DENETİM · 20 KALEM", body);
+  }
+
+  /* ===== EMLAKEKSPERTIZI ÜRÜN BÖLÜMÜ ===== */
+  var EMLAK_LOGO_URI = "";
+  function EmlakEkspertiziProduct(){
+    var logo = EMLAK_LOGO_URI
+      ? '<img src="'+EMLAK_LOGO_URI+'" alt="emlakekspertizi.com" width="88" height="88" style="display:block;border-radius:2px">'
+      : '<span style="'+css({width:88,height:88,display:"flex",alignItems:"center",justifyContent:"center",background:"#020812",border:"1px solid "+C.accent,borderRadius:6,fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:C.accent,textAlign:"center",lineHeight:1.2,padding:6})+'">emlak<br>ekspertizi</span>';
+    return '<section style="'+css({background:"linear-gradient(135deg, "+C.deep+" 0%, "+C.raised+" 100%)",borderTop:"2px solid "+C.violet,borderBottom:"1px solid "+C.borderStrong,padding:"44px 16px 36px",position:"relative",overflow:"hidden"})+'">'
+      + '<div style="'+css({position:"absolute",inset:0,backgroundImage:"radial-gradient(circle at 80% 20%, rgba(167,139,250,0.16), transparent 60%), radial-gradient(circle at 10% 80%, rgba(56,189,248,0.06), transparent 50%)"})+'"></div>'
+      + '<div style="'+css({position:"relative",maxWidth:1280,margin:"0 auto"})+'">'
+      + '<div style="'+css({display:"flex",alignItems:"center",gap:10,marginBottom:18,fontFamily:C.mono,fontSize:11,letterSpacing:"0.14em"})+'"><span style="'+css({color:C.violet,fontWeight:700})+'">◆ ProX’E DOĞRUDAN ERİŞİM</span><span style="'+css({height:1,flex:1,background:C.violet,opacity:0.4})+'"></span><span style="'+css({color:C.textMut})+'">EMLAKEKSPERTIZI.COM · ProX</span></div>'
+      + '<div style="'+css({display:"grid",gridTemplateColumns:"auto 1fr",gap:22,alignItems:"center",marginBottom:14})+'" class="nadas-twocol">'
+      + logo
+      + '<div><h2 style="'+css({fontFamily:"'Sora',sans-serif",fontSize:"clamp(1.8rem,4.6vw,3rem)",fontWeight:700,lineHeight:1.05,letterSpacing:"-0.025em",margin:0,color:C.textPri})+'"><span style="'+css({color:"#fff"})+'">emlak</span><span style="'+css({color:"#2DD4BF"})+'">ekspertizi</span><span style="'+css({color:C.accent})+'">.com</span><span style="'+css({color:C.violet,marginLeft:12})+'">/ ProX</span></h2>'
+      + '<div style="'+css({fontFamily:C.mono,fontSize:11,color:C.violet,letterSpacing:"0.18em",marginTop:4,fontWeight:700})+'">AKILLI EMLAK ASİSTANI · DETERMİNİSTİK</div></div></div>'
+      + '<p style="'+css({marginTop:8,fontSize:15,lineHeight:1.6,color:C.textSec,maxWidth:960})+'">ProX’e en hızlı yol: emlakekspertizi.com platformunda <strong style="'+css({color:C.violet})+'">chat arayüzü</strong>. Ücretsiz başlayın, profesyonel veya kurumsal paketlerle tam kapasiteye geçin. Soru sorun, <strong style="'+css({color:C.textPri})+'">480 milyon kayıttan deterministik cevap alın</strong>.</p>'
+      + '<div style="'+css({marginTop:22,display:"flex",gap:12,flexWrap:"wrap"})+'">'
+      + '<a href="https://www.emlakekspertizi.com/yapay-zeka" target="_blank" rel="noopener noreferrer" style="'+css({display:"inline-flex",alignItems:"center",gap:8,padding:"12px 22px",background:C.violet,color:"#fff",fontFamily:C.mono,fontSize:12,fontWeight:700,letterSpacing:"0.1em",textDecoration:"none",borderRadius:2})+'">ProX CHAT’İ AÇ →</a>'
+      + '<a href="https://www.emlakekspertizi.com/uyelik" target="_blank" rel="noopener noreferrer" style="'+css({display:"inline-flex",alignItems:"center",gap:8,padding:"12px 22px",background:"transparent",color:C.primary,border:"1px solid "+C.primary,fontFamily:C.mono,fontSize:12,fontWeight:700,letterSpacing:"0.1em",textDecoration:"none",borderRadius:2})+'">ÜYELİK PAKETLERİ →</a>'
+      + '<a href="mailto:bilgi@emlakekspertizi.com?subject=ProX%20API%20Teklif" style="'+css({display:"inline-flex",alignItems:"center",gap:8,padding:"12px 22px",background:"transparent",color:C.accent,border:"1px solid "+C.accent,fontFamily:C.mono,fontSize:12,fontWeight:700,letterSpacing:"0.1em",textDecoration:"none",borderRadius:2})+'">API TEKLİF AL →</a>'
+      + '</div></div></section>';
+  }
+
+  /* ===== FOOTER ===== */
+  function MastheadFooter(){
+    var col1 = ["Veri Altyapısı","Çözümler","ProX","Research","Hakkımızda","İletişim"].map(function(l){
+      return '<a href="'+navHref(l)+'" style="'+css({display:"block",fontFamily:C.mono,fontSize:11,color:C.textMut,textDecoration:"none",padding:"3px 0",letterSpacing:"0.04em"})+'">'+l+'</a>';
+    }).join('');
+    var col2 = [
+      ["Chat Arayüzü","https://www.emlakekspertizi.com/yapay-zeka"],
+      ["Üyelik Paketleri","https://www.emlakekspertizi.com/uyelik"],
+      ["Kurumsal API","mailto:bilgi@emlakekspertizi.com"],
+      ["White-Label","mailto:bilgi@emlakekspertizi.com"],
+      ["Veri Lisansı","mailto:bilgi@emlakekspertizi.com"],
+    ].map(function(x){ return '<a href="'+x[1]+'" style="'+css({display:"block",fontFamily:C.mono,fontSize:11,color:C.textMut,textDecoration:"none",padding:"3px 0",letterSpacing:"0.04em"})+'">'+x[0]+'</a>'; }).join('');
+    var col3 = [
+      ["destek@nadas.com.tr","mailto:destek@nadas.com.tr"],
+      ["destek@emlakekspertizi.com","mailto:destek@emlakekspertizi.com"],
+      ["bilgi@emlakekspertizi.com","mailto:bilgi@emlakekspertizi.com"],
+      ["KVKK","kvkk.html"],
+      ["Çerez Politikası","cerez.html"],
+    ].map(function(x){ return '<a href="'+x[1]+'" style="'+css({display:"block",fontFamily:C.mono,fontSize:11,color:C.textMut,textDecoration:"none",padding:"3px 0",letterSpacing:"0.04em"})+'">'+x[0]+'</a>'; }).join('');
+    return '<footer style="'+css({borderTop:"1px solid "+C.borderStrong,padding:"30px 16px 24px",background:C.deep})+'">'
+      + '<div style="'+css({maxWidth:1280,margin:"0 auto"})+'">'
+      + '<div style="'+css({display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:20,marginBottom:24})+'">'
+      + '<div><div style="'+css({display:"flex",alignItems:"center",gap:10,marginBottom:10})+'"><span style="'+css({width:30,height:30,border:"1.5px solid "+C.primary,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:C.primary,borderRadius:2})+'">N</span><div><div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:20,fontWeight:700,color:C.textPri,letterSpacing:"-0.02em"})+'">NADAS</div><div style="'+css({fontFamily:C.mono,fontSize:9,color:C.violet,letterSpacing:"0.16em",fontWeight:700})+'">ProX · AKILLI ASİSTANI</div></div></div>'
+      + '<p style="'+css({fontSize:12,color:C.textMut,maxWidth:380,lineHeight:1.5,margin:0})+'">Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti.<br>Türkiye’nin ilk emlak endeksi · Online emlak ekspertiz platformu.</p></div>'
+      + '<div style="'+css({display:"flex",gap:32,flexWrap:"wrap"})+'">'
+      + '<div><div style="'+css({fontFamily:C.mono,fontSize:10,color:C.violet,fontWeight:700,letterSpacing:"0.12em",marginBottom:10})+'">NADAS</div>'+col1+'</div>'
+      + '<div><div style="'+css({fontFamily:C.mono,fontSize:10,color:C.violet,fontWeight:700,letterSpacing:"0.12em",marginBottom:10})+'">ProX</div>'+col2+'</div>'
+      + '<div><div style="'+css({fontFamily:C.mono,fontSize:10,color:C.violet,fontWeight:700,letterSpacing:"0.12em",marginBottom:10})+'">İLETİŞİM</div>'+col3+'</div>'
+      + '</div></div>'
+      + '<div style="'+css({paddingTop:16,borderTop:"1px solid "+C.border,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:8,fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.06em"})+'"><span>© 2005-2026 NADAS · Tüm hakları saklıdır.</span><span>ProX · DETERMİNİSTİK · HALÜSİNASYON SIFIR</span></div>'
+      + '</div></footer>';
+  }
+
+  /* ===== SAYFA MONTAJI ===== */
+  var PROXTICK = [
+    ["ProX", "AKILLI EMLAK ASİSTANI"], ["MOTOR", "DETERMİNİSTİK"], ["HALÜSİNASYON", "SIFIR"],
+    ["VERİ", "480M+ KAYIT"], ["TARİHSEL ZİNCİR", "21 YIL · 257 AY"], ["MAHALLE", "50.000+"],
+    ["SOKAK BAZI", "İL · İLÇE · MAH · CAD · SOK"], ["RESMİ GAZETE", "CANLI TAKİP"],
+    ["TBMM KARARI", "CANLI TAKİP"], ["HUKUK", "TAM DONANIMLI"], ["MOTOR", "ML/MML"],
+    ["DİL", "TÜRKÇE OPTİMİZE"], ["ERİŞİM", "ÜCRETSİZ · PRO · API"], ["GÜVEN", "%96 MEDYAN"],
+  ];
+  function renderApp(){
+    return NX.Ticker(PROXTICK) + NX.Masthead("ProX") + NX.Nav("ProX") + HeroProX()
+      + SectionDivider("A","ProX Nedir?","TANIM · 6 TEMEL YETENEK") + ProXNedir() + ProX6Yetenek()
+      + SectionDivider("B","Standart LLM Değil","7 KRİTİK FARK · KARŞILAŞTIRMA") + NedenStandartLLMDegil()
+      + SectionDivider("C","Veri Altyapısı","480M KAYIT · 5 KATMAN · 27 KAYNAK") + ProXVeriAltyapisi()
+        + '<div id="eko-mount">'+VeriEkosistemi()+'</div>' + VeriPipeline()
+      + SectionDivider("D","Hukuk + Resmi Gazete","MEVZUAT TAKİBİ · CANLI · 7 GÜN AKIŞ") + HukukResmiGazete() + ResmiGazeteTicker()
+      + SectionDivider("E","Kullanım Senaryoları","4 TİPİK ÖRNEK · GERÇEK SORU-CEVAP") + '<div id="senaryo-mount">'+KullanimSenaryolari()+'</div>'
+      + SectionDivider("F","Erişim Paketleri","FREE → PRO → INVESTOR → CORPORATE → API") + ErisimPaketleri()
+      + SectionDivider("G","Teknik Özellikler","20 KALEM · MOTOR + VERİ + ERİŞİM") + TeknikOzellikler()
+      + EmlakEkspertiziProduct() + NX.Footer();
+  }
+
+  /* ===== ÇALIŞMA ZAMANI ===== */
+  document.getElementById('app').innerHTML = renderApp();
+
+  // Saat
+  function tick(){ var el=document.getElementById('mast-time'); if(el){ var d=new Date(); el.textContent=d.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}); } }
+  tick(); setInterval(tick,1000);
+
+  // Canlı sayaçlar
+  var kayit=480234521;
+  setInterval(function(){ kayit += Math.floor(Math.random()*8)+1; var el=document.getElementById('prox-kayit'); if(el) el.textContent=kayit.toLocaleString("tr-TR"); },800);
+  setInterval(function(){ var el=document.getElementById('prox-aktif'); if(el) el.textContent=Math.floor(Math.random()*(28-6)+6); },2000);
+  setInterval(function(){ var el=document.getElementById('prox-guncelleme'); if(el) el.textContent=Math.floor(Math.random()*(7-1)+1)+"sn ÖNCE"; },2000);
+
+  // Çok-alan-adı SEO: canonical + og:url + og:image mevcut domaine ayarla
+  (function(){
+    try {
+      var o = location.origin + location.pathname;
+      var can = document.querySelector('link[rel="canonical"]'); if(can) can.setAttribute('href', o);
+      var ogu = document.querySelector('meta[property="og:url"]'); if(ogu) ogu.setAttribute('content', o);
+      ['meta[property="og:image"]','meta[name="twitter:image"]'].forEach(function(sel){
+        var m=document.querySelector(sel); if(m){ try{ m.setAttribute('content', new URL(m.getAttribute('content'), location.href).href); }catch(e){} }
+      });
+    } catch(e){}
+  })();
+})();
+</script>
+</body>
+</html>

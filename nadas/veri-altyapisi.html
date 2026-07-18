@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Veri Altyapısı — NADAS · 480M Kayıt · 38 Boyutlu DNA · 7M Olay · Since 2005</title>
+<meta name="description" content="NADAS veri altyapısı: 480M+ kayıt timeseries, 38 boyutlu mahalle DNA'sı (25.000+ çapa), 7M+ olay markırı, 50 TB veri, 21 yıllık tarihsel zincir. PostgreSQL + ClickHouse hibrit mimari, ML/MML işleme, kurumsal API. Halüsinasyonsuz, gerçek veritabanı.">
+<meta name="theme-color" content="#06101B">
+<link rel="canonical" href="https://www.nadas.com.tr/veri-altyapisi">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%2306101B'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%2338BDF8'%3EN%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NADAS">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="Veri Altyapısı — NADAS · 480M Kayıt · 38 Boyutlu DNA · 7M Olay">
+<meta property="og:description" content="Üç temel katman. 38 boyutlu mahalle DNA'sı. 7 milyon olay. PostgreSQL + ClickHouse hibrit mimari, ML/MML işleme, kurumsal API. Halüsinasyonsuz, gerçek veritabanı.">
+<meta property="og:image" content="og-veri-altyapisi.png">
+<meta property="og:url" content="https://www.nadas.com.tr/veri-altyapisi">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Veri Altyapısı — NADAS">
+<meta name="twitter:description" content="480M kayıt · 38 boyutlu DNA · 7M olay · 50 TB · 21 yıllık zincir. Gerçek veritabanı, halüsinasyonsuz.">
+<meta name="twitter:image" content="og-veri-altyapisi.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Dataset","name":"NADAS Veri Altyapısı","description":"480M+ kayıt timeseries, 38 boyutlu mahalle DNA'sı, 7M+ olay markırı, 50 TB veri, 257 aylık tarihsel zincir.","creator":{"@type":"Organization","name":"NADAS Gayrimenkul Bilgi İletişim Sistemleri","url":"https://www.nadas.com.tr"},"temporalCoverage":"2005-01/2026-05","spatialCoverage":"Türkiye","variableMeasured":["konut fiyat","mahalle DNA","olay markırı","güven skoru"]}
+</script>
+<style>
+  @keyframes nadasFlow { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+</style>
+</head>
+<body>
+<div id="app">
+  <noscript>
+    <div style="max-width:900px;margin:0 auto;padding:48px 20px;font-family:'Sora',sans-serif">
+      <h1 style="color:#38BDF8">NADAS Veri Altyapısı — 480M kayıt · 38 boyutlu DNA · 7M olay</h1>
+      <p style="color:#CBD5E1">PostgreSQL + ClickHouse hibrit mimari, ML/MML işleme, kurumsal API. Bu sayfayı görüntülemek için JavaScript gereklidir.</p>
+    </div>
+  </noscript>
+</div>
+
+<script src="js/core.js?v=2"></script>
+<script>
+(function () {
+  "use strict";
+  var C = NX.C, css = NX.css;
+  NX.setAccent(C.primary);
+
+  var VATICK = [
+    ["TIMESERIES MONTHLY", "480M+ ROWS"], ["DNA ANCHORS", "25.000+ MAHALLE"], ["EVENT MARKERS", "7M+ KAYIT"], ["STORAGE", "50 TB+"],
+    ["DAILY INGEST", "~1.2M ROWS"], ["API LATENCY P95", "84ms"], ["UPTIME 30D", "99.97%"], ["ACTIVE NEIGHBORHOODS", "50.084"],
+    ["CATEGORIES", "38 ACTIVE"], ["TIME COVERAGE", "257 MONTHS · 21 YIL"], ["PROX ASİSTANI", "ÇEVRİMİÇİ"], ["FAY HATTI VERİTABANI", "BAĞLI"],
+  ];
+
+  function Progress(value, color, height) {
+    color = color || C.primary; height = height || 4;
+    return '<div style="' + css({ height: height, background: "rgba(255,255,255,0.06)", overflow: "hidden" }) + '"><div style="' + css({ height: "100%", width: value + "%", background: color, transformOrigin: "left", animation: "nadasGrow 1.5s cubic-bezier(.2,.7,.2,1) forwards" }) + '"></div></div>';
+  }
+  function cu(target, suf, pre) { return '<span data-cu="' + target + '"' + (suf ? ' data-suf="' + suf + '"' : '') + (pre ? ' data-pre="' + pre + '"' : '') + '>' + (pre || '') + '0' + (suf || '') + '</span>'; }
+
+  /* ===== LOKAL SECTION PRIMITIFLERI (bu sayfanın kompakt gövde stili) ===== */
+  function SectionDivider(index, title, subtitle) {
+    return '<div style="' + css({ background: C.deep, borderTop: "1px solid " + C.primary, borderBottom: "1px solid " + C.borderStrong, padding: "10px 16px" }) + '">'
+      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }) + '">'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, letterSpacing: "0.14em", fontWeight: 700 }) + '">' + index + '</span>'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textPri, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }) + '">' + title + '</span>'
+      + (subtitle ? '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '">· ' + subtitle + '</span>' : '')
+      + '</div></div>';
+  }
+  function SubSection(num, title, eyebrow, children) {
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "20px 16px" }) + '">'
+      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 12, flexWrap: "wrap" }) + '">'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">' + num + '</span>'
+      + '<h2 style="' + css({ fontSize: "clamp(1.25rem,2.8vw,1.7rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri, lineHeight: 1.15 }) + '">' + title + '</h2>'
+      + (eyebrow ? '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.08em", marginLeft: "auto" }) + '">' + eyebrow + '</span>' : '')
+      + '</div>' + children + '</div></section>';
+  }
+
+  /* ===== HERO ===== */
+  function HeroHeadline() {
+    var stats = [
+      { n: 480, suf: "M+", lbl: "VERİ KAYDI" }, { n: 25, suf: ".000+", lbl: "DNA ÇAPA · MAHALLE" },
+      { n: 7, suf: "M+", lbl: "OLAY MARKIRI" }, { n: 50, suf: " TB", lbl: "VERİ HACMİ" },
+      { n: 257, suf: " AY", lbl: "2005-01 → 2026-05" },
+    ].map(function (s) {
+      return '<div style="' + css({ background: C.raised, padding: "11px 14px" }) + '"><div style="' + css({ fontSize: 19, fontWeight: 700, color: C.primary, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + cu(s.n, s.suf) + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, marginTop: 5, letterSpacing: "0.08em" }) + '">' + s.lbl + '</div></div>';
+    }).join("");
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px 18px", position: "relative", overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 85% 30%, rgba(56,189,248,0.08), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12, fontFamily: C.mono, fontSize: 10.5, letterSpacing: "0.12em", textTransform: "uppercase" }) + '"><span style="' + css({ color: C.primary }) + '">◆ VERİ ALTYAPISI</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span style="' + css({ color: C.textFaint }) + '">TÜRKİYE’NİN GAYRİMENKUL KARAR MERKEZİ</span></div>'
+      + '<h1 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(2rem,5.5vw,3.4rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri, maxWidth: 1100 }) + '">Üç temel katman. 38 boyutlu mahalle DNA’sı. 7 milyon olay.<br><span style="' + css({ color: C.primary }) + '">Bir gayrimenkul karar merkezi.</span></h1>'
+      + '<p style="' + css({ marginTop: 14, fontSize: 15.5, lineHeight: 1.55, color: C.textSec, maxWidth: 920 }) + '">Aylık timeseries · 38 boyutlu DNA demografik vektörü · 7M+ tarihsel olay markırı. PostgreSQL + ClickHouse hibrit mimari, ML/MML işleme katmanı, kurumsal API entegrasyonu. 480 milyon kayıtlık veri hafızası, 21 yıllık tarihsel zincir — 50 TB veri.</p>'
+      + '<div style="' + css({ marginTop: 18, display: "flex", gap: 10, flexWrap: "wrap" }) + '">'
+      + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 12, padding: "10px 16px", border: "1px solid " + C.accent, background: "rgba(52,211,153,0.06)", borderRadius: 2 }) + '"><span style="' + css({ width: 8, height: 8, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.accent, fontWeight: 700, letterSpacing: "0.1em" }) + '">HALÜSİNASYONSUZ · GERÇEK VERİTABANI</span><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textMut, letterSpacing: "0.04em" }) + '">· ML/MML matematiksel işleme · ProX akıllı asistan</span></div>'
+      + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 14px", border: "1px solid " + C.primary, background: "rgba(56,189,248,0.06)", borderRadius: 2 }) + '"><span style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 14, color: C.primary, fontWeight: 700, letterSpacing: "-0.01em" }) + '">SINCE 2005</span><span style="' + css({ width: 1, height: 14, background: C.borderStrong }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, fontWeight: 700, letterSpacing: "0.1em" }) + '">KATEGORİNİN GELİŞTİRİCİSİ</span></div></div>'
+      + '<div style="' + css({ marginTop: 16, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong, maxWidth: 980 }) + '">' + stats + '</div>'
+      + '</div></section>';
+  }
+
+  /* ===== EDITORIAL: VERİ AÇIĞI ===== */
+  function MarketDataGapEditorial() {
+    var cards = [
+      { ent: "TAPU BEYANLARI", src: "Resmi kayıt sistemi", issue: "İdari kayıt amacı", detail: "Tapu beyanları emlak vergisi değerini taban alır; mülkiyet devrinin resmi tescili için kullanılır. İlk amaç piyasa endeksi değil, hukuki tescildir.", col: C.textMut, sym: "◯" },
+      { ent: "RESMİ KONUT ENDEKSLERİ", src: "Kamu istatistik kaynakları", issue: "Tapu kayıtlarından türetilir", detail: "Resmi konut fiyat endeksleri tapu beyanlarını ve belediye değerlemelerini baz alır. Ulusal ölçekte değerli bir gösterge olmakla birlikte mahalle düzeyine inmez.", col: C.textMut, sym: "◐" },
+      { ent: "BANKA DEĞERLEMELERİ", src: "Kredili konut satışları", issue: "Kredili işlemler örneklemi", detail: "TCMB konut fiyat endeksi banka değerlemelerinden oluşur. Kredili satışlar için güvenilir; nakit satışları ve kiralık piyasayı kapsamaz.", col: C.textMut, sym: "◐" },
+      { ent: "NADAS · ÖZEL ALTYAPI", src: "Saha + ilan + 21 yıl", issue: "Fiili piyasa odaklı", detail: "Saha ekipleri, ilan akışları, yerel aktör görüşmeleri. Mahalle, hatta cadde-sokak düzeyinde fiili satış ve kira fiyatları. Resmi kaynakları tamamlar.", col: C.primary, sym: "✓" },
+    ].map(function (c) {
+      return '<div style="' + css({ background: C.raised, padding: 16, position: "relative" }) + '"><div style="' + css({ position: "absolute", top: 12, right: 14, fontSize: 22, color: c.col, opacity: 0.6, fontFamily: C.mono }) + '">' + c.sym + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: c.col, fontWeight: 700, letterSpacing: "0.08em", marginBottom: 4 }) + '">' + c.ent + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.04em", marginBottom: 10 }) + '">' + c.src + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: c.col, fontWeight: 600, marginBottom: 8 }) + '">· ' + c.issue + '</div><p style="' + css({ fontSize: 12, lineHeight: 1.55, color: C.textMut, margin: 0 }) + '">' + c.detail + '</p></div>';
+    }).join("");
+    var metrics = [["2005", "Kategorinin yaratılış yılı · 21 yıl önce"], ["21 YIL", "Saha + ilan + yerel veri toplama deneyimi"], ["480M+", "Veritabanında işlenmiş kayıt"], ["50.000+", "Aktif mahalle/köy izlemesi"]]
+      .map(function (m) { return '<div style="' + css({ background: C.raised, padding: "14px 16px" }) + '"><div style="' + css({ fontSize: "1.8rem", fontWeight: 700, color: C.primary, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + m[0] + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, marginTop: 6, letterSpacing: "0.04em", lineHeight: 1.4 }) + '">' + m[1] + '</div></div>'; }).join("");
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "26px 16px", background: C.deep, position: "relative", overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 20% 30%, rgba(248,113,113,0.06), transparent 50%), radial-gradient(circle at 90% 70%, rgba(56,189,248,0.08), transparent 55%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, fontFamily: C.mono, fontSize: 10.5, letterSpacing: "0.14em", textTransform: "uppercase" }) + '"><span style="' + css({ color: C.primary }) + '">◆ EDITORIAL · KATEGORİNİN GELİŞTİRİCİSİ</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span style="' + css({ color: C.textFaint }) + '">NADAS · 2005’TEN BUGÜNE</span></div>'
+      + '<h2 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(1.7rem,4.4vw,2.8rem)", fontWeight: 700, lineHeight: 1.1, letterSpacing: "-0.025em", margin: 0, color: C.textPri, maxWidth: 1000 }) + '">Türkiye’de gerçek piyasa verisini <span style="' + css({ color: C.primary }) + '">mahalle ölçeğinde tutan</span><br><span style="' + css({ color: C.primary }) + '">tek özel veri altyapısı.</span></h2>'
+      + '<p style="' + css({ marginTop: 16, fontSize: 15.5, lineHeight: 1.7, color: C.textSec, maxWidth: 940 }) + '">Gayrimenkul piyasasında resmi kayıtlar, doğası gereği <strong style="' + css({ color: C.textPri }) + '">tapu beyanlarına</strong> dayanır. Tapu beyanları ise emlak vergisi değerinden başlayarak şekillenir ve fiili piyasa hareketleriyle bire bir örtüşmeyebilir. Bu durum, sektördeki tüm aktörler tarafından bilinen bir gerçektir. Nadas, 2005’ten itibaren <strong style="' + css({ color: C.textPri }) + '">tapu kayıtlarından bağımsız olarak</strong> — saha ekipleri, ilan akışları, yerel aktör görüşmeleri ve banka veri akışlarıyla — fiili piyasa hareketlerini mahalle bazında izleyen <strong style="' + css({ color: C.primary }) + '">özel sektör veri altyapısıdır.</strong></p>'
+      + '<div style="' + css({ marginTop: 22, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>'
+      + '<div style="' + css({ marginTop: 22, padding: "20px 22px", borderLeft: "3px solid " + C.primary, background: C.raised }) + '"><p style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "clamp(1rem,1.6vw,1.18rem)", lineHeight: 1.55, color: C.textPri, margin: 0, fontWeight: 500, letterSpacing: "-0.005em" }) + '">"Türkiye’de mahalle bazlı, fiili piyasayı izleyen özel veri altyapısı kavramını <strong style="' + css({ color: C.primary }) + '">Nadas yarattı.</strong> 2005’te bu yola çıktığımızda kategorinin kendisi yoktu; saha ekibi, ilan akışı, yerel aktör görüşmesi, 21 yıllık aylık zincir — hepsini biz tanımladık. Resmi kaynaklar ulusal ölçekte güçlüdür ve değerlidir; biz onların ulaşmadığı <strong style="' + css({ color: C.textPri }) + '">mahalle ölçeğini ve fiili piyasa dinamiğini</strong> tamamlıyoruz."</p><div style="' + css({ marginTop: 12, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.1em" }) + '">— NADAS · KURUMSAL POLİTİKA · 2026</div></div>'
+      + '<div style="' + css({ marginTop: 20, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 1, border: "1px solid " + C.primary, background: C.borderStrong }) + '">' + metrics + '</div>'
+      + '</div></section>';
+  }
+
+  /* ===== A.1 VERİ KAYNAKLARI ===== */
+  function CollectionMethods() {
+    var methods = [
+      { name: "SAHA EKİPLERİ", pct: 28, det: "Mahalle ekipleri, yerel görüşmeler, fiziksel inceleme. Gerçek dünya çapası — internetin göremediği veri.", sym: "◉" },
+      { name: "İLAN AKIŞI", pct: 34, det: "Tüm büyük ilan platformları crawler ile sürekli izlenir. Real-time ingestion, deduplication.", sym: "⌬" },
+      { name: "KAMU AÇIK VERİ", pct: 16, det: "TÜİK, Tapu Kadastro, belediye kayıtları, imar planları, AFAD deprem verileri.", sym: "▦" },
+      { name: "İMAR & DÖNÜŞÜM", pct: 12, det: "Kentsel dönüşüm kayıtları, imar değişiklikleri, yapı ruhsatları, riskli alan kararları.", sym: "◈" },
+      { name: "YEREL AKTÖR", pct: 10, det: "Emlak ofisleri, müteahhitler, yerel uzmanlarla periyodik anketler ve panel görüşmeleri.", sym: "◐" },
+    ].map(function (m) {
+      return '<div style="' + css({ display: "grid", gridTemplateColumns: "auto 1fr", gap: 14, alignItems: "center" }) + '"><div style="' + css({ width: 40, height: 40, border: "1px solid " + C.primary, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: C.primary, fontFamily: C.mono, borderRadius: 2 }) + '">' + m.sym + '</div><div><div style="' + css({ display: "flex", justifyContent: "space-between", marginBottom: 5, fontFamily: C.mono, fontSize: 11.5 }) + '"><span style="' + css({ color: C.textPri, fontWeight: 600, letterSpacing: "0.06em" }) + '">' + m.name + '</span><span style="' + css({ color: C.primary, fontWeight: 700 }) + '">%' + m.pct + '</span></div>' + Progress(m.pct * 2.5, C.primary, 6) + '<p style="' + css({ fontSize: 12, color: C.textMut, margin: "5px 0 0", lineHeight: 1.5 }) + '">' + m.det + '</p></div></div>';
+    }).join("");
+    return SubSection("A.1", "Veri kaynakları — beş ana giriş", "MULTI-SOURCE INGESTION", '<div style="' + css({ display: "flex", flexDirection: "column", gap: 12 }) + '">' + methods + '</div>');
+  }
+
+  /* ===== A.2 ÜÇ KATMAN ===== */
+  function ThreeLayers() {
+    var layers = [
+      { code: "L1", sym: "▦", name: "TIMESERIES MONTHLY", n: "480M+", lbl: "kayıt", det: "Mahalle × kategori × ay düzeyinde fiyat ve volüm verisi. 21 yıllık tarihsel zincir, 257 ay derinlik." },
+      { code: "L2", sym: "◈", name: "DNA · DEMOGRAFİK VEKTÖR", n: "25.000+", lbl: "çapa mahalle", det: "38 boyutlu vektör. Denize yakınlık, fay hattı, demografi, ekonomi, ulaşım, sosyal altyapı." },
+      { code: "L3", sym: "◉", name: "EVENT MARKERS", n: "7M+", lbl: "olay kaydı", det: "Deprem, faiz, kur, siyasi, makro, regülasyon, mevsim. Otomatik tetikleyici sistem." },
+    ].map(function (l) {
+      return '<div style="' + css({ background: C.raised, padding: 18, position: "relative", overflow: "hidden" }) + '"><div style="' + css({ position: "absolute", top: 12, right: 14, fontSize: 28, color: C.primary, opacity: 0.25, fontFamily: C.mono }) + '">' + l.sym + '</div><div style="' + css({ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }) + '"><span style="' + css({ padding: "3px 7px", background: C.primary, color: C.deep, fontFamily: C.mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", borderRadius: 2 }) + '">' + l.code + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textPri, fontWeight: 600, letterSpacing: "0.08em" }) + '">' + l.name + '</span></div><div style="' + css({ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 8 }) + '"><span style="' + css({ fontSize: "2.4rem", fontWeight: 700, color: C.primary, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + l.n + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.textFaint }) + '">' + l.lbl + '</span></div><p style="' + css({ fontSize: 13, lineHeight: 1.55, color: C.textMut, margin: 0 }) + '">' + l.det + '</p></div>';
+    }).join("");
+    return SubSection("A.2", "Üç temel veri katmanı", "L1 · L2 · L3 LAYER STACK", '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + layers + '</div>');
+  }
+
+  /* ===== A.3 DNA 38 BOYUT ===== */
+  function DNADetail() {
+    var groups = [
+      { name: "TEMEL DEMOGRAFİK", sym: "◉", dims: [["01", "MAHALLE NÜFUSU", "Net nüfus sayımı. TÜİK adres bazlı + Nadas saha doğrulama."], ["02", "YAŞ MEDYAN", "Mahalle nüfus yaş medyanı. Genç/yaşlı bölge profili."], ["03", "HANE BÜYÜKLÜĞÜ", "Ortalama hane kişi sayısı. Tek/aile yapısı."], ["04", "NÜFUS ARTIŞ bp", "Yıllık nüfus değişim hızı (baz puan). Büyüyen/küçülen mahalle."], ["05", "EĞİTİM ORT.", "Ortalama eğitim yılı. Üniversiteli oranı."], ["06", "İŞSİZLİK ENDEKSİ", "Bölgesel istihdam göstergesi. TÜİK ilçe verisi."]] },
+      { name: "EKONOMİK & GELİR", sym: "Σ", dims: [["07", "HANE GELİRİ ORT.", "Mahalle hane geliri ortalaması. Aylık net (TL)."], ["08", "GELİR ÇEYREK DAĞ.", "Q1-Q4 dağılımı. Eşitsizlik/homojenlik göstergesi."], ["09", "TİCARİ AKTİVİTE", "İşletme yoğunluğu, vergi mükellefi sayısı."], ["10", "TURİZM ENDEKSİ", "Konaklama, restoran, turist trafiği yoğunluğu."], ["11", "SANAYİ ENDEKSİ", "Sanayi alanı yakınlığı, işçi nüfusu yoğunluğu."], ["12", "PRESTİJ SKORU", "Alıcı algısı + fiyat primi + marka değeri."]] },
+      { name: "KONUM & MESAFE", sym: "⌬", dims: [["13", "ŞEHİR MERKEZİ MESAFE", "Şehir merkezine km cinsinden mesafe + ulaşım süresi."], ["14", "DENİZE/GÖLE YAKINLIK", "Kıyı bandı uzaklığı. Manzara/iklim primi."], ["15", "DEPREM FAY HATTI", "Aktif fay hattına uzaklık. AFAD verisi."], ["16", "BÜYÜK PROJE YAKINLIĞI", "Kanal İstanbul, havalimanı, hızlı tren, mega proje mesafesi."], ["17", "METRO İSTASYON MES.", "En yakın metro/metrobüs istasyonu mesafesi."], ["18", "OTOYOL ERİŞİMİ", "TEM, çevre yolu, ana arter erişim mesafesi."], ["19", "HAVAALANI MES.", "En yakın havaalanına mesafe. Uluslararası/iç hat."]] },
+      { name: "SOSYAL ALTYAPI", sym: "▦", dims: [["20", "OKUL YOĞUNLUĞU", "Anaokulu, ilk, orta, lise, üniversite kapasitesi/mesafesi."], ["21", "HASTANE/SAĞLIK", "Devlet, özel, üniversite hastanesi mesafesi/yoğunluğu."], ["22", "AVM ERİŞİMİ", "Alışveriş merkezi sayısı/mesafesi."], ["23", "PARK & YEŞİL ALAN", "Park, mesire, orman, koru oranı (m²/kişi)."], ["24", "TOPLU TAŞIMA SKORU", "Otobüs, metro, metrobüs, vapur entegrasyonu."], ["25", "GÜVENLİK SKORU", "Karakol yakınlığı + bölgesel güvenlik göstergeleri."], ["26", "KÜLTÜR & SANAT", "Müze, tiyatro, sinema, kütüphane yoğunluğu."]] },
+      { name: "İMAR & YAPI", sym: "◈", dims: [["27", "İMAR PLANI DURUMU", "Mevcut imar haklarının yapısı, yoğunluk katsayısı."], ["28", "YAPI STOKU YAŞI", "Bina yaşı dağılımı. Eski/yeni yapı oranı."], ["29", "YAPI STOKU RİSK", "Deprem dayanıklılığı, kentsel dönüşüm önceliği."], ["30", "ARSA POTANSİYELİ", "Gelişmemiş arsa oranı + imar planı durumu."], ["31", "DÖNÜŞÜM AKTİVİTE", "Kentsel dönüşüm projesi yoğunluğu, ruhsat sayısı."], ["32", "YOĞUNLUK KAT-S", "Maks emsal, gabari, yapılaşma katsayısı."]] },
+      { name: "ÇEVRE & İKLİM", sym: "◐", dims: [["33", "HAVA KİRLİLİĞİ", "PM2.5, PM10, NO₂ yıllık ortalamalar. T.C. Çevre verisi."], ["34", "SES KİRLİLİĞİ", "Trafik, sanayi, gürültü haritası bazlı skor."], ["35", "İKLİM SKORU", "Nem, sıcaklık, rüzgar ortalamaları. Mevsim genliği."]] },
+      { name: "BÖLGESEL ÖZEL", sym: "◆", dims: [["36", "GAP/DOĞU ETKİSİ", "Güneydoğu Anadolu Projesi + Doğu kalkınma bölgesel etki."], ["37", "SINIR TİCARETİ", "Sınır kapısı yakınlığı, ticari geçiş yoğunluğu."], ["38", "ÜNİVERSİTE/GÖÇ", "Yüksek öğretim varlığı + iç/dış göç hareketleri."]] },
+    ];
+    var total = groups.reduce(function (s, g) { return s + g.dims.length; }, 0);
+    var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.6, color: C.textSec, marginBottom: 16, maxWidth: 940 }) + '">Her mahalle, <strong style="' + css({ color: C.primary }) + '">38 boyutlu bir vektörle</strong> tanımlanır. Fiyatla anlaşılmayan bölge karakterini sayısallaştırır: demografi, gelir, konum, sosyal altyapı, imar, çevre, bölgesel özel etmenler. <strong style="' + css({ color: C.violet }) + '">25.000+ çapa mahalle</strong> bölgesel referans işlevi görür, kalan mahalleler bu çapalardan türetilir.</p>'
+      + '<div style="' + css({ display: "flex", flexDirection: "column", gap: 1, background: C.borderStrong, border: "1px solid " + C.borderStrong }) + '">'
+      + groups.map(function (g) {
+        var dims = g.dims.map(function (d) { return '<div style="' + css({ background: C.raised, padding: "10px 12px" }) + '"><div style="' + css({ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.1em" }) + '">' + d[0] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.06em" }) + '">' + d[1] + '</span></div><p style="' + css({ fontSize: 11.5, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + d[2] + '</p></div>'; }).join("");
+        return '<div style="' + css({ background: C.raised }) + '"><div style="' + css({ padding: "12px 16px", borderBottom: "1px solid " + C.border, display: "flex", alignItems: "center", gap: 10, background: C.deep }) + '"><span style="' + css({ width: 28, height: 28, border: "1px solid " + C.primary, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: C.primary, fontFamily: C.mono, borderRadius: 2 }) + '">' + g.sym + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 11.5, color: C.primary, fontWeight: 700, letterSpacing: "0.1em" }) + '">' + g.name + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, marginLeft: "auto" }) + '">' + g.dims.length + ' BOYUT</span></div><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))", gap: 1, background: C.borderStrong }) + '">' + dims + '</div></div>';
+      }).join("")
+      + '</div>';
+    return SubSection("A.3", "DNA — " + total + " boyutlu mahalle vektörü", "25.000+ ÇAPA MAHALLE · 7 BOYUT GRUBU", body);
+  }
+
+  /* ===== A.4 OLAY MARKERLARI ===== */
+  function EventSystem() {
+    var cats = [
+      { type: "DEPREM & DOĞAL", count: "480K+", det: "Magnitude ≥ 3.0 sismik olaylar (AFAD), heyelan, sel, yangın. Bölgesel etki yarıçapı ile.", col: C.danger, sym: "◉" },
+      { type: "FAİZ & KREDİ", count: "1.3M+", det: "TCMB faiz kararları, konut kredi faizi, mortgage hareketleri (mahalle bazlı kredi kullanım).", col: C.primary, sym: "Σ" },
+      { type: "KUR & ENFLASYON", count: "1.6M+", det: "USD/TRY hareketleri, enflasyon ilanları, alım gücü değişimleri.", col: C.warn, sym: "⌬" },
+      { type: "SİYASİ & SEÇİM", count: "320K+", det: "Seçim sonuçları, referandum, anayasa değişiklikleri, yerel yönetim değişiklikleri.", col: C.primary, sym: "◆" },
+      { type: "MAKRO & GLOBAL", count: "680K+", det: "Pandemi, küresel kriz, ticaret savaşları, jeopolitik şoklar.", col: C.primary, sym: "▦" },
+      { type: "REGÜLASYON", count: "420K+", det: "İmar yasası, KDV değişiklikleri, dönüşüm yasaları, yapı stoku reformları.", col: C.primary, sym: "◈" },
+      { type: "MEVSİMSEL", count: "940K+", det: "Tatil sezonu, eğitim sezonu, vergi dönemleri, dini günler. Periyodik etkiler.", col: C.primary, sym: "◐" },
+      { type: "ALTYAPI & YATIRIM", count: "1.04M+", det: "Metro açılışı, yeni AVM, üniversite kuruluşu, fabrika yatırımı, hastane açılışı.", col: C.accent, sym: "→" },
+      { type: "DEMOGRAFİK", count: "520K+", det: "Göç dalgaları, mülteci yerleşimi, nüfus hareketleri, gentrification.", col: C.primary, sym: "◯" },
+    ].map(function (c) {
+      return '<div style="' + css({ background: C.raised, padding: 14, position: "relative" }) + '"><div style="' + css({ position: "absolute", top: 12, right: 12, fontSize: 18, color: c.col, opacity: 0.3, fontFamily: C.mono }) + '">' + c.sym + '</div><div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }) + '"><span style="' + css({ display: "flex", alignItems: "center", gap: 7 }) + '"><span style="' + css({ width: 8, height: 8, background: c.col }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textPri, fontWeight: 700, letterSpacing: "0.1em" }) + '">' + c.type + '</span></span></div><div style="' + css({ fontSize: "1.4rem", color: c.col, fontWeight: 700, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1, marginBottom: 8 }) + '">' + c.count + '</div><p style="' + css({ fontSize: 11.5, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + c.det + '</p></div>';
+    }).join("");
+    var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.6, color: C.textSec, marginBottom: 14, maxWidth: 900 }) + '">Her markır, etkilenen kategoriler ve mesafe-zaman söneme fonksiyonuyla timeseries’e bağlanır. Bir deprem olayı, mahallenin fay hattına uzaklığına göre 6-24 ay arası bir etki süresi taşır. Bir faiz kararı tüm kategorileri eş zamanlı etkiler. Toplam <strong style="' + css({ color: C.primary }) + '">7 milyon olay</strong> sistemde işlenir.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cats + '</div>';
+    return SubSection("A.4", "Olay markerları — 7 milyon+ kayıt, 9 kategori", "EVENT-DRIVEN PRICE IMPACT MODEL", body);
+  }
+
+  /* ===== A.5 HACIM KARŞILAŞTIRMA ===== */
+  function VolumeComparison() {
+    var items = [
+      { lbl: "NADAS · tüm katmanlar", n: "50 TB", unit: "veri", fill: 100, hi: true },
+      { lbl: "Borsa İstanbul · 1 yıl emir defteri", n: "~2 TB", unit: "yıllık", fill: 4 },
+      { lbl: "TÜİK · tüm konut tarihsel", n: "~8 TB", unit: "tüm zaman", fill: 16 },
+      { lbl: "Google Maps · Türkiye katmanı", n: "~25 TB", unit: "raster+vektör", fill: 50 },
+      { lbl: "Netflix · global günlük log", n: "~15 TB", unit: "günlük", fill: 30 },
+    ];
+    var rows = items.map(function (it, i) {
+      var col = it.hi ? C.primary : C.textMut;
+      return '<div style="' + css({ marginBottom: i < items.length - 1 ? 14 : 0 }) + '"><div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 5, fontFamily: C.mono, fontSize: 12 }) + '"><span style="' + css({ color: col, fontWeight: it.hi ? 700 : 500, letterSpacing: "0.04em" }) + '">' + it.lbl + '</span><span style="' + css({ color: col, fontWeight: 700 }) + '">' + it.n + ' <span style="' + css({ fontSize: 10, color: C.textFaint }) + '">' + it.unit + '</span></span></div>' + Progress(it.fill, col, 8) + '</div>';
+    }).join("");
+    return SubSection("A.5", "Veri hacmi — 50 TB neye eşit?", "REFERENCE COMPARISON", '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: 18 }) + '">' + rows + '<p style="' + css({ fontSize: 11.5, color: C.textFaint, marginTop: 14, fontFamily: C.mono, letterSpacing: "0.04em", lineHeight: 1.5 }) + '">NADAS, Türkiye Cumhuriyeti tarihindeki <span style="' + css({ color: C.primary }) + '">tek mahalle bazlı, ay düzeyinde, 21 yıllık</span> gayrimenkul hafızasıdır.</p></div>');
+  }
+
+  /* ===== B.1 DOĞRULAMA ===== */
+  function ValidationSystem() {
+    var cards = [
+      ["INPUT", "◐ Saha + ilan", "Bir mahalle/kategori/ay için iki bağımsız kaynaktan gelen değerler eş zamanlı toplanır."],
+      ["COMPARE", "Δ Δ hesaplama", "İki değer arasındaki yüzdesel fark hesaplanır. |Δ| > 25% ise outlier işareti tetiklenir."],
+      ["RESOLVE", "→ Resolution kuralı", "Saha verisi tarihsel güvenilirlik (>0.8) gösteriyorsa baz alınır; aksi halde manuel review queue."],
+      ["SCORE", "Σ Confidence", "Yoğunluk × tutarlılık × tarihsel uyum × bölgesel doğrulama → 0-100 güven skoru."],
+    ].map(function (r) { return '<div style="' + css({ background: C.raised, padding: 16 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 6 }) + '">' + r[0] + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.textPri, fontWeight: 600, marginBottom: 8 }) + '">' + r[1] + '</div><p style="' + css({ fontSize: 12, lineHeight: 1.55, color: C.textMut, margin: 0 }) + '">' + r[2] + '</p></div>'; }).join("");
+    return SubSection("B.1", "Çapraz doğrulama mekanizması", "SAHA × İNTERNET CROSS-CHECK", '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>');
+  }
+
+  /* ===== B.2 GÜVEN KADRANI ===== */
+  function ConfidenceGauge() {
+    var r = 54, circ = 2 * Math.PI * r, off = circ - 0.96 * circ;
+    var subs = [
+      ["Veri yoğunluğu", 96.0, "Mahalle/kategori başına ortalama örneklem hacmi"],
+      ["Emsal tutarlılığı", 94.2, "Karşılaştırılabilir varlıklar arası fiyat tutarlılığı"],
+      ["Tarihsel uyum", 94.6, "Geçmiş trende uygunluk, ani sıçrama tespiti"],
+      ["Bölgesel doğrulama", 98.2, "Saha + ilan + yerel aktör çapraz doğrulama"],
+      ["DNA uyumu", 93.8, "38 boyut sonucu beklenen değerle fiili veri uyumu"],
+    ].map(function (s) { return '<div><div style="' + css({ display: "flex", justifyContent: "space-between", marginBottom: 4, fontFamily: C.mono, fontSize: 11.5 }) + '"><span style="' + css({ color: C.textPri, fontWeight: 600 }) + '">' + s[0] + '</span><span style="' + css({ color: C.primary, fontWeight: 700 }) + '">%' + s[1].toFixed(1) + '</span></div>' + Progress(s[1], C.primary) + '<p style="' + css({ fontSize: 11, color: C.textMut, margin: "4px 0 0" }) + '">' + s[2] + '</p></div>'; }).join("");
+    var matrix = [["Konut", "İstanbul", 98.2], ["Konut", "Ankara", 97.4], ["Konut", "İzmir", 96.8], ["Ticari", "İstanbul", 96.1], ["Ticari", "Antalya", 94.7], ["Arsa", "Bursa", 93.2], ["Arsa", "Gaziantep", 92.4], ["Bina", "İstanbul", 95.6], ["Turistik", "Muğla", 95.1]];
+    var mrows = matrix.map(function (m, i) {
+      var col = m[2] >= 96 ? C.accent : m[2] >= 94 ? C.primary : C.warn;
+      return '<div style="' + css({ display: "grid", gridTemplateColumns: "1fr 1fr auto", padding: "8px 14px", borderBottom: i < matrix.length - 1 ? "1px solid " + C.border : "none", alignItems: "center" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.textPri, fontWeight: 500 }) + '">' + m[0] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.textSec }) + '">' + m[1] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 12, color: col, fontWeight: 700, textAlign: "right" }) + '">%' + m[2].toFixed(1) + '</span></div>';
+    }).join("");
+    var gauge = '<div style="' + css({ display: "flex", flexDirection: "column", alignItems: "center", background: C.raised, border: "1px solid " + C.borderStrong, padding: 24 }) + '">'
+      + '<div style="' + css({ position: "relative", width: 160, height: 160 }) + '"><svg viewBox="0 0 160 160" width="160" height="160"><circle cx="80" cy="80" r="' + r + '" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="11"/><circle cx="80" cy="80" r="' + r + '" fill="none" stroke="' + C.primary + '" stroke-width="11" stroke-linecap="round" stroke-dasharray="' + circ + '" stroke-dashoffset="' + off + '" transform="rotate(-90 80 80)"/></svg>'
+      + '<div style="' + css({ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }) + '"><span data-cu="96" data-pre="%" style="' + css({ fontSize: 38, fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", lineHeight: 1 }) + '">%0</span><span style="' + css({ fontSize: 10, color: C.textFaint, fontFamily: C.mono, letterSpacing: "0.12em", marginTop: 4 }) + '">SİSTEM-WIDE</span></div></div>'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textMut, letterSpacing: "0.08em", marginTop: 14, textAlign: "center" }) + '">MEDYAN GÜVEN SKORU</div>'
+      + '<div style="' + css({ marginTop: 14, padding: "8px 12px", border: "1px solid " + C.border, background: C.deep, width: "100%" }) + '"><div style="' + css({ display: "flex", justifyContent: "space-between", fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em", marginBottom: 4 }) + '"><span>EN DÜŞÜK</span><span>EN YÜKSEK</span></div><div style="' + css({ display: "flex", justifyContent: "space-between", fontFamily: "'Sora',sans-serif", fontSize: 16, fontWeight: 700 }) + '"><span style="' + css({ color: C.warn }) + '">%92.4</span><span style="' + css({ color: C.textFaint, fontSize: 13, fontWeight: 400 }) + '">—</span><span style="' + css({ color: C.accent }) + '">%98.2</span></div></div></div>';
+    var right = '<div style="' + css({ display: "flex", flexDirection: "column", gap: 14 }) + '">'
+      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 10, fontWeight: 700 }) + '">◈ ALT METRİKLER · SİSTEM ORTALAMASI</div><div style="' + css({ display: "flex", flexDirection: "column", gap: 10 }) + '">' + subs + '</div></div>'
+      + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, overflow: "hidden" }) + '"><div style="' + css({ padding: "10px 14px", borderBottom: "1px solid " + C.borderStrong, background: C.deep, display: "flex", justifyContent: "space-between", alignItems: "center" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.1em" }) + '">◐ KATEGORİ × İL ÖRNEKLEMİ</span><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '">2026·Q4 DURUMU</span></div><div style="' + css({ display: "grid", gridTemplateColumns: "1fr 1fr auto", fontFamily: C.mono, fontSize: 10, color: C.textFaint, padding: "8px 14px", borderBottom: "1px solid " + C.border, letterSpacing: "0.08em" }) + '"><span>KATEGORİ</span><span>İL</span><span style="' + css({ textAlign: "right" }) + '">GÜVEN</span></div>' + mrows + '</div></div>';
+    var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.6, color: C.textSec, marginBottom: 16, maxWidth: 940 }) + '">Her veri noktası 0-100 arası bir güven skoru ile etiketlenir. Sistem-wide medyan <strong style="' + css({ color: C.primary }) + '">%96</strong>; kategori ve il kombinasyonlarına göre bu skor <strong style="' + css({ color: C.accent }) + '">%92.4 ile %98.2 arasında</strong> değişir. En yüksek güven, ilan ve saha yoğunluğu fazla olan büyükşehir konut piyasasında (örn. <strong style="' + css({ color: C.textPri }) + '">Konut · İstanbul %98.2</strong>); en düşük güven, örneklem hacmi görece sınırlı kategorilerde (örn. Arsa · Gaziantep %92.4) gözlenir.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.6fr)", gap: 16, alignItems: "start" }) + '" class="nadas-twocol">' + gauge + right + '</div>'
+      + '<div style="' + css({ marginTop: 14, padding: "10px 14px", border: "1px dashed " + C.border, background: "rgba(56,189,248,0.03)", fontFamily: C.mono, fontSize: 11, color: C.textMut, letterSpacing: "0.04em", lineHeight: 1.6 }) + '">⌬ Güven skoru her veri noktası için ayrı hesaplanır ve API yanıtlarında <strong style="' + css({ color: C.textPri }) + '">confidence_score</strong> alanı olarak döner. Müşteri uygulamaları, eşik değer altındaki noktaları işaretleyerek karar süreçlerinde ek doğrulama gerektirebilir.</div>';
+    return SubSection("B.2", "Güven skoru — %96 sistem-wide medyan", "0-100 SCALE · KATEGORİ × İL DAĞILIMI", body);
+  }
+
+  /* ===== B.3 HESAPLAMA PERFORMANS ===== */
+  function ModelPerformance() {
+    var cards = [
+      ["MAPE", "4.8%", "Mean Absolute Percentage Error · son 12 ay hesaplamaları"], ["R²", "0.94", "Determinasyon katsayısı · hesaplama uyumu"], ["RMSE", "127 TL", "Root Mean Square Error · medyan fiyat üzerinden"],
+      ["COVERAGE", "98.2%", "Sorgu yapılan nokta için veri bulunma oranı"], ["LATENCY P95", "84ms", "Tek nokta sorgusu 95. yüzdelik yanıt süresi"], ["DAILY DRIFT", "0.3%", "Günlük çıktı stabilite ölçümü"],
+    ].map(function (m) { return '<div style="' + css({ background: C.raised, padding: 14 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.12em", marginBottom: 6 }) + '">' + m[0] + '</div><div style="' + css({ fontSize: "1.7rem", fontWeight: 700, color: C.primary, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1, marginBottom: 8 }) + '">' + m[1] + '</div><p style="' + css({ fontSize: 11.5, lineHeight: 1.45, color: C.textMut, margin: 0 }) + '">' + m[2] + '</p></div>'; }).join("");
+    var body = '<p style="' + css({ fontSize: 13.5, lineHeight: 1.6, color: C.textSec, marginBottom: 14, maxWidth: 900 }) + '">Bu metrikler bir <strong style="' + css({ color: C.accent }) + '">hesaplama doğruluğu</strong> ölçümüdür — gelecek tahmini değil. ML/MML işleme katmanı gerçek veritabanındaki örüntüleri matematiksel olarak işler; hiçbir noktada veri "hayal etmez" veya halüsinasyon üretmez. Tüm çıktılar 480M kayıtlık veritabanından türetilir.</p><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>';
+    return SubSection("B.3", "Hesaplama performans metrikleri", "ML/MML İŞLEME KATMANI", body);
+  }
+
+  /* ===== C.1 PIPELINE ===== */
+  function DataPipeline() {
+    var stages = [
+      { code: "01", name: "SAHA EKİPLERİ", det: "81 il, 973 ilçe, mahalle ölçeği. Saha doğrulaması, yerel görüşmeler, fiziksel inceleme.", sym: "◉" },
+      { code: "02", name: "İNTERNET AKIŞI", det: "İlan platformları, açık veri portalları, kamu kayıtları. 7/24 crawler katmanı.", sym: "⌬" },
+      { code: "03", name: "NORMALİZASYON", det: "Standartlaştırma, deduplication, dönüştürme. Aylık agrege işlemleri.", sym: "⚙" },
+      { code: "04", name: "DOĞRULAMA", det: "Çapraz kontrol, anomaly detection, 0-100 güven skoru üretimi.", sym: "✓" },
+      { code: "05", name: "ML/MML İŞLEME", det: "Gerçek veritabanı üzerinde matematiksel işleme, DNA enrichment, hesaplama katmanı. Halüsinasyon yok.", sym: "Σ" },
+      { code: "06", name: "YAYIN KATMANI", det: "API, dashboard, kurumsal entegrasyon. EmlakEkspertizi.com'a akış.", sym: "→" },
+    ];
+    var body = '<div style="' + css({ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 8 }) + '">'
+      + stages.map(function (s, i) {
+        var card = '<div style="' + css({ flex: "1 1 160px", border: "1px solid " + C.borderStrong, background: C.raised, padding: 14, position: "relative", overflow: "hidden" }) + '"><div style="' + css({ position: "absolute", top: 0, left: 0, height: 2, width: "100%", background: "linear-gradient(90deg, transparent, " + C.primary + ", transparent)", animation: "nadasFlow 2.4s linear " + (i * 0.3) + "s infinite" }) + '"></div><div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 11, fontWeight: 700, color: C.primary, letterSpacing: "0.1em" }) + '">' + s.code + '</span><span style="' + css({ fontSize: 18, color: C.primary, fontFamily: C.mono }) + '">' + s.sym + '</span></div><div style="' + css({ fontFamily: C.mono, fontSize: 11.5, fontWeight: 700, color: C.textPri, letterSpacing: "0.08em", marginBottom: 6 }) + '">' + s.name + '</div><p style="' + css({ fontSize: 12, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + s.det + '</p></div>';
+        var arrow = i < stages.length - 1 ? '<div style="' + css({ display: "flex", alignItems: "center", color: C.textFaint, fontSize: 14, padding: "0 2px" }) + '">→</div>' : '';
+        return card + arrow;
+      }).join("")
+      + '</div>';
+    return SubSection("C.1", "Veri Pipeline — Sahadan API'ye 6 katman", "OPERATIONAL FLOW", body);
+  }
+
+  /* ===== C.2 TECH STACK ===== */
+  function TechStack() {
+    var items = [
+      ["WRITE PATH", "▦ PostgreSQL", "Master kayıt katmanı. ACID garantili yazma. Mahalle/yıl partition. JSONB DNA vektörleri.", "Hot tier"],
+      ["READ PATH", "◈ ClickHouse", "Sorgu motoru. Columnar storage, agrege ms-altı yanıt. Materialized view'lar.", "Read replica"],
+      ["İŞLEME LAYER", "Σ Python · ONNX", "Gerçek veri üzerinde ML/MML hesaplama. DNA enrichment, confidence skoring. Halüsinasyon üretmez, var olan veriyi işler.", "ML/MML"],
+      ["CDC STREAMING", "→ Debezium · Kafka", "Postgres → ClickHouse senkronizasyonu. Olay tetiklemeli yeniden hesaplama.", "<500ms"],
+      ["CACHING", "⚡ Redis edge", "Sık sorulan endeks ve özet veriler. TTL: kategori/period bazlı.", "Edge"],
+      ["GEOSPATIAL", "⌬ PostGIS", "Fay hattı, deniz/göl, AVM, okul, sağlık tesisi koordinatları. Mesafe hesaplamaları.", "Spatial"],
+    ].map(function (r) { return '<div style="' + css({ background: C.raised, padding: 16 }) + '"><div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.1em" }) + '">' + r[0] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.primary, padding: "2px 6px", border: "1px solid " + C.primary, borderRadius: 2, letterSpacing: "0.05em" }) + '">' + r[3] + '</span></div><div style="' + css({ fontFamily: C.mono, fontSize: 13, color: C.primary, fontWeight: 700, marginBottom: 8 }) + '">' + r[1] + '</div><p style="' + css({ fontSize: 12, lineHeight: 1.55, color: C.textMut, margin: 0 }) + '">' + r[2] + '</p></div>'; }).join("");
+    return SubSection("C.2", "Teknoloji yığını — hibrit mimari", "HOT/COLD STORAGE SEPARATION", '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + items + '</div>');
+  }
+
+  /* ===== C.3 ŞEMA ===== */
+  function SchemaViz() {
+    var cols = [
+      ["region_id", "INT", "Mahalle/cadde kimliği — hiyerarşik (il→ilçe→mahalle→sokak)"], ["category_id", "INT", "38 varlık kategorisinden biri (1-70 arası)"], ["year_month", "DATE", "2005-01 → 2026-05 · 257 ay derinliği"],
+      ["value_median", "DECIMAL", "Medyan birim fiyat (TL/m²)"], ["value_count", "INT", "O ay agrege edilen örneklem sayısı"], ["confidence_score", "FLOAT", "0-100 · veri yoğunluğu × doğrulama × tarihsel uyum"],
+      ["data_source", "ENUM", "saha | internet | hybrid | model"], ["dna_vector_id", "FK→L2", "Mahalleye atanmış 38 boyutlu DNA referansı"], ["event_marker_ids", "FK→L3[]", "O ayı etkileyen olayların listesi"], ["updated_at", "TIMESTAMP", "Son güncellenme zamanı"],
+    ];
+    var rows = cols.map(function (c, i) { return '<div style="' + css({ display: "grid", gridTemplateColumns: "200px 120px 1fr", minWidth: 600, gap: 0, padding: "9px 14px", borderBottom: i < cols.length - 1 ? "1px solid " + C.border : "none", fontFamily: C.mono, fontSize: 12, alignItems: "center" }) + '"><span style="' + css({ color: C.primary, fontWeight: 600 }) + '">' + c[0] + '</span><span style="' + css({ color: C.warn, fontSize: 11 }) + '">' + c[1] + '</span><span style="' + css({ color: C.textSec, fontSize: 12 }) + '">' + c[2] + '</span></div>'; }).join("");
+    var body = '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, overflow: "auto" }) + '"><div style="' + css({ display: "grid", gridTemplateColumns: "200px 120px 1fr", minWidth: 600, gap: 0, fontFamily: C.mono, fontSize: 11, color: C.textFaint, padding: "10px 14px", borderBottom: "1px solid " + C.borderStrong, background: C.deep, letterSpacing: "0.08em" }) + '"><span>COLUMN</span><span>TYPE</span><span>DESCRIPTION</span></div>' + rows + '</div>';
+    return SubSection("C.3", "Veri şeması — timeseries_monthly", "POSTGRESQL · 10 KOLON · 480M ROW", body);
+  }
+
+  /* ===== C.4 ÖLÇEKLENME ===== */
+  function ScaleArchitecture() {
+    var cards = [
+      ["WRITE-OPTIMIZED", "PostgreSQL master", "ACID garantili kayıt, tutarlılık öncelikli. Mahalle/yıl partition."],
+      ["READ-OPTIMIZED", "ClickHouse mirror", "Columnar storage, agrege işlemler ms-altı. Materialized view'lar."],
+      ["CDC SYNC", "Debezium + Kafka", "Postgres → ClickHouse asenkron eşleme. <500ms gecikme."],
+      ["CACHING", "Redis edge layer", "Sık sorulan endeks ve özet veriler. TTL: kategori/period bazlı."],
+    ].map(function (r) { return '<div style="' + css({ background: C.raised, padding: 16 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 6 }) + '">' + r[0] + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.textPri, fontWeight: 600, marginBottom: 8 }) + '">' + r[1] + '</div><p style="' + css({ fontSize: 11.5, lineHeight: 1.55, color: C.textMut, margin: 0 }) + '">' + r[2] + '</p></div>'; }).join("");
+    return SubSection("C.4", "Ölçeklenme — neden Postgres + ClickHouse?", "WRITE/READ SEPARATION RATIONALE", '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>');
+  }
+
+  /* ===== D.1 ProX ===== */
+  function ProXChatPreview() {
+    return '<div style="' + css({ border: "1px solid " + C.violet, background: C.deep, borderRadius: 4, overflow: "hidden", fontFamily: C.mono, fontSize: 12 }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 12px", borderBottom: "1px solid " + C.borderStrong, background: C.raised }) + '"><div style="' + css({ display: "flex", alignItems: "center", gap: 8 }) + '"><span style="' + css({ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 22, height: 22, border: "1px solid " + C.violet, borderRadius: 2, fontFamily: "'Sora',sans-serif", fontSize: 11, fontWeight: 700, color: C.violet }) + '">P</span><span style="' + css({ fontSize: 11, color: C.textPri, fontWeight: 700, letterSpacing: "0.08em" }) + '">ProX</span><span style="' + css({ fontSize: 9, color: C.textFaint, letterSpacing: "0.1em" }) + '">v2026 · Nadas akıllı emlak asistanı</span></div><span style="' + css({ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 9.5, color: C.accent, letterSpacing: "0.1em" }) + '"><span style="' + css({ width: 6, height: 6, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>ÇEVRİMİÇİ</span></div>'
+      + '<div style="' + css({ padding: 14, display: "flex", flexDirection: "column", gap: 10 }) + '">'
+      + '<div style="' + css({ alignSelf: "flex-end", maxWidth: "82%", padding: "8px 12px", background: C.primary, color: C.deep, borderRadius: "10px 10px 2px 10px", fontSize: 11.5, fontWeight: 500, lineHeight: 1.45 }) + '">Caddebostan’da 3+1 daire almak istiyorum. Bu ay almak doğru mu? Son 1 yıldaki fiyat hareketi ve yasal riskler neler?</div>'
+      + '<div style="' + css({ alignSelf: "flex-start", maxWidth: "92%", padding: "10px 12px", background: "rgba(167,139,250,0.08)", border: "1px solid " + C.violet, borderRadius: "10px 10px 10px 2px", fontSize: 11.5, color: C.textSec, lineHeight: 1.55 }) + '"><div style="' + css({ display: "flex", alignItems: "center", gap: 6, marginBottom: 6, fontSize: 9, color: C.violet, fontWeight: 700, letterSpacing: "0.12em" }) + '"><span>◈ ProX YANITI · 480M KAYIT TARANDI · 0.84s</span></div><div style="' + css({ color: C.textPri, marginBottom: 6 }) + '"><strong style="' + css({ color: C.violet }) + '">Caddebostan 3+1 daire</strong> · son 12 ay <strong style="' + css({ color: C.accent }) + '">+%14.2</strong> · medyan ₺68.400/m² · likidite yüksek (47 gün)</div><div style="' + css({ color: C.textMut, fontSize: 11 }) + '">◉ DNA: L4-Premium · Prestij 92/100 · Deprem fayı 8km<br>◐ Tarihsel emsal: 2018-2026 arası benzer profilli daire ortalama yıllık <strong style="' + css({ color: C.textSec }) + '">+%21 reel artış</strong><br>⌬ Hukuki: <strong style="' + css({ color: C.warn }) + '">2026/03 Resmi Gazete</strong> — Riskli yapı dönüşüm yasası bölgeyi etkiliyor<br>→ <strong style="' + css({ color: C.accent }) + '">ProX önerisi: AL</strong> · 87/100 güven · gerekçe: tarihsel zincir, DNA stabil, makro talep güçlü</div></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 6, padding: "4px 8px", fontSize: 10, color: C.textFaint, letterSpacing: "0.04em" }) + '"><span style="' + css({ display: "inline-flex", gap: 2 }) + '"><span style="' + css({ width: 4, height: 4, borderRadius: 9999, background: C.textFaint, animation: "nadasPulse 1s ease-in-out 0s infinite" }) + '"></span><span style="' + css({ width: 4, height: 4, borderRadius: 9999, background: C.textFaint, animation: "nadasPulse 1s ease-in-out 0.2s infinite" }) + '"></span><span style="' + css({ width: 4, height: 4, borderRadius: 9999, background: C.textFaint, animation: "nadasPulse 1s ease-in-out 0.4s infinite" }) + '"></span></span>ProX, ek emsal analizi hazırlıyor...</div></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderTop: "1px solid " + C.borderStrong, background: C.raised }) + '"><span style="' + css({ flex: 1, fontSize: 11, color: C.textFaint, letterSpacing: "0.02em" }) + '">ProX’e sor — il, ilçe, mahalle, kategori, hukuki gelişme...</span><span style="' + css({ padding: "3px 8px", background: C.violet, color: "#fff", fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", borderRadius: 2 }) + '">SOR →</span></div>'
+      + '</div>';
+  }
+  function ProXTeaser() {
+    var principles = [
+      ["◉ NE DEĞİL", "Üretici yapay zeka değil, LLM değil. Halüsinasyon üretmez."], ["▦ TEMEL", "Gerçek Nadas veritabanı · 2005'ten günümüze 480M kayıt"], ["⌬ KAPSAM", "İl → ilçe → mahalle → cadde → sokak granülerliği"], ["⚖ HUKUK", "Resmi Gazete + Meclis Kararları canlı takip"], ["Σ MOTOR", "ML/MML algoritmaları · matematiksel · deterministik"], ["→ ERİŞİM", "emlakekspertizi.com/yapay-zeka üzerinden çevrimiçi"],
+    ].map(function (p) { return '<div style="' + css({ padding: "9px 11px", border: "1px solid " + C.border, background: C.deep }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.violet, fontWeight: 700, letterSpacing: "0.08em", marginBottom: 4 }) + '">' + p[0] + '</div><div style="' + css({ fontSize: 11.5, color: C.textMut, lineHeight: 1.45 }) + '">' + p[1] + '</div></div>'; }).join("");
+    var eco = [
+      { name: "NADAS ÖZEL VERİTABANI", sym: "◈", col: C.violet, tag: "PROPRIETARY", sources: [["NADAS TIMESERIES", "480M kayıt · 257 ay · mahalle bazlı"], ["DNA · 38 BOYUT", "25.000+ çapa mahalle vektörü"], ["OLAY MARKIRI", "7M+ kayıt · 9 kategori"], ["SAHA AĞI", "81 il · 973 ilçe yerel ekipler"]] },
+      { name: "RESMİ MEVZUAT & KARARLAR", sym: "⚖", col: C.primary, tag: "LEGAL FEED · GÜNLÜK", sources: [["RESMİ GAZETE", "Günlük yayın · kanun, yönetmelik, tebliğ"], ["TBMM", "Komisyon + Genel Kurul + komisyon raporu"], ["CUMHURBAŞKANLIĞI", "Kararname, kararlar, talimatlar"]] },
+      { name: "KAMU KURUMLARI · MERKEZİ", sym: "▦", col: C.primary, tag: "PUBLIC + LICENSED", sources: [["TKGM", "Tapu Kadastro · mevzuat + emsal işlem"], ["TOKİ", "Konut projeleri, satış programları"], ["EMLAK KONUT GYO", "Proje, fiyat, geliştirici verisi"], ["TÜİK", "Makro veri · lisanslı kaynak (ücretli)"], ["TCMB", "Konut fiyat endeksi, faiz, kredi"], ["BDDK", "Konut kredi hacmi, NPL, faiz"], ["GİB", "Emlak vergisi, tapu harcı istatistikleri"], ["UAVT", "Ulusal Adres Veri Tabanı · mahalle/cadde/sokak"], ["AFAD", "Sismik + fay hattı + afet veritabanı"], ["EPDK", "Elektrik altyapı dağılımı"], ["BORSA İSTANBUL", "GYO endeksleri, GMYO işlem verisi"]] },
+      { name: "BAKANLIKLAR", sym: "◉", col: C.primary, tag: "MINISTRY DATA", sources: [["ÇEVRE, ŞEHİRCİLİK & İKLİM", "İmar planı, dönüşüm, yapı ruhsatı, MSGM"], ["TARIM & ORMAN", "Tarım arazileri, orman sınırları, ÇKS"], ["KÜLTÜR & TURİZM", "Turizm bölgeleri, konaklama lisansları"], ["İÇİŞLERİ · EGM", "Mahalle güvenlik göstergeleri"], ["TİCARET", "Ticaret sicili, işyeri açılış/kapanış, OSB"], ["HAZİNE & MALİYE", "Makro mali veri, gayrimenkul vergisi"]] },
+      { name: "YEREL YÖNETİMLER", sym: "◐", col: C.primary, tag: "LOCAL · 81 İL", sources: [["81 İL · VALİLİKLER", "Bölgesel yatırım, kalkınma, planlama"], ["973 İLÇE · KAYMAKAMLIKLAR", "Yerel idare, koordinasyon verileri"], ["BELEDİYELER (BB + İLÇE)", "İmar planı, rayiç bedel, ruhsat, dönüşüm"]] },
+    ].map(function (g) {
+      var src = g.sources.map(function (s) { return '<div style="' + css({ padding: "7px 10px", border: "1px solid " + C.border, background: C.raised }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: g.col, fontWeight: 700, letterSpacing: "0.04em" }) + '">' + s[0] + '</div><div style="' + css({ fontSize: 10.5, color: C.textMut, marginTop: 3, lineHeight: 1.4 }) + '">' + s[1] + '</div></div>'; }).join("");
+      return '<div><div style="' + css({ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, paddingBottom: 6, borderBottom: "1px solid " + C.border }) + '"><span style="' + css({ width: 24, height: 24, border: "1px solid " + g.col, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: g.col, borderRadius: 2, fontFamily: C.mono }) + '">' + g.sym + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: g.col, fontWeight: 700, letterSpacing: "0.1em" }) + '">' + g.name + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, marginLeft: "auto", letterSpacing: "0.06em" }) + '">' + g.tag + ' · ' + g.sources.length + ' KAYNAK</span></div><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 6 }) + '">' + src + '</div></div>';
+    }).join("");
+    var body = '<div style="' + css({ position: "relative", border: "1px solid " + C.violet, background: "linear-gradient(135deg, " + C.raised + " 0%, " + C.deep + " 100%)", padding: "26px 24px", overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", top: 0, right: 0, width: 320, height: 320, background: "radial-gradient(circle, rgba(167,139,250,0.14), transparent 65%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", display: "grid", gridTemplateColumns: "auto 1fr", gap: 22, alignItems: "start", marginBottom: 24 }) + '" class="nadas-twocol"><div style="' + css({ width: 96, height: 96, border: "2px solid " + C.violet, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", borderRadius: 6, background: "rgba(167,139,250,0.04)" }) + '"><span style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 30, fontWeight: 700, color: C.violet, letterSpacing: "-0.02em", lineHeight: 1 }) + '">ProX</span><span style="' + css({ fontFamily: C.mono, fontSize: 8, color: C.textFaint, letterSpacing: "0.18em", marginTop: 6 }) + '">v2026</span></div><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.violet, letterSpacing: "0.14em", marginBottom: 8, fontWeight: 700 }) + '">◆ İLERİ SEVİYE · GERÇEK NADAS VERİSİYLE · ALANINDA BENZERİ YOK</div><h3 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "clamp(1.4rem,3.2vw,2rem)", fontWeight: 700, color: C.textPri, lineHeight: 1.15, letterSpacing: "-0.02em", margin: 0 }) + '">Türkiye’nin tek <span style="' + css({ color: C.violet }) + '">gerçek piyasa verisiyle</span> çalışan akıllı emlak asistanı.</h3></div></div>'
+      + '<div style="' + css({ position: "relative", display: "grid", gridTemplateColumns: "minmax(0,1.4fr) minmax(0,1fr)", gap: 24, alignItems: "start" }) + '" class="nadas-twocol">'
+      + '<div style="' + css({ display: "flex", flexDirection: "column", gap: 14 }) + '">'
+      + '<p style="' + css({ fontSize: 14.5, lineHeight: 1.65, color: C.textSec, margin: 0 }) + '">ProX, Nadas’ın <strong style="' + css({ color: C.textPri }) + '">emlakekspertizi.com markası için özel geliştirdiği akıllı emlak asistanıdır</strong>. İl, ilçe, mahalle, cadde, sokak bazlı 21 yıllık emlak verisi; Türkiye gayrimenkul sektörüne dair tüm katmanları — fiyat, demografi, ekonomi, ulaşım, sosyal altyapı, imar, çevre — tek bir asistanda birleştirir.</p>'
+      + '<p style="' + css({ fontSize: 14.5, lineHeight: 1.65, color: C.textSec, margin: 0 }) + '"><strong style="' + css({ color: C.violet }) + '">Gayrimenkul hukuku dahil tam donanımlı.</strong> Resmi Gazete’yi ve TBMM kararlarını veritabanına gerçek zamanlı kaydederek, sektördeki tüm hukuki ve regülatif gelişmeleri canlı takip eder. Bir mahalledeki imar değişikliği, dönüşüm yasası ya da KDV düzenlemesi, yayınlandığı an ProX’in bilgisine girer.</p>'
+      + '<p style="' + css({ fontSize: 14.5, lineHeight: 1.65, color: C.textSec, margin: 0 }) + '"><strong style="' + css({ color: C.textPri }) + '">ProX yapay zeka değildir.</strong> ProX, 2005’ten günümüze Nadas’ın tüm verilerine erişen, ML/MML algoritmalarıyla matematiksel olarak işleyen, deterministik ve doğrulanabilir bir <strong style="' + css({ color: C.violet }) + '">akıllı asistandır</strong>. Halüsinasyon üretmez; veri uydurmaz; aynı soru sorulduğunda aynı yanıtı verir. Sektördeki yeni nesil çözümler üretici yapay zeka modellerine yönelirken biz <strong style="' + css({ color: C.accent }) + '">gerçek veri, ölçülebilir hesaplama, doğrulanabilir çıktı</strong> yolunda kararlı duruyoruz. Çünkü 21 yılda biriken bu altyapı bir model değil, bir <strong style="' + css({ color: C.textPri }) + '">hafıza</strong>dır.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 8, marginTop: 8 }) + '">' + principles + '</div></div>'
+      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.violet, letterSpacing: "0.12em", marginBottom: 8, fontWeight: 700 }) + '">◆ ProX CHAT ÖNİZLEME</div>' + ProXChatPreview() + '<div style="' + css({ marginTop: 10, fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.04em", lineHeight: 1.5 }) + '">Her sorgu için Nadas veritabanı taranır. Yanıtlar; <strong style="' + css({ color: C.textMut }) + '">fiyat verisi + DNA + olay markırı + Resmi Gazete + Meclis Kararları</strong> üzerinden derlenir. Üretilen değildir, türetilendir.</div></div></div>'
+      + '<div style="' + css({ position: "relative", marginTop: 24, padding: "16px 18px", border: "1px solid " + C.violet, background: C.deep }) + '"><div style="' + css({ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 8 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.violet, letterSpacing: "0.14em", fontWeight: 700 }) + '">◈ ProX VERİ EKOSİSTEMİ · 5 KATMAN · 25+ KAYNAK · CANLI BAĞLI</div><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.06em" }) + '">YASAL MEVZUAT ÇERÇEVESİNDE · KVKK UYUMLU</div></div><div style="' + css({ display: "flex", flexDirection: "column", gap: 14 }) + '">' + eco + '</div>'
+      + '<div style="' + css({ marginTop: 16, padding: "10px 14px", border: "1px dashed " + C.violet, background: "rgba(167,139,250,0.04)", fontFamily: C.mono, fontSize: 10.5, color: C.textMut, letterSpacing: "0.04em", lineHeight: 1.55 }) + '">⚖ Tüm kaynaklar <strong style="' + css({ color: C.textPri }) + '">yasal mevzuat çerçevesinde</strong> işlenir. Kamuya açık veriler doğrudan kullanılır; TÜİK gibi kurumlardan ücretli veri setleri lisanslı olarak satın alınır. Veriler <strong style="' + css({ color: C.textPri }) + '">KVKK uyumlu</strong>, anonimize ve mahalle/agregat düzeyde işlenir — kişisel veri saklanmaz veya satılmaz.</div></div>'
+      + '<div style="' + css({ position: "relative", marginTop: 18, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, padding: "10px 14px", border: "1px dashed " + C.violet, background: "rgba(167,139,250,0.04)" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textMut, letterSpacing: "0.04em" }) + '">⌬ Bu sayfa Nadas <strong style="' + css({ color: C.textSec }) + '">genel veri akışını</strong> gösterir. ProX’in iç mimarisi ve teknik dökümantasyonu için ayrı sayfa hazırlanmaktadır.</div><a href="https://www.emlakekspertizi.com/yapay-zeka" target="_blank" rel="noopener noreferrer" style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: C.mono, fontSize: 11.5, color: C.violet, textDecoration: "none", fontWeight: 700, letterSpacing: "0.08em" }) + '">ProX’i DENE · emlakekspertizi.com/yapay-zeka →</a></div>'
+      + '</div>';
+    return SubSection("D.1", "ProX — Nadas akıllı emlak asistanı", "◈ EMLAKEKSPERTIZI.COM ÖZEL · ALANINDA TEK", body);
+  }
+
+  /* ===== D.2 API ===== */
+  function APIEndpoints() {
+    var endpoints = [
+      ["GET", "/api/v2/timeseries/monthly", "Bölge × kategori × tarih aralığında aylık seri", "API key"], ["GET", "/api/v2/timeseries/latest", "Son veri noktası — gerçek zamanlı snapshot", "API key"], ["GET", "/api/v2/regions/{id}", "Bölge metadata (hiyerarşi, DNA vektör)", "API key"], ["GET", "/api/v2/regions/search", "İl/ilçe/mahalle adıyla arama, geocoding", "API key"], ["GET", "/api/v2/categories", "38 varlık kategorisi listesi, hiyerarşi", "Public"], ["GET", "/api/v2/dna/region/{id}", "38 boyutlu DNA vektörü, çapa bölge bilgisi", "API key"], ["GET", "/api/v2/dna/similar/{id}", "Benzer DNA profili olan mahalleler (komşuluk)", "Enterprise"], ["GET", "/api/v2/events/markers", "Olay markerları (tarih, kategori, etki yarıçapı)", "API key"], ["GET", "/api/v2/events/by-region/{id}", "Bir bölgeyi etkileyen 37M olaydan ilgili olanlar", "API key"], ["POST", "/api/v2/index/composite", "Çoklu kategori/bölge için endeks hesaplama", "Enterprise"], ["GET", "/api/v2/heatmap/{level}/{cat}", "İl/ilçe/mahalle ölçeğinde heatmap data", "Enterprise"], ["POST", "/api/v2/reports/generate", "Özelleştirilmiş PDF rapor üretimi", "Enterprise"], ["WS", "/ws/v2/stream/region/{id}", "Real-time bölge fiyat akışı (websocket)", "Enterprise"],
+    ];
+    var mc = { GET: C.accent, POST: C.primary, WS: C.violet };
+    var rows = endpoints.map(function (e, i) { return '<div style="' + css({ display: "grid", gridTemplateColumns: "70px 1fr 140px", minWidth: 580, gap: 0, padding: "10px 14px", borderBottom: i < endpoints.length - 1 ? "1px solid " + C.border : "none", alignItems: "center" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 11, fontWeight: 700, color: mc[e[0]] }) + '">' + e[0] + '</span><div><div style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.primary, fontWeight: 600, marginBottom: 2 }) + '">' + e[1] + '</div><div style="' + css({ fontSize: 11.5, color: C.textMut }) + '">' + e[2] + '</div></div><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: e[3] === "Public" ? C.accent : e[3] === "Enterprise" ? C.warn : C.textMut, textAlign: "right", letterSpacing: "0.04em" }) + '">' + e[3].toLocaleUpperCase("tr-TR") + '</span></div>'; }).join("");
+    var body = '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, overflow: "auto" }) + '"><div style="' + css({ display: "grid", gridTemplateColumns: "70px 1fr 140px", minWidth: 580, gap: 0, fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, padding: "10px 14px", borderBottom: "1px solid " + C.borderStrong, background: C.deep, letterSpacing: "0.08em" }) + '"><span>METHOD</span><span>PATH · DESCRIPTION</span><span style="' + css({ textAlign: "right" }) + '">AUTH</span></div>' + rows + '</div>';
+    return SubSection("D.2", "API endpoint kataloğu", "REST + WEBSOCKET · v2", body);
+  }
+
+  /* ===== D.3 RATE LIMIT ===== */
+  function RateLimitsSLA() {
+    var cards = [
+      ["BASIC", "100", "req/dakika", "99.5% uptime · email destek", C.textMut], ["GROWTH", "1.000", "req/dakika", "99.9% uptime · 8h yanıt", C.textPri], ["ENTERPRISE", "10.000+", "req/dakika", "99.99% uptime · 1h yanıt · dedicated SLA", C.primary], ["WEBSOCKET", "Limitsiz", "concurrent", "Stream başına 1.000 mesaj/sn", C.primary],
+    ].map(function (r) { return '<div style="' + css({ background: C.raised, padding: 16 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: r[4], fontWeight: 700, letterSpacing: "0.1em", marginBottom: 8 }) + '">' + r[0] + '</div><div style="' + css({ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 8 }) + '"><span style="' + css({ fontSize: "1.8rem", fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + r[1] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textFaint }) + '">' + r[2] + '</span></div><p style="' + css({ fontSize: 11.5, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + r[3] + '</p></div>'; }).join("");
+    return SubSection("D.3", "Rate limit & SLA garantileri", "ENTERPRISE TIER", '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>');
+  }
+
+  /* ===== D.4 YÖNETİŞİM ===== */
+  function DataGovernance() {
+    var cards = [
+      ["VALIDATION RULES", "Şema, tip, mantık kontrolleri · ingest aşamasında uygulanır."], ["ANOMALY DETECTION", "İstatistiksel outlier tespiti · z-skor + bölgesel komşuluk karşılaştırma."], ["MANUAL OVERRIDE", "Saha ekibi review queue · şüpheli noktalar manuel kontrol edilir."], ["AUDIT TRAIL", "Her veri noktasının kaynak, doğrulama ve değişiklik geçmişi tutulur."], ["KPI DASHBOARD", "Sistem-wide kalite metrikleri · veri yoğunluğu, kapsama, güven dağılımı."], ["BACKFILL POLICY", "Eksik veri için bölgesel komşuluk + tarihsel interpolasyon kuralları."],
+    ].map(function (r) { return '<div style="' + css({ background: C.raised, padding: 14 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11.5, color: C.primary, fontWeight: 700, letterSpacing: "0.08em", marginBottom: 6 }) + '">' + r[0] + '</div><p style="' + css({ fontSize: 12, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + r[1] + '</p></div>'; }).join("");
+    return SubSection("D.4", "Veri yönetişimi & kalite kontrol", "QUALITY ASSURANCE STACK", '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>');
+  }
+
+  /* ===== D.5 GÜNCELLİK ===== */
+  function FreshnessMatrix() {
+    var layers = [
+      ["İLAN AKIŞI", "REAL-TIME", "Saniye", "Crawler webhook'larıyla anlık ingestion", C.accent], ["WEB CRAWL", "GÜNLÜK", "24 saat", "Ana ilan platformları günlük tarama", C.primary], ["SAHA AGREGASYON", "HAFTALIK", "7 gün", "Saha ekipleri haftalık veri yüklemesi", C.primary], ["TIMESERIES AGREGASYON", "AYLIK", "Ayın 5'i", "Önceki ay verilerinin agrege edilmesi", C.primary], ["DNA GÜNCELLEME", "AYLIK/ÇEYREK", "Çeyrek başı", "38 boyutlu vektör yeniden hesaplanır", C.primary], ["OLAY MARKER", "OLAY-TETİKLEMELİ", "Anında", "Deprem, faiz kararı, kur şoku tetikler", C.danger],
+    ];
+    var rows = layers.map(function (l, i) { return '<div style="' + css({ display: "grid", gridTemplateColumns: "160px 130px 100px 1fr", minWidth: 580, gap: 0, padding: "10px 14px", borderBottom: i < layers.length - 1 ? "1px solid " + C.border : "none", alignItems: "center" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 11.5, fontWeight: 600, color: C.textPri }) + '">' + l[0] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: l[4], fontWeight: 700, letterSpacing: "0.04em" }) + '">' + l[1] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textMut }) + '">' + l[2] + '</span><span style="' + css({ fontSize: 12, color: C.textSec }) + '">' + l[3] + '</span></div>'; }).join("");
+    var body = '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, overflow: "auto" }) + '"><div style="' + css({ display: "grid", gridTemplateColumns: "160px 130px 100px 1fr", minWidth: 580, gap: 0, fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, padding: "10px 14px", borderBottom: "1px solid " + C.borderStrong, background: C.deep, letterSpacing: "0.08em" }) + '"><span>LAYER</span><span>FREQUENCY</span><span>LATENCY</span><span>DESCRIPTION</span></div>' + rows + '</div>';
+    return SubSection("D.5", "Veri güncellik matrisi", "UPDATE FREQUENCY MATRIX", body);
+  }
+
+  /* ===== EMLAKEKSPERTIZI ÜRÜN ===== */
+  function EmlakEkspertiziProduct() {
+    var products = [
+      { sym: "◉", tag: "ÜRÜN 01", name: "EMLAK EKSPERTİZİ", desc: "SPK lisanslı değerleme uzmanları tarafından hazırlanan resmi rapor. 38 kategoride. Banka teminatı, mahkeme delili, satış değerlemesi için resmi geçerli.", feats: ["Bağımsız & tarafsız", "SPK lisanslı uzman", "38 kategori desteği", "Resmi geçerli rapor"], col: C.primary },
+      { sym: "◈", tag: "ÜRÜN 02 · ProX DESTEKLİ", name: "KARAR ANALİZİ", desc: "Bir gayrimenkulü almalı/satmalı mıyım? Hangi mahalleye yatırım yapmalıyım? ProX akıllı asistanı üzerinden derinlemesine bölge raporu.", feats: ["38 boyutlu DNA analizi", "7M+ olay korelasyonu", "21 yıllık tarihsel zincir", "ProX akıllı asistan"], col: C.violet },
+      { sym: "▦", tag: "ÜRÜN 03", name: "EMLAK ENDEKSİ", desc: "Tüm Türkiye mahalleleri için canlı endeks, demografik grafik, fiyat trendi ve karşılaştırma. 50.000+ mahalle, ay düzeyinde 21 yıllık seri.", feats: ["50.000+ mahalle", "Aylık güncel", "Demografik katman", "Bölge karşılaştırma"], col: C.primary },
+    ].map(function (p) {
+      var feats = p.feats.map(function (f) { return '<li style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textSec, display: "flex", alignItems: "center", gap: 8 }) + '"><span style="' + css({ color: p.col }) + '">→</span>' + f + '</li>'; }).join("");
+      return '<div style="' + css({ background: C.raised, padding: 22, position: "relative" }) + '"><div style="' + css({ position: "absolute", top: 16, right: 18, fontSize: 28, color: p.col, opacity: 0.25, fontFamily: C.mono }) + '">' + p.sym + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: p.col, letterSpacing: "0.14em", marginBottom: 8 }) + '">' + p.tag + '</div><h3 style="' + css({ fontSize: "1.4rem", fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", margin: "0 0 10px" }) + '">' + p.name + '</h3><p style="' + css({ fontSize: 13, lineHeight: 1.55, color: C.textMut, margin: "0 0 14px" }) + '">' + p.desc + '</p><ul style="' + css({ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 6 }) + '">' + feats + '</ul></div>';
+    }).join("");
+    var plans = [
+      { tier: "BİREYSEL", icon: "◯", price: "ÜCRETSİZ", desc: "Temel endeks görüntüleme, mahalle keşfi", feats: ["Endeks görüntüleme", "Demografik grafik", "Mahalle keşif", "Aylık 5 sorgu"], col: C.textMut },
+      { tier: "PROFESYONEL", icon: "◐", price: "₺ AYLIK", desc: "Emlak danışmanı, müteahhit, yatırımcı için", feats: ["Sınırsız sorgu", "Karar analizi raporları", "PDF export", "API basic erişim"], col: C.textPri },
+      { tier: "KURUMSAL", icon: "◈", price: "ÖZEL FİYAT", desc: "Banka, sigorta, fon, belediye, proptech", feats: ["Tüm API endpoint'leri", "Custom dashboard", "Dedicated destek", "SLA 99.99%"], col: C.primary, featured: true },
+      { tier: "API", icon: "Σ", price: "USAGE BASED", desc: "Geliştirici, entegrasyon, white-label", feats: ["REST + WebSocket", "10K+ req/dk", "Sandbox ortam", "OAuth 2.0"], col: C.textPri },
+    ].map(function (p) {
+      var feats = p.feats.map(function (f) { return '<li style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textSec, display: "flex", alignItems: "center", gap: 6 }) + '"><span style="' + css({ color: p.col, fontSize: 9 }) + '">●</span>' + f + '</li>'; }).join("");
+      return '<div style="' + css({ background: p.featured ? C.elev : C.raised, padding: 20, position: "relative", borderTop: p.featured ? "2px solid " + p.col : "2px solid transparent" }) + '">' + (p.featured ? '<div style="' + css({ position: "absolute", top: -1, right: 16, background: p.col, color: C.deep, fontFamily: C.mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", padding: "3px 8px", borderRadius: "0 0 2px 2px" }) + '">EN POPÜLER</div>' : '') + '<div style="' + css({ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }) + '"><span style="' + css({ fontSize: 18, color: p.col, fontFamily: C.mono }) + '">' + p.icon + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 12, fontWeight: 700, color: p.col, letterSpacing: "0.1em" }) + '">' + p.tier + '</span></div><div style="' + css({ fontSize: 17, fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", marginBottom: 6 }) + '">' + p.price + '</div><p style="' + css({ fontSize: 12, color: C.textMut, margin: "0 0 12px", lineHeight: 1.5 }) + '">' + p.desc + '</p><ul style="' + css({ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 4 }) + '">' + feats + '</ul></div>';
+    }).join("");
+    var mock = [["BÖLGE PROFİLİ", "Premium · L4", C.primary], ["DNA UYUMU", "%92", C.accent], ["RİSK SKORU", "Düşük · 18/100", C.accent], ["FİYAT EĞİLİMİ", "+%14 / yıl", C.accent], ["LİKİDİTE", "Yüksek", C.primary], ["DEPREM RİSKİ", "Orta · Fay 8km", C.warn]]
+      .map(function (m) { return '<div style="' + css({ background: C.raised, padding: "10px 12px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 4 }) + '">' + m[0] + '</div><div style="' + css({ fontSize: 14, color: m[2], fontWeight: 700, fontFamily: C.mono }) + '">' + m[1] + '</div></div>'; }).join("");
+    return '<section style="' + css({ background: "linear-gradient(135deg, " + C.deep + " 0%, " + C.raised + " 100%)", borderTop: "2px solid " + C.primary, borderBottom: "1px solid " + C.borderStrong, padding: "40px 16px 32px", position: "relative", overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 80% 20%, rgba(56,189,248,0.12), transparent 60%), radial-gradient(circle at 10% 80%, rgba(167,139,250,0.08), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, fontFamily: C.mono, fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase" }) + '"><span style="' + css({ color: C.primary }) + '">◆ ÜRÜN</span><span style="' + css({ height: 1, flex: 1, background: C.primary, opacity: 0.4 }) + '"></span><span style="' + css({ color: C.textMut }) + '">BU ALTYAPI İLE ÇALIŞAN PLATFORM</span></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "auto 1fr", gap: 22, alignItems: "center", marginBottom: 14 }) + '" class="nadas-twocol">' + NX.EmlakEkspertiziLogo(88) + '<div><h2 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(1.8rem,4.6vw,3rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri }) + '"><span style="' + css({ color: "#fff" }) + '">emlak</span><span style="' + css({ color: "#2DD4BF" }) + '">ekspertizi</span><span style="' + css({ color: C.accent }) + '">.com</span></h2><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: "#2DD4BF", letterSpacing: "0.18em", marginTop: 4, fontWeight: 700 }) + '">DEĞERİNİ ŞİMDİ ÖĞREN</div></div></div>'
+      + '<p style="' + css({ marginTop: 8, fontSize: 16, lineHeight: 1.6, color: C.textSec, maxWidth: 960 }) + '">Nadas veri altyapısı üzerinde çalışan müşteri platformu. <strong style="' + css({ color: C.textPri }) + '">38 kategoride emlak ekspertizi</strong> ve <strong style="' + css({ color: C.textPri }) + '"> derinlemesine karar analizi</strong>. SPK lisanslı değerleme uzmanları, bağımsız ve tarafsız raporlar. Tüm hesaplamalar <strong style="' + css({ color: C.violet }) + '">ProX akıllı asistan</strong> tarafından gerçekleştirilir — halüsinasyonsuz, gerçek veritabanı tabanlı.</p>'
+      + '<div style="' + css({ marginTop: 24, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 1, background: C.borderStrong, border: "1px solid " + C.primary }) + '">' + products + '</div>'
+      + '<div style="' + css({ marginTop: 32 }) + '"><div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, fontFamily: C.mono, fontSize: 10.5, letterSpacing: "0.12em" }) + '"><span style="' + css({ color: C.primary }) + '">ÜYELİK PLANLARI</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span></div><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + plans + '</div></div>'
+      + '<div style="' + css({ marginTop: 32, padding: 24, background: C.deep, border: "1px solid " + C.primary, position: "relative", overflow: "hidden" }) + '"><div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18, flexWrap: "wrap", gap: 12 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, letterSpacing: "0.14em", marginBottom: 6 }) + '">◆ ÖRNEK · KARAR ANALİZİ ÖNİZLEMESİ</div><h3 style="' + css({ fontSize: "1.5rem", fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", margin: 0 }) + '">İstanbul / Kadıköy / Caddebostan · Daire · Satılık</h3><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.violet, letterSpacing: "0.1em", marginTop: 6 }) + '">◈ ProX YANITI · 480M KAYIT TARANDI · 21 YIL TARİHSEL ZİNCİR</div></div><div style="' + css({ padding: "4px 12px", background: C.violet, color: "#fff", fontFamily: C.mono, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", borderRadius: 2 }) + '">ProX ÖNERİSİ · 87/100</div></div><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 1, background: C.borderStrong, marginBottom: 18 }) + '">' + mock + '</div><p style="' + css({ fontSize: 13, lineHeight: 1.6, color: C.textSec, margin: 0 }) + '"><strong style="' + css({ color: C.violet }) + '">ProX yanıtı:</strong> Caddebostan, son 5 yılda %78 fiyat artışı gösterdi. 38 boyutlu DNA analizi yüksek prestij + güçlü merkezi konum + sahil bandı primi ile bu bölgeyi <strong style="' + css({ color: C.accent }) + '">L4-Premium</strong> kategorisine yerleştiriyor. Deprem riski orta, fakat yapı stoku 2010 sonrası ağırlıklı olduğu için risk düşüyor. Likidite yüksek, dönüş hızı ortalama 47 gün — bölgesel ortalamadan %22 hızlı. <strong style="' + css({ color: C.warn }) + '">Hukuki not:</strong> 2026/03 Resmi Gazete’de yayımlanan dönüşüm yasası bu bölgedeki yapı stokunun %18’ini etkiliyor.</p><div style="' + css({ marginTop: 14, padding: "8px 12px", border: "1px solid " + C.border, background: "rgba(167,139,250,0.04)", fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.04em", lineHeight: 1.5 }) + '">⌬ Bu yanıt bir <strong style="' + css({ color: C.textMut }) + '">üretici yapay zeka çıktısı değildir</strong>. Tüm rakamlar 480M kayıtlık Nadas veritabanı üzerinden ProX tarafından deterministik olarak hesaplanmıştır. Aynı sorgu, aynı sonucu üretir.</div></div>'
+      + '<div style="' + css({ marginTop: 36, padding: "32px 24px", background: C.primary, color: C.deep, textAlign: "center" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11, letterSpacing: "0.16em", marginBottom: 12, opacity: 0.7 }) + '">◆ NADAS ALTYAPISIYLA · BAĞIMSIZ & SPK LİSANSLI · ProX DESTEKLİ</div><h3 style="' + css({ fontSize: "clamp(1.6rem,4vw,2.4rem)", fontWeight: 700, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.025em", margin: "0 0 14px", lineHeight: 1.1 }) + '">38 kategoride emlak ekspertizi.<br>21 yıllık karar analizi. Tek platformda.</h3><p style="' + css({ fontSize: 15, lineHeight: 1.55, margin: "0 auto 22px", maxWidth: 620, opacity: 0.85 }) + '">Yatırım, satış, kiralama, teminat — hangi karar sizinki olsun, veriye dayandırın.</p><div style="' + css({ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }) + '"><a href="https://www.emlakekspertizi.com/emlak-ekspertizi" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: C.deep, color: "#fff", fontFamily: C.mono, fontSize: 13, fontWeight: 700, letterSpacing: "0.08em", textDecoration: "none", borderRadius: 2 }) + '">EMLAK EKSPERTİZİ AL →</a><a href="https://www.emlakekspertizi.com" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "transparent", color: C.deep, fontFamily: C.mono, fontSize: 13, fontWeight: 700, letterSpacing: "0.08em", textDecoration: "none", border: "2px solid " + C.deep, borderRadius: 2 }) + '">EMLAKEKSPERTIZI.COM →</a></div></div>'
+      + '</div></section>';
+  }
+
+  /* ===== MONTAJ ===== */
+  function renderApp() {
+    return NX.Ticker(VATICK) + NX.Masthead("Veri Altyapısı") + NX.Nav("Veri Altyapısı")
+      + HeroHeadline() + MarketDataGapEditorial()
+      + SectionDivider("A", "Veri Katmanı", "NE TOPLUYORUZ · 5 BLOK") + CollectionMethods() + ThreeLayers() + DNADetail() + EventSystem() + VolumeComparison()
+      + SectionDivider("B", "Kalite & Doğrulama", "NASIL GÜVENİLİR · 3 BLOK") + ValidationSystem() + ConfidenceGauge() + ModelPerformance()
+      + SectionDivider("C", "Mimari", "NASIL ÇALIŞIR · 4 BLOK") + DataPipeline() + TechStack() + SchemaViz() + ScaleArchitecture()
+      + SectionDivider("D", "ProX & Erişim", "AKILLI ASİSTAN + KURUMSAL · 5 BLOK") + ProXTeaser() + APIEndpoints() + RateLimitsSLA() + DataGovernance() + FreshnessMatrix()
+      + EmlakEkspertiziProduct() + NX.Footer();
+  }
+
+  NX.boot(renderApp);
+
+  // CountUp — görünür sekmede rAF, gizli sekmede setTimeout geri-dönüşü son değeri garanti eder
+  (function () {
+    var els = document.querySelectorAll("[data-cu]");
+    for (var i = 0; i < els.length; i++) {
+      (function (el) {
+        var target = parseFloat(el.getAttribute("data-cu")) || 0, suf = el.getAttribute("data-suf") || "", pre = el.getAttribute("data-pre") || "", start = null, dur = 1600;
+        function fmt(v) { return pre + Math.round(v).toLocaleString("tr-TR") + suf; }
+        function step(t) { if (!start) start = t; var p = Math.min((t - start) / dur, 1); el.textContent = fmt(target * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); }
+        requestAnimationFrame(step);
+        setTimeout(function () { el.textContent = fmt(target); }, 1900);
+      })(els[i]);
+    }
+  })();
+})();
+</script>
+</body>
+</html>

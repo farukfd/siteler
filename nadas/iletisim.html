@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>İletişim — NADAS · Yazılı İletişim · Sizi Arayalım · Kayıt Altında</title>
+<meta name="description" content="NADAS iletişim: 3 yazılı kanal (destek@nadas.com.tr, destek@emlakekspertizi.com, bilgi@emlakekspertizi.com). Gelen arama kabul edilmez — numaranızı bırakın, sizi arayalım. Yanıt iş günü 24 saat içinde. AR-GE ofis Arnavutköy/İstanbul. Kurumsal talep, API, white-label, veri lisansı.">
+<meta name="theme-color" content="#06101B">
+<link rel="canonical" href="https://www.nadas.com.tr/iletisim">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%2306101B'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%2338BDF8'%3EN%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NADAS">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="İletişim — NADAS · Yazılı İletişim · Sizi Arayalım">
+<meta property="og:description" content="Her temas yazılıdır, her yanıt kayıt altındadır. 3 yazılı kanal, iş günü 24 saat yanıt. Numaranızı bırakın, ilgili birim sizi arasın.">
+<meta property="og:image" content="og-iletisim.png">
+<meta property="og:url" content="https://www.nadas.com.tr/iletisim">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="İletişim — NADAS">
+<meta name="twitter:description" content="3 yazılı kanal · sizi arayalım · iş günü 24 saat yanıt · AR-GE Arnavutköy/İstanbul · kayıt altında.">
+<meta name="twitter:image" content="og-iletisim.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"Nadas Gayrimenkul Bilgi İletişim Sistemleri Ticaret Limited Şirketi","alternateName":"NADAS","url":"https://www.nadas.com.tr","foundingDate":"2005","email":"destek@nadas.com.tr","address":{"@type":"PostalAddress","streetAddress":"Hastane Mah. Ayasofya Cad. Postane Sk. No: 23/5","addressLocality":"Arnavutköy","addressRegion":"İstanbul","addressCountry":"TR"},"contactPoint":[{"@type":"ContactPoint","email":"destek@nadas.com.tr","contactType":"customer support","areaServed":"TR","availableLanguage":["Turkish"]},{"@type":"ContactPoint","email":"bilgi@emlakekspertizi.com","contactType":"sales","areaServed":"TR"}]}
+</script>
+</head>
+<body>
+<div id="app">
+  <noscript>
+    <div style="max-width:900px;margin:0 auto;padding:48px 20px;font-family:'Sora',sans-serif">
+      <h1 style="color:#38BDF8">NADAS İletişim — Yazılı iletişim, kayıt altında</h1>
+      <p style="color:#CBD5E1">destek@nadas.com.tr · destek@emlakekspertizi.com · bilgi@emlakekspertizi.com. Gelen arama kabul edilmez; numaranızı bırakın, sizi arayalım. Bu sayfayı görüntülemek için JavaScript gereklidir.</p>
+    </div>
+  </noscript>
+</div>
+
+<script src="js/core.js?v=2"></script>
+<script>
+(function () {
+  "use strict";
+  var C = NX.C, css = NX.css;
+  NX.setAccent(C.primary);
+
+  var ILTICK = [
+    ["İLETİŞİM", "SADECE YAZILI"], ["SİZİ ARAYALIM", "GERİ DÖNÜŞ SİSTEMİ"], ["YANIT SÜRESİ", "İŞ GÜNÜ · 24 SAAT"], ["GENEL DESTEK", "destek@nadas.com.tr"],
+    ["MÜŞTERİ DESTEĞİ", "destek@emlakekspertizi.com"], ["BİLGİ TALEBİ", "bilgi@emlakekspertizi.com"], ["AR-GE OFİS", "ARNAVUTKÖY · İSTANBUL"], ["KURUMSAL TALEP", "DEMO · TEKLİF · API"],
+    ["WHITE-LABEL", "PLATFORM ÇÖZÜMLERİ"], ["VERİ LİSANSI", "İL · İLÇE BAZLI"], ["KAYIT", "TÜM İLETİŞİM KAYITLIDIR"], ["SINCE 2005", "21 YIL"],
+  ];
+
+  /* ===== LOKAL PRİMİTİFLER ===== */
+  function Eyebrow(children, color) {
+    color = color || C.primary;
+    return '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: C.mono, fontSize: 10.5, color: color, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 700, marginBottom: 12 }) + '"><span style="' + css({ width: 14, height: 1, background: color }) + '"></span>' + children + '</div>';
+  }
+  function SectionDivider(index, title, subtitle) {
+    return '<div style="' + css({ background: C.base, borderTop: "1px solid " + C.primary, borderBottom: "1px solid " + C.borderStrong, padding: "12px 16px" }) + '">'
+      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }) + '">'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, fontWeight: 700, letterSpacing: "0.16em" }) + '">SECTION · ' + index + '</span>'
+      + '<span style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 18, color: C.textPri, fontWeight: 600, letterSpacing: "-0.01em" }) + '">' + title + '</span>'
+      + '<span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span>'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.1em" }) + '">' + subtitle + '</span>'
+      + '</div></div>';
+  }
+  function SubSection(num, title, eyebrow, children) {
+    return '<section style="' + css({ borderBottom: "1px solid " + C.border, padding: "32px 16px" }) + '">'
+      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 6, flexWrap: "wrap" }) + '">'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, fontWeight: 700, letterSpacing: "0.1em" }) + '">' + num + '</span>'
+      + '<h3 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "clamp(1.15rem,2.2vw,1.5rem)", color: C.textPri, fontWeight: 600, letterSpacing: "-0.015em", margin: 0 }) + '">' + title + '</h3>'
+      + '</div>'
+      + (eyebrow ? '<div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.12em", marginBottom: 18 }) + '">' + eyebrow + '</div>' : '')
+      + children + '</div></section>';
+  }
+  function inp(attrs) {
+    return '<input ' + attrs + ' style="' + css({ width: "100%", padding: "11px 12px", background: C.deep, border: "1px solid " + C.borderStrong, color: C.textPri, fontFamily: C.mono, fontSize: 13, outline: "none", boxSizing: "border-box" }) + '">';
+  }
+  function lbl(text) {
+    return '<label style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 6, display: "block", fontWeight: 700 }) + '">' + text + '</label>';
+  }
+  var PHONE_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="%STROKE%" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>';
+  function phoneSvg(color) { return PHONE_SVG.replace("%STROKE%", color); }
+
+  /* ===== HERO ===== */
+  function HeroIletisim() {
+    return '<section style="' + css({ position: "relative", padding: "22px 16px 50px", background: C.base, borderBottom: "1px solid " + C.borderStrong, overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 80% 20%, rgba(56,189,248,0.14), transparent 55%), radial-gradient(circle at 10% 80%, rgba(56,189,248,0.06), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+      + Eyebrow("◆ İLETİŞİM · YAZILI KANAL · KAYIT ALTINDA")
+      + '<h1 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(2rem,5.4vw,3.5rem)", fontWeight: 700, lineHeight: 1.04, letterSpacing: "-0.025em", margin: 0, color: C.textPri, maxWidth: 1100 }) + '">Her temas yazılıdır.<br><span style="' + css({ color: C.primary }) + '">Her yanıt kayıt altındadır.</span></h1>'
+      + '<p style="' + css({ marginTop: 22, fontSize: 16, lineHeight: 1.7, color: C.textSec, maxWidth: 920 }) + '">Nadas iletişimi yalnızca <strong style="' + css({ color: C.textPri }) + '">yazılı kanaldan başlatılır</strong>. Gelen aramalar kabul edilmez; bunun yerine telefon numarası bırakırsanız <strong style="' + css({ color: C.textPri }) + '">ilgili birim sizi arar</strong>. Bu, hizmet kalitesinin denetlenebilir olması, yanıt sürelerinin ölçülmesi ve <strong style="' + css({ color: C.textPri }) + '">kurumsal sorumluluğun korunması</strong> için bilinçli bir tercihtir. Tüm e-posta yanıtları <strong style="' + css({ color: C.textPri }) + '">iş günü içinde 24 saat içinde</strong> sağlanır. Bireysel müşteri talepleri için <a href="https://www.emlakekspertizi.com" target="_blank" rel="noopener noreferrer" style="' + css({ color: C.primary, textDecoration: "none", fontWeight: 600 }) + '">emlakekspertizi.com →</a></p>'
+      + '<div style="' + css({ marginTop: 22, display: "flex", gap: 10, flexWrap: "wrap" }) + '">'
+      + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 10, padding: "10px 16px", border: "1px solid " + C.accent, background: "rgba(52,211,153,0.06)", borderRadius: 2 }) + '"><span style="' + css({ width: 8, height: 8, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.accent, fontWeight: 700, letterSpacing: "0.1em" }) + '">YANIT SÜRESİ · 24 SAAT İÇİNDE</span></div>'
+      + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 14px", border: "1px solid " + C.primary, background: "rgba(56,189,248,0.06)", borderRadius: 2 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, fontWeight: 700, letterSpacing: "0.1em" }) + '">3 KANAL · YAZILI</span></div>'
+      + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 14px", border: "1px solid " + C.violet, background: "rgba(167,139,250,0.06)", borderRadius: 2 }) + '">' + phoneSvg(C.violet) + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.violet, fontWeight: 700, letterSpacing: "0.1em" }) + '">SİZİ ARAYALIM · GERİ DÖNÜŞ SİSTEMİ</span></div>'
+      + '</div></div></section>';
+  }
+
+  /* ===== A.1 İLETİŞİM KANALLARI ===== */
+  function IletisimKanallari() {
+    var channels = [
+      { tag: "01", email: "destek@nadas.com.tr", title: "GENEL DESTEK", sub: "Kurumsal sorular · genel iletişim", desc: "Şirket ile ilgili genel sorular, kurumsal işbirliği teklifleri, basın talepleri ve diğer tüm yazışmalar.", uses: ["Şirket ile ilgili genel sorular", "Kurumsal işbirliği teklifleri", "Basın ve medya talepleri", "İK ve kariyer başvuruları"], color: C.primary, featured: false },
+      { tag: "02", email: "destek@emlakekspertizi.com", title: "MÜŞTERİ DESTEĞİ", sub: "Sipariş · üyelik · ürün desteği", desc: "Karar analizi, SPK lisanslı ekspertiz, ProX üyelikleri ve emlakekspertizi.com platformuyla ilgili tüm sipariş ve müşteri talepleri.", uses: ["Karar Analizi sipariş takibi", "SPK ekspertiz talepleri", "Üyelik · ProX paket soruları", "Teknik destek · raporlama"], color: C.accent, featured: true },
+      { tag: "03", email: "bilgi@emlakekspertizi.com", title: "BİLGİ & İŞBİRLİĞİ", sub: "Bilgi talebi · kurumsal işbirliği", desc: "Kurumsal API, white-label platform, veri lisansı, özel yazılım çözümleri ve büyük ölçekli kurumsal projeler.", uses: ["Kurumsal API talebi", "White-label platform teklifi", "İl/ilçe veri lisansı", "Demo · pilot proje talepleri"], color: C.violet, featured: false },
+    ];
+    var cards = channels.map(function (c) {
+      var uses = c.uses.map(function (u) { return '<li style="' + css({ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 11.5, color: C.textSec, lineHeight: 1.5 }) + '"><span style="' + css({ color: c.color, fontFamily: C.mono, fontSize: 10, lineHeight: 1.6 }) + '">→</span>' + u + '</li>'; }).join("");
+      return '<div style="' + css({ background: c.featured ? C.elev : C.raised, border: "1px solid " + (c.featured ? c.color : C.borderStrong), padding: "26px 22px", display: "flex", flexDirection: "column" }) + '">'
+        + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }) + '"><span style="' + css({ width: 36, height: 36, border: "1px solid " + c.color, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Sora',sans-serif", fontSize: 13, color: c.color, fontWeight: 700, letterSpacing: "0.04em", borderRadius: 2 }) + '">' + c.tag + '</span><div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.12em", marginBottom: 2 }) + '">KANAL ' + c.tag + '</div><div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 14, fontWeight: 700, color: c.color, letterSpacing: "0.04em" }) + '">' + c.title + '</div></div>' + (c.featured ? '<span style="' + css({ marginLeft: "auto", padding: "3px 9px", background: c.color, color: C.deep, fontFamily: C.mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.1em" }) + '">POPÜLER</span>' : '') + '</div>'
+        + '<div style="' + css({ fontSize: 12.5, color: C.textMut, marginBottom: 14, fontWeight: 500 }) + '">' + c.sub + '</div>'
+        + '<a href="mailto:' + c.email + '" style="' + css({ display: "block", padding: "12px 14px", background: C.deep, border: "1px solid " + c.color, marginBottom: 16, textDecoration: "none" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 13.5, color: c.color, fontWeight: 700, letterSpacing: "0.02em", textAlign: "center" }) + '">' + c.email + '</div></a>'
+        + '<p style="' + css({ fontSize: 12.5, color: C.textMut, lineHeight: 1.6, margin: "0 0 14px", flex: 1 }) + '">' + c.desc + '</p>'
+        + '<div style="' + css({ paddingTop: 12, borderTop: "1px solid " + C.border }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 8, fontWeight: 700 }) + '">◈ KULLANIM ALANLARI</div><ul style="' + css({ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 5 }) + '">' + uses + '</ul></div></div>';
+    }).join("");
+    var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 22, maxWidth: 940 }) + '">Talebinize en hızlı yanıt için uygun kanalı seçin. Her e-posta adresinin belirli bir konu kapsamı vardır. Birden fazla konu varsa <strong style="' + css({ color: C.textPri }) + '">destek@nadas.com.tr</strong> üzerinden iletilebilir.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 14 }) + '">' + cards + '</div>';
+    return SubSection("A.1", "İletişim kanalları · 3 yazılı kanal", "HER KANAL · BELİRLİ KONULAR İÇİN · YANIT 24 SAAT", body);
+  }
+
+  /* ===== B.1 İLETİŞİM FORMU ===== */
+  function IletisimFormu() {
+    var subjects = ["Seçiniz...", "Kurumsal API · entegrasyon", "White-label platform teklifi", "Veri lisansı (il/ilçe bazlı)", "Toplu SPK ekspertiz hizmeti", "Investor / Corporate üyelik", "Demo / pilot proje talebi", "Basın · medya · röportaj", "Research aboneliği · rapor talebi", "İK · kariyer · staj", "Diğer · genel sorular"];
+    var opts = subjects.map(function (s) { return '<option>' + s + '</option>'; }).join("");
+    var expect = [
+      ["Otomatik onay e-postası", "Talebiniz alındığında 5 dakika içinde otomatik onay e-postası."],
+      ["İlk yanıt · 24 saat", "İş günü içinde 24 saat içinde sorumlu birimden ilk yanıt."],
+      ["Detaylı yanıt · 48-72 saat", "Kurumsal teklifler için detaylı teknik veya ticari yanıt."],
+      ["Takip · aynı thread", "Tüm yazışma aynı e-posta zincirinde devam eder. Kayıt tutulabilir."],
+    ].map(function (item, idx) {
+      var n = (idx + 1 < 10 ? "0" : "") + (idx + 1);
+      return '<li style="' + css({ display: "flex", gap: 10, paddingBottom: 12, borderBottom: "1px solid " + C.border }) + '"><span style="' + css({ minWidth: 24, height: 24, background: C.accent, color: C.deep, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: C.mono, fontSize: 11, fontWeight: 700, borderRadius: 2 }) + '">' + n + '</span><div><div style="' + css({ fontFamily: C.mono, fontSize: 11.5, color: C.textPri, fontWeight: 700, letterSpacing: "0.04em", marginBottom: 4 }) + '">' + item[0] + '</div><div style="' + css({ fontSize: 12, color: C.textMut, lineHeight: 1.5 }) + '">' + item[1] + '</div></div></li>';
+    }).join("");
+
+    var left = '<div style="' + css({ background: C.raised, border: "1px solid " + C.primary, padding: "26px 26px" }) + '">'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.14em", marginBottom: 18 }) + '">◆ YAZILI TALEP FORMU</div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }) + '" class="nadas-twocol"><div>' + lbl("AD SOYAD *") + inp('id="il-name" type="text" placeholder="İsim Soyisim"') + '</div><div>' + lbl("ŞİRKET / KURUM") + inp('type="text" placeholder="Kurum adı (opsiyonel)"') + '</div></div>'
+      + '<div style="' + css({ marginBottom: 12 }) + '">' + lbl("E-POSTA *") + inp('id="il-email" type="email" placeholder="adresiniz@kurum.com.tr"') + '</div>'
+      + '<div style="' + css({ marginBottom: 12, padding: "14px 14px", background: "rgba(167,139,250,0.05)", border: "1px solid " + C.violet, borderRadius: 2 }) + '"><div style="' + css({ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }) + '">' + phoneSvg(C.violet) + '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.violet, fontWeight: 700, letterSpacing: "0.1em" }) + '">OPSİYONEL · SİZİ ARAYALIM</span></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "1fr auto", gap: 10, alignItems: "stretch" }) + '" class="nadas-twocol">' + inp('type="tel" placeholder="+90 5XX XXX XX XX"') + '<label style="' + css({ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", background: C.deep, border: "1px solid " + C.violet, cursor: "pointer", whiteSpace: "nowrap" }) + '"><input type="checkbox" checked style="' + css({ accentColor: C.violet }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.violet, fontWeight: 700, letterSpacing: "0.06em" }) + '">SİZİ ARAYALIM</span></label></div>'
+      + '<div style="' + css({ marginTop: 8, fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.04em", lineHeight: 1.5 }) + '">⌬ Gelen aramalar kabul edilmez. Numaranızı bırakırsanız <strong style="' + css({ color: C.textMut }) + '">ilgili birim 1-2 iş günü içinde sizi arar</strong>. Telefon görüşmesinin özeti e-posta ile teyit edilir.</div></div>'
+      + '<div style="' + css({ marginBottom: 12 }) + '">' + lbl("KONU KAPSAMI *") + '<select id="il-subject" style="' + css({ width: "100%", padding: "11px 12px", background: C.deep, border: "1px solid " + C.borderStrong, color: C.textPri, fontFamily: C.mono, fontSize: 13, outline: "none", boxSizing: "border-box" }) + '">' + opts + '</select></div>'
+      + '<div style="' + css({ marginBottom: 16 }) + '">' + lbl("MESAJ *") + '<textarea id="il-msg" rows="6" placeholder="Talebinizi detaylı şekilde belirtin. İlgili veri, dönem, bölge veya teknik gereksinim varsa eklemenizi rica ederiz." style="' + css({ width: "100%", padding: "11px 12px", background: C.deep, border: "1px solid " + C.borderStrong, color: C.textPri, fontFamily: C.mono, fontSize: 13, outline: "none", boxSizing: "border-box", resize: "vertical" }) + '"></textarea></div>'
+      + '<div style="' + css({ marginBottom: 16, display: "flex", alignItems: "flex-start", gap: 8, padding: "10px 12px", background: C.deep, border: "1px solid " + C.border }) + '"><input type="checkbox" id="il-kvkk" style="' + css({ marginTop: 3, accentColor: C.primary }) + '"><label for="il-kvkk" style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textMut, lineHeight: 1.5, letterSpacing: "0.02em", cursor: "pointer" }) + '"><strong style="' + css({ color: C.textSec }) + '">KVKK Onayı:</strong> Kişisel verilerimin <a href="kvkk.html" style="' + css({ color: C.primary, textDecoration: "none" }) + '">KVKK Aydınlatma Metni</a> kapsamında işlenmesini ve yalnızca talebimin yanıtlanması amacıyla kullanılmasını kabul ediyorum.</label></div>'
+      + '<button id="il-send" type="button" style="' + css({ width: "100%", padding: "14px", background: C.primary, color: C.deep, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", border: "none", cursor: "pointer", borderRadius: 2 }) + '">YAZILI TALEP GÖNDER →</button>'
+      + '<div id="il-status" style="' + css({ marginTop: 12, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.04em", lineHeight: 1.5, textAlign: "center" }) + '">* Zorunlu alanlar · Talebiniz formda seçtiğiniz konu kapsamındaki uygun e-posta hesabına otomatik yönlendirilir.</div></div>';
+
+    var right = '<div style="' + css({ display: "flex", flexDirection: "column", gap: 14 }) + '">'
+      + '<div style="' + css({ background: C.raised, border: "1px solid " + C.borderStrong, padding: "22px 22px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.accent, fontWeight: 700, letterSpacing: "0.14em", marginBottom: 14 }) + '">◈ NE BEKLEYEBİLİRSİNİZ</div><ul style="' + css({ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 14 }) + '">' + expect + '</ul></div>'
+      + '<div style="' + css({ padding: "16px 18px", border: "1px dashed " + C.borderStrong, background: "rgba(56,189,248,0.03)" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 8 }) + '">◆ BİREYSEL MÜŞTERİLER İÇİN</div><p style="' + css({ fontSize: 12.5, color: C.textSec, lineHeight: 1.6, margin: "0 0 12px" }) + '">Karar analizi, SPK ekspertiz veya üyelik talepleri için bu form yerine doğrudan müşteri platformuna gitmenizi öneririz. Daha hızlı süreç ve ödeme entegrasyonu için:</p><a href="https://www.emlakekspertizi.com" target="_blank" rel="noopener noreferrer" style="' + css({ display: "block", textAlign: "center", padding: "10px 16px", background: C.primary, color: C.deep, fontFamily: C.mono, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">EMLAKEKSPERTIZI.COM →</a></div></div>';
+
+    var body = '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1.4fr) minmax(0,1fr)", gap: 22, alignItems: "start" }) + '" class="nadas-twocol">' + left + right + '</div>';
+    return SubSection("B.1", "İletişim formu", "HER ALAN · OTONOM YANIT SÜRESİ · İŞ GÜNÜ 24 SAAT", body);
+  }
+
+  /* ===== C.1 AR-GE OFİS ===== */
+  function MerkezOfis() {
+    var mapsLink = "https://maps.app.goo.gl/xzrEL2BuuGRhgcUs8";
+    var rows = [["Ofis Tipi", "AR-GE · Saha Operasyonu"], ["İlçe", "Arnavutköy"], ["İl", "İstanbul"], ["Bölge", "Avrupa Yakası"], ["Vergi Dairesi", "Büyükçekmece"]]
+      .map(function (r) { return '<div style="' + css({ display: "flex", justifyContent: "space-between", fontFamily: C.mono, fontSize: 11, padding: "4px 0" }) + '"><span style="' + css({ color: C.textMut, letterSpacing: "0.04em" }) + '">' + r[0] + '</span><span style="' + css({ color: C.textPri, fontWeight: 600 }) + '">' + r[1] + '</span></div>'; }).join("");
+    var pins = [[110, 220, "Beylikdüzü"], [165, 150, "Büyükçekmece"], [220, 110, "Esenyurt"], [300, 220, "Şişli"], [340, 240, "Beyoğlu"], [195, 250, "Bakırköy"]]
+      .map(function (p) { return '<g><circle cx="' + p[0] + '" cy="' + p[1] + '" r="2.5" fill="rgba(255,255,255,0.25)"></circle><text x="' + (p[0] + 5) + '" y="' + (p[1] + 3) + '" fill="rgba(255,255,255,0.35)" font-size="8" font-family="ui-monospace,monospace">' + p[2] + '</text></g>'; }).join("");
+    var mapSvg = '<svg viewBox="0 0 400 400" width="100%" height="100%" style="' + css({ position: "absolute", inset: 0 }) + '" preserveAspectRatio="xMidYMid slice">'
+      + '<defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(56,189,248,0.06)" stroke-width="0.5"></path></pattern></defs>'
+      + '<rect width="400" height="400" fill="url(#grid)"></rect>'
+      + '<path d="M 0 280 Q 100 270 200 280 T 400 285 L 400 400 L 0 400 Z" fill="rgba(56,189,248,0.05)"></path>'
+      + '<path d="M 0 0 L 400 0 L 400 280 Q 300 290 200 280 Q 100 270 0 280 Z" fill="rgba(255,255,255,0.015)"></path>'
+      + '<path d="M 50 200 Q 150 180 250 190 T 380 170" stroke="rgba(56,189,248,0.2)" stroke-width="1.5" fill="none" stroke-dasharray="2,3"></path>'
+      + '<path d="M 100 100 L 250 250" stroke="rgba(56,189,248,0.15)" stroke-width="1" fill="none" stroke-dasharray="3,4"></path>'
+      + '<path d="M 280 50 Q 300 150 200 250" stroke="rgba(56,189,248,0.15)" stroke-width="1" fill="none" stroke-dasharray="3,4"></path>'
+      + pins
+      + '<g><circle cx="200" cy="170" r="20" fill="rgba(56,189,248,0.1)"><animate attributeName="r" values="14;22;14" dur="2s" repeatCount="indefinite"></animate><animate attributeName="opacity" values="0.4;0.1;0.4" dur="2s" repeatCount="indefinite"></animate></circle><circle cx="200" cy="170" r="6" fill="' + C.primary + '" stroke="#fff" stroke-width="2"></circle><text x="200" y="195" fill="' + C.primary + '" font-size="11" font-weight="700" text-anchor="middle" font-family="Sora,sans-serif">NADAS · AR-GE</text><text x="200" y="208" fill="rgba(255,255,255,0.6)" font-size="8" text-anchor="middle" font-family="ui-monospace,monospace">ARNAVUTKÖY · İSTANBUL</text></g>'
+      + '</svg>';
+
+    var leftCol = '<div style="' + css({ background: C.raised, padding: "28px 26px" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.14em" }) + '">◆ AR-GE OFİSİ · ADRES</span><span style="' + css({ padding: "2px 8px", background: C.accent, color: C.deep, fontFamily: C.mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.1em" }) + '">R&D</span></div>'
+      + '<div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "1.4rem", fontWeight: 700, color: C.textPri, lineHeight: 1.3, letterSpacing: "-0.015em", marginBottom: 14 }) + '">Hastane Mah.<br>Ayasofya Cad.<br><span style="' + css({ color: C.primary }) + '">Postane Sk. No: 23/5</span><br><span style="' + css({ fontSize: "0.85em", color: C.textSec }) + '">Arnavutköy / İstanbul · Türkiye</span></div>'
+      + '<div style="' + css({ marginTop: 20, paddingTop: 16, borderTop: "1px solid " + C.border, display: "flex", flexDirection: "column", gap: 8 }) + '">' + rows + '</div>'
+      + '<a href="' + mapsLink + '" target="_blank" rel="noopener noreferrer" style="' + css({ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 20, padding: "12px 18px", background: C.primary, color: C.deep, fontFamily: C.mono, fontSize: 11.5, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>GOOGLE MAPS’TE AÇ →</a>'
+      + '<div style="' + css({ marginTop: 12, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.04em", lineHeight: 1.55 }) + '">⌬ AR-GE ofisi <strong style="' + css({ color: C.textSec }) + '">kapalı çalışma alanıdır</strong>. Ziyaret yalnızca önceden randevulu olarak kabul edilir. Randevu talebi için <strong style="' + css({ color: C.primary }) + '">destek@nadas.com.tr</strong> adresine yazılı talep iletilmelidir.</div></div>';
+
+    var rightCol = '<div style="' + css({ background: C.deep, padding: 0, position: "relative", overflow: "hidden", minHeight: 340 }) + '"><div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 50% 50%, rgba(56,189,248,0.08), transparent 60%)" }) + '"></div>' + mapSvg
+      + '<div style="' + css({ position: "absolute", top: 12, left: 14, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.1em", fontWeight: 700 }) + '">İSTANBUL · AVRUPA</div>'
+      + '<div style="' + css({ position: "absolute", top: 12, right: 14, fontFamily: C.mono, fontSize: 9, color: C.primary, letterSpacing: "0.1em", fontWeight: 700 }) + '">41.1857° N · 28.7456° E</div>'
+      + '<div style="' + css({ position: "absolute", bottom: 12, left: 14, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.06em" }) + '">MARMARA DENİZİ</div>'
+      + '<div style="' + css({ position: "absolute", bottom: 12, right: 14, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.06em" }) + '">KAVRAMSAL GÖRÜNÜM</div></div>';
+
+    var body = '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", gap: 1, border: "1px solid " + C.primary, background: C.borderStrong }) + '" class="nadas-twocol">' + leftCol + rightCol + '</div>';
+    return SubSection("C.1", "AR-GE Ofis · İstanbul", "AR-GE OFİSİ · ARNAVUTKÖY · İSTANBUL · TÜRKİYE", body);
+  }
+
+  /* ===== D.1 KURUMSAL TALEP TİPLERİ ===== */
+  function KurumsalTalepler() {
+    var types = [
+      { sym: "▦", title: "DEMO TALEBİ", desc: "Sektörünüze özel 30 dakikalık demo. ProX asistan, endeks paneli, API, white-label örnekleri.", email: "bilgi@emlakekspertizi.com", sla: "İlk yanıt: 24 saat · Demo: 5 iş günü içinde" },
+      { sym: "Σ", title: "KURUMSAL TEKLİF", desc: "Şirketinize özel API erişimi, SLA, dedicated hesap yöneticisi, custom dashboard ve veri lisansı paketleri.", email: "bilgi@emlakekspertizi.com", sla: "Teklif: 5 iş günü içinde · Pilot: 30 gün" },
+      { sym: "◈", title: "WHITE-LABEL · PLATFORM", desc: "Kendi markanız altında ProX destekli web platformu. Domain, tasarım, CRM entegrasyonu, custom branded PDF.", email: "bilgi@emlakekspertizi.com", sla: "Brief toplantı + teklif · 2 hafta" },
+      { sym: "⌬", title: "VERİ LİSANSI", desc: "İl/ilçe bazlı raw data erişimi. Timeseries, DNA vektörü, olay markırı, koordinat seti. Aylık veya yıllık.", email: "bilgi@emlakekspertizi.com", sla: "Kapsam çalışması: 3 iş günü · Sözleşme: 2 hafta" },
+      { sym: "⚖", title: "TOPLU SPK EKSPERTİZ", desc: "Banka, finans kurumu veya kurumsal portföyler için 50+ adet SPK lisanslı resmi değerleme. Volume indirimi.", email: "destek@emlakekspertizi.com", sla: "Fiyatlandırma: 24 saat · Üretim: 5-15 iş günü" },
+      { sym: "→", title: "BASIN · MEDYA", desc: "Röportaj talebi, basın bildirisi, veri kullanım izni, research alıntısı, etkinlik daveti.", email: "destek@nadas.com.tr", sla: "İlk yanıt: 24 saat · Etkinlik: en az 2 hafta önce" },
+    ];
+    var cards = types.map(function (t) {
+      return '<div style="' + css({ background: C.raised, padding: "22px 22px", display: "flex", flexDirection: "column" }) + '">'
+        + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }) + '"><span style="' + css({ width: 32, height: 32, border: "1px solid " + C.primary, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: C.mono, fontSize: 14, color: C.primary, borderRadius: 2 }) + '">' + t.sym + '</span><div style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.primary, fontWeight: 700, letterSpacing: "0.06em" }) + '">' + t.title + '</div></div>'
+        + '<p style="' + css({ fontSize: 12.5, color: C.textMut, lineHeight: 1.6, margin: "0 0 14px", flex: 1 }) + '">' + t.desc + '</p>'
+        + '<div style="' + css({ paddingTop: 12, borderTop: "1px solid " + C.border, marginBottom: 12 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 4 }) + '">İLGİLİ KANAL</div><a href="mailto:' + t.email + '?subject=' + encodeURIComponent(t.title) + '" style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, fontWeight: 600, textDecoration: "none", letterSpacing: "0.02em" }) + '">' + t.email + ' →</a></div>'
+        + '<div style="' + css({ paddingTop: 10, borderTop: "1px dashed " + C.border, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.04em", lineHeight: 1.5 }) + '"><strong style="' + css({ color: C.accent }) + '">◷ SLA:</strong> ' + t.sla + '</div></div>';
+    }).join("");
+    var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 22, maxWidth: 940 }) + '">Her talep tipi için <strong style="' + css({ color: C.textPri }) + '">uygun kanal ve beklenen süreç</strong> aşağıda belirtilmiştir. Tek bir e-postada birden fazla konuyu birleştirmek yerine, her konu için ayrı e-posta atılması süreç hızını artırır.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>';
+    return SubSection("D.1", "Kurumsal talep tipleri · 6 ana kategori", "DEMO · TEKLİF · WHITE-LABEL · VERİ · BASIN", body);
+  }
+
+  /* ===== E.1 RESMİ BİLGİLER ===== */
+  function ResmiBilgiler() {
+    var reg = [["Ticaret Ünvanı", "Nadas Gayrimenkul Bilgi İletişim Sistemleri Ticaret Limited Şirketi"], ["Kısa Ünvan", "NADAS"], ["MERSİS No", "0627045662400013"], ["Vergi Kimlik No", "6270456624"], ["Vergi Dairesi", "Büyükçekmece"], ["Taşınmaz Tic. Yetki Belgesi", "3402804"], ["Tüzel Yapı", "Limited Şirket (2015)"], ["Kuruluş Yılı", "2005 (şahıs şirketi)"], ["Sektör Kodu", "Gayrimenkul Veri Teknolojileri"]];
+    var regRows = reg.map(function (r) {
+      var monoVal = r[0].indexOf("MERSİS") > -1 || r[0].indexOf("Vergi") > -1 || r[0].indexOf("Belge") > -1;
+      return '<div style="' + css({ display: "flex", justifyContent: "space-between", gap: 14, padding: "9px 0", borderBottom: "1px solid " + C.border, fontSize: 12 }) + '"><span style="' + css({ color: C.textMut, fontFamily: C.mono, letterSpacing: "0.04em", minWidth: 150 }) + '">' + r[0] + '</span><span style="' + css({ color: C.textPri, fontWeight: 600, textAlign: "right", maxWidth: "60%", fontFamily: monoVal ? C.mono : "inherit" }) + '">' + r[1] + '</span></div>';
+    }).join("");
+    var legalLinks = [["KVKK Aydınlatma Metni", "kvkk.html"], ["Çerez Politikası", "cerez.html"], ["Kullanım Koşulları", "kullanim-kosullari.html"], ["Gizlilik Politikası", "gizlilik.html"]]
+      .map(function (l) { return '<a href="' + l[1] + '" style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">→ ' + l[0] + '</a>'; }).join("");
+    var leftCol = '<div style="' + css({ background: C.raised, border: "1px solid " + C.borderStrong, padding: "26px 24px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.14em", marginBottom: 16 }) + '">◆ TÜZEL KİŞİLİK KAYITLARI</div>' + regRows + '</div>';
+    var rightCol = '<div style="' + css({ display: "flex", flexDirection: "column", gap: 12 }) + '">'
+      + '<div style="' + css({ padding: "20px 22px", border: "1px solid " + C.primary, background: "rgba(56,189,248,0.04)" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 8 }) + '">◆ MERKEZ ADRES</div><div style="' + css({ fontSize: 13.5, color: C.textPri, lineHeight: 1.6, fontWeight: 600 }) + '">Hastane Mah. Ayasofya Cad.<br>Postane Sk. No: 23/5<br><span style="' + css({ color: C.primary }) + '">Arnavutköy / İstanbul</span></div></div>'
+      + '<div style="' + css({ padding: "16px 18px", border: "1px dashed " + C.border, background: "rgba(255,255,255,0.015)" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.warn, fontWeight: 700, letterSpacing: "0.1em", marginBottom: 6 }) + '">◐ NOT</div><p style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textMut, lineHeight: 1.6, margin: 0, letterSpacing: "0.02em" }) + '">Faaliyet alanı: Veri altyapısı, endeks geliştirme, gayrimenkul yazılım, ekspertiz hizmetleri. Taşınmaz Ticareti Yetki Belgesi T.C. Ticaret Bakanlığı tarafından düzenlenmiştir.</p></div>'
+      + '<div style="' + css({ padding: "16px 18px", background: C.raised, border: "1px solid " + C.borderStrong }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, fontWeight: 700, letterSpacing: "0.1em", marginBottom: 10 }) + '">◈ İLGİLİ KURUMSAL SAYFALAR</div><div style="' + css({ display: "flex", flexDirection: "column", gap: 6 }) + '">' + legalLinks + '</div></div></div>';
+    var body = '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1.4fr) minmax(0,1fr)", gap: 18, alignItems: "start" }) + '" class="nadas-twocol">' + leftCol + rightCol + '</div>';
+    return SubSection("E.1", "Resmi şirket bilgileri", "TÜZEL · KAYIT · YETKİ BELGELERİ", body);
+  }
+
+  /* ===== F.1 SIK SORULAN SORULAR ===== */
+  function SikSorulanlar() {
+    var faqs = [
+      { q: "Telefon ile iletişim nasıl çalışıyor?", a: "Nadas’ta tüm iletişim yazılı kanaldan başlatılır. Gelen aramalar kabul edilmez; bunun yerine sizi biz arıyoruz. Form üzerinde opsiyonel telefon alanına numaranızı bırakırsanız, talebinizin konusu ile ilgili birim 1-2 iş günü içinde sizinle telefonla iletişime geçer. Telefon görüşmesinin özeti ardından e-posta ile teyit edilir. Bu, hizmet kalitesinin denetlenebilir olması, yanıt sürelerinin ölçülmesi, taleplerin kayıt altında tutulabilmesi ve kurumsal sorumluluğun korunması için bilinçli bir tercihtir." },
+      { q: "Yanıt süresi ne kadar?", a: "İş günü içinde 24 saat içinde ilk yanıt verilir. Detaylı teknik veya ticari taleplerde detaylı yanıt 48-72 saat içinde sağlanır. White-label, kurumsal API veya veri lisansı gibi kapsamlı talepler için brief görüşmesi sonrası 5 iş günü içinde detaylı teklif iletilir." },
+      { q: "Bireysel karar analizi için bu form kullanılabilir mi?", a: "Bireysel müşterilerin karar analizi, SPK ekspertiz ve üyelik talepleri için bu form yerine doğrudan emlakekspertizi.com müşteri platformuna gitmesi önerilir. Daha hızlı süreç, ödeme entegrasyonu ve otomatik raporlama platformda mevcuttur. Yalnızca özel bir durum söz konusuysa destek@emlakekspertizi.com adresi tercih edilebilir." },
+      { q: "Bir e-postada birden fazla konuyu birleştirmek mümkün mü?", a: "Mümkündür ancak önerilmez. Her konu farklı bir sorumlu birime yönlendirildiği için, tek e-postada birleştirilen talepler süreç hızını yavaşlatabilir. Önerimiz: Her konu için ayrı e-posta. Birden fazla konu varsa, destek@nadas.com.tr genel adresinden ana koordinasyon yapılabilir." },
+      { q: "Basın ve medya talepleri için süreç nasıldır?", a: "Röportaj, alıntı, etkinlik daveti veya araştırma kullanım izni gibi basın talepleri için destek@nadas.com.tr adresine yazılı talep iletilmelidir. Konu kapsamı, yayın platformu, son tarih ve ilgili bilgiler ilk e-postada belirtilirse süreç hızlanır. Etkinlik talepleri için en az 2 hafta önceden iletilmesi rica olunur." },
+      { q: "Ziyaret randevusu nasıl alınır?", a: "AR-GE ofisine ziyaret yalnızca önceden randevulu olarak kabul edilir. Randevu talebi destek@nadas.com.tr adresine, görüşmenin amacı, katılacak kişi(ler) ve önerilen tarih aralığı belirtilerek iletilebilir. AR-GE ofisi kapalı çalışma alanıdır; onay sonrası takvim daveti gönderilir." },
+      { q: "İK ve kariyer başvuruları nereye iletilir?", a: "İK ve kariyer başvuruları için destek@nadas.com.tr adresine konu satırında \"İK Başvuru\" ifadesi ile yazılı talep iletilebilir. Aktif pozisyonlar şirket içinde paylaşılır; spontane başvurular CV ile birlikte kaydedilir ve uygun pozisyon açıldığında geri dönüş yapılır." },
+      { q: "KVKK kapsamında verilerim nasıl korunur?", a: "Form üzerinden iletilen tüm kişisel veriler 6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında işlenir. Veriler yalnızca talebinizin yanıtlanması amacıyla kullanılır, üçüncü taraflarla paylaşılmaz, talebiniz tamamlandıktan sonra mevzuat süreleri çerçevesinde silinir. Detaylı bilgi için KVKK Aydınlatma Metni’ni inceleyebilirsiniz." },
+    ];
+    var items = faqs.map(function (f, idx) {
+      var open = idx === 0;
+      var n = "S" + (idx + 1 < 10 ? "0" : "") + (idx + 1);
+      return '<div data-faq-item="' + idx + '" style="' + css({ background: open ? C.elev : C.raised, border: "1px solid " + (open ? C.primary : C.borderStrong), overflow: "hidden" }) + '">'
+        + '<button type="button" data-faq-btn="' + idx + '" style="' + css({ width: "100%", padding: "16px 20px", background: "transparent", border: "none", textAlign: "left", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, fontFamily: "inherit" }) + '">'
+        + '<span style="' + css({ display: "flex", alignItems: "center", gap: 12 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.1em" }) + '">' + n + '</span><span data-faq-q style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 14.5, color: open ? C.primary : C.textPri, fontWeight: 600, letterSpacing: "-0.005em", lineHeight: 1.4 }) + '">' + f.q + '</span></span>'
+        + '<span data-faq-plus style="' + css({ color: open ? C.primary : C.textMut, fontFamily: C.mono, fontSize: 16, fontWeight: 400, transform: open ? "rotate(45deg)" : "rotate(0)", transition: "transform 0.2s", minWidth: 16 }) + '">+</span></button>'
+        + '<div data-faq-panel style="' + css({ padding: "0 20px 18px 20px", borderTop: "1px solid " + C.border, paddingTop: 14, display: open ? "block" : "none" }) + '"><p style="' + css({ fontSize: 13, color: C.textSec, lineHeight: 1.7, margin: 0 }) + '">' + f.a + '</p></div></div>';
+    }).join("");
+    var body = '<div style="' + css({ display: "flex", flexDirection: "column", gap: 6 }) + '">' + items + '</div>'
+      + '<div style="' + css({ marginTop: 22, padding: "14px 18px", border: "1px dashed " + C.border, background: "rgba(56,189,248,0.03)", fontFamily: C.mono, fontSize: 11, color: C.textMut, letterSpacing: "0.02em", lineHeight: 1.6 }) + '">⌬ Sorunuz cevap bulamadıysa <a href="mailto:destek@nadas.com.tr" style="' + css({ color: C.primary, fontWeight: 700, textDecoration: "none" }) + '">destek@nadas.com.tr →</a> adresine yazabilirsiniz.</div>';
+    return SubSection("F.1", "Sık sorulan sorular", "İLETİŞİM SÜRECİ · YANIT SÜRELERİ · GİZLİLİK", body);
+  }
+
+  /* ===== EMLAKEKSPERTIZI ÜRÜN ===== */
+  function EmlakEkspertiziProduct() {
+    return '<section style="' + css({ background: "linear-gradient(135deg, " + C.deep + " 0%, " + C.raised + " 100%)", borderTop: "2px solid " + C.primary, borderBottom: "1px solid " + C.borderStrong, padding: "44px 16px 36px", position: "relative", overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 80% 20%, rgba(56,189,248,0.12), transparent 60%), radial-gradient(circle at 10% 80%, rgba(167,139,250,0.08), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 18, fontFamily: C.mono, fontSize: 11, letterSpacing: "0.14em" }) + '"><span style="' + css({ color: C.primary, fontWeight: 700 }) + '">◆ BİREYSEL MÜŞTERİ PLATFORMU</span><span style="' + css({ height: 1, flex: 1, background: C.primary, opacity: 0.4 }) + '"></span><span style="' + css({ color: C.textMut }) + '">NADAS ALTYAPISI ÜZERİNDE</span></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "auto 1fr", gap: 22, alignItems: "center", marginBottom: 14 }) + '" class="nadas-twocol">' + NX.EmlakEkspertiziLogo(88) + '<div><h2 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "clamp(1.8rem,4.6vw,3rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri }) + '"><span style="' + css({ color: "#fff" }) + '">emlak</span><span style="' + css({ color: "#2DD4BF" }) + '">ekspertizi</span><span style="' + css({ color: C.accent }) + '">.com</span></h2><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: "#2DD4BF", letterSpacing: "0.18em", marginTop: 4, fontWeight: 700 }) + '">DEĞERİNİ ŞİMDİ ÖĞREN</div></div></div>'
+      + '<p style="' + css({ marginTop: 8, fontSize: 15, lineHeight: 1.6, color: C.textSec, maxWidth: 960 }) + '">Bireysel sipariş, üyelik veya ProX asistana doğrudan erişim için kurumsal iletişim formu yerine <strong style="' + css({ color: C.textPri }) + '">emlakekspertizi.com</strong> platformuna gidin. Karar analizi, SPK lisanslı resmi ekspertiz, üyelik paketleri ve akıllı emlak asistanı — hepsi tek tıkla.</p>'
+      + '<div style="' + css({ marginTop: 22, display: "flex", gap: 12, flexWrap: "wrap" }) + '"><a href="https://www.emlakekspertizi.com" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: C.primary, color: C.deep, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">EMLAKEKSPERTIZI.COM →</a><a href="https://www.emlakekspertizi.com/yapay-zeka" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: "transparent", color: C.violet, border: "1px solid " + C.violet, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">ProX AKILLI ASİSTANI DENE →</a></div>'
+      + '</div></section>';
+  }
+
+  /* ===== MONTAJ ===== */
+  function renderApp() {
+    return NX.Ticker(ILTICK) + NX.Masthead("İletişim") + NX.Nav("İletişim")
+      + HeroIletisim()
+      + SectionDivider("A", "İletişim Kanalları", "3 YAZILI KANAL · 24 SAAT YANIT") + IletisimKanallari()
+      + SectionDivider("B", "İletişim Formu", "YAZILI TALEP · OTOMATİK YÖNLENDİRME") + IletisimFormu()
+      + SectionDivider("C", "AR-GE Ofis", "ARNAVUTKÖY · İSTANBUL · R&D") + MerkezOfis()
+      + SectionDivider("D", "Kurumsal Talep Tipleri", "DEMO · TEKLİF · WHITE-LABEL · VERİ · BASIN") + KurumsalTalepler()
+      + SectionDivider("E", "Resmi Bilgiler", "TÜZEL · KAYIT · YETKİ BELGESİ") + ResmiBilgiler()
+      + SectionDivider("F", "Sık Sorulan Sorular", "İLETİŞİM SÜRECİ · YANIT · GİZLİLİK") + SikSorulanlar()
+      + EmlakEkspertiziProduct() + NX.Footer();
+  }
+
+  NX.boot(renderApp);
+
+  /* ===== FAQ AKORDEON ===== */
+  (function () {
+    var items = document.querySelectorAll("[data-faq-item]");
+    function apply(openIdx) {
+      for (var i = 0; i < items.length; i++) {
+        var it = items[i], on = (i === openIdx);
+        it.style.background = on ? C.elev : C.raised;
+        it.style.border = "1px solid " + (on ? C.primary : C.borderStrong);
+        var q = it.querySelector("[data-faq-q]"), plus = it.querySelector("[data-faq-plus]"), panel = it.querySelector("[data-faq-panel]");
+        if (q) q.style.color = on ? C.primary : C.textPri;
+        if (plus) { plus.style.color = on ? C.primary : C.textMut; plus.style.transform = on ? "rotate(45deg)" : "rotate(0)"; }
+        if (panel) panel.style.display = on ? "block" : "none";
+      }
+    }
+    var current = 0;
+    for (var i = 0; i < items.length; i++) {
+      items[i].querySelector("[data-faq-btn]").addEventListener("click", function () {
+        var idx = parseInt(this.getAttribute("data-faq-btn"), 10);
+        current = (current === idx) ? -1 : idx;
+        apply(current);
+      });
+    }
+  })();
+
+  /* ===== FORM GÖNDER ===== */
+  (function () {
+    var btn = document.getElementById("il-send");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      var name = (document.getElementById("il-name") || {}).value || "";
+      var email = (document.getElementById("il-email") || {}).value || "";
+      var subject = (document.getElementById("il-subject") || {}).value || "";
+      var msg = (document.getElementById("il-msg") || {}).value || "";
+      var kvkk = (document.getElementById("il-kvkk") || {}).checked;
+      var status = document.getElementById("il-status");
+      var reMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      function err(t) { if (status) { status.style.color = C.danger; status.textContent = "⚠ " + t; } }
+      if (!name.trim()) return err("Lütfen ad soyad girin.");
+      if (!reMail.test(email.trim())) return err("Lütfen geçerli bir e-posta girin.");
+      if (!subject || subject === "Seçiniz...") return err("Lütfen bir konu kapsamı seçin.");
+      if (!msg.trim() || msg.trim().length < 10) return err("Lütfen talebinizi (en az 10 karakter) yazın.");
+      if (!kvkk) return err("Devam etmek için KVKK onayı gereklidir.");
+      btn.disabled = true;
+      btn.style.opacity = "0.6";
+      btn.style.cursor = "default";
+      btn.textContent = "✓ TALEBİNİZ ALINDI";
+      btn.style.background = C.accent;
+      if (status) { status.style.color = C.accent; status.textContent = "✓ Talebiniz alındı. İş günü içinde 24 saat içinde " + subject + " kapsamında yanıt verilecektir. Onay e-postası kısa süre içinde ulaşacaktır."; }
+    });
+  })();
+})();
+</script>
+</body>
+</html>

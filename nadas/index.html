@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NADAS — Türkiye Emlak Veri Merkezi · 480M Satır Timeseries · 38 Kategori · Since 2005</title>
+<meta name="description" content="NADAS, Türkiye gayrimenkul piyasasının kayıt katmanı. 480M+ satır aylık timeseries, 81 il · 973 ilçe · 50.000+ mahalle, 38 varlık kategorisi, 257 ay (2005-2026). Canlı veri terminali, olay markerları, DNA demografik katman. emlakekspertizi.com/ProX arkalı.">
+<meta name="theme-color" content="#06101B">
+<link rel="canonical" href="https://www.nadas.com.tr/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%2306101B'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%2338BDF8'%3EN%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NADAS">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="NADAS — Türkiye Emlak Veri Merkezi · 480M Satır · 38 Kategori">
+<meta property="og:description" content="480 milyon satır timeseries. Mahalle düzeyinde, 257 ay derinliğinde. 38 varlık kategorisi, saha doğrulamalı, olay markerlı, DNA demografik katman.">
+<meta property="og:image" content="og-index.png">
+<meta property="og:url" content="https://www.nadas.com.tr/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="NADAS — Türkiye Emlak Veri Merkezi">
+<meta name="twitter:description" content="480M satır · 81 il · 50.000+ mahalle · 38 kategori · 257 ay. Canlı veri terminali, olay markerları, DNA katmanı.">
+<meta name="twitter:image" content="og-index.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"Nadas Gayrimenkul Bilgi İletişim Sistemleri Ticaret Limited Şirketi","alternateName":"NADAS","url":"https://www.nadas.com.tr","foundingDate":"2005","description":"Türkiye gayrimenkul piyasasının kayıt katmanı — 480M+ satır aylık timeseries, 38 varlık kategorisi, mahalle düzeyi endeks.","address":{"@type":"PostalAddress","addressLocality":"Arnavutköy","addressRegion":"İstanbul","addressCountry":"TR"}}
+</script>
+<style>
+  .nadas-heatmap-grid { grid-template-columns: minmax(0,1.5fr) minmax(0,1fr); }
+  .nadas-analysis-card { transition: background .15s; }
+  .nadas-analysis-card:hover { background: #101F35 !important; }
+  .nadas-mile:hover { background: #101F35; }
+  .nadas-btn-tab { transition: color .15s, border-color .15s; }
+  .nadas-btn-tab:hover { color: #38BDF8; }
+  .nadas-eco { transition: border-color .15s; }
+  .nadas-eco:hover { border-color: #38BDF8 !important; }
+  select { color-scheme: dark; }
+  @media (max-width: 900px) { .nadas-heatmap-grid { grid-template-columns: 1fr !important; } }
+</style>
+</head>
+<body>
+<div id="app">
+  <noscript>
+    <div style="max-width:900px;margin:0 auto;padding:48px 20px;font-family:'Sora',sans-serif">
+      <h1 style="color:#38BDF8">NADAS — Türkiye Emlak Veri Merkezi</h1>
+      <p style="color:#CBD5E1">480 milyon satır timeseries · 81 il · 973 ilçe · 50.000+ mahalle · 38 varlık kategorisi · 257 ay (2005-2026). Canlı veri terminali için JavaScript gereklidir.</p>
+    </div>
+  </noscript>
+</div>
+
+<script src="js/core.js?v=2"></script>
+<script>
+(function () {
+  "use strict";
+  var C = NX.C, css = NX.css;
+  NX.setAccent(C.primary);
+  var PINK = "#F472B6";
+
+  var GROUP_COLOR = { konut: C.primary, arsa: C.warn, ticari: C.accent, bina: C.violet, turistik: PINK };
+  var GROUP_LABEL = { konut: "Konut", arsa: "Arsa", ticari: "Ticari", bina: "Bina", turistik: "Turistik" };
+  var EVT_COLOR = { deprem: C.danger, kur: C.warn, faiz: C.accent, siyasi: C.violet, makro: PINK, regulasyon: C.primary };
+  var MONTHS = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
+
+  var CATEGORIES = {
+    konut: [{ id: 1, n: "Daire-Sat" }, { id: 2, n: "Daire-Kir" }, { id: 5, n: "Villa-Sat" }, { id: 6, n: "Villa-Kir" }, { id: 9, n: "Yazlık-Sat" }, { id: 10, n: "Yazlık-Kir" }, { id: 39, n: "Çiftlik Evi-Sat" }, { id: 40, n: "Çiftlik Evi-Kir" }, { id: 67, n: "Rezidans-Sat" }, { id: 68, n: "Rezidans-Kir" }, { id: 69, n: "Müstakil-Sat" }, { id: 70, n: "Müstakil-Kir" }],
+    arsa: [{ id: 41, n: "Konut İmarlı" }, { id: 42, n: "Ticari İmarlı" }, { id: 43, n: "Sanayi İmarlı" }, { id: 44, n: "Sosyal Alan" }, { id: 45, n: "Bağ-Bahçe" }, { id: 46, n: "Tarla" }],
+    ticari: [{ id: 47, n: "Mağaza-Sat" }, { id: 48, n: "Mağaza-Kir" }, { id: 49, n: "Depo-Sat" }, { id: 50, n: "Depo-Kir" }, { id: 51, n: "Atölye-Sat" }, { id: 52, n: "Atölye-Kir" }, { id: 53, n: "Plaza Katı-Sat" }, { id: 54, n: "Plaza Katı-Kir" }, { id: 55, n: "Fabrika-Sat" }, { id: 56, n: "Fabrika-Kir" }, { id: 57, n: "Ofis-Sat" }, { id: 58, n: "Ofis-Kir" }],
+    bina: [{ id: 31, n: "Apartman-Sat" }, { id: 59, n: "Apartman-Kir" }, { id: 60, n: "İş Merkezi-Sat" }, { id: 61, n: "İş Merkezi-Kir" }],
+    turistik: [{ id: 62, n: "Tatil Köyü" }, { id: 63, n: "Otel" }, { id: 65, n: "Pansiyon" }, { id: 66, n: "Butik Otel" }],
+  };
+
+  var REGIONS = {
+    İstanbul: { Kadıköy: ["Caddebostan", "Suadiye", "Fenerbahçe", "Moda", "Bostancı"], Beşiktaş: ["Levent", "Etiler", "Bebek", "Ortaköy", "Arnavutköy"], Sarıyer: ["Maslak", "Tarabya", "Yeniköy", "Emirgan", "İstinye"], Üsküdar: ["Beylerbeyi", "Çengelköy", "Acıbadem", "Kuzguncuk", "Altunizade"] },
+    Ankara: { Çankaya: ["Kavaklıdere", "Gaziosmanpaşa", "Çayyolu", "Oran", "Birlik"], Yenimahalle: ["Batıkent", "Demetevler", "Ostim", "İvedik", "Şentepe"], Keçiören: ["Kalaba", "Sancaktepe", "Etlik", "Aktepe", "Esertepe"] },
+    İzmir: { Konak: ["Alsancak", "Göztepe", "Karataş", "Basmane", "Kemeraltı"], Karşıyaka: ["Bostanlı", "Bahriye Üçok", "Mavişehir", "Şemikler", "Atakent"], Bornova: ["Erzene", "Kazımdirik", "Evka 3", "Yeşilçam", "Doğanlar"] },
+    Antalya: { Muratpaşa: ["Lara", "Meltem", "Şirinyalı", "Tahılpazarı", "Konyaaltı"], Konyaaltı: ["Hurma", "Liman", "Sarısu", "Çamyuva", "Arapsuyu"] },
+    Bursa: { Nilüfer: ["Görükle", "Beşevler", "Konak", "Üçevler", "Gümüştepe"], Osmangazi: ["Soğanlı", "Çekirge", "Hamitler", "Demirtaş", "Yıldırım"] },
+  };
+
+  var EVENTS = [
+    { y: 2008, m: 8, lbl: "Küresel Finansal Kriz", det: "Lehman çöküşü, küresel kredi şoku", imp: -8, type: "macro" },
+    { y: 2011, m: 10, lbl: "Van Depremi", det: "7.2 büyüklük, bölgesel piyasa daralması", imp: -4, type: "deprem" },
+    { y: 2013, m: 5, lbl: "Gezi Olayları", det: "Şehir merkezlerinde talep duraklaması", imp: -3, type: "siyasi" },
+    { y: 2015, m: 1, lbl: "TCMB Faiz İndirimi", det: "Politika faizi 50 bp indirim", imp: 4, type: "faiz" },
+    { y: 2016, m: 7, lbl: "Darbe Girişimi", det: "Belirsizlik dönemi, satışlarda duraklama", imp: -5, type: "siyasi" },
+    { y: 2018, m: 8, lbl: "Döviz Krizi", det: "TL %30+ değer kaybı, faiz şoku", imp: -12, type: "kur" },
+    { y: 2020, m: 3, lbl: "Pandemi Başlangıcı", det: "COVID-19 karantina, ilanlarda donma", imp: -4, type: "makro" },
+    { y: 2021, m: 12, lbl: "Kur Şoku", det: "USD/TRY 17’yi aştı, talep patlaması", imp: 18, type: "kur" },
+    { y: 2022, m: 6, lbl: "Konut Kredi Faizi %25+", det: "Erişilebilirlik dramatik düşüş", imp: -6, type: "faiz" },
+    { y: 2023, m: 2, lbl: "Kahramanmaraş Depremleri", det: "7.7 + 7.6 büyüklük, 11 il etkilendi", imp: -6, type: "deprem" },
+    { y: 2024, m: 6, lbl: "Faiz İndirim Çevrimi", det: "TCMB indirimleri başladı", imp: 9, type: "faiz" },
+    { y: 2025, m: 9, lbl: "Yapı Stoku Reformu", det: "Riskli yapı dönüşüm yasası", imp: 5, type: "regulasyon" },
+  ];
+
+  function genSeries(baseLevel, volatility, seed) {
+    var series = [], val = baseLevel, idx = 0;
+    for (var y = 2005; y <= 2026; y++) {
+      for (var m = 0; m < 12; m++) {
+        if (y === 2026 && m > 4) break;
+        var yrInfl = y < 2018 ? 0.008 : y < 2021 ? 0.018 : y < 2024 ? 0.045 : 0.022;
+        var wave = Math.sin((idx * 0.31) + seed) * volatility * 0.35;
+        var noise = (Math.sin(idx * 1.7 + seed * 3) * Math.cos(idx * 0.8 + seed)) * volatility * 0.55;
+        var ev = 0;
+        for (var e = 0; e < EVENTS.length; e++) {
+          var E = EVENTS[e];
+          if (y === E.y && m === E.m) ev = E.imp;
+          if (y > E.y || (y === E.y && m > E.m)) { var dist = (y - E.y) * 12 + (m - E.m); ev += E.imp * Math.max(0, 1 - dist / 8); }
+        }
+        val = val * (1 + (wave + noise + ev) / 100) * (1 + yrInfl / 12);
+        series.push({ y: y, m: m, v: Math.round(val) });
+        idx++;
+      }
+    }
+    return series;
+  }
+  var SERIES_CACHE = {};
+  function getSeries(region, group, catId) {
+    var key = region + "|" + catId;
+    if (SERIES_CACHE[key]) return SERIES_CACHE[key];
+    var cityBase = { İstanbul: 1800, Ankara: 1100, İzmir: 1400, Antalya: 1500, Bursa: 1000 };
+    var groupMul = { konut: 1, ticari: 1.7, arsa: 0.4, bina: 1.3, turistik: 2.2 };
+    var isRent = String(catId).match(/2|6|10|40|48|50|52|54|56|58|59|61|68|70/) ? true : false;
+    var city = Object.keys(REGIONS).find(function (c) { return region.indexOf(c) > -1; }) || "İstanbul";
+    var seed = (region.length + Number(catId)) * 0.7;
+    var base = (cityBase[city] || 1200) * (groupMul[group] || 1) * (isRent ? 0.01 : 1);
+    var vol = group === "arsa" ? 3.5 : group === "turistik" ? 4 : group === "ticari" ? 2.4 : 2;
+    var s = genSeries(base, vol, seed);
+    SERIES_CACHE[key] = s;
+    return s;
+  }
+  function catGroupName(catId) {
+    for (var g in CATEGORIES) {
+      for (var i = 0; i < CATEGORIES[g].length; i++) { if (String(CATEGORIES[g][i].id) === String(catId)) return { group: g, catName: CATEGORIES[g][i].n }; }
+    }
+    return { group: "konut", catName: "Daire-Sat" };
+  }
+  function trNum(n) { return Math.round(n).toLocaleString("tr-TR"); }
+
+  var HOMETICK = [
+    ["İST/KADIKÖY/DAİRE-SAT", "+%14.2"], ["İST/BEŞİKTAŞ/REZİDANS-SAT", "+%21.4"], ["ANK/ÇANKAYA/OFİS-KIR", "+%9.7"], ["İZM/KONAK/MAĞAZA-SAT", "+%6.3"],
+    ["ANTALYA/MURATPAŞA/BUTİK OTEL", "+%32.1"], ["BURSA/NİLÜFER/DAİRE-KIR", "+%11.8"], ["İST/SARIYER/VİLLA-SAT", "+%17.6"], ["GAZİANTEP/ARSA-KONUT İMARLI", "+%8.4"],
+    ["KOCAELİ/SANAYİ İMARLI", "-%2.1"], ["İZM/KARŞIYAKA/DAİRE-KIR", "+%12.3"], ["TRABZON/PANSİYON", "+%19.7"], ["KONYA/TARLA", "+%4.8"],
+  ];
+
+  /* ===== 01 · MANŞET ===== */
+  function HeroHeadline() {
+    var stats = [["480M+", "TIMESERIES SATIRI"], ["50.000+", "AKTİF MAHALLE/KÖY"], ["38", "VARLIK KATEGORİSİ"], ["257", "AY · 2005-01 → 2026-05"]]
+      .map(function (s) { return '<div style="' + css({ background: C.raised, padding: "10px 14px" }) + '"><div style="' + css({ fontSize: 17, fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + s[0] + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, marginTop: 5, letterSpacing: "0.08em" }) + '">' + s[1] + '</div></div>'; }).join("");
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px 18px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12, fontFamily: C.mono, fontSize: 10.5, letterSpacing: "0.12em", textTransform: "uppercase" }) + '"><span style="' + css({ color: C.primary }) + '">01 · MANŞET</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span style="' + css({ color: C.textFaint }) + '">TÜRKİYE’NİN İLK GAYRİMENKUL VERİ MERKEZİ · 2005→</span></div>'
+      + '<h1 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(2rem,5.8vw,3.6rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri, maxWidth: 1000 }) + '">480 milyon satır timeseries. Mahalle düzeyinde, 257 ay derinliğinde.</h1>'
+      + '<p style="' + css({ marginTop: 14, fontSize: 15.5, lineHeight: 1.55, color: C.textSec, maxWidth: 820 }) + '">Nadas, Türkiye gayrimenkul piyasasının kayıt katmanıdır. 81 il, 973 ilçe, 50.000+ mahalle ve köy; cadde-sokak granülerliğine kadar inen 38 varlık kategorisinde aylık seri. Saha doğrulamalı, olay markerlı, DNA demografik katmanla zenginleştirilmiş.</p>'
+      + '<div style="' + css({ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong, maxWidth: 720 }) + '">' + stats + '</div>'
+      + '</div></section>';
+  }
+
+  /* ===== 02 · VERİ TERMİNALİ (interaktif) ===== */
+  var DT = { city: "İstanbul", district: "Kadıköy", neighborhood: "Caddebostan", catId: "1", period: "5Y" };
+  var dtPts = [], dtSeries = [];
+  var W = 760, H = 280;
+
+  function optsPlain(list, current) { return list.map(function (o) { return '<option value="' + o + '"' + (String(o) === String(current) ? " selected" : "") + '>' + o + '</option>'; }).join(""); }
+  function optsCategory(current) {
+    return Object.keys(CATEGORIES).map(function (g) {
+      var inner = CATEGORIES[g].map(function (o) { return '<option value="' + o.id + '"' + (String(o.id) === String(current) ? " selected" : "") + '>' + o.n + '</option>'; }).join("");
+      return '<optgroup label="' + GROUP_LABEL[g].toUpperCase() + '">' + inner + '</optgroup>';
+    }).join("");
+  }
+  function dtSelectHTML(id, label, optionsHtml) {
+    return '<label style="' + css({ display: "block", padding: "10px 14px", borderRight: "1px solid " + C.border, cursor: "pointer" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.12em", marginBottom: 4 }) + '">' + label + '</div><select id="' + id + '" style="' + css({ width: "100%", background: "transparent", border: "none", color: C.textPri, fontSize: 14, fontFamily: C.mono, fontWeight: 600, outline: "none", cursor: "pointer", padding: 0, appearance: "none" }) + '">' + optionsHtml + '</select></label>';
+  }
+
+  function buildTerminalCard() {
+    var districts = Object.keys(REGIONS[DT.city] || {});
+    var neighborhoods = (REGIONS[DT.city] && REGIONS[DT.city][DT.district]) || [];
+    var gc = catGroupName(DT.catId), group = gc.group, catName = gc.catName;
+    var full = getSeries(DT.city + "/" + DT.district + "/" + DT.neighborhood, group, DT.catId);
+    var periodMonths = { "1A": 1, "3A": 3, "1Y": 12, "5Y": 60, "10Y": 120, "MAX": full.length };
+    var cutN = Math.min(periodMonths[DT.period], full.length);
+    var series = full.slice(-cutN);
+    dtSeries = series;
+
+    var last = (series[series.length - 1] || {}).v || 0;
+    var first = (series[0] || {}).v || 1;
+    var change = ((last - first) / first) * 100;
+    var vals = series.map(function (s) { return s.v; });
+    var max = Math.max.apply(null, vals), min = Math.min.apply(null, vals);
+    var yMin = min * 0.95, yMax = max * 1.05;
+    var pts = series.map(function (s, i) { return [(i / (series.length - 1 || 1)) * W, H - ((s.v - yMin) / (yMax - yMin || 1)) * (H - 30) - 15]; });
+    dtPts = pts;
+    var path = pts.map(function (p, i) { return (i === 0 ? "M" : "L") + p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" ");
+    var gcol = GROUP_COLOR[group];
+
+    var evMarks = [];
+    series.forEach(function (s, i) { var ev = null; for (var k = 0; k < EVENTS.length; k++) { if (EVENTS[k].y === s.y && EVENTS[k].m === s.m) { ev = EVENTS[k]; break; } } if (ev && pts[i]) evMarks.push({ ev: ev, x: pts[i][0], y: pts[i][1] }); });
+
+    var yAxis = [0, 0.25, 0.5, 0.75, 1].map(function (p) { return '<text x="6" y="' + (H - p * (H - 30) - 10) + '" font-size="9" fill="' + C.textFaint + '" font-family="ui-monospace,monospace">₺' + trNum(yMin + p * (yMax - yMin)) + '</text>'; }).join("");
+    var evLines = evMarks.map(function (m) { var col = EVT_COLOR[m.ev.type] || C.danger; return '<g><line x1="' + m.x + '" y1="10" x2="' + m.x + '" y2="' + (H - 5) + '" stroke="' + col + '" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.55"></line><circle cx="' + m.x + '" cy="14" r="3.5" fill="' + col + '" opacity="0.95"></circle><text x="' + (m.x + 6) + '" y="17" font-size="8.5" fill="' + col + '" font-family="ui-monospace,monospace">' + m.ev.y + '</text></g>'; }).join("");
+    var rectW = W / series.length;
+    var hitRects = pts.map(function (p, i) { return '<rect data-dti="' + i + '" x="' + (p[0] - rectW / 2) + '" y="0" width="' + rectW + '" height="' + H + '" fill="transparent" style="cursor:crosshair"></rect>'; }).join("");
+
+    var svg = '<svg id="dt-svg" viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="auto" style="display:block">'
+      + '<defs><linearGradient id="lineFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="' + gcol + '" stop-opacity="0.22"></stop><stop offset="100%" stop-color="' + gcol + '" stop-opacity="0"></stop></linearGradient><pattern id="termgrid" width="48" height="35" patternUnits="userSpaceOnUse"><path d="M 48 0 L 0 0 0 35" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"></path></pattern></defs>'
+      + '<rect width="' + W + '" height="' + H + '" fill="url(#termgrid)"></rect>' + yAxis
+      + '<path d="' + path + ' L' + W + ' ' + H + ' L0 ' + H + ' Z" fill="url(#lineFill)"></path>'
+      + '<path d="' + path + '" fill="none" stroke="' + gcol + '" stroke-width="1.8" stroke-linejoin="round"></path>' + evLines
+      + '<line id="dt-hline" x1="0" y1="10" x2="0" y2="' + (H - 5) + '" stroke="' + gcol + '" stroke-width="1" stroke-dasharray="2 3" opacity="0.6" style="display:none"></line>'
+      + '<circle id="dt-hcirc" cx="0" cy="0" r="4" fill="' + C.base + '" stroke="' + gcol + '" stroke-width="2" style="display:none"></circle>'
+      + '<g id="dt-tip" style="display:none"><rect x="-72" y="-4" width="144" height="44" rx="3" fill="' + C.elev + '" stroke="' + C.borderStrong + '"></rect><text id="dt-tip-date" x="0" y="11" font-size="10" fill="' + C.textMut + '" font-family="ui-monospace,monospace" text-anchor="middle"></text><text id="dt-tip-val" x="0" y="28" font-size="13" fill="' + C.textPri + '" font-family="ui-monospace,monospace" font-weight="600" text-anchor="middle"></text></g>'
+      + hitRects + '</svg>';
+
+    var periodBtns = ["1A", "3A", "1Y", "5Y", "10Y", "MAX"].map(function (p) { var on = DT.period === p; return '<button type="button" data-dtp="' + p + '" class="nadas-btn-tab" style="' + css({ padding: "6px 10px", fontSize: 11.5, fontFamily: C.mono, letterSpacing: "0.06em", border: "1px solid " + (on ? C.primary : C.borderStrong), background: on ? "rgba(56,189,248,0.12)" : "transparent", color: on ? C.primary : C.textMut, cursor: "pointer", borderRadius: 2 }) + '">' + p + '</button>'; }).join("");
+
+    var evPanel = "";
+    if (evMarks.length > 0) {
+      var evCards = evMarks.slice(0, 6).map(function (m) { var col = EVT_COLOR[m.ev.type] || C.danger; var e = m.ev; return '<div style="' + css({ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 11.5, fontFamily: C.mono }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: col, marginTop: 4, flexShrink: 0 }) + '"></span><div><div style="' + css({ color: C.textPri, fontWeight: 600 }) + '">' + e.y + '/' + (String(e.m + 1).length < 2 ? "0" : "") + (e.m + 1) + ' · ' + e.lbl + ' <span style="' + css({ color: e.imp > 0 ? C.accent : C.danger, marginLeft: 4 }) + '">' + (e.imp > 0 ? "+" : "") + e.imp + '%</span></div><div style="' + css({ color: C.textMut, fontSize: 10.5, marginTop: 1 }) + '">' + e.det + '</div></div></div>'; }).join("");
+      evPanel = '<div style="' + css({ padding: "10px 16px", borderTop: "1px solid " + C.border, background: "#020812" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.12em", marginBottom: 8 }) + '">OLAY MARKERLARI · NEDEN DÜŞTÜ / NEDEN YÜKSELDİ</div><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 6 }) + '">' + evCards + '</div></div>';
+    }
+
+    var demoSeed = (DT.city + DT.district + DT.neighborhood).length;
+    var dna = {
+      pop: Math.round((50 + Math.sin(demoSeed) * 30) * 1000),
+      segment: ["L4-Premium", "L3-Üst", "L2-Orta-Üst", "L1-Orta", "L0-Gelişmekte"][Math.abs(Math.floor(Math.sin(demoSeed) * 5)) % 5],
+      prestij: Math.round(50 + Math.sin(demoSeed * 0.7) * 45),
+      merkez: Math.round(50 + Math.sin(demoSeed * 1.3) * 40),
+      arsapot: Math.round(40 + Math.sin(demoSeed * 2.1) * 35),
+      kirsallik: Math.round(20 + Math.cos(demoSeed * 1.1) * 25),
+    };
+    var dnaCells = [["NÜFUS", dna.pop.toLocaleString("tr-TR"), C.primary], ["SEGMENT", dna.segment, C.textPri], ["PRESTİJ", dna.prestij, dna.prestij > 70 ? C.accent : C.warn], ["MERKEZ END.", dna.merkez, C.primary], ["ARSA POT.", dna.arsapot, C.warn], ["KIRSALLIK", dna.kirsallik, C.violet]]
+      .map(function (d, i) { return '<div style="' + css({ padding: "10px 12px", borderRight: i < 5 ? "1px solid " + C.border : "none" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 4 }) + '">' + d[0] + '</div><div style="' + css({ fontSize: 14, fontWeight: 600, color: d[2], fontFamily: C.mono }) + '">' + d[1] + '</div></div>'; }).join("");
+
+    var endeksLink = "https://www.emlakekspertizi.com/emlak-endeksi?il=" + encodeURIComponent(DT.city) + "&ilce=" + encodeURIComponent(DT.district) + "&mahalle=" + encodeURIComponent(DT.neighborhood) + "&kategori=" + DT.catId;
+
+    return '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", borderBottom: "1px solid " + C.border }) + '">'
+      + dtSelectHTML("dt-city", "İL", optsPlain(Object.keys(REGIONS), DT.city))
+      + dtSelectHTML("dt-district", "İLÇE", optsPlain(districts, DT.district))
+      + dtSelectHTML("dt-neigh", "MAHALLE", optsPlain(neighborhoods, DT.neighborhood))
+      + dtSelectHTML("dt-cat", "KATEGORİ", optsCategory(DT.catId))
+      + '</div>'
+      + '<div style="' + css({ borderBottom: "1px solid " + C.border, padding: "16px 18px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 16 }) + '">'
+      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textMut, letterSpacing: "0.1em", marginBottom: 4, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }) + '"><span>' + DT.city.toLocaleUpperCase("tr-TR") + ' / ' + DT.district.toLocaleUpperCase("tr-TR") + ' / ' + DT.neighborhood.toLocaleUpperCase("tr-TR") + '</span><span style="' + css({ padding: "2px 7px", border: "1px solid " + gcol, color: gcol, borderRadius: 2, fontSize: 9.5 }) + '">' + GROUP_LABEL[group].toLocaleUpperCase("tr-TR") + ' · ' + catName.toLocaleUpperCase("tr-TR") + '</span></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }) + '"><span style="' + css({ fontSize: "2.2rem", fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">₺' + last.toLocaleString("tr-TR") + '</span><span style="' + css({ fontSize: 13, color: C.textFaint, fontFamily: C.mono }) + '">/m² · medyan</span><span style="' + css({ fontSize: 14, fontWeight: 600, fontFamily: C.mono, color: change >= 0 ? C.accent : C.danger, padding: "2px 8px", background: change >= 0 ? "rgba(52,211,153,0.1)" : "rgba(248,113,113,0.1)", borderRadius: 2 }) + '">' + (change >= 0 ? "▲" : "▼") + ' ' + Math.abs(change).toFixed(1) + '% · ' + DT.period + '</span></div></div>'
+      + '<div style="' + css({ display: "flex", gap: 4, flexWrap: "wrap" }) + '">' + periodBtns + '</div></div>'
+      + '<div style="' + css({ padding: "8px 8px 0", position: "relative" }) + '">' + svg + '</div>'
+      + evPanel
+      + '<div style="' + css({ borderTop: "1px solid " + C.border, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))" }) + '">' + dnaCells + '</div>'
+      + '<div style="' + css({ borderTop: "1px solid " + C.borderStrong, padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, background: "#020812" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textMut, letterSpacing: "0.06em" }) + '">' + DT.city + '/' + DT.district + '/' + DT.neighborhood + ' · ' + catName + ' · 2005-01 → 2026-05 · ~7.390 hücre/mahalle</div><a href="' + endeksLink + '" target="_blank" rel="noopener noreferrer" style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", background: C.primary, color: "#020812", fontSize: 12, fontFamily: C.mono, letterSpacing: "0.06em", fontWeight: 700, borderRadius: 2, textDecoration: "none" }) + '">DETAYLI ENDEKS · EMLAKEKSPERTIZI →</a></div>';
+  }
+
+  function DataTerminalShell() {
+    return '<section id="terminal" style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "16px 16px 24px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">02 · VERİ TERMİNALİ</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.accent, letterSpacing: "0.08em", display: "flex", alignItems: "center", gap: 6 }) + '"><span style="' + css({ width: 6, height: 6, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>CANLI</span></div>'
+      + '<div id="dt-card" style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised }) + '"></div>'
+      + '</div></section>';
+  }
+
+  function mountTerminal() {
+    var card = document.getElementById("dt-card");
+    if (!card) return;
+    card.innerHTML = buildTerminalCard();
+    var cityEl = document.getElementById("dt-city"), distEl = document.getElementById("dt-district"), neighEl = document.getElementById("dt-neigh"), catEl = document.getElementById("dt-cat");
+    cityEl.addEventListener("change", function () { DT.city = this.value; var d = Object.keys(REGIONS[DT.city] || {}); DT.district = d[0] || ""; DT.neighborhood = (REGIONS[DT.city][DT.district] || [])[0] || ""; mountTerminal(); });
+    distEl.addEventListener("change", function () { DT.district = this.value; DT.neighborhood = ((REGIONS[DT.city] || {})[DT.district] || [])[0] || ""; mountTerminal(); });
+    neighEl.addEventListener("change", function () { DT.neighborhood = this.value; mountTerminal(); });
+    catEl.addEventListener("change", function () { DT.catId = this.value; mountTerminal(); });
+    var pbtns = card.querySelectorAll("[data-dtp]");
+    for (var i = 0; i < pbtns.length; i++) { pbtns[i].addEventListener("click", function () { DT.period = this.getAttribute("data-dtp"); mountTerminal(); }); }
+    var hline = document.getElementById("dt-hline"), hcirc = document.getElementById("dt-hcirc"), tip = document.getElementById("dt-tip"), tipD = document.getElementById("dt-tip-date"), tipV = document.getElementById("dt-tip-val");
+    function showHover(idx) {
+      var p = dtPts[idx]; if (!p) return;
+      hline.setAttribute("x1", p[0]); hline.setAttribute("x2", p[0]); hline.style.display = "";
+      hcirc.setAttribute("cx", p[0]); hcirc.setAttribute("cy", p[1]); hcirc.style.display = "";
+      var tx = Math.min(Math.max(p[0], 80), W - 80), ty = Math.max(p[1] - 50, 14);
+      tip.setAttribute("transform", "translate(" + tx + "," + ty + ")"); tip.style.display = "";
+      tipD.textContent = MONTHS[dtSeries[idx].m] + " " + dtSeries[idx].y;
+      tipV.textContent = "₺" + dtSeries[idx].v.toLocaleString("tr-TR") + "/m²";
+    }
+    function hideHover() { hline.style.display = "none"; hcirc.style.display = "none"; tip.style.display = "none"; }
+    var svg = document.getElementById("dt-svg");
+    var hits = card.querySelectorAll("[data-dti]");
+    for (var j = 0; j < hits.length; j++) { hits[j].addEventListener("mouseenter", function () { showHover(parseInt(this.getAttribute("data-dti"), 10)); }); }
+    if (svg) svg.addEventListener("mouseleave", hideHover);
+  }
+
+  /* ===== 03 · 5 GRUP KARŞILAŞTIRMA ===== */
+  function CategoryCompare() {
+    var region = "İstanbul/Kadıköy/Caddebostan";
+    var groups = [{ k: "konut", id: 1, lbl: "Konut (Daire-Sat)" }, { k: "ticari", id: 57, lbl: "Ticari (Ofis-Sat)" }, { k: "arsa", id: 41, lbl: "Arsa (Konut İmarlı)" }, { k: "bina", id: 31, lbl: "Bina (Apartman-Sat)" }, { k: "turistik", id: 63, lbl: "Turistik (Otel)" }];
+    var w = 720, h = 200;
+    var paths = groups.map(function (g) {
+      var s = getSeries(region, g.k, g.id).slice(-120);
+      var mx = Math.max.apply(null, s.map(function (p) { return p.v; }));
+      var d = s.map(function (p, i) { return (i === 0 ? "M" : "L") + ((i / (s.length - 1)) * w).toFixed(1) + "," + (h - ((p.v / mx) * 100 / 100) * (h - 20) - 10).toFixed(1); }).join(" ");
+      return '<path d="' + d + '" fill="none" stroke="' + GROUP_COLOR[g.k] + '" stroke-width="1.6" stroke-linejoin="round"></path>';
+    }).join("");
+    var legend = groups.map(function (g) { return '<span style="' + css({ display: "inline-flex", alignItems: "center", gap: 6 }) + '"><span style="' + css({ width: 12, height: 2, background: GROUP_COLOR[g.k] }) + '"></span>' + g.lbl.toLocaleUpperCase("tr-TR") + '</span>'; }).join("");
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, flexWrap: "wrap" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">03 · 5 ANA GRUP KARŞILAŞTIRMA</span><span style="' + css({ height: 1, flex: 1, minWidth: 60, background: C.borderStrong }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.08em" }) + '">İST/KADIKÖY/CADDEBOSTAN · 10Y · NORMALİZE 0-100</span></div>'
+      + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.base, padding: 12 }) + '"><svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" height="auto" style="display:block"><defs><pattern id="catgrid" width="40" height="25" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 25" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"></path></pattern></defs><rect width="' + w + '" height="' + h + '" fill="url(#catgrid)"></rect>' + paths + '</svg></div>'
+      + '<div style="' + css({ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 14, fontFamily: C.mono, fontSize: 11, color: C.textMut }) + '">' + legend + '</div>'
+      + '</div></section>';
+  }
+
+  /* ===== 04 · ISI HARİTASI ===== */
+  function CityHeatmap() {
+    var cities = ["İstanbul", "Ankara", "İzmir", "Antalya", "Bursa"];
+    var anecdotes = [{ city: "Antalya", month: 7, ch: "+24.3", n: "Sezon piki — turistik kategori talep patlaması" }, { city: "İstanbul", month: 2, ch: "+18.6", n: "Kentsel dönüşüm bölgelerinde ilan artışı" }, { city: "Ankara", month: 9, ch: "+11.2", n: "Eğitim sezonu — kira piyasası canlandı" }, { city: "İzmir", month: 4, ch: "+8.9", n: "Sahil bandında yazlık talebi yükseldi" }, { city: "Bursa", month: 6, ch: "+7.4", n: "Sanayi imarlı arsa ilgisi" }];
+    var headCells = MONTHS.map(function (m) { return '<div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, textAlign: "center", letterSpacing: "0.05em" }) + '">' + m + '</div>'; }).join("");
+    var rows = cities.map(function (c, i) {
+      var cells = MONTHS.map(function (m, j) {
+        var v = Math.sin(i * 0.8 + j * 0.4 + 1.5) * Math.cos(i * 0.3 + j * 0.6);
+        var intensity = Math.abs(v);
+        var color = v > 0.15 ? "rgba(52,211,153," + (intensity * 0.9) + ")" : v < -0.15 ? "rgba(248,113,113," + (intensity * 0.9) + ")" : "rgba(255,255,255,0.04)";
+        var pct = (v * 18).toFixed(1);
+        return '<div title="' + c + ' · ' + MONTHS[j] + ' 2025-26 · ' + pct + '%" style="' + css({ aspectRatio: "1", background: color, cursor: "pointer", borderRadius: 2 }) + '"></div>';
+      }).join("");
+      return '<div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textMut, padding: "4px 8px 4px 0", textAlign: "right", letterSpacing: "0.04em" }) + '">' + c.toLocaleUpperCase("tr-TR") + '</div>' + cells;
+    }).join("");
+    var anec = anecdotes.map(function (a, i) { return '<div style="' + css({ display: "grid", gridTemplateColumns: "auto 1fr", gap: 10, paddingBottom: 10, borderBottom: i < anecdotes.length - 1 ? "1px solid " + C.border : "none" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 13, color: C.accent, fontWeight: 700, paddingTop: 1 }) + '">' + a.ch + '%</div><div><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textPri, fontWeight: 600, letterSpacing: "0.04em" }) + '">' + a.city.toLocaleUpperCase("tr-TR") + ' · ' + MONTHS[a.month].toLocaleUpperCase("tr-TR") + '</div><div style="' + css({ fontSize: 12, color: C.textMut, marginTop: 3, lineHeight: 1.45 }) + '">' + a.n + '</div></div></div>'; }).join("");
+    var legend = '<div style="' + css({ display: "flex", gap: 12, fontFamily: C.mono, fontSize: 10, color: C.textMut }) + '"><span style="' + css({ display: "flex", alignItems: "center", gap: 5 }) + '"><span style="' + css({ width: 10, height: 10, background: C.danger }) + '"></span>NEG</span><span style="' + css({ display: "flex", alignItems: "center", gap: 5 }) + '"><span style="' + css({ width: 10, height: 10, background: "rgba(255,255,255,0.05)" }) + '"></span>NÖTR</span><span style="' + css({ display: "flex", alignItems: "center", gap: 5 }) + '"><span style="' + css({ width: 10, height: 10, background: C.accent }) + '"></span>POZ</span></div>';
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, flexWrap: "wrap" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">04 · 5 BÜYÜK ŞEHİR · MEVSİMSEL ISI HARİTASI</span><span style="' + css({ height: 1, flex: 1, minWidth: 80, background: C.borderStrong }) + '"></span>' + legend + '</div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1.5fr) minmax(0,1fr)", gap: 16 }) + '" class="nadas-heatmap-grid">'
+      + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: 14 }) + '"><div style="' + css({ display: "grid", gridTemplateColumns: "90px repeat(12, minmax(28px, 1fr))", gap: 3 }) + '"><div></div>' + headCells + rows + '</div><div style="' + css({ marginTop: 12, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '">SON 12 AY · HÜCRE = O AYIN MEDYAN DEĞİŞİM ORANI · MAHALLE BAZINDA AGREGE</div></div>'
+      + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: 14 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 12 }) + '">ÖNE ÇIKAN HAREKETLER</div><div style="' + css({ display: "flex", flexDirection: "column", gap: 12 }) + '">' + anec + '</div></div>'
+      + '</div></div></section>';
+  }
+
+  /* ===== 05 · GRANÜLERLİK ===== */
+  function GranularityPanel() {
+    var levels = [["İL", "81", "Türkiye geneli — bölgesel agrege endeksler"], ["İLÇE", "973", "Her ilin tüm ilçeleri — yapı stoku, demografi, ekonomi"], ["MAHALLE/KÖY", "50.000+", "Aktif izlenen mahalle ve köyler — DNA çapalı"], ["CADDE / SOKAK", "✓", "Mikro lokasyon verisi — cephe, ulaşım, prestij"], ["PARSEL", "geliştirme", "Bina düzeyi metadata — kat, yaş, cephe yönü"]];
+    var cards = levels.map(function (l, i) { return '<div style="' + css({ background: C.base, padding: "16px 16px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.12em", marginBottom: 6 }) + '">0' + (i + 1) + ' · ' + l[0] + '</div><div style="' + css({ fontSize: "2rem", fontWeight: 700, color: C.primary, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1, marginBottom: 8 }) + '">' + l[1] + '</div><p style="' + css({ fontSize: 12, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + l[2] + '</p></div>'; }).join("");
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">05 · VERİ GRANÜLERLİĞİ</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">İlden parsele, beş katman.</h2></div><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textFaint, letterSpacing: "0.08em" }) + '">HIERARCHICAL DEPTH</span></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>'
+      + '</div></section>';
+  }
+
+  /* ===== 06 · 38 KATEGORİ ===== */
+  function CategoryPanel() {
+    var cards = Object.keys(CATEGORIES).map(function (k) {
+      var items = CATEGORIES[k];
+      var chips = items.map(function (item) { return '<span title="Kategori ID: ' + item.id + '" style="' + css({ fontSize: 10.5, color: C.textMut, padding: "3px 7px", border: "1px solid " + C.border, borderRadius: 2, fontFamily: C.mono, letterSpacing: "0.02em" }) + '">' + item.n + '</span>'; }).join("");
+      return '<div style="' + css({ background: C.raised, padding: "14px 16px" }) + '"><div style="' + css({ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }) + '"><span style="' + css({ width: 8, height: 8, background: GROUP_COLOR[k] }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 11, fontWeight: 700, color: C.textPri, letterSpacing: "0.1em" }) + '">' + GROUP_LABEL[k].toLocaleUpperCase("tr-TR") + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, marginLeft: "auto" }) + '">' + items.length + ' ADET</span></div><div style="' + css({ display: "flex", flexWrap: "wrap", gap: 4 }) + '">' + chips + '</div></div>';
+    }).join("");
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">06 · KAPSANAN VARLIK KATEGORİLERİ</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">38 varlık kategorisi, 5 ana grup</h2></div><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textFaint, letterSpacing: "0.08em" }) + '">SAT + KİRA AYRI ENDEKS</span></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>'
+      + '</div></section>';
+  }
+
+  /* ===== 07 · DNA ===== */
+  function DNAPanel() {
+    var dims = [["SEGMENT", "L0-Gelişmekte → L4-Premium · gelir + yapı stoku bazlı 5 sınıf"], ["EVRİM SINIFI", "Bölgenin son 20 yıldaki dönüşüm karakteri (stabil/yükselen/düşen)"], ["LİDERLİK L0-L4", "Bölgesel pazar üzerindeki etki gücü (referans bölge mi)"], ["PRESTİJ SKORU", "0-100 · alıcı algısı + tarihsel fiyat primi"], ["MERKEZ END.", "Şehir merkezine yakınlık + ulaşım entegrasyonu"], ["TARİHİ DEĞER", "Tescilli yapı yoğunluğu, koruma alanı, kültür varlığı"], ["SANAYİ END.", "Sanayi alanı yakınlığı + işçi nüfusu yoğunluğu"], ["ARSA POTANSİYELİ", "Gelişmemiş arsa oranı + imar planı durumu"], ["KIRSALLIK", "Tarım/orman alanı oranı + yerleşim seyrekliği"], ["GAP / DOĞU TURİZMİ", "Bölge-özel: GAP projesi, Doğu turizmi etkisi"], ["SINIR TİCARETİ", "Sınır kapısı yakınlığı + ticari geçiş yoğunluğu"], ["ÜNİVERSİTE / GÖÇ", "Üniversite varlığı + iç/dış göç verileri"], ["NÜFUS ARTIŞ BP", "Yıllık nüfus değişim hızı (baz puan)"], ["MEVSİM GENLİĞİ", "Yaz/kış arasında talep ve fiyat oynaklığı"], ["OLAY MARKERLARI", "~600 markırla işlenmiş tarihsel olay etkisi"]];
+    var cards = dims.map(function (d, i) { return '<div style="' + css({ background: C.base, padding: "12px 14px" }) + '"><div style="' + css({ display: "flex", alignItems: "center", gap: 6, marginBottom: 5 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.1em" }) + '">' + (i + 1 < 10 ? "0" : "") + (i + 1) + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.08em" }) + '">' + d[0] + '</span></div><p style="' + css({ fontSize: 11.5, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + d[1] + '</p></div>'; }).join("");
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">07 · DNA · DEMOGRAFİK ZENGİNLEŞTİRME</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Mahalle, sayı değil <span style="' + css({ color: C.primary }) + '">karakter</span>dir.</h2><p style="' + css({ marginTop: 10, fontSize: 14, lineHeight: 1.55, color: C.textSec, maxWidth: 760, margin: "10px 0 0" }) + '">v3.1 DNA katmanı, her mahalleyi 24 boyutlu vektörle tanımlar. ~5.500 DNA çapası bölgesel referans işlevi görür.</p></div><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textFaint, letterSpacing: "0.08em" }) + '">24 BOYUT · ~5.500 ÇAPA</span></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>'
+      + '</div></section>';
+  }
+
+  /* ===== 08 · KRONOLOJİ ===== */
+  function CompanyTimeline() {
+    var ms = [
+      ["2005", "İSTANBUL · İLK MAHALLE KAYITLARI", "Mahalle bazlı veri toplama Türkiye’de ilk kez Nadas tarafından başlatıldı. 5 çekirdek kategori (Daire-Sat, Daire-Kir, Konut İmarlı Arsa, Mağaza-Sat, Mağaza-Kir) ile golden rule katmanı kuruldu."],
+      ["2008", "BÜYÜK ŞEHİRLER · KAPSAMA AÇILDI", "Tüm İstanbul ilçeleri ve büyük şehirlerin merkez ilçeleri sisteme dahil edildi."],
+      ["2010", "81 İL · 973 İLÇE YAPILANMASI", "Türkiye geneli, her il ve ilçe merkezi olacak şekilde yapılandırıldı."],
+      ["2011-2014", "SAHA AR-GE PROJESİ · 38 KATEGORİYE GEÇİŞ", "Türkiye’nin ilk gayrimenkul saha AR-GE projesi. Üniversite öğrencileriyle 81 il, 973 ilçe ve 8.500+ mahalle kapsandı. Kategori derinliği 5’ten 38’e çıktı."],
+      ["2013", "DİZGE BİLİŞİM · ML/MML KATMANI", "Ankara merkezli Dizge Bilişim ve Ulaş Karakuş iş birliğiyle ikinci nesil yazılım mimarisi geliştirildi. Saha + internet doğrulama, akıllı harita sistemi."],
+      ["2014+", "50.000+ MAHALLE · CANLI HARİTA", "DNA demografik katman v3.1 devreye alındı. 24 boyutlu zenginleştirme, ~5.500 çapa bölgesi tanımlandı."],
+      ["2026", "480M+ SATIR · 600 OLAY MARKERI", "Bugün canlı; 4 ana, 38 alt varlık kategorisinde 257 aylık seri. ~178 GB PostgreSQL, ~42 GB ClickHouse sıkıştırılmış."],
+    ];
+    var rows = ms.map(function (m, i) { return '<div style="' + css({ display: "grid", gridTemplateColumns: "110px 1fr", gap: 16, padding: "14px 18px", borderBottom: i < ms.length - 1 ? "1px solid " + C.border : "none" }) + '" class="nadas-mile"><div style="' + css({ fontFamily: C.mono, fontSize: 14, fontWeight: 700, color: C.primary, letterSpacing: "0.04em", paddingTop: 2 }) + '">' + m[0] + '</div><div><div style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.textPri, fontWeight: 600, letterSpacing: "0.06em", marginBottom: 4 }) + '">' + m[1] + '</div><p style="' + css({ fontSize: 13.5, lineHeight: 1.55, color: C.textSec, margin: 0 }) + '">' + m[2] + '</p></div></div>'; }).join("");
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">08 · KRONOLOJİ</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.08em" }) + '">2005-01 → 2026-05</span></div>'
+      + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised }) + '">' + rows + '</div>'
+      + '</div></section>';
+  }
+
+  /* ===== 09 · YÖNTEM ===== */
+  function TwoColumnEditorial() {
+    var steps = [["TOPLAMA", "Saha ekipleri, ilan veri akışları, demografi, imar/dönüşüm kayıtları, yerel aktör görüşmeleri. Cadde-sokak granülerliğine kadar inilir."], ["DOĞRULAMA", "Saha verisi internet verisiyle çapraz doğrulanır. Tutarsızlıklar tespit edilir, her noktaya güven skoru atanır."], ["MODELLEME", "Fiyatın yanına talep, arz, likidite, dönüş hızı, algı katmanlanır. ML/MML modeller ile davranış üretilir, DNA 24 boyutla zenginleştirilir."], ["YAYIN", "Çıktı EmlakEkspertizi platformuna ve kurumsal API’lere akar. Bireysel karar destek, kurumsal endeks ve canlı analizler."]];
+    var rows = steps.map(function (s, i) { return '<div style="' + css({ display: "grid", gridTemplateColumns: "auto 1fr", gap: 12, paddingBottom: 12, borderBottom: i < 3 ? "1px solid " + C.border : "none" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 11, fontWeight: 700, color: C.primary, letterSpacing: "0.1em", paddingTop: 2 }) + '">0' + (i + 1) + '</span><div><div style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.textPri, letterSpacing: "0.08em", marginBottom: 4 }) + '">' + s[0] + '</div><p style="' + css({ fontSize: 14, lineHeight: 1.55, color: C.textSec, margin: 0 }) + '">' + s[1] + '</p></div></div>'; }).join("");
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1180, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,2fr)", gap: 24, alignItems: "start" }) + '" class="nadas-twocol">'
+      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 10 }) + '">09 · YÖNTEM</div><h2 style="' + css({ fontSize: "clamp(1.5rem,3.8vw,2.2rem)", fontWeight: 700, margin: 0, lineHeight: 1.1, letterSpacing: "-0.02em", color: C.textPri }) + '">Veri kirliliği değil, <span style="' + css({ color: C.primary }) + '">veri hafızası.</span></h2></div>'
+      + '<div style="' + css({ display: "grid", gap: 12 }) + '">' + rows + '</div>'
+      + '</div></div></section>';
+  }
+
+  /* ===== 10 · KURUMSAL KULLANICILAR ===== */
+  function CorporateUsers() {
+    var users = [["BANKALAR", "Teminat değerleme, portföy risk analizi, bölgesel kredilendirme — mahalle bazlı endeks akışı."], ["BELEDİYELER", "Kentsel dönüşüm planlaması, imar kararları, bölgesel kalkınma — DNA katmanı destekli."], ["SİGORTA", "Konum bazlı risk modellemesi, prim hesaplama, deprem/yangın hasar analizi."], ["YATIRIM FONLARI", "Bölgesel fırsat analizi, portföy çeşitlendirme, piyasa zamanlaması — 257 aylık seri."], ["EMLAK ZİNCİRLERİ", "Saha karar desteği, fiyat önerisi, talep yoğunluk haritaları — cadde-sokak detayında."], ["PROPTECH", "API entegrasyonu, veri akışı, dashboard ve hesaplama motoru — 38 kategori real-time."]];
+    var cards = users.map(function (u) { return '<div style="' + css({ background: C.base, padding: "14px 16px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11.5, fontWeight: 700, color: C.primary, letterSpacing: "0.1em", marginBottom: 8 }) + '">' + u[0] + '</div><p style="' + css({ fontSize: 13, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + u[1] + '</p></div>'; }).join("");
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">10 · KURUMSAL KULLANICILAR</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Kararını veriye dayayan kurumlar için.</h2></div><a href="cozumler.html" style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, textDecoration: "none", letterSpacing: "0.08em" }) + '">TÜM ÇÖZÜMLER →</a></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>'
+      + '</div></section>';
+  }
+
+  /* ===== 11 · BU HAFTA ===== */
+  function FeaturedAnalysis() {
+    var items = [
+      { tag: "KİRA · İSTANBUL", title: "Daire-Kir momentum: 39 ilçe, 12A", lede: "İlçe bazlı talep yoğunluğu, dönüş hızları ve mevsim genliği analizi.", spark: [40, 52, 48, 65, 72, 68, 85, 92], time: "5 DK" },
+      { tag: "ARSA · ANADOLU", title: "Konut imarlı arsa: dönüşüm korelasyonu", lede: "Kentsel dönüşüm ilan edilen bölgelerde fiyat-talep örüntüsü.", spark: [80, 72, 75, 60, 55, 62, 48, 42], time: "7 DK" },
+      { tag: "TURİSTİK · AKDENİZ", title: "Otel/butik otel mevsim genliği", lede: "Antalya hattında turizm sezonu fiyat dalgalanması ve doluluk korelasyonu.", spark: [30, 38, 45, 52, 60, 72, 78, 88], time: "6 DK" },
+    ];
+    var w = 240, h = 44;
+    var cards = items.map(function (a) {
+      var mx = Math.max.apply(null, a.spark), mn = Math.min.apply(null, a.spark);
+      var path = a.spark.map(function (v, i) { return (i === 0 ? "M" : "L") + ((i / (a.spark.length - 1)) * w).toFixed(1) + "," + (h - ((v - mn) / (mx - mn || 1)) * (h - 6) - 3).toFixed(1); }).join(" ");
+      return '<a href="research.html" class="nadas-analysis-card" style="' + css({ display: "block", background: C.base, padding: 16, textDecoration: "none", color: "inherit" }) + '"><div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, letterSpacing: "0.12em" }) + '">' + a.tag + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.1em" }) + '">' + a.time + '</span></div><h3 style="' + css({ fontSize: 16, fontWeight: 600, lineHeight: 1.3, color: C.textPri, margin: "0 0 8px" }) + '">' + a.title + '</h3><p style="' + css({ fontSize: 13, lineHeight: 1.5, color: C.textMut, margin: "0 0 12px" }) + '">' + a.lede + '</p><svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" height="' + h + '" style="display:block"><path d="' + path + '" fill="none" stroke="' + C.primary + '" stroke-width="1.4"></path></svg></a>';
+    }).join("");
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">11 · BU HAFTA</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Öne çıkan analizler</h2></div><a href="research.html" style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, textDecoration: "none", letterSpacing: "0.08em" }) + '">TÜM ARAŞTIRMALAR →</a></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 1, background: C.borderStrong, border: "1px solid " + C.borderStrong }) + '">' + cards + '</div>'
+      + '</div></section>';
+  }
+
+  /* ===== MONTAJ (kanonik NX menü — ALTIN KURAL) ===== */
+  function renderApp() {
+    return NX.Ticker(HOMETICK) + NX.Masthead("") + NX.Nav("")
+      + HeroHeadline() + DataTerminalShell() + CategoryCompare() + CityHeatmap()
+      + GranularityPanel() + CategoryPanel() + DNAPanel() + CompanyTimeline()
+      + TwoColumnEditorial() + CorporateUsers() + FeaturedAnalysis() + NX.Footer();
+  }
+
+  NX.boot(renderApp);
+  mountTerminal();
+})();
+</script>
+</body>
+</html>

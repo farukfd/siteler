@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Çözümler — NADAS · Karar Analizi · Üyelik · White-Label · SPK · Kurumsal API</title>
+<meta name="description" content="NADAS çözümleri 4 katman: Bireyler için Karar Analizi paketleri (950₺'den), Profesyoneller için üyelikler (175-3.750₺/ay), Şirketler için white-label ProX web + CRM, Kurumsallar için SPK lisanslı değerleme + API + veri lisansı. İlk karar analiziniz ücretsiz.">
+<meta name="theme-color" content="#06101B">
+<link rel="canonical" href="https://www.nadas.com.tr/cozumler">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%2306101B'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%2338BDF8'%3EN%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NADAS">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="Çözümler — NADAS · Birey · Profesyonel · Şirket · Kurumsal">
+<meta property="og:description" content="Karar Analizi paketleri, üyelikler, white-label ProX web + CRM, SPK lisanslı değerleme ve kurumsal API. İlk karar analiziniz ücretsiz.">
+<meta property="og:image" content="og-cozumler.png">
+<meta property="og:url" content="https://www.nadas.com.tr/cozumler">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Çözümler — NADAS">
+<meta name="twitter:description" content="Bireyden kuruma 4 katmanlı gayrimenkul veri çözümleri. İlk karar analizi ücretsiz.">
+<meta name="twitter:image" content="og-cozumler.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"OfferCatalog","name":"NADAS Çözümleri","provider":{"@type":"Organization","name":"NADAS Gayrimenkul Bilgi İletişim Sistemleri","url":"https://www.nadas.com.tr"},"itemListElement":[{"@type":"Offer","name":"ProX Karar Analizi","price":"950","priceCurrency":"TRY"},{"@type":"Offer","name":"ProX Hibrit Karar Analizi","price":"2490","priceCurrency":"TRY"},{"@type":"Offer","name":"ProX Derin Karar Analizi","price":"4990","priceCurrency":"TRY"},{"@type":"Offer","name":"SPK Lisanslı Konut Değerleme","price":"21000","priceCurrency":"TRY"},{"@type":"Offer","name":"SPK Lisanslı Ticari Değerleme","price":"25000","priceCurrency":"TRY"}]}
+</script>
+</head>
+<body>
+<div id="app">
+  <noscript>
+    <div style="max-width:900px;margin:0 auto;padding:48px 20px;font-family:'Sora',sans-serif">
+      <h1 style="color:#38BDF8">NADAS Çözümler — Birey · Profesyonel · Şirket · Kurumsal</h1>
+      <p style="color:#CBD5E1">Karar Analizi paketleri, üyelikler, white-label ProX web + CRM, SPK lisanslı değerleme ve kurumsal API. Bu sayfayı görüntülemek için JavaScript gereklidir.</p>
+    </div>
+  </noscript>
+</div>
+
+<script src="js/core.js?v=2"></script>
+<script>
+(function () {
+  "use strict";
+  var C = NX.C, css = NX.css, Eyebrow = NX.Eyebrow, SectionDivider = NX.SectionDivider, SubSection = NX.SubSection;
+  NX.setAccent(C.primary);
+
+  var COZTICK = [
+    ["KARAR ANALİZİ", "950 ₺'den BAŞLAR"], ["PROX HİBRİT", "2.490 ₺ · ANA ÜRÜN"], ["DERİN ANALİZ", "4.990 ₺"],
+    ["SPK LİSANSLI KONUT", "21.000 ₺"], ["SPK LİSANSLI TİCARİ", "25.000 ₺"], ["STANDARD ÜYELİK", "175 ₺/ay"],
+    ["INVESTOR ÜYELİK", "1.250 ₺/ay"], ["CORPORATE", "TEKLİF AL"], ["WHITE-LABEL WEB", "ÖZEL FİYAT"],
+    ["KURUMSAL API", "USAGE-BASED"], ["İLK ANALİZ", "ÜCRETSİZ"], ["480M+ KAYIT", "AKTİF"],
+  ];
+
+  /* ===== TICKER ===== */
+  function Ticker() {
+    var items = [
+      ["KARAR ANALİZİ", "950 ₺'den BAŞLAR"], ["PROX HİBRİT", "2.490 ₺ · ANA ÜRÜN"], ["DERİN ANALİZ", "4.990 ₺"],
+      ["SPK LİSANSLI KONUT", "21.000 ₺"], ["SPK LİSANSLI TİCARİ", "25.000 ₺"], ["STANDARD ÜYELİK", "175 ₺/ay"],
+      ["INVESTOR ÜYELİK", "1.250 ₺/ay"], ["CORPORATE", "TEKLİF AL"], ["WHITE-LABEL WEB", "ÖZEL FİYAT"],
+      ["KURUMSAL API", "USAGE-BASED"], ["İLK ANALİZ", "ÜCRETSİZ"], ["480M+ KAYIT", "AKTİF"],
+    ];
+    var list = items.concat(items).map(function (it) {
+      return '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "0 24px", fontFamily: C.mono, fontSize: 10.5, letterSpacing: "0.06em" }) + '">'
+        + '<span style="' + css({ color: C.textFaint }) + '">' + it[0] + '</span>'
+        + '<span style="' + css({ color: C.primary, fontWeight: 700 }) + '">' + it[1] + '</span>'
+        + '<span style="' + css({ color: C.textFaint, marginLeft: 8 }) + '">·</span></div>';
+    }).join('');
+    return '<div style="' + css({ background: C.deep, borderBottom: "1px solid " + C.border, overflow: "hidden", padding: "8px 0" }) + '"><div style="' + css({ display: "flex", whiteSpace: "nowrap", animation: "tickerScroll 90s linear infinite" }) + '">' + list + '</div></div>';
+  }
+
+  /* ===== MASTHEAD ===== */
+  function Masthead() {
+    return '<div style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "10px 16px", background: C.base }) + '">'
+      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 12 }) + '">'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.16em" }) + '">NADAS · ÇÖZÜMLER</span>'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '">· TÜRKİYE\'NİN İLK EMLAK ENDEKSİ · 2005</span></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 14, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.08em" }) + '">'
+      + '<span><span style="' + css({ width: 6, height: 6, borderRadius: 9999, background: C.accent, display: "inline-block", marginRight: 6, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>CANLI</span>'
+      + '<span id="mast-time">--:--:--</span><span>TRT</span></div></div></div>';
+  }
+
+  /* ===== NAV ===== */
+  function Nav() {
+    var items = ["Veri Altyapısı", "Çözümler", "ProX", "Research", "Hakkımızda", "İletişim"];
+    var links = items.map(function (it) {
+      var on = it === "Çözümler";
+      return '<a href="' + navHref(it) + '" style="' + css({ fontFamily: C.mono, fontSize: 11, color: on ? C.primary : C.textMut, fontWeight: on ? 700 : 500, letterSpacing: "0.08em", textDecoration: "none", padding: "4px 0", borderBottom: on ? "1px solid " + C.primary : "1px solid transparent" }) + '">' + it.toUpperCase() + '</a>';
+    }).join('');
+    return '<div style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "14px 16px", background: C.base, position: "sticky", top: 0, zIndex: 40, backdropFilter: "blur(12px)" }) + '">'
+      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 14 }) + '">'
+      + '<a href="index.html" style="' + css({ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }) + '">'
+      + '<span style="' + css({ width: 28, height: 28, border: "1.5px solid " + C.primary, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Sora',sans-serif", fontSize: 13, fontWeight: 700, color: C.primary, borderRadius: 2 }) + '">N</span>'
+      + '<span style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 18, fontWeight: 700, color: C.textPri, letterSpacing: "-0.02em" }) + '">NADAS</span>'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.18em", marginLeft: 4 }) + '">ÇÖZÜMLER</span></a>'
+      + '<nav style="' + css({ display: "flex", gap: 22, alignItems: "center", flexWrap: "wrap" }) + '">' + links
+      + '<a href="https://www.emlakekspertizi.com" target="_blank" rel="noopener noreferrer" style="' + css({ padding: "6px 14px", border: "1px solid " + C.primary, fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">EMLAKEKSPERTIZI.COM →</a>'
+      + '</nav></div></div>';
+  }
+
+  /* ===== HERO ===== */
+  function HeroCozumler() {
+    var segs = [
+      { tag: "01", name: "BİREYLER", desc: "Tek mülk karar analizi", products: "3 paket · 950-4.990 ₺", anchor: "#bireyler" },
+      { tag: "02", name: "PROFESYONELLER", desc: "Emlak ofisi · broker · ekspertiz", products: "4 üyelik · 175-3.750 ₺/ay", anchor: "#profesyonel" },
+      { tag: "03", name: "ŞİRKETLER", desc: "İnşaat · zincir · proptech", products: "White-label web · CRM", anchor: "#sirket" },
+      { tag: "04", name: "KURUMSAL", desc: "Banka · sigorta · fon · kamu", products: "API · veri lisansı · SPK", anchor: "#kurumsal" },
+    ].map(function (s) {
+      return '<a href="' + s.anchor + '" style="' + css({ background: C.raised, padding: "18px 18px", textDecoration: "none", display: "block" }) + '">'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, letterSpacing: "0.14em", marginBottom: 6, fontWeight: 700 }) + '">SEGMENT ' + s.tag + '</div>'
+        + '<div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 18, color: C.textPri, fontWeight: 700, letterSpacing: "-0.01em", marginBottom: 4 }) + '">' + s.name + '</div>'
+        + '<div style="' + css({ fontSize: 12, color: C.textMut, marginBottom: 10 }) + '">' + s.desc + '</div>'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, fontWeight: 600, letterSpacing: "0.04em", paddingTop: 10, borderTop: "1px solid " + C.border }) + '">' + s.products + ' →</div></a>';
+    }).join('');
+    return '<section style="' + css({ position: "relative", padding: "22px 16px 44px", background: C.base, borderBottom: "1px solid " + C.borderStrong, overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 80% 20%, rgba(56,189,248,0.14), transparent 55%), radial-gradient(circle at 10% 80%, rgba(167,139,250,0.06), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+      + Eyebrow("◆ ÇÖZÜMLER · BİREY · PROFESYONEL · ŞİRKET · KURUMSAL")
+      + '<h1 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(2rem,5.5vw,3.6rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri, maxWidth: 1180 }) + '">'
+      + 'Türkiye\'nin <span style="' + css({ color: C.primary }) + '">ilk emlak endeksi</span><br>ve <span style="' + css({ color: C.primary }) + '">online emlak ekspertiz platformu.</span></h1>'
+      + '<p style="' + css({ marginTop: 16, fontSize: 16, lineHeight: 1.6, color: C.textSec, maxWidth: 920 }) + '">480 milyon kayıt. 50.000+ mahalle. 21 yıllık tarihsel zincir. ProX akıllı emlak asistanı. <strong style="' + css({ color: C.textPri }) + '">Bireyler, emlak profesyonelleri, şirketler ve kurumsal müşteriler</strong> için tek seferlik raporlardan kendi markanız altında kurulan veri altyapısına kadar tüm çözümler.</p>'
+      + '<div style="' + css({ marginTop: 20, display: "flex", gap: 10, flexWrap: "wrap" }) + '">'
+      + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 10, padding: "10px 16px", border: "1px solid " + C.accent, background: "rgba(52,211,153,0.06)", borderRadius: 2 }) + '">'
+      + '<span style="' + css({ width: 8, height: 8, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.accent, fontWeight: 700, letterSpacing: "0.1em" }) + '">İLK KARAR ANALİZİNİZ ÜCRETSİZ · BAŞLAYIN</span></div>'
+      + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 14px", border: "1px solid " + C.primary, background: "rgba(56,189,248,0.06)", borderRadius: 2 }) + '">'
+      + '<span style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 14, color: C.primary, fontWeight: 700, letterSpacing: "-0.01em" }) + '">SINCE 2005</span>'
+      + '<span style="' + css({ width: 1, height: 14, background: C.borderStrong }) + '"></span>'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, fontWeight: 700, letterSpacing: "0.1em" }) + '">İLK · TEK · KURUMSAL</span></div></div>'
+      + '<div style="' + css({ marginTop: 32 }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12, fontFamily: C.mono, fontSize: 10.5, letterSpacing: "0.12em" }) + '">'
+      + '<span style="' + css({ color: C.primary, fontWeight: 700 }) + '">◆ ÇÖZÜM HARİTASI · 4 SEGMENT</span>'
+      + '<span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span>'
+      + '<span style="' + css({ color: C.textFaint }) + '">KİM İÇİN NE</span></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + segs + '</div>'
+      + '</div></div></section>';
+  }
+
+  /* ===== A.1 KARAR ANALİZİ PAKETLERİ ===== */
+  function KararAnaliziUrunler() {
+    var products = [
+      { tag: "01", name: "ProX Karar Analizi", sub: "Tam ProX motoru · dakikalar içinde", price: "950 ₺", priceNote: "KDV dahil · Tek seferlik", delivery: "Dakikalar içinde", desc: "ProX akıllı emlak asistanı üzerinden anlık olarak hazırlanır. 480M kayıt ve 257 ay zaman serisinden bölgesel piyasa eğilimi çıkarılır. Tek başına ProX motorudur.", features: ["Tahmini Değer Aralığı (Min · Beklenen · Max)", "Veri Güven Puanı", "Bölgesel Eğilim", "Risk Özeti", "Yatırım Skoru", "Profesyonel PDF Çıktısı"], col: C.primary, featured: false },
+      { tag: "02", name: "ProX Hibrit Karar Analizi", sub: "ProX + Bölge Uzmanı · 8-24 saat teslim", price: "2.490 ₺", priceNote: "KDV dahil · Tek seferlik", delivery: "8-24 saat", desc: "Yapay zekânın tek başına veremeyeceği stratejik karar, uzmanın tek başına işleyemeyeceği milyonlarca veri — ikisi birlikte. ProX motorunun çıkardığı bölgesel piyasa eğilimini, her bölgede kategorisine gerçek uzman görüşüyle doğrulayan ana ürünümüz.", features: ["Tüm ProX Karar Analizi içeriği", "Bölgesel Piyasa Analizi", "Emsal Karşılaştırmaları (6 emsal)", "Talep Analizi", "Likidite Analizi", "Risk Analizi · radar grafik", "Yatırım Potansiyeli · 24-36 ay senaryo", "Karar Özeti · ağırlıklı skor", "Uzman Kontrolü · ıslak imza", "Belediye İmar Durumu İncelemesi", "Premium PDF · 24 sayfa"], col: C.accent, featured: true, badge: "⭐ ANA ÜRÜN · EN ÇOK TERCİH EDİLEN" },
+      { tag: "03", name: "ProX Derin Karar Analizi", sub: "ProX + Uzman + Mikro Konum + Resmi Kayıt · 24-36 saat", price: "4.990 ₺", priceNote: "KDV dahil · Tek seferlik · Premium", delivery: "24-36 saat", desc: "Hibrit analizin tüm içeriği üzerine resmi belediye kayıtları, tapu sicil incelemesi, mikro konum analizi ve alternatif bölge karşılaştırmalarını ekleyen en kapsamlı paket. Yüksek değerli yatırım kararları için.", features: ["Tüm Hibrit Karar Analizi içeriği", "Belediye İmar Durumu Sorgulaması (resmi)", "Tapu Kayıt İncelemesi", "Mikro Konum Analizi · cadde · sokak", "Bölgesel Risk Haritası", "Gelişim Potansiyeli · 5-10 yıl", "Alternatif Bölge Karşılaştırmaları", "Yatırım Senaryoları · stress test", "Derin Karar Özeti", "Premium PDF · 40+ sayfa"], col: C.violet, featured: false },
+    ];
+    var cards = products.map(function (p) {
+      var feats = p.features.map(function (f) { return '<li style="' + css({ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 12, color: C.textSec, lineHeight: 1.5 }) + '"><span style="' + css({ color: p.col, fontFamily: C.mono, fontSize: 11, lineHeight: 1.4 }) + '">✓</span>' + f + '</li>'; }).join('');
+      return '<div style="' + css({ position: "relative", background: p.featured ? C.elev : C.raised, border: "1px solid " + (p.featured ? p.col : C.borderStrong), padding: "26px 22px", display: "flex", flexDirection: "column" }) + '">'
+        + (p.featured ? '<div style="' + css({ position: "absolute", top: -1, left: 18, right: 18, padding: "4px 12px", background: p.col, color: C.deep, fontFamily: C.mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textAlign: "center" }) + '">' + p.badge + '</div>' : '')
+        + '<div style="' + css({ marginTop: p.featured ? 8 : 0, marginBottom: 14 }) + '">'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 10, color: p.col, letterSpacing: "0.14em", marginBottom: 6, fontWeight: 700 }) + '">PAKET ' + p.tag + ' · TESLİM ' + p.delivery + '</div>'
+        + '<h4 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "1.4rem", fontWeight: 700, color: C.textPri, lineHeight: 1.2, letterSpacing: "-0.015em", margin: "0 0 4px" }) + '">' + p.name + '</h4>'
+        + '<div style="' + css({ fontSize: 12.5, color: C.textMut, marginBottom: 14 }) + '">' + p.sub + '</div>'
+        + '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 4 }) + '"><span style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "2.4rem", fontWeight: 700, color: p.col, lineHeight: 1, letterSpacing: "-0.02em" }) + '">' + p.price + '</span></div>'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '">' + p.priceNote + '</div></div>'
+        + '<p style="' + css({ fontSize: 12.5, lineHeight: 1.6, color: C.textMut, margin: "0 0 16px", flex: "0 0 auto" }) + '">' + p.desc + '</p>'
+        + '<div style="' + css({ paddingTop: 14, borderTop: "1px solid " + C.border, marginBottom: 14, flex: 1 }) + '">'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 10, fontWeight: 700 }) + '">İÇERİK</div>'
+        + '<ul style="' + css({ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 6 }) + '">' + feats + '</ul></div>'
+        + '<a href="https://www.emlakekspertizi.com/ekspertiz-talep" target="_blank" rel="noopener noreferrer" style="' + css({ display: "block", textAlign: "center", padding: "12px 16px", background: p.featured ? p.col : "transparent", color: p.featured ? C.deep : p.col, border: "1px solid " + p.col, fontFamily: C.mono, fontSize: 11.5, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">KARAR ANALİZİ OLUŞTUR →</a>'
+        + '</div>';
+    }).join('');
+    var body = ''
+      + '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 8, maxWidth: 940 }) + '">Yatırım, satış, alım veya kredi öncesi tek karar belgenizi alın. ProX akıllı emlak asistanımız 480M kayıt ve 257 ay zaman serisinden bölgesel piyasa eğilimini çıkarır; <strong style="' + css({ color: C.textPri }) + '"> gayrimenkul bölge uzmanımız</strong> sahadan emsal, imar ve mikro lokasyon bilgisiyle doğrular.</p>'
+      + '<div style="' + css({ marginBottom: 22, padding: "10px 14px", border: "1px solid " + C.accent, background: "rgba(52,211,153,0.06)", display: "inline-flex", alignItems: "center", gap: 10 }) + '">'
+      + '<span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.accent, fontWeight: 700, letterSpacing: "0.1em" }) + '">HER YENİ KULLANICI · İLK KARAR ANALİZİNİ ÜCRETSİZ ALIR</span></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 14 }) + '">' + cards + '</div>'
+      + '<div style="' + css({ marginTop: 20, padding: "12px 16px", border: "1px dashed " + C.border, background: "rgba(56,189,248,0.03)", fontFamily: C.mono, fontSize: 11, color: C.textMut, letterSpacing: "0.04em", lineHeight: 1.55 }) + '">⌬ Bu çalışmalar bilgilendirme amaçlı veri destekli analiz raporlarıdır. Resmi SPK gayrimenkul değerleme raporu için aşağıdaki <a href="#kurumsal" style="' + css({ color: C.primary, fontWeight: 700, textDecoration: "none" }) + '">SPK Lisanslı Değerleme →</a> bölümüne bakınız.</div>';
+    return SubSection("A.1", "Karar Analizi paketleri — bir mülk için karar verirken", "3 PAKET · ÜCRETSİZ ÖRNEK · ProX MOTORLU · UZMAN DESTEKLİ", body);
+  }
+
+  /* ===== A.2 ÖRNEK KARAR ANALİZİ · PDF ===== */
+  function OrnekKararAnaliziPreview() {
+    var bolumler = [["01","KAPAK"],["02","YÖNETİCİ ÖZETİ"],["03","VERİ GÜVEN PANELİ"],["04","BÖLGE PROFİLİ"],["05","KONUM & ULAŞIM"],["06","CANLI PİYASA ÖZETİ"],["07","12 AYLIK TREND"],["08","60 AYLIK TREND"],["09","TAHMİNİ DEĞER ARALIĞI"],["10","EMSAL YOĞUNLUĞU"],["11","EMSAL KARŞILAŞTIRMA"],["12","BÖLGE MOMENTUMU"],["13","DEMOGRAFİK ETKİLER"],["14","SOSYAL YAŞAM & ÇEVRE"],["15","RİSK ANALİZİ"],["16","POTANSİYEL ANALİZİ"],["17","SWOT ANALİZİ"],["18","PİYASA DAVRANIŞI"],["19","İSTATİSTİKSEL PROJEKSİYON"],["20","KİRA ANALİZİ"],["21","AI ANALİZ MOTORU"],["22","VERİ ALTYAPISI"],["23","SONUÇ DEĞERLENDİRMESİ"],["24","ARKA KAPAK"]];
+    var meta = [["KONUM","Caddebostan · İST"],["KATEGORİ","Konut · Daire"],["SAYFA SAYISI","24 sayfa"],["DOSYA BOYUTU","858 KB · PDF"],["GÜVEN SKORU","%92"],["VERİ DERİNLİĞİ","240+ ay"],["M² ARALIĞI","159K – 216K ₺"],["TOPLAM DEĞER","19.18M – 25.95M ₺"]]
+      .map(function (r) { return '<div style="' + css({ background: C.deep, padding: "10px 12px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 3 }) + '">' + r[0] + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 11.5, color: C.textPri, fontWeight: 600 }) + '">' + r[1] + '</div></div>'; }).join('');
+    var bolumGrid = bolumler.map(function (b) { return '<div style="' + css({ background: C.raised, padding: "10px 14px", display: "flex", alignItems: "center", gap: 10 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.08em", minWidth: 22 }) + '">' + b[0] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textSec, fontWeight: 500, letterSpacing: "0.04em" }) + '">' + b[1] + '</span></div>'; }).join('');
+    var dlIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>';
+    var openIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>';
+
+    var cover = '<div style="' + css({ background: "linear-gradient(135deg, " + C.elev + " 0%, " + C.deep + " 100%)", padding: "32px 28px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", minHeight: 360 }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 50% 0%, rgba(56,189,248,0.18), transparent 55%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", width: "100%", maxWidth: 260, aspectRatio: "210 / 297", background: C.raised, border: "1px solid " + C.primary, padding: "22px 20px", display: "flex", flexDirection: "column", justifyContent: "space-between", boxShadow: "0 20px 40px rgba(2,8,18,0.6), 0 0 0 1px rgba(56,189,248,0.2)" }) + '">'
+      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 8, color: C.primary, fontWeight: 700, letterSpacing: "0.16em", marginBottom: 2 }) + '">NADAS DATA ENGINE</div>'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 6.5, color: C.textFaint, letterSpacing: "0.1em" }) + '">Türkiye Gayrimenkul Veri Teknolojileri</div>'
+      + '<div style="' + css({ height: 1, background: C.border, marginTop: 10 }) + '"></div></div>'
+      + '<div style="' + css({ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }) + '">'
+      + '<div style="' + css({ display: "inline-block", padding: "3px 8px", background: "rgba(56,189,248,0.1)", border: "1px solid " + C.primary, fontFamily: C.mono, fontSize: 6.5, color: C.primary, fontWeight: 700, letterSpacing: "0.1em", marginBottom: 12, alignSelf: "flex-start" }) + '">PREMIUM KARAR ANALİZİ · 24 SAYFA</div>'
+      + '<div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 20, fontWeight: 700, color: C.textPri, lineHeight: 1.05, letterSpacing: "-0.02em", marginBottom: 3 }) + '">GAYRİMENKUL</div>'
+      + '<div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 20, fontWeight: 700, color: C.primary, lineHeight: 1.05, letterSpacing: "-0.02em", marginBottom: 14 }) + '">KARAR ANALİZİ</div>'
+      + '<div style="' + css({ fontSize: 8, color: C.textMut, lineHeight: 1.5, marginBottom: 10 }) + '">Mahalle bazlı veri modeli, canlı piyasa hareketleri ve çok katmanlı veri modeli ile hazırlanmıştır.</div>'
+      + '<div style="' + css({ border: "1px solid " + C.border, padding: "8px 10px", marginTop: 6 }) + '"><div style="' + css({ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }) + '">'
+      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 6, color: C.textFaint, letterSpacing: "0.1em" }) + '">KONUM</div><div style="' + css({ fontSize: 8, color: C.textPri, fontWeight: 600 }) + '">Caddebostan</div><div style="' + css({ fontSize: 7, color: C.textMut }) + '">Kadıköy / İstanbul</div></div>'
+      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 6, color: C.textFaint, letterSpacing: "0.1em" }) + '">KATEGORİ</div><div style="' + css({ fontSize: 8, color: C.textPri, fontWeight: 600 }) + '">Konut · Daire</div><div style="' + css({ fontSize: 7, color: C.textMut }) + '">Satılık</div></div>'
+      + '</div></div></div>'
+      + '<div><div style="' + css({ height: 1, background: C.border, marginBottom: 6 }) + '"></div><div style="' + css({ display: "flex", justifyContent: "space-between", fontFamily: C.mono, fontSize: 6, color: C.textFaint, letterSpacing: "0.08em" }) + '"><span>NADAS DATA ENGINE</span><span style="' + css({ color: C.primary }) + '">emlakekspertizi.com →</span></div></div>'
+      + '</div>'
+      + '<div style="' + css({ position: "relative", marginTop: 16, fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.12em" }) + '">ÖRNEK PDF · 858 KB · A4 · 24 SAYFA</div></div>';
+
+    var right = '<div style="' + css({ background: C.raised, padding: "30px 28px" }) + '">'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.14em", marginBottom: 14 }) + '">◆ ÖRNEK RAPOR · PDF ERİŞİM</div>'
+      + '<h4 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "clamp(1.4rem,2.6vw,1.8rem)", fontWeight: 700, color: C.textPri, lineHeight: 1.15, letterSpacing: "-0.02em", margin: "0 0 16px" }) + '">Gerçek karar analizi raporunu <span style="' + css({ color: C.primary }) + '">tam olarak inceleyin.</span></h4>'
+      + '<p style="' + css({ fontSize: 13.5, color: C.textSec, lineHeight: 1.65, margin: "0 0 22px" }) + '">ProX motoru ve bölge uzmanı ile hazırlanmış 24 sayfalık örnek raporun tamamı. PDF\'i indirin veya tarayıcıda açın — bir Hibrit Karar Analizi paketinin nasıl göründüğünü ayrıntılı şekilde görün.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 1, background: C.border, border: "1px solid " + C.border, marginBottom: 22 }) + '">' + meta + '</div>'
+      + '<div style="' + css({ display: "flex", flexDirection: "column", gap: 10, marginBottom: 14 }) + '">'
+      + '<a href="karar-analizi-ornek.pdf" download="NADAS-Karar-Analizi-Ornek-Caddebostan.pdf" style="' + css({ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, padding: "14px 20px", background: C.primary, color: C.deep, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">' + dlIcon + ' PDF\'İ İNDİR · 858 KB</a>'
+      + '<a href="karar-analizi-ornek.pdf" target="_blank" rel="noopener noreferrer" style="' + css({ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, padding: "14px 20px", background: "transparent", color: C.primary, border: "1px solid " + C.primary, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">' + openIcon + ' TARAYICIDA AÇ</a></div>'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.04em", lineHeight: 1.55 }) + '">⌬ Bu bir örnek rapordur. Kendi mülkünüz için hazırlanacak rapor benzer formatta olacaktır.</div></div>';
+
+    var banner = '<div style="' + css({ marginTop: 28, padding: "22px 26px", background: "linear-gradient(135deg, " + C.elev + " 0%, " + C.raised + " 100%)", border: "1px solid " + C.accent, position: "relative", overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 90% 50%, rgba(52,211,153,0.12), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }) + '">'
+      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.accent, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 6 }) + '">◆ YENİ KULLANICIYA ÖZEL · BİR DEFAYA MAHSUS</div>'
+      + '<h4 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "1.4rem", fontWeight: 700, color: C.textPri, lineHeight: 1.2, letterSpacing: "-0.015em", margin: "0 0 6px" }) + '">İlk Karar Analiziniz <span style="' + css({ color: C.accent }) + '">ücretsiz.</span></h4>'
+      + '<p style="' + css({ fontSize: 13, color: C.textMut, margin: 0, maxWidth: 540 }) + '">emlakekspertizi.com\'a kayıt olun, kendi mülkünüz için 24 sayfalık karar analizi raporunuzu ücretsiz alın. Tek bir mülk için, tek bir defa.</p></div>'
+      + '<a href="https://www.emlakekspertizi.com/ekspertiz-talep?promo=ilk-rapor" target="_blank" rel="noopener noreferrer" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 24px", background: C.accent, color: C.deep, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2, whiteSpace: "nowrap" }) + '">ÜCRETSİZ ANALİZ AL →</a></div></div>';
+
+    var body = ''
+      + '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 22, maxWidth: 940 }) + '">Hibrit Karar Analizi paketinin gerçek bir örnek raporu. <strong style="' + css({ color: C.textPri }) + '">İstanbul · Kadıköy · Caddebostan · Konut · Daire</strong> için hazırlanan 24 sayfalık tam raporu indirebilir veya tarayıcıda açıp inceleyebilirsiniz.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.4fr)", gap: 1, border: "1px solid " + C.primary, background: C.borderStrong, marginBottom: 28 }) + '" class="nadas-twocol">' + cover + right + '</div>'
+      + '<div><div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, fontFamily: C.mono, fontSize: 10.5, letterSpacing: "0.12em" }) + '"><span style="' + css({ color: C.primary, fontWeight: 700 }) + '">◆ RAPORUN 24 BÖLÜMÜ · HİBRİT PAKETİN TAM İÇERİĞİ</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span style="' + css({ color: C.textFaint }) + '">SIRASIYLA</span></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + bolumGrid + '</div></div>'
+      + banner;
+    return SubSection("A.2", "Karar Analizi · 24 sayfalık örnek rapor", "GERÇEK ÖRNEK RAPOR · CADDEBOSTAN · KADIKÖY · KONUT", body);
+  }
+
+  /* ===== B.1 ÜYELİK PAKETLERİ ===== */
+  function UyelikPaketleri() {
+    var tiers = [
+      { tag: "STANDARD", name: "ProX Standard", price: "175 ₺", per: "/ay", desc: "Bireysel kullanıcılar, küçük ölçekli emlak danışmanları, başlangıç düzeyi profesyoneller", features: ["Sınırsız endeks görüntüleme", "Mahalle keşif aracı", "Aylık 5 ProX karar analizi", "PDF export", "Demografik veri erişimi", "Email destek"], col: C.textPri, cta: "Üyeliği Seç" },
+      { tag: "PROFESSIONAL", name: "Yerel Uzman Paketi", price: "950 ₺", per: "/ay", desc: "Emlak ofisleri, broker firmaları, ekspertiz şirketleri, profesyonel danışmanlar", features: ["Tüm Standard içeriği", "Sınırsız ProX karar analizi", "5 SPK kategorisi raporlama desteği", "Aylık 5 hibrit karar analizi", "Toplu sorgulama (200/ay)", "Beyaz etiketli PDF export", "Telefon destek · 8h yanıt"], col: C.primary, cta: "Üyeliği Seç" },
+      { tag: "INVESTOR", name: "ProX Investor", price: "1.250 ₺", per: "/ay", desc: "Yatırımcılar, portföy yöneticileri, gayrimenkul fonları, inşaat şirketleri", features: ["Tüm Professional içeriği", "Tüm 12 endeks tam erişim", "Bölgesel portföy izleme paneli", "Sınırsız hibrit karar analizi", "Aylık 3 derin karar analizi", "API basic erişim (1.000 req/dk)", "Özel dashboard", "Öncelikli destek · 4h yanıt"], col: C.accent, cta: "Üyeliği Seç", featured: true, badge: "⭐ POPÜLER · EN ÇOK TERCİH EDİLEN" },
+      { tag: "CORPORATE", name: "ProX Corporate", price: "3.750 ₺", per: "/ay BAŞLAR", desc: "Bankalar, sigorta şirketleri, fonlar, belediyeler, büyük inşaat zincirleri", features: ["Tüm Investor içeriği", "Tüm API endpoint’leri açık", "Custom dashboard & raporlama", "Custom branded white-label rapor", "Toplu hesap yönetimi", "Dedicated account manager", "SLA 99.99% · 1h yanıt", "Custom veri lisansı opsiyonu"], col: C.violet, cta: "Teklif Al" },
+    ];
+    var cards = tiers.map(function (t) {
+      var feats = t.features.map(function (f) { return '<li style="' + css({ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 11.5, color: C.textSec, lineHeight: 1.45 }) + '"><span style="' + css({ color: t.col, fontFamily: C.mono, fontSize: 10, lineHeight: 1.6 }) + '">●</span>' + f + '</li>'; }).join('');
+      return '<div style="' + css({ position: "relative", background: t.featured ? C.elev : C.raised, border: "1px solid " + (t.featured ? t.col : C.borderStrong), padding: "26px 20px", display: "flex", flexDirection: "column" }) + '">'
+        + (t.featured ? '<div style="' + css({ position: "absolute", top: -1, left: 14, right: 14, padding: "4px 10px", background: t.col, color: C.deep, fontFamily: C.mono, fontSize: 9.5, fontWeight: 700, letterSpacing: "0.1em", textAlign: "center" }) + '">' + t.badge + '</div>' : '')
+        + '<div style="' + css({ marginTop: t.featured ? 8 : 0, marginBottom: 14 }) + '">'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 10, color: t.col, letterSpacing: "0.14em", marginBottom: 6, fontWeight: 700 }) + '">' + t.tag + '</div>'
+        + '<h4 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "1.3rem", fontWeight: 700, color: C.textPri, lineHeight: 1.2, letterSpacing: "-0.015em", margin: "0 0 10px" }) + '">' + t.name + '</h4>'
+        + '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 4 }) + '"><span style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "2.2rem", fontWeight: 700, color: t.col, lineHeight: 1, letterSpacing: "-0.02em" }) + '">' + t.price + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textMut, fontWeight: 600 }) + '">' + t.per + '</span></div></div>'
+        + '<p style="' + css({ fontSize: 12, color: C.textMut, lineHeight: 1.5, margin: "0 0 14px", flex: "0 0 auto" }) + '">' + t.desc + '</p>'
+        + '<ul style="' + css({ listStyle: "none", padding: 0, margin: "0 0 18px", display: "flex", flexDirection: "column", gap: 6, flex: 1, paddingTop: 14, borderTop: "1px solid " + C.border }) + '">' + feats + '</ul>'
+        + '<a href="https://www.emlakekspertizi.com/uyelik" target="_blank" rel="noopener noreferrer" style="' + css({ display: "block", textAlign: "center", padding: "11px 14px", background: t.featured ? t.col : "transparent", color: t.featured ? C.deep : t.col, border: "1px solid " + t.col, fontFamily: C.mono, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">' + t.cta + ' →</a></div>';
+    }).join('');
+    var body = ''
+      + '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 22, maxWidth: 940 }) + '">Tek tek rapor satın almak yerine ProX üyeliklerinden birini seçin. Sınırsız erişim, gelişmiş veri, profesyonel araçlar. Üyeler için <strong style="' + css({ color: C.textPri }) + '">standart paketler %30 indirimli</strong>; <strong style="' + css({ color: C.accent }) + '">POPÜLER ProX Investor tier’ında sınırsız hibrit analiz</strong>.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 14 }) + '">' + cards + '</div>';
+    return SubSection("B.1", "Üyelik paketleri — sürekli analiz ihtiyacı için", "4 TIER · TEK ANALİZ YERİNE SINIRSIZ ERİŞİM", body);
+  }
+
+  /* ===== B.2 EMLAK PROFESYONELLERİ ===== */
+  function EmlakProfesyonelleri() {
+    var segments = [
+      { sym: "◉", name: "EMLAK OFİSLERİ", desc: "Bağımsız emlak danışmanlığı yapan ofisler, broker firmaları", offerings: ["Marka adınızla branded ProX raporu", "Toplu mahalle analizi paneli", "Müşteri sunum aracı", "Hibrit karar analizi (uzman destekli)", "Telefonla satış desteği eğitimi"], ideal: "Professional / Investor üyelik" },
+      { sym: "▦", name: "İNŞAAT ŞİRKETLERİ", desc: "Konut, ticari, karma proje geliştiren inşaat şirketleri", offerings: ["Proje öncesi bölge fizibilite raporu", "Hedef bölge potansiyel analizi", "Rakip proje karşılaştırması", "Satış sürecinde DNA destekli müşteri profili", "Stok yönetimi için API erişimi"], ideal: "Investor / Corporate üyelik" },
+      { sym: "Σ", name: "EKSPERTİZ ŞİRKETLERİ", desc: "SPK lisanslı değerleme uzmanı şirketler ve ekspertiz büroları", offerings: ["Resmi ekspertiz öncesi bölge ön analizi", "Emsal mülk veritabanı erişimi", "Beyaz etiketli rapor template’i", "Çoklu uzman yönetim paneli", "API üzerinden raporlama entegrasyonu"], ideal: "Professional / Investor üyelik" },
+      { sym: "◈", name: "BROKER & DANIŞMAN AĞLARI", desc: "Çok temsilcili broker zincirleri, franchise sistemleri", offerings: ["Şirket markası altında özel web platformu", "Kendi CRM entegrasyonu", "Çoklu temsilci hesap yönetimi", "Performans dashboard’u", "Co-branded müşteri raporları"], ideal: "Corporate üyelik · özel paket" },
+    ];
+    var cards = segments.map(function (s) {
+      var off = s.offerings.map(function (o) { return '<li style="' + css({ display: "flex", gap: 8, fontSize: 11.5, color: C.textSec, lineHeight: 1.5 }) + '"><span style="' + css({ color: C.primary, fontFamily: C.mono, fontSize: 10 }) + '">→</span>' + o + '</li>'; }).join('');
+      return '<div style="' + css({ background: C.raised, padding: "22px 22px" }) + '">'
+        + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }) + '"><span style="' + css({ width: 32, height: 32, border: "1px solid " + C.primary, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: C.mono, fontSize: 14, color: C.primary, borderRadius: 2 }) + '">' + s.sym + '</span><div><div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 15, fontWeight: 700, color: C.primary, letterSpacing: "0.04em" }) + '">' + s.name + '</div></div></div>'
+        + '<p style="' + css({ fontSize: 12.5, color: C.textMut, lineHeight: 1.55, margin: "0 0 14px" }) + '">' + s.desc + '</p>'
+        + '<ul style="' + css({ listStyle: "none", padding: 0, margin: "0 0 14px", display: "flex", flexDirection: "column", gap: 5, paddingTop: 12, borderTop: "1px solid " + C.border }) + '">' + off + '</ul>'
+        + '<div style="' + css({ paddingTop: 10, borderTop: "1px solid " + C.border, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '"><strong style="' + css({ color: C.primary, letterSpacing: "0.04em" }) + '">İDEAL ÜYELİK:</strong> ' + s.ideal + '</div></div>';
+    }).join('');
+    var body = ''
+      + '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 22, maxWidth: 940 }) + '">Gayrimenkul sektöründe çalışan her iş kolunun ihtiyacı farklı. Üyelik paketlerimize ek olarak her segment için <strong style="' + css({ color: C.textPri }) + '"> özelleştirilmiş hizmet bileşenleri</strong> sunuyoruz.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>';
+    return SubSection("B.2", "Emlak profesyonelleri için sektörel paketler", "4 SEGMENT · EMLAK OFİSİ · İNŞAAT · EKSPERTİZ · BROKER", body);
+  }
+
+  /* ===== C.1 WHITE-LABEL ===== */
+  function WhiteLabelCozumler() {
+    var feat = [
+      ["◆ ÖZEL WEB SİTESİ", "Kendi domain’inizde, sizin markanızla çalışan kurumsal web sitesi. Tasarım, içerik, marka tonu tamamen sizin."],
+      ["▦ EMLAK ENDEKSİ API", "50.000+ mahalle endeksi · 12 ana gösterge · canlı güncelleme · sizin sitenizde."],
+      ["◉ EKSPERTİZ HESAPLAMA", "Müşterileriniz mülk için anlık ekspertiz hesaplaması alabilir — arka planda ProX motoru."],
+      ["⌬ ProX AKILLI ASİSTAN", "Sizin markanız altında çalışan akıllı emlak asistanı. Sohbet arayüzü ile sorgu."],
+      ["Σ PDF RAPOR OLUŞTURMA", "24 sayfalık karar analizi raporu, sizin logonuz ve renklerinizle, otomatik olarak."],
+      ["→ CRM ENTEGRASYONU", "Müşteri yönetimi, lead takibi, satış pipeline — Salesforce/HubSpot/özel CRM."],
+      ["◐ İL/İLÇE VERİ LİSANSI", "Sadece sizin faaliyet bölgenize özel veri seti. Mahalle bazlı tam erişim."],
+      ["◯ DASHBOARD & RAPOR", "Yöneticiler için real-time dashboard. Müşteri kullanımı, gelir, performans."],
+    ].map(function (r) { return '<div style="' + css({ background: C.deep, padding: "14px 16px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.violet, fontWeight: 700, letterSpacing: "0.08em", marginBottom: 6 }) + '">' + r[0] + '</div><div style="' + css({ fontSize: 11.5, color: C.textMut, lineHeight: 1.5 }) + '">' + r[1] + '</div></div>'; }).join('');
+    var detail = [
+      { sym: "▦", title: "ÖZEL CRM ÇÖZÜMLERİ", desc: "Emlak ofislerine özel müşteri yönetim sistemi. Lead takibi, pipeline, görev yönetimi, ekspertiz talep entegrasyonu, otomatik raporlama.", features: ["Müşteri profili + DNA", "Pipeline yönetimi", "Ekspertiz talebi otomasyonu", "Mobil + masaüstü"] },
+      { sym: "◈", title: "YAPAY ZEKA DESTEKLİ WEB", desc: "Müşterilerinize ProX akıllı asistanını sizin sitenizden sunun. Sohbet arayüzü, mahalle analizi, fiyat sorgusu — hepsi sizin markanız altında.", features: ["ProX chat widget", "Mahalle keşif aracı", "Anlık ekspertiz", "Lead capture form"] },
+      { sym: "Σ", title: "VERİ ALTYAPI HİZMETİ", desc: "İl/ilçe bazlı tam veri lisansı. Bölgenize özel timeseries, DNA verisi, olay markırı, demografik veri — tam erişim.", features: ["Bölgesel timeseries", "DNA vektör erişimi", "Olay markırı stream", "Historical seri"] },
+    ].map(function (c) {
+      var f = c.features.map(function (x) { return '<li style="' + css({ display: "flex", gap: 8, fontSize: 11.5, color: C.textSec, lineHeight: 1.5 }) + '"><span style="' + css({ color: C.primary, fontFamily: C.mono, fontSize: 10 }) + '">●</span>' + x + '</li>'; }).join('');
+      return '<div style="' + css({ background: C.raised, padding: "22px 22px" }) + '"><div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }) + '"><span style="' + css({ width: 32, height: 32, border: "1px solid " + C.primary, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: C.mono, fontSize: 14, color: C.primary, borderRadius: 2 }) + '">' + c.sym + '</span><div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 14.5, fontWeight: 700, color: C.primary, letterSpacing: "0.04em" }) + '">' + c.title + '</div></div><p style="' + css({ fontSize: 12.5, color: C.textMut, lineHeight: 1.55, margin: "0 0 14px" }) + '">' + c.desc + '</p><ul style="' + css({ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 5, paddingTop: 12, borderTop: "1px solid " + C.border }) + '">' + f + '</ul></div>';
+    }).join('');
+    var body = ''
+      + '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 22, maxWidth: 940 }) + '">Kendi gayrimenkul platformunuzu mu kurmak istiyorsunuz? Nadas altyapısı üzerinde, <strong style="' + css({ color: C.textPri }) + '">sizin markanız</strong>, <strong style="' + css({ color: C.textPri }) + '"> sizin domain’iniz</strong>, sizin tasarımınızla çalışan kurumsal web platformları geliştiriyoruz. Tüm sistemler emlakekspertizi.com altyapısından <strong style="' + css({ color: C.violet }) + '">ProX API</strong> ile beslenir.</p>'
+      + '<div style="' + css({ background: "linear-gradient(135deg, " + C.elev + " 0%, " + C.raised + " 100%)", border: "1px solid " + C.violet, padding: "28px 26px", marginBottom: 16, position: "relative", overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 90% 0%, rgba(167,139,250,0.14), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12, flexWrap: "wrap" }) + '"><span style="' + css({ padding: "3px 10px", background: C.violet, color: "#fff", fontFamily: C.mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", borderRadius: 2 }) + '">◈ ProX DESTEKLİ</span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.1em" }) + '">SIZIN MARKANIZ · BIZIM ALTYAPIMIZ</span></div>'
+      + '<h4 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "clamp(1.3rem,2.4vw,1.7rem)", fontWeight: 700, color: C.textPri, lineHeight: 1.2, letterSpacing: "-0.02em", margin: "0 0 14px" }) + '"><span style="' + css({ color: C.violet }) + '">Veri</span> bizde. <span style="' + css({ color: C.violet }) + '">Marka</span> sizde.</h4>'
+      + '<p style="' + css({ fontSize: 14, color: C.textSec, lineHeight: 1.65, margin: "0 0 20px", maxWidth: 800 }) + '">Tek bir API anahtarıyla emlak endeksi, ekspertiz hesaplama, ProX akıllı asistan ve PDF rapor oluşturma — tümü sizin web sitenizde, sizin müşterileriniz için, sizin markanız altında çalışır.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 1, border: "1px solid " + C.border, background: C.border }) + '">' + feat + '</div>'
+      + '<div style="' + css({ marginTop: 20, display: "flex", gap: 12, flexWrap: "wrap" }) + '">'
+      + '<a href="#kurumsal-iletisim" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: C.violet, color: "#fff", fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">KURUMSAL TEKLİF AL →</a>'
+      + '<a href="#kurumsal" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: "transparent", color: C.violet, border: "1px solid " + C.violet, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">API DOKÜMANTASYONU →</a></div>'
+      + '</div></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong, marginTop: 16 }) + '">' + detail + '</div>';
+    return SubSection("C.1", "Şirkete özel web platformu — sizin markanız, bizim altyapımız", "WHITE-LABEL · ProX DESTEKLİ · ÖZEL DOMAIN · CRM ENTEGRASYONU", body);
+  }
+
+  /* ===== D.1 SPK LİSANSLI DEĞERLEME ===== */
+  function SpkLisansliDegerleme() {
+    var kategoriler = [
+      { tag: "01", name: "KONUT", sub: "Daire · villa · müstakil ev", area: "150 m²’ye kadar", price: "21.000 ₺", priceNote: "KDV hariç · admin yönetimli", delivery: "3-8 iş günü", col: C.primary, ideal: "Banka kredi · ipotek · alım-satım · değerleme" },
+      { tag: "02", name: "TİCARET", sub: "Dükkan · ofis · mağaza", area: "150 m²’ye kadar", price: "25.000 ₺", priceNote: "KDV hariç · admin yönetimli", delivery: "3-8 iş günü", col: C.primary, ideal: "Banka teminat · kira sözleşmesi · iş devri" },
+      { tag: "03", name: "SANAYİ", sub: "Fabrika · depo · üretim alanı", area: "m² bazlı", price: "TEKLİF", priceNote: "Tarafımızdan iletilir · özel fiyat", delivery: "5-10 iş günü", col: C.primary, ideal: "Kurumsal teminat · sigorta · finansal raporlama" },
+    ];
+    var cards = kategoriler.map(function (k) {
+      return '<div style="' + css({ background: C.raised, border: "1px solid " + C.borderStrong, padding: "24px 22px", display: "flex", flexDirection: "column" }) + '">'
+        + '<div style="' + css({ marginBottom: 16 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: k.col, letterSpacing: "0.14em", marginBottom: 6, fontWeight: 700 }) + '">KATEGORİ ' + k.tag + '</div>'
+        + '<h4 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "1.5rem", fontWeight: 700, color: C.textPri, letterSpacing: "-0.015em", margin: "0 0 4px" }) + '">' + k.name + '</h4>'
+        + '<div style="' + css({ fontSize: 12.5, color: C.textMut, marginBottom: 6 }) + '">' + k.sub + '</div>'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.08em" }) + '">' + k.area + '</div></div>'
+        + '<div style="' + css({ paddingTop: 14, borderTop: "1px solid " + C.border, marginBottom: 14 }) + '">'
+        + '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 4 }) + '"><span style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "2.2rem", fontWeight: 700, color: k.col, lineHeight: 1, letterSpacing: "-0.02em" }) + '">' + k.price + '</span></div>'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em", marginBottom: 14 }) + '">' + k.priceNote + '</div>'
+        + '<div style="' + css({ display: "flex", justifyContent: "space-between", padding: "8px 0", fontFamily: C.mono, fontSize: 11 }) + '"><span style="' + css({ color: C.textMut }) + '">TESLİM SÜRESİ</span><span style="' + css({ color: C.textPri, fontWeight: 600 }) + '">' + k.delivery + '</span></div>'
+        + '<div style="' + css({ padding: "8px 0", fontFamily: C.mono, fontSize: 10.5 }) + '"><div style="' + css({ color: C.textFaint, letterSpacing: "0.06em", marginBottom: 4 }) + '">İDEAL KULLANIM</div><div style="' + css({ color: C.textSec, lineHeight: 1.5 }) + '">' + k.ideal + '</div></div></div>'
+        + '<a href="https://www.emlakekspertizi.com/spk-talep" target="_blank" rel="noopener noreferrer" style="' + css({ display: "block", textAlign: "center", padding: "12px 16px", background: "transparent", color: k.col, border: "1px solid " + k.col, fontFamily: C.mono, fontSize: 11.5, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2, marginTop: "auto" }) + '">SPK TALEBİ OLUŞTUR →</a></div>';
+    }).join('');
+    var body = ''
+      + '<div style="' + css({ marginBottom: 22, padding: "14px 16px", border: "1px solid " + C.warn, background: "rgba(251,191,36,0.04)", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }) + '">'
+      + '<span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: C.warn }) + '"></span>'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.warn, fontWeight: 700, letterSpacing: "0.08em" }) + '">RESMİ İŞLEMLER İÇİN GEREKLİ</span>'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textMut, letterSpacing: "0.04em", lineHeight: 1.5 }) + '">Banka · Mahkeme · Finans Kuruluşları · Tapu · İpotek · Kamulaştırma · Resmi İşlemler</span></div>'
+      + '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 22, maxWidth: 940 }) + '">Resmi SPK gayrimenkul değerleme raporu, <strong style="' + css({ color: C.textPri }) + '">SPK lisanslı uzmanlarımız</strong> tarafından hazırlanır. <strong style="' + css({ color: C.textPri }) + '"> Islak imzalı resmi belge</strong> ve <strong style="' + css({ color: C.textPri }) + '">e-imzalı PDF</strong> formatında teslim edilir. Karar Analizi paketlerinden farklı olarak <strong style="' + css({ color: C.warn }) + '">banka, tapu, mahkeme ve resmi işlemlerde kullanılabilir</strong>.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 14 }) + '">' + cards + '</div>'
+      + '<div style="' + css({ marginTop: 20, padding: "12px 16px", border: "1px dashed " + C.border, background: "rgba(56,189,248,0.03)", fontFamily: C.mono, fontSize: 11, color: C.textMut, letterSpacing: "0.04em", lineHeight: 1.55 }) + '">⚖ Tüm SPK raporları SPK Lisanslı Gayrimenkul Değerleme Uzmanları tarafından, Sermaye Piyasası Kurulu (SPK) mevzuatına uygun şekilde hazırlanır. Banka teminat, mahkeme delili, vergi işlemleri ve resmi kurum yazışmaları için kullanılabilir.</div>';
+    return SubSection("D.1", "SPK Lisanslı Resmi Değerleme — banka & mahkeme geçerli", "ISLAK İMZALI · RESMİ BELGE · 3-8 İŞ GÜNÜ TESLİM", body);
+  }
+
+  /* ===== D.2 KURUMSAL API ===== */
+  function KurumsalApiEntegrasyon() {
+    var kurumlar = [
+      ["BANKALAR", "Teminat değerleme, kredi onay süreci, mahalle bazlı risk skorlaması"],
+      ["SİGORTA ŞİRKETLERİ", "Bölgesel risk profili, deprem etki haritası, müşteri segmentasyonu"],
+      ["YATIRIM FONLARI", "Portföy izleme paneli, bölgesel fırsat analizi, alım-satım kararı destek"],
+      ["BELEDİYELER & KAMU", "İmar planlama, kentsel dönüşüm, vergi rayicleri, mahalle gelişim izleme"],
+      ["PROPTECH FİRMALARI", "Marketplace, ilan platformu, scoring motoru — backend olarak"],
+      ["DEĞERLEME FİRMALARI", "Toplu ekspertiz desteği, emsal veri tabanı, hızlı rapor oluşturma"],
+    ].map(function (r) { return '<li style="' + css({ paddingBottom: 10, borderBottom: "1px solid " + C.border, lineHeight: 1.55 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, fontWeight: 700, letterSpacing: "0.06em", marginBottom: 3 }) + '">' + r[0] + '</div><div style="' + css({ fontSize: 12, color: C.textMut }) + '">' + r[1] + '</div></li>'; }).join('');
+    var hizmet = [
+      ["API erişimi", "12 endpoint · REST + WebSocket"], ["Rate limit", "10.000+ req/dakika"], ["SLA garantisi", "%99.99 uptime · 1h yanıt"],
+      ["Dedicated manager", "Hesap yöneticisi atanır"], ["Custom dashboard", "Şirkete özel raporlama"], ["Veri lisansı", "İl/ilçe bazlı raw data"],
+      ["Beyaz etiket rapor", "Branded PDF outputs"], ["On-premise opsiyonu", "Veri hassasiyeti yüksek kurumlar için"], ["KVKK uyumu", "Tüm veriler anonimize · KVKK uyumlu"], ["Eğitim ve onboarding", "Teknik ekip için hizmet içi eğitim"],
+    ].map(function (r) { return '<li style="' + css({ display: "flex", justifyContent: "space-between", gap: 10, padding: "5px 0", borderBottom: "1px solid " + C.border, fontFamily: C.mono, fontSize: 11 }) + '"><span style="' + css({ color: C.textMut, letterSpacing: "0.02em" }) + '">' + r[0] + '</span><span style="' + css({ color: C.textPri, fontWeight: 600, textAlign: "right" }) + '">' + r[1] + '</span></li>'; }).join('');
+    var endpoints = [
+      ["/indices", "Mahalle endeksleri"], ["/neighborhoods", "50.000+ mahalle metadata"], ["/dna/{id}", "38 boyutlu DNA vektörü"], ["/events", "Olay markırı akışı"],
+      ["/valuation", "Anlık ekspertiz hesaplama"], ["/comparables", "Emsal mülk listesi"], ["/confidence", "Güven skoru sorgusu"], ["/timeseries", "257 aylık tarihsel veri"],
+      ["/prox/query", "ProX asistan API"], ["/reports/generate", "PDF rapor oluşturma"], ["/ws/live", "Real-time WebSocket akış"], ["/admin/audit", "Kullanım audit logları"],
+    ].map(function (r) { return '<div style="' + css({ padding: "8px 10px", background: C.raised, border: "1px solid " + C.border }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, fontWeight: 700 }) + '">' + r[0] + '</div><div style="' + css({ fontSize: 10.5, color: C.textMut, marginTop: 2 }) + '">' + r[1] + '</div></div>'; }).join('');
+    var body = ''
+      + '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 22, maxWidth: 940 }) + '">Büyük ölçekli kurumlar için Nadas veritabanı doğrudan erişim API’leri. Mahalle endeksi, DNA verisi, olay markırı, güven skoru, ekspertiz hesaplaması, ProX akıllı asistan — hepsi REST API ve WebSocket üzerinden.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 18 }) + '" class="nadas-twocol">'
+      + '<div style="' + css({ background: C.raised, border: "1px solid " + C.primary, padding: 22 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.14em", marginBottom: 14 }) + '">◆ HEDEF KURUM SEGMENTLERİ</div><ul style="' + css({ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }) + '">' + kurumlar + '</ul></div>'
+      + '<div style="' + css({ background: C.raised, border: "1px solid " + C.borderStrong, padding: 22 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.14em", marginBottom: 14 }) + '">◈ KURUMSAL HİZMET PAKETİ</div><ul style="' + css({ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }) + '">' + hizmet + '</ul>'
+      + '<a href="#kurumsal-iletisim" style="' + css({ display: "block", textAlign: "center", marginTop: 18, padding: "12px 16px", background: C.primary, color: C.deep, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">KURUMSAL TEKLİF AL →</a></div></div>'
+      + '<div style="' + css({ border: "1px solid " + C.borderStrong, padding: 18, background: C.deep }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.14em", marginBottom: 14 }) + '">◆ API ENDPOINT KATALOĞU · ÖZET</div><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 10 }) + '">' + endpoints + '</div></div>';
+    return SubSection("D.2", "Kurumsal API & veri entegrasyonu", "BANKA · SİGORTA · FON · BELEDİYE · PROPTECH · ENTERPRISE SLA", body);
+  }
+
+  /* ===== D.3 KURUMSAL İLETİŞİM CTA ===== */
+  function KurumsalIletisimCTA() {
+    var flist = ["30 dakikalık ücretsiz keşif görüşmesi", "Şirketinize özel demo hazırlığı", "Detaylı teklif · 5 iş günü içinde", "Pilot proje · 30 gün ücretsiz değerlendirme"]
+      .map(function (f) { return '<li style="' + css({ display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: C.textSec }) + '"><span style="' + css({ width: 16, height: 16, border: "1px solid " + C.primary, display: "inline-flex", alignItems: "center", justifyContent: "center", fontFamily: C.mono, fontSize: 10, color: C.primary, borderRadius: 2 }) + '">✓</span>' + f + '</li>'; }).join('');
+    var inputStyle = { width: "100%", padding: "10px 12px", background: C.deep, border: "1px solid " + C.borderStrong, color: C.textPri, fontFamily: C.mono, fontSize: 13, outline: "none", boxSizing: "border-box" };
+    return '<section id="kurumsal-iletisim" style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "56px 16px", background: "linear-gradient(135deg, " + C.deep + " 0%, " + C.raised + " 100%)", position: "relative", overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 80% 50%, rgba(56,189,248,0.14), transparent 50%), radial-gradient(circle at 10% 80%, rgba(167,139,250,0.08), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, fontFamily: C.mono, fontSize: 10.5, letterSpacing: "0.14em" }) + '"><span style="' + css({ color: C.primary, fontWeight: 700 }) + '">◆ KURUMSAL İLETİŞİM</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span style="' + css({ color: C.textFaint }) + '">DEMO · TEKLİF · ÖZEL ÇÖZÜM</span></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 28, alignItems: "center" }) + '" class="nadas-twocol">'
+      + '<div><h2 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "clamp(1.8rem,4vw,2.6rem)", fontWeight: 700, color: C.textPri, lineHeight: 1.1, letterSpacing: "-0.025em", margin: 0 }) + '">Şirketinize özel <span style="' + css({ color: C.primary }) + '">ProX destekli</span> çözüm konuşalım.</h2>'
+      + '<p style="' + css({ marginTop: 16, fontSize: 15, lineHeight: 1.65, color: C.textSec, maxWidth: 640 }) + '">White-label web platformu, kurumsal API entegrasyonu, özel veri lisansı, CRM çözümleri ya da bireysel bir karar analizi — sektörünüze uygun ölçeği birlikte tasarlayalım. Bir uzmanımızla görüşme planlayın, ihtiyacınıza özel teklif hazırlayalım.</p>'
+      + '<ul style="' + css({ marginTop: 18, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }) + '">' + flist + '</ul></div>'
+      + '<div style="' + css({ background: C.raised, border: "1px solid " + C.primary, padding: 24 }) + '">'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 14 }) + '">◆ KURUMSAL TALEP FORMU</div>'
+      + '<div style="' + css({ marginBottom: 10 }) + '"><label style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 4, display: "block" }) + '">ŞİRKET ADI</label><input id="cz-company" type="text" placeholder="ABC Gayrimenkul A.Ş." style="' + css(inputStyle) + '"></div>'
+      + '<div style="' + css({ marginBottom: 10 }) + '"><label style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 4, display: "block" }) + '">İLGİ ALANI</label><select id="cz-interest" style="' + css(inputStyle) + '"><option>White-label web platformu</option><option>Kurumsal API erişimi</option><option>Veri lisansı (il/ilçe)</option><option>CRM çözümü</option><option>Toplu SPK ekspertiz</option><option>Üyelik · Investor/Corporate</option><option>Genel bilgi</option></select></div>'
+      + '<div style="' + css({ marginBottom: 14 }) + '"><label style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 4, display: "block" }) + '">E-POSTA · TELEFON</label><input id="cz-email" type="email" placeholder="yetkili@sirket.com.tr" style="' + css(inputStyle) + '"></div>'
+      + '<button id="cz-submit" type="button" style="' + css({ width: "100%", padding: "13px", background: C.primary, color: C.deep, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", border: "none", cursor: "pointer", borderRadius: 2 }) + '">KURUMSAL TEKLİF AL →</button>'
+      + '<div id="cz-status" style="' + css({ marginTop: 10, fontFamily: C.mono, fontSize: 11, letterSpacing: "0.04em", lineHeight: 1.5, display: "none" }) + '"></div>'
+      + '<div style="' + css({ marginTop: 12, display: "flex", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }) + '">'
+      + '<a href="mailto:destek@emlakekspertizi.com" style="' + css({ flex: 1, textAlign: "center", padding: "10px", background: "transparent", color: C.accent, border: "1px solid " + C.accent, fontFamily: C.mono, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textDecoration: "none", borderRadius: 2 }) + '">Müşteri Desteği →</a>'
+      + '<a href="mailto:destek@emlakekspertizi.com" style="' + css({ flex: 1, textAlign: "center", padding: "10px", background: "transparent", color: C.textSec, border: "1px solid " + C.borderStrong, fontFamily: C.mono, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textDecoration: "none", borderRadius: 2 }) + '">E-posta →</a></div>'
+      + '</div></div></div></section>';
+  }
+
+  /* ===== EMLAKEKSPERTIZI ÜRÜN ===== */
+  function Product() {
+    return '<section style="' + css({ background: "linear-gradient(135deg, " + C.deep + " 0%, " + C.raised + " 100%)", borderTop: "2px solid " + C.primary, borderBottom: "1px solid " + C.borderStrong, padding: "44px 16px 36px", position: "relative", overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 80% 20%, rgba(56,189,248,0.12), transparent 60%), radial-gradient(circle at 10% 80%, rgba(167,139,250,0.08), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 18, fontFamily: C.mono, fontSize: 11, letterSpacing: "0.14em" }) + '"><span style="' + css({ color: C.primary, fontWeight: 700 }) + '">◆ TÜM ÇÖZÜMLERİN MÜŞTERİ PLATFORMU</span><span style="' + css({ height: 1, flex: 1, background: C.primary, opacity: 0.4 }) + '"></span><span style="' + css({ color: C.textMut }) + '">NADAS ALTYAPISI ÜZERİNDE</span></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "auto 1fr", gap: 22, alignItems: "center", marginBottom: 14 }) + '" class="nadas-twocol">'
+      + NX.EmlakEkspertiziLogo(88)
+      + '<div><h2 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "clamp(1.8rem,4.6vw,3rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri }) + '"><span style="' + css({ color: "#fff" }) + '">emlak</span><span style="' + css({ color: "#2DD4BF" }) + '">ekspertizi</span><span style="' + css({ color: C.accent }) + '">.com</span></h2>'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 11, color: "#2DD4BF", letterSpacing: "0.18em", marginTop: 4, fontWeight: 700 }) + '">DEĞERİNİ ŞİMDİ ÖĞREN</div></div></div>'
+      + '<p style="' + css({ marginTop: 8, fontSize: 15, lineHeight: 1.6, color: C.textSec, maxWidth: 960 }) + '">Bu sayfadaki tüm çözümlerin müşteri yüzü <strong style="' + css({ color: C.textPri }) + '">emlakekspertizi.com</strong>’dur. Karar analizi, SPK lisanslı resmi rapor, üyelik paketleri ve ProX akıllı asistana doğrudan erişim.</p>'
+      + '<div style="' + css({ marginTop: 22, display: "flex", gap: 12, flexWrap: "wrap" }) + '">'
+      + '<a href="https://www.emlakekspertizi.com/ekspertiz-talep" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: C.primary, color: C.deep, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">KARAR ANALİZİ AL →</a>'
+      + '<a href="https://www.emlakekspertizi.com/uyelik" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: "transparent", color: C.primary, border: "1px solid " + C.primary, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">ÜYELİK PAKETİ SEÇ →</a>'
+      + '<a href="prox.html" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: "transparent", color: C.violet, border: "1px solid " + C.violet, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">ProX\'i DENE →</a>'
+      + '</div></div></section>';
+  }
+
+  /* ===== FOOTER ===== */
+  function Footer() {
+    var col1 = ["Veri Altyapısı", "Çözümler", "ProX", "Research", "Hakkımızda", "İletişim"].map(function (l) { return '<a href="' + navHref(l) + '" style="' + css({ display: "block", fontFamily: C.mono, fontSize: 11, color: C.textMut, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">' + l + '</a>'; }).join('');
+    var col2 = [["EmlakEkspertizi.com", "https://www.emlakekspertizi.com"], ["Karar Analizi", "https://www.emlakekspertizi.com/ekspertiz-talep"], ["SPK Lisanslı Rapor", "https://www.emlakekspertizi.com/spk-talep"], ["ProX Akıllı Asistan", "https://www.emlakekspertizi.com/yapay-zeka"], ["Üyelikler", "https://www.emlakekspertizi.com/uyelik"]]
+      .map(function (x) { return '<a href="' + x[1] + '" style="' + css({ display: "block", fontFamily: C.mono, fontSize: 11, color: C.textMut, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">' + x[0] + '</a>'; }).join('');
+    var col3 = ["White-label Web", "Kurumsal API", "CRM Çözümleri", "Veri Lisansı", "Teklif Al"].map(function (l) { return '<a href="#kurumsal-iletisim" style="' + css({ display: "block", fontFamily: C.mono, fontSize: 11, color: C.textMut, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">' + l + '</a>'; }).join('');
+    return '<footer style="' + css({ borderTop: "1px solid " + C.borderStrong, padding: "30px 16px 24px", background: C.deep }) + '">'
+      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 20, marginBottom: 24 }) + '">'
+      + '<div><div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }) + '"><span style="' + css({ width: 30, height: 30, border: "1.5px solid " + C.primary, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Sora',sans-serif", fontSize: 14, fontWeight: 700, color: C.primary, borderRadius: 2 }) + '">N</span><div><div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 20, fontWeight: 700, color: C.textPri, letterSpacing: "-0.02em" }) + '">NADAS</div><div style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.16em" }) + '">ÇÖZÜMLER · SINCE 2005</div></div></div>'
+      + '<p style="' + css({ fontSize: 12, color: C.textMut, maxWidth: 380, lineHeight: 1.5, margin: 0 }) + '">Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti.<br>Türkiye\'nin ilk emlak endeksi · Online emlak ekspertiz platformu.</p></div>'
+      + '<div style="' + css({ display: "flex", gap: 32, flexWrap: "wrap" }) + '">'
+      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">NADAS</div>' + col1 + '</div>'
+      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">ÜRÜN</div>' + col2 + '</div>'
+      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">KURUMSAL</div>' + col3 + '</div>'
+      + '</div></div>'
+      + '<div style="' + css({ paddingTop: 16, borderTop: "1px solid " + C.border, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '"><span>© 2005-2026 NADAS · Tüm hakları saklıdır.</span><span>KVKK · GİZLİLİK · ÇEREZ POLİTİKASI · KULLANIM KOŞULLARI</span></div>'
+      + '</div></footer>';
+  }
+
+  /* ===== MONTAJ ===== */
+  function renderApp() {
+    return NX.Ticker(COZTICK) + NX.Masthead("Çözümler") + NX.Nav("Çözümler") + HeroCozumler()
+      + SectionDivider("A", "Bireyler · Karar Analizi", "3 PAKET · ÜCRETSİZ ÖRNEK · 24 SAYFA İÇERİK") + '<div id="bireyler"></div>' + KararAnaliziUrunler() + OrnekKararAnaliziPreview()
+      + SectionDivider("B", "Profesyoneller · Üyelik & Sektörel", "EMLAK OFİSİ · İNŞAAT · EKSPERTİZ · BROKER") + '<div id="profesyonel"></div>' + UyelikPaketleri() + EmlakProfesyonelleri()
+      + SectionDivider("C", "Şirketler · White-Label & Özel Yazılım", "ÖZEL WEB · CRM · ProX API · İL/İLÇE VERİ LİSANSI") + '<div id="sirket"></div>' + WhiteLabelCozumler()
+      + SectionDivider("D", "Kurumsal · SPK · API · Enterprise", "BANKA · SİGORTA · FON · BELEDİYE · KAMU") + '<div id="kurumsal"></div>' + SpkLisansliDegerleme() + KurumsalApiEntegrasyon() + KurumsalIletisimCTA()
+      + Product() + NX.Footer();
+  }
+
+  NX.boot(renderApp);
+
+  // Kurumsal talep formu — hafif onay (backend bağlanınca /api’ye POST)
+  (function () {
+    var btn = document.getElementById("cz-submit");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      var comp = (document.getElementById("cz-company") || {}).value || "";
+      var mail = (document.getElementById("cz-email") || {}).value || "";
+      var st = document.getElementById("cz-status");
+      if (!st) return;
+      st.style.display = "block";
+      if (!comp.trim() || !mail.trim()) {
+        st.style.color = "#fca5a5";
+        st.textContent = "Lütfen şirket adı ve e-posta alanlarını doldurun.";
+        return;
+      }
+      st.style.color = C.accent;
+      st.textContent = "✓ Talebiniz alındı — 5 iş günü içinde dönüş yapacağız.";
+      btn.textContent = "TALEBİNİZ ALINDI ✓";
+      btn.disabled = true;
+      btn.style.opacity = "0.7";
+    });
+  })();
+})();
+</script>
+</body>
+</html>
