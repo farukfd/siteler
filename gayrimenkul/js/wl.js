@@ -64,7 +64,7 @@ function sweep(){if(!customized)return;if(obs)obs.disconnect();try{
   /* logo: TÜM .logo öğeleri (header + footer) BİREBİR — yüklü görsel varsa <img>, yoksa baş harf + tam ad.
      (Eski kod document.querySelector TEKİL kullanıyordu → footer logosu "M" kalıyordu.) */
   try{
-    var esc=function(x){return (x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');};
+    var esc=function(x){return (x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
     var jlH=null;if(name!==ORIG){var ps=name.split(/\s+/);var last=ps.length>1?ps[ps.length-1]:'';var head=ps.length>1?ps.slice(0,-1).join(' '):name;jlH=esc(head)+(last?'<span class="lo2"> '+esc(last)+'</span>':'');}
     var lt=shortN.charAt(0).toLocaleUpperCase('tr');
     document.querySelectorAll('.logo').forEach(function(lo){

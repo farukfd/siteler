@@ -219,7 +219,7 @@ const DEF_REFS=[{id:1,name:'Ayşe Yıldırım',meta:'Satıcı · Konak',text:'Ev
  {id:3,name:'Elif Demir',meta:'Alıcı · Karşıyaka',text:'Danışmanımız bölgeyi avucunun içi gibi biliyordu. WhatsApp\'tan anında dönüş, şeffaf süreç. Kesinlikle tavsiye ederim.'}];
 const DEF_SEO={title:'Meridyen Gayrimenkul · İzmir Emlak & Gayrimenkul Ofisi',desc:'İzmir ve Ege\'de veri odaklı emlak ofisi. Satılık & kiralık portföy, mahalle fiyat endeksi, yatırım skoru ve ücretsiz değerleme.',kw:'izmir emlak, satılık daire, kiralık daire, gayrimenkul danışmanı, emlak değerleme',og:'',schema:true,llms:true,sitemap:true,prog:true};
 const DEF_GOOGLE={ga4:'',gtm:'',gsc:'',maps:'',recaptcha:'',business:'',aiseo:true,ab:false};
-const DEF_MODULES=[{k:'emlak_endeks',n:'Emlak Endeksi',d:'Mahalle m² fiyat ve trend',on:true},{k:'yatirim_skoru',n:'Yatırım Skoru',d:'0-100 bölge skoru',on:true},{k:'risk_analiz',n:'Fay/Deprem Risk',d:'Coğrafi risk rozeti',on:true},{k:'degerleme',n:'Online Değerleme',d:'"Evimin değeri ne?" aracı',on:true},{k:'portfoy3d',n:'3D Portföy & Tur',d:'GLB model + sanal tur',on:true},{k:'ai_asistan',n:'AI Asistan',d:'ProX yapay zeka asistanı',on:true},{k:'pdf_rapor',n:'Logolu PDF Rapor',d:'Şirket logolu endeks raporu',on:true},{k:'fiyat_alarmi',n:'Fiyat Alarmı',d:'Bölge fiyat değişim bildirimi',on:true},{k:'blog_feed',n:'Blog Akışı',d:'emlakekspertizi blog beslemesi',on:true},{k:'whatsapp',n:'WhatsApp Destek',d:'Tek dokunuş iletişim',on:true}];
+const DEF_MODULES=[{k:'emlak_endeks',n:'Emlak Endeksi',d:'Mahalle m² fiyat ve trend',on:true},{k:'yatirim_skoru',n:'Yatırım Skoru',d:'0-100 bölge skoru',on:true},{k:'risk_analiz',n:'Fay/Deprem Risk',d:'Coğrafi risk rozeti',on:true},{k:'degerleme',n:'Online Değerleme',d:'"Evimin değeri ne?" aracı',on:true},{k:'portfoy3d',n:'3D Portföy & Tur',d:'GLB model + sanal tur',on:true},{k:'ai_asistan',n:'ProX Asistan',d:'ProX verisine dayalı asistan',on:true},{k:'pdf_rapor',n:'Logolu PDF Rapor',d:'Şirket logolu endeks raporu',on:true},{k:'fiyat_alarmi',n:'Fiyat Alarmı',d:'Bölge fiyat değişim bildirimi',on:true},{k:'blog_feed',n:'Blog Akışı',d:'emlakekspertizi blog beslemesi',on:true},{k:'whatsapp',n:'WhatsApp Destek',d:'Tek dokunuş iletişim',on:true}];
 const DEF_PROX={key:'prox_emlaktahadimkoy_com_5d318fd5639d630018d37e2b219cbd0c',base:'https://www.emlakekspertizi.com',proxyUrl:'',tenantId:'',il:'İzmir',region:'İzmir',quotaUsed:3420,quotaMax:10000,modules:clone(DEF_MODULES)};
 const DEF_AICFG={enable:true,greet:'Merhaba! Ben Meridyen ProX Asistanı. Bölge, fiyat veya portföy hakkında sorabilirsiniz.',persona:'Meridyen Gayrimenkul\'ün yardımcı, profesyonel emlak danışmanısın. Türkçe, kısa ve net yanıt ver. Bölge fiyat verisi sorulursa örnek olduğunu belirt.',dsKey:'',dsModel:'deepseek-chat'};/* dsKey: kullanıcının kendi DeepSeek anahtarı — girilirse tüm YZ üretimi doğrudan DeepSeek ile çalışır (yoksa ProX sunucu AI'si). ProX anahtarı ise veri/endeks/analiz/PDF içindir. */
 const DEF_CONTRACTS=[
@@ -1717,7 +1717,12 @@ function obSeed(){try{OB.il=(typeof PROX!=='undefined'&&PROX.il)||'İzmir';var f
 function obCollect(){function v(id){var e=document.getElementById(id);return e?e.value.trim():undefined;}
   var m={ob_il:'il',ob_name:'name',ob_unvan:'unvan',ob_vergi:'vergi',ob_adres:'adres',ob_tel:'tel',ob_mail:'mail',ob_belge:'belge',ob_logo:'logo',ob_key:'key'};
   Object.keys(m).forEach(function(id){var val=v(id);if(val!==undefined)OB[m[id]]=val;});}
-function obBody(n){var e=function(s){return (s||'').replace(/"/g,'&quot;');};
+/* GÜVENLİK: e() eskiden yalnız çift tırnak kaçırıyordu. Değerler obCollect()
+   ile form girdilerinden geliyor ve hem öznitelik (value="…") hem HTML metin
+   (<b>…</b>) bağlamına basılıyor; < > kaçmadığı için metin bağlamında etiket
+   enjekte edilebiliyordu. Aynı dosyadaki _le (satır ~1571) beş karakteri de
+   kaçırıyor — çoğaltmak yerine ona devrediyoruz. */
+function obBody(n){var e=_le;
   if(n===1){var ils=(typeof trIlList==='function'?trIlList():['İzmir']).slice().sort(function(a,b){return a.localeCompare(b,'tr');});
     return '<p class="csub">Sitenizin yayınlanacağı ili seçin. İl/ilçe/mahalle endeksi ProX API üzerinden bu ile göre çekilir.</p><div class="afield"><label>İl</label><select id="ob_il" style="width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;font:inherit">'+ils.map(function(il){return '<option'+(il===OB.il?' selected':'')+'>'+il+'</option>';}).join('')+'</select></div>';}
   if(n===2){return '<p class="csub">Yasal firma bilgileriniz — KVKK/çerez/mesafeli metinleri ve site künyesi bunlardan otomatik dolar.</p>'
@@ -2051,7 +2056,7 @@ function kiFillIl(){var sel=document.getElementById("ki_il");if(!sel)return;var 
   var nm=document.getElementById("ki_name");if(nm&&!nm.value&&FIRMA&&FIRMA.name&&FIRMA.name!==BRAND_ORIG)nm.value=FIRMA.name;}
 /* Firma adı yazılırken içinde il geçiyorsa İl seçimini otomatik ayarla; geçmiyorsa dokunma. */
 function kiNameIl(){var nm=(document.getElementById("ki_name")||{}).value||"";var il=(typeof detectIlFromName==="function")?detectIlFromName(nm):null;var sel=document.getElementById("ki_il");if(il&&sel){for(var i=0;i<sel.options.length;i++){if(sel.options[i].value===il){sel.value=il;break;}}}}
-/* ProX AI erişilemezse yerel şablonla KURUMSAL KİMLİK üret — rebrand asla takılmasın. */
+/* İçerik Asistanı erişilemezse yerel şablonla KURUMSAL KİMLİK üret — rebrand asla takılmasın. */
 function kiLocalIdentity(name,il){var sh=(name||"").split(/\s+/)[0]||name;
   return {name:name,il:il,
     slogan:name+" — "+il+"'de veriyle doğru gayrimenkul kararı",
@@ -2138,18 +2143,18 @@ async function kurumsalGenerate(){
   var hint=(document.getElementById("ki_hint").value||"").trim();
   var out=document.getElementById("ki_out");
   if(!name){toast("Firma adını girin.");return;}
-  out.innerHTML='<div class="eids-yetki on" style="margin:0"><span class="ic">⏳</span><div>ProX yapay zeka kapsamlı kurumsal kimliğinizi oluşturuyor…<div style="font-weight:500;font-size:12px;opacity:.85">DeepSeek · '+name+' · '+il+'</div></div></div>';
+  out.innerHTML='<div class="eids-yetki on" style="margin:0"><span class="ic">⏳</span><div>İçerik Asistanı kapsamlı kurumsal kimliğinizi oluşturuyor…<div style="font-weight:500;font-size:12px;opacity:.85">DeepSeek · '+name+' · '+il+'</div></div></div>';
   var prompt="Sen ProX kurumsal kimlik ve Google SEO uzmanısın (emlakekspertizi.com). "+name+" adlı, "+il+" ilinde faaliyet gösteren TAM KAPSAMLI bir gayrimenkul/emlak ofisi için içerik üret. Ofis tüm alanlarda hizmet verir: konut (daire, villa, müstakil ev), arsa ve arazi, ticari & ofis/dükkan, kiralama, gayrimenkul değerleme, yatırım danışmanlığı ve miras/intikal işlemleri."+(hint?(" Öne çıkan uzmanlık: "+hint+"."):"")+" Profesyonel, güven veren, Google SEO uyumlu Türkçe kullan. Belirli tek bir nişe (sadece sahil/daire) sıkışma; tüm kategorileri kapsa. SADECE şu formatta yanıtla, başka açıklama ekleme:\nSLOGAN: <il ismi geçen tek cümle vurucu slogan>\nHERO1: <ana sayfa başlığı 1. satır, 2-4 kelime>\nHERO2: <ana sayfa başlığı 2. satır, 2-4 kelime>\nHERODESC: <hero alt açıklaması 20-30 kelime, veri odaklı, birkaç kategoriye atıf>\nHAKKINDA: <160-200 kelime kapsamlı hakkımızda; "+name+", "+il+", konut+arsa+ticari+miras+değerleme+yatırım hizmetleri, veri odaklı yaklaşım>\nSEOTITLE: <55-60 karakter; "+name+" + "+il+" + gayrimenkul/emlak>\nSEODESC: <150-155 karakter; hizmet çeşitliliği ("+il+" satılık/kiralık konut, arsa, ticari, değerleme, miras)>\nSEOKW: <virgülle 10-12 anahtar kelime; "+il+" emlak, "+il+" satılık daire, "+il+" kiralık, "+il+" arsa, "+il+" ticari gayrimenkul, "+il+" gayrimenkul değerleme, miras intikal, yatırım danışmanlığı>";
   var text=null;
   try{var r=await aiChat({persona:"office",tool:"kurumsal",prompt:aiGuard(prompt)});
     if(r&&!r.fallback&&r.success!==false)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;}catch(e){}
-  var _local=!text;   /* ProX AI erişilemedi → yerel şablonla DEVAM (rebrand asla takılmaz) */
+  var _local=!text;   /* İçerik Asistanı erişilemedi → yerel şablonla DEVAM (rebrand asla takılmaz) */
   function pick(k){if(!text)return"";var m=new RegExp(k+"\\s*:?\\s*([\\s\\S]+?)(?:\\n\\s*(?:SLOGAN|HERO1|HERO2|HERODESC|HAKKINDA|SEOTITLE|SEODESC|SEOKW)\\s*:|$)","i").exec(text);return m?m[1].trim().replace(/^["“]+|["”]+$/g,"").trim():"";}
   var res=_local?kiLocalIdentity(name,il):{name:name,il:il,slogan:pick("SLOGAN"),hero1:pick("HERO1"),hero2:pick("HERO2"),herodesc:pick("HERODESC"),about:pick("HAKKINDA"),seotitle:pick("SEOTITLE"),seodesc:pick("SEODESC"),seokw:pick("SEOKW")};
   if(!res.about||res.about.length<40)res.about=text||res.about;
   window._kiResult=res;
   out.innerHTML='<div class="eids-box" style="margin:0"><div class="eh"><span class="shield">'+eidsShieldSvg(16)+'</span> Kurumsal Kimlik · '+name+' ('+il+') — düzenleyebilirsiniz</div>'
-   +'<div class="csub">'+(_local?'⚠ ProX AI şu an erişilemedi — <b>yerel şablonla</b> hazırlandı. Yine de düzenleyip <b>tüm siteye uygulayabilirsiniz</b>; marka ve il dönüşümü çalışır. Bağlantı gelince “Yeniden Üret” ile AI metnini alabilirsiniz.':'ProX yapay zeka üretti. İstediğiniz alanı düzenleyip kaydedin; sitenin tüm sayfalarına uygulanır. Sonradan İçerik ve SEO bölümlerinden de düzenlenebilir.')+'</div>'
+   +'<div class="csub">'+(_local?'⚠ İçerik Asistanı şu an erişilemedi — <b>yerel şablonla</b> hazırlandı. Yine de düzenleyip <b>tüm siteye uygulayabilirsiniz</b>; marka ve il dönüşümü çalışır. Bağlantı gelince “Yeniden Üret” ile AI metnini alabilirsiniz.':'İçerik Asistanı üretti. İstediğiniz alanı düzenleyip kaydedin; sitenin tüm sayfalarına uygulanır. Sonradan İçerik ve SEO bölümlerinden de düzenlenebilir.')+'</div>'
    +'<div class="afield"><label>Slogan</label><input id="ki_slogan"></div>'
    +'<div class="ed2"><div class="afield"><label>Hero 1. satır</label><input id="ki_hero1"></div><div class="afield"><label>Hero 2. satır</label><input id="ki_hero2"></div></div>'
    +'<div class="afield"><label>Hero açıklaması</label><textarea id="ki_herodesc" class="adm-ta" rows="2"></textarea></div>'
@@ -2340,7 +2345,7 @@ function brandLogos(){
     var img=brandActiveLogo();
     var name=(typeof brandName==='function'?brandName():BRAND_ORIG);
     var isDef=(name===BRAND_ORIG);
-    var esc=function(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');};
+    var esc=function(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
     var jlHtml=null;
     if(!isDef){var ps=name.split(/\s+/);var last=ps.length>1?ps[ps.length-1]:'';var head=ps.length>1?ps.slice(0,-1).join(' '):name;jlHtml=esc(head)+(last?'<span class="lo2"> '+esc(last)+'</span>':'');}
     var letter=((typeof brandShort==='function'?brandShort():'')||'').charAt(0).toLocaleUpperCase('tr');
@@ -2574,7 +2579,12 @@ function fillTemplate(c){
 function renderContracts(){
   const el=document.getElementById('contractList');if(!el)return;
   if(!CONTRACTS.length){el.innerHTML='<div class="empty">Henüz sözleşme yok. Yukarıdan tip seçerek yeni sözleşme oluşturun.</div>';return;}
-  const esc=s=>(s||'').toString().replace(/"/g,'&quot;');
+  /* GÜVENLİK: yalnız çift tırnak kaçıran sürüm, kullanıcının yazdığı sözleşme
+     alanlarını hem input value="…" hem <b>…</b> metin bağlamına basıyordu;
+     < > geçtiği için etiket enjekte edilebiliyor, saveAll() ile localStorage'a
+     kalıcı yazılıyor ve printContract() yeni pencereye kopyalıyordu.
+     Dosyadaki tam kaçış fonksiyonuna devrediliyor. */
+  const esc=_le;
   el.innerHTML=CONTRACTS.map((c,i)=>`<div class="ct-card">
     <div class="ct-head">
       <span class="ct-badge ct-${c.tip}">${CT_LABEL[c.tip]||c.tip}</span>
@@ -2836,7 +2846,7 @@ async function blogOpen(id){var p=document.getElementById('blogPage');if(!p)retu
   setOverlayPage('Blog · Bilgi Merkezi','#blog');}
 function blogShowList(){var l=document.getElementById('blogListWrap'),d=document.getElementById('blogDetailWrap');if(l)l.style.display='';if(d)d.style.display='none';var sc=document.getElementById('blogScroll');if(sc)sc.scrollTop=0;}
 function renderBlogList(){var w=document.getElementById('blogListWrap');if(!w)return;var posts=blogAllPosts();
-  w.innerHTML=posts.length?('<div class="bgrid">'+posts.map(function(b){return '<div class="bpost" onclick="blogDetail(\''+b.id+'\')" style="cursor:pointer"><div class="bi">'+(b.icon||'📄')+'</div><div class="bbody"><div class="cat">'+_be(b.cat)+(b.src==='prox'?' · ProX':b.src==='ai'?' · AI':'')+'</div><h3>'+_be(b.title)+'</h3><p>'+_be(b.sum||'')+'</p><div class="meta"><span>'+_be(b.meta||'')+'</span></div></div></div>';}).join('')+'</div>'):'<p style="text-align:center;color:var(--muted);padding:40px 0">Henüz yazı yok. Admin → İçerik &amp; Sayfalar\'dan ProX AI ile makale oluşturabilirsiniz.</p>';}
+  w.innerHTML=posts.length?('<div class="bgrid">'+posts.map(function(b){return '<div class="bpost" onclick="blogDetail(\''+b.id+'\')" style="cursor:pointer"><div class="bi">'+(b.icon||'📄')+'</div><div class="bbody"><div class="cat">'+_be(b.cat)+(b.src==='prox'?' · ProX':b.src==='ai'?' · AI':'')+'</div><h3>'+_be(b.title)+'</h3><p>'+_be(b.sum||'')+'</p><div class="meta"><span>'+_be(b.meta||'')+'</span></div></div></div>';}).join('')+'</div>'):'<p style="text-align:center;color:var(--muted);padding:40px 0">Henüz yazı yok. Admin → İçerik &amp; Sayfalar\'dan İçerik Asistanı ile makale oluşturabilirsiniz.</p>';}
 function blogDetail(id){var b=blogAllPosts().filter(function(x){return (''+x.id)===(''+id);})[0];if(!b){blogShowList();return;}
   var d=document.getElementById('blogDetailWrap'),l=document.getElementById('blogListWrap');if(l)l.style.display='none';if(d)d.style.display='';
   var body=(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p style="margin:0 0 16px">'+_be(par).replace(/\n/g,'<br>')+'</p>';}).join('');
@@ -2860,7 +2870,7 @@ function saveBlog(){const t=document.getElementById('bl_title').value.trim();if(
   if(editingBlog){const i=BLOGS.findIndex(x=>x.id===editingBlog);BLOGS[i]={...BLOGS[i],...obj};}
   else{obj.id=Date.now();obj.icon='📝';obj.date=new Date().toISOString().slice(0,10);obj.src='firma';var mins=Math.max(2,Math.round((body.split(/\s+/).length||120)/180));obj.meta=mins+' dk okuma · '+new Date().toLocaleDateString('tr-TR',{month:'short',year:'numeric'});BLOGS.unshift(obj);}
   saveAll();renderBlogRows();renderBlogFeed();document.getElementById('blogEditCard').style.display='none';toast('✓ Blog yazısı yayınlandı.');}
-/* ProX AI ile TAM makale üret (BASLIK|KATEGORI|OZET|GOVDE) — aiGuard'lı, düzenlenebilir */
+/* İçerik Asistanı ile TAM makale üret (BASLIK|KATEGORI|OZET|GOVDE) — aiGuard'lı, düzenlenebilir */
 async function blogAiGen(){var konu=((document.getElementById('bl_konu')||{}).value||'').trim()||((document.getElementById('bl_title')||{}).value||'').trim();
   if(!konu){toast('Önce bir konu / anahtar kelime girin.');return;}
   var btn=document.getElementById('blAiBtn');if(btn){btn.disabled=true;btn.textContent='Üretiliyor…';}
@@ -2869,8 +2879,8 @@ async function blogAiGen(){var konu=((document.getElementById('bl_konu')||{}).va
   var text=null;
   try{var r=await aiChat({persona:'office',tool:'blog',prompt:aiGuard(prompt)});if(r&&!r.fallback)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text));}catch(e){}
   if(!text){try{if(typeof callClaude==='function')text=await callClaude([{role:'user',content:aiGuard(prompt)}],'Sadece istenen formatta yanıt ver, ön söz ekleme.');}catch(e){}}
-  if(btn){btn.disabled=false;btn.textContent='🤖 ProX AI ile Makale Oluştur';}
-  if(!text){toast('ProX AI yanıt vermedi. Anahtarı kontrol edip tekrar deneyin.');return;}
+  if(btn){btn.disabled=false;btn.textContent='🤖 İçerik Asistanı ile Makale Oluştur';}
+  if(!text){toast('İçerik Asistanı yanıt vermedi. Anahtarı kontrol edip tekrar deneyin.');return;}
   function pick(k){var m=new RegExp(k+'\\s*:?\\s*([\\s\\S]+?)(?:\\n\\s*(?:BASLIK|KATEGORI|OZET|GOVDE)\\s*:|$)','i').exec(text);return m?m[1].trim():'';}
   var bas=pick('BASLIK'),kat=pick('KATEGORI'),ozet=pick('OZET'),gov=pick('GOVDE');
   if(!gov||gov.length<40)gov=text;
@@ -2879,7 +2889,7 @@ async function blogAiGen(){var konu=((document.getElementById('bl_konu')||{}).va
   document.getElementById('bl_sum').value=(ozet||gov.slice(0,150));
   document.getElementById('bl_body').value=gov;
   var g=document.getElementById('bl_guard');if(g&&typeof aiGuardBadge==='function')g.innerHTML=aiGuardBadge(bas+' '+ozet+' '+gov);
-  toast('✓ ProX AI makalesi üretildi — düzenleyip "Kaydet & Yayınla" deyin.');}
+  toast('✓ İçerik Asistanı makalesi üretildi — düzenleyip "Kaydet & Yayınla" deyin.');}
 function delBlog(id){if(!confirm('Yazı silinsin mi?'))return;BLOGS=BLOGS.filter(x=>x.id!==id);saveAll();renderBlogRows();renderBlogFeed();toast('Yazı silindi.');}
 function renderBlogRows(){const tb=document.getElementById('blogRows');if(!tb)return;
   tb.innerHTML=BLOGS.length?BLOGS.map(b=>`<tr><td><b>${b.title}</b>${b.src==='ai'?' <span class="atag" style="background:#ede9fe;color:#6d28d9">AI</span>':b.src==='prox'?' <span class="atag" style="background:#dbeafe;color:#1e40af">ProX</span>':''}${b.body?'':' <span class="tsub">(özet)</span>'}</td><td>${b.cat}</td><td class="ta"><button class="ico-btn" onclick="editBlog(${b.id})">✎</button><button class="ico-btn del" onclick="delBlog(${b.id})">🗑</button></td></tr>`).join(''):'<tr><td colspan="3" class="empty">Yazı yok.</td></tr>';}
@@ -2997,14 +3007,14 @@ async function aiGenerate(){
     var _al=(document.getElementById('aiLang')||{}).value||'tr';
     var _ls=_al==='en'?'\n\nWrite the entire output in fluent, professional English for foreign real-estate investors.':_al==='ar'?'\n\nاكتب المحتوى بالكامل باللغة العربية الفصحى الاحترافية للمستثمرين العقاريين الأجانب.':'';
     var _fullPrompt=prompts[curAiTool]+_ls;
-    try{                                                  // API-first ProX AI; fallback = callClaude
+    try{                                                  // API-first İçerik Asistanı; fallback = callClaude
       const r=await aiChat({persona:'office',prompt:aiGuard(_fullPrompt),tool:curAiTool});
       if(r&&!r.fallback)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;
     }catch(_){}
     if(!text)text=await callClaude([{role:'user',content:_fullPrompt}],'Yardımcı, profesyonel bir emlak içerik asistanısın. Sadece istenen içeriği ve istenen dilde üret, ön söz ekleme.');
     out.classList.remove('empty');out.innerHTML='<textarea id="aiOutEdit" class="adm-ta" rows="10" style="width:100%;line-height:1.6"></textarea>';document.getElementById('aiOutEdit').value=text;out.insertAdjacentHTML('beforeend',aiGuardBadge(text));document.getElementById('aiActions').style.display='flex';window._aiLast=text;
   }catch(e){
-    out.innerHTML='⚠️ AI servisine şu an ulaşılamadı.<br><span class="tsub">Bu özellik Claude API üzerinden çalışır; canlı yayında ProX AI servisine (/api/ai/generate-content) bağlanır. Demo ortamında bağlantı gerektirir.</span>';
+    out.innerHTML='⚠️ AI servisine şu an ulaşılamadı.<br><span class="tsub">Bu özellik Claude API üzerinden çalışır; canlı yayında İçerik Asistanı servisine (/api/ai/generate-content) bağlanır. Demo ortamında bağlantı gerektirir.</span>';
   }
   btn.disabled=false;
 }
@@ -3029,7 +3039,7 @@ function saveAiCfg(){var _dk=document.getElementById('ai_dskey'),_dm=document.ge
   toast('✓ AI asistan ayarları kaydedildi.'+(AICFG.dsKey?' · DeepSeek anahtarı aktif (YZ artık DeepSeek ile çalışır).':' · YZ ProX sunucu AI\'si ile çalışır.'));}
 function toggleAiFab(){AICFG.enable=document.getElementById('ai_enable').checked;saveAll();initAiAssistant();}
 
-/* shared Claude API caller (works in Claude artifact runtime; in production → emlakekspertizi ProX AI proxy) */
+/* shared Claude API caller (works in Claude artifact runtime; in production → emlakekspertizi İçerik Asistanı proxy) */
 async function callClaude(messages,system){
   const res=await fetch("https://api.anthropic.com/v1/messages",{
     method:"POST",headers:{"Content-Type":"application/json"},
@@ -3075,7 +3085,7 @@ async function aiSend(){
   const ctx='Örnek bölge m² fiyatları (₺/m²): '+Object.keys(BAZ).map(k=>`${k} ${fmt(BAZ[k].m2)} (5y +%${BAZ[k].chg}, skor ${BAZ[k].score})`).join('; ')+'. Bu veriler örnektir; resmi değer güncel bölge endeksinden teyit edilmeli.';
   try{
     let text=null;
-    try{                                                  // API-first ProX AI; fallback = callClaude
+    try{                                                  // API-first İçerik Asistanı; fallback = callClaude
       const r=await aiChat({persona:'office',prompt:aiGuard(AICFG.persona+'\n\nElindeki referans veri: '+ctx),messages:aiHistory.slice(-8),message:txt});
       if(r&&!r.fallback)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;
     }catch(_){}
@@ -3083,7 +3093,7 @@ async function aiSend(){
     typ.remove();addAiMsg('bot',text);aiHistory.push({role:'assistant',content:text});_fabLog('bot',text);/* admin kaydı */
   }catch(e){
     typ.remove();
-    addAiMsg('bot','Şu an yapay zeka servisine ulaşılamıyor. Canlı yayında bu asistan ProX AI servisine bağlıdır. Bu arada bir danışmanımıza WhatsApp\'tan ulaşabilirsiniz.');
+    addAiMsg('bot','Şu an İçerik Asistanı servisine ulaşılamıyor. Bu arada bir danışmanımıza WhatsApp\'tan ulaşabilirsiniz.');
   }
 }
 
@@ -3974,7 +3984,7 @@ const SITE_FOOTER=`<div class="wrap">
   </div>
 </div>`;
 const SITE_CTA=`<a class="nav-wa-ic" aria-label="WhatsApp" title="WhatsApp" href="https://wa.me/905000000000" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg></a><button class="btn btn-primary btn-sm hide-xs" onclick="satScrollForm('Satmak istiyorum')">Ücretsiz Ekspertiz</button><div class="lang-sw" title="Dil / Language"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg><select aria-label="Dil / Language" onchange="gmLang(this.value)"><option value="tr">TR</option><option value="en">EN</option><option value="ar">AR</option></select></div><a class="btn btn-line btn-sm js-giris" onclick="closeAllOverlays();openSaasPortal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){openSaasPortal()}">Giriş</a><button class="burger" onclick="openMnav()" aria-label="Menü"><span></span><span></span><span></span></button>`;
-/* ===== ÇOK DİLLİ (EN/AR) — ProX AI ile gerçek çeviri (sınırlı ana pazarlama seti, cache'li, AR=RTL) ===== */
+/* ===== ÇOK DİLLİ (EN/AR) — İçerik Asistanı ile gerçek çeviri (sınırlı ana pazarlama seti, cache'li, AR=RTL) ===== */
 var _i18nOrig=null;
 function _i18nNodes(){var sels=['#hdr .siteNav a','.hero h1','.hero .lead','.hero p.sub','.hero .hsub','.hero h2','main section h2','.btn-primary'];var set=[],seen=[];
   sels.forEach(function(s){document.querySelectorAll(s).forEach(function(el){if(el.children.length===0&&el.textContent.trim()&&el.textContent.trim().length<160&&seen.indexOf(el)<0){seen.push(el);set.push(el);}});});
@@ -4211,12 +4221,12 @@ const SAAS_CONFIG={
     googleAnalytics:'', googleMapsKey:'', googleSiteVerification:'',
     metaTitle:'', metaDescription:'', metaKeywords:'', customPrompt:''
   },
-  /* ProX AI — bağlama göre özel promptlar (merkezden veya yerel adminden) */
+  /* İçerik Asistanı — bağlama göre özel promptlar (merkezden veya yerel adminden) */
   proxAiPrompts:{
     ilan:'Sen Meridyen Gayrimenkul’ün uzman emlak danışmanısın; kısa, net ve veriyle konuş.',
     degerleme:'Sen profesyonel bir değerleme uzmanısın; tarafsız ve mevzuata uygun yanıt ver.',
     bolge:'Sen bir bölge analiz uzmanısın; 372M+ kayıtlık endeksle konuş.',
-    default:'Sen emlakekspertizi.com ProX yapay zeka asistanısın.'
+    default:'Sen emlakekspertizi.com ProX verisine dayalı asistansın.'
   }
 };
 const SAAS_THEMES={
@@ -4323,7 +4333,7 @@ window.saasSetTheme=function(name){SAAS_CONFIG.themeColor=name;initSaaSTheme();}
 window.saasSetRegions=function(arr){SAAS_CONFIG.allowedRegions.ilceler=arr||[];return fetchSaaSData().then(applySaaSData);};
 /* SaaS başlatma — mevcut chrome'dan SONRA: tema + dinamik menü + veri yetkisi */
 /* ============================================================
-   ProX SaaS — Çift Katmanlı Ayar Çözümleyici · ProX AI Gateway ·
+   ProX SaaS — Çift Katmanlı Ayar Çözümleyici · İçerik Asistanı Gateway ·
    Logo→Renk Adaptasyonu · Profesyonel 38-Kategori PDF Altyapısı
    ============================================================ */
 /* Çift katman: merkez izin verdiyse tenant değeri override eder, yoksa sistem değeri */
@@ -4335,11 +4345,11 @@ function saasResolve(key){
 /* ProX çıktı paneli (sayfaya basar) */
 function _proxOut(){let el=document.getElementById('proxPanel');
   if(!el){el=document.createElement('div');el.id='proxPanel';el.className='prox-panel';
-    el.innerHTML='<div class="prox-hd"><b>⚡ ProX AI · emlakekspertizi.com</b><button onclick="this.closest(\'.prox-panel\').remove()" aria-label="Kapat">✕</button></div><div class="prox-body" id="proxAiOut"></div>';
+    el.innerHTML='<div class="prox-hd"><b>⚡ İçerik Asistanı · emlakekspertizi.com</b><button onclick="this.closest(\'.prox-panel\').remove()" aria-label="Kapat">✕</button></div><div class="prox-body" id="proxAiOut"></div>';
     document.body.appendChild(el);}
   el.classList.add('on');return document.getElementById('proxAiOut');
 }
-/* 1) ProX AI API Gateway — merkez prompt + simüle akıllı cevap */
+/* 1) İçerik Asistanı API Gateway — merkez prompt + simüle akıllı cevap */
 function _proxSimulate(msg,ctx){const m=(msg||'').toLocaleLowerCase('tr');
   if(ctx==='degerleme') return 'Bilimsel metodolojiyle (emsal karşılaştırma + gelir yöntemi) bu mülk için bir değer aralığı hazırlanır. Net rapor için ücretsiz ekspertiz talebi oluşturabilirim.';
   if(ctx==='bolge') return '372M+ kayıtlık endekse göre bu bölgede son 5 yılda belirgin değer artışı ve sağlıklı talep var. Mahalle kırılımı için Bölge Analizi’ni açabilirim.';
@@ -4352,9 +4362,9 @@ async function proxAiQuery(userMessage,contextType){
   const base=(SAAS_CONFIG.proxAiPrompts&&(SAAS_CONFIG.proxAiPrompts[ctx]||SAAS_CONFIG.proxAiPrompts.default))||'';
   const custom=(typeof saasResolve==='function'?saasResolve('customPrompt'):'')||'';
   const prompt=base+(custom?' '+custom:'');
-  console.log('[ProX AI →] '+SAAS_CONFIG.tenantName+' · ctx='+ctx+' · prompt="'+prompt.slice(0,46)+'…" · soru: '+userMessage);
+  console.log('[İçerik Asistanı →] '+SAAS_CONFIG.tenantName+' · ctx='+ctx+' · prompt="'+prompt.slice(0,46)+'…" · soru: '+userMessage);
   let answer=null;
-  try{                                                   // API-first ProX AI; fallback = local _proxSimulate
+  try{                                                   // API-first İçerik Asistanı; fallback = local _proxSimulate
     const r=await aiChat({persona:'office',prompt:aiGuard(prompt),context:ctx,message:userMessage});
     if(r&&!r.fallback){answer=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;}
   }catch(e){/* sessiz: local simülasyona düş */}
@@ -4362,7 +4372,7 @@ async function proxAiQuery(userMessage,contextType){
     await new Promise(r=>setTimeout(r,300));               // emlakekspertizi.com ProX API gecikmesi
     answer=_proxSimulate(userMessage,ctx);
   }
-  console.log('[ProX AI ←] '+answer);
+  console.log('[İçerik Asistanı ←] '+answer);
   const out=_proxOut(); if(out) out.innerHTML='<div class="prox-q">'+userMessage+'</div><div class="prox-a">'+answer+'</div>';
   return answer;
 }
@@ -4561,7 +4571,7 @@ function _saasPortalLoginHTML(){
     +'<div class="sp-pane">'
     +'  <div class="sp-icon">🔐</div>'
     +'  <h3 class="sp-h">Mülk Sahibi &amp; Yatırımcı Portföy Takip Girişi</h3>'
-    +'  <p class="sp-desc">Kurumsal Mülk Yönetim Paneli: Sözleşmeli mülklerinizin ProX AI pazar analizlerine ve performans grafiklerine erişim sağlayın.</p>'
+    +'  <p class="sp-desc">Kurumsal Mülk Yönetim Paneli: Sözleşmeli mülklerinizin ProX pazar analizlerine ve performans grafiklerine erişim sağlayın.</p>'
     +'  <input id="spClientKey" class="sp-in" type="text" placeholder="Kurumsal Anahtar (Client Key)" autocomplete="off">'
     +'  <input id="spPass" class="sp-in" type="password" placeholder="Güvenli Şifre" autocomplete="off" onkeydown="if(event.key===\'Enter\')saasPortalSubmit()">'
     +'  <div id="spErr" class="sp-err" role="alert"></div>'
@@ -4579,7 +4589,7 @@ function _saasPortalPanelHTML(){
     +'  <div class="sp-welcome"><div class="sp-co">'+(cp.companyName||'Kurumsal Üye')+'</div><div class="sp-role">'+(cp.role||'Kurumsal Yönetici')+'</div></div>'
     +'  <div class="sp-reg-l">Yetkili Bölgeler</div><div class="sp-regions">'+regions+'</div>'
     +'  <div class="sp-actions">'
-    +'    <button class="sp-act" onclick="closeSaasPortal();if(typeof toggleAiPanel===\'function\'){toggleAiPanel();}else if(typeof toast===\'function\'){toast(\'ProX AI Pazar Analizi hazırlanıyor…\');}">📊 ProX AI Pazar Analizi</button>'
+    +'    <button class="sp-act" onclick="closeSaasPortal();if(typeof toggleAiPanel===\'function\'){toggleAiPanel();}else if(typeof toast===\'function\'){toast(\'ProX Pazar Analizi hazırlanıyor…\');}">📊 ProX Pazar Analizi</button>'
     +'    <button class="sp-act" onclick="if(typeof toast===\'function\')toast(\'Performans grafikleri portföyünüze göre derleniyor…\');">📈 Performans Grafikleri</button>'
     +'    <button class="sp-act" onclick="if(typeof toast===\'function\')toast(\'Sözleşmeli mülkleriniz listeleniyor…\');">🏢 Sözleşmeli Mülkler</button>'
     +'  </div>'

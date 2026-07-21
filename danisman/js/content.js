@@ -8,7 +8,16 @@
    =================================================================== */
 (function () {
   var CMS_KEY = "dn_content";
-  function esc(s) { return (s == null ? "" : "" + s); }
+  /* GÜVENLİK: bu fonksiyon "esc" adını taşıdığı hâlde hiçbir şey kaçırmıyordu ve
+     iki innerHTML noktasını besliyordu (hz-grid kartları, [data-cms] eyebrow).
+     Beslenen değerler düz metin — aynı değerin else dalı textContent kullanıyor —
+     dolayısıyla kaçışlamak güvenli. Kaynak şu an site sahibinin yayın
+     yapılandırması, ama adı esc olan bir no-op sonraki düzenlemede tuzaktır. */
+  function esc(s) {
+    return ("" + (s == null ? "" : s)).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
   function ready(fn) { if (document.body) fn(); else document.addEventListener("DOMContentLoaded", fn); }
 
   var SVC_ICONS = {

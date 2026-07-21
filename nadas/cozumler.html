@@ -36,7 +36,7 @@
   </noscript>
 </div>
 
-<script src="js/core.js?v=2"></script>
+<script src="js/core.js?v=5"></script>
 <script>
 (function () {
   "use strict";
@@ -116,7 +116,7 @@
       + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
       + Eyebrow("◆ ÇÖZÜMLER · BİREY · PROFESYONEL · ŞİRKET · KURUMSAL")
       + '<h1 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(2rem,5.5vw,3.6rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri, maxWidth: 1180 }) + '">'
-      + 'Türkiye\'nin <span style="' + css({ color: C.primary }) + '">ilk emlak endeksi</span><br>ve <span style="' + css({ color: C.primary }) + '">online emlak ekspertiz platformu.</span></h1>'
+      + 'Türkiye\'nin <span style="' + css({ color: C.primary }) + '">mahalle bazında kesintisiz aylık emlak endeksi</span><br>ve <span style="' + css({ color: C.primary }) + '">online emlak ekspertiz platformu.</span></h1>'
       + '<p style="' + css({ marginTop: 16, fontSize: 16, lineHeight: 1.6, color: C.textSec, maxWidth: 920 }) + '">480 milyon kayıt. 50.000+ mahalle. 21 yıllık tarihsel zincir. ProX akıllı emlak asistanı. <strong style="' + css({ color: C.textPri }) + '">Bireyler, emlak profesyonelleri, şirketler ve kurumsal müşteriler</strong> için tek seferlik raporlardan kendi markanız altında kurulan veri altyapısına kadar tüm çözümler.</p>'
       + '<div style="' + css({ marginTop: 20, display: "flex", gap: 10, flexWrap: "wrap" }) + '">'
       + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 10, padding: "10px 16px", border: "1px solid " + C.accent, background: "rgba(52,211,153,0.06)", borderRadius: 2 }) + '">'
@@ -286,7 +286,7 @@
     ].map(function (r) { return '<div style="' + css({ background: C.deep, padding: "14px 16px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.violet, fontWeight: 700, letterSpacing: "0.08em", marginBottom: 6 }) + '">' + r[0] + '</div><div style="' + css({ fontSize: 11.5, color: C.textMut, lineHeight: 1.5 }) + '">' + r[1] + '</div></div>'; }).join('');
     var detail = [
       { sym: "▦", title: "ÖZEL CRM ÇÖZÜMLERİ", desc: "Emlak ofislerine özel müşteri yönetim sistemi. Lead takibi, pipeline, görev yönetimi, ekspertiz talep entegrasyonu, otomatik raporlama.", features: ["Müşteri profili + DNA", "Pipeline yönetimi", "Ekspertiz talebi otomasyonu", "Mobil + masaüstü"] },
-      { sym: "◈", title: "YAPAY ZEKA DESTEKLİ WEB", desc: "Müşterilerinize ProX akıllı asistanını sizin sitenizden sunun. Sohbet arayüzü, mahalle analizi, fiyat sorgusu — hepsi sizin markanız altında.", features: ["ProX chat widget", "Mahalle keşif aracı", "Anlık ekspertiz", "Lead capture form"] },
+      { sym: "◈", title: "ProX DESTEKLİ WEB", desc: "Müşterilerinize ProX akıllı asistanını sizin sitenizden sunun. Sohbet arayüzü, mahalle analizi, fiyat sorgusu — hepsi sizin markanız altında.", features: ["ProX chat widget", "Mahalle keşif aracı", "Anlık ekspertiz", "Lead capture form"] },
       { sym: "Σ", title: "VERİ ALTYAPI HİZMETİ", desc: "İl/ilçe bazlı tam veri lisansı. Bölgenize özel timeseries, DNA verisi, olay markırı, demografik veri — tam erişim.", features: ["Bölgesel timeseries", "DNA vektör erişimi", "Olay markırı stream", "Historical seri"] },
     ].map(function (c) {
       var f = c.features.map(function (x) { return '<li style="' + css({ display: "flex", gap: 8, fontSize: 11.5, color: C.textSec, lineHeight: 1.5 }) + '"><span style="' + css({ color: C.primary, fontFamily: C.mono, fontSize: 10 }) + '">●</span>' + x + '</li>'; }).join('');
@@ -424,7 +424,7 @@
       + '<div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
       + '<div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 20, marginBottom: 24 }) + '">'
       + '<div><div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }) + '"><span style="' + css({ width: 30, height: 30, border: "1.5px solid " + C.primary, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Sora',sans-serif", fontSize: 14, fontWeight: 700, color: C.primary, borderRadius: 2 }) + '">N</span><div><div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 20, fontWeight: 700, color: C.textPri, letterSpacing: "-0.02em" }) + '">NADAS</div><div style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.16em" }) + '">ÇÖZÜMLER · SINCE 2005</div></div></div>'
-      + '<p style="' + css({ fontSize: 12, color: C.textMut, maxWidth: 380, lineHeight: 1.5, margin: 0 }) + '">Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti.<br>Türkiye\'nin ilk emlak endeksi · Online emlak ekspertiz platformu.</p></div>'
+      + '<p style="' + css({ fontSize: 12, color: C.textMut, maxWidth: 380, lineHeight: 1.5, margin: 0 }) + '">Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti.<br>Türkiye\'nin mahalle bazında kesintisiz aylık emlak endeksi · Online emlak ekspertiz platformu.</p></div>'
       + '<div style="' + css({ display: "flex", gap: 32, flexWrap: "wrap" }) + '">'
       + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">NADAS</div>' + col1 + '</div>'
       + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">ÜRÜN</div>' + col2 + '</div>'

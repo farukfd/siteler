@@ -845,9 +845,16 @@ function closeDoc(){
   if((location.hash||'').indexOf('#doc-')===0)try{history.replaceState(null,'',location.pathname);}catch(e){}
 }
 function renderDoc(key){
-  var d=(DOC&&DOC[key])||{t:key,h:'<p>İçerik yakında eklenecek.</p>'};
+  /* GÜVENLİK: key doğrudan location.hash'ten geliyor (checkHash → '#doc-'+key).
+     Eskiden bilinmeyen anahtar {t:key} ile başlığa aynen basılıyordu ve _brandSubst
+     HTML kaçırmadığı için "#doc-<img src=x onerror=...>" betik çalıştırıyordu.
+     İki katman: (1) anahtar DOC'ta yoksa saldırgan dizesi hiç basılmaz, sabit
+     "bulunamadı" içeriği gösterilir; (2) başlık her hâlükârda _brandEsc'ten geçer.
+     d.h ham kalır — bilinen anahtarlarda kasıtlı olarak yapılandırma HTML'idir,
+     bilinmeyen anahtarda ise artık bizim sabit metnimiz. */
   var en=(typeof LANG!=='undefined'&&LANG==='en');
-  var _bn=((typeof BRAND!=='undefined'&&BRAND.name)||'Meridyen')+((typeof BRAND!=='undefined'&&BRAND.name2)||' Yapı');var h='<div class="doc-hero doc-rv"><div class="doc-eyebrow"><i></i> '+_brandEsc(_bn)+'</div><h1>'+_brandSubst(d.t)+'</h1></div>';
+  var d=(DOC&&DOC[key])||{t:(en?'Document not found':'Belge bulunamadı'),h:'<p>'+(en?'This content is not available.':'Bu içerik bulunamadı.')+'</p>'};
+  var _bn=((typeof BRAND!=='undefined'&&BRAND.name)||'Meridyen')+((typeof BRAND!=='undefined'&&BRAND.name2)||' Yapı');var h='<div class="doc-hero doc-rv"><div class="doc-eyebrow"><i></i> '+_brandEsc(_bn)+'</div><h1>'+_brandEsc(_brandSubst(d.t))+'</h1></div>';
   h+='<div class="doc-content doc-rv">'+_brandSubst(d.h)+'</div>';
   h+='<div class="doc-back doc-rv"><button class="btn btn-primary" onclick="closeDoc()">'+(en?'← Back to site':'← Siteye dön')+'</button></div>';
   document.getElementById('docBody').innerHTML=h;

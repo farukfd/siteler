@@ -36,6 +36,35 @@
   .nadas-eco:hover { border-color: #38BDF8 !important; }
   select { color-scheme: dark; }
   @media (max-width: 900px) { .nadas-heatmap-grid { grid-template-columns: 1fr !important; } }
+
+  /* ---- Veri pipeline hero şeridi ---- */
+  .nadas-pipe-wrap { position: relative; }
+  .nadas-pipe-canvas { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+  .nadas-pipe-grid {
+    position: relative; z-index: 1; display: grid; align-items: center;
+    grid-template-columns: minmax(0,1.05fr) minmax(0,0.9fr) minmax(0,0.6fr) minmax(0,1.15fr);
+    gap: 0 26px;
+  }
+  .nadas-pipe-col { transition: opacity .3s ease; cursor: default; }
+  .nadas-pipe-wrap.is-focus .nadas-pipe-col { opacity: .22; }
+  .nadas-pipe-wrap.is-focus .nadas-pipe-col.is-active { opacity: 1; }
+  .nadas-pipe-chip { transition: border-color .25s, background .25s, transform .25s; }
+  .nadas-pipe-col.is-active .nadas-pipe-chip { background: #101F35; transform: translateX(2px); }
+  .nadas-pipe-stagehead { transition: opacity .3s ease; }
+  .nadas-pipe-wrap.is-focus .nadas-pipe-stagehead { opacity: .3; }
+  .nadas-pipe-wrap.is-focus .nadas-pipe-stagehead.is-active { opacity: 1; }
+  /* Çipler sütunu doldurmaz — artan genişlik parçacıkların yol koridoru olur. */
+  .nadas-pipe-col[data-pipe-stage="0"] .nadas-pipe-stack { max-width: 208px; }
+  .nadas-pipe-col[data-pipe-stage="1"] .nadas-pipe-chip { max-width: 206px; margin: 0 auto; }
+  .nadas-pipe-col[data-pipe-stage="3"] .nadas-pipe-stack { max-width: 218px; margin-left: auto; }
+  .nadas-pipe-headrow > :nth-child(2), .nadas-pipe-headrow > :nth-child(3) { text-align: center; }
+  .nadas-pipe-headrow > :nth-child(4) { text-align: right; }
+  @media (max-width: 860px) {
+    .nadas-pipe-grid { grid-template-columns: 1fr; gap: 20px 0; justify-items: center; }
+    .nadas-pipe-stack { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: none !important; margin: 0 !important; }
+    .nadas-pipe-stack .nadas-pipe-chip { margin-bottom: 0 !important; }
+    .nadas-pipe-headrow { display: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -48,7 +77,7 @@
   </noscript>
 </div>
 
-<script src="js/core.js?v=2"></script>
+<script src="js/core.js?v=5"></script>
 <script>
 (function () {
   "use strict";
@@ -152,6 +181,233 @@
       + '<p style="' + css({ marginTop: 14, fontSize: 15.5, lineHeight: 1.55, color: C.textSec, maxWidth: 820 }) + '">Nadas, Türkiye gayrimenkul piyasasının kayıt katmanıdır. 81 il, 973 ilçe, 50.000+ mahalle ve köy; cadde-sokak granülerliğine kadar inen 38 varlık kategorisinde aylık seri. Saha doğrulamalı, olay markerlı, DNA demografik katmanla zenginleştirilmiş.</p>'
       + '<div style="' + css({ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong, maxWidth: 720 }) + '">' + stats + '</div>'
       + '</div></section>';
+  }
+
+  /* ===== 01b · VERİ PIPELINE (hero şeridi · canvas hareket + DOM etiket) =====
+     prox.html C.3’ün hero’ya uyarlanmış hâli. Üç fark:
+       1) Yatay 4 sütun — 4 aşama nefes alsın (C.3’teki 820x680 kare kutu hero’ya sığmaz).
+       2) Hareket canvas’ta (bezier + easing + additive glow), etiketler DOM’da (net, seçilebilir, erişilebilir).
+       3) Konumlar DOM’dan ÖLÇÜLÜR — koordinat çiftlenmez, responsive bedavaya gelir.
+     12 isimli kaynak yerine 5 kaynak katmanı; isimli döküm prox.html’in işi. Toplam 27 kaynak (4+3+11+6+3).
+  ========================================================================== */
+  var PIPE_SOURCES = [
+    { k: "KAMU KURUMLARI", n: 11, c: C.primary, s: "TKGM · TÜİK* · TCMB · BDDK" },
+    { k: "BAKANLIKLAR", n: 6, c: C.accent, s: "resmi paylaşım protokolü" },
+    { k: "YEREL YÖNETİM", n: 3, c: C.textMut, s: "büyükşehir · il · ilçe" },
+    { k: "NADAS ÖZEL", n: 4, c: C.violet, s: "saha · ilan botu · uzman" },
+    { k: "RESMİ MEVZUAT", n: 3, c: C.warn, s: "Resmi Gazete · TBMM" },
+  ];
+  var PIPE_OUTPUTS = [
+    { k: "ProX Chat", c: C.violet }, { k: "Kurumsal API", c: C.accent },
+    { k: "Karar Analizi", c: C.primary }, { k: "Banka Servisleri", c: C.accent, sp: true },
+    { k: "Belediye Servisleri", c: C.accent, sp: true }, { k: "White-Label", c: C.violet },
+    { k: "Research", c: C.primary },
+  ];
+  var PIPE_STAGES = [
+    ["① KAYNAKLAR", "27 kaynak · 5 katman", C.primary],
+    ["② SUNUCU", "480M+ · toplama · doğrulama", C.accent],
+    ["③ ProX MOTOR", "ML/MML · deterministik", C.violet],
+    ["④ ÇIKTILAR", "7 kanal · banka/belediye/api", C.primary],
+  ];
+
+  function PipelineHero() {
+    var headRow = PIPE_STAGES.map(function (s, i) {
+      return '<div class="nadas-pipe-stagehead" data-pipe-head="' + i + '">'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: s[2], fontWeight: 700, letterSpacing: "0.12em" }) + '">' + s[0] + '</div>'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.06em", marginTop: 3 }) + '">' + s[1] + '</div></div>';
+    }).join("");
+
+    var srcChips = PIPE_SOURCES.map(function (s, i) {
+      return '<div class="nadas-pipe-chip" data-pipe-node="src" data-i="' + i + '" style="' + css({ display: "flex", alignItems: "center", gap: 8, padding: "7px 10px", background: C.raised, border: "1px solid " + C.border, borderLeft: "2px solid " + s.c, marginBottom: 6 }) + '">'
+        + '<span style="' + css({ width: 5, height: 5, borderRadius: "50%", background: s.c, flexShrink: 0 }) + '"></span>'
+        + '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textSec, letterSpacing: "0.05em", fontWeight: 600, whiteSpace: "nowrap" }) + '">' + s.k + '</span>'
+        + '<span style="' + css({ marginLeft: "auto", fontFamily: C.mono, fontSize: 9.5, color: s.c, fontWeight: 700, flexShrink: 0 }) + '">' + s.n + '</span></div>';
+    }).join("");
+
+    var outChips = PIPE_OUTPUTS.map(function (o, i) {
+      return '<div class="nadas-pipe-chip" data-pipe-node="out" data-i="' + i + '" style="' + css({ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px", background: C.raised, border: "1px solid " + (o.sp ? o.c : C.border), borderLeft: (o.sp ? "3px" : "2px") + " solid " + o.c, marginBottom: 5 }) + '">'
+        + '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: o.sp ? C.textPri : C.textSec, letterSpacing: "0.05em", fontWeight: o.sp ? 700 : 600, whiteSpace: "nowrap" }) + '">' + o.k + '</span>'
+        + '<span style="' + css({ marginLeft: "auto", width: 5, height: 5, borderRadius: "50%", background: o.c, flexShrink: 0 }) + '"></span></div>';
+    }).join("");
+
+    var serverCard = '<div class="nadas-pipe-chip" data-pipe-node="server" style="' + css({ background: C.deep, border: "1px solid " + C.accent, padding: "16px 14px", textAlign: "center", position: "relative" }) + '">'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.accent, fontWeight: 700, letterSpacing: "0.12em" }) + '">VERİ SUNUCUSU</div>'
+      + '<div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 30, fontWeight: 700, color: C.textPri, letterSpacing: "-0.03em", lineHeight: 1.05, marginTop: 6 }) + '">480M+</div>'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textMut, letterSpacing: "0.1em", marginTop: 2 }) + '">VERİ KAYDI</div>'
+      + '<div style="' + css({ height: 1, background: C.border, margin: "10px 0 8px" }) + '"></div>'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 8.5, color: C.textMut, letterSpacing: "0.08em", lineHeight: 1.6 }) + '">NORMALİZE · DOĞRULAMA<br>ÇAPRAZ KONTROL</div>'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 8.5, color: C.textFaint, letterSpacing: "0.08em", marginTop: 4 }) + '">50 TB · 27 KAYNAK</div></div>';
+
+    var proxCard = '<div class="nadas-pipe-chip" data-pipe-node="prox" style="' + css({ width: 118, height: 118, borderRadius: "50%", background: C.deep, border: "1.5px solid " + C.violet, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", margin: "0 auto", boxShadow: "0 0 0 1px rgba(167,139,250,0.14), 0 0 34px rgba(124,58,237,0.30) inset" }) + '">'
+      + '<div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 19, fontWeight: 700, color: C.violet, letterSpacing: "0.02em" }) + '">ProX</div>'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 8.5, color: C.textMut, letterSpacing: "0.12em", marginTop: 3 }) + '">ML / MML</div>'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 7.5, color: C.textFaint, letterSpacing: "0.08em", marginTop: 2 }) + '">DETERMİNİSTİK</div></div>';
+
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, background: C.deep, padding: "20px 16px 18px", overflow: "hidden" }) + '">'
+      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, fontFamily: C.mono, fontSize: 10.5, letterSpacing: "0.12em", textTransform: "uppercase" }) + '">'
+      + '<span style="' + css({ color: C.violet }) + '">◆ VERİ PIPELINE · 4 AŞAMA</span>'
+      + '<span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span>'
+      + '<span style="' + css({ color: C.textFaint }) + '">KAYNAKLAR → SUNUCU → ProX → 7 KANAL</span></div>'
+
+      + '<div class="nadas-pipe-wrap" id="pipe-wrap">'
+      + '<canvas class="nadas-pipe-canvas" id="pipe-canvas"></canvas>'
+      + '<div class="nadas-pipe-headrow nadas-pipe-grid" style="' + css({ marginBottom: 14 }) + '">' + headRow + '</div>'
+      + '<div class="nadas-pipe-grid">'
+      + '<div class="nadas-pipe-col" data-pipe-stage="0"><div class="nadas-pipe-stack" id="pipe-src-group">' + srcChips + '</div></div>'
+      + '<div class="nadas-pipe-col" data-pipe-stage="1">' + serverCard + '</div>'
+      + '<div class="nadas-pipe-col" data-pipe-stage="2">' + proxCard + '</div>'
+      + '<div class="nadas-pipe-col" data-pipe-stage="3"><div class="nadas-pipe-stack" id="pipe-out-group">' + outChips + '</div></div>'
+      + '</div></div>'
+
+      + '<div style="' + css({ marginTop: 14, padding: "9px 13px", background: "rgba(167,139,250,0.04)", border: "1px dashed " + C.violet, fontFamily: C.mono, fontSize: 10, color: C.textMut, lineHeight: 1.6, letterSpacing: "0.02em" }) + '">'
+      + '<span style="' + css({ color: C.violet, fontWeight: 700 }) + '">◆ AKIŞ:</span> 27 kaynak → Nadas sunucusunda toplanır + doğrulanır → ProX ML/MML motoruna iletilir → 7 kanaldan sunulur. Her parçacık gerçek zamanlı veri akışını temsil eder.'
+      + '<span style="' + css({ color: C.warn, marginLeft: 8 }) + '">*TÜİK</span> — ücretli lisanslı mikro veri.'
+      + '<span style="' + css({ color: C.accent, marginLeft: 8 }) + '">● BANKA + BELEDİYE</span> — kurumsal müşteri segmentleri.'
+      + '<span style="' + css({ color: C.textFaint, marginLeft: 8 }) + '">▸ Bir aşamanın üzerine gelin.</span></div>'
+      + '</div></section>';
+  }
+
+  /* Hareket katmanı: tek rAF döngüsü, parçacık havuzu, sprite’lı additive glow.
+     Ekran dışında durur (IntersectionObserver), prefers-reduce-motion’da tek statik kare çizer. */
+  function mountPipeline() {
+    var wrap = document.getElementById("pipe-wrap"), cv = document.getElementById("pipe-canvas");
+    if (!wrap || !cv || !cv.getContext) return;
+    var ctx = cv.getContext("2d");
+    var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    /* visible fail-open başlar: IO çalışmayan gömülü WebView’larda animasyon yine de koşar,
+       IO çalışıyorsa yalnızca ekran dışına çıkınca DURDURUR. Tersi (fail-closed) animasyonu hiç başlatmıyordu. */
+    var paths = [], parts = [], sprites = {}, W = 0, H = 0, raf = 0, running = false, visible = true, focus = -1;
+
+    function hexA(h, a) { var n = parseInt(h.slice(1), 16); return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; }
+    function sprite(color) {
+      if (sprites[color]) return sprites[color];
+      var r = 16, s = document.createElement("canvas"); s.width = s.height = r * 2;
+      var sc = s.getContext("2d"), g = sc.createRadialGradient(r, r, 0, r, r, r);
+      g.addColorStop(0, hexA(color, 1)); g.addColorStop(0.22, hexA(color, 0.8));
+      g.addColorStop(0.55, hexA(color, 0.16)); g.addColorStop(1, hexA(color, 0));
+      sc.fillStyle = g; sc.fillRect(0, 0, r * 2, r * 2);
+      sprites[color] = s; return s;
+    }
+    /* Kontrol noktaları baskın eksene göre — aynı kod hem yatay (geniş) hem dikey (dar) düzende çalışır. */
+    function mkPath(a, b, color, group) {
+      var dx = b.x - a.x, dy = b.y - a.y, c1, c2;
+      if (Math.abs(dx) >= Math.abs(dy)) { var k = Math.abs(dx) * 0.45; c1 = { x: a.x + k, y: a.y }; c2 = { x: b.x - k, y: b.y }; }
+      else { var k2 = Math.abs(dy) * 0.45; c1 = { x: a.x, y: a.y + k2 }; c2 = { x: b.x, y: b.y - k2 }; }
+      return { a: a, b: b, c1: c1, c2: c2, color: color, group: group };
+    }
+    function bez(p, t) {
+      var u = 1 - t, uu = u * u, uuu = uu * u, tt = t * t, ttt = tt * t;
+      return { x: uuu * p.a.x + 3 * uu * t * p.c1.x + 3 * u * tt * p.c2.x + ttt * p.b.x,
+               y: uuu * p.a.y + 3 * uu * t * p.c1.y + 3 * u * tt * p.c2.y + ttt * p.b.y };
+    }
+    function seed() {
+      parts = []; var per = W < 860 ? 2 : 3;
+      for (var p = 0; p < paths.length; p++) for (var j = 0; j < per; j++)
+        parts.push({ p: p, t: (j / per) + Math.random() / per, v: 0.0018 + Math.random() * 0.0018, r: 1.7 + Math.random() * 1.7 });
+    }
+    function build() {
+      W = wrap.clientWidth; H = wrap.clientHeight;
+      if (!W || !H) { requestAnimationFrame(build); return; }  /* gizli/sıfır boyutlu kapsayıcıda mount edilirse yeniden dene */
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      cv.style.width = W + "px"; cv.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      var wr = wrap.getBoundingClientRect();
+      function R(el) { var r = el.getBoundingClientRect(); return { l: r.left - wr.left, t: r.top - wr.top, r: r.right - wr.left, b: r.bottom - wr.top, cx: (r.left + r.right) / 2 - wr.left, cy: (r.top + r.bottom) / 2 - wr.top }; }
+      var srvEl = wrap.querySelector('[data-pipe-node="server"]'), prxEl = wrap.querySelector('[data-pipe-node="prox"]');
+      if (!srvEl || !prxEl) return;
+      var srv = R(srvEl), prx = R(prxEl), i;
+      paths = [];
+
+      if (W < 860) { /* dar: dikey akış, kaynak/çıktı gruplarının kenarından */
+        var sg = R(document.getElementById("pipe-src-group")), og = R(document.getElementById("pipe-out-group"));
+        for (i = 0; i < PIPE_SOURCES.length; i++)
+          paths.push(mkPath({ x: sg.l + (sg.r - sg.l) * ((i + 0.5) / PIPE_SOURCES.length), y: sg.b }, { x: srv.cx, y: srv.t }, PIPE_SOURCES[i].c, "in"));
+        paths.push(mkPath({ x: srv.cx, y: srv.b }, { x: prx.cx, y: prx.t }, C.accent, "mid"));
+        for (i = 0; i < PIPE_OUTPUTS.length; i++)
+          paths.push(mkPath({ x: prx.cx, y: prx.b }, { x: og.l + (og.r - og.l) * ((i + 0.5) / PIPE_OUTPUTS.length), y: og.t }, PIPE_OUTPUTS[i].c, "out"));
+      } else { /* geniş: yatay akış, her çipin kendi kenarından */
+        var srcEls = wrap.querySelectorAll('[data-pipe-node="src"]'), outEls = wrap.querySelectorAll('[data-pipe-node="out"]');
+        for (i = 0; i < srcEls.length; i++) { var s = R(srcEls[i]); paths.push(mkPath({ x: s.r, y: s.cy }, { x: srv.l, y: srv.cy }, PIPE_SOURCES[i].c, "in")); }
+        paths.push(mkPath({ x: srv.r, y: srv.cy - 7 }, { x: prx.l, y: prx.cy - 7 }, C.violet, "mid"));
+        paths.push(mkPath({ x: srv.r, y: srv.cy }, { x: prx.l, y: prx.cy }, C.accent, "mid"));
+        paths.push(mkPath({ x: srv.r, y: srv.cy + 7 }, { x: prx.l, y: prx.cy + 7 }, C.violet, "mid"));
+        for (i = 0; i < outEls.length; i++) { var o = R(outEls[i]); paths.push(mkPath({ x: prx.r, y: prx.cy }, { x: o.l, y: o.cy }, PIPE_OUTPUTS[i].c, "out")); }
+      }
+      seed(); draw();
+    }
+    function lit(g) {
+      if (focus < 0) return 1;
+      if (focus === 0) return g === "in" ? 1 : 0.1;
+      if (focus === 1) return (g === "in" || g === "mid") ? 1 : 0.1;
+      if (focus === 2) return (g === "mid" || g === "out") ? 1 : 0.1;
+      return g === "out" ? 1 : 0.1;
+    }
+    function draw() {
+      var i, p;
+      ctx.clearRect(0, 0, W, H);
+      ctx.lineWidth = 1;
+      for (i = 0; i < paths.length; i++) {
+        p = paths[i];
+        ctx.strokeStyle = hexA(p.color, 0.03 + 0.20 * lit(p.group));
+        ctx.beginPath(); ctx.moveTo(p.a.x, p.a.y);
+        ctx.bezierCurveTo(p.c1.x, p.c1.y, p.c2.x, p.c2.y, p.b.x, p.b.y); ctx.stroke();
+      }
+      ctx.globalCompositeOperation = "lighter";
+      for (i = 0; i < parts.length; i++) {
+        var q = parts[i]; p = paths[q.p]; if (!p) continue;
+        var a = lit(p.group); if (a < 0.2) continue;
+        var et = q.t < 0.5 ? 2 * q.t * q.t : 1 - Math.pow(-2 * q.t + 2, 2) / 2;  /* easeInOutQuad */
+        var pt = bez(p, et), fade = Math.sin(Math.PI * q.t), rr = q.r * 4 * (0.55 + 0.45 * fade);
+        ctx.globalAlpha = fade * a;
+        ctx.drawImage(sprite(p.color), pt.x - rr, pt.y - rr, rr * 2, rr * 2);
+      }
+      ctx.globalAlpha = 1; ctx.globalCompositeOperation = "source-over";
+    }
+    function tick() {
+      for (var i = 0; i < parts.length; i++) {
+        var q = parts[i]; q.t += q.v;
+        if (q.t >= 1) { q.t -= 1; q.v = 0.0018 + Math.random() * 0.0018; q.r = 1.7 + Math.random() * 1.7; }
+      }
+      draw(); raf = requestAnimationFrame(tick);
+    }
+    function start() { if (running || reduce || !visible) return; running = true; raf = requestAnimationFrame(tick); }
+    function stop() { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
+
+    var heads = wrap.querySelectorAll("[data-pipe-head]"), cols = wrap.querySelectorAll("[data-pipe-stage]");
+    function setFocus(i) {
+      focus = i;
+      if (i < 0) wrap.classList.remove("is-focus"); else wrap.classList.add("is-focus");
+      function mark(list, attr) {
+        for (var c = 0; c < list.length; c++) {
+          if (i >= 0 && parseInt(list[c].getAttribute(attr), 10) === i) list[c].classList.add("is-active");
+          else list[c].classList.remove("is-active");
+        }
+      }
+      mark(cols, "data-pipe-stage"); mark(heads, "data-pipe-head");
+      if (!running) draw();
+    }
+    for (var c = 0; c < cols.length; c++) (function (el, idx) {
+      el.addEventListener("mouseenter", function () { setFocus(idx); });
+      el.addEventListener("mouseleave", function () { setFocus(-1); });
+    })(cols[c], parseInt(cols[c].getAttribute("data-pipe-stage"), 10));
+
+    build();
+    /* İkisi birden: resize viewport değişimini, RO kapsayıcı-içi değişimi (yan panel vb.) yakalar.
+       RO’yu tek başına bırakmıyoruz — bazı gömülü WebView’larda hiç ateşlenmiyor. */
+    var rt = 0;
+    function relayout() { clearTimeout(rt); rt = setTimeout(build, 120); }
+    window.addEventListener("resize", relayout);
+    if (window.ResizeObserver) { try { new ResizeObserver(relayout).observe(wrap); } catch (e) {} }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);  /* font yüklenince reflow → yeniden ölç */
+    if (window.IntersectionObserver) {
+      try {
+        new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) start(); else stop(); }, { threshold: 0 }).observe(wrap);
+      } catch (e) { /* IO yoksa/bozuksa fail-open’da kalır */ }
+    }
+    start();
   }
 
   /* ===== 02 · VERİ TERMİNALİ (interaktif) ===== */
@@ -420,13 +676,14 @@
   /* ===== MONTAJ (kanonik NX menü — ALTIN KURAL) ===== */
   function renderApp() {
     return NX.Ticker(HOMETICK) + NX.Masthead("") + NX.Nav("")
-      + HeroHeadline() + DataTerminalShell() + CategoryCompare() + CityHeatmap()
+      + PipelineHero() + HeroHeadline() + DataTerminalShell() + CategoryCompare() + CityHeatmap()
       + GranularityPanel() + CategoryPanel() + DNAPanel() + CompanyTimeline()
       + TwoColumnEditorial() + CorporateUsers() + FeaturedAnalysis() + NX.Footer();
   }
 
   NX.boot(renderApp);
   mountTerminal();
+  mountPipeline();
 })();
 </script>
 </body>

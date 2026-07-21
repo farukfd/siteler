@@ -1253,7 +1253,7 @@ html{transition:none}
     var s = DB.load();
     $('v_prox').innerHTML = '<div class="crm-card"><h3>🔑 API Anahtarları</h3>'
       + '<div class="crm-f"><label>ProX · Emlakekspertizi.com API Anahtarı (X-Tenant-Key)</label><input id="px_key" type="password" autocomplete="off" value="' + esc(s.proxKey || '') + '" placeholder="prox_..."></div>'
-      + '<p style="font-size:12px;color:#94a3b8;margin:6px 0 12px">ProX yapay zeka, SPK lisanslı PDF ve blog sistemi bu anahtarla <b>ücretsiz</b> çalışır. Anahtar yalnızca tarayıcınızda saklanır, kayıt/log\'a yazılmaz.</p>'
+      + '<p style="font-size:12px;color:#94a3b8;margin:6px 0 12px">ProX servisleri, SPK lisanslı PDF ve blog sistemi bu anahtarla <b>ücretsiz</b> çalışır. Anahtar yalnızca tarayıcınızda saklanır, kayıt/log\'a yazılmaz.</p>'
       + '<div class="crm-f"><label>DeepSeek API Anahtarı (Yedek — opsiyonel)</label><input id="px_ds" type="password" autocomplete="off" value="' + esc(s.deepseekKey || '') + '" placeholder="sk-..."></div>'
       + '<p style="font-size:12px;color:#94a3b8;margin:6px 0 12px">ProX kotanız dolarsa kendi DeepSeek anahtarınızla yapay zeka ve makale üretimi kesintisiz devam eder. Sistem <b>önce ProX</b>’u dener, gerekirse <b>DeepSeek</b>’e geçer.</p>'
       + '<button class="crm-btn" id="px_ksave">Anahtarları Kaydet</button><div class="crm-out" id="px_kout"></div></div>'
@@ -1261,7 +1261,7 @@ html{transition:none}
       + '<div class="crm-row2"><div class="crm-f"><label>Varlık Türü</label><select id="r_asset"><option>Konut</option><option>İş Yeri / Ofis</option><option>Arsa / Arazi</option><option>Sanayi / Fabrika</option><option>Enerji Santrali</option><option>Akaryakıt İstasyonu</option><option>Diğer</option></select></div><div class="crm-f"><label>Rapor Amacı</label><select id="r_purpose"><option>Bankaya Yönelik (Teminat)</option><option>Mahkeme / Bilirkişi</option><option>Miras / İzaleyi Şuyu</option><option>Finansal Raporlama</option><option>Kamulaştırma</option></select></div></div>'
       + '<div class="crm-row2"><div class="crm-f"><label>Müşteri / Kurum</label><input id="r_client"></div><div class="crm-f"><label>Dosya / Talep No</label><input id="r_file" placeholder="DEG-2026-..."></div></div>'
       + '<button class="crm-btn" id="r_btn">📄 Resmî PDF Rapor Oluştur</button><div class="crm-out" id="r_out"></div></div>'
-      + '<div class="crm-card"><h3>ProX AI — Kuruma Özel Prompt</h3><textarea id="px_prompt" rows="3" placeholder="Kuruma özel uzmanlık/ton...">' + esc(s.proxPrompt || '') + '</textarea><button class="crm-btn ghost" id="px_save" style="margin-top:8px">Kaydet</button></div>'
+      + '<div class="crm-card"><h3>İçerik Asistanı — Kuruma Özel Prompt</h3><textarea id="px_prompt" rows="3" placeholder="Kuruma özel uzmanlık/ton...">' + esc(s.proxPrompt || '') + '</textarea><button class="crm-btn ghost" id="px_save" style="margin-top:8px">Kaydet</button></div>'
       + '<div class="crm-card"><h3>ProX Asistan</h3><div class="crm-f"><textarea id="px_q" rows="2" placeholder="ProX\'a sorun (örn. otel değerlemesinde hangi yaklaşım?)"></textarea></div><button class="crm-btn" id="px_ask">Sor</button><div class="crm-out" id="px_a"></div></div>';
     $('r_btn').addEventListener('click', async function () {
       var client = $('r_client').value.trim(); var o = $('r_out'); if (!client) { o.innerHTML = '<span class="bad">⚠ Müşteri/kurum gerekli.</span>'; return; }
@@ -1273,7 +1273,7 @@ html{transition:none}
     });
     $('px_ksave').addEventListener('click', function () { var s = DB.load(); s.proxKey = $('px_key').value.trim(); s.deepseekKey = $('px_ds').value.trim(); DB.save(s); if (s.proxKey && window.EMLAK_TENANT) window.EMLAK_TENANT.tenant_key = s.proxKey; $('px_kout').innerHTML = '<span class="ok">✓ Anahtarlar kaydedildi. Sistem ProX ile çalışır; kota dolarsa DeepSeek yedeğe geçer.</span>'; toast('API anahtarları kaydedildi.'); });
     $('px_save').addEventListener('click', function () { var s = DB.load(); s.proxPrompt = $('px_prompt').value.trim(); DB.save(s); toast('ProX promptu kaydedildi.'); });
-    $('px_ask').addEventListener('click', async function () { var q = $('px_q').value.trim(); if (!q) return; $('px_a').innerHTML = '<span class="warn">Yanıtlanıyor…</span>'; var r = await window.degAi(q); $('px_a').textContent = (r && r.answer) ? r.answer : 'Yapay zeka çevrimdışı — ProX anahtarı bağlanınca veya DeepSeek yedek anahtarı girilince yanıt verir.'; });
+    $('px_ask').addEventListener('click', async function () { var q = $('px_q').value.trim(); if (!q) return; $('px_a').innerHTML = '<span class="warn">Yanıtlanıyor…</span>'; var r = await window.degAi(q); $('px_a').textContent = (r && r.answer) ? r.answer : 'İçerik Asistanı çevrimdışı — ProX anahtarı bağlanınca veya DeepSeek yedek anahtarı girilince yanıt verir.'; });
   };
 
   RENDER.pdf = function () {
@@ -1612,7 +1612,7 @@ html{transition:none}
       + '<button class="act" data-t="rapor">Resmî Rapor (PDF)</button>'
       + '<button data-t="tema">Tema & Logo</button>'
       + '<button data-t="google">Google & Meta</button>'
-      + '<button data-t="prox">ProX AI</button>'
+      + '<button data-t="prox">İçerik Asistanı</button>'
       + '<button data-t="iletisim">İletişim & Adres</button>'
       + '<button data-t="personel">Personel</button>'
       + '<button data-t="icerik">Sayfa İçerikleri</button>'
@@ -1633,7 +1633,7 @@ html{transition:none}
       + '<div class="sta-f"><label>Meta Başlık</label><input id="ag_title" value="' + val(s.metaTitle) + '"></div>'
       + '<div class="sta-f"><label>Meta Açıklama</label><textarea id="ag_desc" rows="2">' + (s.metaDesc || '') + '</textarea></div>'
       + '<button class="sta-go" id="ag_btn">Kaydet & Uygula</button></div>'
-      + '<div class="sta-pane" data-p="prox" hidden><h4>ProX AI — Kuruma Özel Prompt</h4><p class="sub">SPK/UDES resmî promptuna eklenir. Örn: "Endüstriyel tesis değerlemesinde uzmanız."</p>'
+      + '<div class="sta-pane" data-p="prox" hidden><h4>İçerik Asistanı — Kuruma Özel Prompt</h4><p class="sub">SPK/UDES resmî promptuna eklenir. Örn: "Endüstriyel tesis değerlemesinde uzmanız."</p>'
       + '<textarea id="ap_prompt" rows="4" placeholder="Kuruma özel uzmanlık / ton...">' + (s.proxPrompt || '') + '</textarea>'
       + '<button class="sta-go" id="ap_btn" style="margin-top:8px">Kaydet</button></div>'
       + '<div class="sta-pane" data-p="iletisim" hidden><h4>İletişim & Adres</h4><p class="sub">Bu bilgiler İletişim sayfasında ve haritada gösterilir. Harita için tam adres ya da "enlem,boylam" girin (Google Haritalar konumu).</p>'
@@ -1881,7 +1881,7 @@ html{transition:none}
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDegAdmin(); });
   try { degApplySettings(); } catch (e) {}
 
-  /* ---- ProX AI köprüsü (chat hook'u — UI sonraki adım) ---- */
+  /* ---- İçerik Asistanı köprüsü (chat hook'u — UI sonraki adım) ---- */
   window.degProxAi = async function (prompt) {
     var r = await proxApi('/api/v1/tenant/prox/ai', { method: 'POST', body: { prompt: String(prompt || '') } });
     return (r && r.answer) ? r.answer : 'ProX yanıtı şu anda alınamadı; lütfen başvuru üzerinden uzmanımıza ulaşın.';

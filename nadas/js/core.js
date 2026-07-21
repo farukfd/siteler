@@ -27,7 +27,16 @@
     }
     return out;
   }
-  function attr(s) { return String(s == null ? "" : s).replace(/"/g, "&quot;"); }
+  /* Adı "attr" ama yalnız çift tırnak kaçırmak yetmiyordu: çağrı yerlerinin bir
+     kısmı değeri HTML METNİ olarak basıyor (<title>, <span>). Yalnız tırnak
+     kaçıran bir fonksiyon orada koruma sağlamaz. Tüm çağrılar düz metin geçiriyor
+     — hiçbiri kasıtlı HTML göndermiyor — bu yüzden tam kaçışa yükseltmek
+     güvenli ve fonksiyonu her iki bağlamda da doğru kılıyor. */
+  function attr(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
 
   var C = {
     base: "#06101B", raised: "#0A1626", elev: "#101F35", deep: "#020812",
@@ -101,7 +110,14 @@
       ".nadas-eko-grid{grid-template-columns:1fr !important}",
       ".nadas-feed-row{grid-template-columns:1fr !important;gap:4px !important;padding:14px 16px !important}",
       "}",
-      "@media (max-width:680px){.nadas-pipeline-stages{grid-template-columns:1fr 1fr !important}}"
+      "@media (max-width:680px){.nadas-pipeline-stages{grid-template-columns:1fr 1fr !important}}",
+      /* ProX kurumsal wordmark — insaat/ sitesindeki .fprox lockup’ının birebir karşılığı.
+         Oradaki sabit px’ler em’e çevrildi (referans 14px gövde): 2px→.14em, 6px yarıçap→.43em,
+         X’in 14/15 boy oranı→.93em. Böylece 10px mono etikette de 40px başlıkta da aynı oranda durur.
+         Renkler aynen: kutu #16a34a, hover #1fb155, kutu içi #0b1220. */
+      ".nx-prox{display:inline-flex;align-items:center;white-space:nowrap;font-weight:800;color:#fff}",
+      ".nx-prox-x{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;height:1.4em;background:#16a34a;color:#0b1220;border-radius:.43em;font-weight:800;font-size:.93em;line-height:1;margin-left:.14em}",
+      "a:hover .nx-prox-x{background:#1fb155}"
     ].join("\n");
     document.head.appendChild(s);
   }
@@ -123,10 +139,50 @@
       });
     } catch (e) {}
   }
+  /* ProX wordmark markup’ı (string). Şablon içinde doğrudan gömmek için. */
+  function ProX() { return '<span class="nx-prox">Pro<span class="nx-prox-x">X</span></span>'; }
+
+  /* Render sonrası TÜM görünür "ProX" geçişlerini wordmark’a çevirir.
+     Yalnızca METİN DÜĞÜMLERİ gezilir; bu sayede <title>, meta, href, mailto konusu ve
+     JSON-LD kendiliğinden korunur (hiçbiri metin düğümü olarak ele alınmaz — <script>/<title> zaten atlanıyor).
+     innerHTML kullanılmaz, düğümler tek tek kurulur: enjeksiyon riski yok, idempotent (.nx-prox içine girmez). */
+  var PROX_SKIP = { SCRIPT: 1, STYLE: 1, TITLE: 1, TEXTAREA: 1, OPTION: 1, SELECT: 1, NOSCRIPT: 1, CANVAS: 1 };
+  function proxify(root) {
+    root = root || document.getElementById("app");
+    if (!root || !document.createTreeWalker) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        if (!n.nodeValue || n.nodeValue.indexOf("ProX") < 0) return NodeFilter.FILTER_REJECT;
+        for (var p = n.parentNode; p && p !== root.parentNode; p = p.parentNode) {
+          if (PROX_SKIP[p.nodeName]) return NodeFilter.FILTER_REJECT;
+          if (p.className && String(p.className).indexOf("nx-prox") >= 0) return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = walker.nextNode())) nodes.push(n);
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i], txt = node.nodeValue, frag = document.createDocumentFragment(), last = 0, idx;
+      while ((idx = txt.indexOf("ProX", last)) >= 0) {
+        if (idx > last) frag.appendChild(document.createTextNode(txt.slice(last, idx)));
+        var mark = document.createElement("span"); mark.className = "nx-prox";
+        mark.appendChild(document.createTextNode("Pro"));
+        var x = document.createElement("span"); x.className = "nx-prox-x";
+        x.appendChild(document.createTextNode("X"));
+        mark.appendChild(x); frag.appendChild(mark);
+        last = idx + 4;
+      }
+      if (last < txt.length) frag.appendChild(document.createTextNode(txt.slice(last)));
+      node.parentNode.replaceChild(frag, node);
+    }
+  }
+
   function boot(render) {
     injectBase();
     var app = document.getElementById("app");
     if (app) app.innerHTML = (typeof render === "function" ? render() : render);
+    proxify(app);
     startClock();
     seoAdapt();
   }
@@ -140,7 +196,11 @@
     var m = { "Veri Altyapısı": "veri-altyapisi.html", "Çözümler": "cozumler.html", "ProX": "prox.html", "Research": "research.html", "Hakkımızda": "hakkimizda.html", "İletişim": "iletisim.html" };
     return m[it] || "#";
   }
-  function upperTR(s) { try { return String(s).toLocaleUpperCase("tr-TR"); } catch (e) { return String(s).toUpperCase(); } }
+  /* "ProX" bir wordmark — hiçbir yerde büyük harfe çevrilmez (PROX olmaz). Çevresi normal büyür. */
+  function upperTR(s) {
+    try { return String(s).split("ProX").map(function (p) { return p.toLocaleUpperCase("tr-TR"); }).join("ProX"); }
+    catch (e) { return String(s).toUpperCase(); }
+  }
 
   function Ticker(items) {
     items = items || [];
@@ -169,7 +229,7 @@
     var tag = active ? upperTR(active) : "ANA SAYFA";
     var links = NAV_ITEMS.map(function (it) {
       var on = it === active;
-      return '<a href="' + navHref(it) + '" style="' + css({ fontFamily: C.mono, fontSize: 11, color: on ? C.primary : C.textMut, fontWeight: on ? 700 : 500, letterSpacing: "0.08em", textDecoration: "none", padding: "4px 0", borderBottom: on ? "1px solid " + C.primary : "1px solid transparent" }) + '">' + it.toLocaleUpperCase("tr-TR") + '</a>';
+      return '<a href="' + navHref(it) + '" style="' + css({ fontFamily: C.mono, fontSize: 11, color: on ? C.primary : C.textMut, fontWeight: on ? 700 : 500, letterSpacing: "0.08em", textDecoration: "none", padding: "4px 0", borderBottom: on ? "1px solid " + C.primary : "1px solid transparent" }) + '">' + upperTR(it) + '</a>';
     }).join("");
     return '<div style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "14px 16px", background: C.base, position: "sticky", top: 0, zIndex: 40, backdropFilter: "blur(12px)" }) + '">'
       + '<div style="' + css({ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 14 }) + '">'
@@ -186,18 +246,21 @@
     var col1 = NAV_ITEMS.map(function (l) { return '<a href="' + navHref(l) + '" style="' + css({ display: "block", fontFamily: C.mono, fontSize: 11, color: C.textMut, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">' + l + '</a>'; }).join("");
     var col2 = [["EmlakEkspertizi.com", "https://www.emlakekspertizi.com"], ["Karar Analizi", "https://www.emlakekspertizi.com/ekspertiz-talep"], ["SPK Lisanslı Rapor", "https://www.emlakekspertizi.com/spk-talep"], ["ProX Akıllı Asistan", "https://www.emlakekspertizi.com/yapay-zeka"], ["Üyelikler", "https://www.emlakekspertizi.com/uyelik"]]
       .map(function (x) { return '<a href="' + x[1] + '" style="' + css({ display: "block", fontFamily: C.mono, fontSize: 11, color: C.textMut, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">' + x[0] + '</a>'; }).join("");
-    var col3 = ["White-label Web", "Kurumsal API", "CRM Çözümleri", "Veri Lisansı", "Teklif Al"].map(function (l) { return '<a href="cozumler.html#kurumsal-iletisim" style="' + css({ display: "block", fontFamily: C.mono, fontSize: 11, color: C.textMut, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">' + l + '</a>'; }).join("");
+    /* Her kalem kendi hedefine gider; white-label artık kendi sayfasında. */
+    var col3 = [["White-label Web", "white-label.html"], ["Kurumsal API", "cozumler.html#kurumsal"], ["CRM Çözümleri", "cozumler.html#sirket"], ["Veri Lisansı", "cozumler.html#kurumsal"], ["Teklif Al", "cozumler.html#kurumsal-iletisim"]]
+      .map(function (x) { return '<a href="' + x[1] + '" style="' + css({ display: "block", fontFamily: C.mono, fontSize: 11, color: C.textMut, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">' + x[0] + '</a>'; }).join("");
+    var legal = [["KVKK", "kvkk.html"], ["GİZLİLİK", "gizlilik.html"], ["ÇEREZ POLİTİKASI", "cerez.html"], ["KULLANIM KOŞULLARI", "kullanim-kosullari.html"]].map(function (x, i) { return (i ? '<span style="' + css({ padding: "0 6px", color: C.textFaint }) + '">·</span>' : "") + '<a href="' + x[1] + '" style="' + css({ color: C.textMut, textDecoration: "none", letterSpacing: "0.06em" }) + '">' + x[0] + '</a>'; }).join("");
     return '<footer style="' + css({ borderTop: "1px solid " + C.borderStrong, padding: "30px 16px 24px", background: C.deep }) + '">'
       + '<div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
       + '<div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 20, marginBottom: 24 }) + '">'
       + '<div><div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }) + '"><span style="' + css({ width: 30, height: 30, border: "1.5px solid " + C.primary, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Sora',sans-serif", fontSize: 14, fontWeight: 700, color: C.primary, borderRadius: 2 }) + '">N</span><div><div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 20, fontWeight: 700, color: C.textPri, letterSpacing: "-0.02em" }) + '">NADAS</div><div style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.16em" }) + '">SINCE 2005</div></div></div>'
-      + '<p style="' + css({ fontSize: 12, color: C.textMut, maxWidth: 380, lineHeight: 1.5, margin: 0 }) + '">Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti.<br>Türkiye’nin ilk emlak endeksi · Online emlak ekspertiz platformu.</p></div>'
+      + '<p style="' + css({ fontSize: 12, color: C.textMut, maxWidth: 380, lineHeight: 1.5, margin: 0 }) + '">Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti.<br>2005’ten beri mahalle bazında kesintisiz aylık emlak endeksi · Online emlak ekspertiz platformu.</p></div>'
       + '<div style="' + css({ display: "flex", gap: 32, flexWrap: "wrap" }) + '">'
       + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">NADAS</div>' + col1 + '</div>'
       + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">ÜRÜN</div>' + col2 + '</div>'
       + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">KURUMSAL</div>' + col3 + '</div>'
       + '</div></div>'
-      + '<div style="' + css({ paddingTop: 16, borderTop: "1px solid " + C.border, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '"><span>© 2005-2026 NADAS · Tüm hakları saklıdır.</span><span>KVKK · GİZLİLİK · ÇEREZ POLİTİKASI · KULLANIM KOŞULLARI</span></div>'
+      + '<div style="' + css({ paddingTop: 16, borderTop: "1px solid " + C.border, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '"><span>© 2005-2026 NADAS · Tüm hakları saklıdır.</span><span style="' + css({ display: "flex", flexWrap: "wrap", alignItems: "center" }) + '">' + legal + '</span></div>'
       + '</div></footer>';
   }
 
@@ -206,6 +269,7 @@
     css: css, attr: attr, C: C, EMLAK_LOGO_URI: EMLAK_LOGO_URI, EmlakEkspertiziLogo: EmlakEkspertiziLogo,
     Eyebrow: Eyebrow, SectionDivider: SectionDivider, SubSection: SubSection,
     setAccent: setAccent, boot: boot, startClock: startClock, navHref: navHref,
+    ProX: ProX, proxify: proxify,
     Ticker: Ticker, Masthead: Masthead, Nav: Nav, Footer: Footer,
   };
 })();

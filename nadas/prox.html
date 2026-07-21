@@ -68,7 +68,7 @@
   </noscript>
 </div>
 
-<script src="js/core.js?v=2"></script>
+<script src="js/core.js?v=5"></script>
 <script>
 /* ============================================================================
    ProX · NADAS merkez sitesi — kanonik menü core.js’ten (ALTIN KURAL).
@@ -488,7 +488,7 @@
       + '<div style="'+css({marginTop:16,padding:"12px 16px",background:"rgba(167,139,250,0.04)",border:"1px dashed "+C.violet,fontFamily:C.mono,fontSize:11,color:C.textMut,lineHeight:1.6,letterSpacing:"0.02em"})+'">⌬ Her bir kaynağın güncelleme frekansı, lisans durumu ve veri kapsamı şeffaftır. TÜİK’in ücretli mikro veri kaynakları <strong style="'+css({color:C.warn})+'">LİSANSLI</strong> etiketi ile gösterilir; ProX’in kullandığı tüm TÜİK verisi <strong style="'+css({color:C.textSec})+'">Döner Sermaye İşletmesi tarifesine göre</strong> lisans altında alınmıştır.</div>';
     return SubSection("C.2","Veri ekosistemi · 5 katman · "+totalSources+" kaynak","NADAS ÖZEL · RESMİ MEVZUAT · KAMU · BAKANLIKLAR · YEREL YÖNETİMLER", body);
   }
-  window.nxSetLayer = function(i){ ekoActive=i; var m=document.getElementById('eko-mount'); if(m) m.innerHTML=VeriEkosistemi(); };
+  window.nxSetLayer = function(i){ ekoActive=i; var m=document.getElementById('eko-mount'); if(m){ m.innerHTML=VeriEkosistemi(); NX.proxify(m); } };
 
   /* ===== C.3 VERİ PIPELINE (SVG/SMIL) ===== */
   function VeriPipeline(){
@@ -758,7 +758,7 @@
       + '<div style="'+css({marginTop:16,fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.04em",lineHeight:1.5,textAlign:"center"})+'">⌬ Yukarıdaki örnekler temsilîdir. Gerçek ProX yanıtlarının formatı, kaynak şeffaflığı ve veri detayları aynıdır.</div>';
     return SubSection("E.1","Kullanım senaryoları · 4 tipik örnek","GERÇEK SORU-CEVAP · BİREY · PROFESYONEL · KURUMSAL · HUKUKİ", body);
   }
-  window.nxSetTab = function(i){ senaryoActive=i; var m=document.getElementById('senaryo-mount'); if(m) m.innerHTML=KullanimSenaryolari(); };
+  window.nxSetTab = function(i){ senaryoActive=i; var m=document.getElementById('senaryo-mount'); if(m){ m.innerHTML=KullanimSenaryolari(); NX.proxify(m); } };
 
   /* ===== F.1 ERİŞİM PAKETLERİ ===== */
   function ErisimPaketleri(){
@@ -865,7 +865,7 @@
       + '<div style="'+css({maxWidth:1280,margin:"0 auto"})+'">'
       + '<div style="'+css({display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:20,marginBottom:24})+'">'
       + '<div><div style="'+css({display:"flex",alignItems:"center",gap:10,marginBottom:10})+'"><span style="'+css({width:30,height:30,border:"1.5px solid "+C.primary,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:C.primary,borderRadius:2})+'">N</span><div><div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:20,fontWeight:700,color:C.textPri,letterSpacing:"-0.02em"})+'">NADAS</div><div style="'+css({fontFamily:C.mono,fontSize:9,color:C.violet,letterSpacing:"0.16em",fontWeight:700})+'">ProX · AKILLI ASİSTANI</div></div></div>'
-      + '<p style="'+css({fontSize:12,color:C.textMut,maxWidth:380,lineHeight:1.5,margin:0})+'">Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti.<br>Türkiye’nin ilk emlak endeksi · Online emlak ekspertiz platformu.</p></div>'
+      + '<p style="'+css({fontSize:12,color:C.textMut,maxWidth:380,lineHeight:1.5,margin:0})+'">Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti.<br>2005’ten beri mahalle bazında kesintisiz aylık emlak endeksi · Online emlak ekspertiz platformu.</p></div>'
       + '<div style="'+css({display:"flex",gap:32,flexWrap:"wrap"})+'">'
       + '<div><div style="'+css({fontFamily:C.mono,fontSize:10,color:C.violet,fontWeight:700,letterSpacing:"0.12em",marginBottom:10})+'">NADAS</div>'+col1+'</div>'
       + '<div><div style="'+css({fontFamily:C.mono,fontSize:10,color:C.violet,fontWeight:700,letterSpacing:"0.12em",marginBottom:10})+'">ProX</div>'+col2+'</div>'
@@ -897,7 +897,10 @@
   }
 
   /* ===== ÇALIŞMA ZAMANI ===== */
+  /* Bu sayfa NX.boot() kullanmıyor (kendi saat/sayaç/SEO kurulumu var), bu yüzden
+     ProX wordmark dönüşümünü elle çağırıyoruz — boot içindekiyle aynı iş. */
   document.getElementById('app').innerHTML = renderApp();
+  NX.proxify(document.getElementById('app'));
 
   // Saat
   function tick(){ var el=document.getElementById('mast-time'); if(el){ var d=new Date(); el.textContent=d.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}); } }

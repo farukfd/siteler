@@ -42,7 +42,15 @@ function _brandInitial(){try{var b=(window.dnGetBrand?dnGetBrand():{})||{};if(b.
    Açık ilan yayını EİDS yetkisi ister; VIP (davet usulü) portföy serbesttir.
    gerçek Bakanlık entegrasyonu için soyutlama: eidsConnect gerçek {firmaKod,kullaniciKodu}
    akışıyla değiştirilebilir. ===================================================== */
-function _leD(s){return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+/* GÜVENLİK: eskiden yalnız & < > kaçırıyordu, çift tırnağı geçiriyordu. Metin
+   bağlamında sorun değildi ama _leD 25'ten fazla yerde value="…" ÖZNİTELİK
+   bağlamında da kullanılıyor (CRM kişi/ilan/ekip formları, ayar alanları).
+   Saklı XSS zinciri: ziyaretçi iletişim formuna " onfocus="…" autofocus=" yazar
+   → dn_leads'e ham kaydedilir → crmFromLead() kişiye ham kopyalar → site sahibi
+   düzenleme formunu açtığında öznitelikten kaçıp KENDİ oturumunda çalışır.
+   Doğrulandı: onfocus/autofocus gerçek nitelik olarak ayrıştı. Tek tırnak da
+   eklendi; tek tırnaklı öznitelik kalıpları için. */
+function _leD(s){return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function eidsFirma(){SAAS_CONFIG.firma=SAAS_CONFIG.firma||{};SAAS_CONFIG.firma.eids=SAAS_CONFIG.firma.eids||{yetkili:false,connected:false,belgeNo:'',firmaKod:'',kullaniciKodu:''};return SAAS_CONFIG.firma;}
 function eidsGuid(){var s='';for(var i=0;i<8;i++)s+=Math.floor(Math.random()*10);return 'K'+s;}
 function eidsVerify(){var e=eidsFirma().eids;e.yetkili=!!(e.belgeNo&&(''+e.belgeNo).replace(/\D/g,'').length>=7&&e.connected);return e.yetkili;}
@@ -188,7 +196,7 @@ function abApply(){try{var v=abVariant();if(document.body)document.body.setAttri
 function applyProxyMode(){try{var pu=((SAAS_CONFIG.firma&&SAAS_CONFIG.firma.proxyUrl)||'').trim();
   if(pu){window.EMLAK_PROXY_MODE=true;window.EMLAK_PROXY_URL=pu.replace(/\/+$/,'');}else{window.EMLAK_PROXY_MODE=false;window.EMLAK_PROXY_URL='';}}catch(e){}}
 window.applySchema=applySchema;window.trackEvent=trackEvent;window.abVariant=abVariant;window.applyProxyMode=applyProxyMode;
-/* ===================== ÇOK DİLLİ (EN/AR) — ProX AI gerçek çeviri + RTL ===================== */
+/* ===================== ÇOK DİLLİ (EN/AR) — İçerik Asistanı gerçek çeviri + RTL ===================== */
 var _i18nOrig=null;
 function _i18nNodes(){var sels=['#navLinks .lnk','.hero h1','.hero h2','.hero .lede','.eyebrow','section h2','.btn-gold','.btn-line'];var set=[],seen=[];
   sels.forEach(function(s){document.querySelectorAll(s).forEach(function(el){if(el.children.length===0&&el.textContent.trim()&&el.textContent.trim().length<170&&seen.indexOf(el)<0){seen.push(el);set.push(el);}});});
@@ -780,7 +788,7 @@ function apptSubmit(){const ad=(document.getElementById('ap_ad')||{}).value?docu
   const s=document.getElementById('apptSummary');if(s)s.innerHTML='✓ Talebiniz iletildi: <b>'+_apptState.day+' · '+_apptState.slot+'</b>. Onay için sizi arayacağız.';}
 
 /* =====================================================================
-   ProX AI — Conversion Engine (portföy tarar + prim + randevuya yönlendirir)
+   İçerik Asistanı — Conversion Engine (portföy tarar + prim + randevuya yönlendirir)
    ===================================================================== */
 function _norm(s){return (s||'').toLocaleLowerCase('tr');}
 function proxScan(t){
@@ -1083,7 +1091,7 @@ function ilanEidsVerify(){var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsF
   toast('✓ EİDS taşınmaz doğrulaması alındı.');}
 async function ilanAiDesc(){var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
   var parts=[g('il_baslik'),ilnTipT(g('il_tip')),g('il_durum'),[g('il_ilce'),g('il_mah')].filter(Boolean).join(' '),(g('il_m2')?g('il_m2')+' m²':''),g('il_oda'),(g('il_fiyat')?fmt(+g('il_fiyat'))+' ₺':'')].filter(Boolean).join(' · ');
-  var ta=document.getElementById('il_desc');if(!ta)return;var old=ta.value;ta.value='ProX AI yazıyor…';
+  var ta=document.getElementById('il_desc');if(!ta)return;var old=ta.value;ta.value='İçerik Asistanı yazıyor…';
   try{var txt=await aiChat({prompt:'Sen lüks gayrimenkul için metin yazarısın; abartısız, veri odaklı, gizlilik vurgulu.',message:'Şu ilan için 2-3 cümlelik çekici bir satış açıklaması yaz (Türkçe): '+parts,context:'ilan açıklaması'});
     ta.value=(txt||'').replace(/<[^>]+>/g,'').trim()||old||parts;toast('✓ Açıklama üretildi.');}catch(e){ta.value=old||parts;toast('Üretilemedi.');}}
 function ilanRefreshPublic(){try{var h=document.getElementById('homeListings');if(h)h.innerHTML=listingCardsHTML();}catch(e){}
@@ -1110,7 +1118,7 @@ function ilanEdit(id){ilanLoad();var l=id?LISTINGS.filter(function(x){return x.i
     +'<div class="crm-frow"><div class="crm-f"><label>Fiyat (₺)</label><input id="il_fiyat" type="number" value="'+(l.fiyat||'')+'"></div><div class="crm-f"><label>EİDS Taşınmaz No</label><input id="il_eids" value="'+_leD(l.eidsNo||'')+'" placeholder="opsiyonel"></div></div>'
     +'<div class="crm-f"><label>Görsel</label><div class="iln-img"><div class="iln-thumb" id="il_thumb">'+(_ilnImg?'<img src="'+_ilnImg+'" alt="">':'—')+'</div><label class="btn btn-line" style="cursor:pointer;font-size:12.5px">Görsel Yükle<input type="file" accept="image/*" onchange="ilanImgUpload(this)" style="display:none"></label><button class="btn btn-line" style="font-size:12.5px" type="button" onclick="ilanImgClear()">Kaldır</button></div></div>'
     +'<div class="crm-f"><label>EİDS Taşınmaz Doğrulama</label><div id="il_eidsStatus">'+_ilnEidsHtml()+'</div><button class="btn btn-line" style="margin-top:7px" type="button" onclick="ilanEidsVerify()">e-Devlet EİDS ile Doğrula</button></div>'
-    +'<div class="crm-f"><label>Açıklama <button type="button" class="crm-x2" style="margin-left:8px" onclick="ilanAiDesc()">🤖 ProX AI ile üret</button></label><textarea id="il_desc" rows="3" placeholder="İlan açıklaması…">'+_leD(l.desc||'')+'</textarea></div>'
+    +'<div class="crm-f"><label>Açıklama <button type="button" class="crm-x2" style="margin-left:8px" onclick="ilanAiDesc()">🤖 İçerik Asistanı ile üret</button></label><textarea id="il_desc" rows="3" placeholder="İlan açıklaması…">'+_leD(l.desc||'')+'</textarea></div>'
     +'<div class="crm-frow"><div class="crm-f"><label>360° Sanal Tur Linki</label><input id="il_tur" value="'+_leD(l.tur||'')+'" placeholder="Matterport / Kuula URL"></div><div class="crm-f"><label>Video Tur Linki</label><input id="il_video" value="'+_leD(l.video||'')+'" placeholder="YouTube / Vimeo URL"></div></div>'
     +'<div class="crm-f"><label>Yayın Durumu</label><select id="il_status"><option value="aktif"'+(l.status!=='pasif'?' selected':'')+'>Yayında (aktif)</option><option value="pasif"'+(l.status==='pasif'?' selected':'')+'>Pasif (yayında değil)</option></select></div>'
     +'<div class="crm-mact"><button class="btn btn-gold" onclick="ilanSaveForm('+id+')">Kaydet</button><button class="btn btn-line" onclick="crmCloseModal()">Vazgeç</button>'+(id?'<button class="btn btn-line" style="margin-left:auto;color:#c0603a" onclick="ilanDel('+id+')">Sil</button>':'')+'</div>';
@@ -1377,7 +1385,7 @@ async function dnGenAll(){var btn=document.getElementById('dnGenBtn'),out=docume
   dnIdentSaveForm();
   if(btn){btn.disabled=true;btn.textContent='✨ Üretiliyor…';}if(out)out.innerHTML='<span class="sub">ProX/DeepSeek içerik üretiyor… (10–40 sn)</span>';
   try{var res=await dnGenContent();var data=res&&res.data;
-    if(!data){if(out)out.innerHTML='<span style="color:#c0392b">İçerik üretilemedi. <b>ProX AI</b> sekmesinden DeepSeek anahtarını kontrol edin veya tekrar deneyin.</span>';return;}
+    if(!data){if(out)out.innerHTML='<span style="color:#c0392b">İçerik üretilemedi. <b>İçerik Asistanı</b> sekmesinden DeepSeek anahtarını kontrol edin veya tekrar deneyin.</span>';return;}
     var part={};['heroEb','heroT1','heroT2','heroLede','intelText','homeAboutBody','hk_eyebrow','hk_role','hk_lede','hk_body','hz_eyebrow','hz_lede'].forEach(function(k){if(data[k])part[k]=(''+data[k]).trim();});
     if(Array.isArray(data.services)&&data.services.length){part.services=data.services.slice(0,10).map(function(s){return {title:(''+(s.title||'')).trim(),desc:(''+(s.desc||'')).trim(),icon:(DN_SVC_ICONS[s.icon]?s.icon:'home')};}).filter(function(s){return s.title;});}
     cmsMerge(part);
@@ -1514,7 +1522,7 @@ function crmRenderProxApi(){var host=document.getElementById('crmProxApi');if(!h
     +'<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-gold sta-go" onclick="proxCfgSave()">Kaydet</button><button class="btn btn-line sta-go" type="button" onclick="proxCfgTest()">Bağlan & Test Et</button></div>'
     +'<div id="px_status" style="margin-top:10px"></div>'
     +'<div class="sta-ds"><div class="sta-ds-h">📊 Kullanım Kotası</div><p class="sub" style="margin:2px 0">Bu ay <b>'+((q&&q.count)||0)+'</b> ProX isteği'+(q&&q.month?(' ('+_leD(q.month)+')'):'')+'</p></div>'
-    +'<p class="sub" style="margin-top:8px">Bu anahtar <b>VERİ uçları</b> içindir (endeks · değerleme · il/ilçe/mahalle · analiz). Yapay zeka üretimi için <b>DeepSeek</b> anahtarını "ProX AI" sekmesinden girin — ikisi ayrı çalışır.</p>';
+    +'<p class="sub" style="margin-top:8px">Bu anahtar <b>VERİ uçları</b> içindir (endeks · değerleme · il/ilçe/mahalle · analiz). Yapay zeka üretimi için <b>DeepSeek</b> anahtarını "İçerik Asistanı" sekmesinden girin — ikisi ayrı çalışır.</p>';
   host.innerHTML=H;
 }
 function proxCfgSave(){var g=function(x){var el=document.getElementById(x);return el?el.value.trim():'';};var tenant=g('px_tenant')||'consultant',key=g('px_key');
@@ -1636,7 +1644,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();cl
    ===================================================================== */
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='adm-app';
   el.innerHTML='<div class="adm-topbar"><div class="alogo"><span class="mark">'+_brandInitial()+'</span><span class="alogo-t">'+_leD(saasResolve('brandName')||'Selin Meridyen')+' · <b>Pro<span class="ap-x">X</span> CRM</b></span></div><div class="adm-topbar-act"><button onclick="openOnboarding()">🚀 Sihirbaz</button><button onclick="closeSaasAdmin()">👁 Siteyi Gör</button><button class="adm-x" onclick="closeSaasAdmin()">✕</button></div></div><div class="adm-dash">'
-   +'<aside class="adm-side"><button class="adm-nav" data-t="yayin" onclick="staTab(this)" style="margin-bottom:6px;background:linear-gradient(135deg,#0e5e3e,#14805a);color:#fff;font-weight:700">🚀 Yayın Hazırlığı</button><button class="adm-nav act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><div class="adm-group">CRM & Satış</div><button class="adm-nav" data-t="crmkisi" onclick="staTab(this)">👤 Kişiler & Talepler</button><button class="adm-nav" data-t="eslesme" onclick="staTab(this)">🎯 Akıllı Eşleştirme</button><button class="adm-nav" data-t="crmpipe" onclick="staTab(this)">🪜 Satış Hattı</button><button class="adm-nav" data-t="crmtask" onclick="staTab(this)">📅 Görev & Randevu</button><button class="adm-nav" data-t="komisyon" onclick="staTab(this)">💰 Komisyon & Finans</button><button class="adm-nav" data-t="kira" onclick="staTab(this)">🔑 Kira Takibi</button><button class="adm-nav" data-t="sozlesme" onclick="staTab(this)">📄 Sözleşmeler</button><button class="adm-nav" data-t="iletisim" onclick="staTab(this)">📣 İletişim & WhatsApp</button><button class="adm-nav" data-t="rapor" onclick="staTab(this)">📈 Raporlar</button><button class="adm-nav" data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><div class="adm-group">Portföy & İçerik</div><button class="adm-nav" data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button class="adm-nav" data-t="portfoy" onclick="staTab(this)">🔒 Özel Portföy</button><button class="adm-nav" data-t="ekip" onclick="staTab(this)">👥 Ekip / Danışmanlar</button><button class="adm-nav" data-t="hizmetalani" onclick="staTab(this)">🗺️ Hizmet Alanı</button><button class="adm-nav" data-t="icerik" onclick="staTab(this)">📝 İçerik & Sayfalar</button><div class="adm-group">Entegrasyon & ProX</div><button class="adm-nav" data-t="prox" onclick="staTab(this)">🤖 ProX AI & DeepSeek</button><button class="adm-nav" data-t="proxapi" onclick="staTab(this)">🔌 ProX API & Anahtar</button><button class="adm-nav" data-t="eids" onclick="staTab(this)">🛡️ EİDS Yetki</button><div class="adm-group">Pazarlama</div><button class="adm-nav" data-t="seo" onclick="staTab(this)">🔍 Google & SEO</button><div class="adm-group">Ayarlar</div><button class="adm-nav" data-t="firma" onclick="staTab(this)">🏢 Firma Bilgileri</button><button class="adm-nav" data-t="marka" onclick="staTab(this)">🎨 Marka & Tema</button><button class="adm-nav" data-t="yedek" onclick="staTab(this)">💾 Yedek / Aktar</button><div class="spacer"></div><button class="adm-nav exit" onclick="closeSaasAdmin()">⎋ Paneli Kapat</button></aside><main class="adm-main">'
+   +'<aside class="adm-side"><button class="adm-nav" data-t="yayin" onclick="staTab(this)" style="margin-bottom:6px;background:linear-gradient(135deg,#0e5e3e,#14805a);color:#fff;font-weight:700">🚀 Yayın Hazırlığı</button><button class="adm-nav act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><div class="adm-group">CRM & Satış</div><button class="adm-nav" data-t="crmkisi" onclick="staTab(this)">👤 Kişiler & Talepler</button><button class="adm-nav" data-t="eslesme" onclick="staTab(this)">🎯 Akıllı Eşleştirme</button><button class="adm-nav" data-t="crmpipe" onclick="staTab(this)">🪜 Satış Hattı</button><button class="adm-nav" data-t="crmtask" onclick="staTab(this)">📅 Görev & Randevu</button><button class="adm-nav" data-t="komisyon" onclick="staTab(this)">💰 Komisyon & Finans</button><button class="adm-nav" data-t="kira" onclick="staTab(this)">🔑 Kira Takibi</button><button class="adm-nav" data-t="sozlesme" onclick="staTab(this)">📄 Sözleşmeler</button><button class="adm-nav" data-t="iletisim" onclick="staTab(this)">📣 İletişim & WhatsApp</button><button class="adm-nav" data-t="rapor" onclick="staTab(this)">📈 Raporlar</button><button class="adm-nav" data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><div class="adm-group">Portföy & İçerik</div><button class="adm-nav" data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button class="adm-nav" data-t="portfoy" onclick="staTab(this)">🔒 Özel Portföy</button><button class="adm-nav" data-t="ekip" onclick="staTab(this)">👥 Ekip / Danışmanlar</button><button class="adm-nav" data-t="hizmetalani" onclick="staTab(this)">🗺️ Hizmet Alanı</button><button class="adm-nav" data-t="icerik" onclick="staTab(this)">📝 İçerik & Sayfalar</button><div class="adm-group">Entegrasyon & ProX</div><button class="adm-nav" data-t="prox" onclick="staTab(this)">🤖 İçerik Asistanı & DeepSeek</button><button class="adm-nav" data-t="proxapi" onclick="staTab(this)">🔌 ProX API & Anahtar</button><button class="adm-nav" data-t="eids" onclick="staTab(this)">🛡️ EİDS Yetki</button><div class="adm-group">Pazarlama</div><button class="adm-nav" data-t="seo" onclick="staTab(this)">🔍 Google & SEO</button><div class="adm-group">Ayarlar</div><button class="adm-nav" data-t="firma" onclick="staTab(this)">🏢 Firma Bilgileri</button><button class="adm-nav" data-t="marka" onclick="staTab(this)">🎨 Marka & Tema</button><button class="adm-nav" data-t="yedek" onclick="staTab(this)">💾 Yedek / Aktar</button><div class="spacer"></div><button class="adm-nav exit" onclick="closeSaasAdmin()">⎋ Paneli Kapat</button></aside><main class="adm-main">'
    /* CRM · PANEL */
    +'<div class="sta-pane" data-p="yayin" hidden><h4>🚀 Yayın Hazırlığı</h4><p class="sub">Siteniz yayına çıkmadan önce doldurmanız gereken bilgiler. Her eksik maddeyi tek tıkla ilgili bölüme gidip düzeltin.</p><div id="yayinBody"></div></div>'
    +'<div class="sta-pane" data-p="crmdash"><h4>Yönetim Paneli · CRM</h4><p class="sub">Kişiler, satış hattı, görevler ve gelen talepler tek bakışta. Gerçek görüşme ve talepler otomatik düşer.</p><div id="crmDash"></div></div>'
@@ -1687,11 +1695,11 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
      +'<div class="sta-f"><label>Meta Anahtar Kelimeler (keywords)</label><input id="sm_kw" placeholder="lüks konut, özel portföy, yalı..."></div>'
      +'<button class="btn btn-gold sta-go" onclick="saasSaveSEO()">Kaydet & Uygula</button></div>'
    /* PROX */
-   +'<div class="sta-pane" data-p="prox" hidden><h4>ProX AI — Danışman Promptu</h4><p class="sub">Lüks broker personasına eklenir / düzenlenir. Conversion motoru bu tonu kullanır.</p>'
+   +'<div class="sta-pane" data-p="prox" hidden><h4>İçerik Asistanı — Danışman Promptu</h4><p class="sub">Lüks broker personasına eklenir / düzenlenir. Conversion motoru bu tonu kullanır.</p>'
      +'<div class="sta-f"><label>Ana Persona (sistem)</label><textarea id="sp_base" rows="4" readonly></textarea></div>'
      +'<div class="sta-f"><label>Kuruma Özel Ek Ton (override)</label><textarea id="sp_custom" rows="3" placeholder="Örn: Boğaz hattı yalıları ve marka rezidanslarda uzmanız..."></textarea></div>'
      +'<div class="sta-ds"><div class="sta-ds-h">🧠 DeepSeek Yapay Zeka Anahtarı <span class="sta-opt">opsiyonel</span></div>'
-       +'<p class="sub" style="margin:2px 0 8px">Kendi DeepSeek API anahtarınızı girerseniz <b>tüm yapay zeka üretimi</b> (danışman asistanı + çeviri) doğrudan <b>DeepSeek</b> ile çalışır. Boş bırakırsanız ProX sunucu yapay zekası kullanılır. <b>ProX API anahtarı</b> (EİDS/ProX sekmesi) ise emlak endeksi ve değerleme verileri içindir — ikisi ayrı çalışır.</p>'
+       +'<p class="sub" style="margin:2px 0 8px">Kendi DeepSeek API anahtarınızı girerseniz <b>tüm yapay zeka üretimi</b> (danışman asistanı + çeviri) doğrudan <b>DeepSeek</b> ile çalışır. Boş bırakırsanız ProX sunucusundaki içerik asistanı kullanılır. <b>ProX API anahtarı</b> (EİDS/ProX sekmesi) ise emlak endeksi ve değerleme verileri içindir — ikisi ayrı çalışır.</p>'
        +'<div class="sta-row2"><div class="sta-f"><label>DeepSeek API Anahtarı (sk-...)</label><input id="dn_dskey" type="password" placeholder="sk-..." autocomplete="off"></div>'
        +'<div class="sta-f"><label>Model</label><select id="dn_dsmodel"><option value="deepseek-chat">deepseek-chat (V3)</option><option value="deepseek-reasoner">deepseek-reasoner (R1)</option></select></div></div>'
        +'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-line" type="button" onclick="aiDsTest()">Bağlan & Test Et</button><span class="sub" style="margin:0">Anahtar istemcide saklanır; yayında sunucu-proxy önerilir.</span></div>'
@@ -1796,7 +1804,7 @@ function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');try{do
 function closeSaasAdmin(){const e=document.getElementById('saasTenantAdmin');if(e)e.classList.remove('on');try{document.body.style.overflow='';}catch(_e){}}
 /* ===== PAKET / ÖZELLİK KİLİDİ (admin sekmeleri) — upsell'li ===== */
 var STA_TAB_FEAT={seo:'canUseAnalytics',prox:'canUseMarketingContent',portfoy:'canUseAdvancedProX'};
-var STA_FEAT_LABEL={canUseAnalytics:'Google & SEO / Analitik',canUseMarketingContent:'ProX AI İçerik',canUseAdvancedProX:'Gerçek ProX Özel Portföy'};
+var STA_FEAT_LABEL={canUseAnalytics:'Google & SEO / Analitik',canUseMarketingContent:'İçerik Asistanı İçerik',canUseAdvancedProX:'Gerçek ProX Özel Portföy'};
 var PKG_ORDER_D=['BASIC','PRO','BUSINESS','ENTERPRISE'];
 var PKG_KAPSAM_D={BASIC:'Piyasa analizi · Lead CRM · SVG',PRO:'+ Analitik · SEO & pazarlama içeriği',BUSINESS:'+ Gelişmiş ProX · Blog · Premium tema',ENTERPRISE:'+ Tam white-label'};
 function featHasD(f){return typeof window.hasFeature==='function'?window.hasFeature(f):true;}
@@ -1857,7 +1865,7 @@ function _saasPortalHost(){ var el=document.getElementById('saasPortalModal'); i
 function _saasPortalLoginHTML(){ return ''
   +'<div class="sp-lock"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="16" r="1.4"/></svg></div>'
   +'<h3>Gayrimenkul Sahibi &amp; Yatırımcı Portföy Takip Girişi</h3>'
-  +'<div class="sp-sub">Kurumsal Gayrimenkul Yönetim Paneli: Sözleşmeli gayrimenkullerinizin ProX AI pazar analizlerine ve performans grafiklerine erişim sağlayın.</div>'
+  +'<div class="sp-sub">Kurumsal Gayrimenkul Yönetim Paneli: Sözleşmeli gayrimenkullerinizin ProX pazar analizlerine ve performans grafiklerine erişim sağlayın.</div>'
   +'<div class="sp-f"><input id="spClientKey" placeholder="Kurumsal Anahtar (Client Key)" autocomplete="off"></div>'
   +'<div class="sp-f"><input id="spPass" type="password" placeholder="Güvenli Şifre" autocomplete="off" onkeydown="if(event.key===\'Enter\')saasPortalSubmit()"></div>'
   +'<button id="spGo" class="btn btn-gold sp-go" onclick="saasPortalSubmit()">Güvenli Giriş →</button>'
@@ -1868,11 +1876,11 @@ function _saasPortalPanelHTML(){ var u=window.SAAS_USER.clientProfile||{}; var r
   return ''
   +'<div class="sp-lock"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg></div>'
   +'<h3>Kurumsal Gayrimenkul Yönetim Paneli</h3>'
-  +'<div class="sp-sub">Sözleşmeli portföyünüze ProX AI pazar analizleri ve performans grafikleriyle erişin.</div>'
+  +'<div class="sp-sub">Sözleşmeli portföyünüze ProX pazar analizleri ve performans grafikleriyle erişin.</div>'
   +'<div class="sp-profile"><b>'+((u.companyName||'Kurumsal Üye')+'')+'</b><div class="role">'+((u.role||'Kurumsal Yönetici')+'')+'</div>'
     +'<div class="sp-chips">'+(regions.length?regions.map(function(r){return '<span>'+r+'</span>';}).join(''):'<span>Yetki bölgesi tanımlı değil</span>')+'</div></div>'
   +'<div class="sp-actions">'
-    +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'surec\')"><b>ProX AI Pazar Analizi</b><span>Sözleşmeli gayrimenkul değer & prim analizi</span></div>'
+    +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'surec\')"><b>ProX Pazar Analizi</b><span>Sözleşmeli gayrimenkul değer & prim analizi</span></div>'
     +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'iletisim\')"><b>Performans Grafikleri</b><span>Portföy değer seyri & likidite</span></div>'
     +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'vip\')"><b>Sözleşmeli Gayrimenkuller</b><span>Yetki belgeli portföy kayıtları</span></div>'
     +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'randevu\')"><b>Ücretsiz Analiz</b><span>Danışman görüşmesi planlayın</span></div>'
