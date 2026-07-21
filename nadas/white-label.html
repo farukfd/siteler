@@ -522,6 +522,55 @@
             padding:3px 7px; border-radius:2px; flex:0 0 auto; }
   .ku-kim.siz { background:rgba(56,189,248,.16); color:#7DD3FC; }
   .ku-kim.biz { background:rgba(167,139,250,.16); color:#C4B5FD; }
+
+  /* ---- EİDS: elle mi, gömülü mü ------------------------------------------
+     "EİDS uyumlu" demek bir şey anlatmıyor; değeri elle yapılan işin ortadan
+     kalkmasında. İki sütun yan yana konunca fark kendini anlatıyor. */
+  .ed-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px;
+             background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.10); }
+  .ed-sut { background:#0A1626; padding:14px 16px; }
+  .ed-sut.gomulu { background:#101F35; }
+  .ed-bas { font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.12em;
+            font-weight:700; margin-bottom:4px; }
+  .ed-bas.elle { color:#F87171; }
+  .ed-bas.gomulu { color:#A78BFA; }
+  .ed-alt { font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.06em;
+            color:#4A5B70; margin-bottom:11px; display:block; }
+  .ed-adim { display:grid; grid-template-columns:19px 1fr; gap:9px; padding:7px 0;
+             border-bottom:1px solid rgba(255,255,255,.055); align-items:start; }
+  .ed-adim:last-child { border-bottom:0; }
+  .ed-no { font-family:'JetBrains Mono',monospace; font-size:9px; color:#3E5069; padding-top:2px; }
+  .ed-sut.gomulu .ed-no { color:#7C6BB0; }
+  .ed-ne { font-size:12.5px; line-height:1.5; color:#94A3B8; }
+  .ed-sut.gomulu .ed-ne { color:#CBD5E1; }
+  .ed-otomatik { font-family:'JetBrains Mono',monospace; font-size:7.5px; letter-spacing:.1em;
+                 color:#A78BFA; display:block; margin-top:3px; }
+  @media (max-width:620px){ .ed-grid { grid-template-columns:1fr !important; } }
+
+  /* ---- Çıkış dökümü: ne, hangi biçimde, ne zaman -------------------------
+     "Kilitlenmezsiniz" bir güvence cümlesi; kanıtı ne götürdüğünüzün tek tek
+     yazılması. Son satır kapsam dışını söylüyor — onu yazmak diğerlerini
+     inandırıcı kılıyor. */
+  .ck-satir { display:grid; grid-template-columns:minmax(0,1fr) 116px 128px; gap:12px;
+              align-items:center; padding:9px 0; border-bottom:1px solid rgba(255,255,255,.07); }
+  .ck-satir:last-child { border-bottom:0; }
+  .ck-baslik { border-bottom:1px solid rgba(255,255,255,.14); padding-bottom:7px; }
+  .ck-baslik span { font-family:'JetBrains Mono',monospace; font-size:8.5px;
+                    letter-spacing:.12em; color:#4A5B70; }
+  .ck-ne { font-size:13px; color:#CBD5E1; line-height:1.4; }
+  .ck-bicim { font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#94A3B8; }
+  .ck-zaman { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.06em;
+              padding:4px 8px; border-radius:2px; text-align:center; }
+  .ck-zaman.hemen { background:rgba(52,211,153,.15); color:#34D399; }
+  .ck-zaman.sizde { background:rgba(148,163,184,.14); color:#94A3B8; }
+  .ck-zaman.disi { background:rgba(248,113,113,.14); color:#F87171; }
+  .ck-satir.disi .ck-ne, .ck-satir.disi .ck-bicim { color:#64748B; }
+  @media (max-width:620px){
+    .ck-satir { grid-template-columns:minmax(0,1fr) 104px !important; gap:5px 10px; }
+    .ck-bicim { grid-column:1; font-size:9px; }
+    .ck-zaman { grid-column:2; grid-row:1; }
+    .ck-baslik { display:none; }
+  }
   @media (max-width:620px){ .gv-satir { grid-template-columns:minmax(0,1fr) 92px; } .gv-ad { font-size:12px; } }
   @media (prefers-reduced-motion:reduce){ .gv-rozet, .gv-btn { transition:none !important; } }
 
@@ -1179,7 +1228,9 @@
       ["Taranabilir gerçek sayfalar", "Tek-sayfa uygulamalarının aksine her sayfa ayrı bir adres ve ayrı bir belgedir."],
       ["Canonical · her sayfada", "Yayına çıkınca kanonik adres sizin alan adınıza yazılır."],
       ["35 farklı yapılandırılmış veri tipi", "FAQPage, RealEstateAgent, LocalBusiness, ProfessionalService, GeneralContractor dâhil."],
-      ["Yapay zekâ aramalarına hazır", "Soru-cevap yapısı ve varlık tanımları, üretici arama asistanlarının alıntılayabileceği biçimde işaretlenir."],
+      /* "Yapay zekâ aramalarına hazır" kalemi buradan çıkarıldı: D.4 zaten
+         yalnızca o konuyu işliyordu, iki bölüm aynı iddiayı tekrarlıyordu.
+         D.1 klasik aramaya, D.4 yapay zekâ aramasına odaklanıyor. */
       ["Sitemap + robots", "Panelden üretilir, Search Console’a gönderilir."],
       ["Türkçe gramer motoru", "“Uşak’ta” yazar, “Uşak’de” yazmaz — il adı çekim ekleri ünsüz uyumuyla üretilir. Aşağıda kendiniz deneyin."],
       ["Çok dilli yayın", "TR/EN; değerleme sürümünde beş dil ve sağdan-sola yazım desteği."]
@@ -1189,9 +1240,10 @@
         + '<div style="' + css({ fontSize: 12.5, color: C.textMut, lineHeight: 1.55, marginTop: 4 }) + '">' + k[1] + '</div></div>';
     }).join("");
     var tipler = "AboutPage · AdministrativeArea · Answer · Brand · BreadcrumbList · City · CollectionPage · ContactPage · ContactPoint · Country · Dataset · FAQPage · GeneralContractor · GeoCoordinates · ImageObject · ItemList · ListItem · LocalBusiness · Offer · OfferCatalog · OpeningHoursSpecification · Organization · Person · Place · PostalAddress · Product · ProfessionalService · PropertyValue · Question · RealEstateAgent · RealEstateDevelopment · Service · SoftwareApplication · WebPage · WebSite";
-    return NX.SubSection("D.1", "Google ve yapay zekâ aramalarında görünürlük", "TARANABİLİR · YAPILANDIRILMIŞ VERİ · ÇOK DİLLİ",
+    return NX.SubSection("D.1", "Google aramasında görünürlük", "TARANABİLİR · YAPILANDIRILMIŞ VERİ · TÜRKÇE GRAMER",
       '<div style="' + css({ maxWidth: 740 }) + '">'
-      + '<p style="' + css({ fontSize: 15.5, lineHeight: 1.68, color: C.textSec, marginBottom: 14 }) + '">Çoğu emlak sitesi tek-sayfa uygulamasıdır ve düzgün taranmaz. Bu mimaride her sayfa gerçek ve ayrıdır; üstelik yapılandırılmış veri katmanı, hem arama motorlarının hem de yapay zekâ arama asistanlarının içeriğinizi doğru alıntılamasını sağlar.</p>'
+      + '<p style="' + css({ fontSize: 15.5, lineHeight: 1.68, color: C.textSec, marginBottom: 8 }) + '">Çoğu emlak sitesi tek-sayfa uygulamasıdır ve düzgün taranmaz. Bu mimaride her sayfa gerçek ve ayrıdır; yapılandırılmış veri katmanı arama motorlarının içeriğinizi doğru okumasını sağlar.</p>'
+      + '<p style="' + css({ fontSize: 15.5, lineHeight: 1.68, color: C.textSec, marginBottom: 14 }) + '">Bu bölüm klasik aramayı anlatır. Yapay zekâ asistanlarına yönelik altyapı ayrı bir başlıkta — <strong style="' + css({ color: C.textPri }) + '">D.4</strong>.</p>'
       + kalem + '</div>'
       /* --- Canlı gramer kanıtı: motor sayfada çalışıyor, iddia edilmiyor, gösteriliyor --- */
       + '<div style="' + css({ marginTop: 22, background: C.raised, border: "1px solid " + C.border, padding: "16px 16px", maxWidth: 740 }) + '">'
@@ -1206,20 +1258,34 @@
 
   /* ===== E · KİLİTLENMEZSİNİZ ============================================= */
   function Cikis() {
-    var madde = ["Siteniz kapatılmaz. Canlı veri akışı, yönetim paneli ve güncellemeler durur.",
-      "Talep ederseniz 30 gün içinde sitenizin statik kopyası ve tüm içerik/müşteri verileriniz teslim edilir.",
-      "Alan adı her zaman sizindir.",
-      "12 ay içinde dönerseniz kurulum yeniden yapılmaz."]
-      .map(function (m, i) {
-        return '<div style="' + css({ display: "grid", gridTemplateColumns: "22px 1fr", gap: 12, padding: "10px 0", borderBottom: i === 3 ? "none" : "1px solid " + C.border }) + '">'
-          + '<span style="' + mono(10, C.violet, "0.06em", 700) + '">' + ("0" + (i + 1)) + '</span>'
-          + '<span style="' + css({ fontSize: 13.5, color: C.textSec, lineHeight: 1.6 }) + '">' + m + '</span></div>';
-      }).join("");
-    return NX.SubSection("D.5", "Kilitlenmezsiniz", "ÇIKIŞ TAAHHÜDÜ · STATİK TESLİM · ALAN ADI SİZİN",
+    /* [ne, biçim, ne zaman, durum]
+       SSS ve E.1 ile tutarlı olmalı: site 45 gün ayakta kalır, yedeği kullanıcı
+       KENDİSİ indirir. Eski metin "talep ederseniz 30 gün içinde teslim edilir"
+       diyordu — hem süre hem kurgu yanlıştı. Son satır kapsam dışını söylüyor. */
+    var CIKIS = [
+      ["Portföy ve ilan kayıtları", "CSV · JSON", "İSTEDİĞİNİZ AN", "hemen"],
+      ["Müşteri kayıtları ve talepler", "CSV · JSON", "İSTEDİĞİNİZ AN", "hemen"],
+      ["Sayfa içerikleri ve bölge metinleri", "CSV · JSON", "İSTEDİĞİNİZ AN", "hemen"],
+      ["Medya dosyaları — görsel, belge", "özgün dosya", "İSTEDİĞİNİZ AN", "hemen"],
+      ["Alan adı", "sizin adınıza kayıtlı", "ZATEN SİZDE", "sizde"],
+      ["Platform kaynak kodu", "lisanslanır, devredilmez", "KAPSAM DIŞI", "disi"]
+    ];
+    var madde = '<div class="ck-satir ck-baslik"><span>NE ALIRSINIZ</span><span>BİÇİM</span><span>NE ZAMAN</span></div>'
+      + CIKIS.map(function (c) {
+          return '<div class="ck-satir' + (c[3] === "disi" ? " disi" : "") + '">'
+            + '<span class="ck-ne">' + attr(c[0]) + '</span>'
+            + '<span class="ck-bicim">' + attr(c[1]) + '</span>'
+            + '<span class="ck-zaman ' + c[3] + '">' + attr(c[2]) + '</span></div>';
+        }).join("");
+
+    return NX.SubSection("D.5", "Kilitlenmezsiniz", "ÇIKIŞ YOLU BAŞTAN TANIMLI · AÇIK BİÇİM · ALAN ADI SİZİN",
       '<div style="' + css({ background: C.deep, border: "1px solid " + C.violet, padding: "30px 28px", maxWidth: 880 }) + '">'
       + '<div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "clamp(1.3rem,2.6vw,1.75rem)", fontWeight: 700, color: C.textPri, lineHeight: 1.22, letterSpacing: "-0.025em", maxWidth: 640 }) + '">Ayrılırsanız sitenizi <span style="' + css({ color: C.violet }) + '">yanınızda götürürsünüz.</span></div>'
-      + '<p style="' + css({ fontSize: 14, color: C.textSec, lineHeight: 1.68, margin: "14px 0 20px", maxWidth: 640 }) + '">Derleme adımı yok. Siteniz statik dosyalardan oluşur — bir klasördür. Bu, mimarinin yan etkisi değil, bilinçli bir tercihidir.</p>'
-      + madde + '</div>');
+      + '<p style="' + css({ fontSize: 14, color: C.textSec, lineHeight: 1.68, margin: "14px 0 8px", maxWidth: 640 }) + '">Derleme adımı yok. Siteniz statik dosyalardan oluşur — bir klasördür. Bu, mimarinin yan etkisi değil, bilinçli bir tercihidir.</p>'
+      + '<p style="' + css({ fontSize: 14, color: C.textSec, lineHeight: 1.68, margin: "0 0 20px", maxWidth: 640 }) + '">Üyelik bittiğinde siteniz <strong style="' + css({ color: C.textPri }) + '">45 gün yayında kalmaya devam eder</strong>. Verilerinizi indirmek için o günü beklemeniz de, bizden talepte bulunmanız da gerekmez — panelden istediğiniz an kendiniz alırsınız.</p>'
+      + madde
+      + '<p style="' + mono(9.5, C.textFaint, "0.04em") + css({ marginTop: 14, lineHeight: 1.6 }) + '">Dışa aktarma açık biçimlerde yapılır; veriniz özel bir formata kilitlenmez. Aldığınız dosyaları başka bir web hizmetinde ya da kendi sisteminizde kullanabilirsiniz. 12 ay içinde dönerseniz kurulum yeniden yapılmaz.</p>'
+      + '</div>');
   }
 
   /* ===== F · ÜYELİĞE DAHİL ================================================ */
@@ -1661,16 +1727,37 @@
 
   /* ===== EİDS ======================================================================= */
   function Eids() {
-    var akis = [["İlan girilir", "danışman panelden kaydı oluşturur"],
-      ["e-Devlet EİDS doğrular", "yetki belgesi ve ilan bilgisi kontrol edilir"],
-      ["Bilgiler kilitlenir", "doğrulamadan gelen alanlar değiştirilemez"],
-      ["Yayına alınır", "yalnızca doğrulanmış ilan aktif olur"]]
-      .map(function (a, i) {
-        return '<div style="' + css({ display: "grid", gridTemplateColumns: "24px 1fr", gap: 12, padding: "10px 0", borderBottom: i === 3 ? "none" : "1px solid " + C.border }) + '">'
-          + '<span style="' + mono(10, C.violet, "0.06em", 700) + '">' + ("0" + (i + 1)) + '</span>'
-          + '<div><span style="' + css({ fontSize: 13.5, color: C.textPri, fontWeight: 500 }) + '">' + a[0] + '</span>'
-          + '<span style="' + css({ display: "block", fontSize: 12, color: C.textMut, lineHeight: 1.5, marginTop: 2 }) + '">' + a[1] + '</span></div></div>';
-      }).join("");
+    /* Elle yürütülen akış ile gömülü akış yan yana. Sağ sütunda ilk adım
+       dışındaki her şey otomatik — asıl anlatılmak istenen bu. */
+    var ELLE = [
+      "İlanı kendi sisteminizde hazırlarsınız",
+      "Ayrı bir sisteme giriş yaparsınız",
+      "Yetki belgesi ve taşınmaz bilgisini elle girersiniz",
+      "Doğrulama sonucunu beklersiniz",
+      "Sonucu ilan kaydınıza geri işlersiniz",
+      "Her yeni ilan için baştan tekrarlarsınız"
+    ];
+    var GOMULU = [
+      ["İlanı panelden girersiniz", false],
+      ["Yetki belgesi doğrulaması tetiklenir", true],
+      ["Doğrulamadan gelen alanlar kilitlenir", true],
+      ["Yalnızca doğrulanmış ilan yayına alınır", true]
+    ];
+    function edAdim(metin, no, oto) {
+      return '<div class="ed-adim"><span class="ed-no">' + ("0" + no) + '</span>'
+        + '<span class="ed-ne">' + attr(metin)
+        + (oto ? '<span class="ed-otomatik">OTOMATİK — SİZ BİR ŞEY YAPMAZSINIZ</span>' : "")
+        + '</span></div>';
+    }
+    var akis = '<div class="ed-grid">'
+      + '<div class="ed-sut"><div class="ed-bas elle">ELLE YÜRÜTÜLDÜĞÜNDE</div>'
+      +   '<span class="ed-alt">' + ELLE.length + ' ADIM · HER İLAN İÇİN TEKRAR</span>'
+      +   ELLE.map(function (m, i) { return edAdim(m, i + 1, false); }).join("")
+      + '</div>'
+      + '<div class="ed-sut gomulu"><div class="ed-bas gomulu">PANELE GÖMÜLÜ OLDUĞUNDA</div>'
+      +   '<span class="ed-alt">' + GOMULU.length + ' ADIM · YALNIZCA İLKİ SİZDE</span>'
+      +   GOMULU.map(function (g, i) { return edAdim(g[0], i + 1, g[1]); }).join("")
+      + '</div></div>';
 
     return NX.SubSection("C.4", "EİDS uyumu otomatik", "TİCARET BAKANLIĞI · ZORUNLU · SATILIK KONUTTA 1 ŞUBAT 2026",
       '<div style="' + css({ maxWidth: 780 }) + '">'
@@ -1739,7 +1826,9 @@
   function AiGorunurluk() {
     var kalem = [
       ["Tarama izinleri", "robots.txt dosyanız OpenAI (OAI-SearchBot), Anthropic (Claude-SearchBot), Perplexity ve Google’ın arama tarayıcılarına açık gelir. Bu izin verilmezse site, yapay zekâ arama cevaplarında hiç görünmez."],
-      ["Makine okunabilir veri", "Her bölge sayfanız Dataset, Place ve FAQPage şemalarıyla; her rakam kaynağı, ölçüm tarihi ve gözlem sayısıyla işaretlenir."],
+      /* Şema tiplerinin dökümü D.1'e ait; burada AYNI işaretlemenin alıntılanma
+         açısından ne işe yaradığı anlatılıyor — tekrar değil, devamı. */
+      ["Alıntılanabilir rakamlar", "Bir asistanın bir sayıyı alıntılayabilmesi için kaynağını ve tarihini görmesi gerekir. Sayfalarınızdaki her rakam, kaynağı, ölçüm tarihi ve gözlem sayısıyla birlikte işaretlenir."],
       ["Bing ve IndexNow", "ChatGPT’nin arama katmanı büyük ölçüde Bing indeksiyle örtüştüğü için siteniz Bing Webmaster Tools’a kayıtlı ve IndexNow entegre gelir."],
       ["Soru formatlı içerik", "Bölge sayfalarınız, kullanıcıların asistanlara sorduğu cümlelerin birebir karşılığı olan başlıklarla kurgulanır."],
       /* Eskiden "ilgili soruların cevabı zorunlu olarak buna dayanır" yazıyordu —
@@ -1755,7 +1844,8 @@
 
     return NX.SubSection("D.4", "Yapay zekâ aramaları için hazır altyapı", "CHATGPT · CLAUDE · GEMINI · PERPLEXITY",
       '<div style="' + css({ maxWidth: 800 }) + '">'
-      + '<p style="' + css({ fontSize: 15.5, lineHeight: 1.68, color: C.textSec, marginBottom: 18 }) + '">Kullanıcılar artık “Kadıköy’de ev almak mantıklı mı?” sorusunu yalnızca Google’a değil; ChatGPT’ye, Claude’a, Gemini’ye ve Perplexity’ye de soruyor. Bu asistanlar cevaplarını canlı web’den derliyor — ve derledikleri kaynaklar arasına girmenin teknik şartları var.</p>'
+      + '<p style="' + css({ fontSize: 15.5, lineHeight: 1.68, color: C.textSec, marginBottom: 8 }) + '">Kullanıcılar artık “Kadıköy’de ev almak mantıklı mı?” sorusunu yalnızca Google’a değil; ChatGPT’ye, Claude’a, Gemini’ye ve Perplexity’ye de soruyor. Bu asistanlar cevaplarını canlı web’den derliyor — ve derledikleri kaynaklar arasına girmenin teknik şartları var.</p>'
+      + '<p style="' + css({ fontSize: 15.5, lineHeight: 1.68, color: C.textSec, marginBottom: 18 }) + '">Klasik arama altyapısı <strong style="' + css({ color: C.textPri }) + '">D.1</strong>’de anlatıldı. Buradakiler ona ek olarak, <strong style="' + css({ color: C.textPri }) + '">yalnızca yapay zekâ asistanları için</strong> yapılan işlerdir.</p>'
       /* "DÜRÜST OLALIM" kutusu kaldırıldı: aynı çekince sayfada zaten iki yerde
          var (DurustSinirlar madde 03 ve SSS). Üçüncü tekrar savunmacı okunuyordu.
          Yukarıdaki altı kalem yalnız YAPTIĞIMIZ işi anlattığı için ek çekince
@@ -1765,7 +1855,7 @@
 
   var WLTICK = [["TESLİM", "24 SAAT"], ["ALAN ADI", "SİZİN"], ["SEKTÖR SÜRÜMÜ", "4"],
     ["CRM MODÜLÜ", "26"], ["VERİ", "480M+ SATIR"], ["SERİ", "257 AY · 2005→"],
-    ["MAHALLE + KÖY", "50.847"], ["ŞEMA TİPİ", "35"], ["DAHİL", "INVESTOR VE ÜZERİ"], ["ÇIKIŞ", "STATİK TESLİM"]];
+    ["MAHALLE + KÖY", "50.847"], ["ŞEMA TİPİ", "35"], ["DAHİL", "INVESTOR VE ÜZERİ"], ["ÇIKIŞ", "45 GÜN + KENDİ YEDEĞİNİZ"]];
 
   function renderApp() {
     return NX.Ticker(WLTICK) + NX.Masthead("") + NX.Nav("")
