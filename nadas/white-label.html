@@ -413,6 +413,17 @@
   .wl-cmp td.sonuk, .wl-cmp th.sonuk { opacity:.32; transition:opacity .2s linear; }
   .wl-cmp td.odak, .wl-cmp th.odak { background:rgba(167,139,250,.10) !important; }
   .wl-cmp tr.yok td { opacity:.3; }
+  /* Satır vurgusu (fare/dokunuş) — inset box-shadow inline hücre arka planının ÜSTÜnde çalışır */
+  .wl-cmp tr:hover td { box-shadow: inset 0 0 0 999px rgba(167,139,250,.055); }
+  /* Dört Yol: sütun baş-başa odağı — bir seçeneği NADAS ile karşılaştır */
+  #dy-tablo .dycol { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.09em; font-weight:700;
+                     color:#64748B; background:transparent; border:0; padding:0; margin:0; cursor:pointer;
+                     display:inline-flex; align-items:center; gap:5px; transition:color .15s linear; }
+  #dy-tablo .dycol:hover { color:#CBD5E1; }
+  #dy-tablo .dycol[aria-pressed="true"] { color:#A78BFA; }
+  #dy-tablo .dycol:focus-visible { outline:2px solid #A78BFA; outline-offset:3px; }
+  #dy-tablo .dycol .sw { opacity:.55; font-weight:400; }
+  #dy-tablo .dy-col-sonuk { opacity:.3; transition:opacity .2s linear; }
   .tier-focus:focus-visible { outline:2px solid #A78BFA; outline-offset:-2px; }
   .tier-focus[aria-pressed="true"] { box-shadow:inset 3px 0 0 #A78BFA; }
   .wl-matris summary::-webkit-details-marker { display:none; }
@@ -1406,9 +1417,13 @@
 
     var head = '<tr><th style="' + css({ padding: "11px 14px 11px 0", borderBottom: "1px solid " + C.borderStrong, textAlign: "left", minWidth: 168 }) + '"></th>'
       + YOL.map(function (y, i) {
-          var biz = i === 3;
-          return '<th style="' + css({ textAlign: "left", padding: "11px 14px", borderBottom: "1px solid " + C.borderStrong, minWidth: 172, background: biz ? C.elev : "transparent", borderLeft: biz ? "2px solid " + C.violet : "none" }) + '">'
-            + '<span style="' + mono(10, biz ? C.textPri : C.textFaint, "0.09em", 700) + '">' + y.toLocaleUpperCase("tr-TR") + '</span></th>';
+          var biz = i === 3, U = y.toLocaleUpperCase("tr-TR");
+          /* NADAS sabit referans (span); üç alternatif tıklanabilir — birine basınca
+             o sütun + NADAS açık kalır, diğer alternatifler soluklaşır (baş-başa). */
+          var baslik = biz
+            ? '<span style="' + mono(10, C.textPri, "0.09em", 700) + '">' + U + '</span>'
+            : '<button type="button" class="dycol" data-dycol="' + (i + 1) + '" aria-pressed="false" aria-label="' + attr(y + " seçeneğini NADAS ile karşılaştır") + '">' + U + ' <span class="sw" aria-hidden="true">⇄</span></button>';
+          return '<th style="' + css({ textAlign: "left", padding: "11px 14px", borderBottom: "1px solid " + C.borderStrong, minWidth: 172, background: biz ? C.elev : "transparent", borderLeft: biz ? "2px solid " + C.violet : "none" }) + '">' + baslik + '</th>';
         }).join("") + '</tr>';
 
     var rows = SATIR.map(function (r, ri) {
@@ -2571,8 +2586,20 @@
       var dyBtn = dyBar.querySelectorAll(".mod-chip");
       var dyKarar = document.getElementById("dy-karar");
       var dySatir = dyTablo.querySelectorAll("tr[data-satir]");
+      var dyColBtn = dyTablo.querySelectorAll(".dycol");
+      var dyTumRow = dyTablo.querySelectorAll("tr");
+      var aktifCol = 0;   /* 0 = sütun odağı yok; 1..3 = alternatif çocuk-indeksi (NADAS=4 hep açık) */
+      function dyColTemizle() {
+        aktifCol = 0;
+        for (var i = 0; i < dyTumRow.length; i++) {
+          var hc = dyTumRow[i].children;
+          for (var c = 1; c < hc.length; c++) hc[c].classList.remove("dy-col-sonuk");
+        }
+        for (var b = 0; b < dyColBtn.length; b++) dyColBtn[b].setAttribute("aria-pressed", "false");
+      }
 
       function dyCiz(ad) {
+        dyColTemizle();   /* profil seçilince sütun odağını bırak — tek mod aktif */
         var t = DY[ad];
         for (var i = 0; i < dySatir.length; i++) {
           var idx = parseInt(dySatir[i].getAttribute("data-satir"), 10);
@@ -2596,6 +2623,31 @@
         (function (el) {
           el.addEventListener("click", function () { dyCiz(el.getAttribute("data-dy")); });
         })(dyBtn[d]);
+      }
+
+      /* Sütun baş-başa odağı: bir alternatife basınca o sütun + NADAS açık,
+         diğer alternatifler soluk. Profil satır filtresini sıfırlar (tek mod). */
+      function dyColOdak(cidx) {
+        aktifCol = (aktifCol === cidx) ? 0 : cidx;
+        for (var i = 0; i < dySatir.length; i++) dySatir[i].classList.remove("sonuk", "vurgu");
+        if (dyKarar) dyKarar.hidden = true;
+        for (var p = 0; p < dyBtn.length; p++) dyBtn[p].setAttribute("aria-pressed", dyBtn[p].getAttribute("data-dy") === "*" ? "true" : "false");
+        for (var r = 0; r < dyTumRow.length; r++) {
+          var hc = dyTumRow[r].children;
+          for (var c = 1; c < hc.length; c++) {
+            var acik = !aktifCol || c === aktifCol || c === 4;
+            hc[c].classList.toggle("dy-col-sonuk", !!aktifCol && !acik);
+          }
+        }
+        for (var b = 0; b < dyColBtn.length; b++) {
+          var bc = parseInt(dyColBtn[b].getAttribute("data-dycol"), 10);
+          dyColBtn[b].setAttribute("aria-pressed", (aktifCol && bc === aktifCol) ? "true" : "false");
+        }
+      }
+      for (var dc = 0; dc < dyColBtn.length; dc++) {
+        (function (el) {
+          el.addEventListener("click", function () { dyColOdak(parseInt(el.getAttribute("data-dycol"), 10)); });
+        })(dyColBtn[dc]);
       }
     }
 
