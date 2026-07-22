@@ -154,7 +154,9 @@ function applyProxTenant(){try{proxEnsure();
 
 const TYPE_F={'Daire':1,'Villa':1.18,'Müstakil Ev':1.1,'Ofis / İş Yeri':0.94,'Arsa':0.52};
 
-function mkSpark(chg){let pts=[],n=7,base=40-(chg/12);for(let i=0;i<n;i++){let y=base-(i*(base-4)/(n-1))+(Math.random()*3-1.5);pts.push((i*20)+','+Math.max(3,Math.min(38,y)).toFixed(1));}return pts.join(' ');}
+/* Trend glifi: bölge değişim değerinden (chg) TÜRETİLEN yönlü çizgi. Sahte veri
+   (Math.random gürültüsü) kaldırıldı — gerçek fiyat geçmişi gibi görünmesin. */
+function mkSpark(chg){let pts=[],n=7,base=40-(chg/12);for(let i=0;i<n;i++){let y=base-(i*(base-4)/(n-1));pts.push((i*20)+','+Math.max(3,Math.min(38,y)).toFixed(1));}return pts.join(' ');}
 
 const DEF_ILANLAR=[
  {id:1,title:'Körfez Manzaralı 3+1 Lüks Daire',op:'Satılık',type:'Daire',m2:165,oda:'3+1',kat:'7',ilce:'Konak',mah:'Alsancak',price:18500000,status:'aktif',feat:1,img:'l3',desc:'Yeni nesil rezidans, kapalı otopark, 7/24 güvenlik.'},
