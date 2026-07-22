@@ -91,7 +91,7 @@
       if(item.price){x.fillStyle='#e7d19a';x.font='700 64px "Playfair Display",serif';var pw=x.measureText(''+item.price).width;x.fillText(''+item.price,px,py);x.fillStyle='rgba(195,155,69,.55)';rrect(x,px,py+16,Math.min(pw,360),4,2);x.fill();}
       /* alt marka şeridi + altın ayraç çizgisi */
       x.fillStyle='rgba(195,155,69,.28)';x.fillRect(px,H-96,W-2*px,1.5);
-      x.fillStyle='rgba(220,195,137,.92)';x.font='600 29px "IBM Plex Sans",sans-serif';x.fillText((item.brand||'')+'   ·   EİDS Onaylı',px,H-50);
+      x.fillStyle='rgba(220,195,137,.92)';x.font='600 29px "IBM Plex Sans",sans-serif';x.fillText((item.brand||'')+'   ·   EİDS Yetki Belgeli',px,H-50);
       finish();
     }
     if(item.image){var im=new Image();im.crossOrigin='anonymous';var done=false;im.onload=function(){if(done)return;done=true;render(im);};im.onerror=function(){if(done)return;done=true;render(null);};im.src=abs(item.image);setTimeout(function(){if(!done){done=true;render(im.complete&&im.naturalWidth?im:null);}},4500);}
