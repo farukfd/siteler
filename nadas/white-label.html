@@ -205,6 +205,9 @@
   .tf-yil { display:none; flex-direction:column; gap:3px; }
   .wl-tier[data-bill="yil"] .tf-ay { display:none; }
   .wl-tier[data-bill="yil"] .tf-yil { display:flex; }
+  /* Manşet künye şeridi: hücreler dokunulabilir veri çipi hissi versin */
+  .wl-spec > div { transition: background-color .15s linear; }
+  .wl-spec > div:hover { background:#101F35 !important; }
   .mod-ara { background:#020812; border:1px solid rgba(255,255,255,.14); color:#F1F5F9;
              font-family:'JetBrains Mono',monospace; font-size:10.5px; padding:6px 10px; border-radius:2px;
              outline:none; min-width:170px; flex:1 1 170px; max-width:280px; transition:border-color .14s linear; }
@@ -785,6 +788,13 @@
       + '<div style="' + css({ marginTop: 22, display: "flex", gap: 10, flexWrap: "wrap" }) + '">'
       + '<a href="' + UYELIK + '?tier=investor&src=wl" target="_blank" rel="noopener noreferrer" data-cta="hero-investor" style="' + css({ display: "inline-flex", padding: "12px 20px", background: C.violet, color: "#12081F", fontFamily: C.mono, fontSize: 11.5, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">ÜYELİKLERİ GÖRÜN →</a>'
       + '<a href="#kimlik" data-cta="hero-kimlik" style="' + css({ display: "inline-flex", padding: "12px 20px", color: C.violet, border: "1px solid " + C.violet, fontFamily: C.mono, fontSize: 11.5, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">KİMLİĞİ CANLI DEĞİŞTİRİN ↓</a>'
+      + '</div>'
+      /* Risk çevirme, hunininin en başında: deneme + kurulum + iade — birincil
+         CTA'nın hemen altında sürtünmeyi düşürür. Fiyatlandırmada da restatelenir. */
+      + '<div style="' + mono(11, C.textMut, "0.02em") + css({ marginTop: 14, display: "flex", flexWrap: "wrap", gap: "6px 16px", alignItems: "center" }) + '">'
+      +   ["10 gün ücretsiz deneme", "kurulum ücretsiz", "beğenmezseniz %100 iade"].map(function (x) {
+            return '<span style="' + css({ display: "inline-flex", alignItems: "center", gap: 5 }) + '"><span style="' + css({ color: C.violet, fontWeight: 700 }) + '">✓</span>' + x + '</span>';
+          }).join("")
       + '</div></div>'
       + '<div style="' + css({ paddingTop: 6 }) + '">' + TurkiyeRadar() + '</div>'
       + '</div>'
