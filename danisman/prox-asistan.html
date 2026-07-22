@@ -168,7 +168,7 @@ html,body{height:100%}
     <div class="pa-sb-foot">
       <a class="pa-back" href="index.html">← Ana sayfaya dön</a>
       <nav class="pa-legal" aria-label="Yasal"><a href="kvkk.html">KVKK</a><span>·</span><a href="cerez.html">Çerez</a><span>·</span><a href="kullanim.html">Kullanım</a></nav>
-      <div class="pa-poweredby"><span class="prox-logo" style="font-size:.95em">Pro<span class="prox-x">X</span></span> · +1 milyar doğrulanmış emlak verisi</div>
+      <div class="pa-poweredby"><span class="prox-logo" style="font-size:.95em">Pro<span class="prox-x">X</span></span> · 480 milyon+ doğrulanmış emlak verisi</div>
     </div>
   </aside>
   <main class="pa-main">
@@ -184,7 +184,7 @@ html,body{height:100%}
         <textarea id="paInput" rows="1" placeholder="Mesajınızı yazın… (ör. Boğaz'da yalı portföyünüz var mı?)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();paSend(event)}"></textarea>
         <button type="submit" class="pa-send" aria-label="Gönder">➤</button>
       </form>
-      <div class="pa-disc">ProX Asistan, ProX'un +1 milyar doğrulanmış emlak verisine dayanır; bilgilendirme amaçlıdır, kesin teklif için Selin Meridyen ile görüşün.</div>
+      <div class="pa-disc">ProX Asistan, ProX'un 480 milyon+ doğrulanmış emlak verisine dayanır; bilgilendirme amaçlıdır, kesin teklif için Selin Meridyen ile görüşün.</div>
     </div>
   </main>
 </div>
@@ -208,8 +208,8 @@ async function _deepseek(sys,msgs){var key=_dsKey();if(!key)return null;
     if(!res.ok)return null;var j=await res.json();var t=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;return (t&&t.trim())?t.trim():null;}catch(e){return null;}
 }
 /* ---- persona (SADECE ProX markası; "yapay zeka" ifadesi kullanılmaz) ---- */
-var PA_GREET='Merhaba, ben Selin Meridyen ProX Asistanı 👋 Lüks konut, yatırım, değerleme ya da davet usulü gizli satış — hangi konuda yardımcı olayım? İhtiyacınızı birkaç kısa soruyla netleştirip size en uygun gayrimenkulü bulalım. Yanıtlarım ProX\'un +1 milyar doğrulanmış emlak verisine dayanır.';
-var PA_SYS='Sen Selin Meridyen lüks gayrimenkul danışmanının ProX Asistanısın — sıcak, zarif, üst-segment ve SATIŞ ODAKLI bir müşteri danışmanı. GÖREVİN: ziyaretçiyi DİNLEYEREK gerçek ihtiyacını anla ve onu Selin Meridyen portföyü/hizmetleriyle eşleştirerek müşteriye dönüştür.\nKURALLAR: 1) SELAMLAŞMA yalnızca konuşmanın İLK yanıtında olur; "Önceki konuşma" verilmişse tekrar selamlama/kendini tanıtma yapma, doğrudan konuya devam et. Hazır uzun metin DÖKME. 2) Önce niyeti anla: (a) konut alım/satım (b) yatırım/prim (c) değerleme (d) kiralama (e) miras/intikal (f) gizli/davet usulü satış? Emin değilsen 1-2 KISA soruyla netleştir (konum, bütçe, m², tip). 3) İhtiyacı anladıkça ilgili portföy/hizmeti kısa ve çekici tanıt; müşteriyi bir sonraki adıma (ücretsiz analiz, randevu) yönlendir; güven ver, baskı yapma. 4) Uygun her fırsatta canlı danışmana yönlendir: "Dilerseniz danışmanımız sizi arasın; telefon numaranızı bırakırsanız kısa sürede ulaşırız." 5) Müşteri telefon paylaşırsa teşekkür et ve "danışmanımız kısa sürede sizinle iletişime geçecek" de.\nÜSLUP: Türkçe, kısa (2-4 cümle), sıcak, samimi, üst-segment, profesyonel. Yanıtların ProX\'un +1 milyardan fazla GERÇEK ve DOĞRULANMIŞ emlak verisine dayanır; ProX bir yapay zekâ veya veri üreticisi DEĞİLDİR, veri UYDURMAZSIN. Yanıtlarında \'yapay zeka\' ya da \'AI\' kelimelerini ASLA yazma; gerekiyorsa kendini yalnızca \'ProX\' veya \'canlı emlak zekâsı\' olarak tanımla. Kesin fiyat/garanti getiri verme; tahmini bilgi ver ve ücretsiz analiz öner. Konu dışı sorularda kibarca gayrimenkule yönlendir.';
+var PA_GREET='Merhaba, ben Selin Meridyen ProX Asistanı 👋 Lüks konut, yatırım, değerleme ya da davet usulü gizli satış — hangi konuda yardımcı olayım? İhtiyacınızı birkaç kısa soruyla netleştirip size en uygun gayrimenkulü bulalım. Yanıtlarım ProX\'un 480 milyon+ doğrulanmış emlak verisine dayanır.';
+var PA_SYS='Sen Selin Meridyen lüks gayrimenkul danışmanının ProX Asistanısın — sıcak, zarif, üst-segment ve SATIŞ ODAKLI bir müşteri danışmanı. GÖREVİN: ziyaretçiyi DİNLEYEREK gerçek ihtiyacını anla ve onu Selin Meridyen portföyü/hizmetleriyle eşleştirerek müşteriye dönüştür.\nKURALLAR: 1) SELAMLAŞMA yalnızca konuşmanın İLK yanıtında olur; "Önceki konuşma" verilmişse tekrar selamlama/kendini tanıtma yapma, doğrudan konuya devam et. Hazır uzun metin DÖKME. 2) Önce niyeti anla: (a) konut alım/satım (b) yatırım/prim (c) değerleme (d) kiralama (e) miras/intikal (f) gizli/davet usulü satış? Emin değilsen 1-2 KISA soruyla netleştir (konum, bütçe, m², tip). 3) İhtiyacı anladıkça ilgili portföy/hizmeti kısa ve çekici tanıt; müşteriyi bir sonraki adıma (ücretsiz analiz, randevu) yönlendir; güven ver, baskı yapma. 4) Uygun her fırsatta canlı danışmana yönlendir: "Dilerseniz danışmanımız sizi arasın; telefon numaranızı bırakırsanız kısa sürede ulaşırız." 5) Müşteri telefon paylaşırsa teşekkür et ve "danışmanımız kısa sürede sizinle iletişime geçecek" de.\nÜSLUP: Türkçe, kısa (2-4 cümle), sıcak, samimi, üst-segment, profesyonel. Yanıtların ProX\'un 480 milyon+dan fazla GERÇEK ve DOĞRULANMIŞ emlak verisine dayanır; ProX bir yapay zekâ veya veri üreticisi DEĞİLDİR, veri UYDURMAZSIN. Yanıtlarında \'yapay zeka\' ya da \'AI\' kelimelerini ASLA yazma; gerekiyorsa kendini yalnızca \'ProX\' veya \'canlı emlak zekâsı\' olarak tanımla. Kesin fiyat/garanti getiri verme; tahmini bilgi ver ve ücretsiz analiz öner. Konu dışı sorularda kibarca gayrimenkule yönlendir.';
 var PA_SUGGESTS=['Yatırımlık, prim potansiyeli yüksek ne önerirsiniz?','Boğaz\'da yalı / özel portföyünüz var mı?','Gayrimenkulümü gizlilikle nasıl satabilirsiniz?','Ücretsiz değer analizi almak istiyorum'];
 var PA_FALLBACK='Şu an ProX veri servisine ulaşılamıyor gibi görünüyor. Sorunuzu aldım — dilerseniz telefon numaranızı bırakın, danışmanımız kısa sürede sizi arasın; WhatsApp hattımızdan da yazabilirsiniz.';
 
@@ -243,7 +243,7 @@ function paRenderHistory(){var h=document.getElementById('paHistory');if(!h)retu
 }
 function paRenderLog(){var l=document.getElementById('paLog');if(!l)return;
   if(!_msgs.length){
-    l.innerHTML='<div class="pa-welcome"><div class="w-logo">Pro<span class="prox-x">X</span> Asistan</div><h2>Gayrimenkulünüzü <em style="font-family:var(--serif-2);font-style:italic;color:var(--gold-deep)">veriyle</em> konuşalım.</h2><p>ProX\'un +1 milyar doğrulanmış emlak verisine dayanarak; doğru fiyat, doğru bölge ve size en uygun gayrimenkul için yanınızdayım. Bir konu seçin ya da yazın:</p><div class="pa-suggests">'+PA_SUGGESTS.map(function(s){return '<button class="pa-chip" onclick="paChip(this)">'+esc(s)+'</button>';}).join('')+'</div></div>';
+    l.innerHTML='<div class="pa-welcome"><div class="w-logo">Pro<span class="prox-x">X</span> Asistan</div><h2>Gayrimenkulünüzü <em style="font-family:var(--serif-2);font-style:italic;color:var(--gold-deep)">veriyle</em> konuşalım.</h2><p>ProX\'un 480 milyon+ doğrulanmış emlak verisine dayanarak; doğru fiyat, doğru bölge ve size en uygun gayrimenkul için yanınızdayım. Bir konu seçin ya da yazın:</p><div class="pa-suggests">'+PA_SUGGESTS.map(function(s){return '<button class="pa-chip" onclick="paChip(this)">'+esc(s)+'</button>';}).join('')+'</div></div>';
     return;
   }
   var inner='<div class="pa-log-inner">';

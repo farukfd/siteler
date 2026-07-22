@@ -102,7 +102,7 @@
       '<div class="iv-lead"><div class="ivl-h">Detaylı raporu uzmanımız hazırlasın →</div><div class="iv-grid2"><input id="iv_ad" placeholder="Adınız Soyadınız"><input id="iv_tel" placeholder="Telefonunuz"></div>' +
       '<button class="btn btn-blue" style="width:100%" onclick="infoValLead()">Ücretsiz Detaylı Rapor İste</button></div>' +
       '<div class="iv-note">⚠️ Bu bir ön tahmindir; resmî değer beyanı değildir. Resmî değerleme, lisanslı değerleme uzmanı imzasıyla geçerlidir.</div></div></div>';
-    return '<section class="hk-block"><div class="hk-h"><span class="hk-kick">Ücretsiz Değerleme</span><h2>Evimin değeri ne kadar?</h2><p>Türkiye\'nin en kapsamlı 81 il · 50.000+ mahalle endeks altyapısına bağlı motorumuzla anlık ön tahmin alın; sonra uzman danışmanımız sizi arasın.</p></div>' +
+    return '<section class="hk-block"><div class="hk-h"><span class="hk-kick">Ücretsiz Değerleme</span><h2>Evimin değeri ne kadar?</h2><p>Türkiye\'nin kapsamlı 81 il · 50.000+ mahalle endeks altyapısına bağlı motorumuzla anlık ön tahmin alın; sonra uzman danışmanımız sizi arasın.</p></div>' +
       steps + form + '</section>';
   }
   function infoValMah() {

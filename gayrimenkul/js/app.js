@@ -210,7 +210,7 @@ const DEF_RENTS=[
  {id:502,prop:'Ataköy 2+1',tenant:'Selin Demir',amount:42000,start:'2026-01-15',due:10,status:'bekliyor'},
  {id:503,prop:'Fulya Ofis Katı',tenant:'NovaTech Ltd.',amount:185000,start:'2024-11-01',due:1,status:'gecikti'}
 ];
-const DEF_CONTENT={heroEyebrow:'İzmir & Ege · 372M+ kayıtlık endeks ile çalışıyoruz',heroTitle:'Doğru evi,',heroTitle2:'doğru veriyle buluşturuyoruz',heroDesc:'Satılık ve kiralık portföyümüzün her ilanında mahalle fiyat endeksi, yatırım skoru ve bölge analizi var. Duyguyla değil; veriyle karar verin.',aboutText:'Meridyen Gayrimenkul, İzmir ve Ege bölgesinde 18 yıldır faaliyet gösteriyor. Bizi farklı kılan, her ilan ve her danışmanlığın arkasındaki veri disiplinimiz: Türkiye\'nin en kapsamlı endeks altyapısıyla, müşterilerimize duygu değil rakam sunuyoruz.'};
+const DEF_CONTENT={heroEyebrow:'İzmir & Ege · 480M+ kayıtlık endeks ile çalışıyoruz',heroTitle:'Doğru evi,',heroTitle2:'doğru veriyle buluşturuyoruz',heroDesc:'Satılık ve kiralık portföyümüzün her ilanında mahalle fiyat endeksi, yatırım skoru ve bölge analizi var. Duyguyla değil; veriyle karar verin.',aboutText:'Meridyen Gayrimenkul, İzmir ve Ege bölgesinde 18 yıldır faaliyet gösteriyor. Bizi farklı kılan, her ilan ve her danışmanlığın arkasındaki veri disiplinimiz: Türkiye\'nin kapsamlı endeks altyapısıyla, müşterilerimize duygu değil rakam sunuyoruz.'};
 const DEF_BLOGS=[{id:1,title:'2026\'da değer kazanacak 5 İzmir mahallesi',cat:'Yatırım',sum:'Endeks verileri ışığında yükseliş potansiyeli en yüksek bölgeler.',icon:'📈',meta:'8 dk okuma · Haz 2026',date:'2026-06-18',src:'firma',body:'Bölge seçimi, gayrimenkul yatırımının en belirleyici adımıdır. m² fiyatının bugünkü seviyesi kadar, o bölgenin son 5 yıldaki reel değişim eğilimi ve yatırım skoru da önemlidir.\n\nUlaşım yatırımları, kentsel dönüşüm hareketliliği ve altyapı gelişimi, bir mahallenin orta vadeli prim potansiyelini yukarı çeker. Aşırı prim yapmış bölgeler yerine, gelişim koridorundaki mahalleler daha yüksek getiri sunabilir.\n\nKarar vermeden önce bölge endeksini, kira çarpanını ve arz-talep dengesini birlikte değerlendirin. Kesin rakamlar için güncel ProX endeksiyle teyit alın.'},
  {id:2,title:'Konut kredisinde 2026 faiz rehberi',cat:'Kredi',sum:'Banka banka oranlar, uygunluk kriterleri ve esnek ödeme planları.',icon:'🏦',meta:'6 dk okuma · Haz 2026',date:'2026-06-10',src:'firma',body:'Konut kredisi kararında yalnızca faiz oranı değil; ekspertiz değeri, kredi/değer oranı, vade ve toplam maliyet birlikte değerlendirilmelidir.\n\nGenel kural olarak kredi, ekspertiz değerinin belirli bir yüzdesine kadar kullanılabilir; kalan tutar peşinat olarak gerekir. Ödeme planınızı gelir istikrarınıza göre kurgulayın.\n\nBaşvuru öncesi evraklarınızı hazırlamak süreci belirgin hızlandırır. Size en uygun yapı için ücretsiz ön değerlendirme alın.'},
  {id:3,title:'Tapu devrinde dikkat edilmesi gereken 9 şey',cat:'Hukuk',sum:'Alıcı ve satıcı için TKGM süreci, vergiler ve sık yapılan hatalar.',icon:'📋',meta:'10 dk okuma · May 2026',date:'2026-05-22',src:'firma',body:'Tapu devri, gayrimenkul işleminin hukuki olarak tamamlandığı kritik aşamadır. Web Tapu başvurusu, harç ödemesi ve randevu adımları eksiksiz yürütülmelidir.\n\nDevir öncesi tapu kaydında haciz, ipotek veya şerh olup olmadığı mutlaka kontrol edilmelidir. Alıcı ve satıcının kimlik ve yetki belgeleri hazır olmalıdır.\n\nHarç ve döner sermaye bedelleri, taraflar arasında önceden yazılı olarak netleştirilmelidir. Süreci hatasız yönetmek için profesyonel destek almanızı öneririz.'}];
@@ -2241,7 +2241,7 @@ function kurumsalApply(){var res=window._kiResult;if(!res){toast("Önce oluştur
   var slogan=g("ki_slogan"),hero1=g("ki_hero1"),hero2=g("ki_hero2"),herodesc=g("ki_herodesc"),about=g("ki_about"),seotitle=g("ki_seotitle"),seodesc=g("ki_seodesc"),seokw=g("ki_seokw");
   var before=(document.body.innerText.match(/Meridyen/g)||[]).length;
   try{applyProvince(il,true);}catch(e){}
-  try{if(typeof CONTENT==="object"&&CONTENT){if(hero1)CONTENT.heroTitle=hero1;if(hero2)CONTENT.heroTitle2=hero2;if(herodesc)CONTENT.heroDesc=herodesc;if(about)CONTENT.aboutText=about;CONTENT.heroEyebrow=il+" · 372M+ kayıtlık ProX endeksiyle çalışıyoruz";}}catch(e){}
+  try{if(typeof CONTENT==="object"&&CONTENT){if(hero1)CONTENT.heroTitle=hero1;if(hero2)CONTENT.heroTitle2=hero2;if(herodesc)CONTENT.heroDesc=herodesc;if(about)CONTENT.aboutText=about;CONTENT.heroEyebrow=il+" · 480M+ kayıtlık ProX endeksiyle çalışıyoruz";}}catch(e){}
   try{if(typeof SEO==="object"&&SEO){if(seotitle)SEO.title=seotitle;if(seodesc)SEO.desc=seodesc;if(seokw)SEO.kw=seokw;}}catch(e){}
   try{if(FIRMA.eids)FIRMA.eids.unvan=name+" Danışmanlık Ltd. Şti.";}catch(e){}
   if(slogan)window._kiSlogan=slogan;
@@ -4170,7 +4170,7 @@ function pwRender(){
   const prog=document.getElementById('pwProgress'),foot=document.getElementById('pwFoot');
   if(prog)prog.innerHTML=PW.steps.map((s,i)=>'<i class="'+(i<=PW.idx?'on':'')+'"></i>').join('');
   if(PW.idx===-1){
-    pwBody('<div class="pw-intro"><div class="big"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z" fill="currentColor" stroke="none"/></svg></div><h3>Mülk Pusulası: 4 Soruda Size En Uygun Evi Bulun</h3><p>Bütçeniz, bölgeniz ve önceliğinize göre 372M+ kayıtlık veriyle size özel, <b>gerekçeli</b> bir kısa liste hazırlayalım.</p></div>');
+    pwBody('<div class="pw-intro"><div class="big"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z" fill="currentColor" stroke="none"/></svg></div><h3>Mülk Pusulası: 4 Soruda Size En Uygun Evi Bulun</h3><p>Bütçeniz, bölgeniz ve önceliğinize göre 480M+ kayıtlık veriyle size özel, <b>gerekçeli</b> bir kısa liste hazırlayalım.</p></div>');
     if(foot)foot.innerHTML='<button class="pw-back" onclick="pwClose()">Vazgeç</button><span class="sp"></span><button class="pw-go" onclick="pwNext()">Başlayalım →</button>';
     return;
   }
@@ -4275,7 +4275,7 @@ const SAAS_CONFIG={
   proxAiPrompts:{
     ilan:'Sen Meridyen Gayrimenkul’ün uzman emlak danışmanısın; kısa, net ve veriyle konuş.',
     degerleme:'Sen profesyonel bir değerleme uzmanısın; tarafsız ve mevzuata uygun yanıt ver.',
-    bolge:'Sen bir bölge analiz uzmanısın; 372M+ kayıtlık endeksle konuş.',
+    bolge:'Sen bir bölge analiz uzmanısın; 480M+ kayıtlık endeksle konuş.',
     default:'Sen emlakekspertizi.com ProX verisine dayalı asistansın.'
   }
 };
@@ -4402,7 +4402,7 @@ function _proxOut(){let el=document.getElementById('proxPanel');
 /* 1) İçerik Asistanı API Gateway — merkez prompt + simüle akıllı cevap */
 function _proxSimulate(msg,ctx){const m=(msg||'').toLocaleLowerCase('tr');
   if(ctx==='degerleme') return 'Bilimsel metodolojiyle (emsal karşılaştırma + gelir yöntemi) bu mülk için bir değer aralığı hazırlanır. Net rapor için ücretsiz ekspertiz talebi oluşturabilirim.';
-  if(ctx==='bolge') return '372M+ kayıtlık endekse göre bu bölgede son 5 yılda belirgin değer artışı ve sağlıklı talep var. Mahalle kırılımı için Bölge Analizi’ni açabilirim.';
+  if(ctx==='bolge') return '480M+ kayıtlık endekse göre bu bölgede son 5 yılda belirgin değer artışı ve sağlıklı talep var. Mahalle kırılımı için Bölge Analizi’ni açabilirim.';
   if(m.indexOf('fiyat')>=0||m.indexOf('bütçe')>=0||m.indexOf('butce')>=0) return 'Bütçenize en uygun mülkleri Mülk Pusulası ile saniyeler içinde eşleştirebilirim. Hangi ilçe ve oda tipini istersiniz?';
   if(m.indexOf('kira')>=0) return 'Kiralık portföyümüzde bölge endeksiyle doğru kira bedeli belirleriz. Bütçe ve bölge belirtirseniz en uygun seçenekleri sunayım.';
   return 'Size yardımcı olabilirim. İhtiyacınızı (al/kirala · bütçe · bölge) söyleyin; veriyle en uygun seçenekleri getireyim.';
