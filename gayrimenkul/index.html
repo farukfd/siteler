@@ -653,6 +653,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <button class="adm-nav" data-p="leadler" onclick="admPane(this)">📥 Gelen Talepler</button>
       <div class="adm-group">PORTFÖY & İÇERİK</div>
       <button class="adm-nav" data-p="ilanlar" onclick="admPane(this)">🏠 İlanlar</button>
+      <button class="adm-nav" data-p="ictoplu" onclick="admPane(this)">📤 Toplu İlan Aktar</button>
       <button class="adm-nav" data-p="ozel" onclick="admPane(this)">🔒 Özel Portföy</button>
       <button class="adm-nav" data-p="portfoy3d" onclick="admPane(this)">🧊 3D / VR Portföy</button>
       <button class="adm-nav" data-p="danismanlar" onclick="admPane(this)">👥 Danışmanlar</button>
@@ -733,6 +734,22 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
           <div style="display:flex;gap:10px;margin-top:6px"><button class="btn btn-primary btn-sm" onclick="saveIlan()">Kaydet</button><button class="abtn" onclick="document.getElementById('ilanEditCard').style.display='none'">İptal</button></div>
         </div>
         <div class="adm-card"><table class="atable"><thead><tr><th>İlan</th><th>İşlem</th><th>Fiyat</th><th>Lokasyon</th><th>Durum</th><th></th></tr></thead><tbody id="ilanRows"></tbody></table></div>
+      </div>
+      <!-- TOPLU İLAN AKTAR -->
+      <div class="adm-pane" id="pane-ictoplu">
+        <div class="adm-top"><h2>Toplu İlan İçe Aktar</h2></div>
+        <div class="adm-card">
+          <div class="csub" style="margin-bottom:10px">Kendi ilanlarınızı tek tek girmek yerine toplu ekleyin. <b>Excel veya Google Sheets’ten satırları kopyalayıp</b> aşağıya yapıştırın; sütunlar sekme (Tab), noktalı virgül (;) ya da virgül (,) ile ayrılabilir. Her satır bir ilandır.</div>
+          <div class="csub" style="margin-bottom:10px;color:var(--accent)">Sütun sırası: <b>Başlık · İşlem · Tip · İl · İlçe · Mahalle · m² · Oda · Kat · Fiyat · Açıklama</b> &nbsp;(İşlem: Satılık/Kiralık)</div>
+          <textarea id="bulk_in" rows="8" placeholder="Boğaz Manzaralı 3+1&#9;Satılık&#9;Daire&#9;İzmir&#9;Konak&#9;Alsancak&#9;165&#9;3+1&#9;7&#9;18500000&#9;Deniz manzaralı, asansörlü." style="width:100%;font-family:monospace;font-size:12px;padding:10px;border:1px solid var(--line);border-radius:8px;resize:vertical"></textarea>
+          <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+            <button class="btn btn-sm" onclick="bulkSample()">Örnek Doldur</button>
+            <button class="btn btn-sm" onclick="bulkPreview()">Önizle</button>
+            <button class="btn btn-primary btn-sm" onclick="bulkImport()">İçe Aktar</button>
+          </div>
+          <div id="bulk_out" style="margin-top:12px"></div>
+          <div class="csub" style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">Not: Yalnızca <b>size ait, kendi</b> ilanlarınızı aktarın. sahibinden.com ilanlarınız için Rekabet Kurulu’nun 2025 kararıyla gelen resmî API veri taşıma hakkı; hepsiemlak/emlakjet için portaldan aldığınız dışa aktarım dosyanız kullanılır. Portalları izinsiz tarama yapılmaz. İçe aktarılan her ilan, firma EİDS yetkiniz tanımlıysa EİDS doğrulamasından geçirilerek yayınlanır; değilse taslak (pasif) saklanır.</div>
+        </div>
       </div>
       <!-- DANIŞMANLAR -->
       <!-- ÖZEL PORTFÖY -->

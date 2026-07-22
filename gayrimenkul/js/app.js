@@ -1940,6 +1940,63 @@ function saveIlan(){
 }
 function delIlan(id){if(!confirm('Bu ilanı silmek istediğinize emin misiniz?'))return;
   ILANLAR=ILANLAR.filter(x=>x.id!==id);saveAll();renderIlanRows();renderIlanlar();renderKpis();toast('İlan silindi.');}
+
+/* ===== Toplu ilan içe aktarma =====
+   Kullanıcının KENDİ ilanlarını yapıştırma/CSV ile toplu ekler. Scraping YOK.
+   EİDS: manuel eklemeyle (saveIlan) tıpatıp aynı kapı — firma yetkiliyse her
+   ilana mock EİDS kaydı basılır ve "aktif" yayınlanır; değilse "pasif" taslak
+   kalır. Böylece içe aktarma özel bir bypass açmıyor, mevcut modeli izliyor. */
+function bulkSample(){
+  var t=document.getElementById('bulk_in');if(!t)return;
+  t.value=[
+    ['Boğaz Manzaralı 3+1 Lüks Daire','Satılık','Daire','İzmir','Konak','Alsancak','165','3+1','7','18500000','Deniz manzaralı, asansörlü, otoparklı.'],
+    ['Deniz Kenarı 2+1','Kiralık','Daire','İzmir','Karşıyaka','Bostanlı','95','2+1','3','32000','Eşyalı, site içi.']
+  ].map(function(r){return r.join('\t');}).join('\n');
+  var o=document.getElementById('bulk_out');if(o)o.innerHTML='';
+}
+function bulkParse(){
+  var raw=(document.getElementById('bulk_in').value||'').replace(/\r/g,'').trim();
+  if(!raw)return {ilan:[],hata:['Boş — Excel/Sheets’ten satır yapıştırın ya da “Örnek Doldur”a basın.']};
+  var rows=raw.split('\n'),ilan=[],hata=[];
+  for(var i=0;i<rows.length;i++){
+    var line=rows[i];if(!line.trim())continue;
+    var d=line.indexOf('\t')>=0?'\t':(line.indexOf(';')>=0?';':',');
+    var c=line.split(d).map(function(x){return x.trim();});
+    if(i===0&&/ba[sş]l[ıi]k/i.test(c[0]||'')&&/fiyat/i.test(line))continue; /* başlık satırını atla */
+    if(!c[0]){hata.push((i+1)+'. satır: başlık boş, atlandı.');continue;}
+    var price=parseInt((c[9]||'').replace(/[^\d]/g,''),10)||0;
+    if(!price){hata.push((i+1)+'. satır (“'+c[0].slice(0,24)+'”): geçerli fiyat yok, atlandı.');continue;}
+    ilan.push({title:c[0],op:/kira/i.test(c[1]||'')?'Kiralık':'Satılık',type:c[2]||'Daire',
+      il:c[3]||((typeof PROVINCE!=='undefined'&&PROVINCE.name)||'İzmir'),ilce:c[4]||'-',mah:c[5]||'-',
+      m2:parseInt((c[6]||'').replace(/[^\d]/g,''),10)||0,oda:c[7]||'-',kat:c[8]||'-',price:price,desc:c[10]||''});
+  }
+  return {ilan:ilan,hata:hata};
+}
+function bulkPreview(){
+  var r=bulkParse(),out=document.getElementById('bulk_out');
+  var h='<div class="csub"><b>'+r.ilan.length+'</b> ilan içe aktarılmaya hazır.'+(r.hata.length?(' <b style="color:#c0392b">'+r.hata.length+' satır atlandı.</b>'):'')+'</div>';
+  if(r.ilan.length){
+    h+='<table class="atable" style="margin-top:8px"><thead><tr><th>Başlık</th><th>İşlem</th><th>Lokasyon</th><th>Fiyat</th></tr></thead><tbody>';
+    r.ilan.slice(0,8).forEach(function(x){h+='<tr><td>'+_le(x.title)+'</td><td>'+_le(x.op)+'</td><td>'+_le(x.ilce)+' · '+_le(x.mah)+'</td><td>'+x.price.toLocaleString('tr-TR')+' ₺</td></tr>';});
+    h+='</tbody></table>';if(r.ilan.length>8)h+='<div class="csub">…ve '+(r.ilan.length-8)+' ilan daha.</div>';
+  }
+  if(r.hata.length)h+='<div class="csub" style="color:#c0392b;margin-top:6px">'+r.hata.map(_le).join('<br>')+'</div>';
+  out.innerHTML=h;
+}
+function bulkImport(){
+  var r=bulkParse();
+  if(!r.ilan.length){bulkPreview();toast('İçe aktarılacak geçerli ilan yok.');return;}
+  var yetkili=!!(FIRMA.eids&&FIRMA.eids.yetkili),akt=0,tas=0,now=Date.now();
+  r.ilan.forEach(function(x,idx){
+    var obj={title:x.title,price:x.price,op:x.op,type:x.type,status:'aktif',il:x.il,ilce:x.ilce,mah:x.mah,
+      m2:x.m2,oda:x.oda,kat:x.kat,feat:0,desc:x.desc,img:LIST_IMGS[Math.floor(Math.random()*LIST_IMGS.length)]};
+    if(yetkili){obj.eids=eidsDemoRec(obj);akt++;}else{obj.status='pasif';tas++;}
+    obj.id=now+idx;ILANLAR.unshift(obj);
+  });
+  saveAll();renderIlanRows();renderIlanlar();renderKpis();
+  toast('✓ '+r.ilan.length+' ilan içe aktarıldı'+(yetkili?(' · '+akt+' yayında (EİDS onaylı)'):(' · '+tas+' taslak — EİDS yetkisi yok'))+'.');
+  bulkPreview();
+}
 function eidsVerify(){
   var res=document.getElementById('i_eidsResult');if(!res)return;
   if(!(FIRMA.eids&&FIRMA.eids.yetkili)){res.innerHTML=eidsResultBox('no','EİDS yetkisi yok · ERR-300','İlan doğrulanamıyor. Firma › EİDS Yetkisi bölümünden 7 haneli yetki belgesini girip e-Devlet ile bağlanın.');window._ilanEids=null;return;}
