@@ -402,6 +402,10 @@
   .wl-cmp tr.yok td { opacity:.3; }
   .tier-focus:focus-visible { outline:2px solid #A78BFA; outline-offset:-2px; }
   .tier-focus[aria-pressed="true"] { box-shadow:inset 3px 0 0 #A78BFA; }
+  .wl-matris summary::-webkit-details-marker { display:none; }
+  .wl-matris summary:hover { border-color:rgba(167,139,250,.55); }
+  .wl-matris[open] summary > span:first-child { transform:rotate(45deg); }
+  .wl-matris summary > span:first-child { display:inline-block; transition:transform .18s ease; }
 
   /* ---- Görünürlük karşılaştırması (Özel Portföy) --------------------------
      Kapalı portföyün ne olduğunu anlatmanın en hızlı yolu "kim neyi görüyor"
@@ -1495,11 +1499,19 @@
           }).join("") + '</tr>';
     }).join("");
 
-    return '<div style="' + css({ marginTop: 26 }) + '">'
-      + '<div style="' + mono(9.5, C.textFaint, "0.12em", 700) + css({ marginBottom: 6, marginLeft: -1 }) + '">KADEMEYE GÖRE KAPSAM</div>'
+    /* Matris VARSAYILAN KAPALI: kademe kartları + maliyet çubukları temel kararı
+       zaten veriyor; 13 satırlık döküm derinlik isteyenler için. Kademe kartına
+       basınca odakla() bunu açıyor (aşağıda), böylece kart etkileşiminin görünür
+       bir karşılığı oluyor. Native <details> — klavye ve aria yerleşik. */
+    return '<details class="wl-matris" id="wl-matris-det" style="' + css({ marginTop: 22 }) + '">'
+      + '<summary style="' + css({ cursor: "pointer", listStyle: "none", padding: "11px 14px", background: C.raised, border: "1px solid " + C.border, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }) + '">'
+      + '<span style="' + mono(9.5, C.violet, "0", 700) + '">+</span>'
+      + '<span style="' + mono(10, C.textPri, "0.1em", 700) + '">TÜM KADEMELERİ SATIR SATIR KARŞILAŞTIR</span>'
+      + '<span style="' + mono(9, C.textFaint, "0.06em") + css({ marginLeft: "auto" }) + '">13 SATIR · 4 KADEME</span></summary>'
+      + '<div style="' + css({ paddingTop: 12 }) + '">'
       + '<p style="' + mono(9.5, C.violet, "0.06em") + css({ marginBottom: 4 }) + '" id="wl-matris-not">Bir kademe kartına basın — o sütun öne çıksın.</p>'
       + '<p style="' + mono(9.5, C.textFaint, "0.06em") + css({ marginBottom: 12 }) + '">← YATAYDA KAYDIRIN →</p>'
-      + '<div class="wl-cmp"><table id="wl-matris">' + head + rows + '</table></div></div>';
+      + '<div class="wl-cmp"><table id="wl-matris">' + head + rows + '</table></div></div></details>';
   }
 
   /* ===== G · 24 SAAT ====================================================== */
@@ -2641,8 +2653,12 @@
       var SUTUN_INDEKS = { "Yerel Uzman": 1, "ProX Investor": 2, "ProX Corporate": 3 };
       var aktifSutun = 0;   /* 0 = odak yok */
 
+      var matrisDet = document.getElementById("wl-matris-det");
       function odakla(idx) {
         aktifSutun = (aktifSutun === idx) ? 0 : idx;   /* aynı karta tekrar basınca bırak */
+        /* Kart seçilince kapalı matris açılsın — kart etkileşiminin görünür
+           karşılığı. Bırakınca (aktifSutun 0) açık kalır; kullanıcı kendi kapatır. */
+        if (aktifSutun && matrisDet && !matrisDet.open) matrisDet.open = true;
         var satirlar = matris.querySelectorAll("tr");
         for (var r = 0; r < satirlar.length; r++) {
           var hucre = satirlar[r].children;
