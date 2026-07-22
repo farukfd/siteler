@@ -192,8 +192,8 @@
   /* ===== HERO ===== */
   function HeroProX(){
     var kayitInit = (480234521).toLocaleString("tr-TR");
-    var aktifInit = Math.floor(Math.random()*(28-6)+6);
-    var guncInit = Math.floor(Math.random()*(7-1)+1);
+    var aktifInit = 14;   /* temsilî örnek — canlı sorgu sayacı yok */
+    var guncInit = 3;     /* temsilî örnek */
     var feed = [
       "Sorgu: İSTANBUL · Kadıköy · konut 60-80m² · trend",
       "Sorgu: ANKARA · Çankaya · ofis · ekspertiz",
@@ -240,7 +240,7 @@
       + '<div style="'+css({background:C.raised,padding:"20px 22px",position:"relative",overflow:"hidden"})+'">'
       + '<div style="'+css({position:"absolute",top:10,right:12,display:"flex",alignItems:"center",gap:4})+'">'
       + '<span style="'+css({width:5,height:5,borderRadius:9999,background:C.accent,animation:"nadasPulse 0.8s ease-in-out infinite"})+'"></span>'
-      + '<span style="'+css({fontFamily:C.mono,fontSize:8.5,color:C.accent,fontWeight:700,letterSpacing:"0.08em"})+'">CANLI</span></div>'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:8.5,color:C.accent,fontWeight:700,letterSpacing:"0.08em"})+'">GÜNCEL TOPLAM</span></div>'
       + '<div id="prox-kayit" style="'+css({fontFamily:C.mono,fontSize:"clamp(1.2rem,2.6vw,1.7rem)",fontWeight:700,color:C.violet,letterSpacing:"-0.01em",lineHeight:1,marginBottom:8,fontVariantNumeric:"tabular-nums"})+'">'+kayitInit+'</div>'
       + '<div style="'+css({fontFamily:C.mono,fontSize:10.5,color:C.textFaint,letterSpacing:"0.08em"})+'">Aktif veri kaydı</div></div>'
       /* 50K */
@@ -251,20 +251,20 @@
       + '<div style="'+css({background:C.raised,padding:"20px 22px",position:"relative"})+'">'
       + '<div style="'+css({position:"absolute",top:10,right:12,display:"flex",alignItems:"center",gap:4})+'">'
       + '<span style="'+css({width:5,height:5,borderRadius:9999,background:C.primary,animation:"nadasPulse 1.2s ease-in-out infinite"})+'"></span>'
-      + '<span style="'+css({fontFamily:C.mono,fontSize:8.5,color:C.primary,fontWeight:700,letterSpacing:"0.08em"})+'">ŞU AN</span></div>'
+      + '<span style="'+css({fontFamily:C.mono,fontSize:8.5,color:C.primary,fontWeight:700,letterSpacing:"0.08em"})+'">ŞU AN · TEMSİLÎ</span></div>'
       + '<div id="prox-aktif" style="'+css({fontFamily:"'Sora',sans-serif",fontSize:"clamp(1.8rem,3.5vw,2.6rem)",fontWeight:700,color:C.primary,letterSpacing:"-0.025em",lineHeight:1,marginBottom:8,fontVariantNumeric:"tabular-nums"})+'">'+aktifInit+'</div>'
       + '<div style="'+css({fontFamily:C.mono,fontSize:10.5,color:C.textFaint,letterSpacing:"0.08em"})+'">Anlık aktif sorgu</div></div>'
       /* güven */
       + '<div style="'+css({background:C.raised,padding:"20px 22px",position:"relative"})+'">'
       + '<div style="'+css({position:"absolute",top:10,right:12,display:"flex",alignItems:"center",gap:4})+'">'
       + '<span style="'+css({width:5,height:5,borderRadius:9999,background:C.accent,animation:"nadasPulse 1.5s ease-in-out infinite"})+'"></span>'
-      + '<span id="prox-guncelleme" style="'+css({fontFamily:C.mono,fontSize:8.5,color:C.accent,fontWeight:700,letterSpacing:"0.08em"})+'">'+guncInit+'sn ÖNCE</span></div>'
+      + '<span id="prox-guncelleme" style="'+css({fontFamily:C.mono,fontSize:8.5,color:C.accent,fontWeight:700,letterSpacing:"0.08em"})+'">TEMSİLÎ</span></div>'
       + '<div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:"clamp(1.8rem,3.5vw,2.6rem)",fontWeight:700,color:C.accent,letterSpacing:"-0.025em",lineHeight:1,marginBottom:8})+'">%96</div>'
       + '<div style="'+css({fontFamily:C.mono,fontSize:10.5,color:C.textFaint,letterSpacing:"0.08em"})+'">Sistem güven medyanı</div></div>'
       + '</div>'
       /* akan mini ticker */
       + '<div style="'+css({marginTop:12,padding:"8px 14px",background:C.deep,border:"1px solid "+C.border,fontFamily:C.mono,fontSize:10.5,color:C.textMut,letterSpacing:"0.04em",display:"flex",alignItems:"center",gap:10,overflow:"hidden",whiteSpace:"nowrap"})+'">'
-      + '<span style="'+css({color:C.accent,fontWeight:700})+'">● CANLI</span><span style="'+css({color:C.textFaint})+'">›</span>'
+      + '<span style="'+css({color:C.accent,fontWeight:700})+'">● TEMSİLÎ ÖRNEK</span><span style="'+css({color:C.textFaint})+'">›</span>'
       + '<span style="'+css({flex:1,display:"flex",animation:"tickerScroll 60s linear infinite"})+'">'+feed+'</span></div>'
       + '</div>'
       /* CTA */
@@ -906,11 +906,9 @@
   function tick(){ var el=document.getElementById('mast-time'); if(el){ var d=new Date(); el.textContent=d.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}); } }
   tick(); setInterval(tick,1000);
 
-  // Canlı sayaçlar
-  var kayit=480234521;
-  setInterval(function(){ kayit += Math.floor(Math.random()*8)+1; var el=document.getElementById('prox-kayit'); if(el) el.textContent=kayit.toLocaleString("tr-TR"); },800);
-  setInterval(function(){ var el=document.getElementById('prox-aktif'); if(el) el.textContent=Math.floor(Math.random()*(28-6)+6); },2000);
-  setInterval(function(){ var el=document.getElementById('prox-guncelleme'); if(el) el.textContent=Math.floor(Math.random()*(7-1)+1)+"sn ÖNCE"; },2000);
+  /* Sayaçlar: kayıt = GERÇEK güncel toplam (statik, sahte tik YOK). Anlık aktif sorgu +
+     son güncelleme temsilî örnektir (canlı backend sayacı yok) — Math.random ile "canlı"
+     üretim kaldırıldı; dürüstlük disiplini (ProX uydurmaz). */
 
   // Çok-alan-adı SEO: canonical + og:url + og:image mevcut domaine ayarla
   (function(){
