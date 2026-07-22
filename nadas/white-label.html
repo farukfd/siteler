@@ -406,6 +406,11 @@
   .mk-tutar { font-family:'JetBrains Mono',monospace; font-size:11px; color:#CBD5E1;
               text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
   .mk-tutar b { color:#fff; font-weight:600; }
+  /* Satır vurgusu: etiket + çubuk + tutarı fare/dokunuşta birbirine bağla (okunurluk) */
+  .mk-satir { transition:background-color .15s linear; }
+  .mk-cekirdek { transition:filter .15s linear; }
+  .mk-satir:hover { background:rgba(255,255,255,.028); }
+  .mk-satir:hover .mk-cekirdek { filter:brightness(1.22); }
   @media (max-width:620px){
     .mk-satir { grid-template-columns:1fr !important; gap:5px 0 !important; padding:11px 0; }
     .mk-tutar { text-align:left; }
