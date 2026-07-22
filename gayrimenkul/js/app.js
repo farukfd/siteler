@@ -4372,7 +4372,8 @@ function thValuationSubmit(){const g=id=>{const e=document.getElementById(id);re
   const ad=g('tv_ad'),tel=g('tv_tel'),tip=g('tv_tip'),amac=g('tv_amac'),ilce=g('tv_ilce');
   if(!ad||!tel){toast('Lütfen ad ve telefon girin.');return;}
   if(!tip){toast('Lütfen mülk tipini seçin.');return;}
-  console.log('[Değerleme Talebi] '+ad+' - '+tel+' - '+tip+' · '+amac+(ilce?' · '+ilce:''));
+  /* PII (ad+telefon) konsola yazılmaz — yalnız hata ayıklama bayrağı açıksa. KVKK/gizlilik. */
+  window.__PROX_DEBUG && console.log('[Değerleme Talebi] '+ad+' - '+tel+' - '+tip+' · '+amac+(ilce?' · '+ilce:''));
   if(typeof pushLead==='function')pushLead({ad,tel,konu:'Değerleme Talebi: '+tip+' ('+amac+')',src:'Değerleme Talebi',msg:ilce});
   if(typeof proxSubmitLead==='function')proxSubmitLead({sourcePage:'degerleme-talebi',formType:'thValuation',name:ad,phone:tel,email:'',location:ilce||'',message:tip+' · '+amac,requestedService:'Değerleme Talebi'});
   ['tv_ad','tv_tel','tv_ilce'].forEach(i=>{const e=document.getElementById(i);if(e)e.value='';});
