@@ -82,6 +82,39 @@
 (function () {
   "use strict";
   var C = NX.C, css = NX.css;
+
+  /* ===== ProX / emlakekspertizi CANLI backend (Veri Terminali) ======================
+     NADAS kurumsal tenant anahtarı doldurulunca terminal GERÇEK endekse bağlanır.
+     Anahtar boş / erişilemez ise dürüstçe 'TEMSİLÎ ÖRNEK'e düşer — sahte 'CANLI' YOK. */
+  var EMLAK_API_BASE = "https://www.emlakekspertizi.com";
+  var EMLAK_TENANT = { tenant_id: "nadas", tenant_key: "" };   /* ← NADAS kurumsal ProX anahtarı buraya */
+  function proxApi(path) {
+    if (!EMLAK_TENANT.tenant_key) return Promise.resolve({ fallback: true });
+    return fetch(EMLAK_API_BASE + path, { mode: "cors", headers: { "X-Tenant-Id": EMLAK_TENANT.tenant_id, "X-Tenant-Key": EMLAK_TENANT.tenant_key } })
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .catch(function () { return { fallback: true }; });
+  }
+  var DT_REAL = {};   /* "il|ilce|mah|cat" → {m2,delta} (gerçek) | null (soruldu, veri yok) */
+  function dtKey() { return DT.city + "|" + DT.district + "|" + DT.neighborhood + "|" + DT.catId; }
+  function dtCanli() { return !!DT_REAL[dtKey()]; }
+  function dtLoadReal() {
+    var key = dtKey();
+    if (key in DT_REAL) return;   /* soruldu (gerçek ya da null) — tekrar sorma, döngü yok */
+    var q = "il=" + encodeURIComponent(DT.city) + "&ilce=" + encodeURIComponent(DT.district) + "&mahalle=" + encodeURIComponent(DT.neighborhood) + "&kategori=konut&durum=satilik";
+    var to = new Promise(function (res) { setTimeout(function () { res({ fallback: true }); }, 4000); });   /* asılı kalma yok */
+    Promise.race([proxApi("/api/v1/tenant/endeks?" + q), to]).then(function (r) {
+      DT_REAL[key] = (r && r.success === true && !r.fallback && r.data && +r.data.m2 > 0)
+        ? { m2: +r.data.m2, delta: (typeof r.data.delta === "number" ? r.data.delta : null) } : null;
+      if (DT_REAL[key] && dtKey() === key && document.getElementById("dt-card")) mountTerminal(true);   /* gerçek geldi → tazele (yeniden fetch YOK) */
+      updateDurum();
+    });
+  }
+  function updateDurum() {
+    var el = document.getElementById("dt-durum"); if (!el) return;
+    var on = dtCanli();
+    el.innerHTML = '<span style="' + css({ width: 6, height: 6, borderRadius: 9999, background: on ? C.accent : C.warn, animation: on ? "nadasPulse 1.4s ease-in-out infinite" : "none" }) + '"></span>' + (on ? "CANLI · GERÇEK ENDEKS" : "TEMSİLÎ ÖRNEK");
+    el.style.color = on ? C.accent : C.warn;
+  }
   NX.setAccent(C.primary);
   var PINK = "#F472B6";
 
@@ -439,6 +472,14 @@
     var last = (series[series.length - 1] || {}).v || 0;
     var first = (series[0] || {}).v || 1;
     var change = ((last - first) / first) * 100;
+    /* GERÇEK canlı endeks varsa: güncel m² + değişimi gerçekle değiştir; modellenmiş seriyi
+       gerçek güncel değere ölçekle (grafik başlıkla tutarlı — geçmiş şekil modeldir, uç nokta gerçek). */
+    var dtReal = DT_REAL[dtKey()];
+    if (dtReal && dtReal.m2 > 0) {
+      if (last > 0) { var _sc = dtReal.m2 / last; series = series.map(function (s) { return { y: s.y, m: s.m, v: Math.round(s.v * _sc) }; }); dtSeries = series; }
+      last = dtReal.m2;
+      if (typeof dtReal.delta === "number") change = dtReal.delta;
+    }
     var vals = series.map(function (s) { return s.v; });
     var max = Math.max.apply(null, vals), min = Math.min.apply(null, vals);
     var yMin = min * 0.95, yMax = max * 1.05;
@@ -499,21 +540,23 @@
       + '<div style="' + css({ display: "flex", gap: 4, flexWrap: "wrap" }) + '">' + periodBtns + '</div></div>'
       + '<div style="' + css({ padding: "8px 8px 0", position: "relative" }) + '">' + svg + '</div>'
       + evPanel
-      + '<div style="' + css({ borderTop: "1px solid " + C.border, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))" }) + '">' + dnaCells + '</div>'
-      + '<div style="' + css({ borderTop: "1px solid " + C.borderStrong, padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, background: "#020812" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textMut, letterSpacing: "0.06em" }) + '">' + DT.city + '/' + DT.district + '/' + DT.neighborhood + ' · ' + catName + ' · 2005-01 → 2026-05 · ~7.390 hücre/mahalle</div><a href="' + endeksLink + '" target="_blank" rel="noopener noreferrer" style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", background: C.primary, color: "#020812", fontSize: 12, fontFamily: C.mono, letterSpacing: "0.06em", fontWeight: 700, borderRadius: 2, textDecoration: "none" }) + '">DETAYLI ENDEKS · EMLAKEKSPERTIZI →</a></div>';
+      + '<div style="' + css({ borderTop: "1px solid " + C.border }) + '"><div style="' + css({ padding: "8px 12px 0", fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.1em" }) + '">DEMOGRAFİK KATMAN <span style="' + css({ color: C.warn }) + '">· temsilî</span></div><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))" }) + '">' + dnaCells + '</div></div>'
+      + '<div style="' + css({ borderTop: "1px solid " + C.borderStrong, padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, background: "#020812" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textMut, letterSpacing: "0.06em" }) + '">' + DT.city + '/' + DT.district + '/' + DT.neighborhood + ' · ' + catName + ' · 2005-01 → 2026-05 · ' + (dtCanli() ? '<span style="' + css({ color: C.accent }) + '">güncel m² canlı ProX endeksinden</span>' : '<span style="' + css({ color: C.warn }) + '">seçime göre üretilen temsilî örnek</span>') + '</div><a href="' + endeksLink + '" target="_blank" rel="noopener noreferrer" style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", background: C.primary, color: "#020812", fontSize: 12, fontFamily: C.mono, letterSpacing: "0.06em", fontWeight: 700, borderRadius: 2, textDecoration: "none" }) + '">DETAYLI ENDEKS · EMLAKEKSPERTIZI →</a></div>';
   }
 
   function DataTerminalShell() {
     return '<section id="terminal" style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "16px 16px 24px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">02 · VERİ TERMİNALİ</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.accent, letterSpacing: "0.08em", display: "flex", alignItems: "center", gap: 6 }) + '"><span style="' + css({ width: 6, height: 6, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>CANLI</span></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">02 · VERİ TERMİNALİ</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span id="dt-durum" style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.warn, letterSpacing: "0.08em", display: "flex", alignItems: "center", gap: 6 }) + '"><span style="' + css({ width: 6, height: 6, borderRadius: 9999, background: C.warn }) + '"></span>TEMSİLÎ ÖRNEK</span></div>'
       + '<div id="dt-card" style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised }) + '"></div>'
       + '</div></section>';
   }
 
-  function mountTerminal() {
+  function mountTerminal(skipFetch) {
     var card = document.getElementById("dt-card");
     if (!card) return;
     card.innerHTML = buildTerminalCard();
+    updateDurum();
+    if (!skipFetch) dtLoadReal();   /* gerçek endeksi dene; gelirse mountTerminal(true) ile tazeler */
     var cityEl = document.getElementById("dt-city"), distEl = document.getElementById("dt-district"), neighEl = document.getElementById("dt-neigh"), catEl = document.getElementById("dt-cat");
     cityEl.addEventListener("change", function () { DT.city = this.value; var d = Object.keys(REGIONS[DT.city] || {}); DT.district = d[0] || ""; DT.neighborhood = (REGIONS[DT.city][DT.district] || [])[0] || ""; mountTerminal(); });
     distEl.addEventListener("change", function () { DT.district = this.value; DT.neighborhood = ((REGIONS[DT.city] || {})[DT.district] || [])[0] || ""; mountTerminal(); });
