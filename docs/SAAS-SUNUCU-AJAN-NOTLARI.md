@@ -150,15 +150,25 @@ ilan yayını, PDF, AI kotası).
 
 ---
 
-## 6) EİDS — Elektronik İlan Doğrulama (Ticaret Bakanlığı, 1 Şubat 2026)
+## 6) EİDS — Elektronik İlan Doğrulama (Ticaret Bakanlığı; 15 Şubat 2026'dan beri tüm gayrimenkul ilanlarında zorunlu)
 
-**Şu an SİMÜLE** (`eidsVerify` front-end'de sahte doğrulama üretir). Gerçek
-zorunluluk: satılık konut ilanı yayınlamak için işletmenin **Taşınmaz Ticareti
-Yetki Belgesi** ile e-Devlet EİDS doğrulaması. Sunucunun sağlaması gerekenler:
-- Kiracı EİDS künyesi (belge no 7 hane, TTBS unvan, firma kodu, kullanıcı kodu).
-- İlan bazlı doğrulama ucu: `taşınmaz no` → il/ilçe/ada/parsel/cins doğrulama.
-- Yetki tamamlanmadan **açık ilan yayını kapalı** (yalnızca Özel Portföy ön-tanıtım).
-Front-end kapıları hazır; **sunucu gerçek e-Devlet/EİDS entegrasyonunu yapmalı**.
+**Front-end artık GERÇEK** (`shared/eids.js` → `window.EIDS`; üç ürün sitesi ortak
+kullanır). Kod/durum **UYDURMAZ**; doğrulamayı backend'e devreder, canlı uç yoksa
+dürüstçe `beklemede` kalır — sahte "onaylı" YOK. (Eski `eidsDemoRec`/`_eidsKod`
+fabrikasyonu tamamen kaldırıldı.)
+
+**Client'ın çağırdığı uç — sunucunun sağlaması gereken:**
+`POST /api/v1/tenant/eids/verify`
+- İstek gövdesi: `{ tasinmazNo, il, ilce, ada, parsel, malikTip, yetkiBelgeNo }`
+  — `malikTip`: `malik` | `yakin` | `isletme`; `isletme` için `yetkiBelgeNo` zorunlu.
+- Yanıt: `{ success:true, data:{ status, referans?, tarih?, mesaj? } }`
+  — `status`: `dogrulandi` | `reddedildi` | `beklemede`.
+- Client YALNIZCA `success===true && !fallback && data` ise sonucu kabul eder;
+  aksi halde (fallback/hata/6sn timeout) durum dürüstçe `beklemede` kalır.
+
+**Yayın kapısı:** yalnız `status==='dogrulandi'` ilan resmî yayınlanır
+(`EIDS.canPublish`). Firma-düzeyi: **Taşınmaz Ticareti Yetki Belgesi No** (kurumsal).
+Gerçek e-Devlet/Bakanlık entegrasyonu **sunucuda**; front-end + kapılar hazır.
 
 ---
 
@@ -203,6 +213,8 @@ Front-end kapıları hazır; **sunucu gerçek e-Devlet/EİDS entegrasyonunu yapm
 | `/lead` | Bekliyor | CRM yazımı + kiracı gelen kutusu |
 | `/pdf/generate` | Bekliyor | 38-kategori PDF motoru |
 | `locations/mahalleler` | **EKSİK** | Gerçek mahalle listesi (en çok istenen) |
+| `/eids/verify` | Bekliyor | Front-end GERÇEK + hazır (`shared/eids.js`); sunucu gerçek Bakanlık/e-Devlet doğrulamasını yapmalı (§6). Gelene kadar client dürüstçe `beklemede`. |
+| NADAS Veri Terminali (`/endeks`) | Bekliyor | `nadas/index.html` → `EMLAK_TENANT.tenant_key`'e kurumsal ProX anahtarı ekle → terminal CANLI gerçek endekse geçer. Anahtar boşken dürüstçe **"TEMSİLÎ ÖRNEK"** gösterir (sahte "CANLI" yok). |
 | EİDS doğrulama | **SİMÜLE** | Gerçek e-Devlet entegrasyonu (yasal zorunlu) |
 | portal/staff login | Simüle | Gerçek kimlik doğrulama |
 
