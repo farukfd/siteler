@@ -63,7 +63,10 @@
     return '<div style="' + css({ position: "sticky", top: 0, zIndex: 30, background: C.base, borderTop: "1px solid " + accent, borderBottom: "1px solid " + C.borderStrong, padding: "14px 16px" }) + '">'
       + '<div style="' + css({ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", gap: 14 }) + '">'
       + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: accent, fontWeight: 700, letterSpacing: "0.16em" }) + '">SECTION · ' + index + '</span>'
-      + '<span style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 18, color: C.textPri, fontWeight: 600, letterSpacing: "-0.01em" }) + '">' + title + '</span>'
+      /* Başlık <h2> — hiyerarşi h1(hero) → h2(bölüm) → h3(alt bölüm) tamamlanır;
+         eskiden span'di ve ekran okuyucu h1→h3 atlıyordu. Görsel aynı kalsın diye
+         h2'nin varsayılan margin/font'u sıfırlanıp satır içi tutuluyor. */
+      + '<h2 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 18, color: C.textPri, fontWeight: 600, letterSpacing: "-0.01em", margin: 0, display: "inline" }) + '">' + title + '</h2>'
       + '<span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span>'
       + '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.1em" }) + '">' + subtitle + '</span>'
       + '</div></div>';
@@ -117,7 +120,13 @@
          Renkler aynen: kutu #16a34a, hover #1fb155, kutu içi #0b1220. */
       ".nx-prox{display:inline-flex;align-items:center;white-space:nowrap;font-weight:800;color:#fff}",
       ".nx-prox-x{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;height:1.4em;background:#16a34a;color:#0b1220;border-radius:.43em;font-weight:800;font-size:.93em;line-height:1;margin-left:.14em}",
-      "a:hover .nx-prox-x{background:#1fb155}"
+      "a:hover .nx-prox-x{background:#1fb155}",
+      /* Atlama bağlantısı: uzun sayfalarda klavye kullanıcısı nav'ı geçip
+         içeriğe atlar. Normalde ekran dışında, odaklanınca görünür. */
+      ".nx-skip{position:absolute;left:8px;top:-48px;z-index:200;background:" + C.violet + ";color:#12081F;" +
+        "font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;padding:9px 14px;border-radius:3px;" +
+        "text-decoration:none;transition:top .15s ease}",
+      ".nx-skip:focus{top:8px;outline:2px solid #fff;outline-offset:2px}"
     ].join("\n");
     document.head.appendChild(s);
   }
@@ -182,9 +191,42 @@
     injectBase();
     var app = document.getElementById("app");
     if (app) app.innerHTML = (typeof render === "function" ? render() : render);
+    addLandmarks(app);
     proxify(app);
     startClock();
     seoAdapt();
+  }
+
+  /* Atlama bağlantısı + <main> landmark'ı. Tüm sayfalar aynı iskeleti kullanıyor:
+     Ticker + Masthead + <nav> ... içerik ... <footer>. nav ile footer arasını
+     <main>'e taşıyoruz — öğeler yeniden ebeveynlenir ama KİMLİKLERİ korunur, bu
+     yüzden boot sonrası çalışan mount() kodu getElementById ile hâlâ bulur.
+     Fail-safe: nav/footer yoksa hiçbir şey yapmaz, sayfa eskisi gibi çalışır. */
+  function addLandmarks(app) {
+    if (!app || document.getElementById("nx-main")) return;
+    try {
+      var nav = app.querySelector("nav");
+      var footer = app.querySelector("footer");
+      if (!nav || !footer) return;
+
+      /* Atlama bağlantısı — body'nin ilk çocuğu olsun ki klavye ilk buraya gelsin */
+      if (!document.querySelector(".nx-skip")) {
+        var skip = document.createElement("a");
+        skip.className = "nx-skip";
+        skip.href = "#nx-main";
+        skip.textContent = "İçeriğe atla";
+        document.body.insertBefore(skip, document.body.firstChild);
+      }
+
+      /* nav ile footer arasındaki her düğümü <main>'e taşı */
+      var main = document.createElement("main");
+      main.id = "nx-main";
+      main.tabIndex = -1;   /* atlama bağlantısı odağı buraya taşısın */
+      nav.parentNode.insertBefore(main, nav.nextSibling);
+      while (main.nextSibling && main.nextSibling !== footer) {
+        main.appendChild(main.nextSibling);
+      }
+    } catch (e) { /* landmark eklenemezse sayfa yine çalışır */ }
   }
 
   /* ============================================================================
