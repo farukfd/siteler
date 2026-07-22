@@ -1416,3 +1416,66 @@ body.cookie-on .wa{bottom:86px}
 .fadm-a{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font-size:13px;font-family:inherit;line-height:1.5;min-height:70px;resize:vertical}
 .soc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:560px){.soc-grid{grid-template-columns:1fr}}
+
+/* ===== İLANLAR & ÖZEL PORTFÖY (EİDS + ProX) ===== */
+#ilanlarPage{position:fixed;inset:0;z-index:115;background:var(--bg);overflow-y:auto;display:none;color:var(--ink)}
+#ilanlarPage.on{display:block;animation:pdIn .3s ease}
+/* kamu ilan kartı — ppcard'ı miras alır ama tıklanabilir değil */
+.ins-ilancard{cursor:default}
+.ins-ilancard:hover{transform:translateY(-4px)}
+.ins-ilancard .img .st.devam{background:#1a7f4a}.ins-ilancard .img .st.plan{background:#b45309}
+.ins-eids-tag{position:absolute;top:14px;right:14px;display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.3px;color:#fff;background:#1a7f4a;box-shadow:0 3px 10px -3px rgba(0,0,0,.5)}
+.ins-eids-tag svg{width:12px;height:12px}
+.ins-feat-tag{position:absolute;bottom:14px;left:14px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800;color:#1a1205;background:linear-gradient(135deg,#fbbf24,#f59e0b)}
+.ins-ilancard .body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px}
+.ins-ilancard .loc{font-size:12.5px;color:var(--muted)}
+.ins-ilancard h3{margin:0;font-size:17px;line-height:1.25}
+.ins-ilancard .desc{font-size:13px;color:var(--muted);line-height:1.5}
+.ins-ilancard .meta{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0;margin:2px 0}
+.ins-ilancard .meta .m{text-align:center}.ins-ilancard .meta .m b{display:block;font-size:13px}.ins-ilancard .meta .m span{font-size:10.5px;color:var(--muted)}
+.ins-ilancard .foot{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ins-ilancard .price{font-size:19px;font-weight:800;color:var(--accent)}.ins-ilancard .price small{font-size:12px;font-weight:600;color:var(--muted)}
+/* Özel Portföy şeridi */
+.ins-oz-section{max-width:var(--maxw);margin:10px auto 80px;padding:26px 5vw 0;border-top:1px solid var(--line)}
+.ins-oz-head h2{margin:0 0 6px;font-size:24px}.ins-oz-head h2 span{font-weight:500;color:var(--muted);font-size:16px}
+.ins-oz-head p{margin:0 0 18px;color:var(--muted);font-size:13.5px;max-width:760px;line-height:1.6}
+.ins-oz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:980px){.ins-oz-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.ins-oz-grid{grid-template-columns:1fr}}
+.ins-ozcard{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:15px 16px;display:flex;flex-direction:column;gap:7px}
+.ins-oz-top{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:7px}
+.ins-oz-off{margin-left:auto;font-size:10.5px;font-weight:700;color:#b45309;background:#fbbf2422;padding:3px 8px;border-radius:999px}
+.atag{padding:2px 9px;border-radius:999px;font-size:11px;font-weight:800;color:#fff}
+.atag.sat{background:#1a7f4a}.atag.kir{background:#b45309}
+.ins-oz-loc{font-size:12.5px;color:var(--muted)}
+.ins-oz-spec{font-size:12.5px;font-weight:600}
+.ins-oz-price{font-size:18px;font-weight:800;color:var(--accent);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.ins-oz-price small{font-size:12px;color:var(--muted);font-weight:600}
+.ins-oz-ort{font-size:11px;font-weight:600;color:var(--muted)}
+.ins-oz-note{font-size:11px;color:var(--muted);line-height:1.5;border-top:1px solid var(--line);padding-top:7px}
+
+/* --- Admin: İlan & Özel Portföy panelleri --- */
+.ins-eids-bar{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.ins-chk{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.ins-eids-belge{display:flex;align-items:center;gap:8px}
+.ins-eids-belge label{font-size:12px;color:var(--muted)}
+.ins-eids-belge input{width:150px}
+.ins-note{flex-basis:100%;font-size:12px;color:var(--muted)}
+.ins-csub{font-size:12.5px;color:var(--muted)}
+.ins-ilan-card{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:12px}
+.ins-ilan-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+.ins-ilan-t{font-size:15px;font-weight:700}
+.ins-ilan-badges{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.ins-eids{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
+.ins-eids svg{width:12px;height:12px}
+.ins-eids.ok{color:#1a7f4a;background:#1a7f4a1a}
+.ins-eids.no{color:#b45309;background:#b453091a}
+.ins-pub{font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--line);color:var(--muted)}
+.ins-pub.on{background:#1a7f4a1a;color:#1a7f4a}
+.ins-ilan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 10px}
+@media(max-width:720px){.ins-ilan-grid{grid-template-columns:repeat(2,1fr)}}
+.ins-ilan-card .ed2{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin-bottom:8px}
+.ins-ilan-card label{display:block;font-size:11px;color:var(--muted);margin-bottom:2px}
+.ins-ilan-card input,.ins-ilan-card select{width:100%;box-sizing:border-box}
+.ins-ilan-actions{display:flex;align-items:center;gap:12px;margin-top:11px;padding-top:10px;border-top:1px solid var(--line)}
+.ins-feat{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}

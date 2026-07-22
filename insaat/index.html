@@ -180,6 +180,7 @@ header.scrolled .lang-sel{color:var(--ink)}
     <a href="hizmetler" onclick="event.preventDefault();openHizmetlerPage()">Hizmetlerimiz</a>
     <a href="neden-biz.html">Neden <span class="nb-x">?</span> Biz</a>
     <a href="projeler" onclick="event.preventDefault();openProjelerPage()">Projeler</a>
+    <a href="ilanlar" onclick="event.preventDefault();openIlanlarPage()">İlanlar</a>
     <a href="bolge" onclick="event.preventDefault();openBolgePage()">Bölge Zekası</a>
   </nav>
   <div class="nav-cta insaatCta">
@@ -475,6 +476,53 @@ header.scrolled .lang-sel{color:var(--ink)}
   </div>
   <div class="pp-count" id="ppCount"></div>
   <div class="pp-grid" id="ppGrid"></div>
+
+  <footer class="insaatFooter"></footer>
+</div>
+
+<!-- ===== İLANLAR & ÖZEL PORTFÖY SAYFASI ===== -->
+<div id="ilanlarPage">
+  <header id="hdrIL" class="pp-hdr"><div class="wrap bar">
+    <a class="logo" href="./" onclick="insHome(event)"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
+    <nav class="main insaatNav">
+      <a href="#hakkimizda" onclick="event.preventDefault();closeIlanlarPage();var e=document.getElementById('hakkimizda');if(e)e.scrollIntoView({behavior:'smooth'})">Kurumsal</a>
+      <a href="hizmetler" onclick="event.preventDefault();openHizmetlerPage();closeIlanlarPage()">Hizmetler</a>
+      <a href="projeler" onclick="event.preventDefault();openProjelerPage();closeIlanlarPage()">Projeler</a>
+      <a href="ilanlar" onclick="event.preventDefault();document.getElementById('ilanlarPage').scrollTo({top:0,behavior:'smooth'})">İlanlar</a>
+      <a href="bolge" onclick="event.preventDefault();openBolgePage();closeIlanlarPage()">Bölge Zekası</a>
+      <a href="iletisim" onclick="event.preventDefault();openIletisimPage();closeIlanlarPage()">İletişim</a>
+    </nav>
+    <div class="nav-cta insaatCta">
+      <a class="btn btn-ghost" href="projeler" onclick="event.preventDefault();openProjelerPage();closeIlanlarPage()">Projeler</a>
+      <button class="btn btn-primary" onclick="openTeklif()">Teklif Al</button>
+      <button class="burger" onclick="document.getElementById('mnavIL').classList.add('open')"><span></span><span></span><span></span></button>
+    </div>
+  </div></header>
+  <div class="mnav" id="mnavIL" onclick="if(event.target.id==='mnavIL')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
+
+  <div class="pp-hero">
+    <div class="eyebrow">İlanlar & Özel Portföy</div>
+    <h1>EİDS Onaylı İlanlar ve Kapalı Portföy</h1>
+    <p>Yayındaki tüm ilanlarımız Elektronik İlan Doğrulama Sistemi (EİDS) kaydıyla sunulur. Ayrıca ProX bölge verisinden üretilen off-market kapalı portföy tahminlerini inceleyin.</p>
+  </div>
+
+  <div class="pp-toolbar">
+    <div class="pp-filters" id="insIlanFilters">
+      <button class="ppf active" onclick="insIlanFilterSet('op','',this)">Tümü</button>
+      <button class="ppf" onclick="insIlanFilterSet('op','Satılık',this)">Satılık</button>
+      <button class="ppf" onclick="insIlanFilterSet('op','Kiralık',this)">Kiralık</button>
+    </div>
+  </div>
+  <div class="pp-count" id="insIlanCount"></div>
+  <div class="pp-grid" id="insIlanGrid"></div>
+
+  <div class="ins-oz-section">
+    <div class="ins-oz-head">
+      <h2>🔒 Özel Portföy <span>— kapalı / off-market</span></h2>
+      <p>ProX bölge verisinden üretilen pazar tahminleri. Kamuya açık EİDS ilanı değildir; fiyatlar ProX endeks/analiz tahminidir. Detay için bizimle iletişime geçin.</p>
+    </div>
+    <div class="ins-oz-grid" id="insOzelGrid"></div>
+  </div>
 
   <footer class="insaatFooter"></footer>
 </div>
@@ -819,6 +867,8 @@ function cookieChoice(v){
       <button data-pane="projects" onclick="admNav('projects',this)">🏗️ Projeler</button>
       <button data-pane="services" onclick="admNav('services',this)">🧰 Hizmetler</button>
       <button data-pane="arsa" onclick="admNav('arsa',this)">🤝 Kat Karşılığı Hesap</button>
+      <button data-pane="ilanlar" onclick="admNav('ilanlar',this)">🏘️ İlanlar (EİDS)</button>
+      <button data-pane="portfoy" onclick="admNav('portfoy',this)">🔒 Özel Portföy (ProX)</button>
       <button data-pane="proje3d" onclick="admNav('proje3d',this)">🏗️ 3D Proje Üretici (Kat Karşılığı)</button>
       <button data-pane="dwgproje" onclick="admNav('dwgproje',this)">📐 DWG Mimari Proje</button>
       <button data-pane="contracts" onclick="admNav('contracts',this)">📋 Sözleşmeler</button>
@@ -1051,6 +1101,38 @@ function cookieChoice(v){
           <button class="btn-mini" onclick="admAddArsa()">+ Yeni Fizibilite Hesabı</button>
         </div>
         <div id="arsaList"></div>
+      </div>
+      <!-- İLANLAR (EİDS üzerinden yayın) -->
+      <div class="adm-pane" id="pane-ilanlar">
+        <h2>İlanlar</h2>
+        <div class="crumb">Kendi taşınmazlarınızı bağımsız ilan olarak yayınlayın. Her ilan <b>EİDS</b> (Elektronik İlan Doğrulama Sistemi) kaydıyla yayınlanır. Değişiklikler otomatik kaydedilir, İlanlar sayfasına anında yansır.</div>
+        <div class="panelcard ins-eids-bar">
+          <label class="ins-chk"><input type="checkbox" id="insEidsYetki" onchange="insEidsToggleYetki(this.checked)"> <b>EİDS yetkili firma</b> — işaretliyse yayınlanan ilanlar “EİDS onaylı” rozetiyle çıkar</label>
+          <div class="ins-eids-belge"><label>EİDS Belge No</label><input id="insEidsBelge" placeholder="Örn. 4827193" oninput="SETTINGS.eidsBelgeNo=this.value;saveAll()"></div>
+          <div class="ins-note">ℹ️ Bu ekrandaki EİDS bir tanıtım demosudur; canlı sürümde ilanlar gerçek EİDS servisine bağlanır.</div>
+        </div>
+        <div class="panelcard">
+          <h3 style="margin:0 0 6px">📤 Toplu İlan Aktar</h3>
+          <div class="crumb" style="margin:0 0 10px">Excel / Google Sheets’ten satırları kopyalayıp aşağıya yapıştırın (sütun ayracı sekme, <b>;</b> veya <b>,</b> — otomatik algılanır). Sıra: <b>Başlık · İşlem · Tip · İl · İlçe · Mahalle · m² · Oda · Kat · Fiyat · Açıklama</b>. Yalnız <b>size ait</b> ilanlar — portal izinsiz taraması yapılmaz.</div>
+          <textarea id="insBulk_in" rows="5" style="width:100%;box-sizing:border-box;font-family:ui-monospace,Menlo,monospace;font-size:12px" placeholder="Levent Rezidans 2+1&#9;Satılık&#9;Daire&#9;İstanbul&#9;Beşiktaş&#9;Levent&#9;112&#9;2+1&#9;14&#9;14750000&#9;Açıklama…"></textarea>
+          <div class="adm-toolbar" style="margin-top:8px">
+            <button class="btn-mini" onclick="insBulkSample()">Örnek Doldur</button>
+            <button class="btn-mini" onclick="insBulkPreview()">👁 Önizle</button>
+            <button class="btn-mini" style="background:var(--accent);color:#fff" onclick="insBulkImport()">📥 İçe Aktar</button>
+          </div>
+          <div id="insBulk_out" style="margin-top:8px"></div>
+        </div>
+        <div class="adm-toolbar"><button class="btn-mini" onclick="insIlanAdd()">+ Yeni İlan Ekle</button></div>
+        <div class="panelcard"><div id="insIlanList"></div></div>
+      </div>
+      <!-- ÖZEL PORTFÖY (ProX destekli üretim · EİDS hariç) -->
+      <div class="adm-pane" id="pane-portfoy">
+        <h2>Özel Portföy</h2>
+        <div class="crumb">Off-market / kapalı portföy. Kayıtlar <b>ProX bölge verisinden üretilir</b> (pazar tahmini) — kamuya açık EİDS ilanı değildir, bu yüzden <b>EİDS kapsamı dışındadır</b>. Fiyatlar ProX endeks/analiz tahminidir, kesin ilan fiyatı değildir.</div>
+        <div class="adm-toolbar">
+          <button class="btn-mini" id="insOzGenBtn" style="background:var(--accent);color:#fff" onclick="insOzelGen()">⚡ ProX ile Portföy Üret</button>
+        </div>
+        <div class="panelcard"><div id="insOzelList"></div></div>
       </div>
       <!-- 3D PROJE ÜRETİCİ & FİZİBİLİTE RAPORU -->
       <div class="adm-pane" id="pane-proje3d">
