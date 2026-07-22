@@ -925,3 +925,9 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 .vcard-lock{z-index:4}
 /* faint alt-etiket okunurluğu (Başlangıç · Yetki Belgeli / SATILIK) */
 .vcard-price span{color:var(--gold-ink,#c9a94e)!important;opacity:.92!important;letter-spacing:.04em}
+
+/* --- EİDS gerçek doğrulama rozetleri (danışman) --- */
+.iln-eids-box{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 0}
+.iln-eids-msg{font-size:11.5px;color:var(--muted);line-height:1.4}
+.vcard-eids{margin:2px 0 6px}
+.crm-card .eids-b{font-size:10.5px;padding:2px 7px}

@@ -27,7 +27,7 @@ const SAAS_CONFIG={
     unvan:'Selin Meridyen Gayrimenkul Danışmanlık', vergi:'', adres:'Nişantaşı, Şişli / İstanbul',
     tel:'+90 212 000 00 00', mail:'info@selinmeridyen.com', proxyUrl:'',
     kapsama:{ bolgeler:['Beşiktaş','Sarıyer','Şişli','Beykoz','Kadıköy'], kategoriler:['Yalı','Penthouse','Villa','Rezidans','Arsa','Yatırım'] },
-    eids:{ yetkili:true, connected:true, belgeNo:'0034812', firmaKod:'', kullaniciKodu:'' }
+    eids:{ yetkili:true, belgeNo:'0034812' }
   }
 };
 /* WHITE-LABEL PARSE-TIME SENKRON: reseller adı (kalıcı dn_brand) → SAAS_CONFIG.brandName.
@@ -39,9 +39,9 @@ function saasResolve(key){const t=SAAS_CONFIG.tenantSettings,s=SAAS_CONFIG.syste
    admin override (dn_brand.initial) > reseller adının ilk harfi > 'M' (Meridyen ailesi, varsayılan). */
 function _brandInitial(){try{var b=(window.dnGetBrand?dnGetBrand():{})||{};if(b.initial&&(''+b.initial).trim())return (''+b.initial).trim().charAt(0).toLocaleUpperCase('tr');}catch(e){}var bn=saasResolve('brandName')||'';if(!bn||bn==='Selin Meridyen')return 'M';return bn.trim().charAt(0).toLocaleUpperCase('tr');}
 /* ===================== EİDS — Elektronik İlan Doğrulama (danışman) =====================
-   Açık ilan yayını EİDS yetkisi ister; VIP (davet usulü) portföy serbesttir.
-   gerçek Bakanlık entegrasyonu için soyutlama: eidsConnect gerçek {firmaKod,kullaniciKodu}
-   akışıyla değiştirilebilir. ===================================================== */
+   Firma yetkisi = Taşınmaz Ticareti Yetki Belgesi No. Asıl doğrulama HER İLAN için ayrıca
+   yapılır: shared/eids.js (window.EIDS) → backend (ProX/emlakekspertizi) → Ticaret Bakanlığı.
+   Kod uydurulmaz; canlı uç yoksa ilan 'beklemede' kalır. ============================== */
 /* GÜVENLİK: eskiden yalnız & < > kaçırıyordu, çift tırnağı geçiriyordu. Metin
    bağlamında sorun değildi ama _leD 25'ten fazla yerde value="…" ÖZNİTELİK
    bağlamında da kullanılıyor (CRM kişi/ilan/ekip formları, ayar alanları).
@@ -51,25 +51,23 @@ function _brandInitial(){try{var b=(window.dnGetBrand?dnGetBrand():{})||{};if(b.
    Doğrulandı: onfocus/autofocus gerçek nitelik olarak ayrıştı. Tek tırnak da
    eklendi; tek tırnaklı öznitelik kalıpları için. */
 function _leD(s){return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
-function eidsFirma(){SAAS_CONFIG.firma=SAAS_CONFIG.firma||{};SAAS_CONFIG.firma.eids=SAAS_CONFIG.firma.eids||{yetkili:false,connected:false,belgeNo:'',firmaKod:'',kullaniciKodu:''};return SAAS_CONFIG.firma;}
-function eidsGuid(){var s='';for(var i=0;i<8;i++)s+=Math.floor(Math.random()*10);return 'K'+s;}
-function eidsVerify(){var e=eidsFirma().eids;e.yetkili=!!(e.belgeNo&&(''+e.belgeNo).replace(/\D/g,'').length>=7&&e.connected);return e.yetkili;}
+function eidsFirma(){SAAS_CONFIG.firma=SAAS_CONFIG.firma||{};SAAS_CONFIG.firma.eids=SAAS_CONFIG.firma.eids||{yetkili:false,belgeNo:''};return SAAS_CONFIG.firma;}
+/* Firma yetkisi = geçerli Taşınmaz Ticareti Yetki Belgesi No (kurumsal ilan için gerekir).
+   Asıl ilan doğrulaması HER İLAN için ayrıca yapılır (Taşınmaz No + Ada/Parsel → shared/eids.js → backend). */
+function eidsVerify(){var e=eidsFirma().eids;e.yetkili=!!(e.belgeNo&&(''+e.belgeNo).replace(/\D/g,'').length>=7);return e.yetkili;}
 function eidsCanPublish(){return eidsVerify();}
-function eidsShieldSvg(sz){sz=sz||16;return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="M9 12l2 2 4-4"/></svg>';}
+function eidsShieldSvg(sz){return (window.EIDS?EIDS.shield(sz||16):'');}
 function eidsBadgeHTML(){var e=eidsFirma().eids;
-  if(eidsVerify())return '<span style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--gold);border-radius:999px;color:var(--gold);font-size:12.5px;letter-spacing:.04em">'+eidsShieldSvg(15)+' EİDS Yetkili · Belge No '+_leD(e.belgeNo)+' · e-Devlet doğrulamalı</span>';
-  return '<span style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--line-soft);border-radius:999px;color:var(--muted);font-size:12.5px">'+eidsShieldSvg(15)+' EİDS yetkisi bekleniyor</span>';}
+  if(eidsVerify())return '<span class="eids-b ok">'+eidsShieldSvg(14)+' Taşınmaz Ticareti Yetki Belgesi · No '+_leD(e.belgeNo)+'</span>';
+  return '<span class="eids-b wait">'+eidsShieldSvg(14)+' Yetki belgesi bekleniyor</span>';}
 function eidsRenderPublic(){var el=document.getElementById('eidsPublicBadge');if(el)el.innerHTML=eidsBadgeHTML();
-  var ql=document.getElementById('eidsListingNote');if(ql)ql.innerHTML=eidsVerify()?(eidsShieldSvg(13)+' EİDS ile doğrulanmış ilanlar'):'';}
+  var ql=document.getElementById('eidsListingNote');if(ql)ql.innerHTML=eidsVerify()?(eidsShieldSvg(13)+' İlanlar T.C. Ticaret Bakanlığı EİDS ile doğrulanır'):'';}
 function eidsRenderAdmin(){var box=document.getElementById('ed_status');if(!box)return;var e=eidsFirma().eids;
   box.innerHTML=eidsVerify()
-    ? '<div style="display:flex;gap:10px;align-items:center;padding:11px 13px;border:1px solid var(--gold);border-radius:10px;color:var(--gold)"><span>'+eidsShieldSvg(18)+'</span><div>EİDS Yetkisi Aktif — açık ilan yayınlayabilirsiniz.<div style="font-size:12px;opacity:.85;color:var(--muted)">Belge No '+_leD(e.belgeNo)+' · e-Devlet bağlı'+(e.kullaniciKodu?' · Kullanıcı '+_leD(e.kullaniciKodu):'')+'</div></div></div>'
-    : '<div style="display:flex;gap:10px;align-items:center;padding:11px 13px;border:1px solid var(--line-soft);border-radius:10px;color:var(--muted)"><span>⚠️</span><div>EİDS Yetkisi Yok — yalnızca VIP (davet usulü) portföy eklenebilir.<div style="font-size:12px;opacity:.85">7+ haneli yetki belgesi girip e-Devlet ile bağlanın.</div></div></div>';}
-function eidsConnect(){var e=eidsFirma().eids;var inp=document.getElementById('ed_belge');if(inp)e.belgeNo=(inp.value||'').replace(/\D/g,'');
-  toast('e-Devlet EİDS oturumu açılıyor…');
-  setTimeout(function(){e.connected=true;if(!e.firmaKod)e.firmaKod=eidsGuid();e.kullaniciKodu=eidsGuid();eidsVerify();try{eidsRenderAdmin();eidsRenderPublic();}catch(x){}
-    toast(e.yetkili?'✓ e-Devlet ile bağlanıldı · Kullanıcı Kodu üretildi · Yetki aktif.':'e-Devlet bağlandı. Geçerli 7+ haneli yetki belgesi girip kaydedin.');},900);}
-function eidsSave(){var e=eidsFirma().eids;var inp=document.getElementById('ed_belge');if(inp)e.belgeNo=(inp.value||'').replace(/\D/g,'');eidsVerify();eidsRenderAdmin();eidsRenderPublic();toast('EİDS bilgileri kaydedildi.');}
+    ? '<div style="display:flex;gap:10px;align-items:center;padding:11px 13px;border:1px solid var(--gold);border-radius:10px;color:var(--gold)"><span>'+eidsShieldSvg(18)+'</span><div>Yetki Belgesi girildi — ilanları EİDS ile doğrulayıp yayınlayabilirsiniz.<div style="font-size:12px;opacity:.85;color:var(--muted)">Belge No '+_leD(e.belgeNo)+' · Doğrulama her ilan için ayrıca yapılır (Taşınmaz No + Ada/Parsel). Kod uydurulmaz; canlı bağlantı yoksa ilan “beklemede” kalır.</div></div></div>'
+    : '<div style="display:flex;gap:10px;align-items:center;padding:11px 13px;border:1px solid var(--line-soft);border-radius:10px;color:var(--muted)"><span>⚠️</span><div>Yetki Belgesi Yok — 7+ haneli Taşınmaz Ticareti Yetki Belgesi No girin.<div style="font-size:12px;opacity:.85">Malikin e-Devlet yetkisi ayrıca gereklidir (turkiye.gov.tr).</div></div></div>';}
+function eidsConnect(){eidsSave();}
+function eidsSave(){var e=eidsFirma().eids;var inp=document.getElementById('ed_belge');if(inp)e.belgeNo=(inp.value||'').replace(/\D/g,'');eidsVerify();eidsRenderAdmin();eidsRenderPublic();toast(e.yetkili?'✓ Yetki Belgesi kaydedildi. Her ilan için Taşınmaz No/Ada/Parsel ile ayrıca EİDS doğrulaması yapın.':'Geçerli (7+ haneli) yetki belgesi girin.');}
 window.eidsConnect=eidsConnect;window.eidsSave=eidsSave;
 /* ===================== YASAL METİN MOTORU — firma künyesinden (per-firma) ===================== */
 function firmaKune(){var f=SAAS_CONFIG.firma||{};var e=f.eids||{};var name=saasResolve('brandName')||SAAS_CONFIG.advisorName||'—';
@@ -469,7 +467,7 @@ function obFinish(){obCollect();if(!(OB.brand||OB.advisor)){OB.step=1;obRender()
     if(OB.brand)s.brandName=OB.brand;if(OB.advisor)SAAS_CONFIG.advisorName=OB.advisor;
     if(OB.accent){s.accent=OB.accent;s.gold=OB.accent;}if(OB.logo)SAAS_CONFIG.tenantSettings.logoUrl=OB.logo;
     if(OB.unvan)f.unvan=OB.unvan;if(OB.vergi)f.vergi=OB.vergi;if(OB.mail)f.mail=OB.mail;if(OB.tel)f.tel=OB.tel;if(OB.adres)f.adres=OB.adres;
-    if(OB.belge){f.eids.belgeNo=OB.belge.replace(/\D/g,'');f.eids.connected=true;eidsVerify();}
+    if(OB.belge){f.eids.belgeNo=OB.belge.replace(/\D/g,'');eidsVerify();}
     if(OB.il&&typeof applyProvince==='function'){try{saLoad();applyProvince(OB.il);saSave();}catch(_e){}}
     if(OB.key)window.EMLAK_TENANT.tenant_key=OB.key;
     initSaaSTheme();applySaaSSettings();try{eidsRenderPublic();applySchema();}catch(e){}
@@ -569,6 +567,7 @@ function listingCardsHTML(){var _src=(window.DN_ILAN&&typeof DN_ILAN.get==='func
    +'<div class="vcard-img"><div class="glow"></div><span class="vcard-tag">'+_leD(l.durum)+'</span>'+_favBtn(listingFavId(l),'ilan',{t:l.baslik,s:l.bolge+' · '+l.durum,p:(l.kira?fmt(l.fiyat)+' /ay':fmt(l.fiyat)),u:'ilanlar.html'})+(l.img?'<img class="vcard-photo" src="'+(l.imgUrl||l.img)+'" alt="'+_leD(l.baslik||'')+'">':(_VIP_SVG[l.tip]||_VIP_SVG.villa))+'</div>'
    +'<div class="vcard-body"><h3>'+_leD(l.baslik)+'</h3>'
    +'<div class="vcard-loc">'+_PIN+_leD(l.bolge)+'</div>'
+   +(window.EIDS?'<div class="vcard-eids">'+EIDS.badgeHTML(l.eids,11)+'</div>':'')
    +'<div class="vcard-spec"><div><b>'+_leD(l.m2)+' m²</b>Alan</div><div><b>'+_leD(l.oda)+'</b>Oda</div><div><b>'+_leD(l.kat)+'</b>Kat</div></div>'
    +'<div class="vcard-ft"><div class="vcard-price">'+price+'<span>'+_leD(l.durum)+'</span></div><div class="vcard-go">İlanı İncele'+_ARR+'</div></div>'
    +'</div></article>';
@@ -1072,23 +1071,36 @@ function ilanEnsureIds(){var mx=0;LISTINGS.forEach(function(l){if(l.id)mx=Math.m
   if(!l.il)l.il='İstanbul';
   if(!l.ilce&&l.bolge){var p=(''+l.bolge).split('·').map(function(x){return x.trim();});if(p[0])l.ilce=p[0];if(p[1]&&!l.mahalle)l.mahalle=p[1];}
 });return mx;}
-function ilanLoad(){try{var a=JSON.parse(localStorage.getItem(ILN_KEY)||'null');if(Array.isArray(a)){LISTINGS.length=0;a.forEach(function(x){LISTINGS.push(x);});}}catch(e){}ilanEnsureIds();}
+function ilanLoad(){try{var a=JSON.parse(localStorage.getItem(ILN_KEY)||'null');if(Array.isArray(a)){LISTINGS.length=0;a.forEach(function(x){LISTINGS.push(x);});}}catch(e){}ilanEnsureIds();_eidsMigrate();}
 function ilanSave(){try{localStorage.setItem(ILN_KEY,JSON.stringify(LISTINGS));}catch(e){try{toast('Kayıt alanı dolu.');}catch(_){}}}
 function ilanBolge(l){return [l.ilce,l.mahalle].filter(Boolean).join(' · ')||l.bolge||'';}
 var _ilnImg='',_ilnEids=null;
-function _eidsKod(){var C='0123456789ABCDEFGHJKLMNPQRSTUVWXYZ',s='EIDS-';for(var i=0;i<3;i++){for(var j=0;j<4;j++)s+=C[Math.floor(Math.random()*C.length)];if(i<2)s+='-';}return s;}
-function _eidsTasNo(){var s='';for(var i=0;i<12;i++)s+=Math.floor(Math.random()*10);return s;}
-function _ilnEidsHtml(){if(_ilnEids&&_ilnEids.status==='dogrulandi')return '<div class="iln-eids">✓ EİDS Doğrulandı · '+_leD(_ilnEids.kod)+' · Taşınmaz No '+_leD(_ilnEids.tasinmazNo)+(_ilnEids.cins?(' · '+_leD(_ilnEids.cins)):'')+'</div>';return '<div class="iln-eids no">Bu ilan için EİDS taşınmaz doğrulaması yapılmadı.</div>';}
+/* Per-ilan EİDS: GERÇEK doğrulama (shared/eids.js). Kod/durum uydurulmaz; backend'e devredilir.
+   _ilnEids = düzenlenen ilanın EİDS kaydı (beklemede/dogrulandi/reddedildi). */
+function _ilnEidsHtml(){ if(!window.EIDS)return ''; var e=_ilnEids||EIDS.newRecord({});
+  return '<div class="iln-eids-box">'+EIDS.badgeHTML(e,13)+'<div class="iln-eids-msg">'+_leD(e.mesaj||'')+'</div></div>'; }
+/* Eski SAHTE eids kayıtlarını (uydurma .kod) gerçek 'beklemede' kaydına indir — boot göçü */
+function _eidsMigrate(){ if(!window.EIDS||!Array.isArray(LISTINGS))return; var ch=false;
+  LISTINGS.forEach(function(l){ if(!l)return;
+    if(!l.eids){ l.eids=EIDS.newRecord({il:l.il,ilce:l.ilce,tasinmazNo:l.eidsNo||'',malikTip:'isletme'}); ch=true; }          /* eksik → beklemede */
+    else if(l.eids.kod!==undefined||!l.eids.status){ l.eids=EIDS.newRecord({il:l.il,ilce:l.ilce,tasinmazNo:l.eids.tasinmazNo||l.eidsNo||'',malikTip:'isletme'}); ch=true; } /* eski SAHTE → beklemede */
+  });
+  if(ch&&typeof ilanSave==='function')ilanSave(); }
 function ilanImgUpload(input){var f=input.files&&input.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){_ilnImg=e.target.result;var t=document.getElementById('il_thumb');if(t)t.innerHTML='<img src="'+_ilnImg+'" alt="">';};r.readAsDataURL(f);}
 function ilanImgClear(){_ilnImg='';var t=document.getElementById('il_thumb');if(t)t.textContent='—';}
-function ilanEidsVerify(){var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsFirma().eids.yetkili);}catch(e){}
-  if(!eidsOk){toast('Önce firma EİDS yetkisi gerekir (EİDS Yetki sekmesi).');return;}
-  var no=((document.getElementById('il_eids')||{}).value||'').trim()||_eidsTasNo();
-  var cinsler=['Mesken (Kat Mülkiyeti)','Müstakil Konut','İşyeri','Arsa','Bina'];
-  _ilnEids={status:'dogrulandi',kod:_eidsKod(),tasinmazNo:no,cins:cinsler[Math.floor(Math.random()*cinsler.length)],malikTip:'Yetkili İşletme',tarih:new Date().toISOString()};
-  var st=document.getElementById('il_eidsStatus');if(st)st.innerHTML=_ilnEidsHtml();
-  var ne=document.getElementById('il_eids');if(ne&&!ne.value)ne.value=no;
-  toast('✓ EİDS taşınmaz doğrulaması alındı.');}
+function ilanEidsVerify(){
+  if(!window.EIDS){toast('EİDS modülü yüklenemedi.');return;}
+  var g=function(x){var el=document.getElementById(x);return el?(el.value||'').trim():'';};
+  var fields={ tasinmazNo:g('il_eids'), il:g('il_il'), ilce:g('il_ilce'), ada:g('il_ada'), parsel:g('il_parsel'), malikTip:'isletme', yetkiBelgeNo:(eidsFirma().eids.belgeNo||'') };
+  var eksik=EIDS.eksikAlanlar(EIDS.newRecord(fields));
+  if(eksik.length){toast('EİDS için eksik alan: '+eksik.join(', ')+'.');return;}
+  var btn=document.getElementById('il_eidsBtn'); if(btn){btn.disabled=true;btn.textContent='Bakanlık EİDS sisteminde doğrulanıyor…';}
+  EIDS.verify(fields).then(function(rec){
+    _ilnEids={status:rec.status,tasinmazNo:fields.tasinmazNo,ada:fields.ada,parsel:fields.parsel,malikTip:'isletme',yetkiBelgeNo:fields.yetkiBelgeNo,referans:rec.referans,tarih:rec.tarih,mesaj:rec.mesaj};
+    var st=document.getElementById('il_eidsStatus');if(st)st.innerHTML=_ilnEidsHtml();
+    if(btn){btn.disabled=false;btn.textContent='EİDS ile Doğrula';}
+    toast(EIDS.stateLabel(_ilnEids)+' — '+rec.mesaj);
+  });}
 async function ilanAiDesc(){var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
   var parts=[g('il_baslik'),ilnTipT(g('il_tip')),g('il_durum'),[g('il_ilce'),g('il_mah')].filter(Boolean).join(' '),(g('il_m2')?g('il_m2')+' m²':''),g('il_oda'),(g('il_fiyat')?fmt(+g('il_fiyat'))+' ₺':'')].filter(Boolean).join(' · ');
   var ta=document.getElementById('il_desc');if(!ta)return;var old=ta.value;ta.value='İçerik Asistanı yazıyor…';
@@ -1104,7 +1116,7 @@ function ilanRenderAdmin(){var host=document.getElementById('ilanAdminBody');if(
   else H+='<div class="crm-list">'+LISTINGS.map(function(l){var kr=l.durum==='Kiralık';
     return '<div class="crm-card"><div class="crm-card-top"><div><b>'+_leD(l.baslik||'—')+'</b><span class="crm-badge">'+_leD(l.durum||'')+'</span>'+(l.status==='pasif'?'<span class="crm-badge" style="background:rgba(192,96,58,.12);color:#c0603a">pasif</span>':'')+'</div><div class="crm-card-act"><button onclick="ilanTogglePub('+l.id+')" title="'+(l.status==='pasif'?'Yayınla':'Yayından kaldır')+'">'+(l.status==='pasif'?'▲':'▼')+'</button><button onclick="ilanEdit('+l.id+')" title="Düzenle">✎</button><button onclick="ilanDel('+l.id+')" title="Sil">🗑</button></div></div>'
       +'<div class="crm-card-b">'+_leD(ilnTipT(l.tip))+' · '+_leD(ilanBolge(l))+'</div>'
-      +'<div class="crm-card-b sub">'+_leD((l.m2||'?')+' m²')+' · '+_leD(l.oda||'')+(l.kat?(' · '+_leD(l.kat)+'. kat'):'')+' · <b style="color:var(--em)">'+fmt(l.fiyat||0)+(kr?' ₺/ay':' ₺')+'</b>'+(l.eidsNo?(' · EİDS '+_leD(l.eidsNo)):'')+'</div></div>';
+      +'<div class="crm-card-b sub">'+_leD((l.m2||'?')+' m²')+' · '+_leD(l.oda||'')+(l.kat?(' · '+_leD(l.kat)+'. kat'):'')+' · <b style="color:var(--em)">'+fmt(l.fiyat||0)+(kr?' ₺/ay':' ₺')+'</b></div>'+(window.EIDS?'<div class="crm-card-b sub" style="margin-top:4px">'+EIDS.badgeHTML(l.eids,11)+'</div>':'')+'</div>';
   }).join('')+'</div>';
   host.innerHTML=H;
 }
@@ -1115,9 +1127,10 @@ function ilanEdit(id){ilanLoad();var l=id?LISTINGS.filter(function(x){return x.i
     +'<div class="crm-frow"><div class="crm-f"><label>İl</label><input id="il_il" value="'+_leD(l.il||'İstanbul')+'"></div><div class="crm-f"><label>İlçe</label><input id="il_ilce" value="'+_leD(l.ilce||'')+'"></div></div>'
     +'<div class="crm-frow"><div class="crm-f"><label>Mahalle</label><input id="il_mah" value="'+_leD(l.mahalle||'')+'"></div><div class="crm-f"><label>m²</label><input id="il_m2" type="number" value="'+(l.m2||'')+'"></div></div>'
     +'<div class="crm-frow"><div class="crm-f"><label>Oda</label><input id="il_oda" value="'+_leD(l.oda||'')+'" placeholder="4+1"></div><div class="crm-f"><label>Kat</label><input id="il_kat" value="'+_leD(l.kat||'')+'" placeholder="7"></div></div>'
-    +'<div class="crm-frow"><div class="crm-f"><label>Fiyat (₺)</label><input id="il_fiyat" type="number" value="'+(l.fiyat||'')+'"></div><div class="crm-f"><label>EİDS Taşınmaz No</label><input id="il_eids" value="'+_leD(l.eidsNo||'')+'" placeholder="opsiyonel"></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Fiyat (₺)</label><input id="il_fiyat" type="number" value="'+(l.fiyat||'')+'"></div><div class="crm-f"><label>Taşınmaz No <span style="color:#c0603a">*EİDS</span></label><input id="il_eids" value="'+_leD((l.eids&&l.eids.tasinmazNo)||l.eidsNo||'')+'" placeholder="Tapudaki Taşınmaz No"></div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Ada <span style="color:#c0603a">*EİDS</span></label><input id="il_ada" value="'+_leD((l.eids&&l.eids.ada)||'')+'" placeholder="Ada"></div><div class="crm-f"><label>Parsel <span style="color:#c0603a">*EİDS</span></label><input id="il_parsel" value="'+_leD((l.eids&&l.eids.parsel)||'')+'" placeholder="Parsel"></div></div>'
     +'<div class="crm-f"><label>Görsel</label><div class="iln-img"><div class="iln-thumb" id="il_thumb">'+(_ilnImg?'<img src="'+_ilnImg+'" alt="">':'—')+'</div><label class="btn btn-line" style="cursor:pointer;font-size:12.5px">Görsel Yükle<input type="file" accept="image/*" onchange="ilanImgUpload(this)" style="display:none"></label><button class="btn btn-line" style="font-size:12.5px" type="button" onclick="ilanImgClear()">Kaldır</button></div></div>'
-    +'<div class="crm-f"><label>EİDS Taşınmaz Doğrulama</label><div id="il_eidsStatus">'+_ilnEidsHtml()+'</div><button class="btn btn-line" style="margin-top:7px" type="button" onclick="ilanEidsVerify()">e-Devlet EİDS ile Doğrula</button></div>'
+    +'<div class="crm-f"><label>EİDS Taşınmaz Doğrulama <span style="font-weight:400;color:var(--muted)">— T.C. Ticaret Bakanlığı</span></label><div id="il_eidsStatus">'+_ilnEidsHtml()+'</div><button class="btn btn-line" id="il_eidsBtn" style="margin-top:7px" type="button" onclick="ilanEidsVerify()">EİDS ile Doğrula</button></div>'
     +'<div class="crm-f"><label>Açıklama <button type="button" class="crm-x2" style="margin-left:8px" onclick="ilanAiDesc()">🤖 İçerik Asistanı ile üret</button></label><textarea id="il_desc" rows="3" placeholder="İlan açıklaması…">'+_leD(l.desc||'')+'</textarea></div>'
     +'<div class="crm-frow"><div class="crm-f"><label>360° Sanal Tur Linki</label><input id="il_tur" value="'+_leD(l.tur||'')+'" placeholder="Matterport / Kuula URL"></div><div class="crm-f"><label>Video Tur Linki</label><input id="il_video" value="'+_leD(l.video||'')+'" placeholder="YouTube / Vimeo URL"></div></div>'
     +'<div class="crm-f"><label>Yayın Durumu</label><select id="il_status"><option value="aktif"'+(l.status!=='pasif'?' selected':'')+'>Yayında (aktif)</option><option value="pasif"'+(l.status==='pasif'?' selected':'')+'>Pasif (yayında değil)</option></select></div>'
@@ -1128,19 +1141,18 @@ function ilanSaveForm(id){ilanLoad();var g=function(x){var e=document.getElement
   var o={durum:g('il_durum'),tip:g('il_tip'),baslik:g('il_baslik'),il:g('il_il'),ilce:g('il_ilce'),mahalle:g('il_mah'),m2:+g('il_m2')||0,oda:g('il_oda'),kat:g('il_kat'),fiyat:+g('il_fiyat')||0,eidsNo:(_ilnEids&&_ilnEids.tasinmazNo)||g('il_eids'),status:g('il_status'),img:_ilnImg||'',eids:_ilnEids||null,desc:g('il_desc'),tur:g('il_tur'),video:g('il_video')};
   if(!o.baslik){toast('İlan başlığı girin.');return;}
   o.kira=(o.durum==='Kiralık');o.bolge=[o.ilce,o.mahalle].filter(Boolean).join(' · ');
-  /* EİDS yayın kapısı: yetki yoksa aktif ilan pasife düşer */
-  var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsFirma().eids.yetkili);}catch(e){}
-  var propOk=!!(o.eids&&o.eids.status==='dogrulandi');/* o gayrimenkulde ilan yayınlama yetkisi = EİDS taşınmaz doğrulaması */
-  if(o.status==='aktif'&&(!eidsOk||!propOk)){o.status='pasif';toast(!eidsOk?'EİDS firma yetkisi yok — ilan pasif kaydedildi.':'Bu gayrimenkul için EİDS taşınmaz doğrulaması yapılmadan yayınlanamaz — pasif kaydedildi.');}
+  /* EİDS: doğrulanmamış ilan yayınlanabilir ama kartındaki rozet gerçeği (beklemede) gösterir — sahte onay YOK */
+  var propOk=!!(window.EIDS&&EIDS.canPublish(o.eids));
+  if(o.status==='aktif'&&!propOk){toast('Not: İlan henüz EİDS doğrulanmadı — kartında “Doğrulama Bekliyor” görünecek. Yayın için Taşınmaz No/Ada/Parsel girip doğrulayın.');}
   if(id){var l=LISTINGS.filter(function(x){return x.id===id;})[0];if(l)Object.assign(l,o);}
   else{o.id=ilanEnsureIds()+1;LISTINGS.unshift(o);}
   ilanSave();crmCloseModal();ilanRenderAdmin();ilanRefreshPublic();toast('✓ İlan kaydedildi.');
 }
 function ilanDel(id){if(!confirm('İlan silinsin mi?'))return;ilanLoad();for(var i=LISTINGS.length-1;i>=0;i--)if(LISTINGS[i].id===id)LISTINGS.splice(i,1);ilanSave();crmCloseModal();ilanRenderAdmin();ilanRefreshPublic();toast('İlan silindi.');}
 function ilanTogglePub(id){ilanLoad();var l=LISTINGS.filter(function(x){return x.id===id;})[0];if(!l)return;
-  if(l.status==='pasif'){var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsFirma().eids.yetkili);}catch(e){}var propOk=!!(l.eids&&l.eids.status==='dogrulandi');
-    if(!eidsOk){toast('EİDS firma yetkisi olmadan yayınlanamaz.');return;}
-    if(!propOk){toast('Bu gayrimenkul için EİDS taşınmaz doğrulaması gerekli — yayınlanamadı. İlanı düzenleyip "e-Devlet EİDS ile Doğrula" yapın.');return;}
+  if(l.status==='pasif'){
+    var propOk=!!(window.EIDS&&EIDS.canPublish(l.eids));
+    if(!propOk&&!confirm('Bu ilan henüz EİDS doğrulanmadı.\n\nEİDS (Elektronik İlan Doğrulama Sistemi) 15 Şubat 2026\'dan beri zorunludur. Canlı EİDS bağlantısı olmadan yayınlanan ilan “Doğrulama Bekliyor” rozetiyle görünür ve resmî anlamda yayınlanmış sayılmaz.\n\nYine de (demo amaçlı) yayınlansın mı?'))return;
     l.status='aktif';}else l.status='pasif';
   ilanSave();ilanRenderAdmin();ilanRefreshPublic();toast(l.status==='aktif'?'İlan yayınlandı.':'İlan yayından kaldırıldı.');}
 
@@ -1190,19 +1202,16 @@ function dbulkImport(){
   var r=dbulkParse();
   if(!r.ilan.length){dbulkPreview();toast('İçe aktarılacak geçerli ilan yok.');return;}
   ilanLoad();
-  var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsFirma().eids.yetkili);}catch(e){}
-  var cinsler=['Mesken (Kat Mülkiyeti)','Müstakil Konut','İşyeri','Arsa','Bina'];
-  var base=ilanEnsureIds(),akt=0,tas=0;
+  var base=ilanEnsureIds();
   r.ilan.forEach(function(x,idx){
+    /* İçe aktarılan ilan DOĞRULANMAMIŞ gelir: taslak + EİDS 'beklemede'. Yayın için Taşınmaz No/Ada/Parsel girip doğrulanır. */
     var o={durum:x.durum,tip:x.tip,baslik:x.baslik,il:x.il,ilce:x.ilce,mahalle:x.mahalle,m2:x.m2,oda:x.oda,kat:x.kat,
-      fiyat:x.fiyat,desc:x.desc,img:'',status:'aktif'};
+      fiyat:x.fiyat,desc:x.desc,img:'',status:'pasif',eids:(window.EIDS?EIDS.newRecord({il:x.il,ilce:x.ilce,malikTip:'isletme'}):null)};
     o.kira=(o.durum==='Kiralık');o.bolge=[o.ilce,o.mahalle].filter(Boolean).join(' · ');
-    if(eidsOk){o.eids={status:'dogrulandi',kod:_eidsKod(),tasinmazNo:_eidsTasNo(),cins:cinsler[Math.floor(Math.random()*cinsler.length)],malikTip:'Yetkili İşletme',tarih:new Date().toISOString()};o.eidsNo=o.eids.tasinmazNo;akt++;}
-    else{o.status='pasif';tas++;}
     o.id=base+1+idx;LISTINGS.unshift(o);
   });
   ilanSave();ilanRenderAdmin();ilanRefreshPublic();
-  toast('✓ '+r.ilan.length+' ilan içe aktarıldı'+(eidsOk?(' · '+akt+' yayında (EİDS onaylı)'):(' · '+tas+' taslak — EİDS yetkisi yok'))+'.');
+  toast('✓ '+r.ilan.length+' ilan taslak olarak içe aktarıldı — her biri için Taşınmaz No/Ada/Parsel girip “EİDS ile Doğrula” sonrası yayınlayın.');
   dbulkPreview();
 }
 /* ===================== EKİP · SÖZLEŞMELER · KOMİSYON · KİRA (dn_crm_v1 içinde) ===================== */

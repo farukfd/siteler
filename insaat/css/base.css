@@ -1479,3 +1479,17 @@ body.cookie-on .wa{bottom:86px}
 .ins-ilan-card input,.ins-ilan-card select{width:100%;box-sizing:border-box}
 .ins-ilan-actions{display:flex;align-items:center;gap:12px;margin-top:11px;padding-top:10px;border-top:1px solid var(--line)}
 .ins-feat{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+
+/* --- EİDS gerçek doğrulama alanları (admin + kamu) --- */
+.ins-req{color:#b45309;font-weight:700;font-size:.9em}
+.ins-eids-box{margin-top:11px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.ins-eids-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px}
+.ins-eids-msg{font-size:11.5px;color:var(--muted);line-height:1.4}
+.ins-eids-fields{display:grid;grid-template-columns:repeat(4,1fr);gap:8px 10px}
+@media(max-width:720px){.ins-eids-fields{grid-template-columns:repeat(2,1fr)}}
+.ins-eids-fields label{display:block;font-size:11px;color:var(--muted);margin-bottom:2px}
+.ins-eids-fields input,.ins-eids-fields select{width:100%;box-sizing:border-box}
+.ins-eids-hint{font-size:11px;color:#b45309;margin:8px 0 0}
+.ins-eids-box .btn-mini{margin-top:9px}
+.ins-eids-pub{position:absolute;top:14px;right:14px;z-index:2}
+.ins-eids-pub .eids-b{background:rgba(255,255,255,.94);box-shadow:0 3px 10px -3px rgba(0,0,0,.45)}

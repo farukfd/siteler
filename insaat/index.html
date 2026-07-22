@@ -502,8 +502,8 @@ header.scrolled .lang-sel{color:var(--ink)}
 
   <div class="pp-hero">
     <div class="eyebrow">İlanlar & Özel Portföy</div>
-    <h1>EİDS Onaylı İlanlar ve Kapalı Portföy</h1>
-    <p>Yayındaki tüm ilanlarımız Elektronik İlan Doğrulama Sistemi (EİDS) kaydıyla sunulur. Ayrıca ProX bölge verisinden üretilen off-market kapalı portföy tahminlerini inceleyin.</p>
+    <h1>İlanlar ve Özel Portföy</h1>
+    <p>İlanlarımız T.C. Ticaret Bakanlığı Elektronik İlan Doğrulama Sistemi (EİDS) üzerinden doğrulanır; her ilan kartında doğrulama durumu (doğrulandı / bekliyor) açıkça gösterilir. Ayrıca ProX bölge verisinden üretilen off-market kapalı portföy tahminlerini inceleyin.</p>
   </div>
 
   <div class="pp-toolbar">
@@ -1105,11 +1105,10 @@ function cookieChoice(v){
       <!-- İLANLAR (EİDS üzerinden yayın) -->
       <div class="adm-pane" id="pane-ilanlar">
         <h2>İlanlar</h2>
-        <div class="crumb">Kendi taşınmazlarınızı bağımsız ilan olarak yayınlayın. Her ilan <b>EİDS</b> (Elektronik İlan Doğrulama Sistemi) kaydıyla yayınlanır. Değişiklikler otomatik kaydedilir, İlanlar sayfasına anında yansır.</div>
+        <div class="crumb">Kendi taşınmazlarınızı bağımsız ilan olarak yayınlayın. Her ilan <b>T.C. Ticaret Bakanlığı EİDS</b> (Elektronik İlan Doğrulama Sistemi) üzerinden doğrulanır. 15 Şubat 2026'dan beri tüm ilanlarda doğrulama zorunludur.</div>
         <div class="panelcard ins-eids-bar">
-          <label class="ins-chk"><input type="checkbox" id="insEidsYetki" onchange="insEidsToggleYetki(this.checked)"> <b>EİDS yetkili firma</b> — işaretliyse yayınlanan ilanlar “EİDS onaylı” rozetiyle çıkar</label>
-          <div class="ins-eids-belge"><label>EİDS Belge No</label><input id="insEidsBelge" placeholder="Örn. 4827193" oninput="SETTINGS.eidsBelgeNo=this.value;saveAll()"></div>
-          <div class="ins-note">ℹ️ Bu ekrandaki EİDS bir tanıtım demosudur; canlı sürümde ilanlar gerçek EİDS servisine bağlanır.</div>
+          <div class="ins-eids-belge"><label>Taşınmaz Ticareti Yetki Belgesi No <span class="ins-req">(kurumsal)</span></label><input id="insEidsYetkiBelge" placeholder="Emlak işletmesi yetki belge no" oninput="insEidsSetBelge(this.value)"></div>
+          <div class="ins-note">🛡️ Doğrulama, NADAS sunucusu (ProX / emlakekspertizi.com) üzerinden Ticaret Bakanlığı EİDS sistemine yapılır. <b>Kod uydurulmaz.</b> Canlı EİDS bağlantısı devrede değilken ilanlar dürüstçe <b>“Doğrulama Bekliyor”</b> durumunda kalır. Doğrulanan ilan yeşil <b>EİDS Doğrulandı</b> rozetiyle görünür.</div>
         </div>
         <div class="panelcard">
           <h3 style="margin:0 0 6px">📤 Toplu İlan Aktar</h3>
@@ -1361,7 +1360,8 @@ function cookieChoice(v){
   </div>
 </div>
 
-<script src="js/app-core.js?v=2"></script>
+<script src="../shared/eids.js?v=1"></script>
+<script src="js/app-core.js?v=3"></script>
 
 
 

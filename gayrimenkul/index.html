@@ -719,10 +719,12 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
           </div>
           <div class="eids-box">
             <div class="eh"><span class="shield"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="M9 12l2 2 4-4"/></svg></span> EİDS İlan Doğrulama</div>
-            <div class="csub">Yayın (Aktif) için ilan, e-Devlet EİDS üzerinden doğrulanmalıdır. <b>Taşınmaz Numarası</b> ile sorgulanır; il/ilçe/ada/parsel doğrulamadan gelir ve <b>kilitlenir</b>. Fiyat EİDS'te saklanmaz.</div>
+            <div class="csub">Yayın için ilan, T.C. Ticaret Bakanlığı EİDS üzerinden doğrulanmalıdır. <b>Taşınmaz No + İl/İlçe/Ada/Parsel</b> girilir; doğrulama NADAS sunucusu (ProX) üzerinden Bakanlık sistemine yapılır. <b>Kod uydurulmaz</b> — canlı bağlantı yoksa ilan “Doğrulama Bekliyor” kalır.</div>
             <div class="ed3">
               <div class="afield"><label>Taşınmaz Numarası <span style="color:var(--muted);font-weight:400">(TKGM · zorunlu)</span></label><input id="i_tasinmazNo" inputmode="numeric" placeholder="402851739260"></div>
-              <div class="afield"><label>Malik / Yetki Türü</label><select id="i_malikTip"><option>Yetkili İşletme (malik yetkilendirdi)</option><option>Malik (kendi mülkü)</option><option>Malik 1. derece hısımı</option></select></div>
+              <div class="afield"><label>Ada <span style="color:var(--muted);font-weight:400">(zorunlu)</span></label><input id="i_ada" inputmode="numeric" placeholder="1234"></div>
+              <div class="afield"><label>Parsel <span style="color:var(--muted);font-weight:400">(zorunlu)</span></label><input id="i_parsel" inputmode="numeric" placeholder="56"></div>
+              <div class="afield"><label>Malik / Yetki Türü</label><select id="i_malikTip"><option value="isletme">Yetkili İşletme (malik yetkilendirdi)</option><option value="malik">Malik (kendi mülkü)</option><option value="yakin">Malik 1. derece hısımı</option></select></div>
               <div class="afield"><label>Malik TCKN <span style="color:var(--muted);font-weight:400">(maskeli)</span></label><input id="i_malikTc" maxlength="11" inputmode="numeric" placeholder="123********01"></div>
             </div>
             <div id="i_eidsResult"></div>
@@ -1978,7 +1980,8 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   </div>
 </div>
 
-  <script src="js/app.js?v=24"></script>
+  <script src="../shared/eids.js?v=1"></script>
+  <script src="js/app.js?v=25"></script>
   <script src="js/hero-pusula.js?v=2"></script>
   <script src="js/mahalle-endeks.js?v=8"></script>
   <script src="js/kurumsal-sayfalar.js?v=4"></script>
