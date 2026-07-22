@@ -566,11 +566,11 @@ function listingCardsHTML(){var _src=(window.DN_ILAN&&typeof DN_ILAN.get==='func
   const price=l.kira?fmt(l.fiyat)+' <span class="per">/ay</span>':fmt(l.fiyat);
   const _u='ilanlar.html'+(l.id!=null?'?ilan='+encodeURIComponent(l.id):'');/* ana sayfa ilan kartı → İLANLAR sayfasında o ilanın detayı (index.html in-page randevu YOK) */
   return '<article class="vcard" role="link" tabindex="0" onclick="location.href=\''+_u+'\'" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();location.href=\''+_u+'\';}">'
-   +'<div class="vcard-img"><div class="glow"></div><span class="vcard-tag">'+l.durum+'</span>'+_favBtn(listingFavId(l),'ilan',{t:l.baslik,s:l.bolge+' · '+l.durum,p:(l.kira?fmt(l.fiyat)+' /ay':fmt(l.fiyat)),u:'ilanlar.html'})+(l.img?'<img class="vcard-photo" src="'+(l.imgUrl||l.img)+'" alt="'+_leD(l.baslik||'')+'">':(_VIP_SVG[l.tip]||_VIP_SVG.villa))+'</div>'
-   +'<div class="vcard-body"><h3>'+l.baslik+'</h3>'
-   +'<div class="vcard-loc">'+_PIN+l.bolge+'</div>'
-   +'<div class="vcard-spec"><div><b>'+l.m2+' m²</b>Alan</div><div><b>'+l.oda+'</b>Oda</div><div><b>'+l.kat+'</b>Kat</div></div>'
-   +'<div class="vcard-ft"><div class="vcard-price">'+price+'<span>'+l.durum+'</span></div><div class="vcard-go">İlanı İncele'+_ARR+'</div></div>'
+   +'<div class="vcard-img"><div class="glow"></div><span class="vcard-tag">'+_leD(l.durum)+'</span>'+_favBtn(listingFavId(l),'ilan',{t:l.baslik,s:l.bolge+' · '+l.durum,p:(l.kira?fmt(l.fiyat)+' /ay':fmt(l.fiyat)),u:'ilanlar.html'})+(l.img?'<img class="vcard-photo" src="'+(l.imgUrl||l.img)+'" alt="'+_leD(l.baslik||'')+'">':(_VIP_SVG[l.tip]||_VIP_SVG.villa))+'</div>'
+   +'<div class="vcard-body"><h3>'+_leD(l.baslik)+'</h3>'
+   +'<div class="vcard-loc">'+_PIN+_leD(l.bolge)+'</div>'
+   +'<div class="vcard-spec"><div><b>'+_leD(l.m2)+' m²</b>Alan</div><div><b>'+_leD(l.oda)+'</b>Oda</div><div><b>'+_leD(l.kat)+'</b>Kat</div></div>'
+   +'<div class="vcard-ft"><div class="vcard-price">'+price+'<span>'+_leD(l.durum)+'</span></div><div class="vcard-go">İlanı İncele'+_ARR+'</div></div>'
    +'</div></article>';
 }).join('');}
 
@@ -1143,6 +1143,68 @@ function ilanTogglePub(id){ilanLoad();var l=LISTINGS.filter(function(x){return x
     if(!propOk){toast('Bu gayrimenkul için EİDS taşınmaz doğrulaması gerekli — yayınlanamadı. İlanı düzenleyip "e-Devlet EİDS ile Doğrula" yapın.');return;}
     l.status='aktif';}else l.status='pasif';
   ilanSave();ilanRenderAdmin();ilanRefreshPublic();toast(l.status==='aktif'?'İlan yayınlandı.':'İlan yayından kaldırıldı.');}
+
+/* ===== Toplu ilan içe aktarma (danisman) =====
+   Kullanıcının KENDİ ilanlarını yapıştırma/CSV ile toplu ekler. Scraping YOK.
+   EİDS: ilanSaveForm ile AYNI kapı — firma yetkiliyse mock EİDS kaydı basılıp
+   "aktif", değilse "pasif" taslak. Özel bypass yok. */
+function dbulkSample(){
+  var t=document.getElementById('dbulk_in');if(!t)return;
+  t.value=[
+    ['Boğaz Manzaralı Penthouse','Satılık','penthouse','İstanbul','Beşiktaş','Levent','210','4+1','15','42500000','Boğaz manzaralı, özel asansör.'],
+    ['Deniz Kıyısı Rezidans','Kiralık','rezidans','İstanbul','Kadıköy','Caddebostan','130','3+1','8','85000','Site içi, otoparklı.']
+  ].map(function(r){return r.join('\t');}).join('\n');
+  var o=document.getElementById('dbulk_out');if(o)o.innerHTML='';
+}
+function dbulkParse(){
+  var raw=(document.getElementById('dbulk_in').value||'').replace(/\r/g,'').trim();
+  if(!raw)return {ilan:[],hata:['Boş — Excel/Sheets’ten satır yapıştırın ya da “Örnek Doldur”a basın.']};
+  var rows=raw.split('\n'),ilan=[],hata=[];
+  for(var i=0;i<rows.length;i++){
+    var line=rows[i];if(!line.trim())continue;
+    var d=line.indexOf('\t')>=0?'\t':(line.indexOf(';')>=0?';':',');
+    var c=line.split(d).map(function(x){return x.trim();});
+    if(i===0&&/ba[sş]l[ıi]k/i.test(c[0]||'')&&/fiyat/i.test(line))continue;
+    if(!c[0]){hata.push((i+1)+'. satır: başlık boş, atlandı.');continue;}
+    var fiyat=parseInt((c[9]||'').replace(/[^\d]/g,''),10)||0;
+    if(!fiyat){hata.push((i+1)+'. satır (“'+c[0].slice(0,24)+'”): geçerli fiyat yok, atlandı.');continue;}
+    ilan.push({baslik:c[0],durum:/kira/i.test(c[1]||'')?'Kiralık':'Satılık',tip:c[2]||'daire',
+      il:c[3]||'İstanbul',ilce:c[4]||'-',mahalle:c[5]||'-',
+      m2:parseInt((c[6]||'').replace(/[^\d]/g,''),10)||0,oda:c[7]||'-',kat:c[8]||'-',fiyat:fiyat,desc:c[10]||''});
+  }
+  return {ilan:ilan,hata:hata};
+}
+function dbulkPreview(){
+  var r=dbulkParse(),out=document.getElementById('dbulk_out');if(!out)return;
+  var h='<p class="sub"><b>'+r.ilan.length+'</b> ilan içe aktarılmaya hazır.'+(r.hata.length?(' <b style="color:#c0392b">'+r.hata.length+' satır atlandı.</b>'):'')+'</p>';
+  if(r.ilan.length){
+    h+='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr>'
+      +'<th style="text-align:left;padding:6px 8px;border-bottom:1px solid #ddd">Başlık</th><th style="text-align:left;padding:6px 8px;border-bottom:1px solid #ddd">İşlem</th><th style="text-align:left;padding:6px 8px;border-bottom:1px solid #ddd">Lokasyon</th><th style="text-align:left;padding:6px 8px;border-bottom:1px solid #ddd">Fiyat</th></tr></thead><tbody>';
+    r.ilan.slice(0,8).forEach(function(x){h+='<tr><td style="padding:6px 8px;border-bottom:1px solid #eee">'+_leD(x.baslik)+'</td><td style="padding:6px 8px;border-bottom:1px solid #eee">'+_leD(x.durum)+'</td><td style="padding:6px 8px;border-bottom:1px solid #eee">'+_leD(x.ilce)+' · '+_leD(x.mahalle)+'</td><td style="padding:6px 8px;border-bottom:1px solid #eee">'+x.fiyat.toLocaleString('tr-TR')+' ₺</td></tr>';});
+    h+='</tbody></table></div>';if(r.ilan.length>8)h+='<p class="sub">…ve '+(r.ilan.length-8)+' ilan daha.</p>';
+  }
+  if(r.hata.length)h+='<p class="sub" style="color:#c0392b">'+r.hata.map(_leD).join('<br>')+'</p>';
+  out.innerHTML=h;
+}
+function dbulkImport(){
+  var r=dbulkParse();
+  if(!r.ilan.length){dbulkPreview();toast('İçe aktarılacak geçerli ilan yok.');return;}
+  ilanLoad();
+  var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsFirma().eids.yetkili);}catch(e){}
+  var cinsler=['Mesken (Kat Mülkiyeti)','Müstakil Konut','İşyeri','Arsa','Bina'];
+  var base=ilanEnsureIds(),akt=0,tas=0;
+  r.ilan.forEach(function(x,idx){
+    var o={durum:x.durum,tip:x.tip,baslik:x.baslik,il:x.il,ilce:x.ilce,mahalle:x.mahalle,m2:x.m2,oda:x.oda,kat:x.kat,
+      fiyat:x.fiyat,desc:x.desc,img:'',status:'aktif'};
+    o.kira=(o.durum==='Kiralık');o.bolge=[o.ilce,o.mahalle].filter(Boolean).join(' · ');
+    if(eidsOk){o.eids={status:'dogrulandi',kod:_eidsKod(),tasinmazNo:_eidsTasNo(),cins:cinsler[Math.floor(Math.random()*cinsler.length)],malikTip:'Yetkili İşletme',tarih:new Date().toISOString()};o.eidsNo=o.eids.tasinmazNo;akt++;}
+    else{o.status='pasif';tas++;}
+    o.id=base+1+idx;LISTINGS.unshift(o);
+  });
+  ilanSave();ilanRenderAdmin();ilanRefreshPublic();
+  toast('✓ '+r.ilan.length+' ilan içe aktarıldı'+(eidsOk?(' · '+akt+' yayında (EİDS onaylı)'):(' · '+tas+' taslak — EİDS yetkisi yok'))+'.');
+  dbulkPreview();
+}
 /* ===================== EKİP · SÖZLEŞMELER · KOMİSYON · KİRA (dn_crm_v1 içinde) ===================== */
 function _crmFirma(){var f={};try{f=SAAS_CONFIG.firma||{};}catch(e){}var e=f.eids||{};return {unvan:f.unvan||SAAS_CONFIG.tenantName||'Selin Meridyen Danışmanlık',advisor:SAAS_CONFIG.advisorName||'Selin Meridyen',vergi:f.vergi||'—',adres:f.adres||'—',tel:f.tel||'—',mail:f.mail||'—',belge:e.belgeNo||'—'};}
 /* ---------- EKİP ---------- */
@@ -1644,7 +1706,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();cl
    ===================================================================== */
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='adm-app';
   el.innerHTML='<div class="adm-topbar"><div class="alogo"><span class="mark">'+_brandInitial()+'</span><span class="alogo-t">'+_leD(saasResolve('brandName')||'Selin Meridyen')+' · <b>Pro<span class="ap-x">X</span> CRM</b></span></div><div class="adm-topbar-act"><button onclick="openOnboarding()">🚀 Sihirbaz</button><button onclick="closeSaasAdmin()">👁 Siteyi Gör</button><button class="adm-x" onclick="closeSaasAdmin()">✕</button></div></div><div class="adm-dash">'
-   +'<aside class="adm-side"><button class="adm-nav" data-t="yayin" onclick="staTab(this)" style="margin-bottom:6px;background:linear-gradient(135deg,#0e5e3e,#14805a);color:#fff;font-weight:700">🚀 Yayın Hazırlığı</button><button class="adm-nav act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><div class="adm-group">CRM & Satış</div><button class="adm-nav" data-t="crmkisi" onclick="staTab(this)">👤 Kişiler & Talepler</button><button class="adm-nav" data-t="eslesme" onclick="staTab(this)">🎯 Akıllı Eşleştirme</button><button class="adm-nav" data-t="crmpipe" onclick="staTab(this)">🪜 Satış Hattı</button><button class="adm-nav" data-t="crmtask" onclick="staTab(this)">📅 Görev & Randevu</button><button class="adm-nav" data-t="komisyon" onclick="staTab(this)">💰 Komisyon & Finans</button><button class="adm-nav" data-t="kira" onclick="staTab(this)">🔑 Kira Takibi</button><button class="adm-nav" data-t="sozlesme" onclick="staTab(this)">📄 Sözleşmeler</button><button class="adm-nav" data-t="iletisim" onclick="staTab(this)">📣 İletişim & WhatsApp</button><button class="adm-nav" data-t="rapor" onclick="staTab(this)">📈 Raporlar</button><button class="adm-nav" data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><div class="adm-group">Portföy & İçerik</div><button class="adm-nav" data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button class="adm-nav" data-t="portfoy" onclick="staTab(this)">🔒 Özel Portföy</button><button class="adm-nav" data-t="ekip" onclick="staTab(this)">👥 Ekip / Danışmanlar</button><button class="adm-nav" data-t="hizmetalani" onclick="staTab(this)">🗺️ Hizmet Alanı</button><button class="adm-nav" data-t="icerik" onclick="staTab(this)">📝 İçerik & Sayfalar</button><div class="adm-group">Entegrasyon & ProX</div><button class="adm-nav" data-t="prox" onclick="staTab(this)">🤖 İçerik Asistanı & DeepSeek</button><button class="adm-nav" data-t="proxapi" onclick="staTab(this)">🔌 ProX API & Anahtar</button><button class="adm-nav" data-t="eids" onclick="staTab(this)">🛡️ EİDS Yetki</button><div class="adm-group">Pazarlama</div><button class="adm-nav" data-t="seo" onclick="staTab(this)">🔍 Google & SEO</button><div class="adm-group">Ayarlar</div><button class="adm-nav" data-t="firma" onclick="staTab(this)">🏢 Firma Bilgileri</button><button class="adm-nav" data-t="marka" onclick="staTab(this)">🎨 Marka & Tema</button><button class="adm-nav" data-t="yedek" onclick="staTab(this)">💾 Yedek / Aktar</button><div class="spacer"></div><button class="adm-nav exit" onclick="closeSaasAdmin()">⎋ Paneli Kapat</button></aside><main class="adm-main">'
+   +'<aside class="adm-side"><button class="adm-nav" data-t="yayin" onclick="staTab(this)" style="margin-bottom:6px;background:linear-gradient(135deg,#0e5e3e,#14805a);color:#fff;font-weight:700">🚀 Yayın Hazırlığı</button><button class="adm-nav act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><div class="adm-group">CRM & Satış</div><button class="adm-nav" data-t="crmkisi" onclick="staTab(this)">👤 Kişiler & Talepler</button><button class="adm-nav" data-t="eslesme" onclick="staTab(this)">🎯 Akıllı Eşleştirme</button><button class="adm-nav" data-t="crmpipe" onclick="staTab(this)">🪜 Satış Hattı</button><button class="adm-nav" data-t="crmtask" onclick="staTab(this)">📅 Görev & Randevu</button><button class="adm-nav" data-t="komisyon" onclick="staTab(this)">💰 Komisyon & Finans</button><button class="adm-nav" data-t="kira" onclick="staTab(this)">🔑 Kira Takibi</button><button class="adm-nav" data-t="sozlesme" onclick="staTab(this)">📄 Sözleşmeler</button><button class="adm-nav" data-t="iletisim" onclick="staTab(this)">📣 İletişim & WhatsApp</button><button class="adm-nav" data-t="rapor" onclick="staTab(this)">📈 Raporlar</button><button class="adm-nav" data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><div class="adm-group">Portföy & İçerik</div><button class="adm-nav" data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button class="adm-nav" data-t="ictoplu" onclick="staTab(this)">📤 Toplu İlan Aktar</button><button class="adm-nav" data-t="portfoy" onclick="staTab(this)">🔒 Özel Portföy</button><button class="adm-nav" data-t="ekip" onclick="staTab(this)">👥 Ekip / Danışmanlar</button><button class="adm-nav" data-t="hizmetalani" onclick="staTab(this)">🗺️ Hizmet Alanı</button><button class="adm-nav" data-t="icerik" onclick="staTab(this)">📝 İçerik & Sayfalar</button><div class="adm-group">Entegrasyon & ProX</div><button class="adm-nav" data-t="prox" onclick="staTab(this)">🤖 İçerik Asistanı & DeepSeek</button><button class="adm-nav" data-t="proxapi" onclick="staTab(this)">🔌 ProX API & Anahtar</button><button class="adm-nav" data-t="eids" onclick="staTab(this)">🛡️ EİDS Yetki</button><div class="adm-group">Pazarlama</div><button class="adm-nav" data-t="seo" onclick="staTab(this)">🔍 Google & SEO</button><div class="adm-group">Ayarlar</div><button class="adm-nav" data-t="firma" onclick="staTab(this)">🏢 Firma Bilgileri</button><button class="adm-nav" data-t="marka" onclick="staTab(this)">🎨 Marka & Tema</button><button class="adm-nav" data-t="yedek" onclick="staTab(this)">💾 Yedek / Aktar</button><div class="spacer"></div><button class="adm-nav exit" onclick="closeSaasAdmin()">⎋ Paneli Kapat</button></aside><main class="adm-main">'
    /* CRM · PANEL */
    +'<div class="sta-pane" data-p="yayin" hidden><h4>🚀 Yayın Hazırlığı</h4><p class="sub">Siteniz yayına çıkmadan önce doldurmanız gereken bilgiler. Her eksik maddeyi tek tıkla ilgili bölüme gidip düzeltin.</p><div id="yayinBody"></div></div>'
    +'<div class="sta-pane" data-p="crmdash"><h4>Yönetim Paneli · CRM</h4><p class="sub">Kişiler, satış hattı, görevler ve gelen talepler tek bakışta. Gerçek görüşme ve talepler otomatik düşer.</p><div id="crmDash"></div></div>'
@@ -1656,6 +1718,7 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
    +'<div class="sta-pane" data-p="crmtask" hidden><h4>Görev & Randevu</h4><p class="sub">Arama, yer gösterme, tapu ve takip görevlerinizi planlayın; geciken görevler işaretlenir.</p><div id="crmTasks"></div></div>'
    /* İLAN YÖNETİMİ */
    +'<div class="sta-pane" data-p="ilanlar" hidden><h4>İlan Yönetimi · Açık Portföy</h4><p class="sub">Açık ilanlarınızı ekleyin/düzenleyin/silin; yayın (aktif) için EİDS yetkisi gerekir (VIP Özel Portföy serbesttir). Değişiklikler siteye anında yansır.</p><div id="ilanAdminBody"></div></div>'
+   +'<div class="sta-pane" data-p="ictoplu" hidden><h4>Toplu İlan İçe Aktar</h4><p class="sub"><b>Excel veya Google Sheets’ten satırları kopyalayıp</b> aşağıya yapıştırın; sütunlar sekme (Tab), noktalı virgül (;) veya virgül (,) ile ayrılabilir. Her satır bir ilandır.</p><p class="sub" style="color:#0e5e3e"><b>Sütun sırası: Başlık · İşlem · Tip · İl · İlçe · Mahalle · m² · Oda · Kat · Fiyat · Açıklama</b> (İşlem: Satılık/Kiralık)</p><textarea id="dbulk_in" rows="8" placeholder="Levent Penthouse&#9;Satılık&#9;penthouse&#9;İstanbul&#9;Beşiktaş&#9;Levent&#9;210&#9;4+1&#9;15&#9;42500000&#9;Boğaz manzaralı." style="width:100%;font-family:monospace;font-size:12px;padding:10px;border:1px solid var(--line,#e5e0d8);border-radius:8px;resize:vertical"></textarea><div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap"><button class="btn btn-sm" onclick="dbulkSample()">Örnek Doldur</button><button class="btn btn-sm" onclick="dbulkPreview()">Önizle</button><button class="btn btn-primary btn-sm" onclick="dbulkImport()">İçe Aktar</button></div><div id="dbulk_out" style="margin-top:12px"></div><p class="sub" style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line,#e5e0d8)">Yalnızca <b>size ait, kendi</b> ilanlarınızı aktarın. sahibinden.com ilanlarınız için Rekabet Kurulu’nun 2025 kararıyla gelen resmî API veri taşıma hakkı; hepsiemlak/emlakjet için portaldan aldığınız dışa aktarım dosyanız kullanılır — portalları izinsiz tarama yapılmaz. İçe aktarılan her ilan, firma EİDS yetkiniz tanımlıysa EİDS doğrulamasından geçirilerek yayınlanır; değilse taslak (pasif) saklanır.</p></div>'
    /* EKİP */
    +'<div class="sta-pane" data-p="ekip" hidden><h4>Ekip Yönetimi</h4><p class="sub">Danışman, asistan ve iş ortaklarınızı yönetin; fırsat ve görevlerde sorumlu olarak atanabilir.</p><div id="crmEkip"></div></div>'
    /* SÖZLEŞMELER */
