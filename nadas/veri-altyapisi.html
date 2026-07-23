@@ -167,13 +167,26 @@
   /* ===== A.2 ÜÇ KATMAN ===== */
   function ThreeLayers() {
     var layers = [
-      { code: "L1", sym: "▦", name: "AYLIK ZAMAN SERİSİ", n: "480M+", lbl: "kayıt", det: "Mahalle × kategori × ay düzeyinde fiyat ve volüm verisi. 21 yıllık tarihsel zincir, 257 ay derinlik." },
-      { code: "L2", sym: "◈", name: "DNA · DEMOGRAFİK VEKTÖR", n: "25.000+", lbl: "çapa mahalle", det: "38 boyutlu vektör. Denize yakınlık, fay hattı, demografi, ekonomi, ulaşım, sosyal altyapı." },
-      { code: "L3", sym: "◉", name: "EVENT MARKERS", n: "7M+", lbl: "olay kaydı", det: "Deprem, faiz, kur, siyasi, makro, regülasyon, mevsim. Otomatik tetikleyici sistem." },
-    ].map(function (l) {
-      return '<div style="' + css({ background: C.raised, padding: 18, position: "relative", overflow: "hidden" }) + '"><div style="' + css({ position: "absolute", top: 12, right: 14, fontSize: 28, color: C.primary, opacity: 0.25, fontFamily: C.mono }) + '">' + l.sym + '</div><div style="' + css({ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }) + '"><span style="' + css({ padding: "3px 7px", background: C.primary, color: C.deep, fontFamily: C.mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", borderRadius: 2 }) + '">' + l.code + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textPri, fontWeight: 600, letterSpacing: "0.08em" }) + '">' + l.name + '</span></div><div style="' + css({ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 8 }) + '"><span style="' + css({ fontSize: "2.4rem", fontWeight: 700, color: C.primary, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + l.n + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.textFaint }) + '">' + l.lbl + '</span></div><p style="' + css({ fontSize: 13, lineHeight: 1.55, color: C.textMut, margin: 0 }) + '">' + l.det + '</p></div>';
+      { code: "L1", sym: "▦", name: "AYLIK ZAMAN SERİSİ", n: "480M+", lbl: "kayıt", col: C.primary,
+        meta: [["GRAIN", "mahalle × kategori × ay"], ["DERİNLİK", "257 ay · 21 yıl"], ["ENGINE", "PostgreSQL + ClickHouse"]],
+        det: "Mahalle × kategori × ay düzeyinde fiyat ve volüm serisi — kesintisiz aylık zincir." },
+      { code: "L2", sym: "◈", name: "DNA · DEMOGRAFİK VEKTÖR", n: "25.000+", lbl: "çapa mahalle", col: C.violet,
+        meta: [["GRAIN", "mahalle vektörü"], ["BOYUT", "38 eksen"], ["REFERANS", "çapa → türetme"]],
+        det: "38 boyutlu vektör: denize yakınlık, fay hattı, demografi, ekonomi, ulaşım, sosyal altyapı." },
+      { code: "L3", sym: "◉", name: "OLAY MARKERLARI", n: "7M+", lbl: "olay kaydı", col: C.accent,
+        meta: [["GRAIN", "olay × etki yarıçapı"], ["KAPSAM", "9 kategori"], ["MODEL", "mesafe-zaman söneme"]],
+        det: "Deprem, faiz, kur, siyasi, makro, regülasyon, mevsim — otomatik tetikleyici etki modeli." }
+    ];
+    var cards = layers.map(function (l) {
+      var meta = l.meta.map(function (m) { return '<div style="' + css({ display: "flex", justifyContent: "space-between", gap: 8, padding: "5px 0", borderTop: "1px solid " + C.border }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.06em" }) + '">' + m[0] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textSec, fontWeight: 600, textAlign: "right" }) + '">' + m[1] + '</span></div>'; }).join("");
+      return '<div class="nadas-eco" style="' + css({ background: C.base, border: "1px solid " + C.borderStrong, borderTop: "2px solid " + l.col, padding: "16px 18px", position: "relative", overflow: "hidden" }) + '">'
+        + '<div style="' + css({ position: "absolute", top: 12, right: 14, fontSize: 30, color: l.col, opacity: 0.16, fontFamily: C.mono }) + '">' + l.sym + '</div>'
+        + '<div style="' + css({ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }) + '"><span style="' + css({ padding: "3px 8px", background: l.col, color: C.deep, fontFamily: C.mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", borderRadius: 2 }) + '">' + l.code + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textPri, fontWeight: 700, letterSpacing: "0.06em" }) + '">' + l.name + '</span></div>'
+        + '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 12 }) + '"><span style="' + css({ fontSize: "2.4rem", fontWeight: 700, color: l.col, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + l.n + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.textFaint }) + '">' + l.lbl + '</span></div>'
+        + meta
+        + '<p style="' + css({ fontSize: 12.5, lineHeight: 1.55, color: C.textMut, margin: "12px 0 0" }) + '">' + l.det + '</p></div>';
     }).join("");
-    return SubSection("A.2", "Üç temel veri katmanı", "L1 · L2 · L3 LAYER STACK", '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + layers + '</div>');
+    return SubSection("A.2", "Üç temel veri katmanı", "L1 · L2 · L3 · GRAIN + ENGINE ŞEMASI", '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 12 }) + '">' + cards + '</div>');
   }
 
   /* ===== A.3 DNA 38 BOYUT ===== */
@@ -201,21 +214,29 @@
   /* ===== A.4 OLAY MARKERLARI ===== */
   function EventSystem() {
     var cats = [
-      { type: "DEPREM & DOĞAL", count: "480K+", det: "Magnitude ≥ 3.0 sismik olaylar (AFAD), heyelan, sel, yangın. Bölgesel etki yarıçapı ile.", col: C.danger, sym: "◉" },
-      { type: "FAİZ & KREDİ", count: "1.3M+", det: "TCMB faiz kararları, konut kredi faizi, mortgage hareketleri (mahalle bazlı kredi kullanım).", col: C.primary, sym: "Σ" },
-      { type: "KUR & ENFLASYON", count: "1.6M+", det: "USD/TRY hareketleri, enflasyon ilanları, alım gücü değişimleri.", col: C.warn, sym: "⌬" },
-      { type: "SİYASİ & SEÇİM", count: "320K+", det: "Seçim sonuçları, referandum, anayasa değişiklikleri, yerel yönetim değişiklikleri.", col: C.primary, sym: "◆" },
-      { type: "MAKRO & GLOBAL", count: "680K+", det: "Pandemi, küresel kriz, ticaret savaşları, jeopolitik şoklar.", col: C.primary, sym: "▦" },
-      { type: "REGÜLASYON", count: "420K+", det: "İmar yasası, KDV değişiklikleri, dönüşüm yasaları, yapı stoku reformları.", col: C.primary, sym: "◈" },
-      { type: "MEVSİMSEL", count: "940K+", det: "Tatil sezonu, eğitim sezonu, vergi dönemleri, dini günler. Periyodik etkiler.", col: C.primary, sym: "◐" },
-      { type: "ALTYAPI & YATIRIM", count: "1.04M+", det: "Metro açılışı, yeni AVM, üniversite kuruluşu, fabrika yatırımı, hastane açılışı.", col: C.accent, sym: "→" },
-      { type: "DEMOGRAFİK", count: "520K+", det: "Göç dalgaları, mülteci yerleşimi, nüfus hareketleri, gentrification.", col: C.primary, sym: "◯" },
-    ].map(function (c) {
-      return '<div style="' + css({ background: C.raised, padding: 14, position: "relative" }) + '"><div style="' + css({ position: "absolute", top: 12, right: 12, fontSize: 18, color: c.col, opacity: 0.3, fontFamily: C.mono }) + '">' + c.sym + '</div><div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }) + '"><span style="' + css({ display: "flex", alignItems: "center", gap: 7 }) + '"><span style="' + css({ width: 8, height: 8, background: c.col }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textPri, fontWeight: 700, letterSpacing: "0.1em" }) + '">' + c.type + '</span></span></div><div style="' + css({ fontSize: "1.4rem", color: c.col, fontWeight: 700, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1, marginBottom: 8 }) + '">' + c.count + '</div><p style="' + css({ fontSize: 11.5, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + c.det + '</p></div>';
+      { type: "DEPREM & DOĞAL", count: "480K+", col: C.danger, sym: "◉", dir: "▼", dur: "6-24 ay", scope: "bölgesel", det: "Magnitude ≥ 3.0 sismik olaylar (AFAD), heyelan, sel, yangın; fay hattına uzaklıkla etki yarıçapı." },
+      { type: "FAİZ & KREDİ", count: "1.3M+", col: C.primary, sym: "Σ", dir: "↕", dur: "eş-zamanlı", scope: "ulusal", det: "TCMB faiz kararları, konut kredi faizi, mortgage hareketleri; tüm kategorileri eş zamanlı etkiler." },
+      { type: "KUR & ENFLASYON", count: "1.6M+", col: C.warn, sym: "⌬", dir: "↕", dur: "1-6 ay", scope: "ulusal", det: "USD/TRY hareketleri, enflasyon ilanları, alım gücü değişimleri." },
+      { type: "SİYASİ & SEÇİM", count: "320K+", col: C.violet, sym: "◆", dir: "↕", dur: "1-3 ay", scope: "ulusal", det: "Seçim sonuçları, referandum, anayasa ve yerel yönetim değişiklikleri." },
+      { type: "MAKRO & GLOBAL", count: "680K+", col: C.primary, sym: "▦", dir: "▼", dur: "değişken", scope: "ulusal", det: "Pandemi, küresel kriz, ticaret savaşları, jeopolitik şoklar." },
+      { type: "REGÜLASYON", count: "420K+", col: C.primary, sym: "◈", dir: "↕", dur: "kalıcı", scope: "kategori", det: "İmar yasası, KDV değişiklikleri, dönüşüm yasaları, yapı stoku reformları." },
+      { type: "MEVSİMSEL", count: "940K+", col: C.accent, sym: "◐", dir: "↕", dur: "periyodik", scope: "kategori", det: "Tatil sezonu, eğitim sezonu, vergi dönemleri, dini günler — periyodik etkiler." },
+      { type: "ALTYAPI & YATIRIM", count: "1.04M+", col: C.accent, sym: "→", dir: "▲", dur: "kalıcı", scope: "yerel", det: "Metro açılışı, yeni AVM, üniversite, fabrika, hastane; mahalle bazlı kalıcı prim." },
+      { type: "DEMOGRAFİK", count: "520K+", col: C.violet, sym: "◯", dir: "↕", dur: "uzun vadeli", scope: "yerel", det: "Göç dalgaları, mülteci yerleşimi, nüfus hareketleri, gentrification." }
+    ];
+    var cards = cats.map(function (c) {
+      var dirCol = c.dir === "▲" ? C.accent : c.dir === "▼" ? C.danger : C.warn;
+      function chip(lbl, val, col) { return '<span style="' + css({ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: C.mono, fontSize: 8.5, color: C.textFaint, letterSpacing: "0.04em" }) + '">' + lbl + ' <b style="' + css({ color: col || C.textSec, fontWeight: 700 }) + '">' + val + '</b></span>'; }
+      return '<div class="nadas-eco" style="' + css({ background: C.base, border: "1px solid " + C.borderStrong, borderLeft: "2px solid " + c.col, padding: "13px 15px", position: "relative" }) + '">'
+        + '<div style="' + css({ position: "absolute", top: 12, right: 13, fontSize: 17, color: c.col, opacity: 0.3, fontFamily: C.mono }) + '">' + c.sym + '</div>'
+        + '<div style="' + css({ display: "flex", alignItems: "center", gap: 7, marginBottom: 7 }) + '"><span style="' + css({ width: 8, height: 8, background: c.col, flexShrink: 0 }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textPri, fontWeight: 700, letterSpacing: "0.08em" }) + '">' + c.type + '</span></div>'
+        + '<div style="' + css({ fontSize: "1.4rem", color: c.col, fontWeight: 700, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1, marginBottom: 9 }) + '">' + c.count + '</div>'
+        + '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 9, paddingBottom: 9, borderBottom: "1px solid " + C.border }) + '">' + chip("YÖN", c.dir, dirCol) + chip("SÜRE", c.dur) + chip("KAPSAM", c.scope) + '</div>'
+        + '<p style="' + css({ fontSize: 11.5, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + c.det + '</p></div>';
     }).join("");
-    var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.6, color: C.textSec, marginBottom: 14, maxWidth: 900 }) + '">Her markır, etkilenen kategoriler ve mesafe-zaman söneme fonksiyonuyla zaman serisine bağlanır. Bir deprem olayı, mahallenin fay hattına uzaklığına göre 6-24 ay arası bir etki süresi taşır. Bir faiz kararı tüm kategorileri eş zamanlı etkiler. Toplam <strong style="' + css({ color: C.primary }) + '">7 milyon olay</strong> sistemde işlenir.</p>'
-      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cats + '</div>';
-    return SubSection("A.4", "Olay markerları — 7 milyon+ kayıt, 9 kategori", "EVENT-DRIVEN PRICE IMPACT MODEL", body);
+    var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.6, color: C.textSec, marginBottom: 14, maxWidth: 900 }) + '">Her markır; <strong style="' + css({ color: C.textPri }) + '">yön</strong> (fiyat etkisi ▲▼↕), <strong style="' + css({ color: C.textPri }) + '">süre</strong> ve <strong style="' + css({ color: C.textPri }) + '">kapsam</strong> parametreleriyle mesafe-zaman söneme fonksiyonu üzerinden zaman serisine bağlanır. Bir deprem, fay hattına uzaklığa göre 6-24 ay etki taşır; bir faiz kararı tüm kategorileri eş zamanlı etkiler. Toplam <strong style="' + css({ color: C.primary }) + '">7 milyon olay</strong> sistemde işlenir.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 12 }) + '">' + cards + '</div>';
+    return SubSection("A.4", "Olay markerları — 7 milyon+ kayıt, 9 kategori", "EVENT-DRIVEN IMPACT MODEL · YÖN · SÜRE · KAPSAM", body);
   }
 
   /* ===== A.5 HACIM KARŞILAŞTIRMA ===== */
