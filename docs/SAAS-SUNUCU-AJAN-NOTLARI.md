@@ -207,14 +207,14 @@ Gerçek e-Devlet/Bakanlık entegrasyonu **sunucuda**; front-end + kapılar hazı
 
 | Uç | Durum | Aksiyon |
 |---|---|---|
-| `/endeks` | CANLI (doğrulandı) | Kapsamı genişlet (tüm il/ilçe/mahalle) |
+| `/endeks` | CANLI (doğrulandı) | Kapsamı genişlet (tüm il/ilçe/mahalle). **`data.trend` şu an tek nokta döndürüyor** (ör. `[{period:202605,m2:…}]`) — NADAS terminali çoklu trend noktasını otomatik çizecek şekilde bağlı; sunucu geçmiş trend serisini (aylık) döndürünce grafik gerçek geçmişe geçer. |
 | `/prox/ai` | CANLI (DeepSeek) | Kota/rate-limit + kiracı promptu |
 | `/bootstrap` | Kısmen | Paket+feature bayraklarını netleştir |
 | `/lead` | Bekliyor | CRM yazımı + kiracı gelen kutusu |
 | `/pdf/generate` | Bekliyor | 38-kategori PDF motoru |
 | `locations/mahalleler` | **EKSİK** | Gerçek mahalle listesi (en çok istenen) |
 | `/eids/verify` | Bekliyor | Front-end GERÇEK + hazır (`shared/eids.js`); sunucu gerçek Bakanlık/e-Devlet doğrulamasını yapmalı (§6). Gelene kadar client dürüstçe `beklemede`. |
-| NADAS Veri Terminali (`/endeks`) | Bekliyor | `nadas/index.html` → `EMLAK_TENANT.tenant_key`'e kurumsal ProX anahtarı ekle → terminal CANLI gerçek endekse geçer. Anahtar boşken dürüstçe **"TEMSİLÎ ÖRNEK"** gösterir (sahte "CANLI" yok). |
+| NADAS Veri Terminali (`/endeks`) | **CANLI (bağlandı)** | `nadas/index.html` → `EMLAK_TENANT.tenant_key` dolu (ProX anahtarı); terminal gerçek `m²/score/delta/ilan_sayisi/trend` alanlarına bağlı. Kategori seçimi API `kategori(konut\|ticari\|arsa)+durum(satilik\|kiralik)`'e eşlenir (bina→konut, turistik→ticari, -Kir→kiralik). Gerçek uç yeşil nabız + "CANLI · ProX ENDEKSİ" şeridi (skor halkası); geçmiş ŞEKİL modellenmiş (dürüstçe "MODELLENMİŞ ŞEKİL" etiketli), uç gerçeğe sabit. Veri yoksa/CORS engelliyse dürüstçe **"TEMSİLÎ ÖRNEK"**. **GÜVENLİK:** anahtar istemci-tarafı görünür → salt-okunur + alan-adı kısıtlı olmalı, ideali sunucu-proxy arkasında. |
 | EİDS doğrulama | **SİMÜLE** | Gerçek e-Devlet entegrasyonu (yasal zorunlu) |
 | portal/staff login | Simüle | Gerçek kimlik doğrulama |
 
