@@ -257,13 +257,21 @@
 
   /* ===== B.1 DOĞRULAMA ===== */
   function ValidationSystem() {
-    var cards = [
-      ["INPUT", "◐ Saha + ilan", "Bir mahalle/kategori/ay için iki bağımsız kaynaktan gelen değerler eş zamanlı toplanır."],
-      ["COMPARE", "Δ Δ hesaplama", "İki değer arasındaki yüzdesel fark hesaplanır. |Δ| > 25% ise outlier işareti tetiklenir."],
-      ["RESOLVE", "→ Resolution kuralı", "Saha verisi tarihsel güvenilirlik (>0.8) gösteriyorsa baz alınır; aksi halde manuel review queue."],
-      ["SCORE", "Σ Confidence", "Yoğunluk × tutarlılık × tarihsel uyum × bölgesel doğrulama → 0-100 güven skoru."],
-    ].map(function (r) { return '<div style="' + css({ background: C.raised, padding: 16 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 6 }) + '">' + r[0] + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.textPri, fontWeight: 600, marginBottom: 8 }) + '">' + r[1] + '</div><p style="' + css({ fontSize: 12, lineHeight: 1.55, color: C.textMut, margin: 0 }) + '">' + r[2] + '</p></div>'; }).join("");
-    return SubSection("B.1", "Çapraz doğrulama mekanizması", "SAHA × İNTERNET CROSS-CHECK", '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>');
+    var stages = [
+      { no: "01", name: "INPUT", op: "◐ Saha + ilan", col: C.primary, det: "Bir mahalle / kategori / ay için iki bağımsız kaynaktan gelen değerler eş zamanlı toplanır." },
+      { no: "02", name: "COMPARE", op: "Δ fark hesabı", col: C.warn, det: "İki değer arasındaki yüzdesel fark hesaplanır; |Δ| > 25% ise outlier işareti tetiklenir." },
+      { no: "03", name: "RESOLVE", op: "→ resolution kuralı", col: C.violet, det: "Saha verisi tarihsel güvenilirlik (>0.8) gösteriyorsa baz alınır; aksi halde manuel review queue." },
+      { no: "04", name: "SCORE", op: "Σ confidence", col: C.accent, det: "Yoğunluk × tutarlılık × tarihsel uyum × bölgesel doğrulama → 0-100 güven skoru." }
+    ];
+    var cards = stages.map(function (s) {
+      return '<div class="nadas-eco" style="' + css({ background: C.base, border: "1px solid " + C.borderStrong, borderTop: "2px solid " + s.col, padding: "14px 16px", display: "flex", flexDirection: "column" }) + '">'
+        + '<div style="' + css({ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }) + '"><span style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 15, color: s.col, fontWeight: 700, letterSpacing: "-0.01em" }) + '">' + s.no + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 11.5, color: C.textPri, fontWeight: 700, letterSpacing: "0.08em" }) + '">' + s.name + '</span></div>'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 11, color: s.col, fontWeight: 600, marginBottom: 8, paddingBottom: 8, borderBottom: "1px solid " + C.border }) + '">' + s.op + '</div>'
+        + '<p style="' + css({ fontSize: 11.5, lineHeight: 1.5, color: C.textMut, margin: 0, flex: 1 }) + '">' + s.det + '</p></div>';
+    }).join("");
+    var body = '<p style="' + css({ fontSize: 13.5, lineHeight: 1.6, color: C.textSec, marginBottom: 14, maxWidth: 900 }) + '">Her veri noktası, <strong style="' + css({ color: C.textPri }) + '">saha × internet</strong> iki bağımsız kaynaktan çapraz doğrulanır. Dört aşamalı hat, uyuşmazlıkları outlier olarak işaretler, resolution kuralıyla çözer ve sonucu 0-100 güven skoruyla etiketler.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(210px,1fr))", gap: 12 }) + '">' + cards + '</div>';
+    return SubSection("B.1", "Çapraz doğrulama hattı — 4 aşama", "SAHA × İNTERNET CROSS-CHECK PIPELINE", body);
   }
 
   /* ===== B.2 GÜVEN KADRANI ===== */
@@ -297,12 +305,27 @@
 
   /* ===== B.3 HESAPLAMA PERFORMANS ===== */
   function ModelPerformance() {
-    var cards = [
-      ["MAPE", "4.8%", "Mean Absolute Percentage Error · son 12 ay hesaplamaları"], ["R²", "0.94", "Determinasyon katsayısı · hesaplama uyumu"], ["RMSE", "127 TL", "Root Mean Square Error · medyan fiyat üzerinden"],
-      ["COVERAGE", "98.2%", "Sorgu yapılan nokta için veri bulunma oranı"], ["LATENCY P95", "84ms", "Tek nokta sorgusu 95. yüzdelik yanıt süresi"], ["DAILY DRIFT", "0.3%", "Günlük çıktı stabilite ölçümü"],
-    ].map(function (m) { return '<div style="' + css({ background: C.raised, padding: 14 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.12em", marginBottom: 6 }) + '">' + m[0] + '</div><div style="' + css({ fontSize: "1.7rem", fontWeight: 700, color: C.primary, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1, marginBottom: 8 }) + '">' + m[1] + '</div><p style="' + css({ fontSize: 11.5, lineHeight: 1.45, color: C.textMut, margin: 0 }) + '">' + m[2] + '</p></div>'; }).join("");
-    var body = '<p style="' + css({ fontSize: 13.5, lineHeight: 1.6, color: C.textSec, marginBottom: 14, maxWidth: 900 }) + '">Bu metrikler bir <strong style="' + css({ color: C.accent }) + '">hesaplama doğruluğu</strong> ölçümüdür — gelecek tahmini değil. ML/MML işleme katmanı gerçek veritabanındaki örüntüleri matematiksel olarak işler; hiçbir noktada veri "hayal etmez" veya halüsinasyon üretmez. Tüm çıktılar 480M kayıtlık veritabanından türetilir.</p><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>';
-    return SubSection("B.3", "Hesaplama performans metrikleri", "ML/MML İŞLEME KATMANI", body);
+    var groups = [
+      { title: "DOĞRULUK", note: "hesaplama uyumu", col: C.accent, metrics: [
+        ["MAPE", "4.8%", "Mean Absolute Percentage Error · son 12 ay hesaplamaları"],
+        ["R²", "0.94", "Determinasyon katsayısı · hesaplama uyumu"],
+        ["RMSE", "127 TL", "Root Mean Square Error · medyan fiyat üzerinden"]
+      ] },
+      { title: "OPERASYON", note: "servis kalitesi", col: C.primary, metrics: [
+        ["COVERAGE", "98.2%", "Sorgu yapılan nokta için veri bulunma oranı"],
+        ["LATENCY P95", "84ms", "Tek nokta sorgusu 95. yüzdelik yanıt süresi"],
+        ["DAILY DRIFT", "0.3%", "Günlük çıktı stabilite ölçümü"]
+      ] }
+    ];
+    var blocks = groups.map(function (g) {
+      var cards = g.metrics.map(function (m) {
+        return '<div class="nadas-eco" style="' + css({ background: C.base, border: "1px solid " + C.borderStrong, borderTop: "2px solid " + g.col, padding: "14px 16px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 6 }) + '">' + m[0] + '</div><div style="' + css({ fontSize: "1.7rem", fontWeight: 700, color: g.col, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1, marginBottom: 8 }) + '">' + m[1] + '</div><p style="' + css({ fontSize: 11.5, lineHeight: 1.45, color: C.textMut, margin: 0 }) + '">' + m[2] + '</p></div>';
+      }).join("");
+      return '<div style="' + css({ marginBottom: 4 }) + '"><div style="' + css({ display: "flex", alignItems: "center", gap: 10, margin: "0 0 10px" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: g.col, letterSpacing: "0.12em", fontWeight: 700 }) + '">' + g.title + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint }) + '">· ' + g.note + '</span><span style="' + css({ height: 1, flex: 1, background: C.border }) + '"></span></div><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 12 }) + '">' + cards + '</div></div>';
+    }).join("");
+    var body = '<p style="' + css({ fontSize: 13.5, lineHeight: 1.6, color: C.textSec, marginBottom: 16, maxWidth: 900 }) + '">Bu metrikler bir <strong style="' + css({ color: C.accent }) + '">hesaplama doğruluğu</strong> ölçümüdür — gelecek tahmini değil. ML/MML işleme katmanı gerçek veritabanındaki örüntüleri matematiksel olarak işler; hiçbir noktada veri "hayal etmez" veya halüsinasyon üretmez. Tüm çıktılar 480M kayıtlık veritabanından türetilir.</p>'
+      + '<div style="' + css({ display: "flex", flexDirection: "column", gap: 18 }) + '">' + blocks + '</div>';
+    return SubSection("B.3", "Hesaplama performans metrikleri", "ML/MML İŞLEME KATMANI · DOĞRULUK + OPERASYON", body);
   }
 
   /* ===== C.1 PIPELINE ===== */
