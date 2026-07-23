@@ -274,13 +274,42 @@
 
   /* ===== 01 · MANŞET ===== */
   function HeroHeadline() {
-    var stats = [["480M+", "TIMESERIES SATIRI"], ["50.000+", "AKTİF MAHALLE/KÖY"], ["38", "VARLIK KATEGORİSİ"], ["257", "AY · 2005-01 → 2026-05"]]
-      .map(function (s) { return '<div style="' + css({ background: C.raised, padding: "10px 14px" }) + '"><div style="' + css({ fontSize: 17, fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + s[0] + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, marginTop: 5, letterSpacing: "0.08em" }) + '">' + s[1] + '</div></div>'; }).join("");
-    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px 18px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12, fontFamily: C.mono, fontSize: 10.5, letterSpacing: "0.12em", textTransform: "uppercase" }) + '"><span style="' + css({ color: C.primary }) + '">01 · MANŞET</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span style="' + css({ color: C.textFaint }) + '">TÜRKİYE’NİN İLK GAYRİMENKUL VERİ MERKEZİ · 2005→</span></div>'
-      + '<h1 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(2rem,5.8vw,3.6rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri, maxWidth: 1000 }) + '">480 milyon satır timeseries. Mahalle düzeyinde, 257 ay derinliğinde.</h1>'
-      + '<p style="' + css({ marginTop: 14, fontSize: 15.5, lineHeight: 1.55, color: C.textSec, maxWidth: 820 }) + '">Nadas, Türkiye gayrimenkul piyasasının kayıt katmanıdır. 81 il, 973 ilçe, 50.000+ mahalle ve köy; cadde-sokak granülerliğine kadar inen 38 varlık kategorisinde aylık seri. Saha doğrulamalı, olay markerlı, DNA demografik katmanla zenginleştirilmiş.</p>'
-      + '<div style="' + css({ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong, maxWidth: 720 }) + '">' + stats + '</div>'
+    /* yetenek çipleri */
+    var chips = ["Saha doğrulamalı", "Olay markerlı", "DNA demografik katman", "ML/MML deterministik motor"].map(function (c) {
+      return '<span style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 11px", border: "1px solid " + C.border, borderRadius: 2, fontFamily: C.mono, fontSize: 10.5, color: C.textMut, letterSpacing: "0.03em" }) + '"><span style="' + css({ width: 4, height: 4, borderRadius: 9999, background: C.primary }) + '"></span>' + c + '</span>';
+    }).join("");
+    /* modern istatistik kartları (tam genişlik) */
+    var cards = [
+      ["480M+", "TIMESERIES SATIRI", "aylık kayıt · ~178 GB PostgreSQL", C.primary],
+      ["50.000+", "AKTİF MAHALLE / KÖY", "cadde-sokak granülerlik · DNA çapalı", C.accent],
+      ["38", "VARLIK KATEGORİSİ", "5 ana grup · sat + kira ayrı endeks", C.violet],
+      ["257", "AY DERİNLİĞİ", "2005-01 → 2026-05 · kesintisiz", C.warn]
+    ].map(function (s) {
+      return '<div class="nadas-eco" style="' + css({ flex: "1 1 210px", background: C.raised, border: "1px solid " + C.borderStrong, borderTop: "2px solid " + s[3], padding: "16px 16px 14px" }) + '">'
+        + '<div style="' + css({ fontSize: "clamp(1.7rem,3vw,2.1rem)", fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.025em", lineHeight: 1 }) + '">' + s[0] + '</div>'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 10, color: s[3], marginTop: 9, letterSpacing: "0.1em", fontWeight: 700 }) + '">' + s[1] + '</div>'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, marginTop: 4, letterSpacing: "0.02em", lineHeight: 1.4 }) + '">' + s[2] + '</div></div>';
+    }).join("");
+    /* 2005'ten günümüze — kesintisiz era şeridi (§08 Kronoloji ile tutarlı kilometre taşları) */
+    var eraMarks = [["2005", "İlk mahalle-bazlı kayıt"], ["2008", "Büyükşehirler kapsandı"], ["2010", "81 il · 973 ilçe"], ["2014", "38 kategori · DNA v3.1"], ["2026", "480M+ satır · canlı"]];
+    var eraDots = eraMarks.map(function (m, i, arr) {
+      var last = i === arr.length - 1;
+      return '<div style="' + css({ position: "relative", textAlign: i === 0 ? "left" : last ? "right" : "center", flex: 1, minWidth: 96 }) + '">'
+        + '<div style="' + css({ width: 10, height: 10, borderRadius: 9999, background: last ? C.accent : C.primary, boxShadow: "0 0 0 3px " + C.base, margin: i === 0 ? "0" : last ? "0 0 0 auto" : "0 auto" }) + '"></div>'
+        + '<div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 14, fontWeight: 700, color: last ? C.accent : C.textPri, marginTop: 10 }) + '">' + m[0] + '</div>'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, marginTop: 3, lineHeight: 1.3 }) + '">' + m[1] + '</div></div>';
+    }).join("");
+    var eraBar = '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: "18px 20px 16px" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 6 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", fontWeight: 700 }) + '">◆ 2005’TEN GÜNÜMÜZE</span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.08em" }) + '">21 YIL · 257 AY · KESİNTİSİZ AYLIK SERİ</span></div>'
+      + '<div style="' + css({ overflowX: "auto" }) + '"><div style="' + css({ position: "relative", display: "flex", alignItems: "flex-start", minWidth: 560, padding: "0 2px" }) + '"><div style="' + css({ position: "absolute", top: 4, left: 10, right: 10, height: 2, background: "linear-gradient(90deg," + C.primary + " 0%," + C.violet + " 55%," + C.accent + " 100%)", opacity: 0.5 }) + '"></div>' + eraDots + '</div></div></div>';
+
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "26px 16px 22px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, fontFamily: C.mono, fontSize: 10.5, letterSpacing: "0.12em", textTransform: "uppercase" }) + '"><span style="' + css({ color: C.primary }) + '">01 · MANŞET</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span style="' + css({ color: C.textFaint }) + '">TÜRKİYE’NİN İLK GAYRİMENKUL VERİ MERKEZİ · 2005 → 2026</span></div>'
+      + '<h1 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(2rem,5.6vw,3.6rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri, maxWidth: 1100 }) + '">480 milyon satır timeseries. Mahalle düzeyinde, 257 ay derinliğinde.</h1>'
+      + '<p style="' + css({ marginTop: 16, fontSize: 15.5, lineHeight: 1.6, color: C.textSec, maxWidth: 880 }) + '">Nadas, Türkiye gayrimenkul piyasasının kayıt katmanıdır. 81 il, 973 ilçe, 50.000+ mahalle ve köy; cadde-sokak granülerliğine kadar inen 38 varlık kategorisinde aylık seri. Saha doğrulamalı, olay markerlı, DNA demografik katmanla zenginleştirilmiş.</p>'
+      + '<div style="' + css({ marginTop: 16, display: "flex", flexWrap: "wrap", gap: 7 }) + '">' + chips + '</div>'
+      + '<div style="' + css({ marginTop: 20 }) + '">' + eraBar + '</div>'
+      + '<div style="' + css({ marginTop: 16, display: "flex", flexWrap: "wrap", gap: 12 }) + '">' + cards + '</div>'
       + '</div></section>';
   }
 
