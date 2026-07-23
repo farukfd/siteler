@@ -1178,21 +1178,37 @@
       + '</div></section>';
   }
 
-  /* ===== 09 · BU HAFTA · ÖNE ÇIKAN ANALİZLER =====
-     5 ana grubun her biri için kategori-özel analiz kartı: modellenmiş trend grafiği
-     (getSeries — Veri Terminali'yle aynı motor), 12A değişim, momentum ve oynaklık.
-     Grafikler MODEL ÖRÜNTÜ'dür (temsilî); gerçek endeks Terminal + emlakekspertizi.com. */
+  /* ===== 09 · BU HAFTA · ÖNE ÇIKAN ANALİZLER (12 KART) =====
+     5 ana grup + Kira Değer / Kat Karşılığı / Yatırım / İmar / Mevsim karar mercekleri
+     = 12 kart. Her kart: analiz-türü rozeti + modellenmiş trend + 12A/momentum/oynaklık.
+     Grafikler MODEL ÖRÜNTÜ (temsilî); üstte analiz-türü bilgi ekleri. */
   function FeaturedAnalysis() {
+    var LENS = {
+      deger: ["DEĞER KARAR", C.primary, "Tahmini değer aralığı, emsal ve piyasa yönü"],
+      kira: ["KİRA DEĞER KARAR", C.accent, "Adil kira aralığı, emsal ve getiri"],
+      kat: ["KAT KARŞILIĞI KARAR", C.violet, "Arsa payı, inşaat maliyeti, paylaşım senaryosu"],
+      getiri: ["KİRA GETİRİSİ", C.accent, "Yıllık getiri, doluluk ve gider dengesi"],
+      yatirim: ["YATIRIM BÖLGE", C.warn, "ROI skoru, fırsat haritası ve öncelik"],
+      imar: ["İMAR / EN İYİ KULLANIM", C.warn, "İmar durumu ve en yüksek-en iyi kullanım"],
+      mevsim: ["MEVSİM / DOLULUK", PINK, "Sezon genliği ve doluluk korelasyonu"]
+    };
     var analyses = [
-      { k: "konut", cat: 1, region: "İstanbul/Kadıköy/Caddebostan", short: "İST · KADIKÖY", title: "Konut: erişilebilirlik ve talep dengesi", lede: "Faiz ve gelir baskısı altında daire fiyatlarında momentum; ilçe bazında talep yoğunluğu ayrışıyor.", note: "Daire-Sat · medyan m²", time: "5 DK" },
-      { k: "arsa", cat: 41, region: "Ankara/Çankaya/Çayyolu", short: "ANK · ÇANKAYA", title: "İmarlı arsa: kentsel dönüşüm korelasyonu", lede: "Dönüşüm ilan edilen bölgelerde konut imarlı arsada fiyat-talep örüntüsü belirginleşiyor.", note: "Konut İmarlı · medyan m²", time: "7 DK" },
-      { k: "ticari", cat: 57, region: "İstanbul/Beşiktaş/Levent", short: "İST · LEVENT", title: "Ofis & mağaza: merkez lokasyon primi", lede: "Ticari gayrimenkulde merkez primi ile çeper arasındaki makas ölçülüyor; likidite sınırlı.", note: "Ofis-Sat · medyan m²", time: "6 DK" },
-      { k: "bina", cat: 31, region: "İstanbul/Kadıköy/Bostancı", short: "İST · KADIKÖY", title: "Komple bina: getiri ve dönüşüm", lede: "Apartman/komple binada kira getirisi ile dönüşüm potansiyeli birlikte tartılıyor.", note: "Apartman-Sat · medyan m²", time: "6 DK" },
-      { k: "turistik", cat: 63, region: "Antalya/Muratpaşa/Lara", short: "ANTALYA · LARA", title: "Otel & butik otel: mevsim genliği", lede: "Akdeniz hattında turizm sezonuyla senkron fiyat dalgalanması ve doluluk korelasyonu.", note: "Otel · medyan m²", time: "5 DK" }
+      { k: "konut", cat: 1, region: "İstanbul/Kadıköy/Caddebostan", short: "İST · KADIKÖY", lens: "deger", title: "Daire: değer momentumu ve talep", lede: "Faiz ve gelir baskısı altında daire fiyat momentumu; ilçe bazında talep ayrışıyor.", note: "Daire-Sat", time: "5 DK" },
+      { k: "konut", cat: 2, region: "İstanbul/Kadıköy/Suadiye", short: "İST · KADIKÖY", lens: "kira", title: "Kira değerini öğren: adil kira aralığı", lede: "Emsal kira, dönüş hızı ve talep yoğunluğuyla adil kira bandı ve yıllık getiri.", note: "Daire-Kir", time: "4 DK" },
+      { k: "arsa", cat: 41, region: "Ankara/Çankaya/Çayyolu", short: "ANK · ÇANKAYA", lens: "kat", title: "Kat karşılığı: paylaşım senaryosu", lede: "Arsa payı, inşaat maliyeti ve daire karşılığı oranıyla dönüşüm senaryosu.", note: "Konut İmarlı", time: "7 DK" },
+      { k: "ticari", cat: 57, region: "İstanbul/Beşiktaş/Levent", short: "İST · LEVENT", lens: "deger", title: "Ofis: merkez lokasyon primi", lede: "Ticari değerde merkez primi ile çeper arasındaki makas; likidite sınırlı.", note: "Ofis-Sat", time: "6 DK" },
+      { k: "bina", cat: 31, region: "İstanbul/Kadıköy/Bostancı", short: "İST · KADIKÖY", lens: "kat", title: "Komple bina: getiri ve dönüşüm", lede: "Apartman/komple binada kira getirisi ile kat karşılığı dönüşüm birlikte tartılır.", note: "Apartman-Sat", time: "6 DK" },
+      { k: "turistik", cat: 63, region: "Antalya/Muratpaşa/Lara", short: "ANTALYA · LARA", lens: "mevsim", title: "Otel & butik otel: mevsim genliği", lede: "Turizm sezonuyla senkron fiyat dalgalanması ve doluluk korelasyonu.", note: "Otel", time: "5 DK" },
+      { k: "konut", cat: 5, region: "İstanbul/Sarıyer/Tarabya", short: "İST · SARIYER", lens: "yatirim", title: "Villa: prestij ve yatırım", lede: "Prestij skoru, arz kıtlığı ve uzun vadeli değer korunumuyla villa yatırımı.", note: "Villa-Sat", time: "6 DK" },
+      { k: "arsa", cat: 46, region: "İzmir/Bornova/Kazımdirik", short: "İZM · BORNOVA", lens: "imar", title: "Tarla: imar ve en iyi kullanım", lede: "İmar durumu, gelişim yönü ve en yüksek-en iyi kullanım projeksiyonu.", note: "Tarla", time: "7 DK" },
+      { k: "konut", cat: 67, region: "İstanbul/Beşiktaş/Etiler", short: "İST · BEŞİKTAŞ", lens: "yatirim", title: "Rezidans: yatırım bölge analizi", lede: "Yükselen bölgeler, ROI skoru ve talep yoğunluğuyla rezidans önceliği.", note: "Rezidans-Sat", time: "5 DK" },
+      { k: "ticari", cat: 48, region: "İstanbul/Kadıköy/Caddebostan", short: "İST · KADIKÖY", lens: "getiri", title: "Mağaza: kira getirisi ve cadde primi", lede: "Cadde-sokak primi, kira getirisi ve doluluk süresiyle mağaza kararı.", note: "Mağaza-Kir", time: "5 DK" },
+      { k: "ticari", cat: 49, region: "Bursa/Nilüfer/Görükle", short: "BURSA · NİLÜFER", lens: "deger", title: "Depo & lojistik: sanayi yakınlığı", lede: "Sanayi/lojistik yakınlığı, ulaşım aksı ve talep yoğunluğuyla depo değeri.", note: "Depo-Sat", time: "6 DK" },
+      { k: "bina", cat: 60, region: "Ankara/Çankaya/Kavaklıdere", short: "ANK · ÇANKAYA", lens: "deger", title: "İş merkezi: ticari komple değer", lede: "Kat/ofis dağılımı, doluluk ve merkez konumuyla iş merkezi komple değeri.", note: "İş Merkezi-Sat", time: "7 DK" }
     ];
-    var w = 280, h = 56;
+    var w = 280, h = 54;
     var cards = analyses.map(function (a) {
-      var col = GROUP_COLOR[a.k];
+      var col = GROUP_COLOR[a.k], L = LENS[a.lens];
       var s = getSeries(a.region, a.k, a.cat).slice(-36);
       var vals = s.map(function (p) { return p.v; });
       var mx = Math.max.apply(null, vals), mn = Math.min.apply(null, vals);
@@ -1203,25 +1219,33 @@
       var ch12 = prev12 ? ((last - prev12) / prev12) * 100 : 0;
       var r6 = vals.slice(-6), momUp = r6[r6.length - 1] >= r6[0];
       var v = dtVol(s), volLbl = v < 2 ? "Düşük" : v < 3.5 ? "Orta" : "Yüksek";
-      var gid = "faG_" + a.k;
-      var chBadge = '<span style="' + css({ fontFamily: C.mono, fontSize: 11, fontWeight: 700, color: ch12 >= 0 ? C.accent : C.danger, padding: "2px 8px", background: ch12 >= 0 ? "rgba(52,211,153,0.1)" : "rgba(248,113,113,0.1)", borderRadius: 2 }) + '">' + (ch12 >= 0 ? "▲" : "▼") + " " + Math.abs(ch12).toFixed(1) + "% · 12A</span>";
+      var gid = "faG_" + a.cat;
       function metric(lbl, val, cc) { return '<span style="' + css({ display: "inline-flex", alignItems: "center", gap: 5, fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.04em" }) + '">' + lbl + ' <b style="' + css({ color: cc || C.textSec, fontWeight: 700 }) + '">' + val + '</b></span>'; }
-      return '<a href="research.html" class="nadas-analysis-card" style="' + css({ display: "flex", flexDirection: "column", background: C.base, borderTop: "2px solid " + col, padding: "15px 16px 14px", textDecoration: "none", color: "inherit" }) + '">'
-        + '<div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 9 }) + '"><span style="' + css({ display: "inline-flex", alignItems: "center", gap: 7, fontFamily: C.mono, fontSize: 10, color: col, letterSpacing: "0.08em", fontWeight: 700 }) + '"><span style="' + css({ width: 7, height: 7, background: col }) + '"></span>' + GROUP_LABEL[a.k].toLocaleUpperCase("tr-TR") + ' · ' + a.short + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.1em" }) + '">' + a.time + '</span></div>'
-        + '<h3 style="' + css({ fontSize: 15.5, fontWeight: 700, lineHeight: 1.3, color: C.textPri, margin: "0 0 8px", letterSpacing: "-0.01em", fontFamily: "'Sora',sans-serif" }) + '">' + a.title + '</h3>'
-        + '<div style="' + css({ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8 }) + '">' + chBadge + '<span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.04em" }) + '">' + a.note + '</span></div>'
+      return '<a href="research.html" class="nadas-analysis-card" style="' + css({ display: "flex", flexDirection: "column", background: C.base, borderTop: "2px solid " + col, padding: "14px 16px 13px", textDecoration: "none", color: "inherit" }) + '">'
+        + '<div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }) + '"><span style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: C.mono, fontSize: 9.5, color: col, letterSpacing: "0.08em", fontWeight: 700 }) + '"><span style="' + css({ width: 6, height: 6, background: col }) + '"></span>' + GROUP_LABEL[a.k].toLocaleUpperCase("tr-TR") + ' · ' + a.short + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.1em" }) + '">' + a.time + '</span></div>'
+        + '<div style="' + css({ marginBottom: 8 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 8.5, color: L[1], border: "1px solid " + L[1], borderRadius: 2, padding: "2px 7px", letterSpacing: "0.06em", fontWeight: 700 }) + '">' + L[0] + '</span></div>'
+        + '<h3 style="' + css({ fontSize: 15, fontWeight: 700, lineHeight: 1.3, color: C.textPri, margin: "0 0 8px", letterSpacing: "-0.01em", fontFamily: "'Sora',sans-serif" }) + '">' + a.title + '</h3>'
+        + '<div style="' + css({ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 11, fontWeight: 700, color: ch12 >= 0 ? C.accent : C.danger, padding: "2px 8px", background: ch12 >= 0 ? "rgba(52,211,153,0.1)" : "rgba(248,113,113,0.1)", borderRadius: 2 }) + '">' + (ch12 >= 0 ? "▲" : "▼") + ' ' + Math.abs(ch12).toFixed(1) + '% · 12A</span><span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.04em" }) + '">' + a.note + ' · medyan m²</span></div>'
         + '<svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" height="' + h + '" preserveAspectRatio="none" style="display:block;margin-bottom:10px"><defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="' + col + '" stop-opacity="0.28"></stop><stop offset="100%" stop-color="' + col + '" stop-opacity="0"></stop></linearGradient></defs><path d="' + area + '" fill="url(#' + gid + ')"></path><path d="' + line + '" fill="none" stroke="' + col + '" stroke-width="1.5" stroke-linejoin="round"></path></svg>'
-        + '<p style="' + css({ fontSize: 12.5, lineHeight: 1.5, color: C.textMut, margin: "0 0 10px", flex: 1 }) + '">' + a.lede + '</p>'
+        + '<p style="' + css({ fontSize: 12, lineHeight: 1.5, color: C.textMut, margin: "0 0 10px", flex: 1 }) + '">' + a.lede + '</p>'
         + '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", paddingTop: 9, borderTop: "1px solid " + C.border }) + '">' + metric("MOMENTUM", momUp ? "▲ Pozitif" : "▼ Negatif", momUp ? C.accent : C.danger) + metric("OYNAKLIK", volLbl, C.warn) + '<span style="' + css({ marginLeft: "auto", fontFamily: C.mono, fontSize: 8.5, color: C.textFaint, letterSpacing: "0.08em", border: "1px solid " + C.border, borderRadius: 2, padding: "2px 6px" }) + '">MODEL ÖRÜNTÜ</span></div></a>';
     }).join("");
-    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "24px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+
+    /* analiz-türü bilgi ekleri */
+    var legendKeys = ["deger", "kira", "kat", "getiri", "yatirim", "imar", "mevsim"];
+    var legend = legendKeys.map(function (k) {
+      var l = LENS[k];
+      return '<span title="' + l[2] + '" style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", border: "1px solid " + C.border, borderLeft: "2px solid " + l[1], borderRadius: 2, fontFamily: C.mono, fontSize: 9.5, color: C.textMut, letterSpacing: "0.04em" }) + '"><b style="' + css({ color: l[1], fontWeight: 700 }) + '">' + l[0] + '</b></span>';
+    }).join("");
+
+    return '<section id="analizler" style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "24px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
       + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 6, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">09 · BU HAFTA</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.9rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Öne çıkan analizler</h2></div><a href="research.html" style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, textDecoration: "none", letterSpacing: "0.08em" }) + '">TÜM ARAŞTIRMALAR →</a></div>'
-      + '<p style="' + css({ fontSize: 13.5, lineHeight: 1.6, color: C.textSec, maxWidth: 820, margin: "0 0 18px" }) + '">Her ana varlık grubundan bir kesit — <b style="' + css({ color: C.textPri }) + '">5 grup, 5 açı</b>. Grafikler modellenmiş örüntüdür; canlı endeks için Veri Terminali.</p>'
+      + '<p style="' + css({ fontSize: 13.5, lineHeight: 1.6, color: C.textSec, maxWidth: 860, margin: "0 0 12px" }) + '">5 ana grup + Kira Değer, Kat Karşılığı, Yatırım, İmar ve Mevsim mercekleri — <b style="' + css({ color: C.textPri }) + '">12 karar-analizi kesiti</b>. Grafikler modellenmiş örüntüdür; canlı endeks için Veri Terminali.</p>'
+      + '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }) + '">' + legend + '</div>'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(270px,1fr))", gap: 12 }) + '">' + cards + '</div>'
-      + '<div style="' + css({ marginTop: 12, fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.02em", lineHeight: 1.55 }) + '">Kartlardaki trend, olay ve mevsim etkileriyle üretilen <b style="' + css({ color: C.textMut }) + '">modellenmiş örüntüdür</b> (temsilî). 12A değişim ve oynaklık bu seriden hesaplanır; gerçek m² için <a href="#terminal" style="' + css({ color: C.primary, textDecoration: "none" }) + '">Veri Terminali</a> ve emlakekspertizi.com.</div>'
+      + '<div style="' + css({ marginTop: 12, fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.02em", lineHeight: 1.55 }) + '">Her kart, ilgili kategoride üretilebilen bir <b style="' + css({ color: C.textMut }) + '">karar-analizi ürünüdür</b> (ProX Studio ile markalı PDF). Grafikler modellenmiş örüntüdür (temsilî); gerçek m² için <a href="#terminal" style="' + css({ color: C.primary, textDecoration: "none" }) + '">Veri Terminali</a> ve emlakekspertizi.com.</div>'
       + '</div></section>';
   }
-
   /* ===== MONTAJ (kanonik NX menü — ALTIN KURAL) ===== */
   function renderApp() {
     return NX.Ticker(HOMETICK) + NX.Masthead("") + NX.Nav("")
