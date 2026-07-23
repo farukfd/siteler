@@ -1178,22 +1178,47 @@
       + '</div></section>';
   }
 
-  /* ===== 09 · BU HAFTA ===== */
+  /* ===== 09 · BU HAFTA · ÖNE ÇIKAN ANALİZLER =====
+     5 ana grubun her biri için kategori-özel analiz kartı: modellenmiş trend grafiği
+     (getSeries — Veri Terminali'yle aynı motor), 12A değişim, momentum ve oynaklık.
+     Grafikler MODEL ÖRÜNTÜ'dür (temsilî); gerçek endeks Terminal + emlakekspertizi.com. */
   function FeaturedAnalysis() {
-    var items = [
-      { tag: "KİRA · İSTANBUL", title: "Daire-Kir momentum: 39 ilçe, 12A", lede: "İlçe bazlı talep yoğunluğu, dönüş hızları ve mevsim genliği analizi.", spark: [40, 52, 48, 65, 72, 68, 85, 92], time: "5 DK" },
-      { tag: "ARSA · ANADOLU", title: "Konut imarlı arsa: dönüşüm korelasyonu", lede: "Kentsel dönüşüm ilan edilen bölgelerde fiyat-talep örüntüsü.", spark: [80, 72, 75, 60, 55, 62, 48, 42], time: "7 DK" },
-      { tag: "TURİSTİK · AKDENİZ", title: "Otel/butik otel mevsim genliği", lede: "Antalya hattında turizm sezonu fiyat dalgalanması ve doluluk korelasyonu.", spark: [30, 38, 45, 52, 60, 72, 78, 88], time: "6 DK" },
+    var analyses = [
+      { k: "konut", cat: 1, region: "İstanbul/Kadıköy/Caddebostan", short: "İST · KADIKÖY", title: "Konut: erişilebilirlik ve talep dengesi", lede: "Faiz ve gelir baskısı altında daire fiyatlarında momentum; ilçe bazında talep yoğunluğu ayrışıyor.", note: "Daire-Sat · medyan m²", time: "5 DK" },
+      { k: "arsa", cat: 41, region: "Ankara/Çankaya/Çayyolu", short: "ANK · ÇANKAYA", title: "İmarlı arsa: kentsel dönüşüm korelasyonu", lede: "Dönüşüm ilan edilen bölgelerde konut imarlı arsada fiyat-talep örüntüsü belirginleşiyor.", note: "Konut İmarlı · medyan m²", time: "7 DK" },
+      { k: "ticari", cat: 57, region: "İstanbul/Beşiktaş/Levent", short: "İST · LEVENT", title: "Ofis & mağaza: merkez lokasyon primi", lede: "Ticari gayrimenkulde merkez primi ile çeper arasındaki makas ölçülüyor; likidite sınırlı.", note: "Ofis-Sat · medyan m²", time: "6 DK" },
+      { k: "bina", cat: 31, region: "İstanbul/Kadıköy/Bostancı", short: "İST · KADIKÖY", title: "Komple bina: getiri ve dönüşüm", lede: "Apartman/komple binada kira getirisi ile dönüşüm potansiyeli birlikte tartılıyor.", note: "Apartman-Sat · medyan m²", time: "6 DK" },
+      { k: "turistik", cat: 63, region: "Antalya/Muratpaşa/Lara", short: "ANTALYA · LARA", title: "Otel & butik otel: mevsim genliği", lede: "Akdeniz hattında turizm sezonuyla senkron fiyat dalgalanması ve doluluk korelasyonu.", note: "Otel · medyan m²", time: "5 DK" }
     ];
-    var w = 240, h = 44;
-    var cards = items.map(function (a) {
-      var mx = Math.max.apply(null, a.spark), mn = Math.min.apply(null, a.spark);
-      var path = a.spark.map(function (v, i) { return (i === 0 ? "M" : "L") + ((i / (a.spark.length - 1)) * w).toFixed(1) + "," + (h - ((v - mn) / (mx - mn || 1)) * (h - 6) - 3).toFixed(1); }).join(" ");
-      return '<a href="research.html" class="nadas-analysis-card" style="' + css({ display: "block", background: C.base, padding: 16, textDecoration: "none", color: "inherit" }) + '"><div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, letterSpacing: "0.12em" }) + '">' + a.tag + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.1em" }) + '">' + a.time + '</span></div><h3 style="' + css({ fontSize: 16, fontWeight: 600, lineHeight: 1.3, color: C.textPri, margin: "0 0 8px" }) + '">' + a.title + '</h3><p style="' + css({ fontSize: 13, lineHeight: 1.5, color: C.textMut, margin: "0 0 12px" }) + '">' + a.lede + '</p><svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" height="' + h + '" style="display:block"><path d="' + path + '" fill="none" stroke="' + C.primary + '" stroke-width="1.4"></path></svg></a>';
+    var w = 280, h = 56;
+    var cards = analyses.map(function (a) {
+      var col = GROUP_COLOR[a.k];
+      var s = getSeries(a.region, a.k, a.cat).slice(-36);
+      var vals = s.map(function (p) { return p.v; });
+      var mx = Math.max.apply(null, vals), mn = Math.min.apply(null, vals);
+      var pts = vals.map(function (v, i) { return [(i / (vals.length - 1 || 1)) * w, h - ((v - mn) / (mx - mn || 1)) * (h - 8) - 4]; });
+      var line = pts.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" ");
+      var area = line + " L" + w + " " + h + " L0 " + h + " Z";
+      var last = vals[vals.length - 1], prev12 = vals.length > 12 ? vals[vals.length - 13] : vals[0];
+      var ch12 = prev12 ? ((last - prev12) / prev12) * 100 : 0;
+      var r6 = vals.slice(-6), momUp = r6[r6.length - 1] >= r6[0];
+      var v = dtVol(s), volLbl = v < 2 ? "Düşük" : v < 3.5 ? "Orta" : "Yüksek";
+      var gid = "faG_" + a.k;
+      var chBadge = '<span style="' + css({ fontFamily: C.mono, fontSize: 11, fontWeight: 700, color: ch12 >= 0 ? C.accent : C.danger, padding: "2px 8px", background: ch12 >= 0 ? "rgba(52,211,153,0.1)" : "rgba(248,113,113,0.1)", borderRadius: 2 }) + '">' + (ch12 >= 0 ? "▲" : "▼") + " " + Math.abs(ch12).toFixed(1) + "% · 12A</span>";
+      function metric(lbl, val, cc) { return '<span style="' + css({ display: "inline-flex", alignItems: "center", gap: 5, fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.04em" }) + '">' + lbl + ' <b style="' + css({ color: cc || C.textSec, fontWeight: 700 }) + '">' + val + '</b></span>'; }
+      return '<a href="research.html" class="nadas-analysis-card" style="' + css({ display: "flex", flexDirection: "column", background: C.base, borderTop: "2px solid " + col, padding: "15px 16px 14px", textDecoration: "none", color: "inherit" }) + '">'
+        + '<div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 9 }) + '"><span style="' + css({ display: "inline-flex", alignItems: "center", gap: 7, fontFamily: C.mono, fontSize: 10, color: col, letterSpacing: "0.08em", fontWeight: 700 }) + '"><span style="' + css({ width: 7, height: 7, background: col }) + '"></span>' + GROUP_LABEL[a.k].toLocaleUpperCase("tr-TR") + ' · ' + a.short + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.1em" }) + '">' + a.time + '</span></div>'
+        + '<h3 style="' + css({ fontSize: 15.5, fontWeight: 700, lineHeight: 1.3, color: C.textPri, margin: "0 0 8px", letterSpacing: "-0.01em", fontFamily: "'Sora',sans-serif" }) + '">' + a.title + '</h3>'
+        + '<div style="' + css({ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8 }) + '">' + chBadge + '<span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.04em" }) + '">' + a.note + '</span></div>'
+        + '<svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" height="' + h + '" preserveAspectRatio="none" style="display:block;margin-bottom:10px"><defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="' + col + '" stop-opacity="0.28"></stop><stop offset="100%" stop-color="' + col + '" stop-opacity="0"></stop></linearGradient></defs><path d="' + area + '" fill="url(#' + gid + ')"></path><path d="' + line + '" fill="none" stroke="' + col + '" stroke-width="1.5" stroke-linejoin="round"></path></svg>'
+        + '<p style="' + css({ fontSize: 12.5, lineHeight: 1.5, color: C.textMut, margin: "0 0 10px", flex: 1 }) + '">' + a.lede + '</p>'
+        + '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", paddingTop: 9, borderTop: "1px solid " + C.border }) + '">' + metric("MOMENTUM", momUp ? "▲ Pozitif" : "▼ Negatif", momUp ? C.accent : C.danger) + metric("OYNAKLIK", volLbl, C.warn) + '<span style="' + css({ marginLeft: "auto", fontFamily: C.mono, fontSize: 8.5, color: C.textFaint, letterSpacing: "0.08em", border: "1px solid " + C.border, borderRadius: 2, padding: "2px 6px" }) + '">MODEL ÖRÜNTÜ</span></div></a>';
     }).join("");
-    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">09 · BU HAFTA</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Öne çıkan analizler</h2></div><a href="research.html" style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, textDecoration: "none", letterSpacing: "0.08em" }) + '">TÜM ARAŞTIRMALAR →</a></div>'
-      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 1, background: C.borderStrong, border: "1px solid " + C.borderStrong }) + '">' + cards + '</div>'
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "24px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 6, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">09 · BU HAFTA</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.9rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Öne çıkan analizler</h2></div><a href="research.html" style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, textDecoration: "none", letterSpacing: "0.08em" }) + '">TÜM ARAŞTIRMALAR →</a></div>'
+      + '<p style="' + css({ fontSize: 13.5, lineHeight: 1.6, color: C.textSec, maxWidth: 820, margin: "0 0 18px" }) + '">Her ana varlık grubundan bir kesit — <b style="' + css({ color: C.textPri }) + '">5 grup, 5 açı</b>. Grafikler modellenmiş örüntüdür; canlı endeks için Veri Terminali.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(270px,1fr))", gap: 12 }) + '">' + cards + '</div>'
+      + '<div style="' + css({ marginTop: 12, fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.02em", lineHeight: 1.55 }) + '">Kartlardaki trend, olay ve mevsim etkileriyle üretilen <b style="' + css({ color: C.textMut }) + '">modellenmiş örüntüdür</b> (temsilî). 12A değişim ve oynaklık bu seriden hesaplanır; gerçek m² için <a href="#terminal" style="' + css({ color: C.primary, textDecoration: "none" }) + '">Veri Terminali</a> ve emlakekspertizi.com.</div>'
       + '</div></section>';
   }
 
