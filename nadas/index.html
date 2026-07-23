@@ -160,6 +160,29 @@
       if (dtKey() === key && document.getElementById("dt-card")) mountTerminal(true);   /* geldi → tazele (yeniden fetch YOK) */
     });
   }
+  /* Gerçek konum servisleri (/locations) — 81 il · gerçek ilçe · gerçek mahalle.
+     Gelmezse gömülü REGIONS'a düşer (dürüst fallback). Sonuçlar cache'lenir. */
+  var LOC = { iller: null, ilceler: {}, mahalleler: {} };
+  function locIller() { return LOC.iller || Object.keys(REGIONS); }
+  function locIlceler() { return LOC.ilceler[DT.city] || Object.keys(REGIONS[DT.city] || {}); }
+  function locMahalleler() { return LOC.mahalleler[DT.city + "|" + DT.district] || (REGIONS[DT.city] && REGIONS[DT.city][DT.district]) || []; }
+  function loadIller(cb) {
+    if (LOC.iller) { cb && cb(); return; }
+    proxApi("/api/v1/tenant/locations/iller").then(function (r) { LOC.iller = (r && r.success && Array.isArray(r.data) && r.data.length) ? r.data : null; cb && cb(); });
+  }
+  function loadIlceler(il, cb) {
+    if (LOC.ilceler[il]) { cb && cb(); return; }
+    proxApi("/api/v1/tenant/locations/ilceler?il=" + encodeURIComponent(il)).then(function (r) { LOC.ilceler[il] = (r && r.success && Array.isArray(r.data) && r.data.length) ? r.data : (REGIONS[il] ? Object.keys(REGIONS[il]) : []); cb && cb(); });
+  }
+  function loadMahalleler(il, ilce, cb) {
+    var k = il + "|" + ilce;
+    if (LOC.mahalleler[k]) { cb && cb(); return; }
+    proxApi("/api/v1/tenant/locations/mahalleler?il=" + encodeURIComponent(il) + "&ilce=" + encodeURIComponent(ilce)).then(function (r) { LOC.mahalleler[k] = (r && r.success && Array.isArray(r.data) && r.data.length) ? r.data : ((REGIONS[il] && REGIONS[il][ilce]) || []); cb && cb(); });
+  }
+  /* Açılışta seçili konumun gerçek listelerini yükle, sonra komut çubuğunu tazele. */
+  function dtLocInit() {
+    loadIller(function () { loadIlceler(DT.city, function () { loadMahalleler(DT.city, DT.district, function () { if (document.getElementById("dt-card")) mountTerminal(true); }); }); });
+  }
   NX.setAccent(C.primary);
   var PINK = "#F472B6";
 
@@ -523,15 +546,16 @@
   }
 
   function dtCommandBar() {
-    var districts = Object.keys(REGIONS[DT.city] || {});
-    var neighborhoods = (REGIONS[DT.city] && REGIONS[DT.city][DT.district]) || [];
+    var iller = locIller(), districts = locIlceler(), neighborhoods = locMahalleler();   /* gerçek /locations, yoksa REGIONS */
+    var srcTag = LOC.iller ? "81 İL · GERÇEK" : "5 İL · TEMSİLÎ";
     return '<div style="' + css({ display: "flex", alignItems: "stretch", borderBottom: "1px solid " + C.border, background: C.deep }) + '">'
       + '<div style="' + css({ display: "flex", alignItems: "center", padding: "0 13px", borderRight: "1px solid " + C.border, fontFamily: C.mono, fontSize: 13, color: C.primary, fontWeight: 700 }) + '">▸</div>'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(120px,1fr))", flex: 1, minWidth: 0 }) + '">'
-      + dtSelectHTML("dt-city", "İL", optsPlain(Object.keys(REGIONS), DT.city))
+      + dtSelectHTML("dt-city", "İL", optsPlain(iller, DT.city))
       + dtSelectHTML("dt-district", "İLÇE", optsPlain(districts, DT.district))
       + dtSelectHTML("dt-neigh", "MAHALLE", optsPlain(neighborhoods, DT.neighborhood))
       + dtSelectHTML("dt-cat", "KATEGORİ", optsCategory(DT.catId))
+      + '<div style="' + css({ display: "flex", alignItems: "center", padding: "0 12px", borderLeft: "1px solid " + C.border, fontFamily: C.mono, fontSize: 8.5, color: LOC.iller ? C.accent : C.textFaint, letterSpacing: "0.08em", whiteSpace: "nowrap" }) + '">' + srcTag + '</div>'
       + '</div></div>';
   }
 
@@ -767,8 +791,8 @@
     updateDurum();
     if (!skipFetch) { dtLoadReal(); dtLoadAnalyze(); }
     var cityEl = document.getElementById("dt-city"), distEl = document.getElementById("dt-district"), neighEl = document.getElementById("dt-neigh"), catEl = document.getElementById("dt-cat");
-    cityEl.addEventListener("change", function () { DT.city = this.value; var dk = Object.keys(REGIONS[DT.city] || {}); DT.district = dk[0] || ""; DT.neighborhood = (REGIONS[DT.city][DT.district] || [])[0] || ""; mountTerminal(); });
-    distEl.addEventListener("change", function () { DT.district = this.value; DT.neighborhood = ((REGIONS[DT.city] || {})[DT.district] || [])[0] || ""; mountTerminal(); });
+    cityEl.addEventListener("change", function () { DT.city = this.value; loadIlceler(DT.city, function () { DT.district = locIlceler()[0] || ""; loadMahalleler(DT.city, DT.district, function () { DT.neighborhood = locMahalleler()[0] || ""; mountTerminal(); }); }); });
+    distEl.addEventListener("change", function () { DT.district = this.value; loadMahalleler(DT.city, DT.district, function () { DT.neighborhood = locMahalleler()[0] || ""; mountTerminal(); }); });
     neighEl.addEventListener("change", function () { DT.neighborhood = this.value; mountTerminal(); });
     catEl.addEventListener("change", function () { DT.catId = this.value; mountTerminal(); });
     var mtabs = card.querySelectorAll("[data-dtmode]");
@@ -1023,6 +1047,7 @@
 
   NX.boot(renderApp);
   mountTerminal();
+  dtLocInit();
   mountCityComparison();
   mountPipeline();
 })();
