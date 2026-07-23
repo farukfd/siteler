@@ -88,9 +88,13 @@
      Anahtar boş / erişilemez ise dürüstçe 'TEMSİLÎ ÖRNEK'e düşer — sahte 'CANLI' YOK. */
   var EMLAK_API_BASE = "https://www.emlakekspertizi.com";
   var EMLAK_TENANT = { tenant_id: "nadas", tenant_key: "prox_nadas_43ffdf3fe0501d5510e71616b618cfea" };   /* NADAS kurumsal ProX anahtarı — canlı endeks. NOT: istemci-tarafı görünür; salt-okunur/alan-kısıtlı olmalı. */
-  function proxApi(path) {
+  function proxApi(path, opts) {
     if (!EMLAK_TENANT.tenant_key) return Promise.resolve({ fallback: true });
-    return fetch(EMLAK_API_BASE + path, { mode: "cors", headers: { "X-Tenant-Id": EMLAK_TENANT.tenant_id, "X-Tenant-Key": EMLAK_TENANT.tenant_key } })
+    opts = opts || {};
+    var init = { mode: "cors", headers: { "X-Tenant-Id": EMLAK_TENANT.tenant_id, "X-Tenant-Key": EMLAK_TENANT.tenant_key } };
+    if (opts.method) init.method = opts.method;
+    if (opts.body) { init.headers["Content-Type"] = "application/json"; init.body = JSON.stringify(opts.body); }
+    return fetch(EMLAK_API_BASE + path, init)
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .catch(function () { return { fallback: true }; });
   }
@@ -132,6 +136,29 @@
     var on = dtCanli();
     el.innerHTML = '<span style="' + css({ width: 6, height: 6, borderRadius: 9999, background: on ? C.accent : C.warn, animation: on ? "nadasPulse 1.4s ease-in-out infinite" : "none" }) + '"></span>' + (on ? "CANLI · GERÇEK ENDEKS" : "TEMSİLÎ ÖRNEK");
     el.style.color = on ? C.accent : C.warn;
+  }
+  /* ProX /analyze — gerçek değer aralığı + piyasa yönü + karar/risk özeti + pazarlık payı.
+     100 m² brüt referans; grafikteki değer bandı + analiz paneli bundan beslenir. */
+  var DT_ANALYZE = {};   /* key → {minM2,maxM2,strongM2,spread,conf,band,yon,karar,risk,pazarlik,eksik} | null */
+  function dtLoadAnalyze() {
+    var key = dtKey();
+    if (key in DT_ANALYZE) return;
+    var ap = dtApiParams();
+    var body = { il: DT.city, ilce: DT.district, mahalle: DT.neighborhood, kategori: ap.kategori, durum: ap.durum, brut_m2: 100, attrs: {} };
+    var to = new Promise(function (res) { setTimeout(function () { res({ fallback: true }); }, 6000); });
+    Promise.race([proxApi("/api/v1/tenant/prox/analyze", { method: "POST", body: body }), to]).then(function (r) {
+      if (r && r.success === true && !r.fallback && r.range && (+r.range.min_m2 > 0 || +r.strongest_m2 > 0)) {
+        DT_ANALYZE[key] = {
+          minM2: +r.range.min_m2 || 0, maxM2: +r.range.max_m2 || 0, strongM2: +r.strongest_m2 || 0,
+          spread: (typeof r.range.spread_pct === "number" ? r.range.spread_pct : null),
+          conf: (typeof r.confidence === "number" ? r.confidence : null), band: r.confidence_band || null,
+          yon: r.piyasa_yonu || null, karar: r.karar_ozeti || null, risk: r.risk_ozeti || null,
+          pazarlik: Array.isArray(r.pazarlik_payi_pct) ? r.pazarlik_payi_pct : null,
+          eksik: Array.isArray(r.eksik_bilgi) ? r.eksik_bilgi : null
+        };
+      } else { DT_ANALYZE[key] = null; }
+      if (dtKey() === key && document.getElementById("dt-card")) mountTerminal(true);   /* geldi → tazele (yeniden fetch YOK) */
+    });
   }
   NX.setAccent(C.primary);
   var PINK = "#F472B6";
@@ -547,6 +574,7 @@
 
   function dtEndeksBody() {
     var d = dtComputeSeries(), series = d.series, group = d.group, catName = d.catName;
+    var an = DT_ANALYZE[dtKey()] || null;   /* ProX değerleme (varsa) — grafik bandı + analiz paneli */
     dtSeries = series;
     var vals = series.map(function (s) { return s.v; });
     var last = vals[vals.length - 1] || 0, first = vals[0] || 1;
@@ -557,7 +585,8 @@
     var mom = series.length > 1 ? ((last - series[series.length - 2].v) / series[series.length - 2].v) * 100 : null;
     var gcol = GROUP_COLOR[group];
 
-    var yMin = mn * 0.96, yMax = mx * 1.04;
+    var bandOn = !!(an && an.minM2 > 0 && an.maxM2 > 0);
+    var yMin = Math.min(mn, bandOn ? an.minM2 : mn) * 0.96, yMax = Math.max(mx, bandOn ? an.maxM2 : mx) * 1.04;
     var X = function (i) { return PAD.l + (i / (series.length - 1 || 1)) * PW; };
     var Y = function (v) { return PAD.t + (1 - (v - yMin) / (yMax - yMin || 1)) * PH; };
     var pts = series.map(function (s, i) { return [X(i), Y(s.v)]; });
@@ -585,6 +614,17 @@
     var mmMark = '<g><circle cx="' + pts[iMax][0].toFixed(1) + '" cy="' + pts[iMax][1].toFixed(1) + '" r="2.5" fill="' + C.accent + '"></circle><text x="' + pts[iMax][0].toFixed(1) + '" y="' + (pts[iMax][1] - 6).toFixed(1) + '" font-size="8" fill="' + C.accent + '" font-family="ui-monospace,monospace" text-anchor="middle">MAKS</text></g>'
       + '<g><circle cx="' + pts[iMin][0].toFixed(1) + '" cy="' + pts[iMin][1].toFixed(1) + '" r="2.5" fill="' + C.textMut + '"></circle><text x="' + pts[iMin][0].toFixed(1) + '" y="' + (pts[iMin][1] + 12).toFixed(1) + '" font-size="8" fill="' + C.textMut + '" font-family="ui-monospace,monospace" text-anchor="middle">MİN</text></g>';
 
+    /* ProX değer aralığı bandı (analyze) — min/maks yatay bant + strongest çizgi */
+    var valueBand = "";
+    if (bandOn) {
+      var yb1 = Y(an.maxM2), yb2 = Y(an.minM2), ybs = an.strongM2 > 0 ? Y(an.strongM2) : null;
+      valueBand = '<g>'
+        + '<rect x="' + PAD.l + '" y="' + yb1.toFixed(1) + '" width="' + PW + '" height="' + Math.max(0, yb2 - yb1).toFixed(1) + '" fill="' + C.accent + '" opacity="0.07"></rect>'
+        + '<line x1="' + PAD.l + '" y1="' + yb1.toFixed(1) + '" x2="' + (W - PAD.r) + '" y2="' + yb1.toFixed(1) + '" stroke="' + C.accent + '" stroke-width="0.6" stroke-dasharray="3 3" opacity="0.45"></line>'
+        + '<line x1="' + PAD.l + '" y1="' + yb2.toFixed(1) + '" x2="' + (W - PAD.r) + '" y2="' + yb2.toFixed(1) + '" stroke="' + C.accent + '" stroke-width="0.6" stroke-dasharray="3 3" opacity="0.45"></line>'
+        + (ybs != null ? '<line x1="' + PAD.l + '" y1="' + ybs.toFixed(1) + '" x2="' + (W - PAD.r) + '" y2="' + ybs.toFixed(1) + '" stroke="' + C.accent + '" stroke-width="1" stroke-dasharray="1 2" opacity="0.75"></line>' : '')
+        + '<text x="' + (W - PAD.r - 3) + '" y="' + (yb1 - 3).toFixed(1) + '" font-size="8" fill="' + C.accent + '" font-family="ui-monospace,monospace" text-anchor="end">DEĞER ARALIĞI · ProX</text></g>';
+    }
     var rectW = PW / series.length;
     var hitRects = pts.map(function (p, i) { return '<rect data-dti="' + i + '" x="' + (p[0] - rectW / 2).toFixed(1) + '" y="' + PAD.t + '" width="' + rectW.toFixed(1) + '" height="' + PH + '" fill="transparent" style="cursor:crosshair"></rect>'; }).join("");
 
@@ -593,7 +633,7 @@
       + yAxis + xTicks
       + '<path d="' + line + ' L' + (W - PAD.r) + ' ' + (H - PAD.b) + ' L' + PAD.l + ' ' + (H - PAD.b) + ' Z" fill="url(#lineFill)"></path>'
       + '<path d="' + line + '" fill="none" stroke="' + gcol + '" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"></path>'
-      + evLines + mmMark + realSeg + realDots + endDot
+      + valueBand + evLines + mmMark + realSeg + realDots + endDot
       + '<line id="dt-hline" x1="0" y1="' + PAD.t + '" x2="0" y2="' + (H - PAD.b) + '" stroke="' + gcol + '" stroke-width="1" stroke-dasharray="2 3" opacity="0.6" style="display:none"></line>'
       + '<circle id="dt-hcirc" r="4" fill="' + C.base + '" stroke="' + gcol + '" stroke-width="2" style="display:none"></circle>'
       + '<g id="dt-tip" style="display:none"><rect x="-72" y="-4" width="144" height="44" rx="3" fill="' + C.elev + '" stroke="' + C.borderStrong + '"></rect><text id="dt-tip-date" x="0" y="11" font-size="10" fill="' + C.textMut + '" font-family="ui-monospace,monospace" text-anchor="middle"></text><text id="dt-tip-val" x="0" y="28" font-size="13" fill="' + C.textPri + '" font-family="ui-monospace,monospace" font-weight="600" text-anchor="middle"></text></g>'
@@ -662,7 +702,26 @@
     var endeksLink = "https://www.emlakekspertizi.com/emlak-endeksi?il=" + encodeURIComponent(DT.city) + "&ilce=" + encodeURIComponent(DT.district) + "&mahalle=" + encodeURIComponent(DT.neighborhood) + "&kategori=" + DT.catId;
     var footer = '<div style="' + css({ padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, background: "#020812" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textMut, letterSpacing: "0.04em" }) + '">' + (d.live ? '<span style="' + css({ color: C.accent }) + '">güncel m² canlı ProX endeksinden · geçmiş şekil model</span>' : '<span style="' + css({ color: C.warn }) + '">seçime göre üretilen temsilî örnek · gerçek endeks emlakekspertizi.com</span>') + '</div><a href="' + endeksLink + '" target="_blank" rel="noopener noreferrer" style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", background: C.primary, color: "#020812", fontSize: 12, fontFamily: C.mono, letterSpacing: "0.06em", fontWeight: 700, borderRadius: 2, textDecoration: "none" }) + '">DETAYLI ENDEKS · EMLAKEKSPERTIZI →</a></div>';
 
-    return header + canliRibbon + statStrip + '<div style="' + css({ padding: "8px 8px 0", position: "relative" }) + '">' + svg + '</div>' + evPanel + dnaPanel + footer;
+    /* ProX ANALİZ paneli (analyze) — piyasa yönü · güven · değer aralığı · pazarlık · karar/risk özeti */
+    var analizPanel = "";
+    if (an) {
+      var yonMap = { yukari: ["▲ YÜKSELEN PİYASA", C.accent], asagi: ["▼ DÜŞEN PİYASA", C.danger], yatay: ["● YATAY PİYASA", C.warn] };
+      var yon = yonMap[an.yon] || (an.yon ? ["● " + ("" + an.yon).toLocaleUpperCase("tr-TR"), C.textMut] : null);
+      function anChip(lbl, val, col) { return '<span style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "3px 9px", border: "1px solid " + C.border, borderRadius: 2, fontFamily: C.mono, fontSize: 10 }) + '"><span style="' + css({ color: C.textFaint }) + '">' + lbl + '</span><span style="' + css({ color: col || C.textPri, fontWeight: 700 }) + '">' + val + '</span></span>'; }
+      var chips = (yon ? '<span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: yon[1], fontWeight: 700, letterSpacing: "0.06em" }) + '">' + yon[0] + '</span>' : '')
+        + (an.conf != null ? anChip("GÜVEN", an.conf + "/100" + (an.band ? " · " + an.band : ""), an.conf >= 70 ? C.accent : an.conf >= 45 ? C.primary : C.warn) : '')
+        + (an.minM2 > 0 && an.maxM2 > 0 ? anChip("DEĞER", "₺" + Math.round(an.minM2).toLocaleString("tr-TR") + "–" + Math.round(an.maxM2).toLocaleString("tr-TR") + "/m²", C.accent) : '')
+        + (an.spread != null ? anChip("YELPAZE", "%" + an.spread, C.textMut) : '')
+        + (an.pazarlik ? anChip("PAZARLIK PAYI", "%" + an.pazarlik[0] + "–" + an.pazarlik[1], C.warn) : '');
+      var texts = (an.karar ? '<p style="' + css({ margin: "0 0 6px", fontSize: 12.5, lineHeight: 1.55, color: C.textSec }) + '">' + an.karar + '</p>' : '')
+        + (an.risk ? '<p style="' + css({ margin: 0, fontSize: 12, lineHeight: 1.55, color: C.textMut }) + '"><span style="' + css({ color: C.warn, fontFamily: C.mono, fontSize: 10 }) + '">RİSK · </span>' + an.risk + '</p>' : '');
+      var eksik = (an.eksik && an.eksik.length) ? '<div style="' + css({ marginTop: 8, display: "flex", flexWrap: "wrap", gap: 5, alignItems: "center" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.08em" }) + '">DAHA HASSAS TAHMİN İÇİN:</span>' + an.eksik.map(function (e) { return '<span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textMut, padding: "2px 7px", border: "1px dashed " + C.border, borderRadius: 2 }) + '">' + (e.label || e.key) + '</span>'; }).join("") + '</div>' : '';
+      analizPanel = '<div style="' + css({ padding: "12px 16px", borderBottom: "1px solid " + C.border, background: "rgba(56,189,248,0.03)" }) + '">'
+        + '<div style="' + css({ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 8 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.1em" }) + '">◆ ProX ANALİZ</span><span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint }) + '">100 m² brüt referans · canlı değerleme (/analyze)</span></div>'
+        + '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center", marginBottom: 10 }) + '">' + chips + '</div>'
+        + texts + eksik + '</div>';
+    }
+    return header + canliRibbon + statStrip + '<div style="' + css({ padding: "8px 8px 0", position: "relative" }) + '">' + svg + '</div>' + analizPanel + evPanel + dnaPanel + footer;
   }
 
   function dtCompareBody() {
@@ -706,7 +765,7 @@
     if (!card) return;
     card.innerHTML = buildTerminalCard();
     updateDurum();
-    if (!skipFetch) dtLoadReal();
+    if (!skipFetch) { dtLoadReal(); dtLoadAnalyze(); }
     var cityEl = document.getElementById("dt-city"), distEl = document.getElementById("dt-district"), neighEl = document.getElementById("dt-neigh"), catEl = document.getElementById("dt-cat");
     cityEl.addEventListener("change", function () { DT.city = this.value; var dk = Object.keys(REGIONS[DT.city] || {}); DT.district = dk[0] || ""; DT.neighborhood = (REGIONS[DT.city][DT.district] || [])[0] || ""; mountTerminal(); });
     distEl.addEventListener("change", function () { DT.district = this.value; DT.neighborhood = ((REGIONS[DT.city] || {})[DT.district] || [])[0] || ""; mountTerminal(); });
