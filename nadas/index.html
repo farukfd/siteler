@@ -443,10 +443,17 @@
     start();
   }
 
-  /* ===== 02 · VERİ TERMİNALİ (interaktif) ===== */
-  var DT = { city: "İstanbul", district: "Kadıköy", neighborhood: "Caddebostan", catId: "1", period: "5Y" };
+  /* ===== 02 · VERİ TERMİNALİ — çok modlu veri iş istasyonu =====
+     Modlar:
+       ENDEKS      · tekil mahalle/kategori serisi + stat şeridi + olay markerları + DNA
+       KARŞILAŞTIR · seçili bölgede 5 ana grubun normalize karşılaştırması (eski §03 içeri alındı)
+     Dürüstlük sözleşmesi: geçmiş ŞEKİL modeldir (temsilî). Canlı uç ProX endeksinden
+     gelirse seri gerçek güncel m²'ye ölçeklenir ve uçta NABIZ ile ayrışır; rozet
+     TEMSİLÎ/CANLI der. Stat şeridi de seriden türer — banner ayrımı korunur. */
+  var DT = { city: "İstanbul", district: "Kadıköy", neighborhood: "Caddebostan", catId: "1", period: "5Y", mode: "endeks" };
   var dtPts = [], dtSeries = [];
-  var W = 760, H = 280;
+  var W = 760, H = 300, PAD = { l: 48, r: 12, t: 16, b: 28 };
+  var PW = W - PAD.l - PAD.r, PH = H - PAD.t - PAD.b;
 
   function optsPlain(list, current) { return list.map(function (o) { return '<option value="' + o + '"' + (String(o) === String(current) ? " selected" : "") + '>' + o + '</option>'; }).join(""); }
   function optsCategory(current) {
@@ -456,97 +463,188 @@
     }).join("");
   }
   function dtSelectHTML(id, label, optionsHtml) {
-    return '<label style="' + css({ display: "block", padding: "10px 14px", borderRight: "1px solid " + C.border, cursor: "pointer" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.12em", marginBottom: 4 }) + '">' + label + '</div><select id="' + id + '" style="' + css({ width: "100%", background: "transparent", border: "none", color: C.textPri, fontSize: 14, fontFamily: C.mono, fontWeight: 600, outline: "none", cursor: "pointer", padding: 0, appearance: "none" }) + '">' + optionsHtml + '</select></label>';
+    return '<label style="' + css({ display: "block", padding: "9px 14px", borderRight: "1px solid " + C.border, cursor: "pointer", minWidth: 0 }) + '">'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.14em", marginBottom: 3 }) + '">' + label + '</div>'
+      + '<select id="' + id + '" style="' + css({ width: "100%", background: "transparent", border: "none", color: C.textPri, fontSize: 13.5, fontFamily: C.mono, fontWeight: 600, outline: "none", cursor: "pointer", padding: 0, appearance: "none", textOverflow: "ellipsis" }) + '">' + optionsHtml + '</select></label>';
   }
 
-  function buildTerminalCard() {
+  /* — istatistik yardımcıları — */
+  function dtMedian(a) { var s = a.slice().sort(function (x, y) { return x - y; }), n = s.length; return !n ? 0 : (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2); }
+  function dtVol(series) {
+    if (series.length < 3) return 0;
+    var r = [], i; for (i = 1; i < series.length; i++) if (series[i - 1].v) r.push((series[i].v - series[i - 1].v) / series[i - 1].v * 100);
+    var m = r.reduce(function (s, x) { return s + x; }, 0) / r.length;
+    return Math.sqrt(r.reduce(function (s, x) { return s + (x - m) * (x - m); }, 0) / r.length);
+  }
+
+  function dtCommandBar() {
     var districts = Object.keys(REGIONS[DT.city] || {});
     var neighborhoods = (REGIONS[DT.city] && REGIONS[DT.city][DT.district]) || [];
+    return '<div style="' + css({ display: "flex", alignItems: "stretch", borderBottom: "1px solid " + C.border, background: C.deep }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", padding: "0 13px", borderRight: "1px solid " + C.border, fontFamily: C.mono, fontSize: 13, color: C.primary, fontWeight: 700 }) + '">▸</div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(120px,1fr))", flex: 1, minWidth: 0 }) + '">'
+      + dtSelectHTML("dt-city", "İL", optsPlain(Object.keys(REGIONS), DT.city))
+      + dtSelectHTML("dt-district", "İLÇE", optsPlain(districts, DT.district))
+      + dtSelectHTML("dt-neigh", "MAHALLE", optsPlain(neighborhoods, DT.neighborhood))
+      + dtSelectHTML("dt-cat", "KATEGORİ", optsCategory(DT.catId))
+      + '</div></div>';
+  }
+
+  function dtModeTabs() {
+    var modes = [["endeks", "ENDEKS"], ["karsilastir", "KARŞILAŞTIR"]];
+    var tabs = modes.map(function (m) {
+      var on = DT.mode === m[0];
+      return '<button type="button" data-dtmode="' + m[0] + '" class="nadas-btn-tab" style="' + css({ padding: "9px 18px", fontSize: 11, fontFamily: C.mono, fontWeight: 700, letterSpacing: "0.12em", border: "none", borderBottom: "2px solid " + (on ? C.primary : "transparent"), background: on ? "rgba(56,189,248,0.08)" : "transparent", color: on ? C.primary : C.textMut, cursor: "pointer" }) + '">' + m[1] + '</button>';
+    }).join("");
+    return '<div style="' + css({ display: "flex", alignItems: "stretch", borderBottom: "1px solid " + C.border, background: C.raised }) + '">' + tabs
+      + '<div style="' + css({ flex: 1 }) + '"></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "center", padding: "0 14px", fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.1em" }) + '">257 AY · 2005-01 → 2026-05</div></div>';
+  }
+
+  function dtPeriodBtns() {
+    return ["1A", "3A", "1Y", "5Y", "10Y", "MAX"].map(function (p) { var on = DT.period === p; return '<button type="button" data-dtp="' + p + '" class="nadas-btn-tab" style="' + css({ padding: "6px 10px", fontSize: 11.5, fontFamily: C.mono, letterSpacing: "0.06em", border: "1px solid " + (on ? C.primary : C.borderStrong), background: on ? "rgba(56,189,248,0.12)" : "transparent", color: on ? C.primary : C.textMut, cursor: "pointer", borderRadius: 2 }) + '">' + p + '</button>'; }).join("");
+  }
+
+  function dtComputeSeries() {
     var gc = catGroupName(DT.catId), group = gc.group, catName = gc.catName;
     var full = getSeries(DT.city + "/" + DT.district + "/" + DT.neighborhood, group, DT.catId);
     var periodMonths = { "1A": 1, "3A": 3, "1Y": 12, "5Y": 60, "10Y": 120, "MAX": full.length };
     var cutN = Math.min(periodMonths[DT.period], full.length);
     var series = full.slice(-cutN);
-    dtSeries = series;
-
+    var dtReal = DT_REAL[dtKey()], live = false, liveDelta = null;
     var last = (series[series.length - 1] || {}).v || 0;
-    var first = (series[0] || {}).v || 1;
-    var change = ((last - first) / first) * 100;
-    /* GERÇEK canlı endeks varsa: güncel m² + değişimi gerçekle değiştir; modellenmiş seriyi
-       gerçek güncel değere ölçekle (grafik başlıkla tutarlı — geçmiş şekil modeldir, uç nokta gerçek). */
-    var dtReal = DT_REAL[dtKey()];
-    if (dtReal && dtReal.m2 > 0) {
-      if (last > 0) { var _sc = dtReal.m2 / last; series = series.map(function (s) { return { y: s.y, m: s.m, v: Math.round(s.v * _sc) }; }); dtSeries = series; }
-      last = dtReal.m2;
-      if (typeof dtReal.delta === "number") change = dtReal.delta;
+    if (dtReal && dtReal.m2 > 0 && last > 0) {
+      var sc = dtReal.m2 / last; series = series.map(function (s) { return { y: s.y, m: s.m, v: Math.round(s.v * sc) }; });
+      live = true; if (typeof dtReal.delta === "number") liveDelta = dtReal.delta;
     }
+    return { series: series, group: group, catName: catName, live: live, liveDelta: liveDelta };
+  }
+
+  function dtEndeksBody() {
+    var d = dtComputeSeries(), series = d.series, group = d.group, catName = d.catName;
+    dtSeries = series;
     var vals = series.map(function (s) { return s.v; });
-    var max = Math.max.apply(null, vals), min = Math.min.apply(null, vals);
-    var yMin = min * 0.95, yMax = max * 1.05;
-    var pts = series.map(function (s, i) { return [(i / (series.length - 1 || 1)) * W, H - ((s.v - yMin) / (yMax - yMin || 1)) * (H - 30) - 15]; });
-    dtPts = pts;
-    var path = pts.map(function (p, i) { return (i === 0 ? "M" : "L") + p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" ");
+    var last = vals[vals.length - 1] || 0, first = vals[0] || 1;
+    var change = (d.live && d.liveDelta != null) ? d.liveDelta : ((last - first) / first) * 100;
+    var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals), med = dtMedian(vals);
+    var vol = dtVol(series);
+    var yoy = series.length > 12 ? ((last - series[series.length - 13].v) / series[series.length - 13].v) * 100 : null;
+    var mom = series.length > 1 ? ((last - series[series.length - 2].v) / series[series.length - 2].v) * 100 : null;
     var gcol = GROUP_COLOR[group];
 
+    var yMin = mn * 0.96, yMax = mx * 1.04;
+    var X = function (i) { return PAD.l + (i / (series.length - 1 || 1)) * PW; };
+    var Y = function (v) { return PAD.t + (1 - (v - yMin) / (yMax - yMin || 1)) * PH; };
+    var pts = series.map(function (s, i) { return [X(i), Y(s.v)]; });
+    dtPts = pts;
+    var line = pts.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" ");
+    var iMin = vals.indexOf(mn), iMax = vals.indexOf(mx), lastP = pts[pts.length - 1];
+
+    var yAxis = [0, 0.25, 0.5, 0.75, 1].map(function (t) { var yy = PAD.t + (1 - t) * PH; return '<line x1="' + PAD.l + '" y1="' + yy.toFixed(1) + '" x2="' + (W - PAD.r) + '" y2="' + yy.toFixed(1) + '" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"></line><text x="' + (PAD.l - 5) + '" y="' + (yy + 3).toFixed(1) + '" font-size="8.5" fill="' + C.textFaint + '" font-family="ui-monospace,monospace" text-anchor="end">₺' + trNum(yMin + t * (yMax - yMin)) + '</text>'; }).join("");
+    var xTicks = "", seenY = {};
+    series.forEach(function (s, i) { if (!seenY[s.y] && (s.m === 0 || i === 0)) { seenY[s.y] = 1; var xx = X(i); xTicks += '<text x="' + xx.toFixed(1) + '" y="' + (H - 8) + '" font-size="8.5" fill="' + C.textFaint + '" font-family="ui-monospace,monospace" text-anchor="middle">' + s.y + '</text>'; } });
+
     var evMarks = [];
-    series.forEach(function (s, i) { var ev = null; for (var k = 0; k < EVENTS.length; k++) { if (EVENTS[k].y === s.y && EVENTS[k].m === s.m) { ev = EVENTS[k]; break; } } if (ev && pts[i]) evMarks.push({ ev: ev, x: pts[i][0], y: pts[i][1] }); });
+    series.forEach(function (s, i) { for (var k = 0; k < EVENTS.length; k++) if (EVENTS[k].y === s.y && EVENTS[k].m === s.m) evMarks.push({ ev: EVENTS[k], x: pts[i][0], y: pts[i][1], idx: k }); });
+    var evLines = evMarks.map(function (m) { var col = EVT_COLOR[m.ev.type] || C.danger; return '<g data-ev-line="' + m.idx + '"><line x1="' + m.x.toFixed(1) + '" y1="' + PAD.t + '" x2="' + m.x.toFixed(1) + '" y2="' + (H - PAD.b) + '" stroke="' + col + '" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.5"></line><circle cx="' + m.x.toFixed(1) + '" cy="' + (PAD.t + 4) + '" r="3.5" fill="' + col + '"></circle></g>'; }).join("");
 
-    var yAxis = [0, 0.25, 0.5, 0.75, 1].map(function (p) { return '<text x="6" y="' + (H - p * (H - 30) - 10) + '" font-size="9" fill="' + C.textFaint + '" font-family="ui-monospace,monospace">₺' + trNum(yMin + p * (yMax - yMin)) + '</text>'; }).join("");
-    var evLines = evMarks.map(function (m) { var col = EVT_COLOR[m.ev.type] || C.danger; return '<g><line x1="' + m.x + '" y1="10" x2="' + m.x + '" y2="' + (H - 5) + '" stroke="' + col + '" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.55"></line><circle cx="' + m.x + '" cy="14" r="3.5" fill="' + col + '" opacity="0.95"></circle><text x="' + (m.x + 6) + '" y="17" font-size="8.5" fill="' + col + '" font-family="ui-monospace,monospace">' + m.ev.y + '</text></g>'; }).join("");
-    var rectW = W / series.length;
-    var hitRects = pts.map(function (p, i) { return '<rect data-dti="' + i + '" x="' + (p[0] - rectW / 2) + '" y="0" width="' + rectW + '" height="' + H + '" fill="transparent" style="cursor:crosshair"></rect>'; }).join("");
+    var endDot = d.live
+      ? '<circle cx="' + lastP[0].toFixed(1) + '" cy="' + lastP[1].toFixed(1) + '" r="4" fill="' + gcol + '"></circle><circle cx="' + lastP[0].toFixed(1) + '" cy="' + lastP[1].toFixed(1) + '" r="4" fill="none" stroke="' + gcol + '"><animate attributeName="r" values="4;12" dur="1.6s" repeatCount="indefinite"></animate><animate attributeName="opacity" values="0.7;0" dur="1.6s" repeatCount="indefinite"></animate></circle>'
+      : '<circle cx="' + lastP[0].toFixed(1) + '" cy="' + lastP[1].toFixed(1) + '" r="3" fill="' + C.base + '" stroke="' + gcol + '" stroke-width="1.5"></circle>';
 
-    var svg = '<svg id="dt-svg" viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="auto" style="display:block">'
-      + '<defs><linearGradient id="lineFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="' + gcol + '" stop-opacity="0.22"></stop><stop offset="100%" stop-color="' + gcol + '" stop-opacity="0"></stop></linearGradient><pattern id="termgrid" width="48" height="35" patternUnits="userSpaceOnUse"><path d="M 48 0 L 0 0 0 35" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"></path></pattern></defs>'
-      + '<rect width="' + W + '" height="' + H + '" fill="url(#termgrid)"></rect>' + yAxis
-      + '<path d="' + path + ' L' + W + ' ' + H + ' L0 ' + H + ' Z" fill="url(#lineFill)"></path>'
-      + '<path d="' + path + '" fill="none" stroke="' + gcol + '" stroke-width="1.8" stroke-linejoin="round"></path>' + evLines
-      + '<line id="dt-hline" x1="0" y1="10" x2="0" y2="' + (H - 5) + '" stroke="' + gcol + '" stroke-width="1" stroke-dasharray="2 3" opacity="0.6" style="display:none"></line>'
-      + '<circle id="dt-hcirc" cx="0" cy="0" r="4" fill="' + C.base + '" stroke="' + gcol + '" stroke-width="2" style="display:none"></circle>'
+    var mmMark = '<g><circle cx="' + pts[iMax][0].toFixed(1) + '" cy="' + pts[iMax][1].toFixed(1) + '" r="2.5" fill="' + C.accent + '"></circle><text x="' + pts[iMax][0].toFixed(1) + '" y="' + (pts[iMax][1] - 6).toFixed(1) + '" font-size="8" fill="' + C.accent + '" font-family="ui-monospace,monospace" text-anchor="middle">MAKS</text></g>'
+      + '<g><circle cx="' + pts[iMin][0].toFixed(1) + '" cy="' + pts[iMin][1].toFixed(1) + '" r="2.5" fill="' + C.textMut + '"></circle><text x="' + pts[iMin][0].toFixed(1) + '" y="' + (pts[iMin][1] + 12).toFixed(1) + '" font-size="8" fill="' + C.textMut + '" font-family="ui-monospace,monospace" text-anchor="middle">MİN</text></g>';
+
+    var rectW = PW / series.length;
+    var hitRects = pts.map(function (p, i) { return '<rect data-dti="' + i + '" x="' + (p[0] - rectW / 2).toFixed(1) + '" y="' + PAD.t + '" width="' + rectW.toFixed(1) + '" height="' + PH + '" fill="transparent" style="cursor:crosshair"></rect>'; }).join("");
+
+    var svg = '<svg id="dt-svg" viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="auto" style="display:block" role="img" aria-label="' + DT.neighborhood + ' ' + catName + ' fiyat endeksi zaman serisi">'
+      + '<defs><linearGradient id="lineFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="' + gcol + '" stop-opacity="0.20"></stop><stop offset="100%" stop-color="' + gcol + '" stop-opacity="0"></stop></linearGradient></defs>'
+      + yAxis + xTicks
+      + '<path d="' + line + ' L' + (W - PAD.r) + ' ' + (H - PAD.b) + ' L' + PAD.l + ' ' + (H - PAD.b) + ' Z" fill="url(#lineFill)"></path>'
+      + '<path d="' + line + '" fill="none" stroke="' + gcol + '" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"></path>'
+      + evLines + mmMark + endDot
+      + '<line id="dt-hline" x1="0" y1="' + PAD.t + '" x2="0" y2="' + (H - PAD.b) + '" stroke="' + gcol + '" stroke-width="1" stroke-dasharray="2 3" opacity="0.6" style="display:none"></line>'
+      + '<circle id="dt-hcirc" r="4" fill="' + C.base + '" stroke="' + gcol + '" stroke-width="2" style="display:none"></circle>'
       + '<g id="dt-tip" style="display:none"><rect x="-72" y="-4" width="144" height="44" rx="3" fill="' + C.elev + '" stroke="' + C.borderStrong + '"></rect><text id="dt-tip-date" x="0" y="11" font-size="10" fill="' + C.textMut + '" font-family="ui-monospace,monospace" text-anchor="middle"></text><text id="dt-tip-val" x="0" y="28" font-size="13" fill="' + C.textPri + '" font-family="ui-monospace,monospace" font-weight="600" text-anchor="middle"></text></g>'
       + hitRects + '</svg>';
 
-    var periodBtns = ["1A", "3A", "1Y", "5Y", "10Y", "MAX"].map(function (p) { var on = DT.period === p; return '<button type="button" data-dtp="' + p + '" class="nadas-btn-tab" style="' + css({ padding: "6px 10px", fontSize: 11.5, fontFamily: C.mono, letterSpacing: "0.06em", border: "1px solid " + (on ? C.primary : C.borderStrong), background: on ? "rgba(56,189,248,0.12)" : "transparent", color: on ? C.primary : C.textMut, cursor: "pointer", borderRadius: 2 }) + '">' + p + '</button>'; }).join("");
+    function statCell(lbl, val, col) { return '<div style="' + css({ padding: "8px 12px", borderRight: "1px solid " + C.border }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 8.5, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 3 }) + '">' + lbl + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 12.5, fontWeight: 600, color: col || C.textPri }) + '">' + val + '</div></div>'; }
+    function pctStr(x) { return x == null ? "—" : (x >= 0 ? "+" : "") + x.toFixed(1) + "%"; }
+    function pctCol(x) { return x == null ? C.textMut : (x >= 0 ? C.accent : C.danger); }
+    var statStrip = '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(96px,1fr))", borderBottom: "1px solid " + C.border, background: C.deep }) + '">'
+      + statCell("MİN", "₺" + trNum(mn), C.textSec) + statCell("MAKS", "₺" + trNum(mx), C.textSec) + statCell("MEDYAN", "₺" + trNum(med), C.textSec)
+      + statCell("YoY", pctStr(yoy), pctCol(yoy)) + statCell("MoM", pctStr(mom), pctCol(mom))
+      + statCell("OYNAKLIK", vol.toFixed(1) + "%", C.warn) + statCell("GÖZLEM", series.length + " ay", C.textMut) + '</div>';
+
+    var header = '<div style="' + css({ borderBottom: "1px solid " + C.border, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 14 }) + '">'
+      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textMut, letterSpacing: "0.1em", marginBottom: 5, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }) + '"><span>' + DT.city.toLocaleUpperCase("tr-TR") + ' / ' + DT.district.toLocaleUpperCase("tr-TR") + ' / ' + DT.neighborhood.toLocaleUpperCase("tr-TR") + '</span><span style="' + css({ padding: "2px 7px", border: "1px solid " + gcol, color: gcol, borderRadius: 2, fontSize: 9.5 }) + '">' + GROUP_LABEL[group].toLocaleUpperCase("tr-TR") + ' · ' + catName.toLocaleUpperCase("tr-TR") + '</span></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }) + '"><span style="' + css({ fontSize: "2.1rem", fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">₺' + last.toLocaleString("tr-TR") + '</span><span style="' + css({ fontSize: 12.5, color: C.textFaint, fontFamily: C.mono }) + '">/m² · medyan</span><span style="' + css({ fontSize: 13.5, fontWeight: 600, fontFamily: C.mono, color: change >= 0 ? C.accent : C.danger, padding: "2px 8px", background: change >= 0 ? "rgba(52,211,153,0.1)" : "rgba(248,113,113,0.1)", borderRadius: 2 }) + '">' + (change >= 0 ? "▲" : "▼") + ' ' + Math.abs(change).toFixed(1) + '% · ' + DT.period + '</span>'
+      + (d.live ? '<span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.accent, letterSpacing: "0.08em", display: "inline-flex", alignItems: "center", gap: 5 }) + '"><span style="' + css({ width: 5, height: 5, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>CANLI UÇ</span>' : '') + '</div></div>'
+      + '<div style="' + css({ display: "flex", gap: 4, flexWrap: "wrap" }) + '">' + dtPeriodBtns() + '</div></div>';
 
     var evPanel = "";
-    if (evMarks.length > 0) {
-      var evCards = evMarks.slice(0, 6).map(function (m) { var col = EVT_COLOR[m.ev.type] || C.danger; var e = m.ev; return '<div style="' + css({ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 11.5, fontFamily: C.mono }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: col, marginTop: 4, flexShrink: 0 }) + '"></span><div><div style="' + css({ color: C.textPri, fontWeight: 600 }) + '">' + e.y + '/' + (String(e.m + 1).length < 2 ? "0" : "") + (e.m + 1) + ' · ' + e.lbl + ' <span style="' + css({ color: e.imp > 0 ? C.accent : C.danger, marginLeft: 4 }) + '">' + (e.imp > 0 ? "+" : "") + e.imp + '%</span></div><div style="' + css({ color: C.textMut, fontSize: 10.5, marginTop: 1 }) + '">' + e.det + '</div></div></div>'; }).join("");
-      evPanel = '<div style="' + css({ padding: "10px 16px", borderTop: "1px solid " + C.border, background: "#020812" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.12em", marginBottom: 8 }) + '">OLAY MARKERLARI · NEDEN DÜŞTÜ / NEDEN YÜKSELDİ</div><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 6 }) + '">' + evCards + '</div></div>';
+    if (evMarks.length) {
+      var evCards = evMarks.slice(0, 6).map(function (m) { var col = EVT_COLOR[m.ev.type] || C.danger, e = m.ev; return '<div data-ev-card="' + m.idx + '" style="' + css({ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 11.5, fontFamily: C.mono, padding: "6px 8px", cursor: "default", borderRadius: 2, transition: "background .15s" }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: col, marginTop: 4, flexShrink: 0 }) + '"></span><div><div style="' + css({ color: C.textPri, fontWeight: 600 }) + '">' + e.y + '/' + (e.m + 1 < 10 ? "0" : "") + (e.m + 1) + ' · ' + e.lbl + ' <span style="' + css({ color: e.imp > 0 ? C.accent : C.danger, marginLeft: 4 }) + '">' + (e.imp > 0 ? "+" : "") + e.imp + '%</span></div><div style="' + css({ color: C.textMut, fontSize: 10.5, marginTop: 1 }) + '">' + e.det + '</div></div></div>'; }).join("");
+      evPanel = '<div style="' + css({ padding: "10px 14px", borderBottom: "1px solid " + C.border, background: "#020812" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.12em", marginBottom: 8 }) + '">OLAY MARKERLARI · NEDEN DÜŞTÜ / NEDEN YÜKSELDİ <span style="' + css({ color: C.textMut, letterSpacing: 0 }) + '">— karta gelin, grafikte işaretlensin</span></div><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 4 }) + '">' + evCards + '</div></div>';
     }
 
     var demoSeed = (DT.city + DT.district + DT.neighborhood).length;
+    var dclamp = function (x) { return Math.max(0, Math.min(100, Math.round(x))); };  /* 0-100 endeks — bar genişliği negatif olamaz */
     var dna = {
       pop: Math.round((50 + Math.sin(demoSeed) * 30) * 1000),
       segment: ["L4-Premium", "L3-Üst", "L2-Orta-Üst", "L1-Orta", "L0-Gelişmekte"][Math.abs(Math.floor(Math.sin(demoSeed) * 5)) % 5],
-      prestij: Math.round(50 + Math.sin(demoSeed * 0.7) * 45),
-      merkez: Math.round(50 + Math.sin(demoSeed * 1.3) * 40),
-      arsapot: Math.round(40 + Math.sin(demoSeed * 2.1) * 35),
-      kirsallik: Math.round(20 + Math.cos(demoSeed * 1.1) * 25),
+      prestij: dclamp(50 + Math.sin(demoSeed * 0.7) * 45),
+      merkez: dclamp(50 + Math.sin(demoSeed * 1.3) * 40),
+      arsapot: dclamp(40 + Math.sin(demoSeed * 2.1) * 35),
+      kirsallik: dclamp(20 + Math.cos(demoSeed * 1.1) * 25),
     };
-    var dnaCells = [["NÜFUS", dna.pop.toLocaleString("tr-TR"), C.primary], ["SEGMENT", dna.segment, C.textPri], ["PRESTİJ", dna.prestij, dna.prestij > 70 ? C.accent : C.warn], ["MERKEZ END.", dna.merkez, C.primary], ["ARSA POT.", dna.arsapot, C.warn], ["KIRSALLIK", dna.kirsallik, C.violet]]
-      .map(function (d, i) { return '<div style="' + css({ padding: "10px 12px", borderRight: i < 5 ? "1px solid " + C.border : "none" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 4 }) + '">' + d[0] + '</div><div style="' + css({ fontSize: 14, fontWeight: 600, color: d[2], fontFamily: C.mono }) + '">' + d[1] + '</div></div>'; }).join("");
+    function dnaBar(lbl, v, col) { return '<div style="' + css({ padding: "8px 12px" }) + '"><div style="' + css({ display: "flex", justifyContent: "space-between", fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.08em", marginBottom: 5 }) + '"><span>' + lbl + '</span><span style="' + css({ color: col }) + '">' + v + '</span></div><div style="' + css({ height: 3, background: "rgba(255,255,255,0.06)", borderRadius: 2 }) + '"><div style="' + css({ height: 3, width: v + "%", background: col, borderRadius: 2 }) + '"></div></div></div>'; }
+    var dnaPanel = '<div style="' + css({ borderBottom: "1px solid " + C.border }) + '">'
+      + '<div style="' + css({ padding: "9px 14px 4px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.violet, letterSpacing: "0.12em", fontWeight: 700 }) + '">◇ MAHALLE DNA</span><span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint }) + '">24 boyuttan 6’sı</span><span style="' + css({ marginLeft: "auto", padding: "2px 7px", border: "1px solid " + C.violet, color: C.violet, borderRadius: 2, fontFamily: C.mono, fontSize: 9 }) + '">' + dna.segment + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.warn }) + '">· temsilî</span></div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))" }) + '">'
+      + '<div style="' + css({ padding: "8px 12px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.08em", marginBottom: 4 }) + '">NÜFUS</div><div style="' + css({ fontFamily: C.mono, fontSize: 12.5, fontWeight: 600, color: C.primary }) + '">' + dna.pop.toLocaleString("tr-TR") + '</div></div>'
+      + dnaBar("PRESTİJ", dna.prestij, dna.prestij > 70 ? C.accent : C.warn) + dnaBar("MERKEZ END.", dna.merkez, C.primary) + dnaBar("ARSA POT.", dna.arsapot, C.warn) + dnaBar("KIRSALLIK", dna.kirsallik, C.violet)
+      + '</div></div>';
 
     var endeksLink = "https://www.emlakekspertizi.com/emlak-endeksi?il=" + encodeURIComponent(DT.city) + "&ilce=" + encodeURIComponent(DT.district) + "&mahalle=" + encodeURIComponent(DT.neighborhood) + "&kategori=" + DT.catId;
+    var footer = '<div style="' + css({ padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, background: "#020812" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textMut, letterSpacing: "0.04em" }) + '">' + (d.live ? '<span style="' + css({ color: C.accent }) + '">güncel m² canlı ProX endeksinden · geçmiş şekil model</span>' : '<span style="' + css({ color: C.warn }) + '">seçime göre üretilen temsilî örnek · gerçek endeks emlakekspertizi.com</span>') + '</div><a href="' + endeksLink + '" target="_blank" rel="noopener noreferrer" style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", background: C.primary, color: "#020812", fontSize: 12, fontFamily: C.mono, letterSpacing: "0.06em", fontWeight: 700, borderRadius: 2, textDecoration: "none" }) + '">DETAYLI ENDEKS · EMLAKEKSPERTIZI →</a></div>';
 
-    return '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", borderBottom: "1px solid " + C.border }) + '">'
-      + dtSelectHTML("dt-city", "İL", optsPlain(Object.keys(REGIONS), DT.city))
-      + dtSelectHTML("dt-district", "İLÇE", optsPlain(districts, DT.district))
-      + dtSelectHTML("dt-neigh", "MAHALLE", optsPlain(neighborhoods, DT.neighborhood))
-      + dtSelectHTML("dt-cat", "KATEGORİ", optsCategory(DT.catId))
-      + '</div>'
-      + '<div style="' + css({ borderBottom: "1px solid " + C.border, padding: "16px 18px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 16 }) + '">'
-      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textMut, letterSpacing: "0.1em", marginBottom: 4, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }) + '"><span>' + DT.city.toLocaleUpperCase("tr-TR") + ' / ' + DT.district.toLocaleUpperCase("tr-TR") + ' / ' + DT.neighborhood.toLocaleUpperCase("tr-TR") + '</span><span style="' + css({ padding: "2px 7px", border: "1px solid " + gcol, color: gcol, borderRadius: 2, fontSize: 9.5 }) + '">' + GROUP_LABEL[group].toLocaleUpperCase("tr-TR") + ' · ' + catName.toLocaleUpperCase("tr-TR") + '</span></div>'
-      + '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }) + '"><span style="' + css({ fontSize: "2.2rem", fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">₺' + last.toLocaleString("tr-TR") + '</span><span style="' + css({ fontSize: 13, color: C.textFaint, fontFamily: C.mono }) + '">/m² · medyan</span><span style="' + css({ fontSize: 14, fontWeight: 600, fontFamily: C.mono, color: change >= 0 ? C.accent : C.danger, padding: "2px 8px", background: change >= 0 ? "rgba(52,211,153,0.1)" : "rgba(248,113,113,0.1)", borderRadius: 2 }) + '">' + (change >= 0 ? "▲" : "▼") + ' ' + Math.abs(change).toFixed(1) + '% · ' + DT.period + '</span></div></div>'
-      + '<div style="' + css({ display: "flex", gap: 4, flexWrap: "wrap" }) + '">' + periodBtns + '</div></div>'
-      + '<div style="' + css({ padding: "8px 8px 0", position: "relative" }) + '">' + svg + '</div>'
-      + evPanel
-      + '<div style="' + css({ borderTop: "1px solid " + C.border }) + '"><div style="' + css({ padding: "8px 12px 0", fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.1em" }) + '">DEMOGRAFİK KATMAN <span style="' + css({ color: C.warn }) + '">· temsilî</span></div><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))" }) + '">' + dnaCells + '</div></div>'
-      + '<div style="' + css({ borderTop: "1px solid " + C.borderStrong, padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, background: "#020812" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textMut, letterSpacing: "0.06em" }) + '">' + DT.city + '/' + DT.district + '/' + DT.neighborhood + ' · ' + catName + ' · 2005-01 → 2026-05 · ' + (dtCanli() ? '<span style="' + css({ color: C.accent }) + '">güncel m² canlı ProX endeksinden</span>' : '<span style="' + css({ color: C.warn }) + '">seçime göre üretilen temsilî örnek</span>') + '</div><a href="' + endeksLink + '" target="_blank" rel="noopener noreferrer" style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", background: C.primary, color: "#020812", fontSize: 12, fontFamily: C.mono, letterSpacing: "0.06em", fontWeight: 700, borderRadius: 2, textDecoration: "none" }) + '">DETAYLI ENDEKS · EMLAKEKSPERTIZI →</a></div>';
+    return header + statStrip + '<div style="' + css({ padding: "8px 8px 0", position: "relative" }) + '">' + svg + '</div>' + evPanel + dnaPanel + footer;
+  }
+
+  function dtCompareBody() {
+    var region = DT.city + "/" + DT.district + "/" + DT.neighborhood;
+    var groups = [{ k: "konut", id: 1, lbl: "KONUT" }, { k: "ticari", id: 57, lbl: "TİCARİ" }, { k: "arsa", id: 41, lbl: "ARSA" }, { k: "bina", id: 31, lbl: "BİNA" }, { k: "turistik", id: 63, lbl: "TURİSTİK" }];
+    var periodMonths = { "1A": 1, "3A": 3, "1Y": 12, "5Y": 60, "10Y": 120, "MAX": 300 };
+    var cutN = periodMonths[DT.period];
+    var Yc = function (v) { return PAD.t + (1 - v / 100) * PH; };
+    var lines = groups.map(function (g) {
+      var full = getSeries(region, g.k, g.id), s = full.slice(-Math.min(cutN, full.length));
+      var vv = s.map(function (p) { return p.v; }), mx = Math.max.apply(null, vv), mn = Math.min.apply(null, vv);
+      var norm = vv.map(function (v) { return (v - mn) / (mx - mn || 1) * 100; });
+      var n = norm.length, Xc = function (i) { return PAD.l + (i / (n - 1 || 1)) * PW; };
+      var dd = norm.map(function (v, i) { return (i ? "L" : "M") + Xc(i).toFixed(1) + "," + Yc(v).toFixed(1); }).join(" ");
+      return { g: g, path: dd, lx: Xc(n - 1), ly: Yc(norm[n - 1]), col: GROUP_COLOR[g.k] };
+    });
+    var yAxis = [0, 25, 50, 75, 100].map(function (t) { var yy = Yc(t); return '<line x1="' + PAD.l + '" y1="' + yy.toFixed(1) + '" x2="' + (W - PAD.r) + '" y2="' + yy.toFixed(1) + '" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"></line><text x="' + (PAD.l - 5) + '" y="' + (yy + 3).toFixed(1) + '" font-size="8.5" fill="' + C.textFaint + '" font-family="ui-monospace,monospace" text-anchor="end">' + t + '</text>'; }).join("");
+    var paths = lines.map(function (L) { return '<path data-cmp-line="' + L.g.k + '" d="' + L.path + '" fill="none" stroke="' + L.col + '" stroke-width="1.6" stroke-linejoin="round" opacity="0.95"></path><circle data-cmp-dot="' + L.g.k + '" cx="' + L.lx.toFixed(1) + '" cy="' + L.ly.toFixed(1) + '" r="3" fill="' + L.col + '"></circle>'; }).join("");
+    var svg = '<svg id="dt-cmp-svg" viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="auto" style="display:block" role="img" aria-label="' + DT.neighborhood + ' 5 ana grup normalize karşılaştırma">' + yAxis + paths + '</svg>';
+    var legend = lines.map(function (L) { return '<button type="button" data-cmp-leg="' + L.g.k + '" style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", border: "1px solid " + C.borderStrong, background: "transparent", cursor: "pointer", borderRadius: 2, fontFamily: C.mono, fontSize: 10.5, color: C.textSec, letterSpacing: "0.06em", transition: "border-color .15s" }) + '"><span style="' + css({ width: 12, height: 2, background: L.col }) + '"></span>' + L.g.lbl + '</button>'; }).join("");
+    var header = '<div style="' + css({ borderBottom: "1px solid " + C.border, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 14 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textMut, letterSpacing: "0.1em", marginBottom: 5 }) + '">' + DT.city.toLocaleUpperCase("tr-TR") + ' / ' + DT.district.toLocaleUpperCase("tr-TR") + ' / ' + DT.neighborhood.toLocaleUpperCase("tr-TR") + '</div><div style="' + css({ fontSize: "1.3rem", fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em" }) + '">5 ana grup · normalize 0-100</div></div><div style="' + css({ display: "flex", gap: 4, flexWrap: "wrap" }) + '">' + dtPeriodBtns() + '</div></div>';
+    var note = '<div style="' + css({ padding: "12px 16px", background: "#020812", fontFamily: C.mono, fontSize: 10.5, color: C.textMut, letterSpacing: "0.04em", lineHeight: 1.6 }) + '"><span style="' + css({ color: C.warn }) + '">temsilî örnek</span> · her grup kendi min-maks aralığına normalize edildi; amaç mutlak fiyat değil <b style="' + css({ color: C.textSec, fontWeight: 700 }) + '">momentum/şekil</b> karşılaştırması. Bir gruba tıklayıp izole edin.</div>';
+    return header + '<div style="' + css({ padding: "10px 8px 4px" }) + '">' + svg + '</div><div style="' + css({ display: "flex", gap: 6, flexWrap: "wrap", padding: "4px 16px 14px" }) + '">' + legend + '</div>' + note;
+  }
+
+  function buildTerminalCard() {
+    return dtCommandBar() + dtModeTabs() + (DT.mode === "karsilastir" ? dtCompareBody() : dtEndeksBody());
   }
 
   function DataTerminalShell() {
     return '<section id="terminal" style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "16px 16px 24px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">02 · VERİ TERMİNALİ</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span id="dt-durum" style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.warn, letterSpacing: "0.08em", display: "flex", alignItems: "center", gap: 6 }) + '"><span style="' + css({ width: 6, height: 6, borderRadius: 9999, background: C.warn }) + '"></span>TEMSİLÎ ÖRNEK</span></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12, flexWrap: "wrap" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">02 · VERİ TERMİNALİ</span>'
+      + '<h2 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 15, color: C.textPri, fontWeight: 600, margin: 0, display: "inline", letterSpacing: "-0.01em" }) + '">Mahalle düzeyinde interaktif endeks</h2>'
+      + '<span style="' + css({ height: 1, flex: 1, minWidth: 40, background: C.borderStrong }) + '"></span><span id="dt-durum" style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.warn, letterSpacing: "0.08em", display: "flex", alignItems: "center", gap: 6 }) + '"><span style="' + css({ width: 6, height: 6, borderRadius: 9999, background: C.warn }) + '"></span>TEMSİLÎ ÖRNEK</span></div>'
       + '<div id="dt-card" style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised }) + '"></div>'
       + '</div></section>';
   }
@@ -556,51 +654,70 @@
     if (!card) return;
     card.innerHTML = buildTerminalCard();
     updateDurum();
-    if (!skipFetch) dtLoadReal();   /* gerçek endeksi dene; gelirse mountTerminal(true) ile tazeler */
+    if (!skipFetch) dtLoadReal();
     var cityEl = document.getElementById("dt-city"), distEl = document.getElementById("dt-district"), neighEl = document.getElementById("dt-neigh"), catEl = document.getElementById("dt-cat");
-    cityEl.addEventListener("change", function () { DT.city = this.value; var d = Object.keys(REGIONS[DT.city] || {}); DT.district = d[0] || ""; DT.neighborhood = (REGIONS[DT.city][DT.district] || [])[0] || ""; mountTerminal(); });
+    cityEl.addEventListener("change", function () { DT.city = this.value; var dk = Object.keys(REGIONS[DT.city] || {}); DT.district = dk[0] || ""; DT.neighborhood = (REGIONS[DT.city][DT.district] || [])[0] || ""; mountTerminal(); });
     distEl.addEventListener("change", function () { DT.district = this.value; DT.neighborhood = ((REGIONS[DT.city] || {})[DT.district] || [])[0] || ""; mountTerminal(); });
     neighEl.addEventListener("change", function () { DT.neighborhood = this.value; mountTerminal(); });
     catEl.addEventListener("change", function () { DT.catId = this.value; mountTerminal(); });
+    var mtabs = card.querySelectorAll("[data-dtmode]");
+    for (var t = 0; t < mtabs.length; t++) mtabs[t].addEventListener("click", function () { DT.mode = this.getAttribute("data-dtmode"); mountTerminal(); });
     var pbtns = card.querySelectorAll("[data-dtp]");
-    for (var i = 0; i < pbtns.length; i++) { pbtns[i].addEventListener("click", function () { DT.period = this.getAttribute("data-dtp"); mountTerminal(); }); }
+    for (var i = 0; i < pbtns.length; i++) pbtns[i].addEventListener("click", function () { DT.period = this.getAttribute("data-dtp"); mountTerminal(); });
+    if (DT.mode === "karsilastir") { mountCompareInteractions(card); return; }
+    mountEndeksInteractions(card);
+  }
+
+  function mountEndeksInteractions(card) {
     var hline = document.getElementById("dt-hline"), hcirc = document.getElementById("dt-hcirc"), tip = document.getElementById("dt-tip"), tipD = document.getElementById("dt-tip-date"), tipV = document.getElementById("dt-tip-val");
     function showHover(idx) {
-      var p = dtPts[idx]; if (!p) return;
+      var p = dtPts[idx]; if (!p || !hline) return;
       hline.setAttribute("x1", p[0]); hline.setAttribute("x2", p[0]); hline.style.display = "";
       hcirc.setAttribute("cx", p[0]); hcirc.setAttribute("cy", p[1]); hcirc.style.display = "";
-      var tx = Math.min(Math.max(p[0], 80), W - 80), ty = Math.max(p[1] - 50, 14);
+      var tx = Math.min(Math.max(p[0], 80), W - 80), ty = Math.max(p[1] - 50, PAD.t + 4);
       tip.setAttribute("transform", "translate(" + tx + "," + ty + ")"); tip.style.display = "";
       tipD.textContent = MONTHS[dtSeries[idx].m] + " " + dtSeries[idx].y;
       tipV.textContent = "₺" + dtSeries[idx].v.toLocaleString("tr-TR") + "/m²";
     }
-    function hideHover() { hline.style.display = "none"; hcirc.style.display = "none"; tip.style.display = "none"; }
-    var svg = document.getElementById("dt-svg");
+    function hideHover() { if (hline) { hline.style.display = "none"; hcirc.style.display = "none"; tip.style.display = "none"; } }
     var hits = card.querySelectorAll("[data-dti]");
-    for (var j = 0; j < hits.length; j++) { hits[j].addEventListener("mouseenter", function () { showHover(parseInt(this.getAttribute("data-dti"), 10)); }); }
-    if (svg) svg.addEventListener("mouseleave", hideHover);
+    for (var j = 0; j < hits.length; j++) hits[j].addEventListener("mouseenter", function () { showHover(parseInt(this.getAttribute("data-dti"), 10)); });
+    var svg = document.getElementById("dt-svg"); if (svg) svg.addEventListener("mouseleave", hideHover);
+    function evHi(idx, on) {
+      var lineG = card.querySelector('[data-ev-line="' + idx + '"]'), cardEl = card.querySelector('[data-ev-card="' + idx + '"]');
+      if (lineG) { var ln = lineG.querySelector("line"), ci = lineG.querySelector("circle"); if (ln) ln.setAttribute("opacity", on ? "1" : "0.5"); if (ci) ci.setAttribute("r", on ? "5" : "3.5"); }
+      if (cardEl) cardEl.style.background = on ? C.elev : "transparent";
+    }
+    var cards = card.querySelectorAll("[data-ev-card]");
+    for (var k = 0; k < cards.length; k++) (function (el, idx) {
+      el.addEventListener("mouseenter", function () { evHi(idx, true); });
+      el.addEventListener("mouseleave", function () { evHi(idx, false); });
+    })(cards[k], parseInt(cards[k].getAttribute("data-ev-card"), 10));
+    var lineGs = card.querySelectorAll("[data-ev-line]");
+    for (var l = 0; l < lineGs.length; l++) (function (el, idx) {
+      el.style.cursor = "pointer";
+      el.addEventListener("mouseenter", function () { evHi(idx, true); });
+      el.addEventListener("mouseleave", function () { evHi(idx, false); });
+    })(lineGs[l], parseInt(lineGs[l].getAttribute("data-ev-line"), 10));
   }
 
-  /* ===== 03 · 5 GRUP KARŞILAŞTIRMA ===== */
-  function CategoryCompare() {
-    var region = "İstanbul/Kadıköy/Caddebostan";
-    var groups = [{ k: "konut", id: 1, lbl: "Konut (Daire-Sat)" }, { k: "ticari", id: 57, lbl: "Ticari (Ofis-Sat)" }, { k: "arsa", id: 41, lbl: "Arsa (Konut İmarlı)" }, { k: "bina", id: 31, lbl: "Bina (Apartman-Sat)" }, { k: "turistik", id: 63, lbl: "Turistik (Otel)" }];
-    var w = 720, h = 200;
-    var paths = groups.map(function (g) {
-      var s = getSeries(region, g.k, g.id).slice(-120);
-      var mx = Math.max.apply(null, s.map(function (p) { return p.v; }));
-      var d = s.map(function (p, i) { return (i === 0 ? "M" : "L") + ((i / (s.length - 1)) * w).toFixed(1) + "," + (h - ((p.v / mx) * 100 / 100) * (h - 20) - 10).toFixed(1); }).join(" ");
-      return '<path d="' + d + '" fill="none" stroke="' + GROUP_COLOR[g.k] + '" stroke-width="1.6" stroke-linejoin="round"></path>';
-    }).join("");
-    var legend = groups.map(function (g) { return '<span style="' + css({ display: "inline-flex", alignItems: "center", gap: 6 }) + '"><span style="' + css({ width: 12, height: 2, background: GROUP_COLOR[g.k] }) + '"></span>' + g.lbl.toLocaleUpperCase("tr-TR") + '</span>'; }).join("");
-    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, flexWrap: "wrap" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">03 · 5 ANA GRUP KARŞILAŞTIRMA</span><span style="' + css({ height: 1, flex: 1, minWidth: 60, background: C.borderStrong }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.08em" }) + '">İST/KADIKÖY/CADDEBOSTAN · 10Y · NORMALİZE 0-100</span></div>'
-      + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.base, padding: 12 }) + '"><svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" height="auto" style="display:block"><defs><pattern id="catgrid" width="40" height="25" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 25" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"></path></pattern></defs><rect width="' + w + '" height="' + h + '" fill="url(#catgrid)"></rect>' + paths + '</svg></div>'
-      + '<div style="' + css({ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 14, fontFamily: C.mono, fontSize: 11, color: C.textMut }) + '">' + legend + '</div>'
-      + '</div></section>';
+  function mountCompareInteractions(card) {
+    var legs = card.querySelectorAll("[data-cmp-leg]"), isolated = null;
+    function apply(hoverKey) {
+      var key = isolated || hoverKey;
+      var lines = card.querySelectorAll("[data-cmp-line]"), dots = card.querySelectorAll("[data-cmp-dot]"), i;
+      for (i = 0; i < lines.length; i++) { var k = lines[i].getAttribute("data-cmp-line"); lines[i].setAttribute("opacity", !key || k === key ? "0.95" : "0.12"); lines[i].setAttribute("stroke-width", key && k === key ? "2.4" : "1.6"); }
+      for (i = 0; i < dots.length; i++) { var kd = dots[i].getAttribute("data-cmp-dot"); dots[i].setAttribute("opacity", !key || kd === key ? "1" : "0.12"); }
+      for (i = 0; i < legs.length; i++) { var kl = legs[i].getAttribute("data-cmp-leg"); legs[i].style.borderColor = (isolated === kl) ? GROUP_COLOR[kl] : C.borderStrong; }
+    }
+    for (var i = 0; i < legs.length; i++) (function (el, key) {
+      el.addEventListener("mouseenter", function () { apply(key); });
+      el.addEventListener("mouseleave", function () { apply(null); });
+      el.addEventListener("click", function () { isolated = (isolated === key) ? null : key; apply(null); });
+    })(legs[i], legs[i].getAttribute("data-cmp-leg"));
   }
 
-  /* ===== 04 · ISI HARİTASI ===== */
+  /* ===== 03 · ISI HARİTASI ===== */
   function CityHeatmap() {
     var cities = ["İstanbul", "Ankara", "İzmir", "Antalya", "Bursa"];
     var anecdotes = [{ city: "Antalya", month: 7, ch: "+24.3", n: "Sezon piki — turistik kategori talep patlaması" }, { city: "İstanbul", month: 2, ch: "+18.6", n: "Kentsel dönüşüm bölgelerinde ilan artışı" }, { city: "Ankara", month: 9, ch: "+11.2", n: "Eğitim sezonu — kira piyasası canlandı" }, { city: "İzmir", month: 4, ch: "+8.9", n: "Sahil bandında yazlık talebi yükseldi" }, { city: "Bursa", month: 6, ch: "+7.4", n: "Sanayi imarlı arsa ilgisi" }];
@@ -618,24 +735,24 @@
     var anec = anecdotes.map(function (a, i) { return '<div style="' + css({ display: "grid", gridTemplateColumns: "auto 1fr", gap: 10, paddingBottom: 10, borderBottom: i < anecdotes.length - 1 ? "1px solid " + C.border : "none" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 13, color: C.accent, fontWeight: 700, paddingTop: 1 }) + '">' + a.ch + '%</div><div><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textPri, fontWeight: 600, letterSpacing: "0.04em" }) + '">' + a.city.toLocaleUpperCase("tr-TR") + ' · ' + MONTHS[a.month].toLocaleUpperCase("tr-TR") + '</div><div style="' + css({ fontSize: 12, color: C.textMut, marginTop: 3, lineHeight: 1.45 }) + '">' + a.n + '</div></div></div>'; }).join("");
     var legend = '<div style="' + css({ display: "flex", gap: 12, fontFamily: C.mono, fontSize: 10, color: C.textMut }) + '"><span style="' + css({ display: "flex", alignItems: "center", gap: 5 }) + '"><span style="' + css({ width: 10, height: 10, background: C.danger }) + '"></span>NEG</span><span style="' + css({ display: "flex", alignItems: "center", gap: 5 }) + '"><span style="' + css({ width: 10, height: 10, background: "rgba(255,255,255,0.05)" }) + '"></span>NÖTR</span><span style="' + css({ display: "flex", alignItems: "center", gap: 5 }) + '"><span style="' + css({ width: 10, height: 10, background: C.accent }) + '"></span>POZ</span></div>';
     return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, flexWrap: "wrap" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">04 · 5 BÜYÜK ŞEHİR · MEVSİMSEL ISI HARİTASI</span><span style="' + css({ height: 1, flex: 1, minWidth: 80, background: C.borderStrong }) + '"></span>' + legend + '</div>'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, flexWrap: "wrap" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">03 · 5 BÜYÜK ŞEHİR · MEVSİMSEL ISI HARİTASI</span><span style="' + css({ height: 1, flex: 1, minWidth: 80, background: C.borderStrong }) + '"></span>' + legend + '</div>'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1.5fr) minmax(0,1fr)", gap: 16 }) + '" class="nadas-heatmap-grid">'
       + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: 14 }) + '"><div style="' + css({ display: "grid", gridTemplateColumns: "90px repeat(12, minmax(28px, 1fr))", gap: 3 }) + '"><div></div>' + headCells + rows + '</div><div style="' + css({ marginTop: 12, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '">SON 12 AY · HÜCRE = TEMSİLÎ MEVSİMSEL DEĞİŞİM DESENİ · gerçek endeks: emlakekspertizi.com</div></div>'
       + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: 14 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 12 }) + '">ÖNE ÇIKAN HAREKETLER <span style="' + css({ color: C.warn }) + '">· temsilî örnek</span></div><div style="' + css({ display: "flex", flexDirection: "column", gap: 12 }) + '">' + anec + '</div></div>'
       + '</div></div></section>';
   }
 
-  /* ===== 05 · GRANÜLERLİK ===== */
+  /* ===== 04 · GRANÜLERLİK ===== */
   function GranularityPanel() {
     var levels = [["İL", "81", "Türkiye geneli — bölgesel agrege endeksler"], ["İLÇE", "973", "Her ilin tüm ilçeleri — yapı stoku, demografi, ekonomi"], ["MAHALLE/KÖY", "50.000+", "Aktif izlenen mahalle ve köyler — DNA çapalı"], ["CADDE / SOKAK", "✓", "Mikro lokasyon verisi — cephe, ulaşım, prestij"], ["PARSEL", "geliştirme", "Bina düzeyi metadata — kat, yaş, cephe yönü"]];
     var cards = levels.map(function (l, i) { return '<div style="' + css({ background: C.base, padding: "16px 16px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.12em", marginBottom: 6 }) + '">0' + (i + 1) + ' · ' + l[0] + '</div><div style="' + css({ fontSize: "2rem", fontWeight: 700, color: C.primary, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1, marginBottom: 8 }) + '">' + l[1] + '</div><p style="' + css({ fontSize: 12, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + l[2] + '</p></div>'; }).join("");
     return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">05 · VERİ GRANÜLERLİĞİ</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">İlden parsele, beş katman.</h2></div><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textFaint, letterSpacing: "0.08em" }) + '">HIERARCHICAL DEPTH</span></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">04 · VERİ GRANÜLERLİĞİ</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">İlden parsele, beş katman.</h2></div><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textFaint, letterSpacing: "0.08em" }) + '">HIERARCHICAL DEPTH</span></div>'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>'
       + '</div></section>';
   }
 
-  /* ===== 06 · 38 KATEGORİ ===== */
+  /* ===== 05 · 38 KATEGORİ ===== */
   function CategoryPanel() {
     var cards = Object.keys(CATEGORIES).map(function (k) {
       var items = CATEGORIES[k];
@@ -643,22 +760,22 @@
       return '<div style="' + css({ background: C.raised, padding: "14px 16px" }) + '"><div style="' + css({ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }) + '"><span style="' + css({ width: 8, height: 8, background: GROUP_COLOR[k] }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 11, fontWeight: 700, color: C.textPri, letterSpacing: "0.1em" }) + '">' + GROUP_LABEL[k].toLocaleUpperCase("tr-TR") + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, marginLeft: "auto" }) + '">' + items.length + ' ADET</span></div><div style="' + css({ display: "flex", flexWrap: "wrap", gap: 4 }) + '">' + chips + '</div></div>';
     }).join("");
     return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">06 · KAPSANAN VARLIK KATEGORİLERİ</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">38 varlık kategorisi, 5 ana grup</h2></div><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textFaint, letterSpacing: "0.08em" }) + '">SAT + KİRA AYRI ENDEKS</span></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">05 · KAPSANAN VARLIK KATEGORİLERİ</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">38 varlık kategorisi, 5 ana grup</h2></div><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textFaint, letterSpacing: "0.08em" }) + '">SAT + KİRA AYRI ENDEKS</span></div>'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>'
       + '</div></section>';
   }
 
-  /* ===== 07 · DNA ===== */
+  /* ===== 06 · DNA ===== */
   function DNAPanel() {
     var dims = [["SEGMENT", "L0-Gelişmekte → L4-Premium · gelir + yapı stoku bazlı 5 sınıf"], ["EVRİM SINIFI", "Bölgenin son 20 yıldaki dönüşüm karakteri (stabil/yükselen/düşen)"], ["LİDERLİK L0-L4", "Bölgesel pazar üzerindeki etki gücü (referans bölge mi)"], ["PRESTİJ SKORU", "0-100 · alıcı algısı + tarihsel fiyat primi"], ["MERKEZ END.", "Şehir merkezine yakınlık + ulaşım entegrasyonu"], ["TARİHİ DEĞER", "Tescilli yapı yoğunluğu, koruma alanı, kültür varlığı"], ["SANAYİ END.", "Sanayi alanı yakınlığı + işçi nüfusu yoğunluğu"], ["ARSA POTANSİYELİ", "Gelişmemiş arsa oranı + imar planı durumu"], ["KIRSALLIK", "Tarım/orman alanı oranı + yerleşim seyrekliği"], ["GAP / DOĞU TURİZMİ", "Bölge-özel: GAP projesi, Doğu turizmi etkisi"], ["SINIR TİCARETİ", "Sınır kapısı yakınlığı + ticari geçiş yoğunluğu"], ["ÜNİVERSİTE / GÖÇ", "Üniversite varlığı + iç/dış göç verileri"], ["NÜFUS ARTIŞ BP", "Yıllık nüfus değişim hızı (baz puan)"], ["MEVSİM GENLİĞİ", "Yaz/kış arasında talep ve fiyat oynaklığı"], ["OLAY MARKERLARI", "~600 markırla işlenmiş tarihsel olay etkisi"]];
     var cards = dims.map(function (d, i) { return '<div style="' + css({ background: C.base, padding: "12px 14px" }) + '"><div style="' + css({ display: "flex", alignItems: "center", gap: 6, marginBottom: 5 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.1em" }) + '">' + (i + 1 < 10 ? "0" : "") + (i + 1) + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.08em" }) + '">' + d[0] + '</span></div><p style="' + css({ fontSize: 11.5, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + d[1] + '</p></div>'; }).join("");
     return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">07 · DNA · DEMOGRAFİK ZENGİNLEŞTİRME</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Mahalle, sayı değil <span style="' + css({ color: C.primary }) + '">karakter</span>dir.</h2><p style="' + css({ marginTop: 10, fontSize: 14, lineHeight: 1.55, color: C.textSec, maxWidth: 760, margin: "10px 0 0" }) + '">v3.1 DNA katmanı, her mahalleyi 24 boyutlu vektörle tanımlar. ~5.500 DNA çapası bölgesel referans işlevi görür.</p></div><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textFaint, letterSpacing: "0.08em" }) + '">24 BOYUT · ~5.500 ÇAPA</span></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">06 · DNA · DEMOGRAFİK ZENGİNLEŞTİRME</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Mahalle, sayı değil <span style="' + css({ color: C.primary }) + '">karakter</span>dir.</h2><p style="' + css({ marginTop: 10, fontSize: 14, lineHeight: 1.55, color: C.textSec, maxWidth: 760, margin: "10px 0 0" }) + '">v3.1 DNA katmanı, her mahalleyi 24 boyutlu vektörle tanımlar. ~5.500 DNA çapası bölgesel referans işlevi görür.</p></div><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textFaint, letterSpacing: "0.08em" }) + '">24 BOYUT · ~5.500 ÇAPA</span></div>'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>'
       + '</div></section>';
   }
 
-  /* ===== 08 · KRONOLOJİ ===== */
+  /* ===== 07 · KRONOLOJİ ===== */
   function CompanyTimeline() {
     var ms = [
       ["2005", "İSTANBUL · İLK MAHALLE KAYITLARI", "Mahalle bazlı veri toplama Türkiye’de ilk kez Nadas tarafından başlatıldı. 5 çekirdek kategori (Daire-Sat, Daire-Kir, Konut İmarlı Arsa, Mağaza-Sat, Mağaza-Kir) ile golden rule katmanı kuruldu."],
@@ -671,33 +788,33 @@
     ];
     var rows = ms.map(function (m, i) { return '<div style="' + css({ display: "grid", gridTemplateColumns: "110px 1fr", gap: 16, padding: "14px 18px", borderBottom: i < ms.length - 1 ? "1px solid " + C.border : "none" }) + '" class="nadas-mile"><div style="' + css({ fontFamily: C.mono, fontSize: 14, fontWeight: 700, color: C.primary, letterSpacing: "0.04em", paddingTop: 2 }) + '">' + m[0] + '</div><div><div style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.textPri, fontWeight: 600, letterSpacing: "0.06em", marginBottom: 4 }) + '">' + m[1] + '</div><p style="' + css({ fontSize: 13.5, lineHeight: 1.55, color: C.textSec, margin: 0 }) + '">' + m[2] + '</p></div></div>'; }).join("");
     return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">08 · KRONOLOJİ</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.08em" }) + '">2005-01 → 2026-05</span></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">07 · KRONOLOJİ</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.08em" }) + '">2005-01 → 2026-05</span></div>'
       + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised }) + '">' + rows + '</div>'
       + '</div></section>';
   }
 
-  /* ===== 09 · YÖNTEM ===== */
+  /* ===== 08 · YÖNTEM ===== */
   function TwoColumnEditorial() {
     var steps = [["TOPLAMA", "Saha ekipleri, ilan veri akışları, demografi, imar/dönüşüm kayıtları, yerel aktör görüşmeleri. Cadde-sokak granülerliğine kadar inilir."], ["DOĞRULAMA", "Saha verisi internet verisiyle çapraz doğrulanır. Tutarsızlıklar tespit edilir, her noktaya güven skoru atanır."], ["MODELLEME", "Fiyatın yanına talep, arz, likidite, dönüş hızı, algı katmanlanır. ML/MML modeller ile davranış üretilir, DNA 24 boyutla zenginleştirilir."], ["YAYIN", "Çıktı EmlakEkspertizi platformuna ve kurumsal API’lere akar. Bireysel karar destek, kurumsal endeks ve canlı analizler."]];
     var rows = steps.map(function (s, i) { return '<div style="' + css({ display: "grid", gridTemplateColumns: "auto 1fr", gap: 12, paddingBottom: 12, borderBottom: i < 3 ? "1px solid " + C.border : "none" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 11, fontWeight: 700, color: C.primary, letterSpacing: "0.1em", paddingTop: 2 }) + '">0' + (i + 1) + '</span><div><div style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.textPri, letterSpacing: "0.08em", marginBottom: 4 }) + '">' + s[0] + '</div><p style="' + css({ fontSize: 14, lineHeight: 1.55, color: C.textSec, margin: 0 }) + '">' + s[1] + '</p></div></div>'; }).join("");
     return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1180, margin: "0 auto" }) + '">'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,2fr)", gap: 24, alignItems: "start" }) + '" class="nadas-twocol">'
-      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 10 }) + '">09 · YÖNTEM</div><h2 style="' + css({ fontSize: "clamp(1.5rem,3.8vw,2.2rem)", fontWeight: 700, margin: 0, lineHeight: 1.1, letterSpacing: "-0.02em", color: C.textPri }) + '">Veri kirliliği değil, <span style="' + css({ color: C.primary }) + '">veri hafızası.</span></h2></div>'
+      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 10 }) + '">08 · YÖNTEM</div><h2 style="' + css({ fontSize: "clamp(1.5rem,3.8vw,2.2rem)", fontWeight: 700, margin: 0, lineHeight: 1.1, letterSpacing: "-0.02em", color: C.textPri }) + '">Veri kirliliği değil, <span style="' + css({ color: C.primary }) + '">veri hafızası.</span></h2></div>'
       + '<div style="' + css({ display: "grid", gap: 12 }) + '">' + rows + '</div>'
       + '</div></div></section>';
   }
 
-  /* ===== 10 · KURUMSAL KULLANICILAR ===== */
+  /* ===== 09 · KURUMSAL KULLANICILAR ===== */
   function CorporateUsers() {
     var users = [["BANKALAR", "Teminat değerleme, portföy risk analizi, bölgesel kredilendirme — mahalle bazlı endeks akışı."], ["BELEDİYELER", "Kentsel dönüşüm planlaması, imar kararları, bölgesel kalkınma — DNA katmanı destekli."], ["SİGORTA", "Konum bazlı risk modellemesi, prim hesaplama, deprem/yangın hasar analizi."], ["YATIRIM FONLARI", "Bölgesel fırsat analizi, portföy çeşitlendirme, piyasa zamanlaması — 257 aylık seri."], ["EMLAK ZİNCİRLERİ", "Saha karar desteği, fiyat önerisi, talep yoğunluk haritaları — cadde-sokak detayında."], ["PROPTECH", "API entegrasyonu, veri akışı, dashboard ve hesaplama motoru — 38 kategori real-time."]];
     var cards = users.map(function (u) { return '<div style="' + css({ background: C.base, padding: "14px 16px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11.5, fontWeight: 700, color: C.primary, letterSpacing: "0.1em", marginBottom: 8 }) + '">' + u[0] + '</div><p style="' + css({ fontSize: 13, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + u[1] + '</p></div>'; }).join("");
     return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">10 · KURUMSAL KULLANICILAR</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Kararını veriye dayayan kurumlar için.</h2></div><a href="cozumler.html" style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, textDecoration: "none", letterSpacing: "0.08em" }) + '">TÜM ÇÖZÜMLER →</a></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">09 · KURUMSAL KULLANICILAR</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Kararını veriye dayayan kurumlar için.</h2></div><a href="cozumler.html" style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, textDecoration: "none", letterSpacing: "0.08em" }) + '">TÜM ÇÖZÜMLER →</a></div>'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>'
       + '</div></section>';
   }
 
-  /* ===== 11 · BU HAFTA ===== */
+  /* ===== 10 · BU HAFTA ===== */
   function FeaturedAnalysis() {
     var items = [
       { tag: "KİRA · İSTANBUL", title: "Daire-Kir momentum: 39 ilçe, 12A", lede: "İlçe bazlı talep yoğunluğu, dönüş hızları ve mevsim genliği analizi.", spark: [40, 52, 48, 65, 72, 68, 85, 92], time: "5 DK" },
@@ -711,7 +828,7 @@
       return '<a href="research.html" class="nadas-analysis-card" style="' + css({ display: "block", background: C.base, padding: 16, textDecoration: "none", color: "inherit" }) + '"><div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, letterSpacing: "0.12em" }) + '">' + a.tag + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.1em" }) + '">' + a.time + '</span></div><h3 style="' + css({ fontSize: 16, fontWeight: 600, lineHeight: 1.3, color: C.textPri, margin: "0 0 8px" }) + '">' + a.title + '</h3><p style="' + css({ fontSize: 13, lineHeight: 1.5, color: C.textMut, margin: "0 0 12px" }) + '">' + a.lede + '</p><svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" height="' + h + '" style="display:block"><path d="' + path + '" fill="none" stroke="' + C.primary + '" stroke-width="1.4"></path></svg></a>';
     }).join("");
     return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">11 · BU HAFTA</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Öne çıkan analizler</h2></div><a href="research.html" style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, textDecoration: "none", letterSpacing: "0.08em" }) + '">TÜM ARAŞTIRMALAR →</a></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">10 · BU HAFTA</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Öne çıkan analizler</h2></div><a href="research.html" style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, textDecoration: "none", letterSpacing: "0.08em" }) + '">TÜM ARAŞTIRMALAR →</a></div>'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 1, background: C.borderStrong, border: "1px solid " + C.borderStrong }) + '">' + cards + '</div>'
       + '</div></section>';
   }
@@ -719,7 +836,7 @@
   /* ===== MONTAJ (kanonik NX menü — ALTIN KURAL) ===== */
   function renderApp() {
     return NX.Ticker(HOMETICK) + NX.Masthead("") + NX.Nav("")
-      + PipelineHero() + HeroHeadline() + DataTerminalShell() + CategoryCompare() + CityHeatmap()
+      + PipelineHero() + HeroHeadline() + DataTerminalShell() + CityHeatmap()
       + GranularityPanel() + CategoryPanel() + DNAPanel() + CompanyTimeline()
       + TwoColumnEditorial() + CorporateUsers() + FeaturedAnalysis() + NX.Footer();
   }
