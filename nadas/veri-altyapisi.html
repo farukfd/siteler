@@ -331,34 +331,51 @@
   /* ===== C.1 PIPELINE ===== */
   function DataPipeline() {
     var stages = [
-      { code: "01", name: "SAHA EKİPLERİ", det: "81 il, 973 ilçe, mahalle ölçeği. Saha doğrulaması, yerel görüşmeler, fiziksel inceleme.", sym: "◉" },
-      { code: "02", name: "İNTERNET AKIŞI", det: "İlan platformları, açık veri portalları, kamu kayıtları. 7/24 crawler katmanı.", sym: "⌬" },
-      { code: "03", name: "NORMALİZASYON", det: "Standartlaştırma, deduplication, dönüştürme. Aylık agrege işlemleri.", sym: "⚙" },
-      { code: "04", name: "DOĞRULAMA", det: "Çapraz kontrol, anomaly detection, 0-100 güven skoru üretimi.", sym: "✓" },
-      { code: "05", name: "ML/MML İŞLEME", det: "Gerçek veritabanı üzerinde matematiksel işleme, DNA enrichment, hesaplama katmanı. Halüsinasyon yok.", sym: "Σ" },
-      { code: "06", name: "YAYIN KATMANI", det: "API, dashboard, kurumsal entegrasyon. EmlakEkspertizi.com'a akış.", sym: "→" },
+      { code: "01", name: "SAHA EKİPLERİ", col: C.primary, sym: "◉", det: "81 il, 973 ilçe, mahalle ölçeği; saha doğrulaması, yerel görüşme, fiziksel inceleme." },
+      { code: "02", name: "İNTERNET AKIŞI", col: C.primary, sym: "⌬", det: "İlan platformları, açık veri portalları, kamu kayıtları; 7/24 crawler katmanı." },
+      { code: "03", name: "NORMALİZASYON", col: C.warn, sym: "⚙", det: "Standartlaştırma, deduplication, dönüştürme; aylık agrege işlemleri." },
+      { code: "04", name: "DOĞRULAMA", col: C.accent, sym: "✓", det: "Çapraz kontrol, anomaly detection, 0-100 güven skoru üretimi." },
+      { code: "05", name: "ML/MML İŞLEME", col: C.violet, sym: "Σ", det: "Gerçek veritabanı üzerinde matematiksel işleme, DNA enrichment; halüsinasyon yok." },
+      { code: "06", name: "YAYIN KATMANI", col: C.accent, sym: "→", det: "API, dashboard, kurumsal entegrasyon; emlakekspertizi.com'a akış." }
     ];
     var body = '<div style="' + css({ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 8 }) + '">'
       + stages.map(function (s, i) {
-        var card = '<div style="' + css({ flex: "1 1 160px", border: "1px solid " + C.borderStrong, background: C.raised, padding: 14, position: "relative", overflow: "hidden" }) + '"><div style="' + css({ position: "absolute", top: 0, left: 0, height: 2, width: "100%", background: "linear-gradient(90deg, transparent, " + C.primary + ", transparent)", animation: "nadasFlow 2.4s linear " + (i * 0.3) + "s infinite" }) + '"></div><div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 11, fontWeight: 700, color: C.primary, letterSpacing: "0.1em" }) + '">' + s.code + '</span><span style="' + css({ fontSize: 18, color: C.primary, fontFamily: C.mono }) + '">' + s.sym + '</span></div><div style="' + css({ fontFamily: C.mono, fontSize: 11.5, fontWeight: 700, color: C.textPri, letterSpacing: "0.08em", marginBottom: 6 }) + '">' + s.name + '</div><p style="' + css({ fontSize: 12, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + s.det + '</p></div>';
-        var arrow = i < stages.length - 1 ? '<div style="' + css({ display: "flex", alignItems: "center", color: C.textFaint, fontSize: 14, padding: "0 2px" }) + '">→</div>' : '';
+        var card = '<div class="nadas-eco" style="' + css({ flex: "1 1 160px", border: "1px solid " + C.borderStrong, borderTop: "2px solid " + s.col, background: C.base, padding: "13px 15px", display: "flex", flexDirection: "column" }) + '">'
+          + '<div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }) + '"><span style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 14, fontWeight: 700, color: s.col, letterSpacing: "-0.01em" }) + '">' + s.code + '</span><span style="' + css({ fontSize: 16, color: s.col, fontFamily: C.mono, opacity: 0.7 }) + '">' + s.sym + '</span></div>'
+          + '<div style="' + css({ fontFamily: C.mono, fontSize: 11, fontWeight: 700, color: C.textPri, letterSpacing: "0.06em", marginBottom: 6 }) + '">' + s.name + '</div>'
+          + '<p style="' + css({ fontSize: 11.5, lineHeight: 1.5, color: C.textMut, margin: 0, flex: 1 }) + '">' + s.det + '</p></div>';
+        var arrow = i < stages.length - 1 ? '<div style="' + css({ display: "flex", alignItems: "center", color: C.textFaint, fontSize: 14, fontFamily: C.mono, padding: "0 1px" }) + '">→</div>' : '';
         return card + arrow;
       }).join("")
       + '</div>';
-    return SubSection("C.1", "Veri Pipeline — Sahadan API'ye 6 katman", "OPERATIONAL FLOW", body);
+    return SubSection("C.1", "Veri pipeline — sahadan API'ye 6 katman", "OPERATIONAL FLOW · TOPLAMA → İŞLEME → YAYIN", body);
   }
 
   /* ===== C.2 TECH STACK ===== */
   function TechStack() {
-    var items = [
-      ["WRITE PATH", "▦ PostgreSQL", "Master kayıt katmanı. ACID garantili yazma. Mahalle/yıl partition. JSONB DNA vektörleri.", "Hot tier"],
-      ["READ PATH", "◈ ClickHouse", "Sorgu motoru. Columnar storage, agrege ms-altı yanıt. Materialized view'lar.", "Read replica"],
-      ["İŞLEME LAYER", "Σ Python · ONNX", "Gerçek veri üzerinde ML/MML hesaplama. DNA enrichment, confidence skoring. Halüsinasyon üretmez, var olan veriyi işler.", "ML/MML"],
-      ["CDC STREAMING", "→ Debezium · Kafka", "Postgres → ClickHouse senkronizasyonu. Olay tetiklemeli yeniden hesaplama.", "<500ms"],
-      ["CACHING", "⚡ Redis edge", "Sık sorulan endeks ve özet veriler. TTL: kategori/period bazlı.", "Edge"],
-      ["GEOSPATIAL", "⌬ PostGIS", "Fay hattı, deniz/göl, AVM, okul, sağlık tesisi koordinatları. Mesafe hesaplamaları.", "Spatial"],
-    ].map(function (r) { return '<div style="' + css({ background: C.raised, padding: 16 }) + '"><div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.1em" }) + '">' + r[0] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.primary, padding: "2px 6px", border: "1px solid " + C.primary, borderRadius: 2, letterSpacing: "0.05em" }) + '">' + r[3] + '</span></div><div style="' + css({ fontFamily: C.mono, fontSize: 13, color: C.primary, fontWeight: 700, marginBottom: 8 }) + '">' + r[1] + '</div><p style="' + css({ fontSize: 12, lineHeight: 1.55, color: C.textMut, margin: 0 }) + '">' + r[2] + '</p></div>'; }).join("");
-    return SubSection("C.2", "Teknoloji yığını — hibrit mimari", "HOT/COLD STORAGE SEPARATION", '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + items + '</div>');
+    var groups = [
+      { title: "DEPOLAMA", note: "hot / cold storage separation", items: [
+        ["PostgreSQL", "▦", "Master write path · ACID garantili · mahalle/yıl partition · JSONB DNA vektörleri.", "Hot tier", C.primary],
+        ["ClickHouse", "◈", "Read path · columnar storage · ms-altı agrege · materialized view'lar.", "Read replica", C.accent],
+        ["PostGIS", "⌬", "Geospatial · fay hattı, deniz/göl, AVM, okul, sağlık koordinatları · mesafe hesabı.", "Spatial", C.violet]
+      ] },
+      { title: "İŞLEME", note: "ML/MML compute", items: [
+        ["Python · ONNX", "Σ", "Gerçek veri üzerinde matematiksel işleme · DNA enrichment · confidence skoring. Var olan veriyi işler, halüsinasyon üretmez.", "ML/MML", C.warn]
+      ] },
+      { title: "AKIŞ & ÖNBELLEK", note: "stream + cache", items: [
+        ["Debezium · Kafka", "→", "CDC streaming · Postgres → ClickHouse senkron · olay-tetiklemeli yeniden hesaplama.", "<500ms", C.primary],
+        ["Redis edge", "⚡", "Sık sorulan endeks ve özet veriler · TTL kategori/period bazlı.", "Edge", C.accent]
+      ] }
+    ];
+    var blocks = groups.map(function (g) {
+      var cards = g.items.map(function (r) {
+        return '<div class="nadas-eco" style="' + css({ background: C.base, border: "1px solid " + C.borderStrong, borderLeft: "2px solid " + r[4], padding: "14px 16px" }) + '">'
+          + '<div style="' + css({ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }) + '"><span style="' + css({ fontSize: 15, color: r[4], fontFamily: C.mono, opacity: 0.85 }) + '">' + r[1] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 13, color: r[4], fontWeight: 700, letterSpacing: "0.02em" }) + '">' + r[0] + '</span><span style="' + css({ marginLeft: "auto", fontFamily: C.mono, fontSize: 8.5, color: r[4], padding: "2px 7px", border: "1px solid " + r[4], borderRadius: 2, letterSpacing: "0.05em", whiteSpace: "nowrap" }) + '">' + r[3] + '</span></div>'
+          + '<p style="' + css({ fontSize: 12, lineHeight: 1.55, color: C.textMut, margin: 0 }) + '">' + r[2] + '</p></div>';
+      }).join("");
+      return '<div><div style="' + css({ display: "flex", alignItems: "center", gap: 10, margin: "0 0 10px" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, letterSpacing: "0.12em", fontWeight: 700 }) + '">' + g.title + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint }) + '">· ' + g.note + '</span><span style="' + css({ height: 1, flex: 1, background: C.border }) + '"></span></div><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(250px,1fr))", gap: 12 }) + '">' + cards + '</div></div>';
+    }).join("");
+    return SubSection("C.2", "Teknoloji yığını — hibrit mimari", "STORAGE · COMPUTE · STREAM AYRIMI", '<div style="' + css({ display: "flex", flexDirection: "column", gap: 18 }) + '">' + blocks + '</div>');
   }
 
   /* ===== C.3 ŞEMA ===== */
