@@ -769,30 +769,99 @@
     })(legs[i], legs[i].getAttribute("data-cmp-leg"));
   }
 
-  /* ===== 03 · ISI HARİTASI ===== */
-  function CityHeatmap() {
-    var cities = ["İstanbul", "Ankara", "İzmir", "Antalya", "Bursa"];
-    var anecdotes = [{ city: "Antalya", month: 7, ch: "+24.3", n: "Sezon piki — turistik kategori talep patlaması" }, { city: "İstanbul", month: 2, ch: "+18.6", n: "Kentsel dönüşüm bölgelerinde ilan artışı" }, { city: "Ankara", month: 9, ch: "+11.2", n: "Eğitim sezonu — kira piyasası canlandı" }, { city: "İzmir", month: 4, ch: "+8.9", n: "Sahil bandında yazlık talebi yükseldi" }, { city: "Bursa", month: 6, ch: "+7.4", n: "Sanayi imarlı arsa ilgisi" }];
-    var headCells = MONTHS.map(function (m) { return '<div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, textAlign: "center", letterSpacing: "0.05em" }) + '">' + m + '</div>'; }).join("");
-    var rows = cities.map(function (c, i) {
-      var cells = MONTHS.map(function (m, j) {
-        var v = Math.sin(i * 0.8 + j * 0.4 + 1.5) * Math.cos(i * 0.3 + j * 0.6);
-        var intensity = Math.abs(v);
-        var color = v > 0.15 ? "rgba(52,211,153," + (intensity * 0.9) + ")" : v < -0.15 ? "rgba(248,113,113," + (intensity * 0.9) + ")" : "rgba(255,255,255,0.04)";
-        var pct = (v * 18).toFixed(1);
-        return '<div title="' + c + ' · ' + MONTHS[j] + ' 2025-26 · ' + pct + '%" style="' + css({ aspectRatio: "1", background: color, cursor: "pointer", borderRadius: 2 }) + '"></div>';
-      }).join("");
-      return '<div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textMut, padding: "4px 8px 4px 0", textAlign: "right", letterSpacing: "0.04em" }) + '">' + c.toLocaleUpperCase("tr-TR") + '</div>' + cells;
-    }).join("");
-    var anec = anecdotes.map(function (a, i) { return '<div style="' + css({ display: "grid", gridTemplateColumns: "auto 1fr", gap: 10, paddingBottom: 10, borderBottom: i < anecdotes.length - 1 ? "1px solid " + C.border : "none" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 13, color: C.accent, fontWeight: 700, paddingTop: 1 }) + '">' + a.ch + '%</div><div><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textPri, fontWeight: 600, letterSpacing: "0.04em" }) + '">' + a.city.toLocaleUpperCase("tr-TR") + ' · ' + MONTHS[a.month].toLocaleUpperCase("tr-TR") + '</div><div style="' + css({ fontSize: 12, color: C.textMut, marginTop: 3, lineHeight: 1.45 }) + '">' + a.n + '</div></div></div>'; }).join("");
-    var legend = '<div style="' + css({ display: "flex", gap: 12, fontFamily: C.mono, fontSize: 10, color: C.textMut }) + '"><span style="' + css({ display: "flex", alignItems: "center", gap: 5 }) + '"><span style="' + css({ width: 10, height: 10, background: C.danger }) + '"></span>NEG</span><span style="' + css({ display: "flex", alignItems: "center", gap: 5 }) + '"><span style="' + css({ width: 10, height: 10, background: "rgba(255,255,255,0.05)" }) + '"></span>NÖTR</span><span style="' + css({ display: "flex", alignItems: "center", gap: 5 }) + '"><span style="' + css({ width: 10, height: 10, background: C.accent }) + '"></span>POZ</span></div>';
-    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, flexWrap: "wrap" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">03 · 5 BÜYÜK ŞEHİR · MEVSİMSEL ISI HARİTASI</span><span style="' + css({ height: 1, flex: 1, minWidth: 80, background: C.borderStrong }) + '"></span>' + legend + '</div>'
-      + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1.5fr) minmax(0,1fr)", gap: 16 }) + '" class="nadas-heatmap-grid">'
-      + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: 14 }) + '"><div style="' + css({ display: "grid", gridTemplateColumns: "90px repeat(12, minmax(28px, 1fr))", gap: 3 }) + '"><div></div>' + headCells + rows + '</div><div style="' + css({ marginTop: 12, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '">SON 12 AY · HÜCRE = TEMSİLÎ MEVSİMSEL DEĞİŞİM DESENİ · gerçek endeks: emlakekspertizi.com</div></div>'
-      + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: 14 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 12 }) + '">ÖNE ÇIKAN HAREKETLER <span style="' + css({ color: C.warn }) + '">· temsilî örnek</span></div><div style="' + css({ display: "flex", flexDirection: "column", gap: 12 }) + '">' + anec + '</div></div>'
-      + '</div></div></section>';
+  /* ===== 03 · 5 BÜYÜK ŞEHİR · CANLI ENDEKS KARŞILAŞTIRMASI =====
+     Her şehir amiral mahallesiyle (konut/satılık) temsil edilir; gerçek /endeks
+     verisine bağlı (m²/skor/delta/ilan). Anahtar yok / veri gelmezse dürüstçe temsilî. */
+  var CITY_FLAGSHIP = {
+    "İstanbul": { ilce: "Kadıköy", mah: "Caddebostan" },
+    "Ankara": { ilce: "Çankaya", mah: "Kavaklıdere" },
+    "İzmir": { ilce: "Konak", mah: "Alsancak" },
+    "Antalya": { ilce: "Muratpaşa", mah: "Lara" },
+    "Bursa": { ilce: "Nilüfer", mah: "Görükle" }
+  };
+  var CH_REAL = null;   /* null=sorulmadı · {} doldukça: city → {m2,score,delta,ilan,mah} | null */
+  function chLoadReal() {
+    if (CH_REAL) return;
+    CH_REAL = {};
+    if (!EMLAK_TENANT.tenant_key) { chRender(); return; }   /* anahtar yok → temsilî */
+    var cities = Object.keys(CITY_FLAGSHIP), pending = cities.length;
+    cities.forEach(function (city) {
+      var f = CITY_FLAGSHIP[city];
+      var q = "il=" + encodeURIComponent(city) + "&ilce=" + encodeURIComponent(f.ilce) + "&mahalle=" + encodeURIComponent(f.mah) + "&kategori=konut&durum=satilik";
+      var to = new Promise(function (res) { setTimeout(function () { res({ fallback: true }); }, 5000); });
+      Promise.race([proxApi("/api/v1/tenant/endeks?" + q), to]).then(function (r) {
+        CH_REAL[city] = (r && r.success === true && !r.fallback && r.data && +r.data.m2 > 0)
+          ? { m2: +r.data.m2, score: (typeof r.data.score === "number" ? r.data.score : null), delta: (typeof r.data.delta === "number" ? r.data.delta : null), ilan: (typeof r.data.ilan_sayisi === "number" ? r.data.ilan_sayisi : null), mah: f.ilce + "/" + f.mah }
+          : null;
+        if (--pending === 0) chRender();
+      });
+    });
   }
+  function chRender() {
+    var body = document.getElementById("ch-body"); if (body) body.innerHTML = chBody();
+    var dur = document.getElementById("ch-durum"); if (!dur) return;
+    var cities = Object.keys(CITY_FLAGSHIP);
+    var reals = CH_REAL ? cities.filter(function (c) { return CH_REAL[c]; }).length : 0;
+    var resolved = CH_REAL ? cities.filter(function (c) { return c in CH_REAL; }).length : 0;
+    var on = reals > 0;
+    var lbl = reals === cities.length ? "CANLI · GERÇEK ENDEKS" : reals > 0 ? "KISMEN CANLI · " + reals + "/" + cities.length : resolved >= cities.length ? "TEMSİLÎ ÖRNEK" : "YÜKLENİYOR…";
+    dur.innerHTML = '<span style="' + css({ width: 6, height: 6, borderRadius: 9999, background: on ? C.accent : C.warn, animation: on ? "nadasPulse 1.4s ease-in-out infinite" : "none" }) + '"></span>' + lbl;
+    dur.style.color = on ? C.accent : C.warn;
+  }
+  function chRow(city, d, maxM2) {
+    var has = d && d.m2 > 0;
+    var w = has ? Math.max(3, Math.round((d.m2 / maxM2) * 100)) : 0;
+    var scol = has && d.score != null ? (d.score >= 75 ? C.accent : d.score >= 50 ? C.primary : C.warn) : C.textFaint;
+    var sub = has ? d.mah : (CITY_FLAGSHIP[city].ilce + "/" + CITY_FLAGSHIP[city].mah);
+    return '<div style="' + css({ padding: "10px 12px", borderBottom: "1px solid " + C.border }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 6, flexWrap: "wrap" }) + '">'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 12, fontWeight: 700, color: C.textPri, letterSpacing: "0.06em", minWidth: 74 }) + '">' + city.toLocaleUpperCase("tr-TR") + '</span>'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint }) + '">' + sub + '</span>'
+      + '<span style="' + css({ marginLeft: "auto", fontFamily: "'Sora',sans-serif", fontSize: 16, fontWeight: 700, color: has ? C.textPri : C.textFaint, letterSpacing: "-0.02em" }) + '">' + (has ? "₺" + Math.round(d.m2).toLocaleString("tr-TR") : "—") + '</span>'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint }) + '">' + (has ? "/m²" : "") + '</span></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }) + '">'
+      + '<div style="' + css({ flexBasis: 160, flexGrow: 1, height: 6, background: "rgba(255,255,255,0.05)", borderRadius: 3, overflow: "hidden" }) + '"><div style="' + css({ height: 6, width: w + "%", background: scol, borderRadius: 3, transition: "width .5s" }) + '"></div></div>'
+      + (has && d.score != null ? '<span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: scol, fontWeight: 700 }) + '">skor ' + (Math.round(d.score * 10) / 10) + '</span>' : '')
+      + (has && d.delta != null ? '<span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: d.delta >= 0 ? C.accent : C.danger }) + '">' + (d.delta >= 0 ? "▲" : "▼") + Math.abs(d.delta).toFixed(1) + '%</span>' : '')
+      + (has && d.ilan != null ? '<span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textMut }) + '">' + d.ilan + ' ilan</span>' : '')
+      + '</div></div>';
+  }
+  function chBody() {
+    var cities = Object.keys(CITY_FLAGSHIP);
+    var got = cities.map(function (c) { return { c: c, d: (CH_REAL && (c in CH_REAL)) ? CH_REAL[c] : undefined }; });
+    var reals = got.filter(function (g) { return g.d && g.d.m2 > 0; });
+    var maxM2 = reals.length ? Math.max.apply(null, reals.map(function (g) { return g.d.m2; })) : 1;
+    var ranked = got.slice().sort(function (a, b) { return ((b.d && b.d.m2) || 0) - ((a.d && a.d.m2) || 0); });
+    var rows = ranked.map(function (g) { return chRow(g.c, g.d, maxM2); }).join("");
+    var hi;
+    if (reals.length) {
+      function hiCell(lbl, city, val, col) { return '<div style="' + css({ padding: "9px 0", borderBottom: "1px solid " + C.border }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 4 }) + '">' + lbl + '</div><div style="' + css({ display: "flex", alignItems: "baseline", gap: 8 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 12.5, fontWeight: 700, color: C.textPri }) + '">' + city.toLocaleUpperCase("tr-TR") + '</span><span style="' + css({ marginLeft: "auto", fontFamily: C.mono, fontSize: 13, fontWeight: 700, color: col }) + '">' + val + '</span></div></div>'; }
+      var byM2 = reals.slice().sort(function (a, b) { return b.d.m2 - a.d.m2; })[0];
+      var scoreArr = reals.filter(function (g) { return g.d.score != null; }).sort(function (a, b) { return b.d.score - a.d.score; });
+      var ilanArr = reals.filter(function (g) { return g.d.ilan != null; }).sort(function (a, b) { return b.d.ilan - a.d.ilan; });
+      hi = hiCell("EN YÜKSEK m²", byM2.c, "₺" + Math.round(byM2.d.m2).toLocaleString("tr-TR"), C.accent)
+        + (scoreArr[0] ? hiCell("EN YÜKSEK SKOR", scoreArr[0].c, "" + (Math.round(scoreArr[0].d.score * 10) / 10), C.primary) : "")
+        + (ilanArr[0] ? hiCell("EN ÇOK İLAN", ilanArr[0].c, "" + ilanArr[0].d.ilan, C.textPri) : "");
+    } else {
+      hi = '<div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textMut, lineHeight: 1.6 }) + '">Canlı veri yükleniyor… gelmezse dürüstçe temsilî örneğe düşülür.</div>';
+    }
+    return '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1.6fr) minmax(0,1fr)", gap: 16 }) + '" class="nadas-heatmap-grid">'
+      + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised }) + '">' + rows
+      + '<div style="' + css({ padding: "10px 12px", fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.04em", lineHeight: 1.6 }) + '">m² BARLARI EN YÜKSEĞE GÖRE ÖLÇEKLİ · her şehir amiral mahallesiyle (konut/satılık) temsil edilir · canlı ProX endeksi</div></div>'
+      + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: "4px 14px 12px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", padding: "10px 0 4px" }) + '">ÖNE ÇIKANLAR <span style="' + css({ color: C.textFaint, letterSpacing: 0 }) + '">· gerçek veriden</span></div>' + hi + '</div>'
+      + '</div>';
+  }
+  function CityComparison() {
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, flexWrap: "wrap" }) + '">'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">03 · 5 BÜYÜK ŞEHİR · CANLI ENDEKS</span>'
+      + '<h2 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 15, color: C.textPri, fontWeight: 600, margin: 0, display: "inline", letterSpacing: "-0.01em" }) + '">Amiral mahalle m² karşılaştırması</h2>'
+      + '<span style="' + css({ height: 1, flex: 1, minWidth: 40, background: C.borderStrong }) + '"></span>'
+      + '<span id="ch-durum" style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.warn, letterSpacing: "0.08em", display: "flex", alignItems: "center", gap: 6 }) + '"><span style="' + css({ width: 6, height: 6, borderRadius: 9999, background: C.warn }) + '"></span>YÜKLENİYOR…</span></div>'
+      + '<div id="ch-body">' + chBody() + '</div>'
+      + '</div></section>';
+  }
+  function mountCityComparison() { chLoadReal(); chRender(); }
 
   /* ===== 04 · GRANÜLERLİK ===== */
   function GranularityPanel() {
@@ -888,13 +957,14 @@
   /* ===== MONTAJ (kanonik NX menü — ALTIN KURAL) ===== */
   function renderApp() {
     return NX.Ticker(HOMETICK) + NX.Masthead("") + NX.Nav("")
-      + PipelineHero() + HeroHeadline() + DataTerminalShell() + CityHeatmap()
+      + PipelineHero() + HeroHeadline() + DataTerminalShell() + CityComparison()
       + GranularityPanel() + CategoryPanel() + DNAPanel() + CompanyTimeline()
       + TwoColumnEditorial() + CorporateUsers() + FeaturedAnalysis() + NX.Footer();
   }
 
   NX.boot(renderApp);
   mountTerminal();
+  mountCityComparison();
   mountPipeline();
 })();
 </script>
