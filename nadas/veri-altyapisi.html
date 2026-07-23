@@ -86,9 +86,10 @@
     ].map(function (s) {
       return '<div style="' + css({ background: C.raised, padding: "11px 14px" }) + '"><div style="' + css({ fontSize: 19, fontWeight: 700, color: C.primary, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + cu(s.n, s.suf) + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, marginTop: 5, letterSpacing: "0.08em" }) + '">' + s.lbl + '</div></div>';
     }).join("");
-    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px 18px", position: "relative", overflow: "hidden" }) + '">'
-      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 85% 30%, rgba(56,189,248,0.08), transparent 50%)" }) + '"></div>'
-      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "36px 16px 26px", position: "relative", overflow: "hidden", background: "linear-gradient(180deg,#06101B 0%,#040D18 55%,#020812 100%)" }) + '">'
+      + '<canvas id="infra-canvas" style="' + css({ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none" }) + '"></canvas>'
+      + '<div style="' + css({ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(120% 92% at 82% 18%, rgba(56,189,248,0.09), transparent 55%), linear-gradient(180deg, rgba(6,16,27,0.06), rgba(4,13,24,0.42))" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", zIndex: 1, maxWidth: 1280, margin: "0 auto" }) + '">'
       + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12, fontFamily: C.mono, fontSize: 10.5, letterSpacing: "0.12em", textTransform: "uppercase" }) + '"><span style="' + css({ color: C.primary }) + '">◆ VERİ ALTYAPISI</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span style="' + css({ color: C.textFaint }) + '">TÜRKİYE’NİN GAYRİMENKUL KARAR MERKEZİ</span></div>'
       + '<h1 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(2rem,5.5vw,3.4rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri, maxWidth: 1100 }) + '">Üç temel katman. 38 boyutlu mahalle DNA’sı. 7 milyon olay.<br><span style="' + css({ color: C.primary }) + '">Bir gayrimenkul karar merkezi.</span></h1>'
       + '<p style="' + css({ marginTop: 14, fontSize: 15.5, lineHeight: 1.55, color: C.textSec, maxWidth: 920 }) + '">Aylık timeseries · 38 boyutlu DNA demografik vektörü · 7M+ tarihsel olay markırı. PostgreSQL + ClickHouse hibrit mimari, ML/MML işleme katmanı, kurumsal API entegrasyonu. 480 milyon kayıtlık veri hafızası, 21 yıllık tarihsel zincir — 50 TB veri.</p>'
@@ -437,7 +438,77 @@
       + EmlakEkspertiziProduct() + NX.Footer();
   }
 
+  /* ===== HERO CANVAS · VERİ AKIŞI ANİMASYONU =====
+     3 katmanı temsil eden akan timeseries dalgaları (primary/violet/accent) + dalgalar
+     üzerinde giden parçacıklar (additive glow) + ince grid. Tek rAF; ekran dışında durur
+     (IntersectionObserver); prefers-reduced-motion'da tek statik kare çizer. */
+  function mountInfraHero() {
+    var cv = document.getElementById("infra-canvas");
+    if (!cv || !cv.getContext) return;
+    var wrap = cv.parentNode, ctx = cv.getContext("2d");
+    var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    var W = 0, H = 0, raf = 0, running = false, visible = true, t = 0, parts = [], sprites = {};
+    var WAVES = [
+      { col: C.primary, base: 0.40, amp: 0.11, f1: 1.4, f2: 3.1, sp: 1.00, op: 0.50, lw: 1.6 },
+      { col: C.violet, base: 0.54, amp: 0.09, f1: 1.1, f2: 2.4, sp: -0.80, op: 0.42, lw: 1.4 },
+      { col: C.accent, base: 0.67, amp: 0.08, f1: 1.7, f2: 3.6, sp: 1.30, op: 0.36, lw: 1.2 },
+      { col: C.primary, base: 0.28, amp: 0.06, f1: 2.0, f2: 4.2, sp: -1.15, op: 0.20, lw: 1.0 }
+    ];
+    function hexA(h, a) { var n = parseInt(h.slice(1), 16); return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; }
+    function sprite(color) {
+      if (sprites[color]) return sprites[color];
+      var r = 14, s = document.createElement("canvas"); s.width = s.height = r * 2;
+      var sc = s.getContext("2d"), g = sc.createRadialGradient(r, r, 0, r, r, r);
+      g.addColorStop(0, hexA(color, 0.9)); g.addColorStop(0.3, hexA(color, 0.5)); g.addColorStop(1, hexA(color, 0));
+      sc.fillStyle = g; sc.fillRect(0, 0, r * 2, r * 2); sprites[color] = s; return s;
+    }
+    function waveY(wv, xn) { return H * (wv.base + wv.amp * (Math.sin(xn * wv.f1 * 6.2832 + t * wv.sp) * 0.6 + Math.sin(xn * wv.f2 * 6.2832 - t * wv.sp * 0.7) * 0.4)); }
+    function seed() {
+      parts = []; var n = W < 700 ? 22 : 48;
+      for (var i = 0; i < n; i++) { var wi = i % WAVES.length; parts.push({ x: Math.random(), wv: wi, v: 0.0006 + Math.random() * 0.0012, r: 1.1 + Math.random() * 1.9, off: (Math.random() - 0.5) * 9 }); }
+    }
+    function build() {
+      W = wrap.clientWidth; H = wrap.clientHeight;
+      if (!W || !H) { requestAnimationFrame(build); return; }
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      cv.style.width = W + "px"; cv.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); seed(); draw();
+    }
+    function draw() {
+      var i, gx, gy, w2, xn, x, y;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = "rgba(255,255,255,0.028)"; ctx.lineWidth = 1;
+      for (gx = 0; gx <= W; gx += 48) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+      for (gy = 0; gy <= H; gy += 48) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+      var steps = Math.max(24, Math.floor(W / 14));
+      for (w2 = 0; w2 < WAVES.length; w2++) {
+        var wv = WAVES[w2]; ctx.beginPath();
+        for (i = 0; i <= steps; i++) { xn = i / steps; x = xn * W; y = waveY(wv, xn); if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); }
+        ctx.strokeStyle = hexA(wv.col, wv.op); ctx.lineWidth = wv.lw; ctx.stroke();
+      }
+      ctx.globalCompositeOperation = "lighter";
+      for (i = 0; i < parts.length; i++) {
+        var q = parts[i], wv2 = WAVES[q.wv]; x = q.x * W; y = waveY(wv2, q.x) + q.off;
+        var fade = 0.55 + 0.45 * Math.sin(q.x * Math.PI), rr = q.r * 4 * (0.6 + 0.4 * fade);
+        ctx.globalAlpha = fade; ctx.drawImage(sprite(wv2.col), x - rr, y - rr, rr * 2, rr * 2);
+      }
+      ctx.globalAlpha = 1; ctx.globalCompositeOperation = "source-over";
+    }
+    function tick() { t += 0.008; for (var i = 0; i < parts.length; i++) { parts[i].x += parts[i].v; if (parts[i].x > 1) parts[i].x -= 1; } draw(); raf = requestAnimationFrame(tick); }
+    function start() { if (running || reduce || !visible) return; running = true; raf = requestAnimationFrame(tick); }
+    function stop() { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
+    build();
+    var rt = 0; function relayout() { clearTimeout(rt); rt = setTimeout(build, 120); }
+    window.addEventListener("resize", relayout);
+    if (window.ResizeObserver) { try { new ResizeObserver(relayout).observe(wrap); } catch (e) {} }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+    if (window.IntersectionObserver) { try { new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) start(); else stop(); }, { threshold: 0 }).observe(wrap); } catch (e) {} }
+    start();
+  }
+
   NX.boot(renderApp);
+  mountInfraHero();
 
   // CountUp — görünür sekmede rAF, gizli sekmede setTimeout geri-dönüşü son değeri garanti eder
   (function () {
