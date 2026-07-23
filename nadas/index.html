@@ -771,8 +771,14 @@
     return header + '<div style="' + css({ padding: "10px 8px 4px" }) + '">' + svg + '</div><div style="' + css({ display: "flex", gap: 6, flexWrap: "wrap", padding: "4px 16px 14px" }) + '">' + legend + '</div>' + note;
   }
 
+  /* file:// uyarısı — tarayıcı, dosya kaynağından (null origin) API çağrısını CORS ile
+     engeller (sunucu 403). Sessizce temsilîye düşmek yerine nedeni açıkça söyle. */
+  function dtFileHint() {
+    if (location.protocol !== "file:") return "";
+    return '<div style="' + css({ padding: "9px 14px", background: "rgba(251,191,36,0.09)", borderBottom: "1px solid " + C.warn, fontFamily: C.mono, fontSize: 10.5, color: C.warn, letterSpacing: "0.01em", lineHeight: 1.55 }) + '">⚠ <b>file:// modundasınız</b> — tarayıcı canlı ProX API çağrısını CORS ile engelliyor (null origin), şu an <b>temsilî</b> gösteriliyor. Gerçek veri için siteyi <b>http:// üzerinden</b> açın: <code style="' + css({ color: C.textPri }) + '">python3 -m http.server 8799</code> → <code style="' + css({ color: C.primary }) + '">http://localhost:8799/nadas/index.html</code></div>';
+  }
   function buildTerminalCard() {
-    return dtCommandBar() + dtModeTabs() + (DT.mode === "karsilastir" ? dtCompareBody() : dtEndeksBody());
+    return dtFileHint() + dtCommandBar() + dtModeTabs() + (DT.mode === "karsilastir" ? dtCompareBody() : dtEndeksBody());
   }
 
   function DataTerminalShell() {
