@@ -281,7 +281,7 @@
         + '<div style="' + css({ fontFamily: C.mono, fontSize: 8, color: C.textFaint, lineHeight: 1.25 }) + '">' + o[2] + '</div></div></div>';
     }).join('<span style="' + css({ color: C.textFaint, alignSelf: "center" }) + '">›</span>');
     var stage = '<div id="rp-stage" style="' + css({ position: "relative", overflow: "hidden", border: "1px solid " + C.borderStrong, borderRadius: 5, background: "radial-gradient(130% 150% at 50% 22%, #191c1f 0%, #0b0d0f 48%, #060708 100%)", marginTop: 14 }) + '">'
-      + '<canvas id="rp-canvas" style="' + css({ display: "block", width: "100%", height: "clamp(240px,33vw,380px)" }) + '"></canvas>'
+      + '<canvas id="rp-canvas" style="' + css({ display: "block", width: "100%", height: "clamp(190px,26vw,310px)" }) + '"></canvas>'
       + '<div style="' + css({ position: "absolute", left: 14, top: 12, display: "flex", alignItems: "center", gap: 8, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.12em", fontWeight: 700, pointerEvents: "none" }) + '">◆ KAYNAK → MODEL → ÇIKTI</div>'
       + '<div style="' + css({ position: "absolute", right: 14, top: 12, display: "inline-flex", alignItems: "center", gap: 6, fontFamily: C.mono, fontSize: 8.5, color: C.accent, letterSpacing: "0.12em", pointerEvents: "none" }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>CANLI</div>'
       + '<div id="rp-cap" style="' + css({ position: "absolute", left: 14, bottom: 12, fontFamily: C.mono, fontSize: 9.5, color: C.textMut, letterSpacing: "0.04em", pointerEvents: "none" }) + '">▸ 480M+ kayıt · ProX motoruna akıyor</div></div>';
@@ -320,7 +320,7 @@
     function poly(p, close) { ctx.beginPath(); for (var i = 0; i < p.length; i++) { if (i === 0) ctx.moveTo(p[i].x, p[i].y); else ctx.lineTo(p[i].x, p[i].y); } if (close) ctx.closePath(); }
     function rrect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
     function layout() {
-      U = Math.max(13, Math.min(W / 17.5, H / 6.2));
+      U = Math.max(12, Math.min(W / 20, H / 6.8));
       CX = W / 2; BASEY = H * 0.52;
       var sp = Math.min(W * 0.5 - U * 1.5, U * 6.6);
       A = {
@@ -360,7 +360,7 @@
       poly([a, b, d, e], true); ctx.strokeStyle = hexA(A_MID, 0.5); ctx.lineWidth = 1.1; ctx.stroke(); ctx = c;
     }
     function padGlow(an, pr, inten) {
-      var g = ctx.createRadialGradient(an.x, an.y, 0, an.x, an.y, pr * U); g.addColorStop(0, hexA(A_HI, 0.22 + 0.2 * inten)); g.addColorStop(0.4, hexA(A_MID, 0.12)); g.addColorStop(1, hexA(A_MID, 0));
+      var g = ctx.createRadialGradient(an.x, an.y, 0, an.x, an.y, pr * U); g.addColorStop(0, hexA(A_HI, 0.15 + 0.15 * inten)); g.addColorStop(0.4, hexA(A_MID, 0.07)); g.addColorStop(1, hexA(A_MID, 0));
       ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(an.x, an.y, pr * U, pr * U * 0.54, 0, 0, TAU); ctx.fill();
     }
     // ---- zemin yansıması sarmalayıcı ----
@@ -419,7 +419,7 @@
       function C3(sx, sy, sz) { return P(an, sx * he, yc + sy * he, sz * he); }
       var TA = C3(-1, 1, -1), TB = C3(1, 1, -1), TC = C3(1, 1, 1), TD = C3(-1, 1, 1), BA = C3(-1, -1, -1), BB = C3(1, -1, -1), BC = C3(1, -1, 1), BD = C3(-1, -1, 1);
       // taban enerji ışığı
-      if (!refl) { var baseC = P(an, 0, yc - he, 0); ctx.save(); ctx.globalCompositeOperation = "lighter"; var bg = ctx.createRadialGradient(baseC.x, baseC.y, 0, baseC.x, baseC.y, he * U * 2.3); bg.addColorStop(0, hexA(A_HI, 0.42 + 0.3 * glow)); bg.addColorStop(0.4, hexA(A_MID, 0.16)); bg.addColorStop(1, hexA(A_MID, 0)); ctx.fillStyle = bg; ctx.beginPath(); ctx.ellipse(baseC.x, baseC.y, he * U * 2.1, he * U * 0.95, 0, 0, TAU); ctx.fill(); ctx.restore(); }
+      if (!refl) { var baseC = P(an, 0, yc - he, 0); ctx.save(); ctx.globalCompositeOperation = "lighter"; var bg = ctx.createRadialGradient(baseC.x, baseC.y, 0, baseC.x, baseC.y, he * U * 1.55); bg.addColorStop(0, hexA(A_HI, 0.24 + 0.18 * glow)); bg.addColorStop(0.45, hexA(A_MID, 0.08)); bg.addColorStop(1, hexA(A_MID, 0)); ctx.fillStyle = bg; ctx.beginPath(); ctx.ellipse(baseC.x, baseC.y, he * U * 1.45, he * U * 0.58, 0, 0, TAU); ctx.fill(); ctx.restore(); }
       // arka cam
       ctx.fillStyle = hexA(A_MID, 0.03); poly([TA, BA, BB, TB], true); ctx.fill(); poly([TA, BA, BD, TD], true); ctx.fill();
       ctx.strokeStyle = hexA(A_MID, 0.16); ctx.lineWidth = 0.8; poly([TA, BA], false); ctx.stroke();
@@ -459,9 +459,9 @@
     function qAt(c, u) { var iu = 1 - u; return { x: iu * iu * c.p0.x + 2 * iu * u * c.pc.x + u * u * c.p1.x, y: iu * iu * c.p0.y + 2 * iu * u * c.pc.y + u * u * c.p1.y }; }
     function drawCable(c, idx) {
       ctx.lineCap = "round";
-      cablePath(c); ctx.strokeStyle = hexA(A_LO, 0.85); ctx.lineWidth = U * 0.16 + 5; ctx.stroke();
-      cablePath(c); ctx.strokeStyle = hexA(A_MID, 0.9); ctx.lineWidth = U * 0.16; ctx.stroke();
-      cablePath(c); ctx.strokeStyle = hexA(A_HI, 0.85); ctx.lineWidth = U * 0.16 * 0.42; ctx.stroke();
+      cablePath(c); ctx.strokeStyle = hexA(A_LO, 0.8); ctx.lineWidth = U * 0.12 + 3.5; ctx.stroke();
+      cablePath(c); ctx.strokeStyle = hexA(A_MID, 0.9); ctx.lineWidth = U * 0.12; ctx.stroke();
+      cablePath(c); ctx.strokeStyle = hexA(A_HI, 0.85); ctx.lineWidth = U * 0.12 * 0.42; ctx.stroke();
       ctx.save(); ctx.globalCompositeOperation = "lighter";
       for (var k = 0; k < 2; k++) { var u = ((t * 0.3 + idx * 0.17 + k * 0.5) % 1), p = qAt(c, u), s = Math.sin(u * Math.PI), rr = U * 0.34; ctx.globalAlpha = 0.85 * s; ctx.drawImage(sprite(A_HI), p.x - rr, p.y - rr, rr * 2, rr * 2); ctx.fillStyle = A_WHT; ctx.globalAlpha = 0.95 * s; ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, TAU); ctx.fill(); }
       ctx.restore(); ctx.lineCap = "butt";
@@ -471,9 +471,9 @@
       bgLayer = document.createElement("canvas"); bgLayer.width = Math.max(1, Math.round(W * dpr)); bgLayer.height = Math.max(1, Math.round(H * dpr));
       var g = bgLayer.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0);
       // zemin ışık havuzu
-      var fp = g.createRadialGradient(CX, BASEY + U * 0.6, 0, CX, BASEY + U * 0.6, W * 0.6); fp.addColorStop(0, "rgba(40,60,20,0.14)"); fp.addColorStop(0.5, "rgba(20,30,12,0.05)"); fp.addColorStop(1, "rgba(0,0,0,0)"); g.fillStyle = fp; g.fillRect(0, 0, W, H);
+      var fp = g.createRadialGradient(CX, BASEY + U * 0.6, 0, CX, BASEY + U * 0.6, W * 0.55); fp.addColorStop(0, "rgba(40,60,20,0.1)"); fp.addColorStop(0.5, "rgba(20,30,12,0.035)"); fp.addColorStop(1, "rgba(0,0,0,0)"); g.fillStyle = fp; g.fillRect(0, 0, W, H);
       // ince zemin ızgarası (perspektif)
-      g.strokeStyle = "rgba(150,200,120,0.05)"; g.lineWidth = 1; var horizon = BASEY + U * 0.2;
+      g.strokeStyle = "rgba(150,200,120,0.032)"; g.lineWidth = 1; var horizon = BASEY + U * 0.2;
       for (var i = -8; i <= 8; i++) { g.beginPath(); g.moveTo(CX + i * U * 0.5, horizon); g.lineTo(CX + i * U * 3.4, H + 20); g.stroke(); }
       for (var r = 1; r <= 6; r++) { var yy = horizon + Math.pow(r / 6, 1.8) * (H - horizon + 10); g.beginPath(); g.moveTo(0, yy); g.lineTo(W, yy); g.globalAlpha = 0.5; g.stroke(); g.globalAlpha = 1; }
       var oc = ctx; ctx = g;
