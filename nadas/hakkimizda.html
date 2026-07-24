@@ -505,8 +505,19 @@
     var RX0 = 0, Rtop = 0, Rbot = 0, FW = 0, NB = 7, DX = 0, DY = 0;
     var FIB = [], parts = [], PN = 0;
     // küp içi simetrik oktahedron kafes
-    var NODES = [[0, 0, 0], [0.72, 0.55, -0.72], [-0.72, 0.55, 0.72], [0.72, -0.55, -0.72], [-0.72, -0.55, 0.72], [0, 0.9, 0], [0, -0.9, 0]];
-    var EDGES = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [5, 1], [5, 2], [6, 3], [6, 4], [1, 3], [2, 4]];
+    // ProX modeli: ML motoru (üst) + MML motoru (alt) → ProX çekirdeği; giriş düğümleri (sağ, altın veri girişi)
+    var NODES = [
+      [0, 0, 0],                                                                      // 0 · ProX çekirdek
+      [-0.62, 0.58, -0.3], [-0.5, 0.32, 0.42], [-0.14, 0.66, 0.26], [0.18, 0.5, -0.2], // 1-4 · ML
+      [-0.62, -0.58, 0.3], [-0.5, -0.32, -0.42], [-0.14, -0.66, -0.26], [0.18, -0.5, 0.2], // 5-8 · MML
+      [0.7, 0.2, 0.24], [0.7, -0.2, -0.24], [0.64, 0, 0.36]                            // 9-11 · giriş
+    ];
+    var EDGES = [
+      [1, 3], [2, 3], [3, 4], [4, 0], [1, 4], [2, 0],
+      [5, 7], [6, 7], [7, 8], [8, 0], [5, 8], [6, 0],
+      [9, 1], [9, 5], [10, 2], [10, 6], [11, 4], [11, 8], [9, 0], [10, 0]
+    ];
+    var ML_IDX = [1, 2, 3, 4], MML_IDX = [5, 6, 7, 8];
     function hexA(h, a) { var n = parseInt(h.slice(1), 16); return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; }
     var sprites = {};
     function sprite(color) {
@@ -580,20 +591,35 @@
       var bg = ctx.createRadialGradient(Cx, Cy, 0, Cx, Cy, HE * 2.0); bg.addColorStop(0, hexA(GRN, 0.15 + 0.12 * glow)); bg.addColorStop(0.5, hexA(GRN, 0.04)); bg.addColorStop(1, hexA(GRN, 0)); ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(Cx, Cy, HE * 2.0, 0, TAU); ctx.fill(); ctx.restore();
       // arka cam
       ctx.fillStyle = hexA(GRN, 0.04); poly([TA, BA, BB, TB], true); ctx.fill(); poly([TA, BA, BD, TD], true); ctx.fill();
-      // kafes
-      var pts = NODES.map(function (n) { return pc(n[0] * 0.82, n[1] * 0.82, n[2] * 0.82); });
+      // ---- ProX modeli: ML + MML motorları → ProX çekirdeği ----
+      var pts = NODES.map(function (n) { return pc(n[0] * 0.84, n[1] * 0.84, n[2] * 0.84); });
       ctx.save(); ctx.globalCompositeOperation = "lighter";
-      ctx.strokeStyle = hexA(GRN_HI, 0.16 + 0.12 * glow); ctx.lineWidth = 1; ctx.beginPath();
-      for (var e = 0; e < EDGES.length; e++) { var a = pts[EDGES[e][0]], b = pts[EDGES[e][1]]; ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); } ctx.stroke();
-      for (var i = 1; i < pts.length; i++) { var rr = 4; ctx.globalAlpha = 0.55; ctx.drawImage(sprite(GRN), pts[i].x - rr, pts[i].y - rr, rr * 2, rr * 2); }
-      var crr = 9 + 5 * glow + 2 * pulse; ctx.globalAlpha = 0.92; ctx.drawImage(sprite(GRN), pts[0].x - crr, pts[0].y - crr, crr * 2, crr * 2);
-      ctx.globalAlpha = 0.95; ctx.fillStyle = GRN_CORE; ctx.beginPath(); ctx.arc(pts[0].x, pts[0].y, 2, 0, TAU); ctx.fill(); ctx.restore();
+      // kenarlar + kenar üzerinde çekirdeğe akan sinyaller (ileri geçiş)
+      for (var e = 0; e < EDGES.length; e++) {
+        var a = pts[EDGES[e][0]], b = pts[EDGES[e][1]];
+        ctx.strokeStyle = hexA(GRN, 0.1 + 0.06 * glow); ctx.lineWidth = 0.7; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+        var u = (t * 0.62 + e * 0.317) % 1, sx = a.x + (b.x - a.x) * u, sy = a.y + (b.y - a.y) * u, s2 = 0.4 + 0.6 * Math.sin(u * Math.PI), pr = 2.2 * s2;
+        ctx.globalAlpha = 0.85 * s2; ctx.drawImage(sprite(GRN_HI), sx - pr * 2, sy - pr * 2, pr * 4, pr * 4);
+      }
+      // düğümler (giriş sönük, ML/MML orta, çekirdek parlak)
+      ctx.globalAlpha = 1;
+      for (var i = 1; i < pts.length; i++) { var isIn = i >= 9, rr = isIn ? 2.6 : 3.6; ctx.globalAlpha = isIn ? 0.5 : 0.75; ctx.drawImage(sprite(GRN), pts[i].x - rr, pts[i].y - rr, rr * 2, rr * 2); ctx.globalAlpha = 0.9; ctx.fillStyle = GRN_CORE; ctx.beginPath(); ctx.arc(pts[i].x, pts[i].y, 1.1, 0, TAU); ctx.fill(); }
+      var crr = 8 + 5 * glow + 2.5 * pulse; ctx.globalAlpha = 0.95; ctx.drawImage(sprite(GRN_HI), pts[0].x - crr, pts[0].y - crr, crr * 2, crr * 2);
+      ctx.globalAlpha = 1; ctx.fillStyle = GRN_CORE; ctx.beginPath(); ctx.arc(pts[0].x, pts[0].y, 2.4, 0, TAU); ctx.fill();
+      ctx.restore();
       // ön cam + kenarlar
       ctx.fillStyle = hexA(GRN, 0.07 + 0.05 * glow); poly([TD, TC, BC, BD], true); ctx.fill(); poly([TB, TC, BC, BB], true); ctx.fill();
       poly([TA, TB, TC, TD], true); ctx.fillStyle = hexA(GRN, 0.1 + 0.07 * glow); ctx.fill();
       ctx.lineWidth = 1.3; ctx.strokeStyle = hexA(GRN_HI, 0.5 + 0.3 * glow); poly([TA, TB, TC, TD], true); ctx.stroke();
       ctx.strokeStyle = hexA(GRN_HI, 0.5); ctx.beginPath(); ctx.moveTo(TC.x, TC.y); ctx.lineTo(BC.x, BC.y); ctx.stroke();
       ctx.strokeStyle = hexA(GRN, 0.32); ctx.beginPath(); ctx.moveTo(TB.x, TB.y); ctx.lineTo(BB.x, BB.y); ctx.moveTo(TD.x, TD.y); ctx.lineTo(BD.x, BD.y); ctx.stroke();
+      // ---- holografik etiketler: ML · MML · ProX (sabit, ayrık bölgeler) ----
+      var fs = Math.max(8, Math.round(HE * 0.18)); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      function tag(txt, x, y, col, sz) { ctx.font = "700 " + sz + "px " + C.mono; ctx.shadowColor = col; ctx.shadowBlur = 7; ctx.fillStyle = col; ctx.fillText(txt, x, y); ctx.shadowBlur = 0; }
+      tag("ML", Cx - HE * 0.52, Cy - HE * 0.58, GRN_HI, fs);
+      tag("MML", Cx - HE * 0.52, Cy + HE * 0.58, GRN_HI, fs);
+      tag("ProX", Cx + HE * 0.06, Cy - HE * 0.4, GRN_CORE, Math.round(fs * 1.1));
+      ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
     }
     // ---- statik: bg parıltı + raflar + soluk fiber demeti ----
     function buildScene() {
