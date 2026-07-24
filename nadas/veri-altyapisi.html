@@ -121,12 +121,18 @@
       + '<canvas id="infra-canvas" style="' + css({ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none" }) + '"></canvas>'
       + '<div style="' + css({ position: "relative", zIndex: 2, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 12, paddingBottom: 8, borderBottom: "1px solid " + C.border }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.1em", fontWeight: 700, whiteSpace: "nowrap" }) + '">◆ VERİ AKIŞ HATTI</span><span style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: C.mono, fontSize: 8.5, color: C.accent, letterSpacing: "0.1em", whiteSpace: "nowrap" }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>CANLI</span></div>'
       + '<div style="' + css({ position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "minmax(84px,0.8fr) minmax(118px,300px) minmax(84px,0.8fr)", gap: "8px 6px", alignItems: "stretch", minHeight: 320 }) + '">' + srcCol + coreCol + outCol + '</div>'
-      + '<div id="infra-feed" style="' + css({ position: "relative", zIndex: 2, marginTop: 12, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", padding: "8px 12px", background: "rgba(6,16,27,0.55)", border: "1px solid " + C.borderStrong, borderLeft: "2px solid " + C.accent, borderRadius: 3, fontFamily: C.mono, fontSize: 10.5 }) + '">'
+      + '<div id="infra-feed" style="' + css({ position: "relative", zIndex: 2, marginTop: 12, padding: "9px 12px", background: "rgba(6,16,27,0.6)", border: "1px solid " + C.borderStrong, borderLeft: "2px solid " + C.accent, borderRadius: 3, fontFamily: C.mono, fontSize: 10.5, display: "flex", flexDirection: "column", gap: 6 }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }) + '">'
       + '<span style="' + css({ color: C.accent, fontWeight: 700, letterSpacing: "0.08em", whiteSpace: "nowrap" }) + '">▸ İŞLENİYOR</span>'
       + '<span id="feed-loc" style="' + css({ color: C.textPri, fontWeight: 700, letterSpacing: "0.02em" }) + '">İstanbul › Kadıköy › Caddebostan › Bağdat Cd.</span>'
       + '<span id="feed-m2" style="' + css({ color: C.primary, fontWeight: 700, whiteSpace: "nowrap" }) + '">₺148.200/m²</span>'
-      + '<span id="feed-demo" style="' + css({ color: C.textMut, whiteSpace: "nowrap" }) + '">yaş 41 · hane 2.3 · prestij L4</span>'
-      + '<span style="' + css({ marginLeft: "auto", color: C.textFaint, fontSize: 9, letterSpacing: "0.06em", whiteSpace: "nowrap" }) + '">● temsilî akış · gerçek konumlar</span></div>'
+      + '<span id="feed-demo" style="' + css({ color: C.textMut, whiteSpace: "nowrap" }) + '">yaş 41 · hane 2.3 · prestij L4</span></div>'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", paddingTop: 6, borderTop: "1px solid " + C.border, fontSize: 10 }) + '">'
+      + '<span style="' + css({ color: C.violet, fontWeight: 700, letterSpacing: "0.06em", whiteSpace: "nowrap" }) + '">◈ ML·MML HESAPLIYOR</span>'
+      + '<span id="feed-dim" style="' + css({ color: C.accent, fontWeight: 700, whiteSpace: "nowrap" }) + '">DNA 09/38 · LİKİDİTE</span>'
+      + '<span style="' + css({ color: C.textFaint, whiteSpace: "nowrap" }) + '">işlenen <span id="feed-proc" style="' + css({ color: C.textSec, fontWeight: 700 }) + '">480.241.883</span></span>'
+      + '<span style="' + css({ color: C.textFaint, whiteSpace: "nowrap" }) + '">güven <span id="feed-conf" style="' + css({ color: C.accent, fontWeight: 700 }) + '">%92</span></span>'
+      + '<span style="' + css({ marginLeft: "auto", color: C.textFaint, fontSize: 9, letterSpacing: "0.06em", whiteSpace: "nowrap" }) + '">● temsilî akış · gerçek konumlar</span></div></div>'
       + '<div style="' + css({ position: "relative", zIndex: 2, marginTop: 13, paddingTop: 11, borderTop: "1px solid " + C.border }) + '">'
       + '<div id="infra-cap" aria-live="polite" style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textSec, letterSpacing: "0.03em", minHeight: 15, lineHeight: 1.4 }) + '">6 kaynaktan ham veri akıyor · web · saha · kamu · TÜİK · mevzuat · belediye</div>'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 6, marginTop: 9 }) + '">'
@@ -759,6 +765,10 @@
       ["Kocaeli › İzmit › Yahya Kaptan › 5. Cad.", "₺28.700/m²", "yaş 35 · hane 3.0 · prestij L2"]
     ];
     function cycleFeed() { if (!feedLoc) return; var r = FEED[feedIdx]; feedLoc.textContent = r[0]; feedM2.textContent = r[1]; feedDemo.textContent = r[2]; }
+    var feedDim = document.getElementById("feed-dim"), feedProc = document.getElementById("feed-proc"), feedConf = document.getElementById("feed-conf");
+    var DIM = ["NÜFUS YOĞUNLUĞU", "YAŞ DAĞILIMI", "HANE BÜYÜKLÜĞÜ", "EĞİTİM DÜZEYİ", "GELİR SEVİYESİ", "GÖÇ HAREKETİ", "M² FİYAT", "KİRA ÇARPANI", "LİKİDİTE", "DÖNÜŞ HIZI", "TALEP YOĞUNLUĞU", "ARZ STOKU", "FİYAT TRENDİ", "GETİRİ · ROI", "YAPI STOKU YAŞI", "YAPI KALİTESİ", "DOLULUK ORANI", "BOŞ KONUT ORANI", "SİTE/PROJE ORANI", "İMAR DURUMU", "YOĞUNLUK KAT-S", "ARSA POTANSİYELİ", "DÖNÜŞÜM AKTİVİTE", "RUHSAT YOĞUNLUĞU", "METRO ERİŞİM", "ANA ARTER MESAFE", "MERKEZ MESAFE", "TOPLU TAŞIMA", "SOSYAL DONATI", "YEŞİL ALAN", "SAHİL/MANZARA", "PRESTİJ ENDEKSİ", "GÜVENLİK", "DEPREM RİSKİ", "ZEMİN DURUMU", "SEL/TAŞKIN RİSKİ", "MEVSİMSELLİK", "OLAY ETKİSİ"];
+    var dimIdx = 8, dimLast = 0, procN = 480241883, procF = 0, confLast = 0;
+    function pad2(n) { return n < 10 ? "0" + n : "" + n; }
 
     var W = 0, H = 0, dpr = 1, raf = 0, running = false, visible = true;
     var STEP = 1 / 60, acc = 0, last = 0, t = 0, frameN = 0;
@@ -838,6 +848,9 @@
       curProg = (lt - cum) / ACTS[ai].dur;
       if (ai !== curAct) { curAct = ai; if (capEl) capEl.textContent = ACTS[ai].cap; }
       if (t - feedLast > 1.35) { feedLast = t; feedIdx = (feedIdx + 1) % FEED.length; cycleFeed(); }
+      if (t - dimLast > 0.5) { dimLast = t; dimIdx = (dimIdx + 1) % DIM.length; if (feedDim) feedDim.textContent = "DNA " + pad2(dimIdx + 1) + "/38 · " + DIM[dimIdx]; }
+      procN += dt * 14.2; if ((procF++ % 7) === 0 && feedProc) feedProc.textContent = Math.floor(procN).toLocaleString("tr-TR");
+      if (t - confLast > 1.6) { confLast = t; if (feedConf) feedConf.textContent = "%" + (90 + Math.round(2 + 2 * Math.sin(t * 0.7))); }
       dnaFill += (((ai === 3) ? 1 : 0.4) - dnaFill) * Math.min(1, dt * 1.6);
       emitAcc += dt * (ai === 0 ? 34 : 20);
       while (emitAcc >= 1) { emitAcc -= 1; if (srcs.length) emit((Math.random() * srcs.length) | 0); }
@@ -876,11 +889,13 @@
       var Rd = R * 0.74, sweep = (t * 0.9) % TAU;
       for (i = 0; i < 38; i++) {
         var da = t * 0.18 + i / 38 * TAU, near = Math.abs(((da - sweep + Math.PI * 3) % TAU) - Math.PI);
-        var hl = near < 0.4 ? (0.4 - near) / 0.4 : 0;
-        var len = (3 + 7 * (0.4 + 0.6 * Math.abs(Math.sin(i * 1.27)))) * (0.4 + 0.6 * dnaFill);
-        var aa = 0.20 + 0.55 * dnaFill + 0.5 * hl, r1 = Rd, r2 = Rd + len;
-        ctx.strokeStyle = hexA(C.accent, Math.min(0.95, aa)); ctx.lineWidth = 1.6 + 1.4 * hl;
+        var hl = near < 0.4 ? (0.4 - near) / 0.4 : 0, cur = (i === dimIdx);
+        var len = (3 + 7 * (0.4 + 0.6 * Math.abs(Math.sin(i * 1.27)))) * (0.4 + 0.6 * dnaFill); if (cur) len *= 1.9;
+        var aa = 0.20 + 0.55 * dnaFill + 0.5 * hl; if (cur) aa += 0.55;
+        var r1 = Rd, r2 = Rd + len;
+        ctx.strokeStyle = hexA(cur ? "#EAF6FF" : C.accent, Math.min(1, aa)); ctx.lineWidth = 1.6 + 1.4 * hl + (cur ? 1.6 : 0);
         ctx.beginPath(); ctx.moveTo(cx + r1 * Math.cos(da), cy + r1 * Math.sin(da)); ctx.lineTo(cx + r2 * Math.cos(da), cy + r2 * Math.sin(da)); ctx.stroke();
+        if (cur) { ctx.fillStyle = hexA(C.accent, 0.9); ctx.beginPath(); ctx.arc(cx + r2 * Math.cos(da), cy + r2 * Math.sin(da), 2.2, 0, TAU); ctx.fill(); }
       }
       // çekirdek orb
       var Rc = R * 0.32 * (1 + 0.05 * pulse + 0.08 * coreFlash);
