@@ -242,8 +242,8 @@
     function sprite(color){ if(sprites[color])return sprites[color]; var r=20,s=document.createElement("canvas"); s.width=s.height=r*2; var sc=s.getContext("2d"),g=sc.createRadialGradient(r,r,0,r,r,r); g.addColorStop(0,hexA(color,1)); g.addColorStop(0.3,hexA(color,0.5)); g.addColorStop(1,hexA(color,0)); sc.fillStyle=g; sc.fillRect(0,0,r*2,r*2); sprites[color]=s; return s; }
     function build(){ W=stage.clientWidth;H=stage.clientHeight; if(!W||!H){requestAnimationFrame(build);return;} dpr=Math.min(window.devicePixelRatio||1,2); cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr); cv.style.width=W+"px";cv.style.height=H+"px"; ctx.setTransform(dpr,0,0,dpr,0,0);
       BW=Math.max(46,Math.min(W*0.115,92)); BD=BW*0.46; BH=Math.max(26,Math.min(H*0.12,40));
-      var yb=H*0.30, ys=H*0.14;
-      P=[{x:W*0.24,y:yb+ys*0.1},{x:W*0.50,y:yb+ys*1.0},{x:W*0.76,y:yb+ys*1.9}];
+      var py=H*0.46;
+      P=[{x:W*0.17,y:py},{x:W*0.50,y:py},{x:W*0.83,y:py}];
       draw(); }
     function stepText(ph,q){
       if(ph===0) return "il="+q.il+" · ilçe="+q.ilce+" · mah="+q.mah+" · "+q.kat+" · "+q.dur;
@@ -301,12 +301,31 @@
       else if(idx===1){ ctx.save(); ctx.translate(px+s*0.25,py+s*0.15); ctx.lineWidth=1.6; ctx.beginPath(); ctx.arc(0,0,s*0.5,0,TAU); ctx.stroke(); for(var i=0;i<8;i++){var a=rot+i/8*TAU; ctx.beginPath(); ctx.moveTo(Math.cos(a)*s*0.5,Math.sin(a)*s*0.5); ctx.lineTo(Math.cos(a)*s*0.72,Math.sin(a)*s*0.72); ctx.stroke();} ctx.beginPath(); ctx.arc(0,0,s*0.18,0,TAU); ctx.fill(); ctx.restore(); var bx=px-s*0.95,by=py-s*0.35; [0.4,0.7,0.55,0.9].forEach(function(hh,j){ ctx.fillRect(bx+j*(s*0.24), by+(1-hh)*s*0.7, s*0.16, hh*s*0.7); }); }
       else { ctx.lineWidth=1.6; ctx.strokeRect(px-s*0.85,py-s*0.62,s*1.7,s*1.15); ctx.strokeStyle=hexA(C.accent,0.5); ctx.lineWidth=1; [0.35,0.6].forEach(function(fy){ctx.beginPath();ctx.moveTo(px-s*0.6,py-s*0.62+s*1.15*fy);ctx.lineTo(px+s*0.2,py-s*0.62+s*1.15*fy);ctx.stroke();}); ctx.beginPath();ctx.moveTo(px,py+s*0.53);ctx.lineTo(px,py+s*0.82);ctx.moveTo(px-s*0.3,py+s*0.82);ctx.lineTo(px+s*0.3,py+s*0.82);ctx.stroke(); ctx.strokeStyle=C.accent;ctx.lineWidth=2.2;ctx.beginPath();ctx.moveTo(px-s*0.18,py-s*0.02);ctx.lineTo(px,py+s*0.2);ctx.lineTo(px+s*0.35,py-s*0.28);ctx.stroke(); }
     }
-    function arrow(a,b,gl,fl){
+    function conduit(a,b,gl,fl){
       var dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy)||1,ux=dx/len,uy=dy/len,nx=-uy,ny=ux;
-      var g=ctx.createLinearGradient(a.x,a.y,b.x,b.y); g.addColorStop(0,hexA(C.violet,0.35+0.55*gl)); g.addColorStop(1,hexA(C.primary,0.35+0.6*gl));
-      ctx.strokeStyle=g; ctx.lineWidth=3+3*gl; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x-ux*11,b.y-uy*11); ctx.stroke();
-      ctx.fillStyle=hexA(C.primary,0.5+0.45*gl); ctx.beginPath(); ctx.moveTo(b.x,b.y); ctx.lineTo(b.x-ux*13+nx*7,b.y-uy*13+ny*7); ctx.lineTo(b.x-ux*13-nx*7,b.y-uy*13-ny*7); ctx.closePath(); ctx.fill();
-      ctx.globalCompositeOperation="lighter"; for(var k=0;k<2;k++){ var tt=(fl+k*0.5)%1, cxp=a.x+dx*tt*0.86, cyp=a.y+dy*tt*0.86, rr=7+5*gl; ctx.globalAlpha=(0.4+0.5*gl)*(1-Math.abs(tt-0.5)*0.6); ctx.drawImage(sprite("#EAF6FF"),cxp-rr,cyp-rr,rr*2,rr*2); } ctx.globalCompositeOperation="source-over"; ctx.globalAlpha=1;
+      // taban kanal (violet→primary→accent gradyan)
+      var g=ctx.createLinearGradient(a.x,a.y,b.x,b.y); g.addColorStop(0,hexA(C.violet,0.14+0.28*gl)); g.addColorStop(0.5,hexA(C.primary,0.16+0.34*gl)); g.addColorStop(1,hexA(C.accent,0.14+0.28*gl));
+      ctx.strokeStyle=g; ctx.lineWidth=2+2.4*gl; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x-ux*12,b.y-uy*12); ctx.stroke();
+      // yürüyen veri hattı (marching dash)
+      ctx.save(); ctx.setLineDash([2,7]); ctx.lineDashOffset=-fl*30; ctx.strokeStyle=hexA(C.primary,0.22+0.4*gl); ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x-ux*12,b.y-uy*12); ctx.stroke(); ctx.restore();
+      // ok başı
+      ctx.fillStyle=hexA(C.accent,0.5+0.45*gl); ctx.beginPath(); ctx.moveTo(b.x,b.y); ctx.lineTo(b.x-ux*13+nx*7,b.y-uy*13+ny*7); ctx.lineTo(b.x-ux*13-nx*7,b.y-uy*13-ny*7); ctx.closePath(); ctx.fill();
+      // veri parçacık akışı (işleme modeli · sky→violet→accent renk dönüşümü)
+      ctx.globalCompositeOperation="lighter";
+      var N=12;
+      for(var k=0;k<N;k++){ var tt=((fl*0.9)+k/N)%1; if(tt>0.93)continue;
+        var px=a.x+dx*tt, py2=a.y+dy*tt+Math.sin(tt*9+k)*2.2;
+        var col=tt<0.45?C.primary:(tt<0.78?C.violet:C.accent), rr=(2.2+2.2*gl)*(0.55+0.45*Math.sin(tt*3.14));
+        ctx.globalAlpha=(0.45+0.4*gl)*(tt<0.07?tt/0.07:1);
+        ctx.drawImage(sprite(col),px-rr*2,py2-rr*2,rr*4,rr*4);
+      }
+      // orta işleme düğümü (nabız + dönen dönüşüm çizgileri)
+      var mx=a.x+dx*0.5, my=a.y+dy*0.5, mr=4+3*gl+1.4*Math.sin(t*4);
+      ctx.globalAlpha=0.55+0.4*gl; ctx.drawImage(sprite(C.violet),mx-mr*2.4,my-mr*2.4,mr*4.8,mr*4.8);
+      ctx.globalCompositeOperation="source-over";
+      ctx.strokeStyle=hexA(C.violet,0.45+0.4*gl); ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(mx,my,mr+2,0,TAU); ctx.stroke();
+      ctx.strokeStyle=hexA(C.accent,0.2+0.5*gl); ctx.lineWidth=1; var rot2=t*2.2; for(var s2=0;s2<3;s2++){ var a2=rot2+s2/3*TAU; ctx.beginPath(); ctx.moveTo(mx+Math.cos(a2)*mr*0.55,my+Math.sin(a2)*mr*0.55); ctx.lineTo(mx-Math.cos(a2)*mr*0.55,my-Math.sin(a2)*mr*0.55); ctx.stroke(); }
+      ctx.globalAlpha=1;
     }
     function draw(){
       if(!P.length)return;
@@ -316,8 +335,8 @@
       var corners=[];
       for(var i=0;i<3;i++) corners.push(isoBox(P[i].x,P[i].y,glow[i]));
       // oklar (platformlar arası)
-      arrow({x:corners[0].R.x-2,y:corners[0].R.y-4},{x:corners[1].L.x+2,y:corners[1].L.y-4}, Math.max(glow[0],glow[1]), flow[0]);
-      arrow({x:corners[1].R.x-2,y:corners[1].R.y-4},{x:corners[2].L.x+2,y:corners[2].L.y-4}, Math.max(glow[1],glow[2]), flow[1]);
+      conduit({x:corners[0].R.x,y:corners[0].R.y-BD*0.55},{x:corners[1].L.x,y:corners[1].L.y-BD*0.55}, Math.max(glow[0],glow[1]), flow[0]);
+      conduit({x:corners[1].R.x,y:corners[1].R.y-BD*0.55},{x:corners[2].L.x,y:corners[2].L.y-BD*0.55}, Math.max(glow[1],glow[2]), flow[1]);
       // yüzen ikonlar + etiket
       for(i=0;i<3;i++){
         var bob=Math.sin(t*1.4+i*1.1)*4, ix=P[i].x, iy=P[i].y-BD-30-bob, isz=Math.max(15,BW*0.32);
