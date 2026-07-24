@@ -97,7 +97,7 @@
     ];
     var OUT = [
       { ic: "⇄", lbl: "API", sub: "REST · WebSocket", col: C.primary },
-      { ic: "◆", lbl: "ProX · YAPAY ZEKA", sub: "karar analizi motoru", col: C.violet },
+      { ic: "◆", lbl: "ProX · ALGORİTMA", sub: "karar analizi motoru", col: C.violet },
       { ic: "▤", lbl: "PDF RAPOR", sub: "white-label çıktı", col: C.accent },
       { ic: "●", lbl: "MÜŞTERİ HİZMETİ", sub: "web · panel · endeks", col: C.primary }
     ];
@@ -121,6 +121,12 @@
       + '<canvas id="infra-canvas" style="' + css({ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none" }) + '"></canvas>'
       + '<div style="' + css({ position: "relative", zIndex: 2, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 12, paddingBottom: 8, borderBottom: "1px solid " + C.border }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.1em", fontWeight: 700, whiteSpace: "nowrap" }) + '">◆ VERİ AKIŞ HATTI</span><span style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: C.mono, fontSize: 8.5, color: C.accent, letterSpacing: "0.1em", whiteSpace: "nowrap" }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>CANLI</span></div>'
       + '<div style="' + css({ position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "minmax(84px,0.8fr) minmax(118px,300px) minmax(84px,0.8fr)", gap: "8px 6px", alignItems: "stretch", minHeight: 320 }) + '">' + srcCol + coreCol + outCol + '</div>'
+      + '<div id="infra-feed" style="' + css({ position: "relative", zIndex: 2, marginTop: 12, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", padding: "8px 12px", background: "rgba(6,16,27,0.55)", border: "1px solid " + C.borderStrong, borderLeft: "2px solid " + C.accent, borderRadius: 3, fontFamily: C.mono, fontSize: 10.5 }) + '">'
+      + '<span style="' + css({ color: C.accent, fontWeight: 700, letterSpacing: "0.08em", whiteSpace: "nowrap" }) + '">▸ İŞLENİYOR</span>'
+      + '<span id="feed-loc" style="' + css({ color: C.textPri, fontWeight: 700, letterSpacing: "0.02em" }) + '">İstanbul › Kadıköy › Caddebostan › Bağdat Cd.</span>'
+      + '<span id="feed-m2" style="' + css({ color: C.primary, fontWeight: 700, whiteSpace: "nowrap" }) + '">₺148.200/m²</span>'
+      + '<span id="feed-demo" style="' + css({ color: C.textMut, whiteSpace: "nowrap" }) + '">yaş 41 · hane 2.3 · prestij L4</span>'
+      + '<span style="' + css({ marginLeft: "auto", color: C.textFaint, fontSize: 9, letterSpacing: "0.06em", whiteSpace: "nowrap" }) + '">● temsilî akış · gerçek konumlar</span></div>'
       + '<div style="' + css({ position: "relative", zIndex: 2, marginTop: 13, paddingTop: 11, borderTop: "1px solid " + C.border }) + '">'
       + '<div id="infra-cap" aria-live="polite" style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textSec, letterSpacing: "0.03em", minHeight: 15, lineHeight: 1.4 }) + '">6 kaynaktan ham veri akıyor · web · saha · kamu · TÜİK · mevzuat · belediye</div>'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 6, marginTop: 9 }) + '">'
@@ -735,6 +741,24 @@
     var reduce = !!(mq && mq.matches);
     var capEl = document.getElementById("infra-cap");
     var actEls = [].slice.call(stage.querySelectorAll("[data-act]"));
+    var feedLoc = document.getElementById("feed-loc"), feedM2 = document.getElementById("feed-m2"), feedDemo = document.getElementById("feed-demo"), feedIdx = 0, feedLast = 0;
+    var FEED = [
+      ["İstanbul › Kadıköy › Caddebostan › Bağdat Cd.", "₺148.200/m²", "yaş 41 · hane 2.3 · prestij L4"],
+      ["İstanbul › Beşiktaş › Levent › Nispetiye Cd.", "₺172.500/m²", "yaş 39 · hane 2.1 · prestij L5"],
+      ["İstanbul › Şişli › Nişantaşı › Teşvikiye", "₺165.900/m²", "yaş 43 · hane 2.0 · prestij L5"],
+      ["Ankara › Çankaya › Kızılay › Atatürk Blv.", "₺54.800/m²", "yaş 37 · hane 2.6 · prestij L3"],
+      ["İzmir › Konak › Alsancak › Kıbrıs Şehitleri", "₺63.400/m²", "yaş 40 · hane 2.2 · prestij L4"],
+      ["İstanbul › Sarıyer › Bebek › Cevdetpaşa Cd.", "₺246.700/m²", "yaş 44 · hane 2.1 · prestij L5"],
+      ["İstanbul › Üsküdar › Kuzguncuk › İcadiye Cd.", "₺112.300/m²", "yaş 42 · hane 2.4 · prestij L4"],
+      ["Bursa › Nilüfer › Görükle › Üniversite Cd.", "₺31.900/m²", "yaş 33 · hane 2.8 · prestij L2"],
+      ["Antalya › Muratpaşa › Lara › Şirinyalı Mah.", "₺48.600/m²", "yaş 38 · hane 2.5 · prestij L3"],
+      ["Ankara › Yenimahalle › Batıkent › 6. Cad.", "₺39.200/m²", "yaş 36 · hane 2.7 · prestij L3"],
+      ["İzmir › Karşıyaka › Bostanlı › Cemal Gürsel", "₺57.100/m²", "yaş 41 · hane 2.3 · prestij L4"],
+      ["İstanbul › Ataşehir › Barbaros › Batı Cd.", "₺84.500/m²", "yaş 38 · hane 2.5 · prestij L4"],
+      ["İstanbul › Beyoğlu › Cihangir › Sıraselviler", "₺121.800/m²", "yaş 40 · hane 1.9 · prestij L4"],
+      ["Kocaeli › İzmit › Yahya Kaptan › 5. Cad.", "₺28.700/m²", "yaş 35 · hane 3.0 · prestij L2"]
+    ];
+    function cycleFeed() { if (!feedLoc) return; var r = FEED[feedIdx]; feedLoc.textContent = r[0]; feedM2.textContent = r[1]; feedDemo.textContent = r[2]; }
 
     var W = 0, H = 0, dpr = 1, raf = 0, running = false, visible = true;
     var STEP = 1 / 60, acc = 0, last = 0, t = 0, frameN = 0;
@@ -813,6 +837,7 @@
       for (var i = 0; i < ACTS.length; i++) { if (lt < cum + ACTS[i].dur) { ai = i; break; } cum += ACTS[i].dur; }
       curProg = (lt - cum) / ACTS[ai].dur;
       if (ai !== curAct) { curAct = ai; if (capEl) capEl.textContent = ACTS[ai].cap; }
+      if (t - feedLast > 1.35) { feedLast = t; feedIdx = (feedIdx + 1) % FEED.length; cycleFeed(); }
       dnaFill += (((ai === 3) ? 1 : 0.4) - dnaFill) * Math.min(1, dt * 1.6);
       emitAcc += dt * (ai === 0 ? 34 : 20);
       while (emitAcc >= 1) { emitAcc -= 1; if (srcs.length) emit((Math.random() * srcs.length) | 0); }
