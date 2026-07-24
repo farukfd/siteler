@@ -189,6 +189,14 @@
       + '</nav></div></div>';
   }
 
+  /* ===== ProX endeks API (canlı YANIT için) ===== */
+  var EMLAK_API_BASE = "https://www.emlakekspertizi.com";
+  var EMLAK_TENANT = { tenant_id: "nadas", tenant_key: "prox_nadas_43ffdf3fe0501d5510e71616b618cfea" };   /* NADAS ProX anahtarı — istemci-tarafı görünür; salt-okunur/alan-kısıtlı olmalı. */
+  function proxApi(path){
+    if(!EMLAK_TENANT.tenant_key) return Promise.resolve({fallback:true});
+    return fetch(EMLAK_API_BASE+path,{mode:"cors",headers:{"X-Tenant-Id":EMLAK_TENANT.tenant_id,"X-Tenant-Key":EMLAK_TENANT.tenant_key}})
+      .then(function(r){ if(!r.ok) throw 0; return r.json(); }).catch(function(){ return {fallback:true}; });
+  }
   /* ===== ProX ASİSTAN İNFERENS SİMÜLASYONU (nav altı) ===== */
   function ProXFlow(){
     var heads = [["①","VERİTABANI · SORU",C.primary],["②","ML",C.violet],["③","MML",C.accent],["④","YANIT",C.primary]]
@@ -203,7 +211,7 @@
       + '<div style="'+css({display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"})+'"><span style="'+css({color:C.accent,fontWeight:700,letterSpacing:"0.08em",whiteSpace:"nowrap"})+'">▸ SORGU</span><span id="prox-q" style="'+css({color:C.textPri,fontWeight:700})+'">İstanbul › Kadıköy › Caddebostan · daire · satılık</span></div>'
       + '<div style="'+css({display:"flex",alignItems:"flex-start",gap:8,paddingTop:6,borderTop:"1px solid "+C.border,fontSize:10,lineHeight:1.5})+'"><span id="prox-phic" style="'+css({color:C.violet,fontWeight:700,whiteSpace:"nowrap"})+'">◈ SORGU</span><span id="prox-step" style="'+css({color:C.textSec,flex:1})+'">sorgu ayrıştırılıyor…</span></div>'
       + '<div style="'+css({display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6,marginTop:2})+'">'+stepper+'</div>'
-      + '<div style="'+css({fontFamily:C.mono,fontSize:8.5,color:C.textFaint,letterSpacing:"0.05em",textAlign:"right"})+'">● deterministik · temsilî inferens simülasyonu</div></div></div>';
+      + '<div id="prox-tag" style="'+css({fontFamily:C.mono,fontSize:8.5,color:C.textFaint,letterSpacing:"0.05em",textAlign:"right"})+'">● deterministik · temsilî inferens simülasyonu</div></div></div>';
     return '<section style="'+css({position:"relative",padding:"20px 16px 8px",background:C.base,overflow:"hidden"})+'">'
       + '<div style="'+css({position:"relative",maxWidth:1280,margin:"0 auto"})+'">'
       + Eyebrow("◆ ProX ASİSTAN · İNFERENS · VERİTABANI → ML · MML → YANIT")
@@ -216,7 +224,7 @@
     var ctx=cv.getContext("2d");
     var mq=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)");
     var reduce=!!(mq&&mq.matches);
-    var qEl=document.getElementById("prox-q"), stepEl=document.getElementById("prox-step"), phicEl=document.getElementById("prox-phic"), scanEl=document.getElementById("prox-scan");
+    var qEl=document.getElementById("prox-q"), stepEl=document.getElementById("prox-step"), phicEl=document.getElementById("prox-phic"), scanEl=document.getElementById("prox-scan"), tagEl=document.getElementById("prox-tag");
     var phEls=[].slice.call(stage.querySelectorAll("[data-ph]"));
     var W=0,H=0,dpr=1,raf=0,running=false,visible=true;
     var STEP=1/60,acc=0,last=0,t=0,TAU=6.28318;
@@ -251,8 +259,10 @@
       if(ph===0) return "il="+q.il+" · ilçe="+q.ilce+" · mah="+q.mah+" · "+q.kat+" · "+q.dur;
       if(ph===1) return "480.234.521 kayıt tarandı → eşleşen emsal: "+q.emsal+" (son 12 ay · 800m yarıçap)";
       if(ph===2) return "aykırı-değer eleme −"+q.out+" (%"+q.outp+") · emsal ağırlıklandırma (mesafe×tazelik×benzerlik) · regresyon R²="+q.r2;
-      if(ph===3) return q.emsal+"×38 matris → kovaryans → ağırlıklı m² dağılımı · medyan "+q.med+" · güven bandı "+q.band;
-      return "değer aralığı "+q.range+" · güven %"+q.conf+" · deterministik ✓";
+      if(ph===3) return q.emsal+"×38 matris → kovaryans → ağırlıklı m² dağılımı · medyan "+q.med+(q.live?" · ProX endeks canlı":"")+" · güven bandı "+q.band;
+      return q.live
+        ? "medyan m² "+q.med+" · veri güven %"+q.conf+" · ProX endeks · deterministik ✓"
+        : "değer aralığı "+q.range+" · güven %"+q.conf+" · deterministik ✓";
     }
     function setPhase(ph){
       curPh=ph; var q=QDATA[((qIdx%QDATA.length)+QDATA.length)%QDATA.length];
@@ -263,6 +273,24 @@
     function setQuery(){
       var q=QDATA[((qIdx%QDATA.length)+QDATA.length)%QDATA.length];
       if(qEl) qEl.textContent=q.il+" › "+q.ilce+" › "+q.mah+" · "+q.kat+" · "+q.dur;
+      if(tagEl){ if(q.live){ tagEl.textContent="● YANIT: ProX endeks · CANLI · ara adımlar temsilî"; tagEl.style.color=C.accent; } else { tagEl.textContent="● deterministik · temsilî inferens simülasyonu"; tagEl.style.color=C.textFaint; } }
+    }
+    function loadLive(){
+      if(location.protocol==="file:") return;   // file:// → CORS 403; temsilî kal
+      var katMap={daire:"konut",konut:"konut",villa:"konut",ofis:"ticari",dükkan:"ticari",arsa:"arsa",tarla:"arsa"};
+      QDATA.forEach(function(q){
+        var kat=katMap[q.kat]||"konut", dur=/kir/i.test(q.dur)?"kiralik":"satilik";
+        var path="/api/v1/tenant/endeks?il="+encodeURIComponent(q.il)+"&ilce="+encodeURIComponent(q.ilce)+"&mahalle="+encodeURIComponent(q.mah)+"&kategori="+kat+"&durum="+dur;
+        var to=new Promise(function(res){ setTimeout(function(){res({fallback:true});},5000); });
+        Promise.race([proxApi(path),to]).then(function(res){
+          if(res&&res.success===true&&!res.fallback&&res.data&&+res.data.m2>0){
+            q.med="₺"+Math.round(+res.data.m2).toLocaleString("tr-TR"); q.live=true;
+            if(typeof res.data.score==="number"&&res.data.score>0) q.conf=Math.round(res.data.score);
+            var cur=QDATA[((qIdx%QDATA.length)+QDATA.length)%QDATA.length];
+            if(cur===q){ setQuery(); if(curPh>=0) setPhase(curPh); }
+          }
+        });
+      });
     }
     function stepSim(dt){
       t+=dt; var cyc=t%CYCLE, qi=Math.floor(t/CYCLE);
@@ -318,6 +346,7 @@
     document.addEventListener("visibilitychange",function(){ if(document.hidden)stop(); else if(visible)start(); });
     if(window.IntersectionObserver){ try{ new IntersectionObserver(function(es){ visible=es[0].isIntersecting; if(visible)start(); else stop(); },{threshold:0}).observe(stage); }catch(e){} }
     stage._pump=function(n){ for(var i=0;i<(n||60);i++)stepSim(STEP); draw(); };
+    loadLive();
     start();
   }
 
