@@ -600,6 +600,45 @@
           + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 12 }) + '">' + access + '</div>'
           + '<div style="' + css({ marginTop: 16, padding: "10px 14px", border: "1px dashed " + C.border, background: "rgba(167,139,250,0.04)", fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.04em", lineHeight: 1.55 }) + '">⌬ Rapor bir <strong style="' + css({ color: C.textMut }) + '">üretici yapay zeka çıktısı değildir</strong>; tüm rakamlar 480M kayıtlık Nadas veritabanı üzerinden ProX tarafından deterministik hesaplanır (aynı sorgu → aynı sonuç). Bilgilendirme ve veri destekli analiz amaçlıdır; resmî/yasal değerleme yerine geçmez.</div></div>';
       })()
+      + (function () {
+        var G = [
+          { real: true, title: "ProX Karar Analizi", cat: "Konut · Daire · Satılık", loc: "Caddebostan · Kadıköy", tag: "24 sayfa · 950₺", cover: "img/reports/karar-analizi-ornek.png", pdf: "karar-analizi-ornek.pdf", col: C.violet },
+          { title: "ProX Hibrit Karar Analizi", cat: "ProX + Bölge Uzmanı", loc: "8–24 saat teslim · amiral", tag: "AMİRAL · 2.490₺", sym: "★", col: C.accent },
+          { title: "ProX Derin Karar Analizi", cat: "ProX + Uzman + Resmî Kayıt", loc: "24–36 saat teslim", tag: "PREMIUM · 4.990₺", sym: "◈", col: C.primary },
+          { title: "Mahalle Raporu", cat: "Veri & Trend · anında", loc: "51.000+ mahalle · fiyat/talep", tag: "CANLI RAPOR", sym: "▦", col: C.primary },
+          { title: "Ada / Parsel Raporu", cat: "Veri & Trend · anında", loc: "imar · değer · bölgesel risk", tag: "CANLI RAPOR", sym: "◇", col: C.warn },
+          { title: "Kentsel Dönüşüm Raporu", cat: "Veri & Trend · anında", loc: "riskli yapı · fırsat haritası", tag: "CANLI RAPOR", sym: "⌂", col: C.danger }
+        ];
+        var cards = G.map(function (g) {
+          var coverInner = g.real
+            ? '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "url('" + g.cover + "')", backgroundSize: "cover", backgroundPosition: "top center", backgroundColor: "#fff" }) + '"></div>'
+              + '<div style="' + css({ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(2,8,18,0) 55%,rgba(2,8,18,0.55) 100%)" }) + '"></div>'
+              + '<div style="' + css({ position: "absolute", top: 8, left: 8, fontFamily: C.mono, fontSize: 8, color: C.deep, background: C.accent, borderRadius: 2, padding: "2px 7px", letterSpacing: "0.08em", fontWeight: 700 }) + '">● İNDİRİLEBİLİR</div>'
+            : '<div style="' + css({ position: "absolute", inset: 0, background: "linear-gradient(158deg," + C.raised + "," + C.deep + ")", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 11, padding: 16, textAlign: "center" }) + '">'
+              + '<span style="' + css({ width: 46, height: 46, border: "1px solid " + g.col, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 21, color: g.col, borderRadius: 3, flexShrink: 0 }) + '">' + g.sym + '</span>'
+              + '<div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 13, fontWeight: 700, color: C.textSec, lineHeight: 1.2 }) + '">' + g.title + '</div>'
+              + '<div style="' + css({ fontFamily: C.mono, fontSize: 8, color: C.warn, border: "1px solid " + C.warn, borderRadius: 2, padding: "2px 8px", letterSpacing: "0.1em" }) + '">ÖRNEK YAKINDA</div></div>';
+          var coverBox = '<div style="' + css({ position: "relative", width: "100%", paddingTop: "141%", overflow: "hidden", borderBottom: "1px solid " + C.border }) + '">' + coverInner + '</div>';
+          var actionRow = '<div style="' + css({ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginTop: 4 }) + '">'
+            + '<span style="' + css({ fontFamily: C.mono, fontSize: 8.5, color: g.col, border: "1px solid " + g.col, borderRadius: 2, padding: "2px 6px", letterSpacing: "0.06em", fontWeight: 700 }) + '">' + g.tag + '</span>'
+            + (g.real
+              ? '<a href="' + g.pdf + '" download style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.deep, background: g.col, borderRadius: 2, padding: "5px 11px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.04em", whiteSpace: "nowrap" }) + '">↓ İNDİR</a>'
+              : '<span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.04em" }) + '">yakında →</span>')
+            + '</div>';
+          var footer = '<div style="' + css({ padding: "11px 12px 12px", display: "flex", flexDirection: "column", gap: 5 }) + '">'
+            + '<div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 13.5, fontWeight: 700, color: C.textPri, letterSpacing: "-0.01em", lineHeight: 1.15 }) + '">' + g.title + '</div>'
+            + '<div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textMut, letterSpacing: "0.03em" }) + '">' + g.cat + '</div>'
+            + '<div style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint }) + '">' + g.loc + '</div>'
+            + actionRow + '</div>';
+          return '<div class="nadas-eco" style="' + css({ background: C.raised, border: "1px solid " + C.borderStrong, borderTop: "2px solid " + g.col, display: "flex", flexDirection: "column", overflow: "hidden" }) + '">' + coverBox + footer + '</div>';
+        }).join("");
+        return '<div style="' + css({ marginTop: 28, paddingTop: 24, borderTop: "1px solid " + C.border }) + '">'
+          + '<div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 10, marginBottom: 16 }) + '">'
+          + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.violet, letterSpacing: "0.14em", fontWeight: 700, marginBottom: 6 }) + '">◈ RAPOR GALERİSİ · KAPAK ÖNİZLEMELİ</div>'
+          + '<h3 style="' + css({ fontSize: "clamp(1.2rem,2.6vw,1.5rem)", fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", margin: 0 }) + '">İndirilebilir örnek raporlar</h3></div>'
+          + '<div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.03em", maxWidth: 270, textAlign: "right", lineHeight: 1.5 }) + '">Her yeni örnek rapor kapağıyla birlikte galeriye eklenir — alan otomatik büyür.</div></div>'
+          + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))", gap: 14 }) + '">' + cards + '</div></div>';
+      })()
       + '<div style="' + css({ marginTop: 36, padding: "32px 24px", background: C.primary, color: C.deep, textAlign: "center" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11, letterSpacing: "0.16em", marginBottom: 12, opacity: 0.7 }) + '">◆ NADAS ALTYAPISIYLA · BAĞIMSIZ & SPK LİSANSLI · ProX DESTEKLİ</div><h3 style="' + css({ fontSize: "clamp(1.6rem,4vw,2.4rem)", fontWeight: 700, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.025em", margin: "0 0 14px", lineHeight: 1.1 }) + '">38 kategoride emlak ekspertizi.<br>21 yıllık karar analizi. Tek platformda.</h3><p style="' + css({ fontSize: 15, lineHeight: 1.55, margin: "0 auto 22px", maxWidth: 620, opacity: 0.85 }) + '">Yatırım, satış, kiralama, teminat — hangi karar sizinki olsun, veriye dayandırın.</p><div style="' + css({ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }) + '"><a href="https://www.emlakekspertizi.com/emlak-ekspertizi" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: C.deep, color: "#fff", fontFamily: C.mono, fontSize: 13, fontWeight: 700, letterSpacing: "0.08em", textDecoration: "none", borderRadius: 2 }) + '">EMLAK EKSPERTİZİ AL →</a><a href="https://www.emlakekspertizi.com" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "transparent", color: C.deep, fontFamily: C.mono, fontSize: 13, fontWeight: 700, letterSpacing: "0.08em", textDecoration: "none", border: "2px solid " + C.deep, borderRadius: 2 }) + '">EMLAKEKSPERTIZI.COM →</a></div></div>'
       + '</div></section>';
   }
