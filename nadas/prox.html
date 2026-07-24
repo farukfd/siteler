@@ -68,7 +68,7 @@
   </noscript>
 </div>
 
-<script src="js/core.js?v=6"></script>
+<script src="js/core.js?v=7"></script>
 <script>
 /* ============================================================================
    ProX · NADAS merkez sitesi — kanonik menü core.js’ten (ALTIN KURAL).
@@ -187,6 +187,138 @@
       + '<nav style="'+css({display:"flex",gap:22,alignItems:"center",flexWrap:"wrap"})+'">'+links
       + '<a href="https://www.emlakekspertizi.com/yapay-zeka" target="_blank" rel="noopener noreferrer" style="'+css({padding:"6px 14px",border:"1px solid "+C.violet,background:"rgba(167,139,250,0.08)",fontFamily:C.mono,fontSize:10.5,color:C.violet,fontWeight:700,letterSpacing:"0.1em",textDecoration:"none",borderRadius:2})+'">ProX’i DENE →</a>'
       + '</nav></div></div>';
+  }
+
+  /* ===== ProX ASİSTAN İNFERENS SİMÜLASYONU (nav altı) ===== */
+  function ProXFlow(){
+    var heads = [["①","VERİTABANI · SORU",C.primary],["②","ML",C.violet],["③","MML",C.accent],["④","YANIT",C.primary]]
+      .map(function(h){ return '<div style="'+css({flex:1,textAlign:"center"})+'"><span style="'+css({fontFamily:C.mono,fontSize:11,color:h[2],fontWeight:700,letterSpacing:"0.08em"})+'">'+h[0]+' '+h[1]+'</span></div>'; }).join('');
+    var stepper = ["SORGU","TARAMA","ML","MML","YANIT"].map(function(s,si){ return '<div data-ph="'+si+'" style="'+css({position:"relative",padding:"5px 6px",background:C.base,border:"1px solid "+C.border,borderRadius:2,overflow:"hidden",textAlign:"center"})+'"><div style="'+css({position:"absolute",left:0,top:0,bottom:0,width:"0%",background:"linear-gradient(90deg,rgba(167,139,250,0.22),rgba(52,211,153,0.16))"})+'"></div><span style="'+css({position:"relative",fontFamily:C.mono,fontSize:8,color:C.textFaint,letterSpacing:"0.04em",fontWeight:700})+'">'+s+'</span></div>'; }).join('');
+    var stage = '<div id="prox-stage" style="'+css({position:"relative",overflow:"hidden",border:"1px solid "+C.borderStrong,borderRadius:4,background:"radial-gradient(120% 120% at 50% 30%, #0A0F22, #020812)",padding:"14px 12px",marginTop:14})+'">'
+      + '<canvas id="prox-canvas" style="'+css({position:"absolute",inset:0,width:"100%",height:"100%",zIndex:0,pointerEvents:"none"})+'"></canvas>'
+      + '<div style="'+css({position:"relative",zIndex:2,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,flexWrap:"wrap",marginBottom:10,paddingBottom:8,borderBottom:"1px solid "+C.border})+'"><span style="'+css({fontFamily:C.mono,fontSize:9,color:C.textFaint,letterSpacing:"0.1em",fontWeight:700,whiteSpace:"nowrap"})+'">◆ ProX İNFERENS SİMÜLASYONU</span><span style="'+css({fontFamily:C.mono,fontSize:9,color:C.textMut,letterSpacing:"0.04em",whiteSpace:"nowrap"})+'">◗ TARANAN <span id="prox-scan" style="'+css({color:C.primary,fontWeight:700})+'">0</span> / 480.234.521</span><span style="'+css({display:"inline-flex",alignItems:"center",gap:6,fontFamily:C.mono,fontSize:8.5,color:C.accent,letterSpacing:"0.1em",whiteSpace:"nowrap"})+'"><span style="'+css({width:7,height:7,borderRadius:9999,background:C.accent,animation:"nadasPulse 1.4s ease-in-out infinite"})+'"></span>CANLI</span></div>'
+      + '<div style="'+css({position:"relative",zIndex:2,display:"flex",gap:6,padding:"0 4px"})+'">'+heads+'</div>'
+      + '<div style="'+css({height:"clamp(230px,30vw,300px)"})+'"></div>'
+      + '<div style="'+css({position:"relative",zIndex:2,padding:"9px 12px",background:"rgba(6,16,27,0.62)",border:"1px solid "+C.borderStrong,borderLeft:"2px solid "+C.violet,borderRadius:3,fontFamily:C.mono,fontSize:10.5,display:"flex",flexDirection:"column",gap:6})+'">'
+      + '<div style="'+css({display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"})+'"><span style="'+css({color:C.accent,fontWeight:700,letterSpacing:"0.08em",whiteSpace:"nowrap"})+'">▸ SORGU</span><span id="prox-q" style="'+css({color:C.textPri,fontWeight:700})+'">İstanbul › Kadıköy › Caddebostan · daire · satılık</span></div>'
+      + '<div style="'+css({display:"flex",alignItems:"flex-start",gap:8,paddingTop:6,borderTop:"1px solid "+C.border,fontSize:10,lineHeight:1.5})+'"><span id="prox-phic" style="'+css({color:C.violet,fontWeight:700,whiteSpace:"nowrap"})+'">◈ SORGU</span><span id="prox-step" style="'+css({color:C.textSec,flex:1})+'">sorgu ayrıştırılıyor…</span></div>'
+      + '<div style="'+css({display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6,marginTop:2})+'">'+stepper+'</div>'
+      + '<div style="'+css({fontFamily:C.mono,fontSize:8.5,color:C.textFaint,letterSpacing:"0.05em",textAlign:"right"})+'">● deterministik · temsilî inferens simülasyonu</div></div></div>';
+    return '<section style="'+css({position:"relative",padding:"20px 16px 8px",background:C.base,overflow:"hidden"})+'">'
+      + '<div style="'+css({position:"relative",maxWidth:1280,margin:"0 auto"})+'">'
+      + Eyebrow("◆ ProX ASİSTAN · İNFERENS · VERİTABANI → ML · MML → YANIT")
+      + stage + '</div></section>';
+  }
+  function mountProxFlow(){
+    var stage=document.getElementById("prox-stage");
+    var cv=stage&&document.getElementById("prox-canvas");
+    if(!stage||!cv||!cv.getContext) return;
+    var ctx=cv.getContext("2d");
+    var mq=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)");
+    var reduce=!!(mq&&mq.matches);
+    var qEl=document.getElementById("prox-q"), stepEl=document.getElementById("prox-step"), phicEl=document.getElementById("prox-phic"), scanEl=document.getElementById("prox-scan");
+    var phEls=[].slice.call(stage.querySelectorAll("[data-ph]"));
+    var W=0,H=0,dpr=1,raf=0,running=false,visible=true;
+    var STEP=1/60,acc=0,last=0,t=0,TAU=6.28318;
+    var nodes=[], layerN=[[],[],[],[]], edges=[], sprites={}, gridLayer=null;
+    var emitAcc=0, MAX=140, pool=[], free=[];
+    var XF=[0.12,0.385,0.635,0.88], CNT=[6,7,7,4], COLS=[C.primary,C.violet,C.accent,C.primary];
+    var CYCLE=7.6, PB=[0,1.2,2.9,4.5,6.1,7.6], PHN=["SORGU AYRIŞTIRMA","VERİTABANI TARAMA","ML İŞLEME","MML İŞLEME","YANIT"], PHL=[0,0,1,2,3];
+    var qIdx=-1, curPh=-1, phaseProg=0, activeL=0, scanN=0, SCANMAX=480234521;
+    var QDATA=[
+      {il:"İstanbul",ilce:"Kadıköy",mah:"Caddebostan",kat:"daire",dur:"satılık",emsal:1847,out:223,outp:12,r2:"0.94",med:"₺182.400",band:"±%8",range:"₺159.853 – 216.272",conf:92},
+      {il:"Ankara",ilce:"Çankaya",mah:"Kızılay",kat:"ofis",dur:"kiralık",emsal:934,out:118,outp:13,r2:"0.91",med:"₺54.800",band:"±%9",range:"₺48.900 – 61.200",conf:85},
+      {il:"İzmir",ilce:"Konak",mah:"Alsancak",kat:"daire",dur:"satılık",emsal:1263,out:151,outp:12,r2:"0.93",med:"₺63.400",band:"±%8",range:"₺57.100 – 70.300",conf:84},
+      {il:"Bursa",ilce:"Nilüfer",mah:"Görükle",kat:"konut",dur:"satılık",emsal:612,out:96,outp:16,r2:"0.88",med:"₺31.900",band:"±%11",range:"₺27.400 – 36.800",conf:79},
+      {il:"Antalya",ilce:"Muratpaşa",mah:"Lara",kat:"konut",dur:"satılık",emsal:1045,out:141,outp:13,r2:"0.90",med:"₺48.600",band:"±%10",range:"₺42.900 – 55.100",conf:82},
+      {il:"İstanbul",ilce:"Beşiktaş",mah:"Levent",kat:"daire",dur:"satılık",emsal:1580,out:205,outp:13,r2:"0.95",med:"₺172.500",band:"±%7",range:"₺158.200 – 189.400",conf:88}
+    ];
+    function fmt(n){ return Math.floor(n).toLocaleString("tr-TR"); }
+    function hexA(h,a){ var n=parseInt(h.slice(1),16); return "rgba("+((n>>16)&255)+","+((n>>8)&255)+","+(n&255)+","+a+")"; }
+    function sprite(color){ if(sprites[color])return sprites[color]; var r=16,s=document.createElement("canvas"); s.width=s.height=r*2; var sc=s.getContext("2d"),g=sc.createRadialGradient(r,r,0,r,r,r); g.addColorStop(0,hexA(color,1)); g.addColorStop(0.25,hexA(color,0.6)); g.addColorStop(1,hexA(color,0)); sc.fillStyle=g; sc.fillRect(0,0,r*2,r*2); sprites[color]=s; return s; }
+    function initPool(){ pool=[];free=[]; for(var i=0;i<MAX;i++){ pool.push({on:0,path:null,seg:0,t:0,sp:0,col:C.primary}); free.push(i);} }
+    function alloc(){ if(!free.length)return -1; var k=free.pop(); pool[k].on=1; return k; }
+    function rel(k){ pool[k].on=0; free.push(k); }
+    function anchors(){
+      nodes=[]; layerN=[[],[],[],[]]; edges=[];
+      for(var L=0;L<4;L++){ var n=CNT[L]; for(var i=0;i<n;i++){ var yf=n>1?i/(n-1):0.5, y=H*(0.30+0.48*yf); var idx=nodes.length; nodes.push({x:W*XF[L],y:y,L:L,col:COLS[L],fire:0}); layerN[L].push(idx); } }
+      for(L=0;L<3;L++){ layerN[L].forEach(function(a){ layerN[L+1].forEach(function(b){ edges.push({a:a,b:b}); }); }); }
+    }
+    function buildGrid(){ gridLayer=document.createElement("canvas"); gridLayer.width=Math.max(1,Math.round(W*dpr)); gridLayer.height=Math.max(1,Math.round(H*dpr)); var g=gridLayer.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0); g.strokeStyle="rgba(255,255,255,0.016)"; g.lineWidth=1; for(var x=0;x<=W;x+=46){g.beginPath();g.moveTo(x,0);g.lineTo(x,H);g.stroke();} for(var y=0;y<=H;y+=46){g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke();} }
+    function build(){ W=stage.clientWidth;H=stage.clientHeight; if(!W||!H){requestAnimationFrame(build);return;} dpr=Math.min(window.devicePixelRatio||1,2); cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr); cv.style.width=W+"px";cv.style.height=H+"px"; ctx.setTransform(dpr,0,0,dpr,0,0); anchors(); buildGrid(); draw(); }
+    function emit(){ var k=alloc(); if(k<0)return; var q=pool[k]; q.path=[ layerN[0][(Math.random()*CNT[0])|0], layerN[1][(Math.random()*CNT[1])|0], layerN[2][(Math.random()*CNT[2])|0], layerN[3][(Math.random()*CNT[3])|0] ]; q.seg=0; q.t=0; q.sp=0.02+Math.random()*0.014; q.col=nodes[q.path[0]].col; }
+    function stepText(ph,q){
+      if(ph===0) return "il="+q.il+" · ilçe="+q.ilce+" · mah="+q.mah+" · "+q.kat+" · "+q.dur;
+      if(ph===1) return "480.234.521 kayıt tarandı → eşleşen emsal: "+q.emsal+" (son 12 ay · 800m yarıçap)";
+      if(ph===2) return "aykırı-değer eleme −"+q.out+" (%"+q.outp+") · emsal ağırlıklandırma (mesafe×tazelik×benzerlik) · regresyon R²="+q.r2;
+      if(ph===3) return q.emsal+"×38 matris → kovaryans → ağırlıklı m² dağılımı · medyan "+q.med+" · güven bandı "+q.band;
+      return "değer aralığı "+q.range+" · güven %"+q.conf+" · deterministik ✓";
+    }
+    function setPhase(ph){
+      curPh=ph; var q=QDATA[((qIdx%QDATA.length)+QDATA.length)%QDATA.length];
+      if(phicEl) phicEl.textContent="◈ "+PHN[ph];
+      if(stepEl) stepEl.textContent=stepText(ph,q);
+      for(var i=0;i<phEls.length;i++){ var on=(i===ph); phEls[i].style.borderColor=on?C.violet:C.border; var f=phEls[i].firstChild; if(f&&f.style) f.style.width=(i<ph?100:i===ph?60:0)+"%"; }
+    }
+    function setQuery(){
+      var q=QDATA[((qIdx%QDATA.length)+QDATA.length)%QDATA.length];
+      if(qEl) qEl.textContent=q.il+" › "+q.ilce+" › "+q.mah+" · "+q.kat+" · "+q.dur;
+    }
+    function stepSim(dt){
+      t+=dt; var cyc=t%CYCLE, qi=Math.floor(t/CYCLE);
+      if(qi!==qIdx){ qIdx=qi; setQuery(); }
+      var ph=0; for(var p=0;p<5;p++){ if(cyc>=PB[p]&&cyc<PB[p+1]){ph=p;break;} }
+      if(ph!==curPh) setPhase(ph);
+      phaseProg=(cyc-PB[ph])/(PB[ph+1]-PB[ph]); activeL=PHL[ph];
+      scanN = ph<=1 ? SCANMAX*Math.min(1,cyc/2.6) : SCANMAX;
+      if(scanEl) scanEl.textContent=fmt(scanN);
+      // aktif katman ateşlenir
+      layerN[activeL].forEach(function(i){ if(nodes[i].fire<0.75)nodes[i].fire=0.75; });
+      // sürekli sinyal akışı
+      emitAcc+=dt*7; while(emitAcc>=1){ emitAcc-=1; emit(); }
+      for(var k=0;k<MAX;k++){ var qp=pool[k]; if(!qp.on)continue; qp.t+=qp.sp; if(qp.t>=1){ nodes[qp.path[qp.seg+1]].fire=1; qp.col=nodes[qp.path[qp.seg]].col; qp.seg++; qp.t=0; if(qp.seg>=3){ nodes[qp.path[3]].fire=1; rel(k); } } }
+      for(var m=0;m<nodes.length;m++){ nodes[m].fire*=Math.pow(0.9,dt*60); }
+    }
+    function drawMatrix(){
+      var cols=8, rows=5, cs=Math.max(9,Math.min(15,W*0.011)), gw=cols*cs, gh=rows*cs;
+      var ox=W*XF[2]-gw/2, oy=H*0.54-gh/2;
+      var on=(curPh===3), amb=on?1:0.18, sweep=on?phaseProg*(cols+2):cols;
+      for(var r=0;r<rows;r++){ for(var c=0;c<cols;c++){
+        var lit=(c<=sweep-1), v=0.5+0.5*Math.sin(r*1.7+c*0.9+t*(on?4:0.6));
+        var a=amb*(lit?(0.18+0.5*v):0.06);
+        ctx.fillStyle=hexA(C.accent,a); ctx.fillRect(ox+c*cs+1,oy+r*cs+1,cs-2,cs-2);
+      } }
+      ctx.strokeStyle=hexA(C.accent,on?0.4:0.14); ctx.lineWidth=1; ctx.strokeRect(ox-1,oy-1,gw+2,gh+2);
+    }
+    function draw(){
+      if(!nodes.length)return;
+      ctx.clearRect(0,0,W,H);
+      if(gridLayer)ctx.drawImage(gridLayer,0,0,W,H);
+      for(var e=0;e<edges.length;e++){ var A=nodes[edges[e].a], B=nodes[edges[e].b], al=0.03+0.18*A.fire; ctx.strokeStyle=hexA(A.col,al<0.035?0.03:al); ctx.lineWidth=0.7+A.fire; ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.stroke(); }
+      drawMatrix();
+      ctx.globalCompositeOperation="lighter";
+      for(var i=0;i<nodes.length;i++){ var nd=nodes[i], gl=0.28+0.72*nd.fire, rr=(3.2+7*nd.fire); ctx.globalAlpha=gl*0.9; ctx.drawImage(sprite(nd.col),nd.x-rr,nd.y-rr,rr*2,rr*2); }
+      for(var k=0;k<MAX;k++){ var q=pool[k]; if(!q.on)continue; var A=nodes[q.path[q.seg]], B=nodes[q.path[q.seg+1]], e2=q.t*q.t*(3-2*q.t), x=A.x+(B.x-A.x)*e2, y=A.y+(B.y-A.y)*e2;
+        for(var s=3;s>=1;s--){ var te=e2-s*0.08; if(te<0)continue; var tx=A.x+(B.x-A.x)*te, ty=A.y+(B.y-A.y)*te, tr=(4-s)*1.2; ctx.globalAlpha=0.3-s*0.07; ctx.drawImage(sprite(q.col),tx-tr,ty-tr,tr*2,tr*2); }
+        ctx.globalAlpha=0.95; ctx.drawImage(sprite(q.col),x-5,y-5,10,10); ctx.globalAlpha=0.9; ctx.fillStyle="#EAF6FF"; ctx.beginPath(); ctx.arc(x,y,1.3,0,TAU); ctx.fill(); }
+      ctx.globalCompositeOperation="source-over";
+      for(i=0;i<nodes.length;i++){ var n2=nodes[i]; ctx.globalAlpha=0.5+0.5*n2.fire; ctx.fillStyle=hexA(n2.col,0.9); ctx.beginPath(); ctx.arc(n2.x,n2.y,1.6+1.4*n2.fire,0,TAU); ctx.fill(); }
+      ctx.globalAlpha=1;
+    }
+    function tick(now){ if(!last)last=now; var dt=Math.min((now-last)/1000,0.05); last=now; acc+=dt; while(acc>=STEP){stepSim(STEP);acc-=STEP;} draw(); if(running)raf=requestAnimationFrame(tick); }
+    function start(){ if(running||reduce||!visible)return; running=true; last=0; raf=requestAnimationFrame(tick); }
+    function stop(){ running=false; if(raf)cancelAnimationFrame(raf); raf=0; }
+    initPool(); build();
+    if(reduce){ for(var w=0;w<300;w++)stepSim(STEP); draw(); }
+    var rt=0; function relayout(){ clearTimeout(rt); rt=setTimeout(build,130); }
+    window.addEventListener("resize",relayout);
+    if(window.ResizeObserver){ try{ new ResizeObserver(relayout).observe(stage); }catch(e){} }
+    if(document.fonts&&document.fonts.ready) document.fonts.ready.then(build);
+    if(mq&&mq.addEventListener) mq.addEventListener("change",function(e){ reduce=e.matches; reduce?stop():start(); });
+    document.addEventListener("visibilitychange",function(){ if(document.hidden)stop(); else if(visible)start(); });
+    if(window.IntersectionObserver){ try{ new IntersectionObserver(function(es){ visible=es[0].isIntersecting; if(visible)start(); else stop(); },{threshold:0}).observe(stage); }catch(e){} }
+    stage._pump=function(n){ for(var i=0;i<(n||60);i++)stepSim(STEP); draw(); };
+    start();
   }
 
   /* ===== HERO ===== */
@@ -884,7 +1016,7 @@
     ["DİL", "TÜRKÇE OPTİMİZE"], ["ERİŞİM", "ÜCRETSİZ · PRO · API"], ["GÜVEN", "%96 MEDYAN"],
   ];
   function renderApp(){
-    return NX.Ticker(PROXTICK) + NX.Masthead("ProX") + NX.Nav("ProX") + HeroProX()
+    return NX.Ticker(PROXTICK) + NX.Masthead("ProX Asistan") + NX.Nav("ProX Asistan") + ProXFlow() + HeroProX()
       + SectionDivider("A","ProX Nedir?","TANIM · 6 TEMEL YETENEK") + ProXNedir() + ProX6Yetenek()
       + SectionDivider("B","Standart LLM Değil","7 KRİTİK FARK · KARŞILAŞTIRMA") + NedenStandartLLMDegil()
       + SectionDivider("C","Veri Altyapısı","480M KAYIT · 5 KATMAN · 27 KAYNAK") + ProXVeriAltyapisi()
@@ -901,6 +1033,7 @@
      ProX wordmark dönüşümünü elle çağırıyoruz — boot içindekiyle aynı iş. */
   document.getElementById('app').innerHTML = renderApp();
   NX.proxify(document.getElementById('app'));
+  mountProxFlow();
 
   // Saat
   function tick(){ var el=document.getElementById('mast-time'); if(el){ var d=new Date(); el.textContent=d.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}); } }
