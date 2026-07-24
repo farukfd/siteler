@@ -265,8 +265,313 @@
   }
 
   /* ===== MONTAJ ===== */
+  /* ===== ProX VERİ HATTI — izometrik canlı sahne (hero üstü) ===== */
+  function ResearchPipeline() {
+    var legend = [
+      ["01", "VERİTABANI", "480M+ kayıt · 21 yıl", C.accent],
+      ["02", "VERİ HAZIRLAMA", "temizle · normalize · eşle", C.accent],
+      ["03", "ProX MODELİ", "ML · MML · determinist", C.primary],
+      ["04", "ENDEKS ÇIKTISI", "il · ilçe · mahalle ₺/m²", C.violet],
+      ["05", "API · RAPOR", "REST/WS · PDF · dashboard", C.violet]
+    ].map(function (o) {
+      return '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 7, minWidth: 0 }) + '">'
+        + '<span style="' + css({ fontFamily: C.mono, fontSize: 9, color: o[3], fontWeight: 700, letterSpacing: "0.08em" }) + '">' + o[0] + '</span>'
+        + '<div style="' + css({ minWidth: 0 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textPri, fontWeight: 700, letterSpacing: "0.03em", lineHeight: 1.2 }) + '">' + o[1] + '</div>'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 8, color: C.textFaint, lineHeight: 1.25 }) + '">' + o[2] + '</div></div></div>';
+    }).join('<span style="' + css({ color: C.textFaint, alignSelf: "center" }) + '">›</span>');
+    var stage = '<div id="rp-stage" style="' + css({ position: "relative", overflow: "hidden", border: "1px solid " + C.borderStrong, borderRadius: 4, background: "radial-gradient(120% 130% at 50% 34%, #1b1e21 0%, #0c0e10 46%, #050607 100%)", marginTop: 14 }) + '">'
+      + '<canvas id="rp-canvas" style="' + css({ display: "block", width: "100%", height: "clamp(330px,47vw,510px)" }) + '"></canvas>'
+      + '<div style="' + css({ position: "absolute", left: 12, top: 10, display: "flex", alignItems: "center", gap: 8, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.1em", fontWeight: 700, pointerEvents: "none" }) + '">◆ KAYNAK → MODEL → ÇIKTI</div>'
+      + '<div style="' + css({ position: "absolute", right: 12, top: 10, display: "inline-flex", alignItems: "center", gap: 6, fontFamily: C.mono, fontSize: 8.5, color: C.accent, letterSpacing: "0.1em", pointerEvents: "none" }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>CANLI</div>'
+      + '<div id="rp-cap" style="' + css({ position: "absolute", left: 12, bottom: 10, fontFamily: C.mono, fontSize: 9.5, color: C.textMut, letterSpacing: "0.04em", pointerEvents: "none" }) + '">▸ 480M+ kayıt · ProX motoruna akıyor</div></div>';
+    var legendRow = '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: "6px 10px", alignItems: "center", marginTop: 10, padding: "10px 12px", background: "rgba(6,16,27,0.5)", border: "1px solid " + C.border, borderRadius: 3 }) + '">' + legend + '</div>';
+    return '<section style="' + css({ position: "relative", padding: "20px 16px 6px", background: C.base, overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+      + Eyebrow("◆ ProX VERİ HATTI · KAYNAKTAN KARARA · DETERMİNİST MODEL")
+      + stage + legendRow + '</div></section>';
+  }
+
+  function mountResearchPipeline() {
+    var stage = document.getElementById("rp-stage");
+    var cv = stage && document.getElementById("rp-canvas");
+    if (!stage || !cv || !cv.getContext) return;
+    var ctx = cv.getContext("2d");
+    var capEl = document.getElementById("rp-cap");
+    var mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+    var reduce = !!(mq && mq.matches);
+    var W = 0, H = 0, dpr = 1, raf = 0, running = false, visible = true;
+    var STEP = 1 / 60, acc = 0, last = 0, t = 0, TAU = 6.28318;
+    var COS = 0.8660254, SIN = 0.5, S = 40, ORX = 0, ORY = 0, PT = 0.17;
+    var sceneLayer = null;
+    // renkler (referans: NVIDIA yeşili + lime kablo + mor aksan + çelik kaide)
+    var GRN = "#7FC400", LIME = "#C6E639", GRNc = "#E4FB86", GRNd = "#2b4600", PUR = "#A78BFA", WHT = "#EAFBD0";
+    var STL = { t1: "#4a5158", t2: "#171a1e", s1: "#23272d", s2: "#080a0c", hi: "#727982" };
+    // küp merkez; sol çift (db üst / in alt) ↔ sağ çift (lat üst / gear alt) simetrik
+    var STATIONS = [
+      { id: "db", x: 1.0, z: 0.15, pw: 1.2, pd: 1.2, eh: 1.05 },
+      { id: "in", x: 1.7, z: 1.4, pw: 1.25, pd: 1.25, eh: 1.45 },
+      { id: "cube", x: 4.0, z: 0.6, pw: 2.15, pd: 2.15, eh: 1.8 },
+      { id: "lat", x: 6.3, z: 0.15, pw: 1.25, pd: 1.25, eh: 1.45 },
+      { id: "gear", x: 7.0, z: 1.4, pw: 1.25, pd: 1.25, eh: 1.45 }
+    ];
+    function ST(id) { for (var i = 0; i < STATIONS.length; i++) if (STATIONS[i].id === id) return STATIONS[i]; }
+    // kablo yolları (zemin dünya-koordinatları wx,wz)
+    var CABLES = [
+      { pts: [[1.15, 0.6], [1.5, 0.95], [1.7, 1.15]], w: 3.2 },                                   // db → in
+      { pts: [[2.3, 1.35], [2.95, 1.6], [3.35, 0.95], [3.6, 0.65]], w: 4.6 },                       // in → cube
+      { pts: [[4.55, 0.4], [5.4, 0.1], [5.95, 0.15]], w: 4.0 },                                      // cube → lat
+      { pts: [[4.7, 0.85], [5.55, 1.45], [6.45, 1.4], [6.85, 1.35]], w: 4.0 }                        // cube → gear
+    ];
+    function hexA(h, a) { var n = parseInt(h.slice(1), 16); return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; }
+    var sprites = {};
+    function sprite(color) {
+      if (sprites[color]) return sprites[color];
+      var r = 16, s = document.createElement("canvas"); s.width = s.height = r * 2;
+      var sc = s.getContext("2d"), g = sc.createRadialGradient(r, r, 0, r, r, r);
+      g.addColorStop(0, hexA(color, 1)); g.addColorStop(0.28, hexA(color, 0.55)); g.addColorStop(1, hexA(color, 0));
+      sc.fillStyle = g; sc.fillRect(0, 0, r * 2, r * 2); sprites[color] = s; return s;
+    }
+    function iso(x, y, z) { return { x: ORX + (x - z) * COS * S, y: ORY + ((x + z) * SIN - y) * S }; }
+    function fit() {
+      var pts = [];
+      STATIONS.forEach(function (s) {
+        var hw = s.pw / 2, hd = s.pd / 2;
+        [[s.x - hw, s.z - hd], [s.x + hw, s.z - hd], [s.x + hw, s.z + hd], [s.x - hw, s.z + hd]].forEach(function (c) { pts.push([c[0], 0, c[1]]); pts.push([c[0], -PT, c[1]]); });
+        pts.push([s.x, s.eh, s.z]);
+      });
+      var mnx = 1e9, mxx = -1e9, mny = 1e9, mxy = -1e9;
+      pts.forEach(function (p) { var rx = (p[0] - p[2]) * COS, ry = (p[0] + p[2]) * SIN - p[1]; if (rx < mnx) mnx = rx; if (rx > mxx) mxx = rx; if (ry < mny) mny = ry; if (ry > mxy) mxy = ry; });
+      S = Math.min(W * 0.97 / (mxx - mnx), H * 0.94 / (mxy - mny));
+      ORX = W / 2 - (mnx + mxx) / 2 * S; ORY = H / 2 - (mny + mxy) / 2 * S;
+    }
+    function poly(p, close) { ctx.beginPath(); for (var i = 0; i < p.length; i++) { if (i === 0) ctx.moveTo(p[i].x, p[i].y); else ctx.lineTo(p[i].x, p[i].y); } if (close) ctx.closePath(); }
+    function grad(a, b, c0, c1) { var g = ctx.createLinearGradient(a.x, a.y, b.x, b.y); g.addColorStop(0, c0); g.addColorStop(1, c1); return g; }
+    // ---- çelik kaide ----
+    function platform(s, gctx) {
+      var cc = ctx; ctx = gctx || ctx;
+      var hw = s.pw / 2, hd = s.pd / 2;
+      var A = iso(s.x - hw, 0, s.z - hd), B = iso(s.x + hw, 0, s.z - hd), Cn = iso(s.x + hw, 0, s.z + hd), D = iso(s.x - hw, 0, s.z + hd);
+      var Bb = iso(s.x + hw, -PT, s.z - hd), Cb = iso(s.x + hw, -PT, s.z + hd), Db = iso(s.x - hw, -PT, s.z + hd);
+      // zemin temas gölgesi
+      var sh = iso(s.x, 0, s.z); ctx.save(); ctx.globalAlpha = 0.5; var rg = ctx.createRadialGradient(sh.x, Cb.y, 0, sh.x, Cb.y, s.pw * S * 0.9); rg.addColorStop(0, "rgba(0,0,0,0.55)"); rg.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = rg; ctx.beginPath(); ctx.ellipse(sh.x, Cb.y + 2, s.pw * S * 0.95, s.pd * S * 0.5, 0, 0, TAU); ctx.fill(); ctx.restore();
+      // sağ yan yüz (x+ )
+      poly([B, Cn, Cb, Bb], true); ctx.fillStyle = grad(B, Bb, STL.s1, STL.s2); ctx.fill();
+      // sol/ön yan yüz (z+)
+      poly([D, Cn, Cb, Db], true); ctx.fillStyle = grad(D, Db, "#191d22", STL.s2); ctx.fill();
+      // üst yüz
+      poly([A, B, Cn, D], true); var tg = ctx.createLinearGradient(A.x, A.y, Cn.x, Cn.y); tg.addColorStop(0, STL.t1); tg.addColorStop(0.5, "#2b3037"); tg.addColorStop(1, STL.t2); ctx.fillStyle = tg; ctx.fill();
+      // üst kenar highlight + ön dikey kenar
+      ctx.lineWidth = 1; ctx.strokeStyle = hexA(STL.hi, 0.9); poly([A, B, Cn, D], true); ctx.stroke();
+      ctx.strokeStyle = hexA(STL.hi, 0.5); ctx.beginPath(); ctx.moveTo(Cn.x, Cn.y); ctx.lineTo(Cb.x, Cb.y); ctx.stroke();
+      // ön kenara yeşil taşma (pad ışığı)
+      ctx.strokeStyle = hexA(GRN, 0.5); ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(D.x, D.y); ctx.lineTo(Cn.x, Cn.y); ctx.stroke();
+      ctx = cc;
+    }
+    // ---- yeşil ışık pedi (kaide üstü) ----
+    function padRhombus(s, gctx) {
+      var cc = ctx; ctx = gctx || ctx; var pr = Math.min(s.pw, s.pd) * 0.34;
+      var a = iso(s.x, 0, s.z - pr), b = iso(s.x + pr, 0, s.z), c = iso(s.x, 0, s.z + pr), d = iso(s.x - pr, 0, s.z);
+      poly([a, b, c, d], true); ctx.strokeStyle = hexA(GRN, 0.55); ctx.lineWidth = 1.2; ctx.stroke();
+      poly([a, b, c, d], true); ctx.fillStyle = hexA(GRN, 0.06); ctx.fill(); ctx = cc;
+    }
+    function padGlow(s, g) {
+      var c = iso(s.x, 0, s.z), pr = Math.min(s.pw, s.pd) * S * 0.62;
+      var rg = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, pr); rg.addColorStop(0, hexA(GRN, 0.32 + 0.22 * g)); rg.addColorStop(0.5, hexA(GRN, 0.08)); rg.addColorStop(1, hexA(GRN, 0));
+      ctx.fillStyle = rg; ctx.beginPath(); ctx.ellipse(c.x, c.y, pr, pr * 0.52, 0, 0, TAU); ctx.fill();
+    }
+    // ---- veritabanı (yığılı diskler) ----
+    function drawDB(s, pulse) {
+      var base = iso(s.x, 0, s.z), cxp = base.x, rw = 0.32 * S, rh = rw * 0.46, band = 0.17 * S, gap = 0.05 * S;
+      var by = base.y - 0.12 * S;
+      for (var i = 0; i < 3; i++) {
+        var yTop = by - i * (band + gap) - band;
+        // gövde bandı
+        ctx.beginPath(); ctx.moveTo(cxp - rw, yTop + rh); ctx.lineTo(cxp - rw, yTop + band + rh); ctx.arc(cxp, yTop + band + rh, rw, Math.PI, 0, true); ctx.lineTo(cxp + rw, yTop + rh); ctx.arc(cxp, yTop + rh, rw, 0, Math.PI, true); ctx.closePath();
+        ctx.fillStyle = grad({ x: cxp, y: yTop }, { x: cxp, y: yTop + band + rh }, hexA(GRN, 0.9), hexA(GRNd, 0.95)); ctx.fill();
+        // üst elips
+        ctx.beginPath(); ctx.ellipse(cxp, yTop + rh, rw, rh, 0, 0, TAU); ctx.fillStyle = hexA(GRNc, 0.92); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(cxp, yTop + rh, rw, rh, 0, 0, TAU); ctx.strokeStyle = hexA(WHT, 0.5); ctx.lineWidth = 1; ctx.stroke();
+      }
+      ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = 0.4 + 0.3 * pulse; var gr = 0.6 * S; ctx.drawImage(sprite(GRN), cxp - gr, by - band * 3 - gr * 0.5, gr * 2, gr * 2); ctx.restore();
+    }
+    // ---- panel (billboard cam ekran) ----
+    function panelBox(s, pwF, phF) {
+      var base = iso(s.x, 0, s.z), pw = pwF * S, ph = phF * S, x0 = base.x - pw / 2, y1 = base.y - 0.06 * S, y0 = y1 - ph;
+      // arka ayak/parıltı
+      ctx.fillStyle = "rgba(4,10,16,0.82)"; rrect(x0, y0, pw, ph, 5); ctx.fill();
+      ctx.strokeStyle = hexA(GRN, 0.5); ctx.lineWidth = 1.2; rrect(x0, y0, pw, ph, 5); ctx.stroke();
+      return { x0: x0, y0: y0, pw: pw, ph: ph };
+    }
+    function rrect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+    function drawInput(s) {
+      var b = panelBox(s, 0.66, 0.92), n = 7, bw = b.pw / (n * 1.7), gx = (b.pw - n * bw) / (n + 1);
+      for (var i = 0; i < n; i++) {
+        var hh = (0.32 + 0.62 * (0.5 + 0.5 * Math.sin(t * 2.4 + i * 0.9))) * (b.ph - 20);
+        var bx = b.x0 + gx + i * (bw + gx), byb = b.y0 + b.ph - 8;
+        ctx.fillStyle = hexA(GRN, 0.85); ctx.fillRect(bx, byb - hh, bw, hh);
+        ctx.fillStyle = hexA(GRNc, 0.9); ctx.fillRect(bx, byb - hh, bw, 2);
+      }
+      // tarama çizgisi
+      var sy = b.y0 + 8 + ((t * 0.5) % 1) * (b.ph - 16); ctx.strokeStyle = hexA(LIME, 0.5); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(b.x0 + 5, sy); ctx.lineTo(b.x0 + b.pw - 5, sy); ctx.stroke();
+    }
+    function drawLattice(s) {
+      var b = panelBox(s, 0.72, 0.9), cxp = b.x0 + b.pw / 2, cyp = b.y0 + b.ph / 2, R = Math.min(b.pw, b.ph) * 0.3, rot = t * 0.6;
+      var N = [], gp = [-1, 0, 1];
+      for (var a = 0; a < 3; a++) for (var c = 0; c < 3; c++) if (!(a === 1 && c === 1)) N.push([gp[a], (a + c) % 2 ? 0.6 : -0.6, gp[c]]);
+      var P = N.map(function (p) { var X = p[0] * Math.cos(rot) - p[2] * Math.sin(rot), Z = p[0] * Math.sin(rot) + p[2] * Math.cos(rot); return { x: cxp + X * R, y: cyp - p[1] * R * 0.8 + Z * R * 0.32, z: Z }; });
+      ctx.strokeStyle = hexA(PUR, 0.4); ctx.lineWidth = 1; ctx.beginPath();
+      for (var i = 0; i < P.length; i++) for (var j = i + 1; j < P.length; j++) { var dx = N[i][0] - N[j][0], dy = N[i][1] - N[j][1], dz = N[i][2] - N[j][2]; if (dx * dx + dy * dy + dz * dz < 2.2) { ctx.moveTo(P[i].x, P[i].y); ctx.lineTo(P[j].x, P[j].y); } }
+      ctx.stroke();
+      P.forEach(function (p, i) { var col = i % 2 ? GRN : PUR; ctx.fillStyle = hexA(col, 0.95); ctx.beginPath(); ctx.arc(p.x, p.y, 2.6, 0, TAU); ctx.fill(); });
+    }
+    function drawGear(s) {
+      var b = panelBox(s, 0.74, 0.9);
+      // arka: kayan kod matrisi
+      ctx.save(); rrect(b.x0 + 3, b.y0 + 3, b.pw - 6, b.ph - 6, 4); ctx.clip();
+      ctx.font = "9px " + C.mono; var cols = 6;
+      for (var c = 0; c < cols; c++) { var off = ((t * 22 + c * 13) % (b.ph + 20)); for (var r = 0; r < 8; r++) { var yy = b.y0 + ((r * 13 + off) % (b.ph + 6)) - 3; ctx.fillStyle = hexA(GRN, r === 0 ? 0.9 : 0.32); ctx.fillText(((c + r + (t | 0)) % 2).toString(), b.x0 + 8 + c * ((b.pw - 16) / cols), yy); } }
+      ctx.restore();
+      // ön: dişli
+      var gx = b.x0 + b.pw * 0.62, gy = b.y0 + b.ph * 0.5, R = Math.min(b.pw, b.ph) * 0.24, rot = t * 0.8, teeth = 9;
+      ctx.save(); ctx.translate(gx, gy); ctx.rotate(rot);
+      ctx.fillStyle = hexA(GRNc, 0.95); ctx.beginPath();
+      for (var k = 0; k < teeth; k++) { var a0 = k / teeth * TAU, a1 = (k + 0.5) / teeth * TAU; ctx.lineTo(Math.cos(a0) * R * 1.32, Math.sin(a0) * R * 1.32); ctx.lineTo(Math.cos(a0 + 0.16) * R, Math.sin(a0 + 0.16) * R); ctx.lineTo(Math.cos(a1) * R, Math.sin(a1) * R); ctx.lineTo(Math.cos(a1 + 0.16) * R * 1.0, Math.sin(a1 + 0.16) * R); }
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "rgba(6,14,4,0.95)"; ctx.beginPath(); ctx.arc(0, 0, R * 0.5, 0, TAU); ctx.fill();
+      ctx.strokeStyle = hexA(GRN, 0.9); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, R * 0.5, 0, TAU); ctx.stroke();
+      ctx.restore();
+    }
+    // ---- merkez cam küp + sinir ağı ----
+    var LAY = [
+      [[-0.72, 0.45, 0.0], [-0.72, -0.45, 0.0]],
+      [[-0.24, 0.66, 0.34], [-0.24, 0.0, -0.42], [-0.24, -0.66, 0.34]],
+      [[0.24, 0.62, -0.36], [0.24, 0.02, 0.42], [0.24, -0.62, -0.36]],
+      [[0.72, 0.42, 0.0], [0.72, -0.42, 0.0]]
+    ];
+    function cubeCorners(s, he, yc) {
+      function P(sx, sy, sz) { return iso(s.x + sx * he, yc + sy * he, s.z + sz * he); }
+      return {
+        TA: P(-1, 1, -1), TB: P(1, 1, -1), TC: P(1, 1, 1), TD: P(-1, 1, 1),
+        BA: P(-1, -1, -1), BB: P(1, -1, -1), BC: P(1, -1, 1), BD: P(-1, -1, 1)
+      };
+    }
+    function drawCube(s, glow, pulse) {
+      var he = 0.7, yc = 0.92, C8 = cubeCorners(s, he, yc);
+      // parlak yeşil taban ışığı (referanstaki gibi küpün altından taşan enerji)
+      var baseC = iso(s.x, yc - he, s.z);
+      ctx.save(); ctx.globalCompositeOperation = "lighter";
+      var bg = ctx.createRadialGradient(baseC.x, baseC.y, 0, baseC.x, baseC.y, he * S * 2.4);
+      bg.addColorStop(0, hexA(GRNc, 0.5 + 0.32 * glow)); bg.addColorStop(0.35, hexA(GRN, 0.24)); bg.addColorStop(1, hexA(GRN, 0));
+      ctx.fillStyle = bg; ctx.beginPath(); ctx.ellipse(baseC.x, baseC.y, he * S * 2.2, he * S * 1.02, 0, 0, TAU); ctx.fill();
+      ctx.restore();
+      // arka yüzler (uzak cam)
+      ctx.fillStyle = hexA(GRN, 0.03); poly([C8.TA, C8.BA, C8.BB, C8.TB], true); ctx.fill(); // arka
+      poly([C8.TA, C8.BA, C8.BD, C8.TD], true); ctx.fill(); // sol arka
+      poly([C8.BA, C8.BB, C8.BC, C8.BD], true); ctx.fillStyle = hexA(GRN, 0.05); ctx.fill(); // taban
+      ctx.strokeStyle = hexA(GRN, 0.18); ctx.lineWidth = 1; poly([C8.TA, C8.BA], false); ctx.stroke();
+      // --- sinir ağı ---
+      var nodes = [];
+      LAY.forEach(function (layer, li) { layer.forEach(function (n) { var p = iso(s.x + n[0] * he, yc + n[1] * he, s.z + n[2] * he); nodes.push({ p: p, li: li }); }); });
+      var flow = (t * 0.55) % (LAY.length - 1); // hangi katman arası aktif
+      ctx.save(); ctx.globalCompositeOperation = "lighter";
+      // kenarlar
+      var idx = 0, layerStart = [], acc2 = 0; LAY.forEach(function (l) { layerStart.push(acc2); acc2 += l.length; });
+      for (var li = 0; li < LAY.length - 1; li++) {
+        var aStart = layerStart[li], aEnd = layerStart[li] + LAY[li].length, bStart = layerStart[li + 1], bEnd = layerStart[li + 1] + LAY[li + 1].length;
+        var act = (flow >= li && flow < li + 1); var fp = flow - li;
+        for (var a = aStart; a < aEnd; a++) for (var b = bStart; b < bEnd; b++) {
+          ctx.strokeStyle = hexA(GRN, act ? 0.32 : 0.14); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(nodes[a].p.x, nodes[a].p.y); ctx.lineTo(nodes[b].p.x, nodes[b].p.y); ctx.stroke();
+          if (act) { var px = nodes[a].p.x + (nodes[b].p.x - nodes[a].p.x) * fp, py = nodes[a].p.y + (nodes[b].p.y - nodes[a].p.y) * fp; ctx.globalAlpha = 0.9; ctx.drawImage(sprite(LIME), px - 4, py - 4, 8, 8); ctx.globalAlpha = 1; }
+        }
+      }
+      // düğümler
+      nodes.forEach(function (nd) { var lit = Math.abs(nd.li - flow) < 0.6 || Math.abs(nd.li - flow - 1) < 0.4; var rr = 5 + (lit ? 3 : 0) + 1.5 * pulse; ctx.globalAlpha = lit ? 0.95 : 0.6; ctx.drawImage(sprite(GRN), nd.p.x - rr, nd.p.y - rr, rr * 2, rr * 2); });
+      ctx.globalAlpha = 1;
+      nodes.forEach(function (nd) { ctx.fillStyle = WHT; ctx.beginPath(); ctx.arc(nd.p.x, nd.p.y, 1.7, 0, TAU); ctx.fill(); });
+      ctx.restore();
+      // ön yüzler (yakın cam · translucent)
+      ctx.fillStyle = hexA(GRN, 0.07 + 0.05 * glow);
+      poly([C8.TD, C8.TC, C8.BC, C8.BD], true); ctx.fill();   // ön-sol (z+)
+      poly([C8.TB, C8.TC, C8.BC, C8.BB], true); ctx.fill();   // ön-sağ (x+)
+      poly([C8.TA, C8.TB, C8.TC, C8.TD], true); ctx.fillStyle = hexA(GRN, 0.1 + 0.08 * glow); ctx.fill(); // üst
+      // parlak kenarlar
+      ctx.lineWidth = 1.4; ctx.strokeStyle = hexA(GRNc, 0.5 + 0.3 * glow); poly([C8.TA, C8.TB, C8.TC, C8.TD], true); ctx.stroke();
+      ctx.strokeStyle = hexA(GRNc, 0.5); ctx.beginPath(); ctx.moveTo(C8.TC.x, C8.TC.y); ctx.lineTo(C8.BC.x, C8.BC.y); ctx.stroke();
+      ctx.strokeStyle = hexA(GRN, 0.34); ctx.beginPath(); ctx.moveTo(C8.TB.x, C8.TB.y); ctx.lineTo(C8.BB.x, C8.BB.y); ctx.moveTo(C8.TD.x, C8.TD.y); ctx.lineTo(C8.BD.x, C8.BD.y); ctx.stroke();
+    }
+    // ---- neon zemin kablosu ----
+    function cablePath(pts) { var sp = pts.map(function (p) { return iso(p[0], 0, p[1]); }); ctx.beginPath(); ctx.moveTo(sp[0].x, sp[0].y); for (var i = 1; i < sp.length - 1; i++) { var m = { x: (sp[i].x + sp[i + 1].x) / 2, y: (sp[i].y + sp[i + 1].y) / 2 }; ctx.quadraticCurveTo(sp[i].x, sp[i].y, m.x, m.y); } ctx.lineTo(sp[sp.length - 1].x, sp[sp.length - 1].y); return sp; }
+    function cablePointAt(pts, u) { // yaklaşık: segmentler arası enterpolasyon
+      var sp = pts.map(function (p) { return iso(p[0], 0, p[1]); }), seg = (sp.length - 1), fi = u * seg, i = Math.min(seg - 1, fi | 0), f = fi - i;
+      return { x: sp[i].x + (sp[i + 1].x - sp[i].x) * f, y: sp[i].y + (sp[i + 1].y - sp[i].y) * f };
+    }
+    function drawCable(cab) {
+      ctx.lineCap = "round"; ctx.lineJoin = "round";
+      cablePath(cab.pts); ctx.strokeStyle = hexA(GRNd, 0.9); ctx.lineWidth = cab.w + 5; ctx.stroke();
+      cablePath(cab.pts); ctx.strokeStyle = hexA(GRN, 0.85); ctx.lineWidth = cab.w; ctx.stroke();
+      cablePath(cab.pts); ctx.strokeStyle = hexA(LIME, 0.9); ctx.lineWidth = cab.w * 0.4; ctx.stroke();
+      // akan darbeler
+      ctx.save(); ctx.globalCompositeOperation = "lighter";
+      for (var k = 0; k < 3; k++) { var u = ((t * 0.32 + k / 3) % 1); var p = cablePointAt(cab.pts, u); var col = u < 0.5 ? GRN : LIME; var rr = 7; ctx.globalAlpha = 0.85 * Math.sin(u * Math.PI); ctx.drawImage(sprite(col), p.x - rr, p.y - rr, rr * 2, rr * 2); ctx.fillStyle = GRNc; ctx.globalAlpha = 0.9 * Math.sin(u * Math.PI); ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, TAU); ctx.fill(); }
+      ctx.restore(); ctx.lineCap = "butt"; ctx.lineJoin = "miter";
+    }
+    // ---- statik katman (bg + kaideler + ped çerçeveleri) ----
+    function buildScene() {
+      sceneLayer = document.createElement("canvas"); sceneLayer.width = Math.max(1, Math.round(W * dpr)); sceneLayer.height = Math.max(1, Math.round(H * dpr));
+      var g = sceneLayer.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      // ince zemin ızgarası
+      g.strokeStyle = "rgba(255,255,255,0.02)"; g.lineWidth = 1;
+      for (var gx = -2; gx < 10; gx++) { var p0 = iso(gx, 0, -1), p1 = iso(gx, 0, 3); g.beginPath(); g.moveTo(p0.x, p0.y); g.lineTo(p1.x, p1.y); g.stroke(); }
+      for (var gz = -1; gz < 4; gz++) { var q0 = iso(-2, 0, gz), q1 = iso(10, 0, gz); g.beginPath(); g.moveTo(q0.x, q0.y); g.lineTo(q1.x, q1.y); g.stroke(); }
+      STATIONS.forEach(function (s) { platform(s, g); padRhombus(s, g); });
+    }
+    function build() {
+      W = stage.clientWidth; H = stage.clientHeight; if (!W || !H) { requestAnimationFrame(build); return; }
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.width = W + "px"; cv.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); fit(); buildScene(); draw();
+    }
+    var CAPS = ["480M+ kayıt · ProX motoruna akıyor", "veri temizleme · normalize · coğrafi eşleme", "ML · MML · determinist çıkarım (halüsinasyonsuz)", "il · ilçe · mahalle ₺/m² endeksi üretiliyor", "REST/WS · PDF · dashboard olarak dağıtılıyor"];
+    var capIdx = -1, capLast = 0;
+    function stepSim(dt) {
+      t += dt;
+      if (t - capLast > 2.0) { capLast = t; capIdx = (capIdx + 1) % CAPS.length; if (capEl) capEl.textContent = "▸ " + CAPS[capIdx]; }
+    }
+    function draw() {
+      if (!sceneLayer) return;
+      ctx.clearRect(0, 0, W, H); ctx.drawImage(sceneLayer, 0, 0, W, H);
+      var pulse = 0.5 + 0.5 * Math.sin(t * 1.6), glow = 0.4 + 0.6 * pulse;
+      // ped ışıkları (additive)
+      ctx.save(); ctx.globalCompositeOperation = "lighter";
+      STATIONS.forEach(function (s) { padGlow(s, s.id === "cube" ? glow : glow * 0.7); });
+      ctx.restore();
+      // kablolar (zeminde)
+      CABLES.forEach(drawCable);
+      // istasyon içerikleri (arkadan öne)
+      drawDB(ST("db"), pulse);
+      drawInput(ST("in"));
+      drawCube(ST("cube"), glow, pulse);
+      drawLattice(ST("lat"));
+      drawGear(ST("gear"));
+    }
+    function tick(now) { if (!last) last = now; var dt = Math.min((now - last) / 1000, 0.05); last = now; acc += dt; while (acc >= STEP) { stepSim(STEP); acc -= STEP; } draw(); if (running) raf = requestAnimationFrame(tick); }
+    function start() { if (running || reduce || !visible) return; running = true; last = 0; raf = requestAnimationFrame(tick); }
+    function stop() { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
+    build();
+    if (reduce) { for (var w = 0; w < 200; w++) stepSim(STEP); draw(); }
+    var rt = 0; function relayout() { clearTimeout(rt); rt = setTimeout(build, 140); }
+    window.addEventListener("resize", relayout);
+    if (window.ResizeObserver) { try { new ResizeObserver(relayout).observe(stage); } catch (e) {} }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+    if (mq && mq.addEventListener) mq.addEventListener("change", function (e) { reduce = e.matches; reduce ? stop() : start(); });
+    document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); else if (visible) start(); });
+    if (window.IntersectionObserver) { try { new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) start(); else stop(); }, { threshold: 0 }).observe(stage); } catch (e) {} }
+    stage._pump = function (n) { for (var i = 0; i < (n || 60); i++) stepSim(STEP); draw(); };
+    start();
+  }
+
   function renderApp() {
-    return NX.Ticker(RESTICK) + NX.Masthead("Research") + NX.Nav("Research") + HeroResearch() + FeaturedReport()
+    return NX.Ticker(RESTICK) + NX.Masthead("Research") + NX.Nav("Research") + ResearchPipeline() + HeroResearch() + FeaturedReport()
       + SectionDivider("A", "Son Blog Yazıları", "emlakekspertizi.com/blog · 22.176 YAZI · AYLIK ANALİZ") + LatestResearchFeed()
       + SectionDivider("B", "İçerik Kategorileri", "KONUT · TİCARİ · ARSA · TURİSTİK · PİYASA BÜLTENİ") + ResearchCategories()
       + SectionDivider("C", "Canlı Endeksler", "ProX ENDEKS · GERÇEK m² · İL BAZINDA · CANLI") + IndicesLiveData()
@@ -277,6 +582,7 @@
   }
 
   NX.boot(renderApp);
+  mountResearchPipeline();
 
   // Hero canlı sayaç animasyonu (CountUp) — görünür sekmede rAF animasyonu,
   // gizli sekmede (rAF çalışmaz) setTimeout geri-dönüşü son değeri garanti eder.
