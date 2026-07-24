@@ -131,8 +131,9 @@
       + '<span style="' + css({ color: C.violet, fontWeight: 700, letterSpacing: "0.06em", whiteSpace: "nowrap" }) + '">◈ ML·MML HESAPLIYOR</span>'
       + '<span id="feed-dim" style="' + css({ color: C.accent, fontWeight: 700, whiteSpace: "nowrap" }) + '">DNA 09/38 · LİKİDİTE</span>'
       + '<span style="' + css({ color: C.textFaint, whiteSpace: "nowrap" }) + '">işlenen <span id="feed-proc" style="' + css({ color: C.textSec, fontWeight: 700 }) + '">480.241.883</span></span>'
+      + '<span style="' + css({ color: C.textFaint, whiteSpace: "nowrap" }) + '">elenen <span id="feed-elim" style="' + css({ color: C.danger, fontWeight: 700 }) + '">87.043.912</span> <span style="' + css({ color: C.textFaint }) + '">(dedup %18)</span></span>'
       + '<span style="' + css({ color: C.textFaint, whiteSpace: "nowrap" }) + '">güven <span id="feed-conf" style="' + css({ color: C.accent, fontWeight: 700 }) + '">%92</span></span>'
-      + '<span style="' + css({ marginLeft: "auto", color: C.textFaint, fontSize: 9, letterSpacing: "0.06em", whiteSpace: "nowrap" }) + '">● temsilî akış · gerçek konumlar</span></div></div>'
+      + '<span id="feed-tag" style="' + css({ marginLeft: "auto", color: C.textFaint, fontSize: 9, letterSpacing: "0.06em", whiteSpace: "nowrap" }) + '">● temsilî · gerçek konum</span></div></div>'
       + '<div style="' + css({ position: "relative", zIndex: 2, marginTop: 13, paddingTop: 11, borderTop: "1px solid " + C.border }) + '">'
       + '<div id="infra-cap" aria-live="polite" style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textSec, letterSpacing: "0.03em", minHeight: 15, lineHeight: 1.4 }) + '">6 kaynaktan ham veri akıyor · web · saha · kamu · TÜİK · mevzuat · belediye</div>'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 6, marginTop: 9 }) + '">'
@@ -738,6 +739,16 @@
      3 katmanı temsil eden akan zaman serisi dalgaları (primary/violet/accent) + dalgalar
      üzerinde giden parçacıklar (additive glow) + ince grid. Tek rAF; ekran dışında durur
      (IntersectionObserver); prefers-reduced-motion'da tek statik kare çizer. */
+  var EMLAK_API_BASE = "https://www.emlakekspertizi.com";
+  var EMLAK_TENANT = { tenant_id: "nadas", tenant_key: "prox_nadas_43ffdf3fe0501d5510e71616b618cfea" };   /* NADAS ProX anahtarı — canlı endeks. NOT: istemci-tarafı görünür; salt-okunur/alan-kısıtlı olmalı. */
+  function proxApi(path, opts) {
+    if (!EMLAK_TENANT.tenant_key) return Promise.resolve({ fallback: true });
+    opts = opts || {};
+    var init = { mode: "cors", headers: { "X-Tenant-Id": EMLAK_TENANT.tenant_id, "X-Tenant-Key": EMLAK_TENANT.tenant_key } };
+    if (opts.method) init.method = opts.method;
+    if (opts.body) { init.headers["Content-Type"] = "application/json"; init.body = JSON.stringify(opts.body); }
+    return fetch(EMLAK_API_BASE + path, init).then(function (r) { if (!r.ok) throw 0; return r.json(); }).catch(function () { return { fallback: true }; });
+  }
   function mountInfraPipeline() {
     var stage = document.getElementById("infra-stage");
     var cv = stage && document.getElementById("infra-canvas");
@@ -749,26 +760,50 @@
     var actEls = [].slice.call(stage.querySelectorAll("[data-act]"));
     var feedLoc = document.getElementById("feed-loc"), feedM2 = document.getElementById("feed-m2"), feedDemo = document.getElementById("feed-demo"), feedIdx = 0, feedLast = 0;
     var FEED = [
-      ["İstanbul › Kadıköy › Caddebostan › Bağdat Cd.", "₺148.200/m²", "yaş 41 · hane 2.3 · prestij L4"],
-      ["İstanbul › Beşiktaş › Levent › Nispetiye Cd.", "₺172.500/m²", "yaş 39 · hane 2.1 · prestij L5"],
-      ["İstanbul › Şişli › Nişantaşı › Teşvikiye", "₺165.900/m²", "yaş 43 · hane 2.0 · prestij L5"],
-      ["Ankara › Çankaya › Kızılay › Atatürk Blv.", "₺54.800/m²", "yaş 37 · hane 2.6 · prestij L3"],
-      ["İzmir › Konak › Alsancak › Kıbrıs Şehitleri", "₺63.400/m²", "yaş 40 · hane 2.2 · prestij L4"],
-      ["İstanbul › Sarıyer › Bebek › Cevdetpaşa Cd.", "₺246.700/m²", "yaş 44 · hane 2.1 · prestij L5"],
-      ["İstanbul › Üsküdar › Kuzguncuk › İcadiye Cd.", "₺112.300/m²", "yaş 42 · hane 2.4 · prestij L4"],
-      ["Bursa › Nilüfer › Görükle › Üniversite Cd.", "₺31.900/m²", "yaş 33 · hane 2.8 · prestij L2"],
-      ["Antalya › Muratpaşa › Lara › Şirinyalı Mah.", "₺48.600/m²", "yaş 38 · hane 2.5 · prestij L3"],
-      ["Ankara › Yenimahalle › Batıkent › 6. Cad.", "₺39.200/m²", "yaş 36 · hane 2.7 · prestij L3"],
-      ["İzmir › Karşıyaka › Bostanlı › Cemal Gürsel", "₺57.100/m²", "yaş 41 · hane 2.3 · prestij L4"],
-      ["İstanbul › Ataşehir › Barbaros › Batı Cd.", "₺84.500/m²", "yaş 38 · hane 2.5 · prestij L4"],
-      ["İstanbul › Beyoğlu › Cihangir › Sıraselviler", "₺121.800/m²", "yaş 40 · hane 1.9 · prestij L4"],
-      ["Kocaeli › İzmit › Yahya Kaptan › 5. Cad.", "₺28.700/m²", "yaş 35 · hane 3.0 · prestij L2"]
+      { il: "İstanbul", ilce: "Kadıköy", mah: "Caddebostan", cad: "Bağdat Cd.", m2: 148200, demo: "yaş 41 · hane 2.3 · prestij L4", score: null, live: false },
+      { il: "İstanbul", ilce: "Beşiktaş", mah: "Levent", cad: "Nispetiye Cd.", m2: 172500, demo: "yaş 39 · hane 2.1 · prestij L5", score: null, live: false },
+      { il: "İstanbul", ilce: "Şişli", mah: "Teşvikiye", cad: "Nişantaşı", m2: 165900, demo: "yaş 43 · hane 2.0 · prestij L5", score: null, live: false },
+      { il: "Ankara", ilce: "Çankaya", mah: "Kızılay", cad: "Atatürk Blv.", m2: 54800, demo: "yaş 37 · hane 2.6 · prestij L3", score: null, live: false },
+      { il: "İzmir", ilce: "Konak", mah: "Alsancak", cad: "Kıbrıs Şehitleri", m2: 63400, demo: "yaş 40 · hane 2.2 · prestij L4", score: null, live: false },
+      { il: "İstanbul", ilce: "Sarıyer", mah: "Bebek", cad: "Cevdetpaşa Cd.", m2: 246700, demo: "yaş 44 · hane 2.1 · prestij L5", score: null, live: false },
+      { il: "İstanbul", ilce: "Üsküdar", mah: "Kuzguncuk", cad: "İcadiye Cd.", m2: 112300, demo: "yaş 42 · hane 2.4 · prestij L4", score: null, live: false },
+      { il: "Bursa", ilce: "Nilüfer", mah: "Görükle", cad: "Üniversite Cd.", m2: 31900, demo: "yaş 33 · hane 2.8 · prestij L2", score: null, live: false },
+      { il: "Antalya", ilce: "Muratpaşa", mah: "Şirinyalı", cad: "Lara", m2: 48600, demo: "yaş 38 · hane 2.5 · prestij L3", score: null, live: false },
+      { il: "Ankara", ilce: "Yenimahalle", mah: "Batıkent", cad: "6. Cad.", m2: 39200, demo: "yaş 36 · hane 2.7 · prestij L3", score: null, live: false },
+      { il: "İzmir", ilce: "Karşıyaka", mah: "Bostanlı", cad: "Cemal Gürsel", m2: 57100, demo: "yaş 41 · hane 2.3 · prestij L4", score: null, live: false },
+      { il: "İstanbul", ilce: "Ataşehir", mah: "Barbaros", cad: "Batı Cd.", m2: 84500, demo: "yaş 38 · hane 2.5 · prestij L4", score: null, live: false },
+      { il: "İstanbul", ilce: "Beyoğlu", mah: "Cihangir", cad: "Sıraselviler", m2: 121800, demo: "yaş 40 · hane 1.9 · prestij L4", score: null, live: false },
+      { il: "Kocaeli", ilce: "İzmit", mah: "Yahya Kaptan", cad: "5. Cad.", m2: 28700, demo: "yaş 35 · hane 3.0 · prestij L2", score: null, live: false }
     ];
-    function cycleFeed() { if (!feedLoc) return; var r = FEED[feedIdx]; feedLoc.textContent = r[0]; feedM2.textContent = r[1]; feedDemo.textContent = r[2]; }
+    function fmtM2(n) { return "₺" + Math.round(n).toLocaleString("tr-TR") + "/m²"; }
+    function cycleFeed() {
+      if (!feedLoc) return; var r = FEED[feedIdx];
+      feedLoc.textContent = r.il + " › " + r.ilce + " › " + r.mah + " › " + r.cad;
+      feedM2.textContent = fmtM2(r.m2) + (r.live && typeof r.delta === "number" && Math.abs(r.delta) >= 0.1 ? " " + (r.delta >= 0 ? "▲" : "▼") + Math.abs(r.delta).toFixed(1) + "%" : "");
+      feedDemo.textContent = r.demo;
+      if (feedConf) feedConf.textContent = "%" + (r.live && r.score != null && r.score > 0 ? Math.round(r.score) : (90 + Math.round(2 + 2 * Math.sin(feedIdx * 1.3))));
+      if (feedTag) { feedTag.textContent = r.live ? "● CANLI · ProX endeks m²" : "● temsilî · gerçek konum"; feedTag.style.color = r.live ? C.accent : C.textFaint; }
+    }
     var feedDim = document.getElementById("feed-dim"), feedProc = document.getElementById("feed-proc"), feedConf = document.getElementById("feed-conf");
     var DIM = ["NÜFUS YOĞUNLUĞU", "YAŞ DAĞILIMI", "HANE BÜYÜKLÜĞÜ", "EĞİTİM DÜZEYİ", "GELİR SEVİYESİ", "GÖÇ HAREKETİ", "M² FİYAT", "KİRA ÇARPANI", "LİKİDİTE", "DÖNÜŞ HIZI", "TALEP YOĞUNLUĞU", "ARZ STOKU", "FİYAT TRENDİ", "GETİRİ · ROI", "YAPI STOKU YAŞI", "YAPI KALİTESİ", "DOLULUK ORANI", "BOŞ KONUT ORANI", "SİTE/PROJE ORANI", "İMAR DURUMU", "YOĞUNLUK KAT-S", "ARSA POTANSİYELİ", "DÖNÜŞÜM AKTİVİTE", "RUHSAT YOĞUNLUĞU", "METRO ERİŞİM", "ANA ARTER MESAFE", "MERKEZ MESAFE", "TOPLU TAŞIMA", "SOSYAL DONATI", "YEŞİL ALAN", "SAHİL/MANZARA", "PRESTİJ ENDEKSİ", "GÜVENLİK", "DEPREM RİSKİ", "ZEMİN DURUMU", "SEL/TAŞKIN RİSKİ", "MEVSİMSELLİK", "OLAY ETKİSİ"];
-    var dimIdx = 8, dimLast = 0, procN = 480241883, procF = 0, confLast = 0;
+    var dimIdx = 8, dimLast = 0, procN = 480241883, procF = 0, elimN = 87043912;
+    var feedTag = document.getElementById("feed-tag"), feedElim = document.getElementById("feed-elim");
     function pad2(n) { return n < 10 ? "0" + n : "" + n; }
+    function loadFeedLive() {
+      if (location.protocol === "file:") return;   // file:// → CORS 403; temsilî kal
+      FEED.forEach(function (r) {
+        var q = "il=" + encodeURIComponent(r.il) + "&ilce=" + encodeURIComponent(r.ilce) + "&mahalle=" + encodeURIComponent(r.mah) + "&kategori=konut&durum=satilik";
+        var to = new Promise(function (res) { setTimeout(function () { res({ fallback: true }); }, 5000); });
+        Promise.race([proxApi("/api/v1/tenant/endeks?" + q), to]).then(function (res) {
+          if (res && res.success === true && !res.fallback && res.data && +res.data.m2 > 0) {
+            r.m2 = +res.data.m2; r.live = true;
+            if (typeof res.data.score === "number") r.score = res.data.score;
+            if (typeof res.data.delta === "number") r.delta = res.data.delta;
+            if (FEED[feedIdx] === r) cycleFeed();
+          }
+        }).catch(function () {});
+      });
+    }
 
     var W = 0, H = 0, dpr = 1, raf = 0, running = false, visible = true;
     var STEP = 1 / 60, acc = 0, last = 0, t = 0, frameN = 0;
@@ -849,8 +884,8 @@
       if (ai !== curAct) { curAct = ai; if (capEl) capEl.textContent = ACTS[ai].cap; }
       if (t - feedLast > 1.35) { feedLast = t; feedIdx = (feedIdx + 1) % FEED.length; cycleFeed(); }
       if (t - dimLast > 0.5) { dimLast = t; dimIdx = (dimIdx + 1) % DIM.length; if (feedDim) feedDim.textContent = "DNA " + pad2(dimIdx + 1) + "/38 · " + DIM[dimIdx]; }
-      procN += dt * 14.2; if ((procF++ % 7) === 0 && feedProc) feedProc.textContent = Math.floor(procN).toLocaleString("tr-TR");
-      if (t - confLast > 1.6) { confLast = t; if (feedConf) feedConf.textContent = "%" + (90 + Math.round(2 + 2 * Math.sin(t * 0.7))); }
+      procN += dt * 14.2; elimN += dt * 14.2 * 0.18;
+      if ((procF++ % 7) === 0) { if (feedProc) feedProc.textContent = Math.floor(procN).toLocaleString("tr-TR"); if (feedElim) feedElim.textContent = Math.floor(elimN).toLocaleString("tr-TR"); }
       dnaFill += (((ai === 3) ? 1 : 0.4) - dnaFill) * Math.min(1, dt * 1.6);
       emitAcc += dt * (ai === 0 ? 34 : 20);
       while (emitAcc >= 1) { emitAcc -= 1; if (srcs.length) emit((Math.random() * srcs.length) | 0); }
@@ -945,6 +980,7 @@
     document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); else if (visible) start(); });
     if (window.IntersectionObserver) { try { new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) start(); else stop(); }, { threshold: 0 }).observe(stage); } catch (e) {} }
     stage._pump = function (n) { for (var i = 0; i < (n || 60); i++) stepSim(STEP); syncSteps(); draw(); };
+    loadFeedLive();
     start();
   }
 
