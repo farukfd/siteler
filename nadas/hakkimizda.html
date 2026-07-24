@@ -6,6 +6,8 @@
 <title>Hakkımızda — NADAS · Türkiye’nin İlk Emlak Endeksi · Since 2005</title>
 <meta name="description" content="NADAS Gayrimenkul Bilgi İletişim Sistemleri: 2005’ten beri 257 ay kesintisiz aylık emlak endeksi. 480M+ kayıt, 81 il · 973 ilçe · 50.000+ mahalle, 38 kategori. 2005’ten beri mahalle bazında kesintisiz aylık emlak endeksi. Kategorinin geliştiricisi.">
 <meta name="theme-color" content="#06101B">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="author" content="NADAS Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti.">
 <link rel="canonical" href="https://www.nadas.com.tr/hakkimizda">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%2306101B'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%2338BDF8'%3EN%3C/text%3E%3C/svg%3E">
 <meta property="og:type" content="website">
@@ -14,6 +16,9 @@
 <meta property="og:title" content="Hakkımızda — NADAS · Türkiye’nin İlk Emlak Endeksi">
 <meta property="og:description" content="2005’ten beri 257 ay kesintisiz aylık emlak endeksi. 480M+ kayıt · 50.000+ mahalle · 38 kategori. Kategorinin geliştiricisi.">
 <meta property="og:image" content="og-hakkimizda.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NADAS — Hakkımızda · Türkiye'nin mahalle düzeyinde tek veri altyapısı">
 <meta property="og:url" content="https://www.nadas.com.tr/hakkimizda">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Hakkımızda — NADAS">
@@ -200,7 +205,7 @@
       { y: "2022", ay: "—", m: "205", t: "ProX v1.0 BETA · İLK ASİSTAN", d: "ProX akıllı emlak asistanının ilk versiyonu — beta olarak, sohbet arayüzüyle çıktı. 2013’te başlayan ML/MML veritabanı üzerine kuruldu. Deterministik · halüsinasyonsuz · gerçek veriler üzerinden.", meta: ["Motor: v1.0 BETA", "Arayüz: Sohbet", "Tip: Det.", "Veri: Gerçek"], type: "prox", featured: true },
       { y: "2023", ay: "Şub", m: "218", t: "KAHRAMANMARAŞ DEPREMİ", d: "Hatay, Adıyaman, Malatya bölgesinde yapı stoku ve fiyat dinamiklerinin değişimi. Olay markırı sistemi etkilenen 11 ilde mahalle bazlı sönüm fonksiyonlarıyla devreye alındı.", meta: ["Etkilenen: 11 il", "Markır: Aktif", "Sönüm: Mahalle", "Güncelleme: ✓"], type: "macro" },
       { y: "2024", ay: "—", m: "229", t: "emlakekspertizi.com KAMUYA AÇIK", d: "Müşteri yüzü platformu kamuya açıldı. Karar analizi, SPK ekspertiz, üyelik sistemi devreye alındı. Müşteri ekosistemi genişlemeye başladı.", meta: ["Platform: Yayında", "Ürün: 3 paket", "SPK: Aktif", "Üyelik: 4 tier"], type: "marka", featured: true },
-      { y: "2025", ay: "—", m: "241", t: "ProX 2.0 · AKILLI EMLAK ASİSTANI", d: "İl-ilçe-mahalle-cadde-sokak bazlı 20 yıllık emlak verisi (~375M kayıt). Resmi Gazete + TBMM kararı entegrasyonu, gayrimenkul hukuku katmanı. Deterministik, halüsinasyonsuz.", meta: ["Motor: v2.0", "Kayıt: ~375M", "Hukuk: ✓", "Kapsam: Sokak"], type: "prox", featured: true },
+      { y: "2025", ay: "—", m: "241", t: "ProX 2.0 · AKILLI EMLAK ASİSTANI", d: "İl-ilçe-mahalle-cadde-sokak bazlı 20 yıllık emlak verisi (375M kayıt). Resmi Gazete + TBMM kararı entegrasyonu, gayrimenkul hukuku katmanı. Deterministik, halüsinasyonsuz.", meta: ["Motor: v2.0", "Kayıt: 375M", "Hukuk: ✓", "Kapsam: Sokak"], type: "prox", featured: true },
       { y: "2026", ay: "Mayıs", m: "257", t: "BUGÜN · 480M KAYIT · 50.000 MAHALLE", d: "5 katman 27 veri kaynağı. 50 TB depolama. 38 DNA boyutu. 7 milyon olay markırı. %96 sistem-wide medyan güven skoru. Müşteri ekosistemi bireyden bankaya 8 segment.", meta: ["Zincir: 257 ay", "Kayıt: 480M+", "Mahalle: 50K+", "Güven: %96"], type: "bugun", featured: true },
     ];
     function colorFor(t) { if (t === "prox") return C.violet; if (t === "macro") return C.warn; if (t === "bugun") return C.accent; return C.primary; }
@@ -263,7 +268,7 @@
   function IkiKatmanli() {
     var k1 = ["480M+ kayıt · 50.000+ mahalle", "257 ay tarihsel zincir · 21 yıl", "38 DNA boyutu · 7M olay markırı", "Kendi VPN · kendi proxy · kendi harita", "ProX motoru · ML/MML hesaplama", "Research · editorial · methodology"]
       .map(function (f) { return '<li style="' + css({ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 12, color: C.textSec, lineHeight: 1.5 }) + '"><span style="' + css({ color: C.primary, fontFamily: C.mono, fontSize: 11 }) + '">●</span>' + f + '</li>'; }).join('');
-    var k2 = ["ProX Karar Analizi · 3 paket", "SPK Lisanslı Resmi Değerleme", "Üyelik · 4 tier · sınırsız erişim", "ProX akıllı emlak asistanı", "Emlak endeksi · 50.000+ mahalle", "White-label paketler · kurumsal API"]
+    var k2 = ["ProX Karar Analizi · 3 paket", "SPK Lisanslı Resmi Değerleme", "Üyelik · 4 tier · sınırsız erişim", "ProX akıllı emlak asistanı", "Emlak endeksi · 50.000+ mahalle", "Veri & Trend Raporları · anında", "ProX PDF Studio · 12 / 25 / 50+ sayfa", "White-label paketler · kurumsal API"]
       .map(function (f) { return '<li style="' + css({ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 12, color: C.textSec, lineHeight: 1.5 }) + '"><span style="' + css({ color: C.accent, fontFamily: C.mono, fontSize: 11 }) + '">●</span>' + f + '</li>'; }).join('');
     var arrowSvg = '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
     var body = ''
@@ -286,8 +291,9 @@
       + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 100% 0%, rgba(52,211,153,0.1), transparent 50%)" }) + '"></div>'
       + '<div style="' + css({ position: "relative" }) + '">'
       + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }) + '"><span style="' + css({ padding: "3px 10px", background: C.accent, color: C.deep, fontFamily: C.mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em" }) + '">KATMAN 2</span><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.08em" }) + '">MÜŞTERİ · GÖRÜNEN YÜZ</span></div>'
-      + '<h4 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "1.6rem", fontWeight: 700, letterSpacing: "-0.025em", margin: "0 0 6px" }) + '"><span style="' + css({ color: "#fff" }) + '">emlak</span><span style="' + css({ color: "#2DD4BF" }) + '">ekspertizi</span><span style="' + css({ color: C.accent }) + '">.com</span></h4>'
-      + '<div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: "#2DD4BF", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 18 }) + '">DEĞERİNİ ŞİMDİ ÖĞREN · ProX ASİSTAN</div>'
+      + '<img src="img/emlak-logo-full.png" alt="emlakekspertizi.com" style="' + css({ display: "block", width: "100%", maxWidth: 220, height: "auto", margin: "0 0 10px" }) + '">'
+      + '<h4 style="' + css({ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)", whiteSpace: "nowrap", margin: -1, padding: 0, border: 0 }) + '">emlakekspertizi.com</h4>'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: "#2DD4BF", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 18 }) + '">ProX AKILLI EMLAK ASİSTANI</div>'
       + '<p style="' + css({ fontSize: 13, color: C.textSec, lineHeight: 1.6, margin: "0 0 16px" }) + '">Müşterinin temas ettiği yüzdür. Karar analizi, SPK lisanslı resmi ekspertiz, üyelik sistemi, ProX akıllı emlak asistanı. Tüm hesaplamalar arka planda NADAS altyapısı üzerinde çalışır; kullanıcı sadece sonucu görür.</p>'
       + '<ul style="' + css({ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 7, paddingTop: 14, borderTop: "1px solid " + C.border }) + '">' + k2 + '</ul>'
       + '</div></div></div>';
@@ -428,10 +434,7 @@
       + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 80% 20%, rgba(56,189,248,0.12), transparent 60%), radial-gradient(circle at 10% 80%, rgba(167,139,250,0.08), transparent 50%)" }) + '"></div>'
       + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
       + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 18, fontFamily: C.mono, fontSize: 11, letterSpacing: "0.14em" }) + '"><span style="' + css({ color: C.primary, fontWeight: 700 }) + '">◆ MÜŞTERİ PLATFORMU · NADAS ALTYAPISI ÜZERİNDE</span><span style="' + css({ height: 1, flex: 1, background: C.primary, opacity: 0.4 }) + '"></span><span style="' + css({ color: C.textMut }) + '">2012\'DEN BERİ</span></div>'
-      + '<div style="' + css({ display: "grid", gridTemplateColumns: "auto 1fr", gap: 22, alignItems: "center", marginBottom: 14 }) + '" class="nadas-twocol">'
-      + NX.EmlakEkspertiziLogo(88)
-      + '<div><h2 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "clamp(1.8rem,4.6vw,3rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri }) + '"><span style="' + css({ color: "#fff" }) + '">emlak</span><span style="' + css({ color: "#2DD4BF" }) + '">ekspertizi</span><span style="' + css({ color: C.accent }) + '">.com</span></h2>'
-      + '<div style="' + css({ fontFamily: C.mono, fontSize: 11, color: "#2DD4BF", letterSpacing: "0.18em", marginTop: 4, fontWeight: 700 }) + '">DEĞERİNİ ŞİMDİ ÖĞREN</div></div></div>'
+      + '<div style="' + css({ marginBottom: 16 }) + '"><img src="img/emlak-logo-full.png" alt="emlakekspertizi.com" style="' + css({ display: "block", width: "100%", maxWidth: 360, height: "auto" }) + '"><h2 style="' + css({ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)", whiteSpace: "nowrap", margin: -1, padding: 0, border: 0 }) + '">emlakekspertizi.com</h2></div>'
       + '<p style="' + css({ marginTop: 8, fontSize: 15, lineHeight: 1.6, color: C.textSec, maxWidth: 960 }) + '">NADAS\'ın 2012\'de aldığı marka patenti, bugün <strong style="' + css({ color: C.textPri }) + '">emlakekspertizi.com</strong> olarak tüm bireysel ve kurumsal müşterilerin temas noktası. Karar analizi, SPK lisanslı resmi ekspertiz, üyelik paketleri, ProX akıllı asistan — hepsi 21 yıllık veri altyapısı üzerinde.</p>'
       + '<div style="' + css({ marginTop: 22, display: "flex", gap: 12, flexWrap: "wrap" }) + '">'
       + '<a href="https://www.emlakekspertizi.com" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: C.primary, color: C.deep, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">EMLAKEKSPERTIZI.COM →</a>'
