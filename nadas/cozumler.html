@@ -161,8 +161,9 @@
     var GRN = C.accent, GRN_HI = "#8CF0C4", GRN_CORE = "#E9FFF6";
     var K = 0.8660254; // cos30, iso half-width factor
     // Küp içi ağ-düğüm kafesi (sabit fraksiyonlar: fx,fy,fz ∈ [-1,1])
-    var NODES = [[0, 0, 0], [-0.62, 0.5, -0.42], [0.62, 0.44, 0.4], [0.52, -0.5, -0.5], [-0.5, -0.46, 0.52], [0.12, 0.72, 0.58], [-0.14, -0.72, -0.5]];
-    var EDGES = [[0, 1], [0, 2], [0, 3], [0, 4], [1, 5], [2, 5], [3, 6], [4, 6], [1, 2], [3, 4]];
+    // dikey eksene göre AYNALI simetrik çekirdek kafesi (oktahedron) — ayna eşi: (a,b,c) ↔ (c,b,a)
+    var NODES = [[0, 0, 0], [0.72, 0.55, -0.72], [-0.72, 0.55, 0.72], [0.72, -0.55, -0.72], [-0.72, -0.55, 0.72], [0, 0.9, 0], [0, -0.9, 0]];
+    var EDGES = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [5, 1], [5, 2], [6, 3], [6, 4], [1, 3], [2, 4]];
     var FEED = [
       ["Emlak Endeksi · Karar Motoru", "HERKES", "50.000+ mahalle · 2005’ten canlı", -1],
       ["ProX Karar Analizi", "BİREYLER", "950 ₺ · dakikalar içinde", 0],
@@ -266,10 +267,10 @@
     function drawCube(mx, my, h, glow) {
       var Ta = proj(mx, my, h, -1, 1, -1), Tb = proj(mx, my, h, 1, 1, -1), Tc = proj(mx, my, h, 1, 1, 1), Td = proj(mx, my, h, -1, 1, 1);
       var Bb = proj(mx, my, h, 1, -1, -1), Bc = proj(mx, my, h, 1, -1, 1), Bd = proj(mx, my, h, -1, -1, 1);
-      var rg = ctx.createLinearGradient(Tb.x, Tb.y, Bc.x, Bc.y); rg.addColorStop(0, hexA(GRN, 0.13 + 0.08 * glow)); rg.addColorStop(1, hexA(GRN, 0.03));
-      poly([Tb, Tc, Bc, Bb], true); ctx.fillStyle = rg; ctx.fill();
-      var lg = ctx.createLinearGradient(Td.x, Td.y, Bc.x, Bc.y); lg.addColorStop(0, hexA(GRN, 0.09 + 0.06 * glow)); lg.addColorStop(1, hexA(GRN, 0.015));
-      poly([Td, Tc, Bc, Bd], true); ctx.fillStyle = lg; ctx.fill();
+      // iki ön yüz BİREBİR aynı dikey gradyanla dolar → sol=sağ simetrik parlaklık
+      var fg = ctx.createLinearGradient(0, my - 2 * h, 0, my + 2 * h); fg.addColorStop(0, hexA(GRN, 0.12 + 0.08 * glow)); fg.addColorStop(1, hexA(GRN, 0.02));
+      poly([Tb, Tc, Bc, Bb], true); ctx.fillStyle = fg; ctx.fill();
+      poly([Td, Tc, Bc, Bd], true); ctx.fillStyle = fg; ctx.fill();
       poly([Ta, Tb, Tc, Td], true); ctx.fillStyle = hexA(GRN, 0.14 + 0.12 * glow); ctx.fill();
       ctx.lineWidth = 1.4; ctx.strokeStyle = hexA(GRN_HI, 0.5 + 0.3 * glow); poly([Ta, Tb, Tc, Td], true); ctx.stroke();
       ctx.strokeStyle = hexA(GRN_HI, 0.46 + 0.24 * glow); ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(Tc.x, Tc.y); ctx.lineTo(Bc.x, Bc.y); ctx.stroke();
@@ -285,6 +286,20 @@
       var cr = 8 + 5 * glow + 2 * pulse; ctx.globalAlpha = 0.9; ctx.drawImage(sprite(GRN), pts[0].x - cr, pts[0].y - cr, cr * 2, cr * 2);
       ctx.globalAlpha = 0.95; ctx.fillStyle = GRN_CORE; ctx.beginPath(); ctx.arc(pts[0].x, pts[0].y, 2, 0, TAU); ctx.fill();
     }
+    function diamond(mx, my, dw, dh) { ctx.beginPath(); ctx.moveTo(mx, my - dh); ctx.lineTo(mx + dw, my); ctx.lineTo(mx, my + dh); ctx.lineTo(mx - dw, my); ctx.closePath(); }
+    // simetrik HUD çerçevesi: sabit eşkenar-dörtgen + 4 köşe ayracı + genişleyen nabız halkası (dönme yok → her karede simetrik)
+    function drawFrame(glow) {
+      var dw = K * 2 * hE + 16, dh = 2 * hE + 14;
+      ctx.strokeStyle = hexA(GRN, 0.13 + 0.12 * glow); ctx.lineWidth = 1; diamond(cx, cy, dw, dh); ctx.stroke();
+      var V = [[cx, cy - dh], [cx + dw, cy], [cx, cy + dh], [cx - dw, cy]];
+      ctx.strokeStyle = hexA(GRN_HI, 0.5 + 0.3 * glow); ctx.lineWidth = 1.5;
+      for (var i = 0; i < 4; i++) {
+        var a = V[i], nbrs = [V[(i + 1) % 4], V[(i + 3) % 4]];
+        for (var j = 0; j < 2; j++) { var b = nbrs[j], dx = b[0] - a[0], dy = b[1] - a[1], m = Math.sqrt(dx * dx + dy * dy) || 1; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(a[0] + dx / m * 9, a[1] + dy / m * 9); ctx.stroke(); }
+      }
+      var pp = (t * 0.45) % 1, k = 0.72 + 0.55 * pp;
+      ctx.strokeStyle = hexA(GRN_HI, (1 - pp) * 0.36); ctx.lineWidth = 1.2; diamond(cx, cy, dw * k, dh * k); ctx.stroke();
+    }
     function draw() {
       if (!srcs.length && !outs.length) return;
       ctx.clearRect(0, 0, W, H);
@@ -296,6 +311,7 @@
       drawCube(cx, cy, hE, glow);
       if (curSeg >= 0 && outs[curSeg]) { var o = outs[curSeg], pr = 0.5 + 0.5 * Math.sin(t * 3); ctx.strokeStyle = hexA(o.col, 0.4 + 0.4 * pr); ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(o.lx, o.ly, 10 + 3 * pr, 0, TAU); ctx.stroke(); }
       ctx.globalCompositeOperation = "lighter";
+      drawFrame(glow);
       drawLattice(cx, cy, hE, glow, pulse);
       // giriş/çıkış hub parıltısı (tüplerin küpe bağlandığı yer)
       var hr = 7 + 3 * glow; ctx.globalAlpha = 0.6; ctx.drawImage(sprite(GRN), entryL.x - hr, entryL.y - hr, hr * 2, hr * 2); ctx.drawImage(sprite(GRN), exitR.x - hr, exitR.y - hr, hr * 2, hr * 2);
