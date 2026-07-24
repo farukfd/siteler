@@ -286,13 +286,28 @@
     function poly(pts){ ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y); for(var i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y); ctx.closePath(); }
     function isoBox(px,py,gl){
       var T={x:px,y:py-BD},R={x:px+BW,y:py},B={x:px,y:py+BD},L={x:px-BW,y:py};
-      poly([L,B,{x:B.x,y:B.y+BH},{x:L.x,y:L.y+BH}]); ctx.fillStyle=gl>0.6?"#0E1A2E":"#0A1424"; ctx.fill();
-      poly([B,R,{x:R.x,y:R.y+BH},{x:B.x,y:B.y+BH}]); ctx.fillStyle=gl>0.6?"#0A1626":"#070F1C"; ctx.fill();
-      var tg=ctx.createLinearGradient(T.x,T.y,B.x,B.y); tg.addColorStop(0,gl>0.6?"#17263F":"#101E33"); tg.addColorStop(1,gl>0.6?"#0E1B2E":"#0B1626"); poly([T,R,B,L]); ctx.fillStyle=tg; ctx.fill();
-      // taban içi yeşil parıltı
-      ctx.globalCompositeOperation="lighter"; ctx.globalAlpha=0.12+0.4*gl; ctx.drawImage(sprite(C.accent),px-BW*0.9,py-BD*0.6,BW*1.8,BD*1.6); ctx.globalCompositeOperation="source-over"; ctx.globalAlpha=1;
-      ctx.strokeStyle=hexA(gl>0.6?C.accent:C.primary,0.2+0.4*gl); ctx.lineWidth=1+gl; poly([T,R,B,L]); ctx.stroke();
-      ctx.strokeStyle=hexA(gl>0.6?C.accent:C.primary,0.12+0.25*gl); ctx.lineWidth=1; [L,B,R].forEach(function(c){ctx.beginPath();ctx.moveTo(c.x,c.y);ctx.lineTo(c.x,c.y+BH);ctx.stroke();});
+      var Ld={x:L.x,y:L.y+BH},Bd={x:B.x,y:B.y+BH},Rd={x:R.x,y:R.y+BH};
+      // zemin gölgesi (yere oturtma)
+      var sh=ctx.createRadialGradient(px,Bd.y+4,0,px,Bd.y+4,BW*1.25); sh.addColorStop(0,"rgba(0,0,0,0.42)"); sh.addColorStop(1,"rgba(0,0,0,0)");
+      ctx.fillStyle=sh; ctx.beginPath(); ctx.ellipse(px,Bd.y+6,BW*1.1,BD*0.62,0,0,TAU); ctx.fill();
+      // sol ön yüz (dikey gradyan)
+      var lg=ctx.createLinearGradient(px,py,px,Bd.y); lg.addColorStop(0,gl>0.6?"#101C31":"#0B1526"); lg.addColorStop(1,"#05080F"); poly([L,B,Bd,Ld]); ctx.fillStyle=lg; ctx.fill();
+      // sağ ön yüz (biraz açık)
+      var rg=ctx.createLinearGradient(px,py,px,Rd.y); rg.addColorStop(0,gl>0.6?"#14233E":"#0E1B31"); rg.addColorStop(1,"#070C16"); poly([B,R,Rd,Bd]); ctx.fillStyle=rg; ctx.fill();
+      // üst yüz (gradyan)
+      var tg=ctx.createLinearGradient(T.x,T.y,B.x,B.y); tg.addColorStop(0,gl>0.6?"#1D3050":"#16273F"); tg.addColorStop(1,gl>0.6?"#0F1D33":"#0C1828"); poly([T,R,B,L]); ctx.fillStyle=tg; ctx.fill();
+      // üst yüz yeşil havuz (aktifte parlar)
+      ctx.globalCompositeOperation="lighter"; ctx.globalAlpha=0.1+0.5*gl; ctx.drawImage(sprite(C.accent),px-BW*0.8,py-BD*0.55,BW*1.6,BD*1.5); ctx.globalCompositeOperation="source-over"; ctx.globalAlpha=1;
+      // üst yüz iç bevel
+      var f=0.7,iT={x:px,y:py-BD*f},iR={x:px+BW*f,y:py},iB={x:px,y:py+BD*f},iL={x:px-BW*f,y:py}; ctx.strokeStyle=hexA(gl>0.6?C.accent:C.primary,0.13+0.28*gl); ctx.lineWidth=1; poly([iT,iR,iB,iL]); ctx.stroke();
+      // üst kenar parlak
+      ctx.strokeStyle=hexA(gl>0.6?C.accent:C.primary,0.32+0.5*gl); ctx.lineWidth=1.3+gl; poly([T,R,B,L]); ctx.stroke();
+      // dikey kenarlar
+      ctx.strokeStyle=hexA(gl>0.6?C.accent:C.primary,0.15+0.28*gl); ctx.lineWidth=1; [[L,Ld],[B,Bd],[R,Rd]].forEach(function(e){ctx.beginPath();ctx.moveTo(e[0].x,e[0].y);ctx.lineTo(e[1].x,e[1].y);ctx.stroke();});
+      // alt kenarlar (soluk)
+      ctx.strokeStyle=hexA(C.primary,0.06+0.14*gl); ctx.beginPath(); ctx.moveTo(Ld.x,Ld.y); ctx.lineTo(Bd.x,Bd.y); ctx.lineTo(Rd.x,Rd.y); ctx.stroke();
+      // köşe düğümleri (üst)
+      ctx.globalCompositeOperation="lighter"; [T,R,B,L].forEach(function(c){ ctx.globalAlpha=0.26+0.45*gl; ctx.drawImage(sprite(gl>0.6?C.accent:C.primary),c.x-4,c.y-4,8,8); }); ctx.globalCompositeOperation="source-over"; ctx.globalAlpha=1;
       return {T:T,R:R,B:B,L:L};
     }
     function icon(idx,px,py,s,rot){
@@ -342,9 +357,12 @@
         var bob=Math.sin(t*1.4+i*1.1)*4, ix=P[i].x, iy=P[i].y-BD-30-bob, isz=Math.max(15,BW*0.32);
         ctx.globalCompositeOperation="lighter"; var gr=isz*(1.5+0.6*glow[i]); ctx.globalAlpha=0.4+0.5*glow[i]; ctx.drawImage(sprite(C.accent),ix-gr,iy-gr,gr*2,gr*2); ctx.globalCompositeOperation="source-over"; ctx.globalAlpha=1;
         icon(i,ix,iy,isz,t*0.6);
-        // etiket (ön yüz)
-        ctx.font="700 "+Math.max(9,BW*0.18)+"px 'JetBrains Mono',monospace"; ctx.textAlign="center"; ctx.textBaseline="middle";
-        ctx.fillStyle=hexA("#FFFFFF",0.55+0.4*glow[i]); ctx.fillText(LAB[i], P[i].x, P[i].y+BH*0.55);
+        // etiket (ön yüz merkezi · simetrik)
+        ctx.font="700 "+Math.round(Math.max(11,BW*0.2))+"px 'JetBrains Mono','SF Mono',ui-monospace,monospace"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.letterSpacing="1px";
+        var ly=P[i].y+BD+BH*0.44;
+        ctx.fillStyle="rgba(0,0,0,0.6)"; ctx.fillText(LAB[i], P[i].x, ly+1.2);
+        ctx.fillStyle=hexA("#FFFFFF",0.74+0.26*glow[i]); ctx.fillText(LAB[i], P[i].x, ly);
+        ctx.letterSpacing="0px";
       }
       ctx.textAlign="start"; ctx.textBaseline="alphabetic";
     }
