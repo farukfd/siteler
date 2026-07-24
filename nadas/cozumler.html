@@ -121,8 +121,8 @@
     }
     var coreBox = '<div id="coz-core" style="' + css({ width: "100%", maxWidth: 150, margin: "0 auto", textAlign: "center", background: "rgba(3,9,18,0.35)", border: "1px solid " + C.primary, borderRadius: 8, padding: "10px 10px", backdropFilter: "blur(1px)" }) + '">'
       + '<div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, fontWeight: 700, letterSpacing: "0.06em" }) + '">◉ NADAS PLATFORMU</div>'
-      + '<div style="' + css({ fontFamily: C.mono, fontSize: 8, color: C.textSec, letterSpacing: "0.05em", marginTop: 6, lineHeight: 1.5 }) + '">ProX MOTORU · 2005</div>'
-      + '<div style="' + css({ fontFamily: C.mono, fontSize: 7.5, color: C.textFaint, letterSpacing: "0.08em", marginTop: 4 }) + '">372M+ kayıt · 81 il</div></div>';
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 8, color: C.textSec, letterSpacing: "0.05em", marginTop: 6, lineHeight: 1.5 }) + '">ProX MOTORU · v2.0</div>'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 7.5, color: C.textFaint, letterSpacing: "0.08em", marginTop: 4 }) + '">480M+ kayıt · 81 il</div></div>';
     function colHead(txt, col, right) { return '<div style="' + css({ fontFamily: C.mono, fontSize: 9, color: col, letterSpacing: "0.12em", fontWeight: 700, marginBottom: 9, paddingBottom: 6, borderBottom: "1px solid " + C.border, whiteSpace: "nowrap", textAlign: right ? "right" : "left" }) + '">' + txt + '</div>'; }
     var solCol = '<div style="' + css({ display: "flex", flexDirection: "column" }) + '">' + colHead("◆ ÇÖZÜMLER", C.accent) + '<div style="' + css({ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 6 }) + '">' + SOL.map(function (o) { return chip("csol", o); }).join("") + '</div></div>';
     var coreCol = '<div style="' + css({ display: "flex", flexDirection: "column" }) + '">' + colHead("◆ PLATFORM", C.primary) + '<div style="' + css({ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }) + '">' + coreBox + '</div></div>';
@@ -180,7 +180,7 @@
       ["SPK Lisanslı Değerleme", "KURUMSAL", "mahkeme geçerli · 21.000 ₺’den", 3],
       ["ProX Corporate", "KURUMSAL", "3.750 ₺/ay · tam kurumsal", 3]
     ];
-    var METRICS = ["50.000+ mahalle", "372M+ kayıt", "38 kategori", "240 ay seri", "81 il · 973 ilçe", "12 endpoint · REST/WS"];
+    var METRICS = ["50.000+ mahalle", "480M+ kayıt", "38 kategori", "257 ay seri", "81 il · 973 ilçe", "12 endpoint · REST/WS"];
     function hexA(h, a) { var n = parseInt(h.slice(1), 16); return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; }
     function sprite(color) {
       if (sprites[color]) return sprites[color];
