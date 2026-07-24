@@ -456,18 +456,37 @@
 
   /* ===== D.3 RATE LIMIT ===== */
   function RateLimitsSLA() {
-    var cards = [
-      ["BASIC", "100", "req/dakika", "99.5% uptime · email destek", C.textMut], ["GROWTH", "1.000", "req/dakika", "99.9% uptime · 8h yanıt", C.textPri], ["ENTERPRISE", "10.000+", "req/dakika", "99.99% uptime · 1h yanıt · dedicated SLA", C.primary], ["WEBSOCKET", "Limitsiz", "concurrent", "Stream başına 1.000 mesaj/sn", C.primary],
-    ].map(function (r) { return '<div style="' + css({ background: C.raised, padding: 16 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: r[4], fontWeight: 700, letterSpacing: "0.1em", marginBottom: 8 }) + '">' + r[0] + '</div><div style="' + css({ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 8 }) + '"><span style="' + css({ fontSize: "1.8rem", fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + r[1] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textFaint }) + '">' + r[2] + '</span></div><p style="' + css({ fontSize: 11.5, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + r[3] + '</p></div>'; }).join("");
-    return SubSection("D.3", "Rate limit & SLA garantileri", "ENTERPRISE TIER", '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>');
+    var tiers = [
+      { name: "BASIC", n: "100", unit: "req/dakika", feat: "99.5% uptime · email destek", col: C.textMut, hi: false },
+      { name: "GROWTH", n: "1.000", unit: "req/dakika", feat: "99.9% uptime · 8h yanıt", col: C.primary, hi: false },
+      { name: "ENTERPRISE", n: "10.000+", unit: "req/dakika", feat: "99.99% uptime · 1h yanıt · dedicated SLA", col: C.accent, hi: true },
+      { name: "WEBSOCKET", n: "Limitsiz", unit: "concurrent", feat: "Stream başına 1.000 mesaj/sn", col: C.violet, hi: false }
+    ];
+    var cards = tiers.map(function (t) {
+      return '<div class="nadas-eco" style="' + css({ background: t.hi ? "rgba(52,211,153,0.05)" : C.base, border: "1px solid " + (t.hi ? t.col : C.borderStrong), borderTop: "2px solid " + t.col, padding: "16px 16px 14px", display: "flex", flexDirection: "column" }) + '">'
+        + '<div style="' + css({ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: t.col, fontWeight: 700, letterSpacing: "0.1em" }) + '">' + t.name + '</span>' + (t.hi ? '<span style="' + css({ marginLeft: "auto", fontFamily: C.mono, fontSize: 8, color: t.col, border: "1px solid " + t.col, borderRadius: 2, padding: "1px 6px", letterSpacing: "0.06em" }) + '">ÖNERİLEN</span>' : '') + '</div>'
+        + '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 10 }) + '"><span style="' + css({ fontSize: "1.9rem", fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + t.n + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint }) + '">' + t.unit + '</span></div>'
+        + '<p style="' + css({ fontSize: 11.5, lineHeight: 1.5, color: C.textMut, margin: 0, flex: 1, paddingTop: 9, borderTop: "1px solid " + C.border }) + '">' + t.feat + '</p></div>';
+    }).join("");
+    return SubSection("D.3", "Rate limit & SLA garantileri", "ENTERPRISE TIER · REQ/MIN + UPTIME", '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))", gap: 12 }) + '">' + cards + '</div>');
   }
 
   /* ===== D.4 YÖNETİŞİM ===== */
   function DataGovernance() {
-    var cards = [
-      ["VALIDATION RULES", "Şema, tip, mantık kontrolleri · ingest aşamasında uygulanır."], ["ANOMALY DETECTION", "İstatistiksel outlier tespiti · z-skor + bölgesel komşuluk karşılaştırma."], ["MANUAL OVERRIDE", "Saha ekibi review queue · şüpheli noktalar manuel kontrol edilir."], ["AUDIT TRAIL", "Her veri noktasının kaynak, doğrulama ve değişiklik geçmişi tutulur."], ["KPI DASHBOARD", "Sistem-wide kalite metrikleri · veri yoğunluğu, kapsama, güven dağılımı."], ["BACKFILL POLICY", "Eksik veri için bölgesel komşuluk + tarihsel interpolasyon kuralları."],
-    ].map(function (r) { return '<div style="' + css({ background: C.raised, padding: 14 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11.5, color: C.primary, fontWeight: 700, letterSpacing: "0.08em", marginBottom: 6 }) + '">' + r[0] + '</div><p style="' + css({ fontSize: 12, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + r[1] + '</p></div>'; }).join("");
-    return SubSection("D.4", "Veri yönetişimi & kalite kontrol", "QUALITY ASSURANCE STACK", '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>');
+    var items = [
+      ["VALIDATION RULES", "✓", "Şema, tip, mantık kontrolleri · ingest aşamasında uygulanır.", C.accent],
+      ["ANOMALY DETECTION", "◉", "İstatistiksel outlier tespiti · z-skor + bölgesel komşuluk karşılaştırma.", C.warn],
+      ["MANUAL OVERRIDE", "◐", "Saha ekibi review queue · şüpheli noktalar manuel kontrol edilir.", C.primary],
+      ["AUDIT TRAIL", "▦", "Her veri noktasının kaynak, doğrulama ve değişiklik geçmişi tutulur.", C.violet],
+      ["KPI DASHBOARD", "Σ", "Sistem-wide kalite metrikleri · veri yoğunluğu, kapsama, güven dağılımı.", C.primary],
+      ["BACKFILL POLICY", "⌬", "Eksik veri için bölgesel komşuluk + tarihsel interpolasyon kuralları.", C.accent]
+    ];
+    var cards = items.map(function (r) {
+      return '<div class="nadas-eco" style="' + css({ background: C.base, border: "1px solid " + C.borderStrong, borderLeft: "2px solid " + r[3], padding: "13px 15px" }) + '">'
+        + '<div style="' + css({ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }) + '"><span style="' + css({ width: 26, height: 26, border: "1px solid " + r[3], display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: r[3], fontFamily: C.mono, borderRadius: 2, flexShrink: 0 }) + '">' + r[1] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textPri, fontWeight: 700, letterSpacing: "0.06em" }) + '">' + r[0] + '</span></div>'
+        + '<p style="' + css({ fontSize: 11.5, lineHeight: 1.5, color: C.textMut, margin: 0 }) + '">' + r[2] + '</p></div>';
+    }).join("");
+    return SubSection("D.4", "Veri yönetişimi & kalite kontrol", "QUALITY ASSURANCE STACK", '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))", gap: 12 }) + '">' + cards + '</div>');
   }
 
   /* ===== D.5 GÜNCELLİK ===== */
