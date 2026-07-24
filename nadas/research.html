@@ -322,6 +322,8 @@
     function layout() {
       U = Math.max(12, Math.min(W / 20, H / 6.8));
       CX = W / 2; BASEY = H * 0.52;
+      GAP = U * 1.15; FLOWSPEED = U * 1.7;
+      motes = []; for (var mi = 0; mi < 16; mi++) motes.push({ x: Math.random() * W, y: BASEY - U * 1.8 + Math.random() * U * 3.4, ph: Math.random() * TAU, r: 0.6 + Math.random() * 1.1 });
       var sp = Math.min(W * 0.5 - U * 1.5, U * 6.6);
       A = {
         cube: { x: CX, y: BASEY - U * 0.15 },
@@ -454,16 +456,30 @@
       CONN = [
         [A.L2, A.L1], [A.L1, A.cube], [A.cube, A.R1], [A.R1, A.R2]
       ].map(function (c) { var a = c[0], b = c[1], y0 = a.y + U * 0.5, y1 = b.y + U * 0.5, mx = (a.x + b.x) / 2, my = Math.max(y0, y1) + U * 0.55; return { p0: { x: a.x, y: y0 }, pc: { x: mx, y: my }, p1: { x: b.x, y: y1 } }; });
+      var cum = 0; CONN.forEach(function (c) { var L = 0, pv = qAt(c, 0); for (var s = 1; s <= 14; s++) { var q = qAt(c, s / 14); L += Math.sqrt((q.x - pv.x) * (q.x - pv.x) + (q.y - pv.y) * (q.y - pv.y)); pv = q; } c.len = L; c.cum = cum; cum += L; });
     }
     function cablePath(c) { ctx.beginPath(); ctx.moveTo(c.p0.x, c.p0.y); ctx.quadraticCurveTo(c.pc.x, c.pc.y, c.p1.x, c.p1.y); }
     function qAt(c, u) { var iu = 1 - u; return { x: iu * iu * c.p0.x + 2 * iu * u * c.pc.x + u * u * c.p1.x, y: iu * iu * c.p0.y + 2 * iu * u * c.pc.y + u * u * c.p1.y }; }
+    var GAP = 0, FLOWSPEED = 0, motes = [];   // paket aralığı & akış hızı (px), ambient zerreler — layout'ta ayarlanır
     function drawCable(c, idx) {
       ctx.lineCap = "round";
-      cablePath(c); ctx.strokeStyle = hexA(A_LO, 0.8); ctx.lineWidth = U * 0.12 + 3.5; ctx.stroke();
-      cablePath(c); ctx.strokeStyle = hexA(A_MID, 0.9); ctx.lineWidth = U * 0.12; ctx.stroke();
-      cablePath(c); ctx.strokeStyle = hexA(A_HI, 0.85); ctx.lineWidth = U * 0.12 * 0.42; ctx.stroke();
+      // kablo gövdesi (ince, sakin)
+      cablePath(c); ctx.strokeStyle = hexA(A_LO, 0.7); ctx.lineWidth = U * 0.1 + 2.6; ctx.stroke();
+      cablePath(c); ctx.strokeStyle = hexA(A_MID, 0.55); ctx.lineWidth = U * 0.1; ctx.stroke();
+      // sürekli veri-paketi akışı (boru hattı boyunca kesintisiz, yönlü db→api)
       ctx.save(); ctx.globalCompositeOperation = "lighter";
-      for (var k = 0; k < 2; k++) { var u = ((t * 0.3 + idx * 0.17 + k * 0.5) % 1), p = qAt(c, u), s = Math.sin(u * Math.PI), rr = U * 0.34; ctx.globalAlpha = 0.85 * s; ctx.drawImage(sprite(A_HI), p.x - rr, p.y - rr, rr * 2, rr * 2); ctx.fillStyle = A_WHT; ctx.globalAlpha = 0.95 * s; ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, TAU); ctx.fill(); }
+      var travel = t * FLOWSPEED;                        // px cinsinden ilerleyen mesafe
+      var first = Math.ceil((c.cum - travel) / GAP), n = first;
+      while (true) {
+        var d = n * GAP + travel - c.cum;                // bu kablo üzerindeki mesafe
+        if (d > c.len) break; if (d >= 0) {
+          var u = d / c.len, p = qAt(c, u), pt = qAt(c, Math.max(0, u - 0.05));
+          ctx.strokeStyle = hexA(A_HI, 0.45); ctx.lineWidth = U * 0.045; ctx.beginPath(); ctx.moveTo(pt.x, pt.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+          var rr = U * 0.15; ctx.globalAlpha = 0.9; ctx.drawImage(sprite(A_HI), p.x - rr, p.y - rr, rr * 2, rr * 2);
+          ctx.globalAlpha = 1; ctx.fillStyle = A_WHT; ctx.beginPath(); ctx.arc(p.x, p.y, U * 0.032 + 0.8, 0, TAU); ctx.fill();
+        }
+        n++; if (n - first > 60) break;
+      }
       ctx.restore(); ctx.lineCap = "butt";
     }
     // ---- statik katman: bg vignette + zemin + kaideler + kaide yansıması ----
@@ -504,9 +520,14 @@
       if (!bgLayer) return;
       ctx.clearRect(0, 0, W, H); ctx.drawImage(bgLayer, 0, 0, W, H);
       var pulse = 0.5 + 0.5 * Math.sin(t * 1.6), glow = 0.4 + 0.6 * pulse;
-      // ped ışıkları
+      // ambient veri zerreleri (derinlik/atmosfer)
+      ctx.save(); ctx.globalCompositeOperation = "lighter";
+      for (var m = 0; m < motes.length; m++) { var mo = motes[m], xx = mo.x + Math.sin(t * 0.3 + mo.ph) * 6, yy = mo.y + Math.cos(t * 0.24 + mo.ph * 1.3) * 5, aa = 0.1 * (0.5 + 0.5 * Math.sin(t * 0.8 + mo.ph)), rr = mo.r * U * 0.13; ctx.globalAlpha = aa; ctx.drawImage(sprite(A_MID), xx - rr * 3, yy - rr * 3, rr * 6, rr * 6); }
+      ctx.restore();
+      // ped ışıkları + küp işlem-halkası
       ctx.save(); ctx.globalCompositeOperation = "lighter";
       padGlow(A.L2, 1.15, glow * 0.7); padGlow(A.R2, 1.15, glow * 0.7); padGlow(A.L1, 1.15, glow * 0.7); padGlow(A.R1, 1.15, glow * 0.7); padGlow(A.cube, 1.9, glow);
+      var rp = (t * 0.45) % 1, rw = (0.5 + 1.7 * rp) * U, rh = rw * 0.5; ctx.globalAlpha = (1 - rp) * 0.28; ctx.strokeStyle = hexA(A_HI, 1); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.ellipse(A.cube.x, A.cube.y, rw, rh, 0, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1;
       ctx.restore();
       // kablolar
       CONN.forEach(drawCable);
