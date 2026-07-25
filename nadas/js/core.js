@@ -324,7 +324,7 @@
       + '<div>' + colHead("ÜRÜN") + col2 + '</div>'
       + '<div>' + colHead("KURUMSAL") + col3 + '</div>'
       + '</div>'
-      + '<div style="' + css({ paddingTop: 16, borderTop: "1px solid " + C.border, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '"><span>© 2005-2026 Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti. · Tüm hakları saklıdır.</span><span style="' + css({ display: "flex", flexWrap: "wrap", alignItems: "center" }) + '">' + waLink(css({ display: "inline-flex", alignItems: "center", gap: 4, color: "#25D366", textDecoration: "none", fontWeight: 700, letterSpacing: "0.06em" }), "WHATSAPP") + '<span style="' + css({ padding: "0 6px", color: C.textFaint }) + '">·</span>' + legal + '</span></div>'
+      + '<div style="' + css({ paddingTop: 16, borderTop: "1px solid " + C.border, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '"><span>© 2005-2026 Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti. · Tüm hakları saklıdır.</span><span style="' + css({ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "flex-end" }) + '">' + legal + '<span style="' + css({ padding: "0 6px", color: C.textFaint }) + '">·</span>' + waLink(css({ display: "inline-flex", alignItems: "center", gap: 4, color: "#25D366", textDecoration: "none", fontWeight: 700, letterSpacing: "0.06em" }), "WHATSAPP") + '</span></div>'
       + '</div></footer>';
   }
 
