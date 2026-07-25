@@ -121,6 +121,12 @@
       ".nadas-social a{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:1px solid " + C.borderStrong + ";border-radius:6px;color:" + C.textMut + ";transition:color .15s,border-color .15s}",
       ".nadas-social a:hover{color:" + C.accent + ";border-color:" + C.accent + "}",
       ".nadas-social svg{width:16px;height:16px;fill:currentColor;display:block}",
+      /* Footer WhatsApp pill — yasal satırın en sağında belirgin yeşil buton. */
+      ".nx-wafoot{display:inline-flex;align-items:center;gap:7px;margin-left:14px;background:#25D366;color:#fff;text-decoration:none;font-weight:700;font-size:12px;letter-spacing:.09em;padding:7px 15px;border-radius:9999px;line-height:1;box-shadow:0 2px 10px rgba(37,211,102,.28);transition:background .16s ease,transform .16s ease,box-shadow .16s ease}",
+      ".nx-wafoot:hover{background:#1ebe57;transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,211,102,.42)}",
+      ".nx-wafoot:focus-visible{outline:2px solid #25D366;outline-offset:2px}",
+      ".nx-wafoot svg{width:15px;height:15px;fill:currentColor;display:block}",
+      "@media (max-width:640px){.nx-wafoot{margin-left:0}}",
       /* ProX kurumsal wordmark — insaat/ sitesindeki .fprox lockup’ının birebir karşılığı.
          Oradaki sabit px’ler em’e çevrildi (referans 14px gövde): 2px→.14em, 6px yarıçap→.43em,
          X’in 14/15 boy oranı→.93em. Böylece 10px mono etikette de 40px başlıkta da aynı oranda durur.
@@ -324,14 +330,14 @@
       + '<div>' + colHead("ÜRÜN") + col2 + '</div>'
       + '<div>' + colHead("KURUMSAL") + col3 + '</div>'
       + '</div>'
-      + '<div style="' + css({ paddingTop: 16, borderTop: "1px solid " + C.border, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '"><span>© 2005-2026 Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti. · Tüm hakları saklıdır.</span><span style="' + css({ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "flex-end" }) + '">' + legal + '<span style="' + css({ padding: "0 6px", color: C.textFaint }) + '">·</span>' + waLink(css({ display: "inline-flex", alignItems: "center", gap: 4, color: "#25D366", textDecoration: "none", fontWeight: 700, letterSpacing: "0.06em" }), "WHATSAPP") + '</span></div>'
+      + '<div style="' + css({ paddingTop: 16, borderTop: "1px solid " + C.border, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '"><span>© 2005-2026 Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti. · Tüm hakları saklıdır.</span><span style="' + css({ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "flex-end", marginLeft: "auto" }) + '">' + legal + waLink("nx-wafoot", "WhatsApp") + '</span></div>'
       + '</div></footer>';
   }
 
   /* ===== WHATSAPP KAYAN BUTON (sağ alt köşe) ===== */
   var WA_NUM = "905324919453";
   var WA_PATH = "M16.04 3C9.4 3 4 8.4 4 15.04c0 2.12.55 4.19 1.6 6.02L4 29l8.13-1.56a12 12 0 0 0 3.9.65C22.68 28.09 28.08 22.69 28.08 16.05 28.08 8.4 22.68 3 16.04 3zm0 21.9a9.9 9.9 0 0 1-5.06-1.38l-.36-.21-3.76.72.71-3.67-.24-.38a9.86 9.86 0 0 1-1.52-5.29c0-5.48 4.46-9.94 9.95-9.94a9.86 9.86 0 0 1 9.94 9.95c0 5.48-4.46 9.94-9.95 9.94zm5.46-7.44c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.14-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.06 2.87 1.21 3.07.15.2 2.09 3.2 5.07 4.48.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35z";
-  function waLink(style, label) { return '<a href="https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent("Merhaba, NADAS hakkında bilgi almak istiyorum.") + '" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp ile yazın" style="' + style + '"><svg width="13" height="13" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="' + WA_PATH + '"/></svg>' + (label || "") + '</a>'; }
+  function waLink(cls, label) { return '<a href="https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent("Merhaba, NADAS hakkında bilgi almak istiyorum.") + '" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp ile yazın" class="' + cls + '"><svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="' + WA_PATH + '"/></svg>' + (label || "") + '</a>'; }
 
   /* ===== ÇEREZ RIZASI (KVKK Çerez Rehberi · opt-in · varsayılan kapalı) ===== */
   var CC_KEY = "nadas_cc_v1";
