@@ -25,7 +25,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Organization","name":"Nadas Gayrimenkul Bilgi İletişim Sistemleri Ticaret Limited Şirketi","alternateName":"NADAS","url":"https://www.nadas.com.tr","foundingDate":"2005","identifier":[{"@type":"PropertyValue","propertyID":"MERSİS","value":"0627045662400013"},{"@type":"PropertyValue","propertyID":"Ticaret Sicil No","value":"980139-0"}],"address":{"@type":"PostalAddress","streetAddress":"Hastane Mah. Ayasofya Cad. Postane Sk. No: 23/5","addressLocality":"Arnavutköy","addressRegion":"İstanbul","addressCountry":"TR"},"email":"destek@nadas.com.tr"}
+{"@context":"https://schema.org","@type":"Organization","name":"Nadas Gayrimenkul Bilgi İletişim Sistemleri Ticaret Limited Şirketi","alternateName":"NADAS","url":"https://www.nadas.com.tr","foundingDate":"2005","identifier":[{"@type":"PropertyValue","propertyID":"MERSİS","value":"0627045662400013"},{"@type":"PropertyValue","propertyID":"Ticaret Sicil No","value":"980139-0"}],"address":{"@type":"PostalAddress","streetAddress":"Hastane Mah. Hadımköy İstanbul Cad. No: 46/B","addressLocality":"Arnavutköy","addressRegion":"İstanbul","addressCountry":"TR"},"email":"destek@nadas.com.tr"}
 </script>
 </head>
 <body>
@@ -59,12 +59,12 @@
       ["Ticari Yetki Belgesi No", "3402804", false],
       ["Vergi Dairesi", "Büyükçekmece Vergi Dairesi", false],
       ["Vergi Kimlik No", "6270456624", false],
-      ["Merkez Adresi", "Hastane Mah. Ayasofya Cad. Postane Sk. No: 23/5, Arnavutköy / İstanbul", false],
+      ["Merkez Adresi", "Hastane Mah. Hadımköy İstanbul Cad. No: 46/B, Arnavutköy / İstanbul", false],
       ["KEP Adresi", TODO, true],
       ["E-posta (Genel)", '<a href="mailto:destek@nadas.com.tr" style="' + css({ color: C.primary, textDecoration: "none" }) + '">destek@nadas.com.tr</a>', false],
       ["E-posta (Kurumsal)", '<a href="mailto:bilgi@emlakekspertizi.com" style="' + css({ color: C.primary, textDecoration: "none" }) + '">bilgi@emlakekspertizi.com</a>', false],
       ["İnternet Sitesi", "www.nadas.com.tr", false],
-      ["VERBİS Kaydı", TODO, true],
+      ["VERBİS Kaydı", "Kayıt yükümlülüğü bulunmuyor (yasal eşik altı — 50’den az çalışan ve mali eşik altında)", false],
     ];
     var body = rows.map(function (r, i) {
       return '<div style="' + css({ display: "grid", gridTemplateColumns: "220px 1fr", gap: 0, minWidth: 560, padding: "12px 16px", borderBottom: i < rows.length - 1 ? "1px solid " + C.border : "none", alignItems: "center", background: i % 2 ? "transparent" : "rgba(56,189,248,0.02)" }) + '">'
@@ -74,7 +74,7 @@
     return '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, borderRadius: 4, overflow: "auto", margin: "4px 0 6px" }) + '">'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "220px 1fr", minWidth: 560, fontFamily: C.mono, fontSize: 10, color: C.textFaint, padding: "10px 16px", borderBottom: "1px solid " + C.borderStrong, background: C.deep, letterSpacing: "0.1em", fontWeight: 700 }) + '"><span>ALAN</span><span>BİLGİ</span></div>'
       + body + '</div>'
-      + '<div style="' + css({ marginTop: 10, padding: "10px 14px", border: "1px dashed rgba(251,191,36,0.4)", background: "rgba(251,191,36,0.04)", borderRadius: 3, fontFamily: C.mono, fontSize: 11, color: C.textMut, lineHeight: 1.6 }) + '">⚠ ' + TODO + ' işaretli kalan alanlar, resmî belgelerden doğrulanıp doldurulacaktır (KEP adresi; VERBİS kaydı yapıldıysa kayıt numarası). Yanlış/eksik bilgi girilmemesi için bu alanlar boş bırakılmıştır.</div>';
+      + '<div style="' + css({ marginTop: 10, padding: "10px 14px", border: "1px dashed rgba(251,191,36,0.4)", background: "rgba(251,191,36,0.04)", borderRadius: 3, fontFamily: C.mono, fontSize: 11, color: C.textMut, lineHeight: 1.6 }) + '">⚠ ' + TODO + ' işaretli kalan alan (KEP adresi), resmî belgelerden doğrulanıp doldurulacaktır. Yanlış/eksik bilgi girilmemesi için bu alan boş bırakılmıştır.</div>';
   }
 
   function Hero() {
@@ -98,7 +98,7 @@
     var others = [["KVKK Aydınlatma Metni", "kvkk.html"], ["Gizlilik Politikası", "gizlilik.html"], ["Çerez Politikası", "cerez.html"], ["Kullanım Koşulları", "kullanim-kosullari.html"]]
       .map(function (x) { return '<a href="' + x[1] + '" style="' + css({ fontFamily: C.mono, fontSize: 11.5, color: C.primary, textDecoration: "none", letterSpacing: "0.04em", padding: "3px 0", display: "inline-block" }) + '">→ ' + x[0] + '</a>'; }).join("");
     return '<div style="' + css({ marginTop: 26, display: "grid", gridTemplateColumns: "minmax(0,1.4fr) minmax(0,1fr)", gap: 16 }) + '" class="nadas-twocol">'
-      + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: "18px 20px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">◆ VERİ SORUMLUSU</div><div style="' + css({ fontSize: 13, color: C.textPri, fontWeight: 600, lineHeight: 1.5, marginBottom: 8 }) + '">' + FIRMA + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textMut, lineHeight: 1.7, letterSpacing: "0.02em" }) + '">MERSİS: 0627045662400013<br>Hastane Mah. Ayasofya Cad. Postane Sk. No: 23/5<br>Arnavutköy / İstanbul<br><a href="mailto:destek@nadas.com.tr" style="' + css({ color: C.primary, textDecoration: "none" }) + '">destek@nadas.com.tr</a></div></div>'
+      + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: "18px 20px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">◆ VERİ SORUMLUSU</div><div style="' + css({ fontSize: 13, color: C.textPri, fontWeight: 600, lineHeight: 1.5, marginBottom: 8 }) + '">' + FIRMA + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textMut, lineHeight: 1.7, letterSpacing: "0.02em" }) + '">MERSİS: 0627045662400013<br>Hastane Mah. Hadımköy İstanbul Cad. No: 46/B<br>Arnavutköy / İstanbul<br><a href="mailto:destek@nadas.com.tr" style="' + css({ color: C.primary, textDecoration: "none" }) + '">destek@nadas.com.tr</a></div></div>'
       + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: "18px 20px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">◈ İLGİLİ YASAL METİNLER</div><div style="' + css({ display: "flex", flexDirection: "column", gap: 4 }) + '">' + others + '</div></div>'
       + '</div>';
   }
