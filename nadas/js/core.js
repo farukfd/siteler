@@ -122,11 +122,10 @@
       ".nadas-social a:hover{color:" + C.accent + ";border-color:" + C.accent + "}",
       ".nadas-social svg{width:16px;height:16px;fill:currentColor;display:block}",
       /* Footer WhatsApp pill — yasal satırın en sağında belirgin yeşil buton. */
-      ".nx-wafoot{display:inline-flex;align-items:center;gap:7px;margin-left:14px;background:#25D366;color:#fff;text-decoration:none;font-weight:700;font-size:12px;letter-spacing:.09em;padding:7px 15px;border-radius:9999px;line-height:1;box-shadow:0 2px 10px rgba(37,211,102,.28);transition:background .16s ease,transform .16s ease,box-shadow .16s ease}",
+      ".nx-wafoot{display:inline-flex;align-items:center;gap:7px;margin-left:auto;flex-shrink:0;background:#25D366;color:#fff;text-decoration:none;font-weight:700;font-size:12px;letter-spacing:.09em;padding:7px 15px;border-radius:9999px;line-height:1;box-shadow:0 2px 10px rgba(37,211,102,.28);transition:background .16s ease,transform .16s ease,box-shadow .16s ease}",
       ".nx-wafoot:hover{background:#1ebe57;transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,211,102,.42)}",
       ".nx-wafoot:focus-visible{outline:2px solid #25D366;outline-offset:2px}",
       ".nx-wafoot svg{width:15px;height:15px;fill:currentColor;display:block}",
-      "@media (max-width:640px){.nx-wafoot{margin-left:0}}",
       /* ProX kurumsal wordmark — insaat/ sitesindeki .fprox lockup’ının birebir karşılığı.
          Oradaki sabit px’ler em’e çevrildi (referans 14px gövde): 2px→.14em, 6px yarıçap→.43em,
          X’in 14/15 boy oranı→.93em. Böylece 10px mono etikette de 40px başlıkta da aynı oranda durur.
@@ -330,7 +329,7 @@
       + '<div>' + colHead("ÜRÜN") + col2 + '</div>'
       + '<div>' + colHead("KURUMSAL") + col3 + '</div>'
       + '</div>'
-      + '<div style="' + css({ paddingTop: 16, borderTop: "1px solid " + C.border, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '"><span>© 2005-2026 Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti. · Tüm hakları saklıdır.</span><span style="' + css({ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "flex-end", marginLeft: "auto" }) + '">' + legal + waLink("nx-wafoot", "WhatsApp") + '</span></div>'
+      + '<div style="' + css({ paddingTop: 16, borderTop: "1px solid " + C.border, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '"><div style="' + css({ display: "flex", flexDirection: "column", gap: 7, alignItems: "flex-start", minWidth: 0 }) + '"><span>© 2005-2026 Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti. · Tüm hakları saklıdır.</span><span style="' + css({ display: "flex", flexWrap: "wrap", alignItems: "center" }) + '">' + legal + '</span></div>' + waLink("nx-wafoot", "WhatsApp") + '</div>'
       + '</div></footer>';
   }
 
