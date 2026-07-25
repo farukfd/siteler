@@ -233,9 +233,9 @@
      KANONİK ÜST MENÜ (nav) + ALT MENÜ (footer) — ALTIN KURAL
      cozumler.html referans. Tüm sayfalarda BİREBİR AYNI. Tek kaynak burası.
      ========================================================================== */
-  var NAV_ITEMS = ["Veri Altyapısı", "Çözümler", "ProX Asistan", "Research", "Hakkımızda", "İletişim"];
+  var NAV_ITEMS = ["Veri Altyapısı", "Çözümler", "Demo Web", "ProX Asistan", "Research", "Hakkımızda", "İletişim"];
   function navHref(it) {
-    var m = { "Veri Altyapısı": "veri-altyapisi.html", "Çözümler": "cozumler.html", "ProX Asistan": "prox.html", "ProX": "prox.html", "Research": "research.html", "Hakkımızda": "hakkimizda.html", "İletişim": "iletisim.html" };
+    var m = { "Veri Altyapısı": "veri-altyapisi.html", "Çözümler": "cozumler.html", "Demo Web": "white-label.html", "ProX Asistan": "prox.html", "ProX": "prox.html", "Research": "research.html", "Hakkımızda": "hakkimizda.html", "İletişim": "iletisim.html" };
     return m[it] || "#";
   }
   /* "ProX" bir wordmark — hiçbir yerde büyük harfe çevrilmez (PROX olmaz). Çevresi normal büyür. */
@@ -271,6 +271,9 @@
     var tag = active ? upperTR(active) : "ANA SAYFA";
     var links = NAV_ITEMS.map(function (it) {
       var on = it === active;
+      if (it === "Demo Web") {
+        return '<a href="' + navHref(it) + '" style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.accent, fontWeight: 700, letterSpacing: "0.08em", textDecoration: "none", padding: "4px 10px", border: "1px solid " + C.accent, borderRadius: 2 }) + '">' + upperTR(it) + ' ↗</a>';
+      }
       return '<a href="' + navHref(it) + '" style="' + css({ fontFamily: C.mono, fontSize: 11, color: on ? C.primary : C.textMut, fontWeight: on ? 700 : 500, letterSpacing: "0.08em", textDecoration: "none", padding: "4px 0", borderBottom: on ? "1px solid " + C.primary : "1px solid transparent" }) + '">' + upperTR(it) + '</a>';
     }).join("");
     return '<div style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "14px 16px", background: C.base, position: "sticky", top: 0, zIndex: 40, backdropFilter: "blur(12px)" }) + '">'
@@ -279,7 +282,7 @@
       + '<span style="' + css({ width: 28, height: 28, border: "1.5px solid " + C.primary, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Sora',sans-serif", fontSize: 13, fontWeight: 700, color: C.primary, borderRadius: 2 }) + '">N</span>'
       + '<span style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 18, fontWeight: 700, color: C.textPri, letterSpacing: "-0.02em" }) + '">NADAS</span>'
       + '<span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.18em", marginLeft: 4 }) + '">' + tag + '</span></a>'
-      + '<nav style="' + css({ display: "flex", gap: 22, alignItems: "center", flexWrap: "wrap" }) + '">' + links
+      + '<nav style="' + css({ display: "flex", gap: 20, alignItems: "center", flexWrap: "wrap", flex: "1 1 auto", justifyContent: "flex-end" }) + '">' + links
       + '<a href="https://www.emlakekspertizi.com" target="_blank" rel="noopener noreferrer" style="' + css({ padding: "6px 14px", border: "1px solid " + C.primary, fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">EMLAKEKSPERTIZI.COM →</a>'
       + '</nav></div></div>';
   }

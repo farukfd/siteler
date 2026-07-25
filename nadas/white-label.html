@@ -650,7 +650,7 @@
 <script src="js/tr-grammar.js?v=1"></script>
 <script src="js/tr-il-sinir.js?v=1"></script><!-- 81 il sınırı · gerçek GeoJSON (sadeleştirilmiş) · hero radarı -->
 <script src="js/tr-ilce.js?v=1"></script><!-- 973 ilçe merkezi · HDX COD-AB-TUR · radar tarama noktaları -->
-<script src="js/core.js?v=7"></script>
+<script src="js/core.js?v=8"></script>
 <script>
 (function () {
   "use strict";
@@ -2014,7 +2014,7 @@
     ["MAHALLE + KÖY", "50.000+"], ["ŞEMA TİPİ", "35"], ["DAHİL", "INVESTOR VE ÜZERİ"], ["ÇIKIŞ", "45 GÜN + KENDİ YEDEĞİNİZ"]];
 
   function renderApp() {
-    return NX.Ticker(WLTICK) + NX.Masthead("") + NX.Nav("")
+    return NX.Ticker(WLTICK) + NX.Masthead("") + NX.Nav("Demo Web")
       + Manset()
       + NX.SectionDivider("A", "Kimlik · Tek motor, dört yüz", "GERÇEK ARAYÜZ · CANLI GEÇİŞ") + '<div id="kimlik"></div>' + Kimlik() + Karsilastirma()
       + NX.SectionDivider("B", "Veri · Ajanstan alamayacağınız kısım", "480M+ SATIR · 257 AY · SİTEYE ÖZEL API") + Hendek() + VeriMimarisi()
