@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<title>Veri Lisansı — NADAS · İl/İlçe Gayrimenkul Veri Seti · API + Toplu Teslim · On-Premise</title>
+<meta name="description" content="NADAS Veri Lisansı: 480M+ kayıtlık gayrimenkul veri tabanını il/ilçe/kategori kapsamında lisanslar. İki teslim yolu — ProX API ile yönetilen erişim veya şifreli toplu/raw veri teslimi (on-premise). Lisanslanır, devredilmez · KVKK · Türkiye'de.">
+<meta name="theme-color" content="#06101B">
+<link rel="canonical" href="https://www.nadas.com.tr/veri-lisansi">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%2306101B'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%2338BDF8'%3EN%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NADAS">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="Veri Lisansı — NADAS · İl/İlçe Gayrimenkul Veri Seti">
+<meta property="og:description" content="480M+ kayıtlık veri tabanını il/ilçe/kategori kapsamında lisanslar. API ile yönetilen erişim veya şifreli toplu/raw veri teslimi (on-premise). Lisanslanır, devredilmez · KVKK.">
+<meta property="og:image" content="og-veri-lisansi.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NADAS Veri Lisansı — il/ilçe gayrimenkul veri seti">
+<meta property="og:url" content="https://www.nadas.com.tr/veri-lisansi">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Veri Lisansı — NADAS">
+<meta name="twitter:description" content="İl/ilçe gayrimenkul veri seti: API ile yönetilen erişim veya şifreli toplu/raw teslim (on-premise). Lisanslanır, devredilmez · KVKK.">
+<meta name="twitter:image" content="og-veri-lisansi.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Service","serviceType":"Gayrimenkul veri lisanslama","name":"NADAS Veri Lisansı","description":"480M+ kayıtlık gayrimenkul veri tabanının il/ilçe/kategori kapsamında lisanslanması. İki teslim yolu: ProX API ile yönetilen erişim veya şifreli toplu/raw veri teslimi (on-premise dahil). Veri lisanslanır, mülkiyet devredilmez.","areaServed":{"@type":"Country","name":"Türkiye"},"provider":{"@type":"Organization","name":"Nadas Gayrimenkul Bilgi İletişim Sistemleri Ticaret Limited Şirketi","alternateName":"NADAS","url":"https://www.nadas.com.tr","foundingDate":"2005"}}
+</script>
+</head>
+<body>
+<div id="app">
+  <noscript>
+    <div style="max-width:900px;margin:0 auto;padding:48px 20px;font-family:'Sora',sans-serif">
+      <h1 style="color:#A78BFA">NADAS Veri Lisansı — İl/İlçe Gayrimenkul Veri Seti</h1>
+      <p style="color:#CBD5E1">480M+ kayıtlık gayrimenkul veri tabanını il/ilçe/kategori kapsamında lisanslar; ProX API ile yönetilen erişim ya da şifreli toplu/raw veri teslimi (on-premise). Bu sayfayı görüntülemek için JavaScript gereklidir.</p>
+    </div>
+  </noscript>
+</div>
+
+<script src="js/core.js?v=15"></script>
+<script>
+(function () {
+  "use strict";
+  var C = NX.C, css = NX.css;
+  NX.setAccent(C.violet);
+
+  var LICTICK = [
+    ["VERİ LİSANSI", "İL · İLÇE · KATEGORİ"], ["VERİ", "480M+ KAYIT"], ["MODEL", "API + TOPLU TESLİM"], ["ON-PREMISE", "OPSİYONEL"],
+    ["ÇERÇEVE", "LİSANSLANIR · DEVREDİLMEZ"], ["HUKUK", "FSEK SUI GENERIS"], ["TESLİM", "AES-256 · İMZALI"], ["BARINMA", "TÜRKİYE'DE"],
+    ["FORMAT", "CSV · PARQUET · JSON"], ["GÜNCELLİK", "AYLIK ZİNCİR"], ["KVKK", "KİŞİSEL VERİ ÖZENİ"], ["TAZELİK", "META İLE"],
+  ];
+
+  function cu(target, suf, pre) { return '<span data-cu="' + target + '"' + (suf ? ' data-suf="' + suf + '"' : '') + (pre ? ' data-pre="' + pre + '"' : '') + '>' + (pre || '') + '0' + (suf || '') + '</span>'; }
+
+  function SectionDivider(index, title, subtitle) {
+    return '<div style="' + css({ background: C.deep, borderTop: "1px solid " + C.violet, borderBottom: "1px solid " + C.borderStrong, padding: "10px 16px" }) + '">'
+      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }) + '">'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.violet, letterSpacing: "0.14em", fontWeight: 700 }) + '">' + index + '</span>'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textPri, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }) + '">' + title + '</span>'
+      + (subtitle ? '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '">· ' + subtitle + '</span>' : '')
+      + '</div></div>';
+  }
+  function SubSection(num, title, eyebrow, children) {
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "20px 16px" }) + '">'
+      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 12, flexWrap: "wrap" }) + '">'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.violet, letterSpacing: "0.12em" }) + '">' + num + '</span>'
+      + '<h2 style="' + css({ fontSize: "clamp(1.25rem,2.8vw,1.7rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri, lineHeight: 1.15 }) + '">' + title + '</h2>'
+      + (eyebrow ? '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.08em", marginLeft: "auto" }) + '">' + eyebrow + '</span>' : '')
+      + '</div>' + children + '</div></section>';
+  }
+  function pri(t) { return '<strong style="' + css({ color: C.violet, fontWeight: 600 }) + '">' + t + '</strong>'; }
+  function grid(min, gap) { return css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(" + min + "px,1fr))", gap: gap || 12 }); }
+  function card(o) {
+    var col = o.col || C.violet;
+    return '<div style="' + css({ background: o.featured ? C.elev : C.raised, border: "1px solid " + (o.featured ? col : C.borderStrong), padding: "18px 18px", display: "flex", flexDirection: "column", gap: 8, boxSizing: "border-box" }) + '">'
+      + (o.tag ? '<div style="' + css({ display: "flex", alignItems: "center", gap: 8 }) + '"><span style="' + css({ width: 26, height: 26, flexShrink: 0, border: "1px solid " + col, color: col, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: C.mono, fontSize: 12, borderRadius: 3 }) + '">' + o.ic + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: col, letterSpacing: "0.1em", fontWeight: 700 }) + '">' + o.tag + '</span></div>' : '')
+      + '<div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 15, fontWeight: 700, color: C.textPri, letterSpacing: "-0.01em", lineHeight: 1.25 }) + '">' + o.ttl + '</div>'
+      + (o.body ? '<p style="' + css({ fontSize: 12.5, color: C.textMut, lineHeight: 1.6, margin: 0 }) + '">' + o.body + '</p>' : '')
+      + (o.list ? '<ul style="' + css({ listStyle: "none", padding: 0, margin: "2px 0 0", display: "flex", flexDirection: "column", gap: 5 }) + '">' + o.list.map(function (x) { return '<li style="' + css({ display: "flex", gap: 7, fontSize: 11.5, color: C.textSec, lineHeight: 1.5 }) + '"><span style="' + css({ color: col, fontFamily: C.mono, fontSize: 10, lineHeight: 1.5 }) + '">→</span><span>' + x + '</span></li>'; }).join("") + '</ul>' : '')
+      + '</div>';
+  }
+  function badges(arr) {
+    return '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 4 }) + '">' + arr.map(function (b) { return '<span style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 11px", border: "1px solid " + C.borderStrong, borderRadius: 3, fontFamily: C.mono, fontSize: 10, color: C.violet, letterSpacing: "0.06em", fontWeight: 700, background: "rgba(167,139,250,0.05)" }) + '"><span style="' + css({ width: 5, height: 5, borderRadius: 9999, background: C.violet }) + '"></span>' + b + '</span>'; }).join("") + '</div>';
+  }
+  function note(t) { return '<div style="' + css({ marginTop: 12, padding: "10px 14px", border: "1px dashed " + C.borderStrong, background: "rgba(167,139,250,0.03)", borderRadius: 3, fontFamily: C.mono, fontSize: 10.5, color: C.textMut, lineHeight: 1.6, letterSpacing: "0.02em" }) + '">⌬ ' + t + '</div>'; }
+  function tbl(head, rows, accents) {
+    var th = head.map(function (h) { return '<th style="' + css({ textAlign: "left", padding: "9px 12px", fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em", fontWeight: 700, borderBottom: "1px solid " + C.borderStrong, background: C.deep, whiteSpace: "nowrap" }) + '">' + h + '</th>'; }).join("");
+    var tr = rows.map(function (r) {
+      return '<tr>' + r.map(function (c, i) {
+        var col = i === 0 ? C.textPri : (accents && accents[i] ? accents[i] : C.textSec);
+        return '<td style="' + css({ padding: "9px 12px", fontSize: 12.5, color: col, borderBottom: "1px solid " + C.border, verticalAlign: "top", lineHeight: 1.5, fontWeight: i === 0 ? 600 : 400, fontFamily: i === 0 ? "'Sora',sans-serif" : "inherit" }) + '">' + c + '</td>';
+      }).join("") + '</tr>';
+    }).join("");
+    return '<div style="' + css({ overflowX: "auto", border: "1px solid " + C.borderStrong, borderRadius: 3 }) + '"><table style="' + css({ width: "100%", minWidth: 640, borderCollapse: "collapse" }) + '"><thead><tr>' + th + '</tr></thead><tbody>' + tr + '</tbody></table></div>';
+  }
+
+  /* ===== HERO ===== */
+  function HeroLicense() {
+    var stats = [
+      { n: 480, suf: "M+", lbl: "KAYIT" }, { n: 257, suf: " AY", lbl: "TARİHSEL SERİ" },
+      { n: 50000, suf: "+", lbl: "MAHALLE" }, { n: 38, suf: "", lbl: "KATEGORİ" }, { n: 81, suf: " İL", lbl: "KAPSAM" },
+    ].map(function (s) {
+      return '<div style="' + css({ background: C.raised, padding: "11px 14px" }) + '"><div style="' + css({ fontSize: 19, fontWeight: 700, color: C.violet, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + cu(s.n, s.suf) + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, marginTop: 5, letterSpacing: "0.08em" }) + '">' + s.lbl + '</div></div>';
+    }).join("");
+    var stage = '<div id="lic-stage" style="' + css({ position: "relative", overflow: "hidden", border: "1px solid " + C.borderStrong, borderRadius: 4, background: "radial-gradient(120% 130% at 50% 25%, #0d0a1f, #030810 70%)", marginBottom: 18 }) + '">'
+      + '<canvas id="lic-canvas" style="' + css({ display: "block", width: "100%", height: "clamp(260px,36vw,380px)" }) + '"></canvas>'
+      + '<div style="' + css({ position: "absolute", left: 12, top: 10, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.1em", fontWeight: 700, pointerEvents: "none", maxWidth: "60%" }) + '">◆ KAPSAM → VERİ SETİ → LİSANSLI TESLİM</div>'
+      + '<div style="' + css({ position: "absolute", right: 12, top: 10, display: "inline-flex", alignItems: "center", gap: 6, fontFamily: C.mono, fontSize: 8.5, color: C.violet, letterSpacing: "0.1em", pointerEvents: "none" }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: C.violet, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>LİSANSLI</div>'
+      + '<div style="' + css({ position: "absolute", left: 12, bottom: 10, fontFamily: C.mono, fontSize: 9.5, color: C.textMut, letterSpacing: "0.04em", pointerEvents: "none", maxWidth: "48%", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }) + '" id="lic-cap">▸ İSTANBUL · KADIKÖY · KONUT</div>'
+      + '<div style="' + css({ position: "absolute", right: 12, bottom: 10, fontFamily: C.mono, fontSize: 9, color: C.violet, letterSpacing: "0.06em", pointerEvents: "none" }) + '"><span id="lic-count">0</span> KAYIT LİSANSLANDI ◆</div></div>';
+    return '<section style="' + css({ position: "relative", padding: "18px 16px 20px", background: C.base, borderBottom: "1px solid " + C.borderStrong, overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 82% 15%, rgba(167,139,250,0.13), transparent 55%), radial-gradient(circle at 8% 85%, rgba(56,189,248,0.07), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+      + stage
+      + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: C.mono, fontSize: 10.5, color: C.violet, letterSpacing: "0.14em", fontWeight: 700, marginBottom: 12 }) + '"><span style="' + css({ width: 14, height: 1, background: C.violet }) + '"></span>KURUMSAL · VERİ LİSANSLAMA · İL/İLÇE KAPSAM</div>'
+      + '<h1 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(2rem,5.2vw,3.4rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri, maxWidth: 1120 }) + '">Bölgenizin tüm verisi —<br><span style="' + css({ color: C.violet }) + '">lisanslı, size teslim.</span></h1>'
+      + '<p style="' + css({ marginTop: 18, fontSize: 16, lineHeight: 1.65, color: C.textSec, maxWidth: 980 }) + '">NADAS\'ın ' + pri("480M+ kayıtlık") + ' gayrimenkul veri tabanını ' + pri("il/ilçe/kategori kapsamında") + ' lisanslarız. İki yol: ister ' + pri("ProX API ile yönetilen erişim") + ' (veri bizde kalır, sorguyla erişirsiniz), ister ' + pri("şifreli toplu/raw veri teslimi") + ' — kendi veri ambarınıza, ' + pri("on-premise dahil") + '. Her iki yolda da veri ' + pri("lisanslanır, devredilmez") + ': kullanım hakkı sizin, mülkiyet ve güncelleme NADAS\'ta. Hukuki zemin: ' + pri("FSEK sui generis") + ' veri tabanı koruması.</p>'
+      + '<div style="' + css({ marginTop: 18, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + stats + '</div>'
+      + '<div style="' + css({ marginTop: 14 }) + '">' + badges(["LİSANSLANIR · DEVREDİLMEZ", "İL/İLÇE KAPSAM", "API + TOPLU TESLİM", "ON-PREMISE", "AES-256 · İMZALI", "KVKK · TÜRKİYE'DE", "FSEK SUI GENERIS", "CSV · PARQUET · JSON"]) + '</div>'
+      + '</div></section>';
+  }
+
+  /* ===== A · KAPSAM: NE LİSANSLANIR ===== */
+  function Scope() {
+    var layers = [
+      card({ ic: "◷", tag: "KATMAN 1", col: C.violet, ttl: "Endeks zaman serisi", body: "Mahalle bazlı ₺/m² ve skor; 257 aylık kesintisiz zincir. Trend, delta, sezonluk.", list: ["₺/m² · skor · delta · trend", "257 ay tarihsel · aylık", "İl/ilçe/mahalle çözünürlük"] }),
+      card({ ic: "◈", tag: "KATMAN 2", col: C.primary, ttl: "Mahalle DNA vektörü", body: "38 boyutlu mahalle profili — ulaşım, donatı, likidite, demografi imzası.", list: ["38 boyutlu DNA vektörü", "Benzerlik / kümeleme", "Bölge karşılaştırma"] }),
+      card({ ic: "◆", tag: "KATMAN 3", col: C.accent, ttl: "Olay markırı & koordinat", body: "7M+ olay markırı; mahalle poligonları ve koordinat sınırları.", list: ["Olay markırları · 7M+", "Mahalle poligon/koordinat", "Zaman damgalı olaylar"] }),
+    ].join("");
+    var dims = tbl(["KAPSAM BOYUTU", "SEÇENEKLER"], [
+      ["Coğrafya", "İl · ilçe · mahalle · özel bölge kümesi"],
+      ["Kategori", "38 varlık kategorisinden seçim (konut, ticari, arsa…)"],
+      ["Dönem", "Tam tarihsel (257 ay) ya da belirli aralık"],
+      ["Veri katmanı", "Zaman serisi · DNA · olay/koordinat · güven skoru"],
+      ["Format", "CSV · Parquet · JSON · API (REST/WS)"],
+    ]);
+    var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 14, maxWidth: 960 }) + '">Lisansı ' + pri("ihtiyacınız kadar") + ' kaparsınız — tüm ülke değil, yalnız faaliyet bölgeniz ve ilgili kategoriler. Kapsam sözleşmede net tanımlanır.</p>'
+      + '<div style="' + grid(240, 12) + '">' + layers + '</div>'
+      + '<div style="' + css({ marginTop: 14 }) + '">' + dims + '</div>';
+    return SubSection("A.1", "Ne lisanslanır · kapsam", "İL/İLÇE · KATEGORİ · DÖNEM · KATMAN", body);
+  }
+
+  /* ===== B · TESLİM MODELLERİ ===== */
+  function Delivery() {
+    var mApi = card({ ic: "⇄", tag: "MODEL 1 · YÖNETİLEN ERİŞİM", col: C.primary, featured: true, ttl: "Veri bizde kalır, sorguyla erişirsiniz",
+      body: "ProX API üzerinden (REST + WebSocket) lisans kapsamınızdaki veriye erişirsiniz. Güncelleme canlı; entegrasyon uygulamanıza/dashboard'ınıza.", list: ["Veri NADAS sunucusunda barınır", "REST + WebSocket · canlı/aylık", "Uygulama & dashboard entegrasyonu", "SLA %99.99 · tenant anahtarı"] });
+    var mBulk = card({ ic: "⤓", tag: "MODEL 2 · TOPLU / RAW TESLİM", col: C.violet, featured: true, ttl: "Veri seti kendi sisteminize teslim",
+      body: "Lisans kapsamındaki tam veri seti, şifreli ve imzalı paket olarak kurumunuza teslim edilir — veri ambarınıza, BI/ML hattınıza, on-premise dahil.", list: ["Kurumun sistemine / on-premise", "CSV · Parquet · JSON · şema dokümanı", "Periyodik paket (aylık/çeyrek)", "AES-256 şifreli · imzalı teslim"] });
+    var comp = tbl(["", "Yönetilen erişim (API)", "Toplu / raw teslim"], [
+      ["Veri nerede", "NADAS sunucusu", "Kurumun sistemi · on-premise ops."],
+      ["Erişim", "ProX API (REST/WS)", "Dosya teslimi (CSV/Parquet/JSON)"],
+      ["Güncelleme", "Canlı / aylık push", "Periyodik paket (aylık/çeyrek)"],
+      ["Kapsam", "Sorgu bazlı · kapsam içinde", "Tam veri seti · lisans kapsamı"],
+      ["Güvenlik", "TLS 1.3 · tenant anahtarı", "AES-256 şifreli · imzalı paket"],
+      ["Tipik kullanım", "Uygulama · dashboard · canlı ürün", "Veri ambarı · BI · ML eğitimi"],
+    ], [null, C.primary, C.violet]);
+    var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 14, maxWidth: 960 }) + '">İki teslim yolu da ' + pri("aynı lisans çerçevesinin") + ' altındadır; farkı verinin nerede durduğudur. İkisini birlikte de alabilirsiniz (canlı API + periyodik toplu paket).</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", gap: 12, marginBottom: 14 }) + '" class="nadas-twocol">' + mApi + mBulk + '</div>'
+      + comp;
+    return SubSection("B.1", "Teslim modelleri", "API · TOPLU/RAW · ON-PREMISE", body);
+  }
+
+  /* ===== C · LİSANS ŞARTLARI (DÜRÜST ÇERÇEVE) ===== */
+  function Terms() {
+    var pts = [
+      card({ ic: "◆", tag: "MÜLKİYET", col: C.violet, ttl: "Lisanslanır, devredilmez", body: "Veri satılmaz; mülkiyet NADAS'ta kalır. Siz sözleşmeyle tanımlı sınırlı kullanım hakkı alırsınız — bu, veri sektörünün standart modelidir." }),
+      card({ ic: "◐", tag: "KAPSAM & SÜRE", col: C.primary, ttl: "Kapsam ve süre sözleşmede", body: "İl/ilçe/kategori/dönem kapsamı ve lisans süresi net tanımlanır; süreli lisanstır ve yenilenir. Kapsam dışı kullanım lisansa dahil değildir." }),
+      card({ ic: "⇉", tag: "YENİDEN DAĞITIM", col: C.warn, ttl: "Redistribürasyon kısıtlı", body: "Veriyi üçüncü taraflara yeniden dağıtmak veya alt-lisanslamak açık izne bağlıdır. İç kullanım serbest; dışa dağıtım şartları sözleşmede." }),
+      card({ ic: "✎", tag: "TÜRETİLMİŞ ÜRÜN", col: C.accent, ttl: "Kurduğunuz model sizindir", body: "Veriyle eğittiğiniz model, skor ve analiz — veri setinin büyük kısmını çoğaltmadığı sürece — size aittir. Bu sınır sözleşmede netleştirilir." }),
+      card({ ic: "❝", tag: "KAYNAK", col: C.primary, ttl: "Kaynak gösterimi", body: "Yayına dönük çıktılarda veri kaynağı olarak NADAS/emlakekspertizi.com gösterilir. Kapsam ve biçim sözleşmeyle belirlenir." }),
+      card({ ic: "◉", tag: "DENETİM", col: C.violet, ttl: "Adil kullanım & denetim", body: "Kullanım kapsam ve adil kullanımla sınırlıdır; olağan dışı desen denetlenir. Şeffaf, önceden bildirimli denetim hakkı sözleşmede tanımlanır." }),
+    ].join("");
+    var body = '<div style="' + grid(260, 12) + '">' + pts + '</div>'
+      + note("Hukuki zemin: NADAS\'ın 480M+ kayıtlık veri tabanı, <strong style=\"color:" + C.textSec + "\">büyük emek ve yatırımla</strong> kurulmuş bir veri tabanı olarak FSEK ek m.8 kapsamında <strong style=\"color:" + C.textSec + "\">sui generis</strong> korumaya tabidir — lisanslamanın yasal dayanağı budur. Bu bölüm bilgilendirmedir; bağlayıcı şartlar imzalı lisans sözleşmesinde tanımlanır (hukuki danışmanlık değildir).");
+    return SubSection("C.1", "Lisans şartları · dürüst çerçeve", "LİSANSLANIR · KAPSAM · TÜRETİLMİŞ ÜRÜN", body);
+  }
+
+  /* ===== C.2 · GÜVENLİK · KVKK · SLA ===== */
+  function Compliance() {
+    var pts = [
+      card({ ic: "§", tag: "TESLİM GÜVENLİĞİ", col: C.accent, ttl: "Şifreli & imzalı teslim", body: "Toplu paketler AES-256 ile şifrelenir, imzalanır; taşıma TLS 1.3. API erişimi tenant anahtarı + Origin/IP kısıtı ile korunur.", list: ["AES-256 (dinlenim) · TLS 1.3 (taşıma)", "İmzalı paket · bütünlük doğrulaması", "Erişim: anahtar + allowlist"] }),
+      card({ ic: "◈", tag: "KVKK", col: C.violet, ttl: "Kişisel veri özeni", body: "Varsayılan çıktı toplu/anonim endekstir. Raw koordinat/olay teslimlerinde kişisel veri değerlendirmesi yapılır; işleme yükümlülükleri sözleşmeye bağlanır.", list: ["Toplu/anonim varsayılan", "Raw teslimde KVKK değerlendirmesi", "Türkiye'de barınma"] }),
+      card({ ic: "◷", tag: "SLA & GÜNCELLİK", col: C.primary, ttl: "Taahhütlü teslim", body: "API için SLA %99.99; toplu teslimde taahhütlü frekans (aylık/çeyrek) ve tazelik meta verisi. Her veri seti köken ve tarih bilgisi taşır.", list: ["API SLA %99.99", "Toplu: taahhütlü frekans", "Köken + tazelik meta"] }),
+      card({ ic: "◆", tag: "DETERMİNİST", col: C.primary, ttl: "ProX · doğrulanabilir", body: "Endeks ve skorlar determinist ProX motorunun çıktısıdır — aynı girdi, aynı sonuç; halüsinasyon yok. Metodoloji dokümanı lisansla paylaşılır.", list: ["Aynı girdi → aynı çıktı", "Halüsinasyon yok", "Metodoloji dokümanı"] }),
+    ].join("");
+    return SubSection("C.2", "Güvenlik · KVKK · SLA", "ŞİFRELİ · KİŞİSEL VERİ ÖZENİ · TAAHHÜTLÜ", '<div style="' + grid(250, 12) + '">' + pts + '</div>');
+  }
+
+  /* ===== D · KİMLER ALIR + SÜREÇ ===== */
+  function WhoProcess() {
+    var who = ["Bankalar · değerleme birimleri", "Sigorta & reasürans", "GYO · fonlar · yatırım", "Belediye · kamu · planlama", "Proptech · portal · veri girişimi", "Danışmanlık & araştırma"].map(function (x) {
+      return '<div style="' + css({ display: "flex", gap: 8, alignItems: "center", padding: "9px 12px", background: C.raised, border: "1px solid " + C.border, fontSize: 12.5, color: C.textSec }) + '"><span style="' + css({ color: C.violet, fontFamily: C.mono, fontSize: 11 }) + '">▸</span>' + x + '</div>';
+    }).join("");
+    var steps = [["01", "Kapsam", "İl/ilçe/kategori/dönem ve teslim modeli belirlenir"], ["02", "Lisans", "Şartlar, süre ve KVKK yükümlülükleri sözleşmeye yazılır"], ["03", "Kurulum", "API anahtarı açılır ya da ilk toplu paket teslim edilir"], ["04", "Güncelleme", "Canlı push veya taahhütlü periyodik paket ile süregelir"]].map(function (s) {
+      return '<div style="' + css({ flex: "1 1 180px", background: C.raised, border: "1px solid " + C.borderStrong, padding: "14px 16px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.violet, fontWeight: 700, letterSpacing: "0.1em", marginBottom: 6 }) + '">' + s[0] + '</div><div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 14, fontWeight: 700, color: C.textPri, marginBottom: 4 }) + '">' + s[1] + '</div><div style="' + css({ fontSize: 12, color: C.textMut, lineHeight: 1.5 }) + '">' + s[2] + '</div></div>';
+    }).join("");
+    var body = '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))", gap: 8, marginBottom: 16 }) + '">' + who + '</div>'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 8, fontWeight: 700 }) + '">◆ SÜREÇ</div>'
+      + '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 8 }) + '">' + steps + '</div>'
+      + note("Fiyatlandırma kapsama göre belirlenir (coğrafya · kategori · katman · teslim modeli · süre). Standart bir liste fiyatı vermeyiz; her lisans tekliflendirilir.");
+    return SubSection("D.1", "Kimler alır & süreç", "KURUMSAL · 4 ADIM · TEKLİF BAZLI", body);
+  }
+
+  /* ===== ÜRÜN ===== */
+  function Product() {
+    return '<section style="' + css({ background: "linear-gradient(135deg, " + C.deep + " 0%, " + C.raised + " 100%)", borderTop: "2px solid " + C.violet, borderBottom: "1px solid " + C.borderStrong, padding: "40px 16px 34px", position: "relative", overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 82% 18%, rgba(167,139,250,0.13), transparent 60%), radial-gradient(circle at 10% 82%, rgba(56,189,248,0.07), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, fontFamily: C.mono, fontSize: 11, letterSpacing: "0.14em" }) + '"><span style="' + css({ color: C.violet, fontWeight: 700 }) + '">◆ VERİ KAYNAĞI · NADAS ALTYAPISI</span><span style="' + css({ height: 1, flex: 1, background: C.violet, opacity: 0.4 }) + '"></span><span style="' + css({ color: C.textMut }) + '">LİSANS · TEKLİF</span></div>'
+      + '<div style="' + css({ marginBottom: 16 }) + '"><img src="img/emlak-logo-full.png" alt="emlakekspertizi.com" style="' + css({ display: "block", width: "100%", maxWidth: 360, height: "auto" }) + '"><h2 style="' + css({ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)", whiteSpace: "nowrap", margin: -1, padding: 0, border: 0 }) + '">emlakekspertizi.com</h2></div>'
+      + '<p style="' + css({ marginTop: 8, fontSize: 15, lineHeight: 1.6, color: C.textSec, maxWidth: 960 }) + '">Lisanslanan veri, ' + pri("emlakekspertizi.com") + '\'u besleyen aynı ProX altyapısıdır — 480M+ kayıt, 257 aylık zincir, 38 boyutlu DNA. Bölgeniz için lisans kapsamı ve teklif:</p>'
+      + '<div style="' + css({ marginTop: 20, display: "flex", gap: 12, flexWrap: "wrap" }) + '">'
+      + '<a href="mailto:bilgi@emlakekspertizi.com" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: C.violet, color: C.deep, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">LİSANS TEKLİFİ AL →</a>'
+      + '<a href="kurumsal-api.html" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: "transparent", color: C.primary, border: "1px solid " + C.primary, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">KURUMSAL API →</a>'
+      + '</div></div></section>';
+  }
+
+  function renderApp() {
+    return NX.Ticker(LICTICK) + NX.Masthead("Veri Lisansı") + NX.Nav("")
+      + HeroLicense()
+      + SectionDivider("A", "Kapsam · Ne Lisanslanır", "İL/İLÇE · KATEGORİ · KATMAN") + Scope()
+      + SectionDivider("B", "Teslim Modelleri", "API · TOPLU/RAW · ON-PREMISE") + Delivery()
+      + SectionDivider("C", "Şartlar · Güvenlik · Uyum", "LİSANS · KVKK · SLA") + Terms() + Compliance()
+      + SectionDivider("D", "Kimler Alır & Süreç", "KURUMSAL · TEKLİF") + WhoProcess()
+      + Product() + NX.Footer();
+  }
+
+  /* ===== HERO ANİMASYONU · KAPSAM → VERİ SETİ → LİSANSLI TESLİM ===== */
+  function mountLicenseFlow() {
+    var stage = document.getElementById("lic-stage");
+    var cv = stage && document.getElementById("lic-canvas");
+    if (!stage || !cv || !cv.getContext) return;
+    var ctx = cv.getContext("2d");
+    var capEl = document.getElementById("lic-cap"), cntEl = document.getElementById("lic-count");
+    var mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+    var reduce = !!(mq && mq.matches);
+    var W = 0, H = 0, dpr = 1, raf = 0, running = false, visible = true;
+    var STEP = 1 / 60, acc = 0, last = 0, t = 0, TAU = 6.28318;
+    var CY = "#38BDF8", GRN = "#34D399", VIO = "#A78BFA", WARN = "#FBBF24", GC = "#F1EAFF", MUT = "#64748B";
+    var Px = 0, Ax = 0, Bx = 0, midY = 0, field = [], selRect = null, pool = [], free = [], MAX = 90, emitAcc = 0, licensed = 0, licShown = 0, selPhase = 0, selT = 0;
+    var CAPS = ["İSTANBUL · KADIKÖY · KONUT", "ZAMAN SERİSİ + DNA + OLAY", "MODEL 1: API erişimi", "MODEL 2: TOPLU · on-premise", "AES-256 · imzalı teslim"];
+    var capIdx = -1, capLast = 0;
+    function hexA(h, a) { var n = parseInt(h.slice(1), 16); return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; }
+    var sprites = {};
+    function sprite(color) { if (sprites[color]) return sprites[color]; var r = 16, s = document.createElement("canvas"); s.width = s.height = r * 2; var sc = s.getContext("2d"), g = sc.createRadialGradient(r, r, 0, r, r, r); g.addColorStop(0, hexA(color, 1)); g.addColorStop(0.3, hexA(color, 0.5)); g.addColorStop(1, hexA(color, 0)); sc.fillStyle = g; sc.fillRect(0, 0, r * 2, r * 2); sprites[color] = s; return s; }
+    function initPool() { pool = []; free = []; for (var i = 0; i < MAX; i++) { pool.push({ on: 0, ph: 0, t: 0, sp: 0, lane: 0, col: VIO, fx: 0, fy: 0, seed: 0 }); free.push(i); } }
+    function alloc() { if (!free.length) return -1; var k = free.pop(); pool[k].on = 1; return k; }
+    function rel(k) { pool[k].on = 0; free.push(k); }
+    function buildField() {
+      field = []; var cols = 9, rows = 6, x0 = W * 0.05, y0 = midY - H * 0.24, dx = (W * 0.20) / (cols - 1), dy = (H * 0.48) / (rows - 1);
+      for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) { var inSel = c >= 3 && c <= 6 && r >= 1 && r <= 4; field.push({ x: x0 + c * dx, y: y0 + r * dy, sel: inSel, c: c, r: r }); }
+      selRect = { x: x0 + 3 * dx - dx * 0.4, y: y0 + 1 * dy - dy * 0.4, w: 3 * dx + dx * 0.8, h: 3 * dy + dy * 0.8 };
+    }
+    function layout() { Px = W * 0.52; Ax = W * 0.86; Bx = W * 0.86; midY = H * 0.5; buildField(); }
+    function emit() { var k = alloc(); if (k < 0) return; var q = pool[k]; var src = null, tries = 0; do { src = field[(Math.random() * field.length) | 0]; tries++; } while (src && !src.sel && tries < 8); q.ph = 0; q.t = 0; q.sp = 0.016 + Math.random() * 0.008; q.fx = src ? src.x : W * 0.15; q.fy = src ? src.y : midY; q.lane = Math.random() < 0.5 ? 0 : 1; q.col = q.lane === 0 ? CY : VIO; q.seed = Math.random(); }
+    function lerp(a, b, u) { return a + (b - a) * u; }
+    function build() {
+      W = stage.clientWidth; H = stage.clientHeight; if (!W || !H) { requestAnimationFrame(build); return; }
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.width = W + "px"; cv.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); layout(); draw();
+    }
+    function stepSim(dt) {
+      t += dt; selT += dt; selPhase = 0.5 + 0.5 * Math.sin(selT * 1.2);
+      if (t - capLast > 2.0) { capLast = t; capIdx = (capIdx + 1) % CAPS.length; if (capEl) capEl.textContent = "▸ " + CAPS[capIdx]; }
+      emitAcc += dt * 9; while (emitAcc >= 1) { emitAcc -= 1; emit(); }
+      for (var k = 0; k < MAX; k++) { var q = pool[k]; if (!q.on) continue; q.t += q.sp; if (q.t >= 1) { q.ph++; q.t = 0; if (q.ph === 2) { licensed += 137; licShown = licensed; } if (q.ph > 2) rel(k); } }
+    }
+    function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+    function node(x, col, label, sub, glow) {
+      var r = Math.max(20, Math.min(H * 0.13, 32));
+      var g = ctx.createRadialGradient(x, midY, 0, x, midY, r * 1.9); g.addColorStop(0, hexA(col, 0.22 + 0.16 * glow)); g.addColorStop(0.5, hexA(col, 0.05)); g.addColorStop(1, hexA(col, 0));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, midY, r * 1.9, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(x, midY, r, 0, TAU); ctx.fillStyle = hexA(col, 0.08); ctx.fill(); ctx.strokeStyle = hexA(col, 0.6 + 0.3 * glow); ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.fillStyle = MUT; ctx.font = "700 9px " + C.mono; ctx.textAlign = "center"; ctx.fillText(label, x, midY + r + 15); if (sub) { ctx.fillStyle = hexA(col, 0.85); ctx.fillText(sub, x, midY + r + 27); } ctx.textAlign = "left";
+      return r;
+    }
+    function lane(x, y, col, top, bottom) {
+      var w = W * 0.15, h = H * 0.19, bx = x - w / 2, by = y - h / 2;
+      roundRect(bx, by, w, h, 5); ctx.fillStyle = "rgba(6,16,27,0.8)"; ctx.fill(); ctx.strokeStyle = hexA(col, 0.45); ctx.lineWidth = 1.3; ctx.stroke();
+      ctx.fillStyle = hexA(col, 0.9); ctx.font = "700 9.5px " + C.mono; ctx.textAlign = "left"; ctx.fillText(top, bx + 10, by + 18);
+      ctx.fillStyle = hexA("#CBD5E1", 0.6); ctx.font = "8.5px " + C.mono; ctx.fillText(bottom, bx + 10, by + 33);
+      // lock glyph for bulk
+      if (col === VIO) { var lx = bx + w - 20, ly = by + 14; ctx.strokeStyle = hexA(col, 0.8); ctx.lineWidth = 1.2; ctx.strokeRect(lx, ly, 10, 8); ctx.beginPath(); ctx.arc(lx + 5, ly, 3.2, Math.PI, TAU); ctx.stroke(); }
+      return { x: bx, y: by, w: w, h: h };
+    }
+    function draw() {
+      if (!W) return;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = "rgba(255,255,255,0.02)"; ctx.lineWidth = 1;
+      for (var gx = 0; gx <= W; gx += 44) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+      var glow = selPhase;
+      // veri alanı (sol)
+      for (var i = 0; i < field.length; i++) { var f = field[i];
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.sel ? 2.4 : 1.6, 0, TAU);
+        ctx.fillStyle = f.sel ? hexA(VIO, 0.85) : hexA("#94A3B8", 0.28); ctx.fill();
+      }
+      // kapsam çerçevesi
+      if (selRect) { ctx.strokeStyle = hexA(VIO, 0.55 + 0.35 * glow); ctx.lineWidth = 1.4; ctx.setLineDash([5, 4]); ctx.lineDashOffset = -t * 18; roundRect(selRect.x, selRect.y, selRect.w, selRect.h, 4); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = hexA(VIO, 0.9); ctx.font = "700 8px " + C.mono; ctx.textAlign = "left"; ctx.fillText("KAPSAM", selRect.x, selRect.y - 6); }
+      // paket düğümü + iki lane
+      var pr = node(Px, VIO, "VERİ SETİ", "paketlenir", glow);
+      var apiBox = lane(Ax, midY - H * 0.16, CY, "API", "yönetilen erişim");
+      var bulkBox = lane(Bx, midY + H * 0.16, VIO, "TOPLU/RAW", "on-premise");
+      // bağlantı çizgileri paket→lane
+      ctx.strokeStyle = hexA(CY, 0.12); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(Px + pr, midY); ctx.quadraticCurveTo((Px + Ax) / 2, midY - H * 0.1, apiBox.x, midY - H * 0.16); ctx.stroke();
+      ctx.strokeStyle = hexA(VIO, 0.12); ctx.beginPath(); ctx.moveTo(Px + pr, midY); ctx.quadraticCurveTo((Px + Bx) / 2, midY + H * 0.1, bulkBox.x, midY + H * 0.16); ctx.stroke();
+      // parçacıklar
+      ctx.save(); ctx.globalCompositeOperation = "lighter";
+      for (var k = 0; k < MAX; k++) { var q = pool[k]; if (!q.on) continue; var p, col = q.col;
+        if (q.ph === 0) { p = { x: lerp(q.fx, Px - pr * 0.7, q.t), y: lerp(q.fy, midY, q.t) }; col = VIO; }
+        else if (q.ph === 1) { var ty = q.lane === 0 ? midY - H * 0.16 : midY + H * 0.16; p = { x: lerp(Px, q.lane === 0 ? apiBox.x : bulkBox.x, q.t), y: lerp(midY, ty, q.t) }; col = q.lane === 0 ? CY : VIO; }
+        else { p = { x: q.lane === 0 ? apiBox.x : bulkBox.x, y: q.lane === 0 ? midY - H * 0.16 : midY + H * 0.16 }; col = q.lane === 0 ? CY : VIO; }
+        var rr = q.ph === 0 ? 3 : 3.3; ctx.globalAlpha = 0.85; ctx.drawImage(sprite(col), p.x - rr * 2, p.y - rr * 2, rr * 4, rr * 4);
+        ctx.globalAlpha = 0.9; ctx.fillStyle = GC; ctx.beginPath(); ctx.arc(p.x, p.y, 1.1, 0, TAU); ctx.fill();
+      }
+      ctx.restore();
+      ctx.fillStyle = MUT; ctx.font = "700 9px " + C.mono; ctx.textAlign = "center"; ctx.fillText("NADAS VERİ TABANI · 480M+", W * 0.15, midY + H * 0.30); ctx.textAlign = "left";
+      if (cntEl && licShown) cntEl.textContent = licShown.toLocaleString("tr-TR");
+    }
+    function tick(now) { if (!last) last = now; var dt = Math.min((now - last) / 1000, 0.05); last = now; acc += dt; while (acc >= STEP) { stepSim(STEP); acc -= STEP; } draw(); if (running) raf = requestAnimationFrame(tick); }
+    function start() { if (running || reduce || !visible) return; running = true; last = 0; raf = requestAnimationFrame(tick); }
+    function stop() { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
+    initPool(); build();
+    if (reduce) { for (var w = 0; w < 240; w++) stepSim(STEP); draw(); }
+    var rt = 0; function relayout() { clearTimeout(rt); rt = setTimeout(build, 140); }
+    window.addEventListener("resize", relayout);
+    if (window.ResizeObserver) { try { new ResizeObserver(relayout).observe(stage); } catch (e) {} }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+    if (mq && mq.addEventListener) mq.addEventListener("change", function (e) { reduce = e.matches; reduce ? stop() : start(); });
+    document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); else if (visible) start(); });
+    if (window.IntersectionObserver) { try { new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) start(); else stop(); }, { threshold: 0 }).observe(stage); } catch (e) {} }
+    stage._pump = function (n) { for (var i = 0; i < (n || 60); i++) stepSim(STEP); draw(); };
+    start();
+  }
+
+  NX.boot(renderApp);
+  mountLicenseFlow();
+  (function () {
+    var els = document.querySelectorAll("[data-cu]");
+    for (var i = 0; i < els.length; i++) {
+      (function (el) {
+        var target = parseFloat(el.getAttribute("data-cu")) || 0, suf = el.getAttribute("data-suf") || "", pre = el.getAttribute("data-pre") || "", start = null, dur = 1600;
+        function fmt(v) { return pre + (target % 1 ? v.toFixed(2) : Math.round(v).toLocaleString("tr-TR")) + suf; }
+        function step(t) { if (!start) start = t; var p = Math.min((t - start) / dur, 1); el.textContent = fmt(target * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); }
+        requestAnimationFrame(step);
+        setTimeout(function () { el.textContent = fmt(target); }, 1900);
+      })(els[i]);
+    }
+  })();
+})();
+</script>
+</body>
+</html>
