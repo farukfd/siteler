@@ -119,10 +119,10 @@
     }).join("");
     var stage = '<div id="ai-stage" style="' + css({ position: "relative", overflow: "hidden", border: "1px solid " + C.borderStrong, borderRadius: 4, background: "radial-gradient(120% 130% at 50% 25%, #0d0a1f, #030810 70%)", marginBottom: 18 }) + '">'
       + '<canvas id="ai-canvas" style="' + css({ display: "block", width: "100%", height: "clamp(270px,38vw,400px)" }) + '"></canvas>'
-      + '<div style="' + css({ position: "absolute", left: 12, top: 10, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.1em", fontWeight: 700, pointerEvents: "none", maxWidth: "60%" }) + '">◆ HESAPLAYAN ≠ YAZAN · İKİ AYRI KATMAN</div>'
+      + '<div style="' + css({ position: "absolute", left: 12, top: 10, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.1em", fontWeight: 700, pointerEvents: "none", maxWidth: "60%" }) + '">◆ ŞİRKETE ÖZEL AI SİSTEMİ · KENDİ SUNUCUNUZDA</div>'
       + '<div style="' + css({ position: "absolute", right: 12, top: 10, display: "inline-flex", alignItems: "center", gap: 6, fontFamily: C.mono, fontSize: 8.5, color: C.violet, letterSpacing: "0.1em", pointerEvents: "none" }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: C.violet, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>CANLI</div>'
-      + '<div style="' + css({ position: "absolute", left: 12, bottom: 10, fontFamily: C.mono, fontSize: 9.5, color: C.textMut, letterSpacing: "0.04em", pointerEvents: "none", maxWidth: "62%", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }) + '" id="ai-cap">▸ ProX: aynı girdi = aynı çıktı</div>'
-      + '<div style="' + css({ position: "absolute", right: 12, bottom: 10, fontFamily: C.mono, fontSize: 9, color: C.violet, letterSpacing: "0.06em", pointerEvents: "none" }) + '"><span id="ai-count">0</span> ONAYLI ÇIKTI ◆</div></div>';
+      + '<div style="' + css({ position: "absolute", left: 12, bottom: 10, fontFamily: C.mono, fontSize: 9.5, color: C.textMut, letterSpacing: "0.04em", pointerEvents: "none", maxWidth: "62%", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }) + '" id="ai-cap">▸ kendi veriniz → RAG → çekirdek</div>'
+      + '<div style="' + css({ position: "absolute", right: 12, bottom: 10, fontFamily: C.mono, fontSize: 9, color: C.violet, letterSpacing: "0.06em", pointerEvents: "none" }) + '"><span id="ai-count">0</span> GÜVENLİ ÇIKTI ◆</div></div>';
     return '<section style="' + css({ position: "relative", padding: "18px 16px 20px", background: C.base, borderBottom: "1px solid " + C.borderStrong, overflow: "hidden" }) + '">'
       + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 82% 15%, rgba(167,139,250,0.13), transparent 55%), radial-gradient(circle at 8% 85%, rgba(52,211,153,0.07), transparent 50%)" }) + '"></div>'
       + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
@@ -342,7 +342,7 @@
       + Product() + NX.Footer();
   }
 
-  /* ===== HERO ANİMASYONU · İKİ KATMAN: ProX (determinist) + dil modeli (üretken → insan onayı) ===== */
+  /* ===== HERO ANİMASYONU · ŞİRKETE ÖZEL AI SİSTEMİ (bağımsız sınır · RAG · ProX+çok-model · tool · guardrails → güvenli çıktı) ===== */
   function mountAIFlow() {
     var stage = document.getElementById("ai-stage");
     var cv = stage && document.getElementById("ai-canvas");
@@ -353,87 +353,95 @@
     var reduce = !!(mq && mq.matches);
     var W = 0, H = 0, dpr = 1, raf = 0, running = false, visible = true;
     var STEP = 1 / 60, acc = 0, last = 0, t = 0, TAU = 6.28318;
-    var CY = "#38BDF8", GRN = "#34D399", VIO = "#A78BFA", WARN = "#FBBF24", GC = "#F1EAFF", MUT = "#64748B";
-    var Sx = 0, Nx1 = 0, Nx2 = 0, Gx = 0, Ox = 0, topY = 0, botY = 0, pool = [], free = [], MAX = 88, emitAcc = 0, approved = 0, apprShown = 0, gateFlash = 0, proxPulse = 0;
-    var CAPS = ["ProX: aynı girdi = aynı çıktı", "ProX: veri yoksa boş bırakır · halüsinasyon yok", "Dil modeli: seçtiğiniz model (açık/ticari)", "İnsan editör: onay kapısı", "AI önerir · insan karar verir", "Egemen mod: veri dışarı çıkmaz"];
+    var CY = "#38BDF8", GRN = "#34D399", VIO = "#A78BFA", WARN = "#FBBF24", GC = "#F1EAFF", MUT = "#64748B", FAINT = "#334155";
+    var pool = [], free = [], MAX = 96, emitAcc = 0, done = 0, doneShown = 0, gateFlash = 0, toolFlash = 0, proxPulse = 0;
+    var DATA = 0, RAG = 0, coreX = 0, toolX = 0, gateX = 0, outX = 0, proxY = 0, llmY = 0, midY = 0, F = {};
+    var MODELS = ["Claude", "GPT-4/5", "Gemini", "Llama", "Qwen", "DeepSeek", "Mistral"], modelIdx = 0, modelLast = 0;
+    var CAPS = ["kendi veriniz → RAG → çekirdek", "determinist ProX + seçtiğiniz dil modeli", "tool: ProX / API çağrısı", "guardrails + insan onayı", "güvenli çıktı · kaynak gösterimli", "kendi sunucunuzda · veri egemenliği"];
     var capIdx = -1, capLast = 0;
     function hexA(h, a) { var n = parseInt(h.slice(1), 16); return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; }
     var sprites = {};
-    function sprite(color) { if (sprites[color]) return sprites[color]; var r = 16, s = document.createElement("canvas"); s.width = s.height = r * 2; var sc = s.getContext("2d"), g = sc.createRadialGradient(r, r, 0, r, r, r); g.addColorStop(0, hexA(color, 1)); g.addColorStop(0.3, hexA(color, 0.5)); g.addColorStop(1, hexA(color, 0)); sc.fillStyle = g; sc.fillRect(0, 0, r * 2, r * 2); sprites[color] = s; return s; }
-    function initPool() { pool = []; free = []; for (var i = 0; i < MAX; i++) { pool.push({ on: 0, lane: 0, ph: 0, t: 0, sp: 0, y0: 0 }); free.push(i); } }
+    function sprite(color) { if (sprites[color]) return sprites[color]; var r = 15, s = document.createElement("canvas"); s.width = s.height = r * 2; var sc = s.getContext("2d"), g = sc.createRadialGradient(r, r, 0, r, r, r); g.addColorStop(0, hexA(color, 1)); g.addColorStop(0.3, hexA(color, 0.5)); g.addColorStop(1, hexA(color, 0)); sc.fillStyle = g; sc.fillRect(0, 0, r * 2, r * 2); sprites[color] = s; return s; }
+    function initPool() { pool = []; free = []; for (var i = 0; i < MAX; i++) { pool.push({ on: 0, core: 0, tool: 0, ph: 0, t: 0, sp: 0, y0: 0 }); free.push(i); } }
     function alloc() { if (!free.length) return -1; var k = free.pop(); pool[k].on = 1; return k; }
     function rel(k) { pool[k].on = 0; free.push(k); }
-    function layout() { Sx = W * 0.08; Nx1 = W * 0.4; Nx2 = W * 0.34; Gx = W * 0.6; Ox = W * 0.86; topY = H * 0.33; botY = H * 0.69; }
-    function emit() { var k = alloc(); if (k < 0) return; var q = pool[k]; q.lane = Math.random() < 0.5 ? 0 : 1; q.ph = 0; q.t = 0; q.sp = 0.015 + Math.random() * 0.007; q.y0 = (q.lane === 0 ? topY : botY) + (Math.random() - 0.5) * H * 0.06; }
-    function lerp(a, b, u) { return a + (b - a) * u; }
-    function build() {
-      W = stage.clientWidth; H = stage.clientHeight; if (!W || !H) { requestAnimationFrame(build); return; }
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.width = W + "px"; cv.style.height = H + "px";
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); layout(); draw();
+    function layout() {
+      F = { x0: W * 0.02, y0: H * 0.12, x1: W * 0.98, y1: H * 0.88 };
+      DATA = W * 0.09; RAG = W * 0.24; coreX = W * 0.45; toolX = W * 0.6; gateX = W * 0.72; outX = W * 0.88;
+      midY = H * 0.48; proxY = H * 0.33; llmY = H * 0.63;
     }
+    function emit() { var k = alloc(); if (k < 0) return; var q = pool[k]; q.core = Math.random() < 0.5 ? 0 : 1; q.tool = (q.core === 1 && Math.random() < 0.4) ? 1 : 0; q.ph = 0; q.t = 0; q.sp = 0.014 + Math.random() * 0.007; q.y0 = midY + (Math.random() - 0.5) * H * 0.05; }
+    function lerp(a, b, u) { return a + (b - a) * u; }
+    function build() { W = stage.clientWidth; H = stage.clientHeight; if (!W || !H) { requestAnimationFrame(build); return; } dpr = Math.min(window.devicePixelRatio || 1, 2); cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.width = W + "px"; cv.style.height = H + "px"; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); layout(); draw(); }
     function stepSim(dt) {
       t += dt; proxPulse = 0.5 + 0.5 * Math.sin(t * 1.5);
-      if (t - capLast > 2.0) { capLast = t; capIdx = (capIdx + 1) % CAPS.length; if (capEl) capEl.textContent = "▸ " + CAPS[capIdx]; }
-      emitAcc += dt * 9; while (emitAcc >= 1) { emitAcc -= 1; emit(); }
-      for (var k = 0; k < MAX; k++) { var q = pool[k]; if (!q.on) continue; q.t += q.sp;
-        if (q.t >= 1) { q.ph++; q.t = 0;
-          if (q.lane === 0) { if (q.ph > 1) { approved++; apprShown = approved; rel(k); } }
-          else { if (q.ph === 1) gateFlash = 1; if (q.ph > 2) { approved++; apprShown = approved; rel(k); } }
-        } }
-      gateFlash *= Math.pow(0.9, dt * 60);
+      if (t - capLast > 1.9) { capLast = t; capIdx = (capIdx + 1) % CAPS.length; if (capEl) capEl.textContent = "▸ " + CAPS[capIdx]; }
+      if (t - modelLast > 1.4) { modelLast = t; modelIdx = (modelIdx + 1) % MODELS.length; }
+      emitAcc += dt * 10; while (emitAcc >= 1) { emitAcc -= 1; emit(); }
+      for (var k = 0; k < MAX; k++) { var q = pool[k]; if (!q.on) continue; q.t += q.sp; if (q.t >= 1) { q.ph++; q.t = 0;
+        if (q.core === 0) { if (q.ph === 3) gateFlash = 1; if (q.ph >= 4) { done++; doneShown = done; rel(k); } }
+        else if (q.tool === 0) { if (q.ph === 3) gateFlash = 1; if (q.ph >= 4) { done++; doneShown = done; rel(k); } }
+        else { if (q.ph === 3) toolFlash = 1; if (q.ph === 4) gateFlash = 1; if (q.ph >= 5) { done++; doneShown = done; rel(k); } }
+      } }
+      gateFlash *= Math.pow(0.9, dt * 60); toolFlash *= Math.pow(0.9, dt * 60);
     }
     function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
-    function node(x, y, col, label, sub, glow, r) {
-      r = r || Math.max(18, Math.min(H * 0.11, 28));
-      var g = ctx.createRadialGradient(x, y, 0, x, y, r * 1.9); g.addColorStop(0, hexA(col, 0.22 + 0.18 * glow)); g.addColorStop(0.5, hexA(col, 0.05)); g.addColorStop(1, hexA(col, 0));
+    function node(x, y, col, label, sub, glow, rr) {
+      var r = rr || Math.max(13, Math.min(H * 0.085, 20));
+      var g = ctx.createRadialGradient(x, y, 0, x, y, r * 1.9); g.addColorStop(0, hexA(col, 0.2 + 0.18 * glow)); g.addColorStop(0.5, hexA(col, 0.05)); g.addColorStop(1, hexA(col, 0));
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 1.9, 0, TAU); ctx.fill();
-      ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fillStyle = hexA(col, 0.08); ctx.fill(); ctx.strokeStyle = hexA(col, 0.6 + 0.3 * glow); ctx.lineWidth = 1.5; ctx.stroke();
-      ctx.fillStyle = MUT; ctx.font = "700 9px " + C.mono; ctx.textAlign = "center"; ctx.fillText(label, x, y + r + 14); if (sub) { ctx.fillStyle = hexA(col, 0.85); ctx.fillText(sub, x, y + r + 25); } ctx.textAlign = "left";
+      ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fillStyle = hexA(col, 0.08); ctx.fill(); ctx.strokeStyle = hexA(col, 0.6 + 0.3 * glow); ctx.lineWidth = 1.4; ctx.stroke();
+      ctx.fillStyle = MUT; ctx.font = "700 7.5px " + C.mono; ctx.textAlign = "center"; ctx.fillText(label, x, y + r + 11); if (sub) { ctx.fillStyle = hexA(col, 0.82); ctx.fillText(sub, x, y + r + 20); } ctx.textAlign = "left";
       return r;
-    }
-    function outPanel(x, y, col, top) {
-      var w = W * 0.13, h = H * 0.17, bx = x - w / 2, by = y - h / 2;
-      roundRect(bx, by, w, h, 5); ctx.fillStyle = "rgba(6,16,27,0.82)"; ctx.fill(); ctx.strokeStyle = hexA(col, 0.45); ctx.lineWidth = 1.2; ctx.stroke();
-      ctx.fillStyle = hexA(col, 0.9); ctx.font = "700 9px " + C.mono; ctx.textAlign = "left"; ctx.fillText(top, bx + 9, by + 16);
-      return { x: bx, y: by, w: w, h: h };
     }
     function draw() {
       if (!W) return;
       ctx.clearRect(0, 0, W, H);
       ctx.strokeStyle = "rgba(255,255,255,0.02)"; ctx.lineWidth = 1;
       for (var gx = 0; gx <= W; gx += 44) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
-      ctx.strokeStyle = hexA("#94A3B8", 0.14); ctx.lineWidth = 1; ctx.setLineDash([4, 6]); ctx.beginPath(); ctx.moveTo(W * 0.02, H * 0.51); ctx.lineTo(W * 0.98, H * 0.51); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = hexA("#94A3B8", 0.4); ctx.font = "700 8px " + C.mono; ctx.textAlign = "center"; ctx.fillText("HESAPLAYAN  ≠  YAZAN", W * 0.5, H * 0.51 + 3); ctx.textAlign = "left";
-      ctx.fillStyle = hexA(GRN, 0.5); ctx.font = "700 8.5px " + C.mono; ctx.textAlign = "center"; ctx.fillText("VERİ", Sx, topY - H * 0.13); ctx.textAlign = "left";
-      for (var i = 0; i < 5; i++) { ctx.beginPath(); ctx.arc(Sx + (i % 2) * 8 - 4, topY - H * 0.09 + i * 7, 1.7, 0, TAU); ctx.fillStyle = hexA(GRN, 0.4); ctx.fill(); }
-      var pr = node(Nx1, topY, GRN, "ProX", "determinist", Math.max(proxPulse * 0.5, 0), 0);
-      ctx.strokeStyle = hexA(GRN, 0.35); ctx.lineWidth = 1; ctx.setLineDash([2, 5]); ctx.lineDashOffset = -t * 14; ctx.beginPath(); ctx.arc(Nx1, topY, pr * 0.64, 0, TAU); ctx.stroke(); ctx.setLineDash([]);
-      var kp = outPanel(Ox, topY, GRN, "SAYISAL KARAR");
-      node(Nx2, botY, VIO, "DİL MODELİ", "üretken · LLM", 0.3, 0);
-      var er = Math.max(15, Math.min(H * 0.08, 22));
-      var eg = ctx.createRadialGradient(Gx, botY, 0, Gx, botY, er * 1.8); eg.addColorStop(0, hexA(CY, 0.2 + 0.3 * gateFlash)); eg.addColorStop(1, hexA(CY, 0));
-      ctx.fillStyle = eg; ctx.beginPath(); ctx.arc(Gx, botY, er * 1.8, 0, TAU); ctx.fill();
-      ctx.beginPath(); ctx.arc(Gx, botY, er, 0, TAU); ctx.fillStyle = hexA(CY, 0.08); ctx.fill(); ctx.strokeStyle = hexA(CY, 0.6 + 0.3 * gateFlash); ctx.lineWidth = 1.4; ctx.stroke();
-      ctx.strokeStyle = hexA(CY, 0.8 + 0.2 * gateFlash); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(Gx - er * 0.32, botY); ctx.lineTo(Gx - er * 0.06, botY + er * 0.28); ctx.lineTo(Gx + er * 0.36, botY - er * 0.3); ctx.stroke();
-      ctx.fillStyle = MUT; ctx.font = "700 9px " + C.mono; ctx.textAlign = "center"; ctx.fillText("İNSAN EDİTÖR", Gx, botY + er + 14); ctx.fillStyle = hexA(CY, 0.85); ctx.fillText("onay kapısı", Gx, botY + er + 25); ctx.textAlign = "left";
-      var mp = outPanel(Ox, botY, VIO, "ONAYLI METİN");
+      // BAĞIMSIZLIK SINIRI (frame · kendi sunucunuz)
+      ctx.strokeStyle = hexA(GRN, 0.26); ctx.lineWidth = 1.2; ctx.setLineDash([6, 5]); ctx.lineDashOffset = -t * 8; roundRect(F.x0, F.y0, F.x1 - F.x0, F.y1 - F.y0, 10); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = hexA(GRN, 0.6); ctx.font = "700 7.5px " + C.mono; ctx.textAlign = "left"; ctx.fillText("⛨ BAĞIMSIZLIK SINIRI · SİZİN", F.x0 + 10, F.y0 + 12);
+      ctx.fillStyle = hexA(VIO, 0.5); ctx.fillText("◆ GPU · ON-PREMISE", F.x0 + 10, F.y1 - 7);
+      ctx.textAlign = "right"; ctx.fillStyle = hexA(CY, 0.5); ctx.fillText("TÜRKÇE · KVKK ⛨", F.x1 - 10, F.y1 - 7); ctx.textAlign = "left";
+      // VERİ noktaları
+      for (var i = 0; i < 5; i++) { ctx.beginPath(); ctx.arc(DATA + (i % 2) * 7 - 3, midY - 14 + i * 7, 1.6, 0, TAU); ctx.fillStyle = hexA(CY, 0.4); ctx.fill(); }
+      // bağlantı çizgileri
+      ctx.strokeStyle = hexA(FAINT, 0.55); ctx.lineWidth = 1;
+      function link(x1, y1, x2, y2) { ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); }
+      link(DATA + 12, midY, RAG - 13, midY);
+      link(RAG + 13, midY, coreX - 13, proxY); link(RAG + 13, midY, coreX - 13, llmY);
+      link(coreX + 13, proxY, gateX - 13, midY); link(coreX + 13, llmY, gateX - 13, midY);
+      link(coreX + 11, llmY, toolX - 11, llmY);
+      link(gateX + 13, midY, outX - W * 0.055, midY);
+      // düğümler
+      node(DATA, midY, CY, "VERİ", "veriniz", 0.15);
+      node(RAG, midY, VIO, "RAG", "vektör", 0.2);
+      var pr = node(coreX, proxY, GRN, "ProX", "determinist", Math.max(proxPulse * 0.5, 0));
+      ctx.strokeStyle = hexA(GRN, 0.35); ctx.lineWidth = 1; ctx.setLineDash([2, 5]); ctx.lineDashOffset = -t * 14; ctx.beginPath(); ctx.arc(coreX, proxY, pr * 0.6, 0, TAU); ctx.stroke(); ctx.setLineDash([]);
+      var lr = node(coreX, llmY, VIO, "DİL MODELİ", "", 0.25);
+      ctx.fillStyle = hexA(VIO, 0.92); ctx.font = "700 8px " + C.mono; ctx.textAlign = "center"; ctx.fillText("‹ " + MODELS[modelIdx] + " ›", coreX, llmY + lr + 20); ctx.textAlign = "left";
+      node(toolX, llmY, WARN, "TOOL", "ProX·API", toolFlash, Math.max(10, Math.min(H * 0.055, 15)));
+      var gr = node(gateX, midY, CY, "GUARDRAIL", "insan onayı", gateFlash);
+      ctx.strokeStyle = hexA(CY, 0.8 + 0.2 * gateFlash); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(gateX - gr * 0.32, midY); ctx.lineTo(gateX - gr * 0.06, midY + gr * 0.28); ctx.lineTo(gateX + gr * 0.34, midY - gr * 0.3); ctx.stroke();
+      // GÜVENLİ ÇIKTI paneli
+      var w = W * 0.1, h = H * 0.22, bx = outX - w / 2, by = midY - h / 2;
+      roundRect(bx, by, w, h, 5); ctx.fillStyle = "rgba(6,16,27,0.85)"; ctx.fill(); ctx.strokeStyle = hexA(GRN, 0.4 + 0.2 * gateFlash); ctx.lineWidth = 1.2; ctx.stroke();
+      ctx.fillStyle = hexA(GRN, 0.9); ctx.font = "700 7.5px " + C.mono; ctx.textAlign = "left"; ctx.fillText("GÜVENLİ", bx + 7, by + 13); ctx.fillText("ÇIKTI", bx + 7, by + 23);
+      ctx.fillStyle = hexA("#CBD5E1", 0.4); ctx.font = "7px " + C.mono; ctx.fillText("+ kaynak", bx + 7, by + h - 8);
+      // parçacıklar
       ctx.save(); ctx.globalCompositeOperation = "lighter";
       for (var k = 0; k < MAX; k++) { var q = pool[k]; if (!q.on) continue; var p, col;
-        if (q.lane === 0) {
-          if (q.ph === 0) { p = { x: lerp(Sx + W * 0.03, Nx1 - pr * 0.7, q.t), y: lerp(q.y0, topY, q.t) }; }
-          else { p = { x: lerp(Nx1, kp.x, q.t), y: topY }; }
-          col = GRN;
-        } else {
-          if (q.ph === 0) { p = { x: lerp(Nx2, Gx - er * 0.7, q.t), y: botY }; col = VIO; }
-          else if (q.ph === 1) { p = { x: Gx, y: botY }; col = CY; }
-          else { p = { x: lerp(Gx, mp.x, q.t), y: botY }; col = VIO; }
-        }
-        var rr = 3.2; ctx.globalAlpha = 0.85; ctx.drawImage(sprite(col), p.x - rr * 2, p.y - rr * 2, rr * 4, rr * 4);
-        ctx.globalAlpha = 0.9; ctx.fillStyle = GC; ctx.beginPath(); ctx.arc(p.x, p.y, 1.1, 0, TAU); ctx.fill();
+        if (q.ph === 0) { p = { x: lerp(DATA, RAG, q.t), y: lerp(q.y0, midY, q.t) }; col = CY; }
+        else if (q.ph === 1) { var ty = q.core === 0 ? proxY : llmY; p = { x: lerp(RAG, coreX, q.t), y: lerp(midY, ty, q.t) }; col = q.core === 0 ? GRN : VIO; }
+        else if (q.core === 0) { if (q.ph === 2) { p = { x: lerp(coreX, gateX, q.t), y: lerp(proxY, midY, q.t) }; col = GRN; } else { p = { x: lerp(gateX, outX, q.t), y: midY }; col = GRN; } }
+        else if (q.tool === 0) { if (q.ph === 2) { p = { x: lerp(coreX, gateX, q.t), y: lerp(llmY, midY, q.t) }; col = VIO; } else { p = { x: lerp(gateX, outX, q.t), y: midY }; col = VIO; } }
+        else { if (q.ph === 2) { p = { x: lerp(coreX, toolX, q.t), y: llmY }; col = WARN; } else if (q.ph === 3) { p = { x: lerp(toolX, gateX, q.t), y: lerp(llmY, midY, q.t) }; col = WARN; } else { p = { x: lerp(gateX, outX, q.t), y: midY }; col = VIO; } }
+        var prr = 3; ctx.globalAlpha = 0.85; ctx.drawImage(sprite(col), p.x - prr * 2, p.y - prr * 2, prr * 4, prr * 4);
+        ctx.globalAlpha = 0.9; ctx.fillStyle = GC; ctx.beginPath(); ctx.arc(p.x, p.y, 1, 0, TAU); ctx.fill();
       }
       ctx.restore();
-      if (cntEl && apprShown) cntEl.textContent = apprShown.toLocaleString("tr-TR");
+      if (cntEl && doneShown) cntEl.textContent = doneShown.toLocaleString("tr-TR");
     }
     function tick(now) { if (!last) last = now; var dt = Math.min((now - last) / 1000, 0.05); last = now; acc += dt; while (acc >= STEP) { stepSim(STEP); acc -= STEP; } draw(); if (running) raf = requestAnimationFrame(tick); }
     function start() { if (running || reduce || !visible) return; running = true; last = 0; raf = requestAnimationFrame(tick); }
