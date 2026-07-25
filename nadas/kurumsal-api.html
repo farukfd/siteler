@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<title>Kurumsal API — NADAS · Gayrimenkul Veri API'si · REST + WebSocket · Endeks · DNA · ProX</title>
+<meta name="description" content="NADAS Kurumsal API: 480M+ kayıtlık gayrimenkul verisine REST + WebSocket erişim. Endeks, 38 boyutlu mahalle DNA'sı, olay markırı, ProX karar analizi. Tenant anahtarı, SLA %99.99, KVKK.">
+<meta name="theme-color" content="#06101B">
+<link rel="canonical" href="https://www.nadas.com.tr/kurumsal-api">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%2306101B'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%2338BDF8'%3EN%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NADAS">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="Kurumsal API — NADAS · Gayrimenkul Veri API'si">
+<meta property="og:description" content="480M+ kayıtlık gayrimenkul verisine REST + WebSocket erişim: endeks, mahalle DNA'sı, olay markırı, ProX karar analizi. Tenant anahtarı · SLA %99.99 · KVKK.">
+<meta property="og:image" content="og-kurumsal-api.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NADAS Kurumsal API — gayrimenkul veri API'si">
+<meta property="og:url" content="https://www.nadas.com.tr/kurumsal-api">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Kurumsal API — NADAS">
+<meta name="twitter:description" content="Gayrimenkul veri API'si: REST + WebSocket · endeks · DNA · olay · ProX karar analizi · SLA %99.99 · KVKK.">
+<meta name="twitter:image" content="og-kurumsal-api.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebAPI","name":"NADAS Kurumsal API","description":"Gayrimenkul veri API'si: 480M+ kayıt, mahalle endeksi, 38 boyutlu DNA, olay markırı ve ProX karar analizi için REST + WebSocket uçları. Tenant anahtarı ile kimlik doğrulama, SLA %99.99.","documentation":"https://www.nadas.com.tr/kurumsal-api","provider":{"@type":"Organization","name":"Nadas Gayrimenkul Bilgi İletişim Sistemleri Ticaret Limited Şirketi","alternateName":"NADAS","url":"https://www.nadas.com.tr","foundingDate":"2005"}}
+</script>
+</head>
+<body>
+<div id="app">
+  <noscript>
+    <div style="max-width:900px;margin:0 auto;padding:48px 20px;font-family:'Sora',sans-serif">
+      <h1 style="color:#38BDF8">NADAS Kurumsal API — Gayrimenkul Veri API'si</h1>
+      <p style="color:#CBD5E1">480M+ kayıtlık gayrimenkul verisine REST + WebSocket erişim: endeks, mahalle DNA'sı, olay markırı, ProX karar analizi. Bu sayfayı görüntülemek için JavaScript gereklidir.</p>
+    </div>
+  </noscript>
+</div>
+
+<script src="js/core.js?v=14"></script>
+<script>
+(function () {
+  "use strict";
+  var C = NX.C, css = NX.css;
+  NX.setAccent(C.primary);
+
+  var APITICK = [
+    ["KURUMSAL API", "REST + WebSocket"], ["VERİ", "480M+ KAYIT"], ["ENDEKS", "İL · İLÇE · MAHALLE"], ["DNA", "38 BOYUT"],
+    ["OLAY MARKIRI", "7M+ KAYIT"], ["KİMLİK", "X-TENANT-KEY"], ["SLA", "%99.99 UPTIME"], ["P95 GECİKME", "~84ms"],
+    ["RATE LIMIT", "TIER BAZLI"], ["STREAM", "CANLI ENDEKS · WS"], ["SÜRÜM", "v1 · v2"], ["KVKK", "TÜRKİYE'DE BARINMA"],
+  ];
+
+  function cu(target, suf, pre) { return '<span data-cu="' + target + '"' + (suf ? ' data-suf="' + suf + '"' : '') + (pre ? ' data-pre="' + pre + '"' : '') + '>' + (pre || '') + '0' + (suf || '') + '</span>'; }
+
+  function SectionDivider(index, title, subtitle) {
+    return '<div style="' + css({ background: C.deep, borderTop: "1px solid " + C.primary, borderBottom: "1px solid " + C.borderStrong, padding: "10px 16px" }) + '">'
+      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }) + '">'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, letterSpacing: "0.14em", fontWeight: 700 }) + '">' + index + '</span>'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textPri, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }) + '">' + title + '</span>'
+      + (subtitle ? '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '">· ' + subtitle + '</span>' : '')
+      + '</div></div>';
+  }
+  function SubSection(num, title, eyebrow, children) {
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "20px 16px" }) + '">'
+      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 12, flexWrap: "wrap" }) + '">'
+      + '<span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em" }) + '">' + num + '</span>'
+      + '<h2 style="' + css({ fontSize: "clamp(1.25rem,2.8vw,1.7rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri, lineHeight: 1.15 }) + '">' + title + '</h2>'
+      + (eyebrow ? '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.08em", marginLeft: "auto" }) + '">' + eyebrow + '</span>' : '')
+      + '</div>' + children + '</div></section>';
+  }
+  function pri(t) { return '<strong style="' + css({ color: C.primary, fontWeight: 600 }) + '">' + t + '</strong>'; }
+  function grid(min, gap) { return css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(" + min + "px,1fr))", gap: gap || 12 }); }
+  function card(o) {
+    var col = o.col || C.primary;
+    return '<div style="' + css({ background: o.featured ? C.elev : C.raised, border: "1px solid " + (o.featured ? col : C.borderStrong), padding: "18px 18px", display: "flex", flexDirection: "column", gap: 8, boxSizing: "border-box" }) + '">'
+      + (o.tag ? '<div style="' + css({ display: "flex", alignItems: "center", gap: 8 }) + '"><span style="' + css({ width: 26, height: 26, flexShrink: 0, border: "1px solid " + col, color: col, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: C.mono, fontSize: 12, borderRadius: 3 }) + '">' + o.ic + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: col, letterSpacing: "0.1em", fontWeight: 700 }) + '">' + o.tag + '</span></div>' : '')
+      + '<div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 15, fontWeight: 700, color: C.textPri, letterSpacing: "-0.01em", lineHeight: 1.25 }) + '">' + o.ttl + '</div>'
+      + (o.body ? '<p style="' + css({ fontSize: 12.5, color: C.textMut, lineHeight: 1.6, margin: 0 }) + '">' + o.body + '</p>' : '')
+      + (o.list ? '<ul style="' + css({ listStyle: "none", padding: 0, margin: "2px 0 0", display: "flex", flexDirection: "column", gap: 5 }) + '">' + o.list.map(function (x) { return '<li style="' + css({ display: "flex", gap: 7, fontSize: 11.5, color: C.textSec, lineHeight: 1.5 }) + '"><span style="' + css({ color: col, fontFamily: C.mono, fontSize: 10, lineHeight: 1.5 }) + '">→</span><span>' + x + '</span></li>'; }).join("") + '</ul>' : '')
+      + '</div>';
+  }
+  function badges(arr) {
+    return '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 4 }) + '">' + arr.map(function (b) { return '<span style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 11px", border: "1px solid " + C.borderStrong, borderRadius: 3, fontFamily: C.mono, fontSize: 10, color: C.primary, letterSpacing: "0.06em", fontWeight: 700, background: "rgba(56,189,248,0.05)" }) + '"><span style="' + css({ width: 5, height: 5, borderRadius: 9999, background: C.primary }) + '"></span>' + b + '</span>'; }).join("") + '</div>';
+  }
+  function note(t) { return '<div style="' + css({ marginTop: 12, padding: "10px 14px", border: "1px dashed " + C.borderStrong, background: "rgba(56,189,248,0.03)", borderRadius: 3, fontFamily: C.mono, fontSize: 10.5, color: C.textMut, lineHeight: 1.6, letterSpacing: "0.02em" }) + '">⌬ ' + t + '</div>'; }
+  function code(title, lines) {
+    var body = lines.map(function (l) { return '<div style="' + css({ whiteSpace: "pre", color: l[1] || C.textSec }) + '">' + l[0] + '</div>'; }).join("");
+    return '<div style="' + css({ border: "1px solid " + C.borderStrong, borderRadius: 4, overflow: "hidden", background: "#020812" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", borderBottom: "1px solid " + C.border, background: C.deep }) + '"><span style="' + css({ width: 8, height: 8, borderRadius: 9999, background: C.danger }) + '"></span><span style="' + css({ width: 8, height: 8, borderRadius: 9999, background: C.warn }) + '"></span><span style="' + css({ width: 8, height: 8, borderRadius: 9999, background: C.accent }) + '"></span><span style="' + css({ marginLeft: 6, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '">' + title + '</span></div>'
+      + '<div style="' + css({ padding: "12px 14px", fontFamily: C.mono, fontSize: 11.5, lineHeight: 1.7, overflowX: "auto" }) + '">' + body + '</div></div>';
+  }
+
+  /* ===== ENDPOINT KATALOĞU (site genelinde belgelenen uçlar) ===== */
+  var EP = [
+    ["GET", "/api/v1/tenant/endeks", "Endeks · Zaman Serisi", "İl/ilçe/mahalle · ₺/m² · skor · delta · trend"],
+    ["GET", "/api/v2/timeseries/monthly", "Endeks · Zaman Serisi", "Aylık zaman serisi · 257 ay tarihsel zincir"],
+    ["GET", "/api/v2/timeseries/latest", "Endeks · Zaman Serisi", "Son dönem endeks değerleri"],
+    ["GET", "/api/v2/index/composite", "Endeks · Zaman Serisi", "Kompozit endeks · çok kategorili"],
+    ["GET", "/api/v2/dna/region/{id}", "DNA · Bölge", "38 boyutlu mahalle DNA vektörü"],
+    ["GET", "/api/v2/dna/similar/{id}", "DNA · Bölge", "Benzer mahalleler · DNA yakınlığı"],
+    ["GET", "/api/v2/regions/search", "DNA · Bölge", "Bölge arama · il/ilçe/mahalle"],
+    ["GET", "/api/v2/regions/{id}", "DNA · Bölge", "Bölge detay · koordinat · demografi"],
+    ["GET", "/api/v2/events/markers", "Olay · Isı Haritası", "Olay markırları · 7M+ kayıt"],
+    ["GET", "/api/v2/events/by-region/{id}", "Olay · Isı Haritası", "Bölgeye göre olay markırları"],
+    ["GET", "/api/v2/heatmap/{level}/{cat}", "Olay · Isı Haritası", "Isı haritası verisi · seviye/kategori"],
+    ["POST", "/api/v1/tenant/prox/analyze", "ProX · Rapor", "ProX karar analizi · determinist"],
+    ["POST", "/api/v2/reports/generate", "ProX · Rapor", "Markalı PDF rapor üretimi (async)"],
+    ["GET", "/api/v2/categories", "Referans", "38 varlık kategorisi referansı"],
+    ["GET", "/api/v1/tenant/locations/iller", "Referans", "İl referans listesi (81)"],
+    ["GET", "/api/v1/tenant/locations/ilceler", "Referans", "İlçe referans listesi (973)"],
+    ["GET", "/api/v1/tenant/locations/mahalleler", "Referans", "Mahalle referansı · 50.000+"],
+    ["WS", "/api/v1/tenant/stream", "Stream · Yönetim", "Canlı endeks akışı · WebSocket"],
+    ["GET", "/admin/audit", "Stream · Yönetim", "Kullanım denetim (audit) logları"],
+  ];
+
+  /* ===== HERO ===== */
+  function HeroAPI() {
+    var stats = [
+      { n: 480, suf: "M+", lbl: "KAYIT ERİŞİMİ" }, { n: 257, suf: " AY", lbl: "TARİHSEL SERİ" },
+      { n: 38, suf: " BOYUT", lbl: "MAHALLE DNA" }, { n: 99.99, suf: "%", lbl: "SLA UPTIME" }, { n: 84, suf: "ms", lbl: "P95 GECİKME" },
+    ].map(function (s) {
+      return '<div style="' + css({ background: C.raised, padding: "11px 14px" }) + '"><div style="' + css({ fontSize: 19, fontWeight: 700, color: C.primary, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + cu(s.n, s.suf) + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, marginTop: 5, letterSpacing: "0.08em" }) + '">' + s.lbl + '</div></div>';
+    }).join("");
+    var stage = '<div id="api-stage" style="' + css({ position: "relative", overflow: "hidden", border: "1px solid " + C.borderStrong, borderRadius: 4, background: "radial-gradient(120% 130% at 50% 30%, #08121f, #030810 70%)", marginBottom: 18 }) + '">'
+      + '<canvas id="api-canvas" style="' + css({ display: "block", width: "100%", height: "clamp(260px,36vw,380px)" }) + '"></canvas>'
+      + '<div style="' + css({ position: "absolute", left: 12, top: 10, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.1em", fontWeight: 700, pointerEvents: "none", maxWidth: "62%" }) + '">◆ İSTEK → GEÇİT → ProX → YANIT</div>'
+      + '<div style="' + css({ position: "absolute", right: 12, top: 10, display: "inline-flex", alignItems: "center", gap: 6, fontFamily: C.mono, fontSize: 8.5, color: C.accent, letterSpacing: "0.1em", pointerEvents: "none" }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>CANLI</div>'
+      + '<div style="' + css({ position: "absolute", left: 12, bottom: 10, fontFamily: C.mono, fontSize: 9.5, color: C.textMut, letterSpacing: "0.04em", pointerEvents: "none" }) + '" id="api-cap">▸ GET /endeks · 200 OK · 84ms</div>'
+      + '<div style="' + css({ position: "absolute", right: 12, bottom: 10, fontFamily: C.mono, fontSize: 9, color: C.accent, letterSpacing: "0.06em", pointerEvents: "none" }) + '"><span id="api-count">0</span> İSTEK · 200 OK ◆</div></div>';
+    return '<section style="' + css({ position: "relative", padding: "18px 16px 20px", background: C.base, borderBottom: "1px solid " + C.borderStrong, overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 82% 15%, rgba(56,189,248,0.12), transparent 55%), radial-gradient(circle at 8% 85%, rgba(167,139,250,0.08), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+      + stage
+      + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.14em", fontWeight: 700, marginBottom: 12 }) + '"><span style="' + css({ width: 14, height: 1, background: C.primary }) + '"></span>KURUMSAL · VERİ ERİŞİMİ · REST + WEBSOCKET</div>'
+      + '<h1 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(2rem,5.2vw,3.4rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri, maxWidth: 1120 }) + '">Gayrimenkul verisi,<br><span style="' + css({ color: C.primary }) + '">doğrudan kaynağından.</span></h1>'
+      + '<p style="' + css({ marginTop: 18, fontSize: 16, lineHeight: 1.65, color: C.textSec, maxWidth: 960 }) + '">Banka, sigorta, fon, belediye ve proptech için NADAS veritabanına ' + pri("doğrudan API erişimi") + '. Mahalle endeksi, 38 boyutlu ' + pri("DNA vektörü") + ', olay markırı, güven skoru ve ' + pri("determinist ProX karar analizi") + ' — hepsi REST + WebSocket üzerinden. ' + pri("Tenant anahtarıyla") + ' kimlik, tier bazlı rate limit, SLA %99.99. Veri kopyalanmaz; ' + pri("kaynağa bağlanılır ve lisanslanır") + '.</p>'
+      + '<div style="' + css({ marginTop: 18, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + stats + '</div>'
+      + '<div style="' + css({ marginTop: 14 }) + '">' + badges(["REST + WebSocket", "X-Tenant-Key", "SLA %99.99", "~84ms P95", "TLS 1.3", "KVKK · TÜRKİYE'DE", "v1 · v2 SÜRÜM", "TIER RATE LIMIT"]) + '</div>'
+      + '</div></section>';
+  }
+
+  /* ===== A · ENDPOINT KATALOĞU ===== */
+  function Endpoints() {
+    var mcol = { GET: C.accent, POST: C.warn, WS: C.violet };
+    var rows = EP.map(function (e) {
+      return '<tr>'
+        + '<td style="' + css({ padding: "8px 12px", borderBottom: "1px solid " + C.border, verticalAlign: "top" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10, fontWeight: 700, color: mcol[e[0]] || C.primary, border: "1px solid " + (mcol[e[0]] || C.primary), padding: "1px 6px", borderRadius: 2, letterSpacing: "0.04em" }) + '">' + e[0] + '</span></td>'
+        + '<td style="' + css({ padding: "8px 12px", fontFamily: C.mono, fontSize: 12, color: C.textPri, borderBottom: "1px solid " + C.border, whiteSpace: "nowrap", verticalAlign: "top" }) + '">' + e[1] + '</td>'
+        + '<td style="' + css({ padding: "8px 12px", fontFamily: C.mono, fontSize: 10, color: C.textFaint, borderBottom: "1px solid " + C.border, whiteSpace: "nowrap", verticalAlign: "top" }) + '">' + e[2] + '</td>'
+        + '<td style="' + css({ padding: "8px 12px", fontSize: 12, color: C.textSec, borderBottom: "1px solid " + C.border, verticalAlign: "top", lineHeight: 1.45 }) + '">' + e[3] + '</td></tr>';
+    }).join("");
+    var table = '<div style="' + css({ overflowX: "auto", border: "1px solid " + C.borderStrong, borderRadius: 3 }) + '"><table style="' + css({ width: "100%", minWidth: 680, borderCollapse: "collapse" }) + '"><thead><tr>'
+      + ["METOT", "UÇ (ENDPOINT)", "GRUP", "AÇIKLAMA"].map(function (h) { return '<th style="' + css({ textAlign: "left", padding: "9px 12px", fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em", fontWeight: 700, borderBottom: "1px solid " + C.borderStrong, background: C.deep, whiteSpace: "nowrap" }) + '">' + h + '</th>'; }).join("")
+      + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+    var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 14, maxWidth: 960 }) + '">Tüm uçlar ' + pri("HTTPS/TLS 1.3") + ' üzerinden, JSON döner. Taban: <code style="' + css({ fontFamily: C.mono, color: C.primary, fontSize: 12.5 }) + '">https://www.emlakekspertizi.com</code>. Sürümleme yol üzerinde (<code style="' + css({ fontFamily: C.mono, color: C.textMut, fontSize: 12 }) + '">/api/v1</code>, <code style="' + css({ fontFamily: C.mono, color: C.textMut, fontSize: 12 }) + '">/api/v2</code>).</p>'
+      + table;
+    return SubSection("A.1", "Endpoint kataloğu", "REST + WEBSOCKET · JSON · TLS 1.3", body);
+  }
+
+  /* ===== B · KİMLİK & GÜVENLİK ===== */
+  function Auth() {
+    var cards = [
+      card({ ic: "◈", tag: "KİMLİK", col: C.primary, ttl: "Tenant anahtarıyla doğrulama", body: "Her istek X-Tenant-Id ve X-Tenant-Key başlıklarıyla imzalanır. Anahtar kuruma özeldir; sunucu tarafında Origin/Referer allowlist, IP kısıtı ve kapsam (scope) ile sınırlandırılır.", list: ["X-Tenant-Id · X-Tenant-Key başlıkları", "Kapsam: salt-okunur / tam erişim", "Origin/Referer + IP allowlist", "Anahtar rotasyonu · anında iptal"] }),
+      card({ ic: "◆", tag: "RATE LIMIT", col: C.warn, ttl: "Tier bazlı hız sınırı", body: "İstek hızı üyelik tier'ına göre sınırlıdır; 429 yanıtı ve X-RateLimit-* başlıklarıyla kalan kota bildirilir. Toplu (batch) ve akış (stream) uçları ayrı kotalarda yönetilir.", list: ["Dakika/saniye başına istek kotası", "429 + Retry-After · X-RateLimit-*", "Batch ve stream ayrı kota", "Kurumsal anlaşmada özel limit"] }),
+      card({ ic: "§", tag: "TAŞIMA", col: C.accent, ttl: "Şifreli taşıma & CORS", body: "Tüm trafik TLS 1.3 ile şifrelenir; düz-metin uç yoktur. CORS Origin allowlist ile yönetilir. Yanıtlar imzalı; hata gövdeleri iç ayrıntı sızdırmaz.", list: ["TLS 1.3 · yalnız HTTPS", "CORS · Origin allowlist", "Standart hata kodları · sızıntı yok", "İstek/yanıt denetim izi (audit)"] }),
+    ].join("");
+    var curl = code("bash · curl", [
+      ["<span style=\"color:" + C.textFaint + "\"># Endeks sorgusu — il/ilçe/kategori</span>", C.textFaint],
+      ["curl https://www.emlakekspertizi.com/api/v1/tenant/endeks?il=İstanbul&ilce=Kadıköy \\\\", C.textSec],
+      ["  -H \"X-Tenant-Id: <span style=\\\"color:" + C.accent + "\\\">kurumunuz</span>\" \\\\", C.textSec],
+      ["  -H \"X-Tenant-Key: <span style=\\\"color:" + C.accent + "\\\">••••••••••••</span>\"", C.textSec],
+      ["", C.textSec],
+      ["<span style=\"color:" + C.textFaint + "\"># → 200 OK</span>", C.textFaint],
+      ["{ \"success\": true, \"data\": { \"m2\": 101048, \"score\": 78,", C.primary],
+      ["         \"delta\": 2.4, \"trend\": \"up\", \"veri_adedi\": 12840 } }", C.primary],
+    ]);
+    var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 14, maxWidth: 960 }) + '">Anahtar <strong style="' + css({ color: C.textPri }) + '">sunucu tarafında saklanmalıdır</strong> — tarayıcıya gömülü bir anahtar herkese görünür. Kurumsal entegrasyonda anahtarı yalnız kendi arka ucunuzdan çağırın; NADAS tarafında Origin/IP kısıtı ve rotasyon uygulanır.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", gap: 14, alignItems: "start" }) + '" class="nadas-twocol">'
+      + '<div style="' + grid(240, 12) + '">' + cards + '</div>'
+      + '<div>' + curl + '</div></div>';
+    return SubSection("B.1", "Kimlik doğrulama & güvenlik", "TENANT KEY · RATE LIMIT · TLS 1.3", body);
+  }
+
+  /* ===== C · SLA & PERFORMANS ===== */
+  function SlaPerf() {
+    var pts = [
+      card({ ic: "◷", tag: "UPTIME", col: C.accent, ttl: "SLA %99.99", body: "Kurumsal anlaşmada aylık %99.99 erişilebilirlik taahhüdü ve 1 saat yanıt hedefi. Durum sayfası ve olay bildirimi kurumsal hesaba açıktır." }),
+      card({ ic: "⚡", tag: "GECİKME", col: C.primary, ttl: "P95 ~84ms", body: "Endeks ve referans uçlarında tipik p95 gecikme ~84ms. Ağır analiz (ProX/rapor) uçları asenkron çalışır; iş kimliğiyle sonuç çekilir." }),
+      card({ ic: "⇄", tag: "STREAM", col: C.violet, ttl: "Canlı akış · WebSocket", body: "Endeks güncellemeleri /stream WebSocket ucundan anlık iletilir; polling yerine push. Yeniden bağlanma ve son-durum senkronizasyonu desteklenir." }),
+      card({ ic: "◆", tag: "SÜRÜM", col: C.primary, ttl: "Sürümlü & geriye uyumlu", body: "Uçlar /api/v1 ve /api/v2 altında sürümlenir; kırıcı değişiklik yeni sürümle gelir, eski sürüm duyurulu geçiş süresince yaşar." }),
+    ].join("");
+    var body = '<div style="' + grid(260, 12) + '">' + pts + '</div>'
+      + note("SLA, rate limit ve gecikme hedefleri <strong style=\"color:" + C.textSec + "\">kurumsal sözleşmeyle</strong> sabitlenir; tier'a göre değişir. Sayısal değerler tipik işletim aralığıdır, garanti kapsamı sözleşmede tanımlanır.");
+    return SubSection("C.1", "SLA & performans", "%99.99 · ~84ms · STREAM · SÜRÜMLÜ", body);
+  }
+
+  /* ===== C.2 · VERİ YÖNETİŞİMİ & LİSANS ===== */
+  function Governance() {
+    var pts = [
+      card({ ic: "◆", tag: "LİSANS", col: C.violet, ttl: "Veri lisanslanır, devredilmez", body: "API erişimi veri mülkiyetini devretmez. Kapsam (il/ilçe/kategori), kullanım hakları ve yeniden dağıtım koşulları sözleşmeyle tanımlanır." }),
+      card({ ic: "§", tag: "KVKK", col: C.accent, ttl: "KVKK & Türkiye'de barınma", body: "Veri Türkiye'de barınır; kişisel veri içermeyen toplu/anonim endeks verisi sunulur. İşleme ve saklama koşulları sözleşmede net." }),
+      card({ ic: "◷", tag: "TAZELİK", col: C.primary, ttl: "Güncellik & köken", body: "Endeks aylık, akış anlık günceldir; her yanıt köken ve tazelik meta verisi taşır. Determinist ProX — aynı girdi, aynı çıktı, halüsinasyon yok." }),
+      card({ ic: "◐", tag: "KULLANIM", col: C.primary, ttl: "Adil kullanım & denetim", body: "Kota aşımı, olağan dışı desen ve kötüye kullanım denetlenir. Tüm çağrılar audit loglanır; kurumsal hesap kendi kullanımını görebilir." }),
+    ].join("");
+    return SubSection("C.2", "Veri yönetişimi & lisans", "LİSANSLANIR · KVKK · TAZELİK · DENETİM", '<div style="' + grid(260, 12) + '">' + pts + '</div>');
+  }
+
+  /* ===== D · HIZLI BAŞLANGIÇ (KOD) ===== */
+  function QuickStart() {
+    var js = code("javascript · fetch", [
+      ["<span style=\"color:" + C.textFaint + "\">// 38 boyutlu mahalle DNA'sı</span>", C.textFaint],
+      ["const r = await fetch(", C.textSec],
+      ["  \"https://www.emlakekspertizi.com/api/v2/dna/region/34_kadikoy_caferaga\", {", C.textSec],
+      ["  headers: {", C.textSec],
+      ["    \"X-Tenant-Id\": \"<span style=\\\"color:" + C.accent + "\\\">kurumunuz</span>\",", C.textSec],
+      ["    \"X-Tenant-Key\": process.env.NADAS_KEY", C.textSec],
+      ["  }", C.textSec],
+      ["});", C.textSec],
+      ["const dna = await r.json();  <span style=\"color:" + C.textFaint + "\">// { vector: [...38], ... }</span>", C.primary],
+    ]);
+    var ws = code("javascript · WebSocket (canlı endeks)", [
+      ["const ws = new WebSocket(", C.textSec],
+      ["  \"wss://www.emlakekspertizi.com/api/v1/tenant/stream?token=•••\");", C.textSec],
+      ["ws.onmessage = (e) => {", C.textSec],
+      ["  const upd = JSON.parse(e.data);", C.textSec],
+      ["  <span style=\"color:" + C.textFaint + "\">// { il, ilce, mahalle, m2, delta, ts }</span>", C.textFaint],
+      ["  render(upd);", C.primary],
+      ["};", C.textSec],
+    ]);
+    var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 14, maxWidth: 960 }) + '">Anahtarınızı alın, başlıkları ekleyin, çağırın. REST için standart HTTP istemcisi; canlı akış için WebSocket yeterlidir. SDK gerekmez.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", gap: 14 }) + '" class="nadas-twocol">' + js + ws + '</div>'
+      + note("Kurumsal API erişimi ProX Corporate üyeliğinde ve kurumsal anlaşmada açılır. Anahtar talebi ve tier seçimi için bilgi@emlakekspertizi.com.");
+    return SubSection("D.1", "Hızlı başlangıç", "ANAHTAR · BAŞLIK · ÇAĞRI · SDK YOK", body);
+  }
+
+  /* ===== ÜRÜN ===== */
+  function Product() {
+    return '<section style="' + css({ background: "linear-gradient(135deg, " + C.deep + " 0%, " + C.raised + " 100%)", borderTop: "2px solid " + C.primary, borderBottom: "1px solid " + C.borderStrong, padding: "40px 16px 34px", position: "relative", overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 82% 18%, rgba(56,189,248,0.12), transparent 60%), radial-gradient(circle at 10% 82%, rgba(167,139,250,0.08), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, fontFamily: C.mono, fontSize: 11, letterSpacing: "0.14em" }) + '"><span style="' + css({ color: C.primary, fontWeight: 700 }) + '">◆ VERİ KAYNAĞI · NADAS ALTYAPISI</span><span style="' + css({ height: 1, flex: 1, background: C.primary, opacity: 0.4 }) + '"></span><span style="' + css({ color: C.textMut }) + '">API · v1 · v2</span></div>'
+      + '<div style="' + css({ marginBottom: 16 }) + '"><img src="img/emlak-logo-full.png" alt="emlakekspertizi.com" style="' + css({ display: "block", width: "100%", maxWidth: 360, height: "auto" }) + '"><h2 style="' + css({ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)", whiteSpace: "nowrap", margin: -1, padding: 0, border: 0 }) + '">emlakekspertizi.com</h2></div>'
+      + '<p style="' + css({ marginTop: 8, fontSize: 15, lineHeight: 1.6, color: C.textSec, maxWidth: 960 }) + '">API\'nin arkasındaki motor, ' + pri("emlakekspertizi.com") + '\'u besleyen aynı ProX veri altyapısıdır — 480M+ kayıt, 257 aylık zincir, 38 boyutlu DNA. Kurumsal API erişimi ve veri lisansı için:</p>'
+      + '<div style="' + css({ marginTop: 20, display: "flex", gap: 12, flexWrap: "wrap" }) + '">'
+      + '<a href="mailto:bilgi@emlakekspertizi.com" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: C.primary, color: C.deep, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">API ANAHTARI TALEP ET →</a>'
+      + '<a href="iletisim.html" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: "transparent", color: C.violet, border: "1px solid " + C.violet, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">KURUMSAL GÖRÜŞME →</a>'
+      + '</div></div></section>';
+  }
+
+  function renderApp() {
+    return NX.Ticker(APITICK) + NX.Masthead("Kurumsal API") + NX.Nav("")
+      + HeroAPI()
+      + SectionDivider("A", "Endpoint Kataloğu", "NE ERİŞİLİR · REST + WS") + Endpoints()
+      + SectionDivider("B", "Kimlik & Güvenlik", "TENANT KEY · RATE LIMIT · TLS") + Auth()
+      + SectionDivider("C", "SLA · Performans · Yönetişim", "%99.99 · LİSANS · KVKK") + SlaPerf() + Governance()
+      + SectionDivider("D", "Hızlı Başlangıç", "KOD ÖRNEKLERİ") + QuickStart()
+      + Product() + NX.Footer();
+  }
+
+  /* ===== HERO ANİMASYONU · İSTEK → GEÇİT → ProX → YANIT ===== */
+  function mountApiFlow() {
+    var stage = document.getElementById("api-stage");
+    var cv = stage && document.getElementById("api-canvas");
+    if (!stage || !cv || !cv.getContext) return;
+    var ctx = cv.getContext("2d");
+    var capEl = document.getElementById("api-cap"), cntEl = document.getElementById("api-count");
+    var mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+    var reduce = !!(mq && mq.matches);
+    var W = 0, H = 0, dpr = 1, raf = 0, running = false, visible = true;
+    var STEP = 1 / 60, acc = 0, last = 0, t = 0, TAU = 6.28318;
+    var CY = "#38BDF8", GRN = "#34D399", VIO = "#A78BFA", WARN = "#FBBF24", GC = "#EAF6FF", MUT = "#64748B";
+    var Cx = 0, Gx = 0, Px = 0, Rx = 0, midY = 0, reqRows = [], pool = [], free = [], MAX = 80, emitAcc = 0, done = 0, doneShown = 0, flash = 0;
+    var REQ = [["GET", "/endeks", CY], ["GET", "/dna/{id}", GRN], ["POST", "/analyze", WARN], ["WS", "/stream", VIO], ["GET", "/timeseries", CY]];
+    var CAPS = ["GET /endeks · 200 OK · 84ms", "GET /dna/{id} · 200 OK · 71ms", "POST /prox/analyze · 202 · async", "WS /stream · canlı endeks akışı", "X-Tenant-Key doğrulandı · scope: read"];
+    var capIdx = -1, capLast = 0;
+    function hexA(h, a) { var n = parseInt(h.slice(1), 16); return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; }
+    var sprites = {};
+    function sprite(color) { if (sprites[color]) return sprites[color]; var r = 16, s = document.createElement("canvas"); s.width = s.height = r * 2; var sc = s.getContext("2d"), g = sc.createRadialGradient(r, r, 0, r, r, r); g.addColorStop(0, hexA(color, 1)); g.addColorStop(0.3, hexA(color, 0.5)); g.addColorStop(1, hexA(color, 0)); sc.fillStyle = g; sc.fillRect(0, 0, r * 2, r * 2); sprites[color] = s; return s; }
+    function initPool() { pool = []; free = []; for (var i = 0; i < MAX; i++) { pool.push({ on: 0, ph: 0, t: 0, sp: 0, y0: 0, col: CY, seed: 0 }); free.push(i); } }
+    function alloc() { if (!free.length) return -1; var k = free.pop(); pool[k].on = 1; return k; }
+    function rel(k) { pool[k].on = 0; free.push(k); }
+    function layout() {
+      Cx = W * 0.12; Gx = W * 0.44; Px = W * 0.63; Rx = W * 0.87; midY = H * 0.5;
+      reqRows = []; var n = REQ.length, gap = Math.min(30, H * 0.11), y0 = midY - (n - 1) * gap / 2;
+      for (var i = 0; i < n; i++) reqRows.push({ y: y0 + i * gap, m: REQ[i][0], p: REQ[i][1], col: REQ[i][2] });
+    }
+    function emit() { var k = alloc(); if (k < 0) return; var q = pool[k], s = reqRows[(Math.random() * reqRows.length) | 0]; q.ph = 0; q.t = 0; q.sp = 0.014 + Math.random() * 0.008; q.y0 = s.y; q.col = s.col; q.seed = Math.random(); }
+    function lerp(a, b, u) { return a + (b - a) * u; }
+    function build() {
+      W = stage.clientWidth; H = stage.clientHeight; if (!W || !H) { requestAnimationFrame(build); return; }
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.width = W + "px"; cv.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); layout(); draw();
+    }
+    function stepSim(dt) {
+      t += dt;
+      if (t - capLast > 2.0) { capLast = t; capIdx = (capIdx + 1) % CAPS.length; if (capEl) capEl.textContent = "▸ " + CAPS[capIdx]; }
+      emitAcc += dt * 8; while (emitAcc >= 1) { emitAcc -= 1; emit(); }
+      for (var k = 0; k < MAX; k++) { var q = pool[k]; if (!q.on) continue;
+        q.t += q.sp; if (q.t >= 1) { q.ph++; q.t = 0; if (q.ph === 1) flash = 1; if (q.ph === 3) { done++; doneShown = done; } if (q.ph > 3) rel(k); } }
+      flash *= Math.pow(0.9, dt * 60);
+    }
+    function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+    function node(x, col, label, sub, glow) {
+      var r = Math.max(20, Math.min(H * 0.13, 34));
+      var g = ctx.createRadialGradient(x, midY, 0, x, midY, r * 1.9); g.addColorStop(0, hexA(col, 0.22 + 0.18 * glow)); g.addColorStop(0.5, hexA(col, 0.05)); g.addColorStop(1, hexA(col, 0));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, midY, r * 1.9, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(x, midY, r, 0, TAU); ctx.fillStyle = hexA(col, 0.08); ctx.fill(); ctx.strokeStyle = hexA(col, 0.6 + 0.3 * glow); ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.fillStyle = MUT; ctx.font = "700 9px " + C.mono; ctx.textAlign = "center"; ctx.fillText(label, x, midY + r + 15); if (sub) { ctx.fillStyle = hexA(col, 0.8); ctx.fillText(sub, x, midY + r + 27); } ctx.textAlign = "left";
+      return r;
+    }
+    function draw() {
+      if (!W) return;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = "rgba(255,255,255,0.02)"; ctx.lineWidth = 1;
+      for (var gx = 0; gx <= W; gx += 44) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+      var pulse = 0.5 + 0.5 * Math.sin(t * 1.6), glow = Math.max(pulse * 0.5, flash);
+      // istek satırları (sol)
+      for (var i = 0; i < reqRows.length; i++) { var s = reqRows[i], rw = W * 0.13, x = Cx - rw / 2;
+        roundRect(x, s.y - 9, rw, 18, 3); ctx.fillStyle = hexA(s.col, 0.1); ctx.fill();
+        ctx.fillStyle = hexA(s.col, 0.95); ctx.font = "700 8.5px " + C.mono; ctx.textBaseline = "middle"; ctx.fillText(s.m, x + 7, s.y);
+        ctx.fillStyle = hexA("#CBD5E1", 0.8); ctx.fillText(s.p, x + 30, s.y);
+        ctx.strokeStyle = hexA(s.col, 0.06); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x + rw, s.y); ctx.quadraticCurveTo((x + rw + Gx) / 2, (s.y + midY) / 2, Gx - 26, midY); ctx.stroke();
+      }
+      ctx.textBaseline = "alphabetic";
+      // düğümler
+      var gr = node(Gx, WARN, "GEÇİT", "auth · limit", glow);
+      // geçit auth halkası
+      ctx.strokeStyle = hexA(WARN, 0.4); ctx.lineWidth = 1; ctx.setLineDash([2, 6]); ctx.lineDashOffset = -t * 22; ctx.beginPath(); ctx.arc(Gx, midY, gr * 0.66, 0, TAU); ctx.stroke(); ctx.setLineDash([]);
+      node(Px, GRN, "ProX", "motor", glow);
+      // yanıt paneli (sağ)
+      var vw = W * 0.15, vh = H * 0.44, vx = Rx - vw / 2, vy = midY - vh / 2;
+      roundRect(vx, vy, vw, vh, 5); ctx.fillStyle = "rgba(6,16,27,0.85)"; ctx.fill(); ctx.strokeStyle = hexA(GRN, 0.4 + 0.2 * glow); ctx.lineWidth = 1.3; ctx.stroke();
+      ctx.save(); roundRect(vx + 3, vy + 3, vw - 6, vh - 6, 4); ctx.clip();
+      ctx.fillStyle = hexA(GRN, 0.85); ctx.font = "9px " + C.mono; ctx.fillText("200 OK", vx + 10, vy + 20);
+      ctx.fillStyle = hexA("#CBD5E1", 0.5); for (var r2 = 0; r2 < 7; r2++) { var yy = vy + 34 + r2 * 14 + ((t * 12) % 14); ctx.fillText("{ \"data\": …" + (r2 % 2 ? "}" : ""), vx + 10, yy); }
+      ctx.restore();
+      ctx.fillStyle = MUT; ctx.font = "700 9px " + C.mono; ctx.textAlign = "center"; ctx.fillText("İSTEK", Cx, midY + H * 0.34); ctx.fillText("JSON YANIT", Rx, vy + vh + 15); ctx.textAlign = "left";
+      // parçacıklar
+      ctx.save(); ctx.globalCompositeOperation = "lighter";
+      for (var k = 0; k < MAX; k++) { var q = pool[k]; if (!q.on) continue; var p, col = q.col;
+        if (q.ph === 0) { var x = lerp(Cx + W * 0.065, Gx - gr * 0.7, q.t); p = { x: x, y: lerp(q.y0, midY, q.t) }; }
+        else if (q.ph === 1) { p = { x: lerp(Gx, Px, q.t), y: midY }; col = WARN; }
+        else if (q.ph === 2) { p = { x: lerp(Px, Rx - vw * 0.4, q.t), y: lerp(midY, midY + (q.seed - 0.5) * vh * 0.6, q.t) }; col = GRN; }
+        else { p = { x: Rx, y: midY }; col = GRN; }
+        var rr = q.ph === 0 ? 3 : 3.4; ctx.globalAlpha = 0.85; ctx.drawImage(sprite(col), p.x - rr * 2, p.y - rr * 2, rr * 4, rr * 4);
+        ctx.globalAlpha = 0.9; ctx.fillStyle = GC; ctx.beginPath(); ctx.arc(p.x, p.y, 1.2, 0, TAU); ctx.fill();
+      }
+      ctx.restore();
+      if (cntEl && doneShown) cntEl.textContent = doneShown.toLocaleString("tr-TR");
+    }
+    function tick(now) { if (!last) last = now; var dt = Math.min((now - last) / 1000, 0.05); last = now; acc += dt; while (acc >= STEP) { stepSim(STEP); acc -= STEP; } draw(); if (running) raf = requestAnimationFrame(tick); }
+    function start() { if (running || reduce || !visible) return; running = true; last = 0; raf = requestAnimationFrame(tick); }
+    function stop() { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
+    initPool(); build();
+    if (reduce) { for (var w = 0; w < 240; w++) stepSim(STEP); draw(); }
+    var rt = 0; function relayout() { clearTimeout(rt); rt = setTimeout(build, 140); }
+    window.addEventListener("resize", relayout);
+    if (window.ResizeObserver) { try { new ResizeObserver(relayout).observe(stage); } catch (e) {} }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+    if (mq && mq.addEventListener) mq.addEventListener("change", function (e) { reduce = e.matches; reduce ? stop() : start(); });
+    document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); else if (visible) start(); });
+    if (window.IntersectionObserver) { try { new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) start(); else stop(); }, { threshold: 0 }).observe(stage); } catch (e) {} }
+    stage._pump = function (n) { for (var i = 0; i < (n || 60); i++) stepSim(STEP); draw(); };
+    start();
+  }
+
+  NX.boot(renderApp);
+  mountApiFlow();
+  (function () {
+    var els = document.querySelectorAll("[data-cu]");
+    for (var i = 0; i < els.length; i++) {
+      (function (el) {
+        var target = parseFloat(el.getAttribute("data-cu")) || 0, suf = el.getAttribute("data-suf") || "", pre = el.getAttribute("data-pre") || "", start = null, dur = 1600;
+        function fmt(v) { return pre + (target % 1 ? v.toFixed(2) : Math.round(v).toLocaleString("tr-TR")) + suf; }
+        function step(t) { if (!start) start = t; var p = Math.min((t - start) / dur, 1); el.textContent = fmt(target * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); }
+        requestAnimationFrame(step);
+        setTimeout(function () { el.textContent = fmt(target); }, 1900);
+      })(els[i]);
+    }
+  })();
+})();
+</script>
+</body>
+</html>
