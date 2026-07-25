@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index,follow,max-image-preview:large">
-<title>Şirketinize Özel Yapay Zeka — NADAS · Bağımsız · Kaynak Kodu Sizin · Çoklu Model · Türkçe · ProX</title>
-<meta name="description" content="Şirketinize ve branşınıza özel yapay zeka: isterseniz kendi sunucunuzda bağımsız çalışan, kaynak kodu size ait, kendi verinizle ve Türkçe. Modeli siz seçin — Claude, ChatGPT, Gemini, DeepSeek, Qwen, Llama + determinist ProX. Veri egemenliği, KVKK, Türkiye'de.">
+<title>Şirketinize Özel Yapay Zeka — NADAS · Bağımsız · Kaynak Kodu Sizin · RAG · GPU / On-Premise · Çoklu Model · ProX</title>
+<meta name="description" content="Şirketinize özel yapay zeka mühendisliği: kendi sunucunuzda (GPU/on-premise) bağımsız çalışan, kaynak kodu size ait AI. RAG, tool/fonksiyon çağrısı, ajanlar, vektör DB, fine-tune. Çoklu model (Claude, GPT, Gemini, DeepSeek, Qwen, Llama) + determinist ProX. NVIDIA inference stack, Türkçe, KVKK. 480M veriyle çalışan emlakekspertizi.com'u biz kurduk.">
 <meta name="theme-color" content="#06101B">
 <link rel="canonical" href="https://www.nadas.com.tr/yapay-zeka">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%2306101B'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%2338BDF8'%3EN%3C/text%3E%3C/svg%3E">
@@ -132,6 +132,7 @@
       + '<p style="' + css({ marginTop: 18, fontSize: 16, lineHeight: 1.65, color: C.textSec, maxWidth: 980 }) + '">Şirketinize, ' + pri("kendi branşınıza") + ' ve ' + pri("kendi verinize") + ' özel bir yapay zeka kurarız — isterseniz tamamen ' + pri("kendi sunucunuzda bağımsız çalışan") + ' ve ' + pri("kaynak kodu size ait") + '. Modeli siz seçersiniz: Claude, ChatGPT, Gemini gibi güçlü ticari modeller ya da ' + pri("DeepSeek, Qwen, Llama") + ' gibi kendi sunucunuzda çalışabilen açık kaynak modeller. ' + pri("Türkçe önceliklidir") + '; hesaplayan katman determinist ProX\'tur. Verinizle başka müşteri modeli eğitilmez.</p>'
       + '<div style="' + css({ marginTop: 18, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cells + '</div>'
       + '<div style="' + css({ marginTop: 14 }) + '">' + badges(["KENDİ SUNUCUNUZDA", "KAYNAK KODU SİZİN", "VERİ EGEMENLİĞİ", "ÇOKLU MODEL", "AÇIK KAYNAK · TİCARİ", "TÜRKÇE", "ProX DESTEKLİ", "BRANŞA ÖZEL"]) + '</div>'
+      + '<div style="' + css({ marginTop: 16, padding: "12px 16px", border: "1px solid " + C.accent, background: "rgba(52,211,153,0.05)", borderRadius: 3, fontFamily: C.mono, fontSize: 11.5, color: C.textSec, lineHeight: 1.6, letterSpacing: "0.02em" }) + '"><strong style="' + css({ color: C.accent, letterSpacing: "0.08em" }) + '">◆ KANIT · </strong><strong style="' + css({ color: C.textPri }) + '">480 milyon veri noktasıyla çalışan canlı bir AI sistemini — emlakekspertizi.com — biz kurduk ve her gün üretimde çalıştırıyoruz.</strong> ProX hesaplar, dil modeli yazar; ikisini ayırıp denetliyoruz. Bu işi anlatmıyoruz, yapıyoruz.</div>'
       + '</div></section>';
   }
 
@@ -199,7 +200,7 @@
     var body = '<div style="' + grid(260, 12) + '">' + feats + '</div>'
       + '<div style="' + css({ marginTop: 16 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.violet, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 8 }) + '">◆ BRANŞA ÖZEL KULLANIM ÖRNEKLERİ</div><div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))", gap: 8 }) + '">' + sectors + '</div></div>'
       + note("Sektör örnekleri olası kullanım alanlarıdır; sizin şirketinize özel kapsam keşif aşamasında belirlenir. Düzenlemeye tabi alanlarda (sağlık, hukuk, finans) AI karar vermez, uzmana taslak/öneri sunar; nihai sorumluluk yetkili kişidedir.");
-    return SubSection("C.1", "Şirkete özel veri · Türkçe · sektörünüze göre", "RAG · İNCE-AYAR · ÇOK DİLLİ · SEKTÖREL", body);
+    return SubSection("E.1", "Şirkete özel veri · Türkçe · sektörünüze göre", "RAG · İNCE-AYAR · ÇOK DİLLİ · SEKTÖREL", body);
   }
 
   /* ===== D · İKİ KATMAN (DÜRÜST AI MİMARİSİ) ===== */
@@ -218,19 +219,20 @@
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", gap: 12, marginBottom: 14 }) + '" class="nadas-twocol">' + prox + asis + '</div>'
       + comp
       + note("Neden önemli? 'AI' etiketiyle satılan çoğu çözüm, hesaplaması gereken yerde halüsinasyon üretir. Biz ayırıyoruz: kritik sayı ProX\'tan (determinist) gelir; dil işi seçtiğiniz modelden (insan onaylı) gelir. Böylece güvenebileceğiniz bir çıktı alırsınız.");
-    return SubSection("D.1", "İki katman · dürüst AI mimarisi", "HESAPLAYAN ≠ YAZAN", body);
+    return SubSection("F.1", "İki katman · dürüst AI mimarisi", "HESAPLAYAN ≠ YAZAN", body);
   }
 
   /* ===== E · KURULUM + VERİ GÜVENLİĞİ ===== */
   function GovernProcess() {
     var steps = [
-      ["01", "Fizibilite", "AI'ın nerede gerçekten değer kattığını (ve katmadığını), hangi modelin/barınmanın uygun olduğunu birlikte belirleriz."],
-      ["02", "Veri hazırlığı", "Verinizi toplar, temizler, KVKK kapsamında maskeler ve modele uygun hale getiririz. Veriniz sizin kalır."],
-      ["03", "Kurulum & entegrasyon", "Egemen (kendi sunucunuz) ya da yönetilen modeli, guardrails ve kaynak gösterimiyle sisteminize bağlarız."],
-      ["04", "İnsan-döngüde test", "Çıktıları insan onayıyla test eder; kritik kararlarda son sözü insana bırakırız."],
-      ["05", "Yayın, bakım & izleme", "Canlıya alır; çıktıyı loglar, sapma/maliyet/kaliteyi izler, sürüm ve güvenlik güncellemelerini sürdürürüz."],
+      ["FAZ 0", "Keşif & PoC", "1–2 hafta", "Fizibilite, doğru model/donanım seçimi ve küçük bir kanıt (proof-of-concept) — hype değil, iş sonucu."],
+      ["FAZ 1", "Veri & mimari", "1–3 hafta", "Veri hazırlığı, RAG mimarisi ve güvenlik tasarımı; KVKK kapsamında maskeleme. Veriniz sizin kalır."],
+      ["FAZ 2", "Kurulum · model / donanım", "donanıma bağlı", "Egemen modda sunucu/GPU kurulumu (ya da bulut GPU), model dağıtımı + quantization; yönetilen modda API bağlantısı."],
+      ["FAZ 3", "Entegrasyon", "2–4 hafta", "RAG + tool + sistem entegrasyonu, Türkçe uyarlama, guardrails ve kaynak gösterimi."],
+      ["FAZ 4", "Test & değerlendirme", "1–2 hafta", "Otomatik + insan değerlendirme (eval), insan-döngüde onay, kalite ve güvenlik kontrolleri."],
+      ["FAZ 5", "Yayın, bakım & izleme", "sürekli", "Canlıya alma; çıktı loglama, sapma/maliyet/kalite izleme, model ve güvenlik güncellemeleri."],
     ].map(function (s) {
-      return '<div style="' + css({ flex: "1 1 200px", minWidth: 0, background: C.raised, border: "1px solid " + C.borderStrong, padding: "14px 16px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.violet, fontWeight: 700, letterSpacing: "0.1em", marginBottom: 6 }) + '">' + s[0] + '</div><div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 14, fontWeight: 700, color: C.textPri, marginBottom: 4 }) + '">' + s[1] + '</div><div style="' + css({ fontSize: 12, color: C.textMut, lineHeight: 1.5 }) + '">' + s[2] + '</div></div>';
+      return '<div style="' + css({ flex: "1 1 220px", minWidth: 0, background: C.raised, border: "1px solid " + C.borderStrong, padding: "14px 16px" }) + '"><div style="' + css({ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 6 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.violet, fontWeight: 700, letterSpacing: "0.1em" }) + '">' + s[0] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.accent, border: "1px solid " + C.border, borderRadius: 3, padding: "1px 6px", letterSpacing: "0.04em" }) + '">' + s[2] + '</span></div><div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 14, fontWeight: 700, color: C.textPri, marginBottom: 4 }) + '">' + s[1] + '</div><div style="' + css({ fontSize: 12, color: C.textMut, lineHeight: 1.5 }) + '">' + s[3] + '</div></div>';
     }).join("");
     var gov = [
       card({ ic: "⛨", tag: "VERİ EGEMENLİĞİ", col: C.accent, ttl: "Veriniz sizde kalır", body: "Egemen modda veri sunucunuzdan çıkmaz; internetsiz çalışabilir. Verinizle başka müşteri modeli eğitilmez. Yönetilen modda veri yönetişimi sözleşmeyle güvence altındadır." }),
@@ -239,15 +241,17 @@
     ].join("");
     var body = '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 16 }) + '">' + steps + '</div>'
       + '<div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.violet, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 8 }) + '">◆ VERİ GÜVENLİĞİ & YÖNETİŞİM</div>'
-      + '<div style="' + grid(260, 12) + '">' + gov + '</div>';
-    return SubSection("E.1", "Kurulum · güvenlik & yönetişim", "FİZİBİLİTE → KURULUM → İNSAN-DÖNGÜDE", body);
+      + '<div style="' + grid(260, 12) + '">' + gov + '</div>'
+      + note("Süreler tipik aralıktır; kesin plan ve süre keşif (Faz 0) sonrası netleşir. Donanım tedariki (GPU satın alma) Faz 2'yi uzatabilir; bulut GPU ile hızlı başlanabilir. Her fazın sonunda görebileceğiniz somut bir çıktı olur.");
+    return SubSection("G.1", "Dürüst yol haritası · kurulum & güvenlik", "FAZLI · GERÇEKÇİ SÜRE · İNSAN-DÖNGÜDE", body);
   }
 
   /* ===== F · NEDEN NADAS + DÜRÜST AI ÇERÇEVESİ ===== */
   function WhyHonest() {
     var pts = [
       card({ ic: "◆", tag: "DETERMİNİST ÇEKİRDEK", col: C.accent, featured: true, ttl: "Kendi determinist motorumuz var", body: "Çoğu ajans dışarıdan LLM çağırıp 'AI' der. Bizim çekirdeğimizde 2013'ten beri geliştirdiğimiz determinist ProX motoru var — sayıyı halüsinasyonla değil, hesapla üretir." }),
-      card({ ic: "✓", tag: "KANIT", col: C.primary, ttl: "Kendi AI'mızı biz kullanıyoruz", body: "Bu siteyi ve emlakekspertizi.com'u işletirken ProX + dil modeli katmanlarını bizzat kullanıyoruz. Sattığımız yaklaşımı önce kendimiz uyguluyoruz." }),
+      card({ ic: "✓", tag: "480M · CANLI KANIT", col: C.primary, ttl: "480 milyon veriyle çalışan canlı AI", body: "emlakekspertizi.com'u — ProX + dil modeli katmanıyla, 480 milyon veri noktası üzerinde çalışan canlı bir sistemi — biz kurduk ve her gün üretimde çalıştırıyoruz. Sattığımız yaklaşımı önce kendimiz uyguluyoruz." }),
+      card({ ic: "⚙", tag: "MÜHENDİSLİK", col: C.violet, ttl: "RAG, tool, GPU — gerçekten kuruyoruz", body: "RAG boru hattı, tool/fonksiyon çağrısı, ajanlar, vektör DB, quantization ve GPU üzerinde inference optimizasyonu — bunlar bizde slogan değil, kurduğumuz sistemler. Bu işi anlatmıyoruz, yapıyoruz." }),
       card({ ic: "⛨", tag: "BAĞIMSIZLIK", col: C.violet, ttl: "Kaynak kodu ve veri sizin", body: "İstediğinizde her şey kendi sunucunuzda, kaynak koduyla, veri dışarı çıkmadan çalışır. Bize ya da tek bir sağlayıcıya kilitlenmezsiniz." }),
       card({ ic: "◈", tag: "ALAN DENEYİMİ", col: C.primary, ttl: "21 yıllık emlak + veri", body: "AI'ı boşlukta değil gerçek veride uygularız; doğru soruyu ve doğru sınırı bilen bir ekip, sektörünüze uyarlanabilir bir yöntemle çalışır." }),
     ].join("");
@@ -263,7 +267,7 @@
         "<strong style=\"color:" + C.textSec + "\">SPK/BDDK yetkisi vermeyiz · veri lisanslanır.</strong> Yetki lisanslı uzmandadır; ProX veri altyapısına erişim ayrı ve süregelen bir lisansa bağlıdır. Tüm fiyatlara %20 KDV dahildir.",
       ].map(function (x) { return '<li style="' + css({ display: "flex", gap: 8, fontSize: 12, color: C.textMut, lineHeight: 1.6 }) + '"><span style="' + css({ color: C.warn, fontFamily: C.mono, fontSize: 10, lineHeight: 1.6 }) + '">▸</span><span>' + x + '</span></li>'; }).join("")
       + '</ul></div>';
-    return SubSection("F.1", "Neden NADAS + dürüst AI çerçevesi", "BAĞIMSIZ · DETERMİNİST · ŞEFFAF", body);
+    return SubSection("H.1", "Neden NADAS + dürüst AI çerçevesi", "BAĞIMSIZ · DETERMİNİST · ŞEFFAF", body);
   }
 
   /* ===== ÜRÜN / CTA ===== */
@@ -280,15 +284,61 @@
       + '</div></div></section>';
   }
 
+  /* ===== C · AI MÜHENDİSLİĞİ · NASIL ÇALIŞIR (RAG · TOOL · AJAN) ===== */
+  function AIEngineering() {
+    var stage = '<div id="rag-stage" style="' + css({ position: "relative", overflow: "hidden", border: "1px solid " + C.borderStrong, borderRadius: 4, background: "radial-gradient(120% 130% at 50% 25%, #0a0f1e, #030810 70%)", marginBottom: 16 }) + '">'
+      + '<canvas id="rag-canvas" style="' + css({ display: "block", width: "100%", height: "clamp(230px,32vw,320px)" }) + '"></canvas>'
+      + '<div style="' + css({ position: "absolute", left: 12, top: 10, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.1em", fontWeight: 700, pointerEvents: "none", maxWidth: "62%" }) + '">◆ RAG + TOOL BORU HATTI</div>'
+      + '<div style="' + css({ position: "absolute", right: 12, top: 10, display: "inline-flex", alignItems: "center", gap: 6, fontFamily: C.mono, fontSize: 8.5, color: C.accent, letterSpacing: "0.1em", pointerEvents: "none" }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>CANLI</div>'
+      + '<div style="' + css({ position: "absolute", left: 12, bottom: 10, fontFamily: C.mono, fontSize: 9.5, color: C.textMut, letterSpacing: "0.04em", pointerEvents: "none", maxWidth: "60%", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }) + '" id="rag-cap">▸ embedding → vektör arama</div>'
+      + '<div style="' + css({ position: "absolute", right: 12, bottom: 10, fontFamily: C.mono, fontSize: 9, color: C.accent, letterSpacing: "0.06em", pointerEvents: "none" }) + '"><span id="rag-count">0</span> KAYNAKLI YANIT ◆</div></div>';
+    var blocks = [
+      card({ ic: "◇", tag: "RAG · RETRIEVAL", col: C.accent, featured: true, ttl: "Kendi verinizle konuşur (RAG)", body: "Retrieval-Augmented Generation: model, kendi belgelerinizden ilgili parçaları getirip yanıtı ona dayandırır ve kaynak gösterir.", list: ["Belge → parçalama (chunking) → gömme (embedding)", "Vektör veritabanında anlamsal arama", "En yakın parçalar bağlam olarak modele verilir", "Güncel + doğrulanabilir · halüsinasyon azalır"] }),
+      card({ ic: "⚙", tag: "TOOL · FONKSİYON ÇAĞRISI", col: C.primary, featured: true, ttl: "Gerçek işlem yapar (tool use)", body: "Model dış araçları çağırır: veritabanı sorgusu, hesaplama, API — ve ProX. 'Hangi araç, hangi parametre' der; sistem çalıştırır, sonucu modele döner.", list: ["Fonksiyon/araç çağrısı (function calling)", "DB · API · hesap · ProX entegrasyonu", "Uydurmaz — gerçek sonucu kullanır"] }),
+      card({ ic: "◈", tag: "AJAN · ÇOK ADIM", col: C.violet, ttl: "Planlar, araçları sırayla kullanır", body: "Ajan (agent) çok adımlı bir görevi planlar ve araçları sırayla çalıştırır — denetimli, guardrails içinde, insan onayına açık.", list: ["Görev planlama · araç zinciri", "Sınırlı yetki · guardrails", "Adım adım izlenebilir"] }),
+      card({ ic: "⋯", tag: "EMBEDDING · VEKTÖR DB", col: C.primary, ttl: "Anlamsal arama", body: "Metin, anlamı taşıyan sayısal bir vektöre çevrilir; sorunuza en yakın içerik benzerlikle bulunur. Vektör veritabanı bu aramanın motorudur.", list: ["Metin → vektör (embedding)", "Benzerlik araması (yakın komşu)", "Vektör DB · hızlı erişim"] }),
+      card({ ic: "◐", tag: "FINE-TUNE vs RAG", col: C.accent, ttl: "Doğru yöntem hangisi?", body: "Çoğu ihtiyaçta RAG yeterlidir (bilgi güncel kalır). İnce-ayar (fine-tuning) stil, format ya da dar bir görev için açık modellerde yapılır.", list: ["Bilgi güncelliği → RAG", "Stil / format / dar görev → fine-tune", "Gerektiğinde ikisi birlikte"] }),
+      card({ ic: "◉", tag: "GUARDRAILS · EVAL", col: C.warn, ttl: "Sınır, ölçüm, gözlem", body: "Çıktı kapsamla sınırlandırılır (guardrails), kaynak zorunlu tutulur; kalite otomatik + insan değerlendirmeyle ölçülür (eval) ve sürekli izlenir (observability).", list: ["Guardrails · kaynak zorunluluğu", "Otomatik + insan değerlendirme (eval)", "Loglama & gözlemlenebilirlik"] }),
+    ].join("");
+    var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 14, maxWidth: 980 }) + '">Yapay zekayı bir kutu gibi değil, ' + pri("mühendislik yapı taşlarıyla") + ' kurarız. Aşağıda gerçekte ne yaptığımız var — bunları işinize göre birleştiririz.</p>'
+      + stage
+      + '<div style="' + grid(250, 12) + '">' + blocks + '</div>'
+      + note("Bu boru hattında ProX bir 'tool' olarak da çağrılır: dil modeli sayı gerektiğinde ProX'a sorar, determinist sonucu alır. Böylece dil modeli metni yazar, sayıyı ProX hesaplar — halüsinasyonsuz.");
+    return SubSection("C.1", "AI mühendisliği · nasıl çalışır", "RAG · TOOL · AJAN · EMBEDDING · EVAL", body);
+  }
+
+  /* ===== D · SUNUCU & DONANIM · GPU GEREKSİNİMLERİ ===== */
+  function Hardware() {
+    var tiers = tbl(["KADEME", "MODEL BOYUTU", "GPU · VRAM", "RAM", "DEPOLAMA", "UYGUN"], [
+      ["Başlangıç", "7–8B (quantized)", "1× 16–24GB · RTX 4090 / L4 / A10", "32–64GB", "NVMe SSD", "Küçük ekip · tekil asistan"],
+      ["Orta", "13–34B", "1–2× 48GB · L40S / A100 40GB", "64–128GB", "NVMe", "Kurumsal · çok kullanıcı"],
+      ["Büyük", "70B+", "2–4× 80GB · A100 / H100 (NVLink)", "256GB+", "NVMe RAID", "Ağır yük · düşük gecikme"],
+      ["CPU-only", "Küçük (quantized)", "GPU yok · yavaş", "32GB+", "SSD", "Düşük hacim / test"],
+    ], [null, C.violet, C.accent, C.textSec, C.textSec, C.textMut]);
+    var stackCards = [
+      card({ ic: "◧", tag: "QUANTIZATION", col: C.accent, ttl: "Aynı GPU'da daha büyük model", body: "Ağırlıkları sıkıştırırız (GGUF · AWQ · GPTQ · INT8/INT4); VRAM ihtiyacı düşer, model daha küçük donanıma sığar — kaliteyi koruyarak." }),
+      card({ ic: "⇶", tag: "INFERENCE SUNUCU", col: C.primary, ttl: "Verimli sunum", body: "vLLM, TGI, Triton Inference Server (küçük ölçekte Ollama) ile yüksek verim; batching, KV-cache ve token streaming ile düşük gecikme." }),
+      card({ ic: "◆", tag: "NVIDIA STACK", col: C.violet, ttl: "GPU hızlandırma & optimizasyon", body: "NVIDIA GPU'lar üzerinde CUDA, TensorRT-LLM ile hızlandırma ve NIM mikroservisleriyle sunum; çoklu-GPU için tensor/pipeline paralellik kurarız." }),
+      card({ ic: "◔", tag: "ÖLÇEKLEME", col: C.primary, ttl: "Yük ve maliyet dengesi", body: "Eşzamanlı kullanıcıya göre otomatik ölçek, kuyruk ve önbellek; bulut GPU (kiralık) ile başlayıp on-premise'e geçiş mümkündür." }),
+    ].join("");
+    var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 14, maxWidth: 980 }) + '">Açık kaynak modeli kendi sunucunuzda çalıştırmak ' + pri("GPU gerektirir") + '; donanım, modelin boyutuna ve istenen hıza göre değişir. Donanımı siz sağlarsınız (satın alma ya da bulut GPU kiralama); biz mimariyi kurar, ' + pri("quantization ve inference optimizasyonuyla") + ' en verimli hale getiririz.</p>'
+      + tiers
+      + '<div style="' + css({ marginTop: 16 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.violet, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 8 }) + '">◆ ÇALIŞTIRMA & OPTİMİZASYON YIĞINI</div><div style="' + grid(250, 12) + '">' + stackCards + '</div></div>'
+      + note("Değerler tipik aralıktır; kesin donanım (GPU adedi/tipi, VRAM, RAM) modelinize ve yükünüze göre keşif aşamasında netleşir. GPU/donanım maliyeti size aittir. Ticari model (Claude/GPT/Gemini · API) seçerseniz kendi GPU'nuza gerek kalmaz — o zaman veri, sözleşmeli olarak sağlayıcıya gider.");
+    return SubSection("D.1", "Sunucu & donanım · GPU gereksinimleri", "MODEL BOYUTUNA GÖRE · QUANTIZATION · NVIDIA", body);
+  }
+
   function renderApp() {
     return NX.Ticker(AITICK) + NX.Masthead("Yapay Zeka") + NX.Nav("")
       + HeroAI()
       + SectionDivider("A", "Size Ait · Bağımsız AI", "KENDİ SUNUCUNUZDA · KAYNAK KODU SİZİN") + Sovereignty()
       + SectionDivider("B", "Model Seçimi Sizin", "ÇOKLU MODEL + ProX") + ModelChoice()
-      + SectionDivider("C", "Şirkete Özel Veri · Türkçe · Sektör", "RAG · İNCE-AYAR · SEKTÖREL") + CompanyData()
-      + SectionDivider("D", "İki Katman · Dürüst AI", "HESAPLAYAN ≠ YAZAN") + TwoLayers()
-      + SectionDivider("E", "Kurulum · Güvenlik & Yönetişim", "İNSAN-DÖNGÜDE · KVKK") + GovernProcess()
-      + SectionDivider("F", "Neden NADAS + Dürüst Çerçeve", "BAĞIMSIZ · ŞEFFAF") + WhyHonest()
+      + SectionDivider("C", "AI Mühendisliği · Nasıl Çalışır", "RAG · TOOL · AJAN · EMBEDDING") + AIEngineering()
+      + SectionDivider("D", "Sunucu & Donanım · GPU", "KADEME · QUANTIZATION · NVIDIA") + Hardware()
+      + SectionDivider("E", "Şirkete Özel Veri · Türkçe · Sektör", "RAG · İNCE-AYAR · SEKTÖREL") + CompanyData()
+      + SectionDivider("F", "İki Katman · Dürüst AI", "HESAPLAYAN ≠ YAZAN") + TwoLayers()
+      + SectionDivider("G", "Dürüst Yol Haritası", "FAZLI · İNSAN-DÖNGÜDE · KVKK") + GovernProcess()
+      + SectionDivider("H", "Neden NADAS + Dürüst Çerçeve", "BAĞIMSIZ · ŞEFFAF") + WhyHonest()
       + Product() + NX.Footer();
   }
 
@@ -401,8 +451,106 @@
     start();
   }
 
+  /* ===== C BÖLÜMÜ ANİMASYONU · RAG + TOOL BORU HATTI ===== */
+  function mountRagFlow() {
+    var stage = document.getElementById("rag-stage");
+    var cv = stage && document.getElementById("rag-canvas");
+    if (!stage || !cv || !cv.getContext) return;
+    var ctx = cv.getContext("2d");
+    var capEl = document.getElementById("rag-cap"), cntEl = document.getElementById("rag-count");
+    var mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+    var reduce = !!(mq && mq.matches);
+    var W = 0, H = 0, dpr = 1, raf = 0, running = false, visible = true;
+    var STEP = 1 / 60, acc = 0, last = 0, t = 0, TAU = 6.28318;
+    var CY = "#38BDF8", GRN = "#34D399", VIO = "#A78BFA", WARN = "#FBBF24", GC = "#EAF6FF", MUT = "#64748B";
+    var X = {}, midY = 0, botY = 0, pool = [], free = [], MAX = 72, emitAcc = 0, answered = 0, ansShown = 0, dbFlash = 0, toolFlash = 0;
+    var CAPS = ["soru → embedding (vektör)", "vektör arama · en yakın parçalar", "retrieval → modele bağlam", "tool: ProX / API çağrısı", "yanıt + kaynak gösterimi"];
+    var capIdx = -1, capLast = 0;
+    function hexA(h, a) { var n = parseInt(h.slice(1), 16); return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; }
+    var sprites = {};
+    function sprite(color) { if (sprites[color]) return sprites[color]; var r = 14, s = document.createElement("canvas"); s.width = s.height = r * 2; var sc = s.getContext("2d"), g = sc.createRadialGradient(r, r, 0, r, r, r); g.addColorStop(0, hexA(color, 1)); g.addColorStop(0.3, hexA(color, 0.5)); g.addColorStop(1, hexA(color, 0)); sc.fillStyle = g; sc.fillRect(0, 0, r * 2, r * 2); sprites[color] = s; return s; }
+    function initPool() { pool = []; free = []; for (var i = 0; i < MAX; i++) { pool.push({ on: 0, ph: 0, t: 0, sp: 0, tool: 0, y0: 0 }); free.push(i); } }
+    function alloc() { if (!free.length) return -1; var k = free.pop(); pool[k].on = 1; return k; }
+    function rel(k) { pool[k].on = 0; free.push(k); }
+    function layout() { X = { soru: W * 0.07, embed: W * 0.25, db: W * 0.44, llm: W * 0.66, ans: W * 0.9 }; midY = H * 0.4; botY = H * 0.68; }
+    function emit() { var k = alloc(); if (k < 0) return; var q = pool[k]; q.ph = 0; q.t = 0; q.sp = 0.016 + Math.random() * 0.008; q.tool = Math.random() < 0.35 ? 1 : 0; q.y0 = midY + (Math.random() - 0.5) * H * 0.05; }
+    function lerp(a, b, u) { return a + (b - a) * u; }
+    function build() { W = stage.clientWidth; H = stage.clientHeight; if (!W || !H) { requestAnimationFrame(build); return; } dpr = Math.min(window.devicePixelRatio || 1, 2); cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.width = W + "px"; cv.style.height = H + "px"; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); layout(); draw(); }
+    function stepSim(dt) {
+      t += dt;
+      if (t - capLast > 1.9) { capLast = t; capIdx = (capIdx + 1) % CAPS.length; if (capEl) capEl.textContent = "▸ " + CAPS[capIdx]; }
+      emitAcc += dt * 7; while (emitAcc >= 1) { emitAcc -= 1; emit(); }
+      for (var k = 0; k < MAX; k++) { var q = pool[k]; if (!q.on) continue; q.t += q.sp; if (q.t >= 1) { q.ph++; q.t = 0;
+        if (q.ph === 2) dbFlash = 1;
+        if (!q.tool) { if (q.ph >= 3) { answered++; ansShown = answered; rel(k); } }
+        else { if (q.ph === 3) toolFlash = 1; if (q.ph >= 5) { answered++; ansShown = answered; rel(k); } }
+      } }
+      dbFlash *= Math.pow(0.9, dt * 60); toolFlash *= Math.pow(0.9, dt * 60);
+    }
+    function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+    function nd(x, y, col, label, sub, glow) {
+      var r = Math.max(15, Math.min(H * 0.1, 24));
+      var g = ctx.createRadialGradient(x, y, 0, x, y, r * 1.9); g.addColorStop(0, hexA(col, 0.2 + 0.2 * glow)); g.addColorStop(0.5, hexA(col, 0.05)); g.addColorStop(1, hexA(col, 0));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 1.9, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fillStyle = hexA(col, 0.08); ctx.fill(); ctx.strokeStyle = hexA(col, 0.6 + 0.3 * glow); ctx.lineWidth = 1.4; ctx.stroke();
+      ctx.fillStyle = MUT; ctx.font = "700 8px " + C.mono; ctx.textAlign = "center"; ctx.fillText(label, x, y + r + 12); if (sub) { ctx.fillStyle = hexA(col, 0.8); ctx.fillText(sub, x, y + r + 22); } ctx.textAlign = "left";
+      return r;
+    }
+    function draw() {
+      if (!W) return;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = "rgba(255,255,255,0.02)"; ctx.lineWidth = 1;
+      for (var gx = 0; gx <= W; gx += 44) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+      // ana hat çizgisi
+      ctx.strokeStyle = hexA(VIO, 0.1); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X.soru, midY); ctx.lineTo(X.ans, midY); ctx.stroke();
+      nd(X.soru, midY, CY, "SORU", "", 0.2);
+      nd(X.embed, midY, VIO, "EMBED", "vektör", 0.2);
+      var dr = nd(X.db, midY, GRN, "VEKTÖR DB", "retrieval", dbFlash);
+      // chunk bars (DB'nin altında)
+      for (var c = 0; c < 4; c++) { var by = midY + dr + 24 + c * 7, lit = dbFlash > 0.2 && c < 3; roundRect(X.db - 16, by, 32 * (0.6 + c * 0.12), 4, 2); ctx.fillStyle = hexA(GRN, lit ? 0.8 : 0.25); ctx.fill(); }
+      nd(X.llm, midY, VIO, "LLM", "seçtiğiniz model", 0.25);
+      // tool düğümü (LLM altında)
+      var tr = nd(X.llm, botY, WARN, "TOOL", "ProX · API", toolFlash);
+      ctx.strokeStyle = hexA(WARN, 0.12); ctx.lineWidth = 1; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(X.llm, midY + 24); ctx.lineTo(X.llm, botY - tr); ctx.stroke(); ctx.setLineDash([]);
+      // yanıt paneli
+      var w = W * 0.14, h = H * 0.3, bx = X.ans - w / 2, by = midY - h / 2;
+      roundRect(bx, by, w, h, 5); ctx.fillStyle = "rgba(6,16,27,0.82)"; ctx.fill(); ctx.strokeStyle = hexA(GRN, 0.4); ctx.lineWidth = 1.2; ctx.stroke();
+      ctx.fillStyle = hexA(GRN, 0.9); ctx.font = "700 8.5px " + C.mono; ctx.textAlign = "left"; ctx.fillText("YANIT", bx + 8, by + 15);
+      ctx.fillStyle = hexA("#CBD5E1", 0.45); ctx.font = "7.5px " + C.mono; for (var r2 = 0; r2 < 3; r2++) ctx.fillText("• kaynak [" + (r2 + 1) + "]", bx + 8, by + 30 + r2 * 12);
+      // parçacıklar
+      ctx.save(); ctx.globalCompositeOperation = "lighter";
+      for (var k = 0; k < MAX; k++) { var q = pool[k]; if (!q.on) continue; var p, col = VIO;
+        if (q.ph === 0) { p = { x: lerp(X.soru, X.embed, q.t), y: lerp(q.y0, midY, q.t) }; col = CY; }
+        else if (q.ph === 1) { p = { x: lerp(X.embed, X.db, q.t), y: midY }; col = VIO; }
+        else if (q.ph === 2) { p = { x: lerp(X.db, X.llm, q.t), y: midY }; col = GRN; }
+        else if (q.ph === 3) { if (q.tool) { p = { x: X.llm, y: lerp(midY, botY, q.t) }; col = WARN; } else { p = { x: lerp(X.llm, X.ans, q.t), y: midY }; col = GRN; } }
+        else if (q.ph === 4) { p = { x: X.llm, y: lerp(botY, midY, q.t) }; col = WARN; }
+        else { p = { x: lerp(X.llm, X.ans, q.t), y: midY }; col = GRN; }
+        var rr = 3; ctx.globalAlpha = 0.85; ctx.drawImage(sprite(col), p.x - rr * 2, p.y - rr * 2, rr * 4, rr * 4);
+        ctx.globalAlpha = 0.9; ctx.fillStyle = GC; ctx.beginPath(); ctx.arc(p.x, p.y, 1, 0, TAU); ctx.fill();
+      }
+      ctx.restore();
+      if (cntEl && ansShown) cntEl.textContent = ansShown.toLocaleString("tr-TR");
+    }
+    function tick(now) { if (!last) last = now; var dt = Math.min((now - last) / 1000, 0.05); last = now; acc += dt; while (acc >= STEP) { stepSim(STEP); acc -= STEP; } draw(); if (running) raf = requestAnimationFrame(tick); }
+    function start() { if (running || reduce || !visible) return; running = true; last = 0; raf = requestAnimationFrame(tick); }
+    function stop() { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
+    initPool(); build();
+    if (reduce) { for (var w = 0; w < 200; w++) stepSim(STEP); draw(); }
+    var rt = 0; function relayout() { clearTimeout(rt); rt = setTimeout(build, 140); }
+    window.addEventListener("resize", relayout);
+    if (window.ResizeObserver) { try { new ResizeObserver(relayout).observe(stage); } catch (e) {} }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+    if (mq && mq.addEventListener) mq.addEventListener("change", function (e) { reduce = e.matches; reduce ? stop() : start(); });
+    document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); else if (visible) start(); });
+    if (window.IntersectionObserver) { try { new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) start(); else stop(); }, { threshold: 0 }).observe(stage); } catch (e) {} }
+    stage._pump = function (n) { for (var i = 0; i < (n || 60); i++) stepSim(STEP); draw(); };
+    start();
+  }
+
   NX.boot(renderApp);
   mountAIFlow();
+  mountRagFlow();
   (function () {
     var els = document.querySelectorAll("[data-cu]");
     for (var i = 0; i < els.length; i++) {
