@@ -442,38 +442,6 @@
       + '</div></div></section>';
   }
 
-  /* ===== FOOTER ===== */
-  function Footer() {
-    var col1 = ["Veri Altyapısı", "Çözümler", "ProX", "Research", "Hakkımızda", "İletişim"].map(function (l) {
-      return '<a href="' + navHref(l) + '" style="' + css({ display: "block", fontFamily: C.mono, fontSize: 11, color: C.textMut, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">' + l + '</a>';
-    }).join('');
-    var col2 = [
-      ["EmlakEkspertizi.com", "https://www.emlakekspertizi.com"],
-      ["Karar Analizi", "https://www.emlakekspertizi.com/ekspertiz-talep"],
-      ["SPK Lisanslı Rapor", "https://www.emlakekspertizi.com/spk-talep"],
-      ["ProX Akıllı Asistan", "https://www.emlakekspertizi.com/yapay-zeka"],
-      ["Üyelikler", "https://www.emlakekspertizi.com/uyelik"],
-    ].map(function (x) { return '<a href="' + x[1] + '" style="' + css({ display: "block", fontFamily: C.mono, fontSize: 11, color: C.textMut, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">' + x[0] + '</a>'; }).join('');
-    var col3 = [
-      ["destek@nadas.com.tr", "mailto:destek@nadas.com.tr"],
-      ["destek@emlakekspertizi.com", "mailto:destek@emlakekspertizi.com"],
-      ["bilgi@emlakekspertizi.com", "mailto:bilgi@emlakekspertizi.com"],
-      ["KVKK", "kvkk.html"], ["Çerez Politikası", "cerez.html"],
-    ].map(function (x) { return '<a href="' + x[1] + '" style="' + css({ display: "block", fontFamily: C.mono, fontSize: 11, color: C.textMut, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">' + x[0] + '</a>'; }).join('');
-    return '<footer style="' + css({ borderTop: "1px solid " + C.borderStrong, padding: "30px 16px 24px", background: C.deep }) + '">'
-      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 20, marginBottom: 24 }) + '">'
-      + '<div><div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }) + '"><span style="' + css({ width: 30, height: 30, border: "1.5px solid " + C.primary, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Sora',sans-serif", fontSize: 14, fontWeight: 700, color: C.primary, borderRadius: 2 }) + '">N</span><div><div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 20, fontWeight: 700, color: C.textPri, letterSpacing: "-0.02em" }) + '">NADAS</div><div style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.16em" }) + '">HAKKIMIZDA · SINCE 2005</div></div></div>'
-      + '<p style="' + css({ fontSize: 12, color: C.textMut, maxWidth: 380, lineHeight: 1.5, margin: 0 }) + '">Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti.<br>Türkiye\'nin mahalle bazında kesintisiz aylık emlak endeksi · Online emlak ekspertiz platformu.</p></div>'
-      + '<div style="' + css({ display: "flex", gap: 32, flexWrap: "wrap" }) + '">'
-      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">NADAS</div>' + col1 + '</div>'
-      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">ÜRÜN</div>' + col2 + '</div>'
-      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">İLETİŞİM</div>' + col3 + '</div>'
-      + '</div></div>'
-      + '<div style="' + css({ paddingTop: 16, borderTop: "1px solid " + C.border, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '"><span>© 2005-2026 NADAS · Tüm hakları saklıdır.</span><span>KVKK · GİZLİLİK · ÇEREZ POLİTİKASI · KULLANIM KOŞULLARI</span></div>'
-      + '</div></footer>';
-  }
-
   /* ===== MONTAJ ===== */
   /* ===== VERİ MERKEZİ → ProX MODELİ — izometrik canlı sahne (hero üstü) ===== */
   function HakkimizdaFactory() {
