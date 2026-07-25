@@ -1248,11 +1248,29 @@
       + '</div></section>';
   }
   /* ===== MONTAJ (kanonik NX menü — ALTIN KURAL) ===== */
+  /* ===== ★ İÇERİK ÜRETİCİSİ VURGUSU → web-yazilim.html ===== */
+  function ContentEmphasisBand() {
+    var chips = ["HER GÜN 5+ İÇERİK", "SEO + AI ARAMA · AEO/GEO", "ANAHTAR TESLİM", "SSL DAHİL"].map(function (t) {
+      return '<span style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 11px", border: "1px solid " + C.borderStrong, borderRadius: 3, fontFamily: C.mono, fontSize: 10, color: C.accent, letterSpacing: "0.06em", fontWeight: 700, background: "rgba(52,211,153,0.05)" }) + '"><span style="' + css({ width: 5, height: 5, borderRadius: 9999, background: C.accent }) + '"></span>' + t + '</span>';
+    }).join("");
+    return '<section style="' + css({ position: "relative", overflow: "hidden", background: "linear-gradient(135deg," + C.deep + " 0%," + C.raised + " 100%)", borderTop: "1px solid " + C.accent, borderBottom: "1px solid " + C.borderStrong, padding: "32px 16px" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 85% 15%, rgba(52,211,153,0.12), transparent 55%), radial-gradient(circle at 8% 88%, rgba(56,189,248,0.06), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto", display: "flex", gap: 24, flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }) + '">'
+      + '<div style="' + css({ flex: "1 1 460px", minWidth: 0 }) + '">'
+      + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: C.mono, fontSize: 10.5, color: C.accent, letterSpacing: "0.14em", fontWeight: 700, marginBottom: 10 }) + '"><span style="' + css({ width: 14, height: 1, background: C.accent }) + '"></span>★ BİZİ AYIRAN FARK · İÇERİK ÜRETİCİSİYİZ</div>'
+      + '<h2 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "clamp(1.4rem,3.4vw,2.1rem)", fontWeight: 700, lineHeight: 1.12, letterSpacing: "-0.02em", margin: "0 0 10px", color: C.textPri }) + '">Sistemi kurup bırakmıyoruz — <span style="' + css({ color: C.accent }) + '">her gün içerik üretiyoruz.</span></h2>'
+      + '<p style="' + css({ fontSize: 14.5, lineHeight: 1.6, color: C.textSec, maxWidth: 720, margin: "0 0 14px" }) + '">Sıfırdan kodlanan, anahtar teslim web yazılımı. Bizi ayıran fark: siteyi kurup bırakmayız; <strong style="' + css({ color: C.textPri }) + '">her gün SEO uyumlu içerik üretir</strong>, içeriği <strong style="' + css({ color: C.textPri }) + '">Google ve AI aramada (AEO/GEO)</strong> bulunur kılacak biçimde yapılandırırız.</p>'
+      + '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 8 }) + '">' + chips + '</div>'
+      + '</div>'
+      + '<a href="web-yazilim.html" style="' + css({ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 8, padding: "13px 24px", background: C.accent, color: C.deep, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">WEB YAZILIM · İNCELE →</a>'
+      + '</div></section>';
+  }
+
   function renderApp() {
     return NX.Ticker(HOMETICK) + NX.Masthead("") + NX.Nav("")
       + PipelineHero() + HeroHeadline() + DataTerminalShell() + CityComparison()
       + ReportStudioPanel() + DNAPanel() + CompanyTimeline()
-      + TwoColumnEditorial() + CorporateUsers() + FeaturedAnalysis() + NX.Footer();
+      + TwoColumnEditorial() + CorporateUsers() + FeaturedAnalysis() + ContentEmphasisBand() + NX.Footer();
   }
 
   NX.boot(renderApp);
