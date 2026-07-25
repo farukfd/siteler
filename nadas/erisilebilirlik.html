@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Erişilebilirlik Beyanı — NADAS · WCAG 2.2 · 5378 sayılı Kanun</title>
+<meta name="description" content="NADAS erişilebilirlik beyanı: WCAG 2.2 hedefi, alınan önlemler (klavye navigasyonu, atlama bağlantısı, azaltılmış hareket desteği, ARIA), bilinen sınırlamalar ve geri bildirim kanalı. 5378 sayılı Kanun ve 2025/10 sayılı Genelge kapsamında.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#06101B">
+<link rel="canonical" href="https://www.nadas.com.tr/erisilebilirlik">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%2306101B'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%2338BDF8'%3EN%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NADAS">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="Erişilebilirlik Beyanı — NADAS">
+<meta property="og:description" content="WCAG 2.2 hedefi, alınan önlemler, bilinen sınırlamalar ve geri bildirim kanalı. 5378 sayılı Kanun ve 2025/10 Genelge kapsamında.">
+<meta property="og:url" content="https://www.nadas.com.tr/erisilebilirlik">
+<meta property="og:image" content="og-index.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Erişilebilirlik Beyanı — NADAS">
+<meta name="twitter:image" content="og-index.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="app"><noscript><div style="max-width:900px;margin:0 auto;padding:48px 20px;font-family:'Sora',sans-serif"><h1 style="color:#38BDF8">Erişilebilirlik Beyanı — NADAS</h1><p style="color:#CBD5E1">NADAS, internet sitesini WCAG 2.2 doğrultusunda erişilebilir kılmayı hedefler. Geri bildirim: destek@nadas.com.tr. Görüntülemek için JavaScript gereklidir.</p></div></noscript></div>
+<script src="js/core.js?v=21"></script>
+<script>
+(function () {
+  "use strict";
+  var C = NX.C, css = NX.css;
+  NX.setAccent(C.primary);
+
+  var TICK = [["YASAL METİN", "ERİŞİLEBİLİRLİK BEYANI"], ["HEDEF", "WCAG 2.2 · AA'YA DOĞRU"], ["DAYANAK", "5378 · 2025/10 GENELGE"], ["ÖNLEM", "KLAVYE · ARIA · AZALTILMIŞ HAREKET"], ["GERİ BİLDİRİM", "destek@nadas.com.tr"], ["SON GÜNCELLEME", "25.07.2026"], ["SINCE 2005", "21 YIL"]];
+
+  var FIRMA = "Nadas Gayrimenkul Bilgi İletişim Sistemleri Ticaret Limited Şirketi";
+  var UPDATED = "25 Temmuz 2026";
+
+  function P(t) { return '<p style="' + css({ fontSize: 14, lineHeight: 1.75, color: C.textSec, margin: "0 0 12px" }) + '">' + t + '</p>'; }
+  function UL(items, col) { col = col || C.primary; return '<ul style="' + css({ margin: "2px 0 12px", padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }) + '">' + items.map(function (it) { return '<li style="' + css({ fontSize: 13.5, lineHeight: 1.6, color: C.textSec, display: "flex", gap: 10 }) + '"><span style="' + css({ color: col, fontFamily: C.mono, fontSize: 11, marginTop: 3, flexShrink: 0 }) + '">→</span><span>' + it + '</span></li>'; }).join("") + '</ul>'; }
+
+  function Hero() {
+    return '<section style="' + css({ position: "relative", padding: "26px 16px 20px", background: C.base, borderBottom: "1px solid " + C.borderStrong, overflow: "hidden" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 82% 12%, rgba(56,189,248,0.1), transparent 55%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 980, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.14em", fontWeight: 700, marginBottom: 12 }) + '"><span style="' + css({ width: 14, height: 1, background: C.primary }) + '"></span>YASAL METİN · ERİŞİLEBİLİRLİK</div>'
+      + '<h1 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(1.8rem,4.4vw,2.8rem)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.02em", margin: 0, color: C.textPri }) + '">Erişilebilirlik Beyanı</h1>'
+      + '<div style="' + css({ marginTop: 16 }) + '">' + P("<strong style=\"color:" + C.textPri + "\">" + FIRMA + "</strong> (“NADAS”), bu internet sitesini herkes için erişilebilir kılmayı taahhüt eder. Bu beyan; 5378 sayılı Engelliler Hakkında Kanun ve 2025/10 sayılı Cumhurbaşkanlığı Genelgesi doğrultusunda, WCAG 2.2 ve EN 301 549 standartları referans alınarak hazırlanmıştır. Son güncelleme: <strong style=\"color:" + C.textSec + "\">" + UPDATED + "</strong>.") + '</div>'
+      + '</div></section>';
+  }
+
+  var SECS = [
+    { h: "Uyum Durumu", ps: ["Sitemiz WCAG 2.2 kriterlerine <strong style=\"color:" + C.textSec + "\">kısmen uyumludur</strong> ve erişilebilirlik sürekli iyileştirilen bir hedef olarak ele alınır. En düşük hedefimiz WCAG 2.2 “A” seviyesi olup, “AA” seviyesine ulaşmak için çalışmalar sürmektedir. Uyumu artıracak yeni düzenlemeler zaman içinde uygulanır."] },
+    { h: "Erişilebilirlik İçin Alınan Önlemler", ps: ["Sitenin tasarım ve kodunda erişilebilirlik baştan gözetilir:"], list: ["<strong style=\"color:" + C.textSec + "\">Atlama bağlantısı</strong> (skip link) ve <strong style=\"color:" + C.textSec + "\">landmark</strong> yapısı (main/nav/footer) — klavyeyle içeriğe hızlı geçiş.", "Klavye ile tam gezinme ve görünür odak; anlamlı (semantik) HTML.", "Görsellerde alternatif metin; dekoratif/animasyon öğelerinde ARIA etiketleri.", "<strong style=\"color:" + C.textSec + "\">Azaltılmış hareket</strong> desteği — cihazınızda “hareketi azalt” ayarı açıksa animasyonlar durur, statik kare gösterilir (prefers-reduced-motion).", "Koyu tema için yeterli renk kontrastı ve okunabilir tipografi.", "Mobil-öncelikli, esnek (responsive) düzen; dokunma hedefleri gözetilir.", "Sıralamalı/duraklatılabilir içerik akışları; sekmelerde mantıklı odak sırası."] },
+    { h: "Bilinen Sınırlamalar", ps: ["Şeffaflık adına bilinen sınırlamalarımızı da paylaşıyoruz; bunlar için iyileştirme çalışmalarımız sürüyor:"], list: ["Bazı canlı veri/animasyon görselleri (kanvas grafikleri) yardımcı teknolojilere yalnızca özet/etiket düzeyinde aktarılabilir; içeriklerinin metin karşılığı ilgili sayfalarda sunulur.", "Üçüncü taraf gömülü içeriklerin (ör. harita) erişilebilirliği sağlayıcıya bağlıdır.", "JavaScript kapalıyken sayfalar temel bir metin özetiyle görüntülenir."], after: P("Bu sınırlamalardan biri sizin için engel oluşturuyorsa, aşağıdaki geri bildirim kanalından bize ulaşın; alternatif bir erişim yolu sağlamak için yardımcı oluruz.") },
+    { h: "Geri Bildirim ve İletişim", ps: ["Erişilebilirlikle ilgili bir sorun yaşarsanız ya da bir içeriğe alternatif biçimde erişmek isterseniz bizimle iletişime geçebilirsiniz. Bildiriminizi mümkünse sayfa adresi ve karşılaştığınız sorunla birlikte iletmeniz, çözümü hızlandırır."], list: ["E-posta: <a href=\"mailto:destek@nadas.com.tr\" style=\"color:" + C.primary + ";text-decoration:none\">destek@nadas.com.tr</a>", "İletişim formu: <a href=\"iletisim.html\" style=\"color:" + C.primary + ";text-decoration:none\">İletişim sayfası</a>"], after: P("Geri bildirimlerinizi iş günü içinde 24 saat içinde yanıtlamayı hedefliyoruz.") },
+    { h: "Yasal Dayanak ve Standartlar", ps: ["Bu beyan aşağıdaki mevzuat ve standartlar gözetilerek hazırlanmıştır:"], list: ["5378 sayılı Engelliler Hakkında Kanun (özellikle bilgi ve iletişim erişilebilirliği)", "Web Siteleri ve Mobil Uygulamaların Erişilebilirliği hakkında 2025/10 sayılı Cumhurbaşkanlığı Genelgesi", "WCAG 2.2 (W3C Web İçeriği Erişilebilirlik Yönergeleri) ve EN 301 549"] },
+    { h: "Hazırlama ve Güncelleme", ps: ["Bu beyan, sitenin öz değerlendirmesine dayalı olarak hazırlanmıştır ve düzenli olarak gözden geçirilir. Erişilebilirlik iyileştirmeleri uygulandıkça beyan güncellenir ve son güncelleme tarihi yenilenir."] },
+  ];
+
+  function CompanyBox() {
+    var others = [["KVKK Aydınlatma Metni", "kvkk.html"], ["Gizlilik Politikası", "gizlilik.html"], ["Çerez Politikası", "cerez.html"], ["Kullanım Koşulları", "kullanim-kosullari.html"], ["Künye", "kunye.html"]]
+      .map(function (x) { return '<a href="' + x[1] + '" style="' + css({ fontFamily: C.mono, fontSize: 11.5, color: C.primary, textDecoration: "none", letterSpacing: "0.04em", padding: "3px 0", display: "inline-block" }) + '">→ ' + x[0] + '</a>'; }).join("");
+    return '<div style="' + css({ marginTop: 26, display: "grid", gridTemplateColumns: "minmax(0,1.4fr) minmax(0,1fr)", gap: 16 }) + '" class="nadas-twocol">'
+      + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: "18px 20px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">◆ ERİŞİLEBİLİRLİK GERİ BİLDİRİMİ</div><div style="' + css({ fontSize: 13, color: C.textSec, lineHeight: 1.6, marginBottom: 8 }) + '">Bir erişim sorunu mu yaşadınız? Bize bildirin, çözelim.</div><div style="' + css({ fontFamily: C.mono, fontSize: 11.5 }) + '"><a href="mailto:destek@nadas.com.tr" style="' + css({ color: C.primary, textDecoration: "none" }) + '">destek@nadas.com.tr</a></div></div>'
+      + '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: "18px 20px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">◈ İLGİLİ YASAL METİNLER</div><div style="' + css({ display: "flex", flexDirection: "column", gap: 4 }) + '">' + others + '</div></div>'
+      + '</div>';
+  }
+
+  function Body() {
+    var secs = SECS.map(function (s, i) {
+      return '<div style="' + css({ borderTop: i ? "1px solid " + C.border : "none", padding: "22px 0" }) + '">'
+        + '<h2 style="' + css({ display: "flex", alignItems: "baseline", gap: 10, fontFamily: "'Sora',sans-serif", fontSize: "clamp(1.1rem,2.3vw,1.35rem)", fontWeight: 600, letterSpacing: "-0.01em", color: C.textPri, margin: "0 0 12px" }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.primary, fontWeight: 700 }) + '">0' + (i + 1) + '</span>' + s.h + '</h2>'
+        + (s.ps ? s.ps.map(P).join("") : "")
+        + (s.list ? UL(s.list) : "")
+        + (s.after || "") + '</div>';
+    }).join("");
+    return '<section style="' + css({ padding: "8px 16px 30px" }) + '"><div style="' + css({ maxWidth: 980, margin: "0 auto" }) + '">' + secs + CompanyBox() + '</div></section>';
+  }
+
+  function renderApp() { return NX.Ticker(TICK) + NX.Masthead("Erişilebilirlik") + NX.Nav("") + Hero() + Body() + NX.Footer(); }
+  NX.boot(renderApp);
+})();
+</script>
+</body>
+</html>
