@@ -127,8 +127,7 @@
       ".nx-wa svg{width:30px;height:30px;fill:currentColor;display:block}",
       ".nx-wa::after{content:'';position:absolute;inset:0;border-radius:9999px;box-shadow:0 0 0 0 rgba(37,211,102,.45);animation:nxWaPulse 2.6s ease-out infinite;pointer-events:none}",
       "@keyframes nxWaPulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.45)}70%{box-shadow:0 0 0 16px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}",
-      "html.nx-cc-on .nx-wa{bottom:104px}",
-      "@media (max-width:640px){.nx-wa{right:16px;bottom:16px;width:52px;height:52px}html.nx-cc-on .nx-wa{bottom:172px}}",
+      "@media (max-width:640px){.nx-wa{right:16px;bottom:16px;width:52px;height:52px}}",
       "@media (prefers-reduced-motion:reduce){.nx-wa::after{animation:none}.nx-wa{transition:none}}",
       /* ProX kurumsal wordmark — insaat/ sitesindeki .fprox lockup’ının birebir karşılığı.
          Oradaki sabit px’ler em’e çevrildi (referans 14px gövde): 2px→.14em, 6px yarıçap→.43em,
