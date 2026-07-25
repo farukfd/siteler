@@ -240,9 +240,9 @@
      KANONİK ÜST MENÜ (nav) + ALT MENÜ (footer) — ALTIN KURAL
      cozumler.html referans. Tüm sayfalarda BİREBİR AYNI. Tek kaynak burası.
      ========================================================================== */
-  var NAV_ITEMS = ["Veri Altyapısı", "Çözümler", "Demo Web", "ProX Asistan", "Research", "Hakkımızda", "İletişim"];
+  var NAV_ITEMS = ["Veri Altyapısı", "Çözümler", "CRM", "Demo Web", "ProX Asistan", "Research", "Hakkımızda", "İletişim"];
   function navHref(it) {
-    var m = { "Veri Altyapısı": "veri-altyapisi.html", "Çözümler": "cozumler.html", "Demo Web": "white-label.html", "ProX Asistan": "prox.html", "ProX": "prox.html", "Research": "research.html", "Hakkımızda": "hakkimizda.html", "İletişim": "iletisim.html" };
+    var m = { "Veri Altyapısı": "veri-altyapisi.html", "Çözümler": "cozumler.html", "CRM": "crm.html", "Demo Web": "white-label.html", "ProX Asistan": "prox.html", "ProX": "prox.html", "Research": "research.html", "Hakkımızda": "hakkimizda.html", "İletişim": "iletisim.html" };
     return m[it] || "#";
   }
   /* "ProX" bir wordmark — hiçbir yerde büyük harfe çevrilmez (PROX olmaz). Çevresi normal büyür. */
@@ -300,7 +300,7 @@
     var col2 = [["EmlakEkspertizi.com", "https://www.emlakekspertizi.com"], ["Emlak Endeksi", "https://www.emlakekspertizi.com/emlak-endeksi"], ["Karar Analizi", "https://www.emlakekspertizi.com/ekspertiz-talep"], ["SPK Lisanslı Rapor", "https://www.emlakekspertizi.com/spk-talep"], ["ProX Akıllı Asistan", "https://www.emlakekspertizi.com/yapay-zeka"], ["Üyelikler", "https://www.emlakekspertizi.com/uyelik"], ["Blog · Bülten", "https://www.emlakekspertizi.com/blog"]]
       .map(function (x) { return '<a href="' + x[1] + '" style="' + css({ display: "block", fontFamily: C.mono, fontSize: 11, color: C.textMut, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">' + x[0] + '</a>'; }).join("");
     /* Her kalem kendi hedefine gider; white-label artık kendi sayfasında. */
-    var col3 = [["White-label Web", "white-label.html"], ["Kurumsal API", "cozumler.html#kurumsal"], ["CRM Çözümleri", "cozumler.html#sirket"], ["Veri Lisansı", "cozumler.html#kurumsal"], ["Teklif Al", "cozumler.html#kurumsal-iletisim"]]
+    var col3 = [["White-label Web", "white-label.html"], ["Kurumsal API", "cozumler.html#kurumsal"], ["CRM Çözümleri", "crm.html"], ["Veri Lisansı", "cozumler.html#kurumsal"], ["Teklif Al", "cozumler.html#kurumsal-iletisim"]]
       .map(function (x) { return '<a href="' + x[1] + '" style="' + css({ display: "block", fontFamily: C.mono, fontSize: 11, color: C.textMut, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">' + x[0] + '</a>'; }).join("");
     var legal = [["KVKK", "kvkk.html"], ["GİZLİLİK", "gizlilik.html"], ["ÇEREZ POLİTİKASI", "cerez.html"], ["KULLANIM KOŞULLARI", "kullanim-kosullari.html"]].map(function (x, i) { return (i ? '<span style="' + css({ padding: "0 6px", color: C.textFaint }) + '">·</span>' : "") + '<a href="' + x[1] + '" style="' + css({ color: C.textMut, textDecoration: "none", letterSpacing: "0.06em" }) + '">' + x[0] + '</a>'; }).join("");
     var SOC = [
