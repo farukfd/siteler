@@ -121,6 +121,15 @@
       ".nadas-social a{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:1px solid " + C.borderStrong + ";border-radius:6px;color:" + C.textMut + ";transition:color .15s,border-color .15s}",
       ".nadas-social a:hover{color:" + C.accent + ";border-color:" + C.accent + "}",
       ".nadas-social svg{width:16px;height:16px;fill:currentColor;display:block}",
+      ".nx-wa{position:fixed;right:20px;bottom:20px;z-index:9996;width:56px;height:56px;border-radius:9999px;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.35);text-decoration:none;transition:transform .18s ease,box-shadow .18s ease,bottom .2s ease}",
+      ".nx-wa:hover{transform:scale(1.08);box-shadow:0 10px 30px rgba(0,0,0,.45)}",
+      ".nx-wa:focus-visible{outline:3px solid #fff;outline-offset:2px}",
+      ".nx-wa svg{width:30px;height:30px;fill:currentColor;display:block}",
+      ".nx-wa::after{content:'';position:absolute;inset:0;border-radius:9999px;box-shadow:0 0 0 0 rgba(37,211,102,.45);animation:nxWaPulse 2.6s ease-out infinite;pointer-events:none}",
+      "@keyframes nxWaPulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.45)}70%{box-shadow:0 0 0 16px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}",
+      "html.nx-cc-on .nx-wa{bottom:104px}",
+      "@media (max-width:640px){.nx-wa{right:16px;bottom:16px;width:52px;height:52px}html.nx-cc-on .nx-wa{bottom:172px}}",
+      "@media (prefers-reduced-motion:reduce){.nx-wa::after{animation:none}.nx-wa{transition:none}}",
       /* ProX kurumsal wordmark — insaat/ sitesindeki .fprox lockup’ının birebir karşılığı.
          Oradaki sabit px’ler em’e çevrildi (referans 14px gövde): 2px→.14em, 6px yarıçap→.43em,
          X’in 14/15 boy oranı→.93em. Böylece 10px mono etikette de 40px başlıkta da aynı oranda durur.
@@ -202,6 +211,7 @@
     proxify(app);
     startClock();
     seoAdapt();
+    whatsappFab();
     cookieConsent();
   }
 
@@ -328,6 +338,21 @@
       + '</div></footer>';
   }
 
+  /* ===== WHATSAPP KAYAN BUTON (sağ alt köşe) ===== */
+  var WA_NUM = "905324919453";
+  var WA_DISPLAY = "+90 532 491 94 53";
+  function whatsappFab() {
+    if (!document.body || document.getElementById("nx-wa")) return;
+    var a = document.createElement("a");
+    a.id = "nx-wa"; a.className = "nx-wa";
+    a.href = "https://wa.me/" + WA_NUM + "?text=" + encodeURIComponent("Merhaba, NADAS hakkında bilgi almak istiyorum.");
+    a.target = "_blank"; a.rel = "noopener noreferrer";
+    a.setAttribute("aria-label", "WhatsApp ile yazın · " + WA_DISPLAY);
+    a.title = "WhatsApp ile yazın · " + WA_DISPLAY;
+    a.innerHTML = '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16.04 3C9.4 3 4 8.4 4 15.04c0 2.12.55 4.19 1.6 6.02L4 29l8.13-1.56a12 12 0 0 0 3.9.65h.01C22.68 28.09 28.08 22.69 28.08 16.05 28.08 8.4 22.68 3 16.04 3zm0 21.9h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-3.76.72.71-3.67-.24-.38a9.86 9.86 0 0 1-1.52-5.29c0-5.48 4.46-9.94 9.95-9.94 2.66 0 5.15 1.04 7.03 2.92a9.86 9.86 0 0 1 2.91 7.03c0 5.48-4.46 9.94-9.95 9.94zm5.46-7.44c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.06 2.87 1.21 3.07.15.2 2.09 3.2 5.07 4.48.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35z"/></svg>';
+    document.body.appendChild(a);
+  }
+
   /* ===== ÇEREZ RIZASI (KVKK Çerez Rehberi · opt-in · varsayılan kapalı) ===== */
   var CC_KEY = "nadas_cc_v1";
   var CC_CATS = [
@@ -341,7 +366,7 @@
   function hasConsent(cat) { if (cat === "zorunlu") return true; var c = ccGet(); return !!(c && c[cat]); }
   function ccRemove() { var h = document.getElementById("nx-cc"); if (h && h.parentNode) h.parentNode.removeChild(h); }
   function ccAll(v) { var o = {}; for (var i = 0; i < CC_CATS.length; i++) o[CC_CATS[i].k] = CC_CATS[i].locked ? true : v; return o; }
-  function ccDecide(vals) { vals.zorunlu = true; vals.v = 1; ccSave(vals); ccRemove(); }
+  function ccDecide(vals) { vals.zorunlu = true; vals.v = 1; ccSave(vals); ccRemove(); document.documentElement.classList.remove("nx-cc-on"); }
   function ccBtn(label, primary) {
     return '<button type="button" style="' + css({ padding: "9px 16px", fontFamily: C.mono, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", borderRadius: 3, cursor: "pointer", border: "1px solid " + (primary ? C.primary : C.borderStrong), background: primary ? C.primary : "transparent", color: primary ? C.deep : C.textSec }) + '">' + label + '</button>';
   }
@@ -376,12 +401,14 @@
   function cookieConsent(forcePrefs) {
     if (!document.body) return;
     ccRemove();
+    document.documentElement.classList.remove("nx-cc-on");
     var c = ccGet();
     if (c && !forcePrefs) return;
     var host = document.createElement("div"); host.id = "nx-cc";
     host.innerHTML = forcePrefs ? ccPrefs(c) : ccBanner();
     document.body.appendChild(host);
     ccBind(host);
+    if (!forcePrefs) document.documentElement.classList.add("nx-cc-on");
   }
 
   injectBase();
