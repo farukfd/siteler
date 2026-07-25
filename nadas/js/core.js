@@ -240,7 +240,7 @@
      KANONİK ÜST MENÜ (nav) + ALT MENÜ (footer) — ALTIN KURAL
      cozumler.html referans. Tüm sayfalarda BİREBİR AYNI. Tek kaynak burası.
      ========================================================================== */
-  var NAV_ITEMS = ["Veri Altyapısı", "Çözümler", "CRM", "Demo Web", "ProX Asistan", "Research", "Hakkımızda", "İletişim"];
+  var NAV_ITEMS = ["Veri Altyapısı", "Çözümler", "Demo Web", "ProX Asistan", "Research", "Hakkımızda", "İletişim"];
   function navHref(it) {
     var m = { "Veri Altyapısı": "veri-altyapisi.html", "Çözümler": "cozumler.html", "CRM": "crm.html", "Demo Web": "white-label.html", "ProX Asistan": "prox.html", "ProX": "prox.html", "Research": "research.html", "Hakkımızda": "hakkimizda.html", "İletişim": "iletisim.html" };
     return m[it] || "#";

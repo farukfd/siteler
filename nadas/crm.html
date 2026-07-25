@@ -40,7 +40,7 @@
   </noscript>
 </div>
 
-<script src="js/core.js?v=12"></script>
+<script src="js/core.js?v=13"></script>
 <script>
 (function () {
   "use strict";
@@ -103,7 +103,7 @@
     ].map(function (s) {
       return '<div style="' + css({ background: C.raised, padding: "11px 14px" }) + '"><div style="' + css({ fontSize: 19, fontWeight: 700, color: C.primary, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + cu(s.n, s.suf) + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, marginTop: 5, letterSpacing: "0.08em" }) + '">' + s.lbl + '</div></div>';
     }).join("");
-    var stage = '<div id="crm-stage" style="' + css({ position: "relative", overflow: "hidden", border: "1px solid " + C.borderStrong, borderRadius: 4, background: "radial-gradient(120% 130% at 50% 30%, #08131a, #030a08 70%)", marginTop: 16 }) + '">'
+    var stage = '<div id="crm-stage" style="' + css({ position: "relative", overflow: "hidden", border: "1px solid " + C.borderStrong, borderRadius: 4, background: "radial-gradient(120% 130% at 50% 30%, #08131a, #030a08 70%)", marginBottom: 18 }) + '">'
       + '<canvas id="crm-canvas" style="' + css({ display: "block", width: "100%", height: "clamp(260px,36vw,380px)" }) + '"></canvas>'
       + '<div style="' + css({ position: "absolute", left: 12, top: 10, display: "flex", alignItems: "center", gap: 8, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.1em", fontWeight: 700, pointerEvents: "none" }) + '">◆ MÜŞTERİ VERİSİ → ŞİFRELEME → GÜVENLİ KASA</div>'
       + '<div style="' + css({ position: "absolute", right: 12, top: 10, display: "inline-flex", alignItems: "center", gap: 6, fontFamily: C.mono, fontSize: 8.5, color: C.accent, letterSpacing: "0.1em", pointerEvents: "none" }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>ŞİFRELİ</div>'
@@ -112,12 +112,12 @@
     return '<section style="' + css({ position: "relative", padding: "22px 16px 20px", background: C.base, borderBottom: "1px solid " + C.borderStrong, overflow: "hidden" }) + '">'
       + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 80% 15%, rgba(52,211,153,0.12), transparent 55%), radial-gradient(circle at 8% 85%, rgba(56,189,248,0.08), transparent 50%)" }) + '"></div>'
       + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
+      + stage
       + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: C.mono, fontSize: 10.5, color: C.accent, letterSpacing: "0.14em", fontWeight: 700, marginBottom: 12 }) + '"><span style="' + css({ width: 14, height: 1, background: C.accent }) + '"></span>NADAS YAZILIM · CRM ÇÖZÜMLERİ · GAYRİMENKULE ÖZEL</div>'
       + '<h1 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(2rem,5.2vw,3.4rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri, maxWidth: 1120 }) + '">Gayrimenkul CRM\'i,<br><span style="' + css({ color: C.accent }) + '">verinizin güvende olduğu yerde.</span></h1>'
-      + '<p style="' + css({ marginTop: 18, fontSize: 16, lineHeight: 1.65, color: C.textSec, maxWidth: 960 }) + '">NADAS Yazılım, gayrimenkule özel CRM\'leri iki modelle kurar: ister ' + pri("ömür boyu kaynak kodu sizin olan") + ', kendi sunucunuzda çalışan; ister ' + pri("SSL güvenceli, sunucu ve kodun bizde olduğu yönetilen") + ' bir CRM. İkisinin de altında aynı ' + pri("determinist ProX veri motoru") + ' var. Yüklediğiniz müşteri verisi ' + pri("uçtan uca şifrelenir") + '; KVKK kapsamında Türkiye\'de barınır. SPK lisanslı değerleme uzmanlarına özel uyum akışıyla, 2026 teknolojileriyle.</p>'
+      + '<p style="' + css({ marginTop: 18, fontSize: 16, lineHeight: 1.65, color: C.textSec, maxWidth: 960 }) + '">NADAS Yazılım, gayrimenkule özel CRM\'i ' + pri("hazır şablondan değil, iş akışınıza göre sıfırdan kodlar") + '. İki teslim modeli: ister ' + pri("ömür boyu kaynak kodu sizin olan") + ', kendi sunucunuzda çalışan; ister ' + pri("SSL güvenceli, sunucu ve kodun bizde olduğu yönetilen") + '. İkisinin de altında aynı ' + pri("determinist ProX veri motoru") + ' var. Yüklediğiniz müşteri verisi ' + pri("uçtan uca şifrelenir") + '; KVKK kapsamında Türkiye\'de barınır. ' + pri("SPK lisanslı değerleme uzmanlarına ve BDDK kapsamındaki değerleme kuruluşlarına") + ' özel uyum akışıyla, 2026 teknolojileriyle.</p>'
       + '<div style="' + css({ marginTop: 18, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + stats + '</div>'
-      + stage
-      + '<div style="' + css({ marginTop: 14 }) + '">' + badges(["TLS 1.3", "AES-256", "KVKK · TÜRKİYE'DE BARINMA", "KİRACI İZOLASYONU", "MFA / 2FA", "DENETİM İZİ", "KİLİTLENME YOK", "KAYNAK KOD SİZİN"]) + '</div>'
+      + '<div style="' + css({ marginTop: 14 }) + '">' + badges(["SIFIRDAN ÖZEL KOD", "TLS 1.3", "AES-256", "KVKK · TÜRKİYE'DE", "KİRACI İZOLASYONU", "MFA / 2FA", "DENETİM İZİ", "SPK & BDDK UYUMLU"]) + '</div>'
       + '</div></section>';
   }
 
@@ -187,12 +187,12 @@
 
   /* ===== C.2 · SPK UYUM ===== */
   function SpkModule() {
-    var items = card({ ic: "§", tag: "UYUM MODÜLÜ · LİSANSLI DEĞERLEME İÇİN", col: C.warn, ttl: "Lisansı siz taşıyorsunuz; iş akışını biz kolaylaştırıyoruz",
-      body: "En baştan net söyleyelim: <strong style=\"color:" + C.textPri + "\">SPK lisansını biz vermeyiz.</strong> Değerleme yetkisi, SPK lisanslı değerleme uzmanına ve SPK/BDDK listesindeki değerleme kuruluşuna aittir; NADAS bir yazılım sağlayıcısıdır. ProX'in ürettiği hiçbir çıktı tek başına resmî değerleme raporu değildir; nihai rapor, sorumluluk ve imza lisanslı uzmandadır. Bu çerçevede desteklediklerimiz:",
-      list: ["Değerleme iş akışı — iş emri → saha verisi → taslak → onay (nihai takdir uzmanında)", "Mevzuata uygun rapor iskeleti — standart alanlar, zorunlu bölümler", "Denetim izi (audit trail) — kim/ne zaman/hangi değişiklik · değiştirilemez", "Islak imza / kademeli onay hattı — role bağlı yetki", "Resmî Gazete / mevzuat takibi — bilgilendirme (hukuki danışmanlık değil)", "Arşiv & saklama — mevzuat sürelerine uygun, aranabilir"] });
+    var items = card({ ic: "§", tag: "UYUM MODÜLÜ · SPK & BDDK DEĞERLEME", col: C.warn, ttl: "Lisansı ve yetkiyi siz taşıyorsunuz; iş akışını biz kolaylaştırıyoruz",
+      body: "En baştan net söyleyelim: <strong style=\"color:" + C.textPri + "\">SPK/BDDK yetkisini biz vermeyiz.</strong> Değerleme yetkisi, SPK lisanslı değerleme uzmanına ve SPK ile BDDK'nın yetkilendirdiği değerleme kuruluşuna aittir; NADAS bir yazılım sağlayıcısıdır. Banka teminatı/ipotek amaçlı değerlemeler BDDK kapsamında ek yükümlülükler taşır — modül bu iş akışını da destekler. ProX'in ürettiği hiçbir çıktı tek başına resmî değerleme raporu değildir; nihai rapor, sorumluluk ve imza lisanslı uzmandadır. Bu çerçevede desteklediklerimiz:",
+      list: ["Değerleme iş akışı — iş emri → saha verisi → taslak → onay (nihai takdir uzmanında)", "SPK/BDDK'ya uygun rapor iskeleti — standart alanlar, zorunlu bölümler, banka formatı", "Denetim izi (audit trail) — kim/ne zaman/hangi değişiklik · değiştirilemez", "Islak imza / kademeli onay hattı — sorumlu değerleme uzmanı imzası, role bağlı yetki", "Resmî Gazete / SPK-BDDK mevzuat takibi — bilgilendirme (hukuki danışmanlık değil)", "Arşiv & saklama — mevzuat sürelerine uygun, aranabilir · denetime hazır"] });
     var body = '<div style="' + css({ maxWidth: 900 }) + '">' + items + '</div>'
-      + note("Sınır: bu modül uyum ve iş akışını <strong style=\"color:" + C.textSec + "\">destekler</strong>; lisans, yetki ve nihai değerleme sorumluluğunu üstlenmez. O sorumluluk her zaman lisanslı uzmanda/kuruluştadır.");
-    return SubSection("C.2", "SPK lisanslı değerleme · uyum akışı", "YAZILIM DESTEKLER · LİSANS UZMANDA", body);
+      + note("Sınır: bu modül uyum ve iş akışını <strong style=\"color:" + C.textSec + "\">destekler</strong>; SPK/BDDK lisansını, yetkisini ve nihai değerleme sorumluluğunu üstlenmez. O sorumluluk her zaman lisanslı uzmanda/kuruluştadır.");
+    return SubSection("C.2", "SPK & BDDK · değerleme uyum akışı", "YAZILIM DESTEKLER · YETKİ UZMANDA", body);
   }
 
   /* ===== C.3 · NEDEN GAYRİMENKULE ÖZEL ===== */
@@ -214,6 +214,7 @@
   /* ===== D.1 · NEDEN NADAS YAZILIM ===== */
   function WhyNadas() {
     var pts = [
+      card({ ic: "✎", tag: "SIFIRDAN · ÖZEL", col: C.accent, featured: true, ttl: "İsteğinize göre sıfırdan kodlanır", body: "Hazır bir şablonu size giydirmeyiz. Portföy yapınız, komisyon kurgunuz, ekip rolleriniz ve raporlarınız ne gerektiriyorsa, CRM o iş akışına göre sıfırdan kodlanır — ihtiyaç duymadığınız modül yük olmaz, ihtiyaç duyduğunuz akış eksik kalmaz.", list: ["Ekran, alan ve akışlar size özel", "Kendi modül seçiminiz · gereksiz yük yok", "Marka, domain ve entegrasyonlar sizin"] }),
       card({ ic: "◷", tag: "DENEYİM", col: C.primary, ttl: "21 yıllık gayrimenkul veri deneyimi", body: "2005'ten beri, 257 ay boyunca kesintisiz mahalle bazlı endeks zinciri ürettik. CRM'iniz bu birikimin üzerine oturur, sıfırdan başlamaz." }),
       card({ ic: "▦", tag: "ALTYAPI", col: C.accent, ttl: "Kendi uçtan uca altyapımız", body: "VPN, proxy, harita servisi ve veri sunucusu bize aittir. Üçüncü taraf bir bulut sağlayıcının insafına kalmadan katmanların tümünü kendimiz işletiriz." }),
       card({ ic: "◈", tag: "GÜVENLİK", col: C.accent, ttl: "Güvenlik-öncelikli mühendislik", body: "Veri modeli, erişim ve saklama; sonradan eklenen bir özellik değil, tasarımın başlangıç varsayımıdır." }),
@@ -236,10 +237,23 @@
       card({ ic: "⇄", tag: "API", col: C.accent, ttl: "API ve entegrasyon", body: "CRM kaynağa ProX API anahtarıyla bağlanır; ilan portalları, muhasebe ve iletişim araçlarıyla entegrasyon için açık uçlar sunar." }),
       card({ ic: "◷", tag: "CANLI", col: C.primary, ttl: "Gerçek zamanlı endeks akışı", body: "Mahalle, ilçe ve il düzeyindeki güncel endeks doğrudan kaynaktan akar; CRM eski bir kopyayla değil canlı veriyle çalışır." }),
     ].join("");
+    var stack = [
+      ["Önyüz", "Statik HTML/CSS/JS · derleme yok · mobil-öncelikli"],
+      ["Sunucu / API", "REST + WebSocket · ProX API anahtarı"],
+      ["Veritabanı", "İlişkisel DB · kiracı başına şema izolasyonu"],
+      ["Aktarım", "TLS 1.3 (uçtan uca)"],
+      ["Dinlenim", "AES-256 · PII alan-düzeyi şifreleme"],
+      ["Anahtar yönetimi", "KMS / HSM · veriden ayrık"],
+      ["Kimlik & erişim", "RBAC · MFA/2FA · oturum · denetim izi"],
+      ["Barındırma", "Türkiye · NADAS yönetilen ya da kendi sunucunuz (Model A)"],
+      ["Entegrasyon", "EİDS akışı · portal API'leri · muhasebe/iletişim"],
+      ["Yedek & DR", "Düzenli yedek + geri dönüş testi · felaket kurtarma"],
+    ].map(function (r) { return '<div style="' + css({ display: "flex", gap: 12, padding: "7px 0", borderBottom: "1px solid " + C.border }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textFaint, letterSpacing: "0.04em", minWidth: 128, flexShrink: 0 }) + '">' + r[0] + '</span><span style="' + css({ fontFamily: C.mono, fontSize: 11.5, color: C.textSec, lineHeight: 1.5 }) + '">' + r[1] + '</span></div>'; }).join("");
     var body = '<p style="' + css({ fontSize: 14, lineHeight: 1.65, color: C.textSec, marginBottom: 14, maxWidth: 960 }) + '">\'Yapay zekâ\' etiketini her kutuya yapıştırmıyoruz. Hangi katmanın <strong style="' + css({ color: C.textPri }) + '">hesap yaptığını</strong>, hangi katmanın <strong style="' + css({ color: C.textPri }) + '">metin yazdığını</strong> açıkça ayırıyoruz — çünkü ikisi aynı şey değil.</p>'
       + '<div style="' + grid(280, 12) + '">' + pts + '</div>'
-      + note("Hesaplama determinist ProX motorudur ve doğrulanabilir. Metin üretimi ise ayrı bir dil modeli katmanıdır — İçerik Asistanı. Bir kutuya iki işi birden yükleyip 'yapay zekâ' demiyoruz.");
-    return SubSection("D.2", "2026 teknolojileri", "MODERN · ABARTISIZ · DÜRÜST", body);
+      + '<div style="' + css({ marginTop: 18, background: C.raised, border: "1px solid " + C.borderStrong, padding: "16px 18px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.accent, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 8 }) + '">◈ TEKNİK YIĞIN · TAM OLARAK NE KULLANIYORUZ</div>' + stack + '</div>'
+      + note("Hesaplama determinist ProX motorudur ve doğrulanabilir. Metin üretimi ise ayrı bir dil modeli katmanıdır — İçerik Asistanı. Kesin sürüm/araç seçimleri projeye göre keşif aşamasında netleşir; yukarıdaki mimari her projede sabittir.");
+    return SubSection("D.2", "2026 teknolojileri · teknik yığın", "MODERN · ABARTISIZ · DÜRÜST", body);
   }
 
   /* ===== D.3 · KURULUM SÜRECİ ===== */
@@ -292,7 +306,7 @@
   }
 
   function renderApp() {
-    return NX.Ticker(CRMTICK) + NX.Masthead("CRM") + NX.Nav("CRM")
+    return NX.Ticker(CRMTICK) + NX.Masthead("CRM") + NX.Nav("")
       + HeroCRM() + IntroEditorial()
       + SectionDivider("A", "Teslim Modeli", "İKİ YOL · TEK MOTOR · 1 BLOK") + TwoModels()
       + SectionDivider("B", "Güvenlik & Uyum", "MÜŞTERİ VERİSİ EMANETTİR · 6 KATMAN") + Security()
