@@ -343,6 +343,8 @@
     if (!document.body || document.getElementById("nx-wa")) return;
     var a = document.createElement("a");
     a.id = "nx-wa"; a.className = "nx-wa";
+    /* Kritik konum inline yazılır — CSS sınıfı herhangi bir nedenle uygulanmasa da buton sağ-altta SABİT kalır. */
+    a.style.cssText = "position:fixed;right:20px;bottom:20px;z-index:9996";
     a.href = "https://wa.me/" + WA_NUM + "?text=" + encodeURIComponent("Merhaba, NADAS hakkında bilgi almak istiyorum.");
     a.target = "_blank"; a.rel = "noopener noreferrer";
     a.setAttribute("aria-label", "WhatsApp ile yazın");
