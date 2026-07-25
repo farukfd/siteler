@@ -37,7 +37,7 @@
   </noscript>
 </div>
 
-<script src="js/core.js?v=15"></script>
+<script src="js/core.js?v=16"></script>
 <script>
 (function () {
   "use strict";
@@ -107,7 +107,7 @@
   function contactFormCard() {
     var subjects = ["Seçiniz...", "Kurumsal API · entegrasyon", "White-label platform teklifi", "Veri lisansı (il/ilçe bazlı)", "Toplu SPK ekspertiz hizmeti", "Investor / Corporate üyelik", "Demo / pilot proje talebi", "Basın · medya · röportaj", "Research aboneliği · rapor talebi", "İK · kariyer · staj", "Diğer · genel sorular"];
     var opts = subjects.map(function (s) { return '<option>' + s + '</option>'; }).join("");
-    return '<div style="' + css({ background: C.raised, border: "1px solid " + C.primary, padding: "26px 26px" }) + '">'
+    return '<div id="teklif" style="' + css({ background: C.raised, border: "1px solid " + C.primary, padding: "26px 26px", scrollMarginTop: 96 }) + '">'
       + '<div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.14em", marginBottom: 18 }) + '">◆ YAZILI TALEP FORMU</div>'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }) + '" class="nadas-twocol"><div>' + lbl("AD SOYAD *") + inp('id="il-name" type="text" placeholder="İsim Soyisim"') + '</div><div>' + lbl("ŞİRKET / KURUM") + inp('type="text" placeholder="Kurum adı (opsiyonel)"') + '</div></div>'
       + '<div style="' + css({ marginBottom: 12 }) + '">' + lbl("E-POSTA *") + inp('id="il-email" type="email" placeholder="adresiniz@kurum.com.tr"') + '</div>'
@@ -275,6 +275,20 @@
   }
 
   NX.boot(renderApp);
+
+  /* ===== TEKLİF AL · #teklif hash → forma kaydır + odakla ===== */
+  (function () {
+    function goTeklif() {
+      if (location.hash !== "#teklif") return;
+      var el = document.getElementById("teklif");
+      if (!el) return;
+      try { el.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) { el.scrollIntoView(); }
+      var nm = document.getElementById("il-name");
+      if (nm) setTimeout(function () { try { nm.focus({ preventScroll: true }); } catch (e) { nm.focus(); } }, 420);
+    }
+    goTeklif();
+    window.addEventListener("hashchange", goTeklif);
+  })();
 
   /* ===== FAQ AKORDEON ===== */
   (function () {
