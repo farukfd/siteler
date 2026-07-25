@@ -114,6 +114,13 @@
       ".nadas-feed-row{grid-template-columns:1fr !important;gap:4px !important;padding:14px 16px !important}",
       "}",
       "@media (max-width:680px){.nadas-pipeline-stages{grid-template-columns:1fr 1fr !important}}",
+      ".nadas-footer-grid{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr;gap:36px 30px}",
+      "@media (max-width:820px){.nadas-footer-grid{grid-template-columns:1fr 1fr}}",
+      "@media (max-width:480px){.nadas-footer-grid{grid-template-columns:1fr}}",
+      ".nadas-social{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}",
+      ".nadas-social a{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:1px solid " + C.borderStrong + ";border-radius:6px;color:" + C.textMut + ";transition:color .15s,border-color .15s}",
+      ".nadas-social a:hover{color:" + C.accent + ";border-color:" + C.accent + "}",
+      ".nadas-social svg{width:16px;height:16px;fill:currentColor;display:block}",
       /* ProX kurumsal wordmark — insaat/ sitesindeki .fprox lockup’ının birebir karşılığı.
          Oradaki sabit px’ler em’e çevrildi (referans 14px gövde): 2px→.14em, 6px yarıçap→.43em,
          X’in 14/15 boy oranı→.93em. Böylece 10px mono etikette de 40px başlıkta da aynı oranda durur.
@@ -296,18 +303,27 @@
     var col3 = [["White-label Web", "white-label.html"], ["Kurumsal API", "cozumler.html#kurumsal"], ["CRM Çözümleri", "cozumler.html#sirket"], ["Veri Lisansı", "cozumler.html#kurumsal"], ["Teklif Al", "cozumler.html#kurumsal-iletisim"]]
       .map(function (x) { return '<a href="' + x[1] + '" style="' + css({ display: "block", fontFamily: C.mono, fontSize: 11, color: C.textMut, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">' + x[0] + '</a>'; }).join("");
     var legal = [["KVKK", "kvkk.html"], ["GİZLİLİK", "gizlilik.html"], ["ÇEREZ POLİTİKASI", "cerez.html"], ["KULLANIM KOŞULLARI", "kullanim-kosullari.html"]].map(function (x, i) { return (i ? '<span style="' + css({ padding: "0 6px", color: C.textFaint }) + '">·</span>' : "") + '<a href="' + x[1] + '" style="' + css({ color: C.textMut, textDecoration: "none", letterSpacing: "0.06em" }) + '">' + x[0] + '</a>'; }).join("");
-    return '<footer style="' + css({ borderTop: "1px solid " + C.borderStrong, padding: "30px 16px 24px", background: C.deep }) + '">'
+    var SOC = [
+      ["Facebook", "M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"],
+      ["Instagram", "M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"],
+      ["X", "M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"],
+      ["LinkedIn", "M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"],
+      ["YouTube", "M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"]
+    ].map(function (s) { return '<a href="#" aria-label="' + s[0] + '" title="' + s[0] + ' — yakında"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + s[1] + '"></path></svg></a>'; }).join("")
+      + '<a href="#" aria-label="N Sosyal" title="N Sosyal — Türkiye’nin yerli sosyal medya platformu · yakında"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"></path><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"></path></svg></a>';
+    var colHead = function (t) { return '<div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">' + t + '</div>'; };
+    return '<footer style="' + css({ borderTop: "1px solid " + C.borderStrong, padding: "36px 16px 24px", background: C.deep }) + '">'
       + '<div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
-      + '<div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 20, marginBottom: 24 }) + '">'
-      + '<div><div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }) + '"><span style="' + css({ width: 30, height: 30, border: "1.5px solid " + C.primary, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Sora',sans-serif", fontSize: 14, fontWeight: 700, color: C.primary, borderRadius: 2 }) + '">N</span><div><div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 20, fontWeight: 700, color: C.textPri, letterSpacing: "-0.02em" }) + '">NADAS</div><div style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.16em" }) + '">SINCE 2005</div></div></div>'
-      + '<p style="' + css({ fontSize: 12, color: C.textMut, maxWidth: 380, lineHeight: 1.5, margin: 0 }) + '">Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti.<br>2005’ten beri mahalle bazında kesintisiz aylık emlak endeksi · Online emlak ekspertiz platformu.</p>'
-      + '<div style="' + css({ marginTop: 12, display: "flex", flexWrap: "wrap", alignItems: "center", gap: "4px 12px", fontFamily: C.mono, fontSize: 11 }) + '"><a href="mailto:destek@nadas.com.tr" style="' + css({ color: C.primary, textDecoration: "none", letterSpacing: "0.04em" }) + '">destek@nadas.com.tr</a><span style="' + css({ color: C.textFaint }) + '">·</span><a href="iletisim.html" style="' + css({ color: C.textMut, textDecoration: "none", letterSpacing: "0.04em" }) + '">İletişim →</a></div></div>'
-      + '<div style="' + css({ display: "flex", gap: 32, flexWrap: "wrap" }) + '">'
-      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">NADAS</div>' + col1 + '</div>'
-      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">ÜRÜN</div>' + col2 + '</div>'
-      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.primary, fontWeight: 700, letterSpacing: "0.12em", marginBottom: 10 }) + '">KURUMSAL</div>' + col3 + '</div>'
-      + '</div></div>'
-      + '<div style="' + css({ paddingTop: 16, borderTop: "1px solid " + C.border, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '"><span>© 2005-2026 NADAS · Tüm hakları saklıdır.</span><span style="' + css({ display: "flex", flexWrap: "wrap", alignItems: "center" }) + '">' + legal + '</span></div>'
+      + '<div class="nadas-footer-grid" style="' + css({ marginBottom: 28 }) + '">'
+      + '<div><div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }) + '"><span style="' + css({ width: 30, height: 30, border: "1.5px solid " + C.primary, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Sora',sans-serif", fontSize: 14, fontWeight: 700, color: C.primary, borderRadius: 2 }) + '">N</span><div><div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 20, fontWeight: 700, color: C.textPri, letterSpacing: "-0.02em" }) + '">NADAS</div><div style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.16em" }) + '">SINCE 2005</div></div></div>'
+      + '<p style="' + css({ fontSize: 12.5, color: C.textMut, maxWidth: 430, lineHeight: 1.6, margin: 0 }) + '">Türkiye’de emlak endeksini kategori bazlı zaman serisiyle 2005 yılında biz başlattık. Bugün <strong style="' + css({ color: C.textSec }) + '">480 milyonu aşkın veri noktamızla</strong> sektöre yön vermeye devam ediyoruz.</p>'
+      + '<div class="nadas-social">' + SOC + '</div>'
+      + '<div style="' + css({ marginTop: 16, display: "flex", flexWrap: "wrap", alignItems: "center", gap: "4px 12px", fontFamily: C.mono, fontSize: 11 }) + '"><a href="mailto:destek@nadas.com.tr" style="' + css({ color: C.primary, textDecoration: "none", letterSpacing: "0.04em" }) + '">destek@nadas.com.tr</a><span style="' + css({ color: C.textFaint }) + '">·</span><a href="iletisim.html" style="' + css({ color: C.textMut, textDecoration: "none", letterSpacing: "0.04em" }) + '">İletişim →</a></div></div>'
+      + '<div>' + colHead("NADAS") + col1 + '</div>'
+      + '<div>' + colHead("ÜRÜN") + col2 + '</div>'
+      + '<div>' + colHead("KURUMSAL") + col3 + '</div>'
+      + '</div>'
+      + '<div style="' + css({ paddingTop: 16, borderTop: "1px solid " + C.border, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em" }) + '"><span>© 2005-2026 Nadas Gayrimenkul Bilgi İletişim Sistemleri Tic. Ltd. Şti. · Tüm hakları saklıdır.</span><span style="' + css({ display: "flex", flexWrap: "wrap", alignItems: "center" }) + '">' + legal + '</span></div>'
       + '</div></footer>';
   }
 
