@@ -202,6 +202,7 @@
     proxify(app);
     startClock();
     seoAdapt();
+    cookieConsent();
   }
 
   /* Atlama bağlantısı + <main> landmark'ı. Tüm sayfalar aynı iskeleti kullanıyor:
@@ -302,7 +303,7 @@
     /* Her kalem kendi hedefine gider; white-label artık kendi sayfasında. */
     var col3 = [["White-label Web", "white-label.html"], ["Web Yazılım", "web-yazilim.html"], ["Yapay Zeka", "yapay-zeka.html"], ["Kurumsal API", "kurumsal-api.html"], ["CRM Çözümleri", "crm.html"], ["Veri Lisansı", "veri-lisansi.html"], ["Teklif Al", "iletisim.html#teklif"]]
       .map(function (x) { return '<a href="' + x[1] + '" style="' + css({ display: "block", fontFamily: C.mono, fontSize: 11, color: C.textMut, textDecoration: "none", padding: "3px 0", letterSpacing: "0.04em" }) + '">' + x[0] + '</a>'; }).join("");
-    var legal = [["KVKK", "kvkk.html"], ["GİZLİLİK", "gizlilik.html"], ["ÇEREZ POLİTİKASI", "cerez.html"], ["KULLANIM KOŞULLARI", "kullanim-kosullari.html"]].map(function (x, i) { return (i ? '<span style="' + css({ padding: "0 6px", color: C.textFaint }) + '">·</span>' : "") + '<a href="' + x[1] + '" style="' + css({ color: C.textMut, textDecoration: "none", letterSpacing: "0.06em" }) + '">' + x[0] + '</a>'; }).join("");
+    var legal = [["KVKK", "kvkk.html"], ["GİZLİLİK", "gizlilik.html"], ["ÇEREZ POLİTİKASI", "cerez.html"], ["KULLANIM KOŞULLARI", "kullanim-kosullari.html"], ["ÇEREZ TERCİHLERİ", "cc"]].map(function (x, i) { var href = x[1] === "cc" ? "#" : x[1]; var extra = x[1] === "cc" ? ' onclick="NX.openCookiePrefs();return false"' : ""; return (i ? '<span style="' + css({ padding: "0 6px", color: C.textFaint }) + '">·</span>' : "") + '<a href="' + href + '"' + extra + ' style="' + css({ color: C.textMut, textDecoration: "none", letterSpacing: "0.06em" }) + '">' + x[0] + '</a>'; }).join("");
     var SOC = [
       ["Facebook", "M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"],
       ["Instagram", "M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"],
@@ -327,6 +328,62 @@
       + '</div></footer>';
   }
 
+  /* ===== ÇEREZ RIZASI (KVKK Çerez Rehberi · opt-in · varsayılan kapalı) ===== */
+  var CC_KEY = "nadas_cc_v1";
+  var CC_CATS = [
+    { k: "zorunlu", t: "Zorunlu çerezler", d: "Sitenin çalışması için gereklidir; kapatılamaz (oturum, güvenlik, tercih hatırlama).", locked: true },
+    { k: "islevsel", t: "İşlevsel çerezler", d: "Harita gibi gömülü içerik ve ek işlevler için (üçüncü taraf gömme)." },
+    { k: "analitik", t: "Analitik / performans", d: "Ziyaret istatistikleri ve site performansını ölçmek için." },
+    { k: "reklam", t: "Reklam / hedefleme", d: "Kişiselleştirilmiş içerik/reklam için; açık rıza gerektirir." },
+  ];
+  function ccGet() { try { return JSON.parse(localStorage.getItem(CC_KEY) || "null"); } catch (e) { return null; } }
+  function ccSave(o) { try { localStorage.setItem(CC_KEY, JSON.stringify(o)); } catch (e) {} }
+  function hasConsent(cat) { if (cat === "zorunlu") return true; var c = ccGet(); return !!(c && c[cat]); }
+  function ccRemove() { var h = document.getElementById("nx-cc"); if (h && h.parentNode) h.parentNode.removeChild(h); }
+  function ccAll(v) { var o = {}; for (var i = 0; i < CC_CATS.length; i++) o[CC_CATS[i].k] = CC_CATS[i].locked ? true : v; return o; }
+  function ccDecide(vals) { vals.zorunlu = true; vals.v = 1; ccSave(vals); ccRemove(); }
+  function ccBtn(label, primary) {
+    return '<button type="button" style="' + css({ padding: "9px 16px", fontFamily: C.mono, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", borderRadius: 3, cursor: "pointer", border: "1px solid " + (primary ? C.primary : C.borderStrong), background: primary ? C.primary : "transparent", color: primary ? C.deep : C.textSec }) + '">' + label + '</button>';
+  }
+  function ccBanner() {
+    return '<div role="dialog" aria-label="Çerez bilgilendirmesi" style="' + css({ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 9998, background: C.raised, borderTop: "1px solid " + C.primary, boxShadow: "0 -8px 30px rgba(0,0,0,0.45)", padding: "16px" }) + '">'
+      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto", display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }) + '">'
+      + '<p style="' + css({ margin: 0, fontSize: 12.5, lineHeight: 1.6, color: C.textSec, flex: "1 1 320px" }) + '">Bu sitede çalışması için <strong style="' + css({ color: C.textPri }) + '">zorunlu çerezler</strong> ile onayınıza bağlı işlevsel/analitik/reklam çerezleri kullanılabilir. Zorunlu olmayan çerezler siz onay verene kadar çalışmaz. Ayrıntı: <a href="cerez.html" style="' + css({ color: C.primary, textDecoration: "none" }) + '">Çerez Politikası</a>.</p>'
+      + '<div style="' + css({ display: "flex", gap: 8, flexWrap: "wrap" }) + '"><span data-cc="reject">' + ccBtn("Tümünü Reddet") + '</span><span data-cc="prefs">' + ccBtn("Tercihleri Yönet") + '</span><span data-cc="accept">' + ccBtn("Tümünü Kabul Et", true) + '</span></div>'
+      + '</div></div>';
+  }
+  function ccPrefs(cur) {
+    var rows = CC_CATS.map(function (c) {
+      var on = c.locked ? true : !!(cur && cur[c.k]);
+      return '<label style="' + css({ display: "flex", gap: 12, padding: "12px 0", borderBottom: "1px solid " + C.border, alignItems: "flex-start", cursor: c.locked ? "default" : "pointer" }) + '"><input type="checkbox" data-cc-cat="' + c.k + '"' + (on ? " checked" : "") + (c.locked ? " disabled" : "") + ' style="' + css({ marginTop: 3, accentColor: C.primary, width: 16, height: 16, flexShrink: 0 }) + '"><span><span style="' + css({ display: "block", fontFamily: "'Sora',sans-serif", fontSize: 13.5, fontWeight: 700, color: C.textPri }) + '">' + c.t + (c.locked ? ' <span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.accent, letterSpacing: "0.08em" }) + '">HER ZAMAN AÇIK</span>' : '') + '</span><span style="' + css({ display: "block", fontSize: 11.5, color: C.textMut, lineHeight: 1.5, marginTop: 2 }) + '">' + c.d + '</span></span></label>';
+    }).join("");
+    return '<div role="dialog" aria-modal="true" aria-label="Çerez tercihleri" style="' + css({ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(2,8,18,0.72)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }) + '" data-cc-overlay>'
+      + '<div style="' + css({ background: C.base, border: "1px solid " + C.borderStrong, borderRadius: 6, maxWidth: 560, width: "100%", maxHeight: "86vh", overflowY: "auto", padding: "22px 22px 18px", boxShadow: "0 20px 60px rgba(0,0,0,0.5)" }) + '">'
+      + '<div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 18, fontWeight: 700, color: C.textPri, marginBottom: 6 }) + '">Çerez Tercihleri</div>'
+      + '<p style="' + css({ fontSize: 12.5, color: C.textMut, lineHeight: 1.6, margin: "0 0 8px" }) + '">Zorunlu olmayan çerezleri kategori bazında yönetin. Ayrıntı: <a href="cerez.html" style="' + css({ color: C.primary, textDecoration: "none" }) + '">Çerez Politikası</a>.</p>'
+      + rows
+      + '<div style="' + css({ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "flex-end", marginTop: 16 }) + '"><span data-cc="reject">' + ccBtn("Tümünü Reddet") + '</span><span data-cc="save">' + ccBtn("Seçilenleri Kaydet") + '</span><span data-cc="accept">' + ccBtn("Tümünü Kabul Et", true) + '</span></div>'
+      + '</div></div>';
+  }
+  function ccBind(host) {
+    function on(sel, fn) { var e = host.querySelectorAll(sel); for (var i = 0; i < e.length; i++) e[i].addEventListener("click", fn); }
+    on('[data-cc="accept"]', function () { ccDecide(ccAll(true)); });
+    on('[data-cc="reject"]', function () { ccDecide(ccAll(false)); });
+    on('[data-cc="prefs"]', function () { cookieConsent(true); });
+    on('[data-cc="save"]', function () { var o = {}, b = host.querySelectorAll("[data-cc-cat]"); for (var i = 0; i < b.length; i++) o[b[i].getAttribute("data-cc-cat")] = b[i].checked; ccDecide(o); });
+    var ov = host.querySelector("[data-cc-overlay]"); if (ov) ov.addEventListener("click", function (e) { if (e.target === ov && ccGet()) ccRemove(); });
+  }
+  function cookieConsent(forcePrefs) {
+    if (!document.body) return;
+    ccRemove();
+    var c = ccGet();
+    if (c && !forcePrefs) return;
+    var host = document.createElement("div"); host.id = "nx-cc";
+    host.innerHTML = forcePrefs ? ccPrefs(c) : ccBanner();
+    document.body.appendChild(host);
+    ccBind(host);
+  }
+
   injectBase();
   window.NX = {
     css: css, attr: attr, C: C, EMLAK_LOGO_URI: EMLAK_LOGO_URI, EmlakEkspertiziLogo: EmlakEkspertiziLogo,
@@ -334,5 +391,6 @@
     setAccent: setAccent, boot: boot, startClock: startClock, navHref: navHref,
     ProX: ProX, proxify: proxify,
     Ticker: Ticker, Masthead: Masthead, Nav: Nav, Footer: Footer,
+    hasConsent: hasConsent, openCookiePrefs: function () { cookieConsent(true); },
   };
 })();
