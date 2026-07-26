@@ -41,7 +41,7 @@
   var C = {
     base: "#06101B", raised: "#0A1626", elev: "#101F35", deep: "#020812",
     primary: "#38BDF8", accent: "#34D399", warn: "#FBBF24", danger: "#F87171",
-    violet: "#A78BFA", proxDeep: "#7C3AED",
+    violet: "#2DD4BF", proxDeep: "#0D9488",
     textPri: "#F1F5F9", textSec: "#CBD5E1", textMut: "#94A3B8", textFaint: "#64748B",
     border: "rgba(255,255,255,0.08)", borderStrong: "rgba(255,255,255,0.14)",
     mono: "'JetBrains Mono','SF Mono',ui-monospace,monospace",
@@ -98,7 +98,7 @@
       "@keyframes nadasPulse{0%,100%{opacity:.4}50%{opacity:1}}",
       "@keyframes nadasGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}",
       "@keyframes proxCursor{0%,49%{opacity:1}50%,100%{opacity:0}}",
-      "@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(167,139,250,.3)}50%{box-shadow:0 0 40px rgba(167,139,250,.6)}}",
+      "@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(45,212,191,.3)}50%{box-shadow:0 0 40px rgba(45,212,191,.6)}}",
       ".nadas-twocol{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}",
       ".nadas-twocol-arrow{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}",
       "@media (max-width:900px){",
@@ -146,7 +146,7 @@
       "a:hover .nx-prox-x{background:#1fb155}",
       /* Atlama bağlantısı: uzun sayfalarda klavye kullanıcısı nav'ı geçip
          içeriğe atlar. Normalde ekran dışında, odaklanınca görünür. */
-      ".nx-skip{position:absolute;left:8px;top:-48px;z-index:200;background:" + C.violet + ";color:#12081F;" +
+      ".nx-skip{position:absolute;left:8px;top:-48px;z-index:200;background:" + C.violet + ";color:#04231F;" +
         "font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;padding:9px 14px;border-radius:3px;" +
         "text-decoration:none;transition:top .15s ease}",
       ".nx-skip:focus{top:8px;outline:2px solid #fff;outline-offset:2px}"
