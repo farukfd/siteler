@@ -95,7 +95,7 @@
 
 <script src="js/vendor/lenis.min.js"></script>
 <script src="js/vendor/gsap.min.js"></script>
-<script src="js/core.js?v=34"></script>
+<script src="js/core.js?v=35"></script>
 <script>
 (function () {
   "use strict";
@@ -298,13 +298,14 @@
     }).join("");
     /* modern istatistik kartları (tam genişlik) */
     var cards = [
-      ["480M+", "ZAMAN SERİSİ SATIRI", "aylık kayıt · 81 il · 973 ilçe", C.primary],
-      ["50.000+", "AKTİF MAHALLE / KÖY", "cadde-sokak granülerlik · DNA çapalı", C.accent],
-      ["38", "VARLIK KATEGORİSİ", "5 ana grup · sat + kira ayrı endeks", C.violet],
-      ["257", "AY DERİNLİĞİ", "2005-01 → 2026-05 · kesintisiz", C.warn]
+      ["480M+", "ZAMAN SERİSİ SATIRI", "aylık kayıt · 81 il · 973 ilçe", C.primary, 480, "M+", ""],
+      ["50.000+", "AKTİF MAHALLE / KÖY", "cadde-sokak granülerlik · DNA çapalı", C.accent, 50000, "+", "tr"],
+      ["38", "VARLIK KATEGORİSİ", "5 ana grup · sat + kira ayrı endeks", C.violet, 38, "", ""],
+      ["257", "AY DERİNLİĞİ", "2005-01 → 2026-05 · kesintisiz", C.warn, 257, "", ""]
     ].map(function (s) {
+      var dc = ' data-count="' + s[4] + '"' + (s[5] ? ' data-count-suffix="' + s[5] + '"' : '') + (s[6] ? ' data-count-format="' + s[6] + '"' : '');
       return '<div class="nadas-eco" style="' + css({ flex: "1 1 210px", background: C.raised, border: "1px solid " + C.borderStrong, borderTop: "2px solid " + s[3], padding: "16px 16px 14px" }) + '">'
-        + '<div style="' + css({ fontSize: "clamp(1.7rem,3vw,2.1rem)", fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.025em", lineHeight: 1 }) + '">' + s[0] + '</div>'
+        + '<div' + dc + ' style="' + css({ fontSize: "clamp(1.7rem,3vw,2.1rem)", fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.025em", lineHeight: 1 }) + '">' + s[0] + '</div>'
         + '<div style="' + css({ fontFamily: C.mono, fontSize: 10, color: s[3], marginTop: 9, letterSpacing: "0.1em", fontWeight: 700 }) + '">' + s[1] + '</div>'
         + '<div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, marginTop: 4, letterSpacing: "0.02em", lineHeight: 1.4 }) + '">' + s[2] + '</div></div>';
     }).join("");

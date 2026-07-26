@@ -360,6 +360,28 @@
         Array.prototype.forEach.call(secs, function (el) { g.set(el, { opacity: 0 }); io.observe(el); });
       } catch (e) {}
     }
+    /* Sayı sayaçları — [data-count] görününce 0'dan hedefe sayar (bir kez).
+       Metin başlangıçta son değeri içerir → JS/lib yoksa veya reduced-motion'da o kalır. */
+    if (g && "IntersectionObserver" in window) {
+      try {
+        var cio = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            var el = en.target; cio.unobserve(el);
+            var target = parseFloat(el.getAttribute("data-count")) || 0;
+            var suffix = el.getAttribute("data-count-suffix") || "";
+            var tr = el.getAttribute("data-count-format") === "tr";
+            var o = { v: 0 };
+            g.to(o, {
+              v: target, duration: 1.4, delay: 0.2, ease: "power1.out",
+              onUpdate: function () { el.textContent = (tr ? Math.round(o.v).toLocaleString("tr-TR") : Math.round(o.v)) + suffix; },
+              onComplete: function () { el.textContent = (tr ? Math.round(target).toLocaleString("tr-TR") : target) + suffix; }
+            });
+          });
+        }, { threshold: 0.6 });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-count]"), function (el) { cio.observe(el); });
+      } catch (e) {}
+    }
   }
 
   /* Mobil nav aç/kapa — tek delege dinleyici (tüm sayfalarda çalışır). */
