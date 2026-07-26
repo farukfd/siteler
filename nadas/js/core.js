@@ -132,6 +132,11 @@
       ".nadas-navtoggle:focus-visible{outline:2px solid " + C.primary + ";outline-offset:2px}",
       ".nadas-navtoggle svg{width:20px;height:20px;display:block}",
       "@media (max-width:820px){.nadas-navtoggle{display:inline-flex;align-items:center;justify-content:center}.nadas-navmenu{display:none!important;width:100%;flex-direction:column;align-items:flex-start;gap:14px;padding-top:8px}.nadas-navbar.is-open .nadas-navmenu{display:flex!important}}",
+      /* Lenis pürüzsüz scroll (vendored) — önerilen taban stiller */
+      "html.lenis,html.lenis body{height:auto}",
+      ".lenis.lenis-smooth{scroll-behavior:auto!important}",
+      ".lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}",
+      ".lenis.lenis-stopped{overflow:hidden}",
       /* ProX kurumsal wordmark — insaat/ sitesindeki .fprox lockup’ının birebir karşılığı.
          Oradaki sabit px’ler em’e çevrildi (referans 14px gövde): 2px→.14em, 6px yarıçap→.43em,
          X’in 14/15 boy oranı→.93em. Böylece 10px mono etikette de 40px başlıkta da aynı oranda durur.
@@ -215,6 +220,7 @@
     seoAdapt();
     cookieConsent();
     navToggleInit();
+    motionInit();
   }
 
   /* Atlama bağlantısı + <main> landmark'ı. Tüm sayfalar aynı iskeleti kullanıyor:
@@ -306,6 +312,49 @@
       + '<nav id="nadas-navmenu" class="nadas-navmenu" style="' + css({ display: "flex", gap: 20, alignItems: "center", flexWrap: "wrap", flex: "1 1 auto", justifyContent: "flex-end" }) + '">' + links
       + '<a href="https://www.emlakekspertizi.com" target="_blank" rel="noopener noreferrer" style="' + css({ padding: "6px 14px", border: "1px solid " + C.primary, fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">EMLAKEKSPERTIZI.COM →</a>'
       + '</nav></div></div>';
+  }
+
+  /* Motion + Lenis (vendored) — pürüzsüz scroll + scroll-reveal.
+     prefers-reduced-motion'da tamamen atlanır (içerik tam görünür kalır).
+     İçerik yalnızca Motion yüklüyse gizlenir → JS/lib gelmezse ilerici geliştirme. */
+  function motionInit() {
+    if (document.__nxMotion) return; document.__nxMotion = true;
+    var M = window.Motion, L = window.Lenis;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
+    /* Pürüzsüz scroll — yalnız fare tekeri; dokunmatikte native kalır (smoothTouch varsayılan kapalı). */
+    if (typeof L === "function") {
+      try {
+        var lenis = new L({ lerp: 0.1, smoothWheel: true });
+        NX.lenis = lenis;
+        (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(0);
+        /* iç çapa bağlantıları → yumuşak kaydır (sticky nav yüksekliği kadar ofset) */
+        document.addEventListener("click", function (e) {
+          var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+          if (!a) return;
+          var href = a.getAttribute("href"); if (!href || href.length < 2) return;
+          var tgt = document.querySelector(href);
+          if (tgt) { e.preventDefault(); lenis.scrollTo(tgt, { offset: -70 }); }
+        });
+      } catch (e) {}
+    }
+    /* Scroll-reveal — her bölüm görünüme girince yumuşak fade+rise (bir kez).
+       Bitişte inline transform/opacity temizlenir → içteki position:sticky korunur. */
+    if (M && typeof M.inView === "function" && typeof M.animate === "function") {
+      try {
+        var secs = document.querySelectorAll("#app > section, main > section, #app > footer, footer");
+        Array.prototype.forEach.call(secs, function (el) {
+          el.style.opacity = "0";
+          var done = false;
+          M.inView(el, function () {
+            if (done) return; done = true;   /* bir kez — yeniden girişte flaş olmasın */
+            M.animate(el, { opacity: [0, 1], transform: ["translateY(24px)", "translateY(0px)"] }, { duration: 0.55, easing: [0.22, 0.61, 0.36, 1] });
+            /* animasyon bitince inline transform/opacity temizle → içteki position:sticky korunur */
+            setTimeout(function () { el.style.opacity = ""; el.style.transform = ""; el.style.translate = ""; }, 640);
+          }, { amount: 0.12 });
+        });
+      } catch (e) {}
+    }
   }
 
   /* Mobil nav aç/kapa — tek delege dinleyici (tüm sayfalarda çalışır). */
