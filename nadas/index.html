@@ -1176,6 +1176,23 @@
       return '<div class="nadas-eco" style="' + css({ background: C.base, border: "1px solid " + C.borderStrong, borderTop: "2px solid " + f[3], padding: "15px 16px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: f[3], fontWeight: 700, letterSpacing: "0.14em", marginBottom: 6 }) + '">' + f[0] + '</div><div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 15.5, fontWeight: 700, color: C.textPri, letterSpacing: "-0.01em", marginBottom: 7 }) + '">' + f[1] + '</div><p style="' + css({ margin: 0, fontSize: 12.5, lineHeight: 1.55, color: C.textMut }) + '">' + f[2] + '</p></div>';
     }).join("");
 
+    /* Her mahallede toplanan somut veri sinyalleri — 24 boyutlu DNA'yı besleyen ham katmanlar.
+       Kullanıcının saydığı gerçek veri türleri + '…ve dahası' dürüst notu. */
+    var dataLayers = [
+      ["DEMOGRAFİ & TOPLUM", C.violet, ["Nüfus & yoğunluk", "Yaş dağılımı", "Cinsiyet", "Eğitim / okul mezuniyeti", "Yaşayan profili", "Hane yapısı"]],
+      ["EKONOMİ & GELİR", C.primary, ["Gelir durumu", "Ekonomik seviye", "Segment L0–L4", "Satın alma gücü", "İşgücü / sanayi"]],
+      ["ULAŞIM & ERİŞİM", C.accent, ["Metro", "Tren / Marmaray", "Otobüs & durak", "Denize yakınlık", "Ana arter / otoyol"]],
+      ["KAMU · SAĞLIK · EĞİTİM", C.warn, ["Hastane", "Valilik", "Kaymakamlık", "Postane", "Okul", "Üniversite"]],
+      ["FİNANS & TİCARET", C.primary, ["Banka", "ATM", "Alışveriş merkezi (AVM)", "Çarşı / cadde ticareti", "Market"]],
+      ["YATIRIM & GELİŞİM", PINK, ["Büyük yatırımlar", "Kentsel dönüşüm", "İmar & altyapı projeleri", "Mega proje yakınlığı"]]
+    ];
+    var layerCards = dataLayers.map(function (L) {
+      var chips = L[2].map(function (s) { return '<span style="' + css({ fontSize: 10, color: C.textMut, padding: "3px 8px", border: "1px solid " + C.border, borderRadius: 2, fontFamily: C.mono, whiteSpace: "nowrap" }) + '">' + s + '</span>'; }).join("");
+      return '<div style="' + css({ background: C.base, border: "1px solid " + C.borderStrong, borderLeft: "2px solid " + L[1], padding: "13px 15px" }) + '">'
+        + '<div style="' + css({ display: "flex", alignItems: "center", gap: 8, marginBottom: 9 }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: L[1] }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, fontWeight: 700, color: C.textPri, letterSpacing: "0.06em" }) + '">' + L[0] + '</span><span style="' + css({ marginLeft: "auto", fontFamily: C.mono, fontSize: 9, color: C.textFaint }) + '">' + L[2].length + '+ sinyal</span></div>'
+        + '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 5 }) + '">' + chips + '</div></div>';
+    }).join("");
+
     /* 24 boyutun başlıca eksenleri — tematik gruplar */
     var groups = [
       ["EKONOMİK & PİYASA", C.primary, [["Segment", "L0-Gelişmekte → L4-Premium · gelir + yapı stoku"], ["Prestij Skoru", "0-100 · alıcı algısı + tarihsel fiyat primi"], ["Arsa Potansiyeli", "Gelişmemiş arsa oranı + imar planı durumu"], ["Sanayi Endeksi", "Sanayi alanı yakınlığı + işçi nüfusu"]]],
@@ -1209,7 +1226,10 @@
     return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "24px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
       + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">05 · DNA · DEMOGRAFİK ZENGİNLEŞTİRME</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.9rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Mahalle, sayı değil <span style="' + css({ color: C.primary }) + '">karakter</span>dir.</h2><p style="' + css({ marginTop: 10, fontSize: 14.5, lineHeight: 1.6, color: C.textSec, maxWidth: 820, margin: "10px 0 0" }) + '">NADAS her mahalleyi tek bir fiyata indirgemez. <b style="' + css({ color: C.textPri }) + '">v3.1 DNA katmanı</b>, 50.000+ mahalle ve köyü 24 boyutlu bir vektörle profiller; ~5.500 çapa bölgesi bu profillerin referans zeminini kurar.</p></div><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textFaint, letterSpacing: "0.08em", whiteSpace: "nowrap" }) + '">v3.1 · 24 BOYUT · ~5.500 ÇAPA</span></div>'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 12, marginBottom: 22 }) + '">' + frameCards + '</div>'
-      + subHead("24 BOYUTUN BAŞLICA EKSENLERİ", "5 tema · çok-kaynaklı derleme")
+      + subHead("HER MAHALLEDE TOPLADIĞIMIZ VERİ SİNYALLERİ", "yüzlerce sinyal → 24 boyutlu DNA")
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(250px,1fr))", gap: 12, marginBottom: 10 }) + '">' + layerCards + '</div>'
+      + '<div style="' + css({ marginBottom: 22, fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, letterSpacing: "0.02em", lineHeight: 1.55 }) + '">…ve burada listelenmeyen <b style="' + css({ color: C.textMut }) + '">onlarca sinyal daha</b> (POI yoğunlukları, çevresel ve sosyal donatı katmanları). Hepsi çok-kaynaklı derlenir, çapraz doğrulanır ve her boyuta güven skoru atanır — sonra 24 boyutlu DNA vektörüne indirgenir.</div>'
+      + subHead("24 BOYUTLU DNA · HESAPLANAN EKSENLER", "5 tema · sinyallerden türetilir")
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))", gap: 12, marginBottom: 22 }) + '">' + groupCards + '</div>'
       + subHead("PROFİL & REFERANS", "soyut vektör → somut mahalle")
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", gap: 14 }) + '" class="nadas-heatmap-grid">' + profileCard + anchorCard + '</div>'
