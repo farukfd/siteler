@@ -40,7 +40,7 @@
 
 <script src="js/vendor/lenis.min.js"></script>
 <script src="js/vendor/gsap.min.js"></script>
-<script src="js/core.js?v=37"></script>
+<script src="js/core.js?v=38"></script>
 <script>
 (function () {
   "use strict";
@@ -205,7 +205,7 @@
         + '<div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 12, borderTop: "1px solid " + C.border, fontFamily: C.mono, fontSize: 10 }) + '"><div style="' + css({ display: "flex", gap: 12, color: C.textFaint, letterSpacing: "0.06em" }) + '"><span>' + e.date + '</span><span>·</span><span>' + e.readTime + '</span></div><span style="' + css({ color: e.isProX ? C.violet : C.primary, fontWeight: 700, letterSpacing: "0.06em" }) + '">' + e.kicker + '</span></div></a>';
     }).join("");
     var body = '<p style="' + css({ fontSize: 13.5, lineHeight: 1.6, color: C.textSec, marginBottom: 18, maxWidth: 920 }) + '">Periyodik raporlar dışında, araştırma ekibimizin yöntem, veri felsefesi ve sektör analizi üzerine yazdığı uzun-form yazılar. Her yazı, NADAS Research\'ün düşünce yapısına ve metodolojisine açık bir pencere.</p>'
-      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(380px,1fr))", gap: 14 }) + '">' + cards + '</div>';
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,380px),1fr))", gap: 14 }) + '">' + cards + '</div>';
     return SubSection("D.1", "Editorial & özel analizler", "METHODOLOGY · DATA · HISTORY · PRODUCT", body);
   }
 
