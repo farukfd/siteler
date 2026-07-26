@@ -268,6 +268,82 @@
       + '</div></div></section>';
   }
 
+  /* ===== VERİ GÖRSELLEŞTİRME — animasyonlu grafikler (bar + alan) ===== */
+  function ResearchCharts() {
+    /* İl amiral-mahalle ₺k/m² (temsilî sıralama; gerçek il endeksi C.1'de/API'de) */
+    var BARS = [
+      ["İSTANBUL", 243], ["MUĞLA", 132], ["ANKARA", 112], ["İZMİR", 68], ["ANTALYA", 63],
+      ["KOCAELİ", 52], ["BURSA", 48], ["KAYSERİ", 42], ["KONYA", 38], ["ADANA", 35]
+    ];
+    var maxV = 243, cols = [C.primary, C.accent, C.violet, C.warn];
+    var barRows = BARS.map(function (b, i) {
+      var pct = Math.max(3, Math.round((b[1] / maxV) * 100)), col = cols[i % cols.length];
+      return '<div style="' + css({ display: "grid", gridTemplateColumns: "88px 1fr 58px", alignItems: "center", gap: 12, padding: "5px 0" }) + '">'
+        + '<span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textSec, letterSpacing: "0.03em", whiteSpace: "nowrap" }) + '">' + b[0] + '</span>'
+        + '<div style="' + css({ height: 12, background: "rgba(255,255,255,0.05)", borderRadius: 3, overflow: "hidden" }) + '"><div class="rc-bar" data-pct="' + pct + '" style="' + css({ height: 12, width: pct + "%", background: "linear-gradient(90deg," + col + "," + col + "88)", borderRadius: 3 }) + '"></div></div>'
+        + '<span class="rc-val" data-val="' + b[1] + '" style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 13, fontWeight: 700, color: C.textPri, textAlign: "right" }) + '">₺' + b[1] + 'K</span></div>';
+    }).join("");
+    var barPanel = '<div style="' + css({ background: C.raised, border: "1px solid " + C.borderStrong, padding: "18px 18px 16px" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", flexWrap: "wrap", gap: 6, marginBottom: 14 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.1em" }) + '">◆ İL ₺/m² SIRALAMASI</span><span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.warn, letterSpacing: "0.06em" }) + '">TEMSİLÎ · amiral mahalle</span></div>'
+      + barRows
+      + '<div style="' + css({ marginTop: 12, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.03em", lineHeight: 1.5 }) + '">Barlar en yükseğe göre ölçekli · gerçek canlı il endeksi <a href="#" onclick="return false" style="' + css({ color: C.primary, textDecoration: "none" }) + '">C.1</a> bölümünde ve ProX API\'de.</div></div>';
+    /* 21 yıllık endeks seyri — temsilî şekil (SVG path, çizilerek belirir) */
+    var W = 640, H = 200, P = 10;
+    var series = [10, 12, 16, 26, 22, 24, 29, 37, 45, 52, 49, 58, 66, 62, 70, 60, 68, 79, 88, 84, 92, 100];
+    var n = series.length, mx = 100;
+    var pts = series.map(function (v, i) { return [P + (i / (n - 1)) * (W - 2 * P), (H - P) - (v / mx) * (H - 2 * P)]; });
+    var line = pts.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" ");
+    var area = line + " L" + (W - P) + " " + (H - P) + " L" + P + " " + (H - P) + " Z";
+    var yrs = ["2005", "2010", "2015", "2020", "2026"].map(function (y, i) { return '<span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint }) + '">' + y + '</span>'; }).join("");
+    var svg = '<svg id="rc-svg" viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="auto" preserveAspectRatio="none" style="' + css({ display: "block" }) + '">'
+      + '<defs><linearGradient id="rcFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="' + C.primary + '" stop-opacity="0.28"></stop><stop offset="100%" stop-color="' + C.primary + '" stop-opacity="0"></stop></linearGradient></defs>'
+      + '<path id="rc-area" d="' + area + '" fill="url(#rcFill)" opacity="0"></path>'
+      + '<path id="rc-line" d="' + line + '" fill="none" stroke="' + C.primary + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path></svg>';
+    var linePanel = '<div style="' + css({ background: C.raised, border: "1px solid " + C.borderStrong, padding: "18px 18px 16px", display: "flex", flexDirection: "column" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", flexWrap: "wrap", gap: 6, marginBottom: 14 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.1em" }) + '">◆ 21 YILLIK ENDEKS SEYRİ</span><span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.warn, letterSpacing: "0.06em" }) + '">TEMSİLÎ ŞEKİL · 257 AY</span></div>'
+      + svg
+      + '<div style="' + css({ display: "flex", justifyContent: "space-between", marginTop: 6 }) + '">' + yrs + '</div>'
+      + '<div style="' + css({ marginTop: 10, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.03em", lineHeight: 1.5 }) + '">2005-01 → 2026-05 kesintisiz aylık zincir; şekil temsilîdir, gerçek seri emlakekspertizi.com endeksinde.</div></div>';
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "20px 16px 34px", background: C.base }) + '">'
+      + '<div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + Eyebrow("◆ VERİ GÖRSELLEŞTİRME · KAYITTAN GRAFİĞE")
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", gap: 16, marginTop: 4 }) + '" class="nadas-twocol">' + barPanel + linePanel + '</div>'
+      + '</div></section>';
+  }
+
+  /* research grafiklerinin canlanması — GSAP + IntersectionObserver (reduced-motion güvenli,
+     ilerici geliştirme: JS/lib yoksa barlar son genişlikte, çizgi tam görünür kalır). */
+  function mountResearchCharts() {
+    var g = window.gsap;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!g || reduce || !("IntersectionObserver" in window)) return;
+    var svg = document.getElementById("rc-svg");
+    var sec = svg && svg.closest("section"); if (!sec) return;
+    var io = new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) {
+        if (!en.isIntersecting) return; io.unobserve(sec);
+        /* barlar: 0 → hedef genişlik (stagger) */
+        var bars = sec.querySelectorAll(".rc-bar");
+        g.set(bars, { width: 0 });
+        g.to(bars, { width: function (i, el) { return el.getAttribute("data-pct") + "%"; }, duration: 1, ease: "power2.out", stagger: 0.06 });
+        /* değerler: 0 → hedef (sayaç) */
+        Array.prototype.forEach.call(sec.querySelectorAll(".rc-val"), function (el, i) {
+          var t = parseFloat(el.getAttribute("data-val")) || 0, o = { v: 0 };
+          g.to(o, { v: t, duration: 1.1, delay: 0.15 + i * 0.06, ease: "power1.out", onUpdate: function () { el.textContent = "₺" + Math.round(o.v) + "K"; }, onComplete: function () { el.textContent = "₺" + t + "K"; } });
+        });
+        /* çizgi: çizilerek belir + alan fade */
+        var ln = document.getElementById("rc-line"), ar = document.getElementById("rc-area");
+        if (ln && ln.getTotalLength) {
+          var L = ln.getTotalLength();
+          g.set(ln, { strokeDasharray: L, strokeDashoffset: L });
+          g.to(ln, { strokeDashoffset: 0, duration: 1.6, ease: "power1.inOut", clearProps: "strokeDasharray,strokeDashoffset" });
+        }
+        if (ar) g.to(ar, { opacity: 1, duration: 1, delay: 0.6, ease: "power1.out" });
+      });
+    }, { threshold: 0.25 });
+    io.observe(sec);
+  }
+
   /* ===== MONTAJ ===== */
   /* ===== ProX VERİ HATTI — izometrik canlı sahne (hero üstü) ===== */
   /* ===== ProX VERİ HATTI — izometrik canlı sahne (hero üstü) ===== */
@@ -567,6 +643,7 @@
 
   function renderApp() {
     return NX.Ticker(RESTICK) + NX.Masthead("Research") + NX.Nav("Research") + ResearchPipeline() + HeroResearch() + FeaturedReport()
+      + ResearchCharts()
       + SectionDivider("A", "Son Blog Yazıları", "emlakekspertizi.com/blog · 22.176 YAZI · AYLIK ANALİZ") + LatestResearchFeed()
       + SectionDivider("B", "İçerik Kategorileri", "KONUT · TİCARİ · ARSA · TURİSTİK · PİYASA BÜLTENİ") + ResearchCategories()
       + SectionDivider("C", "Canlı Endeksler", "ProX ENDEKS · GERÇEK m² · İL BAZINDA · CANLI") + IndicesLiveData()
@@ -578,6 +655,7 @@
 
   NX.boot(renderApp);
   mountResearchPipeline();
+  mountResearchCharts();
 
   // Hero canlı sayaç animasyonu (CountUp) — görünür sekmede rAF animasyonu,
   // gizli sekmede (rAF çalışmaz) setTimeout geri-dönüşü son değeri garanti eder.
