@@ -314,20 +314,26 @@
       + '</nav></div></div>';
   }
 
-  /* Motion + Lenis (vendored) — pürüzsüz scroll + scroll-reveal.
-     prefers-reduced-motion'da tamamen atlanır (içerik tam görünür kalır).
-     İçerik yalnızca Motion yüklüyse gizlenir → JS/lib gelmezse ilerici geliştirme. */
+  /* GSAP + Lenis (vendored) — pürüzsüz scroll + scroll-reveal.
+     Reveal TETİKLEYİCİ: IntersectionObserver (Lenis'ten ve dinamik mount zamanlamasından
+     bağımsız, sağlam). Animasyon MOTORU: GSAP. prefers-reduced-motion'da tamamen atlanır;
+     içerik yalnızca GSAP yüklüyse gizlenir → ilerici geliştirme. */
   function motionInit() {
     if (document.__nxMotion) return; document.__nxMotion = true;
-    var M = window.Motion, L = window.Lenis;
+    var g = window.gsap, L = window.Lenis;
     var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
-    /* Pürüzsüz scroll — yalnız fare tekeri; dokunmatikte native kalır (smoothTouch varsayılan kapalı). */
+    /* Pürüzsüz scroll — Lenis; varsa GSAP ticker'ıyla sürülür (tek döngü). Dokunmatikte native. */
     if (typeof L === "function") {
       try {
         var lenis = new L({ lerp: 0.1, smoothWheel: true });
         NX.lenis = lenis;
-        (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(0);
+        if (g && g.ticker) {
+          g.ticker.add(function (t) { lenis.raf(t * 1000); });
+          g.ticker.lagSmoothing(0);
+        } else {
+          (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(0);
+        }
         /* iç çapa bağlantıları → yumuşak kaydır (sticky nav yüksekliği kadar ofset) */
         document.addEventListener("click", function (e) {
           var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
@@ -338,21 +344,20 @@
         });
       } catch (e) {}
     }
-    /* Scroll-reveal — her bölüm görünüme girince yumuşak fade+rise (bir kez).
-       Bitişte inline transform/opacity temizlenir → içteki position:sticky korunur. */
-    if (M && typeof M.inView === "function" && typeof M.animate === "function") {
+    /* Scroll-reveal — IntersectionObserver tetikler, GSAP animasyonlar (bir kez).
+       Başlangıçta yalnız opacity:0 (transform yok → gizliyken bile içteki position:sticky güvenli);
+       bitişte clearProps ile inline stiller temizlenir. */
+    if (g && "IntersectionObserver" in window) {
       try {
         var secs = document.querySelectorAll("#app > section, main > section, #app > footer, footer");
-        Array.prototype.forEach.call(secs, function (el) {
-          el.style.opacity = "0";
-          var done = false;
-          M.inView(el, function () {
-            if (done) return; done = true;   /* bir kez — yeniden girişte flaş olmasın */
-            M.animate(el, { opacity: [0, 1], transform: ["translateY(24px)", "translateY(0px)"] }, { duration: 0.55, easing: [0.22, 0.61, 0.36, 1] });
-            /* animasyon bitince inline transform/opacity temizle → içteki position:sticky korunur */
-            setTimeout(function () { el.style.opacity = ""; el.style.transform = ""; el.style.translate = ""; }, 640);
-          }, { amount: 0.12 });
-        });
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            var el = en.target; io.unobserve(el);
+            g.fromTo(el, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", clearProps: "opacity,transform" });
+          });
+        }, { threshold: 0.12 });
+        Array.prototype.forEach.call(secs, function (el) { g.set(el, { opacity: 0 }); io.observe(el); });
       } catch (e) {}
     }
   }
