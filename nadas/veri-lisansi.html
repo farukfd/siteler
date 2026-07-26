@@ -35,7 +35,7 @@
 <div id="app">
   <noscript>
     <div style="max-width:900px;margin:0 auto;padding:48px 20px;font-family:'Sora',sans-serif">
-      <h1 style="color:#2DD4BF">NADAS Veri Lisansı — İl/İlçe Gayrimenkul Veri Seti</h1>
+      <h1 style="color:#22D3EE">NADAS Veri Lisansı — İl/İlçe Gayrimenkul Veri Seti</h1>
       <p style="color:#CBD5E1">480M+ kayıtlık gayrimenkul veri tabanını il/ilçe/kategori kapsamında lisanslar; ProX API ile yönetilen erişim ya da şifreli toplu/raw veri teslimi (on-premise). Bu sayfayı görüntülemek için JavaScript gereklidir.</p>
     </div>
   </noscript>
@@ -43,7 +43,7 @@
 
 <script src="js/vendor/lenis.min.js"></script>
 <script src="js/vendor/gsap.min.js"></script>
-<script src="js/core.js?v=36"></script>
+<script src="js/core.js?v=37"></script>
 <script>
 (function () {
   "use strict";
@@ -87,9 +87,9 @@
       + '</div>';
   }
   function badges(arr) {
-    return '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 4 }) + '">' + arr.map(function (b) { return '<span style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 11px", border: "1px solid " + C.borderStrong, borderRadius: 3, fontFamily: C.mono, fontSize: 10, color: C.violet, letterSpacing: "0.06em", fontWeight: 700, background: "rgba(45,212,191,0.05)" }) + '"><span style="' + css({ width: 5, height: 5, borderRadius: 9999, background: C.violet }) + '"></span>' + b + '</span>'; }).join("") + '</div>';
+    return '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 4 }) + '">' + arr.map(function (b) { return '<span style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 11px", border: "1px solid " + C.borderStrong, borderRadius: 3, fontFamily: C.mono, fontSize: 10, color: C.violet, letterSpacing: "0.06em", fontWeight: 700, background: "rgba(34,211,238,0.05)" }) + '"><span style="' + css({ width: 5, height: 5, borderRadius: 9999, background: C.violet }) + '"></span>' + b + '</span>'; }).join("") + '</div>';
   }
-  function note(t) { return '<div style="' + css({ marginTop: 12, padding: "10px 14px", border: "1px dashed " + C.borderStrong, background: "rgba(45,212,191,0.03)", borderRadius: 3, fontFamily: C.mono, fontSize: 10.5, color: C.textMut, lineHeight: 1.6, letterSpacing: "0.02em" }) + '">⌬ ' + t + '</div>'; }
+  function note(t) { return '<div style="' + css({ marginTop: 12, padding: "10px 14px", border: "1px dashed " + C.borderStrong, background: "rgba(34,211,238,0.03)", borderRadius: 3, fontFamily: C.mono, fontSize: 10.5, color: C.textMut, lineHeight: 1.6, letterSpacing: "0.02em" }) + '">⌬ ' + t + '</div>'; }
   function tbl(head, rows, accents) {
     var th = head.map(function (h) { return '<th style="' + css({ textAlign: "left", padding: "9px 12px", fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.06em", fontWeight: 700, borderBottom: "1px solid " + C.borderStrong, background: C.deep, whiteSpace: "nowrap" }) + '">' + h + '</th>'; }).join("");
     var tr = rows.map(function (r) {
@@ -116,7 +116,7 @@
       + '<div style="' + css({ position: "absolute", left: 12, bottom: 10, fontFamily: C.mono, fontSize: 9.5, color: C.textMut, letterSpacing: "0.04em", pointerEvents: "none", maxWidth: "48%", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }) + '" id="lic-cap">▸ İSTANBUL · KADIKÖY · KONUT</div>'
       + '<div style="' + css({ position: "absolute", right: 12, bottom: 10, fontFamily: C.mono, fontSize: 9, color: C.violet, letterSpacing: "0.06em", pointerEvents: "none" }) + '"><span id="lic-count">0</span> KAYIT LİSANSLANDI ◆</div></div>';
     return '<section style="' + css({ position: "relative", padding: "18px 16px 20px", background: C.base, borderBottom: "1px solid " + C.borderStrong, overflow: "hidden" }) + '">'
-      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 82% 15%, rgba(45,212,191,0.13), transparent 55%), radial-gradient(circle at 8% 85%, rgba(56,189,248,0.07), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 82% 15%, rgba(34,211,238,0.13), transparent 55%), radial-gradient(circle at 8% 85%, rgba(56,189,248,0.07), transparent 50%)" }) + '"></div>'
       + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
       + stage
       + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: C.mono, fontSize: 10.5, color: C.violet, letterSpacing: "0.14em", fontWeight: 700, marginBottom: 12 }) + '"><span style="' + css({ width: 14, height: 1, background: C.violet }) + '"></span>KURUMSAL · VERİ LİSANSLAMA · İL/İLÇE KAPSAM</div>'
@@ -211,7 +211,7 @@
   /* ===== ÜRÜN ===== */
   function Product() {
     return '<section style="' + css({ background: "linear-gradient(135deg, " + C.deep + " 0%, " + C.raised + " 100%)", borderTop: "2px solid " + C.violet, borderBottom: "1px solid " + C.borderStrong, padding: "40px 16px 34px", position: "relative", overflow: "hidden" }) + '">'
-      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 82% 18%, rgba(45,212,191,0.13), transparent 60%), radial-gradient(circle at 10% 82%, rgba(56,189,248,0.07), transparent 50%)" }) + '"></div>'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 82% 18%, rgba(34,211,238,0.13), transparent 60%), radial-gradient(circle at 10% 82%, rgba(56,189,248,0.07), transparent 50%)" }) + '"></div>'
       + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
       + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, fontFamily: C.mono, fontSize: 11, letterSpacing: "0.14em" }) + '"><span style="' + css({ color: C.violet, fontWeight: 700 }) + '">◆ VERİ KAYNAĞI · NADAS ALTYAPISI</span><span style="' + css({ height: 1, flex: 1, background: C.violet, opacity: 0.4 }) + '"></span><span style="' + css({ color: C.textMut }) + '">LİSANS · TEKLİF</span></div>'
       + '<div style="' + css({ marginBottom: 16 }) + '"><img src="img/emlak-logo-full.png" alt="emlakekspertizi.com" style="' + css({ display: "block", width: 320, maxWidth: "100%", height: "auto" }) + '"><h2 style="' + css({ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)", whiteSpace: "nowrap", margin: -1, padding: 0, border: 0 }) + '">emlakekspertizi.com</h2></div>'
@@ -243,7 +243,7 @@
     var reduce = !!(mq && mq.matches);
     var W = 0, H = 0, dpr = 1, raf = 0, running = false, visible = true;
     var STEP = 1 / 60, acc = 0, last = 0, t = 0, TAU = 6.28318;
-    var CY = "#38BDF8", GRN = "#34D399", VIO = "#2DD4BF", WARN = "#FBBF24", GC = "#F1EAFF", MUT = "#64748B";
+    var CY = "#38BDF8", GRN = "#34D399", VIO = "#22D3EE", WARN = "#FBBF24", GC = "#F1EAFF", MUT = "#64748B";
     var Px = 0, Ax = 0, Bx = 0, midY = 0, field = [], selRect = null, pool = [], free = [], MAX = 90, emitAcc = 0, licensed = 0, licShown = 0, selPhase = 0, selT = 0;
     var CAPS = ["İSTANBUL · KADIKÖY · KONUT", "ZAMAN SERİSİ + DNA + OLAY", "MODEL 1: API erişimi", "MODEL 2: TOPLU · on-premise", "AES-256 · imzalı teslim"];
     var capIdx = -1, capLast = 0;

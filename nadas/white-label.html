@@ -108,7 +108,7 @@
             cursor:pointer; text-align:left; overflow:hidden; border-radius:5px; display:block; width:100%;
             transition:border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
   .id-btn:hover { border-color:rgba(255,255,255,.32); transform:translateY(-3px); }
-  .id-btn:focus-visible { outline:2px solid #2DD4BF; outline-offset:2px; }
+  .id-btn:focus-visible { outline:2px solid #22D3EE; outline-offset:2px; }
   .id-btn[aria-pressed="true"] { border-color:var(--acc); transform:translateY(-3px);
                                  box-shadow:0 0 0 1px var(--acc), 0 14px 34px -16px rgba(0,0,0,.95); }
   /* Üstte seçim şeridi — seçilince ortadan açılır */
@@ -201,8 +201,8 @@
               font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.08em; font-weight:700;
               padding:6px 10px; border-radius:2px; transition:border-color .15s linear, color .15s linear, background-color .15s linear; }
   .mod-chip:hover { border-color:rgba(255,255,255,.34); color:#E2E8F0; }
-  .mod-chip[aria-pressed="true"] { border-color:#2DD4BF; color:#0B1220; background:#2DD4BF; }
-  .mod-chip:focus-visible { outline:2px solid #2DD4BF; outline-offset:2px; }
+  .mod-chip[aria-pressed="true"] { border-color:#22D3EE; color:#0B1220; background:#22D3EE; }
+  .mod-chip:focus-visible { outline:2px solid #22D3EE; outline-offset:2px; }
   .mod-chip i { font-style:normal; opacity:.62; margin-left:5px; }
   /* Ödeme dönemi geçişi: aylık ⇄ yıllık peşin fiyatı kart üzerinde değiştirir */
   .tier-fiyat { display:block; margin-top:8px; }
@@ -216,7 +216,7 @@
   .mod-ara { background:#020812; border:1px solid rgba(255,255,255,.14); color:#F1F5F9;
              font-family:'JetBrains Mono',monospace; font-size:10.5px; padding:6px 10px; border-radius:2px;
              outline:none; min-width:170px; flex:1 1 170px; max-width:280px; transition:border-color .14s linear; }
-  .mod-ara:focus { border-color:#2DD4BF; }
+  .mod-ara:focus { border-color:#22D3EE; }
   .mod-ara::placeholder { color:#3E5069; }
   .mod-say { font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.1em; color:#4A5B70; margin-left:auto; }
   .mod-say b { color:#F1F5F9; font-weight:600; font-variant-numeric:tabular-nums; }
@@ -231,7 +231,7 @@
               letter-spacing:.12em; color:#64748B; border:1px solid rgba(255,255,255,.12);
               padding:2px 5px; border-radius:2px; margin-top:7px; }
   /* Aramada eşleşen harfler */
-  .mod mark { background:rgba(45,212,191,.28); color:#F1F5F9; border-radius:1px; }
+  .mod mark { background:rgba(34,211,238,.28); color:#F1F5F9; border-radius:1px; }
   .mod-bos { padding:18px 14px; background:#0A1626; font-family:'JetBrains Mono',monospace;
              font-size:10px; letter-spacing:.06em; color:#4A5B70; grid-column:1/-1; }
   @media (prefers-reduced-motion:reduce){ .mod, .mod.in { opacity:1 !important; transform:none !important; transition:none !important; } }
@@ -242,7 +242,7 @@
      SVG metni viewBox ile ölçeklendiği için mobilde okunacak boyuta gelmiyor. */
   .tr-evt-legend { display:none; }
   #wl-trench { cursor:crosshair; }
-  #wl-trench:focus-visible { outline:2px solid #2DD4BF; outline-offset:2px; }
+  #wl-trench:focus-visible { outline:2px solid #22D3EE; outline-offset:2px; }
   @media (max-width:760px){
     .tr-evt-t { display:none; }
     .tr-evt-legend { display:block; }
@@ -254,16 +254,16 @@
   .wl-faq summary:hover, .wl-faq[open] summary { color:#F1F5F9; }
   .wl-assure { -webkit-mask-image:linear-gradient(transparent,black 26%,black 74%,transparent); mask-image:linear-gradient(transparent,black 26%,black 74%,transparent); user-select:none; }
   .wl-card { transition:border-color .14s linear, background-color .14s linear; }
-  .wl-card:hover { border-color:rgba(45,212,191,.55); background:#101F35; }
+  .wl-card:hover { border-color:rgba(34,211,238,.55); background:#101F35; }
 
   /* ---- Canlı deneme alanları ---- */
   .wl-in { background:#020812; border:1px solid rgba(255,255,255,.14); color:#F1F5F9;
            font-family:'Inter Tight',sans-serif; font-size:14px; padding:9px 12px; border-radius:2px;
            width:100%; outline:none; transition:border-color .14s linear; }
-  .wl-in:focus { border-color:#2DD4BF; }
+  .wl-in:focus { border-color:#22D3EE; }
   .wl-in::placeholder { color:#4A5B70; }
   .wl-sw { width:26px; height:26px; border:1px solid rgba(255,255,255,.2); border-radius:2px; cursor:pointer; padding:0; }
-  .wl-sw[aria-pressed="true"] { outline:2px solid #2DD4BF; outline-offset:2px; }
+  .wl-sw[aria-pressed="true"] { outline:2px solid #22D3EE; outline-offset:2px; }
   .wl-pick { width:26px; height:26px; padding:0; border:1px solid rgba(255,255,255,.2); border-radius:2px;
              background:#020812; cursor:pointer; }
   .wl-pick::-webkit-color-swatch-wrapper { padding:2px; }
@@ -347,7 +347,7 @@
   /* İl sınırı: taranan il kısa süre parlar — geçiş JS'te sınıfla tetiklenir */
   .tr-il { fill:rgba(56,189,248,.045); stroke:rgba(56,189,248,.26); stroke-width:.55;
            vector-effect:non-scaling-stroke; transition:fill .18s linear, stroke .18s linear; }
-  .tr-il.hot { fill:rgba(45,212,191,.16); stroke:rgba(196,181,253,.95); }
+  .tr-il.hot { fill:rgba(34,211,238,.16); stroke:rgba(196,181,253,.95); }
   .tr-grid { stroke:rgba(255,255,255,.045); stroke-width:.5; vector-effect:non-scaling-stroke; }
   .tr-cap { position:absolute; left:12px; bottom:10px; font-family:'JetBrains Mono',monospace;
             font-size:9px; letter-spacing:.1em; color:#4A5B70; }
@@ -361,7 +361,7 @@
   .tr-read .k { font-size:8px; letter-spacing:.16em; color:#4A5B70; display:block; }
   .tr-read .v { font-size:12px; letter-spacing:.02em; color:#C4B5FD; display:block; margin-top:3px;
                 white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-                text-shadow:0 0 14px rgba(45,212,191,.5); }
+                text-shadow:0 0 14px rgba(34,211,238,.5); }
   .tr-read .v b { color:#fff; font-weight:600; }
   .tr-cnt { position:absolute; right:12px; bottom:10px; font-family:'JetBrains Mono',monospace;
             font-size:9px; letter-spacing:.1em; color:#4A5B70; }
@@ -379,7 +379,7 @@
   /* Yapışkan kademe çubuğu */
   #wl-bar { position:fixed; left:0; right:0; bottom:0; z-index:60; transform:translateY(110%);
             transition:transform .28s cubic-bezier(.4,0,.2,1); background:#0A1626;
-            border-top:1px solid rgba(45,212,191,.45); }
+            border-top:1px solid rgba(34,211,238,.45); }
   #wl-bar.on { transform:none; }
   #wl-bar .in { max-width:1280px; margin:0 auto; padding:11px 16px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
   @media (max-width:620px){ #wl-bar .in { justify-content:center; text-align:center; } }
@@ -404,8 +404,8 @@
   .mk-cekirdek { position:absolute; top:0; bottom:0; left:0; width:100%; border-radius:2px; }
   .mk-bar.bant { background:repeating-linear-gradient(115deg, rgba(248,113,113,.16) 0 5px, rgba(248,113,113,.05) 5px 10px); }
   .mk-bar.bant .mk-cekirdek { background:rgba(248,113,113,.62); }
-  .mk-bar.tek { background:rgba(45,212,191,.22); }
-  .mk-bar.tek .mk-cekirdek { background:#2DD4BF; }
+  .mk-bar.tek { background:rgba(34,211,238,.22); }
+  .mk-bar.tek .mk-cekirdek { background:#22D3EE; }
   .mk-bar.tek.vurgu { background:rgba(52,211,153,.22); }
   .mk-bar.tek.vurgu .mk-cekirdek { background:#34D399; }
   .mk-tutar { font-family:'JetBrains Mono',monospace; font-size:11px; color:#CBD5E1;
@@ -424,23 +424,23 @@
 
   /* ---- Kademe odaklama: seçilen sütun öne çıkar ---- */
   .wl-cmp td.sonuk, .wl-cmp th.sonuk { opacity:.32; transition:opacity .2s linear; }
-  .wl-cmp td.odak, .wl-cmp th.odak { background:rgba(45,212,191,.10) !important; }
+  .wl-cmp td.odak, .wl-cmp th.odak { background:rgba(34,211,238,.10) !important; }
   .wl-cmp tr.yok td { opacity:.3; }
   /* Satır vurgusu (fare/dokunuş) — inset box-shadow inline hücre arka planının ÜSTÜnde çalışır */
-  .wl-cmp tr:hover td { box-shadow: inset 0 0 0 999px rgba(45,212,191,.055); }
+  .wl-cmp tr:hover td { box-shadow: inset 0 0 0 999px rgba(34,211,238,.055); }
   /* Dört Yol: sütun baş-başa odağı — bir seçeneği NADAS ile karşılaştır */
   #dy-tablo .dycol { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.09em; font-weight:700;
                      color:#64748B; background:transparent; border:0; padding:0; margin:0; cursor:pointer;
                      display:inline-flex; align-items:center; gap:5px; transition:color .15s linear; }
   #dy-tablo .dycol:hover { color:#CBD5E1; }
-  #dy-tablo .dycol[aria-pressed="true"] { color:#2DD4BF; }
-  #dy-tablo .dycol:focus-visible { outline:2px solid #2DD4BF; outline-offset:3px; }
+  #dy-tablo .dycol[aria-pressed="true"] { color:#22D3EE; }
+  #dy-tablo .dycol:focus-visible { outline:2px solid #22D3EE; outline-offset:3px; }
   #dy-tablo .dycol .sw { opacity:.55; font-weight:400; }
   #dy-tablo .dy-col-sonuk { opacity:.3; transition:opacity .2s linear; }
-  .tier-focus:focus-visible { outline:2px solid #2DD4BF; outline-offset:-2px; }
-  .tier-focus[aria-pressed="true"] { box-shadow:inset 3px 0 0 #2DD4BF; }
+  .tier-focus:focus-visible { outline:2px solid #22D3EE; outline-offset:-2px; }
+  .tier-focus[aria-pressed="true"] { box-shadow:inset 3px 0 0 #22D3EE; }
   .wl-matris summary::-webkit-details-marker { display:none; }
-  .wl-matris summary:hover { border-color:rgba(45,212,191,.55); }
+  .wl-matris summary:hover { border-color:rgba(34,211,238,.55); }
   .wl-matris[open] summary > span:first-child { transform:rotate(45deg); }
   .wl-matris summary > span:first-child { display:inline-block; transition:transform .18s ease; }
 
@@ -452,8 +452,8 @@
             font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.09em; font-weight:700;
             padding:7px 12px; border-radius:2px; transition:border-color .15s, color .15s, background-color .15s; }
   .gv-btn:hover { border-color:rgba(255,255,255,.34); color:#E2E8F0; }
-  .gv-btn[aria-pressed="true"] { border-color:#2DD4BF; background:#2DD4BF; color:#0B1220; }
-  .gv-btn:focus-visible { outline:2px solid #2DD4BF; outline-offset:2px; }
+  .gv-btn[aria-pressed="true"] { border-color:#22D3EE; background:#22D3EE; color:#0B1220; }
+  .gv-btn:focus-visible { outline:2px solid #22D3EE; outline-offset:2px; }
   .gv-satir { display:grid; grid-template-columns:minmax(0,1fr) 104px; gap:12px; align-items:center;
               padding:9px 0; border-bottom:1px solid rgba(255,255,255,.07); }
   .gv-satir:last-of-type { border-bottom:0; }
@@ -465,7 +465,7 @@
      istenen = kasıtlı erişim (davetli alıcı, siz) · notr = endekse işlenir */
   .gv-rozet.gorur { background:rgba(248,113,113,.16); color:#F87171; }
   .gv-rozet.gormez { background:rgba(52,211,153,.16); color:#34D399; }
-  .gv-rozet.istenen { background:rgba(45,212,191,.18); color:#C4B5FD; }
+  .gv-rozet.istenen { background:rgba(34,211,238,.18); color:#C4B5FD; }
   .gv-rozet.notr { background:rgba(148,163,184,.14); color:#94A3B8; }
 
   /* ---- Ortak / size özel ayrımı ------------------------------------------
@@ -478,13 +478,13 @@
   .oz-bas { font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.12em;
             font-weight:700; margin-bottom:9px; }
   .oz-bas.ortak { color:#64748B; }
-  .oz-bas.ozel { color:#2DD4BF; }
+  .oz-bas.ozel { color:#22D3EE; }
   .oz-sut li { list-style:none; font-size:12.5px; line-height:1.5; color:#94A3B8;
                padding:6px 0 6px 15px; position:relative; border-bottom:1px solid rgba(255,255,255,.055); }
   .oz-sut li:last-child { border-bottom:0; }
   .oz-sut li::before { content:"·"; position:absolute; left:3px; color:#3E5069; font-weight:700; }
   .oz-sut.ozel li { color:#CBD5E1; }
-  .oz-sut.ozel li::before { content:"◆"; color:#2DD4BF; font-size:8px; top:9px; }
+  .oz-sut.ozel li::before { content:"◆"; color:#22D3EE; font-size:8px; top:9px; }
   .oz-say { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.1em;
             color:#4A5B70; margin-top:9px; display:block; }
   /* Google politika alıntısı — kaynak metin olduğu görsel olarak da belli olsun */
@@ -509,11 +509,11 @@
   .zy-out { padding-top:7px; margin-top:2px; border-top:1px solid rgba(255,255,255,.07); display:flex; flex-direction:column; gap:4px; }
   .zy-cikti { font-family:'JetBrains Mono',monospace; font-size:7.5px; letter-spacing:.12em; color:#4A5B70; }
   .zy-sonuc { font-size:12px; line-height:1.5; color:#CBD5E1; display:flex; gap:7px; align-items:flex-start; }
-  .zy-sonuc::before { content:"→"; color:#2DD4BF; font-family:'JetBrains Mono',monospace;
+  .zy-sonuc::before { content:"→"; color:#22D3EE; font-family:'JetBrains Mono',monospace;
                       font-size:11px; flex:0 0 auto; line-height:1.5; transition:color .15s linear; }
   .zy-tur { font-family:'JetBrains Mono',monospace; font-size:7.5px; letter-spacing:.12em;
             padding:2px 6px; border-radius:2px; align-self:flex-start; margin-top:1px; }
-  .zy-tur.talep { background:rgba(45,212,191,.18); color:#C4B5FD; }
+  .zy-tur.talep { background:rgba(34,211,238,.18); color:#C4B5FD; }
   .zy-tur.sinyal { background:rgba(56,189,248,.15); color:#7DD3FC; }
   .zy-tur.erisim { background:rgba(148,163,184,.14); color:#94A3B8; }
   .zy-bos { padding:16px; background:#0A1626; grid-column:1/-1; font-family:'JetBrains Mono',monospace;
@@ -550,15 +550,15 @@
 
   /* ---- Dört yol: durum seçimi ve karar satırı ---- */
   .dy-karar { padding:12px 15px; margin-bottom:12px; border-radius:3px; font-size:13.5px; line-height:1.65; }
-  .dy-karar.biz { background:rgba(45,212,191,.07); border:1px solid rgba(45,212,191,.45); color:#CBD5E1; }
+  .dy-karar.biz { background:rgba(34,211,238,.07); border:1px solid rgba(34,211,238,.45); color:#CBD5E1; }
   .dy-karar.baska { background:rgba(56,189,248,.06); border:1px solid rgba(56,189,248,.42); color:#CBD5E1; }
   .dy-karar b { color:#F1F5F9; }
   .dy-karar .rozet { font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.12em;
                      font-weight:700; display:block; margin-bottom:6px; }
-  .dy-karar.biz .rozet { color:#2DD4BF; }
+  .dy-karar.biz .rozet { color:#22D3EE; }
   .dy-karar.baska .rozet { color:#38BDF8; }
   #dy-tablo tr.sonuk td { opacity:.3; transition:opacity .2s linear; }
-  #dy-tablo tr.vurgu td { background:rgba(45,212,191,.07); }
+  #dy-tablo tr.vurgu td { background:rgba(34,211,238,.07); }
 
   /* ---- Kurulum: hangi adım kime düşüyor ----
      "Ne kadarı bana düşüyor?" kurulum vaadine yöneltilen ilk sorudur;
@@ -566,7 +566,7 @@
   .ku-kim { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.12em; font-weight:700;
             padding:3px 7px; border-radius:2px; flex:0 0 auto; }
   .ku-kim.siz { background:rgba(56,189,248,.16); color:#7DD3FC; }
-  .ku-kim.biz { background:rgba(45,212,191,.16); color:#C4B5FD; }
+  .ku-kim.biz { background:rgba(34,211,238,.16); color:#C4B5FD; }
 
   /* ---- EİDS: elle mi, gömülü mü ------------------------------------------
      "EİDS uyumlu" demek bir şey anlatmıyor; değeri elle yapılan işin ortadan
@@ -578,7 +578,7 @@
   .ed-bas { font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.12em;
             font-weight:700; margin-bottom:4px; }
   .ed-bas.elle { color:#F87171; }
-  .ed-bas.gomulu { color:#2DD4BF; }
+  .ed-bas.gomulu { color:#22D3EE; }
   .ed-alt { font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.06em;
             color:#4A5B70; margin-bottom:11px; display:block; }
   .ed-adim { display:grid; grid-template-columns:19px 1fr; gap:9px; padding:7px 0;
@@ -589,7 +589,7 @@
   .ed-ne { font-size:12.5px; line-height:1.5; color:#94A3B8; }
   .ed-sut.gomulu .ed-ne { color:#CBD5E1; }
   .ed-otomatik { font-family:'JetBrains Mono',monospace; font-size:7.5px; letter-spacing:.1em;
-                 color:#2DD4BF; display:block; margin-top:3px; }
+                 color:#22D3EE; display:block; margin-top:3px; }
   @media (max-width:620px){ .ed-grid { grid-template-columns:1fr !important; } }
 
   /* ---- Çıkış dökümü: ne, hangi biçimde, ne zaman -------------------------
@@ -653,7 +653,7 @@
 <script src="js/tr-ilce.js?v=1"></script><!-- 973 ilçe merkezi · HDX COD-AB-TUR · radar tarama noktaları -->
 <script src="js/vendor/lenis.min.js"></script>
 <script src="js/vendor/gsap.min.js"></script>
-<script src="js/core.js?v=36"></script>
+<script src="js/core.js?v=37"></script>
 <script>
 (function () {
   "use strict";
@@ -937,7 +937,7 @@
       + '<input id="wl-brand" class="wl-in" type="text" maxlength="28" placeholder="örn. Yıldız Gayrimenkul" autocomplete="organization"></div>'
       + '<div><span style="' + mono(9.5, C.textFaint, "0.1em") + css({ display: "block", marginBottom: 6 }) + '">MARKA RENGİ</span>'
       + '<div style="' + css({ display: "flex", gap: 7, alignItems: "center" }) + '" id="wl-swatches">'
-      + ["#ff7a2f", "#1e40af", "#0e5e3e", "#b4975a", "#2DD4BF"].map(function (c, i) {
+      + ["#ff7a2f", "#1e40af", "#0e5e3e", "#b4975a", "#22D3EE"].map(function (c, i) {
           return '<button class="wl-sw" data-color="' + c + '" aria-pressed="' + (i === 0 ? "true" : "false") + '" aria-label="Renk ' + c + '" style="background:' + c + '"></button>';
         }).join("")
       + '<input type="color" class="wl-pick" id="wl-pick" value="#ff7a2f" aria-label="Kendi marka renginizi seçin" title="Kendi renginizi seçin">'
@@ -1048,7 +1048,7 @@
 
     var satirOrtak = ortak.map(function (r) {
       return '<tr><td style="' + css({ padding: "9px 14px 9px 0", borderBottom: "1px solid " + C.border, verticalAlign: "top" }) + '"><span style="' + mono(9.5, C.textFaint, "0.1em") + '">' + r[0].toLocaleUpperCase("tr-TR") + '</span></td>'
-        + '<td colspan="4" style="' + css({ padding: "9px 14px", borderBottom: "1px solid " + C.border, borderLeft: "3px solid " + C.violet, background: "rgba(45,212,191,0.055)" }) + '">'
+        + '<td colspan="4" style="' + css({ padding: "9px 14px", borderBottom: "1px solid " + C.border, borderLeft: "3px solid " + C.violet, background: "rgba(34,211,238,0.055)" }) + '">'
         + '<span style="' + css({ fontSize: 12.5, color: C.textSec, lineHeight: 1.5 }) + '">' + r[1] + '</span></td></tr>';
     }).join("");
 
@@ -1129,8 +1129,8 @@
 
     /* İmleç: fare/klavye ile taranan ay — tamamı hesaplanmış gerçek takvim */
     var imlec = '<g id="wl-tr-cur" opacity="0">'
-      + '<line id="wl-tr-cur-l" x1="0" y1="' + tavan + '" x2="0" y2="' + taban + '" stroke="#2DD4BF" stroke-width="1" stroke-opacity="0.9"/>'
-      + '<circle id="wl-tr-cur-d" cx="0" cy="' + taban + '" r="2.5" fill="#2DD4BF"/></g>';
+      + '<line id="wl-tr-cur-l" x1="0" y1="' + tavan + '" x2="0" y2="' + taban + '" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.9"/>'
+      + '<circle id="wl-tr-cur-d" cx="0" cy="' + taban + '" r="2.5" fill="#22D3EE"/></g>';
 
     var katman = [["İL", "81"], ["İLÇE", "973"], ["MAHALLE + KÖY", "50.000+"], ["KATEGORİ", "38"], ["AY", "257"]].map(function (k) {
       return '<div style="' + css({ padding: "9px 0", borderBottom: "1px solid " + C.border, display: "flex", justifyContent: "space-between", alignItems: "baseline" }) + '">'
@@ -1878,7 +1878,7 @@
 
       /* Hukuki sınır — ayrı ve OLUMLU kurulmuş. Bu bölüm bir muafiyet anlatmıyor;
          muafiyet iması, taşınmaz ticareti mevzuatı açısından savunulamaz olurdu. */
-      + '<div style="' + css({ marginTop: 12, padding: "14px 16px", background: "rgba(45,212,191,0.045)", border: "1px dashed " + C.violet }) + '">'
+      + '<div style="' + css({ marginTop: 12, padding: "14px 16px", background: "rgba(34,211,238,0.045)", border: "1px dashed " + C.violet }) + '">'
       + '<div style="' + mono(9.5, C.violet, "0.12em", 700) + css({ marginBottom: 6, marginLeft: -1 }) + '">◆ SINIRLARI NET OLSUN</div>'
       + '<p style="' + css({ fontSize: 13, lineHeight: 1.68, color: C.textSec, margin: "0 0 7px" }) + '">Özel Portföy bir yükümlülük muafiyeti değildir. Taşınmaz ticareti yetki belgesi zorunluluğu, kaydınızın kapalı ya da açık olmasından bağımsız olarak geçerlidir.</p>'
       + '<p style="' + css({ fontSize: 13, lineHeight: 1.68, color: C.textSec, margin: 0 }) + '">Bir kaydı kamuya ilan etmeye karar verdiğinizde, <strong style="' + css({ color: C.textPri }) + '">EİDS yetki doğrulaması panele gömülü olarak çalışır</strong> — ayrı bir sisteme girmeniz gerekmez. Yani kapalı çalışmak da, ilana çıkmak da aynı panelden ve mevzuata uygun biçimde yürür.</p></div>');
@@ -1923,7 +1923,7 @@
       + '<p style="' + css({ fontSize: 15.5, lineHeight: 1.68, color: C.textSec, marginBottom: 16 }) + '">Ticaret Bakanlığı’nın Elektronik İlan Doğrulama Sistemi (EİDS) kademeli olarak yürürlüğe girdi: kimlik doğrulaması 1 Kasım 2023, <strong style="' + css({ color: C.textPri }) + '">yetki belgesi doğrulaması 15 Eylül 2024</strong>, 15 Şubat 2026’dan itibaren tüm gayrimenkul ilanlarında zorunlu. Yetki belgesi ve taşınmaz doğrulaması yapılmadan ilan yayınlanamıyor.</p>'
       + '<p style="' + css({ fontSize: 15.5, lineHeight: 1.68, color: C.textSec, marginBottom: 18 }) + '">Sitenizde bu akış panele gömülü gelir — <strong style="' + css({ color: C.textPri }) + '">ayrı bir sisteme girip elle doğrulama yapmazsınız</strong>.</p>'
       + akis
-      + '<div style="' + css({ marginTop: 16, padding: "11px 15px", background: "rgba(45,212,191,0.04)", border: "1px dashed " + C.violet, fontFamily: C.mono, fontSize: 10, color: C.textMut, lineHeight: 1.62 }) + '">'
+      + '<div style="' + css({ marginTop: 16, padding: "11px 15px", background: "rgba(34,211,238,0.04)", border: "1px dashed " + C.violet, fontFamily: C.mono, fontSize: 10, color: C.textMut, lineHeight: 1.62 }) + '">'
       + '<span style="' + css({ color: C.violet, fontWeight: 700 }) + '">◆ NOT:</span> Doğrulamadan gelen ilan bilgileri kilitlenir; elle değiştirilemez. Fiyat bilgisi EİDS’te saklanmaz. İlan modülü emlak ofisi ve danışman sürümlerinde bulunur — değerleme sürümünde ilan yayını yoktur.'
       + '</div></div>');
   }
@@ -2184,7 +2184,7 @@
             if (g > 0.55) {                     /* taze vuruşta genişleyen halka */
               ctx.beginPath();
               ctx.arc(n.x * k, n.y * k, rr + (1 - g) * k * 26, 0, 6.2832);
-              ctx.strokeStyle = "rgba(45,212,191," + ((g - 0.55) * 0.8).toFixed(3) + ")";
+              ctx.strokeStyle = "rgba(34,211,238," + ((g - 0.55) * 0.8).toFixed(3) + ")";
               ctx.lineWidth = 1; ctx.stroke();
             }
           }

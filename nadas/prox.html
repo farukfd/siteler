@@ -38,12 +38,12 @@
   }
   a{color:inherit}
   button{font-family:inherit}
-  ::selection{background:rgba(45,212,191,0.32)}
+  ::selection{background:rgba(34,211,238,0.32)}
 
   @keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
   @keyframes nadasPulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
   @keyframes proxCursor { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
-  @keyframes glowPulse { 0%,100% { box-shadow: 0 0 20px rgba(45,212,191,0.3); } 50% { box-shadow: 0 0 40px rgba(45,212,191,0.6); } }
+  @keyframes glowPulse { 0%,100% { box-shadow: 0 0 20px rgba(34,211,238,0.3); } 50% { box-shadow: 0 0 40px rgba(34,211,238,0.6); } }
 
   .nadas-twocol { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
   @media (max-width: 900px) {
@@ -63,16 +63,16 @@
   <!-- No-JS / crawler fallback (JS render bunu değiştirir) -->
   <noscript>
     <div style="max-width:900px;margin:0 auto;padding:48px 20px;font-family:'Sora',sans-serif">
-      <h1 style="color:#2DD4BF">ProX — NADAS Akıllı Emlak Asistanı</h1>
+      <h1 style="color:#22D3EE">ProX — NADAS Akıllı Emlak Asistanı</h1>
       <p style="color:#CBD5E1">İl · ilçe · mahalle · cadde · sokak bazlı 21 yıllık emlak verisi. Deterministik, halüsinasyonsuz. Bu sayfayı görüntülemek için JavaScript gereklidir.</p>
-      <p><a style="color:#2DD4BF" href="https://www.emlakekspertizi.com/yapay-zeka">ProX’i dene →</a></p>
+      <p><a style="color:#22D3EE" href="https://www.emlakekspertizi.com/yapay-zeka">ProX’i dene →</a></p>
     </div>
   </noscript>
 </div>
 
 <script src="js/vendor/lenis.min.js"></script>
 <script src="js/vendor/gsap.min.js"></script>
-<script src="js/core.js?v=36"></script>
+<script src="js/core.js?v=37"></script>
 <script>
 /* ============================================================================
    ProX · NADAS merkez sitesi — kanonik menü core.js’ten (ALTIN KURAL).
@@ -103,7 +103,7 @@
   var C = {
     base: "#06101B", raised: "#0A1626", elev: "#101F35", deep: "#020812",
     primary: "#38BDF8", accent: "#34D399", warn: "#FBBF24", danger: "#F87171",
-    violet: "#2DD4BF", proxDeep: "#0D9488",
+    violet: "#22D3EE", proxDeep: "#0891B2",
     textPri: "#F1F5F9", textSec: "#CBD5E1", textMut: "#94A3B8", textFaint: "#64748B",
     border: "rgba(255,255,255,0.08)", borderStrong: "rgba(255,255,255,0.14)",
     mono: "'JetBrains Mono','SF Mono',ui-monospace,monospace",
@@ -189,7 +189,7 @@
       + '<span style="'+css({fontFamily:C.mono,fontSize:9,color:C.violet,letterSpacing:"0.18em",marginLeft:4,fontWeight:700})+'">ProX</span>'
       + '</a>'
       + '<nav style="'+css({display:"flex",gap:22,alignItems:"center",flexWrap:"wrap"})+'">'+links
-      + '<a href="https://www.emlakekspertizi.com/yapay-zeka" target="_blank" rel="noopener noreferrer" style="'+css({padding:"6px 14px",border:"1px solid "+C.violet,background:"rgba(45,212,191,0.08)",fontFamily:C.mono,fontSize:10.5,color:C.violet,fontWeight:700,letterSpacing:"0.1em",textDecoration:"none",borderRadius:2})+'">ProX’i DENE →</a>'
+      + '<a href="https://www.emlakekspertizi.com/yapay-zeka" target="_blank" rel="noopener noreferrer" style="'+css({padding:"6px 14px",border:"1px solid "+C.violet,background:"rgba(34,211,238,0.08)",fontFamily:C.mono,fontSize:10.5,color:C.violet,fontWeight:700,letterSpacing:"0.1em",textDecoration:"none",borderRadius:2})+'">ProX’i DENE →</a>'
       + '</nav></div></div>';
   }
 
@@ -203,7 +203,7 @@
   }
   /* ===== ProX ASİSTAN İŞLEYİŞ — İZOMETRİK PIPELINE (nav altı) ===== */
   function ProXFlow(){
-    var stepper = ["SORGU","TARAMA","ML","MML","YANIT"].map(function(s,si){ return '<div data-ph="'+si+'" style="'+css({position:"relative",padding:"5px 6px",background:C.base,border:"1px solid "+C.border,borderRadius:2,overflow:"hidden",textAlign:"center"})+'"><div style="'+css({position:"absolute",left:0,top:0,bottom:0,width:"0%",background:"linear-gradient(90deg,rgba(45,212,191,0.22),rgba(52,211,153,0.16))"})+'"></div><span style="'+css({position:"relative",fontFamily:C.mono,fontSize:8,color:C.textFaint,letterSpacing:"0.04em",fontWeight:700})+'">'+s+'</span></div>'; }).join('');
+    var stepper = ["SORGU","TARAMA","ML","MML","YANIT"].map(function(s,si){ return '<div data-ph="'+si+'" style="'+css({position:"relative",padding:"5px 6px",background:C.base,border:"1px solid "+C.border,borderRadius:2,overflow:"hidden",textAlign:"center"})+'"><div style="'+css({position:"absolute",left:0,top:0,bottom:0,width:"0%",background:"linear-gradient(90deg,rgba(34,211,238,0.22),rgba(52,211,153,0.16))"})+'"></div><span style="'+css({position:"relative",fontFamily:C.mono,fontSize:8,color:C.textFaint,letterSpacing:"0.04em",fontWeight:700})+'">'+s+'</span></div>'; }).join('');
     var stage = '<div id="prox-stage" style="'+css({position:"relative",overflow:"hidden",border:"1px solid "+C.borderStrong,borderRadius:4,background:"radial-gradient(120% 120% at 50% 20%, #0B1020, #05070E)",padding:"14px 12px",marginTop:14})+'">'
       + '<canvas id="prox-canvas" style="'+css({position:"absolute",inset:0,width:"100%",height:"100%",zIndex:0,pointerEvents:"none"})+'"></canvas>'
       + '<div style="'+css({position:"relative",zIndex:2,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,flexWrap:"wrap",marginBottom:10,paddingBottom:8,borderBottom:"1px solid "+C.border})+'"><span style="'+css({fontFamily:C.mono,fontSize:9,color:C.textFaint,letterSpacing:"0.1em",fontWeight:700,whiteSpace:"nowrap"})+'">◆ ProX İŞLEYİŞ · VERİ → ML·MML → KARAR</span><span style="'+css({fontFamily:C.mono,fontSize:9,color:C.textMut,letterSpacing:"0.04em",whiteSpace:"nowrap"})+'">◗ TARANAN <span id="prox-scan" style="'+css({color:C.primary,fontWeight:700})+'">0</span> / 480.234.521</span><span style="'+css({display:"inline-flex",alignItems:"center",gap:6,fontFamily:C.mono,fontSize:8.5,color:C.accent,letterSpacing:"0.1em",whiteSpace:"nowrap"})+'"><span style="'+css({width:7,height:7,borderRadius:9999,background:C.accent,animation:"nadasPulse 1.4s ease-in-out infinite"})+'"></span>CANLI</span></div>'
@@ -407,7 +407,7 @@
     ].map(function(t){ return '<span style="'+css({paddingRight:32})+'">'+t+'</span>'; }).join('');
 
     return '<section style="'+css({position:"relative",padding:"22px 16px 50px",background:C.base,borderBottom:"1px solid "+C.borderStrong,overflow:"hidden"})+'">'
-      + '<div style="'+css({position:"absolute",inset:0,backgroundImage:"radial-gradient(circle at 80% 20%, rgba(45,212,191,0.18), transparent 55%), radial-gradient(circle at 10% 80%, rgba(56,189,248,0.06), transparent 50%)"})+'"></div>'
+      + '<div style="'+css({position:"absolute",inset:0,backgroundImage:"radial-gradient(circle at 80% 20%, rgba(34,211,238,0.18), transparent 55%), radial-gradient(circle at 10% 80%, rgba(56,189,248,0.06), transparent 50%)"})+'"></div>'
       + '<div style="'+css({position:"relative",maxWidth:1280,margin:"0 auto"})+'">'
       + Eyebrow("◆ ProX · NADAS AKILLI EMLAK ASİSTANI · DETERMİNİSTİK · HALÜSİNASYONSUZ")
       + '<h1 style="'+css({fontFamily:"'Sora',system-ui,sans-serif",fontSize:"clamp(2rem,5.6vw,3.6rem)",fontWeight:700,lineHeight:1.04,letterSpacing:"-0.025em",margin:0,color:C.textPri,maxWidth:1150})+'">'
@@ -419,7 +419,7 @@
       + 'ML/MML matematiksel işleme katmanı ile çalışan, Nadas’ın 21 yıllık veri altyapısı üzerine inşa edilmiş <strong style="'+css({color:C.textPri})+'">akıllı emlak asistanı</strong>.</p>'
       /* 3 rozet */
       + '<div style="'+css({marginTop:22,display:"flex",gap:10,flexWrap:"wrap"})+'">'
-      + '<div style="'+css({display:"inline-flex",alignItems:"center",gap:10,padding:"10px 16px",border:"1px solid "+C.violet,background:"rgba(45,212,191,0.08)",borderRadius:2})+'">'
+      + '<div style="'+css({display:"inline-flex",alignItems:"center",gap:10,padding:"10px 16px",border:"1px solid "+C.violet,background:"rgba(34,211,238,0.08)",borderRadius:2})+'">'
       + '<span style="'+css({width:8,height:8,borderRadius:9999,background:C.violet,animation:"nadasPulse 1.4s ease-in-out infinite"})+'"></span>'
       + '<span style="'+css({fontFamily:C.mono,fontSize:11,color:C.violet,fontWeight:700,letterSpacing:"0.1em"})+'">DETERMİNİSTİK · HALÜSİNASYON: SIFIR</span></div>'
       + '<div style="'+css({display:"inline-flex",alignItems:"center",gap:8,padding:"10px 14px",border:"1px solid "+C.primary,background:"rgba(56,189,248,0.06)",borderRadius:2})+'">'
@@ -495,7 +495,7 @@
       + '<span style="'+css({fontFamily:C.mono,fontSize:10,color:C.violet,fontWeight:700,letterSpacing:"0.1em",marginLeft:8})+'">ProX · NADAS AKILLI ASİSTANI</span></div>'
       + '<div style="'+css({padding:"16px 16px",fontFamily:C.mono,fontSize:11.5,lineHeight:1.7,color:C.textSec,minHeight:320})+'">'
       + '<div style="'+css({marginBottom:10})+'"><span style="'+css({color:C.textFaint,fontSize:10})+'">[16:42:18] KULLANICI ›</span><br><span style="'+css({color:C.textPri})+'">Kadıköy Caddebostan’da Bağdat Caddesi üzerinde 120 m² konutun bugünkü tahmini değeri?</span></div>'
-      + '<div style="'+css({marginBottom:10,padding:"10px 12px",background:"rgba(45,212,191,0.04)",borderLeft:"2px solid "+C.violet})+'">'
+      + '<div style="'+css({marginBottom:10,padding:"10px 12px",background:"rgba(34,211,238,0.04)",borderLeft:"2px solid "+C.violet})+'">'
       + '<span style="'+css({color:C.violet,fontSize:10,fontWeight:700})+'">[16:42:19] ProX ›</span><br><span style="'+css({color:C.textSec})+'">'
       + '<span style="'+css({color:C.accent})+'">◆ KONUM:</span> İSTANBUL · Kadıköy · Caddebostan · Bağdat Cad.<br>'
       + '<span style="'+css({color:C.accent})+'">◆ KATEGORİ:</span> Konut · Daire · 120 m²<br>'
@@ -527,7 +527,7 @@
     var cards = yetenekler.map(function(y,i){
       return '<div style="'+css({background:C.raised,padding:"24px 22px"})+'">'
         + '<div style="'+css({display:"flex",alignItems:"center",gap:12,marginBottom:14})+'">'
-        + '<span style="'+css({width:38,height:38,border:"1px solid "+C.violet,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:C.mono,fontSize:16,color:C.violet,borderRadius:2,background:"rgba(45,212,191,0.06)"})+'">'+y.sym+'</span>'
+        + '<span style="'+css({width:38,height:38,border:"1px solid "+C.violet,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:C.mono,fontSize:16,color:C.violet,borderRadius:2,background:"rgba(34,211,238,0.06)"})+'">'+y.sym+'</span>'
         + '<div><div style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.14em"})+'">YETENEK '+String(i+1).padStart(2,"0")+'</div>'
         + '<div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:13.5,fontWeight:700,color:C.violet,letterSpacing:"0.04em"})+'">'+y.title+'</div></div></div>'
         + '<div style="'+css({fontFamily:C.mono,fontSize:11,color:C.primary,marginBottom:10,letterSpacing:"0.04em"})+'">'+y.sub+'</div>'
@@ -683,7 +683,7 @@
       + '<span style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.08em"})+'">'+active.count+' AKTİF KAYNAK</span></div>'
       + '<div style="'+css({display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:10})+'">'+kaynakCards+'</div>'
       + '</div></div>'
-      + '<div style="'+css({marginTop:16,padding:"12px 16px",background:"rgba(45,212,191,0.04)",border:"1px dashed "+C.violet,fontFamily:C.mono,fontSize:11,color:C.textMut,lineHeight:1.6,letterSpacing:"0.02em"})+'">⌬ Her bir kaynağın güncelleme frekansı, lisans durumu ve veri kapsamı şeffaftır. TÜİK’in ücretli mikro veri kaynakları <strong style="'+css({color:C.warn})+'">LİSANSLI</strong> etiketi ile gösterilir; ProX’in kullandığı tüm TÜİK verisi <strong style="'+css({color:C.textSec})+'">Döner Sermaye İşletmesi tarifesine göre</strong> lisans altında alınmıştır.</div>';
+      + '<div style="'+css({marginTop:16,padding:"12px 16px",background:"rgba(34,211,238,0.04)",border:"1px dashed "+C.violet,fontFamily:C.mono,fontSize:11,color:C.textMut,lineHeight:1.6,letterSpacing:"0.02em"})+'">⌬ Her bir kaynağın güncelleme frekansı, lisans durumu ve veri kapsamı şeffaftır. TÜİK’in ücretli mikro veri kaynakları <strong style="'+css({color:C.warn})+'">LİSANSLI</strong> etiketi ile gösterilir; ProX’in kullandığı tüm TÜİK verisi <strong style="'+css({color:C.textSec})+'">Döner Sermaye İşletmesi tarifesine göre</strong> lisans altında alınmıştır.</div>';
     return SubSection("C.2","Veri ekosistemi · 5 katman · "+totalSources+" kaynak","NADAS ÖZEL · RESMİ MEVZUAT · KAMU · BAKANLIKLAR · YEREL YÖNETİMLER", body);
   }
   window.nxSetLayer = function(i){ ekoActive=i; var m=document.getElementById('eko-mount'); if(m){ m.innerHTML=VeriEkosistemi(); NX.proxify(m); } };
@@ -738,10 +738,10 @@
 
     var svg = '<svg viewBox="0 0 820 680" width="100%" style="display:block;max-height:620px" preserveAspectRatio="xMidYMid meet">'
       + '<defs>'
-      + '<radialGradient id="proxCore2" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#2DD4BF" stop-opacity="0.9"/><stop offset="60%" stop-color="#0D9488" stop-opacity="0.6"/><stop offset="100%" stop-color="#0D9488" stop-opacity="0"/></radialGradient>'
+      + '<radialGradient id="proxCore2" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#22D3EE" stop-opacity="0.9"/><stop offset="60%" stop-color="#0891B2" stop-opacity="0.6"/><stop offset="100%" stop-color="#0891B2" stop-opacity="0"/></radialGradient>'
       + '<radialGradient id="serverCore" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#34D399" stop-opacity="0.5"/><stop offset="100%" stop-color="#34D399" stop-opacity="0"/></radialGradient>'
       + '<filter id="glow2"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
-      + '<pattern id="gridPattern2" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(45,212,191,0.04)" stroke-width="0.5"/></pattern>'
+      + '<pattern id="gridPattern2" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(34,211,238,0.04)" stroke-width="0.5"/></pattern>'
       + '</defs>'
       + '<rect width="820" height="680" fill="url(#gridPattern2)"/>'
       + srcLines
@@ -806,7 +806,7 @@
       + '<div style="'+css({display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:12,marginBottom:18,padding:"0 8px"})+'" class="nadas-pipeline-stages">'+stagesTop+'</div>'
       + svg
       + '<div style="'+css({marginTop:16,display:"grid",gridTemplateColumns:"repeat(4, 1fr)",gap:8})+'" class="nadas-pipeline-stages">'+stagesBot+'</div>'
-      + '<div style="'+css({marginTop:12,padding:"10px 14px",background:"rgba(45,212,191,0.04)",border:"1px dashed "+C.violet,fontFamily:C.mono,fontSize:10.5,color:C.textMut,lineHeight:1.6,letterSpacing:"0.02em"})+'"><span style="'+css({color:C.violet,fontWeight:700})+'">◆ AKIŞ:</span> Veri kaynakları → Nadas sunucusunda toplanır + doğrulanır → ProX motoruna iletilir → 7 farklı kanaldan müşterilere sunulur. Her parçacık gerçek zamanlı veri akışını temsil eder. <span style="'+css({color:C.warn,marginLeft:8})+'">*TÜİK</span> — ücretli lisanslı mikro veri. <span style="'+css({color:C.accent,marginLeft:8})+'">● BANKA + BELEDİYE</span> — kurumsal müşteri segmentleri.</div>'
+      + '<div style="'+css({marginTop:12,padding:"10px 14px",background:"rgba(34,211,238,0.04)",border:"1px dashed "+C.violet,fontFamily:C.mono,fontSize:10.5,color:C.textMut,lineHeight:1.6,letterSpacing:"0.02em"})+'"><span style="'+css({color:C.violet,fontWeight:700})+'">◆ AKIŞ:</span> Veri kaynakları → Nadas sunucusunda toplanır + doğrulanır → ProX motoruna iletilir → 7 farklı kanaldan müşterilere sunulur. Her parçacık gerçek zamanlı veri akışını temsil eder. <span style="'+css({color:C.warn,marginLeft:8})+'">*TÜİK</span> — ücretli lisanslı mikro veri. <span style="'+css({color:C.accent,marginLeft:8})+'">● BANKA + BELEDİYE</span> — kurumsal müşteri segmentleri.</div>'
       + '</div>';
     return SubSection("C.3","Veri pipeline · 4 aşamalı işleyiş mimarisi","KAYNAKLAR → SUNUCU (480M+) → ProX ML/MML → 7 ÇIKTI KANALI", body);
   }
@@ -949,7 +949,7 @@
       + '<div style="'+css({padding:"20px 24px",borderBottom:"1px solid "+C.border})+'">'
       + '<div style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.12em",marginBottom:8,fontWeight:700})+'">● '+active.title.toUpperCase()+' · KULLANICI SORUSU</div>'
       + '<div style="'+css({fontFamily:"'Sora',sans-serif",fontSize:17,color:C.textPri,lineHeight:1.45,fontWeight:500,letterSpacing:"-0.01em"})+'">"'+active.soru+'"</div></div>'
-      + '<div style="'+css({padding:"20px 24px",background:"rgba(45,212,191,0.03)"})+'">'
+      + '<div style="'+css({padding:"20px 24px",background:"rgba(34,211,238,0.03)"})+'">'
       + '<div style="'+css({display:"flex",alignItems:"center",gap:10,marginBottom:14})+'"><span style="'+css({padding:"3px 10px",background:C.violet,color:"#fff",fontFamily:C.mono,fontSize:10,fontWeight:700,letterSpacing:"0.1em"})+'">◆ ProX</span><span style="'+css({fontFamily:C.mono,fontSize:10,color:C.textFaint,letterSpacing:"0.06em"})+'">YANIT · DETERMİNİSTİK · KAYNAK ŞEFFAF</span></div>'
       + '<div style="'+css({fontFamily:C.mono,fontSize:12.5,color:C.textSec,lineHeight:1.85,whiteSpace:"pre-wrap"})+'">'+lines+'</div></div>'
       + '</div>'
@@ -1025,7 +1025,7 @@
       ? '<img src="'+EMLAK_LOGO_URI+'" alt="emlakekspertizi.com" width="88" height="88" style="display:block;border-radius:2px">'
       : '<span style="'+css({width:88,height:88,display:"flex",alignItems:"center",justifyContent:"center",background:"#020812",border:"1px solid "+C.accent,borderRadius:6,fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:C.accent,textAlign:"center",lineHeight:1.2,padding:6})+'">emlak<br>ekspertizi</span>';
     return '<section style="'+css({background:"linear-gradient(135deg, "+C.deep+" 0%, "+C.raised+" 100%)",borderTop:"2px solid "+C.violet,borderBottom:"1px solid "+C.borderStrong,padding:"44px 16px 36px",position:"relative",overflow:"hidden"})+'">'
-      + '<div style="'+css({position:"absolute",inset:0,backgroundImage:"radial-gradient(circle at 80% 20%, rgba(45,212,191,0.16), transparent 60%), radial-gradient(circle at 10% 80%, rgba(56,189,248,0.06), transparent 50%)"})+'"></div>'
+      + '<div style="'+css({position:"absolute",inset:0,backgroundImage:"radial-gradient(circle at 80% 20%, rgba(34,211,238,0.16), transparent 60%), radial-gradient(circle at 10% 80%, rgba(56,189,248,0.06), transparent 50%)"})+'"></div>'
       + '<div style="'+css({position:"relative",maxWidth:1280,margin:"0 auto"})+'">'
       + '<div style="'+css({display:"flex",alignItems:"center",gap:10,marginBottom:18,fontFamily:C.mono,fontSize:11,letterSpacing:"0.14em"})+'"><span style="'+css({color:C.violet,fontWeight:700})+'">◆ ProX’E DOĞRUDAN ERİŞİM</span><span style="'+css({height:1,flex:1,background:C.violet,opacity:0.4})+'"></span><span style="'+css({color:C.textMut})+'">EMLAKEKSPERTIZI.COM · ProX</span></div>'
       + '<div style="'+css({marginBottom:16})+'"><img src="img/emlak-logo-full.png" alt="emlakekspertizi.com / ProX" style="'+css({display:"block",width:320,maxWidth:"100%",height:"auto"})+'"><h2 style="'+css({position:"absolute",width:1,height:1,overflow:"hidden",clip:"rect(0 0 0 0)",whiteSpace:"nowrap",margin:-1,padding:0,border:0})+'">emlakekspertizi.com / ProX — Akıllı Emlak Asistanı</h2><div style="'+css({fontFamily:C.mono,fontSize:12,color:C.violet,letterSpacing:"0.18em",marginTop:12,fontWeight:700})+'">/ ProX · AKILLI EMLAK ASİSTANI · DETERMİNİSTİK</div></div>'

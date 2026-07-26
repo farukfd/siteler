@@ -41,7 +41,7 @@
   var C = {
     base: "#06101B", raised: "#0A1626", elev: "#101F35", deep: "#020812",
     primary: "#38BDF8", accent: "#34D399", warn: "#FBBF24", danger: "#F87171",
-    violet: "#2DD4BF", proxDeep: "#0D9488",
+    violet: "#22D3EE", proxDeep: "#0891B2",
     textPri: "#F1F5F9", textSec: "#CBD5E1", textMut: "#94A3B8", textFaint: "#64748B",
     border: "rgba(255,255,255,0.08)", borderStrong: "rgba(255,255,255,0.14)",
     mono: "'JetBrains Mono','SF Mono',ui-monospace,monospace",
@@ -92,13 +92,20 @@
     s.id = "nx-base";
     s.textContent = [
       "*{box-sizing:border-box}", "html,body{margin:0;padding:0}",
-      "body{background:" + C.base + ";color:" + C.textPri + ";min-height:100vh;font-family:'Inter Tight','Inter',system-ui,sans-serif;font-feature-settings:\"ss01\",\"cv11\";-webkit-font-smoothing:antialiased}",
+      "body{background:" + C.base + ";color:" + C.textPri + ";min-height:100vh;font-family:'Inter Tight','Inter',system-ui,sans-serif;font-feature-settings:\"ss01\",\"cv11\";-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}",
+      "h1,h2,h3,h4{text-wrap:balance}", "p{text-wrap:pretty}",
       "a{color:inherit}", "button{font-family:inherit}", "::selection{background:rgba(56,189,248,0.30)}",
+      /* Mikro-etkileşim — yumuşak geçişler, kart hover kalkışı, erişilebilir odak halkaları */
+      "a,button{transition:color .16s ease,background-color .16s ease,border-color .16s ease,transform .16s ease,box-shadow .16s ease}",
+      "a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid " + C.primary + ";outline-offset:2px;border-radius:2px}",
+      ".nadas-eco{transition:border-color .18s ease,transform .18s ease,box-shadow .18s ease}",
+      ".nadas-eco:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,0.30)}",
+      "@media (prefers-reduced-motion:reduce){a,button,.nadas-eco{transition:none}.nadas-eco:hover{transform:none}}",
       "@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}",
       "@keyframes nadasPulse{0%,100%{opacity:.4}50%{opacity:1}}",
       "@keyframes nadasGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}",
       "@keyframes proxCursor{0%,49%{opacity:1}50%,100%{opacity:0}}",
-      "@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(45,212,191,.3)}50%{box-shadow:0 0 40px rgba(45,212,191,.6)}}",
+      "@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(34,211,238,.3)}50%{box-shadow:0 0 40px rgba(34,211,238,.6)}}",
       ".nadas-twocol{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}",
       ".nadas-twocol-arrow{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}",
       "@media (max-width:900px){",
