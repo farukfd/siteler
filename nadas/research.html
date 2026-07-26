@@ -345,9 +345,43 @@
   }
 
   /* ===== MONTAJ ===== */
-  /* ===== ProX VERİ HATTI — izometrik canlı sahne (hero üstü) ===== */
-  /* ===== ProX VERİ HATTI — izometrik canlı sahne (hero üstü) ===== */
+  /* ===== ProX VERİ HATTI — GSAP koreografili SVG pipeline (kaynaktan karara) ===== */
   function ResearchPipeline() {
+    var VW = 960, VH = 172, cy = 80, NW = 150, NH = 54, ny = cy - NH / 2, X0 = 175, X1 = 785;
+    var nodes = [
+      { cx: 100, t: "VERİTABANI", n: "01", c: C.accent },
+      { cx: 290, t: "HAZIRLIK", n: "02", c: C.accent },
+      { cx: 480, t: "ProX", n: "03", c: C.primary, core: true },
+      { cx: 670, t: "ENDEKS", n: "04", c: C.violet },
+      { cx: 860, t: "API · RAPOR", n: "05", c: C.violet }
+    ];
+    var conns = "";
+    for (var i = 0; i < nodes.length - 1; i++) {
+      var x1 = nodes[i].cx + NW / 2, x2 = nodes[i + 1].cx - NW / 2;
+      conns += '<line class="rp-conn" x1="' + x1 + '" y1="' + cy + '" x2="' + x2 + '" y2="' + cy + '" stroke="' + C.borderStrong + '" stroke-width="1.5" stroke-dasharray="3 5"></line>';
+    }
+    var pkts = "";
+    for (var p = 0; p < 6; p++) pkts += '<circle class="rp-pkt" cx="' + X0 + '" cy="' + cy + '" r="3.4" fill="' + C.accent + '" opacity="0"></circle>';
+    var nodeSvg = nodes.map(function (nd) {
+      var x = nd.cx - NW / 2;
+      var extra = nd.core
+        ? '<circle id="rp-glow" cx="' + nd.cx + '" cy="' + cy + '" r="40" fill="url(#rpGlow)" opacity="0.4"></circle>'
+        + '<circle id="rp-ring" cx="' + nd.cx + '" cy="' + cy + '" r="40" fill="none" stroke="' + C.primary + '" stroke-width="1.4" stroke-dasharray="5 9" opacity="0.55"></circle>'
+        : '';
+      return '<g class="rp-node">' + extra
+        + '<rect x="' + x + '" y="' + ny + '" width="' + NW + '" height="' + NH + '" rx="8" fill="' + C.raised + '" stroke="' + nd.c + '" stroke-width="' + (nd.core ? 2 : 1.2) + '"></rect>'
+        + '<text x="' + (x + 12) + '" y="' + (ny + 19) + '" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="' + nd.c + '">' + nd.n + '</text>'
+        + '<text x="' + nd.cx + '" y="' + (ny + 37) + '" text-anchor="middle" font-family="Sora,sans-serif" font-size="15" font-weight="700" fill="' + C.textPri + '">' + nd.t + '</text>'
+        + '</g>';
+    }).join("");
+    var svg = '<svg id="rp-svg" viewBox="0 0 ' + VW + ' ' + VH + '" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" role="img" aria-label="ProX veri hattı: veritabanı, hazırlık, ProX model, endeks, API" style="' + css({ display: "block" }) + '">'
+      + '<defs><radialGradient id="rpGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="' + C.primary + '" stop-opacity="0.55"></stop><stop offset="100%" stop-color="' + C.primary + '" stop-opacity="0"></stop></radialGradient></defs>'
+      + conns + pkts + nodeSvg + '</svg>';
+    var stage = '<div id="rp-stage" style="' + css({ position: "relative", overflow: "hidden", border: "1px solid " + C.borderStrong, borderRadius: 5, background: "radial-gradient(130% 150% at 50% 18%, #12161b 0%, #0b0d0f 52%, #060708 100%)", marginTop: 14, padding: "30px 14px 22px" }) + '">'
+      + '<div style="' + css({ position: "absolute", left: 14, top: 12, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.12em", fontWeight: 700, pointerEvents: "none" }) + '">◆ KAYNAK → MODEL → ÇIKTI</div>'
+      + '<div style="' + css({ position: "absolute", right: 14, top: 12, display: "inline-flex", alignItems: "center", gap: 6, fontFamily: C.mono, fontSize: 8.5, color: C.accent, letterSpacing: "0.12em", pointerEvents: "none" }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>CANLI · DETERMİNİST</div>'
+      + svg
+      + '<div id="rp-cap" style="' + css({ position: "absolute", left: 14, bottom: 12, right: 14, fontFamily: C.mono, fontSize: 9.5, color: C.textMut, letterSpacing: "0.04em", pointerEvents: "none", lineHeight: 1.4 }) + '">▸ 480M+ kayıt · ProX motorunda deterministik işlenir — aynı sorgu → aynı sonuç</div></div>';
     var legend = [
       ["01", "VERİTABANI", "480M+ kayıt · 21 yıl", C.accent],
       ["02", "VERİ HAZIRLAMA", "temizle · normalize · eşle", C.accent],
@@ -355,16 +389,8 @@
       ["04", "ENDEKS ÇIKTISI", "il · ilçe · mahalle ₺/m²", C.violet],
       ["05", "API · RAPOR", "REST/WS · PDF · dashboard", C.violet]
     ].map(function (o) {
-      return '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 7, minWidth: 0 }) + '">'
-        + '<span style="' + css({ fontFamily: C.mono, fontSize: 9, color: o[3], fontWeight: 700, letterSpacing: "0.08em" }) + '">' + o[0] + '</span>'
-        + '<div style="' + css({ minWidth: 0 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textPri, fontWeight: 700, letterSpacing: "0.03em", lineHeight: 1.2 }) + '">' + o[1] + '</div>'
-        + '<div style="' + css({ fontFamily: C.mono, fontSize: 8, color: C.textFaint, lineHeight: 1.25 }) + '">' + o[2] + '</div></div></div>';
+      return '<div style="' + css({ display: "flex", alignItems: "baseline", gap: 7, minWidth: 0 }) + '"><span style="' + css({ fontFamily: C.mono, fontSize: 9, color: o[3], fontWeight: 700, letterSpacing: "0.08em" }) + '">' + o[0] + '</span><div style="' + css({ minWidth: 0 }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textPri, fontWeight: 700, letterSpacing: "0.03em", lineHeight: 1.2 }) + '">' + o[1] + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 8, color: C.textFaint, lineHeight: 1.25 }) + '">' + o[2] + '</div></div></div>';
     }).join('<span style="' + css({ color: C.textFaint, alignSelf: "center" }) + '">›</span>');
-    var stage = '<div id="rp-stage" style="' + css({ position: "relative", overflow: "hidden", border: "1px solid " + C.borderStrong, borderRadius: 5, background: "radial-gradient(130% 150% at 50% 22%, #191c1f 0%, #0b0d0f 48%, #060708 100%)", marginTop: 14 }) + '">'
-      + '<canvas id="rp-canvas" style="' + css({ display: "block", width: "100%", height: "clamp(190px,26vw,310px)" }) + '"></canvas>'
-      + '<div style="' + css({ position: "absolute", left: 14, top: 12, display: "flex", alignItems: "center", gap: 8, fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.12em", fontWeight: 700, pointerEvents: "none" }) + '">◆ KAYNAK → MODEL → ÇIKTI</div>'
-      + '<div style="' + css({ position: "absolute", right: 14, top: 12, display: "inline-flex", alignItems: "center", gap: 6, fontFamily: C.mono, fontSize: 8.5, color: C.accent, letterSpacing: "0.12em", pointerEvents: "none" }) + '"><span style="' + css({ width: 7, height: 7, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span>CANLI</div>'
-      + '<div id="rp-cap" style="' + css({ position: "absolute", left: 14, bottom: 12, fontFamily: C.mono, fontSize: 9.5, color: C.textMut, letterSpacing: "0.04em", pointerEvents: "none" }) + '">▸ 480M+ kayıt · ProX motoruna akıyor</div></div>';
     var legendRow = '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: "6px 10px", alignItems: "center", marginTop: 10, padding: "10px 12px", background: "rgba(6,16,27,0.5)", border: "1px solid " + C.border, borderRadius: 3 }) + '">' + legend + '</div>';
     return '<section style="' + css({ position: "relative", padding: "20px 16px 6px", background: C.base, overflow: "hidden" }) + '">'
       + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto" }) + '">'
@@ -372,274 +398,45 @@
       + stage + legendRow + '</div></section>';
   }
 
+  /* GSAP koreografi — reveal + sürekli veri akışı (paketler ProX'te renk değiştirir).
+     prefers-reduced-motion / gsap yoksa: statik görünür (ilerici geliştirme). */
   function mountResearchPipeline() {
-    var stage = document.getElementById("rp-stage");
-    var cv = stage && document.getElementById("rp-canvas");
-    if (!stage || !cv || !cv.getContext) return;
-    var ctx = cv.getContext("2d");
-    var capEl = document.getElementById("rp-cap");
-    var mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
-    var reduce = !!(mq && mq.matches);
-    var W = 0, H = 0, dpr = 1, raf = 0, running = false, visible = true;
-    var STEP = 1 / 60, acc = 0, last = 0, t = 0, TAU = 6.28318;
-    var COS = 0.8660254, SIN = 0.5, U = 40, CX = 0, BASEY = 0, bgLayer = null;
-    // modern yeşil skala + çelik + mor
-    var A_LO = "#3f6d00", A_MID = "#84C400", A_HI = "#C6F04E", A_WHT = "#EDFFCB", PUR = "#B79BFF";
-    var STL = { top1: "#454c55", top2: "#12151a", sid1: "#1b2026", sid2: "#070a0d", rim: "#7a828d" };
-    var A = {};   // anchor ekran noktaları
-    function hexA(h, a) { var n = parseInt(h.slice(1), 16); return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; }
-    var sprites = {};
-    function sprite(color) {
-      if (sprites[color]) return sprites[color];
-      var r = 20, s = document.createElement("canvas"); s.width = s.height = r * 2;
-      var sc = s.getContext("2d"), g = sc.createRadialGradient(r, r, 0, r, r, r);
-      g.addColorStop(0, hexA(color, 1)); g.addColorStop(0.3, hexA(color, 0.5)); g.addColorStop(1, hexA(color, 0));
-      sc.fillStyle = g; sc.fillRect(0, 0, r * 2, r * 2); sprites[color] = s; return s;
-    }
-    function P(an, a, b, c) { return { x: an.x + (a - c) * COS * U, y: an.y + ((a + c) * SIN - b) * U }; }
-    function poly(p, close) { ctx.beginPath(); for (var i = 0; i < p.length; i++) { if (i === 0) ctx.moveTo(p[i].x, p[i].y); else ctx.lineTo(p[i].x, p[i].y); } if (close) ctx.closePath(); }
-    function rrect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
-    function layout() {
-      U = Math.max(12, Math.min(W / 20, H / 6.8));
-      CX = W / 2; BASEY = H * 0.52;
-      GAP = U * 1.15; FLOWSPEED = U * 1.7;
-      motes = []; for (var mi = 0; mi < 16; mi++) motes.push({ x: Math.random() * W, y: BASEY - U * 1.8 + Math.random() * U * 3.4, ph: Math.random() * TAU, r: 0.6 + Math.random() * 1.1 });
-      var sp = Math.min(W * 0.5 - U * 1.5, U * 6.6);
-      A = {
-        cube: { x: CX, y: BASEY - U * 0.15 },
-        L1: { x: CX - sp * 0.5, y: BASEY + U * 0.5 }, R1: { x: CX + sp * 0.5, y: BASEY + U * 0.5 },
-        L2: { x: CX - sp, y: BASEY - U * 0.1 }, R2: { x: CX + sp, y: BASEY - U * 0.1 }
-      };
-    }
-    // ---- yumuşak temas gölgesi ----
-    function contactShadow(an, rx, ry, al) {
-      var g = ctx.createRadialGradient(an.x, an.y, 0, an.x, an.y, rx); g.addColorStop(0, "rgba(0,0,0," + al + ")"); g.addColorStop(0.7, "rgba(0,0,0," + al * 0.5 + ")"); g.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(an.x, an.y, rx, ry, 0, 0, TAU); ctx.fill();
-    }
-    // ---- çelik kaide ----
-    function platform(an, hw, hd, th, g) {
-      var c = ctx; if (g) ctx = g;
-      var BL = P(an, -hw, 0, -hd), BR = P(an, hw, 0, -hd), FR = P(an, hw, 0, hd), FL = P(an, -hw, 0, hd);
-      var FRb = P(an, hw, -th, hd), FLb = P(an, -hw, -th, hd), BRb = P(an, hw, -th, -hd);
-      contactShadow({ x: an.x, y: FR.y + U * 0.06 }, (hw + hd) * COS * U * 1.15, (hw + hd) * SIN * U * 0.72, 0.5);
-      // sağ yan
-      poly([BR, FR, FRb, BRb], true); var rg = ctx.createLinearGradient(BR.x, BR.y, BR.x, BRb.y + (FRb.y - FR.y)); rg.addColorStop(0, STL.sid1); rg.addColorStop(1, STL.sid2); ctx.fillStyle = rg; ctx.fill();
-      // ön yan
-      poly([FL, FR, FRb, FLb], true); var lg = ctx.createLinearGradient(FL.x, FL.y, FL.x, FLb.y); lg.addColorStop(0, "#20252c"); lg.addColorStop(1, STL.sid2); ctx.fillStyle = lg; ctx.fill();
-      // üst yüz + diyagonal spekül
-      poly([BL, BR, FR, FL], true); var tg = ctx.createLinearGradient(BL.x, BL.y, FR.x, FR.y); tg.addColorStop(0, STL.top1); tg.addColorStop(0.42, "#2c323a"); tg.addColorStop(0.55, "#3a424c"); tg.addColorStop(1, STL.top2); ctx.fillStyle = tg; ctx.fill();
-      // spekül şerit
-      ctx.save(); poly([BL, BR, FR, FL], true); ctx.clip(); ctx.globalAlpha = 0.5; ctx.strokeStyle = hexA(STL.rim, 0.5); ctx.lineWidth = U * 0.14; var m1 = P(an, -hw, 0, hd * 0.2), m2 = P(an, hw, 0, -hd * 0.2); ctx.beginPath(); ctx.moveTo(m1.x, m1.y); ctx.lineTo(m2.x, m2.y); ctx.stroke(); ctx.restore();
-      // rim + ön kenar yeşil bounce
-      ctx.lineWidth = 1; ctx.strokeStyle = hexA(STL.rim, 0.85); poly([BL, BR, FR, FL], true); ctx.stroke();
-      ctx.strokeStyle = hexA(A_MID, 0.5); ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(FL.x, FL.y); ctx.lineTo(FR.x, FR.y); ctx.stroke();
-      ctx.strokeStyle = hexA(STL.rim, 0.35); ctx.beginPath(); ctx.moveTo(FR.x, FR.y); ctx.lineTo(FRb.x, FRb.y); ctx.stroke();
-      ctx = c;
-    }
-    function padRing(an, pr, g) {
-      var c = ctx; if (g) ctx = g;
-      var a = P(an, 0, 0, -pr), b = P(an, pr, 0, 0), d = P(an, 0, 0, pr), e = P(an, -pr, 0, 0);
-      poly([a, b, d, e], true); ctx.strokeStyle = hexA(A_MID, 0.5); ctx.lineWidth = 1.1; ctx.stroke(); ctx = c;
-    }
-    function padGlow(an, pr, inten) {
-      var g = ctx.createRadialGradient(an.x, an.y, 0, an.x, an.y, pr * U); g.addColorStop(0, hexA(A_HI, 0.15 + 0.15 * inten)); g.addColorStop(0.4, hexA(A_MID, 0.07)); g.addColorStop(1, hexA(A_MID, 0));
-      ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(an.x, an.y, pr * U, pr * U * 0.54, 0, 0, TAU); ctx.fill();
-    }
-    // ---- zemin yansıması sarmalayıcı ----
-    function reflect(an, fn, al) {
-      ctx.save(); ctx.globalAlpha = al; ctx.translate(an.x, an.y); ctx.scale(1, -0.5); ctx.translate(-an.x, -an.y); ctx.globalCompositeOperation = "lighter"; fn(); ctx.restore();
-    }
-    // ---- veritabanı (yığılı diskler · gövde) ----
-    function db(an, pulse, refl) {
-      var rw = 0.5 * U, rh = rw * 0.42, band = 0.26 * U, gap = 0.05 * U, cxp = an.x, by = an.y - 0.02 * U;
-      for (var i = 0; i < 3; i++) {
-        var yb = by - i * (band + gap), yt = yb - band;
-        ctx.beginPath(); ctx.moveTo(cxp - rw, yt); ctx.lineTo(cxp - rw, yb); ctx.ellipse(cxp, yb, rw, rh, 0, Math.PI, 0, true); ctx.lineTo(cxp + rw, yt); ctx.ellipse(cxp, yt, rw, rh, 0, 0, Math.PI, false); ctx.closePath();
-        var g = ctx.createLinearGradient(cxp - rw, 0, cxp + rw, 0); g.addColorStop(0, hexA(A_LO, 0.95)); g.addColorStop(0.5, hexA(A_MID, 0.98)); g.addColorStop(1, hexA(A_LO, 0.95)); ctx.fillStyle = g; ctx.fill();
-        ctx.beginPath(); ctx.ellipse(cxp, yt, rw, rh, 0, 0, TAU); ctx.fillStyle = hexA(A_HI, 0.95); ctx.fill();
-        ctx.beginPath(); ctx.ellipse(cxp, yt, rw, rh, 0, 0, TAU); ctx.strokeStyle = hexA(A_WHT, 0.55); ctx.lineWidth = 1; ctx.stroke();
-      }
-      if (!refl) { ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = 0.35 + 0.25 * pulse; var gr = 1.0 * U; ctx.drawImage(sprite(A_MID), cxp - gr, by - band * 3 - gr * 0.5, gr * 2, gr * 2); ctx.restore(); }
-    }
-    // ---- cam kart (billboard ekran) ----
-    function card(an, wF, hF, kind, refl) {
-      var w = wF * U, h = hF * U, x0 = an.x - w / 2, y1 = an.y - 0.04 * U, y0 = y1 - h;
-      if (!refl) { ctx.save(); ctx.globalCompositeOperation = "lighter"; padGlow({ x: an.x, y: y0 + h * 0.62 }, 1.0, 0.4); ctx.restore(); }
-      // cam gövde
-      var bg = ctx.createLinearGradient(x0, y0, x0, y1); bg.addColorStop(0, "rgba(14,22,16,0.9)"); bg.addColorStop(1, "rgba(4,8,6,0.92)"); ctx.fillStyle = bg; rrect(x0, y0, w, h, 6); ctx.fill();
-      // üst sheen
-      ctx.save(); rrect(x0, y0, w, h, 6); ctx.clip(); var sh = ctx.createLinearGradient(x0, y0, x0, y0 + h * 0.4); sh.addColorStop(0, "rgba(255,255,255,0.09)"); sh.addColorStop(1, "rgba(255,255,255,0)"); ctx.fillStyle = sh; ctx.fillRect(x0, y0, w, h * 0.4);
-      var cx0 = x0 + 10, cw = w - 20, cy0 = y0 + 12, chh = h - 24;
-      if (kind === "bars") {
-        var n = 6; for (var i = 0; i < n; i++) { var bh = (0.28 + 0.66 * (0.5 + 0.5 * Math.sin(t * 2.2 + i))) * chh, bx = cx0 + i * (cw / n), bw = cw / n - 4; ctx.fillStyle = hexA(A_MID, 0.85); ctx.fillRect(bx, cy0 + chh - bh, bw, bh); ctx.fillStyle = hexA(A_HI, 0.9); ctx.fillRect(bx, cy0 + chh - bh, bw, 2); }
-      } else if (kind === "line") {
-        ctx.strokeStyle = hexA(A_HI, 0.9); ctx.lineWidth = 1.8; ctx.beginPath(); for (var k = 0; k <= 20; k++) { var xx = cx0 + cw * k / 20, vv = 0.5 + 0.32 * Math.sin(k * 0.5 + t * 1.6) + 0.12 * k / 20, yy = cy0 + chh - vv * chh; if (k === 0) ctx.moveTo(xx, yy); else ctx.lineTo(xx, yy); } ctx.stroke();
-        var ex = cx0 + cw, ey = cy0 + chh - (0.62 + 0.32 * Math.sin(10 + t * 1.6)) * chh; ctx.fillStyle = A_WHT; ctx.beginPath(); ctx.arc(cx0 + cw, cy0 + chh - (0.5 + 0.32 * Math.sin(10 + t * 1.6) + 0.12) * chh, 2.4, 0, TAU); ctx.fill();
-      } else if (kind === "code") {
-        ctx.font = (Math.round(U * 0.28)) + "px " + C.mono; for (var c2 = 0; c2 < 5; c2++) { var off = (t * 26 + c2 * 17) % (chh + 16); for (var r = 0; r < 6; r++) { var yy2 = cy0 + ((r * 15 + off) % (chh + 8)) - 4; ctx.fillStyle = hexA(A_MID, r === 0 ? 0.95 : 0.3); ctx.fillText(((c2 * 3 + r + (t | 0)) % 2).toString(), cx0 + c2 * (cw / 5), yy2); } }
-      } else if (kind === "lattice") {
-        var mcx = cx0 + cw / 2, mcy = cy0 + chh / 2, R = Math.min(cw, chh) * 0.34, rot = t * 0.5, pts = [];
-        for (var q = 0; q < 6; q++) { var an2 = q / 6 * TAU + rot, rr2 = q % 2 ? R : R * 0.55; pts.push({ x: mcx + Math.cos(an2) * rr2, y: mcy + Math.sin(an2) * rr2 * 0.7 }); }
-        ctx.strokeStyle = hexA(PUR, 0.5); ctx.lineWidth = 1; ctx.beginPath(); for (var a2 = 0; a2 < pts.length; a2++) { ctx.moveTo(mcx, mcy); ctx.lineTo(pts[a2].x, pts[a2].y); } ctx.stroke();
-        pts.forEach(function (p, i) { ctx.fillStyle = hexA(i % 2 ? A_MID : PUR, 0.95); ctx.beginPath(); ctx.arc(p.x, p.y, 2.4, 0, TAU); ctx.fill(); });
-        ctx.fillStyle = A_WHT; ctx.beginPath(); ctx.arc(mcx, mcy, 2.6, 0, TAU); ctx.fill();
-      }
-      ctx.restore();
-      // çerçeve (fresnel: üst parlak)
-      ctx.lineWidth = 1.2; ctx.strokeStyle = hexA(A_MID, 0.55); rrect(x0, y0, w, h, 6); ctx.stroke();
-      ctx.strokeStyle = hexA(A_HI, 0.5); ctx.beginPath(); ctx.moveTo(x0 + 6, y0); ctx.lineTo(x0 + w - 6, y0); ctx.stroke();
-    }
-    // ---- merkez cam küp + sinir ağı ----
-    var LAY = [
-      [[-0.72, 0.42, 0], [-0.72, -0.42, 0]],
-      [[-0.24, 0.66, 0.32], [-0.24, 0, -0.4], [-0.24, -0.66, 0.32]],
-      [[0.24, 0.62, -0.34], [0.24, 0.02, 0.4], [0.24, -0.62, -0.34]],
-      [[0.72, 0.4, 0], [0.72, -0.4, 0]]
-    ];
-    function cube(an, he, glow, pulse, refl) {
-      var yc = he * 1.02;
-      function C3(sx, sy, sz) { return P(an, sx * he, yc + sy * he, sz * he); }
-      var TA = C3(-1, 1, -1), TB = C3(1, 1, -1), TC = C3(1, 1, 1), TD = C3(-1, 1, 1), BA = C3(-1, -1, -1), BB = C3(1, -1, -1), BC = C3(1, -1, 1), BD = C3(-1, -1, 1);
-      // taban enerji ışığı
-      if (!refl) { var baseC = P(an, 0, yc - he, 0); ctx.save(); ctx.globalCompositeOperation = "lighter"; var bg = ctx.createRadialGradient(baseC.x, baseC.y, 0, baseC.x, baseC.y, he * U * 1.55); bg.addColorStop(0, hexA(A_HI, 0.24 + 0.18 * glow)); bg.addColorStop(0.45, hexA(A_MID, 0.08)); bg.addColorStop(1, hexA(A_MID, 0)); ctx.fillStyle = bg; ctx.beginPath(); ctx.ellipse(baseC.x, baseC.y, he * U * 1.45, he * U * 0.58, 0, 0, TAU); ctx.fill(); ctx.restore(); }
-      // arka cam
-      ctx.fillStyle = hexA(A_MID, 0.03); poly([TA, BA, BB, TB], true); ctx.fill(); poly([TA, BA, BD, TD], true); ctx.fill();
-      ctx.strokeStyle = hexA(A_MID, 0.16); ctx.lineWidth = 0.8; poly([TA, BA], false); ctx.stroke();
-      // sinir ağı
-      var nodes = []; LAY.forEach(function (l, li) { l.forEach(function (n) { nodes.push({ p: P(an, n[0] * he, yc + n[1] * he, n[2] * he), li: li }); }); });
-      var start = [], acc2 = 0; LAY.forEach(function (l) { start.push(acc2); acc2 += l.length; });
-      var flow = (t * 0.5) % (LAY.length - 1);
-      ctx.save(); ctx.globalCompositeOperation = "lighter";
-      for (var li = 0; li < LAY.length - 1; li++) {
-        var aS = start[li], aE = aS + LAY[li].length, bS = start[li + 1], bE = bS + LAY[li + 1].length, act = (flow >= li && flow < li + 1), fp = flow - li;
-        for (var a3 = aS; a3 < aE; a3++) for (var b3 = bS; b3 < bE; b3++) {
-          ctx.strokeStyle = hexA(A_MID, act ? 0.34 : 0.12); ctx.lineWidth = act ? 1.1 : 0.7; ctx.beginPath(); ctx.moveTo(nodes[a3].p.x, nodes[a3].p.y); ctx.lineTo(nodes[b3].p.x, nodes[b3].p.y); ctx.stroke();
-          if (act && !refl) { var px = nodes[a3].p.x + (nodes[b3].p.x - nodes[a3].p.x) * fp, py = nodes[a3].p.y + (nodes[b3].p.y - nodes[a3].p.y) * fp; ctx.globalAlpha = 0.95; ctx.drawImage(sprite(A_HI), px - 4, py - 4, 8, 8); ctx.globalAlpha = 1; }
-        }
-      }
-      nodes.forEach(function (nd) { var lit = Math.abs(nd.li - flow) < 0.55 || Math.abs(nd.li - flow - 1) < 0.4, rr = (refl ? 3 : 5) + (lit ? 3 : 0) + 1.2 * pulse; ctx.globalAlpha = lit ? 0.95 : 0.55; ctx.drawImage(sprite(A_MID), nd.p.x - rr, nd.p.y - rr, rr * 2, rr * 2); });
-      ctx.globalAlpha = 1; if (!refl) nodes.forEach(function (nd) { ctx.fillStyle = A_WHT; ctx.beginPath(); ctx.arc(nd.p.x, nd.p.y, 1.6, 0, TAU); ctx.fill(); });
-      ctx.restore();
-      // ön cam
-      ctx.fillStyle = hexA(A_MID, 0.06 + 0.05 * glow); poly([TD, TC, BC, BD], true); ctx.fill(); poly([TB, TC, BC, BB], true); ctx.fill();
-      poly([TA, TB, TC, TD], true); ctx.fillStyle = hexA(A_MID, 0.09 + 0.07 * glow); ctx.fill();
-      // üst sheen
-      ctx.save(); poly([TA, TB, TC, TD], true); ctx.clip(); var ts = ctx.createLinearGradient(TA.x, TA.y, TC.x, TC.y); ts.addColorStop(0, "rgba(255,255,255,0.12)"); ts.addColorStop(0.5, "rgba(255,255,255,0)"); ctx.fillStyle = ts; poly([TA, TB, TC, TD], true); ctx.fill(); ctx.restore();
-      // fresnel kenarlar
-      ctx.lineWidth = 1.3; ctx.strokeStyle = hexA(A_HI, 0.5 + 0.3 * glow); poly([TA, TB, TC, TD], true); ctx.stroke();
-      ctx.strokeStyle = hexA(A_HI, 0.5); ctx.beginPath(); ctx.moveTo(TC.x, TC.y); ctx.lineTo(BC.x, BC.y); ctx.stroke();
-      ctx.strokeStyle = hexA(A_MID, 0.32); ctx.beginPath(); ctx.moveTo(TB.x, TB.y); ctx.lineTo(BB.x, BB.y); ctx.moveTo(TD.x, TD.y); ctx.lineTo(BD.x, BD.y); ctx.stroke();
-    }
-    // ---- neon kablo (ekran-uzayı bezier, bloom + akış) ----
-    var CONN = [];
-    function buildConns() {
-      CONN = [
-        [A.L2, A.L1], [A.L1, A.cube], [A.cube, A.R1], [A.R1, A.R2]
-      ].map(function (c) { var a = c[0], b = c[1], y0 = a.y + U * 0.5, y1 = b.y + U * 0.5, mx = (a.x + b.x) / 2, my = Math.max(y0, y1) + U * 0.55; return { p0: { x: a.x, y: y0 }, pc: { x: mx, y: my }, p1: { x: b.x, y: y1 } }; });
-      var cum = 0; CONN.forEach(function (c) { var L = 0, pv = qAt(c, 0); for (var s = 1; s <= 14; s++) { var q = qAt(c, s / 14); L += Math.sqrt((q.x - pv.x) * (q.x - pv.x) + (q.y - pv.y) * (q.y - pv.y)); pv = q; } c.len = L; c.cum = cum; cum += L; });
-    }
-    function cablePath(c) { ctx.beginPath(); ctx.moveTo(c.p0.x, c.p0.y); ctx.quadraticCurveTo(c.pc.x, c.pc.y, c.p1.x, c.p1.y); }
-    function qAt(c, u) { var iu = 1 - u; return { x: iu * iu * c.p0.x + 2 * iu * u * c.pc.x + u * u * c.p1.x, y: iu * iu * c.p0.y + 2 * iu * u * c.pc.y + u * u * c.p1.y }; }
-    var GAP = 0, FLOWSPEED = 0, motes = [];   // paket aralığı & akış hızı (px), ambient zerreler — layout'ta ayarlanır
-    function drawCable(c, idx) {
-      ctx.lineCap = "round";
-      // kablo gövdesi (ince, sakin)
-      cablePath(c); ctx.strokeStyle = hexA(A_LO, 0.7); ctx.lineWidth = U * 0.1 + 2.6; ctx.stroke();
-      cablePath(c); ctx.strokeStyle = hexA(A_MID, 0.55); ctx.lineWidth = U * 0.1; ctx.stroke();
-      // sürekli veri-paketi akışı (boru hattı boyunca kesintisiz, yönlü db→api)
-      ctx.save(); ctx.globalCompositeOperation = "lighter";
-      var travel = t * FLOWSPEED;                        // px cinsinden ilerleyen mesafe
-      var first = Math.ceil((c.cum - travel) / GAP), n = first;
-      while (true) {
-        var d = n * GAP + travel - c.cum;                // bu kablo üzerindeki mesafe
-        if (d > c.len) break; if (d >= 0) {
-          var u = d / c.len, p = qAt(c, u), pt = qAt(c, Math.max(0, u - 0.05));
-          ctx.strokeStyle = hexA(A_HI, 0.45); ctx.lineWidth = U * 0.045; ctx.beginPath(); ctx.moveTo(pt.x, pt.y); ctx.lineTo(p.x, p.y); ctx.stroke();
-          var rr = U * 0.15; ctx.globalAlpha = 0.9; ctx.drawImage(sprite(A_HI), p.x - rr, p.y - rr, rr * 2, rr * 2);
-          ctx.globalAlpha = 1; ctx.fillStyle = A_WHT; ctx.beginPath(); ctx.arc(p.x, p.y, U * 0.032 + 0.8, 0, TAU); ctx.fill();
-        }
-        n++; if (n - first > 60) break;
-      }
-      ctx.restore(); ctx.lineCap = "butt";
-    }
-    // ---- statik katman: bg vignette + zemin + kaideler + kaide yansıması ----
-    function buildBg() {
-      bgLayer = document.createElement("canvas"); bgLayer.width = Math.max(1, Math.round(W * dpr)); bgLayer.height = Math.max(1, Math.round(H * dpr));
-      var g = bgLayer.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0);
-      // zemin ışık havuzu
-      var fp = g.createRadialGradient(CX, BASEY + U * 0.6, 0, CX, BASEY + U * 0.6, W * 0.55); fp.addColorStop(0, "rgba(40,60,20,0.1)"); fp.addColorStop(0.5, "rgba(20,30,12,0.035)"); fp.addColorStop(1, "rgba(0,0,0,0)"); g.fillStyle = fp; g.fillRect(0, 0, W, H);
-      // ince zemin ızgarası (perspektif)
-      g.strokeStyle = "rgba(150,200,120,0.032)"; g.lineWidth = 1; var horizon = BASEY + U * 0.2;
-      for (var i = -8; i <= 8; i++) { g.beginPath(); g.moveTo(CX + i * U * 0.5, horizon); g.lineTo(CX + i * U * 3.4, H + 20); g.stroke(); }
-      for (var r = 1; r <= 6; r++) { var yy = horizon + Math.pow(r / 6, 1.8) * (H - horizon + 10); g.beginPath(); g.moveTo(0, yy); g.lineTo(W, yy); g.globalAlpha = 0.5; g.stroke(); g.globalAlpha = 1; }
-      var oc = ctx; ctx = g;
-      // kaide yansımaları (aşağı, soluk)
-      [{ a: A.cube, hw: 1.55, hd: 1.55 }, { a: A.L1, hw: 0.95, hd: 0.95 }, { a: A.R1, hw: 0.95, hd: 0.95 }, { a: A.L2, hw: 0.95, hd: 0.95 }, { a: A.R2, hw: 0.95, hd: 0.95 }].forEach(function (s) {
-        g.save(); g.globalAlpha = 0.12; g.translate(s.a.x, s.a.y); g.scale(1, -0.5); g.translate(-s.a.x, -s.a.y); platform(s.a, s.hw, s.hd, 0.28, g); g.restore();
+    var svg = document.getElementById("rp-svg"); if (!svg) return;
+    var g = window.gsap;
+    var nodes = svg.querySelectorAll(".rp-node"), conns = svg.querySelectorAll(".rp-conn"), pkts = svg.querySelectorAll(".rp-pkt");
+    var ring = svg.querySelector("#rp-ring"), glow = svg.querySelector("#rp-glow");
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!g || reduce) {
+      Array.prototype.forEach.call(pkts, function (pk, i) {
+        if (i < 3) { pk.setAttribute("cx", 290 + i * 190); pk.setAttribute("opacity", "0.9"); pk.setAttribute("fill", i < 1 ? C.accent : C.violet); }
       });
-      // kaideler
-      platform(A.L2, 0.95, 0.95, 0.28, g); padRing(A.L2, 0.66, g);
-      platform(A.R2, 0.95, 0.95, 0.28, g); padRing(A.R2, 0.66, g);
-      platform(A.L1, 0.95, 0.95, 0.28, g); padRing(A.L1, 0.66, g);
-      platform(A.R1, 0.95, 0.95, 0.28, g); padRing(A.R1, 0.66, g);
-      platform(A.cube, 1.55, 1.55, 0.32, g); padRing(A.cube, 1.15, g);
-      ctx = oc;
-      // vignette
-      var vg = g.createRadialGradient(CX, H * 0.44, H * 0.3, CX, H * 0.5, W * 0.72); vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(0,0,0,0.55)"); g.fillStyle = vg; g.fillRect(0, 0, W, H);
+      return;
     }
-    function build() {
-      W = stage.clientWidth; H = stage.clientHeight; if (!W || !H) { requestAnimationFrame(build); return; }
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.width = W + "px"; cv.style.height = H + "px";
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); layout(); buildConns(); buildBg(); draw();
+    var PROX = 480, X0 = 175, X1 = 785, HALF = 1.7, ORIGIN = "480 80", GREEN = C.accent, VIOLET = C.violet;
+    g.set(nodes, { opacity: 0, scale: 0.86, transformOrigin: "center center" });
+    g.set(conns, { opacity: 0 });
+    var started = false;
+    function play() {
+      if (started) return; started = true;
+      var tl = g.timeline();
+      tl.to(nodes, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)", stagger: 0.11 })
+        .to(conns, { opacity: 1, duration: 0.4, stagger: 0.08 }, "-=0.25");
+      if (ring) g.to(ring, { rotation: 360, duration: 9, ease: "none", repeat: -1, svgOrigin: ORIGIN });
+      if (glow) g.to(glow, { opacity: 0.72, scale: 1.12, duration: 1.6, ease: "sine.inOut", repeat: -1, yoyo: true, svgOrigin: ORIGIN });
+      Array.prototype.forEach.call(pkts, function (pk, i) {
+        var t = g.timeline({ repeat: -1, delay: i * 0.55 });
+        t.set(pk, { attr: { cx: X0, fill: GREEN }, opacity: 1 })
+          .to(pk, { attr: { cx: PROX }, duration: HALF, ease: "none" })
+          .set(pk, { attr: { fill: VIOLET } })
+          .to(pk, { attr: { cx: X1 }, duration: HALF, ease: "none" })
+          .set(pk, { opacity: 0 });
+      });
     }
-    var CAPS = ["480M+ kayıt · ProX motoruna akıyor", "veri temizleme · normalize · coğrafi eşleme", "ML · MML · determinist çıkarım (halüsinasyonsuz)", "il · ilçe · mahalle ₺/m² endeksi üretiliyor", "REST/WS · PDF · dashboard olarak dağıtılıyor"];
-    var capIdx = -1, capLast = 0;
-    function stepSim(dt) { t += dt; if (t - capLast > 2.0) { capLast = t; capIdx = (capIdx + 1) % CAPS.length; if (capEl) capEl.textContent = "▸ " + CAPS[capIdx]; } }
-    function draw() {
-      if (!bgLayer) return;
-      ctx.clearRect(0, 0, W, H); ctx.drawImage(bgLayer, 0, 0, W, H);
-      var pulse = 0.5 + 0.5 * Math.sin(t * 1.6), glow = 0.4 + 0.6 * pulse;
-      // ambient veri zerreleri (derinlik/atmosfer)
-      ctx.save(); ctx.globalCompositeOperation = "lighter";
-      for (var m = 0; m < motes.length; m++) { var mo = motes[m], xx = mo.x + Math.sin(t * 0.3 + mo.ph) * 6, yy = mo.y + Math.cos(t * 0.24 + mo.ph * 1.3) * 5, aa = 0.1 * (0.5 + 0.5 * Math.sin(t * 0.8 + mo.ph)), rr = mo.r * U * 0.13; ctx.globalAlpha = aa; ctx.drawImage(sprite(A_MID), xx - rr * 3, yy - rr * 3, rr * 6, rr * 6); }
-      ctx.restore();
-      // ped ışıkları + küp işlem-halkası
-      ctx.save(); ctx.globalCompositeOperation = "lighter";
-      padGlow(A.L2, 1.15, glow * 0.7); padGlow(A.R2, 1.15, glow * 0.7); padGlow(A.L1, 1.15, glow * 0.7); padGlow(A.R1, 1.15, glow * 0.7); padGlow(A.cube, 1.9, glow);
-      var rp = (t * 0.45) % 1, rw = (0.5 + 1.7 * rp) * U, rh = rw * 0.5; ctx.globalAlpha = (1 - rp) * 0.28; ctx.strokeStyle = hexA(A_HI, 1); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.ellipse(A.cube.x, A.cube.y, rw, rh, 0, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1;
-      ctx.restore();
-      // kablolar
-      CONN.forEach(drawCable);
-      // yansımalar (zeminde, soluk)
-      reflect(A.L2, function () { db(A.L2, pulse, true); }, 0.13);
-      reflect(A.R2, function () { card(A.R2, 1.0, 1.25, "code", true); }, 0.11);
-      reflect(A.L1, function () { card(A.L1, 1.05, 1.3, "bars", true); }, 0.11);
-      reflect(A.R1, function () { card(A.R1, 1.05, 1.3, "line", true); }, 0.11);
-      reflect(A.cube, function () { cube(A.cube, 1.05, glow, pulse, true); }, 0.14);
-      // nesneler (arkadan öne: L2/R2 üst → L1/R1 → küp)
-      db(A.L2, pulse, false);
-      card(A.R2, 1.0, 1.25, "lattice", false);
-      card(A.L1, 1.05, 1.3, "bars", false);
-      card(A.R1, 1.05, 1.3, "line", false);
-      cube(A.cube, 1.05, glow, pulse, false);
-    }
-    function tick(now) { if (!last) last = now; var dt = Math.min((now - last) / 1000, 0.05); last = now; acc += dt; while (acc >= STEP) { stepSim(STEP); acc -= STEP; } draw(); if (running) raf = requestAnimationFrame(tick); }
-    function start() { if (running || reduce || !visible) return; running = true; last = 0; raf = requestAnimationFrame(tick); }
-    function stop() { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
-    build();
-    if (reduce) { for (var w = 0; w < 200; w++) stepSim(STEP); draw(); }
-    var rt = 0; function relayout() { clearTimeout(rt); rt = setTimeout(build, 140); }
-    window.addEventListener("resize", relayout);
-    if (window.ResizeObserver) { try { new ResizeObserver(relayout).observe(stage); } catch (e) {} }
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
-    if (mq && mq.addEventListener) mq.addEventListener("change", function (e) { reduce = e.matches; reduce ? stop() : start(); });
-    document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); else if (visible) start(); });
-    if (window.IntersectionObserver) { try { new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) start(); else stop(); }, { threshold: 0 }).observe(stage); } catch (e) {} }
-    stage._pump = function (n) { for (var i = 0; i < (n || 60); i++) stepSim(STEP); draw(); };
-    start();
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { io.disconnect(); play(); } }, { threshold: 0.2 });
+      io.observe(svg);
+    } else { play(); }
   }
-
 
   function renderApp() {
     return NX.Ticker(RESTICK) + NX.Masthead("Research") + NX.Nav("Research") + ResearchPipeline() + HeroResearch() + FeaturedReport()
