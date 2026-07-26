@@ -55,7 +55,13 @@
   var RTL_LANGS = { ar: 1 };
   var LANG_KEY = "nadas_lang";
   var _lang = "tr";
-  try { var _sl = localStorage.getItem(LANG_KEY); if (LANGS.indexOf(_sl) >= 0) _lang = _sl; } catch (e) {}
+  /* Dil kaynağı: URL ?lang= (SEO/crawler için otorite) > localStorage > tr. */
+  try {
+    var _q = null;
+    try { _q = (new URLSearchParams(location.search)).get("lang"); } catch (e0) {}
+    if (LANGS.indexOf(_q) >= 0) { _lang = _q; try { localStorage.setItem(LANG_KEY, _q); } catch (e1) {} }
+    else { var _sl = localStorage.getItem(LANG_KEY); if (LANGS.indexOf(_sl) >= 0) _lang = _sl; }
+  } catch (e) {}
   function getLang() { return _lang; }
   function t(d) {
     if (d == null) return "";
@@ -70,7 +76,12 @@
   function setLang(l) {
     if (LANGS.indexOf(l) < 0 || l === _lang) return;
     try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
-    try { location.reload(); } catch (e) {}
+    /* URL'e yaz (SEO: her dil ayrı taranabilir URL). tr = varsayılan → param temizlenir. */
+    try {
+      var u = new URL(location.href);
+      if (l === "tr") u.searchParams.delete("lang"); else u.searchParams.set("lang", l);
+      location.href = u.toString();
+    } catch (e) { try { location.reload(); } catch (e2) {} }
   }
   var LANG_OPTS = [["tr", "TR", "Türkçe"], ["en", "EN", "English"], ["zh", "中文", "简体中文"], ["ar", "عربي", "العربية"]];
   function LangSwitch() {
@@ -366,14 +377,34 @@
     function t() { var d = new Date(); el.textContent = d.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit", second: "2-digit" }); }
     t(); setInterval(t, 1000);
   }
+  var OG_LOCALE = { tr: "tr_TR", en: "en_US", zh: "zh_CN", ar: "ar_AR" };
+  function _langUrl(base, l) { return l === "tr" ? base : base + "?lang=" + l; }
   function seoAdapt() {
     try {
-      var o = location.origin + location.pathname;
-      var can = document.querySelector('link[rel="canonical"]'); if (can) can.setAttribute("href", o);
-      var ogu = document.querySelector('meta[property="og:url"]'); if (ogu) ogu.setAttribute("content", o);
+      var base = location.origin + location.pathname;
+      var self = _langUrl(base, _lang);
+      var can = document.querySelector('link[rel="canonical"]'); if (can) can.setAttribute("href", self);
+      var ogu = document.querySelector('meta[property="og:url"]'); if (ogu) ogu.setAttribute("content", self);
       ['meta[property="og:image"]', 'meta[name="twitter:image"]'].forEach(function (sel) {
         var m = document.querySelector(sel);
         if (m) { try { m.setAttribute("content", new URL(m.getAttribute("content"), location.href).href); } catch (e) {} }
+      });
+      /* og:locale (+ alternate) — dile göre */
+      var head = document.head;
+      var ogl = document.querySelector('meta[property="og:locale"]');
+      if (!ogl) { ogl = document.createElement("meta"); ogl.setAttribute("property", "og:locale"); head.appendChild(ogl); }
+      ogl.setAttribute("content", OG_LOCALE[_lang] || "tr_TR");
+      Array.prototype.forEach.call(document.querySelectorAll('meta[property="og:locale:alternate"],link[data-nx-hl]'), function (n) { n.parentNode.removeChild(n); });
+      /* hreflang alternate — 4 dil + x-default (SEO/AEO çok dilli indeksleme) */
+      LANGS.forEach(function (l) {
+        var lk = document.createElement("link"); lk.setAttribute("rel", "alternate"); lk.setAttribute("hreflang", l === "tr" ? "tr" : (l === "zh" ? "zh-Hans" : (l === "ar" ? "ar" : "en")));
+        lk.setAttribute("href", _langUrl(base, l)); lk.setAttribute("data-nx-hl", "1"); head.appendChild(lk);
+        if (l !== _lang) { var al = document.createElement("meta"); al.setAttribute("property", "og:locale:alternate"); al.setAttribute("content", OG_LOCALE[l]); head.appendChild(al); }
+      });
+      var xd = document.createElement("link"); xd.setAttribute("rel", "alternate"); xd.setAttribute("hreflang", "x-default"); xd.setAttribute("href", base); xd.setAttribute("data-nx-hl", "1"); head.appendChild(xd);
+      /* <html lang> zaten applyLangAttr'da; JSON-LD inLanguage ekle */
+      Array.prototype.forEach.call(document.querySelectorAll('script[type="application/ld+json"]'), function (s) {
+        try { var j = JSON.parse(s.textContent); if (j && typeof j === "object" && !Array.isArray(j)) { j.inLanguage = (_lang === "zh" ? "zh-Hans" : _lang); s.textContent = JSON.stringify(j); } } catch (e) {}
       });
     } catch (e) {}
   }
