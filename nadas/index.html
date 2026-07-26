@@ -1121,13 +1121,32 @@
       return '<div class="nadas-eco" style="' + css({ background: C.base, border: "1px solid " + C.border, padding: "12px 14px" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 11.5, fontWeight: 700, color: C.textPri, letterSpacing: "0.03em", marginBottom: 5 }) + '">' + t[0] + '</div><div style="' + css({ fontSize: 11.5, color: C.textMut, lineHeight: 1.45 }) + '">' + t[1] + '</div></div>';
     }).join("");
 
+    /* — GERÇEK ÖRNEK · indirilebilir PDF karar raporu (veri-altyapisi ile aynı dosya) — */
+    var pdfDl = '<a href="karar-analizi-ornek.pdf" download style="' + css({ display: "inline-flex", alignItems: "center", gap: 7, padding: "11px 18px", background: C.violet, color: "#12081F", fontFamily: C.mono, fontSize: 12.5, fontWeight: 700, letterSpacing: "0.06em", borderRadius: 2, textDecoration: "none", whiteSpace: "nowrap" }) + '">↓ ÖRNEK RAPORU İNDİR · PDF</a>';
+    function rsFact(lbl, val, col) { return '<div><div style="' + css({ fontFamily: C.mono, fontSize: 8, color: C.textFaint, letterSpacing: "0.08em" }) + '">' + lbl + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 11, color: col || C.textSec, fontWeight: col ? 700 : 500, marginTop: 2 }) + '">' + val + '</div></div>'; }
+    var realSample = '<div style="' + css({ border: "1px solid " + C.violet, background: C.deep, padding: "18px 20px", marginBottom: 22, position: "relative", overflow: "hidden" }) + '">'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,0.82fr) minmax(0,1.45fr)", gap: 20, alignItems: "center" }) + '" class="nadas-heatmap-grid">'
+      + '<div style="' + css({ position: "relative", border: "1px solid " + C.border, borderRadius: 2, background: "#fff", overflow: "hidden" }) + '">'
+      + '<img src="img/reports/karar-analizi-ornek.png?v=2" alt="Gayrimenkul Karar Analizi — örnek rapor kapağı · Caddebostan · Kadıköy · güven %92 · 24 sayfa" loading="lazy" style="' + css({ display: "block", width: "100%", height: "auto" }) + '">'
+      + '<div style="' + css({ position: "absolute", top: 10, right: 10, fontFamily: C.mono, fontSize: 8.5, color: C.deep, background: C.warn, borderRadius: 2, padding: "3px 8px", letterSpacing: "0.1em", fontWeight: 700 }) + '">ÖRNEK</div>'
+      + '<div style="' + css({ position: "absolute", left: 0, right: 0, bottom: 0, height: 40, background: "linear-gradient(0deg,rgba(2,8,18,0.9),transparent)", pointerEvents: "none" }) + '"></div>'
+      + '<div style="' + css({ position: "absolute", left: 10, bottom: 8, fontFamily: C.mono, fontSize: 8, color: C.textFaint, letterSpacing: "0.08em" }) + '">PDF · İLK SAYFA</div></div>'
+      + '<div><div style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.violet, letterSpacing: "0.14em", fontWeight: 700, marginBottom: 6 }) + '">◆ KARAR ANALİZİ RAPORU · GERÇEK ÖRNEK</div>'
+      + '<h3 style="' + css({ fontSize: "clamp(1.3rem,3vw,1.7rem)", fontWeight: 700, color: C.textPri, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", margin: 0 }) + '">24 sayfalık veri destekli karar raporu</h3>'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textMut, letterSpacing: "0.06em", marginTop: 6, marginBottom: 14 }) + '">◈ ProX · 480M kayıt tarandı · 21 yıllık zincir · deterministik</div>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(132px,1fr))", gap: "10px 14px", marginBottom: 16 }) + '">' + rsFact("KONUM", "Caddebostan · Kadıköy") + rsFact("KATEGORİ", "Konut · Daire · Satılık") + rsFact("VERİ GÜVEN SKORU", "%92", C.accent) + rsFact("TAHMİNİ m² ARALIĞI", "₺159.853 – ₺216.272", C.textPri) + '</div>'
+      + pdfDl + '</div></div>'
+      + '<div style="' + css({ marginTop: 16, padding: "10px 14px", border: "1px dashed " + C.border, background: "rgba(167,139,250,0.04)", fontFamily: C.mono, fontSize: 10, color: C.textFaint, letterSpacing: "0.02em", lineHeight: 1.55 }) + '">⌬ Rapor bir <strong style="' + css({ color: C.textMut }) + '">üretken yapay zeka çıktısı değildir</strong>; tüm rakamlar 480M kayıtlık Nadas veritabanı üzerinden ProX tarafından <strong style="' + css({ color: C.textMut }) + '">deterministik</strong> hesaplanır (aynı sorgu → aynı sonuç). Bilgilendirme ve veri destekli analiz amaçlıdır; resmî/yasal değerleme yerine geçmez.</div>'
+      + '</div>';
+
     var proxLink = "prox.html";
     return '<section id="studio" style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "24px 16px", background: C.raised }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
       + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 6, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">04 · ProX STUDIO · PDF RAPORLAMA</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.9rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Kendi markanızla, 38 kategoride karar-analiz raporu.</h2></div><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.textFaint, letterSpacing: "0.08em" }) + '">5 ANA · 38 KOMBİNASYON</span></div>'
       + '<p style="' + css({ fontSize: 14.5, lineHeight: 1.6, color: C.textSec, maxWidth: 860, margin: "0 0 20px" }) + '">Blok editörle <b style="' + css({ color: C.textPri }) + '">30 saniyede</b> profesyonel PDF. Kurumsal müşteriler kendi logo, firma ve adlarıyla üretir; ProX gerçek veriyle otomatik doldurur — bir kategori/şablon seçin, lokasyon girin, rapor hazır olsun.</p>'
+      + realSample
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "minmax(0,1.5fr) minmax(0,1fr)", gap: 18, marginBottom: 22 }) + '" class="nadas-heatmap-grid">'
       + '<div>' + subHead("RAPOR TÜRLERİ", "7 ürün · karar analizi + veri & trend") + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 10 }) + '">' + reportCards + '</div></div>'
-      + '<div>' + subHead("ÖRNEK ÇIKTI", "24 sayfa") + coverMock + '<div style="' + css({ marginTop: 12 }) + '">' + subHead("NEDEN ProX STUDIO") + whyBlock + '</div></div>'
+      + '<div>' + subHead("WHITE-LABEL KAPAK", "kendi markanızla") + coverMock + '<div style="' + css({ marginTop: 12 }) + '">' + subHead("NEDEN ProX STUDIO") + whyBlock + '</div></div>'
       + '</div>'
       + subHead("İLDEN ADA/PARSELE · 38 KATEGORİDE", "her rapor bu derinlikte üretilir")
       + '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 14 }) + '">' + granStrip + '</div>'
