@@ -29,6 +29,9 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Service","@id":"https://www.nadas.com.tr/#prox-studio-raporlama","name":"ProX Studio — Kurumsal Markalı PDF Raporlama","serviceType":"Gayrimenkul karar analizi ve markalı PDF raporlama","url":"https://www.nadas.com.tr/white-label.html","description":"Kurumsal müşterilerin kendi logo, firma ve ad-soyadlarıyla (white-label) 38 varlık kategorisinde gayrimenkul karar-analiz PDF raporu üretmesini sağlayan raporlama hizmeti. Blok editör, hazır şablon ve API ile; deterministik ProX veri motoru (emlakekspertizi.com) arkalı.","areaServed":{"@type":"Country","name":"Türkiye"},"availableLanguage":{"@type":"Language","name":"Türkçe","alternateName":"tr"},"provider":{"@type":"Organization","name":"Nadas Gayrimenkul Bilgi İletişim Sistemleri Ticaret Limited Şirketi","alternateName":"NADAS","url":"https://www.nadas.com.tr","foundingDate":"2005","address":{"@type":"PostalAddress","addressLocality":"Arnavutköy","addressRegion":"İstanbul","addressCountry":"TR"}},"brand":{"@type":"Brand","name":"ProX Studio","url":"https://www.nadas.com.tr/prox.html"},"hasOfferCatalog":{"@type":"OfferCatalog","name":"ProX Studio rapor türleri","itemListElement":[{"@type":"Offer","price":"950","priceCurrency":"TRY","url":"https://www.nadas.com.tr/karar-analizi-ornek.pdf","itemOffered":{"@type":"Service","name":"ProX Karar Analizi Raporu","description":"Markalı 24 sayfalık gayrimenkul karar-analiz raporu: değer aralığı bandı, bölge karşılaştırması ve yatırım göstergeleri."}},{"@type":"Offer","category":"Veri & Trend","itemOffered":{"@type":"Service","name":"Mahalle Raporu","description":"Mahalle düzeyinde m² satış/kira endeksi ve DNA demografik katmanla bölge profili."}},{"@type":"Offer","category":"Veri & Trend","itemOffered":{"@type":"Service","name":"Ada/Parsel Raporu (TKGM)","description":"Tapu ada-parsel bilgisi ve bölgesel değer bağlamıyla parsel odaklı rapor."}},{"@type":"Offer","category":"Veri & Trend","itemOffered":{"@type":"Service","name":"Bölgesel Trend Raporu","description":"257 aylık zaman serisi üzerinden ilçe/mahalle fiyat trendi ve olay markerları."}},{"@type":"Offer","category":"Veri & Trend","itemOffered":{"@type":"Service","name":"Yatırım Bölgesi Analizi","description":"Bölge bazında getiri, likidite ve karşılaştırmalı yatırım göstergeleri."}},{"@type":"Offer","category":"Veri & Trend","itemOffered":{"@type":"Service","name":"Kentsel Dönüşüm Raporu","description":"6306 sayılı Kanun kapsamında riskli yapı ve dönüşüm bölgesi veri analizi."}},{"@type":"Offer","category":"Veri & Trend","itemOffered":{"@type":"Service","name":"Bölgesel Veri Paketleri (Excel/CSV/API)","description":"38 varlık kategorisinde ham aylık zaman serisi verisinin Excel, CSV ve API dışa aktarımı."}}]}}
 </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"NADAS","alternateName":"Nadas Gayrimenkul Bilgi İletişim Sistemleri","url":"https://www.nadas.com.tr/","inLanguage":"tr-TR","publisher":{"@type":"Organization","name":"Nadas Gayrimenkul Bilgi İletişim Sistemleri Ticaret Limited Şirketi","alternateName":"NADAS","url":"https://www.nadas.com.tr","foundingDate":"2005"}}
+</script>
 <style>
   .nadas-heatmap-grid { grid-template-columns: minmax(0,1.5fr) minmax(0,1fr); }
   .nadas-analysis-card { transition: background .15s; }
@@ -82,7 +85,7 @@
   </noscript>
 </div>
 
-<script src="js/core.js?v=30"></script>
+<script src="js/core.js?v=31"></script>
 <script>
 (function () {
   "use strict";
@@ -285,7 +288,7 @@
     }).join("");
     /* modern istatistik kartları (tam genişlik) */
     var cards = [
-      ["480M+", "ZAMAN SERİSİ SATIRI", "aylık kayıt · ~178 GB PostgreSQL", C.primary],
+      ["480M+", "ZAMAN SERİSİ SATIRI", "aylık kayıt · 81 il · 973 ilçe", C.primary],
       ["50.000+", "AKTİF MAHALLE / KÖY", "cadde-sokak granülerlik · DNA çapalı", C.accent],
       ["38", "VARLIK KATEGORİSİ", "5 ana grup · sat + kira ayrı endeks", C.violet],
       ["257", "AY DERİNLİĞİ", "2005-01 → 2026-05 · kesintisiz", C.warn]
@@ -371,7 +374,7 @@
       + '<div style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textMut, letterSpacing: "0.1em", marginTop: 2 }) + '">VERİ KAYDI</div>'
       + '<div style="' + css({ height: 1, background: C.border, margin: "10px 0 8px" }) + '"></div>'
       + '<div style="' + css({ fontFamily: C.mono, fontSize: 8.5, color: C.textMut, letterSpacing: "0.08em", lineHeight: 1.6 }) + '">NORMALİZE · DOĞRULAMA<br>ÇAPRAZ KONTROL</div>'
-      + '<div style="' + css({ fontFamily: C.mono, fontSize: 8.5, color: C.textFaint, letterSpacing: "0.08em", marginTop: 4 }) + '">50 TB · 27 KAYNAK</div></div>';
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 8.5, color: C.textFaint, letterSpacing: "0.08em", marginTop: 4 }) + '">81 İL · 27 KAYNAK</div></div>';
 
     var proxCard = '<div class="nadas-pipe-chip" data-pipe-node="prox" style="' + css({ width: 118, height: 118, borderRadius: "50%", background: C.deep, border: "1.5px solid " + C.violet, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", margin: "0 auto", boxShadow: "0 0 0 1px rgba(167,139,250,0.14), 0 0 34px rgba(124,58,237,0.30) inset" }) + '">'
       + '<div style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 19, fontWeight: 700, color: C.violet, letterSpacing: "0.02em" }) + '">ProX</div>'
@@ -1150,7 +1153,7 @@
       ["2011-2014", "SAHA AR-GE PROJESİ · 38 KATEGORİYE GEÇİŞ", "Türkiye’nin ilk gayrimenkul saha AR-GE projesi. Üniversite öğrencileriyle 81 il, 973 ilçe ve 8.500+ mahalle kapsandı. Kategori derinliği 5’ten 38’e çıktı."],
       ["2013", "DİZGE BİLİŞİM · ML/MML KATMANI", "Ankara merkezli Dizge Bilişim ve Ulaş Karakuş iş birliğiyle ikinci nesil yazılım mimarisi geliştirildi. Saha + internet doğrulama, akıllı harita sistemi."],
       ["2014+", "50.000+ MAHALLE · CANLI HARİTA", "DNA demografik katman v3.1 devreye alındı. 24 boyutlu zenginleştirme, ~5.500 çapa bölgesi tanımlandı."],
-      ["2026", "480M+ SATIR · 600 OLAY MARKERI", "Bugün canlı; 4 ana, 38 alt varlık kategorisinde 257 aylık seri. ~178 GB PostgreSQL, ~42 GB ClickHouse sıkıştırılmış."],
+      ["2026", "480M+ SATIR · 600 OLAY MARKERI", "Bugün canlı; 4 ana, 38 alt varlık kategorisinde 257 aylık seri. 81 il · 973 ilçe · 50.000+ mahallede 480M+ veri noktası."],
     ];
     var rows = ms.map(function (m, i) { return '<div style="' + css({ display: "grid", gridTemplateColumns: "110px 1fr", gap: 16, padding: "14px 18px", borderBottom: i < ms.length - 1 ? "1px solid " + C.border : "none" }) + '" class="nadas-mile"><div style="' + css({ fontFamily: C.mono, fontSize: 14, fontWeight: 700, color: C.primary, letterSpacing: "0.04em", paddingTop: 2 }) + '">' + m[0] + '</div><div><div style="' + css({ fontFamily: C.mono, fontSize: 12, color: C.textPri, fontWeight: 600, letterSpacing: "0.06em", marginBottom: 4 }) + '">' + m[1] + '</div><p style="' + css({ fontSize: 13.5, lineHeight: 1.55, color: C.textSec, margin: 0 }) + '">' + m[2] + '</p></div></div>'; }).join("");
     return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
@@ -1177,6 +1180,31 @@
     return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
       + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">08 · KURUMSAL KULLANICILAR</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Kararını veriye dayayan kurumlar için.</h2></div><a href="cozumler.html" style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, textDecoration: "none", letterSpacing: "0.08em" }) + '">TÜM ÇÖZÜMLER →</a></div>'
       + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 1, border: "1px solid " + C.borderStrong, background: C.borderStrong }) + '">' + cards + '</div>'
+      + '</div></section>';
+  }
+
+  /* ===== 08b · ÜRÜNLER & ÇÖZÜMLER — ana sayfadan tüm ürün sayfalarına iç link ===== */
+  function SolutionsGrid() {
+    var items = [
+      ["ProX Akıllı Asistan", "prox.html", "Deterministik, halüsinasyonsuz emlak asistanı — 480M+ kayıt, ML/MML motoru, Resmi Gazete + TBMM entegrasyonu.", C.violet],
+      ["Kurumsal API", "kurumsal-api.html", "480M+ kayda REST + WebSocket erişim: endeks, 38 boyutlu mahalle DNA’sı, olay markırı, ProX karar analizi.", C.accent],
+      ["Veri Lisansı", "veri-lisansi.html", "İl/ilçe/kategori veri seti; ProX API veya şifreli toplu/raw teslim (on-premise). Lisanslanır, devredilmez.", C.primary],
+      ["White-Label Platform", "white-label.html", "Kendi markanız, kendi domaininizde 24 saatte yayında: 26 modüllü CRM + canlı mahalle endeksi.", C.violet],
+      ["Şirketinize Özel Yapay Zeka", "yapay-zeka.html", "Kendi sunucunuzda (GPU/on-premise) bağımsız AI: RAG, ajanlar, çoklu model + deterministik ProX.", C.accent],
+      ["CRM Çözümleri", "crm.html", "Gayrimenkul CRM: kod sizin ya da SSL güvenceli yönetilen; TLS 1.3 · AES-256, KVKK, SPK uyumlu.", C.primary],
+      ["Web Yazılım", "web-yazilim.html", "Sıfırdan anahtar teslim web yazılımı; her gün SEO uyumlu içerik, Google + AI aramada (AEO/GEO) görünürlük.", C.warn],
+      ["Veri Altyapısı", "veri-altyapisi.html", "Mahalle düzeyinde tek veri altyapısı: 480M+ kayıt, 38 kategori, 257 aylık kesintisiz endeks zinciri.", C.primary]
+    ];
+    var cards = items.map(function (it) {
+      return '<a href="' + it[1] + '" class="nadas-eco" style="' + css({ display: "flex", flexDirection: "column", background: C.base, border: "1px solid " + C.borderStrong, borderTop: "2px solid " + it[3], padding: "15px 16px", textDecoration: "none", color: "inherit" }) + '">'
+        + '<div style="' + css({ fontFamily: C.mono, fontSize: 12, color: it[3], fontWeight: 700, letterSpacing: "0.04em", marginBottom: 7 }) + '">' + it[0] + '</div>'
+        + '<p style="' + css({ fontSize: 13, lineHeight: 1.5, color: C.textMut, margin: 0, flex: 1 }) + '">' + it[2] + '</p>'
+        + '<span style="' + css({ fontFamily: C.mono, fontSize: 10, color: it[3], marginTop: 10, letterSpacing: "0.08em", fontWeight: 700 }) + '">İNCELE →</span></a>';
+    }).join("");
+    return '<section style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "22px 16px" }) + '"><div style="' + css({ maxWidth: 1280, margin: "0 auto" }) + '">'
+      + '<div style="' + css({ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 6, flexWrap: "wrap", gap: 6 }) + '"><div><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", marginBottom: 4 }) + '">08b · ÜRÜNLER & ÇÖZÜMLER</div><h2 style="' + css({ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, margin: 0, letterSpacing: "-0.02em", color: C.textPri }) + '">Tek veri omurgası, çok ürün.</h2></div><a href="cozumler.html" style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, textDecoration: "none", letterSpacing: "0.08em" }) + '">TÜM ÇÖZÜMLER →</a></div>'
+      + '<p style="' + css({ fontSize: 13.5, lineHeight: 1.6, color: C.textSec, maxWidth: 860, margin: "0 0 14px" }) + '">Aynı 480M+ kayıtlık omurga üzerinde; asistandan API’ye, veri lisansından özel yazılıma kadar kurumsal ürünler.</p>'
+      + '<div style="' + css({ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 10 }) + '">' + cards + '</div>'
       + '</div></section>';
   }
 
@@ -1267,11 +1295,29 @@
       + '</div></section>';
   }
 
+  /* ===== 11 · İLETİŞİM / TEKLİF AL — dönüşüm CTA (footer öncesi) ===== */
+  function ContactCTA() {
+    var waHref = "https://wa.me/905324919453?text=" + encodeURIComponent("Merhaba, NADAS hakkında bilgi almak istiyorum.");
+    return '<section style="' + css({ position: "relative", overflow: "hidden", borderBottom: "1px solid " + C.borderStrong, background: C.deep, padding: "34px 16px" }) + '">'
+      + '<div style="' + css({ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 12% 18%, rgba(56,189,248,0.10), transparent 55%), radial-gradient(circle at 88% 88%, rgba(167,139,250,0.08), transparent 55%)" }) + '"></div>'
+      + '<div style="' + css({ position: "relative", maxWidth: 1280, margin: "0 auto", display: "flex", gap: 24, flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }) + '">'
+      + '<div style="' + css({ flex: "1 1 440px", minWidth: 0 }) + '">'
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.primary, letterSpacing: "0.12em", fontWeight: 700, marginBottom: 10 }) + '">11 · İLETİŞİM</div>'
+      + '<h2 style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: "clamp(1.4rem,3.4vw,2.1rem)", fontWeight: 700, lineHeight: 1.12, letterSpacing: "-0.02em", margin: "0 0 10px", color: C.textPri }) + '">Kurumunuz için veri, API ya da özel yazılım mı gerekiyor?</h2>'
+      + '<p style="' + css({ fontSize: 14.5, lineHeight: 1.6, color: C.textSec, maxWidth: 680, margin: 0 }) + '">İhtiyacınızı konuşalım; kapsam, entegrasyon ve teklif için ekibimize yazın. 2005’ten günümüze 81 il · 973 ilçe · 50.000+ mahalle · 480M+ veri noktası.</p>'
+      + '</div>'
+      + '<div style="' + css({ flexShrink: 0, display: "flex", flexWrap: "wrap", gap: 10 }) + '">'
+      + '<a href="iletisim.html" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "13px 24px", background: C.primary, color: C.deep, fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">TEKLİF AL →</a>'
+      + '<a href="' + waHref + '" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp ile yazın" style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "13px 22px", background: "#25D366", color: "#fff", fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textDecoration: "none", borderRadius: 2 }) + '">WHATSAPP →</a>'
+      + '</div>'
+      + '</div></section>';
+  }
+
   function renderApp() {
     return NX.Ticker(HOMETICK) + NX.Masthead("") + NX.Nav("")
       + PipelineHero() + HeroHeadline() + DataTerminalShell() + CityComparison()
       + ReportStudioPanel() + DNAPanel() + CompanyTimeline()
-      + TwoColumnEditorial() + CorporateUsers() + FeaturedAnalysis() + ContentEmphasisBand() + NX.Footer();
+      + TwoColumnEditorial() + CorporateUsers() + SolutionsGrid() + FeaturedAnalysis() + ContentEmphasisBand() + ContactCTA() + NX.Footer();
   }
 
   NX.boot(renderApp);

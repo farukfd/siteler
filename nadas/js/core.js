@@ -126,6 +126,12 @@
       ".nx-wafoot:hover{background:#1ebe57;transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,211,102,.42)}",
       ".nx-wafoot:focus-visible{outline:2px solid #25D366;outline-offset:2px}",
       ".nx-wafoot svg{width:15px;height:15px;fill:currentColor;display:block}",
+      /* Mobil hamburger nav — masaüstünde gizli; ≤820px'te aç/kapa menü. */
+      ".nadas-navtoggle{display:none;background:transparent;border:1px solid " + C.borderStrong + ";border-radius:3px;color:" + C.textMut + ";padding:6px;cursor:pointer;line-height:0}",
+      ".nadas-navtoggle:hover{color:" + C.primary + ";border-color:" + C.primary + "}",
+      ".nadas-navtoggle:focus-visible{outline:2px solid " + C.primary + ";outline-offset:2px}",
+      ".nadas-navtoggle svg{width:20px;height:20px;display:block}",
+      "@media (max-width:820px){.nadas-navtoggle{display:inline-flex;align-items:center;justify-content:center}.nadas-navmenu{display:none!important;width:100%;flex-direction:column;align-items:flex-start;gap:14px;padding-top:8px}.nadas-navbar.is-open .nadas-navmenu{display:flex!important}}",
       /* ProX kurumsal wordmark — insaat/ sitesindeki .fprox lockup’ının birebir karşılığı.
          Oradaki sabit px’ler em’e çevrildi (referans 14px gövde): 2px→.14em, 6px yarıçap→.43em,
          X’in 14/15 boy oranı→.93em. Böylece 10px mono etikette de 40px başlıkta da aynı oranda durur.
@@ -208,6 +214,7 @@
     startClock();
     seoAdapt();
     cookieConsent();
+    navToggleInit();
   }
 
   /* Atlama bağlantısı + <main> landmark'ı. Tüm sayfalar aynı iskeleti kullanıyor:
@@ -289,15 +296,36 @@
       }
       return '<a href="' + navHref(it) + '" style="' + css({ fontFamily: C.mono, fontSize: 11, color: on ? C.primary : C.textMut, fontWeight: on ? 700 : 500, letterSpacing: "0.08em", textDecoration: "none", padding: "4px 0", borderBottom: on ? "1px solid " + C.primary : "1px solid transparent" }) + '">' + upperTR(it) + '</a>';
     }).join("");
-    return '<div style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "14px 16px", background: C.base, position: "sticky", top: 0, zIndex: 40, backdropFilter: "blur(12px)" }) + '">'
+    return '<div class="nadas-navbar" style="' + css({ borderBottom: "1px solid " + C.borderStrong, padding: "14px 16px", background: C.base, position: "sticky", top: 0, zIndex: 40, backdropFilter: "blur(12px)" }) + '">'
       + '<div style="' + css({ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 14 }) + '">'
       + '<a href="index.html" style="' + css({ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }) + '">'
       + '<span style="' + css({ width: 28, height: 28, border: "1.5px solid " + C.primary, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Sora',sans-serif", fontSize: 13, fontWeight: 700, color: C.primary, borderRadius: 2 }) + '">N</span>'
       + '<span style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 18, fontWeight: 700, color: C.textPri, letterSpacing: "-0.02em" }) + '">NADAS</span>'
       + '<span style="' + css({ fontFamily: C.mono, fontSize: 9, color: C.textFaint, letterSpacing: "0.18em", marginLeft: 4 }) + '">' + tag + '</span></a>'
-      + '<nav style="' + css({ display: "flex", gap: 20, alignItems: "center", flexWrap: "wrap", flex: "1 1 auto", justifyContent: "flex-end" }) + '">' + links
+      + '<button type="button" class="nadas-navtoggle" aria-label="Menü" aria-expanded="false" aria-controls="nadas-navmenu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>'
+      + '<nav id="nadas-navmenu" class="nadas-navmenu" style="' + css({ display: "flex", gap: 20, alignItems: "center", flexWrap: "wrap", flex: "1 1 auto", justifyContent: "flex-end" }) + '">' + links
       + '<a href="https://www.emlakekspertizi.com" target="_blank" rel="noopener noreferrer" style="' + css({ padding: "6px 14px", border: "1px solid " + C.primary, fontFamily: C.mono, fontSize: 10.5, color: C.primary, fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", borderRadius: 2 }) + '">EMLAKEKSPERTIZI.COM →</a>'
       + '</nav></div></div>';
+  }
+
+  /* Mobil nav aç/kapa — tek delege dinleyici (tüm sayfalarda çalışır). */
+  function navToggleInit() {
+    if (document.__nadasNavBound) return;
+    document.__nadasNavBound = true;
+    document.addEventListener("click", function (e) {
+      var el = e.target;
+      var btn = el.closest ? el.closest(".nadas-navtoggle") : null;
+      if (btn) {
+        var bar = btn.closest(".nadas-navbar");
+        if (bar) { var open = bar.classList.toggle("is-open"); btn.setAttribute("aria-expanded", open ? "true" : "false"); }
+        return;
+      }
+      var link = el.closest ? el.closest(".nadas-navmenu a") : null;
+      if (link) {
+        var b = link.closest(".nadas-navbar");
+        if (b) { b.classList.remove("is-open"); var t = b.querySelector(".nadas-navtoggle"); if (t) t.setAttribute("aria-expanded", "false"); }
+      }
+    });
   }
 
   function Footer() {

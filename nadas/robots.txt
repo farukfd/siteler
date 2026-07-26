@@ -1,0 +1,5 @@
+# NADAS — https://www.nadas.com.tr/
+User-agent: *
+Allow: /
+
+Sitemap: https://www.nadas.com.tr/sitemap.xml
