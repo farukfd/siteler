@@ -18,13 +18,13 @@
 <meta property="og:url" content="https://www.nadas.com.tr/veri-altyapisi">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Veri Altyapısı — NADAS">
-<meta name="twitter:description" content="480M kayıt · 38 boyutlu DNA · 7M olay · 50 TB · 21 yıllık zincir. Gerçek veritabanı, halüsinasyonsuz.">
+<meta name="twitter:description" content="480M kayıt · 38 boyutlu DNA · 7M olay · 81 il·973 ilçe · 21 yıllık zincir. Gerçek veritabanı, halüsinasyonsuz.">
 <meta name="twitter:image" content="og-veri-altyapisi.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Dataset","name":"NADAS Veri Altyapısı","description":"480M+ kayıt zaman serisi, 38 boyutlu mahalle DNA'sı, 7M+ olay markırı, 50 TB veri, 257 aylık tarihsel zincir.","creator":{"@type":"Organization","name":"NADAS Gayrimenkul Bilgi İletişim Sistemleri","url":"https://www.nadas.com.tr"},"temporalCoverage":"2005-01/2026-05","spatialCoverage":"Türkiye","variableMeasured":["konut fiyat","mahalle DNA","olay markırı","güven skoru"]}
+{"@context":"https://schema.org","@type":"Dataset","name":"NADAS Veri Altyapısı","description":"480M+ kayıt zaman serisi, 38 boyutlu mahalle DNA'sı, 7M+ olay markırı, 81 il·973 ilçe·50.000+ mahalle, 257 aylık tarihsel zincir.","creator":{"@type":"Organization","name":"NADAS Gayrimenkul Bilgi İletişim Sistemleri","url":"https://www.nadas.com.tr"},"temporalCoverage":"2005-01/2026-05","spatialCoverage":"Türkiye","variableMeasured":["konut fiyat","mahalle DNA","olay markırı","güven skoru"]}
 </script>
 <style>
   @keyframes nadasFlow { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
@@ -51,7 +51,7 @@
   NX.setAccent(C.primary);
 
   var VATICK = [
-    ["AYLIK ZAMAN SERİSİ", "480M+ ROWS"], ["DNA ANCHORS", "25.000+ MAHALLE"], ["EVENT MARKERS", "7M+ KAYIT"], ["STORAGE", "50 TB+"],
+    ["AYLIK ZAMAN SERİSİ", "480M+ ROWS"], ["DNA ANCHORS", "25.000+ MAHALLE"], ["EVENT MARKERS", "7M+ KAYIT"], ["KAPSAM", "81 İL · 973 İLÇE"],
     ["DAILY INGEST", "~1.2M ROWS"], ["API LATENCY P95", "84ms"], ["UPTIME 30D", "99.97%"], ["ACTIVE NEIGHBORHOODS", "50.084"],
     ["CATEGORIES", "38 ACTIVE"], ["TIME COVERAGE", "257 MONTHS · 21 YIL"], ["PROX ASİSTANI", "ÇEVRİMİÇİ"], ["FAY HATTI VERİTABANI", "BAĞLI"],
   ];
@@ -85,7 +85,7 @@
   function HeroHeadline() {
     var stats = [
       { n: 480, suf: "M+", lbl: "VERİ KAYDI" }, { n: 25, suf: ".000+", lbl: "DNA ÇAPA · MAHALLE" },
-      { n: 7, suf: "M+", lbl: "OLAY MARKIRI" }, { n: 50, suf: " TB", lbl: "VERİ HACMİ" },
+      { n: 7, suf: "M+", lbl: "OLAY MARKIRI" }, { n: 973, suf: " İLÇE", lbl: "81 İL · TAM KAPSAM" },
       { n: 257, suf: " AY", lbl: "2005-01 → 2026-05" },
     ].map(function (s) {
       return '<div style="' + css({ background: C.raised, padding: "11px 14px" }) + '"><div style="' + css({ fontSize: 19, fontWeight: 700, color: C.primary, fontFamily: "'Sora',sans-serif", letterSpacing: "-0.02em", lineHeight: 1 }) + '">' + cu(s.n, s.suf) + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 9.5, color: C.textFaint, marginTop: 5, letterSpacing: "0.08em" }) + '">' + s.lbl + '</div></div>';
@@ -116,7 +116,7 @@
     var coreBox = '<div id="infra-core" style="' + css({ width: "100%", maxWidth: 176, margin: "0 auto", textAlign: "center", background: "rgba(6,16,27,0.42)", border: "1px solid " + C.primary, borderRadius: 8, padding: "13px 12px", backdropFilter: "blur(2px)" }) + '">'
       + '<div style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, fontWeight: 700, letterSpacing: "0.08em" }) + '">◉ NADAS MOTORU</div>'
       + '<div style="' + css({ fontFamily: C.mono, fontSize: 8, color: C.textSec, letterSpacing: "0.05em", marginTop: 6, lineHeight: 1.5 }) + '">TOPLA · TEMİZLE · ML·MML</div>'
-      + '<div style="' + css({ fontFamily: C.mono, fontSize: 7.5, color: C.textFaint, letterSpacing: "0.1em", marginTop: 4 }) + '">TR · İSTANBUL · 50 TB</div></div>';
+      + '<div style="' + css({ fontFamily: C.mono, fontSize: 7.5, color: C.textFaint, letterSpacing: "0.1em", marginTop: 4 }) + '">TR · İSTANBUL · 480M+</div></div>';
     function colHead(txt, col) { return '<div style="' + css({ fontFamily: C.mono, fontSize: 9, color: col, letterSpacing: "0.12em", fontWeight: 700, marginBottom: 9, paddingBottom: 6, borderBottom: "1px solid " + C.border, whiteSpace: "nowrap" }) + '">' + txt + '</div>'; }
     var srcCol = '<div style="' + css({ display: "flex", flexDirection: "column" }) + '">' + colHead("◆ KAYNAKLAR", C.accent) + '<div style="' + css({ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 7 }) + '">' + SRC.map(function (o) { return chip("src", o); }).join("") + '</div></div>';
     var coreCol = '<div style="' + css({ display: "flex", flexDirection: "column" }) + '">' + colHead("◆ İŞLEME", C.primary) + '<div style="' + css({ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }) + '">' + coreBox + '</div></div>';
@@ -148,7 +148,7 @@
       + stage
       + '<div style="' + css({ display: "flex", alignItems: "center", gap: 10, marginBottom: 12, fontFamily: C.mono, fontSize: 10.5, letterSpacing: "0.12em", textTransform: "uppercase" }) + '"><span style="' + css({ color: C.primary }) + '">◆ VERİ ALTYAPISI</span><span style="' + css({ height: 1, flex: 1, background: C.borderStrong }) + '"></span><span style="' + css({ color: C.textFaint }) + '">TÜRKİYE’NİN GAYRİMENKUL KARAR MERKEZİ</span></div>'
       + '<h1 style="' + css({ fontFamily: "'Sora',system-ui,sans-serif", fontSize: "clamp(2rem,5.5vw,3.4rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.025em", margin: 0, color: C.textPri, maxWidth: 1100 }) + '">Üç temel katman. 38 boyutlu mahalle DNA’sı. 7 milyon olay.<br><span style="' + css({ color: C.primary }) + '">Bir gayrimenkul karar merkezi.</span></h1>'
-      + '<p style="' + css({ marginTop: 14, fontSize: 15.5, lineHeight: 1.55, color: C.textSec, maxWidth: 920 }) + '">Aylık zaman serisi · 38 boyutlu DNA demografik vektörü · 7M+ tarihsel olay markırı. PostgreSQL + ClickHouse hibrit mimari, ML/MML işleme katmanı, kurumsal API entegrasyonu. 480 milyon kayıtlık veri hafızası, 21 yıllık tarihsel zincir — 50 TB veri.</p>'
+      + '<p style="' + css({ marginTop: 14, fontSize: 15.5, lineHeight: 1.55, color: C.textSec, maxWidth: 920 }) + '">Aylık zaman serisi · 38 boyutlu DNA demografik vektörü · 7M+ tarihsel olay markırı. PostgreSQL + ClickHouse hibrit mimari, ML/MML işleme katmanı, kurumsal API entegrasyonu. 480 milyon kayıtlık veri hafızası, 21 yıllık tarihsel zincir — 81 il · 973 ilçe · 50.000+ mahalle.</p>'
       + '<div style="' + css({ marginTop: 18, display: "flex", gap: 10, flexWrap: "wrap" }) + '">'
       + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 12, padding: "10px 16px", border: "1px solid " + C.accent, background: "rgba(52,211,153,0.06)", borderRadius: 2 }) + '"><span style="' + css({ width: 8, height: 8, borderRadius: 9999, background: C.accent, animation: "nadasPulse 1.4s ease-in-out infinite" }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.accent, fontWeight: 700, letterSpacing: "0.1em" }) + '">HALÜSİNASYONSUZ · GERÇEK VERİTABANI</span><span style="' + css({ fontFamily: C.mono, fontSize: 10, color: C.textMut, letterSpacing: "0.04em" }) + '">· ML/MML matematiksel işleme · ProX akıllı asistan</span></div>'
       + '<div style="' + css({ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 14px", border: "1px solid " + C.primary, background: "rgba(56,189,248,0.06)", borderRadius: 2 }) + '"><span style="' + css({ fontFamily: "'Sora',sans-serif", fontSize: 14, color: C.primary, fontWeight: 700, letterSpacing: "-0.01em" }) + '">SINCE 2005</span><span style="' + css({ width: 1, height: 14, background: C.borderStrong }) + '"></span><span style="' + css({ fontFamily: C.mono, fontSize: 11, color: C.primary, fontWeight: 700, letterSpacing: "0.1em" }) + '">KATEGORİNİN GELİŞTİRİCİSİ</span></div></div>'
@@ -295,20 +295,21 @@
     return SubSection("A.4", "Olay markerları — 7 milyon+ kayıt, 9 kategori", "EVENT-DRIVEN IMPACT MODEL · YÖN · SÜRE · KAPSAM", body);
   }
 
-  /* ===== A.5 HACIM KARŞILAŞTIRMA ===== */
+  /* ===== A.5 ÖLÇEK / KAPSAM ===== */
   function VolumeComparison() {
     var items = [
-      { lbl: "NADAS · tüm katmanlar", n: "50 TB", unit: "veri", fill: 100, hi: true },
-      { lbl: "Borsa İstanbul · 1 yıl emir defteri", n: "~2 TB", unit: "yıllık", fill: 4 },
-      { lbl: "TÜİK · tüm konut tarihsel", n: "~8 TB", unit: "tüm zaman", fill: 16 },
-      { lbl: "Google Maps · Türkiye katmanı", n: "~25 TB", unit: "raster+vektör", fill: 50 },
-      { lbl: "Netflix · global günlük log", n: "~15 TB", unit: "günlük", fill: 30 },
+      { lbl: "Coğrafi kapsam", n: "81 il · 973 ilçe", hi: true },
+      { lbl: "Mahalle granülerliği", n: "50.000+ mahalle ve köy" },
+      { lbl: "Tarihsel derinlik", n: "257 ay · 21 yıl · kesintisiz" },
+      { lbl: "Varlık kategorisi", n: "38 boyut · 5 ana grup" },
+      { lbl: "Veri hacmi", n: "480M+ veri noktası" },
+      { lbl: "Olay hafızası", n: "7M+ olay markırı" },
     ];
     var rows = items.map(function (it, i) {
-      var col = it.hi ? C.primary : C.textMut;
-      return '<div style="' + css({ marginBottom: i < items.length - 1 ? 14 : 0 }) + '"><div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 5, fontFamily: C.mono, fontSize: 12 }) + '"><span style="' + css({ color: col, fontWeight: it.hi ? 700 : 500, letterSpacing: "0.04em" }) + '">' + it.lbl + '</span><span style="' + css({ color: col, fontWeight: 700 }) + '">' + it.n + ' <span style="' + css({ fontSize: 10, color: C.textFaint }) + '">' + it.unit + '</span></span></div>' + Progress(it.fill, col, 8) + '</div>';
+      var last = i === items.length - 1;
+      return '<div style="' + css({ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, padding: "11px 0", borderBottom: last ? "none" : "1px solid " + C.border, fontFamily: C.mono }) + '"><span style="' + css({ color: C.textMut, fontSize: 12, letterSpacing: "0.04em" }) + '">' + it.lbl + '</span><span style="' + css({ color: it.hi ? C.primary : C.textPri, fontSize: 12.5, fontWeight: 700, letterSpacing: "0.02em", textAlign: "right" }) + '">' + it.n + '</span></div>';
     }).join("");
-    return SubSection("A.5", "Veri hacmi — 50 TB neye eşit?", "REFERENCE COMPARISON", '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: 18 }) + '">' + rows + '<p style="' + css({ fontSize: 11.5, color: C.textFaint, marginTop: 14, fontFamily: C.mono, letterSpacing: "0.04em", lineHeight: 1.5 }) + '">NADAS, Türkiye Cumhuriyeti tarihindeki <span style="' + css({ color: C.primary }) + '">tek mahalle bazlı, ay düzeyinde, 21 yıllık</span> gayrimenkul hafızasıdır.</p></div>');
+    return SubSection("A.5", "Ölçek — bu hafıza neyi kapsıyor?", "KAPSAM · DERİNLİK · GRANÜLERLİK", '<div style="' + css({ border: "1px solid " + C.borderStrong, background: C.raised, padding: 18 }) + '">' + rows + '<p style="' + css({ fontSize: 11.5, color: C.textFaint, marginTop: 14, fontFamily: C.mono, letterSpacing: "0.04em", lineHeight: 1.5 }) + '">NADAS, Türkiye Cumhuriyeti tarihindeki <span style="' + css({ color: C.primary }) + '">tek mahalle bazlı, ay düzeyinde, 21 yıllık</span> gayrimenkul hafızasıdır.</p></div>');
   }
 
   /* ===== B.1 DOĞRULAMA ===== */

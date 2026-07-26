@@ -570,7 +570,7 @@
     var stats = [
       ["480M+","Aktif veri kaydı",C.violet],["257 ay","Tarihsel zincir",C.primary],
       ["50K+","Mahalle veritabanı",C.violet],["38","DNA boyutu (mahalle)",C.primary],
-      ["7M+","Olay markırı",C.accent],["50 TB","Depolama hacmi",C.violet],
+      ["7M+","Olay markırı",C.accent],["973","İlçe kapsamı",C.violet],
       ["27","Veri kaynağı",C.primary],["%96","Güven medyanı",C.accent],
     ].map(function(s){
       return '<div style="'+css({background:C.raised,padding:"16px 16px"})+'">'
@@ -766,7 +766,7 @@
       + '<text x="'+serverCenterX+'" y="'+(serverY+84)+'" fill="#CBD5E1" font-size="9" font-family="ui-monospace,monospace" text-anchor="middle" letter-spacing="0.1em">VERİ KAYDI</text>'
       + '<line x1="'+(serverX+14)+'" y1="'+(serverY+94)+'" x2="'+(serverX+serverW-14)+'" y2="'+(serverY+94)+'" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>'
       + '<text x="'+serverCenterX+'" y="'+(serverY+106)+'" fill="#94A3B8" font-size="8" font-family="ui-monospace,monospace" text-anchor="middle" letter-spacing="0.08em">TOPLAMA · DOĞRULAMA</text>'
-      + '<text x="'+serverCenterX+'" y="'+(serverY+118)+'" fill="#64748B" font-size="8" font-family="ui-monospace,monospace" text-anchor="middle" letter-spacing="0.08em">50 TB · 27 KAYNAK</text></g>'
+      + '<text x="'+serverCenterX+'" y="'+(serverY+118)+'" fill="#64748B" font-size="8" font-family="ui-monospace,monospace" text-anchor="middle" letter-spacing="0.08em">81 İL · 27 KAYNAK</text></g>'
       /* ProX motoru */
       + '<g><circle cx="'+proxX+'" cy="'+proxY+'" r="60" fill="none" stroke="'+C.violet+'" stroke-width="0.5" stroke-opacity="0.3"/>'
       + '<circle cx="'+proxX+'" cy="'+proxY+'" r="44" fill="none" stroke="'+C.violet+'" stroke-width="0.5" stroke-opacity="0.4"/>'
@@ -994,7 +994,7 @@
       {k:"Dil",v:"Türkçe optimize (resmi + halk dili)",c:C.primary},
       {k:"Sorgu süresi",v:"Tipik 0.8 – 2.4 saniye",c:C.primary},
       {k:"Veri kaynağı",v:"27 katman · Nadas özel + kamu + saha + ilan + mevzuat",c:C.primary},
-      {k:"Veri kapasitesi",v:"480M+ aktif kayıt · 50 TB depolama",c:C.violet},
+      {k:"Veri kapasitesi",v:"480M+ aktif kayıt · 81 il · 973 ilçe",c:C.violet},
       {k:"Tarihsel zincir",v:"257 ay · 2005-01 → 2026-05 · kesintisiz",c:C.violet},
       {k:"Granularity",v:"İl → İlçe → Mahalle → Cadde → Sokak",c:C.primary},
       {k:"Coğrafi kapsam",v:"81 il · 973 ilçe · 50.000+ mahalle",c:C.primary},
