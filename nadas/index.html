@@ -44,6 +44,14 @@
   select { color-scheme: dark; }
   @media (max-width: 900px) { .nadas-heatmap-grid { grid-template-columns: 1fr !important; } }
 
+  /* Veri Terminali · masaüstü 2-kolon (solda grafik, sağda analiz/olay/DNA) */
+  .dt-2col { display: grid; grid-template-columns: minmax(0,1.62fr) minmax(0,1fr); align-items: stretch; }
+  .dt-2col > .dt-side { border-left: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; }
+  @media (max-width: 980px) {
+    .dt-2col { grid-template-columns: 1fr; }
+    .dt-2col > .dt-side { border-left: none; border-top: 1px solid rgba(255,255,255,0.08); }
+  }
+
   /* ---- Veri pipeline hero şeridi ---- */
   .nadas-pipe-wrap { position: relative; }
   .nadas-pipe-canvas { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
@@ -696,8 +704,9 @@
       + '<path d="' + line + '" fill="none" stroke="' + gcol + '" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"></path>'
       + valueBand + evLines + mmMark + realSeg + realDots + endDot
       + '<line id="dt-hline" x1="0" y1="' + PAD.t + '" x2="0" y2="' + (H - PAD.b) + '" stroke="' + gcol + '" stroke-width="1" stroke-dasharray="2 3" opacity="0.6" style="display:none"></line>'
+      + '<line id="dt-hguide" x1="' + PAD.l + '" y1="0" x2="' + (W - PAD.r) + '" y2="0" stroke="' + gcol + '" stroke-width="1" stroke-dasharray="2 3" opacity="0.35" style="display:none"></line>'
       + '<circle id="dt-hcirc" r="4" fill="' + C.base + '" stroke="' + gcol + '" stroke-width="2" style="display:none"></circle>'
-      + '<g id="dt-tip" style="display:none"><rect x="-72" y="-4" width="144" height="44" rx="3" fill="' + C.elev + '" stroke="' + C.borderStrong + '"></rect><text id="dt-tip-date" x="0" y="11" font-size="10" fill="' + C.textMut + '" font-family="ui-monospace,monospace" text-anchor="middle"></text><text id="dt-tip-val" x="0" y="28" font-size="13" fill="' + C.textPri + '" font-family="ui-monospace,monospace" font-weight="600" text-anchor="middle"></text></g>'
+      + '<g id="dt-tip" style="display:none"><rect x="-74" y="-4" width="148" height="58" rx="3" fill="' + C.elev + '" stroke="' + C.borderStrong + '"></rect><text id="dt-tip-date" x="0" y="12" font-size="10" fill="' + C.textMut + '" font-family="ui-monospace,monospace" text-anchor="middle"></text><text id="dt-tip-val" x="0" y="30" font-size="13.5" fill="' + C.textPri + '" font-family="ui-monospace,monospace" font-weight="700" text-anchor="middle"></text><text id="dt-tip-chg" x="0" y="47" font-size="11" font-family="ui-monospace,monospace" font-weight="600" text-anchor="middle"></text></g>'
       + hitRects + '</svg>';
 
     function statCell(lbl, val, col) { return '<div style="' + css({ padding: "8px 12px", borderRight: "1px solid " + C.border }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 8.5, color: C.textFaint, letterSpacing: "0.1em", marginBottom: 3 }) + '">' + lbl + '</div><div style="' + css({ fontFamily: C.mono, fontSize: 12.5, fontWeight: 600, color: col || C.textPri }) + '">' + val + '</div></div>'; }
@@ -761,7 +770,7 @@
       + '</div></div>';
 
     var endeksLink = "https://www.emlakekspertizi.com/emlak-endeksi?il=" + encodeURIComponent(DT.city) + "&ilce=" + encodeURIComponent(DT.district) + "&mahalle=" + encodeURIComponent(DT.neighborhood) + "&kategori=" + DT.catId;
-    var footer = '<div style="' + css({ padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, background: "#020812" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textMut, letterSpacing: "0.04em" }) + '">' + (d.live ? '<span style="' + css({ color: C.accent }) + '">güncel m² canlı ProX endeksinden · geçmiş şekil model</span>' : '<span style="' + css({ color: C.warn }) + '">seçime göre üretilen temsilî örnek · gerçek endeks emlakekspertizi.com</span>') + '</div><a href="' + endeksLink + '" target="_blank" rel="noopener noreferrer" style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", background: C.primary, color: "#020812", fontSize: 12, fontFamily: C.mono, letterSpacing: "0.06em", fontWeight: 700, borderRadius: 2, textDecoration: "none" }) + '">DETAYLI ENDEKS · EMLAKEKSPERTIZI →</a></div>';
+    var footer = '<div style="' + css({ padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, background: "#020812" }) + '"><div style="' + css({ fontFamily: C.mono, fontSize: 10.5, color: C.textMut, letterSpacing: "0.04em" }) + '">' + (d.live ? '<span style="' + css({ color: C.accent }) + '">güncel m² canlı ProX endeksinden · geçmiş şekil model</span>' : '<span style="' + css({ color: C.warn }) + '">seçime göre üretilen temsilî örnek · gerçek endeks emlakekspertizi.com</span>') + '</div><div style="' + css({ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }) + '"><button type="button" data-dt-png class="nadas-btn-tab" style="' + css({ display: "inline-flex", alignItems: "center", gap: 5, padding: "8px 12px", background: "transparent", border: "1px solid " + C.borderStrong, color: C.textMut, fontFamily: C.mono, fontSize: 11, letterSpacing: "0.06em", fontWeight: 700, cursor: "pointer", borderRadius: 2 }) + '" aria-label="Grafiği PNG indir">↓ PNG</button><button type="button" data-dt-share class="nadas-btn-tab" style="' + css({ display: "inline-flex", alignItems: "center", gap: 5, padding: "8px 12px", background: "transparent", border: "1px solid " + C.borderStrong, color: C.textMut, fontFamily: C.mono, fontSize: 11, letterSpacing: "0.06em", fontWeight: 700, cursor: "pointer", borderRadius: 2 }) + '" aria-label="Bağlantıyı paylaş">↗ PAYLAŞ</button><a href="' + endeksLink + '" target="_blank" rel="noopener noreferrer" style="' + css({ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", background: C.primary, color: "#020812", fontSize: 12, fontFamily: C.mono, letterSpacing: "0.06em", fontWeight: 700, borderRadius: 2, textDecoration: "none" }) + '">DETAYLI ENDEKS · EMLAKEKSPERTIZI →</a></div></div>';
 
     /* ProX ANALİZ paneli (analyze) — piyasa yönü · güven · değer aralığı · pazarlık · karar/risk özeti */
     var analizPanel = "";
@@ -782,7 +791,13 @@
         + '<div style="' + css({ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center", marginBottom: 10 }) + '">' + chips + '</div>'
         + texts + eksik + '</div>';
     }
-    return header + canliRibbon + statStrip + '<div style="' + css({ padding: "8px 8px 0", position: "relative" }) + '">' + svg + '</div>' + analizPanel + evPanel + dnaPanel + footer;
+    var chartWrap = '<div style="' + css({ padding: "8px 8px 0", position: "relative" }) + '">' + svg + '</div>';
+    return header + canliRibbon
+      + '<div class="dt-2col">'
+      + '<div class="dt-main">' + statStrip + chartWrap + '</div>'
+      + '<div class="dt-side">' + analizPanel + evPanel + dnaPanel + '</div>'
+      + '</div>'
+      + footer;
   }
 
   function dtCompareBody() {
@@ -846,18 +861,54 @@
     mountEndeksInteractions(card);
   }
 
+  function dtEndeksLink() { return "https://www.emlakekspertizi.com/emlak-endeksi?il=" + encodeURIComponent(DT.city) + "&ilce=" + encodeURIComponent(DT.district) + "&mahalle=" + encodeURIComponent(DT.neighborhood) + "&kategori=" + DT.catId; }
+  function dtExportPNG() {
+    var svg = document.getElementById("dt-svg"); if (!svg) return;
+    var clone = svg.cloneNode(true); clone.setAttribute("width", W); clone.setAttribute("height", H);
+    var xml = new XMLSerializer().serializeToString(clone);
+    var img = new Image();
+    img.onload = function () {
+      var s = 2, cv = document.createElement("canvas"); cv.width = W * s; cv.height = H * s;
+      var ctx = cv.getContext("2d"); ctx.fillStyle = "#06101B"; ctx.fillRect(0, 0, cv.width, cv.height);
+      ctx.drawImage(img, 0, 0, cv.width, cv.height);
+      try {
+        var a = document.createElement("a");
+        a.download = "nadas-" + (DT.neighborhood || "endeks").toLocaleLowerCase("tr-TR").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") + "-endeks.png";
+        a.href = cv.toDataURL("image/png"); document.body.appendChild(a); a.click(); a.remove();
+      } catch (e) {}
+    };
+    img.onerror = function () {};
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(xml);
+  }
+  function dtShare(btn) {
+    var url = dtEndeksLink(), gc = catGroupName(DT.catId);
+    var title = DT.neighborhood + " · " + gc.catName + " — NADAS Veri Terminali";
+    var text = DT.city + "/" + DT.district + "/" + DT.neighborhood + " " + gc.catName + " endeksi · NADAS";
+    function done() { if (!btn) return; var o = btn.getAttribute("data-lbl") || btn.textContent; btn.setAttribute("data-lbl", o); btn.textContent = "✓ KOPYALANDI"; setTimeout(function () { btn.textContent = o; }, 1600); }
+    function legacyCopy() { try { var ta = document.createElement("textarea"); ta.value = url; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); done(); } catch (e) {} }
+    if (navigator.share) { navigator.share({ title: title, text: text, url: url }).catch(function () {}); }
+    else if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(url).then(done, legacyCopy); }
+    else { legacyCopy(); }
+  }
+
   function mountEndeksInteractions(card) {
-    var hline = document.getElementById("dt-hline"), hcirc = document.getElementById("dt-hcirc"), tip = document.getElementById("dt-tip"), tipD = document.getElementById("dt-tip-date"), tipV = document.getElementById("dt-tip-val");
+    var hline = document.getElementById("dt-hline"), hguide = document.getElementById("dt-hguide"), hcirc = document.getElementById("dt-hcirc"), tip = document.getElementById("dt-tip"), tipD = document.getElementById("dt-tip-date"), tipV = document.getElementById("dt-tip-val"), tipC = document.getElementById("dt-tip-chg");
     function showHover(idx) {
       var p = dtPts[idx]; if (!p || !hline) return;
       hline.setAttribute("x1", p[0]); hline.setAttribute("x2", p[0]); hline.style.display = "";
+      if (hguide) { hguide.setAttribute("y1", p[1]); hguide.setAttribute("y2", p[1]); hguide.style.display = ""; }
       hcirc.setAttribute("cx", p[0]); hcirc.setAttribute("cy", p[1]); hcirc.style.display = "";
-      var tx = Math.min(Math.max(p[0], 80), W - 80), ty = Math.max(p[1] - 50, PAD.t + 4);
+      var tx = Math.min(Math.max(p[0], 82), W - 82), ty = Math.max(p[1] - 66, PAD.t + 4);
       tip.setAttribute("transform", "translate(" + tx + "," + ty + ")"); tip.style.display = "";
       tipD.textContent = MONTHS[dtSeries[idx].m] + " " + dtSeries[idx].y;
       tipV.textContent = "₺" + dtSeries[idx].v.toLocaleString("tr-TR") + "/m²";
+      if (tipC) {
+        var base = (dtSeries[0] || {}).v || 0, chg = base ? ((dtSeries[idx].v - base) / base) * 100 : 0;
+        tipC.textContent = (chg >= 0 ? "▲ +" : "▼ ") + chg.toFixed(1) + "% · dönem";
+        tipC.setAttribute("fill", chg >= 0 ? C.accent : C.danger);
+      }
     }
-    function hideHover() { if (hline) { hline.style.display = "none"; hcirc.style.display = "none"; tip.style.display = "none"; } }
+    function hideHover() { if (hline) { hline.style.display = "none"; hcirc.style.display = "none"; tip.style.display = "none"; if (hguide) hguide.style.display = "none"; } }
     var hits = card.querySelectorAll("[data-dti]");
     for (var j = 0; j < hits.length; j++) hits[j].addEventListener("mouseenter", function () { showHover(parseInt(this.getAttribute("data-dti"), 10)); });
     var svg = document.getElementById("dt-svg"); if (svg) svg.addEventListener("mouseleave", hideHover);
@@ -877,6 +928,8 @@
       el.addEventListener("mouseenter", function () { evHi(idx, true); });
       el.addEventListener("mouseleave", function () { evHi(idx, false); });
     })(lineGs[l], parseInt(lineGs[l].getAttribute("data-ev-line"), 10));
+    var pngBtn = card.querySelector("[data-dt-png]"); if (pngBtn) pngBtn.addEventListener("click", dtExportPNG);
+    var shBtn = card.querySelector("[data-dt-share]"); if (shBtn) shBtn.addEventListener("click", function () { dtShare(shBtn); });
   }
 
   function mountCompareInteractions(card) {
