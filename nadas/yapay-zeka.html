@@ -48,7 +48,7 @@
 
 <script src="js/vendor/lenis.min.js"></script>
 <script src="js/vendor/gsap.min.js"></script>
-<script src="js/core.js?v=38"></script>
+<script src="js/core.js?v=39"></script>
 <script>
 (function () {
   "use strict";
@@ -105,7 +105,7 @@
         return '<td style="' + css({ padding: "9px 12px", fontSize: 12.5, color: col, borderBottom: "1px solid " + C.border, verticalAlign: "top", lineHeight: 1.5, fontWeight: i === 0 ? 600 : 400, fontFamily: i === 0 ? "'Sora',sans-serif" : "inherit" }) + '">' + c + '</td>';
       }).join("") + '</tr>';
     }).join("");
-    return '<div style="' + css({ overflowX: "auto", border: "1px solid " + C.borderStrong, borderRadius: 3 }) + '"><table style="' + css({ width: "100%", minWidth: 680, borderCollapse: "collapse" }) + '"><thead><tr>' + th + '</tr></thead><tbody>' + tr + '</tbody></table></div>';
+    return '<div class="nadas-scrollx" style="' + css({ overflowX: "auto", border: "1px solid " + C.borderStrong, borderRadius: 3 }) + '"><table style="' + css({ width: "100%", minWidth: 680, borderCollapse: "collapse" }) + '"><thead><tr>' + th + '</tr></thead><tbody>' + tr + '</tbody></table></div>';
   }
 
   /* ===== HERO ===== */

@@ -156,7 +156,18 @@
       ".nx-skip{position:absolute;left:8px;top:-48px;z-index:200;background:" + C.violet + ";color:#04231F;" +
         "font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;padding:9px 14px;border-radius:3px;" +
         "text-decoration:none;transition:top .15s ease}",
-      ".nx-skip:focus{top:8px;outline:2px solid #fff;outline-offset:2px}"
+      ".nx-skip:focus{top:8px;outline:2px solid #fff;outline-offset:2px}",
+      /* Yatay kaydırma ipucu — geniş tablo/kod bloklarında "daha var" göstergesi.
+         .nadas-scrollx işaretli scroller boot'ta .nadas-shint sarmalayıcısına alınır;
+         sağ kenar gölgesi + nabız atan › ipucu YALNIZCA sağa kaydırılabilirken görünür,
+         sona kaydırınca / içerik sığınca kaybolur. Reduced-motion'da nabız durur. */
+      ".nadas-shint{position:relative}",
+      ".nadas-shint::after{content:'';position:absolute;top:1px;right:1px;bottom:1px;width:56px;pointer-events:none;border-radius:0 3px 3px 0;background:linear-gradient(to left,var(--shint-bg," + C.base + "),rgba(6,16,27,0));opacity:0;transition:opacity .25s ease}",
+      ".nadas-shint[data-shint='start']::after,.nadas-shint[data-shint='mid']::after{opacity:1}",
+      ".nadas-shint-cue{position:absolute;top:50%;right:11px;transform:translateY(-50%);pointer-events:none;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;line-height:1;color:" + C.violet + ";text-shadow:0 0 10px rgba(34,211,238,.55);opacity:0;transition:opacity .25s ease;animation:shintNudge 1.5s ease-in-out infinite}",
+      ".nadas-shint[data-shint='start'] .nadas-shint-cue,.nadas-shint[data-shint='mid'] .nadas-shint-cue{opacity:.95}",
+      "@keyframes shintNudge{0%,100%{transform:translateY(-50%) translateX(0)}50%{transform:translateY(-50%) translateX(5px)}}",
+      "@media (prefers-reduced-motion:reduce){.nadas-shint-cue{animation:none}}"
     ].join("\n");
     document.head.appendChild(s);
   }
@@ -228,6 +239,37 @@
     cookieConsent();
     navToggleInit();
     motionInit();
+    scrollHintInit();
+  }
+
+  /* Yatay kaydırma ipucu — .nadas-scrollx scroller'ları .nadas-shint sarmalayıcısına
+     alır, sağa-kaydırılabilir durumunu izler (data-shint: start|mid|end|none) ve
+     nabız atan › ipucu ekler. Sarma tek bir blok öğeyi kapsar; layout'a şeffaftır. */
+  function scrollHintInit() {
+    var list = document.querySelectorAll(".nadas-scrollx");
+    Array.prototype.forEach.call(list, function (area) {
+      if (area.getAttribute("data-shint-init") || !area.parentNode) return;
+      area.setAttribute("data-shint-init", "1");
+      var wrap = document.createElement("div");
+      wrap.className = "nadas-shint";
+      var bg = area.getAttribute("data-shint-bg");
+      if (bg) wrap.style.setProperty("--shint-bg", bg);
+      area.parentNode.insertBefore(wrap, area);
+      wrap.appendChild(area);
+      var cue = document.createElement("span");
+      cue.className = "nadas-shint-cue";
+      cue.setAttribute("aria-hidden", "true");
+      cue.textContent = "›";
+      wrap.appendChild(cue);
+      function update() {
+        var max = area.scrollWidth - area.clientWidth;
+        wrap.setAttribute("data-shint", max <= 2 ? "none" : (area.scrollLeft >= max - 2 ? "end" : (area.scrollLeft <= 2 ? "start" : "mid")));
+      }
+      area.addEventListener("scroll", update, { passive: true });
+      window.addEventListener("resize", update);
+      if (window.ResizeObserver) { try { new ResizeObserver(update).observe(area); } catch (e) {} }
+      update();
+    });
   }
 
   /* Atlama bağlantısı + <main> landmark'ı. Tüm sayfalar aynı iskeleti kullanıyor:
