@@ -44,6 +44,7 @@
 <script src="js/vendor/lenis.min.js"></script>
 <script src="js/vendor/gsap.min.js"></script>
 <script src="js/core.js?v=45"></script>
+<script src="js/i18n/crm.js?v=1"></script>
 <script>
 (function () {
   "use strict";
@@ -318,6 +319,7 @@
       + Product() + NX.Footer();
   }
 
+  if (window.__PAGE_I18N) NX.setPageI18n(window.__PAGE_I18N);
   NX.boot(renderApp);
   mountCrmVault();
 
