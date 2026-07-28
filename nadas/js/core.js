@@ -433,6 +433,13 @@
           ar: "شركة بيانات وبرمجيات عقارية مقرها تركيا تنتج مؤشرًا عقاريًا شهريًا على مستوى الأحياء دون انقطاع منذ 2005. 81 محافظة · 973 منطقة · 50,000+ حي · 480M+ سجل بيانات · سلسلة زمنية من 257 شهرًا."
         };
         var ORIGIN = "https://www.nadas.com.tr";
+        /* Sayfa adı (dile göre başlıktan) + açıklama (meta, translateMeta ile dilli) + görsel */
+        var _pageName = ((document.title || "").split(" — ")[0].split(" · ")[0]).trim();
+        var _mdesc = document.querySelector('meta[name="description"]');
+        var _pageDesc = _mdesc ? _mdesc.getAttribute("content") : "";
+        var _ogimg = document.querySelector('meta[property="og:image"]');
+        var _pageImg = _ogimg ? (function () { try { return new URL(_ogimg.getAttribute("content"), location.href).href; } catch (e) { return ORIGIN + "/og-index.png"; } })() : ORIGIN + "/og-index.png";
+        var _isHome = (location.pathname === "/" || /index\.html?$/.test(location.pathname) || location.pathname === "");
         var graph = {
           "@context": "https://schema.org", "@graph": [
             {
@@ -447,11 +454,29 @@
               "knowsAbout": ["Real estate data", "Real estate price index", "Neighborhood-level property analysis", "Property valuation", "Time series data", "ProX data engine"],
               "sameAs": ["https://www.emlakekspertizi.com/", "https://www.facebook.com/emlakekspertiz", "https://x.com/emlakeksperti", "https://www.linkedin.com/company/emlakekspertizi"]
             },
-            { "@type": "WebSite", "@id": ORIGIN + "/#website", "url": ORIGIN + "/", "name": "NADAS", "inLanguage": _lt, "publisher": { "@id": ORIGIN + "/#organization" } }
+            { "@type": "WebSite", "@id": ORIGIN + "/#website", "url": ORIGIN + "/", "name": "NADAS", "inLanguage": _lt, "publisher": { "@id": ORIGIN + "/#organization" } },
+            {
+              "@type": "WebPage", "@id": self + "#webpage", "url": self,
+              "name": _pageName, "description": _pageDesc, "inLanguage": _lt,
+              "isPartOf": { "@id": ORIGIN + "/#website" }, "about": { "@id": ORIGIN + "/#organization" },
+              "primaryImageOfPage": _pageImg,
+              "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["h1", "h2"] }
+            }
           ]
         };
         var gsc = document.createElement("script"); gsc.type = "application/ld+json"; gsc.setAttribute("data-nx-graph", "1");
         gsc.textContent = JSON.stringify(graph); head.appendChild(gsc);
+        /* BreadcrumbList — gezinme bağlamı (dile göre; ana sayfada eklenmez) */
+        if (!_isHome) {
+          var _bc = {
+            "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": (typeof S === "function" ? S("nav.anaSayfa") : "Ana Sayfa"), "item": ORIGIN + "/" },
+              { "@type": "ListItem", "position": 2, "name": _pageName, "item": self }
+            ]
+          };
+          var bsc = document.createElement("script"); bsc.type = "application/ld+json"; bsc.setAttribute("data-nx-crumb", "1");
+          bsc.textContent = JSON.stringify(_bc); head.appendChild(bsc);
+        }
       }
     } catch (e) {}
   }
