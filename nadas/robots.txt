@@ -1,5 +1,68 @@
 # NADAS — https://www.nadas.com.tr/
+# Politika: tüm arama motorları ve yapay zeka yanıt motorları içeriğe tam erişebilir (AEO/GEO).
+
 User-agent: *
 Allow: /
 
+# --- Google (klasik + AI Overviews / Gemini / Vertex) ---
+User-agent: Googlebot
+Allow: /
+User-agent: Googlebot-Image
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+# --- Microsoft Bing (ChatGPT arama katmanı büyük ölçüde Bing indeksiyle örtüşür) ---
+User-agent: bingbot
+Allow: /
+User-agent: msnbot
+Allow: /
+
+# --- OpenAI / ChatGPT ---
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+
+# --- Anthropic / Claude ---
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: Claude-User
+Allow: /
+User-agent: anthropic-ai
+Allow: /
+
+# --- Perplexity ---
+User-agent: PerplexityBot
+Allow: /
+User-agent: Perplexity-User
+Allow: /
+
+# --- Apple (Siri / Spotlight AI) ---
+User-agent: Applebot
+Allow: /
+User-agent: Applebot-Extended
+Allow: /
+
+# --- Diğer AI / arama tarayıcıları ---
+User-agent: CCBot
+Allow: /
+User-agent: meta-externalagent
+Allow: /
+User-agent: Amazonbot
+Allow: /
+User-agent: DuckDuckBot
+Allow: /
+User-agent: YandexBot
+Allow: /
+User-agent: cohere-ai
+Allow: /
+User-agent: Diffbot
+Allow: /
+
+Host: https://www.nadas.com.tr
 Sitemap: https://www.nadas.com.tr/sitemap.xml

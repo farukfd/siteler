@@ -391,6 +391,12 @@
       });
       /* og:locale (+ alternate) — dile göre */
       var head = document.head;
+      /* robots meta — AEO: tam snippet + büyük görsel/video önizleme (Google + AI yanıt motorları) */
+      ["robots", "googlebot"].forEach(function (nm) {
+        var rb = document.querySelector('meta[name="' + nm + '"]');
+        if (!rb) { rb = document.createElement("meta"); rb.setAttribute("name", nm); head.appendChild(rb); }
+        rb.setAttribute("content", "index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1");
+      });
       var ogl = document.querySelector('meta[property="og:locale"]');
       if (!ogl) { ogl = document.createElement("meta"); ogl.setAttribute("property", "og:locale"); head.appendChild(ogl); }
       ogl.setAttribute("content", OG_LOCALE[_lang] || "tr_TR");
@@ -402,10 +408,51 @@
         if (l !== _lang) { var al = document.createElement("meta"); al.setAttribute("property", "og:locale:alternate"); al.setAttribute("content", OG_LOCALE[l]); head.appendChild(al); }
       });
       var xd = document.createElement("link"); xd.setAttribute("rel", "alternate"); xd.setAttribute("hreflang", "x-default"); xd.setAttribute("href", base); xd.setAttribute("data-nx-hl", "1"); head.appendChild(xd);
-      /* <html lang> zaten applyLangAttr'da; JSON-LD inLanguage ekle */
-      Array.prototype.forEach.call(document.querySelectorAll('script[type="application/ld+json"]'), function (s) {
-        try { var j = JSON.parse(s.textContent); if (j && typeof j === "object" && !Array.isArray(j)) { j.inLanguage = (_lang === "zh" ? "zh-Hans" : _lang); s.textContent = JSON.stringify(j); } } catch (e) {}
+      /* <html lang> zaten applyLangAttr'da. AEO: JSON-LD dil-farkındalığı —
+         inLanguage ekle + tüm string DEĞERLERİ sayfa sözlüğüyle çevir (FAQPage soru/cevap,
+         hizmet adları vb. görünür metinle birebir eşleşiyorsa otomatik dillenir). */
+      var _lt = (_lang === "zh" ? "zh-Hans" : _lang);
+      var _SKIPK = { "@type": 1, "@context": 1, "@id": 1, "url": 1, "sameAs": 1, "inLanguage": 1, "datePublished": 1, "dateModified": 1, "price": 1, "priceCurrency": 1, "logo": 1, "image": 1, "contentUrl": 1, "email": 1, "telephone": 1, "identifier": 1, "streetAddress": 1, "postalCode": 1 };
+      function _tv(str) { if (_lang === "tr") return str; var e = PAGE_I18N && PAGE_I18N[str]; return (e && e[_lang]) ? e[_lang] : str; }
+      function _dt(o) { if (Array.isArray(o)) return o.map(_dt); if (o && typeof o === "object") { var r = {}; for (var k in o) { r[k] = _SKIPK[k] ? o[k] : _dt(o[k]); } return r; } return (typeof o === "string") ? _tv(o) : o; }
+      Array.prototype.forEach.call(document.querySelectorAll('script[type="application/ld+json"]:not([data-nx-graph])'), function (s) {
+        try {
+          var j = _dt(JSON.parse(s.textContent));
+          if (Array.isArray(j)) { j.forEach(function (n) { if (n && typeof n === "object") n.inLanguage = _lt; }); }
+          else if (j && typeof j === "object") { j.inLanguage = _lt; }
+          s.textContent = JSON.stringify(j);
+        } catch (e) {}
       });
+      /* AEO/GEO entity grafiği — site-geneli Organization + WebSite (sameAs, availableLanguage,
+         knowsAbout). Bilgi grafiği/AI yanıt motorları için varlık sinyali. Dile göre açıklama. */
+      if (!document.querySelector('script[data-nx-graph]')) {
+        var OD = {
+          tr: "2005’ten beri mahalle bazında kesintisiz aylık emlak endeksi üreten Türkiye merkezli gayrimenkul veri ve yazılım şirketi. 81 il · 973 ilçe · 50.000+ mahalle · 480M+ veri kaydı · 257 aylık zaman serisi.",
+          en: "Türkiye-based real estate data & software company producing an uninterrupted monthly neighborhood-level real estate index since 2005. 81 provinces · 973 districts · 50,000+ neighborhoods · 480M+ data records · 257-month time series.",
+          zh: "自2005年起持续生成街区级月度房地产指数的土耳其房地产数据与软件公司。81 省 · 973 区 · 50,000+ 街区 · 4.8 亿+ 数据记录 · 257 个月时间序列。",
+          ar: "شركة بيانات وبرمجيات عقارية مقرها تركيا تنتج مؤشرًا عقاريًا شهريًا على مستوى الأحياء دون انقطاع منذ 2005. 81 محافظة · 973 منطقة · 50,000+ حي · 480M+ سجل بيانات · سلسلة زمنية من 257 شهرًا."
+        };
+        var ORIGIN = "https://www.nadas.com.tr";
+        var graph = {
+          "@context": "https://schema.org", "@graph": [
+            {
+              "@type": "Organization", "@id": ORIGIN + "/#organization",
+              "name": "Nadas Gayrimenkul Bilgi İletişim Sistemleri Ticaret Limited Şirketi", "alternateName": "NADAS",
+              "url": ORIGIN + "/", "foundingDate": "2005",
+              "logo": ORIGIN + "/og-index.png", "image": ORIGIN + "/og-index.png",
+              "description": OD[_lang] || OD.tr,
+              "address": { "@type": "PostalAddress", "streetAddress": "Hastane Mah. Hadımköy İstanbul Cad. No: 46/B", "addressLocality": "Arnavutköy", "addressRegion": "İstanbul", "addressCountry": "TR" },
+              "areaServed": { "@type": "Country", "name": "Türkiye" },
+              "availableLanguage": ["tr", "en", "zh-Hans", "ar"],
+              "knowsAbout": ["Real estate data", "Real estate price index", "Neighborhood-level property analysis", "Property valuation", "Time series data", "ProX data engine"],
+              "sameAs": ["https://www.emlakekspertizi.com/", "https://www.facebook.com/emlakekspertiz", "https://x.com/emlakeksperti", "https://www.linkedin.com/company/emlakekspertizi"]
+            },
+            { "@type": "WebSite", "@id": ORIGIN + "/#website", "url": ORIGIN + "/", "name": "NADAS", "inLanguage": _lt, "publisher": { "@id": ORIGIN + "/#organization" } }
+          ]
+        };
+        var gsc = document.createElement("script"); gsc.type = "application/ld+json"; gsc.setAttribute("data-nx-graph", "1");
+        gsc.textContent = JSON.stringify(graph); head.appendChild(gsc);
+      }
     } catch (e) {}
   }
   /* ProX wordmark markup’ı (string). Şablon içinde doğrudan gömmek için. */

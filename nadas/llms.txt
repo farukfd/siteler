@@ -1,0 +1,42 @@
+# NADAS
+
+> NADAS (Nadas Gayrimenkul Bilgi İletişim Sistemleri Ticaret Limited Şirketi) is a Türkiye-based real estate DATA & SOFTWARE company. Since 2005 it has produced an uninterrupted monthly, neighborhood-level real estate index for Türkiye and performs real estate data mining. Scale (2026): 81 provinces · 973 districts · 50,000+ neighborhoods · 480M+ data records · a 257-month (2005→2026) time series. Istanbul-based. The customer-facing platform is emlakekspertizi.com, where the deterministic ProX data engine runs.
+
+## Key facts (citable)
+- Founded: 2005 (sole proprietorship), 2015 (limited company). Headquarters: Arnavutköy, Istanbul, Türkiye.
+- Coverage: 81 provinces, 973 districts, 50,000+ neighborhoods; 38 index categories (for-sale + for-rent).
+- Data depth: 480M+ records; 257-month continuous monthly chain (Jan 2005 → May 2026); 38-dimension neighborhood "DNA"; 7M+ event markers; ~96% system-wide median confidence score.
+- ProX is a DETERMINISTIC ML/MML data engine — NOT a generative AI. Same query → same output; it does not hallucinate; when data is missing the field is left blank (no fabricated values).
+- The "smart real estate assistant" (ProX Asistan) is a separate readable-text layer over the deterministic engine; every published text has a named editor.
+- SPK-licensed valuation reports are prepared by SPK-licensed experts and are valid for banks/courts; NADAS's own index/analysis is informational and is NOT investment advice and NOT an SPK valuation report.
+- KDV/VAT: all displayed prices include 20% VAT (Türkiye standard rate since 10 July 2023).
+- Languages: the site is fully available in Turkish, English, Simplified Chinese and Arabic (with RTL). Add ?lang=en, ?lang=zh or ?lang=ar to any URL.
+
+## Products & solutions
+- [Solutions overview](https://www.nadas.com.tr/cozumler): four segments — individual (decision analysis), professional (memberships), company (white-label + CRM), enterprise (API, data license, SPK).
+- [Data infrastructure](https://www.nadas.com.tr/veri-altyapisi): the ProX data engine, 257-month time series, neighborhood DNA, event markers, confidence scoring.
+- [ProX assistant](https://www.nadas.com.tr/prox): deterministic real-estate decision engine and assistant.
+- [White-label platform](https://www.nadas.com.tr/white-label): your brand, your domain, live in 24 hours — 26-module CRM + live neighborhood index; four sector editions (real estate office, construction, individual advisor, SPK-licensed valuation).
+- [Web software](https://www.nadas.com.tr/web-yazilim): turnkey, SEO/AEO-structured real estate websites with daily content.
+- [CRM](https://www.nadas.com.tr/crm): 26-module real estate CRM.
+- [AI / Yapay Zeka](https://www.nadas.com.tr/yapay-zeka): ProX engine vs. generative models; sovereign (on-premise, open-source) vs. managed (API) layers.
+- [Enterprise API](https://www.nadas.com.tr/kurumsal-api): REST + WebSocket endpoints for banks, insurers, funds, municipalities, proptech.
+- [Data license](https://www.nadas.com.tr/veri-lisansi): province/district-level raw data delivery and on-premise options.
+- [Research](https://www.nadas.com.tr/research): data-driven market analysis, live province indices, editorial methodology; blog at emlakekspertizi.com/blog.
+
+## Company
+- [About](https://www.nadas.com.tr/hakkimizda): 21-year history (2005→2026), two-layer structure (invisible data infrastructure + customer platform), principles, ecosystem.
+- [Contact](https://www.nadas.com.tr/iletisim): written channels only; leave your number and the relevant unit calls you; R&D office in Arnavutköy, Istanbul.
+- [Imprint / legal info](https://www.nadas.com.tr/kunye): trade name, MERSİS, tax and registry details.
+
+## Legal
+- [KVKK privacy notice](https://www.nadas.com.tr/kvkk)
+- [KVKK data-subject application form](https://www.nadas.com.tr/kvkk-basvuru)
+- [Privacy policy](https://www.nadas.com.tr/gizlilik)
+- [Cookie policy](https://www.nadas.com.tr/cerez)
+- [Terms of use](https://www.nadas.com.tr/kullanim-kosullari)
+- [Accessibility statement](https://www.nadas.com.tr/erisilebilirlik)
+
+## Related
+- Customer platform (ProX runs here): https://www.emlakekspertizi.com/
+- Sitemap: https://www.nadas.com.tr/sitemap.xml
