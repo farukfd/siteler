@@ -1,23 +1,183 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.nadas.com.tr/</loc><lastmod>2026-07-26</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
-  <url><loc>https://www.nadas.com.tr/veri-altyapisi</loc><lastmod>2026-07-26</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.nadas.com.tr/cozumler</loc><lastmod>2026-07-26</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.nadas.com.tr/prox</loc><lastmod>2026-07-26</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.nadas.com.tr/web-yazilim</loc><lastmod>2026-07-26</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.nadas.com.tr/white-label</loc><lastmod>2026-07-26</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.nadas.com.tr/yapay-zeka</loc><lastmod>2026-07-26</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.nadas.com.tr/kurumsal-api</loc><lastmod>2026-07-26</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.nadas.com.tr/crm</loc><lastmod>2026-07-26</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.nadas.com.tr/veri-lisansi</loc><lastmod>2026-07-26</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.nadas.com.tr/research</loc><lastmod>2026-07-26</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.nadas.com.tr/hakkimizda</loc><lastmod>2026-07-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.nadas.com.tr/iletisim</loc><lastmod>2026-07-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.nadas.com.tr/kvkk</loc><lastmod>2026-07-26</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://www.nadas.com.tr/kvkk-basvuru</loc><lastmod>2026-07-26</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://www.nadas.com.tr/gizlilik</loc><lastmod>2026-07-26</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://www.nadas.com.tr/cerez</loc><lastmod>2026-07-26</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://www.nadas.com.tr/kullanim-kosullari</loc><lastmod>2026-07-26</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://www.nadas.com.tr/kunye</loc><lastmod>2026-07-26</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://www.nadas.com.tr/erisilebilirlik</loc><lastmod>2026-07-26</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.nadas.com.tr/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/"/>
+    <lastmod>2026-07-28</lastmod><changefreq>daily</changefreq><priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/veri-altyapisi</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/veri-altyapisi"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/veri-altyapisi?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/veri-altyapisi?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/veri-altyapisi?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/veri-altyapisi"/>
+    <lastmod>2026-07-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/cozumler</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/cozumler"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/cozumler?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/cozumler?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/cozumler?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/cozumler"/>
+    <lastmod>2026-07-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/prox</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/prox"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/prox?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/prox?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/prox?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/prox"/>
+    <lastmod>2026-07-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/web-yazilim</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/web-yazilim"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/web-yazilim?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/web-yazilim?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/web-yazilim?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/web-yazilim"/>
+    <lastmod>2026-07-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/white-label</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/white-label"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/white-label?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/white-label?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/white-label?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/white-label"/>
+    <lastmod>2026-07-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/yapay-zeka</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/yapay-zeka"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/yapay-zeka?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/yapay-zeka?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/yapay-zeka?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/yapay-zeka"/>
+    <lastmod>2026-07-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/kurumsal-api</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/kurumsal-api"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/kurumsal-api?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/kurumsal-api?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/kurumsal-api?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/kurumsal-api"/>
+    <lastmod>2026-07-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/crm</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/crm"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/crm?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/crm?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/crm?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/crm"/>
+    <lastmod>2026-07-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/veri-lisansi</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/veri-lisansi"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/veri-lisansi?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/veri-lisansi?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/veri-lisansi?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/veri-lisansi"/>
+    <lastmod>2026-07-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/research</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/research"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/research?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/research?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/research?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/research"/>
+    <lastmod>2026-07-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/hakkimizda</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/hakkimizda"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/hakkimizda?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/hakkimizda?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/hakkimizda?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/hakkimizda"/>
+    <lastmod>2026-07-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/iletisim</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/iletisim"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/iletisim?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/iletisim?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/iletisim?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/iletisim"/>
+    <lastmod>2026-07-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/kvkk</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/kvkk"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/kvkk?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/kvkk?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/kvkk?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/kvkk"/>
+    <lastmod>2026-07-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/kvkk-basvuru</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/kvkk-basvuru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/kvkk-basvuru?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/kvkk-basvuru?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/kvkk-basvuru?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/kvkk-basvuru"/>
+    <lastmod>2026-07-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/gizlilik</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/gizlilik"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/gizlilik?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/gizlilik?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/gizlilik?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/gizlilik"/>
+    <lastmod>2026-07-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/cerez</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/cerez"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/cerez?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/cerez?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/cerez?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/cerez"/>
+    <lastmod>2026-07-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/kullanim-kosullari</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/kullanim-kosullari"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/kullanim-kosullari?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/kullanim-kosullari?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/kullanim-kosullari?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/kullanim-kosullari"/>
+    <lastmod>2026-07-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/kunye</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/kunye"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/kunye?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/kunye?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/kunye?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/kunye"/>
+    <lastmod>2026-07-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.nadas.com.tr/erisilebilirlik</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.nadas.com.tr/erisilebilirlik"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nadas.com.tr/erisilebilirlik?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://www.nadas.com.tr/erisilebilirlik?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.nadas.com.tr/erisilebilirlik?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nadas.com.tr/erisilebilirlik"/>
+    <lastmod>2026-07-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
 </urlset>
