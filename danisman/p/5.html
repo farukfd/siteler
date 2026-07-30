@@ -39,8 +39,26 @@
   <div class="w">
     <div class="m">M</div>
     <h1>Nişantaşı Cadde Üstü Dükkan</h1>
-    <p>İlana yönlendiriliyorsunuz… <a href="../ilanlar.html?ilan=5">Devam etmezse tıklayın</a></p>
+    <p id="rdir">İlana yönlendiriliyorsunuz… <a href="../ilanlar.html?ilan=5">Devam etmezse tıklayın</a></p>
   </div>
-  <script>location.replace('../ilanlar.html?ilan=5');</script>
+  <script>
+(function(){
+  var L=((location.search.match(/[?&]lang=([a-z]{2})/)||[])[1])||localStorage.getItem('dn_lang')||'tr';
+  var LG=['tr','en','ru','zh','ar']; if(LG.indexOf(L)<0)L='tr';
+  var RTL={ar:1};
+  var T={
+    tr:['İlana yönlendiriliyorsunuz…','Devam etmezse tıklayın'],
+    en:['You are being redirected to the listing…','Click here if it doesn’t continue'],
+    ru:['Вы перенаправляетесь к объявлению…','Нажмите, если переход не произошёл'],
+    zh:['正在跳转到房源…','若未自动跳转请点击'],
+    ar:['يتم تحويلكم إلى الإعلان…','اضغطوا هنا إن لم يتم التحويل']
+  };
+  var t=T[L]||T.tr, url='../ilanlar.html?ilan=5&lang='+L;
+  document.documentElement.lang=L; if(RTL[L])document.documentElement.dir='rtl';
+  var p=document.getElementById('rdir');
+  if(p){p.textContent=t[0]+' '; var a=document.createElement('a'); a.href=url; a.textContent=t[1]; p.appendChild(a);}
+  location.replace(url);
+})();
+</script>
 </body>
 </html>
