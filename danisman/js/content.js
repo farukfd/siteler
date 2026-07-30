@@ -112,7 +112,15 @@
     + '<div><h4>Kurumsal</h4><ul><li><a href="index.html">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="sss.html">S.S.S</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="index.html#giris">Üye Girişi / Hesabım</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>'
     + '<div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="#" onclick="if(window.dnConsent){dnConsent.open();}return false;">Çerez Tercihleri</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li><li><a href="index.html#admin">Yönetim Paneli</a></li></ul></div>'
     + '</div>'
-    + '<div class="fbot"><span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span><a class="fprox" href="https://emlakekspertizi.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a></div>'
+    + '<div class="fbot">'
+    + '<div class="dn-lang" data-noi18n role="group" aria-label="Dil / Language" style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;font-family:\'IBM Plex Sans\',system-ui,sans-serif;font-size:12px;letter-spacing:.02em">'
+    +   '<a href="?lang=tr" data-lang="tr" style="color:inherit;text-decoration:none;opacity:.7">TR</a><span style="opacity:.3">·</span>'
+    +   '<a href="?lang=en" data-lang="en" style="color:inherit;text-decoration:none;opacity:.7">EN</a><span style="opacity:.3">·</span>'
+    +   '<a href="?lang=ru" data-lang="ru" style="color:inherit;text-decoration:none;opacity:.7">RU</a><span style="opacity:.3">·</span>'
+    +   '<a href="?lang=zh" data-lang="zh" style="color:inherit;text-decoration:none;opacity:.7">中文</a><span style="opacity:.3">·</span>'
+    +   '<a href="?lang=ar" data-lang="ar" style="color:inherit;text-decoration:none;opacity:.7">العربية</a>'
+    + '</div>'
+    + '<span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span><a class="fprox" href="https://emlakekspertizi.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a></div>'
     + '</div>';
   window.DN_FOOTER_INNER = INNER;
   window.DN_FOOTER_HTML = '<footer>' + INNER + '</footer>';
