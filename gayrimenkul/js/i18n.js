@@ -73,7 +73,11 @@
         var raw = n.nodeValue; if (!raw || !/\S/.test(raw)) continue;
         var key = norm(raw); if (key.length < 1) continue;
         var tr = t(key);
-        if (tr !== key) n.nodeValue = raw.replace(key, tr);
+        if (tr !== key) {
+          var idx = raw.indexOf(key);
+          if (idx >= 0) { n.nodeValue = raw.slice(0, idx) + tr + raw.slice(idx + key.length); }
+          else { var lead = (raw.match(/^\s*/) || [""])[0], trail = (raw.match(/\s*$/) || [""])[0]; n.nodeValue = lead + tr + trail; }
+        }
       }
       var els = root.querySelectorAll ? root.querySelectorAll("[aria-label],[title],[alt],[placeholder]") : [];
       [].forEach.call(els, function (el) {
