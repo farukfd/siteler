@@ -36,7 +36,7 @@
 <link rel="apple-touch-icon" href="favicon.svg">
 <script src="js/brand.js?v=3"></script>
 <script src="js/tr-grammar.js?v=3"></script><script src="js/content.js?v=8"></script>
-<script src="js/i18n/_common.js?v=1"></script><script src="js/i18n.js?v=1"></script>
+<script src="js/i18n/_common.js?v=1"></script><script src="js/i18n/ozel-portfoy.js?v=1"></script><script src="js/i18n.js?v=1"></script>
 <script src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
 <script src="js/a11y.js?v=1"></script>
 <link rel="stylesheet" href="css/portfoy.css?v=9">
@@ -505,7 +505,7 @@ function ozPanel(o){
     +'<div class="stc-head"><div class="stc-htext"><h3 class="stc-name">'+esc(o.name)+'</h3><p class="stc-loc">'+esc(o.sub)+'</p></div>'+(score>0?ozGauge(score):'')+'</div>'
     +(pill?'<div class="stc-pillrow">'+pill+'</div>':'')
     +'<div class="stc-rows">'+rows.join('')+'</div>'
-    +'<div class="stc-foot"><span class="stc-live">'+ICO_STAR+'Canlı ProX'+(veri?' · '+fmtNum(veri)+' veri':'')+'</span>'
+    +'<div class="stc-foot"><span class="stc-live">'+ICO_STAR+'<span>Canlı ProX</span>'+(veri?' · '+fmtNum(veri)+' <span>veri</span>':'')+'</span>'
       +'<button class="stc-cta" onclick="event.stopPropagation();ozLead(\''+esc(o.name)+'\')">Talep Et</button></div>'
     +'</div></div></div></div>';
 }
