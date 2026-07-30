@@ -135,7 +135,7 @@
 <link rel="apple-touch-icon" href="favicon.svg">
 <script src="js/brand.js?v=3"></script>
 <script src="js/tr-grammar.js?v=3"></script><script src="js/content.js?v=8"></script>
-<script src="js/i18n/_common.js?v=1"></script><script src="js/i18n.js?v=1"></script>
+<script src="js/i18n/_common.js?v=1"></script><script src="js/i18n/bolge-analizi.js?v=1"></script><script src="js/i18n.js?v=1"></script>
 <script src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
 <script src="js/a11y.js?v=1"></script>
 <style>
@@ -719,8 +719,8 @@ function paintStrip(){
   host.innerHTML=sorted.map(function(ic,idx){
     var d=ILCE_DATA[ic]||{};var w=d.m2?Math.max(6,d.m2/mx*100):0;var y=yonOf(d.delta,d.score);
     var valTxt=d.m2?TL(d.m2)+' ₺':'—';
-    return '<div class="ba-row'+(ic===ILCE?' on':'')+'" data-ilce="'+esc(ic)+'" role="button" tabindex="0" aria-label="'+esc(ic)+' detay">'
-      +'<div class="nm">'+esc(ic)+'<small>skor '+(d.score?Math.round(d.score):'—')+' · '+(d.ilan?TL(d.ilan)+' ilan':'—')+'</small></div>'
+    return '<div class="ba-row'+(ic===ILCE?' on':'')+'" data-ilce="'+esc(ic)+'" role="button" tabindex="0" aria-label="'+esc(ic)+' '+(window.DNI18N?DNI18N.t('detay'):'detay')+'">'
+      +'<div class="nm">'+esc(ic)+'<small><span>skor</span> '+(d.score?Math.round(d.score):'—')+' · '+(d.ilan?TL(d.ilan)+' <span>ilan</span>':'—')+'</small></div>'
       +'<div class="ba-track"><i class="ba-fill" data-w="'+w.toFixed(1)+'" style="background:'+heatColor(d.m2/mx)+'"></i></div>'
       +'<div class="val">'+valTxt+'<span class="yon yon-'+y+'">'+yonSym(y)+'</span></div>'
     +'</div>';
@@ -765,7 +765,7 @@ function paintScatter(){
   s+='<text class="ba-sc-axl" transform="translate(13,'+((PT+H-PB)/2)+') rotate(-90)" text-anchor="middle">brüt getiri % →</text>';
   /* noktalar */
   pts.forEach(function(p,i){var r=4+Math.sqrt(p.ilan/imx)*7;var col=p.yon==='up'?'var(--prox)':p.yon==='dn'?'#c0603a':'var(--muted-2)';
-    s+='<circle class="ba-sc-dot" data-ilce="'+esc(p.ic)+'" cx="'+X(p.x).toFixed(1)+'" cy="'+Y(p.y).toFixed(1)+'" r="'+(RM?r.toFixed(1):'0.1')+'" data-r="'+r.toFixed(1)+'" fill="'+col+'" fill-opacity=".82" stroke="#fff" stroke-width="1"><title>'+esc(p.ic)+' · '+TL(p.x)+' ₺/m² · getiri %'+fmtY(p.y)+'</title></circle>';
+    s+='<circle class="ba-sc-dot" data-ilce="'+esc(p.ic)+'" cx="'+X(p.x).toFixed(1)+'" cy="'+Y(p.y).toFixed(1)+'" r="'+(RM?r.toFixed(1):'0.1')+'" data-r="'+r.toFixed(1)+'" fill="'+col+'" fill-opacity=".82" stroke="#fff" stroke-width="1"><title>'+esc(p.ic)+' · '+TL(p.x)+' ₺/m² · '+(window.DNI18N?DNI18N.t('getiri'):'getiri')+' %'+fmtY(p.y)+'</title></circle>';
   });
   svg.innerHTML=s;
   [].forEach.call(svg.querySelectorAll('.ba-sc-dot'),function(dot){dot.addEventListener('click',function(){selectIlce(dot.getAttribute('data-ilce'),true);});});
@@ -878,7 +878,7 @@ async function loadMahalleGrid(ic){
       if(mine!==_mahBusy)return;var sat=r[0],kir=r[1];var cur=DURUM==='satilik'?sat:kir;
       var m2=(cur&&cur.m2)||0;var yld=(sat&&kir)?yieldPct(sat.m2,kir.m2):0;var score=(cur&&cur.score)||0;var delta=(cur&&cur.delta)||0;var yon=yonOf(delta,score);
       var m2El=card.querySelector('.mm2');m2El.innerHTML=(m2?'<span class="ba-num">'+TL(m2)+'</span>':'<span style="color:var(--muted-2)">—</span>')+' <small>₺/m²'+(DURUM==='kiralik'?'·ay':'')+'</small>';
-      var chip=card.querySelector('.ba-chip');chip.classList.remove('ba-shim');chip.textContent=yld?'getiri %'+fmtY(yld):'—';
+      var chip=card.querySelector('.ba-chip');chip.classList.remove('ba-shim');chip.innerHTML=yld?'<span>getiri</span> %'+fmtY(yld):'—';
       var ring=card.querySelector('.ba-miniring');ring.style.setProperty('--p',score||0);ring.querySelector('b').textContent=score?Math.round(score):'—';
       card.querySelector('.mtag').innerHTML=esc(ic)+' · '+(DURUM==='satilik'?'satılık':'kiralık')+' <span class="yon-'+yon+'">'+yonSym(yon)+'</span>';
     });
