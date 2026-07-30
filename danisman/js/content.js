@@ -103,6 +103,13 @@
     + '<a href="https://youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a>'
     + '<a href="https://nsosyal.com" target="_blank" rel="noopener noreferrer" aria-label="NEXT Sosyal" title="NEXT Sosyal — yerli sosyal medya platformu"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg></a>'
     + '</div>';
+  var LANGSW = '<div class="dn-lang" data-noi18n role="group" aria-label="Dil / Language" style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;font-family:\'IBM Plex Sans\',system-ui,sans-serif;font-size:12px;letter-spacing:.02em">'
+    +   '<a href="?lang=tr" data-lang="tr" style="color:inherit;text-decoration:none;opacity:.7">TR</a><span style="opacity:.3">·</span>'
+    +   '<a href="?lang=en" data-lang="en" style="color:inherit;text-decoration:none;opacity:.7">EN</a><span style="opacity:.3">·</span>'
+    +   '<a href="?lang=ru" data-lang="ru" style="color:inherit;text-decoration:none;opacity:.7">RU</a><span style="opacity:.3">·</span>'
+    +   '<a href="?lang=zh" data-lang="zh" style="color:inherit;text-decoration:none;opacity:.7">中文</a><span style="opacity:.3">·</span>'
+    +   '<a href="?lang=ar" data-lang="ar" style="color:inherit;text-decoration:none;opacity:.7">العربية</a>'
+    + '</div>';
   var INNER = '<div class="wrap"><div class="fcols">'
     + '<div><div class="brand"><a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit"><span class="mark">M</span><span><b>Selin Meridyen</b><small>Kişiye Özel Danışman</small></span></a></div><p>Yetki belgeli kişiye özel emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy ve ücretsiz gayrimenkul değer analizi.</p>'
     + SOC
@@ -113,18 +120,16 @@
     + '<div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="#" onclick="if(window.dnConsent){dnConsent.open();}return false;">Çerez Tercihleri</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li><li><a href="index.html#admin">Yönetim Paneli</a></li></ul></div>'
     + '</div>'
     + '<div class="fbot">'
-    + '<div class="dn-lang" data-noi18n role="group" aria-label="Dil / Language" style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;font-family:\'IBM Plex Sans\',system-ui,sans-serif;font-size:12px;letter-spacing:.02em">'
-    +   '<a href="?lang=tr" data-lang="tr" style="color:inherit;text-decoration:none;opacity:.7">TR</a><span style="opacity:.3">·</span>'
-    +   '<a href="?lang=en" data-lang="en" style="color:inherit;text-decoration:none;opacity:.7">EN</a><span style="opacity:.3">·</span>'
-    +   '<a href="?lang=ru" data-lang="ru" style="color:inherit;text-decoration:none;opacity:.7">RU</a><span style="opacity:.3">·</span>'
-    +   '<a href="?lang=zh" data-lang="zh" style="color:inherit;text-decoration:none;opacity:.7">中文</a><span style="opacity:.3">·</span>'
-    +   '<a href="?lang=ar" data-lang="ar" style="color:inherit;text-decoration:none;opacity:.7">العربية</a>'
-    + '</div>'
+    + LANGSW
     + '<span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span><a class="fprox" href="https://emlakekspertizi.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a></div>'
     + '</div>';
   window.DN_FOOTER_INNER = INNER;
   window.DN_FOOTER_HTML = '<footer>' + INNER + '</footer>';
+  window.DN_LANG_SWITCHER = LANGSW;
   function mountFooters() {
+    // Bağımsız dil seçici yuvaları — footer'ı olmayan minimal sayfalar (404, prox-asistan) için tek kaynak
+    var slots = document.querySelectorAll('[data-dn-lang-slot]');
+    for (var s = 0; s < slots.length; s++) { if (!slots[s].querySelector('.dn-lang')) { try { slots[s].innerHTML = LANGSW; } catch (e) {} } }
     // #siteFooter (index/SPA kabuğu) — app.js de aynı kaynağı kullanır; burada da güvenle bas
     var sf = document.getElementById("siteFooter");
     if (sf && sf.tagName !== "FOOTER" && !sf.querySelector("footer")) { try { sf.innerHTML = window.DN_FOOTER_HTML; } catch (e) {} }
