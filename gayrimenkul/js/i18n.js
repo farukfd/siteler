@@ -64,6 +64,56 @@
     return false;
   }
   var ATTRS = ["aria-label", "title", "alt", "placeholder"];
+
+  /* ---- Token geçişi: exact-match başarısız (karışık düğüm: sayı/ilçe/₺ + çevrilebilir kelime) olunca
+     sıralı, dilbilgisi-doğru kalıp kuralları uygulanır. İl/ilçe/mahalle (Latin) ve ₺ fiyat/rakam dokunulmaz.
+     Zaten çevrilmiş düğümde Türkçe token kalmadığı için tekrar tetiklenmez (kararlı). ---- */
+  var TOKENS = [
+    // kat (sayı-sıralı, dile göre konum): "7. kat"
+    { re: /(\d+)\.\s*kat\b/g, en: "$1. floor", ru: "$1-й этаж", zh: "第$1层", ar: "الطابق $1" },
+    // sayaç ifadeleri (uzun → kısa)
+    { re: /ilan listeleniyor/g, en: "listings shown", ru: "объявлений показано", zh: "条房源", ar: "إعلان معروض" },
+    { re: /ilan bulunamadı/g, en: "listings found", ru: "объявлений найдено", zh: "条房源", ar: "إعلان" },
+    { re: /özel portföy kaydı/g, en: "private-portfolio records", ru: "записей закрытого портфеля", zh: "条专属房源记录", ar: "سجل محفظة خاصة" },
+    { re: /kayıt seçildi/g, en: "selected", ru: "выбрано", zh: "项已选", ar: "محدد" },
+    { re: /kayıt →/g, en: "records →", ru: "записей →", zh: "条记录 →", ar: "سجل ←" },
+    { re: /ifşasız portföy/g, en: "undisclosed portfolio", ru: "непубличный портфель", zh: "不公开房源", ar: "محفظة غير مُفصح عنها" },
+    { re: /’den başlayan/g, en: "starting from", ru: "от", zh: "起", ar: "ابتداءً من" },
+    // etiket/kategori kelimeleri (sınır-korumalı; ilçe/mahalle/sokak Latin kalır)
+    { re: /Özel Portföy/g, en: "Private Portfolio", ru: "Закрытый портфель", zh: "专属房源", ar: "المحفظة الخاصة" },
+    { re: /(^|[ ·(])İlan(?=[ ·).,]|$)/g, en: "$1Listing", ru: "$1Объявление", zh: "$1房源", ar: "$1إعلان" },
+    { re: /(^|[ ·(])Villa(?=[ ·).,]|$)/g, en: "$1Villa", ru: "$1Вилла", zh: "$1别墅", ar: "$1فيلا" },
+    { re: /(^|[ ·(])Daire(?=[ ·).,]|$)/g, en: "$1Apartment", ru: "$1Квартира", zh: "$1公寓", ar: "$1شقة" },
+    { re: /(^|[ ·(])Ofis(?=[ ·).,]|$)/g, en: "$1Office", ru: "$1Офис", zh: "$1办公室", ar: "$1مكتب" },
+    { re: /(^|[ ·(])Arsa(?=[ ·).,]|$)/g, en: "$1Land", ru: "$1Участок", zh: "$1土地", ar: "$1أرض" },
+    { re: /(^|[ ·(])Dükkan(?=[ ·).,]|$)/g, en: "$1Shop", ru: "$1Магазин", zh: "$1店铺", ar: "$1محل" },
+    { re: /(^|[ ·(])Stüdyo(?=[ ·).,]|$)/g, en: "$1Studio", ru: "$1Студия", zh: "$1开间", ar: "$1استوديو" },
+    { re: /Puanı/g, en: "Rating", ru: "рейтинг", zh: "评分", ar: "تقييم" },
+    // ekler / birimler
+    { re: /\/m²·ay/g, en: "/m²·mo", ru: "/м²·мес", zh: "/㎡·月", ar: "/م²·شهر" },
+    { re: /\/yıl/g, en: "/yr", ru: "/год", zh: "/年", ar: "/سنة" },
+    { re: /\/ay\b/g, en: "/mo", ru: "/мес", zh: "/月", ar: "/شهر" },
+    { re: /’den/g, en: " and up", ru: " и выше", zh: " 起", ar: " فأكثر" },
+    // tekil kelimeler (kelime-sınırı korumalı)
+    { re: /\bkayıt\b/g, en: "records", ru: "записей", zh: "条记录", ar: "سجل" },
+    { re: /\bilan\b/g, en: "listings", ru: "объявлений", zh: "条房源", ar: "إعلان" },
+    { re: /\bkişi\b/g, en: "people", ru: "чел.", zh: "人", ar: "أشخاص" },
+    { re: /\bendeks\b/g, en: "index", ru: "индекс", zh: "指数", ar: "مؤشر" },
+    { re: /\buyum\b/g, en: "match", ru: "совпадение", zh: "匹配", ar: "تطابق" },
+    { re: /\bcivarı\b/g, en: "area", ru: "район", zh: "一带", ar: "محيط" },
+    { re: /\bbaşlangıç\b/g, en: "starting", ru: "старт", zh: "起价", ar: "البداية" },
+    { re: /(\d+)\s*[Yy]ıl\b/g, en: "$1 years", ru: "$1 лет", zh: "$1 年", ar: "$1 سنوات" }
+  ];
+  function tokenize(raw) {
+    var out = raw, hit = false;
+    for (var i = 0; i < TOKENS.length; i++) {
+      var r = TOKENS[i]; if (!r[_lang]) continue;
+      if (r.re.test(out)) { out = out.replace(r.re, r[_lang]); hit = true; }
+      r.re.lastIndex = 0;
+    }
+    return hit ? out : null;
+  }
+
   function apply(root) {
     if (_lang === "tr" || !root) return;
     try {
@@ -77,6 +127,9 @@
           var idx = raw.indexOf(key);
           if (idx >= 0) { n.nodeValue = raw.slice(0, idx) + tr + raw.slice(idx + key.length); }
           else { var lead = (raw.match(/^\s*/) || [""])[0], trail = (raw.match(/\s*$/) || [""])[0]; n.nodeValue = lead + tr + trail; }
+        } else {
+          var tok = tokenize(raw);
+          if (tok !== null && tok !== raw) n.nodeValue = tok;
         }
       }
       var els = root.querySelectorAll ? root.querySelectorAll("[aria-label],[title],[alt],[placeholder]") : [];
