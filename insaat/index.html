@@ -180,7 +180,7 @@ header.scrolled .lang-sel{color:var(--ink)}
     <a href="hizmetler" onclick="event.preventDefault();openHizmetlerPage()">Hizmetlerimiz</a>
     <a href="neden-biz.html">Neden <span class="nb-x">?</span> Biz</a>
     <a href="projeler" onclick="event.preventDefault();openProjelerPage()">Projeler</a>
-    <a href="ilanlar" onclick="event.preventDefault();openIlanlarPage()">İlanlar</a>
+    <a href="#ilanlar" onclick="event.preventDefault();openIlanlarPage()">İlanlar</a>
     <a href="bolge" onclick="event.preventDefault();openBolgePage()">Bölge Zekası</a>
   </nav>
   <div class="nav-cta insaatCta">
@@ -488,7 +488,7 @@ header.scrolled .lang-sel{color:var(--ink)}
       <a href="#hakkimizda" onclick="event.preventDefault();closeIlanlarPage();var e=document.getElementById('hakkimizda');if(e)e.scrollIntoView({behavior:'smooth'})">Kurumsal</a>
       <a href="hizmetler" onclick="event.preventDefault();openHizmetlerPage();closeIlanlarPage()">Hizmetler</a>
       <a href="projeler" onclick="event.preventDefault();openProjelerPage();closeIlanlarPage()">Projeler</a>
-      <a href="ilanlar" onclick="event.preventDefault();document.getElementById('ilanlarPage').scrollTo({top:0,behavior:'smooth'})">İlanlar</a>
+      <a href="#ilanlar" onclick="event.preventDefault();document.getElementById('ilanlarPage').scrollTo({top:0,behavior:'smooth'})">İlanlar</a>
       <a href="bolge" onclick="event.preventDefault();openBolgePage();closeIlanlarPage()">Bölge Zekası</a>
       <a href="iletisim" onclick="event.preventDefault();openIletisimPage();closeIlanlarPage()">İletişim</a>
     </nav>
@@ -2160,7 +2160,7 @@ window.initProje3D=async function(){
   };
   window.renderReportImages=function(){
     var grid=document.getElementById('p3imgGrid');if(!grid)return;
-    grid.innerHTML=window.__p3images.map(function(src,i){return '<div class="p3img"><img src="'+src+'"><button onclick="window.__p3images.splice('+i+',1);renderReportImages()">✕</button></div>';}).join('');
+    grid.innerHTML=window.__p3images.map(function(src,i){return '<div class="p3img"><img src="'+src+'" alt="Meridyen Yapı proje görseli"><button onclick="window.__p3images.splice('+i+',1);renderReportImages()">✕</button></div>';}).join('');
   };
   window.saveP3Note=function(){window.__p3note=(document.getElementById('p3_not')||{}).value||'';};
   window.generateReport=async function(){
@@ -2202,7 +2202,7 @@ window.initProje3D=async function(){
     H+='<div><span>İmar (Emsal/TAKS)</span><b>'+p.emsal+' / '+p.taks+'</b></div>';
     H+='<div><span>Kat Adedi</span><b>'+p.kat+'</b></div>';
     H+='<div><span>Bina Tipi</span><b>'+tipLabel+'</b></div></div>';
-    if(snap)H+='<div class="sec">3D Konsept Görünüm</div><img class="snap" src="'+snap+'">';
+    if(snap)H+='<div class="sec">3D Konsept Görünüm</div><img class="snap" src="'+snap+'" alt="Şantiye görünümü">';
     H+='<div class="sec">İmar & Yapı Analizi</div><table><tr><th>Kalem</th><th>Değer</th></tr>';
     H+='<tr><td>Toplam İnşaat Alanı (m²×emsal)</td><td>'+f.insaat.toLocaleString("tr-TR")+' m²</td></tr>';
     H+='<tr><td>Taban Oturum Alanı (m²×TAKS)</td><td>'+f.taban.toLocaleString("tr-TR")+' m²</td></tr>';
@@ -2221,7 +2221,7 @@ window.initProje3D=async function(){
     H+='<tr><td>Arsa Sahibi Pay Değeri</td><td>'+fmtTL3(f.arsaSahibiDeger)+'</td></tr>';
     H+='<tr><td>Müteahhit Pay Değeri</td><td>'+fmtTL3(f.mutDeger)+'</td></tr>';
     H+='<tr style="font-weight:700"><td>Müteahhit Tahmini Net Kâr</td><td>'+fmtTL3(f.mutNetKar)+'</td></tr></table>';
-    if(imgs.length){H+='<div class="sec">Proje Görselleri</div><div class="imgrow">';for(var k=0;k<imgs.length;k++){H+='<img src="'+imgs[k]+'">';}H+='</div>';}
+    if(imgs.length){H+='<div class="sec">Proje Görselleri</div><div class="imgrow">';for(var k=0;k<imgs.length;k++){H+='<img src="'+imgs[k]+'" alt="Proje galeri görseli">';}H+='</div>';}
     if(note)H+='<div class="sec">Notlar</div><div class="note">'+note.replace(/</g,"&lt;")+'</div>';
     H+='<div class="disc">⚠️ Bu rapor ön fizibilite amaçlıdır. Kesin daire adedi, paylaşım ve değerler onaylı mimari projeye, belediye imar durumuna ve piyasa koşullarına göre değişir. Resmi sözleşme için hukuki danışmanlık alınmalıdır.</div>';
     H+='<div class="rfoot">'+firma+' · '+(S.firmaEmail||"")+' · '+today+'</div>';
