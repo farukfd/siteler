@@ -19,8 +19,8 @@ Beş bağımsız **statik** dikey site (build YOK, server-runtime YOK). Dosyalar
 | `danisman/` | Selin Meridyen · lüks konut danışmanı | **5 dil** TR·EN·RU·ZH·AR | `consultant` ✅ canlı | admin paneli CRM (SaaS) |
 | `gayrimenkul/` | Meridyen Gayrimenkul · İzmir ofisi | **5 dil** + dinamik kart token'ları | `emlaktahadimkoy_com` ✅ canlı (**düzeltildi**) | eski `office` anahtarı geçersizdi |
 | `insaat/` | Meridyen Yapı · kurumsal inşaat | **5 dil** TR·EN·RU·ZH·AR | `construction` ✅ canlı | SPA + 5 statik SEO sayfası |
-| `nadas/` | NADAS · gayrimenkul ofisi | (mevcut) | `nadas` ✅ canlı | ana marka |
-| `degerleme/` | Değerleme / ekspertiz | (mevcut) | `valuation` · **`INJECT_AT_DEPLOY`** | anahtar deploy'da enjekte (güvenli desen) |
+| `nadas/` | NADAS · emlak veri-altyapısı | **5 dil** TR·EN·RU·ZH·AR | `nadas` ✅ canlı | ana marka; core.js motoru (i18n.js değil), 20 sayfa |
+| `degerleme/` | Değerleme / ekspertiz | **5 dil** TR·EN·RU·ZH·AR | `valuation` · **`INJECT_AT_DEPLOY`** | anahtar deploy'da enjekte (güvenli desen) |
 
 **i18n motoru** (danisman/gayrimenkul/insaat): sayfa-içi `js/i18n.js` + `js/i18n/_common.js` + `js/i18n/<sayfa>.js`; anahtar `dn_lang`/`gm_lang`/`in_lang`; `?lang=` URL > localStorage > tr; RTL (ar); post-render TreeWalker + MutationObserver. **gayrimenkul** ayrıca dinamik ilan-kartı için motor-içi güvenli **token geçişi** (kat/ilan/kişi/₺ birim kalıpları; il/ilçe/mahalle Latin + TL sabit). Statik dosyalar; server tarafı iş yok.
 
