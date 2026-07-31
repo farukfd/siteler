@@ -51,7 +51,7 @@
      Metin tabloları: t({tr,en,zh,ar}) geçerli dile göre döner (tr fallback).
      Dil değişimi localStorage'a yazılır + sayfa yeniden yüklenir (temiz, sızıntısız).
      Arapça (ar) RTL → <html dir="rtl">. */
-  var LANGS = ["tr", "en", "zh", "ar"];
+  var LANGS = ["tr", "en", "ru", "zh", "ar"];
   var RTL_LANGS = { ar: 1 };
   var LANG_KEY = "nadas_lang";
   var _lang = "tr";
@@ -83,7 +83,7 @@
       location.href = u.toString();
     } catch (e) { try { location.reload(); } catch (e2) {} }
   }
-  var LANG_OPTS = [["tr", "TR", "Türkçe"], ["en", "EN", "English"], ["zh", "中文", "简体中文"], ["ar", "عربي", "العربية"]];
+  var LANG_OPTS = [["tr", "TR", "Türkçe"], ["en", "EN", "English"], ["ru", "RU", "Русский"], ["zh", "中文", "简体中文"], ["ar", "عربي", "العربية"]];
   function LangSwitch() {
     return '<div class="nx-lang" role="group" aria-label="Dil / Language">' + LANG_OPTS.map(function (o) {
       var on = o[0] === _lang;
@@ -93,66 +93,66 @@
 
   /* Ortak UI metin tablosu (nav·footer·masthead·çerez) — uzman ajan çevirileri. */
   var TXT = {
-    "nav.veriAltyapisi": { tr: "Veri Altyapısı", en: "Data Infrastructure", zh: "数据基础设施", ar: "البنية التحتية للبيانات" },
-    "nav.cozumler": { tr: "Çözümler", en: "Solutions", zh: "解决方案", ar: "الحلول" },
-    "nav.demoWeb": { tr: "Demo Web", en: "Demo Web", zh: "演示网站", ar: "نسخة تجريبية (Demo Web)" },
-    "nav.proxAsistan": { tr: "ProX Asistan", en: "ProX Assistant", zh: "ProX 助手", ar: "مساعد ProX" },
-    "nav.research": { tr: "Research", en: "Research", zh: "研究", ar: "الأبحاث" },
-    "nav.hakkimizda": { tr: "Hakkımızda", en: "About Us", zh: "关于我们", ar: "من نحن" },
-    "nav.iletisim": { tr: "İletişim", en: "Contact", zh: "联系我们", ar: "اتصل بنا" },
-    "nav.anaSayfa": { tr: "Ana Sayfa", en: "Home", zh: "首页", ar: "الرئيسية" },
-    "nav.menuAria": { tr: "Menü", en: "Menu", zh: "菜单", ar: "القائمة" },
-    "mast.tagline": { tr: "TÜRKİYE'NİN İLK EMLAK ENDEKSİ · 2005", en: "TURKEY'S FIRST REAL ESTATE INDEX · 2005", zh: "土耳其首个房地产指数 · 2005", ar: "أول مؤشر عقاري في تركيا · 2005" },
-    "mast.canli": { tr: "CANLI", en: "LIVE", zh: "实时", ar: "مباشر" },
-    "footer.tagline": { tr: "Türkiye'de emlak endeksini kategori bazlı zaman serisiyle 2005 yılında biz başlattık. Bugün 480 milyonu aşkın veri noktamızla sektöre yön vermeye devam ediyoruz.", en: "We launched Turkey's real estate index with category-based time series back in 2005. Today, with more than 480 million data points, we continue to shape the industry.", zh: "2005 年，我们率先在土耳其以分类时间序列构建房地产指数。如今，凭借超过 4.8 亿个数据点，我们持续引领行业发展。", ar: "نحن من أطلق مؤشر العقارات في تركيا بسلاسل زمنية حسب الفئة في عام 2005. واليوم نواصل توجيه القطاع بأكثر من 480 مليون نقطة بيانات." },
-    "footer.colProduct": { tr: "ÜRÜN", en: "PRODUCT", zh: "产品", ar: "المنتج" },
-    "footer.colCorporate": { tr: "KURUMSAL", en: "CORPORATE", zh: "公司", ar: "الشركة" },
-    "footer.emlakEndeksi": { tr: "Emlak Endeksi", en: "Real Estate Index", zh: "房地产指数", ar: "مؤشر العقارات" },
-    "footer.kararAnalizi": { tr: "Karar Analizi", en: "Decision Analysis", zh: "决策分析", ar: "تحليل القرار" },
-    "footer.spkRapor": { tr: "SPK Lisanslı Rapor", en: "SPK-Licensed Report", zh: "SPK 持牌报告", ar: "تقرير مرخّص من SPK" },
-    "footer.proxAsistanUrun": { tr: "ProX Akıllı Asistan", en: "ProX Smart Assistant", zh: "ProX 智能助手", ar: "مساعد ProX الذكي" },
-    "footer.uyelikler": { tr: "Üyelikler", en: "Memberships", zh: "会员服务", ar: "العضويات" },
-    "footer.blogBulten": { tr: "Blog · Bülten", en: "Blog · Newsletter", zh: "博客 · 简报", ar: "المدونة · النشرة" },
-    "footer.whiteLabelWeb": { tr: "White-label Web", en: "White-label Web", zh: "白标网站", ar: "موقع White-label" },
-    "footer.webYazilim": { tr: "Web Yazılım", en: "Web Software", zh: "网站软件", ar: "برمجيات الويب" },
-    "footer.yapayZeka": { tr: "Yapay Zeka", en: "Artificial Intelligence", zh: "人工智能", ar: "الذكاء الاصطناعي" },
-    "footer.kurumsalApi": { tr: "Kurumsal API", en: "Enterprise API", zh: "企业 API", ar: "واجهة API للمؤسسات" },
-    "footer.crmCozumleri": { tr: "CRM Çözümleri", en: "CRM Solutions", zh: "CRM 解决方案", ar: "حلول CRM" },
-    "footer.veriLisansi": { tr: "Veri Lisansı", en: "Data License", zh: "数据许可", ar: "ترخيص البيانات" },
-    "footer.teklifAl": { tr: "Teklif Al", en: "Get a Quote", zh: "获取报价", ar: "اطلب عرض سعر" },
-    "legal.gizlilik": { tr: "GİZLİLİK", en: "PRIVACY", zh: "隐私", ar: "الخصوصية" },
-    "legal.cerezPolitikasi": { tr: "ÇEREZ POLİTİKASI", en: "COOKIE POLICY", zh: "Cookie 政策", ar: "سياسة ملفات تعريف الارتباط" },
-    "legal.kullanimKosullari": { tr: "KULLANIM KOŞULLARI", en: "TERMS OF USE", zh: "使用条款", ar: "شروط الاستخدام" },
-    "legal.kunye": { tr: "KÜNYE", en: "LEGAL NOTICE", zh: "公司信息", ar: "البيان القانوني" },
-    "legal.erisilebilirlik": { tr: "ERİŞİLEBİLİRLİK", en: "ACCESSIBILITY", zh: "无障碍", ar: "إمكانية الوصول" },
-    "legal.cerezTercihleri": { tr: "ÇEREZ TERCİHLERİ", en: "COOKIE PREFERENCES", zh: "Cookie 设置", ar: "تفضيلات ملفات تعريف الارتباط" },
-    "footer.copyrightRights": { tr: "Tüm hakları saklıdır.", en: "All rights reserved.", zh: "保留所有权利。", ar: "جميع الحقوق محفوظة." },
-    "footer.iletisimArrow": { tr: "İletişim →", en: "Contact →", zh: "联系我们 →", ar: "اتصل بنا →" },
-    "footer.soon": { tr: "yakında", en: "coming soon", zh: "即将推出", ar: "قريباً" },
-    "footer.nSocialDesc": { tr: "N Sosyal — Türkiye'nin yerli sosyal medya platformu · yakında", en: "N Social — Turkey's homegrown social media platform · coming soon", zh: "N Sosyal — 土耳其本土社交媒体平台 · 即将推出", ar: "N Sosyal — منصة التواصل الاجتماعي المحلية في تركيا · قريباً" },
-    "common.whatsapp": { tr: "WhatsApp", en: "WhatsApp", zh: "WhatsApp", ar: "WhatsApp" },
-    "common.waMessage": { tr: "Merhaba, NADAS hakkında bilgi almak istiyorum.", en: "Hello, I'd like to learn more about NADAS.", zh: "您好，我想了解有关 NADAS 的信息。", ar: "مرحباً، أودّ الحصول على معلومات حول NADAS." },
-    "common.waAria": { tr: "WhatsApp ile yazın", en: "Message us on WhatsApp", zh: "通过 WhatsApp 联系", ar: "راسلنا عبر WhatsApp" },
-    "skip.toContent": { tr: "İçeriğe geç", en: "Skip to content", zh: "跳至主要内容", ar: "الانتقال إلى المحتوى" },
-    "cc.dialogAria": { tr: "Çerez bilgilendirmesi", en: "Cookie notice", zh: "Cookie 通知", ar: "إشعار ملفات تعريف الارتباط" },
-    "cc.bannerText": { tr: "Bu sitede çalışması için zorunlu çerezler ile onayınıza bağlı işlevsel/analitik/reklam çerezleri kullanılabilir. Zorunlu olmayan çerezler siz onay verene kadar çalışmaz. Ayrıntı: Çerez Politikası.", en: "This site may use cookies that are strictly necessary for it to function, along with functional, analytics, and advertising cookies that depend on your consent. Non-essential cookies will not run until you give consent. Details: Cookie Policy.", zh: "本网站可能使用运行所必需的必要 Cookie，以及需经您同意的功能性/分析/广告 Cookie。在您同意之前，非必要 Cookie 不会启用。详情请见：Cookie 政策。", ar: "قد يستخدم هذا الموقع ملفات تعريف ارتباط ضرورية لتشغيله، إضافة إلى ملفات وظيفية/تحليلية/إعلانية تخضع لموافقتك. لا تعمل ملفات تعريف الارتباط غير الضرورية حتى تمنح موافقتك. للتفاصيل: سياسة ملفات تعريف الارتباط." },
-    "cc.rejectAll": { tr: "Tümünü Reddet", en: "Reject All", zh: "全部拒绝", ar: "رفض الكل" },
-    "cc.managePrefs": { tr: "Tercihleri Yönet", en: "Manage Preferences", zh: "管理设置", ar: "إدارة التفضيلات" },
-    "cc.acceptAll": { tr: "Tümünü Kabul Et", en: "Accept All", zh: "全部接受", ar: "قبول الكل" },
-    "cc.saveSelected": { tr: "Seçilenleri Kaydet", en: "Save Selected", zh: "保存所选", ar: "حفظ المحدد" },
-    "cc.prefsTitle": { tr: "Çerez Tercihleri", en: "Cookie Preferences", zh: "Cookie 偏好设置", ar: "تفضيلات ملفات تعريف الارتباط" },
-    "cc.prefsIntro": { tr: "Zorunlu olmayan çerezleri kategori bazında yönetin. Ayrıntı: Çerez Politikası.", en: "Manage non-essential cookies by category. Details: Cookie Policy.", zh: "按类别管理非必要 Cookie。详情请见：Cookie 政策。", ar: "أدِر ملفات تعريف الارتباط غير الضرورية حسب الفئة. للتفاصيل: سياسة ملفات تعريف الارتباط." },
-    "cc.cerezPolitikasiLink": { tr: "Çerez Politikası", en: "Cookie Policy", zh: "Cookie 政策", ar: "سياسة ملفات تعريف الارتباط" },
-    "cc.alwaysOn": { tr: "HER ZAMAN AÇIK", en: "ALWAYS ON", zh: "始终启用", ar: "مفعّل دائماً" },
-    "cc.prefsDialogAria": { tr: "Çerez tercihleri", en: "Cookie preferences", zh: "Cookie 偏好设置", ar: "تفضيلات ملفات تعريف الارتباط" },
-    "cc.cat.zorunlu.t": { tr: "Zorunlu çerezler", en: "Strictly necessary cookies", zh: "必要 Cookie", ar: "ملفات تعريف الارتباط الضرورية" },
-    "cc.cat.zorunlu.d": { tr: "Sitenin çalışması için gereklidir; kapatılamaz (oturum, güvenlik, tercih hatırlama).", en: "Required for the site to function; cannot be turned off (session, security, remembering preferences).", zh: "网站正常运行所必需，无法关闭（会话、安全、记住偏好设置）。", ar: "ضرورية لعمل الموقع؛ لا يمكن إيقافها (الجلسة، الأمان، تذكّر التفضيلات)." },
-    "cc.cat.islevsel.t": { tr: "İşlevsel çerezler", en: "Functional cookies", zh: "功能性 Cookie", ar: "ملفات تعريف الارتباط الوظيفية" },
-    "cc.cat.islevsel.d": { tr: "Harita gibi gömülü içerik ve ek işlevler için (üçüncü taraf gömme).", en: "For embedded content such as maps and additional features (third-party embeds).", zh: "用于地图等嵌入式内容及附加功能（第三方嵌入）。", ar: "للمحتوى المضمّن مثل الخرائط والوظائف الإضافية (تضمين من طرف ثالث)." },
-    "cc.cat.analitik.t": { tr: "Analitik / performans", en: "Analytics / performance", zh: "分析 / 性能", ar: "التحليلات / الأداء" },
-    "cc.cat.analitik.d": { tr: "Ziyaret istatistikleri ve site performansını ölçmek için.", en: "To measure visit statistics and site performance.", zh: "用于统计访问量并衡量网站性能。", ar: "لقياس إحصاءات الزيارات وأداء الموقع." },
-    "cc.cat.reklam.t": { tr: "Reklam / hedefleme", en: "Advertising / targeting", zh: "广告 / 定向", ar: "الإعلانات / الاستهداف" },
-    "cc.cat.reklam.d": { tr: "Kişiselleştirilmiş içerik/reklam için; açık rıza gerektirir.", en: "For personalized content and advertising; requires explicit consent.", zh: "用于个性化内容/广告；需获得您的明确同意。", ar: "لتقديم محتوى/إعلانات مخصّصة؛ تتطلب موافقة صريحة." },
+    "nav.veriAltyapisi": { tr: "Veri Altyapısı", en: "Data Infrastructure", ru: "Инфраструктура данных", zh: "数据基础设施", ar: "البنية التحتية للبيانات" },
+    "nav.cozumler": { tr: "Çözümler", en: "Solutions", ru: "Решения", zh: "解决方案", ar: "الحلول" },
+    "nav.demoWeb": { tr: "Demo Web", en: "Demo Web", ru: "Демо-сайт", zh: "演示网站", ar: "نسخة تجريبية (Demo Web)" },
+    "nav.proxAsistan": { tr: "ProX Asistan", en: "ProX Assistant", ru: "Ассистент ProX", zh: "ProX 助手", ar: "مساعد ProX" },
+    "nav.research": { tr: "Research", en: "Research", ru: "Research", zh: "研究", ar: "الأبحاث" },
+    "nav.hakkimizda": { tr: "Hakkımızda", en: "About Us", ru: "О нас", zh: "关于我们", ar: "من نحن" },
+    "nav.iletisim": { tr: "İletişim", en: "Contact", ru: "Контакты", zh: "联系我们", ar: "اتصل بنا" },
+    "nav.anaSayfa": { tr: "Ana Sayfa", en: "Home", ru: "Главная", zh: "首页", ar: "الرئيسية" },
+    "nav.menuAria": { tr: "Menü", en: "Menu", ru: "Меню", zh: "菜单", ar: "القائمة" },
+    "mast.tagline": { tr: "TÜRKİYE'NİN İLK EMLAK ENDEKSİ · 2005", en: "TURKEY'S FIRST REAL ESTATE INDEX · 2005", ru: "ПЕРВЫЙ ИНДЕКС НЕДВИЖИМОСТИ В ТУРЦИИ · 2005", zh: "土耳其首个房地产指数 · 2005", ar: "أول مؤشر عقاري في تركيا · 2005" },
+    "mast.canli": { tr: "CANLI", en: "LIVE", ru: "В ЭФИРЕ", zh: "实时", ar: "مباشر" },
+    "footer.tagline": { tr: "Türkiye'de emlak endeksini kategori bazlı zaman serisiyle 2005 yılında biz başlattık. Bugün 480 milyonu aşkın veri noktamızla sektöre yön vermeye devam ediyoruz.", en: "We launched Turkey's real estate index with category-based time series back in 2005. Today, with more than 480 million data points, we continue to shape the industry.", ru: "Мы первыми запустили в Турции индекс недвижимости с категорийными временными рядами ещё в 2005 году. Сегодня, располагая более чем 480 миллионами точек данных, мы продолжаем задавать направление отрасли.", zh: "2005 年，我们率先在土耳其以分类时间序列构建房地产指数。如今，凭借超过 4.8 亿个数据点，我们持续引领行业发展。", ar: "نحن من أطلق مؤشر العقارات في تركيا بسلاسل زمنية حسب الفئة في عام 2005. واليوم نواصل توجيه القطاع بأكثر من 480 مليون نقطة بيانات." },
+    "footer.colProduct": { tr: "ÜRÜN", en: "PRODUCT", ru: "ПРОДУКТ", zh: "产品", ar: "المنتج" },
+    "footer.colCorporate": { tr: "KURUMSAL", en: "CORPORATE", ru: "КОМПАНИЯ", zh: "公司", ar: "الشركة" },
+    "footer.emlakEndeksi": { tr: "Emlak Endeksi", en: "Real Estate Index", ru: "Индекс недвижимости", zh: "房地产指数", ar: "مؤشر العقارات" },
+    "footer.kararAnalizi": { tr: "Karar Analizi", en: "Decision Analysis", ru: "Анализ решений", zh: "决策分析", ar: "تحليل القرار" },
+    "footer.spkRapor": { tr: "SPK Lisanslı Rapor", en: "SPK-Licensed Report", ru: "Отчёт с лицензией SPK", zh: "SPK 持牌报告", ar: "تقرير مرخّص من SPK" },
+    "footer.proxAsistanUrun": { tr: "ProX Akıllı Asistan", en: "ProX Smart Assistant", ru: "Умный ассистент ProX", zh: "ProX 智能助手", ar: "مساعد ProX الذكي" },
+    "footer.uyelikler": { tr: "Üyelikler", en: "Memberships", ru: "Членство", zh: "会员服务", ar: "العضويات" },
+    "footer.blogBulten": { tr: "Blog · Bülten", en: "Blog · Newsletter", ru: "Блог · Рассылка", zh: "博客 · 简报", ar: "المدونة · النشرة" },
+    "footer.whiteLabelWeb": { tr: "White-label Web", en: "White-label Web", ru: "White-label сайт", zh: "白标网站", ar: "موقع White-label" },
+    "footer.webYazilim": { tr: "Web Yazılım", en: "Web Software", ru: "Веб-разработка", zh: "网站软件", ar: "برمجيات الويب" },
+    "footer.yapayZeka": { tr: "Yapay Zeka", en: "Artificial Intelligence", ru: "Искусственный интеллект", zh: "人工智能", ar: "الذكاء الاصطناعي" },
+    "footer.kurumsalApi": { tr: "Kurumsal API", en: "Enterprise API", ru: "Корпоративный API", zh: "企业 API", ar: "واجهة API للمؤسسات" },
+    "footer.crmCozumleri": { tr: "CRM Çözümleri", en: "CRM Solutions", ru: "CRM-решения", zh: "CRM 解决方案", ar: "حلول CRM" },
+    "footer.veriLisansi": { tr: "Veri Lisansı", en: "Data License", ru: "Лицензия на данные", zh: "数据许可", ar: "ترخيص البيانات" },
+    "footer.teklifAl": { tr: "Teklif Al", en: "Get a Quote", ru: "Запросить предложение", zh: "获取报价", ar: "اطلب عرض سعر" },
+    "legal.gizlilik": { tr: "GİZLİLİK", en: "PRIVACY", ru: "КОНФИДЕНЦИАЛЬНОСТЬ", zh: "隐私", ar: "الخصوصية" },
+    "legal.cerezPolitikasi": { tr: "ÇEREZ POLİTİKASI", en: "COOKIE POLICY", ru: "ПОЛИТИКА COOKIE", zh: "Cookie 政策", ar: "سياسة ملفات تعريف الارتباط" },
+    "legal.kullanimKosullari": { tr: "KULLANIM KOŞULLARI", en: "TERMS OF USE", ru: "УСЛОВИЯ ИСПОЛЬЗОВАНИЯ", zh: "使用条款", ar: "شروط الاستخدام" },
+    "legal.kunye": { tr: "KÜNYE", en: "LEGAL NOTICE", ru: "ПРАВОВАЯ ИНФОРМАЦИЯ", zh: "公司信息", ar: "البيان القانوني" },
+    "legal.erisilebilirlik": { tr: "ERİŞİLEBİLİRLİK", en: "ACCESSIBILITY", ru: "ДОСТУПНОСТЬ", zh: "无障碍", ar: "إمكانية الوصول" },
+    "legal.cerezTercihleri": { tr: "ÇEREZ TERCİHLERİ", en: "COOKIE PREFERENCES", ru: "НАСТРОЙКИ COOKIE", zh: "Cookie 设置", ar: "تفضيلات ملفات تعريف الارتباط" },
+    "footer.copyrightRights": { tr: "Tüm hakları saklıdır.", en: "All rights reserved.", ru: "Все права защищены.", zh: "保留所有权利。", ar: "جميع الحقوق محفوظة." },
+    "footer.iletisimArrow": { tr: "İletişim →", en: "Contact →", ru: "Контакты →", zh: "联系我们 →", ar: "اتصل بنا →" },
+    "footer.soon": { tr: "yakında", en: "coming soon", ru: "скоро", zh: "即将推出", ar: "قريباً" },
+    "footer.nSocialDesc": { tr: "N Sosyal — Türkiye'nin yerli sosyal medya platformu · yakında", en: "N Social — Turkey's homegrown social media platform · coming soon", ru: "N Sosyal — отечественная социальная платформа Турции · скоро", zh: "N Sosyal — 土耳其本土社交媒体平台 · 即将推出", ar: "N Sosyal — منصة التواصل الاجتماعي المحلية في تركيا · قريباً" },
+    "common.whatsapp": { tr: "WhatsApp", en: "WhatsApp", ru: "WhatsApp", zh: "WhatsApp", ar: "WhatsApp" },
+    "common.waMessage": { tr: "Merhaba, NADAS hakkında bilgi almak istiyorum.", en: "Hello, I'd like to learn more about NADAS.", ru: "Здравствуйте, я хотел бы узнать больше о NADAS.", zh: "您好，我想了解有关 NADAS 的信息。", ar: "مرحباً، أودّ الحصول على معلومات حول NADAS." },
+    "common.waAria": { tr: "WhatsApp ile yazın", en: "Message us on WhatsApp", ru: "Написать в WhatsApp", zh: "通过 WhatsApp 联系", ar: "راسلنا عبر WhatsApp" },
+    "skip.toContent": { tr: "İçeriğe geç", en: "Skip to content", ru: "Перейти к содержимому", zh: "跳至主要内容", ar: "الانتقال إلى المحتوى" },
+    "cc.dialogAria": { tr: "Çerez bilgilendirmesi", en: "Cookie notice", ru: "Уведомление о cookie", zh: "Cookie 通知", ar: "إشعار ملفات تعريف الارتباط" },
+    "cc.bannerText": { tr: "Bu sitede çalışması için zorunlu çerezler ile onayınıza bağlı işlevsel/analitik/reklam çerezleri kullanılabilir. Zorunlu olmayan çerezler siz onay verene kadar çalışmaz. Ayrıntı: Çerez Politikası.", en: "This site may use cookies that are strictly necessary for it to function, along with functional, analytics, and advertising cookies that depend on your consent. Non-essential cookies will not run until you give consent. Details: Cookie Policy.", ru: "На этом сайте могут использоваться строго необходимые для его работы файлы cookie, а также функциональные, аналитические и рекламные cookie, зависящие от вашего согласия. Необязательные cookie не работают, пока вы не дадите согласие. Подробнее: Политика cookie.", zh: "本网站可能使用运行所必需的必要 Cookie，以及需经您同意的功能性/分析/广告 Cookie。在您同意之前，非必要 Cookie 不会启用。详情请见：Cookie 政策。", ar: "قد يستخدم هذا الموقع ملفات تعريف ارتباط ضرورية لتشغيله، إضافة إلى ملفات وظيفية/تحليلية/إعلانية تخضع لموافقتك. لا تعمل ملفات تعريف الارتباط غير الضرورية حتى تمنح موافقتك. للتفاصيل: سياسة ملفات تعريف الارتباط." },
+    "cc.rejectAll": { tr: "Tümünü Reddet", en: "Reject All", ru: "Отклонить все", zh: "全部拒绝", ar: "رفض الكل" },
+    "cc.managePrefs": { tr: "Tercihleri Yönet", en: "Manage Preferences", ru: "Управлять настройками", zh: "管理设置", ar: "إدارة التفضيلات" },
+    "cc.acceptAll": { tr: "Tümünü Kabul Et", en: "Accept All", ru: "Принять все", zh: "全部接受", ar: "قبول الكل" },
+    "cc.saveSelected": { tr: "Seçilenleri Kaydet", en: "Save Selected", ru: "Сохранить выбранное", zh: "保存所选", ar: "حفظ المحدد" },
+    "cc.prefsTitle": { tr: "Çerez Tercihleri", en: "Cookie Preferences", ru: "Настройки cookie", zh: "Cookie 偏好设置", ar: "تفضيلات ملفات تعريف الارتباط" },
+    "cc.prefsIntro": { tr: "Zorunlu olmayan çerezleri kategori bazında yönetin. Ayrıntı: Çerez Politikası.", en: "Manage non-essential cookies by category. Details: Cookie Policy.", ru: "Управляйте необязательными cookie по категориям. Подробнее: Политика cookie.", zh: "按类别管理非必要 Cookie。详情请见：Cookie 政策。", ar: "أدِر ملفات تعريف الارتباط غير الضرورية حسب الفئة. للتفاصيل: سياسة ملفات تعريف الارتباط." },
+    "cc.cerezPolitikasiLink": { tr: "Çerez Politikası", en: "Cookie Policy", ru: "Политика cookie", zh: "Cookie 政策", ar: "سياسة ملفات تعريف الارتباط" },
+    "cc.alwaysOn": { tr: "HER ZAMAN AÇIK", en: "ALWAYS ON", ru: "ВСЕГДА ВКЛЮЧЕНО", zh: "始终启用", ar: "مفعّل دائماً" },
+    "cc.prefsDialogAria": { tr: "Çerez tercihleri", en: "Cookie preferences", ru: "Настройки cookie", zh: "Cookie 偏好设置", ar: "تفضيلات ملفات تعريف الارتباط" },
+    "cc.cat.zorunlu.t": { tr: "Zorunlu çerezler", en: "Strictly necessary cookies", ru: "Строго необходимые cookie", zh: "必要 Cookie", ar: "ملفات تعريف الارتباط الضرورية" },
+    "cc.cat.zorunlu.d": { tr: "Sitenin çalışması için gereklidir; kapatılamaz (oturum, güvenlik, tercih hatırlama).", en: "Required for the site to function; cannot be turned off (session, security, remembering preferences).", ru: "Необходимы для работы сайта; их нельзя отключить (сессия, безопасность, запоминание настроек).", zh: "网站正常运行所必需，无法关闭（会话、安全、记住偏好设置）。", ar: "ضرورية لعمل الموقع؛ لا يمكن إيقافها (الجلسة، الأمان، تذكّر التفضيلات)." },
+    "cc.cat.islevsel.t": { tr: "İşlevsel çerezler", en: "Functional cookies", ru: "Функциональные cookie", zh: "功能性 Cookie", ar: "ملفات تعريف الارتباط الوظيفية" },
+    "cc.cat.islevsel.d": { tr: "Harita gibi gömülü içerik ve ek işlevler için (üçüncü taraf gömme).", en: "For embedded content such as maps and additional features (third-party embeds).", ru: "Для встроенного контента, например карт, и дополнительных функций (сторонние встраивания).", zh: "用于地图等嵌入式内容及附加功能（第三方嵌入）。", ar: "للمحتوى المضمّن مثل الخرائط والوظائف الإضافية (تضمين من طرف ثالث)." },
+    "cc.cat.analitik.t": { tr: "Analitik / performans", en: "Analytics / performance", ru: "Аналитика / производительность", zh: "分析 / 性能", ar: "التحليلات / الأداء" },
+    "cc.cat.analitik.d": { tr: "Ziyaret istatistikleri ve site performansını ölçmek için.", en: "To measure visit statistics and site performance.", ru: "Для измерения статистики посещений и производительности сайта.", zh: "用于统计访问量并衡量网站性能。", ar: "لقياس إحصاءات الزيارات وأداء الموقع." },
+    "cc.cat.reklam.t": { tr: "Reklam / hedefleme", en: "Advertising / targeting", ru: "Реклама / таргетинг", zh: "广告 / 定向", ar: "الإعلانات / الاستهداف" },
+    "cc.cat.reklam.d": { tr: "Kişiselleştirilmiş içerik/reklam için; açık rıza gerektirir.", en: "For personalized content and advertising; requires explicit consent.", ru: "Для персонализированного контента и рекламы; требует явного согласия.", zh: "用于个性化内容/广告；需获得您的明确同意。", ar: "لتقديم محتوى/إعلانات مخصّصة؛ تتطلب موافقة صريحة." },
   };
   function S(k) { return t(TXT[k]); }
 
@@ -377,7 +377,7 @@
     function t() { var d = new Date(); el.textContent = d.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit", second: "2-digit" }); }
     t(); setInterval(t, 1000);
   }
-  var OG_LOCALE = { tr: "tr_TR", en: "en_US", zh: "zh_CN", ar: "ar_AR" };
+  var OG_LOCALE = { tr: "tr_TR", en: "en_US", ru: "ru_RU", zh: "zh_CN", ar: "ar_AR" };
   function _langUrl(base, l) { return l === "tr" ? base : base + "?lang=" + l; }
   function seoAdapt() {
     try {
@@ -427,9 +427,7 @@
          knowsAbout). Bilgi grafiği/AI yanıt motorları için varlık sinyali. Dile göre açıklama. */
       if (!document.querySelector('script[data-nx-graph]')) {
         var OD = {
-          tr: "2005’ten beri mahalle bazında kesintisiz aylık emlak endeksi üreten Türkiye merkezli gayrimenkul veri ve yazılım şirketi. 81 il · 973 ilçe · 50.000+ mahalle · 480M+ veri kaydı · 257 aylık zaman serisi.",
-          en: "Türkiye-based real estate data & software company producing an uninterrupted monthly neighborhood-level real estate index since 2005. 81 provinces · 973 districts · 50,000+ neighborhoods · 480M+ data records · 257-month time series.",
-          zh: "自2005年起持续生成街区级月度房地产指数的土耳其房地产数据与软件公司。81 省 · 973 区 · 50,000+ 街区 · 4.8 亿+ 数据记录 · 257 个月时间序列。",
+          tr: "2005’ten beri mahalle bazında kesintisiz aylık emlak endeksi üreten Türkiye merkezli gayrimenkul veri ve yazılım şirketi. 81 il · 973 ilçe · 50.000+ mahalle · 480M+ veri kaydı · 257 aylık zaman serisi.", en: "Türkiye-based real estate data & software company producing an uninterrupted monthly neighborhood-level real estate index since 2005. 81 provinces · 973 districts · 50,000+ neighborhoods · 480M+ data records · 257-month time series.", ru: "Компания из Турции в сфере данных и программного обеспечения для недвижимости, с 2005 года непрерывно формирующая ежемесячный индекс недвижимости на уровне кварталов. 81 провинция · 973 района · 50 000+ кварталов · 480M+ записей данных · временной ряд из 257 месяцев.", zh: "自2005年起持续生成街区级月度房地产指数的土耳其房地产数据与软件公司。81 省 · 973 区 · 50,000+ 街区 · 4.8 亿+ 数据记录 · 257 个月时间序列。",
           ar: "شركة بيانات وبرمجيات عقارية مقرها تركيا تنتج مؤشرًا عقاريًا شهريًا على مستوى الأحياء دون انقطاع منذ 2005. 81 محافظة · 973 منطقة · 50,000+ حي · 480M+ سجل بيانات · سلسلة زمنية من 257 شهرًا."
         };
         var ORIGIN = "https://www.nadas.com.tr";
