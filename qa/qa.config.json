@@ -42,6 +42,32 @@
         "/insaat/neden-biz.html",
         "/insaat/soru-cevap.html"
       ]
+    },
+    {
+      "name": "nadas",
+      "note": "Ana marka · 5 dil (TR·EN·RU·ZH·AR). Kapsama eklendi 2026-07-31.",
+      "pages": [
+        "/nadas/index.html",
+        "/nadas/cozumler.html",
+        "/nadas/prox.html",
+        "/nadas/veri-altyapisi.html",
+        "/nadas/veri-lisansi.html",
+        "/nadas/white-label.html",
+        "/nadas/web-yazilim.html",
+        "/nadas/yapay-zeka.html",
+        "/nadas/crm.html",
+        "/nadas/kurumsal-api.html",
+        "/nadas/research.html",
+        "/nadas/hakkimizda.html",
+        "/nadas/iletisim.html",
+        "/nadas/kunye.html",
+        "/nadas/kvkk.html",
+        "/nadas/kvkk-basvuru.html",
+        "/nadas/gizlilik.html",
+        "/nadas/cerez.html",
+        "/nadas/kullanim-kosullari.html",
+        "/nadas/erisilebilirlik.html"
+      ]
     }
   ],
   "seo": { "titleMin": 15, "titleMax": 70, "descMin": 60, "descMax": 165, "minLighthouse": 0.75 },
