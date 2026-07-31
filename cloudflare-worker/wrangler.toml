@@ -1,0 +1,28 @@
+name = "prox-edge"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+# Her kiracı için ayrı route/subdomain önerilir. Örnekler (kendi domain'inle değiştir):
+#   routes = [
+#     { pattern = "prox.emlaktahadimkoy.com/*", zone_name = "emlaktahadimkoy.com" },
+#     { pattern = "prox.selinmeridyen.com/*",   zone_name = "selinmeridyen.com" },
+#   ]
+# workers.dev üzerinde denemek için route gerekmez; https://prox-edge.<hesap>.workers.dev kullanılır.
+
+# --- SECRET'lar koda YAZILMAZ. `wrangler secret put` ile eklenir (aşağıda). ---
+# Beklenen secret adları (kiracı-başına):
+#   TENANT_KEY_emlaktahadimkoy_com   → gayrimenkul (Meridyen Gayrimenkul)
+#   TENANT_KEY_consultant            → danisman
+#   TENANT_KEY_construction          → insaat
+#   TENANT_KEY_nadas                 → nadas
+#   TENANT_KEY_valuation             → degerleme
+#
+# İzinli origin (CORS) — plaintext var olarak [vars] altında ya da secret olarak:
+[vars]
+ORIGIN_emlaktahadimkoy_com = "https://emlaktahadimkoy.com"
+ORIGIN_consultant          = "https://selinmeridyen.com"
+ORIGIN_construction        = "https://meridyenyapi.com"
+ORIGIN_nadas               = "https://nadas.com.tr"
+ORIGIN_valuation           = "https://degerleme.example"
+# Not: yerel test için geçici olarak "http://localhost:8799" ekleyebilirsin (virgülle):
+#   ORIGIN_consultant = "https://selinmeridyen.com,http://localhost:8799"

@@ -82,6 +82,7 @@ Beş bağımsız **statik** dikey site (build YOK, server-runtime YOK). Dosyalar
 ---
 
 ## 5) İLGİLİ BELGELER
+- **`cloudflare-worker/`** — HAZIR proxy Worker (`worker.js`) + `wrangler.toml` + `README.md` (deploy adımları). P0'ın uygulanabilir çözümü. Yerelde kanıtlandı: proxy modunda istemci `X-Tenant-Key` GÖNDERMİYOR, ProX yine canlı yanıt veriyor. Yerel test: `node scripts/prox-proxy-local.mjs` (Worker'ın node kopyası).
 - `DEPLOY-VE-GUVENLIK-NOTU.md` — proxy/edge güvenli mod + Cloudflare Worker + çok-kiracı pipeline (P0 çözümü).
 - `insaat/SUNUCU-CLAUDE-NOTLARI.md` — insaat dikeyi tam devir (dosya yapısı, hash routing detayı).
 - `degerleme/SAAS-SUNUCU-NOTLARI.md` · `docs/SAAS-SUNUCU-AJAN-NOTLARI.md` — SaaS/backend uçları.
