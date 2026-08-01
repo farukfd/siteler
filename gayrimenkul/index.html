@@ -156,11 +156,11 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   <a href="portfoy.html" onclick="closeAllOverlays();mclose()">Portföy</a>
   <a href="#" class="mnav-asistan" onclick="if(typeof openProxAsistanPage==='function'){openProxAsistanPage();mclose();return false}"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>
   <div class="mnav-div">Al · Sat · Kirala</div>
-  <a href="#portfoy-ilan" onclick="goPortfoy('ilan',event);mclose()">İlanlar</a><a href="#ozel" onclick="goPortfoy('ozel',event);mclose()">Özel Portföy</a>
-  <a href="#" onclick="goView('sat');mclose();return false">Sat ve Kirala</a>
+  <a href="#portfoy-ilan" onclick="goPortfoy('ilan',event);mclose()">İlanlar</a><a href="ozel/" onclick="goPortfoy('ozel',event);mclose()">Özel Portföy</a>
+  <a href="sat/" onclick="goView('sat');mclose();return false">Sat ve Kirala</a>
   <a href="#danismanlar" onclick="closeAllOverlays();mclose()">Danışmanlar</a>
   <div class="mnav-div">Kurumsal</div>
-  <a href="#" onclick="goView('analiz');mclose();return false">Analiz Merkezi</a>
+  <a href="analiz/" onclick="goView('analiz');mclose();return false">Analiz Merkezi</a>
   <a href="#" onclick="goView('hakkimizda');mclose();return false">Hakkımızda</a>
   <a href="#" onclick="closeAllOverlays();mclose();if(typeof girisOrHesap==='function'){girisOrHesap()}else{location.href='index.html#giris'};return false">Üye Girişi / Hesabım</a>
   <button class="btn btn-primary" style="margin-top:14px" onclick="satScrollForm('Satmak istiyorum');mclose()">Ücretsiz Ekspertiz</button>
