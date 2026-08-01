@@ -1976,13 +1976,13 @@ document.addEventListener('DOMContentLoaded',function(){ if(location.hash){var e
     try {
       var d = JSON.parse(localStorage.getItem("meridyenGM_v1") || "{}") || {};
       var f = d.FIRMA || {}, s = d.SETTINGS || {}, c = d.CONTACT || {};
-      out.unvan = f.unvan || s.unvan;
-      out.vergi = [s.vergiDairesi, s.vergiNo].filter(Boolean).join(" / ");
-      out.mersis = s.mersis; out.ticaretSicil = s.ticaretSicil;
-      out.yetkiBelgesi = s.yetkiBelgesi; out.kep = s.kep;
-      out.adres = c.adres || s.adres || f.adres;
-      out.tel = c.tel || s.tel || f.tel;
-      out.email = c.email || s.email || f.email;
+      out.unvan = (f.eids&&f.eids.unvan) || f.unvan || s.unvan || f.name;
+      out.vergi = [f.vergiDaire||s.vergiDairesi, f.vergi||s.vergiNo].filter(Boolean).join(" / ");
+      out.mersis = f.mersis || s.mersis; out.ticaretSicil = f.ticaretSicil || s.ticaretSicil;
+      out.yetkiBelgesi = (f.eids&&f.eids.belgeNo) || s.yetkiBelgesi; out.kep = f.kep || s.kep;
+      out.adres = f.adres || c.adres || s.adres;
+      out.tel = f.tel || c.tel || s.tel;
+      out.email = f.mail || c.email || s.email || f.email;
     } catch (e) {}
     return out;
   }
