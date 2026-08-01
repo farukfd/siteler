@@ -24,7 +24,7 @@
   function tenant() {
     var t = {
       tenant_id: 'consultant',
-      tenant_key: 'prox_consultant_a383eb07bb544ce3db7323150370bb46'
+      tenant_key: ''
     };
     try {
       if (window.EMLAK_TENANT) {

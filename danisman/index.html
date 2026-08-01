@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde kaldırılır -->
 <title>Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı</title>
 <meta name="description" content="Yetki belgeli kişiye özel emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy, ücretsiz gayrimenkul değer analizi ve ProX AI danışman.">
 <meta name="keywords" content="lüks konut danışmanı, özel portföy, yalı, penthouse, kişiye özel emlak, ücretsiz gayrimenkul analizi, gizli satış">
@@ -13,7 +14,8 @@
 <!-- ============ ProX SaaS API ÇEKİRDEĞİ (additive, single-file) ============ -->
 <script>
 window.EMLAK_API_BASE = "https://www.emlakekspertizi.com";
-window.EMLAK_TENANT = { id:"consultant", tenant_id:"consultant", tenant_key:"prox_consultant_a383eb07bb544ce3db7323150370bb46", domain:location.hostname, sector:"real_estate_consultant", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"BUSINESS", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"consultant", legalMode:"standard" };
+window.EMLAK_PROXY_MODE = true;/* güvenlik: gizli anahtar istemciye gömülmez */
+window.EMLAK_TENANT = { id:"consultant", tenant_id:"consultant", tenant_key:"", domain:location.hostname, sector:"real_estate_consultant", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"BUSINESS", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"consultant", legalMode:"standard" };
 /* SATIN ALINMIŞ PAKET TABANI — bu site BUSINESS müşterisine aittir; hiçbir alanda "yükselt" kilidi görünmez.
    Sunucu bootstrap yalnızca YUKARI (BUSINESS→ENTERPRISE) yükseltebilir, aşağı düşüremez. */
 window.EMLAK_PACKAGE_FLOOR = "BUSINESS";
@@ -192,6 +194,7 @@ window.proxBootstrap=proxBootstrap;
 </style>
 </head>
 <body>
+<div role="note" aria-label="Demo bildirimi" style="background:#0f2740;color:#dbeafe;font:600 12.5px/1.45 system-ui,-apple-system,sans-serif;text-align:center;padding:7px 14px;border-bottom:1px solid rgba(255,255,255,.12)">🔎 <b>DEMO · Tanıtım sürümü</b> — Bu sitedeki ilan, portföy, danışman, yorum ve istatistikler <b>temsilîdir</b>, gerçek veri değildir. Kurumsal firmalara özel gerçek sürüm: <a href="https://www.nadas.com.tr/white-label.html" style="color:#7dd3fc;text-decoration:underline">nadas.com.tr</a></div>
 
 <!-- ============ TEK SABİT NAV (her sayfada birebir aynı) ============ -->
 <header class="nav" id="nav">
