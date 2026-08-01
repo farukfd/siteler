@@ -2461,6 +2461,15 @@ function _insProxM2(il,ilce,mah,demo){
   var to=new Promise(function(res){setTimeout(function(){res({m2:demo,canli:false});},3500);});
   return Promise.race([live,to]);
 }
+/* GERÇEK mahalle — ProX granular locations ucu (canlı doğrulandı; kısa timeout, yoksa null → bölge etiketi) */
+function _insMahalle(il,ilce){
+  if(typeof proxApi!=='function'||!il||!ilce)return Promise.resolve(null);
+  var live=proxApi('/api/v1/tenant/locations/mahalleler?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce))
+    .then(function(rm){return (rm&&rm.success===true&&!rm.fallback&&Array.isArray(rm.data)&&rm.data.length)?(''+rm.data[0]).replace(/\s+(Mah\.?|Mahallesi|Köyü)$/i,'').trim():null;})
+    .catch(function(){return null;});
+  var to=new Promise(function(res){setTimeout(function(){res(null);},3500);});
+  return Promise.race([live,to]);
+}
 async function insOzelGen(){
   var btn=document.getElementById('insOzGenBtn');if(btn){btn.disabled=true;btn.textContent='⏳ ProX üretiyor…';}
   try{
@@ -2470,17 +2479,19 @@ async function insOzelGen(){
     var m2list=await Promise.all(regs.map(function(b){
       var il=((b.ilce||'').split('/')[1]||'İstanbul').trim();
       var ilce=((b.ilce||'').split('/')[0]||b.ad||'').trim();
-      return _insProxM2(il,ilce,b.ad,+b.m2n||90000);
+      /* m² endeks + GERÇEK mahalle PARALEL — her biri kendi 3.5sn timeout'u */
+      return Promise.all([_insProxM2(il,ilce,b.ad,+b.m2n||90000),_insMahalle(il,ilce)]).then(function(p){return {m2:p[0].m2,canli:p[0].canli,mah:p[1]};});
     }));
     var out=[],id=1,gercek=0;
     for(var ri=0;ri<regs.length;ri++){
       var b=regs[ri];
       var il=((b.ilce||'').split('/')[1]||'İstanbul').trim();
       var ilce=((b.ilce||'').split('/')[0]||b.ad||'').trim();
-      var m2sat=m2list[ri].m2, canli=m2list[ri].canli;if(canli)gercek++;
+      var m2sat=m2list[ri].m2, canli=m2list[ri].canli, rmah=m2list[ri].mah;if(canli)gercek++;
+      var mahAd=rmah||b.ad||ilce;/* GERÇEK ProX mahallesi (yoksa bölge etiketi) */
       var km2=120,kf=Math.round(m2sat*km2/1000)*1000,ko=Math.round(kf*1.15/1000)*1000;
-      out.push({id:'og'+(id++),op:'Satılık',tip:'Daire',il:il,ilce:ilce,mah:b.ad||ilce,cadde:cads[ri%cads.length],m2:km2,oda:'3+1',fiyat:kf,ort:ko,durum:'aktif',
-        not:'ProX '+(b.ad||ilce)+' bölge tahmini · '+_ifmt(m2sat)+' ₺/m²'+(canli?' (canlı endeks)':'')+' · bölge ort. '+_ifmt(ko)+' ₺ · kapalı portföy',_gen:true});
+      out.push({id:'og'+(id++),op:'Satılık',tip:'Daire',il:il,ilce:ilce,mah:mahAd,cadde:cads[ri%cads.length],m2:km2,oda:'3+1',fiyat:kf,ort:ko,durum:'aktif',
+        not:'ProX '+ilce+(rmah?(' · '+rmah+' Mah.'):'')+' bölge tahmini · '+_ifmt(m2sat)+' ₺/m²'+(canli?' (canlı endeks)':'')+' · bölge ort. '+_ifmt(ko)+' ₺ · kapalı portföy',_gen:true});
       if(ri<2){var aM2=500,am2=Math.round(m2sat*0.4),af=Math.round(am2*aM2/1000)*1000;
         out.push({id:'og'+(id++),op:'Satılık',tip:'Arsa',il:il,ilce:ilce,mah:b.ad||'Merkez',cadde:'İmarlı parsel bölgesi',m2:aM2,oda:'-',fiyat:af,ort:Math.round(af*1.12/1000)*1000,durum:'aktif',
           not:'ProX '+(b.ad||ilce)+' arsa tahmini · ~'+_ifmt(am2)+' ₺/m² · kapalı portföy',_gen:true});}
