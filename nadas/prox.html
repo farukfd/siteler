@@ -194,7 +194,7 @@
 
   /* ===== ProX endeks API (canlı YANIT için) ===== */
   var EMLAK_API_BASE = "https://www.emlakekspertizi.com";
-  var EMLAK_TENANT = { tenant_id: "nadas", tenant_key: "prox_nadas_43ffdf3fe0501d5510e71616b618cfea" };   /* NADAS ProX anahtarı — istemci-tarafı görünür; salt-okunur/alan-kısıtlı olmalı. */
+  var EMLAK_TENANT = { tenant_id: "nadas", tenant_key: "" };   /* NADAS ProX anahtarı — istemci-tarafı görünür; salt-okunur/alan-kısıtlı olmalı. */
   function proxApi(path){
     if(!EMLAK_TENANT.tenant_key) return Promise.resolve({fallback:true});
     return fetch(EMLAK_API_BASE+path,{mode:"cors",headers:{"X-Tenant-Id":EMLAK_TENANT.tenant_id,"X-Tenant-Key":EMLAK_TENANT.tenant_key}})

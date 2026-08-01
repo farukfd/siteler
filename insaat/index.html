@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO -->
 <title>Meridyen Yapı · Kurumsal İnşaat, Tadilat ve Gayrimenkul Geliştirme</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23ff7a2f'/%3E%3Ctext x='16' y='23' font-family='sans-serif' font-size='20' font-weight='800' fill='%231a1205' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <script src="js/brand.js?v=2"></script>
@@ -14,7 +15,8 @@
 <!-- ===== ProX API-first SaaS çekirdeği (additive) ===== -->
 <script>
 window.EMLAK_API_BASE = "https://www.emlakekspertizi.com";
-window.EMLAK_TENANT = { id:"construction", tenant_id:"construction", tenant_key:"prox_construction_910783dfb8dd6be9cb9549bc818a60ee", domain:location.hostname, sector:"construction_company", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"PRO", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"construction", legalMode:"standard" };
+window.EMLAK_PROXY_MODE = true;/* güvenlik */
+window.EMLAK_TENANT = { id:"construction", tenant_id:"construction", tenant_key:"", domain:location.hostname, sector:"construction_company", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"PRO", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"construction", legalMode:"standard" };
 window.EMLAK_PACKAGES = {
   BASIC:["canUseMarketAnalysis","canUsePriceEstimate","canUseLeadCRM","canUseSvgGraphics"],
   PRO:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent"],
@@ -171,6 +173,7 @@ header.scrolled .lang-sel{color:var(--ink)}
 </style>
 </head>
 <body>
+<div role="note" aria-label="Demo bildirimi" style="background:#0f2740;color:#dbeafe;font:600 12.5px/1.45 system-ui,-apple-system,sans-serif;text-align:center;padding:7px 14px;border-bottom:1px solid rgba(255,255,255,.12)">🔎 <b>DEMO · Tanıtım sürümü</b> — Bu sitedeki proje, portföy, ekip, yorum ve istatistikler <b>temsilîdir</b>, gerçek veri değildir. Kurumsal firmalara özel gerçek sürüm: <a href="https://www.nadas.com.tr/white-label.html" style="color:#7dd3fc;text-decoration:underline">nadas.com.tr</a></div>
 
 <!-- ============ PUBLIC SITE ============ -->
 <div id="site">

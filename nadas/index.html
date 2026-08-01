@@ -107,7 +107,7 @@
      NADAS kurumsal tenant anahtarı doldurulunca terminal GERÇEK endekse bağlanır.
      Anahtar boş / erişilemez ise dürüstçe 'TEMSİLÎ ÖRNEK'e düşer — sahte 'CANLI' YOK. */
   var EMLAK_API_BASE = "https://www.emlakekspertizi.com";
-  var EMLAK_TENANT = { tenant_id: "nadas", tenant_key: "prox_nadas_43ffdf3fe0501d5510e71616b618cfea" };   /* NADAS kurumsal ProX anahtarı — canlı endeks. NOT: istemci-tarafı görünür; salt-okunur/alan-kısıtlı olmalı. */
+  var EMLAK_TENANT = { tenant_id: "nadas", tenant_key: "" };   /* NADAS kurumsal ProX anahtarı — canlı endeks. NOT: istemci-tarafı görünür; salt-okunur/alan-kısıtlı olmalı. */
   function proxApi(path, opts) {
     if (!EMLAK_TENANT.tenant_key) return Promise.resolve({ fallback: true });
     opts = opts || {};
