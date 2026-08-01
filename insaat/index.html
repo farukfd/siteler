@@ -847,7 +847,7 @@ function cookieChoice(v){
       <div class="lg"><span class="mark">M</span>Meridyen Yönetim</div>
       <p>Firma yönetici paneline giriş yapın.</p>
       <div class="err" id="admErr">Hatalı şifre. Tekrar deneyin.</div>
-      <input type="text" id="admUser" placeholder="Kullanıcı adı (admin)" value="admin">
+      <input type="text" id="admUser" placeholder="Kullanıcı adı" value="" autocomplete="off">
       <input type="password" id="admPass" placeholder="Şifre" onkeydown="if(event.key==='Enter')admLogin()">
       <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="admLogin()">Giriş Yap</button>
       <div class="hint">Yetkili girişi · Şifrenizi bilmiyorsanız sistem yöneticinizle görüşün.</div>
