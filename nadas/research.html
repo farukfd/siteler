@@ -473,7 +473,7 @@
 
   // Canlı il endeksi — gerçek ProX endeks (il bazında konut ₺/m² + veri güven)
   var EMLAK_API_BASE = "https://www.emlakekspertizi.com";
-  var EMLAK_TENANT = { tenant_id: "nadas", tenant_key: "prox_nadas_43ffdf3fe0501d5510e71616b618cfea" };   /* istemci-tarafı görünür; salt-okunur/alan-kısıtlı olmalı */
+  var EMLAK_TENANT = { tenant_id: "nadas", tenant_key: "" };   /* istemci-tarafı görünür; salt-okunur/alan-kısıtlı olmalı */
   function proxApi(path) {
     if (!EMLAK_TENANT.tenant_key) return Promise.resolve({ fallback: true });
     return fetch(EMLAK_API_BASE + path, { mode: "cors", headers: { "X-Tenant-Id": EMLAK_TENANT.tenant_id, "X-Tenant-Key": EMLAK_TENANT.tenant_key } }).then(function (r) { if (!r.ok) throw 0; return r.json(); }).catch(function () { return { fallback: true }; });

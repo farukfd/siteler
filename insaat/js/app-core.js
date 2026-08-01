@@ -2375,7 +2375,7 @@ function insIlanTogglePub(i){
   else{
     var verified=window.EIDS&&EIDS.canPublish(it.eids);
     if(!verified){
-      if(!confirm('Bu ilan henüz EİDS doğrulanmadı.\n\nEİDS (Elektronik İlan Doğrulama Sistemi) 15 Şubat 2026\'dan beri zorunludur. Canlı EİDS bağlantısı olmadan yayınlanan ilan “Doğrulama Bekliyor” rozetiyle görünür ve resmî anlamda yayınlanmış sayılmaz.\n\nYine de (demo amaçlı) yayınlansın mı?'))
+      if(!confirm('Bu ilan henüz EİDS doğrulanmadı.\n\nEİDS (Elektronik İlan Doğrulama Sistemi) kapsamında yayın için yetki/taşınmaz doğrulaması gerekir. Canlı EİDS bağlantısı olmadan yayınlanan ilan “Doğrulama Bekliyor” rozetiyle görünür ve resmî anlamda yayınlanmış sayılmaz.\n\nYine de (demo amaçlı) yayınlansın mı?'))
         { renderInsIlan(); return; }
     }
     it.status='aktif';
