@@ -81,3 +81,38 @@ Mimari raporu · SaaS diyagramı · tenant çözümleme akışı · DB izolasyon
 
 ## 6) ROLLBACK
 Bu çalışma izole branch `feat/gm-saas-p0-hardening`'te; `main`/`feat/dwg-prox-gercek-veri` etkilenmedi. Geri dönüş: branch'i merge etme veya `git branch -D`. Üretim değişikliği yapılmadan önce çalışan sürümün yedeği + staging + rollback planı (spec girişi) zorunlu.
+
+---
+
+## GÜNCELLEME (2026-08-01) — A-kovası genişletildi + DEMO içerik kararı
+
+**DEMO içerik kararı (kullanıcı):** Demo sitenin amacı TÜM özellikleri göstermektir.
+İlan, Özel Portföy, endeksler, danışmanlar, danışman yorumları ve istatistikler
+**temsilî içerik olarak KORUNUR** (kaldırılmaz). Dürüstlük, bunların temsilî olduğunu
+**sinyallemekle** sağlanır; üretimde her tenant'ın GERÇEK verisi bunların yerini alır
+(onboarding "kurulum kapısı" — B/C).
+
+**Bu turda tamamlanan ek A-kalemleri (parça parça):**
+- **Demo sinyali (Google + kullanıcı):** 8/8 sayfaya statik DEMO bildirimi
+  ("ilan/portföy/danışman/yorum/istatistik temsilîdir") + noindex,nofollow,noarchive
+  + robots.txt Disallow + Referanslar "temsilî örnekler" notu.
+- **#8 (kritik):** Canlı ProX anahtarı 8/8 sayfa + app.js'ten kaldırıldı, proxy modu.
+  ⚠️ Anahtar git geçmişinde → **ROTATE** zorunlu (B).
+- **#2/#3/#24:** admin/1234 ifşası kaldırıldı; demo noindex.
+- **#10:** EİDS "durum-takibi" (sahte canlı-doğrulama iddiası yok).
+- **#16:** Fiyat alarmı public metninden iç API yolu kaldırıldı.
+- **#23:** Kırık `#ozel` çapası → gerçek `ozel/` URL; overlay-nav gerçek deep-link
+  URL'lerine (`sat/`,`analiz/`) bağlandı. Mevcut pushState temiz-URL router'ı + subdir
+  loader stub'ları var; TAM clean-URL/301 hosting-tarafı (B).
+- **#35:** "50.000+ mahalle ve köy" (tüm sayfalar).
+- **#36:** ProX ön-değerleme sonucu ARALIK gösteriyor + satır-içi "resmî değerleme
+  değildir; lisanslı uzman imzasıyla geçerlidir" uyarısı.
+- **#37:** Kredi modülü → "bilgilendirici simülasyon; kredi onayı/finansal danışmanlık
+  değil, banka teklifi yerine geçmez".
+- **#40:** Erişilebilirlik büyük ölçüde uyumlu — tek h1/sayfa, lang 8/8, img-alt eksiği 0,
+  ~%92 input etiketli. Kalan minör: skip-link + ~19 (çoğu admin) etiketsiz input + kontrast.
+- **#31:** Şemada sahte AggregateRating YOK (temiz).
+
+**Değişmeyen gerçek:** #1,5,6,7,9,11-15,17-22,25,26,28-34,38,39,41-49 hâlâ
+backend/altyapı (B) veya hukuk (C) — statik repoda yapılamaz. Detay yukarıdaki
+B/C bölümlerinde.
