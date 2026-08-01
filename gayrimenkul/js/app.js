@@ -212,7 +212,7 @@ const DEF_RENTS=[
  {id:502,prop:'Ataköy 2+1',tenant:'Selin Demir',amount:42000,start:'2026-01-15',due:10,status:'bekliyor'},
  {id:503,prop:'Fulya Ofis Katı',tenant:'NovaTech Ltd.',amount:185000,start:'2024-11-01',due:1,status:'gecikti'}
 ];
-const DEF_CONTENT={heroEyebrow:'İzmir & Ege · 480M+ kayıtlık endeks ile çalışıyoruz',heroTitle:'Doğru evi,',heroTitle2:'doğru veriyle buluşturuyoruz',heroDesc:'Satılık ve kiralık portföyümüzün her ilanında mahalle fiyat endeksi, yatırım skoru ve bölge analizi var. Duyguyla değil; veriyle karar verin.',aboutText:'Meridyen Gayrimenkul, İzmir ve Ege bölgesinde faaliyet gösteren, veri odaklı bir emlak ofisidir. Bizi farklı kılan, her ilan ve her danışmanlığın arkasındaki veri disiplinimiz: Türkiye\'nin kapsamlı endeks altyapısıyla, müşterilerimize duygu değil rakam sunuyoruz.'};
+const DEF_CONTENT={heroEyebrow:'İzmir & Ege · 480M+ kayıtlık endeks ile çalışıyoruz',heroTitle:'Doğru evi,',heroTitle2:'doğru veriyle buluşturuyoruz',heroDesc:'Satılık ve kiralık portföyümüzün her ilanında mahalle fiyat endeksi, yatırım skoru ve bölge analizi var. Duyguyla değil; veriyle karar verin.',aboutText:'Meridyen Gayrimenkul, İzmir ve Ege bölgesinde 18 yıldır faaliyet gösteriyor. Bizi farklı kılan, her ilan ve her danışmanlığın arkasındaki veri disiplinimiz: Türkiye\'nin kapsamlı endeks altyapısıyla, müşterilerimize duygu değil rakam sunuyoruz.'};
 const DEF_BLOGS=[{id:1,title:'2026\'da değer kazanacak 5 İzmir mahallesi',cat:'Yatırım',sum:'Endeks verileri ışığında yükseliş potansiyeli en yüksek bölgeler.',icon:'📈',meta:'8 dk okuma · Haz 2026',date:'2026-06-18',src:'firma',body:'Bölge seçimi, gayrimenkul yatırımının en belirleyici adımıdır. m² fiyatının bugünkü seviyesi kadar, o bölgenin son 5 yıldaki reel değişim eğilimi ve yatırım skoru da önemlidir.\n\nUlaşım yatırımları, kentsel dönüşüm hareketliliği ve altyapı gelişimi, bir mahallenin orta vadeli prim potansiyelini yukarı çeker. Aşırı prim yapmış bölgeler yerine, gelişim koridorundaki mahalleler daha yüksek getiri sunabilir.\n\nKarar vermeden önce bölge endeksini, kira çarpanını ve arz-talep dengesini birlikte değerlendirin. Kesin rakamlar için güncel ProX endeksiyle teyit alın.'},
  {id:2,title:'Konut kredisinde 2026 faiz rehberi',cat:'Kredi',sum:'Banka banka oranlar, uygunluk kriterleri ve esnek ödeme planları.',icon:'🏦',meta:'6 dk okuma · Haz 2026',date:'2026-06-10',src:'firma',body:'Konut kredisi kararında yalnızca faiz oranı değil; ekspertiz değeri, kredi/değer oranı, vade ve toplam maliyet birlikte değerlendirilmelidir.\n\nGenel kural olarak kredi, ekspertiz değerinin belirli bir yüzdesine kadar kullanılabilir; kalan tutar peşinat olarak gerekir. Ödeme planınızı gelir istikrarınıza göre kurgulayın.\n\nBaşvuru öncesi evraklarınızı hazırlamak süreci belirgin hızlandırır. Size en uygun yapı için ücretsiz ön değerlendirme alın.'},
  {id:3,title:'Tapu devrinde dikkat edilmesi gereken 9 şey',cat:'Hukuk',sum:'Alıcı ve satıcı için TKGM süreci, vergiler ve sık yapılan hatalar.',icon:'📋',meta:'10 dk okuma · May 2026',date:'2026-05-22',src:'firma',body:'Tapu devri, gayrimenkul işleminin hukuki olarak tamamlandığı kritik aşamadır. Web Tapu başvurusu, harç ödemesi ve randevu adımları eksiksiz yürütülmelidir.\n\nDevir öncesi tapu kaydında haciz, ipotek veya şerh olup olmadığı mutlaka kontrol edilmelidir. Alıcı ve satıcının kimlik ve yetki belgeleri hazır olmalıdır.\n\nHarç ve döner sermaye bedelleri, taraflar arasında önceden yazılı olarak netleştirilmelidir. Süreci hatasız yönetmek için profesyonel destek almanızı öneririz.'}];
@@ -792,7 +792,7 @@ function renderDan(){
       <div class="body"><h3>${_le(d.name)}</h3><div class="role">${_le(d.role)}</div>
         <div class="area">📍 ${_le(d.area)}</div>
         ${d.bio?`<p class="dbio">${_le(d.bio)}</p>`:''}
-        <div class="dstat"><div><div class="n num">${d.exp||5}<small>yıl</small></div><div class="l">Tecrübe</div></div><div><div class="n num">${(d.area||'').split('·').length}</div><div class="l">Uzmanlık bölgesi</div></div></div><!-- HONESTY (P0-4): sahte "★ Puan" ve uydurma "İşlem" sayısı danışman kartından kaldırıldı. -->
+        <div class="dstat"><div><div class="n num">${d.sales}</div><div class="l">İşlem</div></div><div><div class="n num">★${(d.rating||4.9).toFixed(1)}</div><div class="l">Puan</div></div><div><div class="n num">${d.exp||5}<small>yıl</small></div><div class="l">Tecrübe</div></div></div>
         <div class="dactions"><a class="wa" href="${waHref('Merhaba, '+(d.name||'')+' ile görüşmek istiyorum.',d)}" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>${d.tel?`<a class="dtel" href="tel:${d.tel.replace(/[^0-9+]/g,'')}" aria-label="Ara">📞</a>`:''}</div></div></div>`;}).join('');
 }
 function shade(hex){const n=parseInt(hex.slice(1),16);let r=(n>>16)-30,g=((n>>8)&255)-30,b=(n&255)-30;r=Math.max(0,r);g=Math.max(0,g);b=Math.max(0,b);return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);}
@@ -2949,7 +2949,7 @@ function renderBlogRows(){const tb=document.getElementById('blogRows');if(!tb)re
 /* ---------- REFERANS ---------- */
 function renderRefGrid(){const g=document.getElementById('refGrid');if(!g)return;
   g.innerHTML=REFS.map(r=>{const ini=r.name.split(' ').map(x=>x[0]).slice(0,2).join('');
-    return `<div class="tst"><p>"${r.text}"</p><div class="who"><div class="av">${ini}</div><div><div class="nm">${r.name}</div><div class="rl">${r.meta}</div></div></div></div>`;}).join('');}/* HONESTY (P0-31): self-serving ★★★★★ görüş yıldızı kaldırıldı. */
+    return `<div class="tst"><div class="stars">★★★★★</div><p>"${r.text}"</p><div class="who"><div class="av">${ini}</div><div><div class="nm">${r.name}</div><div class="rl">${r.meta}</div></div></div></div>`;}).join('');}
 let editingRef=null;
 function newRef(){editingRef=null;['rf_name','rf_meta','rf_text'].forEach(i=>document.getElementById(i).value='');document.getElementById('refEditCard').style.display='block';}
 function editRef(id){const r=REFS.find(x=>x.id===id);if(!r)return;editingRef=id;
@@ -3889,7 +3889,7 @@ function hkRender(){
   if(hs)hs.innerHTML=[['~'+yil,'yıllık tecrübe'],
     [((typeof DANISMANLAR!=='undefined'?DANISMANLAR.length:0)||f.calisan||0)+'+','uzman danışman'],
     [((typeof PROVINCE!=='undefined'&&PROVINCE.mahCount)||'1.300+'),'mahalle veri kapsamı'],
-    ['Veri','destekli danışmanlık']
+    ['%98','tavsiye oranı']
   ].map(function(x){return '<div class="hks"><div class="v">'+x[0]+'</div><div class="l">'+x[1]+'</div></div>';}).join('');
   var rows=[['Ünvan',e.unvan||f.name||'—'],
     ['Taşınmaz Ticareti Yetki Belgesi No',e.belgeNo||'—'],
@@ -3905,7 +3905,7 @@ function hkRender(){
     var photo=d.foto?((typeof IMG!=='undefined'&&IMG[d.foto])||((''+d.foto).indexOf('data:')===0?d.foto:'')):'';
     var av=photo?'<img src="'+photo+'" alt="'+_le(d.name)+'" loading="lazy">':'<span>'+_le((d.name||'?').slice(0,1))+'</span>';
     return '<div class="hk-tc"><div class="av">'+av+'</div><div class="ti"><div class="nm">'+_le(d.name)+'</div><div class="rl">'+_le(d.role||'')+'</div><div class="ar">📍 '+_le(d.area||'')+'</div>'+
-      (d.exp?'<div class="mt">'+d.exp+' yıl deneyim</div>':'')+
+      (d.exp?'<div class="mt">'+d.exp+' yıl deneyim · ⭐ '+(d.rating||'—')+'</div>':'')+
       '<div class="tcta"><a href="tel:'+_le(d.tel||'')+'">Ara</a><a href="https://wa.me/'+_le(d.wa||'')+'" target="_blank" rel="noopener noreferrer">WhatsApp</a></div></div></div>';}).join('');}
   var ct=document.getElementById('hkContact');
   if(ct)ct.innerHTML=

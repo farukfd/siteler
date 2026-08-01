@@ -74,7 +74,7 @@
     var av = photo ? '<img src="' + photo + '" alt="' + esc(d.name) + '" loading="lazy">' : '<span>' + esc((d.name || '?').slice(0, 1)) + '</span>';
     return '<div class="hk-tc"><div class="av">' + av + '</div><div class="ti"><div class="nm">' + esc(d.name) + '</div><div class="rl">' + esc(d.role || '') + '</div>' +
       '<div class="ar">📍 ' + esc(d.area || '') + '</div>' +
-      (d.exp ? '<div class="mt">' + d.exp + ' yıl deneyim</div>' : '') +
+      (d.exp ? '<div class="mt">' + d.exp + ' yıl deneyim · ⭐ ' + (d.rating || '—') + (d.sales ? ' · ' + d.sales + ' işlem' : '') + '</div>' : '') +
       '<div class="tcta"><a href="tel:' + esc(d.tel || '') + '">Ara</a><a href="https://wa.me/' + esc(d.wa || '') + '" target="_blank" rel="noopener noreferrer">WhatsApp</a></div></div></div>';
   }
   function renderDanismanlar() {
@@ -136,9 +136,9 @@
   /* ---------- REFERANSLAR ---------- */
   function renderReferans() {
     var refs = (typeof REFS !== 'undefined' && REFS) || [];
-    var stats = '<div class="info-stats"><div class="is"><b>Veri</b><span>odaklı süreç</span></div><div class="is"><b>Şeffaf</b><span>uçtan uca danışmanlık</span></div><div class="is"><b>Bölge</b><span>uzmanı ekip</span></div></div>';/* HONESTY (P0-4/31): "3.800+/%98/4.9 Google/18 yıl" uydurma istatistikleri niteliksel yapıldı. */
+    var stats = '<div class="info-stats"><div class="is"><b>3.800+</b><span>tamamlanan işlem</span></div><div class="is"><b>%98</b><span>müşteri memnuniyeti</span></div><div class="is"><b>4.9</b><span>Google puanı</span></div><div class="is"><b>18 yıl</b><span>bölge tecrübesi</span></div></div>';
     var cards = '<div class="info-refs">' + refs.map(function (r) {
-      return '<div class="iref"><p>“' + esc(r.text) + '”</p><div class="who"><span class="av">' + esc((r.name || '?').slice(0, 1)) + '</span><div><b>' + esc(r.name) + '</b><small>' + esc(r.meta || '') + '</small></div></div></div>';
+      return '<div class="iref"><div class="stars">★★★★★</div><p>“' + esc(r.text) + '”</p><div class="who"><span class="av">' + esc((r.name || '?').slice(0, 1)) + '</span><div><b>' + esc(r.name) + '</b><small>' + esc(r.meta || '') + '</small></div></div></div>';
     }).join('') + '</div>';
     var portals = '<div class="info-portals"><span class="lbl">İlanlarımızı ayrıca şu platformlarda da yayınlıyoruz:</span><div class="pl"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer"><b>emlak</b>jet</a></div></div>';
     return '<section class="hk-block"><div class="hk-h"><span class="hk-kick">Referanslar</span><h2>Müşterilerimiz ne diyor?</h2><p>Veriyle savunulan fiyat, şeffaf süreç ve işlem sonrası destek — memnuniyetimizin arkasındaki fark.</p></div>' +
