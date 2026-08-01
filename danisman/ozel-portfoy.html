@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde kaldırılır -->
 <title>Özel Portföy — Mahalle Fiyat Endeksi & Fırsat Radarı · Selin Meridyen</title>
 <meta name="description" content="Hizmet verdiğim mahallelerde ProX canlı endeksinden satılık &amp; kiralık konut, işyeri ve arsa başlangıç fiyatları, yatırım skoru ve yükselen fırsatlar. Ücretsiz değer analizi ve kişisel danışmanlık.">
 <meta name="keywords" content="mahalle fiyat endeksi, m² fiyatları, satılık kiralık başlangıç fiyat, bölge fiyat analizi, yatırım fırsatı, gayrimenkul değer analizi, ProX endeks, emlak danışmanlığı">
@@ -194,6 +195,7 @@
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body class="pf-page">
+<div role="note" aria-label="Demo bildirimi" style="background:#0f2740;color:#dbeafe;font:600 12.5px/1.45 system-ui,-apple-system,sans-serif;text-align:center;padding:7px 14px;border-bottom:1px solid rgba(255,255,255,.12)">🔎 <b>DEMO · Tanıtım sürümü</b> — Bu sitedeki ilan, portföy, danışman, yorum ve istatistikler <b>temsilîdir</b>, gerçek veri değildir. Kurumsal firmalara özel gerçek sürüm: <a href="https://www.nadas.com.tr/white-label.html" style="color:#7dd3fc;text-decoration:underline">nadas.com.tr</a></div>
 
 <!-- ============ ÜST MENÜ (birebir) ============ -->
 <header class="nav scrolled" id="nav">
@@ -396,7 +398,7 @@
 <script>
 /* ============ ProX API ÇEKİRDEĞİ ============ */
 var EMLAK_API_BASE="https://www.emlakekspertizi.com";
-var EMLAK_TENANT={tenant_id:"consultant",tenant_key:"prox_consultant_a383eb07bb544ce3db7323150370bb46"};
+var EMLAK_TENANT={tenant_id:"consultant",tenant_key:""};
 try{var _dp=JSON.parse(localStorage.getItem('dn_prox')||'null');if(_dp&&_dp.key){EMLAK_TENANT.tenant_key=_dp.key;if(_dp.tenant)EMLAK_TENANT.tenant_id=_dp.tenant;}}catch(e){}
 async function proxApi(path){try{var res=await fetch(EMLAK_API_BASE+path,{method:"GET",mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":EMLAK_TENANT.tenant_id,"X-Tenant-Key":EMLAK_TENANT.tenant_key}});if(!res.ok)throw new Error("ProX "+res.status);return await res.json();}catch(e){return {fallback:true,_err:e.message};}}
 var TR_ILILCE=window.TR_ILILCE||{};

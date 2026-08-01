@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde kaldırılır -->
 <title>İstanbul Bölge Analizi — m² Fiyat & Kira Getirisi · Selin Meridyen</title>
 <meta name="description" content="İstanbul'un 39 ilçesi ve mahalleleri için canlı ProX m² fiyat endeksi, brüt kira getirisi, yatırım skoru ve piyasa yönü. Konut, arsa ve ticari; satılık ve kiralık.">
 <meta name="keywords" content="istanbul bölge analizi, mahalle m² fiyat, emlak endeksi, kira getirisi, yatırım skoru, gayrimenkul piyasa analizi, ilçe fiyat karşılaştırması, canlı ProX, konut arsa ticari, satılık kiralık, likidite">
@@ -359,6 +360,7 @@ body{overflow-x:clip}
 </style>
 </head>
 <body>
+<div role="note" aria-label="Demo bildirimi" style="background:#0f2740;color:#dbeafe;font:600 12.5px/1.45 system-ui,-apple-system,sans-serif;text-align:center;padding:7px 14px;border-bottom:1px solid rgba(255,255,255,.12)">🔎 <b>DEMO · Tanıtım sürümü</b> — Bu sitedeki ilan, portföy, danışman, yorum ve istatistikler <b>temsilîdir</b>, gerçek veri değildir. Kurumsal firmalara özel gerçek sürüm: <a href="https://www.nadas.com.tr/white-label.html" style="color:#7dd3fc;text-decoration:underline">nadas.com.tr</a></div>
 
 <!-- ============ ÜST MENÜ (birebir) ============ -->
 <header class="nav scrolled" id="nav">
@@ -642,7 +644,7 @@ var RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').m
 
 /* ---- ProX (izole minimal kopya — yalnız VERİ uçları) ---- */
 var EMLAK_API_BASE="https://www.emlakekspertizi.com";
-var EMLAK_TENANT={tenant_id:"consultant",tenant_key:"prox_consultant_a383eb07bb544ce3db7323150370bb46"};
+var EMLAK_TENANT={tenant_id:"consultant",tenant_key:""};
 try{var _dp=JSON.parse(localStorage.getItem('dn_prox')||'null');if(_dp&&_dp.key){EMLAK_TENANT.tenant_key=_dp.key;if(_dp.tenant)EMLAK_TENANT.tenant_id=_dp.tenant;}}catch(e){}/* admin ProX anahtarı (dn_prox) */
 async function proxApi(path){
   try{
