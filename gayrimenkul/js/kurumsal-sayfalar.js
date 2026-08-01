@@ -74,7 +74,7 @@
     var av = photo ? '<img src="' + photo + '" alt="' + esc(d.name) + '" loading="lazy">' : '<span>' + esc((d.name || '?').slice(0, 1)) + '</span>';
     return '<div class="hk-tc"><div class="av">' + av + '</div><div class="ti"><div class="nm">' + esc(d.name) + '</div><div class="rl">' + esc(d.role || '') + '</div>' +
       '<div class="ar">📍 ' + esc(d.area || '') + '</div>' +
-      (d.exp ? '<div class="mt">' + d.exp + ' yıl deneyim · ⭐ ' + (d.rating || '—') + (d.sales ? ' · ' + d.sales + ' işlem' : '') + '</div>' : '') +
+      (d.exp ? '<div class="mt">' + d.exp + ' yıl deneyim</div>' : '') +
       '<div class="tcta"><a href="tel:' + esc(d.tel || '') + '">Ara</a><a href="https://wa.me/' + esc(d.wa || '') + '" target="_blank" rel="noopener noreferrer">WhatsApp</a></div></div></div>';
   }
   function renderDanismanlar() {
@@ -102,7 +102,7 @@
       '<div class="iv-lead"><div class="ivl-h">Detaylı raporu uzmanımız hazırlasın →</div><div class="iv-grid2"><input id="iv_ad" placeholder="Adınız Soyadınız"><input id="iv_tel" placeholder="Telefonunuz"></div>' +
       '<button class="btn btn-blue" style="width:100%" onclick="infoValLead()">Ücretsiz Detaylı Rapor İste</button></div>' +
       '<div class="iv-note">⚠️ Bu bir ön tahmindir; resmî değer beyanı değildir. Resmî değerleme, lisanslı değerleme uzmanı imzasıyla geçerlidir.</div></div></div>';
-    return '<section class="hk-block"><div class="hk-h"><span class="hk-kick">Ücretsiz Değerleme</span><h2>Evimin değeri ne kadar?</h2><p>Türkiye\'nin kapsamlı 81 il · 50.000+ mahalle endeks altyapısına bağlı motorumuzla anlık ön tahmin alın; sonra uzman danışmanımız sizi arasın.</p></div>' +
+    return '<section class="hk-block"><div class="hk-h"><span class="hk-kick">Ücretsiz Değerleme</span><h2>Evimin değeri ne kadar?</h2><p>Türkiye\'nin kapsamlı 81 il · 50.000+ mahalle ve köy endeks altyapısına bağlı motorumuzla anlık ön tahmin alın; sonra uzman danışmanımız sizi arasın.</p></div>' +
       steps + form + '</section>';
   }
   function infoValMah() {
@@ -136,9 +136,9 @@
   /* ---------- REFERANSLAR ---------- */
   function renderReferans() {
     var refs = (typeof REFS !== 'undefined' && REFS) || [];
-    var stats = '<div class="info-stats"><div class="is"><b>3.800+</b><span>tamamlanan işlem</span></div><div class="is"><b>%98</b><span>müşteri memnuniyeti</span></div><div class="is"><b>4.9</b><span>Google puanı</span></div><div class="is"><b>18 yıl</b><span>bölge tecrübesi</span></div></div>';
+    var stats = '<div class="info-stats"><div class="is"><b>Veri</b><span>odaklı süreç</span></div><div class="is"><b>Şeffaf</b><span>uçtan uca danışmanlık</span></div><div class="is"><b>Bölge</b><span>uzmanı ekip</span></div></div>';/* HONESTY (P0-4/31): "3.800+/%98/4.9 Google/18 yıl" uydurma istatistikleri niteliksel yapıldı. */
     var cards = '<div class="info-refs">' + refs.map(function (r) {
-      return '<div class="iref"><div class="stars">★★★★★</div><p>“' + esc(r.text) + '”</p><div class="who"><span class="av">' + esc((r.name || '?').slice(0, 1)) + '</span><div><b>' + esc(r.name) + '</b><small>' + esc(r.meta || '') + '</small></div></div></div>';
+      return '<div class="iref"><p>“' + esc(r.text) + '”</p><div class="who"><span class="av">' + esc((r.name || '?').slice(0, 1)) + '</span><div><b>' + esc(r.name) + '</b><small>' + esc(r.meta || '') + '</small></div></div></div>';
     }).join('') + '</div>';
     var portals = '<div class="info-portals"><span class="lbl">İlanlarımızı ayrıca şu platformlarda da yayınlıyoruz:</span><div class="pl"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer"><b>emlak</b>jet</a></div></div>';
     return '<section class="hk-block"><div class="hk-h"><span class="hk-kick">Referanslar</span><h2>Müşterilerimiz ne diyor?</h2><p>Veriyle savunulan fiyat, şeffaf süreç ve işlem sonrası destek — memnuniyetimizin arkasındaki fark.</p></div>' +

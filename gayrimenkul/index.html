@@ -386,20 +386,15 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   <div>
     <div class="eyebrow">Hakkımızda</div>
     <h2 style="font-size:clamp(26px,3.4vw,38px);margin:.35em 0 .4em">Veriyi, güvenle birleştiren bir emlak ofisi</h2>
-    <p class="js-aboutText" style="color:var(--ink-2);font-size:16.5px">Meridyen Gayrimenkul, İzmir ve Ege bölgesinde 18 yıldır faaliyet gösteriyor. Bizi farklı kılan, her ilan ve her danışmanlığın arkasındaki <b>veri disiplinimiz</b>: Türkiye'nin kapsamlı endeks altyapısıyla, müşterilerimize duygu değil rakam sunuyoruz.</p>
-    <div class="kpi">
-      <div class="k"><div class="n num" data-count="1240">0</div><div class="l">Aktif portföy</div></div>
-      <div class="k"><div class="n num"><span data-count="3800">0</span><small>+</small></div><div class="l">Tamamlanan işlem</div></div>
-      <div class="k"><div class="n num"><span data-count="42">0</span></div><div class="l">Uzman danışman</div></div>
-      <div class="k"><div class="n num"><span data-count="98">0</span><small>%</small></div><div class="l">Tavsiye oranı</div></div>
-    </div>
+    <p class="js-aboutText" style="color:var(--ink-2);font-size:16.5px">Meridyen Gayrimenkul, İzmir ve Ege bölgesinde faaliyet gösteren, veri odaklı bir emlak ofisidir. Bizi farklı kılan, her ilan ve her danışmanlığın arkasındaki <b>veri disiplinimiz</b>: Türkiye'nin kapsamlı endeks altyapısıyla, müşterilerimize duygu değil rakam sunuyoruz.</p>
+    <!-- HONESTY (P0-4/34): Uydurma sayaçlar (aktif portföy/tamamlanan işlem/danışman/tavsiye oranı) kaldırıldı. Üretimde gerçek, girişten türeyen sayılarla doldurulur. -->
     <div class="about-badges">
-      <span class="ab"><svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="5"/><path d="M9 13 7.5 21 12 18.4 16.5 21 15 13"/></svg> Yetkili Emlak Müşaviri</span><span class="ab"><svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="M9 12l2 2 4-4"/></svg> Saha Veri Ortağı</span>
-      <span class="ab"><svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> KVKK Uyumlu</span><span class="ab"><svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.4l2.55 5.2 5.75.85-4.15 4.05 1 5.75L12 17.6 6.85 19.3l1-5.75L3.7 9.45l5.75-.85z"/></svg> 4.9 Google Puanı</span>
+      <!-- HONESTY (P0-4/31): "Yetkili Emlak Müşaviri" (belgesiz rozet), "Saha Veri Ortağı" (doğrulanamaz) ve "4.9 Google Puanı" (sahte derece) kaldırıldı. -->
+      <span class="ab"><svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> KVKK Uyumlu</span><span class="ab"><svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg> Veri destekli danışmanlık</span>
     </div>
   </div>
   <div class="about-img"><img id="aboutImg" alt="Meridyen Gayrimenkul ekibi" loading="lazy" decoding="async">
-    <div class="float"><div class="n num">18 Yıl</div><div class="l">Bölgenin güveni</div></div>
+    <!-- HONESTY (P0-4): Uydurma "18 Yıl" rozeti kaldırıldı. -->
   </div>
 </div></section>
 
@@ -408,7 +403,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   <div class="alarm-box">
     <div>
       <h3><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 4.5 2 5.5 2 5.5H4s2-1 2-5.5"/><path d="M10 20a2 2 0 0 0 4 0"/></svg> Bölgenizdeki fiyatlar değişince ilk siz öğrenin</h3>
-      <p>Takip etmek istediğiniz bölgeyi seçin; m² fiyatı veya uygun ilan çıktığında size e-posta gönderelim. <span style="color:var(--green-200)">/api/price-alerts/create</span> ile çalışır.</p>
+      <p>Takip etmek istediğiniz bölgeyi seçin; m² fiyatı veya uygun ilan çıktığında size e-posta gönderelim. E-posta doğrulaması (çift onay) ile çalışır; dilediğinizde tek tıkla abonelikten çıkabilirsiniz.<!-- HONESTY/GÜVENLİK (P0-16): iç endpoint adı (/api/price-alerts/create) son-kullanıcı metninden kaldırıldı. --></p>
     </div>
     <div class="alarm-form">
       <select id="al_bolge" aria-label="Bölge"><option value="">Bölge seçin</option><option>Konak</option><option>Karşıyaka</option><option>Bornova</option><option>Buca</option><option>Çeşme</option></select>
@@ -420,12 +415,9 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
 <!-- ===== REFERANSLAR ===== -->
 <section id="referans"><div class="wrap">
-  <div class="sec-head center"><div class="eyebrow">Referanslar</div><h2>Müşterilerimiz ne diyor?</h2></div>
+  <div class="sec-head center"><div class="eyebrow">Referanslar</div><h2>Müşterilerimiz ne diyor?</h2><p style="color:var(--ink-2);font-size:13px;margin-top:6px">Aşağıdaki görüşler bu demo sürüm için hazırlanmış <b>temsilî örneklerdir</b>.</p></div>
   <div class="tst-grid" id="refGrid"></div>
-  <div class="logos">
-    <div class="l">ANKA<br>HOLDİNG</div><div class="l">Vega<br>GYO</div><div class="l">Marmara<br>Yapı</div>
-    <div class="l">Nova<br>İnşaat</div><div class="l">Atlas<br>Bank</div><div class="l">Kıyı<br>Sigorta</div>
-  </div>
+  <!-- HONESTY (P0-4/31): İzinsiz/kurgusal müşteri logosu şeridi (ANKA/Vega/Marmara/Nova/Atlas/Kıyı) kaldırıldı. Gerçek referans logoları yalnız yazılı izinle eklenir. -->
 </div></section>
 
 <!-- ===== BLOG ===== -->
@@ -437,7 +429,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
 <!-- ===== İLETİŞİM ===== -->
 <section id="iletisim"><div class="wrap">
-  <div class="sec-head"><div class="eyebrow">İletişim</div><h2>Hemen bir danışmanla görüşün</h2><p>Aklınızdaki gayrimenkul ne olursa olsun, 1 saat içinde size dönüş yapalım.</p></div>
+  <div class="sec-head"><div class="eyebrow">İletişim</div><h2>Hemen bir danışmanla görüşün</h2><p>Aklınızdaki gayrimenkul ne olursa olsun, kısa sürede size dönüş yapalım.</p></div>
   <div class="ilet-grid">
     <div>
       <div class="ilet-info">
@@ -536,7 +528,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <div class="modal" id="leadModal" onclick="if(event.target.id==='leadModal')closeLead()"><div class="mbox">
   <button class="mclose" onclick="closeLead()">✕</button>
   <h3 id="leadTitle">Ücretsiz Değerleme</h3>
-  <div class="msub">Bilgilerinizi bırakın, uzman danışmanımız 1 saat içinde sizi arasın.</div>
+  <div class="msub">Bilgilerinizi bırakın, uzman danışmanımız kısa sürede sizi arasın.</div>
   <input id="m_ad" placeholder="Adınız Soyadınız *">
   <input id="m_tel" placeholder="Telefon *">
   <select id="m_konu"><option>Ücretsiz Değerleme</option><option>Satılık ilan ilgisi</option><option>Kiralık ilan ilgisi</option><option>Evimi satmak istiyorum</option><option>Yatırım danışmanlığı</option></select>
@@ -1590,7 +1582,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
     <div class="ozo-head">
       <div class="eyebrow"><span class="dot"></span> Mülk Sahibi · Özel Portföy</div>
       <h2>Mülkünüzü, satışta olduğu duyulmadan satışa çıkarın</h2>
-      <p>Açık ilan vermeden, fotoğraf ve adres ifşa olmadan; mülkünüzü yalnızca bizim doğrulanmış alıcı havuzumuza tanıtırız. e-Devlet üzerinden yetkilendirme tamamlandıktan sonra satış sürecini başlatırız. Bilgilerinizi bırakın, danışmanımız sizi arasın.</p>
+      <p>Açık ilan vermeden, fotoğraf ve adres ifşa olmadan; mülkünüzü yalnızca bizim nitelikli alıcı havuzumuza tanıtırız. e-Devlet üzerinden yetkilendirme tamamlandıktan sonra satış sürecini başlatırız. Bilgilerinizi bırakın, danışmanımız sizi arasın.</p>
     </div>
     <div class="ozo-grid">
       <ul class="ozo-bul">
@@ -1652,16 +1644,16 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <div class="in">
         <div class="eyebrow"><span class="dot"></span> Mülk Sahibi · Meridyen ile</div>
         <h2>Mülkünüzü <span>en doğru fiyata</span> satın ya da kiraya verin</h2>
-        <p>İster satmak, ister kiraya vermek isteyin: Meridyen, 480M+ kayıtlık endeks ve doğrulanmış alıcı havuzuyla mülkünüzü doğru fiyata, doğru kişiyle buluşturur. İsterseniz Özel Portföy ile mülkünüz açık ilana çıkmadan değerlendirilir.</p>
+        <p>İster satmak, ister kiraya vermek isteyin: Meridyen, 480M+ kayıtlık endeks ve nitelikli alıcı havuzuyla mülkünüzü doğru fiyata, doğru kişiyle buluşturur. İsterseniz Özel Portföy ile mülkünüz açık ilana çıkmadan değerlendirilir.</p>
         <div class="sat-hero-cta">
           <a class="ozh-btn primary" onclick="satScrollForm();return false" href="#skForm">Hemen Portföy Bırak</a>
           <a class="ozh-btn ghost" onclick="document.getElementById('satNeden').scrollIntoView({behavior:'smooth'});return false" href="#satNeden">Neden Meridyen?</a>
         </div>
         <div class="sat-stats">
           <div class="s"><div class="v">480M+</div><div class="l">kayıtlık fiyat endeksi</div></div>
-          <div class="s"><div class="v">21 gün</div><div class="l">ortalama satış süresi</div></div>
-          <div class="s"><div class="v">%98</div><div class="l">müşteri memnuniyeti</div></div>
-          <div class="s"><div class="v">1.300+</div><div class="l">doğrulanmış alıcı</div></div>
+          <div class="s"><div class="v">Hızlı</div><div class="l">veriyle doğru fiyatlama</div></div>
+          <div class="s"><div class="v">Şeffaf</div><div class="l">uçtan uca süreç</div></div>
+          <div class="s"><div class="v">Nitelikli</div><div class="l">alıcı adayı ağı</div></div><!-- HONESTY (P0-4/34): "21 gün/%98/1.300+" uydurma metrikleri niteliksel etiketlerle değiştirildi. -->
         </div>
       </div>
     </section>
@@ -1670,7 +1662,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
         <div class="sat-sec-h"><div class="eyebrow">Neden Meridyen?</div><h2>Mülkünüzü emanet etmeniz için 6 net neden</h2></div>
         <p class="sat-lead">Bir mülkü satmak ya da kiraya vermek; doğru fiyatı bulmak, doğru alıcıya ulaşmak ve süreci hatasız yönetmektir. Meridyen bu üç işi de veriyle ve uzman danışmanlıkla yapar — siz hiçbir aşamada yalnız kalmazsınız.</p>
         <div class="sat-benefits">
-          <div class="sb"><div class="ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><h4>Özel Portföy ile tanıtım</h4><p>Mülkünüz açık ilana çıkmadan, fotoğraf ve adres paylaşılmadan yalnızca doğrulanmış alıcıya ulaşır. Komşu, kiracı veya çevre haberdar olmaz.</p></div>
+          <div class="sb"><div class="ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><h4>Özel Portföy ile tanıtım</h4><p>Mülkünüz açık ilana çıkmadan, fotoğraf ve adres paylaşılmadan yalnızca nitelikli alıcıya ulaşır. Komşu, kiracı veya çevre haberdar olmaz.</p></div>
           <div class="sb"><div class="ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3.5-4 3 2.5L21 7"/></svg></div><h4>Veriyle doğru fiyat</h4><p>480M+ kayıtlık endeks ve mahalle bazlı analizle ne eksiğe ne fazlaya; mülkünüzü tam gerçek piyasa değerine konumlandırırız.</p></div>
           <div class="sb"><div class="ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17.5" cy="9" r="2.6"/><path d="M16 14.5a5 5 0 0 1 5 5.5"/></svg></div><h4>Doğrulanmış alıcı havuzu</h4><p>Bütçesi ve niyeti önceden teyit edilmiş, hazır alıcı ve kiracılarla hızlı ve ciddi eşleşme — vakit kaybı yok.</p></div>
           <div class="sb"><div class="ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12l2.5 2.5L16 9"/><path d="M3 9.5 12 4l9 5.5-9 5.5z"/><path d="M5 12v4.5c0 1 3 3 7 3s7-2 7-3V12"/></svg></div><h4>Tek danışman, tam takip</h4><p>Süreci baştan sona yöneten size özel bir uzman danışman. Tek muhatap, tam şeffaflık; siz hiç yorulmazsınız.</p></div>
@@ -1698,7 +1690,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
               <path d="M56 250 C 140 70, 200 60, 244 70 C 320 88, 420 120, 528 130 L528 260 L56 260 Z" fill="url(#scg)"/>
               <path d="M56 250 C 140 70, 200 60, 244 70 C 320 88, 420 120, 528 130" fill="none" stroke="#1f8b43" stroke-width="3.2" stroke-linecap="round"/>
               <path d="M56 250 C 150 232, 240 214, 320 206 C 400 198, 470 196, 528 198" fill="none" stroke="#e0245e" stroke-width="2.6" stroke-dasharray="2 7" stroke-linecap="round"/>
-              <g><circle cx="244" cy="70" r="6" fill="#1f8b43"/><rect x="214" y="34" width="116" height="24" rx="6" fill="#1f8b43"/><text x="272" y="50" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">21 günde satış</text></g>
+              <g><circle cx="244" cy="70" r="6" fill="#1f8b43"/><rect x="214" y="34" width="116" height="24" rx="6" fill="#1f8b43"/><text x="272" y="50" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">Hızlı satış</text></g>
               <g fill="#e0245e"><circle cx="320" cy="206" r="4.5"/><circle cx="430" cy="196" r="4.5"/></g>
               <text x="430" y="184" fill="#e0245e" font-size="11" text-anchor="middle" font-weight="700">fiyat indirimleri</text>
             </svg>
@@ -1708,9 +1700,9 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
             <p>Bir mülkün en çok ilgi gördüğü dönem, ilana çıktığı <b>ilk 2–3 haftadır</b>. Olduğundan yüksek bir fiyatla başlamak, tam bu kritik pencereyi harcar: ilgi düşer, mülk "yanmış" görünür ve sonunda arka arkaya indirimlerle gerçek değerinin de altına satılır.</p>
             <p>Meridyen, mülkünüzü <b>480M+ kayıtlık endeks</b> ve mahalle bazlı analizle daha ilk günden doğru fiyata konumlandırır. Sonuç: ilk haftadaki ilgiyi ciddi tekliflere çevirmek, daha kısa sürede ve genellikle <b>daha yüksek</b> bir bedelle kapanış.</p>
             <div class="sat-mini-stats">
-              <div><b>~21 gün</b><span>doğru fiyatlı mülklerde ort. satış</span></div>
-              <div><b>%96</b><span>liste fiyatına yakınlık oranı</span></div>
-              <div><b>3.2x</b><span>ilk hafta alıcı ilgisi farkı</span></div>
+              <div><b>Hızlı</b><span>doğru fiyatlı mülklerde satış</span></div>
+              <div><b>Yakın</b><span>liste fiyatına yakınlık</span></div>
+              <div><b>Yüksek</b><span>ilk hafta alıcı ilgisi</span></div><!-- HONESTY: ~21 gün/%96/3.2x uydurma sayıları niteliksel yapıldı. -->
             </div>
           </div>
         </div>
@@ -1720,12 +1712,12 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
         <div class="sat-sec-h"><div class="eyebrow">Fark nerede?</div><h2>Geleneksel açık ilan vs. Meridyen</h2></div>
         <div class="sat-cmp">
           <div class="row head"><div class="c k">Kriter</div><div class="c">Geleneksel açık ilan</div><div class="c hl">Meridyen · Özel Portföy + Veri</div></div>
-          <div class="row"><div class="c k">Mahremiyet</div><div class="c"><span class="x">Fotoğraf & adres herkese açık</span></div><div class="c hl"><span class="v">İfşa yok, yalnızca doğrulanmış alıcı</span></div></div>
+          <div class="row"><div class="c k">Mahremiyet</div><div class="c"><span class="x">Fotoğraf & adres herkese açık</span></div><div class="c hl"><span class="v">İfşa yok, yalnızca nitelikli alıcı</span></div></div>
           <div class="row"><div class="c k">Fiyatlama</div><div class="c"><span class="x">Tahmin / komşu fiyatı</span></div><div class="c hl"><span class="v">480M+ kayıtlık endeks</span></div></div>
           <div class="row"><div class="c k">Alıcı kalitesi</div><div class="c"><span class="x">Karışık, ön elemesiz</span></div><div class="c hl"><span class="v">Bütçesi teyitli havuz</span></div></div>
           <div class="row"><div class="c k">Pazarlık</div><div class="c"><span class="x">Mülk sahibi tek başına</span></div><div class="c hl"><span class="v">Profesyonel pazarlık yönetimi</span></div></div>
           <div class="row"><div class="c k">Süreç & evrak</div><div class="c"><span class="x">Mülk sahibine kalıyor</span></div><div class="c hl"><span class="v">e-Devlet yetkili, baştan sona biz</span></div></div>
-          <div class="row"><div class="c k">Satış süresi</div><div class="c"><span class="x">Belirsiz, uzayabilir</span></div><div class="c hl"><span class="v">Ortalama ~21 gün</span></div></div>
+          <div class="row"><div class="c k">Satış süresi</div><div class="c"><span class="x">Belirsiz, uzayabilir</span></div><div class="c hl"><span class="v">Veriyle belirgin şekilde daha kısa</span></div></div>
         </div>
       </section>
 
@@ -1733,8 +1725,8 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
         <div class="sat-sec-h"><div class="eyebrow">Erişim gücümüz</div><h2>Mülkünüz doğru alıcıya nasıl ulaşır?</h2></div>
         <div class="sat-funnel">
           <div class="fl l1"><b>480M+</b><span>kayıtlık fiyat & talep endeksi taranır</span></div>
-          <div class="fl l2"><b>50.000+</b><span>bölgeyle ilgili aktif alıcı kitlesi</span></div>
-          <div class="fl l3"><b>1.300+</b><span>bütçesi & niyeti doğrulanmış alıcı</span></div>
+          <div class="fl l2"><b>Geniş</b><span>bölgeyle ilgili alıcı ilgisi</span></div>
+          <div class="fl l3"><b>Nitelikli</b><span>bütçesi & niyeti teyit edilmiş alıcı adayı</span></div><!-- HONESTY: 50.000+/1.300+ uydurma huni sayıları niteliksel yapıldı. -->
           <div class="fl l4"><b>1</b><span>mülkünüz için doğru alıcı</span></div>
         </div>
         <p class="sat-funnel-note">Geniş veriden başlayıp doğru tek alıcıya kadar daralan, hedefli ve ölçülebilir bir süreç. Her adım danışmanınız tarafından raporlanır.</p>
@@ -1780,7 +1772,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
           </div>
           <div class="tl">
             <div class="dot"><span class="n">3</span><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div>
-            <h4>Tanıtım & eşleştirme</h4><p>Özel Portföy'de veya açık ilanda; doğrulanmış alıcı/kiracıyla hedefli buluşturma.</p>
+            <h4>Tanıtım & eşleştirme</h4><p>Özel Portföy'de veya açık ilanda; nitelikli alıcı/kiracıyla hedefli buluşturma.</p>
           </div>
           <div class="tl">
             <div class="dot"><span class="n">4</span><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/></svg></div>
@@ -1877,10 +1869,10 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <section class="sat-sec">
         <div class="sat-sec-h"><div class="eyebrow">Sık sorulanlar</div><h2>Aklınızdaki sorular</h2></div>
         <div class="sat-faq">
-          <details><summary>Mülkümün satışta olduğu duyulur mu?</summary><div>Özel Portföy ile hayır. Açık ilan, fotoğraf ve adres paylaşılmadan; mülkünüz yalnızca doğrulanmış alıcılara tanıtılır. Açık ilanı siz tercih ederseniz profesyonel pazarlama da yaparız.</div></details>
+          <details><summary>Mülkümün satışta olduğu duyulur mu?</summary><div>Özel Portföy ile hayır. Açık ilan, fotoğraf ve adres paylaşılmadan; mülkünüz yalnızca nitelikli alıcılara tanıtılır. Açık ilanı siz tercih ederseniz profesyonel pazarlama da yaparız.</div></details>
           <details><summary>Komisyon / ücret nasıl işliyor?</summary><div>Yalnızca başarılı satış veya kira sözleşmesinde, yasal oranlarda hizmet bedeli alınır. Başta sürpriz ücret yoktur; tüm koşullar yazılı olarak paylaşılır.</div></details>
           <details><summary>Satış fiyatını kim belirler?</summary><div>Kararı siz verirsiniz. Biz 480M+ kayıtlık endeks ve bölge analiziyle veriye dayalı bir fiyat aralığı öneririz; son söz her zaman mülk sahibinindir.</div></details>
-          <details><summary>Süreç ne kadar sürer?</summary><div>Talebinizin ardından genellikle 24 saat içinde ekspertiz planlanır. Doğru fiyatlı mülkler ortalama 21 günde alıcısıyla buluşur.</div></details>
+          <details><summary>Süreç ne kadar sürer?</summary><div>Talebinizin ardından genellikle 24 saat içinde ekspertiz planlanır. Doğru fiyatlı mülkler kısa sürede alıcısıyla buluşur.</div></details>
           <details><summary>Ön değerleme ücretli mi?</summary><div>Hayır. Hem siteden anında alacağınız ön tahmin hem de uzmanımızın yerinde yapacağı ekspertiz ve fiyat raporu tamamen ücretsizdir; hiçbir yükümlülük doğurmaz.</div></details>
           <details><summary>Başka şehirde / ilçede mülküm var, bakar mısınız?</summary><div>Önceliğimiz İzmir ve Ege bölgesidir; ancak çevre illerdeki mülkler için de danışmanlık ve veri desteği sunabiliyoruz. Formda konumu belirtmeniz yeterli.</div></details>
         </div>
