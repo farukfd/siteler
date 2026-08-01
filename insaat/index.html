@@ -371,7 +371,7 @@ header.scrolled .lang-sel{color:var(--ink)}
     <div class="eyebrow">Bölge Zekası · Veriyle Yatırım</div>
     <h2>Her projemizin altında, bölgenin gerçek verisi var</h2>
     <p>Sıradan müteahhitlerden farkımız: her projeyi mahalle bazlı fiyat endeksi, 5 yıllık değer trendi, yatırım skoru ve deprem/fay analiziyle sunuyoruz. Yatırımınızı duyguyla değil, veriyle yapın.</p>
-    <div class="partner">🔗 Canlı Bölge Veri Ağı · 81 il · 50.000+ mahalle endeksi</div>
+    <div class="partner">🔗 Canlı Bölge Veri Ağı · 81 il · 50.000+ mahalle ve köy endeksi</div>
     <div style="margin-top:22px"><button class="btn btn-primary" onclick="openBolgePage()">Bölge Zekası & Saha Gücümüz →</button></div>
   </div>
   <div class="dataw">
@@ -1108,7 +1108,7 @@ function cookieChoice(v){
       <!-- İLANLAR (EİDS üzerinden yayın) -->
       <div class="adm-pane" id="pane-ilanlar">
         <h2>İlanlar</h2>
-        <div class="crumb">Kendi taşınmazlarınızı bağımsız ilan olarak yayınlayın. Her ilan <b>T.C. Ticaret Bakanlığı EİDS</b> (Elektronik İlan Doğrulama Sistemi) üzerinden doğrulanır. 15 Şubat 2026'dan beri tüm ilanlarda doğrulama zorunludur.</div>
+        <div class="crumb">Kendi taşınmazlarınızı bağımsız ilan olarak yayınlayın. Her ilan <b>T.C. Ticaret Bakanlığı EİDS</b> (Elektronik İlan Doğrulama Sistemi) kapsamında yetki durumu takip edilir; resmî doğrulama yetkili EİDS/TTBS bağlantısı üzerinden yapılır.<!-- HONESTY (P0-10): "üzerinden doğrulanır" + doğrulanmamış tarih iddiası → durum-takibi. --></div>
         <div class="panelcard ins-eids-bar">
           <div class="ins-eids-belge"><label>Taşınmaz Ticareti Yetki Belgesi No <span class="ins-req">(kurumsal)</span></label><input id="insEidsYetkiBelge" placeholder="Emlak işletmesi yetki belge no" oninput="insEidsSetBelge(this.value)"></div>
           <div class="ins-note">🛡️ Doğrulama, NADAS sunucusu (ProX / emlakekspertizi.com) üzerinden Ticaret Bakanlığı EİDS sistemine yapılır. <b>Kod uydurulmaz.</b> Canlı EİDS bağlantısı devrede değilken ilanlar dürüstçe <b>“Doğrulama Bekliyor”</b> durumunda kalır. Doğrulanan ilan yeşil <b>EİDS Doğrulandı</b> rozetiyle görünür.</div>
