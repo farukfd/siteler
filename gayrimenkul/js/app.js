@@ -1785,7 +1785,13 @@ function obFinish(){obCollect();if(!OB.name){OB.step=2;obRender();toast('Firma a
     if(typeof applyProvince==='function')applyProvince(OB.il);
     if(typeof FIRMA!=='undefined'){FIRMA.name=OB.name;if(OB.vergi)FIRMA.vergi=OB.vergi;if(OB.adres)FIRMA.adres=OB.adres;if(OB.tel)FIRMA.tel=OB.tel;if(OB.mail)FIRMA.mail=OB.mail;
       FIRMA.eids=FIRMA.eids||{};if(OB.unvan)FIRMA.eids.unvan=OB.unvan;else if(!FIRMA.eids.unvan)FIRMA.eids.unvan=OB.name+' Danışmanlık Ltd. Şti.';
-      if(OB.belge){FIRMA.eids.belgeNo=OB.belge.replace(/[^0-9]/g,'');FIRMA.eids.yetkili=!!(FIRMA.eids.belgeNo.length>=7);}}
+      if(OB.belge){FIRMA.eids.belgeNo=OB.belge.replace(/[^0-9]/g,'');FIRMA.eids.yetkili=!!(FIRMA.eids.belgeNo.length>=7);}
+      /* BOŞ-DEFAULT TEMİZLEME (sızıntı G): yeni tenant, sihirbazın TOPLAMADIĞI İzmir-demo alanlarını MİRAS ALMASIN
+         → boş bırak (yasal künye '[Doldurulacak]' gösterir; yanlış İzmir MERSİS/KEP/adres değil). Admin sonra doldurur. */
+      var _newTenant=(OB.name!=='Meridyen Gayrimenkul')||(OB.il&&OB.il!=='İzmir');
+      if(_newTenant){['mersis','ticaretSicil','oda','kep','vergiDaire','wa'].forEach(function(k){FIRMA[k]='';});
+        FIRMA.social={fb:'',ig:'',x:'',li:'',yt:''};
+        if(!OB.adres)FIRMA.adres='';if(!OB.tel)FIRMA.tel='';if(!OB.mail)FIRMA.mail='';}}
     if(typeof applyBrand==='function')applyBrand(OB.name);
     if(OB.logo){try{if(typeof SAAS_CONFIG!=='undefined'&&SAAS_CONFIG.tenantSettings){SAAS_CONFIG.tenantSettings.logoUrl=OB.logo;if(typeof applySaaSSettings==='function')applySaaSSettings();}}catch(e){}}
     if(OB.key&&typeof PROX!=='undefined'){PROX.key=OB.key;PROX.il=OB.il;PROX.region=OB.il;if(typeof applyProxTenant==='function')applyProxTenant();}
