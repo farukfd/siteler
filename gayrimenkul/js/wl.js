@@ -39,6 +39,10 @@ try{var TH=(d.THEME&&d.THEME.accent)?d.THEME:null;if(TH){
   rs.setProperty('--green',gr);rs.setProperty('--green-700',_dk(gr,16));rs.setProperty('--green-200',_lx(gr,34));
   rs.setProperty('--c-bg-navy',nv);rs.setProperty('--c-bg-deep',_dk(nv,6));
 }}catch(e){}
+/* Tipografi teması (statik sayfalar): d.THEME.font → Google Fonts yükle + gövde fontu (base.css'i kırmadan) */
+try{var _tf=(d.THEME&&d.THEME.font)||'';var _CF={'Inter':'Inter:wght@400;500;600;700;800','Poppins':'Poppins:wght@400;500;600;700','Manrope':'Manrope:wght@400;500;600;700;800','Sora':'Sora:wght@400;500;600;700','DM Sans':'DM+Sans:wght@400;500;600;700','Nunito':'Nunito:wght@400;600;700;800','Montserrat':'Montserrat:wght@400;500;600;700','Figtree':'Figtree:wght@400;500;600;700','Playfair Display':'Playfair+Display:wght@500;600;700'};
+if(_tf&&_CF[_tf]){var _lid='brand-font-'+_tf.replace(/\s+/g,'');if(!document.getElementById(_lid)){var _l=document.createElement('link');_l.rel='stylesheet';_l.id=_lid;_l.href='https://fonts.googleapis.com/css2?family='+_CF[_tf]+'&display=swap';(document.head||document.documentElement).appendChild(_l);}
+  var _ap=function(){if(document.body)document.body.style.fontFamily="'"+_tf+"', system-ui, -apple-system, sans-serif";};if(document.body)_ap();else document.addEventListener('DOMContentLoaded',_ap);}}catch(e){}
 
 /* ---- 2) Marka + gramerli şehir ---- */
 var shortN=name.split(/\s+/)[0]||OSHORT;

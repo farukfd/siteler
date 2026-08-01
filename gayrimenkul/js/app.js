@@ -2831,6 +2831,17 @@ function setTheme(accent,green,navy){
 }
 function lighten(hex,amt){const n=parseInt(hex.slice(1),16);let r=Math.min(255,(n>>16)+amt),g=Math.min(255,((n>>8)&255)+amt),b=Math.min(255,(n&255)+amt);return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);}
 function darken(hex,amt){const n=parseInt(hex.slice(1),16);let r=Math.max(0,(n>>16)-amt),g=Math.max(0,((n>>8)&255)-amt),b=Math.max(0,(n&255)-amt);return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);}
+/* TİPOGRAFİ TEMASI (token, Faz 0): seçili fontu Google Fonts'tan yükle + gövde fontunu ayarla
+   (base.css'i geniş refactor etmeden; başlıklar kendi display fontunu koruyabilir). CSP _headers'ta izinli. */
+var CURATED_FONTS={'Inter':'Inter:wght@400;500;600;700;800','Poppins':'Poppins:wght@400;500;600;700','Manrope':'Manrope:wght@400;500;600;700;800','Sora':'Sora:wght@400;500;600;700','DM Sans':'DM+Sans:wght@400;500;600;700','Nunito':'Nunito:wght@400;600;700;800','Montserrat':'Montserrat:wght@400;500;600;700','Figtree':'Figtree:wght@400;500;600;700','Playfair Display':'Playfair+Display:wght@500;600;700'};
+function applyFontTheme(font){try{
+  if(!font||!CURATED_FONTS[font]){if(document.body)document.body.style.removeProperty('font-family');document.documentElement.style.removeProperty('--brand-font');return;}
+  var lid='brand-font-'+font.replace(/\s+/g,'');
+  if(!document.getElementById(lid)){var l=document.createElement('link');l.rel='stylesheet';l.id=lid;l.href='https://fonts.googleapis.com/css2?family='+CURATED_FONTS[font]+'&display=swap';(document.head||document.documentElement).appendChild(l);}
+  document.documentElement.style.setProperty('--brand-font',"'"+font+"'");
+  if(document.body)document.body.style.fontFamily="'"+font+"', system-ui, -apple-system, sans-serif";
+}catch(e){}}
+window.applyFontTheme=applyFontTheme;window.CURATED_FONTS=CURATED_FONTS;
 
 /* ============ ADMIN: YEDEK ============ */
 function exportData(){const data={FIRMA,ILANLAR,DANISMANLAR,LEADS,THEME,CONTENT,BLOGS,REFS,SEO,GOOGLE,PROX,AICFG,P3,KISILER,DEALS,TASKS,COMMS,RENTS,MSGLOG,RAPORLOG,ACT,CONTRACTS,OZEL,_exported:new Date().toISOString(),_brand:'Meridyen Gayrimenkul'};/* M2: CRM + Özel Portföy dilimleri de yedeklenir (import zaten okuyordu → parite) */
@@ -2844,7 +2855,7 @@ function importData(inp){const f=inp.files[0];if(!f)return;const r=new FileReade
     if(d.KISILER)KISILER=d.KISILER;if(d.DEALS)DEALS=d.DEALS;if(d.TASKS)TASKS=d.TASKS;if(d.COMMS)COMMS=d.COMMS;if(d.RENTS)RENTS=d.RENTS;if(d.MSGLOG)MSGLOG=d.MSGLOG;if(d.RAPORLOG)RAPORLOG=d.RAPORLOG;if(d.ACT)ACT=d.ACT;
     if(d.CONTRACTS)CONTRACTS=d.CONTRACTS;if(d.OZEL)OZEL=d.OZEL;/* M2: sözleşme + Özel Portföy de içe aktarılır */
     if(PROX&&!PROX.modules)PROX.modules=clone(DEF_MODULES);
-    saveAll();applyFirma();applyContent();if(THEME)setTheme(THEME.accent,THEME.green,THEME.navy);
+    saveAll();applyFirma();applyContent();if(THEME)setTheme(THEME.accent,THEME.green,THEME.navy);try{applyFontTheme(THEME&&THEME.font);}catch(e){}
     renderIlanlar();renderDan();renderBlogFeed();renderRefGrid();applyModuleVisibility();initAiAssistant();
     try{if(typeof renderOzel==='function')renderOzel();if(typeof renderOzHome==='function')renderOzHome();if(typeof ozHero==='function')ozHero();if(typeof renderOzelRows==='function')renderOzelRows();}catch(e){}/* M2: içe aktarılan Özel Portföy'ü de bas */
     renderIlanRows();renderDanRows();renderLeads();renderRecentLeads();renderKpis();renderBolgeRows();fillFirmaForm();renderThemeGrid();
@@ -2867,6 +2878,7 @@ function resetData(){if(!confirm('Tüm değişiklikler silinip demo verisine dö
 document.addEventListener('DOMContentLoaded',()=>{
   loadAll();eidsEnsure();applyProxTenant();try{if(typeof applyCanonical==='function')applyCanonical();}catch(e){}try{if(PROX&&PROX.il&&PROX.il!==PROVINCE.name)applyProvince(PROX.il,true);}catch(e){}try{if(typeof FIRMA!=='undefined'&&FIRMA.name!==BRAND_ORIG&&typeof applySeoHead==='function')applySeoHead();}catch(e){}try{if(typeof applySchema==='function')applySchema();}catch(e){}
   if(THEME&&THEME.accent)setTheme(THEME.accent,THEME.green,THEME.navy);
+  try{applyFontTheme(THEME&&THEME.font);}catch(e){}
   applyContent();
   initHero();renderIlanlar();renderOzel();ozHero();renderOzHome();renderDan();renderBolgePick();initVal();applyFirma();renderBlogFeed();renderRefGrid();
   initAiAssistant();applyModuleVisibility();try{brandSweep(document.body);brandObserve();}catch(e){}try{abApply();}catch(e){}
