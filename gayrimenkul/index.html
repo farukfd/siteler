@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde bu satır KALDIRILIR -->
 <title>Meridyen Gayrimenkul · Satılık & Kiralık Konut, Ofis, Arsa</title>
 <meta name="description" content="Meridyen Gayrimenkul — İzmir ve çevresinde satılık/kiralık konut, ofis, arsa. Mahalle bazlı fiyat endeksi, yatırım skoru ve ücretsiz değerleme.">
 <meta name="theme-color" content="#0a1631">
@@ -12,7 +13,12 @@
 <!-- ===== EMLAK API-FIRST SAAS CORE (additive) ===== -->
 <script>
 window.EMLAK_API_BASE = "https://www.emlakekspertizi.com";
-window.EMLAK_TENANT = { id:"emlaktahadimkoy_com", tenant_id:"emlaktahadimkoy_com", tenant_key:"prox_emlaktahadimkoy_com_5d318fd5639d630018d37e2b219cbd0c", domain:location.hostname, sector:"real_estate_agency", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"PRO", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"office", legalMode:"standard" };
+/* GÜVENLİK (P0): Gizli tenant anahtarı İSTEMCİYE GÖMÜLMEZ. Proxy modu açık → X-Tenant-Key
+   gönderilmez; anahtarı edge/proxy sunucusu ekler (bkz. cloudflare-worker/ + DEPLOY-VE-GUVENLIK-NOTU.md).
+   Proxy yoksa ProX çağrıları demo/fallback veriye düşer (demo gerçek anahtar/veri kullanmaz).
+   NOT: Eskiden burada gömülü olan anahtar git geçmişinde kaldı → sunucuda ROTATE edilmeli. */
+window.EMLAK_PROXY_MODE = true;
+window.EMLAK_TENANT = { id:"emlaktahadimkoy_com", tenant_id:"emlaktahadimkoy_com", tenant_key:"", domain:location.hostname, sector:"real_estate_agency", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"PRO", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"office", legalMode:"standard" };
 window.EMLAK_PACKAGES = {
   BASIC:["canUseMarketAnalysis","canUsePriceEstimate","canUseLeadCRM","canUseSvgGraphics"],
   PRO:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent"],
@@ -630,10 +636,10 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <div class="mark">M</div>
       <h2>Yönetim Paneli</h2>
       <p>Meridyen Gayrimenkul · İçerik & Portföy Yönetimi</p>
-      <input id="adm_user" placeholder="Kullanıcı adı" value="admin">
+      <input id="adm_user" placeholder="Kullanıcı adı" value="" autocomplete="off">
       <input id="adm_pass" type="password" placeholder="Şifre" onkeydown="if(event.key==='Enter')admLogin()">
       <button class="btn btn-primary" style="width:100%" onclick="admLogin()">Giriş Yap</button>
-      <div class="hint">Demo giriş — Kullanıcı: <b>admin</b> · Şifre: <b>1234</b></div>
+      <div class="hint">Yönetim paneli — yetkili giriş gerekir. Erişim için firma yöneticinizle iletişime geçin.<!-- GÜVENLİK (P0): Gömülü demo kimlik bilgisi (admin/1234) kaldırıldı. Gerçek güvenlik için panel sunucu-taraf auth + MFA arkasına alınmalı (bkz. handoff B-kovası). --></div>
       <div class="hint"><a href="#" onclick="closeAdmin();return false" style="color:var(--accent)">← Siteye dön</a></div>
     </div>
   </div>
