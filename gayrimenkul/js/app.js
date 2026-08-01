@@ -705,7 +705,12 @@ async function wlBuildBolge(il,silent){
     return pack;
   }catch(e){if(!silent)toast('Bölge verisi çekilemedi.');}
 }
-var _ozBusy=false;
+var _ozBusy=false,_ozPending=null,_ozDebounce=null;
+/* ANLIK özel portföy: cascade değişince debounce(700ms) + kuyruklu rebuild → son seçim kazanır.
+   ProX gerçek veriyle (proxy/CORS hazır olunca) o seçime göre anında yeniden üretir. */
+function _ozInstant(){try{if(_ozDebounce)clearTimeout(_ozDebounce);}catch(e){}
+  _ozDebounce=setTimeout(function(){try{if(typeof rebuildOzelFromProx==='function')rebuildOzelFromProx((SERVICE_AREA&&SERVICE_AREA.primary)||PROVINCE.name,true);}catch(e){}},700);}
+window._ozInstant=_ozInstant;
 /* Hizmet alanı → çok-illi iş listesi ({il,ilce}) + kategori geçidi */
 function saWorkList(maxPrimary){maxPrimary=maxPrimary||7;var list=[];
   if(SERVICE_AREA){var ills=saActiveIller();ills.sort(function(a,b){return a===SERVICE_AREA.primary?-1:b===SERVICE_AREA.primary?1:0;});
@@ -714,7 +719,7 @@ function saWorkList(maxPrimary){maxPrimary=maxPrimary||7;var list=[];
   return list;}
 function saHasCat(kw){if(!SERVICE_AREA||!SERVICE_AREA.kategoriler)return true;var s=SERVICE_AREA.kategoriler.join('|').toLocaleLowerCase('tr');return s.indexOf((''+kw).toLocaleLowerCase('tr'))>=0;}
 async function rebuildOzelFromProx(il,silent){
-  if(_ozBusy)return;_ozBusy=true;il=il||PROVINCE.name;
+  if(_ozBusy){_ozPending=il||true;return;}_ozBusy=true;il=il||PROVINCE.name;/* kuyruk: rebuild sırasında yeni istek gelirse sona sakla */
   try{
     var work=saWorkList(9);   // çok-illi: primary + ek hizmet illeri (SERVICE_AREA'daki aktif il/ilçe)
     var illerSet={};work.forEach(function(w){illerSet[w.il]=1;});
@@ -731,7 +736,7 @@ async function rebuildOzelFromProx(il,silent){
       var nextMah=function(){return rm[rmi++]||mahs[mi++%mahs.length];};var nextCad=function(){return cads[ci++%cads.length];};
       /* her bölgede kategori bazlı: satılık + kiralık daire (merkez mahalle) */
       if(cKonut)specs.push({il:il2,op:'Satılık',durum:'satilik',tip:'Daire',ilce:ilce,mah:nextMah(),cadde:nextCad(),m2:110,oda:'3+1'});
-      if(cKira||cKonut)specs.push({il:il2,op:'Kiralık',durum:'kiralik',tip:'Daire',ilce:ilce,mah:nextMah(),cadde:nextCad(),m2:90,oda:'2+1'});
+      if(cKira)specs.push({il:il2,op:'Kiralık',durum:'kiralik',tip:'Daire',ilce:ilce,mah:nextMah(),cadde:nextCad(),m2:90,oda:'2+1'});/* düzeltildi: yalnız 'Kiralık' kategorisi seçiliyse kira ilanı (eski cKira||cKonut sızıntısı) */
       /* il-merkez / ilk bölgeler: farklı mahallede ikinci (geniş) daire — il-merkez mahalle çeşitliliği */
       if(i<3&&cKonut)specs.push({il:il2,op:'Satılık',durum:'satilik',tip:'Daire',ilce:ilce,mah:nextMah(),cadde:nextCad(),m2:145,oda:'4+1'});
       /* sahil ilçe: denize yakın villa kategorisi */
@@ -787,6 +792,7 @@ async function rebuildOzelFromProx(il,silent){
     if(!silent)toast('✓ Özel Portföy '+il+': '+out.length+' yeni ProX kaydı ('+realCount+' gerçek analiz fiyatı)'+(_manual.length?' · '+_manual.length+' elle kayıt korundu':'')+'.');
   }catch(e){if(!silent)toast('Özel Portföy güncellenemedi.');}
   _ozBusy=false;
+  if(_ozPending){var _p=(_ozPending===true?((SERVICE_AREA&&SERVICE_AREA.primary)||PROVINCE.name):_ozPending);_ozPending=null;setTimeout(function(){rebuildOzelFromProx(_p,true);},60);}/* son seçim kazanır */
 }
 function renderOzelRows(){const t=document.getElementById('ozRows');if(!t)return;
   if(!OZEL.length){t.innerHTML='<tr><td colspan="7" class="empty">Henüz kayıt yok.</td></tr>';return;}
@@ -1853,17 +1859,17 @@ function renderSA(){saLoad();
 function saAddProvince(){saLoad();var sel=document.getElementById('saAddIl');var il=sel&&sel.value;if(!il)return;if(!SERVICE_AREA.iller[il])SERVICE_AREA.iller[il]=saBuildIl(il);saCurIl=il;saCurIlce='';renderSA();toast('Hizmet ili eklendi: '+il);}
 function saRemoveProvince(il){saLoad();if(il===SERVICE_AREA.primary){toast('Ana il çıkarılamaz. Önce başka ili ana yapın (il değiştir).');return;}delete SERVICE_AREA.iller[il];if(saCurIl===il){saCurIl=SERVICE_AREA.primary;saCurIlce='';}renderSA();toast('Hizmet ili çıkarıldı: '+il);}
 function saSelectIl(il){saLoad();saCurIl=il;saCurIlce='';renderSA();}
-function saToggleIlce(ic){saLoad();var rec=SERVICE_AREA.iller[saCurIl];if(!rec||!rec.ilceler[ic])return;rec.ilceler[ic].aktif=(rec.ilceler[ic].aktif===false);renderSA();}
-function saAllIlce(on){saLoad();var rec=SERVICE_AREA.iller[saCurIl];if(!rec)return;Object.keys(rec.ilceler).forEach(function(ic){rec.ilceler[ic].aktif=!!on;});renderSA();toast(on?'Tüm ilçeler hizmet alanına alındı.':'Tüm ilçeler çıkarıldı.');}
-function saSelectIlce(ic){saLoad();saCurIlce=ic;renderSA();}
+function saToggleIlce(ic){saLoad();var rec=SERVICE_AREA.iller[saCurIl];if(!rec||!rec.ilceler[ic])return;rec.ilceler[ic].aktif=(rec.ilceler[ic].aktif===false);renderSA();_ozInstant();}
+function saAllIlce(on){saLoad();var rec=SERVICE_AREA.iller[saCurIl];if(!rec)return;Object.keys(rec.ilceler).forEach(function(ic){rec.ilceler[ic].aktif=!!on;});renderSA();_ozInstant();toast(on?'Tüm ilçeler hizmet alanına alındı.':'Tüm ilçeler çıkarıldı.');}
+function saSelectIlce(ic){saLoad();saCurIlce=ic;renderSA();try{loadMahalleIlce(saCurIl,ic).then(function(mm){if(saCurIlce===ic){renderSA();}});}catch(e){}}/* ilçe seçince GERÇEK mahalleleri canlı yükle → öneriler gerçek */
 function saAddMahalle(){var inp=document.getElementById('saAddMah');var v=inp&&inp.value.trim();if(v){saAddMahalleName(v);inp.value='';}}
-function saAddMahalleName(v){saLoad();if(!saCurIlce){toast('Önce bir ilçe seçin.');return;}var e=SERVICE_AREA.iller[saCurIl].ilceler[saCurIlce];e.mahalleler=e.mahalleler||[];if(e.mahalleler.indexOf(v)<0)e.mahalleler.push(v);renderSA();}
-function saRemoveMahalle(m){saLoad();var e=SERVICE_AREA.iller[saCurIl].ilceler[saCurIlce];if(e)e.mahalleler=(e.mahalleler||[]).filter(function(x){return x!==m;});renderSA();}
-function saAddKat(){var inp=document.getElementById('saAddKat');var v=inp&&inp.value.trim();if(!v)return;saLoad();if(SERVICE_AREA.kategoriler.indexOf(v)<0)SERVICE_AREA.kategoriler.push(v);inp.value='';renderSA();}
-function saRemoveKat(k){saLoad();SERVICE_AREA.kategoriler=SERVICE_AREA.kategoriler.filter(function(x){return x!==k;});renderSA();}
+function saAddMahalleName(v){saLoad();if(!saCurIlce){toast('Önce bir ilçe seçin.');return;}var e=SERVICE_AREA.iller[saCurIl].ilceler[saCurIlce];e.mahalleler=e.mahalleler||[];if(e.mahalleler.indexOf(v)<0)e.mahalleler.push(v);renderSA();_ozInstant();}
+function saRemoveMahalle(m){saLoad();var e=SERVICE_AREA.iller[saCurIl].ilceler[saCurIlce];if(e)e.mahalleler=(e.mahalleler||[]).filter(function(x){return x!==m;});renderSA();_ozInstant();}
+function saAddKat(){var inp=document.getElementById('saAddKat');var v=inp&&inp.value.trim();if(!v)return;saLoad();if(SERVICE_AREA.kategoriler.indexOf(v)<0)SERVICE_AREA.kategoriler.push(v);inp.value='';renderSA();_ozInstant();}
+function saRemoveKat(k){saLoad();SERVICE_AREA.kategoriler=SERVICE_AREA.kategoriler.filter(function(x){return x!==k;});renderSA();_ozInstant();}
 function saApply(){saLoad();saSave();
   try{applyProvince(SERVICE_AREA.primary);}catch(e){}
-  try{if(SERVICE_AREA.primary!=='İzmir'&&typeof rebuildOzelFromProx==='function')rebuildOzelFromProx(SERVICE_AREA.primary,true);}catch(e){}
+  try{if(SERVICE_AREA.primary&&typeof rebuildOzelFromProx==='function')rebuildOzelFromProx(SERVICE_AREA.primary,true);}catch(e){}
   try{if(typeof renderBolgeRows==='function')renderBolgeRows();if(typeof renderSA==='function')renderSA();}catch(e){}
   var aktifIl=saActiveIller().length,aktifIlce=(saServedIlce(SERVICE_AREA.primary)||[]).length;
   toast('✓ Hizmet alanı uygulandı — '+aktifIl+' il · '+aktifIlce+' ilçe ('+SERVICE_AREA.primary+') · '+SERVICE_AREA.kategoriler.length+' kategori.');}
@@ -2295,7 +2301,7 @@ function saveFirma(){const g=id=>document.getElementById(id).value.trim();
      Adında il geçiyorsa (Konya Gayrimenkul) o ile geç; geçmiyorsa (Kaya/Romix) mevcut ili KORU, hata verme. */
   var _il=(typeof detectIlFromName==='function')?detectIlFromName(FIRMA.name):null;
   if(_il&&typeof applyProvince==='function'&&(typeof PROVINCE==='undefined'||!PROVINCE||_il!==PROVINCE.name)){try{applyProvince(_il,true);}catch(e){}
-    try{if(_il!=='İzmir'&&typeof rebuildOzelFromProx==='function'&&(typeof wlStale!=='function'||wlStale('wl_ozel_ts',_il)))rebuildOzelFromProx(_il,true);}catch(e){}
+    try{if(_il&&typeof rebuildOzelFromProx==='function'&&(typeof wlStale!=='function'||wlStale('wl_ozel_ts',_il)))rebuildOzelFromProx(_il,true);}catch(e){}
     try{if(_il!=='İzmir'&&typeof wlBuildBolge==='function'&&(typeof wlStale!=='function'||wlStale('wl_bolge',_il)))wlBuildBolge(_il,true);}catch(e){}}
   if(typeof applyBrand==='function')applyBrand(FIRMA.name); else applyFirma();
   if(typeof renderEidsYetki==='function')renderEidsYetki();if(typeof renderIlanRows==='function')renderIlanRows();if(typeof applySchema==='function')applySchema();
@@ -3185,7 +3191,7 @@ function saveProx(){PROX.key=document.getElementById('px_key').value.trim();
   if(document.getElementById('px_proxy'))PROX.proxyUrl=document.getElementById('px_proxy').value.trim();
   if(document.getElementById('px_tenant'))PROX.tenantId=document.getElementById('px_tenant').value.trim();
   var il=(document.getElementById('px_il')||{}).value||'İzmir';PROX.il=il;PROX.region=il;
-  applyProxTenant();saveAll();applyProvince(il);if(typeof proxRenderStatus==='function')proxRenderStatus();try{if(il!=='İzmir'&&typeof rebuildOzelFromProx==='function'&&wlStale('wl_ozel_ts',il))rebuildOzelFromProx(il,true);}catch(e){}try{if(il!=='İzmir'&&typeof wlBuildBolge==='function'&&wlStale('wl_bolge',il))wlBuildBolge(il,true);}catch(e){}
+  applyProxTenant();saveAll();applyProvince(il);if(typeof proxRenderStatus==='function')proxRenderStatus();try{if(il&&typeof rebuildOzelFromProx==='function'&&wlStale('wl_ozel_ts',il))rebuildOzelFromProx(il,true);}catch(e){}try{if(il!=='İzmir'&&typeof wlBuildBolge==='function'&&wlStale('wl_bolge',il))wlBuildBolge(il,true);}catch(e){}
   toast('✓ ProX bağlantısı kaydedildi · aktif il: '+il);}
 function proxRenderStatus(){var el=document.getElementById('px_status');if(!el)return;var t=window.EMLAK_TENANT||{};
   var oz=null,bl=null,q=null;try{oz=JSON.parse(localStorage.getItem('wl_ozel_ts')||'null');}catch(e){}try{bl=JSON.parse(localStorage.getItem('wl_bolge')||'null');}catch(e){}try{q=JSON.parse(localStorage.getItem('prox_quota')||'null');}catch(e){}
