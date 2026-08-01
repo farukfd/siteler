@@ -61,12 +61,33 @@ const TR_ILILCE={"Adana":{"plate":1,"ilce":["Aladağ","Ceyhan","Çukurova","Feke
 /* ===== GERÇEK MAHALLE VERİ KATMANI (talep-üzerine yükleme) ===== */
 var _mahCache={};
 function mahalleSlug(il){var m={'ç':'c','Ç':'c','ğ':'g','Ğ':'g','ı':'i','İ':'i','ö':'o','Ö':'o','ş':'s','Ş':'s','ü':'u','Ü':'u',' ':'-'};return (il||'').replace(/[çÇğĞıİöÖşŞüÜ ]/g,function(x){return m[x]||x;}).toLowerCase();}
-async function loadMahalle(il){if(!il)return null;if(_mahCache[il]!==undefined)return _mahCache[il];var out=null;
-  /* TEK KAYNAK: ProX il/ilçe/mahalle ucu (sunucuda eklenecek — bkz. PROX-API-GEREKSINIM-NOTU.md). 404/yoksa null → jeneratör fallback. */
-  try{var r=await proxApi('/api/v1/tenant/locations?il='+encodeURIComponent(il));
-    if(r&&!r.fallback&&r.success===true){var t=r.ilceler||r.data||r.locations;
-      if(t&&typeof t==='object'){out={};Object.keys(t).forEach(function(ic){var a=t[ic]||[];out[ic]=(Array.isArray(a)?a:[]).map(function(m){return (''+m).replace(/\s+(Mah\.?|Mahallesi|Köyü)$/i,'').trim();}).filter(Boolean);});}}}catch(e){}
-  _mahCache[il]=out;return out;}
+/* GRANULAR ProX locations (danisman deseni — canlı doğrulandı: /iller /ilceler /mahalleler GERÇEK veri döner).
+   Eski toplu '/locations?il=' ucu YOKTU → hep 404→COMMON_MAH uydurmaya düşüyordu. Düzeltildi. */
+function _mahClean(m){return (''+m).replace(/\s+(Mah\.?|Mahallesi|Köyü)$/i,'').trim();}
+async function loadMahalleIlce(il,ilce){if(!il||!ilce)return null;
+  if(!_mahCache[il]||typeof _mahCache[il]!=='object')_mahCache[il]={};
+  if(_mahCache[il][ilce]!==undefined)return _mahCache[il][ilce];
+  _mahCache[il][ilce]=null;/* uçuşta işaretle → çift istek engeli */
+  var out=null;
+  try{var rm=await proxApi('/api/v1/tenant/locations/mahalleler?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce));
+    if(rm&&!rm.fallback&&rm.success===true&&Array.isArray(rm.data)&&rm.data.length){
+      out=rm.data.map(_mahClean).filter(Boolean);
+      var seen={},uniq=[];out.forEach(function(m){var k=m.toLocaleLowerCase('tr');if(!seen[k]){seen[k]=1;uniq.push(m);}});out=uniq;}
+  }catch(e){}
+  _mahCache[il][ilce]=out;return out;}
+async function proxIlceList(il){if(!il)return [];
+  try{var ri=await proxApi('/api/v1/tenant/locations/ilceler?il='+encodeURIComponent(il));
+    if(ri&&!ri.fallback&&ri.success===true&&Array.isArray(ri.data)&&ri.data.length)return ri.data.slice();}catch(e){}
+  var rec=TR_ILILCE[il];return (rec&&rec.ilce)?rec.ilce.slice():[];}
+async function proxIlList(){
+  try{var r=await proxApi('/api/v1/tenant/locations/iller');
+    if(r&&!r.fallback&&r.success===true&&Array.isArray(r.data)&&r.data.length)return r.data.slice();}catch(e){}
+  return trIlList();}
+async function loadMahalle(il,ilceList){if(!il)return _mahCache[il]||null;
+  var ilcs=(ilceList&&ilceList.length)?ilceList:(await proxIlceList(il)).slice(0,12);
+  try{await _wlPMap(ilcs,function(ic){return loadMahalleIlce(il,ic);},6);}catch(e){}
+  return _mahCache[il]||null;}
+window.loadMahalleIlce=loadMahalleIlce;window.proxIlceList=proxIlceList;window.proxIlList=proxIlList;window.loadMahalle=loadMahalle;
 async function enrichProvinceMahalle(il){il=il||PROVINCE.name;var d=await loadMahalle(il);if(!d||PROVINCE.name!==il)return false;
   Object.keys(PROVINCE.districts).forEach(function(ilce){var arr=d[ilce];if(arr&&arr.length)PROVINCE.districts[ilce].mah=arr.slice(0,40);});
   if(typeof rebuildBAZ==='function')rebuildBAZ();
