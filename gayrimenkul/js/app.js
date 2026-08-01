@@ -4110,7 +4110,8 @@ async function gmLang(v){var sel=document.querySelectorAll('.lang-sw select');
 function mountSiteChrome(){document.querySelectorAll('.siteNav').forEach(function(n){n.innerHTML=SITE_NAV;});document.querySelectorAll('.siteCta').forEach(function(c){c.innerHTML=SITE_CTA;});document.querySelectorAll('.siteFooter').forEach(function(f){f.innerHTML=SITE_FOOTER;});
   /* white-label: geç enjekte edilen chrome (nav/footer/cta) SITE_FOOTER gibi sabit
      "Meridyen Gayrimenkul" içeriyor → observer'a güvenmeden HEMEN yerelleştir */
-  try{if(typeof brandSweep==='function')brandSweep(document.body);}catch(e){}}
+  try{if(typeof brandSweep==='function')brandSweep(document.body);}catch(e){}
+  try{if(typeof applyFirma==='function')applyFirma();}catch(e){}/* geç-render footer: iletişim + sosyal href'leri (applySocial) uygula */}
 mountSiteChrome();
 function gmDockSync(){try{var mb=document.querySelector('.mbar');if(!mb)return;var as=mb.querySelectorAll('a');for(var i=0;i<as.length;i++){if((as[i].className||'').indexOf('wa')<0)as[i].classList.remove('active');}var y=(window.scrollY||window.pageYOffset||0)+150;var il=document.getElementById('ilanlar'),hk=document.getElementById('hakkimizda');var idx=0;if(il&&y>=il.offsetTop)idx=0;if(hk&&y>=hk.offsetTop)idx=1;if(as[idx]&&(as[idx].className||'').indexOf('wa')<0)as[idx].classList.add('active');}catch(e){}}
 addEventListener('scroll',gmDockSync,{passive:true});setTimeout(gmDockSync,120);
