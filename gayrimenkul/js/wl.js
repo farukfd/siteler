@@ -155,7 +155,16 @@ async function wlLang(v){
 }
 try{window.gmLang=wlLang;}catch(e){}   /* statik "yakında" stub'ını gerçek çeviriyle değiştir */
 
-function start(){buildBolge();sweep();if(customized&&'MutationObserver' in window){obs=new MutationObserver(function(){clearTimeout(to);to=setTimeout(function(){sweep();},150);});obs.observe(document.body,{childList:true,subtree:true});}setTimeout(function(){buildBolge();sweep();},400);
+/* Sosyal medya (statik sayfalar): FIRMA.social'dan href yaz; boşsa demo linkini gizle (tenant'ta Meridyen'e gitmesin) */
+function applySocialWL(){try{var S=(d.FIRMA&&d.FIRMA.social)||{};if(!customized)return;
+  [['fb','facebook.com/meridyengayrimenkul'],['ig','instagram.com/meridyengayrimenkul'],['x','x.com/meridyengm'],['li','linkedin.com/company/meridyengayrimenkul'],['yt','youtube.com/@meridyengayrimenkul']].forEach(function(m){
+    var v=(S[m[0]]||'').trim();
+    document.querySelectorAll('a[href*="'+m[1]+'"]').forEach(function(a){
+      if(v){a.href=/^https?:\/\//i.test(v)?v:('https://'+v.replace(/^\/+/,''));a.style.display='';}else{a.style.display='none';}
+    });
+  });
+}catch(e){}}
+function start(){buildBolge();sweep();applySocialWL();if(customized&&'MutationObserver' in window){obs=new MutationObserver(function(){clearTimeout(to);to=setTimeout(function(){sweep();},150);});obs.observe(document.body,{childList:true,subtree:true});}setTimeout(function(){buildBolge();sweep();},400);
   /* kaydedilmiş dil TR değilse otomatik uygula (SPA ile tutarlı çok-dillilik) */
   try{var _sv=localStorage.getItem('wl_lang');if(_sv&&_sv!=='tr')setTimeout(function(){try{wlLang(_sv);}catch(e){}},550);}catch(e){}}
 if(document.readyState!=='loading')start();else document.addEventListener('DOMContentLoaded',start);

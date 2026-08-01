@@ -9,6 +9,7 @@ const LIST_IMGS=['l1','l2','l3','l4','l5','l6'];
 const DEF_FIRMA={name:'Meridyen Gayrimenkul',tel:'+90 232 000 00 00',mail:'info@meridyengm.com',wa:'905000000000',adres:'Alsancak Mah. Kıbrıs Şehitleri Cad. No:00, Konak / İzmir',hours:'Hafta içi 09:00–19:00 · Cumartesi 10:00–17:00',vergi:'6100000000',yetkili:'',
   kurulus:2007,vergiDaire:'Konak Vergi Dairesi',mersis:'0648010000000000',ticaretSicil:'İzmir Ticaret Sicil · 000000',oda:'İzmir Ticaret Odası · Üye No 00000',kep:'meridyengm@hs01.kep.tr',calisan:42,
   lat:38.4322,lng:27.1419,
+  social:{fb:'',ig:'',x:'',li:'',yt:''},/* boş → demo sosyal linkleri gizlenir (Meridyen'e gitmez); sihirbaz/admin doldurur */
   eids:{yetkili:true,belgeNo:'4827193',unvan:'Meridyen Gayrimenkul Danışmanlık Ltd. Şti.'}};
 // ₺/m² baz fiyatlar (örnek, emlakekspertizi endeksine bağlanır)
 /* ============ İL VERİ KATMANI (swappable: İzmir → Ankara renk+veri) ============ */
@@ -2408,7 +2409,21 @@ function applyFirma(){
   document.querySelectorAll('.js-hours,.js-hours2').forEach(e=>e.textContent=FIRMA.hours);
   document.querySelectorAll('.js-adres').forEach(e=>e.textContent=FIRMA.adres);
   if(FIRMA.wa){document.querySelectorAll('a[href^="https://wa.me/905000000000"]').forEach(a=>{a.href=a.href.replace('905000000000',FIRMA.wa);});}
+  try{applySocial();}catch(e){}
 }
+/* Sosyal medya: FIRMA.social'dan href yaz; boşsa demo linkini GİZLE (Meridyen hesabına gitmesin).
+   Demo-handle deseniyle çalışır → SPA footer + geç render + statik footer (wl.js de çağırır). */
+function applySocial(){
+  var S=(FIRMA&&FIRMA.social)||{};
+  [['fb','facebook.com/meridyengayrimenkul'],['ig','instagram.com/meridyengayrimenkul'],['x','x.com/meridyengm'],['li','linkedin.com/company/meridyengayrimenkul'],['yt','youtube.com/@meridyengayrimenkul']].forEach(function(m){
+    var key=m[0],demo=m[1],v=(S[key]||'').trim();
+    document.querySelectorAll('a[href*="'+demo+'"]').forEach(function(a){
+      if(v){a.href=/^https?:\/\//i.test(v)?v:('https://'+v.replace(/^\/+/,''));a.style.display='';}
+      else{a.style.display='none';}
+    });
+  });
+}
+window.applySocial=applySocial;
 /* ===== TEK KAYNAK LOGO — üst menü + tüm overlay header'ları + footer BİREBİR =====
    Kök neden: eski kod document.querySelector('.logo .mark') (TEKİL) kullanıyordu →
    yalnız İLK logo (ana header) güncelleniyor, overlay/footer logoları "M" kalıyordu.
