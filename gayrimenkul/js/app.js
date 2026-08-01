@@ -3946,6 +3946,7 @@ function satCalc(){var v=function(id){var e=document.getElementById(id);return e
       +'<div><span>Tahmini aylık kira</span><b>'+fmt(rent)+' ₺</b></div>'
       +'<div><span>Zemin / risk</span><b class="sc-risk">'+(b.risk||'-')+'</b></div>'
     +'</div>'
+    +'<div class="sc-note" style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5;border-top:1px solid rgba(255,255,255,.08);padding-top:8px">⚠️ Bu, güncel bölge verisine dayalı bir <b>ön tahmin aralığıdır</b>; resmî değerleme veya SPK lisanslı ekspertiz raporu değildir ve tek kesin fiyat vermez. Kesin ve resmî değer, yetkili/lisanslı değerleme uzmanının imzasıyla geçerlidir. (Demo — veriler temsilîdir.)</div>'
     +'<button class="ozh-btn primary sc-cta" onclick="satScrollForm(\'Satmak istiyorum\')">Bu mülk için ücretsiz ekspertiz al</button>';
 }
 /* ====================================================================
