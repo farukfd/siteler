@@ -193,13 +193,18 @@
   function dnApplyTheme() {
     var a = ""; try { a = (JSON.parse(localStorage.getItem("dn_theme") || "{}") || {}).accent || ""; } catch (e) {}
     if (!a || ("" + a).charAt(0) !== "#") return;
-    var a2 = _dnLighten(a, 20), dp = _dnDarken(a, 22), sf = _dnRgba(a, .14);
-    var css = ":root{--accent:" + a + ";--gold:" + a + ";--accent-2:" + a2 + ";--gold-deep:" + dp + ";--gold-soft:" + sf + ";}";
+    /* accent → TÜM altın ailesi + gradyan. İmza altını süren TEK değişken --grad-gold;
+       bütün .mark/.btn-gold/.hs-btn... var(--grad-gold) kullanır → accent seçilince altın accent'e döner.
+       Zümrüt (--em*) yapısal koyu neutral olarak kalır (danışman iki-tonlu kimliği). */
+    var a2 = _dnLighten(a, 18), soft = _dnLighten(a, 30), dp = _dnDarken(a, 22), ink = _dnDarken(a, 40), sf = _dnRgba(a, .14);
+    var grad = "linear-gradient(135deg," + soft + "," + a + " 55%," + dp + ")";
+    var css = ":root{--accent:" + a + ";--accent-2:" + a2 + ";--gold:" + a + ";--gold-soft:" + soft + ";--gold-deep:" + dp + ";--gold-ink:" + ink + ";--grad-gold:" + grad + ";--gold-a14:" + sf + ";}";
     var st = document.getElementById("tenant-theme");
     if (!st) { st = document.createElement("style"); st.id = "tenant-theme"; }
     st.textContent = css; (document.head || document.documentElement).appendChild(st);
     var r = document.documentElement.style;
-    r.setProperty("--accent", a); r.setProperty("--gold", a); r.setProperty("--accent-2", a2); r.setProperty("--gold-deep", dp); r.setProperty("--gold-soft", sf);
+    r.setProperty("--accent", a); r.setProperty("--accent-2", a2); r.setProperty("--gold", a);
+    r.setProperty("--gold-soft", soft); r.setProperty("--gold-deep", dp); r.setProperty("--gold-ink", ink); r.setProperty("--grad-gold", grad);
   }
   window.dnApplyTheme = dnApplyTheme;
 

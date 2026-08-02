@@ -531,7 +531,18 @@ function _dnHashOpen(){var h=location.hash;try{
 }catch(e){}}
 window.addEventListener('hashchange',_dnHashOpen);
 window.addEventListener('load',function(){try{var h=location.hash;if(h==='#kur'||h==='#blog'||h==='#randevu'||h==='#admin')setTimeout(_dnHashOpen,480);}catch(e){}});
-function initSaaSTheme(){const r=document.documentElement.style;const a=saasResolve('accent'),a2=saasResolve('accent2'),as=saasResolve('accentSoft');if(a){r.setProperty('--accent',a);r.setProperty('--gold',a);}if(a2)r.setProperty('--accent-2',a2);if(as)r.setProperty('--gold-soft',as);}
+function initSaaSTheme(){const r=document.documentElement.style;const a=saasResolve('accent'),a2=saasResolve('accent2'),as=saasResolve('accentSoft');
+  if(a){r.setProperty('--accent',a);r.setProperty('--gold',a);
+    /* accent → imza altın ailesi + gradyan (--grad-gold TÜM .mark/.btn-gold'u sürer) */
+    if(/^#[0-9a-fA-F]{6}$/.test(a)){
+      var L=function(h,m){var n=parseInt(h.slice(1),16);return '#'+((1<<24)+(Math.min(255,(n>>16)+m)<<16)+(Math.min(255,((n>>8)&255)+m)<<8)+Math.min(255,(n&255)+m)).toString(16).slice(1);};
+      var D=function(h,m){var n=parseInt(h.slice(1),16);return '#'+((1<<24)+(Math.max(0,(n>>16)-m)<<16)+(Math.max(0,((n>>8)&255)-m)<<8)+Math.max(0,(n&255)-m)).toString(16).slice(1);};
+      var soft=L(a,30),dp=D(a,22),ink=D(a,40);
+      r.setProperty('--gold-soft',soft);r.setProperty('--gold-deep',dp);r.setProperty('--gold-ink',ink);
+      r.setProperty('--grad-gold','linear-gradient(135deg,'+soft+','+a+' 55%,'+dp+')');
+    }
+  }
+  if(a2)r.setProperty('--accent-2',a2);if(as&&!(a&&/^#[0-9a-fA-F]{6}$/.test(a)))r.setProperty('--gold-soft',as);}
 function applySaaSSettings(){
   const title=saasResolve('metaTitle');if(title)document.title=title;
   const setMeta=(name,val)=>{if(val==null)return;let m=document.querySelector('meta[name="'+name+'"]');if(!m){m=document.createElement('meta');m.name=name;document.head.appendChild(m);}m.content=val;};
@@ -2018,10 +2029,10 @@ window.addEventListener('load',function(){try{
   try{var _wl=JSON.parse(localStorage.getItem('dn_brand')||'{}');if(_wl&&_wl.name&&_wl.name.trim())SAAS_CONFIG.systemSettings.brandName=_wl.name.trim();}catch(e){}
   /* dn_theme restore: accent/logo persist (SAAS tenantSettings kalıcı değil) → initSaaSTheme'den ÖNCE geri yükle */
   try{var _dt=JSON.parse(localStorage.getItem('dn_theme')||'null');if(_dt){if(_dt.accent){SAAS_CONFIG.systemSettings.accent=_dt.accent;SAAS_CONFIG.systemSettings.gold=_dt.accent;SAAS_CONFIG.tenantSettings.accent=_dt.accent;}if(_dt.logo)SAAS_CONFIG.tenantSettings.logoUrl=_dt.logo;}}catch(e){}
+  try{firmaLoad();}catch(e){}/* firma künye (dn_firma) → SAAS_CONFIG.firma — eidsRenderPublic/applySchema'dan ÖNCE olmalı, yoksa hero belge + JSON-LD demo (0034812) kalır */
   initSaaSTheme();applySaaSSettings();
   try{eidsRenderPublic();applySchema();applyProxyMode();abApply();}catch(e){}
   try{ilanLoad();}catch(e){}/* admin'de kaydedilmiş açık ilanları yükle (dn_listings_v1) */
-  try{firmaLoad();}catch(e){}/* firma künye (dn_firma) → SAAS_CONFIG.firma */
   try{proxCfgLoad();}catch(e){}/* admin ProX API anahtarı (dn_prox) → EMLAK_TENANT */
   try{applyContent();}catch(e){}/* CMS: admin'de düzenlenmiş hero metinlerini uygula (dn_content) */
   try{applyPortrait();}catch(e){}/* Ana sayfa Kişisel Temsil portresi (admin yüklediyse gerçek foto, yoksa temsili) */
