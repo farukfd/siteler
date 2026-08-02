@@ -32,6 +32,23 @@ SVG→PNG dönüştür (satori GEREKMEZ; kart zaten hazır SVG). `Accept` veya
 **Yerel test:** `node` ile `worker.fetch(new Request(".../og?..."))` → SVG döner
 (bkz. commit mesajı; `renderOgSvg` saf fonksiyon, Cloudflare olmadan çalışır).
 
+## URL → marka çıkarımı (Faz 3) — `/extract` (STUB)
+Sihirbazdaki "✨ Mevcut web / Google işletme URL'niz" alanının hedefi. Kullanıcı
+URL girer → backend sayfayı çeker + AI ile marka bilgilerini çıkarır → sihirbaz
+alanlarını (name, accent, tel, mail, adres…) ön-doldurur. Client kancası HAZIR:
+sihirbaz `obFinish`'te URL'yi `ins_brand_url` / `wl_brand_url` / `dn_brand_url`'e yazar.
+
+**Dosya:** `extract-brand.js` (referans stub). Üretim için:
+1. `wrangler secret put AI_API_KEY` (Claude Messages API / OpenAI / Gemini).
+2. SSRF: `isSafeUrl()` hazır (localhost/10./169.254/172.16-31/192.168/[::1] reddi — test 9/9).
+3. `extractPrompt()` çıktıyı **sabit `BRAND_SCHEMA`** JSON'una zorlar (sihirbaz bunu bekler).
+4. `callAI(...)` gövdesini sağlayıcıya göre doldur (Claude: `POST api.anthropic.com/v1/messages`, `anthropic-version`, `x-api-key`).
+5. worker.js'e route: `if (url.pathname === "/extract") return extractBrand(req, env);`
+
+**Sözleşme:** `POST /extract {url}` → `200 {ok:true, brand:{...BRAND_SCHEMA}}` | `{ok:false,error}`.
+Sihirbaz yalnız DOLU alanları ön-doldurur; kullanıcı her zaman düzenler (uydurma yok).
+Anahtar yoksa stub `501` döner (güvenli varsayılan).
+
 ## 1) Kurulum (bir kez)
 ```bash
 npm i -g wrangler            # veya: npx wrangler ...
