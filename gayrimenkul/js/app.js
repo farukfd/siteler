@@ -2330,8 +2330,14 @@ function csMountGM(){
     image:function(q){return csPexels(q);},
     list:function(){try{return (typeof BLOGS!=='undefined'&&BLOGS)||[];}catch(e){return [];}},
     save:function(arts){try{BLOGS=arts;if(typeof saveAll==='function')saveAll();if(typeof renderBlogRows==='function')renderBlogRows();}catch(e){}},
-    getKeys:function(){try{return {provider:AICFG.provider||'auto',dsKey:AICFG.dsKey||'',oaKey:AICFG.oaKey||'',clKey:AICFG.clKey||'',pexelsKey:AICFG.pexelsKey||''};}catch(e){return {};}},
-    setKeys:function(k){try{AICFG.provider=k.provider||'auto';AICFG.dsKey=k.dsKey||'';AICFG.oaKey=k.oaKey||'';AICFG.clKey=k.clKey||'';AICFG.pexelsKey=k.pexelsKey||'';if(typeof saveAll==='function')saveAll();}catch(e){}},
+    getKeys:function(){try{return {provider:AICFG.provider||'auto',proxKey:(PROX&&PROX.key)||'',dsKey:AICFG.dsKey||'',oaKey:AICFG.oaKey||'',clKey:AICFG.clKey||'',pexelsKey:AICFG.pexelsKey||''};}catch(e){return {};}},
+    setKeys:function(k){try{
+      AICFG.provider=k.provider||'auto';AICFG.dsKey=k.dsKey||'';AICFG.oaKey=k.oaKey||'';AICFG.clKey=k.clKey||'';AICFG.pexelsKey=k.pexelsKey||'';
+      /* ProX anahtarı girildiyse: doğrudan gönder (proxy-mode kapat → proxApi X-Tenant-Key ekler) */
+      if(k.proxKey&&(''+k.proxKey).trim()){var pk=(''+k.proxKey).trim();if(typeof PROX!=='undefined'&&PROX)PROX.key=pk;try{window.EMLAK_PROXY_MODE=false;window.EMLAK_TENANT.tenant_key=pk;}catch(e){}}
+      if(typeof saveAll==='function')saveAll();
+    }catch(e){}},
+    proxInfo:function(){try{var q=JSON.parse(localStorage.getItem('prox_quota')||'null')||{count:0};return {count:q.count||0,max:(PROX&&PROX.quotaMax)||10000};}catch(e){return {count:0,max:10000};}},
     toast:function(m){if(typeof toast==='function')toast(m);},
     guard:function(p){return (typeof aiGuard==='function')?aiGuard(p):p;}
   });

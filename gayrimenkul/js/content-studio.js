@@ -85,7 +85,10 @@
     var text=null,err=null;
     try{ var r=await CFG.ai({persona:'office',tool:'blog',prompt:buildPrompt(o)}); text=r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text))); if(r&&r.fallback)text=null; }
     catch(e){err=e;}
-    if(!text){ if(btn){btn.disabled=false;btn.textContent=btn._t;} _status('YZ yanıt vermedi. Bir sağlayıcı seçip anahtar girdiğinizden emin olun (ProX/DeepSeek/OpenAI/Claude).','err'); return; }
+    if(!text){ if(btn){btn.disabled=false;btn.textContent=btn._t;}
+      var hint=_hasAnyKey()?'Seçili sağlayıcıya ulaşılamadı — anahtarı "Kaydet & Test Et" ile doğrulayın (ProX yerelde CORS nedeniyle çalışmayabilir).':'Önce bir anahtar girin: aşağıda ⚙️ Ayarlar → ProX / DeepSeek / OpenAI / Claude.';
+      _status('YZ yanıt vermedi. '+hint,'err');
+      var d=$('cs_set'); if(d&&!_hasAnyKey()){d.open=true;} return; }
     var g=parseOut(text);
     if(!g.body){ g.body=_cleanBody(text); if(!g.title)g.title=topic; }
     g.body=_cleanBody(g.body);/* model başlık satırlarını (BASLIK:..) yanlışlıkla gövdeye kattıysa temizle */
@@ -202,11 +205,32 @@
   function _status(msg,kind){var el=$('cs_status');if(!el)return;el.className='cs-status '+(kind||'');el.textContent=msg;}
 
   /* ---------- ANAHTAR / SAĞLAYICI AYARLARI ---------- */
-  CS.saveKeys = function(){
+  CS.saveKeys = function(test){
     var k={provider:($('cs_provider')||{}).value||'auto',
+      proxKey:($('cs_proxKey')||{}).value||'',
       dsKey:($('cs_dsKey')||{}).value||'', oaKey:($('cs_oaKey')||{}).value||'', clKey:($('cs_clKey')||{}).value||'', pexelsKey:($('cs_pexKey')||{}).value||''};
-    if(CFG.setKeys)CFG.setKeys(k); toast('✓ Sağlayıcı & anahtarlar kaydedildi.'); _status('Aktif sağlayıcı: '+_provLabel(),'ok');
+    if(CFG.setKeys)CFG.setKeys(k);
+    toast('✓ Sağlayıcı & anahtarlar kaydedildi.');
+    _status('Aktif sağlayıcı: '+_provLabel()+(k.proxKey?' · ProX anahtarı bağlı':''),'ok');
+    _renderProvChips();
+    if(test)CS.testActive();
   };
+  CS.testActive = async function(){
+    _status('Bağlantı test ediliyor ('+_provLabel()+')…','wait');
+    try{
+      var r=await CFG.ai({message:'Bağlantı testi. Yalnızca "tamam" yaz.'});
+      var t=r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text))); if(r&&r.fallback)t=null;
+      _status(t?('✓ Bağlantı başarılı ('+_provLabel()+'). Artık makale üretebilirsiniz.'):'Bağlantı kurulamadı. Anahtarı kontrol edin. (ProX, tarayıcı CORS\'u nedeniyle yerelde çalışmayabilir; yayında/kendi anahtarınızla çalışır.)', t?'ok':'err');
+    }catch(e){_status('Test hatası: '+(e&&e.message||e),'err');}
+  };
+  function _hasAnyKey(){var k=(CFG.getKeys&&CFG.getKeys())||{};return !!(k.proxKey||k.dsKey||k.oaKey||k.clKey);}
+  function _renderProvChips(){
+    var host=$('cs_provChips'); if(!host)return; var k=(CFG.getKeys&&CFG.getKeys())||{};
+    var defs=[['prox','ProX',!!k.proxKey],['deepseek','DeepSeek',!!k.dsKey],['openai','OpenAI',!!k.oaKey],['claude','Claude',!!k.clKey]];
+    host.innerHTML='<span class="cs-chip'+((k.provider||'auto')==='auto'?' on':'')+'" onclick="ContentStudio.setProvider(\'auto\')">Otomatik</span>'
+      +defs.map(function(d){return '<span class="cs-chip'+(k.provider===d[0]?' on':'')+(d[2]?' has':'')+'" onclick="ContentStudio.setProvider(\''+d[0]+'\')">'+d[1]+(d[2]?' ✓':'')+'</span>';}).join('');
+  }
+  CS.setProvider=function(p){var sel=$('cs_provider');if(sel)sel.value=p;var k=(CFG.getKeys&&CFG.getKeys())||{};k.provider=p;if(CFG.setKeys)CFG.setKeys(k);_renderProvChips();_status('Aktif sağlayıcı: '+_provLabel(),'ok');};
 
   /* ---------- MOUNT (UI) ---------- */
   CS.mount = function(host, cfg){
@@ -218,62 +242,79 @@
     var bind=function(id,ev,fn){var e=$(id);if(e)e.addEventListener(ev,fn);};
     bind('cs_body','input',_syncMeta); bind('cs_title','input',_syncMeta);
     bind('cs_slug','input',function(){$('cs_slug')._touched=true;});
-    _syncMeta(); CS.renderList();
+    _syncMeta(); CS.renderList(); _renderProvChips();
     if(DRAFT)_fillEditor(DRAFT);
   };
 
   function _html(k){
     var prov=k.provider||'auto';
+    var noKey=!(k.proxKey||k.dsKey||k.oaKey||k.clKey);
+    var q=(CFG.proxInfo&&CFG.proxInfo())||null;
     return ''
     +'<div class="cs-wrap">'
-    +'<div class="cs-head"><div><h2>✨ İçerik Stüdyosu</h2><p class="cs-muted">SEO uyumlu, ProX destekli makaleler üretin — görselleriyle birlikte /blog\'da yayınlayın.</p></div></div>'
-    +'<div class="cs-status" id="cs_status">Aktif sağlayıcı: '+esc(({auto:'Otomatik',prox:'ProX',deepseek:'DeepSeek',openai:'OpenAI',claude:'Claude'})[prov]||prov)+'</div>'
-    /* ÜRETİM KUTUSU */
-    +'<div class="cs-card">'
-      +'<div class="cs-grid2"><div class="cs-f"><label>Konu / Başlık fikri *</label><input id="cs_topic" placeholder="ör. 2026\'da yatırım için doğru bölge nasıl seçilir?"></div>'
-      +'<div class="cs-f"><label>Anahtar kelimeler</label><input id="cs_kw" placeholder="yatırım, bölge analizi, m² fiyat"></div></div>'
-      +'<div class="cs-grid3"><div class="cs-f"><label>Uzunluk (kelime)</label><select id="cs_len"><option>600</option><option>800</option><option>1000</option><option>1200</option></select></div>'
+    /* HERO */
+    +'<div class="cs-hero"><div class="cs-hero-ic">✨</div><div><h2>İçerik Stüdyosu</h2>'
+      +'<p>SEO uyumlu, ProX destekli makaleler üretin — konuya uygun gerçek görselle birlikte <b>/blog</b>\'da yayınlayın.</p></div></div>'
+    /* SAĞLAYICI CHIP\'LERİ */
+    +'<div class="cs-provbar"><span class="cs-provbar-l">Yapay zekâ:</span><div class="cs-chips" id="cs_provChips"></div>'
+      +'<button type="button" class="cs-link" onclick="var d=document.getElementById(\'cs_set\');if(d){d.open=true;d.scrollIntoView({behavior:\'smooth\'});}">⚙️ Anahtarlar & Ayarlar</button></div>'
+    +'<div class="cs-status" id="cs_status">'+(noKey?'⚠️ Henüz sağlayıcı anahtarı yok — <b>Anahtarlar & Ayarlar</b>\'dan ProX / DeepSeek / OpenAI / Claude anahtarı girin.':'Aktif sağlayıcı: '+esc(({auto:'Otomatik',prox:'ProX',deepseek:'DeepSeek',openai:'OpenAI',claude:'Claude'})[prov]||prov))+'</div>'
+    /* ADIM 1 — ÜRET */
+    +'<div class="cs-card"><div class="cs-step"><span class="cs-step-n">1</span><h3>Konu &amp; ayarlar</h3></div>'
+      +'<div class="cs-f"><label>Konu / başlık fikri *</label><input id="cs_topic" placeholder="ör. 2026\'da yatırım için doğru bölge nasıl seçilir?"></div>'
+      +'<div class="cs-f"><label>Anahtar kelimeler <span class="cs-muted">(SEO — virgülle)</span></label><input id="cs_kw" placeholder="yatırım, bölge analizi, m² fiyat"></div>'
+      +'<div class="cs-grid3"><div class="cs-f"><label>Uzunluk</label><select id="cs_len"><option value="600">≈600 kelime</option><option value="800">≈800 kelime</option><option value="1000">≈1000 kelime</option><option value="1200">≈1200 kelime</option></select></div>'
       +'<div class="cs-f"><label>Üslup</label><select id="cs_tone"><option value="bilgilendirici">Bilgilendirici</option><option value="kurumsal">Kurumsal</option><option value="samimi">Samimi</option><option value="ikna">İkna edici</option></select></div>'
       +'<div class="cs-f"><label>Dil</label><select id="cs_lang"><option value="tr">Türkçe</option><option value="en">English</option><option value="ar">العربية</option></select></div></div>'
-      +'<button type="button" class="cs-btn pri" id="cs_genBtn" onclick="ContentStudio.generate()">✍️ Makale Üret</button>'
-      +' <button type="button" class="cs-btn" onclick="ContentStudio.newArticle()">+ Boş Makale</button>'
+      +'<div class="cs-actions"><button type="button" class="cs-btn pri lg" id="cs_genBtn" onclick="ContentStudio.generate()">✍️ Makale Üret</button>'
+      +'<button type="button" class="cs-btn" onclick="ContentStudio.newArticle()">+ Boş makale</button></div>'
     +'</div>'
-    /* EDİTÖR */
-    +'<div class="cs-card"><h3>Editör</h3>'
-      +'<div class="cs-f"><label>Başlık</label><input id="cs_title"></div>'
-      +'<div class="cs-grid2"><div class="cs-f"><label>Kalıcı bağlantı (slug)</label><input id="cs_slug"></div>'
-      +'<div class="cs-f"><label>Kategori</label><input id="cs_cat"></div></div>'
-      +'<div class="cs-f"><label>Etiketler (virgülle)</label><input id="cs_tags"></div>'
-      +'<div class="cs-f"><label>Özet (meta açıklama)</label><textarea id="cs_sum" rows="2"></textarea></div>'
-      /* KAPAK GÖRSELİ */
-      +'<div class="cs-f"><label>Kapak görseli (Pexels)</label>'
-        +'<div class="cs-cover" id="cs_coverPrev"><div class="cs-muted">Kapak görseli yok</div></div>'
-        +'<div class="cs-grid-img"><input id="cs_imgq" placeholder="görsel arama (ör. modern apartment)"><button type="button" class="cs-btn" onclick="ContentStudio.findImage()">🔎 Görsel Ara</button></div>'
-        +'<div class="cs-img-results" id="cs_imgResults"></div>'
+    /* ADIM 2 — EDİTÖR */
+    +'<div class="cs-card"><div class="cs-step"><span class="cs-step-n">2</span><h3>Editör</h3><span class="cs-wc" id="cs_wc"></span></div>'
+      +'<div class="cs-edit">'
+        +'<div class="cs-edit-main">'
+          +'<div class="cs-f"><label>Başlık</label><input id="cs_title" placeholder="Makale başlığı"></div>'
+          +'<div class="cs-grid2"><div class="cs-f"><label>Kalıcı bağlantı (slug)</label><input id="cs_slug"></div>'
+          +'<div class="cs-f"><label>Kategori</label><input id="cs_cat"></div></div>'
+          +'<div class="cs-f"><label>Etiketler <span class="cs-muted">(virgülle)</span></label><input id="cs_tags"></div>'
+          +'<div class="cs-f"><label>Gövde <span class="cs-muted">(Markdown — ## alt başlık)</span></label><textarea id="cs_body" rows="16" placeholder="Makale gövdesi burada oluşur…"></textarea></div>'
+        +'</div>'
+        +'<div class="cs-edit-side">'
+          +'<div class="cs-f"><label>Kapak görseli</label><div class="cs-cover" id="cs_coverPrev"><div class="cs-muted">Kapak görseli yok</div></div>'
+            +'<div class="cs-grid-img"><input id="cs_imgq" placeholder="görsel ara (ör. modern apartment)"><button type="button" class="cs-btn" onclick="ContentStudio.findImage()">🔎</button></div>'
+            +'<div class="cs-img-results" id="cs_imgResults"></div></div>'
+          +'<div class="cs-f"><label>Özet <span class="cs-muted">(meta)</span></label><textarea id="cs_sum" rows="3"></textarea></div>'
+          +'<div class="cs-f"><label>SEO başlık</label><input id="cs_seoTitle" maxlength="70"></div>'
+          +'<div class="cs-f"><label>SEO açıklama</label><input id="cs_seoDesc" maxlength="160"></div>'
+        +'</div>'
       +'</div>'
-      +'<div class="cs-f"><label>Gövde (Markdown)</label><textarea id="cs_body" rows="14"></textarea><div class="cs-wc" id="cs_wc"></div></div>'
-      +'<div class="cs-grid2"><div class="cs-f"><label>SEO Başlık</label><input id="cs_seoTitle" maxlength="70"></div>'
-      +'<div class="cs-f"><label>SEO Açıklama</label><input id="cs_seoDesc" maxlength="160"></div></div>'
-      +'<div class="cs-actions"><button type="button" class="cs-btn pri" onclick="ContentStudio.save(true)">✓ Kaydet & Yayınla</button>'
+      +'<div class="cs-actions cs-sticky"><button type="button" class="cs-btn pri" onclick="ContentStudio.save(true)">✓ Kaydet &amp; Yayınla</button>'
       +'<button type="button" class="cs-btn" onclick="ContentStudio.save(false)">Taslak kaydet</button></div>'
     +'</div>'
-    /* MAKALE LİSTESİ */
-    +'<div class="cs-card"><h3>Makaleler</h3><div id="cs_list"></div></div>'
-    /* AYARLAR: SAĞLAYICI + ANAHTARLAR */
-    +'<details class="cs-card cs-settings"><summary>⚙️ Yapay Zekâ & Görsel Ayarları (sağlayıcı + anahtarlar)</summary>'
-      +'<p class="cs-muted">ProX (emlakekspertizi.com) anahtarsız çalışır — veri + YZ kotalı. Dilerseniz kendi DeepSeek / OpenAI / Claude / Pexels anahtarınızı girip bağımsız kullanın. Anahtarlar yalnız bu yönetim oturumunda saklanır.</p>'
-      +'<div class="cs-f"><label>Üretim sağlayıcısı</label><select id="cs_provider">'
-        +'<option value="auto"'+(prov==='auto'?' selected':'')+'>Otomatik (anahtarı olan → yoksa ProX)</option>'
-        +'<option value="prox"'+(prov==='prox'?' selected':'')+'>ProX (emlakekspertizi.com · kotalı)</option>'
-        +'<option value="deepseek"'+(prov==='deepseek'?' selected':'')+'>DeepSeek (kendi anahtarım)</option>'
-        +'<option value="openai"'+(prov==='openai'?' selected':'')+'>OpenAI / ChatGPT (kendi anahtarım)</option>'
-        +'<option value="claude"'+(prov==='claude'?' selected':'')+'>Anthropic Claude (kendi anahtarım)</option>'
-      +'</select></div>'
-      +'<div class="cs-f"><label>DeepSeek API anahtarı</label><input id="cs_dsKey" type="password" value="'+esc(k.dsKey||'')+'" placeholder="sk-..."></div>'
-      +'<div class="cs-f"><label>OpenAI API anahtarı</label><input id="cs_oaKey" type="password" value="'+esc(k.oaKey||'')+'" placeholder="sk-..."></div>'
-      +'<div class="cs-f"><label>Claude (Anthropic) API anahtarı</label><input id="cs_clKey" type="password" value="'+esc(k.clKey||'')+'" placeholder="sk-ant-..."></div>'
-      +'<div class="cs-f"><label>Pexels görsel anahtarı <span class="cs-muted">(boşsa ProX görsel-proxy denenir)</span></label><input id="cs_pexKey" type="password" value="'+esc(k.pexelsKey||'')+'" placeholder="Pexels API key"></div>'
-      +'<button type="button" class="cs-btn pri" onclick="ContentStudio.saveKeys()">Kaydet</button>'
+    /* MAKALELER */
+    +'<div class="cs-card"><div class="cs-step"><span class="cs-step-n">3</span><h3>Makaleler</h3></div><div id="cs_list"></div></div>'
+    /* AYARLAR */
+    +'<details class="cs-card cs-settings" id="cs_set"'+(noKey?' open':'')+'><summary>⚙️ Yapay Zekâ &amp; Görsel Ayarları</summary>'
+      +'<div class="cs-f"><label>Üretim sağlayıcısı</label><select id="cs_provider" onchange="ContentStudio.setProvider(this.value)">'
+        +'<option value="auto"'+(prov==='auto'?' selected':'')+'>Otomatik (anahtarı olanı kullan)</option>'
+        +'<option value="prox"'+(prov==='prox'?' selected':'')+'>ProX — emlakekspertizi.com (kotalı)</option>'
+        +'<option value="deepseek"'+(prov==='deepseek'?' selected':'')+'>DeepSeek</option>'
+        +'<option value="openai"'+(prov==='openai'?' selected':'')+'>OpenAI / ChatGPT</option>'
+        +'<option value="claude"'+(prov==='claude'?' selected':'')+'>Anthropic Claude</option></select></div>'
+      /* ProX kartı */
+      +'<div class="cs-provcard cs-prox"><div class="cs-provcard-h"><b>🔑 ProX API Anahtarı</b><span class="cs-muted">emlakekspertizi.com — veri + YZ + görsel (kotalı)</span></div>'
+        +'<input id="cs_proxKey" type="password" value="'+esc(k.proxKey||'')+'" placeholder="prox_...">'
+        +(q?'<div class="cs-quota"><div class="cs-quota-bar"><span style="width:'+Math.min(100,Math.round((q.count/(q.max||1))*100))+'%"></span></div><span class="cs-muted">'+q.count+' / '+q.max+' istek (bu ay)</span></div>':'')
+        +'<div class="cs-muted" style="margin-top:6px">Girdiğiniz ProX anahtarı doğrudan kullanılır. (Yerelde tarayıcı CORS\'u engelleyebilir; kendi yayında/whitelisted alan adında çalışır.)</div>'
+      +'</div>'
+      /* BYO providers */
+      +'<div class="cs-provcard"><div class="cs-provcard-h"><b>DeepSeek</b><span class="cs-muted">kendi anahtarım</span></div><input id="cs_dsKey" type="password" value="'+esc(k.dsKey||'')+'" placeholder="sk-..."></div>'
+      +'<div class="cs-provcard"><div class="cs-provcard-h"><b>OpenAI / ChatGPT</b><span class="cs-muted">kendi anahtarım</span></div><input id="cs_oaKey" type="password" value="'+esc(k.oaKey||'')+'" placeholder="sk-..."></div>'
+      +'<div class="cs-provcard"><div class="cs-provcard-h"><b>Anthropic Claude</b><span class="cs-muted">kendi anahtarım</span></div><input id="cs_clKey" type="password" value="'+esc(k.clKey||'')+'" placeholder="sk-ant-..."></div>'
+      +'<div class="cs-provcard"><div class="cs-provcard-h"><b>📷 Pexels</b><span class="cs-muted">görsel — boşsa ProX görsel-proxy</span></div><input id="cs_pexKey" type="password" value="'+esc(k.pexelsKey||'')+'" placeholder="Pexels API key"></div>'
+      +'<div class="cs-muted" style="margin:8px 0 12px">Anahtarlar yalnız bu yönetim oturumunuzda (tarayıcınızda) saklanır. ProX anahtarsız da kullanılabilir (yayında sunucu-proxy).</div>'
+      +'<div class="cs-actions"><button type="button" class="cs-btn pri" onclick="ContentStudio.saveKeys(true)">Kaydet &amp; Test Et</button>'
+      +'<button type="button" class="cs-btn" onclick="ContentStudio.saveKeys(false)">Kaydet</button></div>'
     +'</details>'
     +'</div>';
   }
@@ -311,34 +352,62 @@
   };
 
   var CS_CSS=''
-  +'.cs-wrap{max-width:920px}'
-  +'.cs-head h2{margin:0 0 2px;font-size:22px}.cs-muted{color:var(--muted,#6b7280);font-size:13px}'
-  +'.cs-status{margin:10px 0;padding:9px 13px;border-radius:9px;background:var(--surface,#f3f4f6);border:1px solid var(--line,#e5e7eb);font-size:13px}'
+  +'.cs-wrap{max-width:960px;margin:0 auto}'
+  +'.cs-muted{color:var(--muted,#6b7280);font-size:13px}'
+  /* HERO */
+  +'.cs-hero{display:flex;gap:16px;align-items:center;padding:20px 22px;border-radius:16px;color:#fff;background:linear-gradient(120deg,var(--accent,#0ea5a5),var(--accent-2,#22d3ee));box-shadow:0 10px 30px -14px rgba(0,0,0,.35)}'
+  +'.cs-hero-ic{font-size:34px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}'
+  +'.cs-hero h2{margin:0 0 3px;font-size:23px;color:#fff}.cs-hero p{margin:0;font-size:13.5px;line-height:1.55;color:rgba(255,255,255,.92)}.cs-hero b{color:#fff}'
+  /* PROVIDER BAR + CHIPS */
+  +'.cs-provbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 4px}'
+  +'.cs-provbar-l{font-size:12.5px;font-weight:700;color:var(--muted,#6b7280)}'
+  +'.cs-chips{display:flex;gap:7px;flex-wrap:wrap;flex:1}'
+  +'.cs-chip{padding:5px 12px;border-radius:999px;border:1px solid var(--line,#e5e7eb);background:var(--bg,#fff);font-size:12.5px;font-weight:600;cursor:pointer;user-select:none}'
+  +'.cs-chip.has{border-color:var(--accent,#0ea5a5)}.cs-chip.on{background:var(--accent,#0ea5a5);color:var(--on-accent,#fff);border-color:transparent}'
+  +'.cs-link{background:none;border:none;color:var(--accent,#0ea5a5);font:inherit;font-weight:600;font-size:12.5px;cursor:pointer;text-decoration:underline}'
+  +'.cs-status{margin:8px 0 4px;padding:10px 14px;border-radius:10px;background:var(--surface,#f3f4f6);border:1px solid var(--line,#e5e7eb);font-size:13px;line-height:1.5}'
   +'.cs-status.wait{border-color:#d97706;color:#b45309}.cs-status.ok{border-color:#1a7f4b;color:#1a7f4b}.cs-status.err{border-color:#c0392b;color:#c0392b}'
-  +'.cs-card{background:var(--surface,#fff);border:1px solid var(--line,#e5e7eb);border-radius:14px;padding:18px 18px;margin:14px 0}'
-  +'.cs-card h3{margin:0 0 12px;font-size:16px}'
+  /* CARDS + STEPS */
+  +'.cs-card{background:var(--surface,#fff);border:1px solid var(--line,#e5e7eb);border-radius:16px;padding:20px 20px;margin:14px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}'
+  +'.cs-step{display:flex;align-items:center;gap:10px;margin:0 0 14px}.cs-step h3{margin:0;font-size:16px}'
+  +'.cs-step-n{width:26px;height:26px;border-radius:50%;background:var(--accent,#0ea5a5);color:var(--on-accent,#fff);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:0 0 auto}'
+  +'.cs-step .cs-wc{margin-left:auto}'
   +'.cs-f{margin:0 0 12px}.cs-f label{display:block;font-size:12.5px;font-weight:600;margin:0 0 5px}'
-  +'.cs-f input,.cs-f select,.cs-f textarea{width:100%;padding:10px 11px;border:1px solid var(--line,#e5e7eb);border-radius:9px;font:inherit;background:var(--bg,#fff);color:inherit;box-sizing:border-box}'
+  +'.cs-f input,.cs-f select,.cs-f textarea{width:100%;padding:10px 12px;border:1px solid var(--line,#e5e7eb);border-radius:10px;font:inherit;background:var(--bg,#fff);color:inherit;box-sizing:border-box}'
+  +'.cs-f input:focus,.cs-f select:focus,.cs-f textarea:focus{outline:none;border-color:var(--accent,#0ea5a5);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent,#0ea5a5) 18%,transparent)}'
   +'.cs-f textarea{resize:vertical;line-height:1.6}'
   +'.cs-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cs-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}'
+  /* EDITOR 2-COL */
+  +'.cs-edit{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}'
+  +'.cs-btn{padding:10px 16px;border:1px solid var(--line,#e5e7eb);border-radius:10px;background:var(--bg,#fff);color:inherit;cursor:pointer;font:inherit;font-weight:600;transition:filter .15s}'
+  +'.cs-btn:hover{filter:brightness(.97)}.cs-btn.pri{background:var(--accent,#0ea5a5);color:var(--on-accent,#fff);border-color:transparent}.cs-btn.lg{padding:13px 24px;font-size:15px}'
+  +'.cs-actions{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}'
+  +'.cs-sticky{border-top:1px solid var(--line,#eee);margin-top:16px;padding-top:14px}'
+  +'.cs-wc{font-size:12.5px;color:var(--muted,#6b7280)}'
+  /* COVER + IMAGES */
   +'.cs-grid-img{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:8px}'
-  +'.cs-btn{padding:10px 16px;border:1px solid var(--line,#e5e7eb);border-radius:9px;background:var(--bg,#fff);color:inherit;cursor:pointer;font:inherit;font-weight:600}'
-  +'.cs-btn.pri{background:var(--accent,#0ea5a5);color:var(--on-accent,#fff);border-color:transparent}'
-  +'.cs-actions{display:flex;gap:10px;margin-top:6px}'
-  +'.cs-wc{font-size:12.5px;margin-top:6px;color:var(--muted,#6b7280)}'
-  +'.cs-cover{border:1px dashed var(--line,#e5e7eb);border-radius:10px;min-height:120px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;background:var(--bg,#fafafa)}'
-  +'.cs-cover img{width:100%;height:220px;object-fit:cover;display:block}'
+  +'.cs-cover{border:1px dashed var(--line,#e5e7eb);border-radius:12px;min-height:150px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;background:var(--bg,#fafafa)}'
+  +'.cs-cover img{width:100%;height:180px;object-fit:cover;display:block}'
   +'.cs-credit{position:absolute;bottom:6px;right:8px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;padding:2px 7px;border-radius:6px}'
-  +'.cs-img-results{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}'
+  +'.cs-img-results{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}'
   +'.cs-img{padding:0;border:2px solid transparent;border-radius:8px;overflow:hidden;cursor:pointer;background:none;aspect-ratio:4/3}'
   +'.cs-img img{width:100%;height:100%;object-fit:cover;display:block}.cs-img.sel{border-color:var(--accent,#0ea5a5)}'
-  +'.cs-row{display:flex;gap:12px;align-items:center;padding:10px;border:1px solid var(--line,#eee);border-radius:10px;margin-bottom:8px}'
-  +'.cs-row-img{width:54px;height:54px;border-radius:8px;overflow:hidden;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:var(--bg,#f3f4f6);font-size:22px}'
+  /* LIST */
+  +'.cs-row{display:flex;gap:12px;align-items:center;padding:10px;border:1px solid var(--line,#eee);border-radius:12px;margin-bottom:8px}'
+  +'.cs-row-img{width:60px;height:60px;border-radius:9px;overflow:hidden;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:var(--bg,#f3f4f6);font-size:24px}'
   +'.cs-row-img img{width:100%;height:100%;object-fit:cover}'
   +'.cs-row-main{flex:1;min-width:0}.cs-row-main b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'
-  +'.cs-row-sub{font-size:12px;color:var(--muted,#6b7280);margin-top:2px}'
-  +'.cs-badge{padding:1px 7px;border-radius:999px;font-size:11px;font-weight:700}.cs-badge.pub{background:#e6f6ee;color:#1a7f4b}.cs-badge.draft{background:#fdecec;color:#c0392b}.cs-badge.ai{background:#eef2ff;color:#4f46e5}'
-  +'.cs-row-act button{background:none;border:1px solid var(--line,#e5e7eb);border-radius:7px;padding:5px 9px;cursor:pointer;margin-left:5px}'
-  +'.cs-settings summary{cursor:pointer;font-weight:700;font-size:15px}'
-  +'@media(max-width:640px){.cs-grid2,.cs-grid3{grid-template-columns:1fr}.cs-img-results{grid-template-columns:repeat(3,1fr)}}';
+  +'.cs-row-sub{font-size:12px;color:var(--muted,#6b7280);margin-top:3px}'
+  +'.cs-badge{padding:1px 8px;border-radius:999px;font-size:11px;font-weight:700}.cs-badge.pub{background:#e6f6ee;color:#1a7f4b}.cs-badge.draft{background:#fdecec;color:#c0392b}.cs-badge.ai{background:#eef2ff;color:#4f46e5}'
+  +'.cs-row-act button{background:none;border:1px solid var(--line,#e5e7eb);border-radius:8px;padding:6px 10px;cursor:pointer;margin-left:5px}'
+  /* SETTINGS */
+  +'.cs-settings summary{cursor:pointer;font-weight:700;font-size:15px;padding:2px 0}'
+  +'.cs-settings[open]>summary{margin-bottom:12px}'
+  +'.cs-provcard{border:1px solid var(--line,#e5e7eb);border-radius:12px;padding:12px 14px;margin:0 0 10px;background:var(--bg,#fafafa)}'
+  +'.cs-provcard.cs-prox{border-color:var(--accent,#0ea5a5);background:color-mix(in srgb,var(--accent,#0ea5a5) 6%,transparent)}'
+  +'.cs-provcard-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:0 0 8px}.cs-provcard-h b{font-size:14px}'
+  +'.cs-provcard input{width:100%;padding:9px 11px;border:1px solid var(--line,#e5e7eb);border-radius:9px;font:inherit;background:var(--surface,#fff);color:inherit;box-sizing:border-box}'
+  +'.cs-quota{display:flex;align-items:center;gap:8px;margin-top:8px}'
+  +'.cs-quota-bar{flex:1;height:7px;border-radius:99px;background:var(--line,#e5e7eb);overflow:hidden}.cs-quota-bar span{display:block;height:100%;background:var(--accent,#0ea5a5)}'
+  +'@media(max-width:720px){.cs-edit{grid-template-columns:1fr}.cs-grid2,.cs-grid3{grid-template-columns:1fr}.cs-img-results{grid-template-columns:repeat(3,1fr)}}';
 })();
