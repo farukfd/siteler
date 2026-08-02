@@ -1022,6 +1022,8 @@ html{transition:none}
 
 </style>
 <script src="js/brand.js?v=2"></script>
+<script src="../shared/cs-engine.js?v=2"></script>
+<script src="js/content-studio.js?v=2"></script>
 </head>
 <body class="crm">
 <div role="note" aria-label="Demo bildirimi" style="background:#0f2740;color:#dbeafe;font:600 12.5px/1.45 system-ui,-apple-system,sans-serif;text-align:center;padding:7px 14px;border-bottom:1px solid rgba(255,255,255,.12)">🔎 <b>DEMO · Tanıtım sürümü</b> — Bu sitedeki içerik, ekip, referans ve örnekler <b>temsilîdir</b>, gerçek veri değildir. Kurumsal firmalara özel gerçek sürüm: <a href="https://www.nadas.com.tr/white-label.html" style="color:#7dd3fc;text-decoration:underline">nadas.com.tr</a></div>
@@ -1048,6 +1050,7 @@ html{transition:none}
       <button class="act" data-v="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg> Gösterge Paneli</button>
       <button data-v="talepler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg> Talepler / CRM</button>
       <button data-v="makaleler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg> Makaleler / Blog</button>
+      <button data-v="icstudio" style="background:linear-gradient(135deg,#0891b2,#22d3ee);color:#052e33;font-weight:700"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg> İçerik Stüdyosu</button>
       <button data-v="icerik"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Sayfa İçerikleri</button>
       <button data-v="personel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15.5 14.2c2.3.4 4 2.4 4 4.8"/></svg> Personel</button>
       <button data-v="prox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6"/><path d="M9 16c1.5-2 3 2 4.5 0"/></svg> ProX &amp; PDF</button>
@@ -1064,6 +1067,7 @@ html{transition:none}
       <section class="crm-view on" data-v="dashboard" id="v_dashboard"></section>
       <section class="crm-view" data-v="talepler" id="v_talepler"></section>
       <section class="crm-view" data-v="makaleler" id="v_makaleler"></section>
+      <section class="crm-view" data-v="icstudio" id="v_icstudio"></section>
       <section class="crm-view" data-v="icerik" id="v_icerik"></section>
       <section class="crm-view" data-v="personel" id="v_personel"></section>
       <section class="crm-view" data-v="prox" id="v_prox"></section>
@@ -1078,7 +1082,7 @@ html{transition:none}
 <script id="crm-js">
 (function () {
   'use strict';
-  var TITLES = { dashboard: 'Gösterge Paneli', talepler: 'Talepler / CRM', makaleler: 'Makaleler / Blog', icerik: 'Site İçerikleri', personel: 'Personel', prox: 'ProX & PDF', pdf: 'SPK Lisanslı PDF · Smart Office', seo: 'SEO & Reklam · Google', ayarlar: 'Ayarlar', hesap: 'Hesap & Güvenlik' };
+  var TITLES = { dashboard: 'Gösterge Paneli', talepler: 'Talepler / CRM', makaleler: 'Makaleler / Blog', icstudio: 'İçerik Stüdyosu', icerik: 'Site İçerikleri', personel: 'Personel', prox: 'ProX & PDF', pdf: 'SPK Lisanslı PDF · Smart Office', seo: 'SEO & Reklam · Google', ayarlar: 'Ayarlar', hesap: 'Hesap & Güvenlik' };
   /* Smart Office (emlakekspertizi.com/profil?section=smart-office) PDF entegrasyonu — canlı uç bağlanınca doldurulur */
   window.SMART_OFFICE = window.SMART_OFFICE || { url: 'https://www.emlakekspertizi.com/profil?section=smart-office', endpoint: '/api/v1/tenant/smart-office/pdf' };
   var DB = {
@@ -1127,6 +1131,36 @@ html{transition:none}
 
   /* ---- Views ---- */
   var RENDER = {};
+
+  /* ===== İÇERİK STÜDYOSU (ortak motor) — deg_admin.articles birleşik depoya yazar ===== */
+  /* İKİ BAĞIMSIZ AJAN — ayrı anahtar depoları: DEG_CONTENT (deg_cs_content) + DEG_SITE (deg_cs_site) */
+  var DEG_TID=(window.EMLAK_TENANT&&EMLAK_TENANT.tenant_id)||'valuation', DEG_PBASE=(window.EMLAK_API_BASE||'https://www.emlakekspertizi.com');
+  var DEG_CONTENT=null, DEG_SITE=null;
+  try{ if(window.CSEngine){ DEG_CONTENT=CSEngine.create({store:'deg_cs_content',tenantId:DEG_TID,proxBase:DEG_PBASE}); DEG_SITE=CSEngine.create({store:'deg_cs_site',tenantId:DEG_TID,proxBase:DEG_PBASE}); _degMigrateAgents(); } }catch(e){}
+  function _degMigrateAgents(){try{ var old=JSON.parse(localStorage.getItem('deg_aicfg')||'null'); if(old&&!localStorage.getItem('deg_cs_content'))localStorage.setItem('deg_cs_content',JSON.stringify(old)); var s=DB.load(); [DEG_CONTENT,DEG_SITE].forEach(function(E){ if(!E)return; var k=E.getKeys(),patch={}; if(!k.proxKey&&s.proxKey)patch.proxKey=s.proxKey; if(!k.dsKey&&s.deepseekKey)patch.dsKey=s.deepseekKey; if(Object.keys(patch).length)E.setKeys(patch); }); }catch(e){}}
+  window.DEG_CONTENT=DEG_CONTENT;window.DEG_SITE=DEG_SITE;
+  function _degArtId(a){return a.id||(a.ts?('t'+Date.parse(a.ts)):Date.now());}
+  function _degStudioList(){var s=DB.load();return (s.articles||[]).map(function(a){return Object.assign({},a,{id:_degArtId(a),cat:a.cat||a.category||'Genel',sum:a.sum||a.excerpt||'',status:a.status||((a.published===false)?'draft':'published'),date:a.date||(a.ts?String(a.ts).slice(0,10):''),tags:a.tags||[]});});}
+  function _degStudioSave(arts){var s=DB.load();s.articles=(arts||[]).map(function(a){return Object.assign({},a,{category:a.cat||a.category||'Genel',excerpt:a.sum||a.excerpt||'',published:(a.status==='published'||!a.status),ts:a.ts||(a.date?(new Date(a.date)).toISOString():(new Date()).toISOString())});});DB.save(s);}
+  function _degSeedStudio(){try{var s=DB.load();[DEG_CONTENT,DEG_SITE].forEach(function(E){if(!E)return;var k=E.getKeys(),patch={};if(!k.proxKey&&s.proxKey)patch.proxKey=s.proxKey;if(!k.dsKey&&s.deepseekKey)patch.dsKey=s.deepseekKey;if(Object.keys(patch).length)E.setKeys(patch);});}catch(e){}}
+  RENDER.icstudio = function(){ if(!window.ContentStudio||!DEG_CONTENT){ $('v_icstudio').innerHTML='<div class="crm-card">İçerik Stüdyosu motoru yüklenemedi.</div>'; return; } _degSeedStudio();
+    ContentStudio.mount($('v_icstudio'),{
+      vertical:'degerleme', persona:'SPK lisanslı gayrimenkul değerleme uzmanı içerik editörü',
+      city:function(){return '';},
+      brand:function(){try{return (typeof brandName==='function'?brandName():'')||'Meridyen Değerleme';}catch(e){return 'Meridyen Değerleme';}},
+      ai:function(bd){return DEG_CONTENT.ai(bd,{max_tokens:3500,timeout:70000});},
+      image:function(q){return DEG_CONTENT.image(q);},
+      list:_degStudioList, save:_degStudioSave,
+      getKeys:function(){return DEG_CONTENT.getKeys();}, setKeys:function(k){DEG_CONTENT.setKeys(k);},
+      proxInfo:function(){return DEG_CONTENT.proxInfo();},
+      getSchedule:function(){return DEG_CONTENT.getSchedule();}, setSchedule:function(sc){DEG_CONTENT.setSchedule(sc);},
+      topicPool:function(){return ['SPK gayrimenkul değerleme mevzuatı','UDES / IVS uluslararası değerleme standartları','Bankaya teminat değerlemesi süreci','Mahkeme ve bilirkişi değerleme raporu','Kamulaştırma bedel tespiti','Emsal karşılaştırma yaklaşımı','Gelir indirgeme yöntemi','Maliyet yaklaşımı ile değerleme','Arsa ve arazi değerleme esasları','Enerji santrali ve özel varlık değerleme','Değerleme raporunda sık yapılan hatalar','Ekspertiz raporu nasıl okunur'];},
+      toast:function(m){try{toast(m);}catch(e){}},
+      guard:function(p){var sp='';try{sp=DEG_CONTENT.sysPrompt();}catch(e){}return (sp?sp+'\n\n':'')+p;}
+    });
+  };
+  window._degStudioList=_degStudioList;
+
   RENDER.dashboard = function () {
     var leads = DB.leads(), s = DB.load();
     var yeni = leads.filter(function (l) { return (l.status || 'yeni') === 'yeni'; }).length;
@@ -1263,7 +1297,28 @@ html{transition:none}
       + '<div class="crm-row2"><div class="crm-f"><label>Müşteri / Kurum</label><input id="r_client"></div><div class="crm-f"><label>Dosya / Talep No</label><input id="r_file" placeholder="DEG-2026-..."></div></div>'
       + '<button class="crm-btn" id="r_btn">📄 Resmî PDF Rapor Oluştur</button><div class="crm-out" id="r_out"></div></div>'
       + '<div class="crm-card"><h3>İçerik Asistanı — Kuruma Özel Prompt</h3><textarea id="px_prompt" rows="3" placeholder="Kuruma özel uzmanlık/ton...">' + esc(s.proxPrompt || '') + '</textarea><button class="crm-btn ghost" id="px_save" style="margin-top:8px">Kaydet</button></div>'
-      + '<div class="crm-card"><h3>ProX Asistan</h3><div class="crm-f"><textarea id="px_q" rows="2" placeholder="ProX\'a sorun (örn. otel değerlemesinde hangi yaklaşım?)"></textarea></div><button class="crm-btn" id="px_ask">Sor</button><div class="crm-out" id="px_a"></div></div>';
+      + '<div class="crm-card"><h3>ProX Asistan</h3><div class="crm-f"><textarea id="px_q" rows="2" placeholder="ProX\'a sorun (örn. otel değerlemesinde hangi yaklaşım?)"></textarea></div><button class="crm-btn" id="px_ask">Sor</button><div class="crm-out" id="px_a"></div></div>'
+      + '<div class="crm-card"><h3>✨ İçerik Ajanı — Makale &amp; Haber Üretimi</h3>'
+      + '<p style="font-size:12px;color:#94a3b8;margin:0 0 12px">İçerik Stüdyosu\'nu çalıştırır (SEO makale + günlük otomatik haber). <b>Site Asistanı\'ndan bağımsız</b> kendi sağlayıcı ve anahtarları vardır.</p>'
+      + '<div class="crm-f"><label>Sağlayıcı</label><select id="cxcd_provider"><option value="auto">Otomatik (anahtarı olanı kullan)</option><option value="prox">ProX</option><option value="deepseek">DeepSeek</option><option value="openai">OpenAI</option><option value="claude">Claude</option></select></div>'
+      + '<div class="crm-row2"><div class="crm-f"><label>ProX API Anahtarı</label><input id="cxcd_prox" type="password" autocomplete="off" placeholder="prox_..."></div><div class="crm-f"><label>DeepSeek (sk-...)</label><input id="cxcd_ds" type="password" autocomplete="off" placeholder="sk-..."></div></div>'
+      + '<div class="crm-row2"><div class="crm-f"><label>OpenAI (sk-...)</label><input id="cxcd_oa" type="password" autocomplete="off" placeholder="sk-..."></div><div class="crm-f"><label>Claude (sk-ant-...)</label><input id="cxcd_cl" type="password" autocomplete="off" placeholder="sk-ant-..."></div></div>'
+      + '<div class="crm-f"><label>Pexels <span style="color:#94a3b8;font-weight:400">(opsiyonel — boşsa Openverse)</span></label><input id="cxcd_pex" type="password" autocomplete="off" placeholder="Pexels API anahtarı"></div>'
+      + '<div class="crm-f"><label>İçerik promptu / editöryal ton <span style="color:#94a3b8;font-weight:400">(opsiyonel)</span></label><textarea id="cxcd_sys" rows="2" placeholder="Örn. SPK/UDES-IVS çerçevesinde, mevzuata uygun; kesin değer/garanti verme."></textarea></div>'
+      + '<div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap"><button class="crm-btn" id="cxcd_save">Kaydet</button><button class="crm-btn ghost" id="cxcd_test">Bağlan &amp; Test</button><span class="crm-out" id="cxcd_status" style="margin:0"></span></div></div>'
+      + '<div class="crm-card"><h3>💬 Site Asistanı — Ziyaretçi Sohbeti</h3>'
+      + '<p style="font-size:12px;color:#94a3b8;margin:0 0 12px">Sitedeki (iletişim) ziyaretçi sohbetini çalıştırır. İçerik Ajanı\'ndan tamamen ayrıdır.</p>'
+      + '<div class="crm-f"><label>Sağlayıcı</label><select id="cxsd_provider"><option value="auto">Otomatik (anahtarı olanı kullan)</option><option value="prox">ProX</option><option value="deepseek">DeepSeek</option><option value="openai">OpenAI</option><option value="claude">Claude</option></select></div>'
+      + '<div class="crm-row2"><div class="crm-f"><label>ProX API Anahtarı</label><input id="cxsd_prox" type="password" autocomplete="off" placeholder="prox_..."></div><div class="crm-f"><label>DeepSeek (sk-...)</label><input id="cxsd_ds" type="password" autocomplete="off" placeholder="sk-..."></div></div>'
+      + '<div class="crm-row2"><div class="crm-f"><label>OpenAI (sk-...)</label><input id="cxsd_oa" type="password" autocomplete="off" placeholder="sk-..."></div><div class="crm-f"><label>Claude (sk-ant-...)</label><input id="cxsd_cl" type="password" autocomplete="off" placeholder="sk-ant-..."></div></div>'
+      + '<div class="crm-f"><label>Asistan promptu / ton <span style="color:#94a3b8;font-weight:400">(opsiyonel)</span></label><textarea id="cxsd_sys" rows="2" placeholder="Örn. SPK lisanslı, güven veren; kesin değer verme, ücretsiz ön görüşmeye yönlendir."></textarea></div>'
+      + '<div class="crm-f"><label>Yetenekler</label><div style="display:flex;flex-wrap:wrap;gap:12px;font-size:13px">'
+        + '<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cxsd_cap_phone" checked> 📞 Telefon iste (canlı uzman araması)</label>'
+        + '<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cxsd_cap_lead" checked> 🎯 Lead nitelendirme</label>'
+        + '<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cxsd_cap_advice" checked> 💡 Süreç & mevzuat danışmanlığı</label>'
+        + '<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cxsd_cap_multilang" checked> 🌐 Çok dilli</label>'
+      + '</div></div>'
+      + '<div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap"><button class="crm-btn" id="cxsd_save">Kaydet</button><button class="crm-btn ghost" id="cxsd_test">Bağlan &amp; Test</button><span class="crm-out" id="cxsd_status" style="margin:0"></span></div></div>';
     $('r_btn').addEventListener('click', async function () {
       var client = $('r_client').value.trim(); var o = $('r_out'); if (!client) { o.innerHTML = '<span class="bad">⚠ Müşteri/kurum gerekli.</span>'; return; }
       o.innerHTML = '<span class="warn">Oluşturuluyor…</span>';
@@ -1272,7 +1327,16 @@ html{transition:none}
       else if (r && r.fallback) o.innerHTML = '<span class="warn">○ Çevrimdışı/demo: Dosya altyapısı hazırlandı ve uzmana atandı. Canlı API bağlanınca PDF anında üretilir.</span>';
       else o.innerHTML = '<span class="ok">✓ Talep alındı; uzman onayına gönderildi.</span>';
     });
-    $('px_ksave').addEventListener('click', function () { var s = DB.load(); s.proxKey = $('px_key').value.trim(); s.deepseekKey = $('px_ds').value.trim(); DB.save(s); if (s.proxKey && window.EMLAK_TENANT) window.EMLAK_TENANT.tenant_key = s.proxKey; $('px_kout').innerHTML = '<span class="ok">✓ Anahtarlar kaydedildi. Sistem ProX ile çalışır; kota dolarsa DeepSeek yedeğe geçer.</span>'; toast('API anahtarları kaydedildi.'); });
+    $('px_ksave').addEventListener('click', function () { var s = DB.load(); s.proxKey = $('px_key').value.trim(); s.deepseekKey = $('px_ds').value.trim(); DB.save(s); if (s.proxKey && window.EMLAK_TENANT) window.EMLAK_TENANT.tenant_key = s.proxKey; try{_degSeedStudio();}catch(e){} $('px_kout').innerHTML = '<span class="ok">✓ Anahtarlar kaydedildi. ProX veri anahtarı; her iki YZ ajanına da başlangıç olarak uygulanır.</span>'; toast('API anahtarları kaydedildi.'); });
+    /* İki ajan kartı — İçerik Ajanı (cxcd_) + Site Asistanı (cxsd_) */
+    function _degFill(E,pre){try{var k=E.getKeys();var sf=function(id,v){var e=$(id);if(e)e.value=v||'';};sf(pre+'provider',k.provider||'auto');sf(pre+'prox',k.proxKey);sf(pre+'ds',k.dsKey);sf(pre+'oa',k.oaKey);sf(pre+'cl',k.clKey);sf(pre+'sys',k.sysPrompt);var pex=$(pre+'pex');if(pex)pex.value=k.pexelsKey||'';}catch(e){}}
+    async function _degTest(E,sid){$(sid).innerHTML='<span class="warn">Test ediliyor…</span>';try{var r=await E.ai({message:'Bağlantı testi. Yalnızca "tamam" yaz.'});var t=r&&(r.answer||r.text);if(r&&r.fallback)t=null;$(sid).innerHTML=t?'<span class="ok">✓ Bağlantı başarılı.</span>':'<span class="warn">○ Bağlantı kurulamadı. Anahtarı kontrol edin (ProX yerelde CORS kısıtlı olabilir).</span>';}catch(e){$(sid).innerHTML='<span class="bad">Test hatası.</span>';}}
+    if(DEG_CONTENT)_degFill(DEG_CONTENT,'cxcd_');
+    if(DEG_SITE){_degFill(DEG_SITE,'cxsd_');var _sc=DEG_SITE.getCaps();[['cxsd_cap_phone','phone'],['cxsd_cap_lead','lead'],['cxsd_cap_advice','advice'],['cxsd_cap_multilang','multilang']].forEach(function(d){var e=$(d[0]);if(e)e.checked=(_sc&&_sc[d[1]]!==undefined)?!!_sc[d[1]]:true;});}
+    var _cc=$('cxcd_save'); if(_cc)_cc.addEventListener('click',function(){ if(!DEG_CONTENT)return; var v=function(id){var e=$(id);return e?e.value.trim():'';}; DEG_CONTENT.setKeys({provider:v('cxcd_provider')||'auto',proxKey:v('cxcd_prox'),dsKey:v('cxcd_ds'),oaKey:v('cxcd_oa'),clKey:v('cxcd_cl'),pexelsKey:v('cxcd_pex'),sysPrompt:v('cxcd_sys')}); $('cxcd_status').innerHTML='<span class="ok">✓ İçerik Ajanı kaydedildi · '+(v('cxcd_provider')||'auto')+'</span>'; toast('İçerik Ajanı anahtarları kaydedildi.'); });
+    var _ct=$('cxcd_test'); if(_ct)_ct.addEventListener('click',function(){ if(DEG_CONTENT)_degTest(DEG_CONTENT,'cxcd_status'); });
+    var _ss=$('cxsd_save'); if(_ss)_ss.addEventListener('click',function(){ if(!DEG_SITE)return; var v=function(id){var e=$(id);return e?e.value.trim():'';}; var ck=function(id){var e=$(id);return e?!!e.checked:true;}; DEG_SITE.setKeys({provider:v('cxsd_provider')||'auto',proxKey:v('cxsd_prox'),dsKey:v('cxsd_ds'),oaKey:v('cxsd_oa'),clKey:v('cxsd_cl'),sysPrompt:v('cxsd_sys'),capabilities:{phone:ck('cxsd_cap_phone'),lead:ck('cxsd_cap_lead'),advice:ck('cxsd_cap_advice'),match:false,multilang:ck('cxsd_cap_multilang')}}); $('cxsd_status').innerHTML='<span class="ok">✓ Site Asistanı kaydedildi · '+(v('cxsd_provider')||'auto')+'</span>'; toast('Site Asistanı ayarları kaydedildi.'); });
+    var _st=$('cxsd_test'); if(_st)_st.addEventListener('click',function(){ if(DEG_SITE)_degTest(DEG_SITE,'cxsd_status'); });
     $('px_save').addEventListener('click', function () { var s = DB.load(); s.proxPrompt = $('px_prompt').value.trim(); DB.save(s); toast('ProX promptu kaydedildi.'); });
     $('px_ask').addEventListener('click', async function () { var q = $('px_q').value.trim(); if (!q) return; $('px_a').innerHTML = '<span class="warn">Yanıtlanıyor…</span>'; var r = await window.degAi(q); $('px_a').textContent = (r && r.answer) ? r.answer : 'İçerik Asistanı çevrimdışı — ProX anahtarı bağlanınca veya DeepSeek yedek anahtarı girilince yanıt verir.'; });
   };

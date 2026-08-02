@@ -848,13 +848,15 @@ async function paSend(ev){
   try{var _ph=q.match(/(?:\+?90[\s.\-]?)?0?5\d{2}[\s.\-]?\d{3}[\s.\-]?\d{2}[\s.\-]?\d{2}/);if(_ph&&typeof proxSubmitLead==='function'){var _pn=_ph[0].replace(/[^\d+]/g,'');proxSubmitLead({sourcePage:'asistan',formType:'prox-asistan',name:_ps?_ps.name:'ProX Asistan ziyaretçisi',phone:_pn,email:_ps?_ps.email:'',message:q,requestedService:'ProX Asistan görüşmesi — geri arama talebi'});var _cc=_paCur();if(_cc){_cc.lead=true;_cc.phone=_pn;_paSaveStore();}}}catch(e){}
   _paBusy=true;var btn=document.querySelector('#proxAsistanPage .pa-send');if(btn)btn.disabled=true;
   _paMsgs.push({role:'bot',typing:true});_paRenderLog();
-  var persona=(window.EMLAK_TENANT&&EMLAK_TENANT.proxPersona)||'construction';
-  var _hist=_paHistCtx();
   try{
-    var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:persona,context:_hist||'default',prompt:_paPrompt(),message:(_hist?('Önceki konuşma:\n'+_hist+'\n\nMüşterinin yeni mesajı: '):'')+q}});
+    var lang='tr';try{lang=(window.INI18N&&INI18N.lang&&INI18N.lang())||'tr';}catch(e){}
+    var ans='';
+    if(window.INS_SITE){
+      var _r=await INS_SITE.reply({ message:q, history:_paHistArr(), brand:(typeof _csInsBrand==='function'?_csInsBrand():'Meridyen Yapı'), city:(typeof _insCity==='function'?_insCity():'İstanbul'), lang:lang, portfolio:_insPortfolioText(), caps:{phone:true,lead:true,advice:true,match:true,multilang:true} });
+      ans=(_r&&_r.ok)?_r.answer:'';
+    }
     _paMsgs=_paMsgs.filter(function(m){return !m.typing;});
-    var ans=(r&&(r.answer||(r.data&&r.data.answer)))||'';
-    if(!ans||(r&&r.fallback))ans=_paFallback();
+    if(!ans)ans=_paFallback();
     _paMsgs.push({role:'bot',text:ans});
   }catch(e){_paMsgs=_paMsgs.filter(function(m){return !m.typing;});_paMsgs.push({role:'bot',text:_paFallback()});}
   _paRenderLog();_paSyncCur();
@@ -1848,9 +1850,88 @@ function reserveApt(no){
 }
 // ESC ile kapat
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('pjDetail').classList.contains('on'))closeProjectDetail();});
-function renderBlog(){document.getElementById('blogGrid').innerHTML=BLOG.map(b=>{const s=imgFor(b.img);
-  return `<div class="post"><div class="ph">${s?`<img src="${s}" alt="" loading="lazy" decoding="async">`:''}</div>
-  <div class="body"><div class="date">${b.date}</div><h3>${b.t}</h3><p>${b.d}</p></div></div>`;}).join('');}
+/* =====================================================================
+   İÇERİK STÜDYOSU (ortak motor: shared/cs-engine.js + content-studio.js)
+   ===================================================================== */
+/* İKİ BAĞIMSIZ AJAN — ayrı anahtar depoları:
+     INS_CONTENT (ins_cs_content) → İçerik Ajanı; INS_SITE (ins_cs_site) → Site Asistanı */
+var INS_TID=(window.EMLAK_TENANT&&EMLAK_TENANT.tenant_id)||'construction', INS_PBASE=(window.EMLAK_API_BASE||'https://www.emlakekspertizi.com');
+var INS_CONTENT=null, INS_SITE=null;
+try{ if(window.CSEngine){ INS_CONTENT=CSEngine.create({store:'ins_cs_content',tenantId:INS_TID,proxBase:INS_PBASE}); INS_SITE=CSEngine.create({store:'ins_cs_site',tenantId:INS_TID,proxBase:INS_PBASE}); _insMigrateAgents(); } }catch(e){}
+function _insMigrateAgents(){try{
+  var old=JSON.parse(localStorage.getItem('ins_aicfg')||'null');
+  if(old&&!localStorage.getItem('ins_cs_content'))localStorage.setItem('ins_cs_content',JSON.stringify(old));
+  var dk=(localStorage.getItem('deepseek_key')||window.PROX_DS_KEY||''), pk=(window.EMLAK_TENANT&&EMLAK_TENANT.tenant_key)||'';
+  [INS_CONTENT,INS_SITE].forEach(function(E){ if(!E)return; var k=E.getKeys(),patch={}; if(!k.dsKey&&dk)patch.dsKey=dk; if(!k.proxKey&&pk)patch.proxKey=pk; if(Object.keys(patch).length)E.setKeys(patch); });
+}catch(e){}}
+window.INS_CONTENT=INS_CONTENT;window.INS_SITE=INS_SITE;
+/* Site Asistanı bağlam yardımcıları */
+function _insPortfolioText(){try{var out=[];if(typeof PROJECTS!=='undefined'&&PROJECTS)PROJECTS.slice(0,8).forEach(function(p){out.push('• '+(p.t||'Proje')+' — '+[p.loc,p.type,p.price,p.st].filter(Boolean).join(', '));});if(typeof ILANLAR!=='undefined'&&ILANLAR)ILANLAR.slice(0,8).forEach(function(x){out.push('• '+(x.baslik||x.t||'İlan')+' — '+[x.ilce||x.loc,x.tip||x.type,x.fiyat||x.price].filter(Boolean).join(', '));});return out.join('\n');}catch(e){return '';}}
+function _paHistArr(){try{var m=(typeof _paMsgs!=='undefined'&&_paMsgs)?_paMsgs.filter(function(x){return !x.typing;}):[];var out=[];for(var i=0;i<m.length-1;i++){out.push({role:(m[i].role==='me'?'user':'assistant'),content:m[i].text||''});}return out.slice(-8);}catch(e){return [];}}
+function insArts(){try{return JSON.parse(localStorage.getItem('ins_articles')||'[]')||[];}catch(e){return [];}}
+function insArtsSave(a){try{localStorage.setItem('ins_articles',JSON.stringify(a||[]));}catch(e){}}
+function insRunSchedule(){try{var a=insArts(),now=Date.now(),ch=false,en=true;try{en=(INS_CONTENT.getSchedule().enabled!==false);}catch(e){}if(en)a.forEach(function(x){if(x&&x.status==='scheduled'&&x.publishAt&&x.publishAt<=now){x.status='published';ch=true;}});if(ch)insArtsSave(a);}catch(e){}}
+function insBlogAll(){try{insRunSchedule();}catch(e){}var out=[];
+  try{insArts().filter(function(a){return a.status==='published'||!a.status;}).forEach(function(a){out.push({id:a.id,img:(a.img&&a.img.url)||'',imgObj:a.img,date:a.date||'',t:a.title||'',d:a.sum||'',cat:a.cat,blocks:a.blocks,video:a.video,body:a.body,tags:a.tags,seo:a.seo,src:'ai'});});}catch(e){}
+  (typeof BLOG!=='undefined'?BLOG:[]).forEach(function(b,i){out.push({id:'seed'+i,img:b.img,date:b.date,t:b.t,d:b.d});});
+  return out;}
+function insBlogById(id){var a=insBlogAll();for(var i=0;i<a.length;i++){if(String(a[i].id)===String(id))return a[i];}return null;}
+function _csInsBrand(){try{var S=(typeof SETTINGS!=='undefined')?SETTINGS:{};if(S.firmaUnvan)return S.firmaUnvan;var b=(typeof BRAND!=='undefined')?BRAND:{};return (b.name||'Meridyen')+(b.name2||' Yapı');}catch(e){return 'Meridyen Yapı';}}
+function _insCity(){try{var r=SAAS_CONFIG&&SAAS_CONFIG.allowedRegions;if(r&&r.ilceler&&r.ilceler.length)return r.ilceler[0];if(r&&r.il)return r.il;}catch(e){}return 'İstanbul';}
+function _insEsc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function insBlogDetail(id){var b=insBlogById(id);if(!b)return;
+  var body;
+  if(b.blocks&&b.blocks.length&&window.ContentStudio&&ContentStudio.blocksToHtml)body=ContentStudio.blocksToHtml(b.blocks);
+  else if(window.ContentStudio&&ContentStudio.mdToHtml&&/(^|\n)\s*(#{1,3}\s|[-*]\s|>\s)|\*\*|!\[/.test(b.body||''))body=ContentStudio.mdToHtml(b.body||'');
+  else body=String(b.body||b.d||'').split(/\n{2,}/).map(function(p){return '<p>'+_insEsc(p).replace(/\n/g,'<br>')+'</p>';}).join('');
+  var imgU=(b.imgObj&&b.imgObj.url)||((b.img&&/^(https?:|data:|blob:)/.test(b.img))?b.img:'');
+  var cover=imgU?'<figure style="margin:0 0 22px"><img src="'+_insEsc(imgU)+'" style="width:100%;border-radius:14px;display:block" alt="'+_insEsc((b.imgObj&&b.imgObj.alt)||b.t||'')+'">'+((b.imgObj&&b.imgObj.credit)?'<figcaption style="font-size:12px;opacity:.65;margin-top:6px">📷 '+_insEsc(b.imgObj.credit)+'</figcaption>':'')+'</figure>':'';
+  var vid=(b.video&&b.video.url&&window.ContentStudio&&ContentStudio.videoEmbed&&ContentStudio.videoEmbed(b.video.url))?ContentStudio.videoHtml(b.video.url,''):'';
+  try{if(window.ContentStudio&&ContentStudio.applyArticleSEO&&b.src==='ai'&&b.blocks)ContentStudio.applyArticleSEO(b);}catch(e){}
+  var ov=document.getElementById('insBlogOverlay');
+  if(!ov){ov=document.createElement('div');ov.id='insBlogOverlay';ov.style.cssText='position:fixed;inset:0;z-index:99999;background:var(--bg,#0b0e13);color:var(--ink,#e6e9ef);overflow:auto';document.body.appendChild(ov);}
+  ov.innerHTML='<div class="cs-article" style="max-width:820px;margin:0 auto;padding:40px 20px 90px;line-height:1.75;font-size:17px">'
+    +'<button onclick="insBlogClose()" style="background:var(--surface,#161b22);color:inherit;border:1px solid var(--line,#2a2f37);border-radius:10px;padding:9px 16px;cursor:pointer;margin-bottom:24px;font:inherit">← Tüm yazılar</button>'
+    +'<div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.55;margin-bottom:8px">Blog'+(b.cat?' · '+_insEsc(b.cat):'')+'</div>'
+    +'<h1 style="font-size:clamp(28px,5vw,44px);line-height:1.15;margin:0 0 10px">'+_insEsc(b.t||'')+'</h1>'
+    +'<div style="opacity:.55;margin-bottom:28px">'+_insEsc(b.date||'')+'</div>'
+    +cover+vid+'<div>'+body+'</div></div>';
+  ov.scrollTop=0;document.body.style.overflow='hidden';
+}
+function insBlogClose(){var ov=document.getElementById('insBlogOverlay');if(ov)ov.remove();document.body.style.overflow='';}
+window.insBlogDetail=insBlogDetail;window.insBlogClose=insBlogClose;window.insArts=insArts;window.insRunSchedule=insRunSchedule;
+/* studio anahtarlarını sitede zaten girilmiş DeepSeek/ProX anahtarından tohumla */
+function _insAgentFill(E,pre){try{var k=E.getKeys();var set=function(id,v){var e=document.getElementById(id);if(e)e.value=v||'';};set(pre+'provider',k.provider||'auto');set(pre+'prox',k.proxKey);set(pre+'ds',k.dsKey);set(pre+'oa',k.oaKey);set(pre+'cl',k.clKey);set(pre+'sys',k.sysPrompt);var pex=document.getElementById(pre+'pex');if(pex)pex.value=k.pexelsKey||'';}catch(e){}}
+function csMountINS(){ if(!window.ContentStudio||!INS_CONTENT)return; var host=document.getElementById('csHost'); if(!host)return;
+  ContentStudio.mount(host,{
+    vertical:'insaat', persona:'kurumsal inşaat & gayrimenkul geliştirme içerik editörü',
+    city:_insCity, brand:_csInsBrand,
+    ai:function(bd){return INS_CONTENT.ai(bd,{max_tokens:3500,timeout:70000});},
+    image:function(q){return INS_CONTENT.image(q);},
+    list:insArts, save:insArtsSave,
+    getKeys:function(){return INS_CONTENT.getKeys();}, setKeys:function(k){INS_CONTENT.setKeys(k);},
+    proxInfo:function(){return INS_CONTENT.proxInfo();},
+    getSchedule:function(){return INS_CONTENT.getSchedule();}, setSchedule:function(s){INS_CONTENT.setSchedule(s);},
+    topicPool:function(){return ['Kentsel dönüşümde hak sahibinin bilmesi gerekenler','Kat karşılığı sözleşmesinde kritik maddeler','Deprem güvenli bina nasıl anlaşılır (TBDY 2018)','Anahtar teslim inşaat süreç rehberi','Tadilatta bütçe yönetimi','İmar durumu ve ruhsat süreçleri','Betonarme yapı kalitesi ve denetim','Enerji kimlik belgesi ve A+ binalar','Arsa değerleme ve fizibilite','Yapı denetimi ve iş güvenliği','Konut projesinde teslim takvimi','Karma kullanımlı projelerin avantajları'];},
+    toast:function(m){try{if(typeof toast==='function')toast(m);else if(typeof flashSaved==='function')flashSaved();}catch(e){}},
+    guard:function(p){var sp='';try{sp=INS_CONTENT.sysPrompt();}catch(e){}return (sp?sp+'\n\n':'')+p;}
+  });
+}
+window.csMountINS=csMountINS;
+/* İçerik Stüdyosu sağlayıcı & anahtar kartı (ProX/YZ panosu) */
+function insContentFill(){if(INS_CONTENT)_insAgentFill(INS_CONTENT,'cxci_');}
+function insSiteFill(){if(!INS_SITE)return;_insAgentFill(INS_SITE,'cxsi_');try{var c=INS_SITE.getCaps();[['cxsi_cap_phone','phone'],['cxsi_cap_lead','lead'],['cxsi_cap_advice','advice'],['cxsi_cap_match','match'],['cxsi_cap_multilang','multilang']].forEach(function(d){var e=document.getElementById(d[0]);if(e)e.checked=(c&&c[d[1]]!==undefined)?!!c[d[1]]:true;});}catch(e){}}
+function insStudioFill(){insContentFill();insSiteFill();}
+function insContentSave(){if(!INS_CONTENT)return;try{var v=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};INS_CONTENT.setKeys({provider:v('cxci_provider')||'auto',proxKey:v('cxci_prox'),dsKey:v('cxci_ds'),oaKey:v('cxci_oa'),clKey:v('cxci_cl'),pexelsKey:v('cxci_pex'),sysPrompt:v('cxci_sys')});var el=document.getElementById('cxci_status');if(el)el.textContent='✓ İçerik Ajanı kaydedildi · '+(v('cxci_provider')||'auto');try{if(typeof toast==='function')toast('✓ İçerik Ajanı anahtarları kaydedildi.');}catch(e){}}catch(e){}}
+function insSiteSave(){if(!INS_SITE)return;try{var v=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};var ck=function(id){var e=document.getElementById(id);return e?!!e.checked:true;};INS_SITE.setKeys({provider:v('cxsi_provider')||'auto',proxKey:v('cxsi_prox'),dsKey:v('cxsi_ds'),oaKey:v('cxsi_oa'),clKey:v('cxsi_cl'),sysPrompt:v('cxsi_sys'),capabilities:{phone:ck('cxsi_cap_phone'),lead:ck('cxsi_cap_lead'),advice:ck('cxsi_cap_advice'),match:ck('cxsi_cap_match'),multilang:ck('cxsi_cap_multilang')}});var el=document.getElementById('cxsi_status');if(el)el.textContent='✓ Site Asistanı kaydedildi · '+(v('cxsi_provider')||'auto');try{if(typeof toast==='function')toast('✓ Site Asistanı ayarları kaydedildi.');}catch(e){}}catch(e){}}
+async function _insAgentTest(E,statusId){var el=document.getElementById(statusId);if(el)el.textContent='Test ediliyor…';try{var r=await E.ai({message:'Bağlantı testi. Yalnızca "tamam" yaz.'});var t=r&&(r.answer||r.text);if(r&&r.fallback)t=null;if(el)el.textContent=t?'✓ Bağlantı başarılı.':'Bağlantı kurulamadı. Anahtarı kontrol edin (ProX yerelde CORS kısıtlı olabilir).';}catch(e){if(el)el.textContent='Test hatası.';}}
+function insContentTest(){if(INS_CONTENT)_insAgentTest(INS_CONTENT,'cxci_status');}
+function insSiteTest(){if(INS_SITE)_insAgentTest(INS_SITE,'cxsi_status');}
+window.insStudioFill=insStudioFill;window.insContentFill=insContentFill;window.insSiteFill=insSiteFill;window.insContentSave=insContentSave;window.insSiteSave=insSiteSave;window.insContentTest=insContentTest;window.insSiteTest=insSiteTest;
+
+function renderBlog(){var el=document.getElementById('blogGrid');if(!el)return;var posts=insBlogAll();el.innerHTML=posts.map(function(b){var s=(b.img&&/^(https?:|data:|blob:)/.test(b.img))?b.img:imgFor(b.img);var ids=String(b.id).replace(/[^A-Za-z0-9]/g,'');
+  return '<div class="post" style="cursor:pointer" onclick="insBlogDetail(\''+ids+'\')"><div class="ph">'+(s?'<img src="'+s+'" alt="" loading="lazy" decoding="async">':'')+'</div>'
+  +'<div class="body"><div class="date">'+_insEsc(b.date)+'</div><h3>'+_insEsc(b.t)+'</h3><p>'+_insEsc(b.d)+'</p></div></div>';}).join('');}
 function paintImgs(){const a=document.getElementById('img-about');if(a&&IMG.about)a.src=IMG.about;const sf=document.getElementById('stageFb');if(sf&&IMG.p_office)sf.src=IMG.p_office;}
 loadAll();insEidsMigrate();renderServices();renderProjects();renderBlog();paintImgs();
 
@@ -1943,7 +2024,7 @@ function showAdmin(){document.getElementById('adminApp').classList.add('show');d
 function closeAdmin(){document.getElementById('adminApp').classList.remove('show');document.body.style.overflow='';if(location.hash==='#admin')try{history.replaceState(null,'',location.pathname);}catch(e){};}
 function admLogin(){const p=document.getElementById('admPass').value;const u=document.getElementById('admUser').value;if(p===(SETTINGS&&SETTINGS.admPass||'1234')){document.getElementById('adminApp').classList.add('authed');document.getElementById('admErr').style.display='none';refreshAdmin();}else{document.getElementById('admErr').style.display='block';}}
 function admLogout(){document.getElementById('adminApp').classList.remove('authed');document.getElementById('admPass').value='';}
-function admNav(pane,btn){document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('on'));document.getElementById('pane-'+pane).classList.add('on');document.querySelectorAll('.adm-side button[data-pane]').forEach(b=>b.classList.remove('on'));btn.classList.add('on');if(pane==='leads')renderLeads();if(pane==='gorusmeler')renderGorusmeler();if(pane==='dash')renderKpi();if(pane==='arsa')renderArsa();if(pane==='ilanlar')renderInsIlan();if(pane==='portfoy')renderInsOzel();if(pane==='contracts')renderContracts();if(pane==='settings')loadSettingsUI();if(pane==='brand')loadBrandUI();if(pane==='menutext')loadMenuUI();if(pane==='ads')loadAdsUI();if(pane==='diller')renderDiller();if(pane==='iletisim')loadIletisimUI();if(pane==='faq')renderFaqAdmin();if(pane==='social')loadSocialUI();if(pane==='stats')loadStatsUI();if(pane==='proje3d'&&window.initProje3D)setTimeout(()=>window.initProje3D(),60);if(pane!=='proje3d'&&window.__p3hide)window.__p3hide();}
+function admNav(pane,btn){document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('on'));document.getElementById('pane-'+pane).classList.add('on');document.querySelectorAll('.adm-side button[data-pane]').forEach(b=>b.classList.remove('on'));btn.classList.add('on');if(pane==='leads')renderLeads();if(pane==='gorusmeler')renderGorusmeler();if(pane==='dash')renderKpi();if(pane==='arsa')renderArsa();if(pane==='ilanlar')renderInsIlan();if(pane==='portfoy')renderInsOzel();if(pane==='contracts')renderContracts();if(pane==='icstudio'&&window.csMountINS)csMountINS();if(pane==='proxai'&&window.insStudioFill)insStudioFill();if(pane==='settings')loadSettingsUI();if(pane==='brand')loadBrandUI();if(pane==='menutext')loadMenuUI();if(pane==='ads')loadAdsUI();if(pane==='diller')renderDiller();if(pane==='iletisim')loadIletisimUI();if(pane==='faq')renderFaqAdmin();if(pane==='social')loadSocialUI();if(pane==='stats')loadStatsUI();if(pane==='proje3d'&&window.initProje3D)setTimeout(()=>window.initProje3D(),60);if(pane!=='proje3d'&&window.__p3hide)window.__p3hide();}
 function refreshAdmin(){renderKpi();admPjList();admSvcList();renderLeads();try{renderArsa();renderInsIlan();renderInsOzel();renderContracts();loadSettingsUI();loadBrandUI();loadMenuUI();loadAdsUI();loadSocialUI();}catch(e){}}
 function renderKpi(){
   const k=document.getElementById('kpi');if(!k)return;

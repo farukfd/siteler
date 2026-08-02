@@ -93,7 +93,7 @@
     try{if(typeof proxSubmitLead==='function'){var u=(_authUsers()[s.email]||{});proxSubmitLead({sourcePage:'hesap',formType:'teklif-talebi',name:s.name,email:s.email,phone:u.phone||'',message:q.mesaj,requestedService:q.konu});}}catch(e){}
     _quoteRespond(q.id,q.konu,q.mesaj);return{ok:true,id:q.id};}
   /* YZ çağrısı: admin DeepSeek anahtarı girdiyse app.js aiChat (DeepSeek) ile, yoksa ProX sunucu AI'si. */
-  function _uasAiCall(body){return (typeof window!=='undefined'&&window.aiChat)?window.aiChat(body):proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:body});}
+  function _uasAiCall(body){var E=(typeof window!=='undefined'&&window._gmSite)?window._gmSite():null;return E?E.ai(body,{max_tokens:900,timeout:60000}):((typeof window!=='undefined'&&window.aiChat)?window.aiChat(body):proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:body}));}
   async function _quoteRespond(id,konu,mesaj){var reply='';var m=(mesaj||'').trim();
     try{var r=await _uasAiCall({persona:'office',context:'default',prompt:_paBS('Sen Meridyen Gayrimenkul\'ün ProX Asistanısın — sıcak, satış odaklı bir emlak danışmanı. Müşteri "'+konu+'" konusunda bir talep formu doldurdu. GÖREV: mesajı DİKKATLE oku, gerçekte ne istediğini anla. Mesaj yalnızca selam ya da çok kısa/boşsa: kibarca selam ver, kendini tanıt ("Ben Meridyen Gayrimenkul ProX Asistanı") ve "'+konu+'" için ihtiyacı netleştirecek 1-2 KISA soru sor (konum/ilçe, bütçe, m², oda, satılık/kiralık) — hazır uzun metin DÖKME. Gerçek talep varsa: 2-3 cümlelik samimi ön değerlendirme ver ve müşteriyi ilanı görme / ücretsiz ekspertiz / portföy talebi gibi bir sonraki adıma yönlendir. Her durumda canlı danışmana davet et: telefon bırakırsa danışmanımız kısa sürede arar. Türkçe, kısa. Kesin fiyat verme, ücretsiz ekspertiz öner. Yanıtın ProX\'un doğrulanmış emlak verisine dayanır.'),message:konu+' — '+(m||'(müşteri mesaj bırakmadı)')});reply=(r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text))))||'';}catch(e){}
     if(!reply){reply=_paBS((m.length<8)?('Merhaba, ben Meridyen Gayrimenkul ProX Asistanı 👋 “'+konu+'” konusunda yardımcı olmak isterim. Kısaca ihtiyacınızı anlatır mısınız — hangi ilçe, bütçe, kaç oda? Dilerseniz telefon numaranızı bırakın, danışmanımız kısa sürede sizi arasın.'):('Talebinizi aldık. “'+konu+'” için uzman danışmanımız ProX verisiyle ön değerlendirme yapıp en kısa sürede size dönecek. Dilerseniz ücretsiz ekspertiz planlayalım ya da telefon numaranızı bırakın, sizi arayalım.'));}
@@ -146,14 +146,12 @@
     try{var _ph=q.match(/(?:\+?90[\s.\-]?)?0?5\d{2}[\s.\-]?\d{3}[\s.\-]?\d{2}[\s.\-]?\d{2}/);if(_ph&&typeof proxSubmitLead==='function'){var _pn=_ph[0].replace(/[^\d+]/g,'');proxSubmitLead({sourcePage:'asistan',formType:'prox-asistan',name:_ps?_ps.name:'ProX Asistan ziyaretçisi',phone:_pn,email:_ps?_ps.email:'',message:q,requestedService:'ProX Asistan görüşmesi — geri arama talebi'});var _cc=_paCur();if(_cc){_cc.lead=true;_cc.phone=_pn;_paSaveStore();}}}catch(e){}
     _paBusy=true;var btn=document.querySelector('#proxAsistanPage .pa-send');if(btn)btn.disabled=true;
     _paMsgs.push({role:'bot',typing:true});_paRenderLog();
-    var persona=(window.EMLAK_TENANT&&EMLAK_TENANT.proxPersona)||'office';
-    var _hist=_paHistCtx();
-    var _messages=_paMsgs.filter(function(m){return !m.typing&&m.text;}).map(function(m){return {role:(m.role==='me'?'user':'assistant'),content:m.text};});
+    var _histMsgs=_paMsgs.filter(function(m){return !m.typing&&m.text;});_histMsgs=_histMsgs.slice(0,-1).map(function(m){return {role:(m.role==='me'?'user':'assistant'),content:m.text};});
     try{
-      var r=await _uasAiCall({persona:persona,context:_hist||'default',prompt:_paPrompt(),messages:_messages,message:(_hist?('Önceki konuşma:\n'+_hist+'\n\nMüşterinin yeni mesajı: '):'')+q});
+      var r=(typeof window!=='undefined'&&window.gmSiteReply)?await window.gmSiteReply({message:q,history:_histMsgs,prompt:_paPrompt(),portfolio:_paBizContext()}):null;
       _paMsgs=_paMsgs.filter(function(m){return !m.typing;});
-      var ans=(r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text))))||'';
-      if(!ans||(r&&r.fallback))ans=_paFallback();
+      var ans=(r&&r.ok)?r.answer:'';
+      if(!ans)ans=_paFallback();
       _paMsgs.push({role:'bot',text:ans});
     }catch(e){_paMsgs=_paMsgs.filter(function(m){return !m.typing;});_paMsgs.push({role:'bot',text:_paFallback()});}
     _paRenderLog();_paSyncCur();

@@ -752,8 +752,9 @@ async function proxBlogFeed(force){
       out=(arr||[]).map(function(p,i){var bd=p.body||p.content||p.icerik||'';return {id:'px'+(p.id||i),title:p.title||p.baslik||'',cat:p.cat||p.category||p.kategori||'ProX Haber',sum:p.summary||p.ozet||p.excerpt||(''+bd).slice(0,150),body:bd,icon:'📰',date:p.date||p.published||'',meta:((p.date||p.published||'')+' · ProX Haber').trim(),src:'prox'};}).filter(function(p){return p.title;});}
   }catch(e){}
   _dnBlogCache=out;return out;}
-function dnBlogAll(){var px=_dnBlogCache||[];var seen={},all=[];
-  DN_BLOGS.concat(px).forEach(function(b){var k=(b.title||'').toLocaleLowerCase('tr');if(k&&!seen[k]){seen[k]=1;all.push(b);}});return all;}
+function dnBlogAll(){try{dnRunSchedule();}catch(e){}var px=_dnBlogCache||[];var seen={},all=[];
+  var arts=[];try{arts=dnArts().filter(function(a){return a.status==='published'||!a.status;}).map(function(a){return {id:a.id,cat:a.cat||'Haber',icon:a.icon||'📝',title:a.title,date:a.date,meta:a.meta||(((a.words||'')&&(a.words+' kelime · '))+(a.date||'')),src:'firma',sum:a.sum||'',body:a.body||'',blocks:a.blocks,video:a.video,img:a.img,tags:a.tags,seo:a.seo};});}catch(e){}
+  arts.concat(DN_BLOGS).concat(px).forEach(function(b){var k=(b.title||'').toLocaleLowerCase('tr');if(k&&!seen[k]){seen[k]=1;all.push(b);}});return all;}
 function dnBlogById(id){var a=dnBlogAll();for(var i=0;i<a.length;i++){if((''+a[i].id)===(''+id))return a[i];}return null;}
 function _dnBlogCard(b){return '<article class="bcard" onclick="dnBlogDetail(\''+_leD(b.id)+'\')">'
   +'<div class="bcard-ic">'+(b.icon||'📄')+_favBtn('bl-'+b.id,'blog',{t:b.title,s:(b.cat||'')+' · '+(b.meta||''),p:'',u:'index.html#blog'})+'</div>'
@@ -763,11 +764,17 @@ function _dnBlogCard(b){return '<article class="bcard" onclick="dnBlogDetail(\''
 function dnBlogListHTML(){var posts=dnBlogAll();return '<section class="sec-pad"><div class="wrap"><div class="bgrid" id="dnBlogGrid">'+posts.map(_dnBlogCard).join('')+'</div>'
   +'<div class="vault-note" style="margin-top:36px">📰 Güncel haber ve analizler <b>ProX doğrulanmış emlak verisiyle</b> beslenir · üye iseniz beğendiğiniz yazıyı <b>favorilerinize</b> ekleyebilirsiniz.</div></div></section>';}
 function dnBlogDetail(id){var b=dnBlogById(id);if(!b){navGo('blog');return;}
-  var body=(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p style="margin:0 0 17px">'+_leD(par).replace(/\n/g,'<br>')+'</p>';}).join('');
+  var body;
+  if(b.blocks&&b.blocks.length&&window.ContentStudio&&ContentStudio.blocksToHtml){body=ContentStudio.blocksToHtml(b.blocks);}
+  else if(window.ContentStudio&&ContentStudio.mdToHtml&&/(^|\n)\s*(#{1,3}\s|[-*]\s|>\s)|\*\*|!\[/.test(b.body||'')){body=ContentStudio.mdToHtml(b.body||'');}
+  else{body=(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p style="margin:0 0 17px">'+_leD(par).replace(/\n/g,'<br>')+'</p>';}).join('');}
+  var cover=(b.img&&b.img.url)?'<figure class="blog-cover" style="margin:0 0 22px"><img src="'+_leD(b.img.url)+'" alt="'+_leD(b.img.alt||b.title||'')+'" style="width:100%;border-radius:14px;display:block">'+(b.img.credit?'<figcaption style="font-size:12px;color:var(--muted);margin-top:6px">📷 '+_leD(b.img.credit)+'</figcaption>':'')+'</figure>':'';
+  var vid=(b.video&&b.video.url&&window.ContentStudio&&ContentStudio.videoEmbed&&ContentStudio.videoEmbed(b.video.url))?ContentStudio.videoHtml(b.video.url,''):'';
+  try{if(window.ContentStudio&&ContentStudio.applyArticleSEO&&b.src==='firma'&&b.blocks)ContentStudio.applyArticleSEO(b);}catch(e){}
   var ov=document.getElementById('pageOverlay');
   ov.innerHTML='<div class="pov-band"><div class="wrap"><div class="eyebrow">Blog · '+_leD(b.cat||'Haber')+(b.src==='prox'?' · ProX Haber':'')+'</div><h1>'+_leD(b.title||'')+'</h1><p>'+_leD(b.meta||'')+'</p></div></div>'
     +'<section class="sec-pad"><div class="wrap" style="max-width:780px"><button class="btn btn-line" onclick="navGo(\'blog\')" style="margin-bottom:22px">← Tüm yazılar</button>'
-    +'<div class="blog-article">'+body+'</div>'
+    +'<div class="blog-article">'+cover+vid+body+'</div>'
     +'<div class="blog-cta"><b>Bu konuda kişiye özel danışmanlık mı istiyorsunuz?</b><a class="btn btn-gold" onclick="navGo(\'randevu\')">Ücretsiz Analiz Randevusu</a></div>'
     +'</div></section>'+footerHTML();
   ov.classList.add('on');ov.scrollTop=0;document.body.classList.add('lock');
@@ -776,6 +783,54 @@ function dnBlogDetail(id){var b=dnBlogById(id);if(!b){navGo('blog');return;}
   try{setActiveNav(null);}catch(e){}
   try{window.dnFavReflect&&dnFavReflect();}catch(e){}}
 try{window.proxBlogFeed=proxBlogFeed;window.dnBlogAll=dnBlogAll;window.dnBlogById=dnBlogById;window.dnBlogDetail=dnBlogDetail;window.dnBlogListHTML=dnBlogListHTML;}catch(e){}
+
+/* =====================================================================
+   İÇERİK STÜDYOSU (ortak motor: shared/cs-engine.js + content-studio.js)
+   — SEO makale + günlük otomatik haber; blok/galeri/video editörü.
+   ===================================================================== */
+/* İKİ BAĞIMSIZ AJAN — her biri KENDİ anahtar deposu (kullanıcı kararı):
+     • DN_CONTENT (dn_cs_content) → İçerik Ajanı: makale/haber üretimi
+     • DN_SITE    (dn_cs_site)    → Site Asistanı: ziyaretçi sohbeti  */
+var DN_TID=(window.EMLAK_TENANT&&EMLAK_TENANT.tenant_id)||'consultant', DN_PBASE=(window.EMLAK_API_BASE||'https://www.emlakekspertizi.com');
+var DN_CONTENT=null, DN_SITE=null;
+try{ if(window.CSEngine){ DN_CONTENT=CSEngine.create({store:'dn_cs_content',tenantId:DN_TID,proxBase:DN_PBASE}); DN_SITE=CSEngine.create({store:'dn_cs_site',tenantId:DN_TID,proxBase:DN_PBASE}); _dnMigrateAgents(); } }catch(e){}
+function _dnMigrateAgents(){try{
+  var old=JSON.parse(localStorage.getItem('dn_aicfg')||'null');            /* eski tek-depo → İçerik Ajanı (bir defalık) */
+  if(old&&!localStorage.getItem('dn_cs_content'))localStorage.setItem('dn_cs_content',JSON.stringify(old));
+  var dsk=_dsKey(),dsm=_dsModel(),dp=null; try{dp=JSON.parse(localStorage.getItem('dn_prox')||'null');}catch(e){}
+  [DN_CONTENT,DN_SITE].forEach(function(E){ if(!E)return; var k=E.getKeys(),patch={}; if(!k.dsKey&&dsk){patch.dsKey=dsk;patch.dsModel=dsm;} if(!k.proxKey&&dp&&dp.key)patch.proxKey=dp.key; if(Object.keys(patch).length)E.setKeys(patch); });
+}catch(e){}}
+function dnArts(){try{return JSON.parse(localStorage.getItem('dn_articles')||'[]')||[];}catch(e){return [];}}
+function dnArtsSave(a){try{localStorage.setItem('dn_articles',JSON.stringify(a||[]));}catch(e){}}
+/* lazy-cron: zamanı gelen scheduled → published (public + admin her yüklemede) */
+function dnRunSchedule(){try{var a=dnArts(),now=Date.now(),ch=false;var en=true;
+  try{en=(DN_CONTENT.getSchedule().enabled!==false);}catch(e){}
+  if(en)a.forEach(function(x){if(x&&x.status==='scheduled'&&x.publishAt&&x.publishAt<=now){x.status='published';ch=true;}});
+  if(ch)dnArtsSave(a);}catch(e){}}
+window.dnRunSchedule=dnRunSchedule;window.dnArts=dnArts;
+function _dnCity(){try{return PROVINCE.name||(SERVICE_AREA&&SERVICE_AREA.primary)||(SAAS_CONFIG.firma&&SAAS_CONFIG.firma.il)||'İstanbul';}catch(e){return 'İstanbul';}}
+function _dnBrand(){try{return saasResolve('brandName')||(typeof brandName==='function'&&brandName())||'Selin Meridyen';}catch(e){return 'Selin Meridyen';}}
+function csMountDN(){ if(!window.ContentStudio||!DN_CONTENT)return; var host=document.getElementById('csHost'); if(!host)return;
+  ContentStudio.mount(host,{
+    vertical:'danisman', persona:'üst segment lüks gayrimenkul danışmanlığı içerik editörü',
+    city:_dnCity, brand:_dnBrand,
+    ai:function(b){return DN_CONTENT.ai(b,{max_tokens:3500,timeout:70000});},
+    image:function(q){return DN_CONTENT.image(q);},
+    list:function(){return dnArts();},
+    save:function(a){dnArtsSave(a);},
+    getKeys:function(){return DN_CONTENT.getKeys();},
+    setKeys:function(k){DN_CONTENT.setKeys(k);},
+    proxInfo:function(){return DN_CONTENT.proxInfo();},
+    getSchedule:function(){return DN_CONTENT.getSchedule();},
+    setSchedule:function(s){DN_CONTENT.setSchedule(s);},
+    topicPool:function(){return ['İstanbul lüks konut piyasası','Boğaz hattı yalı yatırımı','Kentsel dönüşümde değer artışı','Kira getirisi mi değer artışı mı','Özel portföy ve mahremiyet','Gayrimenkul değerleme süreci','Tapu ve ekspertiz rehberi','Yatırım için doğru bölge analizi','Konut kredisi ve faizin etkisi','Prestij semtlerde arz-talep dengesi','Emlak vergisi ve alım-satım masrafları','Yabancıya konut satışı rehberi'];},
+    toast:function(m){try{toast(m);}catch(e){}},
+    guard:function(p){var sp='';try{sp=DN_CONTENT.sysPrompt();}catch(e){}return (sp?sp+'\n\n':'')+p;}
+  });
+}
+window.csMountDN=csMountDN;
+/* Site Asistanı portföy bağlamı (eşleştirme için özet) */
+function _dnPortfolioText(){try{var all=LISTINGS.concat(VIP_PORTFOLIO).slice(0,14);return all.map(function(x){return '• '+(x.baslik||x.tip||'İlan')+' — '+(x.bolge||'')+(x.oda?(' · '+x.oda):'')+(x.m2?(' · '+x.m2+'m²'):'')+(x.fiyat?(' · '+x.fiyat):'');}).join('\n');}catch(e){return '';}}
 
 /* =====================================================================
    DİNAMİK SAYFA ROUTER (overlay — üst+alt menü birebir tutarlı)
@@ -1724,11 +1779,16 @@ async function _proxResolveReply(q){
   try{
     const t=_norm(q);
     const wantsAnalyze=/(yatırım|yatirim|prim|değer|deger|fiyat|kaça|ne kadar|kıymet|kiymet|getiri)/.test(t);
-    /* AI persona marka-ikamesi (sızıntı F): sweep modele giden prompt'a ulaşamaz → brandName() uygula */
-    var _bnP=(typeof brandName==='function'&&brandName())||'Selin Meridyen';
-    const _persona=aiGuard((((SAAS_CONFIG.proxAiPrompts&&SAAS_CONFIG.proxAiPrompts.persona)||'').split('Selin Meridyen').join(_bnP))+(saasResolve('customPrompt')?('\n\nEk ton: '+saasResolve('customPrompt')):''));
-    const ai=await aiChat({prompt:_persona,message:q,context:"persona=consultant; sector="+window.EMLAK_TENANT.sector});/* DeepSeek: persona=sistem, soru=kullanıcı; yoksa ProX'e düşer */
-    var answer=(ai&&!ai.fallback&&ai.success!==false&&ai.answer)?ai.answer:'';
+    /* SİTE ASİSTANI ajanı (DN_SITE) — İçerik Ajanı'ndan BAĞIMSIZ anahtar+prompt+yetenek */
+    var lang='tr';try{lang=(window.DNI18N&&DNI18N.lang&&DNI18N.lang())||'tr';}catch(e){}
+    var answer='';
+    if(DN_SITE){
+      var _r=await DN_SITE.reply({ message:q, brand:_dnBrand(), city:_dnCity(), lang:lang,
+        caps:{phone:true,lead:true,advice:true,match:true,multilang:true}, portfolio:_dnPortfolioText(),
+        onLead:function(l){ try{ if(typeof dnPushLead==='function')dnPushLead({name:'',phone:l.phone,konu:'ProX Asistan — geri arama talebi',msg:l.message,src:'prox-asistan'}); }catch(e){} }
+      });
+      answer=(_r&&_r.ok)?_r.answer:'';
+    }
     var analyzeHTML='';
     if(wantsAnalyze){
       var prop=_proxMatchListing(t);
@@ -1775,7 +1835,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();cl
    ===================================================================== */
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='adm-app';
   el.innerHTML='<div class="adm-topbar"><div class="alogo"><span class="mark">'+_brandInitial()+'</span><span class="alogo-t">'+_leD(saasResolve('brandName')||'Selin Meridyen')+' · <b>Pro<span class="ap-x">X</span> CRM</b></span></div><div class="adm-topbar-act"><button onclick="openOnboarding()">🚀 Sihirbaz</button><button onclick="closeSaasAdmin()">👁 Siteyi Gör</button><button class="adm-x" onclick="closeSaasAdmin()">✕</button></div></div><div class="adm-dash">'
-   +'<aside class="adm-side"><button class="adm-nav" data-t="yayin" onclick="staTab(this)" style="margin-bottom:6px;background:linear-gradient(135deg,#0e5e3e,#14805a);color:#fff;font-weight:700">🚀 Yayın Hazırlığı</button><button class="adm-nav act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><div class="adm-group">CRM & Satış</div><button class="adm-nav" data-t="crmkisi" onclick="staTab(this)">👤 Kişiler & Talepler</button><button class="adm-nav" data-t="eslesme" onclick="staTab(this)">🎯 Akıllı Eşleştirme</button><button class="adm-nav" data-t="crmpipe" onclick="staTab(this)">🪜 Satış Hattı</button><button class="adm-nav" data-t="crmtask" onclick="staTab(this)">📅 Görev & Randevu</button><button class="adm-nav" data-t="komisyon" onclick="staTab(this)">💰 Komisyon & Finans</button><button class="adm-nav" data-t="kira" onclick="staTab(this)">🔑 Kira Takibi</button><button class="adm-nav" data-t="sozlesme" onclick="staTab(this)">📄 Sözleşmeler</button><button class="adm-nav" data-t="iletisim" onclick="staTab(this)">📣 İletişim & WhatsApp</button><button class="adm-nav" data-t="rapor" onclick="staTab(this)">📈 Raporlar</button><button class="adm-nav" data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><div class="adm-group">Portföy & İçerik</div><button class="adm-nav" data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button class="adm-nav" data-t="ictoplu" onclick="staTab(this)">📤 Toplu İlan Aktar</button><button class="adm-nav" data-t="portfoy" onclick="staTab(this)">🔒 Özel Portföy</button><button class="adm-nav" data-t="ekip" onclick="staTab(this)">👥 Ekip / Danışmanlar</button><button class="adm-nav" data-t="hizmetalani" onclick="staTab(this)">🗺️ Hizmet Alanı</button><button class="adm-nav" data-t="icerik" onclick="staTab(this)">📝 İçerik & Sayfalar</button><div class="adm-group">Entegrasyon & ProX</div><button class="adm-nav" data-t="prox" onclick="staTab(this)">🤖 İçerik Asistanı & DeepSeek</button><button class="adm-nav" data-t="proxapi" onclick="staTab(this)">🔌 ProX API & Anahtar</button><button class="adm-nav" data-t="eids" onclick="staTab(this)">🛡️ EİDS Yetki</button><div class="adm-group">Pazarlama</div><button class="adm-nav" data-t="seo" onclick="staTab(this)">🔍 Google & SEO</button><div class="adm-group">Ayarlar</div><button class="adm-nav" data-t="firma" onclick="staTab(this)">🏢 Firma Bilgileri</button><button class="adm-nav" data-t="marka" onclick="staTab(this)">🎨 Marka & Tema</button><button class="adm-nav" data-t="yedek" onclick="staTab(this)">💾 Yedek / Aktar</button><div class="spacer"></div><button class="adm-nav exit" onclick="closeSaasAdmin()">⎋ Paneli Kapat</button></aside><main class="adm-main">'
+   +'<aside class="adm-side"><button class="adm-nav" data-t="yayin" onclick="staTab(this)" style="margin-bottom:6px;background:linear-gradient(135deg,#0e5e3e,#14805a);color:#fff;font-weight:700">🚀 Yayın Hazırlığı</button><button class="adm-nav act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><div class="adm-group">CRM & Satış</div><button class="adm-nav" data-t="crmkisi" onclick="staTab(this)">👤 Kişiler & Talepler</button><button class="adm-nav" data-t="eslesme" onclick="staTab(this)">🎯 Akıllı Eşleştirme</button><button class="adm-nav" data-t="crmpipe" onclick="staTab(this)">🪜 Satış Hattı</button><button class="adm-nav" data-t="crmtask" onclick="staTab(this)">📅 Görev & Randevu</button><button class="adm-nav" data-t="komisyon" onclick="staTab(this)">💰 Komisyon & Finans</button><button class="adm-nav" data-t="kira" onclick="staTab(this)">🔑 Kira Takibi</button><button class="adm-nav" data-t="sozlesme" onclick="staTab(this)">📄 Sözleşmeler</button><button class="adm-nav" data-t="iletisim" onclick="staTab(this)">📣 İletişim & WhatsApp</button><button class="adm-nav" data-t="rapor" onclick="staTab(this)">📈 Raporlar</button><button class="adm-nav" data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><div class="adm-group">Portföy & İçerik</div><button class="adm-nav" data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button class="adm-nav" data-t="ictoplu" onclick="staTab(this)">📤 Toplu İlan Aktar</button><button class="adm-nav" data-t="portfoy" onclick="staTab(this)">🔒 Özel Portföy</button><button class="adm-nav" data-t="ekip" onclick="staTab(this)">👥 Ekip / Danışmanlar</button><button class="adm-nav" data-t="hizmetalani" onclick="staTab(this)">🗺️ Hizmet Alanı</button><button class="adm-nav" data-t="icstudio" onclick="staTab(this)" style="background:linear-gradient(135deg,#0891b2,#22d3ee);color:#fff;font-weight:700">✨ İçerik Stüdyosu</button><button class="adm-nav" data-t="icerik" onclick="staTab(this)">📝 İçerik & Sayfalar</button><div class="adm-group">Entegrasyon & ProX</div><button class="adm-nav" data-t="prox" onclick="staTab(this)">🤖 İçerik Asistanı & DeepSeek</button><button class="adm-nav" data-t="proxapi" onclick="staTab(this)">🔌 ProX API & Anahtar</button><button class="adm-nav" data-t="eids" onclick="staTab(this)">🛡️ EİDS Yetki</button><div class="adm-group">Pazarlama</div><button class="adm-nav" data-t="seo" onclick="staTab(this)">🔍 Google & SEO</button><div class="adm-group">Ayarlar</div><button class="adm-nav" data-t="firma" onclick="staTab(this)">🏢 Firma Bilgileri</button><button class="adm-nav" data-t="marka" onclick="staTab(this)">🎨 Marka & Tema</button><button class="adm-nav" data-t="yedek" onclick="staTab(this)">💾 Yedek / Aktar</button><div class="spacer"></div><button class="adm-nav exit" onclick="closeSaasAdmin()">⎋ Paneli Kapat</button></aside><main class="adm-main">'
    /* CRM · PANEL */
    +'<div class="sta-pane" data-p="yayin" hidden><h4>🚀 Yayın Hazırlığı</h4><p class="sub">Siteniz yayına çıkmadan önce doldurmanız gereken bilgiler. Her eksik maddeyi tek tıkla ilgili bölüme gidip düzeltin.</p><div id="yayinBody"></div></div>'
    +'<div class="sta-pane" data-p="crmdash"><h4>Yönetim Paneli · CRM</h4><p class="sub">Kişiler, satış hattı, görevler ve gelen talepler tek bakışta. Gerçek görüşme ve talepler otomatik düşer.</p><div id="crmDash"></div></div>'
@@ -1800,6 +1860,8 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
    +'<div class="sta-pane" data-p="rapor" hidden><h4>Raporlar & Analitik</h4><p class="sub">Marka rapor oluşturun; dönüşüm oranı, satış hattı dağılımı, talep kaynakları ve aylık trend CRM verinizden canlı hesaplanır.</p><div id="crmRapor"></div></div>'
    /* AKILLI EŞLEŞTİRME */
    +'<div class="sta-pane" data-p="eslesme" hidden><h4>Akıllı Eşleştirme</h4><p class="sub">Alıcı/yatırımcı/kiracı kişilerinizi açık ilanlarınızla otomatik eşleştirin — bölge, kategori ve bütçe uyumuna göre.</p><div id="crmMatch"></div></div>'
+   /* İÇERİK STÜDYOSU */
+   +'<div class="sta-pane" data-p="icstudio" hidden><div id="csHost"></div></div>'
    /* İÇERİK CMS */
    +'<div class="sta-pane" data-p="icerik" hidden><h4>Sayfa İçerikleri</h4><p class="sub">Ana sayfa hero metinlerini düzenleyin; değişiklik siteye anında uygulanır.</p><div id="crmCms"></div></div>'
    /* YEDEK / AKTAR */
@@ -1836,6 +1898,32 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
        +'<div class="sta-f"><label>Model</label><select id="dn_dsmodel"><option value="deepseek-chat">deepseek-chat (V3)</option><option value="deepseek-reasoner">deepseek-reasoner (R1)</option></select></div></div>'
        +'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-line" type="button" onclick="aiDsTest()">Bağlan & Test Et</button><span class="sub" style="margin:0">Anahtar istemcide saklanır; yayında sunucu-proxy önerilir.</span></div>'
        +'<div id="dn_dsstatus" style="margin-top:8px"></div></div>'
+     /* İÇERİK STÜDYOSU — çok-sağlayıcı YZ + görsel anahtarları */
+     /* ===== AJAN 1 — İÇERİK AJANI (makale/haber üretimi) ===== */
+     +'<div class="sta-ds" style="margin-top:14px"><div class="sta-ds-h">✨ İçerik Ajanı — Makale &amp; Haber Üretimi</div>'
+       +'<p class="sub" style="margin:2px 0 8px">İçerik Stüdyosu\'nu (SEO makale + günlük otomatik haber) çalıştırır. <b>Kendi</b> sağlayıcı ve anahtarlarına sahiptir; Site Asistanı\'ndan bağımsızdır. Anahtarlar yalnızca bu tarayıcıda saklanır.</p>'
+       +'<div class="sta-row2"><div class="sta-f"><label>Sağlayıcı</label><select id="cxc_provider"><option value="auto">Otomatik (anahtarı olanı kullan)</option><option value="prox">ProX</option><option value="deepseek">DeepSeek</option><option value="openai">OpenAI</option><option value="claude">Claude</option></select></div>'
+       +'<div class="sta-f"><label>ProX API Anahtarı</label><input id="cxc_prox" type="password" placeholder="ProX kiracı anahtarı" autocomplete="off"></div></div>'
+       +'<div class="sta-row2"><div class="sta-f"><label>DeepSeek (sk-...)</label><input id="cxc_ds" type="password" autocomplete="off" placeholder="sk-..."></div><div class="sta-f"><label>OpenAI (sk-...)</label><input id="cxc_oa" type="password" autocomplete="off" placeholder="sk-..."></div></div>'
+       +'<div class="sta-row2"><div class="sta-f"><label>Claude (sk-ant-...)</label><input id="cxc_cl" type="password" autocomplete="off" placeholder="sk-ant-..."></div><div class="sta-f"><label>Pexels <span style="color:var(--muted);font-weight:400">(opsiyonel — boşsa Openverse)</span></label><input id="cxc_pex" type="password" autocomplete="off"></div></div>'
+       +'<div class="sta-f"><label>İçerik promptu / editöryal ton <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><textarea id="cxc_sys" rows="2" placeholder="Örn. üst segment, sakin ve otoriter; SEO uyumlu; uydurma rakam/garanti verme."></textarea></div>'
+       +'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-gold" type="button" onclick="dnContentSave()">Kaydet</button><button class="btn btn-line" type="button" onclick="dnContentTest()">Bağlan &amp; Test</button><span class="sub" id="cxc_status" style="margin:0"></span></div></div>'
+     /* ===== AJAN 2 — SİTE ASİSTANI (ziyaretçi sohbeti) ===== */
+     +'<div class="sta-ds" style="margin-top:14px"><div class="sta-ds-h">💬 Site Asistanı — Ziyaretçi Sohbeti</div>'
+       +'<p class="sub" style="margin:2px 0 8px">Sitedeki ProX Asistan sohbetini çalıştırır. <b>Kendi</b> sağlayıcı, anahtar, prompt ve yetenekleri vardır — İçerik Ajanı\'ndan tamamen ayrıdır.</p>'
+       +'<div class="sta-row2"><div class="sta-f"><label>Sağlayıcı</label><select id="cxs_provider"><option value="auto">Otomatik (anahtarı olanı kullan)</option><option value="prox">ProX</option><option value="deepseek">DeepSeek</option><option value="openai">OpenAI</option><option value="claude">Claude</option></select></div>'
+       +'<div class="sta-f"><label>ProX API Anahtarı</label><input id="cxs_prox" type="password" placeholder="ProX kiracı anahtarı" autocomplete="off"></div></div>'
+       +'<div class="sta-row2"><div class="sta-f"><label>DeepSeek (sk-...)</label><input id="cxs_ds" type="password" autocomplete="off" placeholder="sk-..."></div><div class="sta-f"><label>OpenAI (sk-...)</label><input id="cxs_oa" type="password" autocomplete="off" placeholder="sk-..."></div></div>'
+       +'<div class="sta-f"><label>Claude (sk-ant-...)</label><input id="cxs_cl" type="password" autocomplete="off" placeholder="sk-ant-..."></div>'
+       +'<div class="sta-f"><label>Asistan promptu / ton <span style="color:var(--muted);font-weight:400">(opsiyonel — kuruma özel ek)</span></label><textarea id="cxs_sys" rows="2" placeholder="Örn. sıcak ama profesyonel; önce ihtiyacı anla, sonra randevuya yönlendir."></textarea></div>'
+       +'<div class="sta-f"><label>Yetenekler</label><div style="display:flex;flex-wrap:wrap;gap:12px;font-size:13px">'
+         +'<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cxs_cap_phone" checked> 📞 Telefon iste (canlı danışman araması)</label>'
+         +'<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cxs_cap_lead" checked> 🎯 Lead nitelendirme</label>'
+         +'<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cxs_cap_advice" checked> 💡 Bölge & fiyat danışmanlığı</label>'
+         +'<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cxs_cap_match" checked> 🔑 Portföy eşleştirme</label>'
+         +'<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cxs_cap_multilang" checked> 🌐 Çok dilli</label>'
+       +'</div></div>'
+       +'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-gold" type="button" onclick="dnSiteSave()">Kaydet</button><button class="btn btn-line" type="button" onclick="dnSiteTest()">Bağlan &amp; Test</button><span class="sub" id="cxs_status" style="margin:0"></span></div></div>'
      +'<button class="btn btn-gold sta-go" onclick="saasSaveProxPrompt()">Kaydet</button></div>'
    /* PROX API & ANAHTAR */
    +'<div class="sta-pane" data-p="proxapi" hidden><h4>ProX API & Anahtar</h4><p class="sub">Kendi ProX kiracı kimliğinizi ve API anahtarınızı girin; endeks, değerleme ve bölge verileri bu anahtarla çekilir.</p><div id="crmProxApi"></div></div>'
@@ -1925,7 +2013,7 @@ function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');try{do
   set('sg_ga',saasResolve('googleAnalytics'));set('sg_gsc',saasResolve('googleSiteVerification'));set('sg_maps',saasResolve('googleMapsKey'));
   set('sm_title',saasResolve('metaTitle'));set('sm_desc',saasResolve('metaDescription'));set('sm_kw',saasResolve('metaKeywords'));
   set('sp_base',SAAS_CONFIG.proxAiPrompts.persona);set('sp_custom',SAAS_CONFIG.tenantSettings.customPrompt);
-  set('dn_dskey',_dsKey());set('dn_dsmodel',_dsModel());try{aiDsStatus();}catch(e){}
+  set('dn_dskey',_dsKey());set('dn_dsmodel',_dsModel());try{aiDsStatus();}catch(e){}try{dnStudioFill();}catch(e){}
   set('ed_belge',eidsFirma().eids.belgeNo);try{eidsRenderAdmin();}catch(e){}
   try{renderSA();renderVipStatus();renderOzp();renderGorusmelerD();}catch(e){}
   try{crmRenderAll();}catch(e){}
@@ -1949,7 +2037,18 @@ function staUpsell(t){var f=STA_TAB_FEAT[t];if(!f)return;var need=featMinPkgD(f)
   mm.innerHTML='<div style="position:absolute;inset:0;background:rgba(0,0,0,.75)" onclick="document.getElementById(\''+id+'\').style.display=\'none\'"></div><div style="position:relative;max-width:460px;background:var(--ink,#0b0b0c);border:1px solid var(--line-soft);border-radius:14px;padding:26px;text-align:center"><div style="font-size:32px">🔒</div><h3 style="font-family:var(--serif);color:var(--gold);margin:6px 0">'+_leD(label)+' · '+_leD(need)+' paketi</h3><div class="sub">Mevcut paket: <b>'+_leD(cur)+'</b>. Bu özellik <b>'+_leD(need)+'</b> ve üzeri paketlerde açıktır.</div><div style="text-align:left;background:var(--cream);border:1px solid var(--line-soft);border-radius:10px;padding:12px;margin:14px 0;font-size:13px;color:var(--muted)"><b style="color:var(--gold)">'+_leD(need)+' kapsamı:</b><br>'+_leD(PKG_KAPSAM_D[need]||'')+'</div><button class="btn btn-gold" style="width:100%" onclick="document.getElementById(\''+id+'\').style.display=\'none\';if(typeof toast===\'function\')toast(\''+_leD(need)+' paketi yükseltme talebiniz iletildi.\')">'+_leD(need)+' Paketine Yükselt</button></div>';
   mm.style.display='flex';}
 window.staGate=staGate;window.staUpsell=staUpsell;window.staTabGated=staTabGated;
-function staTab(b){var t=b.dataset.t;if(staTabGated(t)){staUpsell(t);return;}const m=b.closest('.adm-app')||b.closest('.sta-modal')||document;m.querySelectorAll('.adm-nav,.sta-tabs button').forEach(x=>x.classList.toggle('act',x===b));m.querySelectorAll('.sta-pane').forEach(p=>p.hidden=(p.dataset.p!==t));var mn=m.querySelector('.adm-main');if(mn)mn.scrollTop=0;}
+function staTab(b){var t=b.dataset.t;if(staTabGated(t)){staUpsell(t);return;}const m=b.closest('.adm-app')||b.closest('.sta-modal')||document;m.querySelectorAll('.adm-nav,.sta-tabs button').forEach(x=>x.classList.toggle('act',x===b));m.querySelectorAll('.sta-pane').forEach(p=>p.hidden=(p.dataset.p!==t));var mn=m.querySelector('.adm-main');if(mn)mn.scrollTop=0;if(t==='icstudio'){try{csMountDN();}catch(e){}}}
+/* İçerik Stüdyosu sağlayıcı & anahtar ayarları (ProX sekmesi kartı) */
+function _dnAgentFill(E,pre){try{var k=E.getKeys();var set=function(id,v){var e=document.getElementById(id);if(e)e.value=v||'';};set(pre+'provider',k.provider||'auto');set(pre+'prox',k.proxKey);set(pre+'ds',k.dsKey);set(pre+'oa',k.oaKey);set(pre+'cl',k.clKey);set(pre+'sys',k.sysPrompt);var pex=document.getElementById(pre+'pex');if(pex)pex.value=k.pexelsKey||'';}catch(e){}}
+function dnContentFill(){if(DN_CONTENT)_dnAgentFill(DN_CONTENT,'cxc_');}
+function dnSiteFill(){if(!DN_SITE)return;_dnAgentFill(DN_SITE,'cxs_');try{var c=DN_SITE.getCaps();[['cxs_cap_phone','phone'],['cxs_cap_lead','lead'],['cxs_cap_advice','advice'],['cxs_cap_match','match'],['cxs_cap_multilang','multilang']].forEach(function(d){var e=document.getElementById(d[0]);if(e)e.checked=(c&&c[d[1]]!==undefined)?!!c[d[1]]:true;});}catch(e){}}
+function dnStudioFill(){dnContentFill();dnSiteFill();}
+function dnContentSave(){if(!DN_CONTENT)return;try{var v=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};DN_CONTENT.setKeys({provider:v('cxc_provider')||'auto',proxKey:v('cxc_prox'),dsKey:v('cxc_ds'),oaKey:v('cxc_oa'),clKey:v('cxc_cl'),pexelsKey:v('cxc_pex'),sysPrompt:v('cxc_sys')});var el=document.getElementById('cxc_status');if(el)el.textContent='✓ İçerik Ajanı kaydedildi · '+(v('cxc_provider')||'auto');try{toast('✓ İçerik Ajanı anahtarları kaydedildi.');}catch(e){}}catch(e){}}
+function dnSiteSave(){if(!DN_SITE)return;try{var v=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};var ck=function(id){var e=document.getElementById(id);return e?!!e.checked:true;};DN_SITE.setKeys({provider:v('cxs_provider')||'auto',proxKey:v('cxs_prox'),dsKey:v('cxs_ds'),oaKey:v('cxs_oa'),clKey:v('cxs_cl'),sysPrompt:v('cxs_sys'),capabilities:{phone:ck('cxs_cap_phone'),lead:ck('cxs_cap_lead'),advice:ck('cxs_cap_advice'),match:ck('cxs_cap_match'),multilang:ck('cxs_cap_multilang')}});var el=document.getElementById('cxs_status');if(el)el.textContent='✓ Site Asistanı kaydedildi · '+(v('cxs_provider')||'auto');try{toast('✓ Site Asistanı ayarları kaydedildi.');}catch(e){}}catch(e){}}
+async function _dnAgentTest(E,statusId){var el=document.getElementById(statusId);if(el)el.textContent='Test ediliyor…';try{var r=await E.ai({message:'Bağlantı testi. Yalnızca "tamam" yaz.'});var t=r&&(r.answer||r.text);if(r&&r.fallback)t=null;if(el)el.textContent=t?'✓ Bağlantı başarılı.':'Bağlantı kurulamadı. Anahtarı kontrol edin (ProX yerelde CORS kısıtlı olabilir).';}catch(e){if(el)el.textContent='Test hatası.';}}
+function dnContentTest(){if(DN_CONTENT)_dnAgentTest(DN_CONTENT,'cxc_status');}
+function dnSiteTest(){if(DN_SITE)_dnAgentTest(DN_SITE,'cxs_status');}
+window.dnStudioFill=dnStudioFill;window.dnContentFill=dnContentFill;window.dnSiteFill=dnSiteFill;window.dnContentSave=dnContentSave;window.dnSiteSave=dnSiteSave;window.dnContentTest=dnContentTest;window.dnSiteTest=dnSiteTest;
 function _v(id){const e=document.getElementById(id);return e?e.value.trim():'';}
 function _refreshLogoPrev(){const box=document.getElementById('adLogoPrev');if(!box)return;const logo=saasResolve('logoUrl');if(logo)box.innerHTML='<img src="'+logo+'" alt="logo">';else box.textContent=(saasResolve('brandName')||'M').trim().charAt(0);}
 function saasUploadImg(input,key){const f=input.files&&input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{SAAS_CONFIG.tenantSettings[key]=e.target.result;applySaaSSettings();_refreshLogoPrev();toast((key==='logoUrl'?'Logo':'Favicon')+' yüklendi & uygulandı.');};r.readAsDataURL(f);}

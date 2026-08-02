@@ -1115,7 +1115,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
             <button class="abtn" onclick="openOnboarding()" title="Adım adım kurulum">🚀 Kurulum Sihirbazı</button>
           </div>
         </div>
-        <div class="adm-card"><h3>Yapay Zekâ Sağlayıcı & Anahtarlar</h3><div class="csub">✨ İçerik Stüdyosu haber/makale üretimi hangi YZ ile çalışsın? <b>ProX</b> (yukarıdaki anahtar) veya kendi <b>DeepSeek / OpenAI / Claude</b> anahtarınız. Görsel: <b>Pexels</b> (boşsa anahtarsız Openverse). Anahtarlar bu yönetim oturumunda saklanır.</div>
+        <div class="adm-card"><h3>✨ İçerik Ajanı — Makale &amp; Haber Üretimi</h3><div class="csub">İçerik Stüdyosu (SEO makale + günlük otomatik haber) hangi YZ ile çalışsın? <b>ProX</b> veya kendi <b>DeepSeek / OpenAI / Claude</b> anahtarınız. Görsel: <b>Pexels</b> (boşsa anahtarsız Openverse). <b>Site Asistanı'ndan bağımsızdır</b> — kendi anahtar ve promptu vardır. Anahtarlar bu tarayıcıda saklanır.</div>
           <div class="afield"><label>Üretim sağlayıcısı</label><select id="ax_provider"><option value="auto">Otomatik (anahtarı olanı kullan → yoksa ProX)</option><option value="prox">ProX — emlakekspertizi.com (yukarıdaki anahtar)</option><option value="deepseek">DeepSeek (kendi anahtarım)</option><option value="openai">OpenAI / ChatGPT (kendi anahtarım)</option><option value="claude">Anthropic Claude (kendi anahtarım)</option></select></div>
           <div class="ed2"><div class="afield"><label>DeepSeek API Anahtarı</label><input id="ax_ds" type="password" placeholder="sk-..." autocomplete="off" style="font-family:var(--num),monospace;font-size:12px"></div><div class="afield"><label>OpenAI (ChatGPT) API</label><input id="ax_oa" type="password" placeholder="sk-..." autocomplete="off" style="font-family:var(--num),monospace;font-size:12px"></div></div>
           <div class="ed2"><div class="afield"><label>Anthropic Claude API</label><input id="ax_cl" type="password" placeholder="sk-ant-..." autocomplete="off" style="font-family:var(--num),monospace;font-size:12px"></div><div class="afield"><label>Pexels görsel anahtarı <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="ax_pex" type="password" placeholder="Pexels API key" autocomplete="off" style="font-family:var(--num),monospace;font-size:12px"></div></div>
@@ -1123,11 +1123,22 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
           <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="saveAiKeys()">Kaydet</button><button class="abtn" onclick="testAiKeys()">Bağlan & Test Et</button></div>
           <div id="ax_status" style="margin-top:8px"></div>
         </div>
-        <div class="adm-card"><h3>Site AI Asistanı (ProX)</h3><div class="csub">Ziyaretçilerin emlak/bölge sorularını yanıtlayan canlı asistan. Sitenin sağ altında balon olarak görünür. Yukarıdaki sağlayıcıyı kullanır.</div>
-          <div class="sw-row"><div class="swl"><b>AI Asistanı Etkinleştir</b><span>Sitede yüzen "ProX Asistan" balonu</span></div><label class="switch"><input type="checkbox" id="ai_enable" checked onchange="toggleAiFab()"><span class="sl"></span></label></div>
+        <div class="adm-card"><h3>💬 Site Asistanı — Ziyaretçi Sohbeti</h3><div class="csub">Ziyaretçilerin sorularını yanıtlayan canlı asistan (sağ alt balon + tam-sayfa ProX Asistan). <b>İçerik Ajanı'ndan bağımsız</b> kendi sağlayıcı, anahtar, prompt ve yetenekleri vardır. Anahtarlar bu tarayıcıda saklanır.</div>
+          <div class="sw-row"><div class="swl"><b>Asistanı Etkinleştir</b><span>Sitede yüzen "ProX Asistan" balonu</span></div><label class="switch"><input type="checkbox" id="ai_enable" checked onchange="toggleAiFab()"><span class="sl"></span></label></div>
           <div class="afield"><label>Karşılama Mesajı</label><input id="ai_greet" value="Merhaba! Ben Meridyen ProX Asistanı. Bölge, fiyat veya portföy hakkında sorabilirsiniz."></div>
+          <div class="afield"><label>Sağlayıcı</label><select id="gs_provider"><option value="auto">Otomatik (anahtarı olanı kullan → yoksa ProX)</option><option value="prox">ProX — emlakekspertizi.com</option><option value="deepseek">DeepSeek (kendi anahtarım)</option><option value="openai">OpenAI / ChatGPT</option><option value="claude">Anthropic Claude</option></select></div>
+          <div class="ed2"><div class="afield"><label>ProX API Anahtarı</label><input id="gs_prox" type="password" placeholder="ProX kiracı anahtarı" autocomplete="off" style="font-family:var(--num),monospace;font-size:12px"></div><div class="afield"><label>DeepSeek API</label><input id="gs_ds" type="password" placeholder="sk-..." autocomplete="off" style="font-family:var(--num),monospace;font-size:12px"></div></div>
+          <div class="ed2"><div class="afield"><label>OpenAI (ChatGPT) API</label><input id="gs_oa" type="password" placeholder="sk-..." autocomplete="off" style="font-family:var(--num),monospace;font-size:12px"></div><div class="afield"><label>Anthropic Claude API</label><input id="gs_cl" type="password" placeholder="sk-ant-..." autocomplete="off" style="font-family:var(--num),monospace;font-size:12px"></div></div>
           <div class="afield"><label>Asistan Kişiliği / Talimat</label><textarea id="ai_persona" rows="2">Meridyen Gayrimenkul'ün yardımcı, profesyonel emlak danışmanısın. Türkçe, kısa ve net yanıt ver. Bölge fiyat verisi sorulursa örnek olduğunu belirt.</textarea></div>
-          <button class="btn btn-primary btn-sm" onclick="saveAiCfg()">Kaydet</button>
+          <div class="afield"><label>Yetenekler</label><div style="display:flex;flex-wrap:wrap;gap:12px;font-size:13px">
+            <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="gs_cap_phone" checked> 📞 Telefon iste (canlı danışman)</label>
+            <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="gs_cap_lead" checked> 🎯 Lead nitelendirme</label>
+            <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="gs_cap_advice" checked> 💡 Bölge & fiyat danışmanlığı</label>
+            <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="gs_cap_match" checked> 🔑 İlan/portföy eşleştirme</label>
+            <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="gs_cap_multilang" checked> 🌐 Çok dilli</label>
+          </div></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="saveAiCfg()">Kaydet</button><button class="abtn" onclick="gmSiteTest()">Bağlan & Test</button></div>
+          <div id="gs_status" style="margin-top:8px"></div>
         </div>
         <div class="adm-card"><h3>Aktif Modüller</h3><div class="csub">Sitede gösterilecek ProX veri modüllerini açıp kapatın.</div>
           <div id="moduleList"></div>
@@ -1976,12 +1987,13 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 </div>
 
   <script src="../shared/eids.js?v=1"></script>
-  <script src="js/app.js?v=36"></script>
-  <script src="js/content-studio.js?v=18"></script>
+  <script src="../shared/cs-engine.js?v=2"></script>
+  <script src="js/app.js?v=37"></script>
+  <script src="js/content-studio.js?v=19"></script>
   <script src="js/hero-pusula.js?v=2"></script>
   <script src="js/mahalle-endeks.js?v=8"></script>
   <script src="js/kurumsal-sayfalar.js?v=4"></script>
-  <script src="js/uyelik-asistan.js?v=13"></script>
+  <script src="js/uyelik-asistan.js?v=14"></script>
 <script src="js/i18n/_common.js?v=4"></script><script src="js/i18n/index.js?v=2"></script><script src="js/i18n.js?v=4"></script>
 </body>
 </html>

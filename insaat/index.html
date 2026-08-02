@@ -860,6 +860,8 @@ function cookieChoice(v){
       <button onclick="openOnboarding()" style="background:var(--accent);color:var(--on-accent);font-weight:700;border:none">🪄 Kurulum Sihirbazı</button>
       <button class="on" data-pane="dash" onclick="admNav('dash',this)">📊 Genel Bakış</button>
       <button data-pane="content" onclick="admNav('content',this)">✏️ Site İçeriği</button>
+      <button data-pane="icstudio" onclick="admNav('icstudio',this)" style="background:linear-gradient(135deg,#0891b2,#22d3ee);color:#fff;font-weight:700;border:none">✨ İçerik Stüdyosu</button>
+      <button data-pane="proxai" onclick="admNav('proxai',this)">🔌 ProX API & Yapay Zekâ</button>
       <button data-pane="brand" onclick="admNav('brand',this)">🖼️ Marka & Logo</button>
       <button data-pane="menutext" onclick="admNav('menutext',this)">🔤 Menü & Footer Yazıları</button>
       <button data-pane="ads" onclick="admNav('ads',this)">🔌 Google & Reklam</button>
@@ -899,6 +901,43 @@ function cookieChoice(v){
           <label>Hero Alt Metni</label><textarea id="a_sub" rows="2">Konut, ticari ve karma projelerde anahtar teslim mühendislik; kentsel dönüşüm, kat karşılığı ve tadilat hizmetlerinde 38 yıllık güven.</textarea>
           <label>Hakkımızda Metni</label><textarea id="a_about" rows="4">Meridyen Yapı; 1986'da temellerini attığı kurumsal kültürünü üç kuşaktır aynı titizlikle sürdüren bir yapı ve gayrimenkul geliştirme şirketidir. Arsa analizinden anahtar teslime kadar her aşamayı kendi mühendis kadromuzla yönetir; deprem güvenliği, malzeme kalitesi ve teslim takvimini taviz verilmez ilkeler olarak görürüz.</textarea>
           <button class="btn btn-primary" style="margin-top:16px" onclick="saveContent()">Değişiklikleri Kaydet</button>
+        </div>
+      </div>
+      <div class="adm-pane" id="pane-icstudio"><div id="csHost"></div></div>
+      <div class="adm-pane" id="pane-proxai">
+        <h2>ProX API & Yapay Zekâ · İki Bağımsız Ajan</h2><div class="crumb">İki ayrı yapay zekâ: <b>İçerik Ajanı</b> (admin makale/haber üretimi) ve <b>Site Asistanı</b> (ziyaretçi sohbeti). Her birinin KENDİ sağlayıcı, anahtar, prompt ve yetenekleri vardır. Anahtarlar yalnızca bu tarayıcıda saklanır.</div>
+        <div class="panelcard">
+          <h3 style="margin:0 0 4px">✨ İçerik Ajanı — Makale & Haber Üretimi</h3>
+          <p style="font-size:12.5px;color:#888;margin:0 0 10px">İçerik Stüdyosu'nu çalıştırır (SEO makale + günlük otomatik haber).</p>
+          <label>Sağlayıcı</label>
+          <select id="cxci_provider"><option value="auto">Otomatik (anahtarı olanı kullan)</option><option value="prox">ProX</option><option value="deepseek">DeepSeek</option><option value="openai">OpenAI</option><option value="claude">Claude</option></select>
+          <label>ProX API Anahtarı</label><input type="password" id="cxci_prox" placeholder="ProX kiracı anahtarı" autocomplete="off">
+          <label>DeepSeek (sk-...)</label><input type="password" id="cxci_ds" placeholder="sk-..." autocomplete="off">
+          <label>OpenAI (sk-...)</label><input type="password" id="cxci_oa" placeholder="sk-..." autocomplete="off">
+          <label>Claude (sk-ant-...)</label><input type="password" id="cxci_cl" placeholder="sk-ant-..." autocomplete="off">
+          <label>Pexels <span style="opacity:.6;font-weight:400">(opsiyonel — boşsa Openverse ücretsiz görsel)</span></label><input type="password" id="cxci_pex" placeholder="Pexels API anahtarı" autocomplete="off">
+          <label>İçerik promptu / editöryal ton <span style="opacity:.6;font-weight:400">(opsiyonel)</span></label><textarea id="cxci_sys" rows="2" placeholder="Örn. kurumsal, güven veren; SEO uyumlu; uydurma rakam/garanti verme."></textarea>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px"><button class="btn btn-primary" onclick="insContentSave()">Kaydet</button><button class="btn" onclick="insContentTest()">Bağlan & Test</button><span id="cxci_status" style="opacity:.75;font-size:13px"></span></div>
+        </div>
+        <div class="panelcard" style="margin-top:16px">
+          <h3 style="margin:0 0 4px">💬 Site Asistanı — Ziyaretçi Sohbeti</h3>
+          <p style="font-size:12.5px;color:#888;margin:0 0 10px">Sitedeki ProX Asistan sohbetini çalıştırır. İçerik Ajanı'ndan tamamen ayrıdır.</p>
+          <label>Sağlayıcı</label>
+          <select id="cxsi_provider"><option value="auto">Otomatik (anahtarı olanı kullan)</option><option value="prox">ProX</option><option value="deepseek">DeepSeek</option><option value="openai">OpenAI</option><option value="claude">Claude</option></select>
+          <label>ProX API Anahtarı</label><input type="password" id="cxsi_prox" placeholder="ProX kiracı anahtarı" autocomplete="off">
+          <label>DeepSeek (sk-...)</label><input type="password" id="cxsi_ds" placeholder="sk-..." autocomplete="off">
+          <label>OpenAI (sk-...)</label><input type="password" id="cxsi_oa" placeholder="sk-..." autocomplete="off">
+          <label>Claude (sk-ant-...)</label><input type="password" id="cxsi_cl" placeholder="sk-ant-..." autocomplete="off">
+          <label>Asistan promptu / ton <span style="opacity:.6;font-weight:400">(opsiyonel — kuruma özel ek)</span></label><textarea id="cxsi_sys" rows="2" placeholder="Örn. sıcak ama profesyonel; önce ihtiyacı anla, sonra keşfe/temsilciye yönlendir."></textarea>
+          <label>Yetenekler</label>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:13px;margin-top:4px">
+            <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cxsi_cap_phone" checked> 📞 Telefon iste (canlı danışman araması)</label>
+            <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cxsi_cap_lead" checked> 🎯 Lead nitelendirme</label>
+            <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cxsi_cap_advice" checked> 💡 Bölge & fiyat danışmanlığı</label>
+            <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cxsi_cap_match" checked> 🔑 Proje/ilan eşleştirme</label>
+            <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cxsi_cap_multilang" checked> 🌐 Çok dilli</label>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px"><button class="btn btn-primary" onclick="insSiteSave()">Kaydet</button><button class="btn" onclick="insSiteTest()">Bağlan & Test</button><span id="cxsi_status" style="opacity:.75;font-size:13px"></span></div>
         </div>
       </div>
       <div class="adm-pane" id="pane-brand">
@@ -1365,7 +1404,9 @@ function cookieChoice(v){
 </div>
 
 <script src="../shared/eids.js?v=1"></script>
-<script src="js/app-core.js?v=3"></script>
+<script src="../shared/cs-engine.js?v=2"></script>
+<script src="js/content-studio.js?v=2"></script>
+<script src="js/app-core.js?v=6"></script>
 
 
 

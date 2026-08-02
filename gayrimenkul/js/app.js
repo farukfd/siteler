@@ -2327,6 +2327,28 @@ async function csPexels(query,opts){
   return {_err:true,status:0};
 }
 try{window.csPexels=csPexels;}catch(e){}
+/* =====================================================================
+   SİTE ASİSTANI AJANI (GM_SITE) — İçerik Ajanı'ndan (AICFG/İçerik Stüdyosu)
+   BAĞIMSIZ: kendi sağlayıcı + anahtar + prompt + yetenek deposu (gm_cs_site).
+   ===================================================================== */
+var GM_SITE=null;
+function _gmSite(){ try{ if(!window.CSEngine)return null;
+  if(!GM_SITE){ GM_SITE=CSEngine.create({store:'gm_cs_site',tenantId:(typeof PROX!=='undefined'&&PROX&&PROX.tenantId)||'',proxBase:(typeof PROX!=='undefined'&&PROX&&PROX.base)||'https://www.emlakekspertizi.com'});
+    if(!localStorage.getItem('gm_cs_site')){ /* ilk defa: mevcut asistan ayarlarından tohumla (sonra bağımsız düzenlenebilir) */
+      try{GM_SITE.setKeys({provider:AICFG.provider||'auto',dsKey:AICFG.dsKey||'',oaKey:AICFG.oaKey||'',clKey:AICFG.clKey||'',proxKey:AICFG.proxKey||(typeof PROX!=='undefined'&&PROX&&PROX.key)||'',sysPrompt:(AICFG.persona||'')});}catch(e){}
+    }
+    window.GM_SITE=GM_SITE;
+  } else { try{GM_SITE.cfg.tenantId=(typeof PROX!=='undefined'&&PROX&&PROX.tenantId)||GM_SITE.cfg.tenantId;}catch(e){} }
+}catch(e){} return GM_SITE; }
+function _gmLang(){try{return (window.GMI18N&&GMI18N.lang&&GMI18N.lang())||'tr';}catch(e){return 'tr';}}
+function _gmSiteCity(){try{return (typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name)||(typeof PROX!=='undefined'&&PROX.il)||'';}catch(e){return '';}}
+function _gmSiteBrand(){try{return (typeof brandName==='function'?brandName():((typeof FIRMA!=='undefined'&&FIRMA&&FIRMA.name)||'Meridyen Gayrimenkul'));}catch(e){return 'Meridyen Gayrimenkul';}}
+async function gmSiteReply(ctx){ ctx=ctx||{}; var E=_gmSite(); if(!E)return {ok:false,answer:''};
+  var caps=E.getCaps(); if(!caps||!Object.keys(caps).length)caps={phone:true,lead:true,advice:true,match:true,multilang:true};
+  return await E.reply({ message:ctx.message||'', history:ctx.history||[], brand:_gmSiteBrand(), city:_gmSiteCity(), lang:_gmLang(), caps:caps,
+    prompt:[ctx.prompt,E.sysPrompt()].filter(Boolean).join('\n\n'), portfolio:ctx.portfolio||'', max_tokens:900 });
+}
+window.gmSiteReply=gmSiteReply;window._gmSite=_gmSite;
 /* İçerik Stüdyosu (content-studio.js) — gayrimenkul entegrasyonu */
 var _csMounted=false;
 function _csApplyProxKey(){/* studio ProX anahtarını uygula (reload'da proxy-mode temizlediği için AICFG.proxKey kalıcı) */
@@ -3338,10 +3360,14 @@ function aiToBlog(){var _t=aiOutText();if(!_t)return;const lines=_t.split('\n').
   var g=document.getElementById('bl_guard');if(g&&typeof aiGuardBadge==='function')g.innerHTML=aiGuardBadge(_t);
   editingBlog=null;document.querySelector('.adm-nav[data-p="icerik"]').click();document.getElementById('blogEditCard').style.display='block';
   toast('İçerik blog formuna aktarıldı — düzenleyip "Kaydet & Yayınla" deyin.');}
-function fillAiCfg(){document.getElementById('ai_enable').checked=AICFG.enable;document.getElementById('ai_greet').value=AICFG.greet;document.getElementById('ai_persona').value=AICFG.persona;
-  var dk=document.getElementById('ai_dskey');if(dk)dk.value=AICFG.dsKey||'';
-  var dm=document.getElementById('ai_dsmodel');if(dm)dm.value=AICFG.dsModel||'deepseek-chat';
-  if(typeof aiDsStatus==='function')aiDsStatus();}
+function fillAiCfg(){var E=(typeof _gmSite==='function')?_gmSite():null;var k=E?E.getKeys():{};
+  var g=function(id,v){var e=document.getElementById(id);if(e)e.value=(v||'');};
+  var en=document.getElementById('ai_enable');if(en)en.checked=AICFG.enable;
+  g('ai_greet',AICFG.greet);
+  g('ai_persona',(E&&E.sysPrompt())||AICFG.persona);
+  g('gs_provider',k.provider||'auto');g('gs_prox',k.proxKey);g('gs_ds',k.dsKey);g('gs_oa',k.oaKey);g('gs_cl',k.clKey);
+  var caps=(E&&E.getCaps())||{};[['gs_cap_phone','phone'],['gs_cap_lead','lead'],['gs_cap_advice','advice'],['gs_cap_match','match'],['gs_cap_multilang','multilang']].forEach(function(d){var e=document.getElementById(d[0]);if(e)e.checked=(caps&&caps[d[1]]!==undefined)?!!caps[d[1]]:true;});
+}
 /* ProX API & Modüller sekmesi → Yapay Zekâ Sağlayıcı & Anahtarlar (İçerik Stüdyosu bunları kullanır) */
 function fillAiKeys(){var s=function(id,v){var e=document.getElementById(id);if(e)e.value=(v||'');};
   s('ax_provider',AICFG.provider||'auto');s('ax_ds',AICFG.dsKey);s('ax_oa',AICFG.oaKey);s('ax_cl',AICFG.clKey);s('ax_pex',AICFG.pexelsKey);s('ax_sys',AICFG.sysPrompt);}
@@ -3357,13 +3383,19 @@ async function testAiKeys(){saveAiKeys();var el=document.getElementById('ax_stat
     if(el)el.innerHTML='<div class="csub" style="margin:0;color:'+(t?'#1a7f4b':'#c0392b')+'">'+(t?('✓ Bağlantı başarılı ('+AICFG.provider+'). İçerik Stüdyosu üretebilir.'):'⚠️ Bağlantı kurulamadı — anahtarı kontrol edin. (ProX yerelde CORS\'a takılabilir; yayında çalışır.)')+'</div>';
   }catch(e){if(el)el.innerHTML='<div class="csub" style="margin:0;color:#c0392b">Test hatası: '+(e&&e.message||e)+'</div>';}}
 function saveAiCfg(){
-  /* YZ anahtarları artık TEK yerde: İçerik Stüdyosu → Ayarlar. Burada yalnız asistan
-     davranışı (aç/kapa, karşılama, kişilik). AICFG'nin diğer alanlarını KORU (Object.assign). */
+  /* Site Asistanı ajanı — İçerik Ajanı'ndan (AICFG anahtarları/İçerik Stüdyosu) BAĞIMSIZ.
+     Aç/kapa+karşılama AICFG'de; sağlayıcı/anahtar/prompt/yetenek GM_SITE (gm_cs_site) deposunda. */
   AICFG.enable=document.getElementById('ai_enable').checked;
   AICFG.greet=document.getElementById('ai_greet').value;
-  AICFG.persona=document.getElementById('ai_persona').value;
+  AICFG.persona=document.getElementById('ai_persona').value;/* geriye dönük ayna */
+  var E=(typeof _gmSite==='function')?_gmSite():null;
+  if(E){var g=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};var ck=function(id){var e=document.getElementById(id);return e?!!e.checked:true;};
+    E.setKeys({provider:g('gs_provider')||'auto',proxKey:g('gs_prox'),dsKey:g('gs_ds'),oaKey:g('gs_oa'),clKey:g('gs_cl'),sysPrompt:(document.getElementById('ai_persona')||{}).value||'',capabilities:{phone:ck('gs_cap_phone'),lead:ck('gs_cap_lead'),advice:ck('gs_cap_advice'),match:ck('gs_cap_match'),multilang:ck('gs_cap_multilang')}});}
   saveAll();initAiAssistant();
-  toast('✓ AI asistan ayarları kaydedildi.');}
+  var st=document.getElementById('gs_status');if(st)st.innerHTML='<div class="csub" style="margin:0;color:#1a7f4b">✓ Site Asistanı kaydedildi · '+((E&&E.getKeys().provider)||'auto')+'</div>';
+  toast('✓ Site Asistanı ayarları kaydedildi.');}
+async function gmSiteTest(){var st=document.getElementById('gs_status');if(st)st.innerHTML='<div class="csub" style="margin:0">Bağlantı test ediliyor…</div>';var E=_gmSite();try{var r=await E.ai({message:'Bağlantı testi. Yalnızca "tamam" yaz.'});var t=r&&(r.answer||r.text);if(r&&r.fallback)t=null;if(st)st.innerHTML='<div class="csub" style="margin:0;color:'+(t?'#1a7f4b':'#c0392b')+'">'+(t?'✓ Bağlantı başarılı.':'⚠️ Bağlantı kurulamadı — anahtarı kontrol edin (ProX yerelde CORS\'a takılabilir; yayında çalışır).')+'</div>';}catch(e){if(st)st.innerHTML='<div class="csub" style="margin:0;color:#c0392b">Test hatası.</div>';}}
+window.gmSiteTest=gmSiteTest;
 function toggleAiFab(){AICFG.enable=document.getElementById('ai_enable').checked;saveAll();initAiAssistant();}
 
 /* shared Claude API caller (works in Claude artifact runtime; in production → emlakekspertizi İçerik Asistanı proxy) */
@@ -3412,9 +3444,9 @@ async function aiSend(){
   const ctx='Örnek bölge m² fiyatları (₺/m²): '+Object.keys(BAZ).map(k=>`${k} ${fmt(BAZ[k].m2)} (5y +%${BAZ[k].chg}, skor ${BAZ[k].score})`).join('; ')+'. Bu veriler örnektir; resmi değer güncel bölge endeksinden teyit edilmeli.';
   try{
     let text=null;
-    try{                                                  // API-first İçerik Asistanı; fallback = callClaude
-      const r=await aiChat({persona:'office',prompt:aiGuard(AICFG.persona+'\n\nElindeki referans veri: '+ctx),messages:aiHistory.slice(-8),message:txt});
-      if(r&&!r.fallback)text=r.answer||r.text||(r.data&&(r.data.answer||r.data.text))||null;
+    try{                                                  // Site Asistanı ajanı (GM_SITE) — İçerik Ajanı'ndan bağımsız
+      const r=await gmSiteReply({message:txt,history:aiHistory.slice(0,-1).slice(-8),prompt:aiGuard(AICFG.persona+'\n\nElindeki referans veri: '+ctx)});
+      if(r&&r.ok)text=r.answer;
     }catch(_){}
     if(!text)text=await callClaude(aiHistory.slice(-8),AICFG.persona+'\n\nElindeki referans veri: '+ctx);
     typ.remove();addAiMsg('bot',text);aiHistory.push({role:'assistant',content:text});_fabLog('bot',text);/* admin kaydı */
