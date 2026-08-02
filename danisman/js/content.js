@@ -161,7 +161,30 @@
     }
   }
   window.dnApplyWaLinks = applyWaLinks;
-  ready(function () { applyWaLinks(); setTimeout(applyWaLinks, 350); });
+  /* SOSYAL MEDYA: dn_social'dan footer href'leri yaz; boşsa gizle. Tenant yapılandırmadıysa demo'ya dokunma. */
+  function dnApplySocial() {
+    var raw = null; try { raw = localStorage.getItem("dn_social"); } catch (e) {} if (!raw) return;
+    var S = {}; try { S = JSON.parse(raw) || {}; } catch (e) {}
+    [["fb", "facebook.com"], ["ig", "instagram.com"], ["x", "x.com"], ["li", "linkedin.com"], ["yt", "youtube.com"]].forEach(function (m) {
+      var v = (S[m[0]] || "").trim();
+      [].forEach.call(document.querySelectorAll('footer a[href*="' + m[1] + '"]'), function (a) {
+        if (v) { a.href = /^https?:\/\//i.test(v) ? v : ("https://" + v.replace(/^\/+/, "")); a.style.display = ""; }
+        else { a.style.display = "none"; }
+      });
+    });
+  }
+  window.dnApplySocial = dnApplySocial;
+  /* TİPOGRAFİ: dn_theme.font → Google Fonts yükle + gövde fontu (base.css'i kırmadan). CSP _headers'ta izinli. */
+  function dnApplyFont() {
+    var f = ""; try { f = (JSON.parse(localStorage.getItem("dn_theme") || "{}") || {}).font || ""; } catch (e) {}
+    var CF = { "Playfair Display": "Playfair+Display:wght@500;600;700", "Cormorant": "Cormorant:wght@500;600;700", "Inter": "Inter:wght@400;500;600;700;800", "Poppins": "Poppins:wght@400;500;600;700", "Manrope": "Manrope:wght@400;500;600;700;800", "Sora": "Sora:wght@400;500;600;700", "Jost": "Jost:wght@400;500;600;700" };
+    if (!f || !CF[f]) return;
+    var lid = "brand-font-" + f.replace(/\s+/g, "");
+    if (!document.getElementById(lid)) { var l = document.createElement("link"); l.rel = "stylesheet"; l.id = lid; l.href = "https://fonts.googleapis.com/css2?family=" + CF[f] + "&display=swap"; (document.head || document.documentElement).appendChild(l); }
+    if (document.body) document.body.style.fontFamily = "'" + f + "', system-ui, -apple-system, sans-serif";
+  }
+  window.dnApplyFont = dnApplyFont;
+  ready(function () { applyWaLinks(); setTimeout(applyWaLinks, 350); dnApplySocial(); dnApplyFont(); setTimeout(function(){ dnApplySocial(); dnApplyFont(); }, 400); });
 })();
 
 /* ===================================================================
