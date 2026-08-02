@@ -2927,14 +2927,17 @@ function applyFaqSeo(){try{
 }catch(e){}}
 /* ---- Sosyal medya & ilan portalleri (footer) ---- */
 function applySocial(){try{var S=SOCIAL;
+  /* protokolsüz girişi (ör. "instagram.com/x") mutlak https'e çevir → aksi halde
+     "localhost/insaat/instagram.com/x" gibi KIRIK göreli link olur */
+  var _u=function(v){v=(''+(v||'')).trim();return v&&!/^https?:\/\//i.test(v)?'https://'+v.replace(/^\/+/,''):v;};
   var map={Facebook:S.facebook,Instagram:S.instagram,X:S.x,LinkedIn:S.linkedin,YouTube:S.youtube};
   document.querySelectorAll('.insaatFooter .fsocial a').forEach(function(a){
     var lb=a.getAttribute('aria-label')||'';
-    if(lb.indexOf('NEXT')>-1){ if(S.nsosyal){a.href=S.nsosyal;a.style.display='';}else{a.style.display='none';} return; }
-    if(map.hasOwnProperty(lb)){ var u=map[lb]; if(u){a.href=u;a.style.display='';}else{a.style.display='none';} }
+    if(lb.indexOf('NEXT')>-1){ if(S.nsosyal){a.href=_u(S.nsosyal);a.style.display='';}else{a.style.display='none';} return; }
+    if(map.hasOwnProperty(lb)){ var u=map[lb]; if(u){a.href=_u(u);a.style.display='';}else{a.style.display='none';} }
   });
   var pmap={'fp-sah':S.sahibinden,'fp-hep':S.hepsiemlak,'fp-ejt':S.emlakjet};
-  Object.keys(pmap).forEach(function(cls){document.querySelectorAll('.insaatFooter .'+cls).forEach(function(a){if(pmap[cls]){a.href=pmap[cls];a.style.display='';}else{a.style.display='none';}});});
+  Object.keys(pmap).forEach(function(cls){document.querySelectorAll('.insaatFooter .'+cls).forEach(function(a){if(pmap[cls]){a.href=_u(pmap[cls]);a.style.display='';}else{a.style.display='none';}});});
 }catch(e){}}
 /* ---- Admin: Soru-Cevap CRUD ---- */
 function _faqFillSelects(){['faqNewCat','faqAdminCat'].forEach(function(id){var s=document.getElementById(id);if(s&&!s._f){s._f=1;var extra=(id==='faqAdminCat')?'<option value="all">Tüm kategoriler</option>':'';s.innerHTML=extra+FAQ_CATS.map(function(c){return '<option value="'+c.k+'">'+c.i+' '+c.l+'</option>';}).join('');}});}
