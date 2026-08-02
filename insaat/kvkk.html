@@ -518,9 +518,9 @@ document.addEventListener('DOMContentLoaded',function(){try{nbHarvest();nbLang(N
       var pub = JSON.parse(localStorage.getItem("meridyen_pub_v1") || "{}") || {};
       var all = JSON.parse(localStorage.getItem("meridyen_site_v1") || "{}") || {};
       var s = all.SETTINGS || {}, c = pub.CONTACT || {};
-      out.unvan = s.unvan; out.vergi = [s.vergiDairesi, s.vergiNo].filter(Boolean).join(" / ");
-      out.mersis = s.mersis; out.ticaretSicil = s.ticaretSicil; out.kep = s.kep;
-      out.adres = c.adres || s.adres; out.tel = c.tel || s.tel; out.email = c.email || s.email;
+      out.unvan = s.firmaUnvan || s.unvan; out.vergi = [s.firmaVergiDairesi||s.vergiDairesi, s.firmaVergiNo||s.vergiNo].filter(Boolean).join(" / ");
+      out.mersis = s.firmaMersis || s.mersis; out.ticaretSicil = s.firmaTicaretSicil || s.ticaretSicil; out.kep = s.firmaKep || s.kep;
+      out.adres = c.adres || s.firmaAdres || s.adres; out.tel = c.tel || s.tel; out.email = c.email || s.email;
     } catch (e) {}
     return out;
   }
