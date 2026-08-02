@@ -44,6 +44,7 @@
       +(o.keywords?('Şu anahtar kelimeleri doğal biçimde geç: '+o.keywords+'. '):'')
       +'Gövde EN AZ '+(o.minWords||600)+' kelime olacak; kısa yazma. '
       +'Alt başlıklar (##), kısa paragraflar ve gerekiyorsa madde işaretleri kullan. '
+      +'ÖNEMLİ: Bana soru SORMA, selamlama/açıklama/onay YAZMA, "makaleyi paylaşın" gibi ifadeler KULLANMA — doğrudan makaleyi üret. '
       +'Yalnızca aşağıdaki formatta yanıt ver, başka hiçbir şey yazma:\n\n'
       +'BASLIK: <en fazla 60 karakter, dikkat çekici>\n'
       +'KATEGORI: <tek-iki kelime kategori>\n'
@@ -86,18 +87,30 @@
     }
     return null;
   }
+  /* YZ sohbet/meta cevabı mı? (makale değil) — ProX kısa asistan olduğu için bazen
+     "Merhaba, makaleyi paylaşın", soru sorma gibi konuşma metni döndürür → reddet. */
+  function _conv(t){t=(''+(t||'')).trim();if(!t)return true;var low=t.toLocaleLowerCase('tr');
+    if(t.length<120&&/\?\s*$/.test(t))return true;
+    return /^(merhaba|selam|tabii|elbette|tabi|maalesef|üzgünüm)\b/i.test(t)
+      || /(payla[şs][mı]|payla[şs]([ıi]n|mad[ıi]n[ıi]z)|ileti[nr]|g[öo]nderin|g[öo]remiyorum|metni? (payla|g[öo]nder|ileti)|nas[ıi]l yard[ıi]mc[ıi]|hangi (konu|makale)|bir metin (yok|g[öo]r[üu])|ortada bir metin)/i.test(low);
+  }
   async function _genOne(o,st){
     st=st||function(){};
-    var text=await _aiText({persona:'office',tool:'blog',prompt:buildPrompt(o)},3);
-    if(!text)return null;
+    var text=await _aiText({persona:'office',tool:'blog',prompt:buildPrompt(o)},4);
+    /* sohbet/meta cevabı → daha sert prompt'la 1 kez daha dene */
+    if(text&&_conv(text)){ st('yeniden'); var hard=buildPrompt(o)+'\n\n[UYARI] Önceki denemede sohbet metni döndü. SADECE makaleyi BASLIK/KATEGORI/ETIKETLER/OZET/GOROG/GOVDE formatında yaz; selamlama/soru/açıklama yazma.'; var t0=await _aiText({persona:'office',tool:'blog',prompt:hard},2); if(t0&&!_conv(t0))text=t0; }
+    if(!text||_conv(text))return null;/* hâlâ sohbet/boş → başarısız (çöp makale ÜRETME) */
     var g=parseOut(text);
     if(!g.body){g.body=_cleanBody(text);if(!g.title)g.title=o.topic;}
     g.body=_cleanBody(g.body);
+    if(_conv(g.body))return null;/* gövde sohbet cevabı → reddet */
     var wc=wordCount(g.body);
-    if(!o.noExpand&&wc<o.minWords){ st('genişletiliyor');
-      var ep='Aşağıdaki makaleyi, aynı konu ve üslupta, EN AZ '+o.minWords+' kelimeye çıkacak şekilde GENİŞLET (yeni ## alt başlıklar, örnekler, detaylar ekle). Sadece genişletilmiş Markdown gövdeyi döndür (BASLIK/KATEGORI gibi etiket satırı EKLEME):\n\n'+g.body;
+    /* GENİŞLETME yalnız GERÇEK bir taban gövde varsa (≥100 kelime) — yoksa ProX
+       boş metne "makaleyi paylaşın" der ve gövdeyi bozar. Sonuç sohbet/kısa ise KORU. */
+    if(!o.noExpand&&wc>=100&&wc<o.minWords){ st('genişletiliyor');
+      var ep='Aşağıdaki makaleyi, aynı konu ve üslupta, EN AZ '+o.minWords+' kelimeye çıkacak şekilde GENİŞLET (yeni ## alt başlıklar, örnekler, detaylar ekle). SADECE genişletilmiş Markdown gövdeyi döndür; selamlama/soru/etiket satırı EKLEME:\n\n'+g.body;
       var t2=_cleanBody(await _aiText({persona:'office',tool:'blog',prompt:(CFG.guard?CFG.guard(ep):ep)},2));
-      if(t2&&wordCount(t2)>wc){g.body=t2;wc=wordCount(g.body);}
+      if(t2&&!_conv(t2)&&wordCount(t2)>wc){g.body=t2;wc=wordCount(g.body);}/* yalnız gerçek+daha uzunsa değiştir */
     }
     if(wc<40)return null;/* çok kısa/boş yanıt → başarısız say (atla/tekrar dene) */
     return {
