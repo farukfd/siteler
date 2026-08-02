@@ -40,6 +40,35 @@
     document.body.appendChild(d.firstChild);
   }
 
+  /* Ofis haritası: adresten geocode (Nominatim) → #gmOfisMap taşı + FIRMA.lat/lng cache.
+     Nominatim serbest-metni sevmez → normalize + aşamalı sorgu (tam → ilçe,il → il). */
+  function _gmGeoMap(adres) {
+    var fr = document.getElementById('gmOfisMap'); if (!fr || !adres) return;
+    var norm = String(adres).replace(/No[:.]?\s*\d+\w*/gi, '').replace(/\bKat\b[^,]*/gi, '').replace(/\bD[:.]?\s*\d+/gi, '')
+      .replace(/\bCad\.?\b/gi, 'Caddesi').replace(/\bCd\.?\b/gi, 'Caddesi').replace(/\bMah\.?\b/gi, 'Mahallesi').replace(/\bMh\.?\b/gi, 'Mahallesi')
+      .replace(/\bSok\.?\b/gi, 'Sokak').replace(/\bSk\.?\b/gi, 'Sokak').replace(/\bBul(v)?\.?\b/gi, 'Bulvarı').replace(/\bBlv\.?\b/gi, 'Bulvarı')
+      .replace(/[\/]/g, ',').replace(/\s+/g, ' ').replace(/\s*,\s*/g, ', ').replace(/(,\s*)+/g, ', ').replace(/^[,\s]+|[,\s]+$/g, '').trim();
+    var parts = norm.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+    var cands = []; if (norm) cands.push(norm); if (parts.length >= 2) cands.push(parts.slice(-2).join(', ')); if (parts.length >= 1) cands.push(parts[parts.length - 1]);
+    var apply = function (lat, lng) {
+      lat = +lat; lng = +lng; if (isNaN(lat) || isNaN(lng)) return;
+      var bb = (lng - 0.012) + ',' + (lat - 0.008) + ',' + (lng + 0.012) + ',' + (lat + 0.008);
+      fr.setAttribute('src', 'https://www.openstreetmap.org/export/embed.html?bbox=' + encodeURIComponent(bb) + '&layer=mapnik&marker=' + lat + ',' + lng);
+      var lk = document.getElementById('gmOfisMapLink'); if (lk) lk.href = 'https://www.openstreetmap.org/?mlat=' + lat + '&mlon=' + lng + '#map=16/' + lat + '/' + lng;
+      try { if (typeof FIRMA !== 'undefined' && FIRMA) { FIRMA.lat = lat; FIRMA.lng = lng; if (typeof saveAll === 'function') saveAll(); } } catch (e) {}
+    };
+    var tryNext = function (i) {
+      if (i >= cands.length) return;
+      try {
+        fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=tr&accept-language=tr&q=' + encodeURIComponent(cands[i]))
+          .then(function (r) { return r.ok ? r.json() : []; })
+          .then(function (a) { if (a && a[0] && a[0].lat && a[0].lon) apply(a[0].lat, a[0].lon); else tryNext(i + 1); })
+          ['catch'](function () { tryNext(i + 1); });
+      } catch (e) {}
+    };
+    tryNext(0);
+  }
+
   /* ---------- İLETİŞİM ---------- */
   function renderIletisim() {
     var f = F(), e = f.eids || {};
@@ -59,9 +88,12 @@
       '<span>📍 ' + esc(f.adres || '') + '</span></div>';
     var lat = +f.lat || 38.4322, lng = +f.lng || 27.1419;
     var bbox = (lng - 0.012) + ',' + (lat - 0.008) + ',' + (lng + 0.012) + ',' + (lat + 0.008);
+    /* koordinat yok ama adres varsa → render sonrası adresten geocode ile haritayı taşı (demo İzmir'e düşmesin) */
+    var needGeo = !(+f.lat && +f.lng) && !!(f.adres && ('' + f.adres).trim());
+    if (needGeo) { try { setTimeout(function () { _gmGeoMap(f.adres); }, 60); } catch (e) {} }
     var mapSec = '<section class="hk-block"><div class="hk-h"><span class="hk-kick">Ofisimiz</span><h2>Bizi ziyaret edin</h2><p>' + esc(f.adres || '') + '</p></div>' +
-      '<div class="info-map"><iframe title="Ofis konumu" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=' + encodeURIComponent(bbox) + '&amp;layer=mapnik&amp;marker=' + lat + ',' + lng + '"></iframe>' +
-      '<a class="info-map-link" href="https://www.openstreetmap.org/?mlat=' + lat + '&mlon=' + lng + '#map=16/' + lat + '/' + lng + '" target="_blank" rel="noopener noreferrer">Haritada aç · yol tarifi al ↗</a></div></section>';
+      '<div class="info-map"><iframe id="gmOfisMap" title="Ofis konumu" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=' + encodeURIComponent(bbox) + '&amp;layer=mapnik&amp;marker=' + lat + ',' + lng + '"></iframe>' +
+      '<a id="gmOfisMapLink" class="info-map-link" href="https://www.openstreetmap.org/?mlat=' + lat + '&mlon=' + lng + '#map=16/' + lat + '/' + lng + '" target="_blank" rel="noopener noreferrer">Haritada aç · yol tarifi al ↗</a></div></section>';
     return '<section class="hk-block"><div class="hk-h"><span class="hk-kick">Bize Ulaşın</span><h2>İletişim Kanallarımız</h2><p>Telefon, e-posta veya WhatsApp ile bize ulaşın; ofisimizde de sizi ağırlamaktan memnuniyet duyarız.</p></div>' +
       cc + '</section>' +
       '<section class="hk-block if-wrap">' + form + kunye + '</section>' +

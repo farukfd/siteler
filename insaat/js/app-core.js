@@ -288,11 +288,23 @@ function _fillMapEmbed(cm,tagCls,mapQuery,addr){
   };
   var ll=(typeof _parseLatLng==='function')?_parseLatLng(mapQuery):null;
   if(ll){ put(ll[0],ll[1]); return; }
-  var q=mapQuery||addr||'İstanbul';
-  fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=tr&accept-language=tr&q='+encodeURIComponent(q))
-    .then(function(r){return r.json();})
-    .then(function(a){ if(a&&a[0])put(+a[0].lat,+a[0].lon); else put(41.0812,29.0094); })
-    .catch(function(){ put(41.0812,29.0094); });
+  /* Nominatim serbest-metni sevmez ("No:5", "Cad.", "/") → normalize + aşamalı sorgu (tam → ilçe,il → il) */
+  var _ng=function(a){return String(a||'').replace(/No[:.]?\s*\d+\w*/gi,'').replace(/\bKat\b[^,]*/gi,'').replace(/\bD[:.]?\s*\d+/gi,'')
+    .replace(/\bCad\.?\b/gi,'Caddesi').replace(/\bCd\.?\b/gi,'Caddesi').replace(/\bMah\.?\b/gi,'Mahallesi').replace(/\bMh\.?\b/gi,'Mahallesi')
+    .replace(/\bSok\.?\b/gi,'Sokak').replace(/\bSk\.?\b/gi,'Sokak').replace(/\bBul(v)?\.?\b/gi,'Bulvarı').replace(/\bBlv\.?\b/gi,'Bulvarı')
+    .replace(/[\/]/g,',').replace(/\s+/g,' ').replace(/\s*,\s*/g,', ').replace(/(,\s*)+/g,', ').replace(/^[,\s]+|[,\s]+$/g,'').trim();};
+  var norm=_ng(mapQuery||addr||'');
+  var parts=norm.split(',').map(function(s){return s.trim();}).filter(Boolean);
+  var cands=[]; if(norm)cands.push(norm); if(parts.length>=2)cands.push(parts.slice(-2).join(', ')); if(parts.length>=1)cands.push(parts[parts.length-1]);
+  if(!cands.length)cands.push('İstanbul');
+  var tryNext=function(i){
+    if(i>=cands.length){ put(41.0812,29.0094); return; }
+    fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=tr&accept-language=tr&q='+encodeURIComponent(cands[i]))
+      .then(function(r){return r.json();})
+      .then(function(a){ if(a&&a[0])put(+a[0].lat,+a[0].lon); else tryNext(i+1); })
+      .catch(function(){ tryNext(i+1); });
+  };
+  tryNext(0);
 }
 function applyContactAll(){try{var s=SETTINGS;
   var wn=String(s.waNumber||'').replace(/[^0-9]/g,'')||'905001234567';
