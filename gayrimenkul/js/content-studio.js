@@ -130,9 +130,78 @@
   };
   CS.pickImage = function(i){
     var p=(CS._imgs||[])[i]; if(!p||!DRAFT)return;
-    DRAFT.img={url:p.url,alt:p.alt||DRAFT.title,credit:p.credit,creditUrl:p.creditUrl};
-    var prev=$('cs_coverPrev'); if(prev)prev.innerHTML='<img src="'+esc(p.url)+'" alt="'+esc(p.alt)+'"><span class="cs-credit">📷 '+esc(p.credit)+' · Pexels</span>';
+    _setCover(p.url,p.alt||DRAFT.title,p.credit,p.creditUrl);
     [].forEach.call(document.querySelectorAll('#cs_imgResults .cs-img'),function(b,bi){b.classList.toggle('sel',bi===i);});
+  };
+  function _setCover(url,alt,credit,creditUrl){
+    if(!DRAFT)DRAFT={id:Date.now(),src:'firma',date:today()};
+    DRAFT.img={url:url,alt:alt||DRAFT.title||'',credit:credit||'',creditUrl:creditUrl||''};
+    var isUpload=!credit||/yüklenen|yuklenen/i.test(credit)||/^data:/.test(url);
+    var label=isUpload?'🖼 Yüklenen görsel':('📷 '+esc(credit)+' · Pexels');
+    var prev=$('cs_coverPrev'); if(prev)prev.innerHTML='<img src="'+esc(url)+'" alt="'+esc(alt||'')+'"><span class="cs-credit">'+label+'</span>';
+  }
+  /* ---------- GÖRSEL: bilgisayardan yükle (küçült + data-URI) ---------- */
+  function _readImage(file,maxW,cb){
+    try{
+      var r=new FileReader();
+      r.onload=function(e){
+        var img=new Image();
+        img.onload=function(){
+          try{
+            var w=img.width,h=img.height,mx=maxW||1400; if(w>mx){h=Math.round(h*mx/w);w=mx;}
+            var cv=document.createElement('canvas');cv.width=w;cv.height=h;
+            cv.getContext('2d').drawImage(img,0,0,w,h);
+            var out=cv.toDataURL('image/jpeg',0.82);
+            cb(out);
+          }catch(err){cb(e.target.result);}
+        };
+        img.onerror=function(){cb(e.target.result);};
+        img.src=e.target.result;
+      };
+      r.readAsDataURL(file);
+    }catch(err){toast('Görsel okunamadı.');}
+  }
+  CS.uploadCover = function(input){
+    var f=input&&input.files&&input.files[0]; if(!f)return;
+    if(!/^image\//.test(f.type)){toast('Lütfen bir görsel dosyası seçin.');return;}
+    toast('Görsel yükleniyor…');
+    _readImage(f,1400,function(dataUri){ _setCover(dataUri,($('cs_title')||{}).value||'Kapak','Yüklenen görsel',''); toast('✓ Kapak görseli eklendi.'); });
+    input.value='';
+  };
+  CS.coverFromUrl = function(){
+    var u=(($('cs_coverUrl')||{}).value||'').trim(); if(!u)return;
+    _setCover(u,($('cs_title')||{}).value||'Kapak','',''); toast('✓ Kapak görseli (URL) eklendi.');
+  };
+  /* ---------- GÖVDE: imleçte ekleme + biçimlendirme + görsel ekleme ---------- */
+  function _insBody(before,after,placeholder){
+    var ta=$('cs_body'); if(!ta)return; after=after||''; placeholder=placeholder||'';
+    var s=ta.selectionStart||0,e=ta.selectionEnd||0,v=ta.value;
+    var sel=v.slice(s,e)||placeholder;
+    var ins=before+sel+after;
+    ta.value=v.slice(0,s)+ins+v.slice(e);
+    var pos=s+before.length; ta.focus(); ta.setSelectionRange(pos,pos+sel.length);
+    _syncMeta();
+  }
+  CS.fmt = function(kind){
+    if(kind==='b')_insBody('**','**','kalın');
+    else if(kind==='h2')_insBody('\n## ','\n','Alt Başlık');
+    else if(kind==='h3')_insBody('\n### ','\n','Alt Başlık');
+    else if(kind==='ul')_insBody('\n- ','','Madde');
+    else if(kind==='quote')_insBody('\n> ','\n','Alıntı');
+    else if(kind==='link'){var u=prompt('Bağlantı URL:','https://');if(u)_insBody('[',']('+u+')','bağlantı metni');}
+  };
+  CS.uploadBodyImage = function(input){
+    var f=input&&input.files&&input.files[0]; if(!f){return;}
+    if(!/^image\//.test(f.type)){toast('Lütfen bir görsel seçin.');return;}
+    toast('Görsel yükleniyor…');
+    _readImage(f,1200,function(dataUri){ _insBody('\n![',']('+dataUri+')\n','görsel açıklaması'); toast('✓ Görsel gövdeye eklendi.'); });
+    input.value='';
+  };
+  CS.insertCoverToBody = function(){ if(DRAFT&&DRAFT.img&&DRAFT.img.url){_insBody('\n!['+((DRAFT.img.alt||'görsel'))+']('+DRAFT.img.url+')\n','','');toast('✓ Kapak gövdeye eklendi.');}else toast('Önce kapak görseli seçin.'); };
+  CS.togglePreview = function(){
+    var pv=$('cs_preview'),ta=$('cs_body'),btn=$('cs_pvBtn'); if(!pv||!ta)return;
+    if(pv.style.display==='none'||!pv.style.display){ pv.innerHTML=CS.mdToHtml(ta.value); pv.style.display='block'; ta.style.display='none'; if(btn)btn.textContent='✎ Düzenle'; }
+    else { pv.style.display='none'; ta.style.display=''; if(btn)btn.textContent='👁 Önizleme'; }
   };
 
   /* ---------- EDİTÖR ↔ DRAFT ---------- */
@@ -277,11 +346,29 @@
           +'<div class="cs-grid2"><div class="cs-f"><label>Kalıcı bağlantı (slug)</label><input id="cs_slug"></div>'
           +'<div class="cs-f"><label>Kategori</label><input id="cs_cat"></div></div>'
           +'<div class="cs-f"><label>Etiketler <span class="cs-muted">(virgülle)</span></label><input id="cs_tags"></div>'
-          +'<div class="cs-f"><label>Gövde <span class="cs-muted">(Markdown — ## alt başlık)</span></label><textarea id="cs_body" rows="16" placeholder="Makale gövdesi burada oluşur…"></textarea></div>'
+          +'<div class="cs-f"><label>Gövde <span class="cs-muted">(Markdown — ## alt başlık)</span></label>'
+            +'<div class="cs-toolbar">'
+              +'<button type="button" title="Kalın" onclick="ContentStudio.fmt(\'b\')"><b>B</b></button>'
+              +'<button type="button" title="Alt başlık" onclick="ContentStudio.fmt(\'h2\')">H2</button>'
+              +'<button type="button" title="Küçük başlık" onclick="ContentStudio.fmt(\'h3\')">H3</button>'
+              +'<button type="button" title="Madde listesi" onclick="ContentStudio.fmt(\'ul\')">• Liste</button>'
+              +'<button type="button" title="Alıntı" onclick="ContentStudio.fmt(\'quote\')">❝</button>'
+              +'<button type="button" title="Bağlantı" onclick="ContentStudio.fmt(\'link\')">🔗</button>'
+              +'<label class="cs-tb-upl" title="Gövdeye görsel yükle">🖼<input type="file" accept="image/*" onchange="ContentStudio.uploadBodyImage(this)" hidden></label>'
+              +'<button type="button" id="cs_pvBtn" class="cs-tb-r" onclick="ContentStudio.togglePreview()">👁 Önizleme</button>'
+            +'</div>'
+            +'<textarea id="cs_body" rows="16" placeholder="Makale gövdesi burada oluşur…"></textarea>'
+            +'<div class="cs-article cs-preview" id="cs_preview" style="display:none"></div>'
+          +'</div>'
         +'</div>'
         +'<div class="cs-edit-side">'
           +'<div class="cs-f"><label>Kapak görseli</label><div class="cs-cover" id="cs_coverPrev"><div class="cs-muted">Kapak görseli yok</div></div>'
-            +'<div class="cs-grid-img"><input id="cs_imgq" placeholder="görsel ara (ör. modern apartment)"><button type="button" class="cs-btn" onclick="ContentStudio.findImage()">🔎</button></div>'
+            +'<div class="cs-imgbtns">'
+              +'<label class="cs-btn cs-upl">⬆ Bilgisayardan yükle<input type="file" accept="image/*" onchange="ContentStudio.uploadCover(this)" hidden></label>'
+              +'<button type="button" class="cs-btn" onclick="ContentStudio.insertCoverToBody()">➕ Gövdeye ekle</button>'
+            +'</div>'
+            +'<div class="cs-grid-img" style="margin-top:8px"><input id="cs_imgq" placeholder="Pexels\'te ara (ör. modern apartment)"><button type="button" class="cs-btn" onclick="ContentStudio.findImage()">🔎 Ara</button></div>'
+            +'<div class="cs-grid-img" style="margin-top:6px"><input id="cs_coverUrl" placeholder="veya görsel URL yapıştır"><button type="button" class="cs-btn" onclick="ContentStudio.coverFromUrl()">Ekle</button></div>'
             +'<div class="cs-img-results" id="cs_imgResults"></div></div>'
           +'<div class="cs-f"><label>Özet <span class="cs-muted">(meta)</span></label><textarea id="cs_sum" rows="3"></textarea></div>'
           +'<div class="cs-f"><label>SEO başlık</label><input id="cs_seoTitle" maxlength="70"></div>'
@@ -333,21 +420,33 @@
       var s=document.getElementById('cs-article-ld'); if(!s){s=document.createElement('script');s.type='application/ld+json';s.id='cs-article-ld';document.head.appendChild(s);} s.textContent=JSON.stringify(ld);
     }catch(e){}
   };
-  /* Markdown → HTML (hafif; başlık/kalın/liste/paragraf) — public render için */
+  /* Markdown → HTML (başlık/kalın/liste/alıntı/link/görsel) — önizleme + public render için */
   CS.mdToHtml = function(md){
     md=''+(md||'');
     var esc2=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
-    var lines=md.split(/\n/),out=[],inUl=false;
+    var inline=function(s){
+      s=esc2(s);
+      s=s.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,function(m,a,u){return '<img src="'+u.replace(/"/g,'&quot;')+'" alt="'+a+'" loading="lazy" style="max-width:100%;border-radius:10px;margin:8px 0">';});
+      s=s.replace(/\[([^\]]+)\]\(([^)]+)\)/g,function(m,t,u){return '<a href="'+u.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener">'+t+'</a>';});
+      s=s.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+      return s;
+    };
+    var lines=md.split(/\n/),out=[],inUl=false,inBq=false;
+    var closeBlocks=function(){if(inUl){out.push('</ul>');inUl=false;}if(inBq){out.push('</blockquote>');inBq=false;}};
     lines.forEach(function(ln){
       var t=ln.trim();
-      if(/^###\s+/.test(t)){if(inUl){out.push('</ul>');inUl=false;}out.push('<h3>'+esc2(t.replace(/^###\s+/,''))+'</h3>');return;}
-      if(/^##\s+/.test(t)){if(inUl){out.push('</ul>');inUl=false;}out.push('<h2>'+esc2(t.replace(/^##\s+/,''))+'</h2>');return;}
-      if(/^[-*]\s+/.test(t)){if(!inUl){out.push('<ul>');inUl=true;}out.push('<li>'+esc2(t.replace(/^[-*]\s+/,'')).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')+'</li>');return;}
-      if(!t){if(inUl){out.push('</ul>');inUl=false;}return;}
-      if(inUl){out.push('</ul>');inUl=false;}
-      out.push('<p>'+esc2(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')+'</p>');
+      if(/^###\s+/.test(t)){closeBlocks();out.push('<h3>'+inline(t.replace(/^###\s+/,''))+'</h3>');return;}
+      if(/^##\s+/.test(t)){closeBlocks();out.push('<h2>'+inline(t.replace(/^##\s+/,''))+'</h2>');return;}
+      if(/^#\s+/.test(t)){closeBlocks();out.push('<h2>'+inline(t.replace(/^#\s+/,''))+'</h2>');return;}
+      if(/^>\s?/.test(t)){if(inUl){out.push('</ul>');inUl=false;}if(!inBq){out.push('<blockquote>');inBq=true;}out.push(inline(t.replace(/^>\s?/,''))+'<br>');return;}
+      if(/^[-*]\s+/.test(t)){if(inBq){out.push('</blockquote>');inBq=false;}if(!inUl){out.push('<ul>');inUl=true;}out.push('<li>'+inline(t.replace(/^[-*]\s+/,''))+'</li>');return;}
+      if(!t){closeBlocks();return;}
+      closeBlocks();
+      /* tek başına görsel → figure */
+      if(/^!\[[^\]]*\]\([^)]+\)$/.test(t)){out.push('<figure style="margin:10px 0">'+inline(t)+'</figure>');return;}
+      out.push('<p>'+inline(t)+'</p>');
     });
-    if(inUl)out.push('</ul>');
+    closeBlocks();
     return out.join('\n');
   };
 
@@ -409,5 +508,16 @@
   +'.cs-provcard input{width:100%;padding:9px 11px;border:1px solid var(--line,#e5e7eb);border-radius:9px;font:inherit;background:var(--surface,#fff);color:inherit;box-sizing:border-box}'
   +'.cs-quota{display:flex;align-items:center;gap:8px;margin-top:8px}'
   +'.cs-quota-bar{flex:1;height:7px;border-radius:99px;background:var(--line,#e5e7eb);overflow:hidden}.cs-quota-bar span{display:block;height:100%;background:var(--accent,#0ea5a5)}'
+  /* IMAGE BUTTONS + BODY TOOLBAR + PREVIEW */
+  +'.cs-imgbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}'
+  +'.cs-upl{cursor:pointer;display:inline-flex;align-items:center}'
+  +'.cs-toolbar{display:flex;gap:4px;flex-wrap:wrap;align-items:center;padding:6px;border:1px solid var(--line,#e5e7eb);border-bottom:none;border-radius:10px 10px 0 0;background:var(--bg,#fafafa)}'
+  +'.cs-toolbar button,.cs-tb-upl{background:var(--surface,#fff);border:1px solid var(--line,#e5e7eb);border-radius:7px;padding:5px 9px;cursor:pointer;font:inherit;font-size:12.5px;line-height:1;color:inherit}'
+  +'.cs-toolbar button:hover,.cs-tb-upl:hover{border-color:var(--accent,#0ea5a5)}'
+  +'.cs-tb-upl{display:inline-flex;align-items:center}.cs-tb-r{margin-left:auto}'
+  +'.cs-toolbar + textarea{border-radius:0 0 10px 10px}'
+  +'.cs-preview{border:1px solid var(--line,#e5e7eb);border-radius:0 0 10px 10px;padding:16px;background:var(--bg,#fff);max-height:420px;overflow:auto}'
+  +'.cs-article h2{font-size:20px;margin:18px 0 8px}.cs-article h3{font-size:16px;margin:14px 0 6px}.cs-article p{margin:0 0 12px;line-height:1.7}.cs-article ul{margin:0 0 12px;padding-left:20px}.cs-article li{margin:2px 0}'
+  +'.cs-article img{max-width:100%;border-radius:10px}.cs-article blockquote{margin:12px 0;padding:8px 14px;border-left:3px solid var(--accent,#0ea5a5);background:var(--surface,#f7f7f7);border-radius:0 8px 8px 0}.cs-article a{color:var(--accent,#0ea5a5)}'
   +'@media(max-width:720px){.cs-edit{grid-template-columns:1fr}.cs-grid2,.cs-grid3{grid-template-columns:1fr}.cs-img-results{grid-template-columns:repeat(3,1fr)}}';
 })();
