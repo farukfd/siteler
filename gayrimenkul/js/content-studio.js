@@ -388,28 +388,22 @@
     if(name==='makale')CS.renderList();
   };
   function _html(k){
-    var prov=k.provider||'auto';
     var noKey=!(k.proxKey||k.dsKey||k.oaKey||k.clKey);
-    var q=(CFG.proxInfo&&CFG.proxInfo())||null;
     var s=CS.getSched();
-    var t0=noKey?'ayar':'uret';
     return ''
     +'<div class="cs-wrap">'
     /* HERO */
     +'<div class="cs-hero"><div class="cs-hero-ic">✨</div><div><h2>İçerik Stüdyosu</h2>'
       +'<p>SEO uyumlu, ProX destekli makaleler + günlük otomatik haber — gerçek görselle <b>/blog</b>\'da yayınlayın.</p></div></div>'
-    /* SAĞLAYICI CHIP\'LERİ */
-    +'<div class="cs-provbar"><span class="cs-provbar-l">Yapay zekâ:</span><div class="cs-chips" id="cs_provChips"></div></div>'
-    +'<div class="cs-status" id="cs_status">'+(noKey?'⚠️ Henüz sağlayıcı anahtarı yok — <b>Ayarlar</b> sekmesinden ProX / DeepSeek / OpenAI / Claude anahtarı girin.':'Aktif sağlayıcı: '+esc(({auto:'Otomatik',prox:'ProX',deepseek:'DeepSeek',openai:'OpenAI',claude:'Claude'})[prov]||prov))+'</div>'
-    /* SEKME NAV */
+    +'<div class="cs-status" id="cs_status">'+(noKey?'⚠️ Yapay zekâ anahtarı yok — <b>🔌 ProX API &amp; Modüller</b> sekmesinden ProX/DeepSeek/OpenAI/Claude anahtarını girin, sonra üretin.':'Hazır — konu girin ve üretin. (Sağlayıcı & anahtarlar: 🔌 ProX API &amp; Modüller)')+'</div>'
+    /* SEKME NAV — yalnız içerik üretimi (AI ayarları ProX sekmesinde) */
     +'<div class="cs-tabs">'
-      +'<button type="button" class="cs-tab'+(t0==='uret'?' on':'')+'" data-t="uret" onclick="ContentStudio.tab(\'uret\',this)">✍️ Makale Üret</button>'
+      +'<button type="button" class="cs-tab on" data-t="uret" onclick="ContentStudio.tab(\'uret\',this)">✍️ Makale Üret</button>'
       +'<button type="button" class="cs-tab" data-t="haber" onclick="ContentStudio.tab(\'haber\',this)">📰 Günlük Haber</button>'
       +'<button type="button" class="cs-tab" data-t="makale" onclick="ContentStudio.tab(\'makale\',this)">📄 Makaleler</button>'
-      +'<button type="button" class="cs-tab'+(t0==='ayar'?' on':'')+'" data-t="ayar" onclick="ContentStudio.tab(\'ayar\',this)">⚙️ Ayarlar</button>'
     +'</div>'
     /* ===== PANEL: ÜRET ===== */
-    +'<div class="cs-panel" data-p="uret"'+(t0!=='uret'?' style="display:none"':'')+'>'
+    +'<div class="cs-panel" data-p="uret">'
     /* ADIM 1 — ÜRET */
     +'<div class="cs-card"><div class="cs-step"><span class="cs-step-n">1</span><h3>Konu &amp; ayarlar</h3></div>'
       +'<div class="cs-f"><label>Konu / başlık fikri *</label><input id="cs_topic" placeholder="ör. 2026\'da yatırım için doğru bölge nasıl seçilir?"></div>'
@@ -483,29 +477,6 @@
     +'</div>'/* /panel haber */
     /* ===== PANEL: MAKALELER ===== */
     +'<div class="cs-panel" data-p="makale" style="display:none"><div class="cs-card"><div class="cs-step"><span class="cs-step-n">📄</span><h3>Makaleler</h3></div><div id="cs_list"></div></div></div>'
-    /* ===== PANEL: AYARLAR ===== */
-    +'<div class="cs-panel" data-p="ayar"'+(t0!=='ayar'?' style="display:none"':'')+'><div class="cs-card cs-settings" id="cs_set">'
-      +'<div class="cs-f"><label>Üretim sağlayıcısı</label><select id="cs_provider" onchange="ContentStudio.setProvider(this.value)">'
-        +'<option value="auto"'+(prov==='auto'?' selected':'')+'>Otomatik (anahtarı olanı kullan)</option>'
-        +'<option value="prox"'+(prov==='prox'?' selected':'')+'>ProX — emlakekspertizi.com (kotalı)</option>'
-        +'<option value="deepseek"'+(prov==='deepseek'?' selected':'')+'>DeepSeek</option>'
-        +'<option value="openai"'+(prov==='openai'?' selected':'')+'>OpenAI / ChatGPT</option>'
-        +'<option value="claude"'+(prov==='claude'?' selected':'')+'>Anthropic Claude</option></select></div>'
-      /* ProX kartı */
-      +'<div class="cs-provcard cs-prox"><div class="cs-provcard-h"><b>🔑 ProX API Anahtarı</b><span class="cs-muted">emlakekspertizi.com — veri + YZ + görsel (kotalı)</span></div>'
-        +'<input id="cs_proxKey" type="password" value="'+esc(k.proxKey||'')+'" placeholder="prox_...">'
-        +(q?'<div class="cs-quota"><div class="cs-quota-bar"><span style="width:'+Math.min(100,Math.round((q.count/(q.max||1))*100))+'%"></span></div><span class="cs-muted">'+q.count+' / '+q.max+' istek (bu ay)</span></div>':'')
-        +'<div class="cs-muted" style="margin-top:6px">Girdiğiniz ProX anahtarı doğrudan kullanılır. (Yerelde tarayıcı CORS\'u engelleyebilir; kendi yayında/whitelisted alan adında çalışır.)</div>'
-      +'</div>'
-      /* BYO providers */
-      +'<div class="cs-provcard"><div class="cs-provcard-h"><b>DeepSeek</b><span class="cs-muted">kendi anahtarım</span></div><input id="cs_dsKey" type="password" value="'+esc(k.dsKey||'')+'" placeholder="sk-..."></div>'
-      +'<div class="cs-provcard"><div class="cs-provcard-h"><b>OpenAI / ChatGPT</b><span class="cs-muted">kendi anahtarım</span></div><input id="cs_oaKey" type="password" value="'+esc(k.oaKey||'')+'" placeholder="sk-..."></div>'
-      +'<div class="cs-provcard"><div class="cs-provcard-h"><b>Anthropic Claude</b><span class="cs-muted">kendi anahtarım</span></div><input id="cs_clKey" type="password" value="'+esc(k.clKey||'')+'" placeholder="sk-ant-..."></div>'
-      +'<div class="cs-provcard"><div class="cs-provcard-h"><b>📷 Pexels</b><span class="cs-muted">görsel — boşsa ProX görsel-proxy</span></div><input id="cs_pexKey" type="password" value="'+esc(k.pexelsKey||'')+'" placeholder="Pexels API key"></div>'
-      +'<div class="cs-muted" style="margin:8px 0 12px">Anahtarlar yalnız bu yönetim oturumunuzda (tarayıcınızda) saklanır. ProX anahtarsız da kullanılabilir (yayında sunucu-proxy).</div>'
-      +'<div class="cs-actions"><button type="button" class="cs-btn pri" onclick="ContentStudio.saveKeys(true)">Kaydet &amp; Test Et</button>'
-      +'<button type="button" class="cs-btn" onclick="ContentStudio.saveKeys(false)">Kaydet</button></div>'
-    +'</div></div>'/* /settings card, /panel ayar */
     +'</div>';
   }
 

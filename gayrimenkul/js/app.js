@@ -250,7 +250,7 @@ const DEF_AICFG={enable:true,greet:'Merhaba! Ben Meridyen ProX Asistanı. Bölge
   dsKey:'',dsModel:'deepseek-chat',
   oaKey:'',oaModel:'gpt-4o-mini',/* OpenAI (ChatGPT) — kullanıcının kendi anahtarı */
   clKey:'',clModel:'claude-sonnet-4-6',/* Anthropic Claude — tarayıcı-erişim başlığıyla */
-  pexelsKey:''/* Pexels görsel anahtarı — boşsa ProX görsel-proxy denenir */
+  sysPrompt:'',/* marka sistem promptu */pexelsKey:''/* Pexels görsel anahtarı — boşsa ProX görsel-proxy denenir */
 };/* Anahtarlar kullanıcının KENDİ anahtarlarıdır (kendi admin oturumunda saklanır). ProX veri/endeks/AI için sunucu-proxy'dir. */
 const DEF_CONTRACTS=[
  {id:'c1',tip:'aracilik',baslik:'Konak 3+1 — Satış Aracılık',durum:'aktif',tarih:'2026-06-12',karsiTaraf:'Okan Demir',karsiTC:'12345678901',karsiAdres:'Alsancak Mah. Kıbrıs Şehitleri Cad. No:00 D:0, Konak / İzmir',il:'İzmir',ilce:'Konak',mahalle:'Alsancak',tasinmazAdres:'Kıbrıs Şehitleri Cad. No:00 Daire:0',tasinmazTip:'Daire',m2:'140',islem:'Satılık',bedel:'14.500.000',komisyon:'2',sureAy:'6',ozelMetin:''},
@@ -2356,7 +2356,7 @@ function csMountGM(){
     topicPool:function(){var il=(typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name)||'bölgenizde';
       return ['2026\'da '+il+' konut piyasası: fiyat ve trend beklentileri','Yatırım için doğru bölge nasıl seçilir?','Ev alırken dikkat edilmesi gereken 10 kritik nokta','Kiralık mı satılık mı? Yatırımcı için karşılaştırma','Deprem yönetmeliği ve güvenli konut rehberi','Tapu ve satış işlemlerinde adım adım süreç','Gayrimenkul değerlemesi nasıl yapılır?','Kentsel dönüşümde hak sahibi olarak haklarınız','İlk evini alacaklar için finansman ve kredi rehberi','Konutta enerji verimliliği ve değere etkisi','Yabancıya konut satışı ve vatandaşlık süreci','Emlak danışmanıyla çalışmanın avantajları'];},
     toast:function(m){if(typeof toast==='function')toast(m);},
-    guard:function(p){return (typeof aiGuard==='function')?aiGuard(p):p;}
+    guard:function(p){var base=(typeof aiGuard==='function')?aiGuard(p):p;var sp=((AICFG&&AICFG.sysPrompt)||'').trim();return sp?(sp+'\n\n'+base):base;}
   });
   _csMounted=true;
 }
@@ -3342,6 +3342,20 @@ function fillAiCfg(){document.getElementById('ai_enable').checked=AICFG.enable;d
   var dk=document.getElementById('ai_dskey');if(dk)dk.value=AICFG.dsKey||'';
   var dm=document.getElementById('ai_dsmodel');if(dm)dm.value=AICFG.dsModel||'deepseek-chat';
   if(typeof aiDsStatus==='function')aiDsStatus();}
+/* ProX API & Modüller sekmesi → Yapay Zekâ Sağlayıcı & Anahtarlar (İçerik Stüdyosu bunları kullanır) */
+function fillAiKeys(){var s=function(id,v){var e=document.getElementById(id);if(e)e.value=(v||'');};
+  s('ax_provider',AICFG.provider||'auto');s('ax_ds',AICFG.dsKey);s('ax_oa',AICFG.oaKey);s('ax_cl',AICFG.clKey);s('ax_pex',AICFG.pexelsKey);s('ax_sys',AICFG.sysPrompt);}
+function saveAiKeys(){var g=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};
+  AICFG.provider=g('ax_provider')||'auto';AICFG.dsKey=g('ax_ds');AICFG.oaKey=g('ax_oa');AICFG.clKey=g('ax_cl');AICFG.pexelsKey=g('ax_pex');AICFG.sysPrompt=(document.getElementById('ax_sys')||{}).value||'';
+  var pk=g('px_key');if(pk)AICFG.proxKey=pk;/* ProX anahtarı bu sekmede — İçerik Stüdyosu için AICFG.proxKey'e senkronla */
+  if(typeof _csApplyProxKey==='function')_csApplyProxKey();
+  if(typeof saveAll==='function')saveAll();
+  var el=document.getElementById('ax_status');if(el)el.innerHTML='<div class="csub" style="color:#1a7f4b;margin:0">✓ Kaydedildi. Aktif sağlayıcı: <b>'+(AICFG.provider)+'</b>'+(AICFG.proxKey?' · ProX anahtarı bağlı':'')+'</div>';
+  if(typeof toast==='function')toast('✓ Yapay zekâ sağlayıcı & anahtarları kaydedildi.');}
+async function testAiKeys(){saveAiKeys();var el=document.getElementById('ax_status');if(el)el.innerHTML='<div class="csub" style="margin:0">Bağlantı test ediliyor…</div>';
+  try{var r=await aiChat({message:'Bağlantı testi. Yalnızca "tamam" yaz.'},{timeout:45000});var t=r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text)));if(r&&r.fallback)t=null;
+    if(el)el.innerHTML='<div class="csub" style="margin:0;color:'+(t?'#1a7f4b':'#c0392b')+'">'+(t?('✓ Bağlantı başarılı ('+AICFG.provider+'). İçerik Stüdyosu üretebilir.'):'⚠️ Bağlantı kurulamadı — anahtarı kontrol edin. (ProX yerelde CORS\'a takılabilir; yayında çalışır.)')+'</div>';
+  }catch(e){if(el)el.innerHTML='<div class="csub" style="margin:0;color:#c0392b">Test hatası: '+(e&&e.message||e)+'</div>';}}
 function saveAiCfg(){
   /* YZ anahtarları artık TEK yerde: İçerik Stüdyosu → Ayarlar. Burada yalnız asistan
      davranışı (aç/kapa, karşılama, kişilik). AICFG'nin diğer alanlarını KORU (Object.assign). */
@@ -3420,8 +3434,10 @@ function fillProx(){document.getElementById('px_key').value=PROX.key||'';
   var _used=(_q&&_q.count)||PROX.quotaUsed||0,_max=PROX.quotaMax||10000;
   const pct=Math.min(100,Math.round(_used/_max*100));document.getElementById('px_fill').style.width=pct+'%';
   document.getElementById('px_quotaTxt').textContent=fmt(_used)+' / '+fmt(_max)+' istek'+(_q?' · '+_q.month:'');
+  if(typeof fillAiKeys==='function')fillAiKeys();/* aynı sekmedeki YZ anahtar alanlarını da doldur */
   if(typeof proxRenderStatus==='function')proxRenderStatus();}
 function saveProx(){PROX.key=document.getElementById('px_key').value.trim();
+  if(PROX.key){try{AICFG.proxKey=PROX.key;if(typeof _csApplyProxKey==='function')_csApplyProxKey();}catch(e){}}/* ProX anahtarı İçerik Stüdyosu'na da geçsin */
   if(document.getElementById('px_proxy'))PROX.proxyUrl=document.getElementById('px_proxy').value.trim();
   if(document.getElementById('px_tenant'))PROX.tenantId=document.getElementById('px_tenant').value.trim();
   var il=(document.getElementById('px_il')||{}).value||'İzmir';PROX.il=il;PROX.region=il;
