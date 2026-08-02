@@ -3143,12 +3143,15 @@ function blogDetail(id){var b=blogAllPosts().filter(function(x){return (''+x.id)
       :(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p style="margin:0 0 16px">'+_be(par).replace(/\n/g,'<br>')+'</p>';}).join('');}
   var _cap='';if(b.img&&b.img.credit&&!/yüklenen|yuklenen/i.test(b.img.credit)&&!/^data:/.test(b.img.url||''))_cap='<figcaption style="font-size:12px;color:var(--muted);margin-top:6px">📷 '+_be(b.img.credit)+' · Pexels</figcaption>';
   var cover=(b.img&&b.img.url)?('<figure style="margin:0 0 22px"><img src="'+_be(b.img.url)+'" alt="'+_be((b.img.alt||b.title))+'" style="width:100%;border-radius:14px;display:block">'+_cap+'</figure>'):'';
+  /* VİDEO alanı — yalnız video linki varsa (yoksa hiç alan çıkmaz) */
+  var vid=(b.video&&b.video.url&&typeof ContentStudio!=='undefined'&&ContentStudio.videoHtml)?ContentStudio.videoHtml(b.video.url,(b.video.caption||'')):'';
   var tags=(b.tags&&b.tags.length)?('<div style="margin-top:24px;display:flex;gap:8px;flex-wrap:wrap">'+b.tags.map(function(t){return '<span style="background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:12.5px">#'+_be(t)+'</span>';}).join('')+'</div>'):'';
   d.innerHTML='<button class="br-back" onclick="blogShowList()"><svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg> Tüm yazılar</button>'
     +'<article style="max-width:760px;margin:22px auto 0"><div class="cat" style="color:var(--accent);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em">'+_be(b.cat)+(b.src==='prox'?' · ProX':b.src==='ai'?' · AI':'')+'</div>'
     +'<h1 style="font-family:var(--head);font-size:clamp(26px,4vw,40px);line-height:1.15;margin:8px 0 10px">'+_be(b.title)+'</h1>'
     +'<div class="meta" style="color:var(--muted);font-size:13.5px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--line)">'+_be(b.meta||'')+'</div>'
     +cover
+    +vid
     +'<div class="cs-article" style="font-size:16px;line-height:1.75;color:var(--ink-2,#334155)">'+body+'</div>'
     +tags
     +'<div style="margin-top:30px;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:14px;text-align:center"><b style="font-size:16px">Bu konuda uzman desteği mi istiyorsunuz?</b><div style="margin-top:10px"><button class="btn btn-primary" onclick="closeAllOverlays();satScrollForm(\'Blog danışmanlık talebi\')">Ücretsiz Danışmanlık Alın</button></div></div></article>';

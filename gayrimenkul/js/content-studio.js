@@ -273,6 +273,8 @@
     if($('cs_imgq'))$('cs_imgq').value=a.imgq||'';
     if(a.img&&a.img.url)_setCover(a.img.url,a.img.alt,a.img.credit,a.img.creditUrl);
     else{var prev=$('cs_coverPrev');if(prev)prev.innerHTML='<div class="cs-muted">Kapak görseli yok</div>';}
+    if($('cs_video'))$('cs_video').value=(a.video&&a.video.url)||'';
+    var vp=$('cs_videoPrev');if(vp)vp.innerHTML=(a.video&&a.video.url&&CS.videoEmbed(a.video.url))?CS.videoHtml(a.video.url,''):'';
     _syncMeta();
   }
   function _collect(){
@@ -286,6 +288,7 @@
     DRAFT.body=CS.blocksToText(DRAFT.blocks);
     DRAFT.seo={title:(($('cs_seoTitle')||{}).value||DRAFT.title).slice(0,60),desc:(($('cs_seoDesc')||{}).value||DRAFT.sum).slice(0,160)};
     DRAFT.imgq=($('cs_imgq')||{}).value||DRAFT.imgq||'';
+    var vv=(($('cs_video')||{}).value||'').trim();DRAFT.video=vv?{url:vv}:null;
     DRAFT.words=wordCount(CS.blocksToText(DRAFT.blocks));
     return DRAFT;
   }
@@ -433,6 +436,7 @@
               +'<button type="button" onclick="ContentStudio.addBlock(\'header\')">H Başlık</button>'
               +'<button type="button" onclick="ContentStudio.addBlock(\'image\')">🖼 Görsel</button>'
               +'<button type="button" onclick="ContentStudio.addBlock(\'gallery\')">🖼🖼 Galeri</button>'
+              +'<button type="button" onclick="ContentStudio.addBlock(\'video\')">🎬 Video</button>'
               +'<button type="button" onclick="ContentStudio.addBlock(\'list\')">• Liste</button>'
               +'<button type="button" onclick="ContentStudio.addBlock(\'quote\')">❝ Alıntı</button>'
               +'<button type="button" id="cs_pvBtn" class="cs-tb-r" onclick="ContentStudio.togglePreview()">👁 Önizleme</button>'
@@ -449,6 +453,9 @@
             +'<div class="cs-grid-img" style="margin-top:8px"><input id="cs_imgq" placeholder="Pexels\'te ara (ör. modern apartment)"><button type="button" class="cs-btn" onclick="ContentStudio.findImage()">🔎 Ara</button></div>'
             +'<div class="cs-grid-img" style="margin-top:6px"><input id="cs_coverUrl" placeholder="veya görsel URL yapıştır"><button type="button" class="cs-btn" onclick="ContentStudio.coverFromUrl()">Ekle</button></div>'
             +'<div class="cs-img-results" id="cs_imgResults"></div></div>'
+          +'<div class="cs-f"><label>🎬 Video (link) <span class="cs-muted">(opsiyonel · YouTube/Vimeo)</span></label>'
+            +'<input id="cs_video" placeholder="https://youtu.be/… — boşsa detayda video alanı çıkmaz" oninput="ContentStudio.onVideoInput()">'
+            +'<div class="cs-video-prev" id="cs_videoPrev"></div></div>'
           +'<div class="cs-f"><label>Özet <span class="cs-muted">(meta)</span></label><textarea id="cs_sum" rows="3"></textarea></div>'
           +'<div class="cs-f"><label>SEO başlık</label><input id="cs_seoTitle" maxlength="70"></div>'
           +'<div class="cs-f"><label>SEO açıklama</label><input id="cs_seoDesc" maxlength="160"></div>'
@@ -552,6 +559,7 @@
       case 'list': return '<'+(d.style==='ordered'?'ol':'ul')+'>'+(d.items||[]).map(function(i){return '<li>'+(typeof i==='string'?i:(i.content||''))+'</li>';}).join('')+'</'+(d.style==='ordered'?'ol':'ul')+'>';
       case 'image': return '<figure>'+(d.url?'<img src="'+e(d.url)+'" alt="'+e(d.alt||'')+'" loading="lazy">':'')+(d.caption?'<figcaption>'+e(d.caption)+'</figcaption>':'')+'</figure>';
       case 'gallery': return '<figure class="cs-gal cs-gal--'+(d.layout||'grid')+'">'+(d.images||[]).map(function(im){return '<figure><img src="'+e(im.url)+'" alt="'+e(im.alt||'')+'" loading="lazy">'+(im.caption?'<figcaption>'+e(im.caption)+'</figcaption>':'')+'</figure>';}).join('')+(d.caption?'<figcaption class="cs-gal-cap">'+e(d.caption)+'</figcaption>':'')+'</figure>';
+      case 'video': return d.url?CS.videoHtml(d.url,d.caption):'';
       case 'delimiter': return '<hr>';
       default: return '';
     }}).join('\n');
@@ -561,11 +569,29 @@
     return blocks.map(function(b){var d=b.data||{};if(b.type==='list')return (d.items||[]).map(function(i){return typeof i==='string'?i:(i.content||'');}).join(' ');return (d.text||'')+' '+(d.caption||'');}).join(' ').replace(/<[^>]+>/g,' ');
   };
   function _imgsFromBlocks(blocks){var out=[];(blocks||[]).forEach(function(b){if(b.type==='image'&&b.data.url)out.push(b.data.url);if(b.type==='gallery')(b.data.images||[]).forEach(function(im){if(im.url)out.push(im.url);});});return out;}
+  /* Video linkini gömme (embed) URL'sine çevir — YouTube / Vimeo. Tanınmazsa null. */
+  CS.videoEmbed=function(url){
+    url=(''+(url||'')).trim(); if(!url)return null;
+    var m;
+    if((m=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/)))return {src:'https://www.youtube.com/embed/'+m[1],provider:'youtube'};
+    if((m=url.match(/vimeo\.com\/(?:video\/)?(\d+)/)))return {src:'https://player.vimeo.com/video/'+m[1],provider:'vimeo'};
+    if(/^https:\/\/.+\.(mp4|webm)$/i.test(url))return {src:url,provider:'file'};
+    return null;
+  };
+  CS.videoHtml=function(url,caption){
+    var v=CS.videoEmbed(url); if(!v)return '';
+    var e=esc;
+    var inner=v.provider==='file'
+      ? '<video src="'+e(v.src)+'" controls playsinline style="width:100%;height:100%;border:0;display:block"></video>'
+      : '<iframe src="'+e(v.src)+'" title="Video" loading="lazy" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>';
+    return '<figure class="cs-video"><div class="cs-video-frame">'+inner+'</div>'+(caption?'<figcaption>'+e(caption)+'</figcaption>':'')+'</figure>';
+  };
+  CS.onVideoInput=function(){var v=(($('cs_video')||{}).value||'').trim();if(DRAFT)DRAFT.video=v?{url:v}:null;var p=$('cs_videoPrev');if(p)p.innerHTML=v?(CS.videoEmbed(v)?CS.videoHtml(v,''):'<span class="cs-muted">Tanınmayan link (YouTube/Vimeo/.mp4)</span>'):'';};
 
   /* ============ BLOK EDİTÖRÜ (UI) ============ */
   function _blk(id){return (DRAFT.blocks||[]).filter(function(b){return b.id===id;})[0];}
   function _sanitize(html){var d=document.createElement('div');d.innerHTML=html||'';[].forEach.call(d.querySelectorAll('*'),function(el){if(!/^(B|I|EM|STRONG|A|BR|CODE)$/.test(el.tagName)){el.replaceWith.apply(el,el.childNodes.length?[].slice.call(el.childNodes):[document.createTextNode(el.textContent||'')]);return;}[].slice.call(el.attributes).forEach(function(at){if(el.tagName==='A'&&(at.name==='href'||at.name==='target'||at.name==='rel'))return;el.removeAttribute(at.name);});if(el.tagName==='A'){el.setAttribute('target','_blank');el.setAttribute('rel','noopener');}});return d.innerHTML;}
-  var _typeLabel={paragraph:'¶ Paragraf',header:'H Başlık',image:'🖼 Görsel',gallery:'🖼🖼 Galeri',list:'• Liste',quote:'❝ Alıntı',delimiter:'— Ayraç'};
+  var _typeLabel={paragraph:'¶ Paragraf',header:'H Başlık',image:'🖼 Görsel',gallery:'🖼🖼 Galeri',video:'🎬 Video',list:'• Liste',quote:'❝ Alıntı',delimiter:'— Ayraç'};
   CS.renderBlocks=function(){
     var host=$('cs_blocks'); if(!host)return; if(!DRAFT.blocks||!DRAFT.blocks.length)DRAFT.blocks=[{id:_bid(),type:'paragraph',data:{text:''}}];
     host.innerHTML='';
@@ -606,6 +632,8 @@
       body.appendChild(_imageEditor(b));
     } else if(b.type==='gallery'){
       body.appendChild(_galleryEditor(b));
+    } else if(b.type==='video'){
+      body.appendChild(_videoEditor(b));
     }
     return el;
   }
@@ -636,7 +664,14 @@
     wrap.appendChild(add);
     return wrap;
   }
-  CS.addBlock=function(type){if(!DRAFT.blocks)DRAFT.blocks=[];var nb={id:_bid(),type:type,data:type==='header'?{text:'',level:2}:type==='list'?{style:'unordered',items:[]}:type==='gallery'?{layout:'grid',images:[]}:type==='image'?{url:'',caption:'',alt:''}:type==='quote'?{text:'',caption:''}:type==='delimiter'?{}:{text:''}};DRAFT.blocks.push(nb);CS.renderBlocks();var host=$('cs_blocks');if(host&&host.lastChild)host.lastChild.scrollIntoView({block:'nearest'});};
+  function _videoEditor(b){var d=b.data;var wrap=document.createElement('div');
+    var prev=document.createElement('div');prev.className='cs-video-prev';wrap.appendChild(prev);
+    var draw=function(){var v=CS.videoEmbed(d.url);prev.innerHTML=v?CS.videoHtml(d.url,''):(d.url?'<span class="cs-muted">Tanınmayan video linki (YouTube/Vimeo/.mp4)</span>':'<span class="cs-muted">Video linki yapıştırın</span>');};
+    var inp=document.createElement('input');inp.className='cs-cap';inp.placeholder='YouTube / Vimeo linki (ör. https://youtu.be/...)';inp.value=d.url||'';inp.oninput=function(){d.url=inp.value.trim();draw();};
+    var cap=document.createElement('input');cap.className='cs-cap';cap.placeholder='Video altı not (opsiyonel)';cap.value=d.caption||'';cap.oninput=function(){d.caption=cap.value;};
+    wrap.appendChild(inp);wrap.appendChild(cap);draw();return wrap;
+  }
+  CS.addBlock=function(type){if(!DRAFT.blocks)DRAFT.blocks=[];var nb={id:_bid(),type:type,data:type==='header'?{text:'',level:2}:type==='list'?{style:'unordered',items:[]}:type==='gallery'?{layout:'grid',images:[]}:type==='image'?{url:'',caption:'',alt:''}:type==='video'?{url:'',caption:''}:type==='quote'?{text:'',caption:''}:type==='delimiter'?{}:{text:''}};DRAFT.blocks.push(nb);CS.renderBlocks();var host=$('cs_blocks');if(host&&host.lastChild)host.lastChild.scrollIntoView({block:'nearest'});};
   CS.delBlock=function(id){DRAFT.blocks=(DRAFT.blocks||[]).filter(function(b){return b.id!==id;});if(!DRAFT.blocks.length)DRAFT.blocks=[{id:_bid(),type:'paragraph',data:{text:''}}];CS.renderBlocks();};
   CS.moveBlock=function(id,dir){var a=DRAFT.blocks||[];var i=a.findIndex(function(b){return b.id===id;});var j=i+dir;if(i<0||j<0||j>=a.length)return;var t=a[i];a[i]=a[j];a[j]=t;CS.renderBlocks();};
 
@@ -772,5 +807,8 @@
   +'.cs-gal-x{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:14px;line-height:1}'
   +'.cs-gal-add{margin-top:8px}'
   +'.cs-gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:12px 0}.cs-gal>figure{margin:0}.cs-gal img{width:100%;border-radius:10px;display:block}.cs-gal figcaption{font-size:12px;color:var(--muted,#6b7280);margin-top:4px}.cs-gal-cap{grid-column:1/-1;text-align:center;font-size:12.5px;color:var(--muted,#6b7280)}'
+  /* VİDEO (responsive 16:9) — editör önizleme + public */
+  +'.cs-video{margin:14px 0}.cs-video-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}.cs-video figcaption{font-size:12.5px;color:var(--muted,#6b7280);margin-top:6px;text-align:center}'
+  +'.cs-video-prev{margin-top:8px}.cs-video-prev .cs-video{margin:0}'
   +'@media(max-width:720px){.cs-edit{grid-template-columns:1fr}.cs-grid2,.cs-grid3{grid-template-columns:1fr}.cs-img-results{grid-template-columns:repeat(3,1fr)}.cs-gal-edit{grid-template-columns:repeat(2,1fr)}}';
 })();
