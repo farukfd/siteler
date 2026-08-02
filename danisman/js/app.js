@@ -475,9 +475,16 @@ function obFinish(){obCollect();if(!(OB.brand||OB.advisor)){OB.step=1;obRender()
     if(OB.belge){f.eids.belgeNo=OB.belge.replace(/\D/g,'');eidsVerify();}
     if(OB.il&&typeof applyProvince==='function'){try{saLoad();applyProvince(OB.il);saSave();}catch(_e){}}
     if(OB.key)window.EMLAK_TENANT.tenant_key=OB.key;
-    initSaaSTheme();applySaaSSettings();try{eidsRenderPublic();applySchema();}catch(e){}
+    /* ★ PERSIST (KRİTİK: eskiden yalnız bellekteydi → reload'da 12 statik sayfa 'Selin Meridyen'e dönüyordu) */
+    var _bn=OB.brand||OB.advisor;
+    try{if(window.dnSetBrand)dnSetBrand({name:_bn,initial:(_bn||'M').trim().charAt(0).toLocaleUpperCase('tr')});}catch(e){}
+    try{localStorage.setItem('dn_firma',JSON.stringify(Object.assign({},SAAS_CONFIG.firma||{},{advisor:SAAS_CONFIG.advisorName,unvan:f.unvan,vergi:f.vergi,adres:f.adres,tel:f.tel,mail:f.mail,eids:f.eids})));}catch(e){}
+    try{localStorage.setItem('dn_iletisim',JSON.stringify({wa:(OB.tel||'').replace(/[^\d]/g,''),tel:OB.tel||'',mail:OB.mail||'',adres:OB.adres||''}));}catch(e){}
+    try{if(OB.key)localStorage.setItem('dn_prox',JSON.stringify({key:OB.key}));}catch(e){}
+    try{localStorage.setItem('dn_theme',JSON.stringify({accent:OB.accent||'',logo:OB.logo||''}));}catch(e){}
+    initSaaSTheme();applySaaSSettings();try{eidsRenderPublic();applySchema();if(typeof applyIletisim==='function')applyIletisim();}catch(e){}
     try{localStorage.setItem('dn_onboarded','1');}catch(e){}
-    obClose();toast('✓ Kurulum tamam! '+(OB.brand||OB.advisor)+' yayında.'+(OB.key?'':' (ProX anahtarını admin→ProX/EİDS\'ten ekleyebilirsiniz.)'));
+    obClose();toast('✓ Kurulum tamam! '+_bn+' yayında.'+(OB.key?'':' (ProX anahtarını admin→ProX/EİDS\'ten ekleyebilirsiniz.)'));
   }catch(e){toast('Kurulumda hata: '+(e&&e.message||e));}}
 window.openOnboarding=openOnboarding;window.obGo=obGo;window.obClose=obClose;window.obFinish=obFinish;
 /* Footer/başka sayfa → index.html#hash ile overlay aç (birebir footer için) */
@@ -1972,6 +1979,8 @@ window.addEventListener('load',function(){try{
      brand.js ile app.js'in AYNI adı kullanması için SAAS_CONFIG.brandName'i dn_brand'den senkronla;
      yoksa app.js "Selin Meridyen" render eder, brand.js "Didem Keskin" → çakışma + geç-render sızıntısı. */
   try{var _wl=JSON.parse(localStorage.getItem('dn_brand')||'{}');if(_wl&&_wl.name&&_wl.name.trim())SAAS_CONFIG.systemSettings.brandName=_wl.name.trim();}catch(e){}
+  /* dn_theme restore: accent/logo persist (SAAS tenantSettings kalıcı değil) → initSaaSTheme'den ÖNCE geri yükle */
+  try{var _dt=JSON.parse(localStorage.getItem('dn_theme')||'null');if(_dt){if(_dt.accent){SAAS_CONFIG.systemSettings.accent=_dt.accent;SAAS_CONFIG.systemSettings.gold=_dt.accent;SAAS_CONFIG.tenantSettings.accent=_dt.accent;}if(_dt.logo)SAAS_CONFIG.tenantSettings.logoUrl=_dt.logo;}}catch(e){}
   initSaaSTheme();applySaaSSettings();
   try{eidsRenderPublic();applySchema();applyProxyMode();abApply();}catch(e){}
   try{ilanLoad();}catch(e){}/* admin'de kaydedilmiş açık ilanları yükle (dn_listings_v1) */
