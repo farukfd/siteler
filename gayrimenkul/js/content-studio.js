@@ -75,48 +75,101 @@
     return t.replace(/^\s+/,'').trim();
   }
 
-  /* ---------- ÜRETİM ---------- */
+  /* ---------- ÜRETİM ÇEKİRDEĞİ (headless — hem tekli hem batch kullanır) ---------- */
+  var _uidc=0; function _uid(){_uidc=(_uidc+1)%1000;return Date.now()*1000+_uidc;}
+  function _sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
+  async function _aiText(body,tries){
+    tries=tries||3;
+    for(var i=0;i<tries;i++){
+      try{ var r=await CFG.ai(body); var t=r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text))); if(r&&r.fallback)t=null; if(t&&(''+t).trim())return (''+t).trim(); }catch(e){}
+      if(i<tries-1)await _sleep(1500*(i+1));/* rate-limit → artan backoff (1.5s,3s) */
+    }
+    return null;
+  }
+  async function _genOne(o,st){
+    st=st||function(){};
+    var text=await _aiText({persona:'office',tool:'blog',prompt:buildPrompt(o)},3);
+    if(!text)return null;
+    var g=parseOut(text);
+    if(!g.body){g.body=_cleanBody(text);if(!g.title)g.title=o.topic;}
+    g.body=_cleanBody(g.body);
+    var wc=wordCount(g.body);
+    if(!o.noExpand&&wc<o.minWords){ st('genişletiliyor');
+      var ep='Aşağıdaki makaleyi, aynı konu ve üslupta, EN AZ '+o.minWords+' kelimeye çıkacak şekilde GENİŞLET (yeni ## alt başlıklar, örnekler, detaylar ekle). Sadece genişletilmiş Markdown gövdeyi döndür (BASLIK/KATEGORI gibi etiket satırı EKLEME):\n\n'+g.body;
+      var t2=_cleanBody(await _aiText({persona:'office',tool:'blog',prompt:(CFG.guard?CFG.guard(ep):ep)},2));
+      if(t2&&wordCount(t2)>wc){g.body=t2;wc=wordCount(g.body);}
+    }
+    if(wc<40)return null;/* çok kısa/boş yanıt → başarısız say (atla/tekrar dene) */
+    return {
+      id:_uid(), title:g.title||o.topic, slug:slugify(g.title||o.topic), cat:g.cat||'Genel',
+      tags:(g.tags||'').split(/[,;]/).map(function(s){return s.trim();}).filter(Boolean).slice(0,8),
+      sum:g.sum||'', body:g.body||'', imgq:g.imgq||o.topic, img:null,
+      seo:{title:(g.title||o.topic).slice(0,60),desc:(g.sum||'').slice(0,160)},
+      status:'draft', date:today(), words:wc, src:'ai', icon:'📝'
+    };
+  }
+  async function _attachImage(a){ try{var res=await CFG.image(a.imgq||a.title); if(res&&!res._err&&res.length){var p=res[0];a.img={url:p.url,alt:p.alt||a.title,credit:p.credit,creditUrl:p.creditUrl};}}catch(e){} return a; }
+
+  /* ---------- TEKLİ ÜRETİM (editöre) ---------- */
   CS.generate = async function(){
     var topic=($('cs_topic')||{}).value||''; topic=topic.trim();
     if(!topic){toast('Lütfen bir konu/başlık girin.');return;}
     var o={topic:topic,keywords:(($('cs_kw')||{}).value||'').trim(),tone:(($('cs_tone')||{}).value||'bilgilendirici'),lang:(($('cs_lang')||{}).value||'tr'),minWords:parseInt(($('cs_len')||{}).value||'600',10)||600};
     var btn=$('cs_genBtn'); if(btn){btn._t=btn.textContent;btn.disabled=true;btn.textContent='✍️ Üretiliyor…';}
     _status('YZ makaleyi yazıyor… (sağlayıcı: '+_provLabel()+')','wait');
-    var text=null,err=null;
-    try{ var r=await CFG.ai({persona:'office',tool:'blog',prompt:buildPrompt(o)}); text=r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text))); if(r&&r.fallback)text=null; }
-    catch(e){err=e;}
-    if(!text){ if(btn){btn.disabled=false;btn.textContent=btn._t;}
-      var hint=_hasAnyKey()?'Seçili sağlayıcıya ulaşılamadı — anahtarı "Kaydet & Test Et" ile doğrulayın (ProX yerelde CORS nedeniyle çalışmayabilir).':'Önce bir anahtar girin: aşağıda ⚙️ Ayarlar → ProX / DeepSeek / OpenAI / Claude.';
-      _status('YZ yanıt vermedi. '+hint,'err');
-      var d=$('cs_set'); if(d&&!_hasAnyKey()){d.open=true;} return; }
-    var g=parseOut(text);
-    if(!g.body){ g.body=_cleanBody(text); if(!g.title)g.title=topic; }
-    g.body=_cleanBody(g.body);/* model başlık satırlarını (BASLIK:..) yanlışlıkla gövdeye kattıysa temizle */
-    var wc=wordCount(g.body);
-    /* ≥ hedef kelime kontrolü — kısa ise otomatik genişlet (tek deneme) */
-    if(wc<o.minWords){
-      _status('Makale kısa ('+wc+' kelime) — hedefe ('+o.minWords+') genişletiliyor…','wait');
-      try{
-        var ep='Aşağıdaki makaleyi, aynı konu ve üslupta, EN AZ '+o.minWords+' kelimeye çıkacak şekilde GENİŞLET (yeni ## alt başlıklar, örnekler, detaylar ekle). Sadece genişletilmiş Markdown gövdeyi döndür (BASLIK/KATEGORI gibi etiket satırı EKLEME):\n\n'+g.body;
-        var r2=await CFG.ai({persona:'office',tool:'blog',prompt:(CFG.guard?CFG.guard(ep):ep)});
-        var t2=r2&&(r2.answer||r2.text||(r2.data&&(r2.data.answer||r2.data.text)));
-        t2=_cleanBody(t2);
-        if(t2&&wordCount(t2)>wc){g.body=t2;wc=wordCount(g.body);}
-      }catch(e){}
-    }
-    DRAFT={
-      id:DRAFT&&DRAFT.id||Date.now(),
-      title:g.title||topic, slug:slugify(g.title||topic), cat:g.cat||'Genel',
-      tags:(g.tags||'').split(/[,;]/).map(function(s){return s.trim();}).filter(Boolean).slice(0,8),
-      sum:g.sum||'', body:g.body||'', imgq:g.imgq||topic,
-      img:null, seo:{title:(g.title||topic).slice(0,60),desc:(g.sum||'').slice(0,160)},
-      status:'draft', date:today(), words:wc, src:'ai', icon:'📝'
-    };
-    _fillEditor(DRAFT);
+    var a=await _genOne(o,function(){_status('Makale genişletiliyor (≥'+o.minWords+' kelime)…','wait');});
     if(btn){btn.disabled=false;btn.textContent=btn._t;}
-    _status('✓ Makale üretildi ('+wc+' kelime'+(wc>=o.minWords?', hedef tamam':', hedefin altında')+'). Görsel aranıyor…','ok');
+    if(!a){ var hint=_hasAnyKey()?'Seçili sağlayıcıya ulaşılamadı — anahtarı "Kaydet & Test Et" ile doğrulayın.':'Önce bir anahtar girin: ⚙️ Ayarlar → ProX / DeepSeek / OpenAI / Claude.';
+      _status('YZ yanıt vermedi. '+hint,'err'); var d=$('cs_set'); if(d&&!_hasAnyKey())d.open=true; return; }
+    DRAFT=a; _fillEditor(DRAFT);
+    _status('✓ Makale üretildi ('+a.words+' kelime'+(a.words>=o.minWords?', hedef tamam':', hedefin altında')+'). Görsel aranıyor…','ok');
     CS.findImage(DRAFT.imgq);
   };
+
+  /* ---------- GÜNLÜK OTOMATİK HABER: batch üret + zamanla ---------- */
+  function _todayAt(hour,min){ var d=new Date(); d.setHours(hour||0,min||0,0,0); return d.getTime(); }
+  CS.getSched=function(){ var s=(CFG.getSchedule&&CFG.getSchedule())||{}; return {enabled:!!s.enabled,startHour:(s.startHour!=null?s.startHour:8),count:(s.count||10),everyMin:(s.everyMin||60),topics:s.topics||''}; };
+  CS.saveSched=function(){ var s={enabled:!!($('cs_schEnable')||{}).checked,startHour:parseInt(($('cs_schStart')||{}).value||'8',10),count:parseInt(($('cs_schCount')||{}).value||'10',10),everyMin:parseInt(($('cs_schEvery')||{}).value||'60',10),topics:($('cs_schTopics')||{}).value||''};
+    if(CFG.setSchedule)CFG.setSchedule(s); toast('✓ Zamanlayıcı ayarları kaydedildi.'); };
+  function _topicList(){
+    var s=CS.getSched(); var raw=(s.topics||'').split('\n').map(function(x){return x.trim();}).filter(Boolean);
+    if(raw.length)return raw;
+    var pool=(CFG.topicPool&&CFG.topicPool())||['Sektörel güncel gelişmeler','Bölge analizi ve yatırım fırsatları','Alıcılar için rehber','Satıcılar için ipuçları','Piyasa trendleri'];
+    return pool;
+  }
+  CS.generateBatch=async function(){
+    var s={startHour:parseInt(($('cs_schStart')||{}).value||'8',10),count:parseInt(($('cs_schCount')||{}).value||'10',10),everyMin:parseInt(($('cs_schEvery')||{}).value||'60',10),minWords:600,tone:'bilgilendirici',lang:'tr'};
+    var topics=_topicList(); var city=(CFG.city&&CFG.city())||'';
+    var btn=$('cs_batchBtn'); if(btn){btn._t=btn.textContent;btn.disabled=true;}
+    var arts=(CFG.list&&CFG.list())||[]; var now=Date.now(); var made=0,fail=0;
+    var base=_todayAt(s.startHour,0);
+    for(var i=0;i<s.count;i++){
+      var topic=topics[i%topics.length]+(city?(' — '+city):'')+(topics.length<s.count?(' ('+(Math.floor(i/topics.length)+1)+')'):'');
+      if(btn)btn.textContent='Üretiliyor '+(i+1)+'/'+s.count+'…';
+      _status('📰 Günlük haber üretiliyor '+(i+1)+'/'+s.count+' — "'+topic+'"'+(fail?(' · '+fail+' atlandı'):''),'wait');
+      /* haber gövdesi ProX'ta kısa gelir → expand ile ~300+ kelimeye çıkar (kısa/boş ise atlanır) */
+      var a=await _genOne({topic:topic,keywords:'',tone:s.tone,lang:s.lang,minWords:s.minWords},function(){});
+      if(!a){ fail++; await _sleep(3000); continue; }/* rate-limit → bu haberi ATLA, bekle, devam et (batch'i kırma) */
+      a=await _attachImage(a);
+      a.publishAt=base+i*s.everyMin*60000;
+      a.status=(a.publishAt<=now)?'published':'scheduled';
+      arts.unshift(a); made++;
+      if(CFG.save)CFG.save(arts); CS.renderList();
+      if(i<s.count-1)await _sleep(2200);/* ProX ardışık çağrı rate-limit'ini yumuşat */
+    }
+    if(btn){btn.disabled=false;btn.textContent=btn._t;}
+    var pub=arts.filter(function(x){return x.status==='published';}).length, sc=arts.filter(function(x){return x.status==='scheduled';}).length;
+    _status((made?'✓ '+made+' haber üretildi'+(fail?(', '+fail+' atlandı (rate-limit — tekrar deneyin)'):'')+'. '+(sc?sc+' zamanlandı, ':'')+'zamanı gelen /blog\'da yayında.':'Üretilemedi ('+fail+' atlandı). ProX rate-limit olabilir; sağlayıcıyı DeepSeek/OpenAI yapıp tekrar deneyin.'),made?'ok':'err');
+    CS.runSchedule();
+  };
+  /* Zamanı gelen scheduled → published (statik "lazy-cron"; her sayfa yüklemesinde çalışır) */
+  CS.runSchedule=function(){
+    var arts=(CFG.list&&CFG.list())||[]; var now=Date.now(),ch=false;
+    arts.forEach(function(a){ if(a.status==='scheduled'&&a.publishAt&&a.publishAt<=now){a.status='published';ch=true;} });
+    if(ch&&CFG.save)CFG.save(arts);
+    return arts.filter(function(a){return a.status==='scheduled';}).length;
+  };
+  try{window.csRunSchedule=function(){try{return CS.runSchedule();}catch(e){return 0;}};}catch(e){}
 
   /* ---------- GÖRSEL (Pexels) ---------- */
   CS.findImage = async function(q){
@@ -215,8 +268,8 @@
     if($('cs_seoTitle'))$('cs_seoTitle').value=(a.seo&&a.seo.title)||'';
     if($('cs_seoDesc'))$('cs_seoDesc').value=(a.seo&&a.seo.desc)||'';
     if($('cs_imgq'))$('cs_imgq').value=a.imgq||'';
-    var prev=$('cs_coverPrev');
-    if(prev)prev.innerHTML=a.img?('<img src="'+esc(a.img.url)+'" alt="'+esc(a.img.alt||'')+'"><span class="cs-credit">📷 '+esc(a.img.credit||'')+' · Pexels</span>'):'<div class="cs-muted">Kapak görseli yok</div>';
+    if(a.img&&a.img.url)_setCover(a.img.url,a.img.alt,a.img.credit,a.img.creditUrl);
+    else{var prev=$('cs_coverPrev');if(prev)prev.innerHTML='<div class="cs-muted">Kapak görseli yok</div>';}
     _syncMeta();
   }
   function _collect(){
@@ -255,18 +308,24 @@
   CS.edit = function(id){ var a=(CFG.list&&CFG.list()||[]).filter(function(x){return x.id===id;})[0]; if(!a)return; DRAFT=JSON.parse(JSON.stringify(a)); DRAFT.imgq=DRAFT.imgq||DRAFT.title; _fillEditor(DRAFT); try{window.scrollTo(0,0);}catch(e){} };
   CS.del = function(id){ if(!confirm('Bu makale silinsin mi?'))return; var arts=(CFG.list&&CFG.list()||[]).filter(function(x){return x.id!==id;}); if(CFG.save)CFG.save(arts); CS.renderList(); };
 
+  function _hhmm(ts){try{var d=new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}catch(e){return '';}}
+  CS.publishNow=function(id){var arts=(CFG.list&&CFG.list())||[];var a=arts.filter(function(x){return x.id===id;})[0];if(!a)return;a.status='published';a.publishAt=Date.now();if(CFG.save)CFG.save(arts);toast('✓ Yayınlandı.');CS.renderList();};
   CS.renderList = function(){
     var host=$('cs_list'); if(!host)return; var arts=(CFG.list&&CFG.list())||[];
-    if(!arts.length){host.innerHTML='<div class="cs-muted" style="padding:16px">Henüz makale yok. Yukarıdan üretin veya "Yeni".</div>';return;}
-    host.innerHTML=arts.map(function(a){
+    var pub=arts.filter(function(a){return a.status==='published'||!a.status;}).length, sc=arts.filter(function(a){return a.status==='scheduled';}).length, dr=arts.filter(function(a){return a.status==='draft';}).length;
+    var head='<div class="cs-listhead"><span class="cs-badge pub">'+pub+' yayında</span> <span class="cs-badge sch">'+sc+' zamanlı</span> <span class="cs-badge draft">'+dr+' taslak</span></div>';
+    if(!arts.length){host.innerHTML='<div class="cs-muted" style="padding:16px">Henüz makale yok. Üretin, "Günlük Haberler"den toplu üretin veya "Boş makale".</div>';return;}
+    host.innerHTML=head+arts.map(function(a){
+      var st=a.status||'published';
+      var badge=st==='published'?'<span class="cs-badge pub">Yayında</span>':st==='scheduled'?('<span class="cs-badge sch">🕒 '+_hhmm(a.publishAt)+'</span>'):'<span class="cs-badge draft">Taslak</span>';
       return '<div class="cs-row">'
         +'<div class="cs-row-img">'+(a.img&&a.img.url?'<img src="'+esc(a.img.url)+'" alt="">':'<span>'+(a.icon||'📝')+'</span>')+'</div>'
         +'<div class="cs-row-main"><b>'+esc(a.title||'—')+'</b>'
-        +'<div class="cs-row-sub">'+esc(a.cat||'Genel')+' · '+(a.words||wordCount(a.body))+' kelime · '+esc(a.date||'')
-        +' · <span class="cs-badge '+(a.status==='published'?'pub':'draft')+'">'+(a.status==='published'?'Yayında':'Taslak')+'</span>'
+        +'<div class="cs-row-sub">'+esc(a.cat||'Genel')+' · '+(a.words||wordCount(a.body))+' kelime · '+esc(a.date||'')+' · '+badge
         +(a.src==='ai'?' · <span class="cs-badge ai">YZ</span>':'')+'</div></div>'
-        +'<div class="cs-row-act"><button type="button" onclick="ContentStudio.edit('+a.id+')">✎</button>'
-        +'<button type="button" onclick="ContentStudio.del('+a.id+')">🗑</button></div></div>';
+        +'<div class="cs-row-act">'+(st!=='published'?'<button type="button" title="Şimdi yayınla" onclick="ContentStudio.publishNow('+a.id+')">▲</button>':'')
+        +'<button type="button" title="Düzenle" onclick="ContentStudio.edit('+a.id+')">✎</button>'
+        +'<button type="button" title="Sil" onclick="ContentStudio.del('+a.id+')">🗑</button></div></div>';
     }).join('');
   };
 
@@ -315,19 +374,34 @@
     if(DRAFT)_fillEditor(DRAFT);
   };
 
+  CS.tab=function(name,btn){
+    [].forEach.call(document.querySelectorAll('#'+ (HOST.id||'csHost') +' .cs-panel'),function(p){p.style.display=(p.getAttribute('data-p')===name)?'':'none';});
+    [].forEach.call(document.querySelectorAll('#'+ (HOST.id||'csHost') +' .cs-tab'),function(b){b.classList.toggle('on',b.getAttribute('data-t')===name);});
+    if(name==='makale')CS.renderList();
+  };
   function _html(k){
     var prov=k.provider||'auto';
     var noKey=!(k.proxKey||k.dsKey||k.oaKey||k.clKey);
     var q=(CFG.proxInfo&&CFG.proxInfo())||null;
+    var s=CS.getSched();
+    var t0=noKey?'ayar':'uret';
     return ''
     +'<div class="cs-wrap">'
     /* HERO */
     +'<div class="cs-hero"><div class="cs-hero-ic">✨</div><div><h2>İçerik Stüdyosu</h2>'
-      +'<p>SEO uyumlu, ProX destekli makaleler üretin — konuya uygun gerçek görselle birlikte <b>/blog</b>\'da yayınlayın.</p></div></div>'
+      +'<p>SEO uyumlu, ProX destekli makaleler + günlük otomatik haber — gerçek görselle <b>/blog</b>\'da yayınlayın.</p></div></div>'
     /* SAĞLAYICI CHIP\'LERİ */
-    +'<div class="cs-provbar"><span class="cs-provbar-l">Yapay zekâ:</span><div class="cs-chips" id="cs_provChips"></div>'
-      +'<button type="button" class="cs-link" onclick="var d=document.getElementById(\'cs_set\');if(d){d.open=true;d.scrollIntoView({behavior:\'smooth\'});}">⚙️ Anahtarlar & Ayarlar</button></div>'
-    +'<div class="cs-status" id="cs_status">'+(noKey?'⚠️ Henüz sağlayıcı anahtarı yok — <b>Anahtarlar & Ayarlar</b>\'dan ProX / DeepSeek / OpenAI / Claude anahtarı girin.':'Aktif sağlayıcı: '+esc(({auto:'Otomatik',prox:'ProX',deepseek:'DeepSeek',openai:'OpenAI',claude:'Claude'})[prov]||prov))+'</div>'
+    +'<div class="cs-provbar"><span class="cs-provbar-l">Yapay zekâ:</span><div class="cs-chips" id="cs_provChips"></div></div>'
+    +'<div class="cs-status" id="cs_status">'+(noKey?'⚠️ Henüz sağlayıcı anahtarı yok — <b>Ayarlar</b> sekmesinden ProX / DeepSeek / OpenAI / Claude anahtarı girin.':'Aktif sağlayıcı: '+esc(({auto:'Otomatik',prox:'ProX',deepseek:'DeepSeek',openai:'OpenAI',claude:'Claude'})[prov]||prov))+'</div>'
+    /* SEKME NAV */
+    +'<div class="cs-tabs">'
+      +'<button type="button" class="cs-tab'+(t0==='uret'?' on':'')+'" data-t="uret" onclick="ContentStudio.tab(\'uret\',this)">✍️ Makale Üret</button>'
+      +'<button type="button" class="cs-tab" data-t="haber" onclick="ContentStudio.tab(\'haber\',this)">📰 Günlük Haber</button>'
+      +'<button type="button" class="cs-tab" data-t="makale" onclick="ContentStudio.tab(\'makale\',this)">📄 Makaleler</button>'
+      +'<button type="button" class="cs-tab'+(t0==='ayar'?' on':'')+'" data-t="ayar" onclick="ContentStudio.tab(\'ayar\',this)">⚙️ Ayarlar</button>'
+    +'</div>'
+    /* ===== PANEL: ÜRET ===== */
+    +'<div class="cs-panel" data-p="uret"'+(t0!=='uret'?' style="display:none"':'')+'>'
     /* ADIM 1 — ÜRET */
     +'<div class="cs-card"><div class="cs-step"><span class="cs-step-n">1</span><h3>Konu &amp; ayarlar</h3></div>'
       +'<div class="cs-f"><label>Konu / başlık fikri *</label><input id="cs_topic" placeholder="ör. 2026\'da yatırım için doğru bölge nasıl seçilir?"></div>'
@@ -378,10 +452,24 @@
       +'<div class="cs-actions cs-sticky"><button type="button" class="cs-btn pri" onclick="ContentStudio.save(true)">✓ Kaydet &amp; Yayınla</button>'
       +'<button type="button" class="cs-btn" onclick="ContentStudio.save(false)">Taslak kaydet</button></div>'
     +'</div>'
-    /* MAKALELER */
-    +'<div class="cs-card"><div class="cs-step"><span class="cs-step-n">3</span><h3>Makaleler</h3></div><div id="cs_list"></div></div>'
-    /* AYARLAR */
-    +'<details class="cs-card cs-settings" id="cs_set"'+(noKey?' open':'')+'><summary>⚙️ Yapay Zekâ &amp; Görsel Ayarları</summary>'
+    +'</div>'/* /panel uret */
+    /* ===== PANEL: GÜNLÜK HABER ===== */
+    +'<div class="cs-panel" data-p="haber" style="display:none">'
+      +'<div class="cs-card"><div class="cs-step"><span class="cs-step-n">📰</span><h3>Günlük Otomatik Haber</h3></div>'
+        +'<p class="cs-muted">Belirlenen saatten itibaren <b>saat başı</b> yayınlanacak haberleri toplu üretin. Zamanı gelen haber /blog\'da otomatik görünür; kalanlar zamanı geldikçe yayınlanır. Her haberi Makaleler sekmesinden düzenleyebilirsiniz.</p>'
+        +'<div class="cs-grid3"><div class="cs-f"><label>Başlangıç saati (0-23)</label><input id="cs_schStart" type="number" min="0" max="23" value="'+s.startHour+'"></div>'
+        +'<div class="cs-f"><label>Haber adedi</label><input id="cs_schCount" type="number" min="1" max="24" value="'+s.count+'"></div>'
+        +'<div class="cs-f"><label>Aralık (dakika)</label><input id="cs_schEvery" type="number" min="15" max="240" step="15" value="'+s.everyMin+'"></div></div>'
+        +'<div class="cs-f"><label>Konu havuzu <span class="cs-muted">(her satır bir konu — boşsa sektörel otomatik)</span></label><textarea id="cs_schTopics" rows="6" placeholder="Her satıra bir haber konusu yazın…">'+esc(s.topics||'')+'</textarea></div>'
+        +'<label class="cs-check"><input type="checkbox" id="cs_schEnable"'+(s.enabled?' checked':'')+'> Günlük otomatik yayın etkin (zamanı gelen haberler otomatik yayınlanır)</label>'
+        +'<div class="cs-actions"><button type="button" class="cs-btn pri lg" id="cs_batchBtn" onclick="ContentStudio.generateBatch()">📰 Günlük Haberleri Üret</button>'
+        +'<button type="button" class="cs-btn" onclick="ContentStudio.saveSched()">Ayarları Kaydet</button></div>'
+      +'</div>'
+    +'</div>'/* /panel haber */
+    /* ===== PANEL: MAKALELER ===== */
+    +'<div class="cs-panel" data-p="makale" style="display:none"><div class="cs-card"><div class="cs-step"><span class="cs-step-n">📄</span><h3>Makaleler</h3></div><div id="cs_list"></div></div></div>'
+    /* ===== PANEL: AYARLAR ===== */
+    +'<div class="cs-panel" data-p="ayar"'+(t0!=='ayar'?' style="display:none"':'')+'><div class="cs-card cs-settings" id="cs_set">'
       +'<div class="cs-f"><label>Üretim sağlayıcısı</label><select id="cs_provider" onchange="ContentStudio.setProvider(this.value)">'
         +'<option value="auto"'+(prov==='auto'?' selected':'')+'>Otomatik (anahtarı olanı kullan)</option>'
         +'<option value="prox"'+(prov==='prox'?' selected':'')+'>ProX — emlakekspertizi.com (kotalı)</option>'
@@ -402,7 +490,7 @@
       +'<div class="cs-muted" style="margin:8px 0 12px">Anahtarlar yalnız bu yönetim oturumunuzda (tarayıcınızda) saklanır. ProX anahtarsız da kullanılabilir (yayında sunucu-proxy).</div>'
       +'<div class="cs-actions"><button type="button" class="cs-btn pri" onclick="ContentStudio.saveKeys(true)">Kaydet &amp; Test Et</button>'
       +'<button type="button" class="cs-btn" onclick="ContentStudio.saveKeys(false)">Kaydet</button></div>'
-    +'</details>'
+    +'</div></div>'/* /settings card, /panel ayar */
     +'</div>';
   }
 
@@ -465,6 +553,13 @@
   +'.cs-chip.has{border-color:var(--accent,#0ea5a5)}.cs-chip.on{background:var(--accent,#0ea5a5);color:var(--on-accent,#fff);border-color:transparent}'
   +'.cs-link{background:none;border:none;color:var(--accent,#0ea5a5);font:inherit;font-weight:600;font-size:12.5px;cursor:pointer;text-decoration:underline}'
   +'.cs-status{margin:8px 0 4px;padding:10px 14px;border-radius:10px;background:var(--surface,#f3f4f6);border:1px solid var(--line,#e5e7eb);font-size:13px;line-height:1.5}'
+  /* TABS */
+  +'.cs-tabs{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 0;border-bottom:2px solid var(--line,#e5e7eb)}'
+  +'.cs-tab{background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;padding:10px 16px;font:inherit;font-weight:700;font-size:13.5px;color:var(--muted,#6b7280);cursor:pointer}'
+  +'.cs-tab:hover{color:inherit}.cs-tab.on{color:var(--accent,#0ea5a5);border-bottom-color:var(--accent,#0ea5a5)}'
+  +'.cs-check{display:flex;gap:8px;align-items:center;margin:4px 0 14px;font-size:13.5px}.cs-check input{width:auto}'
+  +'.cs-listhead{display:flex;gap:8px;margin-bottom:12px}'
+  +'.cs-badge.sch{background:#fff4e5;color:#b45309}'
   +'.cs-status.wait{border-color:#d97706;color:#b45309}.cs-status.ok{border-color:#1a7f4b;color:#1a7f4b}.cs-status.err{border-color:#c0392b;color:#c0392b}'
   /* CARDS + STEPS */
   +'.cs-card{background:var(--surface,#fff);border:1px solid var(--line,#e5e7eb);border-radius:16px;padding:20px 20px;margin:14px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}'

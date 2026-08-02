@@ -1065,12 +1065,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
           <div class="afield"><label>Karşılama Mesajı</label><input id="ai_greet" value="Merhaba! Ben Meridyen ProX Asistanı. Bölge, fiyat veya portföy hakkında sorabilirsiniz."></div>
           <div class="afield"><label>Asistan Kişiliği / Talimat</label><textarea id="ai_persona" rows="2">Meridyen Gayrimenkul'ün yardımcı, profesyonel emlak danışmanısın. Türkçe, kısa ve net yanıt ver. Bölge fiyat verisi sorulursa örnek olduğunu belirt.</textarea></div>
           <div style="border-top:1px dashed var(--line);margin:14px 0 12px;padding-top:12px">
-            <div class="drh" style="margin-bottom:6px">🧠 DeepSeek Yapay Zeka Anahtarı <span class="badge-ai-feat">opsiyonel</span></div>
-            <div class="csub" style="margin-bottom:10px">Kendi DeepSeek API anahtarınızı girerseniz <b>tüm yapay zeka üretimi</b> (ProX Asistan sohbeti, blog/bölge/kurumsal metin üretimi) doğrudan <b>DeepSeek</b> ile çalışır. Boş bırakırsanız ProX sunucu yapay zekası kullanılır. <b>ProX API anahtarı</b> (🔌 ProX API sekmesi) ise emlak endeksi, değerleme ve PDF/dosyalama verileri içindir — ikisi ayrı çalışır.</div>
-            <div class="afield"><label>DeepSeek API Anahtarı <span style="color:var(--muted);font-weight:400">(sk-...)</span></label><input id="ai_dskey" type="password" placeholder="sk-..." autocomplete="off" style="font-family:var(--num),monospace;font-size:12px"></div>
-            <div class="afield"><label>Model</label><select id="ai_dsmodel"><option value="deepseek-chat">deepseek-chat (V3 · genel)</option><option value="deepseek-reasoner">deepseek-reasoner (R1 · akıl yürütme)</option></select></div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="abtn" onclick="aiDsTest()">Bağlan & Test Et</button><span class="csub" style="margin:0">Anahtar istemcide saklanır; yayında sunucu-proxy önerilir.</span></div>
-            <div id="ai_dsstatus" style="margin-top:10px"></div>
+            <div class="csub">🔑 Yapay zekâ anahtarları (DeepSeek / OpenAI / Claude / ProX / Pexels) artık tek yerde: <b>✨ İçerik Stüdyosu → ⚙️ Ayarlar</b> sekmesi. Asistan da oradaki sağlayıcıyı kullanır.</div>
           </div>
           <button class="btn btn-primary btn-sm" onclick="saveAiCfg()">Kaydet</button>
         </div>
@@ -1976,8 +1971,8 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 </div>
 
   <script src="../shared/eids.js?v=1"></script>
-  <script src="js/app.js?v=29"></script>
-  <script src="js/content-studio.js?v=6"></script>
+  <script src="js/app.js?v=31"></script>
+  <script src="js/content-studio.js?v=11"></script>
   <script src="js/hero-pusula.js?v=2"></script>
   <script src="js/mahalle-endeks.js?v=8"></script>
   <script src="js/kurumsal-sayfalar.js?v=4"></script>

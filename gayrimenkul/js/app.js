@@ -2319,8 +2319,11 @@ async function csPexels(query,opts){
 try{window.csPexels=csPexels;}catch(e){}
 /* İçerik Stüdyosu (content-studio.js) — gayrimenkul entegrasyonu */
 var _csMounted=false;
+function _csApplyProxKey(){/* studio ProX anahtarını uygula (reload'da proxy-mode temizlediği için AICFG.proxKey kalıcı) */
+  try{var pk=(AICFG&&AICFG.proxKey||'').trim();if(pk){if(typeof PROX!=='undefined'&&PROX)PROX.key=pk;window.EMLAK_PROXY_MODE=false;if(window.EMLAK_TENANT)window.EMLAK_TENANT.tenant_key=pk;}}catch(e){}}
 function csMountGM(){
   if(typeof ContentStudio==='undefined'||!ContentStudio.mount)return;
+  _csApplyProxKey();
   ContentStudio.mount('csHost',{
     vertical:'gayrimenkul',
     persona:'emlak/gayrimenkul içerik editörü',
@@ -2330,14 +2333,18 @@ function csMountGM(){
     image:function(q){return csPexels(q);},
     list:function(){try{return (typeof BLOGS!=='undefined'&&BLOGS)||[];}catch(e){return [];}},
     save:function(arts){try{BLOGS=arts;if(typeof saveAll==='function')saveAll();if(typeof renderBlogRows==='function')renderBlogRows();}catch(e){}},
-    getKeys:function(){try{return {provider:AICFG.provider||'auto',proxKey:(PROX&&PROX.key)||'',dsKey:AICFG.dsKey||'',oaKey:AICFG.oaKey||'',clKey:AICFG.clKey||'',pexelsKey:AICFG.pexelsKey||''};}catch(e){return {};}},
+    getKeys:function(){try{return {provider:AICFG.provider||'auto',proxKey:(AICFG.proxKey||(PROX&&PROX.key)||''),dsKey:AICFG.dsKey||'',oaKey:AICFG.oaKey||'',clKey:AICFG.clKey||'',pexelsKey:AICFG.pexelsKey||''};}catch(e){return {};}},
     setKeys:function(k){try{
       AICFG.provider=k.provider||'auto';AICFG.dsKey=k.dsKey||'';AICFG.oaKey=k.oaKey||'';AICFG.clKey=k.clKey||'';AICFG.pexelsKey=k.pexelsKey||'';
-      /* ProX anahtarı girildiyse: doğrudan gönder (proxy-mode kapat → proxApi X-Tenant-Key ekler) */
-      if(k.proxKey&&(''+k.proxKey).trim()){var pk=(''+k.proxKey).trim();if(typeof PROX!=='undefined'&&PROX)PROX.key=pk;try{window.EMLAK_PROXY_MODE=false;window.EMLAK_TENANT.tenant_key=pk;}catch(e){}}
+      AICFG.proxKey=(k.proxKey&&(''+k.proxKey).trim())||'';/* kalıcı: reload'da proxy-mode PROX.key'i temizlese de buradan geri uygulanır */
+      _csApplyProxKey();
       if(typeof saveAll==='function')saveAll();
     }catch(e){}},
     proxInfo:function(){try{var q=JSON.parse(localStorage.getItem('prox_quota')||'null')||{count:0};return {count:q.count||0,max:(PROX&&PROX.quotaMax)||10000};}catch(e){return {count:0,max:10000};}},
+    getSchedule:function(){try{return (AICFG&&AICFG.schedule)||{};}catch(e){return {};}},
+    setSchedule:function(s){try{AICFG.schedule=s;if(typeof saveAll==='function')saveAll();}catch(e){}},
+    topicPool:function(){var il=(typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name)||'bölgenizde';
+      return ['2026\'da '+il+' konut piyasası: fiyat ve trend beklentileri','Yatırım için doğru bölge nasıl seçilir?','Ev alırken dikkat edilmesi gereken 10 kritik nokta','Kiralık mı satılık mı? Yatırımcı için karşılaştırma','Deprem yönetmeliği ve güvenli konut rehberi','Tapu ve satış işlemlerinde adım adım süreç','Gayrimenkul değerlemesi nasıl yapılır?','Kentsel dönüşümde hak sahibi olarak haklarınız','İlk evini alacaklar için finansman ve kredi rehberi','Konutta enerji verimliliği ve değere etkisi','Yabancıya konut satışı ve vatandaşlık süreci','Emlak danışmanıyla çalışmanın avantajları'];},
     toast:function(m){if(typeof toast==='function')toast(m);},
     guard:function(p){return (typeof aiGuard==='function')?aiGuard(p):p;}
   });
@@ -3091,7 +3098,9 @@ async function proxBlogFeed(force){if(_proxBlogCache&&!force)return _proxBlogCac
     if(r&&!r.fallback){var arr=r.posts||r.data||r.items||(Array.isArray(r)?r:[]);
       out=(arr||[]).map(function(p,i){return {id:'px'+(p.id||i),title:p.title||p.baslik||'',cat:p.cat||p.category||p.kategori||'ProX',sum:p.summary||p.ozet||p.excerpt||(''+(p.body||p.content||'')).slice(0,150),body:p.body||p.content||p.icerik||'',icon:'📰',date:p.date||p.published||'',meta:((p.date||p.published||'')+' · ProX Blog').trim(),src:'prox'};}).filter(function(p){return p.title;});}}catch(e){}
   _proxBlogCache=out;return out;}
-function blogAllPosts(){var px=_proxBlogCache||[];var local=(typeof BLOGS!=='undefined'?BLOGS:[]);var seen={},all=[];
+function blogAllPosts(){try{if(typeof csRunSchedule==='function')csRunSchedule();}catch(e){}/* zamanı gelen haberleri otomatik yayınla */
+  var px=_proxBlogCache||[];var local=(typeof BLOGS!=='undefined'?BLOGS:[]).filter(function(b){return !b.status||b.status==='published';});/* taslak/zamanlı gizli */
+  var seen={},all=[];
   local.concat(px).forEach(function(b){var k=(b.title||'').toLocaleLowerCase('tr');if(k&&!seen[k]){seen[k]=1;all.push(b);}});return all;}
 async function blogFetchProx(){var btn=document.getElementById('blFetchBtn');if(btn){btn.disabled=true;btn.textContent='Çekiliyor…';}
   var posts=await proxBlogFeed(true);
@@ -3306,11 +3315,14 @@ function fillAiCfg(){document.getElementById('ai_enable').checked=AICFG.enable;d
   var dk=document.getElementById('ai_dskey');if(dk)dk.value=AICFG.dsKey||'';
   var dm=document.getElementById('ai_dsmodel');if(dm)dm.value=AICFG.dsModel||'deepseek-chat';
   if(typeof aiDsStatus==='function')aiDsStatus();}
-function saveAiCfg(){var _dk=document.getElementById('ai_dskey'),_dm=document.getElementById('ai_dsmodel');
-  AICFG={enable:document.getElementById('ai_enable').checked,greet:document.getElementById('ai_greet').value,persona:document.getElementById('ai_persona').value,
-    dsKey:(_dk?_dk.value.trim():(AICFG.dsKey||'')),dsModel:(_dm&&_dm.value?_dm.value.trim():(AICFG.dsModel||'deepseek-chat'))};
-  saveAll();initAiAssistant();if(typeof aiDsStatus==='function')aiDsStatus();
-  toast('✓ AI asistan ayarları kaydedildi.'+(AICFG.dsKey?' · DeepSeek anahtarı aktif (YZ artık DeepSeek ile çalışır).':' · YZ ProX sunucu AI\'si ile çalışır.'));}
+function saveAiCfg(){
+  /* YZ anahtarları artık TEK yerde: İçerik Stüdyosu → Ayarlar. Burada yalnız asistan
+     davranışı (aç/kapa, karşılama, kişilik). AICFG'nin diğer alanlarını KORU (Object.assign). */
+  AICFG.enable=document.getElementById('ai_enable').checked;
+  AICFG.greet=document.getElementById('ai_greet').value;
+  AICFG.persona=document.getElementById('ai_persona').value;
+  saveAll();initAiAssistant();
+  toast('✓ AI asistan ayarları kaydedildi.');}
 function toggleAiFab(){AICFG.enable=document.getElementById('ai_enable').checked;saveAll();initAiAssistant();}
 
 /* shared Claude API caller (works in Claude artifact runtime; in production → emlakekspertizi İçerik Asistanı proxy) */
