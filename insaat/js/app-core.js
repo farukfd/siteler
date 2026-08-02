@@ -209,6 +209,7 @@ function publishConfig(){
     ADS:(typeof ADS!=='undefined'?ADS:null),
     SOCIAL:(typeof SOCIAL!=='undefined'?SOCIAL:null),
     CONTACT:{tel:SETTINGS.firmaTel,email:SETTINGS.firmaEmail,adres:SETTINGS.firmaAdres,wa:SETTINGS.waNumber,calisma:SETTINGS.firmaCalisma},
+    THEME:{accent:SETTINGS.tenantAccent||'',font:SETTINGS.tenantFont||''},
     at:Date.now()
   })); }catch(e){}
 }
@@ -3009,3 +3010,170 @@ function insBoot(){
 }
 window.addEventListener('popstate',insRoute);
 addEventListener('hashchange',checkHash);insBoot();
+
+/* ═══════════════ KURULUM SİHİRBAZI (Faz 1) + TEMA/FONT PERSİST (Faz 0 boşluğu) ═══════════════
+   insaat'ta tema persist YOKTU (window.__theme hiç atanmıyordu; font teması hiç yoktu).
+   Wipe-proof <style id="tenant-theme"> + Google Fonts → SETTINGS.tenantAccent/tenantFont'ta saklanır,
+   publishConfig ile pub.THEME'e taşınır → brand.js tüm public/yasal sayfalarda uygular. */
+function _obLighten(hex,amt){try{var n=parseInt(hex.slice(1),16);var r=Math.min(255,(n>>16)+amt),g=Math.min(255,((n>>8)&255)+amt),b=Math.min(255,(n&255)+amt);return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);}catch(e){return hex;}}
+var INS_FONTS={'Inter':'Inter:wght@400;500;600;700;800','Poppins':'Poppins:wght@400;500;600;700','Manrope':'Manrope:wght@400;500;600;700;800','Sora':'Sora:wght@400;500;600;700','DM Sans':'DM+Sans:wght@400;500;600;700','Nunito':'Nunito:wght@400;600;700;800','Montserrat':'Montserrat:wght@400;500;600;700','Figtree':'Figtree:wght@400;500;600;700','Playfair Display':'Playfair+Display:wght@500;600;700'};
+function applyTenantTheme(accent,font){
+  try{
+    if(accent&&typeof accent==='string'&&accent.charAt(0)==='#'){
+      var a2=_obLighten(accent,20),on=(typeof readableOn==='function')?readableOn(accent):'#ffffff';
+      var css=':root{--accent:'+accent+';--accent-2:'+a2+';--on-accent:'+on+';}';
+      var st=document.getElementById('tenant-theme');
+      if(!st){st=document.createElement('style');st.id='tenant-theme';}
+      st.textContent=css;(document.head||document.documentElement).appendChild(st);
+      var r=document.documentElement.style;r.setProperty('--accent',accent);r.setProperty('--accent-2',a2);r.setProperty('--on-accent',on);
+    }
+    if(font&&INS_FONTS[font]){
+      var lid='brand-font-'+font.replace(/\s+/g,'');
+      if(!document.getElementById(lid)){var l=document.createElement('link');l.rel='stylesheet';l.id=lid;l.href='https://fonts.googleapis.com/css2?family='+INS_FONTS[font]+'&display=swap';(document.head||document.documentElement).appendChild(l);}
+      document.documentElement.style.setProperty('--brand-font',"'"+font+"'");
+      if(document.body)document.body.style.fontFamily="'"+font+"', system-ui, -apple-system, sans-serif";
+    }else if(font===''){if(document.body)document.body.style.removeProperty('font-family');document.documentElement.style.removeProperty('--brand-font');}
+  }catch(e){}
+}
+window.applyTenantTheme=applyTenantTheme;window.INS_FONTS=INS_FONTS;
+
+var OB_CSS='#obWrap{position:fixed;inset:0;z-index:99999;display:none;align-items:flex-start;justify-content:center;background:rgba(8,12,20,.55);overflow:auto;padding:30px 16px}'
++'#obWrap.open{display:flex}'
++'#obWrap .ob-box{position:relative;background:var(--surface,#fff);color:var(--ink,#0e1420);max-width:600px;width:100%;border:1px solid var(--line,#e5e9f0);border-radius:18px;padding:24px 26px;box-shadow:0 24px 70px rgba(0,0,0,.32);font-family:inherit}'
++'#obWrap h3{margin:0 0 2px;font-size:19px}'
++'#obWrap .ob-sub{color:var(--muted,#5a6472);font-size:13px;line-height:1.6;margin:0 0 4px}'
++'#obWrap label{display:block;font-size:12.5px;font-weight:600;margin:0 0 5px;color:var(--ink,#0e1420)}'
++'#obWrap .ob-field{margin-top:12px}'
++'#obWrap .ob-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}'
++'#obWrap input[type=text],#obWrap input:not([type]),#obWrap select,#obWrap input[type=color]{width:100%;padding:11px;border:1px solid var(--line,#e5e9f0);border-radius:10px;font:inherit;background:var(--bg,#fff);color:inherit;box-sizing:border-box}'
++'#obWrap input[type=color]{height:44px;padding:4px}'
++'#obWrap .ob-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted,#5a6472);line-height:1}'
++'#obWrap .ob-btn{padding:10px 16px;border:1px solid var(--line,#e5e9f0);border-radius:10px;background:var(--bg,#fff);color:inherit;cursor:pointer;font:inherit;font-weight:600}'
++'#obWrap .ob-btn.pri{background:var(--accent,#c8102e);color:var(--on-accent,#fff);border-color:transparent}'
++'#obWrap .ob-sum{background:var(--bg,#f7f9fc);border:1px solid var(--line,#e5e9f0);border-radius:10px;padding:12px 14px;margin-top:12px;font-size:13px;line-height:1.9}';
+
+var _OB_ILLER=['Adana','Adıyaman','Afyonkarahisar','Ağrı','Aksaray','Amasya','Ankara','Antalya','Ardahan','Artvin','Aydın','Balıkesir','Bartın','Batman','Bayburt','Bilecik','Bingöl','Bitlis','Bolu','Burdur','Bursa','Çanakkale','Çankırı','Çorum','Denizli','Diyarbakır','Düzce','Edirne','Elazığ','Erzincan','Erzurum','Eskişehir','Gaziantep','Giresun','Gümüşhane','Hakkâri','Hatay','Iğdır','Isparta','İstanbul','İzmir','Kahramanmaraş','Karabük','Karaman','Kars','Kastamonu','Kayseri','Kırıkkale','Kırklareli','Kırşehir','Kilis','Kocaeli','Konya','Kütahya','Malatya','Manisa','Mardin','Mersin','Muğla','Muş','Nevşehir','Niğde','Ordu','Osmaniye','Rize','Sakarya','Samsun','Siirt','Sinop','Sivas','Şanlıurfa','Şırnak','Tekirdağ','Tokat','Trabzon','Tunceli','Uşak','Van','Yalova','Yozgat','Zonguldak'];
+function _obE(s){return (''+(s==null?'':s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+var OB={step:1,brandUrl:'',il:'',name:'',name2:'',unvan:'',vergi:'',vergiDaire:'',adres:'',tel:'',mail:'',wa:'',yetkili:'',calisma:'',mersis:'',ticaretSicil:'',oda:'',kep:'',belge:'',logo:'',favicon:'',accent:'',font:'',fb:'',ig:'',x:'',li:'',yt:'',seoTitle:'',seoDesc:'',demoMode:'ornek'};
+var OB_STEPS=['İl & Marka','Firma & İletişim','Yasal Künye','Marka & Tema','Sosyal Medya','SEO & İçerik','Yayın'];
+function obSeed(){try{
+  var S=(typeof SETTINGS!=='undefined'&&SETTINGS)||{},B=(typeof BRAND!=='undefined'&&BRAND)||{},SO=(typeof SOCIAL!=='undefined'&&SOCIAL)||{};
+  var keep=function(v,bad){return (v&&(''+v).indexOf(bad)<0)?v:'';};
+  OB.il='';OB.name=(B.name&&B.name!=='Meridyen')?B.name:'';OB.name2=(B.name2&&(''+B.name2).indexOf('Yapı')<0)?(''+B.name2).trim():'';
+  OB.unvan=keep(S.firmaUnvan,'Meridyen');OB.vergi=keep(S.firmaVergiNo,'1234567890');OB.vergiDaire=keep(S.firmaVergiDairesi,'Beşiktaş');
+  OB.adres=keep(S.firmaAdres,'Levent');OB.tel=keep(S.firmaTel,'000 00 00');OB.mail=keep(S.firmaEmail,'meridyen');OB.wa=keep(S.waNumber,'905001234567');
+  OB.yetkili=keep(S.firmaYetkili,'Genel Müdür');OB.calisma=keep(S.firmaCalisma,'');
+  OB.mersis=keep(S.firmaMersis,'0123456789012345');OB.ticaretSicil=keep(S.firmaTicaretSicil,'123456');OB.oda=keep(S.firmaOda,'İstanbul Ticaret');OB.kep=keep(S.firmaKep,'meridyenyapi');
+  OB.belge=keep(S.eidsYetkiBelgeNo,'');
+  OB.accent=S.tenantAccent||'';OB.font=S.tenantFont||'';OB.logo='';OB.favicon='';
+  OB.fb=SO.facebook||'';OB.ig=SO.instagram||'';OB.x=SO.x||'';OB.li=SO.linkedin||'';OB.yt=SO.youtube||'';
+  OB.seoTitle=keep(S.metaTitle,'Meridyen');OB.seoDesc=keep(S.metaDesc,'Meridyen');
+}catch(e){}}
+function obCollect(){function v(id){var e=document.getElementById(id);return e?e.value.trim():undefined;}
+  var m={ob_il:'il',ob_brandUrl:'brandUrl',ob_name:'name',ob_name2:'name2',ob_unvan:'unvan',ob_vergi:'vergi',ob_vergiDaire:'vergiDaire',ob_adres:'adres',ob_tel:'tel',ob_mail:'mail',ob_wa:'wa',ob_yetkili:'yetkili',ob_calisma:'calisma',ob_mersis:'mersis',ob_ticaretSicil:'ticaretSicil',ob_oda:'oda',ob_kep:'kep',ob_belge:'belge',ob_logo:'logo',ob_favicon:'favicon',ob_accent:'accent',ob_font:'font',ob_fb:'fb',ob_ig:'ig',ob_x:'x',ob_li:'li',ob_yt:'yt',ob_seoTitle:'seoTitle',ob_seoDesc:'seoDesc'};
+  Object.keys(m).forEach(function(id){var val=v(id);if(val!==undefined)OB[m[id]]=val;});
+  try{var dm=document.querySelector('input[name="ob_demoMode"]:checked');if(dm)OB.demoMode=dm.value;}catch(e){}}
+function obBody(n){var e=_obE;
+  if(n===1){var ils=_OB_ILLER;
+    return '<p class="ob-sub">Firmanızın bulunduğu ili ve marka adını girin. Site tüm sayfalarında bu markaya dönüşür.</p>'
+    +'<div class="ob-field"><label>İl</label><select id="ob_il"><option value="">— Seçin (opsiyonel) —</option>'+ils.map(function(il){return '<option'+(il===OB.il?' selected':'')+'>'+il+'</option>';}).join('')+'</select></div>'
+    +'<div class="ob-2"><div><label>Marka Adı *</label><input id="ob_name" value="'+e(OB.name)+'" placeholder="ör. Anadolu"></div><div><label>2. Kelime <span style="color:var(--muted);font-weight:400">(ör. Yapı / İnşaat)</span></label><input id="ob_name2" value="'+e(OB.name2)+'" placeholder="Yapı"></div></div>'
+    +'<div class="ob-field"><label>✨ Mevcut web / Google işletme URL\'niz <span style="color:var(--muted);font-weight:400">(opsiyonel — otomatik marka)</span></label><input id="ob_brandUrl" value="'+e(OB.brandUrl)+'" placeholder="https://firmaniz.com"><div class="ob-sub" style="margin-top:6px">Girerseniz logo/renk/font/bilgileri buradan otomatik çekmeyi deneriz (yayında aktifleşir).</div></div>';}
+  if(n===2){return '<p class="ob-sub">Firma + iletişim — künye, footer ve iletişim alanları bunlardan dolar.</p>'
+    +'<div class="ob-field"><label>Ticari Unvan</label><input id="ob_unvan" value="'+e(OB.unvan)+'" placeholder="ör. Anadolu Yapı İnşaat A.Ş."></div>'
+    +'<div class="ob-2"><div><label>Telefon</label><input id="ob_tel" value="'+e(OB.tel)+'" placeholder="+90 ..."></div><div><label>WhatsApp</label><input id="ob_wa" value="'+e(OB.wa)+'" placeholder="90 5xx ..."></div></div>'
+    +'<div class="ob-field"><label>E-posta</label><input id="ob_mail" value="'+e(OB.mail)+'" placeholder="info@firmaniz.com"></div>'
+    +'<div class="ob-field"><label>Adres</label><input id="ob_adres" value="'+e(OB.adres)+'"></div>'
+    +'<div class="ob-2"><div><label>Yetkili</label><input id="ob_yetkili" value="'+e(OB.yetkili)+'" placeholder="Genel Müdür"></div><div><label>Çalışma Saatleri</label><input id="ob_calisma" value="'+e(OB.calisma)+'" placeholder="Hafta içi 09:00–18:00"></div></div>';}
+  if(n===3){return '<p class="ob-sub">Yasal künye — KVKK/gizlilik/çerez/kullanım "Veri Sorumlusu Künyesi" bunlardan dolar. Boş bırakılan alan sayfada "[Doldurulacak]" görünür.</p>'
+    +'<div class="ob-2"><div><label>Vergi No</label><input id="ob_vergi" value="'+e(OB.vergi)+'"></div><div><label>Vergi Dairesi</label><input id="ob_vergiDaire" value="'+e(OB.vergiDaire)+'"></div></div>'
+    +'<div class="ob-2"><div><label>MERSİS No</label><input id="ob_mersis" value="'+e(OB.mersis)+'"></div><div><label>Ticaret Sicil No</label><input id="ob_ticaretSicil" value="'+e(OB.ticaretSicil)+'"></div></div>'
+    +'<div class="ob-2"><div><label>Ticaret Odası</label><input id="ob_oda" value="'+e(OB.oda)+'"></div><div><label>KEP Adresi</label><input id="ob_kep" value="'+e(OB.kep)+'" placeholder="...@hs01.kep.tr"></div></div>'
+    +'<div class="ob-field"><label>EİDS Yetki Belge No <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="ob_belge" value="'+e(OB.belge)+'" placeholder="Yetki belge numarası"></div>';}
+  if(n===4){var fonts=Object.keys(INS_FONTS);
+    return '<p class="ob-sub">Marka görseli + tema. Logo girilmezse firma adının baş harfi kullanılır. Renk & font tüm siteye uygulanır.</p>'
+    +'<div class="ob-field"><label>Logo URL</label><input id="ob_logo" value="'+e(OB.logo)+'" placeholder="https://... .png"></div>'
+    +'<div class="ob-field"><label>Favicon URL <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="ob_favicon" value="'+e(OB.favicon)+'" placeholder="https://... .png/.svg"></div>'
+    +'<div class="ob-2"><div><label>Marka Rengi</label><input id="ob_accent" type="color" value="'+e(OB.accent||'#c8102e')+'"></div>'
+    +'<div><label>Yazı Tipi</label><select id="ob_font"><option value=""'+(!OB.font?' selected':'')+'>Varsayılan</option>'+fonts.map(function(f){return '<option'+(f===OB.font?' selected':'')+'>'+f+'</option>';}).join('')+'</select></div></div>'
+    +(OB.logo?'<div style="margin-top:10px"><img src="'+e(OB.logo)+'" alt="logo" style="max-height:56px;border:1px solid var(--line);border-radius:8px;padding:6px;background:#fff"></div>':'');}
+  if(n===5){return '<p class="ob-sub">Sosyal medya hesaplarınız — footer\'da gösterilir. Boş bıraktıklarınız gizlenir (demo hesaplara link verilmez).</p>'
+    +'<div class="ob-field"><label>Instagram</label><input id="ob_ig" value="'+e(OB.ig)+'" placeholder="instagram.com/firmaniz"></div>'
+    +'<div class="ob-field"><label>Facebook</label><input id="ob_fb" value="'+e(OB.fb)+'" placeholder="facebook.com/firmaniz"></div>'
+    +'<div class="ob-2"><div><label>X (Twitter)</label><input id="ob_x" value="'+e(OB.x)+'" placeholder="x.com/firmaniz"></div><div><label>LinkedIn</label><input id="ob_li" value="'+e(OB.li)+'" placeholder="linkedin.com/company/..."></div></div>'
+    +'<div class="ob-field"><label>YouTube</label><input id="ob_yt" value="'+e(OB.yt)+'" placeholder="youtube.com/@firmaniz"></div>';}
+  if(n===6){return '<p class="ob-sub">SEO + demo içerik. SEO boşsa firma adından otomatik üretilir.</p>'
+    +'<div class="ob-field"><label>SEO Başlık</label><input id="ob_seoTitle" value="'+e(OB.seoTitle)+'" placeholder="Firma Adı – Kurumsal İnşaat"></div>'
+    +'<div class="ob-field"><label>SEO Açıklama</label><input id="ob_seoDesc" value="'+e(OB.seoDesc)+'" placeholder="Kısa tanıtım (≤160 karakter)"></div>'
+    +'<div class="ob-field"><label>Demo içerik (proje / ilan / arsa)</label>'
+    +'<div style="margin-top:6px;font-size:14px"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:400"><input type="radio" name="ob_demoMode" value="ornek"'+(OB.demoMode!=='temiz'?' checked':'')+' style="width:auto"> Örnekle başla (marka döner, içerik temsilî — sonra düzenle)</label></div>'
+    +'<div style="margin-top:6px;font-size:14px"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:400"><input type="radio" name="ob_demoMode" value="temiz"'+(OB.demoMode==='temiz'?' checked':'')+' style="width:auto"> Temiz başla (demo proje/ilan/arsa silinsin)</label></div></div>';}
+  if(n===7){var full=(OB.name||'—')+(OB.name2?(' '+OB.name2):'');
+    return '<p class="ob-sub">Her şey hazır. "Kur & Yayınla" ile demo, firmanızın kurumsal kimliğine dönüşür ve yayınlanır.</p>'
+    +'<div class="ob-sum"><b>Kurulum özeti</b><br>'
+    +'Marka: <b>'+e(full)+'</b>'+(OB.il?' · İl: <b>'+e(OB.il)+'</b>':'')+'<br>'
+    +(OB.name?'✓':'○')+' Marka adı · '+((OB.tel||OB.mail)?'✓':'○')+' İletişim · '+((OB.mersis||OB.vergi)?'✓':'○')+' Künye · '+(OB.belge?'✓':'○')+' EİDS<br>'
+    +(OB.logo?'✓':'○')+' Logo · '+(OB.accent?'✓':'○')+' Renk · '+(OB.font?'✓':'○')+' Font · '+((OB.ig||OB.fb||OB.x||OB.li||OB.yt)?'✓':'○')+' Sosyal · '+(OB.seoTitle?'✓':'○')+' SEO<br>'
+    +'İçerik: <b>'+(OB.demoMode==='temiz'?'temiz':'örnek')+'</b></div>';}
+  return '';}
+function obRender(){var id='obWrap',m=document.getElementById(id);
+  if(!document.getElementById('ob-css')){var s=document.createElement('style');s.id='ob-css';s.textContent=OB_CSS;(document.head||document.documentElement).appendChild(s);}
+  if(!m){m=document.createElement('div');m.id=id;document.body.appendChild(m);}
+  var dots=OB_STEPS.map(function(t,i){var nn=i+1,on=nn===OB.step,done=nn<OB.step;return '<div style="flex:1;text-align:center;font-size:10.5px;color:'+(on?'var(--accent)':done?'#1a7f4b':'var(--muted)')+';font-weight:'+(on?'700':'500')+'"><div style="height:6px;border-radius:3px;background:'+(on||done?'var(--accent)':'var(--line)')+';margin-bottom:5px"></div>'+(done?'✓ ':'')+t+'</div>';}).join('');
+  var last=OB.step===OB_STEPS.length;
+  m.innerHTML='<div class="ob-box"><button class="ob-close" onclick="obClose()">✕</button>'
+    +'<h3>🏗️ Kurulum Sihirbazı <span style="font-weight:400;color:var(--muted);font-size:13px">— '+OB.step+'/'+OB_STEPS.length+'</span></h3>'
+    +'<div style="display:flex;gap:6px;margin:12px 0 16px">'+dots+'</div>'
+    +'<div style="min-height:180px">'+obBody(OB.step)+'</div>'
+    +'<div style="display:flex;gap:10px;margin-top:18px;justify-content:space-between">'
+    +'<div>'+(OB.step>1?'<button class="ob-btn" onclick="obGo(-1)">← Geri</button>':'<button class="ob-btn" onclick="obClose()">Daha sonra</button>')+'</div>'
+    +'<div>'+(last?'<button class="ob-btn pri" onclick="obFinish()">✓ Kur & Yayınla</button>':'<button class="ob-btn pri" onclick="obGo(1)">Devam →</button>')+'</div></div></div>';
+  m.classList.add('open');}
+function obGo(d){obCollect();if(d>0&&OB.step===1&&!OB.name){toast('Lütfen marka adını girin.');return;}OB.step=Math.max(1,Math.min(OB_STEPS.length,OB.step+d));obRender();}
+function openOnboarding(){obSeed();OB.step=1;obRender();}
+function obClose(){var m=document.getElementById('obWrap');if(m)m.classList.remove('open');}
+function obFinish(){obCollect();if(!OB.name){OB.step=1;obRender();toast('Marka adı gerekli.');return;}
+  try{
+    if(typeof BRAND!=='undefined'){BRAND.name=OB.name;BRAND.name2=OB.name2?(' '+OB.name2.replace(/^\s+/,'')):'';if(OB.logo)BRAND.logo=OB.logo;if(OB.favicon)BRAND.favicon=OB.favicon;}
+    if(typeof SETTINGS!=='undefined'){var S=SETTINGS;
+      if(OB.unvan){S.firmaUnvan=OB.unvan;S.eidsUnvan=OB.unvan;}else if(OB.name){S.firmaUnvan=OB.name+(OB.name2?(' '+OB.name2):'')+' İnşaat A.Ş.';S.eidsUnvan=S.firmaUnvan;}
+      if(OB.tel)S.firmaTel=OB.tel;if(OB.mail)S.firmaEmail=OB.mail;if(OB.adres)S.firmaAdres=OB.adres;if(OB.wa)S.waNumber=OB.wa.replace(/[^0-9]/g,'');
+      if(OB.yetkili)S.firmaYetkili=OB.yetkili;if(OB.calisma)S.firmaCalisma=OB.calisma;
+      if(OB.vergi)S.firmaVergiNo=OB.vergi;if(OB.vergiDaire)S.firmaVergiDairesi=OB.vergiDaire;if(OB.mersis)S.firmaMersis=OB.mersis;
+      if(OB.ticaretSicil)S.firmaTicaretSicil=OB.ticaretSicil;if(OB.oda)S.firmaOda=OB.oda;if(OB.kep)S.firmaKep=OB.kep;
+      if(OB.belge)S.eidsYetkiBelgeNo=OB.belge;
+      if(OB.seoTitle)S.metaTitle=OB.seoTitle;else if(OB.name)S.metaTitle=OB.name+(OB.name2?(' '+OB.name2):'')+' – Kurumsal İnşaat';
+      if(OB.seoDesc)S.metaDesc=OB.seoDesc;
+      S.tenantAccent=OB.accent||'';S.tenantFont=OB.font||'';
+      /* BOŞ-DEFAULT TEMİZLEME: yeni tenant'ta boş bırakılan Meridyen-demo künye/iletişim alanları miras kalmasın → [Doldurulacak] */
+      if(OB.name!=='Meridyen'){
+        if(!OB.vergi)S.firmaVergiNo='';if(!OB.vergiDaire)S.firmaVergiDairesi='';if(!OB.mersis)S.firmaMersis='';
+        if(!OB.ticaretSicil)S.firmaTicaretSicil='';if(!OB.oda)S.firmaOda='';if(!OB.kep)S.firmaKep='';
+        if(!OB.tel)S.firmaTel='';if(!OB.mail)S.firmaEmail='';if(!OB.adres)S.firmaAdres='';if(!OB.wa)S.waNumber='';}
+    }
+    if(typeof SOCIAL!=='undefined'){SOCIAL.facebook=OB.fb||'';SOCIAL.instagram=OB.ig||'';SOCIAL.x=OB.x||'';SOCIAL.linkedin=OB.li||'';SOCIAL.youtube=OB.yt||'';}
+    if(OB.demoMode==='temiz'){try{if(typeof PROJECTS!=='undefined'&&PROJECTS.length)PROJECTS.length=0;if(typeof ILANLAR!=='undefined'&&ILANLAR.length)ILANLAR.length=0;if(typeof ARSALAR!=='undefined'&&ARSALAR.length)ARSALAR.length=0;if(typeof OZEL!=='undefined'&&OZEL.length)OZEL.length=0;}catch(e){}}
+    if(typeof saveAll==='function')saveAll(); /* persist meridyen_site_v1 + publishConfig → meridyen_pub_v1 (pub.THEME dahil) */
+    try{if(typeof applyBrand==='function')applyBrand();}catch(e){}
+    try{if(typeof applySocial==='function')applySocial();}catch(e){}
+    try{if(typeof applyContactAll==='function')applyContactAll();}catch(e){}
+    try{if(typeof applyMenuText==='function')applyMenuText();}catch(e){}
+    try{if(typeof applyCerts==='function')applyCerts();}catch(e){}
+    try{applyTenantTheme(OB.accent,OB.font);}catch(e){}
+    if(OB.brandUrl){try{localStorage.setItem('ins_brand_url',OB.brandUrl);}catch(e){}} /* Faz 3 AI çıkarım kancası */
+    try{localStorage.setItem('ins_onboarded','1');}catch(e){}
+    obClose();
+    if(typeof toast==='function')toast('✓ Kurulum tamam! '+OB.name+(OB.name2?(' '+OB.name2):'')+' yayında.');
+  }catch(e){if(typeof toast==='function')toast('Kurulumda hata: '+(e&&e.message||e));}
+}
+window.openOnboarding=openOnboarding;window.obGo=obGo;window.obFinish=obFinish;window.obClose=obClose;
+/* boot: kayıtlı tenant temasını geri uygula + #kur / ilk-çalıştırma otomatik aç */
+try{if(typeof SETTINGS!=='undefined'&&(SETTINGS.tenantAccent||SETTINGS.tenantFont))applyTenantTheme(SETTINGS.tenantAccent,SETTINGS.tenantFont);}catch(e){}
+addEventListener('hashchange',function(){if(location.hash==='#kur')openOnboarding();});
+window.addEventListener('load',function(){try{
+  if(typeof SETTINGS!=='undefined'&&(SETTINGS.tenantAccent||SETTINGS.tenantFont))applyTenantTheme(SETTINGS.tenantAccent,SETTINGS.tenantFont);
+  if(location.hash==='#kur'){setTimeout(openOnboarding,400);return;}
+  var fresh=!localStorage.getItem('meridyen_site_v1')&&!localStorage.getItem('ins_onboarded');
+  if(fresh)setTimeout(openOnboarding,1400);
+}catch(e){}});
