@@ -1678,7 +1678,9 @@ async function _proxResolveReply(q){
   try{
     const t=_norm(q);
     const wantsAnalyze=/(yatırım|yatirim|prim|değer|deger|fiyat|kaça|ne kadar|kıymet|kiymet|getiri)/.test(t);
-    const _persona=aiGuard(((SAAS_CONFIG.proxAiPrompts&&SAAS_CONFIG.proxAiPrompts.persona)||'')+(saasResolve('customPrompt')?('\n\nEk ton: '+saasResolve('customPrompt')):''));
+    /* AI persona marka-ikamesi (sızıntı F): sweep modele giden prompt'a ulaşamaz → brandName() uygula */
+    var _bnP=(typeof brandName==='function'&&brandName())||'Selin Meridyen';
+    const _persona=aiGuard((((SAAS_CONFIG.proxAiPrompts&&SAAS_CONFIG.proxAiPrompts.persona)||'').split('Selin Meridyen').join(_bnP))+(saasResolve('customPrompt')?('\n\nEk ton: '+saasResolve('customPrompt')):''));
     const ai=await aiChat({prompt:_persona,message:q,context:"persona=consultant; sector="+window.EMLAK_TENANT.sector});/* DeepSeek: persona=sistem, soru=kullanıcı; yoksa ProX'e düşer */
     var answer=(ai&&!ai.fallback&&ai.success!==false&&ai.answer)?ai.answer:'';
     var analyzeHTML='';

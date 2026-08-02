@@ -142,10 +142,23 @@
   /* WhatsApp/telefon bağlantılarını admin numarasına (dn_iletisim.wa) güncelle — TÜM sayfalar (nav+footer+CTA).
      Numara girilmemişse placeholder kalır (danışman admin'den kendi numarasını girmeli). */
   function waNumC() { try { var c = JSON.parse(localStorage.getItem("dn_iletisim") || "null"); if (c && c.wa) return ("" + c.wa).replace(/[^\d]/g, ""); } catch (e) {} return ""; }
+  function _mailC() { try { var c = JSON.parse(localStorage.getItem("dn_iletisim") || "{}") || {}; if (c.mail) return c.mail; var f = JSON.parse(localStorage.getItem("dn_firma") || "{}") || {}; return f.mail || ""; } catch (e) { return ""; } }
   function applyWaLinks() {
-    var n = waNumC(); if (!n) return;
-    [].forEach.call(document.querySelectorAll('a[href*="wa.me/"]'), function (a) { a.href = a.href.replace(/wa\.me\/\d+/, "wa.me/" + n); });
-    [].forEach.call(document.querySelectorAll('a[href^="tel:"]'), function (a) { a.href = "tel:+" + n; });
+    var n = waNumC();
+    if (n) {
+      [].forEach.call(document.querySelectorAll('a[href*="wa.me/"]'), function (a) { a.href = a.href.replace(/wa\.me\/\d+/, "wa.me/" + n); });
+      [].forEach.call(document.querySelectorAll('a[href^="tel:"]'), function (a) { a.href = "tel:+" + n; });
+    }
+    /* E-POSTA: mailto href + demo 'info@selinmeridyen.com' metni/öznitelikleri (statik sayfalarda sızıyordu; applyWaLinks eskiden mailto'ya dokunmuyordu) */
+    var mail = _mailC();
+    if (mail) {
+      [].forEach.call(document.querySelectorAll('a[href^="mailto:"]'), function (a) { a.href = "mailto:" + mail; });
+      try {
+        var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false), ns = [], nx;
+        while (nx = w.nextNode()) { if (nx.nodeValue && nx.nodeValue.indexOf("info@selinmeridyen.com") >= 0) ns.push(nx); }
+        ns.forEach(function (nn) { nn.nodeValue = nn.nodeValue.split("info@selinmeridyen.com").join(mail); });
+      } catch (e) {}
+    }
   }
   window.dnApplyWaLinks = applyWaLinks;
   ready(function () { applyWaLinks(); setTimeout(applyWaLinks, 350); });
