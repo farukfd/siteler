@@ -79,10 +79,10 @@
   var _uidc=0; function _uid(){_uidc=(_uidc+1)%1000;return Date.now()*1000+_uidc;}
   function _sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
   async function _aiText(body,tries){
-    tries=tries||3;
+    tries=tries||4;
     for(var i=0;i<tries;i++){
       try{ var r=await CFG.ai(body); var t=r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text))); if(r&&r.fallback)t=null; if(t&&(''+t).trim())return (''+t).trim(); }catch(e){}
-      if(i<tries-1)await _sleep(1500*(i+1));/* rate-limit → artan backoff (1.5s,3s) */
+      if(i<tries-1)await _sleep(2000*(i+1));/* ProX rate-limit → artan backoff (2s,4s,6s) */
     }
     return null;
   }
@@ -119,8 +119,10 @@
     _status('YZ makaleyi yazıyor… (sağlayıcı: '+_provLabel()+')','wait');
     var a=await _genOne(o,function(){_status('Makale genişletiliyor (≥'+o.minWords+' kelime)…','wait');});
     if(btn){btn.disabled=false;btn.textContent=btn._t;}
-    if(!a){ var hint=_hasAnyKey()?'Seçili sağlayıcıya ulaşılamadı — anahtarı "Kaydet & Test Et" ile doğrulayın.':'Önce bir anahtar girin: ⚙️ Ayarlar → ProX / DeepSeek / OpenAI / Claude.';
-      _status('YZ yanıt vermedi. '+hint,'err'); var d=$('cs_set'); if(d&&!_hasAnyKey())d.open=true; return; }
+    if(!a){ var hint=_hasAnyKey()
+        ?'Sağlayıcıya ulaşılamadı. ProX yoğun ardışık isteği kısıtlayabilir — birkaç saniye sonra tekrar deneyin, ya da 🔌 ProX API & Modüller → kendi DeepSeek/OpenAI/Claude anahtarınızı kullanın.'
+        :'Önce yapay zekâ anahtarı girin: 🔌 ProX API & Modüller sekmesi → “Yapay Zekâ Sağlayıcı & Anahtarlar”.';
+      _status('YZ yanıt vermedi. '+hint,'err'); return; }
     DRAFT=a; _fillEditor(DRAFT);
     _status('✓ Makale üretildi ('+a.words+' kelime'+(a.words>=o.minWords?', hedef tamam':', hedefin altında')+'). Görsel aranıyor…','ok');
     CS.findImage(DRAFT.imgq);
