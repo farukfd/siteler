@@ -1735,12 +1735,24 @@ window.addEventListener('hashchange',function(){if(location.hash==='#super')open
 window.addEventListener('load',function(){if(location.hash==='#super')setTimeout(openSuperAdmin,400);});
 
 /* ===== ONBOARDING SİHİRBAZI — yeni bayi tek akış (il → firma → EİDS → logo → ProX ile kur) ===== */
-var OB={step:1,il:'',name:'',unvan:'',vergi:'',adres:'',tel:'',mail:'',belge:'',logo:'',key:''};
-var OB_STEPS=['İl Seçimi','Firma Bilgileri','EİDS Yetki','Logo','ProX ile Kur'];
-function obSeed(){try{OB.il=(typeof PROX!=='undefined'&&PROX.il)||'İzmir';var f=(typeof FIRMA!=='undefined'&&FIRMA)||{};OB.name=(f.name&&f.name!=='Meridyen Gayrimenkul')?f.name:'';OB.unvan=(f.eids&&f.eids.unvan)||'';OB.vergi=f.vergi||'';OB.adres=(f.adres&&f.adres.indexOf('İzmir')<0)?f.adres:'';OB.tel=(f.tel&&f.tel.indexOf('232')<0)?f.tel:'';OB.mail=(f.mail&&f.mail.indexOf('meridyen')<0)?f.mail:'';OB.belge=(f.eids&&f.eids.belgeNo)||'';OB.key=(typeof PROX!=='undefined'&&PROX.key&&PROX.key.indexOf('emlaktahadimkoy')<0)?PROX.key:'';}catch(e){}}
+var OB={step:1,brandUrl:'',il:'',name:'',unvan:'',vergi:'',vergiDaire:'',adres:'',tel:'',mail:'',wa:'',mersis:'',ticaretSicil:'',oda:'',kep:'',belge:'',logo:'',favicon:'',accent:'',font:'',fb:'',ig:'',x:'',li:'',yt:'',seoTitle:'',seoDesc:'',demoMode:'ornek',key:''};
+var OB_STEPS=['İl & Marka','Firma & İletişim','Yasal Künye','Marka & Tema','Sosyal Medya','SEO & İçerik','ProX & Yayın'];
+function obSeed(){try{var f=(typeof FIRMA!=='undefined'&&FIRMA)||{};var keep=function(v,bad){return (v&&(''+v).indexOf(bad)<0)?v:'';};
+  OB.il=(typeof PROX!=='undefined'&&PROX.il)||'İzmir';
+  OB.name=(f.name&&f.name!=='Meridyen Gayrimenkul')?f.name:'';
+  OB.unvan=keep((f.eids&&f.eids.unvan)||'','Meridyen');OB.vergi=keep(f.vergi,'6100000000');OB.vergiDaire=keep(f.vergiDaire,'Konak');
+  OB.adres=keep(f.adres,'İzmir');OB.tel=keep(f.tel,'232');OB.mail=keep(f.mail,'meridyen');OB.wa=keep(f.wa,'905000000000');
+  OB.mersis=keep(f.mersis,'0648010000000000');OB.ticaretSicil=keep(f.ticaretSicil,'İzmir');OB.oda=keep(f.oda,'İzmir');OB.kep=keep(f.kep,'meridyengm');
+  OB.belge=(f.eids&&f.eids.belgeNo&&f.eids.belgeNo!=='4827193')?f.eids.belgeNo:'';
+  var th=(typeof THEME!=='undefined'&&THEME)||{};OB.accent=th.accent||'';OB.font=th.font||'';
+  var s=f.social||{};OB.fb=s.fb||'';OB.ig=s.ig||'';OB.x=s.x||'';OB.li=s.li||'';OB.yt=s.yt||'';
+  var seo=(typeof SEO!=='undefined'&&SEO)||{};OB.seoTitle=keep(seo.title,'Meridyen');OB.seoDesc=keep(seo.desc,'Meridyen');
+  OB.key=(typeof PROX!=='undefined'&&PROX.key&&PROX.key.indexOf('emlaktahadimkoy')<0)?PROX.key:'';
+}catch(e){}}
 function obCollect(){function v(id){var e=document.getElementById(id);return e?e.value.trim():undefined;}
-  var m={ob_il:'il',ob_name:'name',ob_unvan:'unvan',ob_vergi:'vergi',ob_adres:'adres',ob_tel:'tel',ob_mail:'mail',ob_belge:'belge',ob_logo:'logo',ob_key:'key'};
-  Object.keys(m).forEach(function(id){var val=v(id);if(val!==undefined)OB[m[id]]=val;});}
+  var m={ob_il:'il',ob_brandUrl:'brandUrl',ob_name:'name',ob_unvan:'unvan',ob_vergi:'vergi',ob_vergiDaire:'vergiDaire',ob_adres:'adres',ob_tel:'tel',ob_mail:'mail',ob_wa:'wa',ob_mersis:'mersis',ob_ticaretSicil:'ticaretSicil',ob_oda:'oda',ob_kep:'kep',ob_belge:'belge',ob_logo:'logo',ob_favicon:'favicon',ob_accent:'accent',ob_font:'font',ob_fb:'fb',ob_ig:'ig',ob_x:'x',ob_li:'li',ob_yt:'yt',ob_seoTitle:'seoTitle',ob_seoDesc:'seoDesc',ob_demoMode:'demoMode',ob_key:'key'};
+  Object.keys(m).forEach(function(id){var val=v(id);if(val!==undefined)OB[m[id]]=val;});
+  try{var dm=document.querySelector('input[name="ob_demoMode"]:checked');if(dm)OB.demoMode=dm.value;}catch(e){}}
 /* GÜVENLİK: e() eskiden yalnız çift tırnak kaçırıyordu. Değerler obCollect()
    ile form girdilerinden geliyor ve hem öznitelik (value="…") hem HTML metin
    (<b>…</b>) bağlamına basılıyor; < > kaçmadığı için metin bağlamında etiket
@@ -1748,22 +1760,44 @@ function obCollect(){function v(id){var e=document.getElementById(id);return e?e
    kaçırıyor — çoğaltmak yerine ona devrediyoruz. */
 function obBody(n){var e=_le;
   if(n===1){var ils=(typeof trIlList==='function'?trIlList():['İzmir']).slice().sort(function(a,b){return a.localeCompare(b,'tr');});
-    return '<p class="csub">Sitenizin yayınlanacağı ili seçin. İl/ilçe/mahalle endeksi ProX API üzerinden bu ile göre çekilir.</p><div class="afield"><label>İl</label><select id="ob_il" style="width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;font:inherit">'+ils.map(function(il){return '<option'+(il===OB.il?' selected':'')+'>'+il+'</option>';}).join('')+'</select></div>';}
-  if(n===2){return '<p class="csub">Yasal firma bilgileriniz — KVKK/çerez/mesafeli metinleri ve site künyesi bunlardan otomatik dolar.</p>'
+    return '<p class="csub">Sitenizin yayınlanacağı ili seçin; ProX il/ilçe/mahalle endeksi buna göre çekilir.</p><div class="afield"><label>İl</label><select id="ob_il" style="width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;font:inherit">'+ils.map(function(il){return '<option'+(il===OB.il?' selected':'')+'>'+il+'</option>';}).join('')+'</select></div>'
+      +'<div class="afield" style="margin-top:12px"><label>✨ Mevcut web / Google işletme URL\'niz <span style="color:var(--muted);font-weight:400">(opsiyonel — otomatik marka)</span></label><input id="ob_brandUrl" value="'+e(OB.brandUrl)+'" placeholder="https://firmaniz.com"><div class="csub" style="margin-top:6px">Girerseniz logo/renk/font/bilgileri buradan otomatik çekmeyi deneriz (yayında aktifleşir). Girmezseniz elle doldurursunuz.</div></div>';}
+  if(n===2){return '<p class="csub">Firma + iletişim — künye, footer ve iletişim alanları bunlardan dolar.</p>'
     +'<div class="afield"><label>Firma Adı *</label><input id="ob_name" value="'+e(OB.name)+'" placeholder="ör. Antalya Elite Gayrimenkul"></div>'
     +'<div class="afield"><label>Ticari Unvan</label><input id="ob_unvan" value="'+e(OB.unvan)+'" placeholder="ör. Antalya Elite Gayrimenkul A.Ş."></div>'
-    +'<div class="ed2"><div class="afield"><label>Vergi No</label><input id="ob_vergi" value="'+e(OB.vergi)+'"></div><div class="afield"><label>Telefon</label><input id="ob_tel" value="'+e(OB.tel)+'" placeholder="+90 ..."></div></div>'
+    +'<div class="ed2"><div class="afield"><label>Telefon</label><input id="ob_tel" value="'+e(OB.tel)+'" placeholder="+90 ..."></div><div class="afield"><label>WhatsApp</label><input id="ob_wa" value="'+e(OB.wa)+'" placeholder="90 5xx ..."></div></div>'
     +'<div class="afield"><label>E-posta</label><input id="ob_mail" value="'+e(OB.mail)+'" placeholder="info@firmaniz.com"></div>'
     +'<div class="afield"><label>Adres</label><input id="ob_adres" value="'+e(OB.adres)+'"></div>';}
-  if(n===3){return '<p class="csub">EİDS (Elektronik İlan Doğrulama) — Özel Portföy kayıtları serbesttir; <b>gerçek ilan yayınlamak için</b> yetki belgesi gerekir. Şimdi girebilir veya sonra ekleyebilirsiniz.</p>'
-    +'<div class="afield"><label>Yetki Belge No <span style="color:var(--muted);font-weight:400">(7 hane, opsiyonel)</span></label><input id="ob_belge" value="'+e(OB.belge)+'" maxlength="7" placeholder="1234567"></div>'
-    +'<div class="csub" style="margin-top:6px">Yayında e-Devlet ile bağlanıp kullanıcı kodu üretilir; sihirbaz sonrası admin → Firma\'dan tamamlanır.</div>';}
-  if(n===4){return '<p class="csub">Logo (opsiyonel) — URL girin. Girilmezse firma adınızın baş harfi marka olarak kullanılır.</p>'
+  if(n===3){return '<p class="csub">Yasal künye — KVKK/gizlilik/çerez/kullanım "Veri Sorumlusu Künyesi" bunlardan dolar. Boş bırakılan alan sayfada "[Doldurulacak]" görünür.</p>'
+    +'<div class="ed2"><div class="afield"><label>Vergi No</label><input id="ob_vergi" value="'+e(OB.vergi)+'"></div><div class="afield"><label>Vergi Dairesi</label><input id="ob_vergiDaire" value="'+e(OB.vergiDaire)+'"></div></div>'
+    +'<div class="ed2"><div class="afield"><label>MERSİS No</label><input id="ob_mersis" value="'+e(OB.mersis)+'"></div><div class="afield"><label>Ticaret Sicil No</label><input id="ob_ticaretSicil" value="'+e(OB.ticaretSicil)+'"></div></div>'
+    +'<div class="ed2"><div class="afield"><label>Ticaret Odası</label><input id="ob_oda" value="'+e(OB.oda)+'"></div><div class="afield"><label>KEP Adresi</label><input id="ob_kep" value="'+e(OB.kep)+'" placeholder="...@hs01.kep.tr"></div></div>'
+    +'<div class="afield"><label>EİDS Yetki Belge No <span style="color:var(--muted);font-weight:400">(7 hane, opsiyonel)</span></label><input id="ob_belge" value="'+e(OB.belge)+'" maxlength="7" placeholder="1234567"></div>';}
+  if(n===4){var fonts=(typeof CURATED_FONTS!=='undefined')?Object.keys(CURATED_FONTS):[];
+    return '<p class="csub">Marka görseli + tema. Logo girilmezse firma adının baş harfi kullanılır.</p>'
     +'<div class="afield"><label>Logo URL</label><input id="ob_logo" value="'+e(OB.logo)+'" placeholder="https://... .png"></div>'
+    +'<div class="afield"><label>Favicon URL <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="ob_favicon" value="'+e(OB.favicon)+'" placeholder="https://... .png/.svg"></div>'
+    +'<div class="ed2"><div class="afield"><label>Marka Rengi</label><input id="ob_accent" type="color" value="'+e(OB.accent||'#0ea5a5')+'" style="height:44px;padding:4px;width:100%"></div>'
+    +'<div class="afield"><label>Yazı Tipi</label><select id="ob_font" style="width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;font:inherit"><option value=""'+(!OB.font?' selected':'')+'>Varsayılan</option>'+fonts.map(function(f){return '<option'+(f===OB.font?' selected':'')+'>'+f+'</option>';}).join('')+'</select></div></div>'
     +(OB.logo?'<div style="margin-top:8px"><img src="'+e(OB.logo)+'" alt="logo" style="max-height:56px;border:1px solid var(--line);border-radius:8px;padding:6px;background:#fff"></div>':'');}
-  if(n===5){return '<p class="csub">ProX API anahtarınızı girin (canlı il/ilçe/mahalle + değerleme + AI). Boş bırakırsanız demo veriyle kurulur; sonra admin → ProX\'tan ekleyebilirsiniz.</p>'
+  if(n===5){return '<p class="csub">Sosyal medya hesaplarınız — footer\'da gösterilir. Boş bıraktıklarınız gizlenir (demo hesaplara link verilmez).</p>'
+    +'<div class="afield"><label>Instagram</label><input id="ob_ig" value="'+e(OB.ig)+'" placeholder="instagram.com/firmaniz"></div>'
+    +'<div class="afield"><label>Facebook</label><input id="ob_fb" value="'+e(OB.fb)+'" placeholder="facebook.com/firmaniz"></div>'
+    +'<div class="ed2"><div class="afield"><label>X (Twitter)</label><input id="ob_x" value="'+e(OB.x)+'" placeholder="x.com/firmaniz"></div><div class="afield"><label>LinkedIn</label><input id="ob_li" value="'+e(OB.li)+'" placeholder="linkedin.com/company/..."></div></div>'
+    +'<div class="afield"><label>YouTube</label><input id="ob_yt" value="'+e(OB.yt)+'" placeholder="youtube.com/@firmaniz"></div>';}
+  if(n===6){return '<p class="csub">SEO + demo içerik. SEO boşsa firma adından otomatik üretilir.</p>'
+    +'<div class="afield"><label>SEO Başlık</label><input id="ob_seoTitle" value="'+e(OB.seoTitle)+'" placeholder="Firma Adı · Şehir Emlak & Gayrimenkul"></div>'
+    +'<div class="afield"><label>SEO Açıklama</label><input id="ob_seoDesc" value="'+e(OB.seoDesc)+'" placeholder="Kısa tanıtım (≤160 karakter)"></div>'
+    +'<div class="afield" style="margin-top:10px"><label>Demo içerik (ilan / danışman / referans)</label>'
+    +'<div style="margin-top:6px;font-size:14px"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="ob_demoMode" value="ornek"'+(OB.demoMode!=='temiz'?' checked':'')+'> Örnekle başla (marka döner, içerik temsilî — sonra düzenle)</label></div>'
+    +'<div style="margin-top:6px;font-size:14px"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="ob_demoMode" value="temiz"'+(OB.demoMode==='temiz'?' checked':'')+'> Temiz başla (tüm demo içerik silinsin)</label></div></div>';}
+  if(n===7){return '<p class="csub">ProX API anahtarı (canlı il/ilçe/mahalle + değerleme + AI). Boşsa demo veriyle kurulur; sonra admin → ProX\'tan eklenir.</p>'
     +'<div class="afield"><label>ProX API Anahtarı <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="ob_key" value="'+e(OB.key)+'" placeholder="prox_..." style="font-family:monospace;font-size:12px"></div>'
-    +'<div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.8"><b>Kurulum özeti</b><br>İl: <b>'+e(OB.il)+'</b> · Firma: <b>'+e(OB.name||'—')+'</b><br>EİDS: '+(OB.belge?'✓ '+e(OB.belge):'sonra')+' · Logo: '+(OB.logo?'✓':'baş harf')+' · ProX: '+(OB.key?'✓ anahtar':'demo')+'</div>';}
+    +'<div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.9"><b>Kurulum özeti</b><br>'
+      +'İl: <b>'+e(OB.il)+'</b> · Firma: <b>'+e(OB.name||'—')+'</b><br>'
+      +(OB.name?'✓':'○')+' Firma adı · '+((OB.tel||OB.mail)?'✓':'○')+' İletişim · '+((OB.mersis||OB.vergi)?'✓':'○')+' Künye · '+(OB.belge?'✓':'○')+' EİDS<br>'
+      +(OB.logo?'✓':'○')+' Logo · '+(OB.accent?'✓':'○')+' Renk · '+(OB.font?'✓':'○')+' Font · '+((OB.ig||OB.fb||OB.x||OB.li||OB.yt)?'✓':'○')+' Sosyal · '+(OB.seoTitle?'✓':'○')+' SEO<br>'
+      +'İçerik: <b>'+(OB.demoMode==='temiz'?'temiz':'örnek')+'</b> · ProX: '+(OB.key?'✓ anahtar':'demo')+'</div>';}
   return '';}
 function obRender(){var id='obWizard',m=document.getElementById(id);
   if(!m){m=document.createElement('div');m.id=id;m.className='modal';document.body.appendChild(m);}
@@ -1783,20 +1817,31 @@ function obClose(){var m=document.getElementById('obWizard');if(m)m.classList.re
 function obFinish(){obCollect();if(!OB.name){OB.step=2;obRender();toast('Firma adı gerekli.');return;}
   try{
     if(typeof applyProvince==='function')applyProvince(OB.il);
-    if(typeof FIRMA!=='undefined'){FIRMA.name=OB.name;if(OB.vergi)FIRMA.vergi=OB.vergi;if(OB.adres)FIRMA.adres=OB.adres;if(OB.tel)FIRMA.tel=OB.tel;if(OB.mail)FIRMA.mail=OB.mail;
-      FIRMA.eids=FIRMA.eids||{};if(OB.unvan)FIRMA.eids.unvan=OB.unvan;else if(!FIRMA.eids.unvan)FIRMA.eids.unvan=OB.name+' Danışmanlık Ltd. Şti.';
+    if(typeof FIRMA!=='undefined'){FIRMA.name=OB.name;
+      if(OB.vergi)FIRMA.vergi=OB.vergi;if(OB.vergiDaire)FIRMA.vergiDaire=OB.vergiDaire;
+      if(OB.adres)FIRMA.adres=OB.adres;if(OB.tel)FIRMA.tel=OB.tel;if(OB.mail)FIRMA.mail=OB.mail;if(OB.wa)FIRMA.wa=OB.wa.replace(/[^0-9]/g,'');
+      if(OB.mersis)FIRMA.mersis=OB.mersis;if(OB.ticaretSicil)FIRMA.ticaretSicil=OB.ticaretSicil;if(OB.oda)FIRMA.oda=OB.oda;if(OB.kep)FIRMA.kep=OB.kep;
+      if(OB.favicon)FIRMA.favicon=OB.favicon;
+      FIRMA.social={fb:OB.fb||'',ig:OB.ig||'',x:OB.x||'',li:OB.li||'',yt:OB.yt||''};
+      FIRMA.eids=FIRMA.eids||{};if(OB.unvan)FIRMA.eids.unvan=OB.unvan;else if(!FIRMA.eids.unvan||FIRMA.eids.unvan.indexOf('Meridyen')>=0)FIRMA.eids.unvan=OB.name+' Danışmanlık Ltd. Şti.';
       if(OB.belge){FIRMA.eids.belgeNo=OB.belge.replace(/[^0-9]/g,'');FIRMA.eids.yetkili=!!(FIRMA.eids.belgeNo.length>=7);}
-      /* BOŞ-DEFAULT TEMİZLEME (sızıntı G): yeni tenant, sihirbazın TOPLAMADIĞI İzmir-demo alanlarını MİRAS ALMASIN
-         → boş bırak (yasal künye '[Doldurulacak]' gösterir; yanlış İzmir MERSİS/KEP/adres değil). Admin sonra doldurur. */
+      /* BOŞ-DEFAULT TEMİZLEME (G): sihirbazda BOŞ bırakılan İzmir-demo künye alanları MİRAS kalmasın → boş ([Doldurulacak]). */
       var _newTenant=(OB.name!=='Meridyen Gayrimenkul')||(OB.il&&OB.il!=='İzmir');
-      if(_newTenant){['mersis','ticaretSicil','oda','kep','vergiDaire','wa'].forEach(function(k){FIRMA[k]='';});
-        FIRMA.social={fb:'',ig:'',x:'',li:'',yt:''};
+      if(_newTenant){['mersis','ticaretSicil','oda','kep','vergiDaire','wa'].forEach(function(k){if(!OB[k])FIRMA[k]='';});
         if(!OB.adres)FIRMA.adres='';if(!OB.tel)FIRMA.tel='';if(!OB.mail)FIRMA.mail='';}}
+    /* TEMA: accent + font (token) */
+    try{if(typeof THEME==='undefined'||!THEME)THEME={};if(OB.accent){THEME.accent=OB.accent;THEME.id='ozel';if(typeof setTheme==='function')setTheme(OB.accent,THEME.green,THEME.navy);}THEME.font=OB.font||'';if(typeof applyFontTheme==='function')applyFontTheme(OB.font);}catch(e){}
+    /* SEO */
+    try{if(typeof SEO!=='undefined'){if(OB.seoTitle)SEO.title=OB.seoTitle;if(OB.seoDesc)SEO.desc=OB.seoDesc;}}catch(e){}
+    /* DEMO İÇERİK: 'temiz' → ilan/danışman/referans/özel/blog demo temizle (kullanıcı seçimi) */
+    if(OB.demoMode==='temiz'){try{ILANLAR=[];DANISMANLAR=[];REFS=[];OZEL=[];if(typeof BLOGS!=='undefined')BLOGS=[];}catch(e){}}
     if(typeof applyBrand==='function')applyBrand(OB.name);
     if(OB.logo){try{if(typeof SAAS_CONFIG!=='undefined'&&SAAS_CONFIG.tenantSettings){SAAS_CONFIG.tenantSettings.logoUrl=OB.logo;if(typeof applySaaSSettings==='function')applySaaSSettings();}}catch(e){}}
     if(OB.key&&typeof PROX!=='undefined'){PROX.key=OB.key;PROX.il=OB.il;PROX.region=OB.il;if(typeof applyProxTenant==='function')applyProxTenant();}
+    try{if(typeof applyFirma==='function')applyFirma();}catch(e){}/* iletişim + sosyal href'leri hemen uygula */
     if(typeof saveAll==='function')saveAll();
-    if(OB.il!=='İzmir'){try{if(typeof rebuildOzelFromProx==='function')rebuildOzelFromProx(OB.il,true);}catch(e){}try{if(typeof wlBuildBolge==='function')wlBuildBolge(OB.il,true);}catch(e){}}
+    if(OB.demoMode!=='temiz'){try{if(typeof rebuildOzelFromProx==='function')rebuildOzelFromProx(OB.il,true);}catch(e){}try{if(typeof wlBuildBolge==='function')wlBuildBolge(OB.il,true);}catch(e){}}
+    if(OB.brandUrl){try{localStorage.setItem('wl_brand_url',OB.brandUrl);}catch(e){}}/* Faz 3 AI çıkarım kancası — backend bu URL'den logo/renk/font çıkarır */
     try{localStorage.setItem('wl_onboarded','1');}catch(e){}
     obClose();
     if(typeof toast==='function')toast('✓ Kurulum tamam! '+OB.name+' · '+OB.il+' yayında.'+(OB.key?'':' (ProX anahtarını admin→ProX\'tan ekleyebilirsiniz.)'));
@@ -2823,9 +2868,14 @@ function customColor(){const a=document.getElementById('cc_accent').value,gr=doc
 function setTheme(accent,green,navy){
   if(!accent||typeof accent!=='string'||accent.charAt(0)!=='#')return;/* L: accent yoksa lighten/darken hex.slice çökerdi — güvenli çıkış */
   green=green||'#1e7e3a';navy=navy||'#0f1f3d';
+  /* WIPE-PROOF token tema: kalıcı <style> bloğu (documentElement.style init sırasında sıfırlanabiliyor;
+     stylesheet silinmez ve <head> sonuna eklenince base.css/meridyen.css'i geçer). + inline (anında). */
+  var css=':root{--accent:'+accent+';--accent-2:'+lighten(accent,18)+';--green:'+green+';--green-700:'+darken(green,16)+';--green-200:'+lighten(green,34)+';--c-bg-navy:'+navy+';--c-bg-deep:'+darken(navy,6)+';}';
+  var st=document.getElementById('tenant-theme');
+  if(!st){st=document.createElement('style');st.id='tenant-theme';}
+  st.textContent=css;(document.head||document.documentElement).appendChild(st);/* her seferinde sona taşı → kaskadta kazanır */
   const r=document.documentElement.style;
-  r.setProperty('--accent',accent);
-  r.setProperty('--accent-2',lighten(accent,18));
+  r.setProperty('--accent',accent);r.setProperty('--accent-2',lighten(accent,18));
   r.setProperty('--green',green);r.setProperty('--green-700',darken(green,16));r.setProperty('--green-200',lighten(green,34));
   r.setProperty('--c-bg-navy',navy);r.setProperty('--c-bg-deep',darken(navy,6));
 }
@@ -2882,6 +2932,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   applyContent();
   initHero();renderIlanlar();renderOzel();ozHero();renderOzHome();renderDan();renderBolgePick();initVal();applyFirma();renderBlogFeed();renderRefGrid();
   initAiAssistant();applyModuleVisibility();try{brandSweep(document.body);brandObserve();}catch(e){}try{abApply();}catch(e){}
+  /* GEÇ TEMA RE-APPLY: init render'ları (applyProvince vb.) documentElement.style'ı sıfırlayabiliyor → accent/font kayboluyordu. Sona + kısa gecikmeyle yeniden uygula. */
+  function _reTheme(){try{if(THEME&&THEME.accent)setTheme(THEME.accent,THEME.green,THEME.navy);if(THEME&&THEME.font)applyFontTheme(THEME.font);}catch(e){}}
+  _reTheme();setTimeout(_reTheme,180);
   try{if(localStorage.getItem('wl_service_area')){saLoad();if(typeof PROVINCE!=='undefined'&&PROVINCE){saFilterActiveProvince();rebuildBAZ();if(typeof renderBolgePick==='function')renderBolgePick();if(typeof renderOzel==='function')renderOzel();if(typeof renderOzHome==='function')renderOzHome();}}}catch(e){}
   // counters via IntersectionObserver
   const io=new IntersectionObserver((ents)=>{ents.forEach(e=>{if(e.isIntersecting){animateCounters();}});},{threshold:.25});
