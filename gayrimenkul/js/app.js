@@ -2305,16 +2305,26 @@ try{window.aiChat=aiChat;window._deepseekChat=_deepseekChat;window._openaiChat=_
 async function csPexels(query,opts){
   opts=opts||{};var q=(''+(query||'')).trim();if(!q)return null;
   var key=_pexKey();
-  try{
-    var url,headers={};
-    if(key){ url='https://api.pexels.com/v1/search?per_page=12&orientation=landscape&locale=tr-TR&query='+encodeURIComponent(q); headers={'Authorization':key}; }
-    else { url=(EMLAK_API_BASE||'https://www.emlakekspertizi.com')+'/api/v1/tenant/prox/image?per_page=12&q='+encodeURIComponent(q); headers={'X-Tenant-Id':(typeof EMLAK_TENANT!=='undefined'&&EMLAK_TENANT&&EMLAK_TENANT.tenant_id)||''}; }
-    var res=await fetch(url,{headers:headers});
-    if(!res.ok)return {_err:true,status:res.status};
-    var j=await res.json();var photos=(j&&(j.photos||j.data||j.results))||[];
-    if(!photos.length)return {_err:true,status:0};
-    return photos.map(function(p){var s=p.src||p||{};return {url:s.large||s.medium||s.original||s.landscape||p.url,thumb:s.medium||s.small||s.tiny||s.large,alt:p.alt||q,credit:p.photographer||'Pexels',creditUrl:p.photographer_url||p.url||'https://www.pexels.com'};});
-  }catch(e){return {_err:true,status:-1,err:String(e&&e.message||e)};}
+  /* 1) Pexels (kullanıcı anahtarı) */
+  if(key){try{
+    var r=await fetch('https://api.pexels.com/v1/search?per_page=12&orientation=landscape&locale=tr-TR&query='+encodeURIComponent(q),{headers:{'Authorization':key}});
+    if(r.ok){var j=await r.json();var ph=(j&&j.photos)||[];if(ph.length)return ph.map(function(p){var s=p.src||{};return {url:s.large||s.original||s.medium,thumb:s.medium||s.small||s.tiny,alt:p.alt||q,credit:(p.photographer||'')+' · Pexels',creditUrl:p.photographer_url||'https://www.pexels.com'};});}
+  }catch(e){}}
+  /* 2) Openverse (ANAHTARSIZ, CC lisanslı, CORS) — varsayılan kaynak.
+     Şehir/Türkçe kelimeler Openverse'de 0 dönebilir → sorguyu aşamalı sadeleştir. */
+  var _ov=async function(qq){try{
+    var r=await fetch('https://api.openverse.org/v1/images/?q='+encodeURIComponent(qq)+'&page_size=12',{headers:{'Accept':'application/json'}});
+    if(!r.ok)return null;var j=await r.json();var rs=(j&&j.results)||[];if(!rs.length)return null;
+    return rs.filter(function(p){return p.url;}).map(function(p){return {url:p.url,thumb:p.thumbnail||p.url,alt:p.title||qq,credit:(p.creator||'Openverse')+' · Openverse',creditUrl:p.creator_url||p.foreign_landing_url||'https://openverse.org'};});
+  }catch(e){return null;}};
+  var TR=/[çğıöşüİ]/i;
+  var words=q.split(/\s+/).filter(function(w){return w.length>2&&!TR.test(w);});/* Türkçe/şehir kelimelerini ele */
+  var cands=[];
+  if(words.length)cands.push(words.slice(0,2).join(' '));
+  if(words.length)cands.push(words[0]);
+  cands.push('modern apartment');cands.push('real estate');cands.push('city building');/* jenerik emlak fallback */
+  for(var i=0;i<cands.length;i++){var got=await _ov(cands[i]);if(got&&got.length)return got;}
+  return {_err:true,status:0};
 }
 try{window.csPexels=csPexels;}catch(e){}
 /* İçerik Stüdyosu (content-studio.js) — gayrimenkul entegrasyonu */
@@ -3141,7 +3151,7 @@ function blogDetail(id){var b=blogAllPosts().filter(function(x){return (''+x.id)
   else{var hasMd=/(^|\n)\s*#{1,3}\s|(^|\n)\s*[-*]\s/.test(b.body||'');
     body=(typeof ContentStudio!=='undefined'&&ContentStudio.mdToHtml&&hasMd)?ContentStudio.mdToHtml(b.body)
       :(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p style="margin:0 0 16px">'+_be(par).replace(/\n/g,'<br>')+'</p>';}).join('');}
-  var _cap='';if(b.img&&b.img.credit&&!/yüklenen|yuklenen/i.test(b.img.credit)&&!/^data:/.test(b.img.url||''))_cap='<figcaption style="font-size:12px;color:var(--muted);margin-top:6px">📷 '+_be(b.img.credit)+' · Pexels</figcaption>';
+  var _cap='';if(b.img&&b.img.credit&&!/yüklenen|yuklenen/i.test(b.img.credit)&&!/^data:/.test(b.img.url||''))_cap='<figcaption style="font-size:12px;color:var(--muted);margin-top:6px">📷 '+_be(b.img.credit)+'</figcaption>';
   var cover=(b.img&&b.img.url)?('<figure style="margin:0 0 22px"><img src="'+_be(b.img.url)+'" alt="'+_be((b.img.alt||b.title))+'" style="width:100%;border-radius:14px;display:block">'+_cap+'</figure>'):'';
   /* VİDEO alanı — yalnız video linki varsa (yoksa hiç alan çıkmaz) */
   var vid=(b.video&&b.video.url&&typeof ContentStudio!=='undefined'&&ContentStudio.videoHtml)?ContentStudio.videoHtml(b.video.url,(b.video.caption||'')):'';

@@ -191,7 +191,7 @@
     if(!DRAFT)DRAFT={id:Date.now(),src:'firma',date:today()};
     DRAFT.img={url:url,alt:alt||DRAFT.title||'',credit:credit||'',creditUrl:creditUrl||''};
     var isUpload=!credit||/yüklenen|yuklenen/i.test(credit)||/^data:/.test(url);
-    var label=isUpload?'🖼 Yüklenen görsel':('📷 '+esc(credit)+' · Pexels');
+    var label=isUpload?'🖼 Yüklenen görsel':('📷 '+esc(credit));/* credit kaynağı içerir (… · Pexels/Openverse) */
     var prev=$('cs_coverPrev'); if(prev)prev.innerHTML='<img src="'+esc(url)+'" alt="'+esc(alt||'')+'"><span class="cs-credit">'+label+'</span>';
   }
   /* ---------- GÖRSEL: bilgisayardan yükle (küçült + data-URI) ---------- */
