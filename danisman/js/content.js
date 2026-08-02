@@ -184,7 +184,25 @@
     if (document.body) document.body.style.fontFamily = "'" + f + "', system-ui, -apple-system, sans-serif";
   }
   window.dnApplyFont = dnApplyFont;
-  ready(function () { applyWaLinks(); setTimeout(applyWaLinks, 350); dnApplySocial(); dnApplyFont(); setTimeout(function(){ dnApplySocial(); dnApplyFont(); }, 400); });
+  /* TEMA (accent): dn_theme.accent → statik sayfalar. index initSaaSTheme accent'i
+     HEM --accent HEM --gold'a yazıyor (zümrüt+altın teması); statik sayfada da öyle.
+     Wipe-proof <style id=tenant-theme> + inline root (sayfanın kendi :root'unu kaskadta yener). */
+  function _dnLighten(hex, amt) { try { var n = parseInt(hex.slice(1), 16); var r = Math.min(255, (n >> 16) + amt), g = Math.min(255, ((n >> 8) & 255) + amt), b = Math.min(255, (n & 255) + amt); return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1); } catch (e) { return hex; } }
+  function _dnDarken(hex, amt) { try { var n = parseInt(hex.slice(1), 16); var r = Math.max(0, (n >> 16) - amt), g = Math.max(0, ((n >> 8) & 255) - amt), b = Math.max(0, (n & 255) - amt); return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1); } catch (e) { return hex; } }
+  function _dnRgba(hex, a) { try { var n = parseInt(hex.slice(1), 16); return "rgba(" + (n >> 16) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; } catch (e) { return hex; } }
+  function dnApplyTheme() {
+    var a = ""; try { a = (JSON.parse(localStorage.getItem("dn_theme") || "{}") || {}).accent || ""; } catch (e) {}
+    if (!a || ("" + a).charAt(0) !== "#") return;
+    var a2 = _dnLighten(a, 20), dp = _dnDarken(a, 22), sf = _dnRgba(a, .14);
+    var css = ":root{--accent:" + a + ";--gold:" + a + ";--accent-2:" + a2 + ";--gold-deep:" + dp + ";--gold-soft:" + sf + ";}";
+    var st = document.getElementById("tenant-theme");
+    if (!st) { st = document.createElement("style"); st.id = "tenant-theme"; }
+    st.textContent = css; (document.head || document.documentElement).appendChild(st);
+    var r = document.documentElement.style;
+    r.setProperty("--accent", a); r.setProperty("--gold", a); r.setProperty("--accent-2", a2); r.setProperty("--gold-deep", dp); r.setProperty("--gold-soft", sf);
+  }
+  window.dnApplyTheme = dnApplyTheme;
+  ready(function () { applyWaLinks(); setTimeout(applyWaLinks, 350); dnApplySocial(); dnApplyFont(); dnApplyTheme(); setTimeout(function(){ dnApplySocial(); dnApplyFont(); dnApplyTheme(); }, 400); });
 })();
 
 /* ===================================================================
