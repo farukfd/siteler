@@ -47,7 +47,11 @@ if(_tf&&_CF[_tf]){var _lid='brand-font-'+_tf.replace(/\s+/g,'');if(!document.get
   var _ap=function(){if(document.body)document.body.style.fontFamily="'"+_tf+"', system-ui, -apple-system, sans-serif";};if(document.body)_ap();else document.addEventListener('DOMContentLoaded',_ap);}}catch(e){}
 
 /* ---- 2) Marka + gramerli şehir ---- */
-var shortN=name.split(/\s+/)[0]||OSHORT;
+/* Kısa marka adı: jenerik kategori/hukuki ekleri at ("Batı Ege Gayrimenkul"→"Batı Ege",
+   "Yıldız Gayrimenkul Danışmanlık A.Ş."→"Yıldız"). Demo "Meridyen Gayrimenkul"→"Meridyen".
+   Tek-kelime kalırsa/hepsi jenerikse ilk kelimeye düş. */
+function _wlShort(nm,fb){nm=(nm||'').trim();if(!nm)return fb;var s=nm.replace(/\s*(a\.?\s*ş\.?|ltd\.?\s*şti\.?|ltd\.?|şti\.?|inc\.?|llc)\s*$/gi,'').trim();s=s.replace(/\b(gayrimenkul|emlak|danışmanlık|danismanlik|inşaat|insaat|yapı|yapi|real\s*estate|realty|holding|group|grup|proje|müşavirlik|musavirlik)\b/gi,' ').replace(/\s+/g,' ').trim();return s||nm.split(/\s+/)[0]||fb;}
+var shortN=_wlShort(name,OSHORT);
 function lv(w){var m=(w||'').toLowerCase().match(/[aeıioöuü]/g);return m?m[m.length-1]:'a';}
 function bk(v){return 'aıou'.indexOf(v)>=0;}function ro(v){return 'ouöü'.indexOf(v)>=0;}
 function I(v){return bk(v)?(ro(v)?'u':'ı'):(ro(v)?'ü':'i');}function A(v){return bk(v)?'a':'e';}

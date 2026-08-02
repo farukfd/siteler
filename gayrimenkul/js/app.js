@@ -2363,10 +2363,13 @@ function renderEidsYetki(){var box=document.getElementById('eidsYetkiBox');if(!b
 /* ===== KUSURSUZ MARKA MOTORU (white-label · Meridyen -> firma adı) ===== */
 const BRAND_ORIG='Meridyen Gayrimenkul',BRAND_ORIG_SHORT='Meridyen';
 function brandName(){return ((typeof FIRMA!=='undefined'&&FIRMA&&FIRMA.name)||BRAND_ORIG).trim();}
-function brandShort(){return brandName().split(/\s+/)[0]||BRAND_ORIG_SHORT;}
+/* Kısa marka: jenerik kategori/hukuki ekleri at ("Batı Ege Gayrimenkul"→"Batı Ege"),
+   demo "Meridyen Gayrimenkul"→"Meridyen"; hepsi jenerikse ilk kelime. */
+function _bShort(nm,fb){nm=(nm||'').trim();if(!nm)return fb;var s=nm.replace(/\s*(a\.?\s*ş\.?|ltd\.?\s*şti\.?|ltd\.?|şti\.?|inc\.?|llc)\s*$/gi,'').trim();s=s.replace(/\b(gayrimenkul|emlak|danışmanlık|danismanlik|inşaat|insaat|yapı|yapi|real\s*estate|realty|holding|group|grup|proje|müşavirlik|musavirlik)\b/gi,' ').replace(/\s+/g,' ').trim();return s||nm.split(/\s+/)[0]||fb;}
+function brandShort(){return _bShort(brandName(),BRAND_ORIG_SHORT);}
 function brandReplace(s){if(!s||typeof s!=='string')return s;var n=brandName();if(n===BRAND_ORIG||s.indexOf('Meridyen')<0)return s;return s.split(BRAND_ORIG).join(n).split(BRAND_ORIG_SHORT).join(brandShort());}
 /* Şablonu (Meridyen…) VERİLEN ada göre markalar — re-brand'ı tersinir kılmak için. */
-function brandShortOf(nm){return (((nm||'').trim().split(/\s+/)[0])||BRAND_ORIG_SHORT);}
+function brandShortOf(nm){return _bShort(nm,BRAND_ORIG_SHORT);}
 function brandReplaceWith(s,nm){if(!s||typeof s!=='string'||!nm||nm===BRAND_ORIG||s.indexOf('Meridyen')<0)return s;return s.split(BRAND_ORIG).join(nm).split(BRAND_ORIG_SHORT).join(brandShortOf(nm));}
 /* Firma adında bir Türkiye ili geçiyor mu? (kelime-bazlı, en uzun eşleşme). Yoksa null —
    böylece "Konya Gayrimenkul" → il=Konya; "Kaya/Romix Gayrimenkul" → null (il korunur, HATA YOK). */
