@@ -103,7 +103,7 @@
     return {
       id:_uid(), title:g.title||o.topic, slug:slugify(g.title||o.topic), cat:g.cat||'Genel',
       tags:(g.tags||'').split(/[,;]/).map(function(s){return s.trim();}).filter(Boolean).slice(0,8),
-      sum:g.sum||'', body:g.body||'', imgq:g.imgq||o.topic, img:null,
+      sum:g.sum||'', body:g.body||'', blocks:CS.mdToBlocks(g.body||''), imgq:g.imgq||o.topic, img:null,
       seo:{title:(g.title||o.topic).slice(0,60),desc:(g.sum||'').slice(0,160)},
       status:'draft', date:today(), words:wc, src:'ai', icon:'📝'
     };
@@ -128,7 +128,7 @@
 
   /* ---------- GÜNLÜK OTOMATİK HABER: batch üret + zamanla ---------- */
   function _todayAt(hour,min){ var d=new Date(); d.setHours(hour||0,min||0,0,0); return d.getTime(); }
-  CS.getSched=function(){ var s=(CFG.getSchedule&&CFG.getSchedule())||{}; return {enabled:!!s.enabled,startHour:(s.startHour!=null?s.startHour:8),count:(s.count||10),everyMin:(s.everyMin||60),topics:s.topics||''}; };
+  CS.getSched=function(){ var s=(CFG.getSchedule&&CFG.getSchedule())||{}; return {enabled:(s.enabled!==false),startHour:(s.startHour!=null?s.startHour:8),count:(s.count||10),everyMin:(s.everyMin||60),topics:s.topics||''}; };
   CS.saveSched=function(){ var s={enabled:!!($('cs_schEnable')||{}).checked,startHour:parseInt(($('cs_schStart')||{}).value||'8',10),count:parseInt(($('cs_schCount')||{}).value||'10',10),everyMin:parseInt(($('cs_schEvery')||{}).value||'60',10),topics:($('cs_schTopics')||{}).value||''};
     if(CFG.setSchedule)CFG.setSchedule(s); toast('✓ Zamanlayıcı ayarları kaydedildi.'); };
   function _topicList(){
@@ -163,13 +163,14 @@
     CS.runSchedule();
   };
   /* Zamanı gelen scheduled → published (statik "lazy-cron"; her sayfa yüklemesinde çalışır) */
-  CS.runSchedule=function(){
-    var arts=(CFG.list&&CFG.list())||[]; var now=Date.now(),ch=false;
-    arts.forEach(function(a){ if(a.status==='scheduled'&&a.publishAt&&a.publishAt<=now){a.status='published';ch=true;} });
+  CS.runSchedule=function(){/* admin — zamanı geleni yayınla (master switch AÇIK ise) */
+    var arts=(CFG.list&&CFG.list())||[]; var now=Date.now(),ch=false;var s=CS.getSched();
+    if(s.enabled!==false)arts.forEach(function(a){ if(a.status==='scheduled'&&a.publishAt&&a.publishAt<=now){a.status='published';ch=true;} });
     if(ch&&CFG.save)CFG.save(arts);
     return arts.filter(function(a){return a.status==='scheduled';}).length;
   };
-  try{window.csRunSchedule=function(){try{return CS.runSchedule();}catch(e){return 0;}};}catch(e){}
+  /* window.csRunSchedule app.js'te tanımlı (public sayfalarda studio mount olmadan çalışır) */
+  CS.toggleAutomation=function(on){var s=CS.getSched();s.enabled=!!on;if(CFG.setSchedule)CFG.setSchedule(s);var ch=$('cs_schEnable');if(ch)ch.checked=!!on;CS.runSchedule();CS.renderList();_status(on?'▶️ Otomatik yayın AÇIK — zamanı gelen haberler yayınlanır.':'⏸️ Otomatik yayın DURDURULDU — zamanlı haberler bekletiliyor.',on?'ok':'wait');};
 
   /* ---------- GÖRSEL (Pexels) ---------- */
   CS.findImage = async function(q){
@@ -252,9 +253,9 @@
   };
   CS.insertCoverToBody = function(){ if(DRAFT&&DRAFT.img&&DRAFT.img.url){_insBody('\n!['+((DRAFT.img.alt||'görsel'))+']('+DRAFT.img.url+')\n','','');toast('✓ Kapak gövdeye eklendi.');}else toast('Önce kapak görseli seçin.'); };
   CS.togglePreview = function(){
-    var pv=$('cs_preview'),ta=$('cs_body'),btn=$('cs_pvBtn'); if(!pv||!ta)return;
-    if(pv.style.display==='none'||!pv.style.display){ pv.innerHTML=CS.mdToHtml(ta.value); pv.style.display='block'; ta.style.display='none'; if(btn)btn.textContent='✎ Düzenle'; }
-    else { pv.style.display='none'; ta.style.display=''; if(btn)btn.textContent='👁 Önizleme'; }
+    var pv=$('cs_preview'),bl=$('cs_blocks'),btn=$('cs_pvBtn'); if(!pv||!bl)return;
+    if(pv.style.display==='none'||!pv.style.display){ pv.innerHTML=CS.blocksToHtml(DRAFT.blocks||[]); pv.style.display='block'; bl.style.display='none'; var ab=document.querySelector('.cs-addbar');if(ab)ab.style.display='none'; if(btn)btn.textContent='✎ Düzenle'; }
+    else { pv.style.display='none'; bl.style.display=''; var ab2=document.querySelector('.cs-addbar');if(ab2)ab2.style.display=''; if(btn)btn.textContent='👁 Önizleme'; }
   };
 
   /* ---------- EDİTÖR ↔ DRAFT ---------- */
@@ -264,7 +265,9 @@
     if($('cs_cat'))$('cs_cat').value=a.cat||'';
     if($('cs_tags'))$('cs_tags').value=(a.tags||[]).join(', ');
     if($('cs_sum'))$('cs_sum').value=a.sum||'';
-    if($('cs_body'))$('cs_body').value=a.body||'';
+    /* gövde artık BLOK modeli — a.blocks yoksa eski Markdown body'den türet */
+    DRAFT.blocks=(a.blocks&&a.blocks.length)?a.blocks:CS.mdToBlocks(a.body||'');
+    CS.renderBlocks();
     if($('cs_seoTitle'))$('cs_seoTitle').value=(a.seo&&a.seo.title)||'';
     if($('cs_seoDesc'))$('cs_seoDesc').value=(a.seo&&a.seo.desc)||'';
     if($('cs_imgq'))$('cs_imgq').value=a.imgq||'';
@@ -278,15 +281,17 @@
     DRAFT.cat=($('cs_cat')||{}).value||'Genel';
     DRAFT.tags=(($('cs_tags')||{}).value||'').split(/[,;]/).map(function(s){return s.trim();}).filter(Boolean);
     DRAFT.sum=($('cs_sum')||{}).value||'';
-    DRAFT.body=($('cs_body')||{}).value||'';
+    /* blocks canlı güncelleniyor; geriye-dönük body (legacy render/özet) + kelime blocksToText'ten */
+    if(!DRAFT.blocks||!DRAFT.blocks.length)DRAFT.blocks=CS.mdToBlocks(DRAFT.body||'');
+    DRAFT.body=CS.blocksToText(DRAFT.blocks);
     DRAFT.seo={title:(($('cs_seoTitle')||{}).value||DRAFT.title).slice(0,60),desc:(($('cs_seoDesc')||{}).value||DRAFT.sum).slice(0,160)};
     DRAFT.imgq=($('cs_imgq')||{}).value||DRAFT.imgq||'';
-    DRAFT.words=wordCount(DRAFT.body);
+    DRAFT.words=wordCount(CS.blocksToText(DRAFT.blocks));
     return DRAFT;
   }
   function _syncMeta(){
-    var w=wordCount(($('cs_body')||{}).value||''); var el=$('cs_wc');
-    if(el){var ok=w>=600;el.innerHTML='<b style="color:'+(ok?'#1a7f4b':'#c0392b')+'">'+w+' kelime</b> · '+readingTime(w)+' · '+(ok?'✓ SEO uzunluğu yeterli':'≥600 kelime önerilir');}
+    var w=DRAFT&&DRAFT.blocks?wordCount(CS.blocksToText(DRAFT.blocks)):0; var el=$('cs_wc');
+    if(el){var ok=w>=600;el.innerHTML='<b style="color:'+(ok?'#1a7f4b':'#c0392b')+'">'+w+' kelime</b> · '+readingTime(w)+' · '+(ok?'✓ SEO uzunluğu yeterli':'≥600 önerilir')+' · '+((DRAFT&&DRAFT.blocks||[]).length)+' blok';}
     if($('cs_slug')&&!$('cs_slug')._touched&&$('cs_title'))$('cs_slug').value=slugify($('cs_title').value);
   }
 
@@ -420,18 +425,18 @@
           +'<div class="cs-grid2"><div class="cs-f"><label>Kalıcı bağlantı (slug)</label><input id="cs_slug"></div>'
           +'<div class="cs-f"><label>Kategori</label><input id="cs_cat"></div></div>'
           +'<div class="cs-f"><label>Etiketler <span class="cs-muted">(virgülle)</span></label><input id="cs_tags"></div>'
-          +'<div class="cs-f"><label>Gövde <span class="cs-muted">(Markdown — ## alt başlık)</span></label>'
-            +'<div class="cs-toolbar">'
-              +'<button type="button" title="Kalın" onclick="ContentStudio.fmt(\'b\')"><b>B</b></button>'
-              +'<button type="button" title="Alt başlık" onclick="ContentStudio.fmt(\'h2\')">H2</button>'
-              +'<button type="button" title="Küçük başlık" onclick="ContentStudio.fmt(\'h3\')">H3</button>'
-              +'<button type="button" title="Madde listesi" onclick="ContentStudio.fmt(\'ul\')">• Liste</button>'
-              +'<button type="button" title="Alıntı" onclick="ContentStudio.fmt(\'quote\')">❝</button>'
-              +'<button type="button" title="Bağlantı" onclick="ContentStudio.fmt(\'link\')">🔗</button>'
-              +'<label class="cs-tb-upl" title="Gövdeye görsel yükle">🖼<input type="file" accept="image/*" onchange="ContentStudio.uploadBodyImage(this)" hidden></label>'
+          +'<div class="cs-f"><label>İçerik blokları <span class="cs-muted">(paragraf · başlık · görsel · galeri · liste · alıntı)</span></label>'
+            +'<div class="cs-blocks" id="cs_blocks"></div>'
+            +'<div class="cs-addbar">'
+              +'<span class="cs-muted">+ Blok:</span>'
+              +'<button type="button" onclick="ContentStudio.addBlock(\'paragraph\')">¶ Paragraf</button>'
+              +'<button type="button" onclick="ContentStudio.addBlock(\'header\')">H Başlık</button>'
+              +'<button type="button" onclick="ContentStudio.addBlock(\'image\')">🖼 Görsel</button>'
+              +'<button type="button" onclick="ContentStudio.addBlock(\'gallery\')">🖼🖼 Galeri</button>'
+              +'<button type="button" onclick="ContentStudio.addBlock(\'list\')">• Liste</button>'
+              +'<button type="button" onclick="ContentStudio.addBlock(\'quote\')">❝ Alıntı</button>'
               +'<button type="button" id="cs_pvBtn" class="cs-tb-r" onclick="ContentStudio.togglePreview()">👁 Önizleme</button>'
             +'</div>'
-            +'<textarea id="cs_body" rows="16" placeholder="Makale gövdesi burada oluşur…"></textarea>'
             +'<div class="cs-article cs-preview" id="cs_preview" style="display:none"></div>'
           +'</div>'
         +'</div>'
@@ -461,7 +466,10 @@
         +'<div class="cs-f"><label>Haber adedi</label><input id="cs_schCount" type="number" min="1" max="24" value="'+s.count+'"></div>'
         +'<div class="cs-f"><label>Aralık (dakika)</label><input id="cs_schEvery" type="number" min="15" max="240" step="15" value="'+s.everyMin+'"></div></div>'
         +'<div class="cs-f"><label>Konu havuzu <span class="cs-muted">(her satır bir konu — boşsa sektörel otomatik)</span></label><textarea id="cs_schTopics" rows="6" placeholder="Her satıra bir haber konusu yazın…">'+esc(s.topics||'')+'</textarea></div>'
-        +'<label class="cs-check"><input type="checkbox" id="cs_schEnable"'+(s.enabled?' checked':'')+'> Günlük otomatik yayın etkin (zamanı gelen haberler otomatik yayınlanır)</label>'
+        +'<div class="cs-master"><div><b>Otomatik yayın</b><div class="cs-muted">Zamanı gelen haberler /blog\'da otomatik görünür</div></div>'
+          +'<div class="cs-master-btns"><button type="button" class="cs-btn'+(s.enabled?' pri':'')+'" onclick="ContentStudio.toggleAutomation(true)">▶️ Başlat</button>'
+          +'<button type="button" class="cs-btn'+(!s.enabled?' pri':'')+'" onclick="ContentStudio.toggleAutomation(false)">⏸️ Durdur</button></div></div>'
+        +'<input type="checkbox" id="cs_schEnable"'+(s.enabled?' checked':'')+' style="display:none">'
         +'<div class="cs-actions"><button type="button" class="cs-btn pri lg" id="cs_batchBtn" onclick="ContentStudio.generateBatch()">📰 Günlük Haberleri Üret</button>'
         +'<button type="button" class="cs-btn" onclick="ContentStudio.saveSched()">Ayarları Kaydet</button></div>'
       +'</div>'
@@ -508,7 +516,131 @@
       var s=document.getElementById('cs-article-ld'); if(!s){s=document.createElement('script');s.type='application/ld+json';s.id='cs-article-ld';document.head.appendChild(s);} s.textContent=JSON.stringify(ld);
     }catch(e){}
   };
-  /* Markdown → HTML (başlık/kalın/liste/alıntı/link/görsel) — önizleme + public render için */
+  /* ============================================================
+     BLOK MOTORU (Editor.js-şekilli {id,type,data}) — çoklu görsel + caption
+     Tipler: paragraph|header|image|gallery|list|quote|delimiter
+     Eski Markdown gövdeler mdToBlocks ile bloğa çevrilir; public render blocksToHtml.
+     ============================================================ */
+  function _bid(){return 'b'+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36);}
+  function _stripMd(s){return (''+(s||'')).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');}
+  CS.mdToBlocks = function(md){
+    md=''+(md||''); var lines=md.split(/\n/),blocks=[],ul=null;
+    var flush=function(){if(ul){blocks.push({id:_bid(),type:'list',data:{style:'unordered',items:ul}});ul=null;}};
+    lines.forEach(function(ln){
+      var t=ln.trim();
+      var mImg=t.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+      if(mImg){flush();blocks.push({id:_bid(),type:'image',data:{url:mImg[2],caption:'',alt:mImg[1]||''}});return;}
+      if(/^###\s+/.test(t)){flush();blocks.push({id:_bid(),type:'header',data:{text:_stripMd(t.replace(/^###\s+/,'')),level:3}});return;}
+      if(/^##\s+/.test(t)){flush();blocks.push({id:_bid(),type:'header',data:{text:_stripMd(t.replace(/^##\s+/,'')),level:2}});return;}
+      if(/^#\s+/.test(t)){flush();blocks.push({id:_bid(),type:'header',data:{text:_stripMd(t.replace(/^#\s+/,'')),level:2}});return;}
+      if(/^>\s?/.test(t)){flush();blocks.push({id:_bid(),type:'quote',data:{text:_stripMd(t.replace(/^>\s?/,'')),caption:''}});return;}
+      if(/^[-*]\s+/.test(t)){if(!ul)ul=[];ul.push(_stripMd(t.replace(/^[-*]\s+/,'')));return;}
+      if(!t){flush();return;}
+      flush();blocks.push({id:_bid(),type:'paragraph',data:{text:_stripMd(t)}});
+    });
+    flush();
+    if(!blocks.length)blocks.push({id:_bid(),type:'paragraph',data:{text:''}});
+    return blocks;
+  };
+  CS.blocksToHtml = function(blocks){
+    if(!blocks||!blocks.length)return '';
+    var e=esc;
+    return blocks.map(function(b){var d=b.data||{};switch(b.type){
+      case 'header': return '<h'+(d.level||2)+'>'+(d.text||'')+'</h'+(d.level||2)+'>';
+      case 'paragraph': return d.text?('<p>'+d.text+'</p>'):'';
+      case 'quote': return '<blockquote><p>'+(d.text||'')+'</p>'+(d.caption?'<cite>'+e(d.caption)+'</cite>':'')+'</blockquote>';
+      case 'list': return '<'+(d.style==='ordered'?'ol':'ul')+'>'+(d.items||[]).map(function(i){return '<li>'+(typeof i==='string'?i:(i.content||''))+'</li>';}).join('')+'</'+(d.style==='ordered'?'ol':'ul')+'>';
+      case 'image': return '<figure>'+(d.url?'<img src="'+e(d.url)+'" alt="'+e(d.alt||'')+'" loading="lazy">':'')+(d.caption?'<figcaption>'+e(d.caption)+'</figcaption>':'')+'</figure>';
+      case 'gallery': return '<figure class="cs-gal cs-gal--'+(d.layout||'grid')+'">'+(d.images||[]).map(function(im){return '<figure><img src="'+e(im.url)+'" alt="'+e(im.alt||'')+'" loading="lazy">'+(im.caption?'<figcaption>'+e(im.caption)+'</figcaption>':'')+'</figure>';}).join('')+(d.caption?'<figcaption class="cs-gal-cap">'+e(d.caption)+'</figcaption>':'')+'</figure>';
+      case 'delimiter': return '<hr>';
+      default: return '';
+    }}).join('\n');
+  };
+  CS.blocksToText = function(blocks){
+    if(!blocks||!blocks.length)return '';
+    return blocks.map(function(b){var d=b.data||{};if(b.type==='list')return (d.items||[]).map(function(i){return typeof i==='string'?i:(i.content||'');}).join(' ');return (d.text||'')+' '+(d.caption||'');}).join(' ').replace(/<[^>]+>/g,' ');
+  };
+  function _imgsFromBlocks(blocks){var out=[];(blocks||[]).forEach(function(b){if(b.type==='image'&&b.data.url)out.push(b.data.url);if(b.type==='gallery')(b.data.images||[]).forEach(function(im){if(im.url)out.push(im.url);});});return out;}
+
+  /* ============ BLOK EDİTÖRÜ (UI) ============ */
+  function _blk(id){return (DRAFT.blocks||[]).filter(function(b){return b.id===id;})[0];}
+  function _sanitize(html){var d=document.createElement('div');d.innerHTML=html||'';[].forEach.call(d.querySelectorAll('*'),function(el){if(!/^(B|I|EM|STRONG|A|BR|CODE)$/.test(el.tagName)){el.replaceWith.apply(el,el.childNodes.length?[].slice.call(el.childNodes):[document.createTextNode(el.textContent||'')]);return;}[].slice.call(el.attributes).forEach(function(at){if(el.tagName==='A'&&(at.name==='href'||at.name==='target'||at.name==='rel'))return;el.removeAttribute(at.name);});if(el.tagName==='A'){el.setAttribute('target','_blank');el.setAttribute('rel','noopener');}});return d.innerHTML;}
+  var _typeLabel={paragraph:'¶ Paragraf',header:'H Başlık',image:'🖼 Görsel',gallery:'🖼🖼 Galeri',list:'• Liste',quote:'❝ Alıntı',delimiter:'— Ayraç'};
+  CS.renderBlocks=function(){
+    var host=$('cs_blocks'); if(!host)return; if(!DRAFT.blocks||!DRAFT.blocks.length)DRAFT.blocks=[{id:_bid(),type:'paragraph',data:{text:''}}];
+    host.innerHTML='';
+    DRAFT.blocks.forEach(function(b,idx){host.appendChild(_blockEl(b,idx));});
+    _syncMeta();
+  };
+  function _ctrlBar(b){
+    var bar=document.createElement('div');bar.className='cs-blk-ctrl';
+    bar.innerHTML='<span class="cs-blk-t">'+(_typeLabel[b.type]||b.type)+'</span>'
+      +'<span class="cs-blk-btns"><button type="button" title="Yukarı" onclick="ContentStudio.moveBlock(\''+b.id+'\',-1)">↑</button>'
+      +'<button type="button" title="Aşağı" onclick="ContentStudio.moveBlock(\''+b.id+'\',1)">↓</button>'
+      +'<button type="button" title="Sil" onclick="ContentStudio.delBlock(\''+b.id+'\')">🗑</button></span>';
+    return bar;
+  }
+  function _blockEl(b){
+    var el=document.createElement('div');el.className='cs-blk';el.dataset.id=b.id;el.dataset.type=b.type;
+    el.appendChild(_ctrlBar(b));
+    var body=document.createElement('div');body.className='cs-blk-body';el.appendChild(body);var d=b.data||(b.data={});
+    if(b.type==='paragraph'){
+      var p=document.createElement('div');p.className='cs-ce';p.contentEditable='true';p.innerHTML=d.text||'';p.setAttribute('data-ph','Paragraf yazın…');
+      p.addEventListener('input',function(){d.text=_sanitize(p.innerHTML);_syncMeta();});
+      p.addEventListener('keydown',function(ev){if((ev.metaKey||ev.ctrlKey)&&ev.key.toLowerCase()==='b'){ev.preventDefault();document.execCommand('bold');}if((ev.metaKey||ev.ctrlKey)&&ev.key.toLowerCase()==='i'){ev.preventDefault();document.execCommand('italic');}});
+      body.appendChild(p);
+    } else if(b.type==='header'){
+      var row=document.createElement('div');row.className='cs-hrow';
+      var sel=document.createElement('select');sel.innerHTML='<option value="2">H2</option><option value="3">H3</option>';sel.value=String(d.level||2);sel.onchange=function(){d.level=+sel.value;};
+      var h=document.createElement('div');h.className='cs-ce cs-ce-h';h.contentEditable='true';h.innerHTML=d.text||'';h.setAttribute('data-ph','Başlık…');h.addEventListener('input',function(){d.text=_sanitize(h.innerHTML);_syncMeta();});
+      row.appendChild(sel);row.appendChild(h);body.appendChild(row);
+    } else if(b.type==='quote'){
+      var q=document.createElement('div');q.className='cs-ce';q.contentEditable='true';q.innerHTML=d.text||'';q.setAttribute('data-ph','Alıntı…');q.addEventListener('input',function(){d.text=_sanitize(q.innerHTML);});
+      var c=document.createElement('input');c.className='cs-cap';c.placeholder='— kaynak (opsiyonel)';c.value=d.caption||'';c.oninput=function(){d.caption=c.value;};
+      body.appendChild(q);body.appendChild(c);
+    } else if(b.type==='list'){
+      var ta=document.createElement('textarea');ta.rows=4;ta.placeholder='Her satır bir madde…';ta.value=(d.items||[]).map(function(i){return typeof i==='string'?i:(i.content||'');}).join('\n');
+      ta.oninput=function(){d.items=ta.value.split('\n').map(function(x){return x.trim();}).filter(Boolean);_syncMeta();};body.appendChild(ta);
+    } else if(b.type==='delimiter'){ var hr=document.createElement('div');hr.className='cs-hr';hr.textContent='— — —';body.appendChild(hr);
+    } else if(b.type==='image'){
+      body.appendChild(_imageEditor(b));
+    } else if(b.type==='gallery'){
+      body.appendChild(_galleryEditor(b));
+    }
+    return el;
+  }
+  function _imgSrcRow(onUrl,onUpload,phUrl){
+    var row=document.createElement('div');row.className='cs-grid-img';
+    var inp=document.createElement('input');inp.placeholder=phUrl||'Görsel URL yapıştır';inp.onchange=function(){onUrl(inp.value.trim());};
+    var lab=document.createElement('label');lab.className='cs-btn cs-upl';lab.innerHTML='⬆ Yükle';var f=document.createElement('input');f.type='file';f.accept='image/*';f.hidden=true;f.onchange=function(){onUpload(f);};lab.appendChild(f);
+    row.appendChild(inp);row.appendChild(lab);return row;
+  }
+  function _imageEditor(b){var d=b.data;var wrap=document.createElement('div');
+    var prev=document.createElement('div');prev.className='cs-blk-cover';prev.innerHTML=d.url?'<img src="'+esc(d.url)+'" alt="">':'<span class="cs-muted">Görsel yok</span>';wrap.appendChild(prev);
+    wrap.appendChild(_imgSrcRow(function(u){d.url=u;prev.innerHTML=u?'<img src="'+esc(u)+'" alt="">':'';},function(f){_readImage(f.files[0],1400,function(du){d.url=du;prev.innerHTML='<img src="'+esc(du)+'" alt="">';});}));
+    var cap=document.createElement('input');cap.className='cs-cap';cap.placeholder='Görsel altı not (caption)';cap.value=d.caption||'';cap.oninput=function(){d.caption=cap.value;};wrap.appendChild(cap);
+    var alt=document.createElement('input');alt.className='cs-cap';alt.placeholder='Alt metin (SEO/erişilebilirlik)';alt.value=d.alt||'';alt.oninput=function(){d.alt=alt.value;};wrap.appendChild(alt);
+    return wrap;
+  }
+  function _galleryEditor(b){var d=b.data;if(!d.images)d.images=[];if(!d.layout)d.layout='grid';
+    var wrap=document.createElement('div');
+    var grid=document.createElement('div');grid.className='cs-gal-edit';wrap.appendChild(grid);
+    var draw=function(){grid.innerHTML='';d.images.forEach(function(im,i){var cell=document.createElement('div');cell.className='cs-gal-cell';
+      cell.innerHTML='<div class="cs-gal-thumb">'+(im.url?'<img src="'+esc(im.url)+'">':'<span class="cs-muted">?</span>')+'<button type="button" class="cs-gal-x" title="Kaldır">×</button></div>';
+      var cap=document.createElement('input');cap.className='cs-cap';cap.placeholder='Foto '+(i+1)+' notu';cap.value=im.caption||'';cap.oninput=function(){im.caption=cap.value;};cell.appendChild(cap);
+      cell.querySelector('.cs-gal-x').onclick=function(){d.images.splice(i,1);draw();};
+      grid.appendChild(cell);});};
+    draw();
+    var add=document.createElement('div');add.className='cs-gal-add';
+    add.appendChild(_imgSrcRow(function(u){if(u){d.images.push({url:u,caption:'',alt:''});draw();}},function(f){_readImage(f.files[0],1400,function(du){d.images.push({url:du,caption:'',alt:''});draw();});},'Galeriye görsel URL ekle'));
+    wrap.appendChild(add);
+    return wrap;
+  }
+  CS.addBlock=function(type){if(!DRAFT.blocks)DRAFT.blocks=[];var nb={id:_bid(),type:type,data:type==='header'?{text:'',level:2}:type==='list'?{style:'unordered',items:[]}:type==='gallery'?{layout:'grid',images:[]}:type==='image'?{url:'',caption:'',alt:''}:type==='quote'?{text:'',caption:''}:type==='delimiter'?{}:{text:''}};DRAFT.blocks.push(nb);CS.renderBlocks();var host=$('cs_blocks');if(host&&host.lastChild)host.lastChild.scrollIntoView({block:'nearest'});};
+  CS.delBlock=function(id){DRAFT.blocks=(DRAFT.blocks||[]).filter(function(b){return b.id!==id;});if(!DRAFT.blocks.length)DRAFT.blocks=[{id:_bid(),type:'paragraph',data:{text:''}}];CS.renderBlocks();};
+  CS.moveBlock=function(id,dir){var a=DRAFT.blocks||[];var i=a.findIndex(function(b){return b.id===id;});var j=i+dir;if(i<0||j<0||j>=a.length)return;var t=a[i];a[i]=a[j];a[j]=t;CS.renderBlocks();};
+
+  /* Markdown → HTML (başlık/kalın/liste/alıntı/link/görsel) — önizleme + LEGACY public render için */
   CS.mdToHtml = function(md){
     md=''+(md||'');
     var esc2=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
@@ -558,6 +690,8 @@
   +'.cs-tab{background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;padding:10px 16px;font:inherit;font-weight:700;font-size:13.5px;color:var(--muted,#6b7280);cursor:pointer}'
   +'.cs-tab:hover{color:inherit}.cs-tab.on{color:var(--accent,#0ea5a5);border-bottom-color:var(--accent,#0ea5a5)}'
   +'.cs-check{display:flex;gap:8px;align-items:center;margin:4px 0 14px;font-size:13.5px}.cs-check input{width:auto}'
+  +'.cs-master{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid var(--line,#e5e7eb);border-radius:10px;background:var(--surface,#f7f7f9);margin:6px 0 12px}'
+  +'.cs-master-btns{display:flex;gap:6px;flex:0 0 auto}'
   +'.cs-listhead{display:flex;gap:8px;margin-bottom:12px}'
   +'.cs-badge.sch{background:#fff4e5;color:#b45309}'
   +'.cs-status.wait{border-color:#d97706;color:#b45309}.cs-status.ok{border-color:#1a7f4b;color:#1a7f4b}.cs-status.err{border-color:#c0392b;color:#c0392b}'
@@ -614,5 +748,29 @@
   +'.cs-preview{border:1px solid var(--line,#e5e7eb);border-radius:0 0 10px 10px;padding:16px;background:var(--bg,#fff);max-height:420px;overflow:auto}'
   +'.cs-article h2{font-size:20px;margin:18px 0 8px}.cs-article h3{font-size:16px;margin:14px 0 6px}.cs-article p{margin:0 0 12px;line-height:1.7}.cs-article ul{margin:0 0 12px;padding-left:20px}.cs-article li{margin:2px 0}'
   +'.cs-article img{max-width:100%;border-radius:10px}.cs-article blockquote{margin:12px 0;padding:8px 14px;border-left:3px solid var(--accent,#0ea5a5);background:var(--surface,#f7f7f7);border-radius:0 8px 8px 0}.cs-article a{color:var(--accent,#0ea5a5)}'
-  +'@media(max-width:720px){.cs-edit{grid-template-columns:1fr}.cs-grid2,.cs-grid3{grid-template-columns:1fr}.cs-img-results{grid-template-columns:repeat(3,1fr)}}';
+  /* BLOK EDİTÖRÜ */
+  +'.cs-blocks{display:flex;flex-direction:column;gap:8px}'
+  +'.cs-blk{border:1px solid var(--line,#e5e7eb);border-radius:10px;background:var(--bg,#fff);overflow:hidden}'
+  +'.cs-blk-ctrl{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:var(--surface,#f7f7f9);border-bottom:1px solid var(--line,#eee)}'
+  +'.cs-blk-t{font-size:11px;font-weight:700;color:var(--muted,#6b7280)}'
+  +'.cs-blk-btns button{background:none;border:1px solid var(--line,#e5e7eb);border-radius:6px;padding:2px 7px;cursor:pointer;margin-left:4px;font-size:12px}'
+  +'.cs-blk-body{padding:10px 12px}'
+  +'.cs-ce{min-height:26px;outline:none;line-height:1.65;font-size:15px}.cs-ce:empty:before{content:attr(data-ph);color:var(--muted,#9ca3af)}'
+  +'.cs-ce-h{font-size:19px;font-weight:700}'
+  +'.cs-hrow{display:flex;gap:8px;align-items:flex-start}.cs-hrow select{width:64px;flex:0 0 auto;padding:6px;border:1px solid var(--line,#e5e7eb);border-radius:8px}'
+  +'.cs-cap{width:100%;margin-top:6px;padding:7px 10px;border:1px solid var(--line,#e5e7eb);border-radius:8px;font:inherit;font-size:13px;box-sizing:border-box;background:var(--surface,#fff);color:inherit}'
+  +'.cs-blk-cover{border:1px dashed var(--line,#e5e7eb);border-radius:8px;min-height:90px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--surface,#fafafa);margin-bottom:6px}.cs-blk-cover img{width:100%;max-height:220px;object-fit:cover;display:block}'
+  +'.cs-hr{text-align:center;color:var(--muted,#9ca3af);letter-spacing:4px}'
+  +'.cs-addbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line,#e5e7eb)}'
+  +'.cs-addbar button{background:var(--surface,#fff);border:1px solid var(--line,#e5e7eb);border-radius:8px;padding:6px 11px;cursor:pointer;font:inherit;font-size:12.5px;font-weight:600}'
+  +'.cs-addbar button:hover{border-color:var(--accent,#0ea5a5)}'
+  /* GALERİ editör + public */
+  +'.cs-gal-edit{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}'
+  +'.cs-gal-cell{border:1px solid var(--line,#eee);border-radius:8px;padding:6px}'
+  +'.cs-gal-thumb{position:relative;aspect-ratio:4/3;border-radius:6px;overflow:hidden;background:var(--surface,#f3f4f6);display:flex;align-items:center;justify-content:center}'
+  +'.cs-gal-thumb img{width:100%;height:100%;object-fit:cover}'
+  +'.cs-gal-x{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:14px;line-height:1}'
+  +'.cs-gal-add{margin-top:8px}'
+  +'.cs-gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:12px 0}.cs-gal>figure{margin:0}.cs-gal img{width:100%;border-radius:10px;display:block}.cs-gal figcaption{font-size:12px;color:var(--muted,#6b7280);margin-top:4px}.cs-gal-cap{grid-column:1/-1;text-align:center;font-size:12.5px;color:var(--muted,#6b7280)}'
+  +'@media(max-width:720px){.cs-edit{grid-template-columns:1fr}.cs-grid2,.cs-grid3{grid-template-columns:1fr}.cs-img-results{grid-template-columns:repeat(3,1fr)}.cs-gal-edit{grid-template-columns:repeat(2,1fr)}}';
 })();

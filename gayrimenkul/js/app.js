@@ -3098,6 +3098,18 @@ async function proxBlogFeed(force){if(_proxBlogCache&&!force)return _proxBlogCac
     if(r&&!r.fallback){var arr=r.posts||r.data||r.items||(Array.isArray(r)?r:[]);
       out=(arr||[]).map(function(p,i){return {id:'px'+(p.id||i),title:p.title||p.baslik||'',cat:p.cat||p.category||p.kategori||'ProX',sum:p.summary||p.ozet||p.excerpt||(''+(p.body||p.content||'')).slice(0,150),body:p.body||p.content||p.icerik||'',icon:'📰',date:p.date||p.published||'',meta:((p.date||p.published||'')+' · ProX Blog').trim(),src:'prox'};}).filter(function(p){return p.title;});}}catch(e){}
   _proxBlogCache=out;return out;}
+/* Zamanlı haberleri otomatik yayınla — BLOGS tabanlı (public sayfalarda studio mount OLMADAN çalışır).
+   Master switch: AICFG.schedule.enabled===false ise DURDURULMUŞ → yayınlama (beklet). */
+function csRunSchedule(){try{
+  if(typeof BLOGS==='undefined'||!BLOGS)return 0;
+  var sched=(typeof AICFG!=='undefined'&&AICFG&&AICFG.schedule)||{};
+  if(sched.enabled===false)return BLOGS.filter(function(a){return a.status==='scheduled';}).length;/* durduruldu */
+  var now=Date.now(),ch=false,pend=0;
+  BLOGS.forEach(function(a){if(a.status==='scheduled'&&a.publishAt){if(a.publishAt<=now){a.status='published';ch=true;}else pend++;}});
+  if(ch&&typeof saveAll==='function')saveAll();
+  return pend;
+}catch(e){return 0;}}
+try{window.csRunSchedule=csRunSchedule;}catch(e){}
 function blogAllPosts(){try{if(typeof csRunSchedule==='function')csRunSchedule();}catch(e){}/* zamanı gelen haberleri otomatik yayınla */
   var px=_proxBlogCache||[];var local=(typeof BLOGS!=='undefined'?BLOGS:[]).filter(function(b){return !b.status||b.status==='published';});/* taslak/zamanlı gizli */
   var seen={},all=[];
@@ -3124,9 +3136,11 @@ function renderBlogList(){var w=document.getElementById('blogListWrap');if(!w)re
   w.innerHTML=posts.length?('<div class="bgrid">'+posts.map(function(b){var head=(b.img&&b.img.url)?('<div class="bi" style="padding:0;overflow:hidden;height:150px"><img src="'+_be(b.img.url)+'" alt="'+_be(b.img.alt||b.title)+'" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"></div>'):('<div class="bi">'+(b.icon||'📄')+'</div>');return '<div class="bpost" onclick="blogDetail(\''+b.id+'\')" style="cursor:pointer">'+head+'<div class="bbody"><div class="cat">'+_be(b.cat)+(b.src==='prox'?' · ProX':b.src==='ai'?' · AI':'')+'</div><h3>'+_be(b.title)+'</h3><p>'+_be(b.sum||'')+'</p><div class="meta"><span>'+_be(b.meta||'')+'</span></div></div></div>';}).join('')+'</div>'):'<p style="text-align:center;color:var(--muted);padding:40px 0">Henüz yazı yok. Admin → ✨ İçerik Stüdyosu\'ndan SEO uyumlu makale oluşturabilirsiniz.</p>';}
 function blogDetail(id){var b=blogAllPosts().filter(function(x){return (''+x.id)===(''+id);})[0];if(!b){blogShowList();return;}
   var d=document.getElementById('blogDetailWrap'),l=document.getElementById('blogListWrap');if(l)l.style.display='none';if(d)d.style.display='';
-  var hasMd=/(^|\n)\s*#{1,3}\s|(^|\n)\s*[-*]\s/.test(b.body||'');
-  var body=(typeof ContentStudio!=='undefined'&&ContentStudio.mdToHtml&&hasMd)?ContentStudio.mdToHtml(b.body)
-    :(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p style="margin:0 0 16px">'+_be(par).replace(/\n/g,'<br>')+'</p>';}).join('');
+  var body;
+  if(b.blocks&&b.blocks.length&&typeof ContentStudio!=='undefined'&&ContentStudio.blocksToHtml){body=ContentStudio.blocksToHtml(b.blocks);}/* yeni blok modeli */
+  else{var hasMd=/(^|\n)\s*#{1,3}\s|(^|\n)\s*[-*]\s/.test(b.body||'');
+    body=(typeof ContentStudio!=='undefined'&&ContentStudio.mdToHtml&&hasMd)?ContentStudio.mdToHtml(b.body)
+      :(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p style="margin:0 0 16px">'+_be(par).replace(/\n/g,'<br>')+'</p>';}).join('');}
   var _cap='';if(b.img&&b.img.credit&&!/yüklenen|yuklenen/i.test(b.img.credit)&&!/^data:/.test(b.img.url||''))_cap='<figcaption style="font-size:12px;color:var(--muted);margin-top:6px">📷 '+_be(b.img.credit)+' · Pexels</figcaption>';
   var cover=(b.img&&b.img.url)?('<figure style="margin:0 0 22px"><img src="'+_be(b.img.url)+'" alt="'+_be((b.img.alt||b.title))+'" style="width:100%;border-radius:14px;display:block">'+_cap+'</figure>'):'';
   var tags=(b.tags&&b.tags.length)?('<div style="margin-top:24px;display:flex;gap:8px;flex-wrap:wrap">'+b.tags.map(function(t){return '<span style="background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:12.5px">#'+_be(t)+'</span>';}).join('')+'</div>'):'';
