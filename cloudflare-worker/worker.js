@@ -18,8 +18,34 @@
  *   5) Anahtarı asla yanıtta echo'lamaz.
  */
 
+import { renderOgSvg } from "./og-card.js";
+
 const UPSTREAM = "https://www.emlakekspertizi.com";
 const ALLOW_PREFIX = "/api/v1/tenant/";
+
+/* Faz 2 — per-tenant OG (Open Graph) kartı: /og?site=&name=&name2=&accent=&domain=
+   Sosyal tarayıcılar (WhatsApp/Telegram/Slack/Discord SVG'yi doğrudan işler;
+   Facebook/X/LinkedIn için PNG isteniyorsa README'deki resvg-wasm upgrade'i).
+   Public endpoint: tenant-key GEREKMEZ, CORS kısıtı YOK (bir görsel). */
+function renderOg(url) {
+  const q = url.searchParams;
+  const svg = renderOgSvg({
+    site: q.get("site") || "insaat",
+    name: q.get("name") || "",
+    name2: q.get("name2") || "",
+    accent: q.get("accent") || "",
+    tagline: q.get("tagline") || "",
+    domain: q.get("domain") || "",
+  });
+  return new Response(svg, {
+    status: 200,
+    headers: {
+      "Content-Type": "image/svg+xml; charset=utf-8",
+      "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+}
 
 /* Kiracı id doğrulama: yalnız [a-z0-9_.-] (secret adı enjeksiyonunu önle) */
 function safeTenantId(id) {
@@ -54,6 +80,15 @@ export default {
     const url = new URL(req.url);
     const reqOrigin = req.headers.get("Origin") || "";
     const id = safeTenantId(req.headers.get("X-Tenant-Id"));
+
+    // --- Faz 2: per-tenant OG kartı (public görsel; tenant-key/CORS gerekmez) ---
+    if (url.pathname === "/og" || url.pathname === "/og.svg") {
+      if (req.method !== "GET" && req.method !== "OPTIONS")
+        return json(405, { error: "method not allowed" }, corsHeaders(null));
+      if (req.method === "OPTIONS")
+        return new Response(null, { status: 204, headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,OPTIONS" } });
+      return renderOg(url);
+    }
 
     // --- CORS preflight ---
     if (req.method === "OPTIONS") {
