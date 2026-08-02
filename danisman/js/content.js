@@ -202,7 +202,48 @@
     r.setProperty("--accent", a); r.setProperty("--gold", a); r.setProperty("--accent-2", a2); r.setProperty("--gold-deep", dp); r.setProperty("--gold-soft", sf);
   }
   window.dnApplyTheme = dnApplyTheme;
-  ready(function () { applyWaLinks(); setTimeout(applyWaLinks, 350); dnApplySocial(); dnApplyFont(); dnApplyTheme(); setTimeout(function(){ dnApplySocial(); dnApplyFont(); dnApplyTheme(); }, 400); });
+
+  /* YASAL KÜNYE TABLOSU: statik yasal sayfalara (kvkk/kullanım/çerez) TAM künye kartı enjekte et
+     — demo müşterisi tüm kurumsal bilgiyi görsün (Unvan/Vergi/MERSİS/Sicil/Oda/KEP/Adres/Tel/E-posta/EİDS).
+     Veri: dn_firma (+ dn_iletisim fallback). Sadece dolu alan gösterilir. Kişi-anlatısı korunur, tablo EK'tir. */
+  function _kEsc(s){return ('' + (s == null ? '' : s)).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });}
+  function dnLegalKunye(){
+    var body = document.querySelector('.lg-body'); if (!body) return;             // yalnız yasal sayfalar
+    if (document.getElementById('dnLegalKunye')) return;                          // tek sefer
+    var f = {}, il = {};
+    try { f = JSON.parse(localStorage.getItem('dn_firma') || '{}') || {}; } catch (e) {}
+    try { il = JSON.parse(localStorage.getItem('dn_iletisim') || '{}') || {}; } catch (e) {}
+    var e = f.eids || {};
+    var brand = ''; try { brand = (JSON.parse(localStorage.getItem('dn_brand') || '{}') || {}).name || ''; } catch (er) {}
+    var unvan = f.unvan || brand || 'Bilgi girilmedi';
+    var vergiDaire = f.vergiDaire || '', vergiNo = f.vergi || '';
+    var vergi = (vergiDaire || vergiNo) ? [vergiDaire, vergiNo].filter(Boolean).join(' / ') : '';
+    var rows = [
+      ['Ticari Unvan', unvan, 1],
+      ['Danışman / Yetkili', f.advisor || brand, 0],
+      ['Vergi Dairesi / No', vergi, 0],
+      ['MERSİS No', f.mersis, 0],
+      ['Ticaret Sicil No', f.sicil, 0],
+      ['Ticaret Odası', f.oda, 0],
+      ['KEP Adresi', f.kep, 0],
+      ['EİDS Yetki Belge No', e.belgeNo, 0],
+      ['Adres', f.adres || il.adres, 1],
+      ['Telefon', f.tel || il.tel, 0],
+      ['E-posta', f.mail || il.mail, 0]
+    ].filter(function (r) { return r[1]; });
+    var g = 'color:var(--gold);font-weight:700';
+    var html = '<div id="dnLegalKunye" style="background:var(--cream,#f7f4ec);border:1px solid var(--line-soft,#e7e0cf);border-radius:12px;padding:16px 18px;margin:0 0 22px">'
+      + '<div style="font-family:var(--serif,Georgia),serif;color:var(--gold);font-size:17px;font-weight:700;margin-bottom:10px">Veri Sorumlusu Künyesi</div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px 24px;font-size:13.5px;line-height:1.65">'
+      + rows.map(function (r) { return '<div' + (r[2] ? ' style="grid-column:1/-1"' : '') + '><b style="' + g + '">' + _kEsc(r[0]) + ':</b> ' + _kEsc(r[1]) + '</div>'; }).join('')
+      + '</div></div>';
+    var intro = body.querySelector('.intro');
+    if (intro && intro.parentNode) intro.insertAdjacentHTML('afterend', html);
+    else body.insertAdjacentHTML('afterbegin', html);
+  }
+  window.dnLegalKunye = dnLegalKunye;
+
+  ready(function () { applyWaLinks(); setTimeout(applyWaLinks, 350); dnApplySocial(); dnApplyFont(); dnApplyTheme(); dnLegalKunye(); setTimeout(function(){ dnApplySocial(); dnApplyFont(); dnApplyTheme(); }, 400); });
 })();
 
 /* ===================================================================
