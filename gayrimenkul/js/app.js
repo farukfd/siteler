@@ -245,7 +245,13 @@ const DEF_SEO={title:'Meridyen Gayrimenkul · İzmir Emlak & Gayrimenkul Ofisi',
 const DEF_GOOGLE={ga4:'',gtm:'',gsc:'',maps:'',recaptcha:'',business:'',aiseo:true,ab:false};
 const DEF_MODULES=[{k:'emlak_endeks',n:'Emlak Endeksi',d:'Mahalle m² fiyat ve trend',on:true},{k:'yatirim_skoru',n:'Yatırım Skoru',d:'0-100 bölge skoru',on:true},{k:'risk_analiz',n:'Fay/Deprem Risk',d:'Coğrafi risk rozeti',on:true},{k:'degerleme',n:'Online Değerleme',d:'"Evimin değeri ne?" aracı',on:true},{k:'portfoy3d',n:'3D Portföy & Tur',d:'GLB model + sanal tur',on:true},{k:'ai_asistan',n:'ProX Asistan',d:'ProX verisine dayalı asistan',on:true},{k:'pdf_rapor',n:'Logolu PDF Rapor',d:'Şirket logolu endeks raporu',on:true},{k:'fiyat_alarmi',n:'Fiyat Alarmı',d:'Bölge fiyat değişim bildirimi',on:true},{k:'blog_feed',n:'Blog Akışı',d:'emlakekspertizi blog beslemesi',on:true},{k:'whatsapp',n:'WhatsApp Destek',d:'Tek dokunuş iletişim',on:true}];
 const DEF_PROX={key:'',base:'https://www.emlakekspertizi.com',proxyUrl:'',tenantId:'emlaktahadimkoy_com',il:'İzmir',region:'İzmir',quotaUsed:0,quotaMax:10000,modules:clone(DEF_MODULES)};/* GÜVENLİK (P0): gizli ProX anahtarı istemciye GÖMÜLMEZ — proxy/edge sunucusu ekler. Eski gömülü anahtar git geçmişinde → sunucuda ROTATE edilmeli. */
-const DEF_AICFG={enable:true,greet:'Merhaba! Ben Meridyen ProX Asistanı. Bölge, fiyat veya portföy hakkında sorabilirsiniz.',persona:'Meridyen Gayrimenkul\'ün yardımcı, profesyonel emlak danışmanısın. Türkçe, kısa ve net yanıt ver. Bölge fiyat verisi sorulursa örnek olduğunu belirt.',dsKey:'',dsModel:'deepseek-chat'};/* dsKey: kullanıcının kendi DeepSeek anahtarı — girilirse tüm YZ üretimi doğrudan DeepSeek ile çalışır (yoksa ProX sunucu AI'si). ProX anahtarı ise veri/endeks/analiz/PDF içindir. */
+const DEF_AICFG={enable:true,greet:'Merhaba! Ben Meridyen ProX Asistanı. Bölge, fiyat veya portföy hakkında sorabilirsiniz.',persona:'Meridyen Gayrimenkul\'ün yardımcı, profesyonel emlak danışmanısın. Türkçe, kısa ve net yanıt ver. Bölge fiyat verisi sorulursa örnek olduğunu belirt.',
+  provider:'auto',/* auto | prox | deepseek | openai | claude — İçerik Stüdyosu üretim sağlayıcısı */
+  dsKey:'',dsModel:'deepseek-chat',
+  oaKey:'',oaModel:'gpt-4o-mini',/* OpenAI (ChatGPT) — kullanıcının kendi anahtarı */
+  clKey:'',clModel:'claude-sonnet-4-6',/* Anthropic Claude — tarayıcı-erişim başlığıyla */
+  pexelsKey:''/* Pexels görsel anahtarı — boşsa ProX görsel-proxy denenir */
+};/* Anahtarlar kullanıcının KENDİ anahtarlarıdır (kendi admin oturumunda saklanır). ProX veri/endeks/AI için sunucu-proxy'dir. */
 const DEF_CONTRACTS=[
  {id:'c1',tip:'aracilik',baslik:'Konak 3+1 — Satış Aracılık',durum:'aktif',tarih:'2026-06-12',karsiTaraf:'Okan Demir',karsiTC:'12345678901',karsiAdres:'Alsancak Mah. Kıbrıs Şehitleri Cad. No:00 D:0, Konak / İzmir',il:'İzmir',ilce:'Konak',mahalle:'Alsancak',tasinmazAdres:'Kıbrıs Şehitleri Cad. No:00 Daire:0',tasinmazTip:'Daire',m2:'140',islem:'Satılık',bedel:'14.500.000',komisyon:'2',sureAy:'6',ozelMetin:''},
  {id:'c2',tip:'kira',baslik:'Bornova 1+1 — Kira',durum:'aktif',tarih:'2026-06-19',karsiTaraf:'Ali Vural',karsiTC:'98765432109',karsiAdres:'Kazımdirik Mah. No:00 D:0, Bornova / İzmir',il:'İzmir',ilce:'Bornova',mahalle:'Kazımdirik',tasinmazAdres:'Kazımdirik Mah. Stüdyo No:00',tasinmazTip:'Daire',m2:'55',islem:'Kiralık',bedel:'38.000',komisyon:'',sureAy:'12',ozelMetin:''}
@@ -1931,7 +1937,7 @@ function admPane(btn){
   if(btn.dataset.p){btn.classList.add('act');
     document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('act'));
     document.getElementById('pane-'+btn.dataset.p).classList.add('act');
-    if(btn.dataset.p==='contracts'&&typeof renderContracts==='function')renderContracts();if(btn.dataset.p==='ozel'&&typeof renderOzelRows==='function'){renderOzelRows();renderOzTalep();renderOzAlarm();if(typeof renderOzOwner==='function')renderOzOwner();}if(btn.dataset.p==='hizmetalani'&&typeof renderSA==='function')renderSA();}
+    if(btn.dataset.p==='contracts'&&typeof renderContracts==='function')renderContracts();if(btn.dataset.p==='ozel'&&typeof renderOzelRows==='function'){renderOzelRows();renderOzTalep();renderOzAlarm();if(typeof renderOzOwner==='function')renderOzOwner();}if(btn.dataset.p==='hizmetalani'&&typeof renderSA==='function')renderSA();if(btn.dataset.p==='ai'&&typeof csMountGM==='function')csMountGM();}
 }
 
 /* ============ ADMIN: KPI + RECENT ============ */
@@ -2240,12 +2246,98 @@ async function _deepseekChat(body,opts){
     return {_dsErr:true,status:0};
   }catch(e){if(to)clearTimeout(to);return {_dsErr:true,status:-1,err:String(e&&e.message||e)};}
 }
-/* Birleşik YZ çağrısı: DeepSeek anahtarı varsa onunla, yoksa (veya DeepSeek hata verirse) ProX ile. */
-async function aiChat(body,opts){
-  if(_dsKey()){var d=await _deepseekChat(body,opts);if(d&&d.answer)return d;/* DeepSeek hata → ProX'e düş */}
-  return await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:body});
+/* ===== ÇOK-SAĞLAYICILI YZ (İçerik Stüdyosu) — ProX + DeepSeek + OpenAI + Claude =====
+   Anahtarlar kullanıcının KENDİ anahtarlarıdır (AICFG). OpenAI+DeepSeek CORS'a açıktır;
+   Claude için 'anthropic-dangerous-direct-browser-access' başlığı gerekir (anahtar o admin
+   oturumunda görünür — kullanıcı bilinçli girer). ProX anahtarsızdır (sunucu-proxy). */
+function _oaKey(){try{return ((AICFG&&AICFG.oaKey)||'').trim();}catch(e){return '';}}
+function _oaModel(){try{return ((AICFG&&AICFG.oaModel)||'gpt-4o-mini').trim()||'gpt-4o-mini';}catch(e){return 'gpt-4o-mini';}}
+function _clKey(){try{return ((AICFG&&AICFG.clKey)||'').trim();}catch(e){return '';}}
+function _clModel(){try{return ((AICFG&&AICFG.clModel)||'claude-sonnet-4-6').trim()||'claude-sonnet-4-6';}catch(e){return 'claude-sonnet-4-6';}}
+function _pexKey(){try{return ((AICFG&&AICFG.pexelsKey)||'').trim();}catch(e){return '';}}
+function _aiProvider(){try{return ((AICFG&&AICFG.provider)||'auto').trim()||'auto';}catch(e){return 'auto';}}
+async function _openaiChat(body,opts){
+  opts=opts||{};var key=_oaKey();if(!key)return null;
+  var ctrl=(typeof AbortController!=='undefined')?new AbortController():null;var to=ctrl?setTimeout(function(){try{ctrl.abort();}catch(e){}},opts.timeout||60000):null;
+  try{
+    var res=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({model:_oaModel(),messages:_dsMessages(body),temperature:(opts.temperature!=null?opts.temperature:0.7),max_tokens:(opts.max_tokens||3000)}),
+      signal:ctrl?ctrl.signal:undefined});
+    if(to)clearTimeout(to);
+    if(!res.ok)return {_aiErr:true,status:res.status,provider:'openai'};
+    var j=await res.json();var t=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;
+    return (t&&t.trim())?{answer:t.trim(),success:true,_via:'openai'}:{_aiErr:true,status:0,provider:'openai'};
+  }catch(e){if(to)clearTimeout(to);return {_aiErr:true,status:-1,provider:'openai',err:String(e&&e.message||e)};}
 }
-try{window.aiChat=aiChat;window._deepseekChat=_deepseekChat;}catch(e){}
+async function _claudeChat(body,opts){
+  opts=opts||{};var key=_clKey();if(!key)return null;
+  var msgs=_dsMessages(body);var sys=msgs.filter(function(m){return m.role==='system';}).map(function(m){return m.content;}).join('\n');
+  var conv=msgs.filter(function(m){return m.role!=='system';}).map(function(m){return {role:(m.role==='assistant'?'assistant':'user'),content:String(m.content)};});
+  if(!conv.length)conv=[{role:'user',content:String(body.prompt||body.message||'')}];
+  var ctrl=(typeof AbortController!=='undefined')?new AbortController():null;var to=ctrl?setTimeout(function(){try{ctrl.abort();}catch(e){}},opts.timeout||60000):null;
+  try{
+    var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:_clModel(),max_tokens:(opts.max_tokens||3000),system:sys||undefined,messages:conv}),
+      signal:ctrl?ctrl.signal:undefined});
+    if(to)clearTimeout(to);
+    if(!res.ok)return {_aiErr:true,status:res.status,provider:'claude'};
+    var j=await res.json();var t=j&&j.content&&j.content[0]&&(j.content[0].text||'');
+    return (t&&t.trim())?{answer:t.trim(),success:true,_via:'claude'}:{_aiErr:true,status:0,provider:'claude'};
+  }catch(e){if(to)clearTimeout(to);return {_aiErr:true,status:-1,provider:'claude',err:String(e&&e.message||e)};}
+}
+/* Birleşik YZ çağrısı — AICFG.provider'a göre yönlendirir; 'auto' = anahtarı olan (ds→oa→cl) yoksa ProX. */
+async function aiChat(body,opts){
+  var p=_aiProvider();
+  if(p==='deepseek'&&_dsKey()){var d=await _deepseekChat(body,opts);if(d&&d.answer)return d;}
+  else if(p==='openai'&&_oaKey()){var o=await _openaiChat(body,opts);if(o&&o.answer)return o;}
+  else if(p==='claude'&&_clKey()){var c=await _claudeChat(body,opts);if(c&&c.answer)return c;}
+  else if(p==='auto'){
+    if(_dsKey()){var da=await _deepseekChat(body,opts);if(da&&da.answer)return da;}
+    if(_oaKey()){var oa=await _openaiChat(body,opts);if(oa&&oa.answer)return oa;}
+    if(_clKey()){var ca=await _claudeChat(body,opts);if(ca&&ca.answer)return ca;}
+  }
+  return await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:body});/* ProX sunucu-proxy (anahtarsız) */
+}
+try{window.aiChat=aiChat;window._deepseekChat=_deepseekChat;window._openaiChat=_openaiChat;window._claudeChat=_claudeChat;}catch(e){}
+/* ===== PEXELS görsel arama — konuya uygun gerçek foto. Anahtar: AICFG.pexelsKey, yoksa ProX görsel-proxy. ===== */
+async function csPexels(query,opts){
+  opts=opts||{};var q=(''+(query||'')).trim();if(!q)return null;
+  var key=_pexKey();
+  try{
+    var url,headers={};
+    if(key){ url='https://api.pexels.com/v1/search?per_page=12&orientation=landscape&locale=tr-TR&query='+encodeURIComponent(q); headers={'Authorization':key}; }
+    else { url=(EMLAK_API_BASE||'https://www.emlakekspertizi.com')+'/api/v1/tenant/prox/image?per_page=12&q='+encodeURIComponent(q); headers={'X-Tenant-Id':(typeof EMLAK_TENANT!=='undefined'&&EMLAK_TENANT&&EMLAK_TENANT.tenant_id)||''}; }
+    var res=await fetch(url,{headers:headers});
+    if(!res.ok)return {_err:true,status:res.status};
+    var j=await res.json();var photos=(j&&(j.photos||j.data||j.results))||[];
+    if(!photos.length)return {_err:true,status:0};
+    return photos.map(function(p){var s=p.src||p||{};return {url:s.large||s.medium||s.original||s.landscape||p.url,thumb:s.medium||s.small||s.tiny||s.large,alt:p.alt||q,credit:p.photographer||'Pexels',creditUrl:p.photographer_url||p.url||'https://www.pexels.com'};});
+  }catch(e){return {_err:true,status:-1,err:String(e&&e.message||e)};}
+}
+try{window.csPexels=csPexels;}catch(e){}
+/* İçerik Stüdyosu (content-studio.js) — gayrimenkul entegrasyonu */
+var _csMounted=false;
+function csMountGM(){
+  if(typeof ContentStudio==='undefined'||!ContentStudio.mount)return;
+  ContentStudio.mount('csHost',{
+    vertical:'gayrimenkul',
+    persona:'emlak/gayrimenkul içerik editörü',
+    city:function(){try{return (typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name)||(typeof PROX!=='undefined'&&PROX.il)||'';}catch(e){return '';}},
+    brand:function(){try{return (typeof brandName==='function'?brandName():((FIRMA&&FIRMA.name)||'Meridyen Gayrimenkul'));}catch(e){return '';}},
+    ai:function(body){return aiChat(body,{max_tokens:3500,timeout:70000});},
+    image:function(q){return csPexels(q);},
+    list:function(){try{return (typeof BLOGS!=='undefined'&&BLOGS)||[];}catch(e){return [];}},
+    save:function(arts){try{BLOGS=arts;if(typeof saveAll==='function')saveAll();if(typeof renderBlogRows==='function')renderBlogRows();}catch(e){}},
+    getKeys:function(){try{return {provider:AICFG.provider||'auto',dsKey:AICFG.dsKey||'',oaKey:AICFG.oaKey||'',clKey:AICFG.clKey||'',pexelsKey:AICFG.pexelsKey||''};}catch(e){return {};}},
+    setKeys:function(k){try{AICFG.provider=k.provider||'auto';AICFG.dsKey=k.dsKey||'';AICFG.oaKey=k.oaKey||'';AICFG.clKey=k.clKey||'';AICFG.pexelsKey=k.pexelsKey||'';if(typeof saveAll==='function')saveAll();}catch(e){}},
+    toast:function(m){if(typeof toast==='function')toast(m);},
+    guard:function(p){return (typeof aiGuard==='function')?aiGuard(p):p;}
+  });
+  _csMounted=true;
+}
+try{window.csMountGM=csMountGM;}catch(e){}
 /* Admin: DeepSeek anahtar testi + durum rozeti */
 async function aiDsTest(){
   var el=document.getElementById('ai_dsstatus');var inp=document.getElementById('ai_dskey');
@@ -3014,16 +3106,23 @@ async function blogOpen(id){var p=document.getElementById('blogPage');if(!p)retu
   setOverlayPage('Blog · Bilgi Merkezi','#blog');}
 function blogShowList(){var l=document.getElementById('blogListWrap'),d=document.getElementById('blogDetailWrap');if(l)l.style.display='';if(d)d.style.display='none';var sc=document.getElementById('blogScroll');if(sc)sc.scrollTop=0;}
 function renderBlogList(){var w=document.getElementById('blogListWrap');if(!w)return;var posts=blogAllPosts();
-  w.innerHTML=posts.length?('<div class="bgrid">'+posts.map(function(b){return '<div class="bpost" onclick="blogDetail(\''+b.id+'\')" style="cursor:pointer"><div class="bi">'+(b.icon||'📄')+'</div><div class="bbody"><div class="cat">'+_be(b.cat)+(b.src==='prox'?' · ProX':b.src==='ai'?' · AI':'')+'</div><h3>'+_be(b.title)+'</h3><p>'+_be(b.sum||'')+'</p><div class="meta"><span>'+_be(b.meta||'')+'</span></div></div></div>';}).join('')+'</div>'):'<p style="text-align:center;color:var(--muted);padding:40px 0">Henüz yazı yok. Admin → İçerik &amp; Sayfalar\'dan İçerik Asistanı ile makale oluşturabilirsiniz.</p>';}
+  w.innerHTML=posts.length?('<div class="bgrid">'+posts.map(function(b){var head=(b.img&&b.img.url)?('<div class="bi" style="padding:0;overflow:hidden;height:150px"><img src="'+_be(b.img.url)+'" alt="'+_be(b.img.alt||b.title)+'" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"></div>'):('<div class="bi">'+(b.icon||'📄')+'</div>');return '<div class="bpost" onclick="blogDetail(\''+b.id+'\')" style="cursor:pointer">'+head+'<div class="bbody"><div class="cat">'+_be(b.cat)+(b.src==='prox'?' · ProX':b.src==='ai'?' · AI':'')+'</div><h3>'+_be(b.title)+'</h3><p>'+_be(b.sum||'')+'</p><div class="meta"><span>'+_be(b.meta||'')+'</span></div></div></div>';}).join('')+'</div>'):'<p style="text-align:center;color:var(--muted);padding:40px 0">Henüz yazı yok. Admin → ✨ İçerik Stüdyosu\'ndan SEO uyumlu makale oluşturabilirsiniz.</p>';}
 function blogDetail(id){var b=blogAllPosts().filter(function(x){return (''+x.id)===(''+id);})[0];if(!b){blogShowList();return;}
   var d=document.getElementById('blogDetailWrap'),l=document.getElementById('blogListWrap');if(l)l.style.display='none';if(d)d.style.display='';
-  var body=(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p style="margin:0 0 16px">'+_be(par).replace(/\n/g,'<br>')+'</p>';}).join('');
+  var hasMd=/(^|\n)\s*#{1,3}\s|(^|\n)\s*[-*]\s/.test(b.body||'');
+  var body=(typeof ContentStudio!=='undefined'&&ContentStudio.mdToHtml&&hasMd)?ContentStudio.mdToHtml(b.body)
+    :(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p style="margin:0 0 16px">'+_be(par).replace(/\n/g,'<br>')+'</p>';}).join('');
+  var cover=(b.img&&b.img.url)?('<figure style="margin:0 0 22px"><img src="'+_be(b.img.url)+'" alt="'+_be((b.img.alt||b.title))+'" style="width:100%;border-radius:14px;display:block"><figcaption style="font-size:12px;color:var(--muted);margin-top:6px">📷 '+_be(b.img.credit||'')+' · Pexels</figcaption></figure>'):'';
+  var tags=(b.tags&&b.tags.length)?('<div style="margin-top:24px;display:flex;gap:8px;flex-wrap:wrap">'+b.tags.map(function(t){return '<span style="background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:12.5px">#'+_be(t)+'</span>';}).join('')+'</div>'):'';
   d.innerHTML='<button class="br-back" onclick="blogShowList()"><svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg> Tüm yazılar</button>'
     +'<article style="max-width:760px;margin:22px auto 0"><div class="cat" style="color:var(--accent);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em">'+_be(b.cat)+(b.src==='prox'?' · ProX':b.src==='ai'?' · AI':'')+'</div>'
     +'<h1 style="font-family:var(--head);font-size:clamp(26px,4vw,40px);line-height:1.15;margin:8px 0 10px">'+_be(b.title)+'</h1>'
     +'<div class="meta" style="color:var(--muted);font-size:13.5px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--line)">'+_be(b.meta||'')+'</div>'
-    +'<div style="font-size:16px;line-height:1.75;color:var(--ink-2,#334155)">'+body+'</div>'
+    +cover
+    +'<div class="cs-article" style="font-size:16px;line-height:1.75;color:var(--ink-2,#334155)">'+body+'</div>'
+    +tags
     +'<div style="margin-top:30px;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:14px;text-align:center"><b style="font-size:16px">Bu konuda uzman desteği mi istiyorsunuz?</b><div style="margin-top:10px"><button class="btn btn-primary" onclick="closeAllOverlays();satScrollForm(\'Blog danışmanlık talebi\')">Ücretsiz Danışmanlık Alın</button></div></div></article>';
+  try{if(typeof ContentStudio!=='undefined'&&ContentStudio.applyArticleSEO)ContentStudio.applyArticleSEO(b);}catch(e){}
   var sc=document.getElementById('blogScroll');if(sc)sc.scrollTop=0;}
 window.blogOpen=blogOpen;window.blogDetail=blogDetail;window.blogShowList=blogShowList;window.renderBlogList=renderBlogList;
 let editingBlog=null;

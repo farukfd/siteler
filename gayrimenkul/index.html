@@ -1059,21 +1059,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
       <!-- YAPAY ZEKA STÜDYO -->
       <div class="adm-pane" id="pane-ai">
-        <div class="adm-top"><h2>İçerik Stüdyosu <span class="ai-badge">✨ Claude destekli</span></h2></div>
-        <div class="adm-card"><h3>AI İçerik Üretici</h3><div class="csub">Profesyonel ilan açıklaması, blog yazısı ve bölge analizi üretin. ProX paketinde emlakekspertizi AI servisleri (/api/ai/generate-content) ile çalışır.</div>
-          <div class="ai-tools">
-            <div class="ai-tool act" data-ai="ilan" onclick="selAiTool(this)"><div class="ti">🏠</div><h4>İlan Açıklaması</h4><p>Daire özelliklerinden satışa hazır, ikna edici açıklama.</p></div>
-            <div class="ai-tool" data-ai="blog" onclick="selAiTool(this)"><div class="ti">📝</div><h4>Blog Yazısı</h4><p>SEO uyumlu emlak/yatırım rehber yazısı taslağı.</p></div>
-            <div class="ai-tool" data-ai="bolge" onclick="selAiTool(this)"><div class="ti">📍</div><h4>Bölge Analizi</h4><p>Seçilen ilçe için yatırım & yaşam özeti.</p></div>
-            <div class="ai-tool" data-ai="sosyal" onclick="selAiTool(this)"><div class="ti">📣</div><h4>Sosyal Medya</h4><p>Instagram/Facebook paylaşım metni + hashtag.</p></div>
-            <div class="ai-tool" data-ai="seo" onclick="selAiTool(this)"><div class="ti">🔍</div><h4>SEO Metni</h4><p>Başlık + açıklama + anahtar kelime.</p></div>
-          </div>
-          <div class="afield" style="margin-top:14px"><label id="aiInLabel">Konu / Girdi</label><textarea id="aiInput" rows="3" placeholder="örn. Levent'te 3+1, 165m², 7. kat, deniz manzaralı, kapalı otopark, 7/24 güvenlik"></textarea></div>
-          <div class="afield" style="margin-top:8px"><label>Hedef Dil <span style="color:var(--muted);font-weight:400">(yabancı yatırımcı için EN/AR)</span></label><select id="aiLang" style="max-width:240px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--surface);font:inherit"><option value="tr">Türkçe</option><option value="en">English (EN)</option><option value="ar">العربية (AR)</option></select></div>
-          <button class="btn btn-primary btn-sm" id="aiGenBtn" onclick="aiGenerate()">✨ Üret</button>
-          <div class="ai-out empty" id="aiOut">Üretilen içerik burada görünecek.</div>
-          <div id="aiActions" style="display:none;gap:10px;margin-top:10px;flex-wrap:wrap"><button class="abtn" onclick="copyAi()">📋 Kopyala</button><button class="abtn" onclick="aiIndir()">⬇ İndir</button><button class="abtn" onclick="aiToBlog()">📝 Blog'a Aktar</button></div>
-        </div>
+        <div id="csHost"><!-- İçerik Stüdyosu (content-studio.js) buraya mount edilir --></div>
         <div class="adm-card"><h3>Site AI Asistanı (ProX)</h3><div class="csub">Ziyaretçilerin emlak/bölge sorularını yanıtlayan canlı asistan. Sitenin sağ altında balon olarak görünür.</div>
           <div class="sw-row"><div class="swl"><b>AI Asistanı Etkinleştir</b><span>Sitede yüzen "ProX Asistan" balonu</span></div><label class="switch"><input type="checkbox" id="ai_enable" checked onchange="toggleAiFab()"><span class="sl"></span></label></div>
           <div class="afield"><label>Karşılama Mesajı</label><input id="ai_greet" value="Merhaba! Ben Meridyen ProX Asistanı. Bölge, fiyat veya portföy hakkında sorabilirsiniz."></div>
@@ -1990,7 +1976,8 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 </div>
 
   <script src="../shared/eids.js?v=1"></script>
-  <script src="js/app.js?v=25"></script>
+  <script src="js/app.js?v=27"></script>
+  <script src="js/content-studio.js?v=3"></script>
   <script src="js/hero-pusula.js?v=2"></script>
   <script src="js/mahalle-endeks.js?v=8"></script>
   <script src="js/kurumsal-sayfalar.js?v=4"></script>
