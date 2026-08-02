@@ -248,7 +248,55 @@
   }
   window.dnLegalKunye = dnLegalKunye;
 
-  ready(function () { applyWaLinks(); setTimeout(applyWaLinks, 350); dnApplySocial(); dnApplyFont(); dnApplyTheme(); dnLegalKunye(); setTimeout(function(){ dnApplySocial(); dnApplyFont(); dnApplyTheme(); }, 400); });
+  /* İLETİŞİM HARİTASI (KONUM): tenant adresini OSM'de göster. Adres → Nominatim geocode
+     (CSP connect-src'de nominatim.openstreetmap.org izinli) → OSM embed bbox+marker.
+     Sonuç dn_iletisim.geo'ya cache'lenir (adres değişince yenilenir). Geocode başarısızsa
+     mevcut demo iframe korunur (kırılmaz). Ayrıca "Yol Tarifi" linki adrese göre güncellenir. */
+  function dnApplyMap() {
+    var frame = document.querySelector('.ct-map iframe'); if (!frame) return;      // yalnız iletişim
+    var il = {}, f = {};
+    try { il = JSON.parse(localStorage.getItem('dn_iletisim') || '{}') || {}; } catch (e) {}
+    try { f = JSON.parse(localStorage.getItem('dn_firma') || '{}') || {}; } catch (e) {}
+    var adres = (il.adres || f.adres || '').trim();
+    if (!adres) return;                                                            // tenant yok → demo iframe kalsın
+    var setMap = function (lat, lon) {
+      lat = parseFloat(lat); lon = parseFloat(lon); if (isNaN(lat) || isNaN(lon)) return;
+      var w = (lon - 0.010).toFixed(5), s = (lat - 0.007).toFixed(5), e = (lon + 0.010).toFixed(5), n = (lat + 0.007).toFixed(5);
+      frame.src = 'https://www.openstreetmap.org/export/embed.html?bbox=' + w + '%2C' + s + '%2C' + e + '%2C' + n + '&layer=mapnik&marker=' + lat.toFixed(5) + '%2C' + lon.toFixed(5);
+      // "Yol Tarifi" / haritada aç linkleri (varsa) — OSM directions
+      [].forEach.call(document.querySelectorAll('.ct-map a, a.js-map, a[data-map]'), function (a) { a.href = 'https://www.openstreetmap.org/?mlat=' + lat + '&mlon=' + lon + '#map=16/' + lat + '/' + lon; a.target = '_blank'; a.rel = 'noopener'; });
+    };
+    // cache?
+    var g = il.geo;
+    if (g && g.q === adres && g.lat && g.lon) { setMap(g.lat, g.lon); return; }
+    // Nominatim serbest-metin adresi sevmez ("No:200", "Cad.", "/") → normalize + aşamalı sorgu
+    var norm = adres
+      .replace(/No[:.]?\s*\d+\w*/gi, '').replace(/\bKat\b[^,]*/gi, '').replace(/\bD[:.]?\s*\d+/gi, '')
+      .replace(/\bCad\.?\b/gi, 'Caddesi').replace(/\bCd\.?\b/gi, 'Caddesi').replace(/\bMah\.?\b/gi, 'Mahallesi').replace(/\bMh\.?\b/gi, 'Mahallesi')
+      .replace(/\bSok\.?\b/gi, 'Sokak').replace(/\bSk\.?\b/gi, 'Sokak').replace(/\bBul(v)?\.?\b/gi, 'Bulvarı').replace(/\bBlv\.?\b/gi, 'Bulvarı')
+      .replace(/[\/]/g, ',').replace(/\s+/g, ' ').replace(/\s*,\s*/g, ', ').replace(/(,\s*)+/g, ', ').replace(/^[,\s]+|[,\s]+$/g, '').trim();
+    var parts = norm.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+    var cands = [norm];                                                            // 1) tam normalize
+    if (parts.length >= 2) cands.push(parts.slice(-2).join(', '));                 // 2) ilçe, il
+    if (parts.length >= 1) cands.push(parts[parts.length - 1]);                    // 3) il
+    var tryNext = function (i) {
+      if (i >= cands.length) return;
+      try {
+        fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=tr&q=' + encodeURIComponent(cands[i]), { headers: { 'Accept': 'application/json' } })
+          .then(function (r) { return r.ok ? r.json() : []; })
+          .then(function (arr) {
+            if (arr && arr[0] && arr[0].lat && arr[0].lon) {
+              setMap(arr[0].lat, arr[0].lon);
+              try { il.geo = { q: adres, lat: arr[0].lat, lon: arr[0].lon }; localStorage.setItem('dn_iletisim', JSON.stringify(il)); } catch (e) {}
+            } else { tryNext(i + 1); }
+          })["catch"](function () { tryNext(i + 1); });
+      } catch (e) {}
+    };
+    tryNext(0);
+  }
+  window.dnApplyMap = dnApplyMap;
+
+  ready(function () { applyWaLinks(); setTimeout(applyWaLinks, 350); dnApplySocial(); dnApplyFont(); dnApplyTheme(); dnLegalKunye(); dnApplyMap(); setTimeout(function(){ dnApplySocial(); dnApplyFont(); dnApplyTheme(); }, 400); });
 })();
 
 /* ===================================================================
