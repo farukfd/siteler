@@ -126,6 +126,26 @@
   window.DN_FOOTER_INNER = INNER;
   window.DN_FOOTER_HTML = '<footer>' + INNER + '</footer>';
   window.DN_LANG_SWITCHER = LANGSW;
+  /* DEMO & KURUMSAL BANT — üstteki 'role=note' şerit alta alındı; footer öncesine kanonik enjekte (tüm sayfalar, insaat/gm ile aynı) */
+  window.DN_DEMOBAND = '<style>'
+    +'.demo-band{background:linear-gradient(180deg,#0b1f38,#0f2740);color:#dbeafe;border-top:1px solid rgba(255,255,255,.1);font-family:system-ui,-apple-system,sans-serif}'
+    +'.demo-band .db-in{max-width:1240px;margin:0 auto;padding:18px clamp(16px,4vw,40px);display:flex;flex-wrap:wrap;align-items:center;gap:16px 26px;justify-content:space-between}'
+    +'.demo-band .db-lead{flex:1 1 320px;min-width:260px}'
+    +'.demo-band .db-badge{display:inline-flex;align-items:center;gap:6px;background:#22c55e;color:#052e16;font-weight:800;font-size:10.5px;letter-spacing:.07em;padding:3px 9px;border-radius:6px;margin-bottom:8px}'
+    +'.demo-band p{margin:0;font-size:13px;line-height:1.55;color:#c7d6ea}'
+    +'.demo-band a{color:#7dd3fc;text-decoration:none;font-weight:600}.demo-band a:hover{text-decoration:underline}'
+    +'.demo-band .db-feats{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}'
+    +'.demo-band .db-feats li{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:6px 10px;font-size:11.5px;font-weight:600;color:#e2ecf7;white-space:nowrap}'
+    +'.demo-band .db-wa{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#04240f;padding:10px 15px;border-radius:12px;font-size:12.5px;line-height:1.3;text-decoration:none;white-space:nowrap}'
+    +'.demo-band .db-wa:hover{filter:brightness(1.06);text-decoration:none}.demo-band .db-wa b{font-size:13px;font-weight:800}'
+    +'@media(max-width:640px){.demo-band .db-in{flex-direction:column;align-items:flex-start}.demo-band .db-wa{width:100%;justify-content:center}}'
+    +'</style>'
+    +'<section class="demo-band" aria-label="Demo ve kurumsal bilgi"><div class="db-in">'
+    +'<div class="db-lead"><span class="db-badge">🔎 CANLI DEMO</span>'
+    +'<p>Bu, kuruma özel hazırlanmış <b>gerçek bir tanıtım sürümüdür</b> — tüm özellikleri buradan deneyimleyebilirsiniz. Kurumsal bilgi &amp; başvuru: <a href="https://www.emlakekspertizi.com" target="_blank" rel="noopener noreferrer">emlakekspertizi.com</a> · <a href="https://www.nadas.com.tr" target="_blank" rel="noopener noreferrer">nadas.com.tr</a></p></div>'
+    +'<ul class="db-feats"><li>🎨 Şirkete özel arayüz</li><li>📄 Firmaya özel +5 sayfa</li><li>🗓️ Her ay +1 ek sayfa</li><li>📰 Günlük SEO uyumlu haber</li></ul>'
+    +'<a class="db-wa" href="https://api.whatsapp.com/send?phone=905324919453" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp ile iletişim"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg><span><b>CRM &amp; Yönetim Paneli erişimi için</b><br>WhatsApp: 0532 491 94 53</span></a>'
+    +'</div></section>';
   function mountFooters() {
     // Bağımsız dil seçici yuvaları — footer'ı olmayan minimal sayfalar (404, prox-asistan) için tek kaynak
     var slots = document.querySelectorAll('[data-dn-lang-slot]');
@@ -136,6 +156,14 @@
     // statik sayfaların inline <footer>'ı → kanonikle değiştir (app.js yoksa tek kaynak budur)
     var fs = document.querySelectorAll("footer");
     for (var i = 0; i < fs.length; i++) { var f = fs[i]; if (f.closest && f.closest("#pageOverlay")) continue; try { f.innerHTML = INNER; } catch (e) {} }
+    /* DEMO bant — ana footer öncesine, sayfada bir kez (üst şerit alta alındı) */
+    try {
+      if (!document.querySelector(".demo-band")) {
+        var anc = document.getElementById("siteFooter");
+        if (!anc) { for (var j = 0; j < fs.length; j++) { if (!(fs[j].closest && fs[j].closest("#pageOverlay"))) { anc = fs[j]; break; } } }
+        if (anc) anc.insertAdjacentHTML("beforebegin", window.DN_DEMOBAND);
+      }
+    } catch (e) {}
   }
   window.dnMountFooters = mountFooters;
   ready(mountFooters);
