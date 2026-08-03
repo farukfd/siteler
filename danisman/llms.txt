@@ -12,4 +12,5 @@ Not: Kurgusal tanıtım demosudur — ilan, fiyat ve istatistikler temsilîdir.
 - [ProX Asistan](prox-asistan.html): ProX veri altyapısına dayalı canlı emlak asistanı.
 
 ## İletişim
+- [İletişim](iletisim.html): Randevu talebi, ofis bilgileri ve ücretsiz gayrimenkul değer analizi.
 WhatsApp ve telefonla randevu; ücretsiz değer analizi.

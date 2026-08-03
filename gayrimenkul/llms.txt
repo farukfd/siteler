@@ -7,8 +7,12 @@ Not: Kurgusal tanıtım demosudur — ilan, fiyat, danışman ve istatistikler t
 ## Ana Sayfalar
 - [İlanlar](ilanlar.html): EİDS onaylı satılık & kiralık gayrimenkul ilanları; gerçek konum haritası, sahibinden düzeyinde kapsamlı özellik tablosu, 360° sanal tur, video, kat planı, konut kredisi hesaplama, benzer ilan ve karşılaştırma.
 - [Portföy](portfoy.html): Açık portföy ve kategori bazlı ilan vitrini.
+- [Özel Portföy](ozel/): Davet/VIP erişimli, gizli/off-market gayrimenkul portföyü.
 - [Hizmetlerimiz](hizmetlerimiz.html): Alım-satım, kiralama, ücretsiz değerleme, bölge/yatırım analizi.
 - [Neden Biz](nedenbiz.html): Fark yaratan veri odaklı yaklaşım.
+- [ProX Asistan](prox-asistan.html): ProX'un 480 milyon+ doğrulanmış emlak verisine dayalı canlı emlak danışman sohbeti (satılık/kiralık arama, değerleme, yatırım yönlendirmesi).
+- [Hakkımızda](hakkimizda.html): Kurumsal kimlik, deneyim ve veri odaklı danışmanlık yaklaşımı.
 
-## İletişim
+## Kurumsal & İletişim
+- [İletişim](iletisim.html): Ofis bilgileri, randevu talebi ve ücretsiz gayrimenkul değer analizi.
 WhatsApp ve telefonla randevu; ücretsiz gayrimenkul değer analizi talebi.

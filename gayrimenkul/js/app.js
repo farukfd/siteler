@@ -4384,27 +4384,27 @@ const SITE_FOOTER=`<div class="wrap">
       <div class="fsocial"><a href="https://facebook.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a><a href="https://instagram.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a><a href="https://x.com/meridyengm" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg></a><a href="https://www.linkedin.com/company/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg></a><a href="https://www.youtube.com/@meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a><a href="https://nsosyal.com" target="_blank" rel="noopener noreferrer" aria-label="NEXT Sosyal (Türkiye)" title="NEXT Sosyal — Türkiye'nin yerli sosyal medya platformu"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg></a></div><div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
     </div>
     <div><h4>Kurumsal</h4><ul>
-      <li><a href="#" onclick="goView('hakkimizda')">Hakkımızda</a></li>
-      <li><a href="#" onclick="goView('danismanlar')">Danışmanlar</a></li>
-      <li><a href="hizmetlerimiz.html" onclick="closeAllOverlays()">Hizmetler</a></li>
-      <li><a href="#" onclick="goView('referans')">Referanslar</a></li>
-      <li><a href="#blog" onclick="goView('blog')">Blog</a></li>
-      <li><a href="#" onclick="goView('iletisim')">İletişim</a></li>
+      <li><a href="hakkimizda.html">Hakkımızda</a></li>
+      <li><a href="index.html#danismanlar">Danışmanlar</a></li>
+      <li><a href="hizmetlerimiz.html">Hizmetler</a></li>
+      <li><a href="index.html#referans">Referanslar</a></li>
+      <li><a href="blog/" onclick="goView('blog');return false">Blog</a></li>
+      <li><a href="iletisim.html">İletişim</a></li>
     </ul></div>
     <div><h4>Hizmetler</h4><ul>
       <li><a href="ilanlar.html"><b>Tüm İlanlar</b></a></li>
       <li><a href="ilanlar.html?op=Satılık">Satılık İlanlar</a></li>
       <li><a href="ilanlar.html?op=Kiralık">Kiralık İlanlar</a></li>
-      <li><a href="#" onclick="goView('ozel')">Özel Portföy</a></li>
-      <li><a href="#" onclick="goView('sat')">Sat ve Kirala</a></li>
-      <li><a href="#" onclick="goView('degerleme')">Ücretsiz Değerleme</a></li>
-      <li><a href="#" onclick="goView('analiz')">Analiz Merkezi</a></li>
-      <li><a href="#" onclick="goView('alarm')">Fiyat Alarmı</a></li>
+      <li><a href="ozel/" onclick="goView('ozel');return false">Özel Portföy</a></li>
+      <li><a href="sat/" onclick="goView('sat');return false">Sat ve Kirala</a></li>
+      <li><a href="index.html#degerleme">Ücretsiz Değerleme</a></li>
+      <li><a href="analiz/" onclick="goView('analiz');return false">Analiz Merkezi</a></li>
+      <li><a href="index.html#alarm">Fiyat Alarmı</a></li>
     </ul></div>
     <div><h4>Yasal & Araçlar</h4><ul>
-      <li><a href="#" onclick="goView('kvkk')">KVKK Aydınlatma Metni</a></li>
-      <li><a href="#" onclick="goView('cerez')">Çerez Politikası</a></li>
-      <li><a href="#" onclick="goView('mesafeli')">Mesafeli Hizmet &amp; Kullanım</a></li>
+      <li><a href="kvkk.html">KVKK Aydınlatma Metni</a></li>
+      <li><a href="cerez.html">Çerez Politikası</a></li>
+      <li><a href="kullanim-kosullari.html">Mesafeli Hizmet &amp; Kullanım</a></li>
       <li><a href="https://parselsorgu.tkgm.gov.tr" target="_blank" rel="noopener noreferrer">TKGM Ada/Parsel Sorgu ↗</a></li>
       <li><a href="#" onclick="closeAllOverlays();openSaasPortal();return false">Müşteri Portalı / Giriş</a></li><li><a href="#" onclick="closeAllOverlays();openAdmin();return false">Yönetim Paneli</a></li>
     </ul></div>
@@ -4428,7 +4428,7 @@ async function gmLang(v){var sel=document.querySelectorAll('.lang-sw select');
   var ckey='wl_i18n_'+v,cache=null;try{cache=JSON.parse(localStorage.getItem(ckey)||'null');}catch(e){}
   if(cache&&cache.firma===firma&&cache.n===texts.length){cache.tr.forEach(function(t,i){if(_i18nOrig[i]&&t)_i18nOrig[i].el.textContent=t;});return;}
   try{toast(v==='ar'?'Arapça çeviri hazırlanıyor…':'İngilizce çeviri hazırlanıyor…');}catch(e){}
-  var langName=v==='ar'?'Modern Standard Arabic':'English';
+  var langName=({en:'English',ar:'Modern Standard Arabic',ru:'Russian',zh:'Simplified Chinese (中文)'})[v]||'English';
   var prompt='Translate these Turkish real-estate website UI strings to '+langName+'. Keep the brand name "'+firma+'" and city/proper nouns unchanged. Return ONLY a numbered list, exactly one translation per line, SAME count and order, no extra commentary:\n'+texts.map(function(t,i){return (i+1)+'. '+t;}).join('\n');
   var outTxt=null;
   try{var r=await aiChat({persona:'office',tool:'translate',prompt:prompt});if(r&&!r.fallback)outTxt=r.answer||r.text||(r.data&&(r.data.answer||r.data.text));}catch(e){}
@@ -4436,7 +4436,7 @@ async function gmLang(v){var sel=document.querySelectorAll('.lang-sw select');
   var lines=outTxt.split('\n').map(function(l){return l.replace(/^\s*\d+[.)]\s*/,'').trim();}).filter(function(l){return l;});
   var applied=_i18nOrig.map(function(o,i){var t=lines[i]||o.txt;if(lines[i])o.el.textContent=lines[i];return t;});
   try{localStorage.setItem(ckey,JSON.stringify({firma:firma,n:texts.length,tr:applied}));localStorage.setItem('wl_lang',v);}catch(e){}
-  try{toast('✓ '+(v==='ar'?'العربية':'English')+' aktif.');}catch(e){}}
+  try{toast('✓ '+(({en:'English',ar:'العربية',ru:'Русский',zh:'中文'})[v]||v)+' aktif.');}catch(e){}}
 function mountSiteChrome(){document.querySelectorAll('.siteNav').forEach(function(n){n.innerHTML=SITE_NAV;});document.querySelectorAll('.siteCta').forEach(function(c){c.innerHTML=SITE_CTA;});document.querySelectorAll('.siteFooter').forEach(function(f){f.innerHTML=SITE_FOOTER;});
   /* white-label: geç enjekte edilen chrome (nav/footer/cta) SITE_FOOTER gibi sabit
      "Meridyen Gayrimenkul" içeriyor → observer'a güvenmeden HEMEN yerelleştir */
@@ -4720,7 +4720,7 @@ function mountSaaSMenu(){
     + '<a href="portfoy.html" onclick="closeAllOverlays()">Portföy</a>'
     + '<a href="ilanlar.html">İlanlar</a>';
   /* Analiz Merkezi + Hakkımızda ÜST menüde DEĞİL → alt menüde (footer). Üst menü sade: 4 öğe. */
-  nav+='<a href="index.html#asistan" class="nav-asistan" onclick="if(typeof openProxAsistanPage===\'function\'){openProxAsistanPage();return false}"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>';
+  nav+='<a href="prox-asistan.html" class="nav-asistan" onclick="if(typeof openProxAsistanPage===\'function\'){openProxAsistanPage();return false}"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>';
   document.querySelectorAll('.siteNav').forEach(n=>n.innerHTML=nav);
   const cta='<a class="nav-wa-ic" aria-label="WhatsApp" title="WhatsApp" href="https://wa.me/'+((typeof saasResolve==='function'&&saasResolve('whatsapp'))||c.whatsapp||'905000000000')+'" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg></a><button class="btn btn-primary btn-sm hide-xs" onclick="satScrollForm(\'Satmak istiyorum\')">Ücretsiz Ekspertiz</button><a class="btn btn-line btn-sm js-giris" href="index.html#giris" onclick="if(typeof girisOrHesap===\'function\'){girisOrHesap();return false}else{openSaasPortal()}" role="button" tabindex="0" onkeydown="if(event.key===\'Enter\'){if(typeof girisOrHesap===\'function\'){girisOrHesap()}else{openSaasPortal()}}">Giriş</a><button class="burger" onclick="openMnav()" aria-label="Menü"><span></span><span></span><span></span></button>';
   document.querySelectorAll('.siteCta').forEach(el=>el.innerHTML=cta);

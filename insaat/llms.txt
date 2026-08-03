@@ -10,5 +10,13 @@ Not: Kurgusal tanıtım demosudur — proje, ilan ve istatistikler temsilîdir.
 - [Hizmetlerimiz](hizmetlerimiz.html): Konut inşaatı, tadilat, kentsel dönüşüm, kat karşılığı, anahtar teslim.
 - [Bölge Zekası](bolge.html) · [Neden Biz](neden-biz.html) · [S.S.S](soru-cevap.html)
 
+## Kurumsal
+- [Özel Portföy](ozel-portfoy.html): Mülkünüzü ifşa etmeden, açık ilana koymadan; ProX mahalle verisiyle gizli/off-market satış ve kiralama.
+- [Vizyon & Misyon](vizyon-misyon.html): Vizyonumuz, misyonumuz ve değerlerimiz — güven, dürüstlük, iş güvenliği ve sürdürülebilirlik.
+- [Yönetim Kadrosu](yonetim.html): Deneyimli, alanında uzman yönetim ekibi ve sorumluluk alanları.
+- [Kalite & Sertifikalar](kalite.html): Kalite politikası ve sertifikalar — ISO 9001/14001/45001, TBDY 2018, yapı denetimi, BIM.
+- [Kariyer](kariyer.html): Açık pozisyonlar ve başvuru.
+- [Medya & Basında Biz](medya.html): Basın bültenleri, haberler ve medya kiti.
+
 ## İletişim
 WhatsApp ve telefonla ücretsiz keşif/teklif.
