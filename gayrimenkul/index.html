@@ -260,26 +260,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
     </div>
     <button class="btn btn-primary" onclick="goView('ozel')">Tüm Özel Portföyü Gör →</button>
   </div>
-  <div class="me-panel" id="mahEndeks">
-    <div class="me-top">
-      <div class="me-selrow">
-        <div class="me-sel"><label>İlçe</label><select id="me_ilce" aria-label="İlçe" onchange="mahEndeksIlce()"></select></div>
-        <div class="me-sel"><label>Mahalle</label><select id="me_mah" aria-label="Mahalle" onchange="mahEndeksRender()"></select></div>
-      </div>
-      <div class="me-live" id="me_live"><span class="dot"></span> Canlı ProX endeksi bağlanıyor…</div>
-    </div>
-    <div class="me-head" id="me_head"></div>
-    <div class="me-valband" id="me_val"></div>
-    <div class="me-cats-head" id="me_catsHead">Tüm kategori endeksi · ProX gerçek veri</div>
-    <div class="me-cats" id="me_cats"></div>
-    <div class="me-profile" id="me_profile"></div>
-    <div class="me-ozel" id="me_ozel"></div>
-    <div class="me-streets-wrap">
-      <div class="me-streets-head">Cadde / sokak örnekleri · teknik detay</div>
-      <div class="me-streets" id="me_streets"></div>
-    </div>
-    <div class="me-note">🔒 <b>Fiyatları görün, mülkünüzü ifşa etmeyin.</b> Bu endeks Özel Portföy'ün gücüdür — mülkü açık ilana koymadan doğru alıcı/kiracıyla veri odaklı eşleştiririz. <a href="#" onclick="goView('ozel');return false">Özel Portföy talebi bırakın →</a></div>
-  </div>
+  <div id="mahEndeks"></div>
 </div></section>
 
 <section id="ilanlar"><div class="wrap">
@@ -1997,7 +1978,8 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   <script src="js/app.js?v=50"></script>
   <script src="js/content-studio.js?v=19"></script>
   <script src="js/hero-pusula.js?v=2"></script>
-  <script src="js/mahalle-endeks.js?v=8"></script>
+  <script src="../shared/mahalle-endeks.js?v=1"></script>
+  <script src="js/mahalle-endeks.js?v=10"></script>
   <script src="js/kurumsal-sayfalar.js?v=4"></script>
   <script src="js/uyelik-asistan.js?v=14"></script>
 <script src="js/i18n/_common.js?v=7"></script><script src="js/i18n/index.js?v=2"></script><script src="js/i18n.js?v=4"></script>

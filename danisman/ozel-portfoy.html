@@ -363,6 +363,13 @@
     </div>
   </div>
 </section>
+<!-- ============ MAHALLE ENDEKSİ + ÖZEL PORTFÖY (shared/mahalle-endeks.js) ============ -->
+<section class="ozfx-sec" id="ozMahEndeksSec" style="padding:44px 0"><div class="wrap">
+  <div class="ozfx-head"><div class="ozfx-eyebrow"><span class="d"></span>ProX Mahalle Endeksi · Demografi & Özel Portföy</div>
+    <h2 style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(24px,3.4vw,34px);margin:10px 0 6px;color:#00452b">Mahalle mahalle canlı endeks, demografi ve gizli portföy</h2>
+    <p style="max-width:640px;color:#4b5563">Seçtiğiniz mahalle için ProX canlı değerleme, kategori endeksi, demografik profil ve <b>ifşasız</b> Özel Portföy başlangıç fiyatları.</p></div>
+  <div id="mahEndeks" style="margin-top:22px"></div>
+</div></section>
 </main>
 
 <!-- ============ FOOTER (birebir) ============ -->
@@ -1457,5 +1464,32 @@ function ozRadarInit(){
 if(document.readyState!=='loading')ozInit();else document.addEventListener('DOMContentLoaded',ozInit);
 </script>
 <script src="js/uyelik.js?v=4"></script>
+<script src="../shared/mahalle-endeks.js?v=1"></script>
+<script>
+/* danışman — MAHALLE ENDEKSİ bootstrap → shared/mahalle-endeks.js (İstanbul · gerçek mahalle) */
+(function(){
+  var _inst=null, ISTIL='İstanbul';
+  function districts(){ var d={}; try{ var T=(window.TR_ILILCE&&TR_ILILCE[ISTIL])||null; if(T&&T.ilce)T.ilce.forEach(function(ic){ if(!/il Merkezi|^Merkez$/.test(ic))d[ic]=[]; }); }catch(e){} return d; }
+  function mProx(u,o){ try{
+    if(o&&o.method==='POST'){ return fetch(EMLAK_API_BASE+u,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id,'X-Tenant-Key':EMLAK_TENANT.tenant_key},body:JSON.stringify(o.body||{})}).then(function(r){return r.ok?r.json():{fallback:true};}).catch(function(){return {fallback:true};}); }
+    return (typeof proxApi==='function')?proxApi(u):Promise.resolve(null);
+  }catch(e){return Promise.resolve(null);} }
+  function loadMah(il,ilce){ try{ if(typeof fetchMahalleler==='function'){ return Promise.resolve(fetchMahalleler(il,ilce)).then(function(a){ a=Array.isArray(a)?a:((a&&a.mahalleler)||[]); return a.map(function(x){return (x&&(x.ad||x.name||x.mahalle))||x;}).filter(Boolean).slice(0,40); }).catch(function(){return [];}); } }catch(e){} return Promise.resolve([]); }
+  function waHref(t){ return 'https://wa.me/905320000000?text='+encodeURIComponent(t); }
+  function boot(){
+    var host=document.getElementById('mahEndeks'); if(!host||!window.MahalleEndeks)return;
+    if(_inst){try{_inst.refresh();}catch(e){}return;}
+    _inst=window.MahalleEndeks.mount(host,{
+      proxApi:mProx, province:function(){return ISTIL;}, districts:districts, loadMah:loadMah,
+      ozData:function(){return [];},
+      goOzel:function(){try{var e=document.getElementById('ozFiyatMatris');if(e)e.scrollIntoView({behavior:'smooth'});}catch(e){}},
+      onLead:function(){try{if(typeof ozOpenTalep==='function')ozOpenTalep();else if(typeof navGo==='function')navGo('randevu');else location.href='index.html#randevu';}catch(e){}},
+      waHref:waHref, accent:'#00452b'
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,300);});
+  else setTimeout(boot,300);
+})();
+</script>
 </body>
 </html>
