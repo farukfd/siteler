@@ -512,11 +512,26 @@ header.scrolled .lang-sel{color:var(--ink)}
   <div class="mnav" id="mnavIL" onclick="if(event.target.id==='mnavIL')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
 
   <div class="pp-hero">
-    <div class="eyebrow">İlanlar & Özel Portföy</div>
-    <h1>İlanlar ve Özel Portföy</h1>
-    <p>İlanlarımız T.C. Ticaret Bakanlığı Elektronik İlan Doğrulama Sistemi (EİDS) üzerinden doğrulanır; her ilan kartında doğrulama durumu (doğrulandı / bekliyor) açıkça gösterilir. Ayrıca ProX bölge verisinden üretilen off-market kapalı portföy tahminlerini inceleyin.</p>
+    <div class="eyebrow">🔒 Özel Portföy · Mahalle Endeksi</div>
+    <h1>Özel Portföy — kapalı / off-market</h1>
+    <p>Mülkünüzü <b>açık ilana koymadan</b>, tam konum ve EİDS paylaşmadan; ProX mahalle verisiyle doğru alıcı/kiracıyla eşleştiriyoruz. Aşağıda mahalle bazlı canlı endeks, demografi ve "…dan başlayan" özel portföy fiyatlarını inceleyin. Kamuya açık EİDS ilanları en altta.</p>
   </div>
 
+  <!-- ÖZEL PORTFÖY (üstte) -->
+  <div class="ins-oz-section">
+    <div class="ins-oz-head">
+      <h2>🔒 Özel Portföy <span>— kapalı / off-market</span></h2>
+      <p>ProX bölge verisinden üretilen pazar tahminleri. Kamuya açık EİDS ilanı değildir; fiyatlar ProX endeks/analiz tahminidir. Detay için bizimle iletişime geçin.</p>
+    </div>
+    <div id="mahEndeks" style="margin:0 0 26px"></div>
+    <div class="ins-oz-grid" id="insOzelGrid"></div>
+  </div>
+
+  <!-- KAMUYA AÇIK İLANLAR (en altta) -->
+  <div class="ins-oz-head" style="margin-top:40px">
+    <h2>🛡️ Kamuya Açık İlanlar <span>— EİDS doğrulamalı</span></h2>
+    <p>T.C. Ticaret Bakanlığı EİDS üzerinden doğrulanan açık ilanlarımız. Tüm ilanlar için <a href="ilanlar.html">İlanlar sayfası →</a></p>
+  </div>
   <div class="pp-toolbar">
     <div class="pp-filters" id="insIlanFilters">
       <button class="ppf active" onclick="insIlanFilterSet('op','',this)">Tümü</button>
@@ -526,15 +541,6 @@ header.scrolled .lang-sel{color:var(--ink)}
   </div>
   <div class="pp-count" id="insIlanCount"></div>
   <div class="pp-grid" id="insIlanGrid"></div>
-
-  <div class="ins-oz-section">
-    <div class="ins-oz-head">
-      <h2>🔒 Özel Portföy <span>— kapalı / off-market</span></h2>
-      <p>ProX bölge verisinden üretilen pazar tahminleri. Kamuya açık EİDS ilanı değildir; fiyatlar ProX endeks/analiz tahminidir. Detay için bizimle iletişime geçin.</p>
-    </div>
-    <div id="mahEndeks" style="margin:0 0 26px"></div>
-    <div class="ins-oz-grid" id="insOzelGrid"></div>
-  </div>
 
   <footer class="insaatFooter"></footer>
 </div>

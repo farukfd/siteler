@@ -94,6 +94,14 @@
 <!-- ===== İLAN LİSTESİ (shared/listings-page.js) ===== -->
 <main class="il-main"><div id="ilanlarApp"></div></main>
 
+<!-- ===== ÖZEL PORTFÖY (en altta · mahalle endeksi) ===== -->
+<section style="max-width:1240px;margin:0 auto;padding:8px clamp(16px,4vw,40px) 64px">
+  <span class="il-eyebrow" style="margin-bottom:12px">🔒 Özel Portföy · Mahalle Endeksi</span>
+  <h2 style="font-family:var(--head,inherit);font-size:clamp(22px,3.6vw,32px);line-height:1.15;margin:14px 0 6px;color:var(--ink,#12181f)">Mülkünü ifşa etmeden sat/kirala — Özel Portföy</h2>
+  <p style="max-width:660px;color:var(--muted,#556);margin:0 0 22px;font:500 15px/1.6 system-ui">Tam konum ve EİDS paylaşmadan, açık ilana koymadan; ProX mahalle verisiyle canlı endeks, demografi ve "…dan başlayan" özel portföy fiyatları.</p>
+  <div id="mahEndeks"></div>
+</section>
+
 <!-- ===== ALT MENÜ ===== -->
 <footer class="insaatFooter"><div class="wrap">
   <div class="fgrid">
@@ -124,6 +132,24 @@
 <script src="../shared/vendor/pannellum.js?v=1"></script>
 <script src="../shared/listing-extras.js?v=7"></script>
 <script src="../shared/listings-page.js?v=1"></script>
+<script src="../shared/mahalle-endeks.js?v=2"></script>
+<script>
+/* insaat/ilanlar.html — en altta Özel Portföy mahalle endeksi paneli (İstanbul · sentetik) */
+(function(){
+  var ISTIL='İstanbul';
+  function districts(){var d={};try{var T=window.TR_ILILCE&&TR_ILILCE[ISTIL];if(T&&T.ilce)T.ilce.forEach(function(ic){if(!/il Merkezi|^Merkez$/.test(ic))d[ic]=[];});}catch(e){}return d;}
+  function waHref(t){return 'https://wa.me/905001234567?text='+encodeURIComponent(t);}
+  function boot(){var host=document.getElementById('mahEndeks');if(!host||!window.MahalleEndeks)return;
+    var ac='';try{ac=(getComputedStyle(document.documentElement).getPropertyValue('--accent')||'').trim();}catch(e){}
+    window.MahalleEndeks.mount(host,{
+      proxApi:function(){return Promise.resolve(null);}, province:function(){return ISTIL;}, districts:districts,
+      ozData:function(){return [];}, goOzel:function(){location.href='index.html#ozel';},
+      onLead:function(){location.href='index.html#iletisim';}, waHref:waHref, accent:ac||'#ff7a2f'
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,200);});else setTimeout(boot,200);
+})();
+</script>
 <script src="js/i18n/_common.js?v=6"></script><script src="js/i18n.js?v=2"></script><!-- 5-dil i18n (TR·EN·RU·ZH·AR) — chrome sözlüğü -->
 <script>
 /* ====== GERÇEK İLAN VERİSİ — ana sayfa & admin ile AYNI store (meridyen_site_v1) ====== */
