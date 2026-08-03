@@ -50,6 +50,8 @@ nav.main{display:flex;gap:28px;align-items:center;margin-left:auto;margin-right:
 nav.main a{font-weight:600;font-size:15px;color:rgba(255,255,255,.86)}
 nav.main a:hover{color:#fff}
 .nav-cta{display:flex;align-items:center;gap:12px}
+/* header CTA butonları — tüm insaat sayfalarıyla birebir (kompakt); nav konumu sayfa geçişinde kaymasın */
+header#hdr .nav-cta .btn{font-family:var(--head);font-weight:600;font-size:14.5px;padding:11px 20px;border-radius:10px}
 header.scrolled{background:var(--surface);box-shadow:0 6px 24px -16px rgba(13,30,60,.4)}
 header.scrolled .logo{color:var(--ink)}
 header.scrolled nav.main a{color:var(--muted)}header.scrolled nav.main a:hover{color:var(--ink)}
