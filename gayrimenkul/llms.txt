@@ -1,0 +1,14 @@
+# Meridyen Gayrimenkul
+
+> İzmir ve Ege'de veri odaklı emlak danışmanlığı. EİDS onaylı satılık & kiralık konut, ofis, dükkan ve arsa ilanları; ücretsiz online değerleme, mahalle bazlı fiyat endeksi ve bölge analizi.
+
+Not: Kurgusal tanıtım demosudur — ilan, fiyat, danışman ve istatistikler temsilîdir.
+
+## Ana Sayfalar
+- [İlanlar](ilanlar.html): EİDS onaylı satılık & kiralık gayrimenkul ilanları; gerçek konum haritası, sahibinden düzeyinde kapsamlı özellik tablosu, 360° sanal tur, video, kat planı, konut kredisi hesaplama, benzer ilan ve karşılaştırma.
+- [Portföy](portfoy.html): Açık portföy ve kategori bazlı ilan vitrini.
+- [Hizmetlerimiz](hizmetlerimiz.html): Alım-satım, kiralama, ücretsiz değerleme, bölge/yatırım analizi.
+- [Neden Biz](nedenbiz.html): Fark yaratan veri odaklı yaklaşım.
+
+## İletişim
+WhatsApp ve telefonla randevu; ücretsiz gayrimenkul değer analizi talebi.

@@ -618,19 +618,53 @@ function vipFavId(p){return p&&(p.id?('vp-'+p.id):('vp-'+_favSlug(p.baslik||''))
 function _favBtn(id,type,snap){snap=snap||{};return '<button class="vc-fav" data-fid="'+_leD(id)+'" data-ftype="'+type+'" data-ft="'+_leD(snap.t||'')+'" data-fs="'+_leD(snap.s||'')+'" data-fp="'+_leD(snap.p||'')+'" data-fu="'+_leD(snap.u||'')+'" onclick="event.stopPropagation();window.dnFav&&dnFav(this.getAttribute(\'data-fid\'),this.getAttribute(\'data-ftype\'),this)" aria-label="Favorilere ekle" title="Favorilere ekle">♡</button>';}
 try{window.listingFavId=listingFavId;window.vipFavId=vipFavId;}catch(e){}
 
-function listingCardsHTML(){var _src=(window.DN_ILAN&&typeof DN_ILAN.get==='function')?DN_ILAN.get().slice(0,6):LISTINGS.filter(function(l){return l.status!=='pasif';});return _src.map(l=>{
-  const price=l.kira?fmt(l.fiyat)+' <span class="per">/ay</span>':fmt(l.fiyat);
-  const _u='ilanlar.html'+(l.id!=null?'?ilan='+encodeURIComponent(l.id):'');/* ana sayfa ilan kartı → İLANLAR sayfasında o ilanın detayı (index.html in-page randevu YOK) */
-  return '<article class="vcard" role="link" tabindex="0" onclick="location.href=\''+_u+'\'" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();location.href=\''+_u+'\';}">'
-   +'<div class="vcard-img"><div class="glow"></div><span class="vcard-tag">'+_leD(l.durum)+'</span>'+_favBtn(listingFavId(l),'ilan',{t:l.baslik,s:l.bolge+' · '+l.durum,p:(l.kira?fmt(l.fiyat)+' /ay':fmt(l.fiyat)),u:'ilanlar.html'})+(l.img?'<img class="vcard-photo" src="'+(l.imgUrl||l.img)+'" alt="'+_leD(l.baslik||'')+'">':(_VIP_SVG[l.tip]||_VIP_SVG.villa))+'</div>'
-   +'<div class="vcard-body"><h3>'+_leD(l.baslik)+'</h3>'
-   +'<div class="vcard-loc">'+_PIN+_leD(l.bolge)+'</div>'
-   +(window.EIDS?'<div class="vcard-eids">'+EIDS.badgeHTML(l.eids,11)+'</div>':'')
-   +'<div class="vcard-spec"><div><b>'+_leD(l.m2)+' m²</b>Alan</div><div><b>'+_leD(l.oda)+'</b>Oda</div><div><b>'+_leD(l.kat)+'</b>Kat</div></div>'
-   +'<div class="vcard-ft"><div class="vcard-price">'+price+'<span>'+_leD(l.durum)+'</span></div><div class="vcard-go">İlanı İncele'+_ARR+'</div></div>'
-   +'</div></article>';
-}).join('');}
+function listingCardsHTML(limit){
+  var _all=(window.DN_ILAN&&typeof DN_ILAN.get==='function')?DN_ILAN.get():LISTINGS.filter(function(l){return l.status!=='pasif';});
+  /* EİDS YAYIN KAPISI: yalnız doğrulanmış ilanlar yayında görünür */
+  var _pub=(window.Listings&&Listings.publicList)?Listings.publicList(_all):_all.filter(function(l){return l&&l.eids&&l.eids.status==='dogrulandi';});
+  var _src=(limit===0)?_pub:_pub.slice(0,limit||6);
+  if(!_src.length)return '<div class="vault-note">Şu anda EİDS doğrulanmış yayında ilan bulunmuyor. Doğrulanan ilanlar burada listelenir.</div>';
+  if(window.Listings&&Listings.cardHTML){ return _src.map(function(l){return Listings.cardHTML(dnListNormalize(l),DN_LIST_CFG);}).join(''); }
+  return _src.map(function(l){return '<article class="vcard" onclick="dnListingDetail(\''+_leD(l.id)+'\')"><h3>'+_leD(l.baslik)+'</h3></article>';}).join('');
+}
 
+/* ---- İLAN DETAY (shared/listing.js kapsamlı içeriği + danışman nav/footer chrome) ---- */
+function _dnListImgs(r){var g=(r.gallery&&r.gallery.length)?r.gallery:[r.img];return g.filter(Boolean).map(function(k){return (window.DN_ILAN&&DN_ILAN.imgURL)?DN_ILAN.imgURL(k):k;});}
+function _dnTipLabel(t){if(!t)return '';var m={penthouse:'Penthouse',rezidans:'Rezidans',villa:'Villa',yali:'Yalı',loft:'Loft / Daire',arsa:'Arsa',daire:'Daire',ofis:'Ofis'};return m[t]||t;}
+function dnListNormalize(r){ if(!r)return null;
+  return { id:r.id, title:r.baslik||r.title, op:r.durum||r.op, type:_dnTipLabel(r.tip||r.type),
+    priceText:(r.kira?fmt(r.fiyat)+' /ay':fmt(r.fiyat)), images:((window.Listings&&Listings.catImages)?Listings.catImages(r,4):_dnListImgs(r)),
+    il:r.il, ilce:r.ilce, mah:r.mahalle||r.mah,
+    specs:[{k:'Brüt m²',v:r.m2||(r.attrs&&r.attrs.m2)},{k:'Oda',v:r.oda||(r.attrs&&r.attrs.oda)},{k:'Kat',v:r.kat||(r.attrs&&r.attrs.kat)},{k:'Isıtma',v:r.isitma||(r.attrs&&r.attrs.isitma)},{k:'Cephe',v:r.cephe},{k:'Bina Yaşı',v:r.yas||(r.attrs&&r.attrs.yas)}],
+    features:(r.features&&r.features.length?r.features:(r.ek||[])), attrs:r.attrs, desc:r.desc, eids:r.eids,
+    videoUrl:r.videoUrl, tour360Url:r.tour360Url, floorplanUrl:r.floorplanUrl, media:r.media, energy:r.energy, ilanNo:r.ilanNo, tarih:r.tarih };
+}
+var DN_LIST_CFG={ns:'dn',
+  brand:function(){try{return _dnBrand();}catch(e){return 'Selin Meridyen';}},
+  phone:function(){try{return (SAAS_CONFIG.firma&&SAAS_CONFIG.firma.tel)||'+90 532 000 00 00';}catch(e){return '+90 532 000 00 00';}},
+  whatsapp:function(){return '905320000000';},
+  agent:function(){try{return {name:(_dnBrand()||'Selin Meridyen'),photo:'img/danisman-portresi.jpg',title:'Lüks Konut & Özel Portföy Danışmanı',experience:18};}catch(e){return {name:'Selin Meridyen',photo:'img/danisman-portresi.jpg',title:'Gayrimenkul Danışmanı',experience:18};}},
+  onOpen:function(id){dnListingDetail(id);},
+  onContact:function(){try{var ov=document.getElementById('pageOverlay');if(ov){ov.classList.remove('on');ov.innerHTML='';}document.body.classList.remove('lock');}catch(e){}try{navGo('randevu');}catch(e){}},
+  mapQuery:function(l){return [l.mah,l.ilce,l.il].filter(Boolean).join(', ');},
+  list:function(){try{return ((window.DN_ILAN&&DN_ILAN.get())||[]).map(dnListNormalize).filter(Boolean);}catch(e){return [];}}
+};
+try{if(window.Listings)Listings.register('dn',DN_LIST_CFG);}catch(e){}
+function dnListingDetail(id){
+  var raw=((window.DN_ILAN&&DN_ILAN.get())||[]).filter(function(x){return String(x.id)===String(id);})[0];
+  if(!raw||!window.Listings){try{navGo('ilanlar');}catch(e){}return;}
+  var L=dnListNormalize(raw);
+  var ov=document.getElementById('pageOverlay'); if(!ov)return;
+  ov.innerHTML='<section class="sec-pad" style="padding-top:96px"><div class="wrap"><button class="btn btn-line" onclick="navGo(\'ilanlar\')" style="margin-bottom:18px">← Tüm ilanlar</button>'
+    +Listings.detailInnerHTML(L,DN_LIST_CFG)+'</div></section>'+footerHTML();
+  ov.classList.add('on');ov.scrollTop=0;document.body.classList.add('lock');
+  var hv=document.getElementById('homeView');if(hv)hv.style.display='none';
+  var nv=document.getElementById('nav');if(nv)nv.classList.add('scrolled');
+  try{setActiveNav(null);}catch(e){}
+  try{setTimeout(function(){Listings.mountMaps();},80);}catch(e){}
+  try{if(Listings._extAfterOpen)setTimeout(function(){Listings._extAfterOpen(L,ov,DN_LIST_CFG);},60);}catch(e){}
+}
+try{window.dnListingDetail=dnListingDetail;window.dnListNormalize=dnListNormalize;}catch(e){}
 function vipCardsHTML(){return VIP_PORTFOLIO.map(p=>{
   const nm=p.baslik.replace(/'/g,'’');
   return '<article class="vcard" onclick="leadFor(\''+nm+'\')">'
@@ -837,7 +871,7 @@ function _dnPortfolioText(){try{var all=LISTINGS.concat(VIP_PORTFOLIO).slice(0,1
    ===================================================================== */
 const PAGES={
   ilanlar:{eyebrow:'Güncel İlanlar',title:'Açık Portföy',em:'tam şeffaf bilgi',desc:'Fiyat, oda, metrekare ve bölge bilgisi açıkça paylaşılan güncel lüks ilanlar. Beğendiğiniz gayrimenkul için ücretsiz değer analizi talep edin.',
-    body:()=>'<section class="sec-pad"><div class="wrap"><div class="card-grid">'+listingCardsHTML()+'</div><div class="vault-note" style="margin-top:36px">Tüm ilanlar yetki belgelidir · detaylı bilgi ve yerinde değerlendirme için <b>ücretsiz analiz</b> alın.</div></div></section>'},
+    body:()=>'<section class="sec-pad"><div class="wrap"><div class="lst-grid">'+listingCardsHTML(0)+'</div><div class="vault-note" style="margin-top:36px">🛡️ Tüm ilanlar <b>EİDS (Elektronik İlan Doğrulama Sistemi)</b> ile doğrulanmıştır · yalnızca doğrulanmış ilanlar yayınlanır · detaylı bilgi için <b>ücretsiz analiz</b> alın.</div></div></section>'},
   vip:{eyebrow:'Kişisel VIP Portföyüm',title:'Davet Usulü',em:'gizli özel portföy',desc:'Yalnızca cadde/sokak ismi ve başlangıç değeri paylaşılır. Tam adres, kimlik ve net fiyat mahremiyet gereği yalnızca ön analiz sonrası açıklanır.',
     body:()=>'<section class="vault sec-pad"><div class="wrap"><div class="card-grid">'+vipCardsHTML()+'</div><div class="vault-note" style="margin-top:36px">🔒 <b>Adres gizliliği</b> tüm kayıtlarda esastır · net konum yalnızca <b>ücretsiz analiz görüşmesinde</b> paylaşılır.</div></div></section>'},
   blog:{eyebrow:'Blog · Haberler',title:'Bilgi & Piyasa',em:'ProX veri ışığında',desc:'Lüks konut, yatırım ve piyasa üzerine kişiye özel analizler; ProX doğrulanmış emlak verisiyle beslenen güncel haber akışı.',
@@ -1187,7 +1221,9 @@ function ilanEnsureIds(){var mx=0;LISTINGS.forEach(function(l){if(l.id)mx=Math.m
 function ilanLoad(){try{var a=JSON.parse(localStorage.getItem(ILN_KEY)||'null');if(Array.isArray(a)){LISTINGS.length=0;a.forEach(function(x){LISTINGS.push(x);});}}catch(e){}ilanEnsureIds();_eidsMigrate();}
 function ilanSave(){try{localStorage.setItem(ILN_KEY,JSON.stringify(LISTINGS));}catch(e){try{toast('Kayıt alanı dolu.');}catch(_){}}}
 function ilanBolge(l){return [l.ilce,l.mahalle].filter(Boolean).join(' · ')||l.bolge||'';}
-var _ilnImg='',_ilnEids=null;
+var _ilnImg='',_ilnEids=null,_ilnAttrs={},_ilnFeats=[];
+function dnRenderAttrs(){try{var t=(document.getElementById('il_tip')||{}).value||'';var cat=(window.Listings?Listings.catOf({type:t}):'konut');var box=document.getElementById('il_attrBox');if(box&&window.Listings)box.innerHTML=Listings.attrFormHTML(cat,_ilnAttrs||{},_ilnFeats||[]);}catch(e){}}
+try{window.dnRenderAttrs=dnRenderAttrs;}catch(e){}
 /* Per-ilan EİDS: GERÇEK doğrulama (shared/eids.js). Kod/durum uydurulmaz; backend'e devredilir.
    _ilnEids = düzenlenen ilanın EİDS kaydı (beklemede/dogrulandi/reddedildi). */
 function _ilnEidsHtml(){ if(!window.EIDS)return ''; var e=_ilnEids||EIDS.newRecord({});
@@ -1215,16 +1251,28 @@ function ilanEidsVerify(){
     toast(EIDS.stateLabel(_ilnEids)+' — '+rec.mesaj);
   });}
 async function ilanAiDesc(){var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
-  var parts=[g('il_baslik'),ilnTipT(g('il_tip')),g('il_durum'),[g('il_ilce'),g('il_mah')].filter(Boolean).join(' '),(g('il_m2')?g('il_m2')+' m²':''),g('il_oda'),(g('il_fiyat')?fmt(+g('il_fiyat'))+' ₺':'')].filter(Boolean).join(' · ');
-  var ta=document.getElementById('il_desc');if(!ta)return;var old=ta.value;ta.value='İçerik Asistanı yazıyor…';
-  try{var txt=await aiChat({prompt:'Sen lüks gayrimenkul için metin yazarısın; abartısız, veri odaklı, gizlilik vurgulu.',message:'Şu ilan için 2-3 cümlelik çekici bir satış açıklaması yaz (Türkçe): '+parts,context:'ilan açıklaması'});
-    ta.value=(txt||'').replace(/<[^>]+>/g,'').trim()||old||parts;toast('✓ Açıklama üretildi.');}catch(e){ta.value=old||parts;toast('Üretilemedi.');}}
+  var ta=document.getElementById('il_desc');if(!ta)return;
+  var fields={title:g('il_baslik'),op:g('il_durum'),type:g('il_tip'),il:g('il_il'),ilce:g('il_ilce'),mah:g('il_mah'),m2:g('il_m2'),oda:g('il_oda'),kat:g('il_kat')};
+  if(!fields.title){toast('Önce başlık girin.');return;}
+  var aiFn=(window.DN_CONTENT)?function(b){return DN_CONTENT.ai(b,{max_tokens:600,timeout:60000});}:(window.aiChat||null);
+  if(!aiFn||!window.Listings||!Listings.aiDescribe){toast('YZ motoru hazır değil.');return;}
+  var old=ta.value;ta.value='🤖 İçerik Ajanı açıklama yazıyor…';
+  try{var t=await Listings.aiDescribe(fields,aiFn);
+    if(t){ta.value=t;toast('✓ AI açıklama üretildi.');}else{ta.value=old;toast('Üretilemedi — İçerik Ajanı anahtarını kontrol edin (🔌 ProX API & Anahtarlar).');}}
+  catch(e){ta.value=old;toast('Üretilemedi.');}}
+async function ilanAiTitle(){var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};var inp=document.getElementById('il_baslik');if(!inp)return;
+  var aiFn=(window.DN_CONTENT)?function(b){return DN_CONTENT.ai(b,{max_tokens:60,timeout:45000});}:(window.aiChat||null);
+  if(!aiFn||!window.Listings||!Listings.aiTitle){toast('YZ motoru hazır değil.');return;}
+  var fields={op:g('il_durum'),type:g('il_tip'),oda:g('il_oda'),m2:g('il_m2'),il:g('il_il'),ilce:g('il_ilce'),mah:g('il_mah')};
+  var old=inp.value;inp.value='🤖 AI başlık yazıyor…';
+  try{var t=await Listings.aiTitle(fields,aiFn);inp.value=t||old;if(t)toast('✓ AI başlık üretildi.');else toast('Üretilemedi — İçerik Ajanı anahtarını kontrol edin.');}catch(e){inp.value=old;}}
+try{window.ilanAiTitle=ilanAiTitle;}catch(e){}
 function ilanRefreshPublic(){try{var h=document.getElementById('homeListings');if(h)h.innerHTML=listingCardsHTML();}catch(e){}
   try{if(typeof _OV!=='undefined'&&document.querySelector('#pageOverlay.on')){var g=document.querySelector('#pageOverlay .card-grid');/* ilanlar sayfası açıksa */}}catch(e){}}
 function ilanRenderAdmin(){var host=document.getElementById('ilanAdminBody');if(!host)return;ilanLoad();
   var eidsOk=false;try{eidsOk=!!(eidsFirma().eids&&eidsFirma().eids.yetkili);}catch(e){}
   var akt=LISTINGS.filter(function(l){return l.status!=='pasif';}).length;
-  var H='<div class="crm-bar"><div class="sub" style="margin:0">'+LISTINGS.length+' ilan · '+akt+' yayında'+(eidsOk?'':' · <b style="color:#c0603a">EİDS yetkisi yok → yeni ilanlar pasif</b>')+'</div><button class="btn btn-gold crm-add" onclick="ilanEdit(0)">+ İlan Ekle</button></div>';
+  var H='<div id="ilanFormInline"></div><div class="crm-bar"><div class="sub" style="margin:0">'+LISTINGS.length+' ilan · '+akt+' yayında'+(eidsOk?'':' · <b style="color:#c0603a">EİDS yetkisi yok → yeni ilanlar pasif</b>')+'</div><button class="btn btn-gold crm-add" onclick="ilanEdit(0)">+ Yeni İlan Ekle</button></div>';
   if(!LISTINGS.length)H+='<div class="crm-empty">İlan yok. "+ İlan Ekle" ile açık portföyünüzü oluşturun.</div>';
   else H+='<div class="crm-list">'+LISTINGS.map(function(l){var kr=l.durum==='Kiralık';
     return '<div class="crm-card"><div class="crm-card-top"><div><b>'+_leD(l.baslik||'—')+'</b><span class="crm-badge">'+_leD(l.durum||'')+'</span>'+(l.status==='pasif'?'<span class="crm-badge" style="background:rgba(192,96,58,.12);color:#c0603a">pasif</span>':'')+'</div><div class="crm-card-act"><button onclick="ilanTogglePub('+l.id+')" title="'+(l.status==='pasif'?'Yayınla':'Yayından kaldır')+'">'+(l.status==='pasif'?'▲':'▼')+'</button><button onclick="ilanEdit('+l.id+')" title="Düzenle">✎</button><button onclick="ilanDel('+l.id+')" title="Sil">🗑</button></div></div>'
@@ -1233,32 +1281,47 @@ function ilanRenderAdmin(){var host=document.getElementById('ilanAdminBody');if(
   }).join('')+'</div>';
   host.innerHTML=H;
 }
-function ilanEdit(id){ilanLoad();var l=id?LISTINGS.filter(function(x){return x.id===id;})[0]:{id:0,durum:'Satılık',tip:'villa',status:'aktif'};if(!l)return;_ilnImg=l.img||'';_ilnEids=l.eids||null;
+function ilanEdit(id){ilanLoad();var l=id?LISTINGS.filter(function(x){return x.id===id;})[0]:{id:0,durum:'Satılık',tip:'Daire',status:'aktif'};if(!l)return;_ilnImg=l.img||'';_ilnEids=l.eids||null;_ilnAttrs=l.attrs||{};_ilnFeats=l.features||l.ek||[];
   var F='<div class="crm-mh">'+(id?'İlanı Düzenle':'Yeni İlan')+'</div>'
-    +'<div class="crm-f"><label>Başlık</label><input id="il_baslik" value="'+_leD(l.baslik||'')+'" placeholder="Levent Çift Kat Penthouse"></div>'
-    +'<div class="crm-frow"><div class="crm-f"><label>Durum</label><select id="il_durum">'+_crmOpt(ILN_DURUM,l.durum)+'</select></div><div class="crm-f"><label>Tip</label><select id="il_tip">'+ILN_TIP.map(function(t){return '<option value="'+t.k+'"'+(t.k===l.tip?' selected':'')+'>'+t.t+'</option>';}).join('')+'</select></div></div>'
-    +'<div class="crm-frow"><div class="crm-f"><label>İl</label><input id="il_il" value="'+_leD(l.il||'İstanbul')+'"></div><div class="crm-f"><label>İlçe</label><input id="il_ilce" value="'+_leD(l.ilce||'')+'"></div></div>'
-    +'<div class="crm-frow"><div class="crm-f"><label>Mahalle</label><input id="il_mah" value="'+_leD(l.mahalle||'')+'"></div><div class="crm-f"><label>m²</label><input id="il_m2" type="number" value="'+(l.m2||'')+'"></div></div>'
+    +'<div class="crm-f"><label>Başlık <button type="button" class="crm-x2" style="margin-left:8px" onclick="ilanAiTitle()">🤖 AI Başlık</button></label><input id="il_baslik" value="'+_leD(l.baslik||'')+'" placeholder="Örn. Levent’te Yüksek Katlı 3+1 Rezidans"></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>İşlem</label>'+(window.Listings?Listings.opSelectHTML('il_durum',l.durum):'<select id="il_durum">'+_crmOpt(ILN_DURUM,l.durum)+'</select>')+'</div><div class="crm-f"><label>Emlak Kategorisi</label>'+(window.Listings?Listings.typeSelectHTML('il_tip',(l.tip||l.type)):'<select id="il_tip">'+ILN_TIP.map(function(t){return '<option value="'+t.k+'"'+(t.k===l.tip?' selected':'')+'>'+t.t+'</option>';}).join('')+'</select>')+'</div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>İl</label>'+(window.Listings?'<select id="il_il" onchange="dnIlChange()">'+Listings.ilOptions(l.il||'İstanbul')+'</select>':'<input id="il_il" value="'+_leD(l.il||'İstanbul')+'">')+'</div><div class="crm-f"><label>İlçe</label>'+(window.Listings?'<select id="il_ilce" onchange="dnLoadMahDL()">'+Listings.ilceOptions(l.il||'İstanbul',l.ilce)+'</select>':'<input id="il_ilce" value="'+_leD(l.ilce||'')+'">')+'</div></div>'
+    +'<div class="crm-frow"><div class="crm-f"><label>Mahalle</label><input id="il_mah" list="il_mahDL" value="'+_leD(l.mahalle||'')+'" placeholder="Mahalle (yazın veya seçin)"><datalist id="il_mahDL"></datalist></div><div class="crm-f"><label>m²</label><input id="il_m2" type="number" value="'+(l.m2||'')+'"></div></div>'
     +'<div class="crm-frow"><div class="crm-f"><label>Oda</label><input id="il_oda" value="'+_leD(l.oda||'')+'" placeholder="4+1"></div><div class="crm-f"><label>Kat</label><input id="il_kat" value="'+_leD(l.kat||'')+'" placeholder="7"></div></div>'
     +'<div class="crm-frow"><div class="crm-f"><label>Fiyat (₺)</label><input id="il_fiyat" type="number" value="'+(l.fiyat||'')+'"></div><div class="crm-f"><label>Taşınmaz No <span style="color:#c0603a">*EİDS</span></label><input id="il_eids" value="'+_leD((l.eids&&l.eids.tasinmazNo)||l.eidsNo||'')+'" placeholder="Tapudaki Taşınmaz No"></div></div>'
     +'<div class="crm-frow"><div class="crm-f"><label>Ada <span style="color:#c0603a">*EİDS</span></label><input id="il_ada" value="'+_leD((l.eids&&l.eids.ada)||'')+'" placeholder="Ada"></div><div class="crm-f"><label>Parsel <span style="color:#c0603a">*EİDS</span></label><input id="il_parsel" value="'+_leD((l.eids&&l.eids.parsel)||'')+'" placeholder="Parsel"></div></div>'
     +'<div class="crm-f"><label>Görsel</label><div class="iln-img"><div class="iln-thumb" id="il_thumb">'+(_ilnImg?'<img src="'+_ilnImg+'" alt="">':'—')+'</div><label class="btn btn-line" style="cursor:pointer;font-size:12.5px">Görsel Yükle<input type="file" accept="image/*" onchange="ilanImgUpload(this)" style="display:none"></label><button class="btn btn-line" style="font-size:12.5px" type="button" onclick="ilanImgClear()">Kaldır</button></div></div>'
     +'<div class="crm-f"><label>EİDS Taşınmaz Doğrulama <span style="font-weight:400;color:var(--muted)">— T.C. Ticaret Bakanlığı</span></label><div id="il_eidsStatus">'+_ilnEidsHtml()+'</div><button class="btn btn-line" id="il_eidsBtn" style="margin-top:7px" type="button" onclick="ilanEidsVerify()">EİDS ile Doğrula</button></div>'
-    +'<div class="crm-f"><label>Açıklama <button type="button" class="crm-x2" style="margin-left:8px" onclick="ilanAiDesc()">🤖 İçerik Asistanı ile üret</button></label><textarea id="il_desc" rows="3" placeholder="İlan açıklaması…">'+_leD(l.desc||'')+'</textarea></div>'
+    +'<div class="crm-f"><label>Kategori Detayları <span style="font-weight:400;color:var(--muted)">— seçerek doldurun</span></label><div id="il_attrBox"></div></div>'
+    +'<div class="crm-f"><div id="il_mediaBox"></div></div>'
+    +'<div class="crm-f"><label>Açıklama <button type="button" class="crm-x2" style="margin-left:8px" onclick="ilanAiDesc()">🤖 İçerik Asistanı ile üret</button></label><textarea id="il_desc" rows="3" placeholder="İlan açıklaması… (🤖 ile otomatik üretebilirsiniz)">'+_leD(l.desc||'')+'</textarea></div>'
     +'<div class="crm-frow"><div class="crm-f"><label>360° Sanal Tur Linki</label><input id="il_tur" value="'+_leD(l.tur||'')+'" placeholder="Matterport / Kuula URL"></div><div class="crm-f"><label>Video Tur Linki</label><input id="il_video" value="'+_leD(l.video||'')+'" placeholder="YouTube / Vimeo URL"></div></div>'
     +'<div class="crm-f"><label>Yayın Durumu</label><select id="il_status"><option value="aktif"'+(l.status!=='pasif'?' selected':'')+'>Yayında (aktif)</option><option value="pasif"'+(l.status==='pasif'?' selected':'')+'>Pasif (yayında değil)</option></select></div>'
-    +'<div class="crm-mact"><button class="btn btn-gold" onclick="ilanSaveForm('+id+')">Kaydet</button><button class="btn btn-line" onclick="crmCloseModal()">Vazgeç</button>'+(id?'<button class="btn btn-line" style="margin-left:auto;color:#c0603a" onclick="ilanDel('+id+')">Sil</button>':'')+'</div>';
-  crmModal(F);
+    +'<div class="crm-mact"><button class="btn btn-gold" onclick="ilanSaveForm('+id+')">Kaydet</button><button class="btn btn-line" onclick="ilanFormClose()">Vazgeç</button>'+(id?'<button class="btn btn-line" style="margin-left:auto;color:#c0603a" onclick="ilanDel('+id+')">Sil</button>':'')+'</div>';
+  /* SAYFA-İÇİ (inline) form — açılan pencere (modal) DEĞİL */
+  var host=document.getElementById('ilanFormInline');
+  if(host){ host.innerHTML='<div class="crm-card iln-form-inline" style="border:1px solid var(--gold-soft,#dcc389);box-shadow:0 10px 34px rgba(0,0,0,.10)">'+F+'</div>'; try{host.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){} var _tt=document.getElementById('il_tip'); if(_tt)_tt.onchange=dnRenderAttrs; dnRenderAttrs(); try{var _mb=document.getElementById('il_mediaBox'); if(_mb&&window.Listings&&Listings.mediaFormHTML)_mb.innerHTML=Listings.mediaFormHTML(l||{});}catch(e){} var _f=host.querySelector('#il_baslik'); if(_f)try{_f.focus();}catch(e){} }
+  else crmModal(F);
 }
+function ilanFormClose(){var h=document.getElementById('ilanFormInline');if(h)h.innerHTML='';try{crmCloseModal();}catch(e){}}
+/* İl → İlçe cascade (TR_ILILCE tam liste) + İlçe → gerçek mahalle datalist (ProX) */
+function dnIlChange(){try{var il=(document.getElementById('il_il')||{}).value;var ic=document.getElementById('il_ilce');if(ic&&window.Listings)ic.innerHTML=Listings.ilceOptions(il,'');var dl=document.getElementById('il_mahDL');if(dl)dl.innerHTML='';}catch(e){}}
+async function dnLoadMahDL(){try{var il=(document.getElementById('il_il')||{}).value,ic=(document.getElementById('il_ilce')||{}).value,dl=document.getElementById('il_mahDL');if(!dl||!il||!ic||typeof loadMahalleIlce!=='function')return;var arr=await loadMahalleIlce(il,ic);arr=Array.isArray(arr)?arr:((arr&&arr.mahalleler)||[]);if(arr&&arr.length)dl.innerHTML=arr.slice(0,400).map(function(m){return '<option value="'+_leD(_mahClean?_mahClean(m):m)+'"></option>';}).join('');}catch(e){}}
+try{window.ilanFormClose=ilanFormClose;window.dnIlChange=dnIlChange;window.dnLoadMahDL=dnLoadMahDL;}catch(e){}
 function ilanSaveForm(id){ilanLoad();var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
-  var o={durum:g('il_durum'),tip:g('il_tip'),baslik:g('il_baslik'),il:g('il_il'),ilce:g('il_ilce'),mahalle:g('il_mah'),m2:+g('il_m2')||0,oda:g('il_oda'),kat:g('il_kat'),fiyat:+g('il_fiyat')||0,eidsNo:(_ilnEids&&_ilnEids.tasinmazNo)||g('il_eids'),status:g('il_status'),img:_ilnImg||'',eids:_ilnEids||null,desc:g('il_desc'),tur:g('il_tur'),video:g('il_video')};
+  var _af=(window.Listings&&Listings.readAttrForm)?Listings.readAttrForm(document.getElementById('ilanFormInline')||document):{attrs:{},features:[]};
+  var o={durum:g('il_durum'),tip:g('il_tip'),baslik:g('il_baslik'),il:g('il_il'),ilce:g('il_ilce'),mahalle:g('il_mah'),m2:+g('il_m2')||(+(_af.attrs&&_af.attrs.m2)||0),oda:(_af.attrs&&_af.attrs.oda)||g('il_oda'),kat:(_af.attrs&&_af.attrs.kat)||g('il_kat'),fiyat:+g('il_fiyat')||0,eidsNo:(_ilnEids&&_ilnEids.tasinmazNo)||g('il_eids'),status:g('il_status'),img:_ilnImg||'',eids:_ilnEids||null,desc:g('il_desc'),tur:g('il_tur'),video:g('il_video'),attrs:_af.attrs,features:_af.features};
   if(!o.baslik){toast('İlan başlığı girin.');return;}
   o.kira=(o.durum==='Kiralık');o.bolge=[o.ilce,o.mahalle].filter(Boolean).join(' · ');
   /* EİDS: doğrulanmamış ilan yayınlanabilir ama kartındaki rozet gerçeği (beklemede) gösterir — sahte onay YOK */
   var propOk=!!(window.EIDS&&EIDS.canPublish(o.eids));
   if(o.status==='aktif'&&!propOk){toast('Not: İlan henüz EİDS doğrulanmadı — kartında “Doğrulama Bekliyor” görünecek. Yayın için Taşınmaz No/Ada/Parsel girip doğrulayın.');}
+  var _mid=id||(ilanEnsureIds()+1); o.id=_mid;
+  try{if(window.Listings&&Listings.readMediaForm)Listings.readMediaForm(_mid,o,document.getElementById('ilanFormInline')||document);}catch(e){}
+  if(!o.videoUrl&&o.video)o.videoUrl=o.video;
+  if(!o.tour360Url&&o.tur)o.tour360Url=o.tur;   /* 360° link alanını shared medya modeline köprüle */
   if(id){var l=LISTINGS.filter(function(x){return x.id===id;})[0];if(l)Object.assign(l,o);}
-  else{o.id=ilanEnsureIds()+1;LISTINGS.unshift(o);}
+  else{LISTINGS.unshift(o);}
   ilanSave();crmCloseModal();ilanRenderAdmin();ilanRefreshPublic();toast('✓ İlan kaydedildi.');
 }
 function ilanDel(id){if(!confirm('İlan silinsin mi?'))return;ilanLoad();for(var i=LISTINGS.length-1;i>=0;i--)if(LISTINGS[i].id===id)LISTINGS.splice(i,1);ilanSave();crmCloseModal();ilanRenderAdmin();ilanRefreshPublic();toast('İlan silindi.');}
@@ -1802,7 +1865,7 @@ async function _proxResolveReply(q){
 function proxSend(){const i=document.getElementById('proxIn');if(!i)return;const q=i.value.trim();if(!q)return;_proxPush('u',_leD(q));_dnLogConvo('u',q);i.value='';setTimeout(function(){_proxResolveReply(q).then(function(html){_proxPush('a',html);_dnLogConvo('a',html);});},440);}/* D4/XSS: kullanıcı echo'su tam _leD escape (kısmi <-only değil) */
 function proxQuick(q){const i=document.getElementById('proxIn');if(i)i.value=q;proxSend();}
 function proxToAnaliz(){navGo('randevu');}
-function proxAiQuery(q){const base=SAAS_CONFIG.proxAiPrompts.persona;const custom=saasResolve('customPrompt');console.log('[ProX persona]',(base+(custom?(' Ek ton: '+custom):'')).slice(0,90)+'…');return _proxReply(q);}
+function proxAiQuery(q){return _proxReply(q);}
 window.proxAiQuery=proxAiQuery;
 
 /* =====================================================================

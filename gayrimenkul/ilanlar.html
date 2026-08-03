@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Satılık & Kiralık İlanlar · Konut, Ofis, Arsa — Meridyen Gayrimenkul</title>
+<meta name="description" content="İzmir ve Ege'de EİDS onaylı satılık & kiralık konut, ofis, dükkan ve arsa ilanları. Her ilanda gerçek konum, kapsamlı özellik tablosu ve şeffaf fiyat. Meridyen Gayrimenkul.">
+<meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde bu satır KALDIRILIR -->
+<link rel="canonical" href="https://www.emlakekspertizi.com/demo/gayrimenkul/ilanlar.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Meridyen Gayrimenkul">
+<meta property="og:url" content="https://www.emlakekspertizi.com/demo/gayrimenkul/ilanlar.html">
+<meta property="og:title" content="Satılık & Kiralık İlanlar — Meridyen Gayrimenkul">
+<meta property="og:description" content="EİDS onaylı satılık & kiralık gayrimenkul ilanları — konut, ofis, arsa. Gerçek konum, kapsamlı detay, şeffaf fiyat.">
+<meta property="og:image" content="https://www.emlakekspertizi.com/demo/gayrimenkul/og-image.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Satılık & Kiralık İlanlar — Meridyen Gayrimenkul">
+<meta name="twitter:description" content="EİDS onaylı satılık & kiralık gayrimenkul ilanları — konut, ofis, arsa.">
+<meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/gayrimenkul/og-image.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=3">
+<link rel="stylesheet" href="css/base.css?v=21">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script src="js/brand.js?v=3"></script>
+<style>
+  :root{--il-nav-h:64px}
+  body{margin:0}
+  .il-hd{position:sticky;top:0;z-index:60;background:var(--surface,#fff);border-bottom:1px solid var(--line,#e6e8ec);box-shadow:0 2px 18px rgba(15,23,42,.06)}
+  .il-hd .bar{display:flex;align-items:center;gap:18px;height:var(--il-nav-h);padding:0 clamp(16px,4vw,40px);max-width:1240px;margin:0 auto}
+  .il-hd .logo{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink,#12181f);font-family:var(--head,inherit);font-weight:800;font-size:20px}
+  .il-hd .mark{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--accent,#0e7c86);color:#fff;font-weight:800}
+  .il-hd .lo2{color:var(--accent,#0e7c86)}
+  .il-nav{display:flex;gap:4px;margin-left:6px;flex:1;overflow-x:auto;scrollbar-width:none}
+  .il-nav::-webkit-scrollbar{display:none}
+  .il-nav a{white-space:nowrap;text-decoration:none;color:var(--muted,#556);font:600 14.5px/1 system-ui,-apple-system,sans-serif;padding:10px 13px;border-radius:9px;transition:.15s}
+  .il-nav a:hover{color:var(--ink,#12181f);background:rgba(0,0,0,.04)}
+  .il-nav a.on{color:var(--accent,#0e7c86);background:color-mix(in srgb,var(--accent,#0e7c86) 12%,transparent)}
+  .il-hcta{display:flex;align-items:center;gap:8px}
+  .il-hcta .il-wa{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:10px;background:#25D366;color:#fff}
+  .il-hcta .btn{border:0;background:var(--accent,#0e7c86);color:#fff;border-radius:10px;padding:11px 16px;font:700 13.5px/1 system-ui;cursor:pointer;text-decoration:none;white-space:nowrap}
+  .il-burger{display:none;background:none;border:0;cursor:pointer;padding:8px}
+  .il-burger span{display:block;width:22px;height:2px;background:var(--ink,#12181f);margin:4px 0;border-radius:2px}
+  .il-hero{background:linear-gradient(135deg,color-mix(in srgb,var(--accent,#0e7c86) 12%,#fff),var(--surface,#fff));border-bottom:1px solid var(--line,#e6e8ec);padding:38px 0 30px}
+  .il-hero .wrap{max-width:1240px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+  .il-eyebrow{display:inline-flex;align-items:center;gap:7px;font:800 12px/1 system-ui;letter-spacing:.04em;text-transform:uppercase;color:var(--accent,#0e7c86);background:color-mix(in srgb,var(--accent,#0e7c86) 12%,transparent);padding:8px 13px;border-radius:999px}
+  .il-hero h1{font-family:var(--head,inherit);font-size:clamp(26px,4vw,40px);line-height:1.1;margin:14px 0 8px;color:var(--ink,#12181f)}
+  .il-hero p{max-width:640px;margin:0;color:var(--muted,#556);font:500 15.5px/1.6 system-ui}
+  main.il-main{max-width:1240px;margin:0 auto;padding:30px clamp(16px,4vw,40px) 70px}
+  @media(max-width:860px){.il-nav{display:none}.il-burger{display:block}.il-hcta .btn{display:none}}
+  .il-mnav{position:fixed;inset:0;background:rgba(10,15,25,.5);z-index:80;display:none}
+  .il-mnav.open{display:block}
+  .il-mnav .panel{position:absolute;top:0;right:0;bottom:0;width:min(80vw,320px);background:var(--surface,#fff);padding:20px;display:flex;flex-direction:column;gap:4px;box-shadow:-8px 0 40px rgba(0,0,0,.2)}
+  .il-mnav .panel a{text-decoration:none;color:var(--ink,#12181f);font:600 16px/1 system-ui;padding:14px 10px;border-radius:9px;border-bottom:1px solid var(--line,#eee)}
+  .il-mnav .panel a:hover{background:rgba(0,0,0,.04)}
+</style>
+</head>
+<body>
+<div role="note" aria-label="Demo bildirimi" style="background:#0f2740;color:#dbeafe;font:600 12.5px/1.45 system-ui,-apple-system,sans-serif;text-align:center;padding:7px 14px">🔎 <b>DEMO · Tanıtım sürümü</b> — Bu sitedeki ilan, portföy, danışman ve istatistikler <b>temsilîdir</b>, gerçek veri değildir. Kurumsal gerçek sürüm: <a href="https://www.nadas.com.tr/white-label.html" style="color:#7dd3fc;text-decoration:underline">nadas.com.tr</a></div>
+
+<!-- ===== ÜST MENÜ ===== -->
+<header class="il-hd"><div class="bar">
+  <a class="logo" href="index.html"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Gayrimenkul</span></span></a>
+  <nav class="il-nav">
+    <a href="hizmetlerimiz.html">Hizmetlerimiz</a>
+    <a href="nedenbiz.html">Neden Biz</a>
+    <a href="portfoy.html">Portföy</a>
+    <a href="ilanlar.html" class="on">İlanlar</a>
+    <a href="ozel/">Özel Portföy</a>
+    <a href="index.html#danismanlar">Danışmanlar</a>
+    <a href="index.html#iletisim">İletişim</a>
+  </nav>
+  <div class="il-hcta">
+    <a class="il-wa" href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 .9-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4-.1.6.5l.8 1.9c.1.1.1.3 0 .5l-.4.5-.3.3c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l1.8.9c.2.1.4.2.4.3.1.1.1.6-.1 1.2Z"/></svg></a>
+    <a class="btn" href="index.html#degerleme">Ücretsiz Değerleme</a>
+    <button class="il-burger" aria-label="Menü" onclick="document.getElementById('ilMnav').classList.add('open')"><span></span><span></span><span></span></button>
+  </div>
+</div></header>
+
+<div class="il-mnav" id="ilMnav" onclick="if(event.target===this)this.classList.remove('open')"><div class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><b style="font-size:18px">Menü</b><button style="background:none;border:0;font-size:24px;cursor:pointer" onclick="document.getElementById('ilMnav').classList.remove('open')" aria-label="Kapat">✕</button></div>
+  <a href="hizmetlerimiz.html">Hizmetlerimiz</a>
+  <a href="nedenbiz.html">Neden Biz</a>
+  <a href="portfoy.html">Portföy</a>
+  <a href="ilanlar.html">İlanlar</a>
+  <a href="ozel/">Özel Portföy</a>
+  <a href="index.html#danismanlar">Danışmanlar</a>
+  <a href="index.html#iletisim">İletişim</a>
+  <a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp ile Yaz</a>
+</div></div>
+
+<!-- ===== HERO ===== -->
+<section class="il-hero"><div class="wrap">
+  <span class="il-eyebrow">🛡️ EİDS Onaylı İlanlar</span>
+  <h1>Satılık & Kiralık Gayrimenkul İlanları</h1>
+  <p>İzmir ve Ege'de konut, ofis, dükkan ve arsa portföyümüz. Her ilan EİDS yetki belgesiyle yayında; gerçek konum haritası, sahibinden düzeyinde kapsamlı özellik tablosu ve şeffaf fiyatla.</p>
+</div></section>
+
+<!-- ===== İLAN LİSTESİ (shared/listings-page.js) ===== -->
+<main class="il-main"><div id="ilanlarApp"></div></main>
+
+<!-- ===== ALT MENÜ ===== -->
+<footer class="siteFooter"><div class="wrap">
+  <div class="fcols">
+    <div>
+      <div class="logo"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Gayrimenkul</span></span></div>
+      <p>Veri odaklı emlak danışmanlığı. İzmir ve Ege'de satılık, kiralık konut, ofis ve arsa portföyü. Her ilanda gerçek bölge endeksi.</p>
+      <div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer"><b>emlak</b>jet</a></div>
+    </div>
+    <div><h4>Kurumsal</h4><ul><li><a href="index.html#hakkimizda">Hakkımızda</a></li><li><a href="index.html#danismanlar">Danışmanlar</a></li><li><a href="hizmetlerimiz.html">Hizmetler</a></li><li><a href="nedenbiz.html">Neden Biz</a></li><li><a href="index.html#iletisim">İletişim</a></li></ul></div>
+    <div><h4>Hizmetler</h4><ul><li><a href="ilanlar.html"><b>Tüm İlanlar</b></a></li><li><a href="ilanlar.html?op=Satılık">Satılık İlanlar</a></li><li><a href="ilanlar.html?op=Kiralık">Kiralık İlanlar</a></li><li><a href="ozel/">Özel Portföy</a></li><li><a href="index.html#degerleme">Ücretsiz Değerleme</a></li></ul></div>
+    <div><h4>Yasal & Araçlar</h4><ul>
+      <li><a href="kvkk.html">KVKK Aydınlatma Metni</a></li>
+      <li><a href="cerez.html">Çerez Politikası</a></li>
+      <li><a href="kullanim-kosullari.html">Mesafeli Hizmet & Kullanım</a></li>
+      <li><a href="https://parselsorgu.tkgm.gov.tr" target="_blank" rel="noopener noreferrer">TKGM Ada/Parsel Sorgu ↗</a></li>
+    </ul></div>
+  </div>
+  <div class="fbot">
+    <span>© 2026 Meridyen Gayrimenkul · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span></span><div class="lang-sw" title="Dil / Language" style="display:inline-flex;align-items:center;gap:5px;margin:0 14px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><select aria-label="Dil / Language" style="background:transparent;border:1px solid currentColor;border-radius:8px;padding:3px 7px;font-weight:700;font-size:12px;color:inherit;cursor:pointer"><option value="tr">TR</option><option value="en">EN</option><option value="ru">RU</option><option value="zh">中文</option><option value="ar">AR</option></select></div><a class="gm-prox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="gm-prox-lead">Powered by</span><span class="gm-prox-mark"><span class="gm-prox-pro">Pro</span><span class="gm-prox-x">X</span></span></a>
+  </div>
+</div></footer>
+
+<script src="../shared/eids.js?v=1"></script>
+<link rel="stylesheet" href="../shared/vendor/pannellum.css?v=1">
+<script src="../shared/listing.js?v=17"></script>
+<script src="../shared/vendor/pannellum.js?v=1"></script>
+<script src="../shared/listing-extras.js?v=7"></script>
+<script src="../shared/listings-page.js?v=1"></script>
+<script src="js/wl.js?v=4"></script><!-- white-label: üretim tenant domain/marka rebrand (canonical/og) -->
+<script src="js/seo-chrome.js?v=3"></script><!-- admin WhatsApp/marka DOM yayılımı -->
+<script src="js/i18n/_common.js?v=7"></script><script src="js/i18n.js?v=4"></script>
+<script>
+/* ====== GERÇEK İLAN VERİSİ — ana sayfa & admin ile AYNI store (meridyenGM_v1) ====== */
+(function(){
+  var STORE='meridyenGM_v1';
+  /* admin ilan eklemeden önce gösterilecek seed (ana sayfadaki DEF_ILANLAR ile birebir) */
+  var SEED=[
+    {id:1,title:'Körfez Manzaralı 3+1 Lüks Daire',op:'Satılık',type:'Daire',m2:165,oda:'3+1',kat:'7',ilce:'Konak',mah:'Alsancak',il:'İzmir',price:18500000,status:'aktif',feat:1,img:'l3',desc:'Yeni nesil rezidans, kapalı otopark, 7/24 güvenlik.',energy:'B',tour360Url:'../shared/vendor/sample-360.jpg',floorplanUrl:'../shared/vendor/sample-floorplan.svg'},
+    {id:2,title:'Bahçeli Müstakil Villa',op:'Satılık',type:'Villa',m2:320,oda:'5+2',kat:'-',ilce:'Urla',mah:'Zeytinalanı',il:'İzmir',price:42000000,status:'aktif',feat:1,img:'l1',desc:'Özel bahçe, havuz, akıllı ev sistemi.'},
+    {id:3,title:'Deniz Manzaralı 2+1 Daire',op:'Satılık',type:'Daire',m2:110,oda:'2+1',kat:'4',ilce:'Karşıyaka',mah:'Mavişehir',il:'İzmir',price:11200000,status:'aktif',feat:1,img:'l2',desc:'Sahile yürüme mesafesi, ferah salon.'},
+    {id:4,title:'Modern Kiralık 1+1 Stüdyo',op:'Kiralık',type:'Daire',m2:62,oda:'1+1',kat:'3',ilce:'Bornova',mah:'Kazımdirik',il:'İzmir',price:38000,status:'aktif',feat:0,img:'l5',desc:'Eşyalı, metroya 3 dk, ofis bölgesinde.'},
+    {id:5,title:'Geniş Aile Dairesi 4+1',op:'Satılık',type:'Daire',m2:210,oda:'4+1',kat:'9',ilce:'Buca',mah:'Şirinyer',il:'İzmir',price:9800000,status:'aktif',feat:0,img:'l6',desc:'Site içi, sosyal tesis, yeni bina.'},
+    {id:6,title:'Plaza Katı Kiralık Ofis',op:'Kiralık',type:'Ofis / İş Yeri',m2:240,oda:'-',kat:'12',ilce:'Konak',mah:'Alsancak',il:'İzmir',price:185000,status:'aktif',feat:0,img:'l4',desc:'Açık ofis, toplantı odaları, otopark.'},
+    {id:7,title:'Yatırımlık Arsa (İmarlı)',op:'Satılık',type:'Arsa',m2:600,oda:'-',kat:'-',ilce:'Menderes',mah:'Gümüldür',il:'İzmir',price:28000000,status:'aktif',feat:0,img:'l1',desc:'Konut imarlı, yola cepheli.'},
+    {id:8,title:'Taş Mimari 3+1 Restorasyonlu',op:'Satılık',type:'Daire',m2:140,oda:'3+1',kat:'2',ilce:'Çeşme',mah:'Alaçatı',il:'İzmir',price:14500000,status:'aktif',feat:0,img:'l3',desc:'Karakteristik bina, yenilenmiş iç mekan.'},
+    {id:9,title:'Sahil Yakını 2+1 Kiralık',op:'Kiralık',type:'Daire',m2:95,oda:'2+1',kat:'5',ilce:'Karşıyaka',mah:'Bostanlı',il:'İzmir',price:42000,status:'aktif',feat:0,img:'l2',desc:'Marina yakını, asansörlü, aydınlık.'}
+  ];
+  window.EIDS_DEMO=true;
+  function fmt(n){return Number(n||0).toLocaleString('tr-TR');}
+  function loadRaw(){ try{var d=JSON.parse(localStorage.getItem(STORE)||'null'); if(d&&Array.isArray(d.ILANLAR)&&d.ILANLAR.length)return d.ILANLAR;}catch(e){} return SEED.slice(); }
+  function _demoEids(){return {status:'dogrulandi',tasinmazNo:'',il:'',ilce:'',ada:'',parsel:'',malikTip:'isletme',yetkiBelgeNo:'',referans:'',tarih:'2026-08-02',mesaj:'Demo: temsilî EİDS doğrulaması — gerçek Bakanlık kodu üretilmez.'};}
+  function _pendEids(){return {status:'beklemede',mesaj:'EİDS doğrulama bekliyor — bu ilan yayınlanmaz.'};}
+  /* ana sayfadaki gmIlanView ile AYNI EİDS demo mantığı */
+  function ilanView(){
+    var arr=loadRaw().filter(function(i){return i&&i.status==='aktif';}).map(function(i){
+      if(!i.il)i.il='İzmir';
+      var e=(i.eids&&(i.eids.status==='dogrulandi'||i.eids.status==='reddedildi'))?i.eids:_demoEids();
+      return Object.assign({},i,{eids:e});
+    });
+    if(arr.length>6){for(var k=arr.length-1;k>=0;k--){if(arr[k].eids.status==='dogrulandi'){arr[k]=Object.assign({},arr[k],{eids:_pendEids()});break;}}}
+    return arr;
+  }
+  /* ana sayfadaki gmListNormalize ile AYNI */
+  function norm(r){ if(!r)return null;
+    return {id:r.id,title:r.title,op:r.op,type:r.type,
+      priceText:(r.op==='Kiralık'?fmt(r.price)+' ₺/ay':fmt(r.price)+' ₺'),
+      images:((window.Listings&&Listings.catImages)?Listings.catImages(r,4):[]), il:r.il,ilce:r.ilce,mah:r.mah,
+      specs:[{k:'Brüt m²',v:((r.m2||(r.attrs&&r.attrs.m2))?((r.m2||r.attrs.m2)+' m²'):'')},{k:'Oda',v:r.oda||(r.attrs&&r.attrs.oda)},{k:'Kat',v:(r.kat&&r.kat!=='-'?r.kat:(r.attrs&&r.attrs.kat))},{k:'Tip',v:r.type}],
+      features:r.features||[], attrs:r.attrs, desc:r.desc, eids:r.eids,
+      videoUrl:r.videoUrl, tour360Url:r.tour360Url, floorplanUrl:r.floorplanUrl, media:r.media, energy:r.energy, ilanNo:r.ilanNo, tarih:r.tarih };
+  }
+  function listFn(){ return ilanView().map(norm).filter(Boolean); }
+
+  var CFG={ns:'gmpage',
+    brand:function(){return 'Meridyen Gayrimenkul';},
+    phone:function(){return '+90 232 444 55 66';},
+    whatsapp:function(){return '905320000000';},
+    agent:function(){return {name:'Emre Yıldız',title:'Meridyen Gayrimenkul · Gayrimenkul Danışmanı',experience:12};},
+    navHTML:function(){try{var el=document.querySelector('header.il-hd');return el?el.outerHTML:'';}catch(e){return '';}},
+    footerHTML:function(){try{var el=document.querySelector('footer.siteFooter');return el?el.outerHTML:'';}catch(e){return '';}},
+    mapQuery:function(l){return [l.mah,l.ilce,l.il].filter(Boolean).join(', ');},
+    onContact:function(){try{if(window.Listings)Listings.closeDetail();}catch(e){}alert('Talebiniz alındı — danışmanımız kısa sürede sizinle iletişime geçecek.');},
+    list:listFn
+  };
+  try{if(window.Listings)Listings.register('gmpage',CFG);}catch(e){}
+
+  function boot(){
+    try{if(window.EIDS&&EIDS.injectCSS)EIDS.injectCSS();}catch(e){}
+    ListingsPage.mount({mountId:'ilanlarApp', cfg:CFG, list:listFn,
+      title:'Satılık & Kiralık Gayrimenkul İlanları',
+      subtitle:'İzmir ve Ege’de EİDS onaylı konut, ofis, dükkan ve arsa portföyü.',
+      seo:{name:'Satılık & Kiralık İlanlar — Meridyen Gayrimenkul', url:'https://www.emlakekspertizi.com/demo/gayrimenkul/ilanlar.html', description:'EİDS onaylı satılık & kiralık gayrimenkul ilanları.'}
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot); else boot();
+})();
+</script>
+</body>
+</html>

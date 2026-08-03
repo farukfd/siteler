@@ -17,13 +17,27 @@
 ];
   function imgURL(v){if(!v)return 'img/gayrimenkul/img2.webp';if((''+v).indexOf('data:')===0||(''+v).indexOf('http')===0||(''+v).charAt(0)==='/'||(''+v).indexOf('../')===0)return v;if(/^img\d+$/.test(v))return 'img/gayrimenkul/'+v+'.webp';return 'img/gayrimenkul/img2.webp';}
   function catOf(t){t=(t||'').toLowerCase();if(/arsa/.test(t))return 'arsa';if(/ofis|is ?yeri|dukkan|ticari/.test(t))return 'ticari';return 'konut';}
+  /* DEMO EİDS — temsilî 'doğrulandı' (gerçek Bakanlık kodu UYDURULMAZ; referans boş). 1 ilan bilinçli 'beklemede' → EİDS kapısı onu gizler. */
+  function _demoEids(){return {status:'dogrulandi',tasinmazNo:'',il:'',ilce:'',ada:'',parsel:'',malikTip:'isletme',yetkiBelgeNo:'',referans:'',tarih:'2026-08-02',mesaj:'Demo: temsilî EİDS doğrulaması — gerçek Bakanlık kodu üretilmez.'};}
+  function _pendEids(){return {status:'beklemede',mesaj:'EİDS doğrulama bekliyor — bu ilan sitede yayınlanmaz.'};}
+  function _galOf(l){var base=parseInt((''+(l.img||'img1')).replace(/\D/g,''),10)||1;var g=[];for(var k=0;k<4;k++){g.push('img'+(((base-1+k*3)%16)+1));}return g;}
+  /* DEMO modu: temsilî ilanları EİDS-doğrulanmış göster (üretimde EIDS_DEMO=false → gerçek kapı). */
+  var DEMO=(typeof window==='undefined')||(window.EIDS_DEMO!==false);
   function get(){
     var list=SEED.slice();
     try{var a=JSON.parse(localStorage.getItem('dn_listings_v1')||'null');if(Array.isArray(a)&&a.length)list=a;}catch(e){}
-    return list.filter(function(l){return l&&l.status!=='pasif';}).map(function(l){
+    var mapped=list.filter(function(l){return l&&l.status!=='pasif';}).map(function(l){
       var bolge=l.bolge||[l.mahalle,l.ilce].filter(Boolean).join(' · ')||l.ilce||l.il||'';
-      return Object.assign({},l,{bolge:bolge,imgUrl:imgURL(l.img)});
+      var eids=l.eids;
+      if(DEMO){ /* gerçek 'dogrulandi'/'reddedildi' KORUNUR; varsayılan/beklemede → temsilî doğrulandı */
+        eids=(l.eids&&(l.eids.status==='dogrulandi'||l.eids.status==='reddedildi'))?l.eids:_demoEids();
+      } else { eids=l.eids||_pendEids(); }
+      return Object.assign({},l,{bolge:bolge,imgUrl:imgURL(l.img),
+        gallery:(l.gallery&&l.gallery.length?l.gallery:_galOf(l)),eids:eids});
     });
+    /* DEMO: EİDS kapısını göstermek için SON doğrulanmış ilanı 'beklemede' bırak — YALNIZ 6'dan fazla ilan varsa (ana sayfada hep ≥6 kalsın) */
+    if(DEMO&&mapped.length>6){for(var i=mapped.length-1;i>=0;i--){if(mapped[i].eids&&mapped[i].eids.status==='dogrulandi'){mapped[i]=Object.assign({},mapped[i],{eids:_pendEids()});break;}}}
+    return mapped;
   }
   window.DN_ILAN={SEED:SEED,imgURL:imgURL,catOf:catOf,get:get};
 })();

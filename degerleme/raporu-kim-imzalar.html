@@ -1792,7 +1792,7 @@ html{transition:none}
     document.documentElement.dir = _i18nRTL[lang] ? 'rtl' : 'ltr';
     if (lang === 'tr') { _nodes.forEach(function (x) { x.n.nodeValue = x.tr; }); _phs.forEach(function (x) { x.el.setAttribute('placeholder', x.tr); }); return; }
     var d = _i18n[lang];
-    if (!d) { try { var r = await fetch('assets/i18n/' + lang + '.json'); d = await r.json(); } catch (e) { d = {}; } _i18n[lang] = d; }
+    if (!d) { try { var r = await fetch('assets/i18n/' + lang + '.json?v=2'); d = await r.json(); } catch (e) { d = {}; } _i18n[lang] = d; }
     _nodes.forEach(function (x) { var k = x.tr.trim(); var t = d[k]; x.n.nodeValue = t ? x.tr.replace(k, t) : x.tr; });
     _phs.forEach(function (x) { var t = d[(x.tr || '').trim()]; x.el.setAttribute('placeholder', t || x.tr); });
   }

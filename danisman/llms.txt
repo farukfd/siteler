@@ -1,0 +1,15 @@
+# Selin Meridyen — Lüks Konut & Özel Portföy Danışmanı
+
+> Yetki belgeli, kişiye özel emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy, ücretsiz gayrimenkul değer analizi ve ProX yapay zeka destekli emlak asistanı.
+
+Not: Kurgusal tanıtım demosudur — ilan, fiyat ve istatistikler temsilîdir.
+
+## Ana Sayfalar
+- [İlanlar](ilanlar.html): Açık portföy; şeffaf fiyat, oda, m² ve bölge bilgisiyle güncel lüks ilanlar.
+- [Özel Portföy](ozel-portfoy.html): Davet usulü, mahremiyeti korunan ayrıcalıklı gayrimenkuller.
+- [Bölge Analizi](bolge-analizi.html): Mahalle m² karşılaştırması ve yatırım skoru.
+- [Hizmetlerimiz](hizmetlerimiz.html) · [Hakkımızda](hakkimizda.html) · [S.S.S](sss.html)
+- [ProX Asistan](prox-asistan.html): ProX veri altyapısına dayalı canlı emlak asistanı.
+
+## İletişim
+WhatsApp ve telefonla randevu; ücretsiz değer analizi.
