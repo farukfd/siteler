@@ -80,7 +80,7 @@
     var prov=cfg.province?cfg.province():'İzmir';
     var d=(cfg.localModel&&cfg.localModel(ilce,mah))||builtinModel(prov,ilce,mah);
     var b=d.m2, kmo=b*(d.kira/100)/12;
-    return { source:'local',period:'',score:d.score,chg5:d.chg5!=null?d.chg5:d.chg,ilce:ilce,mah:mah,base:b,prov:prov,
+    return { source:'local',period:'',score:d.score,chg5:d.chg5!=null?d.chg5:d.chg,ilce:ilce,mah:mah,base:b,prov:prov,kiraPct:(d.kira!=null?d.kira:4.5),
       cats:{daireSat:{m2:b,live:false,ilan:0},daireKira:{m2:kmo,live:false,ilan:0},ticariSat:{m2:b*1.9,live:false,ilan:0},ticariKira:{m2:kmo*1.15,live:false,ilan:0},arsa:{m2:b*0.18,live:false,ilan:0}},
       demo:{yas:d.yas,egitim:d.egitim,gelir:d.gelir,sahiplik:d.sahiplik,ortGelir:d.ortGelir,nufus:d.nufus,hane:d.hane,yasamK:d.yasamK} };
   }
@@ -216,6 +216,16 @@
         +'<div class="me-cc-foot"><span class="me-chg up">▲ '+chgTxt+'</span>'+(ilan?'<span class="me-cc-ilan">'+ilan+' ilan</span>':'<span class="me-cc-ilan mut">endeks</span>')+'</div></div>';
     }
     function paint(m){
+      /* KİRA-SATIŞ TUTARLILIĞI: kira endeksi (canlı/sentetik), satış fiyatına göre gerçekçi
+         brüt getiri bandında olmalı. ProX'ta satış-kira endeksleri bağımsız gelir; tutarsız
+         olursa (ör. %9+ getiri) absürt kira çıkar → satıştan modelin getirisiyle yeniden türet. */
+      (function(){ try{
+        var ty=clamp((m.kiraPct||4.5)/100,0.032,0.058);
+        var s=m.cats.daireSat.m2, k=m.cats.daireKira.m2;
+        if(s>0&&k>0){ var y=k*12/s; if(y<0.028||y>0.062){ m.cats.daireKira.m2=s*ty/12; m.cats.daireKira.adj=true; } }
+        var ts=m.cats.ticariSat.m2, tk=m.cats.ticariKira.m2;
+        if(ts>0&&tk>0){ var y2=tk*12/ts; var tyT=Math.max(ty*1.05,0.04); if(y2<0.03||y2>0.09){ m.cats.ticariKira.m2=ts*tyT/12; m.cats.ticariKira.adj=true; } }
+      }catch(e){} })();
       var yr=m.deltaYr&&m.deltaYr>0?m.deltaYr:annual(m.chg5);
       var yrTxt='%'+yr.toFixed(1)+'<i>/yıl</i>';
       var ds=m.cats.daireSat,dk=m.cats.daireKira,ts=m.cats.ticariSat,tk=m.cats.ticariKira,ar=m.cats.arsa;
