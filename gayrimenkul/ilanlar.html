@@ -180,7 +180,7 @@
     phone:function(){return '+90 232 444 55 66';},
     whatsapp:function(){return '905320000000';},
     agent:function(){return {name:'Emre Yıldız',title:'Meridyen Gayrimenkul · Gayrimenkul Danışmanı',experience:12};},
-    navHTML:function(){try{var el=document.querySelector('header.il-hd');return el?el.outerHTML:'';}catch(e){return '';}},
+    navHTML:function(){try{var el=document.querySelector('header#hdr');return el?el.outerHTML:'';}catch(e){return '';}},
     footerHTML:function(){try{var el=document.querySelector('footer.siteFooter');return el?el.outerHTML:'';}catch(e){return '';}},
     mapQuery:function(l){return [l.mah,l.ilce,l.il].filter(Boolean).join(', ');},
     onContact:function(){try{if(window.Listings)Listings.closeDetail();}catch(e){}alert('Talebiniz alındı — danışmanımız kısa sürede sizinle iletişime geçecek.');},
