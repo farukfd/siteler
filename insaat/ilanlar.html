@@ -28,7 +28,8 @@
   .il-hd .logo{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink,#12181f);font-family:var(--head,inherit);font-weight:800;font-size:20px}
   .il-hd .mark{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--accent,#c8102e);color:#fff;font-weight:800}
   .il-hd .lo2{color:var(--accent,#c8102e)}
-  .il-nav{display:flex;gap:4px;margin-left:6px;flex:1;overflow-x:auto;scrollbar-width:none}
+  .il-nav{display:flex;gap:4px;margin-left:auto;justify-content:flex-end;padding-right:22px;flex:1;overflow-x:auto;scrollbar-width:none}
+  .nb-x{display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;background:var(--accent);color:#160a03;border-radius:6px;font-weight:800;font-size:.9em;line-height:1;vertical-align:middle;position:relative;top:-1px;margin:0 3px}
   .il-nav::-webkit-scrollbar{display:none}
   .il-nav a{white-space:nowrap;text-decoration:none;color:var(--muted,#556);font:600 14.5px/1 system-ui,-apple-system,sans-serif;padding:10px 13px;border-radius:9px;transition:.15s}
   .il-nav a:hover{color:var(--ink,#12181f);background:rgba(0,0,0,.04)}
@@ -36,6 +37,7 @@
   .il-hcta{display:flex;align-items:center;gap:8px}
   .il-hcta .il-wa{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:10px;background:#25D366;color:#fff}
   .il-hcta .btn{border:0;background:var(--accent,#c8102e);color:#fff;border-radius:10px;padding:11px 16px;font:700 13.5px/1 system-ui;cursor:pointer;text-decoration:none;white-space:nowrap}
+  .il-hcta .il-ghost{background:transparent;border:1px solid var(--line,rgba(255,255,255,.22));color:var(--ink,#fff)}
   .il-burger{display:none;background:none;border:0;cursor:pointer;padding:8px}
   .il-burger span{display:block;width:22px;height:2px;background:var(--ink,#12181f);margin:4px 0;border-radius:2px}
   .il-hero{background:linear-gradient(135deg,color-mix(in srgb,var(--accent,#c8102e) 10%,#fff),var(--surface,#fff));border-bottom:1px solid var(--line,#e6e8ec);padding:38px 0 30px}
@@ -60,15 +62,15 @@
   <a class="logo" href="index.html"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
   <nav class="il-nav">
     <a href="hizmetlerimiz.html">Hizmetlerimiz</a>
-    <a href="neden-biz.html">Neden Biz</a>
+    <a href="neden-biz.html">Neden <span class="nb-x">?</span> Biz</a>
     <a href="projelerimiz.html">Projeler</a>
     <a href="ilanlar.html" class="on">İlanlar</a>
-    <a href="bolge.html">Bölge Zekası</a>
-    <a href="soru-cevap.html">S.S.S</a>
+    <a href="index.html#asistan" class="nav-asistan"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a>
   </nav>
   <div class="il-hcta">
     <a class="il-wa" href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 .9-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4-.1.6.5l.8 1.9c.1.1.1.3 0 .5l-.4.5-.3.3c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l1.8.9c.2.1.4.2.4.3.1.1.1.6-.1 1.2Z"/></svg></a>
     <a class="btn" href="index.html#iletisim">Ücretsiz Keşif</a>
+    <a class="btn il-ghost" href="index.html#giris">Giriş</a>
     <button class="il-burger" aria-label="Menü" onclick="document.getElementById('ilMnav').classList.add('open')"><span></span><span></span><span></span></button>
   </div>
 </div></header>
@@ -76,11 +78,11 @@
 <div class="il-mnav" id="ilMnav" onclick="if(event.target===this)this.classList.remove('open')"><div class="panel">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><b style="font-size:18px">Menü</b><button style="background:none;border:0;font-size:24px;cursor:pointer" onclick="document.getElementById('ilMnav').classList.remove('open')" aria-label="Kapat">✕</button></div>
   <a href="hizmetlerimiz.html">Hizmetlerimiz</a>
-  <a href="neden-biz.html">Neden Biz</a>
+  <a href="neden-biz.html">Neden <span class="nb-x">?</span> Biz</a>
   <a href="projelerimiz.html">Projeler</a>
   <a href="ilanlar.html">İlanlar</a>
-  <a href="bolge.html">Bölge Zekası</a>
-  <a href="soru-cevap.html">S.S.S</a>
+  <a href="index.html#asistan" class="nav-asistan"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a>
+  <a href="index.html#giris">Giriş</a>
   <a href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer">WhatsApp ile Yaz</a>
 </div></div>
 
@@ -107,15 +109,25 @@
   <div class="fgrid">
     <div><div class="lo">Meridyen<span class="lo2"> Yapı</span></div>
       <p class="desc">1986'dan bu yana güvenle inşa eden kurumsal yapı, tadilat ve gayrimenkul geliştirme şirketi.</p>
+      <div class="fsocial">
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg></a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg></a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a>
+        <a href="https://nsosyal.com" target="_blank" rel="noopener noreferrer" aria-label="NEXT Sosyal (Türkiye)" title="NEXT Sosyal — Türkiye'nin yerli sosyal medya platformu"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg></a>
+      </div>
       <div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer"><b>emlak</b>jet</a></div>
+      <div class="flegal"><a href="kvkk.html">KVKK</a><a href="gizlilik.html">Gizlilik</a><a href="cerez.html">Çerez Politikası</a></div>
     </div>
-    <div><h4>Kurumsal</h4><a href="neden-biz.html">Hakkımızda</a><a href="bolge.html">Bölge Ekspertizi</a><a href="projelerimiz.html">Projeler</a><a href="soru-cevap.html">İnşaata Başlamadan Dikkat Edilecekler</a></div>
-    <div><h4>Hizmetler</h4><a href="ilanlar.html"><b>Tüm İlanlar</b></a><a href="ilanlar.html?op=Satılık">Satılık İlanlar</a><a href="ilanlar.html?op=Kiralık">Kiralık İlanlar</a><a href="hizmetlerimiz.html">Konut İnşaatı</a><a href="hizmetlerimiz.html">Kentsel Dönüşüm</a><a href="hizmetlerimiz.html">Anahtar Teslim</a></div>
+    <div><h4>Kurumsal</h4><a href="neden-biz.html">Hakkımızda</a><a href="index.html">Vizyon &amp; Misyon</a><a href="index.html">Yönetim Kadrosu</a><a href="index.html">Kalite &amp; Sertifikalar</a><a href="index.html#medya">Medya &amp; Basında Biz</a><a href="bolge.html">Bölge Ekspertizi</a><a href="index.html">Kariyer</a><a href="soru-cevap.html">İnşaata Başlamadan Dikkat Edilecekler</a></div>
+    <div><h4>Hizmetler</h4><a href="ilanlar.html"><b>Tüm İlanlar</b></a><a href="ilanlar.html?op=Satılık">Satılık İlanlar</a><a href="ilanlar.html?op=Kiralık">Kiralık İlanlar</a><a href="#mahEndeks">🔒 Özel Portföy</a><a href="bolge.html">Bölge Zekası</a><a href="hizmetlerimiz.html">Konut İnşaatı</a><a href="hizmetlerimiz.html">Kentsel Dönüşüm</a><a href="hizmetlerimiz.html">Anahtar Teslim</a></div>
     <div><h4>İletişim</h4>
       <a href="index.html#iletisim">Levent Mah. Yapı Cad. No:1<br>Beşiktaş / İstanbul</a>
       <a href="tel:+902120000000" class="js-tel">+90 212 000 00 00</a>
       <a href="mailto:info@meridyenyapi.com">info@meridyenyapi.com</a>
       <a href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer">💬 WhatsApp Hattı</a>
+      <a href="index.html#asistan" style="display:inline-flex;align-items:center;gap:6px"><span class="prox-logo" style="font-size:.95em">Pro<span class="prox-x">X</span></span> Asistan · 480 milyon+ doğrulanmış emlak verisi</a>
     </div>
   </div>
   <div class="fbot">
