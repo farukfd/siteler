@@ -183,7 +183,7 @@ addEventListener('scroll',function(){var h=document.getElementById('hdr');if(h)h
     var ac='';try{ac=(getComputedStyle(document.documentElement).getPropertyValue('--accent')||'').trim();}catch(e){}
     window.MahalleEndeks.mount(host,{
       proxApi:function(){return Promise.resolve(null);}, province:function(){return ISTIL;}, districts:districts,
-      ozData:function(){return [];}, goOzel:function(){location.href='index.html#ozel';},
+      ozData:function(){return [];}, goOzel:function(){location.href='ozel-portfoy.html';},
       onLead:function(){location.href='index.html#iletisim';}, waHref:waHref, accent:ac||'#ff7a2f'
     });
   }
