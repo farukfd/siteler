@@ -24,65 +24,44 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <script src="js/brand.js?v=3"></script>
 <style>
-  :root{--il-nav-h:74px}
   body{margin:0}
-  .il-hd{position:sticky;top:0;z-index:60;background:var(--surface,#fff);border-bottom:1px solid var(--line,#e6e8ec);box-shadow:0 2px 18px rgba(15,23,42,.06)}
-  .il-hd .bar{display:flex;align-items:center;gap:18px;height:var(--il-nav-h);padding:0 clamp(16px,4vw,40px);max-width:1240px;margin:0 auto}
-  .il-hd .logo{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink,#12181f);font-family:var(--head,inherit);font-weight:800;font-size:21px}
-  .il-hd .mark{display:inline-grid;place-items:center;width:42px;height:42px;border-radius:11px;background:var(--accent,#0e7c86);color:#fff;font-weight:800;font-size:21px}
-  .il-hd .lo2{color:var(--accent,#0e7c86)}
-  .il-nav{display:flex;gap:4px;margin-left:auto;justify-content:flex-end;padding-right:14px;flex:1;overflow-x:auto;scrollbar-width:none}
-  .il-nav .nb-x{display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;background:var(--accent);color:#fff;border-radius:6px;font-weight:800;font-size:.85em;line-height:1;vertical-align:middle}
-  .il-nav .prox-logo{font-family:var(--head,inherit);font-weight:800;white-space:nowrap}.il-nav .prox-x{display:inline-flex;align-items:center;justify-content:center;background:#19c37d;color:#04140c;border-radius:6px;padding:.02em .28em;margin-left:2px;line-height:1}
-  .il-nav::-webkit-scrollbar{display:none}
-  .il-nav a{white-space:nowrap;text-decoration:none;color:var(--muted,#556);font:600 14.5px/1 system-ui,-apple-system,sans-serif;padding:10px 13px;border-radius:9px;transition:.15s}
-  .il-nav a:hover{color:var(--ink,#12181f);background:rgba(0,0,0,.04)}
-  .il-nav a.on{color:var(--accent,#0e7c86);background:color-mix(in srgb,var(--accent,#0e7c86) 12%,transparent)}
-  .il-hcta{display:flex;align-items:center;gap:8px}
-  .il-hcta .il-wa{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:10px;background:#25D366;color:#fff}
-  .il-hcta .btn{border:0;background:var(--accent,#0e7c86);color:#fff;border-radius:10px;padding:11px 16px;font:700 13.5px/1 system-ui;cursor:pointer;text-decoration:none;white-space:nowrap}
-  .il-burger{display:none;background:none;border:0;cursor:pointer;padding:8px}
-  .il-burger span{display:block;width:22px;height:2px;background:var(--ink,#12181f);margin:4px 0;border-radius:2px}
   .il-hero{background:linear-gradient(135deg,color-mix(in srgb,var(--accent,#0e7c86) 12%,#fff),var(--surface,#fff));border-bottom:1px solid var(--line,#e6e8ec);padding:38px 0 30px}
   .il-hero .wrap{max-width:1240px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
   .il-eyebrow{display:inline-flex;align-items:center;gap:7px;font:800 12px/1 system-ui;letter-spacing:.04em;text-transform:uppercase;color:var(--accent,#0e7c86);background:color-mix(in srgb,var(--accent,#0e7c86) 12%,transparent);padding:8px 13px;border-radius:999px}
   .il-hero h1{font-family:var(--head,inherit);font-size:clamp(26px,4vw,40px);line-height:1.1;margin:14px 0 8px;color:var(--ink,#12181f)}
   .il-hero p{max-width:640px;margin:0;color:var(--muted,#556);font:500 15.5px/1.6 system-ui}
   main.il-main{max-width:1240px;margin:0 auto;padding:30px clamp(16px,4vw,40px) 70px}
-  @media(max-width:860px){.il-nav{display:none}.il-burger{display:block}.il-hcta .btn{display:none}}
-  .il-mnav{position:fixed;inset:0;background:rgba(10,15,25,.5);z-index:80;display:none}
-  .il-mnav.open{display:block}
-  .il-mnav .panel{position:absolute;top:0;right:0;bottom:0;width:min(80vw,320px);background:var(--surface,#fff);padding:20px;display:flex;flex-direction:column;gap:4px;box-shadow:-8px 0 40px rgba(0,0,0,.2)}
-  .il-mnav .panel a{text-decoration:none;color:var(--ink,#12181f);font:600 16px/1 system-ui;padding:14px 10px;border-radius:9px;border-bottom:1px solid var(--line,#eee)}
-  .il-mnav .panel a:hover{background:rgba(0,0,0,.04)}
 </style>
 </head>
 <body>
-<!-- ===== ÜST MENÜ ===== -->
-<header class="il-hd"><div class="bar">
+<!-- ===== ÜST MENÜ (standart — tüm sayfalarla birebir, base.css stiller) ===== -->
+<header id="hdr"><div class="wrap bar">
   <a class="logo" href="index.html"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Gayrimenkul</span></span></a>
-  <nav class="il-nav">
+  <nav class="main siteNav">
     <a href="hizmetlerimiz.html">Hizmetlerimiz</a>
     <a href="nedenbiz.html">Neden <span class="nb-x">?</span> Biz</a>
     <a href="portfoy.html">Portföy</a>
-    <a href="ilanlar.html" class="on">İlanlar</a>
+    <a href="ilanlar.html" class="active">İlanlar</a>
     <a href="index.html#asistan" class="nav-asistan"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>
   </nav>
-  <div class="il-hcta">
-    <a class="il-wa" href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 .9-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4-.1.6.5l.8 1.9c.1.1.1.3 0 .5l-.4.5-.3.3c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l1.8.9c.2.1.4.2.4.3.1.1.1.6-.1 1.2Z"/></svg></a>
-    <a class="btn" href="index.html#degerleme">Ücretsiz Değerleme</a>
-    <button class="il-burger" aria-label="Menü" onclick="document.getElementById('ilMnav').classList.add('open')"><span></span><span></span><span></span></button>
+  <div class="nav-cta siteCta">
+    <a class="nav-wa-ic" aria-label="WhatsApp" title="WhatsApp" href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"></path></svg></a>
+    <a class="btn btn-primary btn-sm hide-xs" href="index.html#degerleme">Ücretsiz Ekspertiz</a>
+    <a class="btn btn-line btn-sm" href="index.html#giris">Giriş</a>
+    <button class="burger" onclick="document.getElementById('mnav').classList.add('open')" aria-label="Menü"><span></span><span></span><span></span></button>
   </div>
 </div></header>
 
-<div class="il-mnav" id="ilMnav" onclick="if(event.target===this)this.classList.remove('open')"><div class="panel">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><b style="font-size:18px">Menü</b><button style="background:none;border:0;font-size:24px;cursor:pointer" onclick="document.getElementById('ilMnav').classList.remove('open')" aria-label="Kapat">✕</button></div>
+<div class="mnav" id="mnav" onclick="if(event.target.id==='mnav')this.classList.remove('open')"><div class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-family:var(--head);font-size:18px">Menü</b>
+    <button style="background:none;border:0;font-size:24px;cursor:pointer;color:var(--muted)" onclick="document.getElementById('mnav').classList.remove('open')" aria-label="Kapat">✕</button></div>
   <a href="hizmetlerimiz.html">Hizmetlerimiz</a>
-  <a href="nedenbiz.html">Neden Biz</a>
+  <a href="nedenbiz.html">Neden <span class="nb-x">?</span> Biz</a>
   <a href="portfoy.html">Portföy</a>
   <a href="ilanlar.html">İlanlar</a>
-  <a href="index.html#asistan">ProX Asistan</a>
-  <a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp ile Yaz</a>
+  <a href="index.html#asistan"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>
+  <a class="btn btn-primary" style="margin-top:14px" href="index.html#degerleme">Ücretsiz Ekspertiz</a>
+  <a class="btn btn-line" style="margin-top:8px" href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp ile Yaz</a>
 </div></div>
 
 <!-- ===== HERO ===== -->
