@@ -70,6 +70,8 @@ footer.insaatFooter p.desc{font-size:14px;color:#9fb0ca;max-width:34ch}
 footer.insaatFooter .fbot{border-top:1px solid rgba(255,255,255,.1);padding:18px 0;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13px;color:#8fa0bb}
 @media(max-width:880px){footer.insaatFooter .fgrid{grid-template-columns:1fr 1fr;gap:24px}}
 .nb-x{display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;background:var(--accent);color:#160a03;border-radius:6px;font-weight:800;font-size:.9em;line-height:1;vertical-align:middle;position:relative;top:-1px;margin:0 3px}
+  .prox-logo{font-family:var(--head,"Space Grotesk",system-ui,sans-serif);font-weight:800;letter-spacing:.2px;color:inherit;white-space:nowrap;display:inline-flex;align-items:center}
+  .prox-x{display:inline-flex;align-items:center;justify-content:center;background:#19c37d;color:#04140c;border-radius:6px;padding:.02em .28em;margin-left:2px;line-height:1;font-size:.9em}
 .nav-wa{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;color:#25d366;border:1px solid var(--line);background:rgba(255,255,255,.05);transition:.2s;text-decoration:none}
 .nav-wa:hover{background:rgba(37,211,102,.16)}.nav-wa svg{width:20px;height:20px}
 .lang-sw{display:inline-flex;align-items:center;gap:5px}.lang-sw>svg{width:17px;height:17px;color:var(--muted)}
@@ -295,11 +297,13 @@ footer.big{position:relative;background:var(--bg2);border-top:1px solid var(--li
     <a href="index.html#hizmetler" >Hizmetlerimiz</a>
     <a href="#hero" class="on">Neden <span class="nb-x">?</span> Biz</a>
     <a href="index.html#projeler" >Projeler</a>
-    <a href="ilanlar.html">İlanlar</a></nav>
+    <a href="ilanlar.html">İlanlar</a>
+    <a href="index.html#asistan" data-seo-asistan="1" class="nav-asistan"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a>
+  </nav>
   <div class="nav-cta insaatCta">
     <a class="nav-wa" href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg></a>
     <button class="btn btn-primary" onclick="openTeklif()">Ücretsiz Keşif</button>
-    <div class="lang-sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg><select class="lang-sel" aria-label="Dil / Language" onchange="nbLang(this.value)"><option value="tr">TR</option><option value="en">EN</option></select></div>
+    
     <a class="btn btn-ghost js-giris" href="#giris" onclick="event.preventDefault();openGiris()">Giriş</a>
     <button class="burger" onclick="document.getElementById('mnav').classList.add('open')" aria-label="Menü"><span></span><span></span><span></span></button>
   </div>
@@ -379,6 +383,7 @@ footer.big{position:relative;background:var(--bg2);border-top:1px solid var(--li
   </div>
   <div class="fbot">
     <div class="fcopy">© 2026 Meridyen Yapı A.Ş. · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span></div>
+    <div class="lang-sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg><select class="lang-sel" aria-label="Dil / Language" onchange="nbLang(this.value)"><option value="tr">TR</option><option value="en">EN</option></select></div>
     <a class="fprox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a>
   </div>
 </div></footer>

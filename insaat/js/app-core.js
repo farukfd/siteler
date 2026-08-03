@@ -1725,6 +1725,10 @@ function _insaatOpenFromHash(){
 window.addEventListener('load',function(){setTimeout(_insaatOpenFromHash,80);});
 
 document.addEventListener('DOMContentLoaded',()=>{
+  /* Chrome'u (nav/CTA/footer) İLK BOYAMADAN hemen sonra kur → header/footer "eski geliyor gidiyor"
+     flash'ı gider (eskiden yalnız window.load'da kuruluyordu → en geç an). window.load'daki mount
+     idempotent tekrar çalışır (aynı içerik). */
+  try{ if(typeof mountInsaatMenu==='function') mountInsaatMenu(); }catch(e){}
   document.querySelectorAll('#ppFilters .ppf').forEach(b=>b.onclick=()=>{
     document.querySelectorAll('#ppFilters .ppf').forEach(x=>x.classList.remove('active'));
     b.classList.add('active');_ppFilter=b.dataset.f;renderProjelerPage();
