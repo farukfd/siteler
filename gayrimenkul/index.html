@@ -290,6 +290,11 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
     <button class="fchip ty" data-f="ty" data-v="Villa" onclick="filt(this)">Villa</button>
     <button class="fchip ty" data-f="ty" data-v="Ofis / İş Yeri" onclick="filt(this)">Ofis</button>
     <button class="fchip ty" data-f="ty" data-v="Arsa" onclick="filt(this)">Arsa</button>
+    <span class="gmf-sep"></span>
+    <select class="gmf-sel" id="fIlce" onchange="advFilt()" aria-label="İlçe seçin"></select>
+    <select class="gmf-sel" id="fOda" onchange="advFilt()" aria-label="Oda sayısı"></select>
+    <input class="gmf-inp" id="fMin" type="text" inputmode="numeric" placeholder="Min ₺" oninput="advFilt()" aria-label="En düşük fiyat">
+    <input class="gmf-inp" id="fMax" type="text" inputmode="numeric" placeholder="Max ₺" oninput="advFilt()" aria-label="En yüksek fiyat">
     <span class="fcount" id="fcount"></span>
   </div>
   <div class="lgrid" id="lgrid"></div>
@@ -459,6 +464,20 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   .demo-band .db-wa{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#04240f;padding:10px 15px;border-radius:12px;font-size:12.5px;line-height:1.3;text-decoration:none;white-space:nowrap}
   .demo-band .db-wa:hover{filter:brightness(1.06);text-decoration:none}.demo-band .db-wa b{font-size:13px;font-weight:800}
   @media(max-width:640px){.demo-band .db-in{flex-direction:column;align-items:flex-start}.demo-band .db-wa{width:100%;justify-content:center}}
+  /* konum + fiyat + oda filtre kontrolleri (P2) — mevcut token'larla, yeni CSS sistemi değil */
+  .gmf-sel,.gmf-inp{padding:9px 12px;border:1.5px solid var(--line);border-radius:11px;font-family:inherit;font-weight:600;font-size:14px;color:var(--ink);background:#fff;cursor:pointer}
+  .gmf-sel{min-width:132px}
+  .gmf-inp{min-width:92px;max-width:118px;cursor:text}
+  .gmf-inp::placeholder{color:var(--muted);font-weight:600}
+  .gmf-sel:focus,.gmf-inp:focus{outline:none;border-color:var(--accent)}
+  .gmf-sep{width:1px;height:24px;background:var(--line)}
+  @media(max-width:640px){.gmf-sel,.gmf-inp{flex:1 1 44%;min-width:0;max-width:none}.gmf-sep{display:none}}
+  /* İlan detayı — Bölge & Ulaşım (P6) */
+  .gm-region-risk{display:flex;align-items:center;gap:7px;margin:2px 0 12px;font-size:13.5px;color:var(--ink-2)}
+  .gm-region-risk b{color:var(--ink);font-weight:700}
+  .gm-region-list{margin:0;padding-left:18px;display:grid;gap:7px}
+  .gm-region-list li{font-size:14px;color:var(--ink-2);line-height:1.5}
+  .gm-region-note{margin-top:11px;font-size:12px;color:var(--muted);line-height:1.5}
 </style>
 <section class="demo-band" aria-label="Demo ve kurumsal bilgi">
   <div class="db-in">
@@ -1521,6 +1540,11 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
           <button class="pf-chip ty" data-f="ty" data-v="Villa" onclick="pfFilt(this)">Villa</button>
           <button class="pf-chip ty" data-f="ty" data-v="Ofis / İş Yeri" onclick="pfFilt(this)">Ofis</button>
           <button class="pf-chip ty" data-f="ty" data-v="Arsa" onclick="pfFilt(this)">Arsa</button>
+          <span class="gmf-sep"></span>
+          <select class="gmf-sel" id="pfIlce" onchange="pfAdvFilt()" aria-label="İlçe seçin"></select>
+          <select class="gmf-sel" id="pfOda" onchange="pfAdvFilt()" aria-label="Oda sayısı"></select>
+          <input class="gmf-inp" id="pfMin" type="text" inputmode="numeric" placeholder="Min ₺" oninput="pfAdvFilt()" aria-label="En düşük fiyat">
+          <input class="gmf-inp" id="pfMax" type="text" inputmode="numeric" placeholder="Max ₺" oninput="pfAdvFilt()" aria-label="En yüksek fiyat">
           <select class="pf-sort" id="pfSort" onchange="renderPfIlan()">
             <option value="feat">Öne çıkanlar</option>
             <option value="price-asc">Fiyat (artan)</option>
@@ -2003,11 +2027,11 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
   <script src="../shared/eids.js?v=1"></script>
   <link rel="stylesheet" href="../shared/vendor/pannellum.css?v=1">
-<script src="../shared/listing.js?v=18"></script>
+<script src="../shared/listing.js?v=19"></script>
 <script src="../shared/vendor/pannellum.js?v=1"></script>
 <script src="../shared/listing-extras.js?v=7"></script>
   <script src="../shared/cs-engine.js?v=2"></script>
-  <script src="js/app.js?v=52"></script>
+  <script src="js/app.js?v=53"></script>
   <script src="js/content-studio.js?v=19"></script>
   <script src="js/hero-pusula.js?v=2"></script>
   <script src="../shared/mahalle-endeks.js?v=2"></script>

@@ -22,10 +22,10 @@ const IZMIR_PROVINCE={
     {key:'ic',name:'İç & Kuzey İlçeler',desc:'Tarım, sanayi ve gelişen yerleşimler'}
   ],
   districts:{
-    'Konak':{group:'metropol',m2:62000,chg:168,score:84,risk:'Körfez zemini · Orta risk',warn:1,mah:['Alsancak','Göztepe','Güzelyalı','Hatay','Karataş','Basmane','Kahramanlar','Mersinli','Umurbey','Çankaya','Konak','Eşrefpaşa','Akıncılar','Güney','Yeşildere','Lale','Kadifekale','Tepecik','Mecidiye','Yenişehir']},
-    'Karşıyaka':{group:'metropol',m2:72000,chg:176,score:86,risk:'Körfez zemini · Orta risk',warn:1,mah:['Bostanlı','Mavişehir','Alaybey','Bahriye Üçok','Donanmacı','Tuna','Nergiz','Yalı','Şemikler','Atakent','Goncalar','Aksoy','Dedebaşı','İmbatlı','Cumhuriyet','Örnekköy','Zübeyde Hanım','Tersane','Latife Hanım']},
-    'Bornova':{group:'metropol',m2:55000,chg:184,score:80,risk:'Fay hattına yakın · Zemin dikkat',warn:1,mah:['Kazımdirik','Erzene','Evka 3','Evka 4','Çamdibi','Mevlana','Atatürk','Doğanlar','Ergene','Naldöken','Pınarbaşı','Işıkkent','Kavaklıdere','Yeşilova','Rafetpaşa','Egemenlik','Çiçekli','Yıldırım Beyazıt','Inönü','Çamiçi']},
-    'Buca':{group:'metropol',m2:42000,chg:192,score:72,risk:'Orta risk · Karışık yapı stoku',warn:1,mah:['Şirinyer','Adatepe','Yıldız','Kozağaç','Tınaztepe','Çamlıkule','Gaziler','Vali Rahmi Bey','İnönü','Dumlupınar','Yenigün','Kuruçeşme','Hürriyet','Menderes','Yıldızlar','Buca Koop','Göksu','Mustafa Kemal']},
+    'Konak':{group:'metropol',m2:62000,chg:168,score:84,risk:'Körfez zemini · Orta risk',warn:1,facts:['İzmir Metrosu ve İZBAN ile kent geneline raylı erişim','Konak–Karşıyaka vapur hattıyla körfez ulaşımı','Kordon ve Alsancak sahil aksı, yaya-dostu merkez','Dokuz Eylül Üniversitesi yerleşkeleri ve merkezi okullar'],mah:['Alsancak','Göztepe','Güzelyalı','Hatay','Karataş','Basmane','Kahramanlar','Mersinli','Umurbey','Çankaya','Konak','Eşrefpaşa','Akıncılar','Güney','Yeşildere','Lale','Kadifekale','Tepecik','Mecidiye','Yenişehir']},
+    'Karşıyaka':{group:'metropol',m2:72000,chg:176,score:86,risk:'Körfez zemini · Orta risk',warn:1,facts:['İZBAN ve tramvay ile sahil boyunca raylı ulaşım','Karşıyaka–Konak vapur iskelesi','Bostanlı–Mavişehir sahil bandı ve yürüyüş yolları','Çarşısı ve sosyal donatısı gelişmiş yerleşim'],mah:['Bostanlı','Mavişehir','Alaybey','Bahriye Üçok','Donanmacı','Tuna','Nergiz','Yalı','Şemikler','Atakent','Goncalar','Aksoy','Dedebaşı','İmbatlı','Cumhuriyet','Örnekköy','Zübeyde Hanım','Tersane','Latife Hanım']},
+    'Bornova':{group:'metropol',m2:55000,chg:184,score:80,risk:'Fay hattına yakın · Zemin dikkat',warn:1,facts:['İzmir Metrosu Bornova hattıyla merkeze bağlantı','Ege Üniversitesi ve Yaşar Üniversitesi çevresi','Öğrenci ve kiralık talebi yüksek bölge','Fay hattına yakınlık nedeniyle yapı/zemin denetimi önerilir'],mah:['Kazımdirik','Erzene','Evka 3','Evka 4','Çamdibi','Mevlana','Atatürk','Doğanlar','Ergene','Naldöken','Pınarbaşı','Işıkkent','Kavaklıdere','Yeşilova','Rafetpaşa','Egemenlik','Çiçekli','Yıldırım Beyazıt','Inönü','Çamiçi']},
+    'Buca':{group:'metropol',m2:42000,chg:192,score:72,risk:'Orta risk · Karışık yapı stoku',warn:1,facts:['Dokuz Eylül Üniversitesi Buca yerleşkeleri','İZBAN Şirinyer istasyonu ile ulaşım','Geniş konut stoğu, aile odaklı mahalleler','Karışık yapı stoğu; yaşına göre yapı denetimi önemli'],mah:['Şirinyer','Adatepe','Yıldız','Kozağaç','Tınaztepe','Çamlıkule','Gaziler','Vali Rahmi Bey','İnönü','Dumlupınar','Yenigün','Kuruçeşme','Hürriyet','Menderes','Yıldızlar','Buca Koop','Göksu','Mustafa Kemal']},
     'Bayraklı':{group:'metropol',m2:52000,chg:205,score:75,risk:'Fay hattına yakın · Yüksek dikkat',warn:1,mah:['Mansuroğlu','Adalet','Manavkuyu','Bayraklı','Turan','Org. Nafiz Gürman','Çay','Onur','Çiçek','Postacılar','Soğukkuyu','Yamanlar','Cengizhan','Refik Şevket İnce','Tepekule']},
     'Çiğli':{group:'metropol',m2:44000,chg:198,score:70,risk:'Fay/zemin · Yüksek dikkat',warn:1,mah:['Ataşehir','Balatçık','Egekent','Küçük Çiğli','Büyük Çiğli','Maltepe','Harmandalı','Güzeltepe','Yeni Mahalle','Şirintepe','Aydınlık','Sasalı','Köyiçi','Uğur Mumcu']},
     'Gaziemir':{group:'metropol',m2:48000,chg:188,score:74,risk:'Orta risk',mah:['Atıfbey','Sakarya','Irmak','Gazi','Menderes','Beyazevler','Aktepe','Binbaşı Reşatbey','Yeşil','Fatih','Dokuz Eylül']},
@@ -34,11 +34,11 @@ const IZMIR_PROVINCE={
     'Karabağlar':{group:'metropol',m2:40000,chg:196,score:68,risk:'Orta risk · Yoğun yapı',warn:1,mah:['Yeşillik','Bozyaka','Üçkuyular','Gülyaka','Bahçelievler','Yurtoğlu','Vatan','Maliyeciler','Limontepe','Salihomurtak','Aydın','Fahrettin Altay','Cennetçeşme','Umut','Devrim','Poligon','Uzundere','Yunus Emre']},
     'Güzelbahçe':{group:'metropol',m2:80000,chg:178,score:82,risk:'Düşük risk',mah:['Yalı','Çamlı','Kahramandere','Mustafa Kemal Paşa','Atatürk','Yelki','Siteler','Maltepe']},
 
-    'Çeşme':{group:'sahil',m2:95000,chg:224,score:88,risk:'Düşük risk · Sahil',mah:['Alaçatı','Ilıca','Cumhuriyet','Dalyan','Ovacık','Reisdere','16 Eylül','Musalla','Çiftlikköy','Germiyan','Ildırı','Şifne']},
-    'Urla':{group:'sahil',m2:78000,chg:232,score:84,risk:'Düşük risk · Sahil',mah:['İskele','Zeytinalanı','Altıntaş','Güvendik','Kuşçular','Özbek','Bademler','Yağcılar','Camiatik','Hacıisa','Sıra','Rüstem','Gülbahçe','Kalabak']},
+    'Çeşme':{group:'sahil',m2:95000,chg:224,score:88,risk:'Düşük risk · Sahil',facts:['Alaçatı ve Ilıca sahil-turizm merkezleri','Yaz sezonu yoğun, ikincil konut talebi güçlü','Otoyol ile İzmir merkeze hızlı karayolu bağlantısı','Düşük yoğunluklu sahil yerleşimi'],mah:['Alaçatı','Ilıca','Cumhuriyet','Dalyan','Ovacık','Reisdere','16 Eylül','Musalla','Çiftlikköy','Germiyan','Ildırı','Şifne']},
+    'Urla':{group:'sahil',m2:78000,chg:232,score:84,risk:'Düşük risk · Sahil',facts:['Ege kıyısında sakin yarımada yaşamı','Bağ-bahçe ve villa ağırlıklı düşük yoğunluk','İzmir merkeze karayolu ile ulaşım (trafiğe bağlı)','Zeytincilik ve sahil turizmi bölgesi'],mah:['İskele','Zeytinalanı','Altıntaş','Güvendik','Kuşçular','Özbek','Bademler','Yağcılar','Camiatik','Hacıisa','Sıra','Rüstem','Gülbahçe','Kalabak']},
     'Seferihisar':{group:'sahil',m2:56000,chg:218,score:80,risk:'Düşük-Orta risk',mah:['Sığacık','Doğanbey','Ürkmez','Payamlı','Hıdırlık','Atatürk','Camikebir','Turgut','Tepecik','Beyler','Düzce']},
     'Foça':{group:'sahil',m2:60000,chg:206,score:81,risk:'Düşük risk · Sahil',mah:['Cumhuriyet','Aşıklar','Yenifoça','Bağarası','Atatürk','Fevzipaşa','Kozbeyli','Gerenköy','İsmetpaşa']},
-    'Menderes':{group:'sahil',m2:38000,chg:214,score:68,risk:'Gelişen bölge',mah:['Cumhuriyet','Görece','Gümüldür','Özdere','Develi','Oğlananası','Çileme','Bulgurca','Değirmendere','Çatalca']},
+    'Menderes':{group:'sahil',m2:38000,chg:214,score:68,risk:'Gelişen bölge',facts:['Gümüldür–Özdere sahil hattı','Adnan Menderes Havalimanı çevresi ve İZBAN erişimi','İzmir merkeze İZBAN ile raylı ulaşım','Gelişen bölge; tarım ve ikincil konut karışımı'],mah:['Cumhuriyet','Görece','Gümüldür','Özdere','Develi','Oğlananası','Çileme','Bulgurca','Değirmendere','Çatalca']},
     'Dikili':{group:'sahil',m2:40000,chg:198,score:72,risk:'Düşük risk · Sahil',mah:['İsmetpaşa','Cumhuriyet','Atatürk','Çandarlı','Bademli','Salihler','Kabakum','Gazipaşa']},
     'Karaburun':{group:'sahil',m2:52000,chg:188,score:76,risk:'Düşük risk · Sahil',mah:['Cumhuriyet','Mordoğan','Küçükbahçe','Sarpıncık','Eğlenhoca','Salman','Hasseki']},
     'Selçuk':{group:'sahil',m2:42000,chg:196,score:75,risk:'Tarih & turizm bölgesi',mah:['Şirince','Atatürk','Cumhuriyet','Zafer','İsabey','Pamucak','Belevi','Acarlar','Barutçu']},
@@ -238,9 +238,9 @@ const DEF_CONTENT={heroEyebrow:'İzmir & Ege · 480M+ kayıtlık endeks ile çal
 const DEF_BLOGS=[{id:1,title:'2026\'da değer kazanacak 5 İzmir mahallesi',cat:'Yatırım',sum:'Endeks verileri ışığında yükseliş potansiyeli en yüksek bölgeler.',icon:'📈',meta:'8 dk okuma · Haz 2026',date:'2026-06-18',src:'firma',body:'Bölge seçimi, gayrimenkul yatırımının en belirleyici adımıdır. m² fiyatının bugünkü seviyesi kadar, o bölgenin son 5 yıldaki reel değişim eğilimi ve yatırım skoru da önemlidir.\n\nUlaşım yatırımları, kentsel dönüşüm hareketliliği ve altyapı gelişimi, bir mahallenin orta vadeli prim potansiyelini yukarı çeker. Aşırı prim yapmış bölgeler yerine, gelişim koridorundaki mahalleler daha yüksek getiri sunabilir.\n\nKarar vermeden önce bölge endeksini, kira çarpanını ve arz-talep dengesini birlikte değerlendirin. Kesin rakamlar için güncel ProX endeksiyle teyit alın.'},
  {id:2,title:'Konut kredisinde 2026 faiz rehberi',cat:'Kredi',sum:'Banka banka oranlar, uygunluk kriterleri ve esnek ödeme planları.',icon:'🏦',meta:'6 dk okuma · Haz 2026',date:'2026-06-10',src:'firma',body:'Konut kredisi kararında yalnızca faiz oranı değil; ekspertiz değeri, kredi/değer oranı, vade ve toplam maliyet birlikte değerlendirilmelidir.\n\nGenel kural olarak kredi, ekspertiz değerinin belirli bir yüzdesine kadar kullanılabilir; kalan tutar peşinat olarak gerekir. Ödeme planınızı gelir istikrarınıza göre kurgulayın.\n\nBaşvuru öncesi evraklarınızı hazırlamak süreci belirgin hızlandırır. Size en uygun yapı için ücretsiz ön değerlendirme alın.'},
  {id:3,title:'Tapu devrinde dikkat edilmesi gereken 9 şey',cat:'Hukuk',sum:'Alıcı ve satıcı için TKGM süreci, vergiler ve sık yapılan hatalar.',icon:'📋',meta:'10 dk okuma · May 2026',date:'2026-05-22',src:'firma',body:'Tapu devri, gayrimenkul işleminin hukuki olarak tamamlandığı kritik aşamadır. Web Tapu başvurusu, harç ödemesi ve randevu adımları eksiksiz yürütülmelidir.\n\nDevir öncesi tapu kaydında haciz, ipotek veya şerh olup olmadığı mutlaka kontrol edilmelidir. Alıcı ve satıcının kimlik ve yetki belgeleri hazır olmalıdır.\n\nHarç ve döner sermaye bedelleri, taraflar arasında önceden yazılı olarak netleştirilmelidir. Süreci hatasız yönetmek için profesyonel destek almanızı öneririz.'}];
-const DEF_REFS=[{id:1,name:'Ayşe Yıldırım',meta:'Satıcı · Konak',text:'Evimizi piyasanın üstünde bir fiyata, üstelik 3 haftada sattılar. Bölge endeksini gösterip fiyatı veriyle savundular; alıcı ikna oldu.'},
- {id:2,name:'Murat Kaya',meta:'Yatırımcı · Bornova',text:'Yatırım için daire arıyordum. Yatırım skoru ve 5 yıllık trend analizi sayesinde doğru mahalleyi seçtim. Bir yılda değer kazandı.'},
- {id:3,name:'Elif Demir',meta:'Alıcı · Karşıyaka',text:'Danışmanımız bölgeyi avucunun içi gibi biliyordu. WhatsApp\'tan anında dönüş, şeffaf süreç. Kesinlikle tavsiye ederim.'}];
+const DEF_REFS=[{id:1,name:'Ayşe Yıldırım',meta:'Satıcı · Konak',prop:'3+1 Daire · Alsancak',date:'2026-05',text:'Evimizi piyasanın üstünde bir fiyata, üstelik 3 haftada sattılar. Bölge endeksini gösterip fiyatı veriyle savundular; alıcı ikna oldu.'},
+ {id:2,name:'Murat Kaya',meta:'Yatırımcı · Bornova',prop:'2+1 Daire · Kazımdirik',date:'2026-04',text:'Yatırım için daire arıyordum. Yatırım skoru ve 5 yıllık trend analizi sayesinde doğru mahalleyi seçtim. Bir yılda değer kazandı.'},
+ {id:3,name:'Elif Demir',meta:'Alıcı · Karşıyaka',prop:'2+1 Daire · Mavişehir',date:'2026-06',text:'Danışmanımız bölgeyi avucunun içi gibi biliyordu. WhatsApp\'tan anında dönüş, şeffaf süreç. Kesinlikle tavsiye ederim.'}];
 const DEF_SEO={title:'Meridyen Gayrimenkul · İzmir Emlak & Gayrimenkul Ofisi',desc:'İzmir ve Ege\'de veri odaklı emlak ofisi. Satılık & kiralık portföy, mahalle fiyat endeksi, yatırım skoru ve ücretsiz değerleme.',kw:'izmir emlak, satılık daire, kiralık daire, gayrimenkul danışmanı, emlak değerleme',og:'',schema:true,llms:true,sitemap:true,prog:true};
 const DEF_GOOGLE={ga4:'',gtm:'',gsc:'',maps:'',recaptcha:'',business:'',aiseo:true,ab:false};
 const DEF_MODULES=[{k:'emlak_endeks',n:'Emlak Endeksi',d:'Mahalle m² fiyat ve trend',on:true},{k:'yatirim_skoru',n:'Yatırım Skoru',d:'0-100 bölge skoru',on:true},{k:'risk_analiz',n:'Fay/Deprem Risk',d:'Coğrafi risk rozeti',on:true},{k:'degerleme',n:'Online Değerleme',d:'"Evimin değeri ne?" aracı',on:true},{k:'portfoy3d',n:'3D Portföy & Tur',d:'GLB model + sanal tur',on:true},{k:'ai_asistan',n:'ProX Asistan',d:'ProX verisine dayalı asistan',on:true},{k:'pdf_rapor',n:'Logolu PDF Rapor',d:'Şirket logolu endeks raporu',on:true},{k:'fiyat_alarmi',n:'Fiyat Alarmı',d:'Bölge fiyat değişim bildirimi',on:true},{k:'blog_feed',n:'Blog Akışı',d:'emlakekspertizi blog beslemesi',on:true},{k:'whatsapp',n:'WhatsApp Destek',d:'Tek dokunuş iletişim',on:true}];
@@ -362,11 +362,44 @@ var GM_LIST_CFG={ns:'gm',
   agent:function(l){try{var dans=(typeof DANISMANLAR!=='undefined'&&DANISMANLAR&&DANISMANLAR.length)?DANISMANLAR:DEF_DAN;var ilce=(l&&l.ilce)||'';var pick=null;for(var i=0;i<dans.length;i++){if((dans[i].area||'').indexOf(ilce)>=0){pick=dans[i];break;}}if(!pick){var sahil=['Çeşme','Urla','Alaçatı','Menderes','Seferihisar','Karaburun','Gümüldür','Foça'];pick=(sahil.indexOf(ilce)>=0)?(dans[2]||dans[0]):(dans[1]||dans[0]);}var br=(typeof brandName==='function'?brandName():'Meridyen');return {name:pick.name,photo:(typeof imgSrc==='function'?imgSrc(pick.foto||'dan1'):''),title:br+' · '+(pick.role||'Gayrimenkul Danışmanı'),experience:pick.exp||10,wa:pick.wa,tel:pick.tel,area:pick.area,rating:pick.rating};}catch(e){return {name:'Meridyen Danışmanı',title:'Gayrimenkul Danışmanı',experience:10};}},
   navHTML:function(){try{var el=document.querySelector('header')||document.querySelector('.siteNav');return el?el.outerHTML:'';}catch(e){return '';}},
   footerHTML:function(){try{var el=document.querySelector('footer.siteFooter, .siteFooter, footer');return el?el.outerHTML:'';}catch(e){return '';}},
-  onContact:function(){try{if(window.Listings)Listings.closeDetail();}catch(e){}try{toast('Talebiniz alındı — danışmanımız kısa sürede sizinle iletişime geçecek.');}catch(e){}},
+  appointment:true,/* satır-içi Randevu formu (shared/listing.js) etkin — gerçek lead yakalar */
+  onContact:function(id,data){
+    try{
+      if(data&&(data.name||data.phone)){/* form gönderimi → gerçek lead */
+        var loc=[data.mah,data.ilce].filter(Boolean).join(', ');
+        var label=(data.title||('İlan #'+id));
+        var msg='İlan: '+label+(data.op?(' ('+data.op+')'):'')+(data.priceText?(' · '+data.priceText):'')+(data.date?(' · Tercih tarih: '+data.date):'')+(data.note?(' · Not: '+data.note):'');
+        if(typeof pushLead==='function')pushLead({ad:data.name,tel:data.phone,konu:'İlan Randevu: '+label,msg:msg,src:'İlan Randevu Talebi',ilanId:id,entryLabel:label});/* localStorage fallback (LEADS→saveAll) */
+        if(typeof proxSubmitLead==='function')proxSubmitLead({sourcePage:'ilan-randevu',formType:'randevu',name:data.name,phone:data.phone,email:'',location:loc,message:msg,requestedService:'İlan Randevu Talebi'});
+        try{if(typeof toast==='function')toast('🔔 Randevu talebiniz danışmanımıza iletildi.');}catch(e){}
+        return;/* detay açık kalır — satır-içi onay gösterilir */
+      }
+    }catch(e){}
+    try{if(window.Listings)Listings.closeDetail();}catch(e){}try{if(typeof toast==='function')toast('Talebiniz alındı — danışmanımız kısa sürede sizinle iletişime geçecek.');}catch(e){}
+  },
   mapQuery:function(l){return [l.mah,l.ilce,l.il].filter(Boolean).join(', ');},
   list:function(){return gmIlanView().map(gmListNormalize);}
 };
 try{if(window.Listings)Listings.register('gm',GM_LIST_CFG);}catch(e){}
+/* ===== İZMİR BÖLGE & ULAŞIM (P6): ilan detayına dürüst, temsilî mahalle/ulaşım bilgisi =====
+   Yalnızca gm sayfaları app.js yükler → danışman/insaat etkilenmez. IZMIR_PROVINCE.districts[ilçe]
+   .facts yoksa bölüm atlanır; .risk notu (varsa) dürüstçe yüzeye çıkarılır. */
+function gmRegionFactsHTML(l){ try{
+  if(!l||!l.ilce)return '';
+  var d=(typeof IZMIR_PROVINCE!=='undefined'&&IZMIR_PROVINCE.districts)?IZMIR_PROVINCE.districts[l.ilce]:null;
+  if(!d)return '';
+  var facts=(d.facts&&d.facts.length)?d.facts:null;
+  if(!facts)return '';/* facts yok → bölümü atla */
+  var esc=function(s){return (''+(s==null?'':s)).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];});};
+  return '<div class="lstd-section gm-region">'
+    +'<h3><span aria-hidden="true">📍</span> '+esc(l.ilce)+' · Bölge &amp; Ulaşım</h3>'
+    +(d.risk?'<div class="gm-region-risk">'+(window.EIDS&&EIDS.shield?EIDS.shield(13):'🛡')+' Zemin/risk notu: <b>'+esc(d.risk)+'</b></div>':'')
+    +'<ul class="gm-region-list">'+facts.map(function(f){return '<li>'+esc(f)+'</li>';}).join('')+'</ul>'
+    +'<div class="gm-region-note">Temsilî bölge bilgisi — güncel ulaşım/zemin detayları için danışmanınıza ve resmî kaynaklara danışın.</div>'
+  +'</div>';
+}catch(e){return '';} }
+try{ if(window.Listings){ var _gmPrevAfterMain=Listings._extAfterMain;
+  Listings._extAfterMain=function(l,cfg){ var base=(typeof _gmPrevAfterMain==='function')?_gmPrevAfterMain(l,cfg):''; return gmRegionFactsHTML(l)+base; }; } }catch(e){}
 /* İlan formu: tam Türkçe kategori taksonomisi + İşlem + kategoriye göre öznitelik formu */
 var _gmAttrs={},_gmFeats=[];
 function gmRenderAttrs(){try{var t=(document.getElementById('i_type')||{}).value||'';var cat=(window.Listings?Listings.catOf({type:t}):'konut');var box=document.getElementById('i_attrBox');if(box&&window.Listings)box.innerHTML=Listings.attrFormHTML(cat,_gmAttrs||{},_gmFeats||[]);}catch(e){}}
@@ -383,13 +416,48 @@ function initHero(){
 }
 
 /* ============ RENDER: İLANLAR ============ */
-let curFilter={op:'',ty:''};
+let curFilter={op:'',ty:'',ilce:'',mah:'',oda:'',min:0,max:0};
 function ilanScore(it){const b=bolgeOf(it.ilce);return {score:b.score,chg:b.chg,m2:b.m2};}
+/* ---- Konum + fiyat + oda filtresi (P2): boş/tanımsız filtre = kısıtlama yok ---- */
+function gmNorm(s){return (''+(s==null?'':s)).toLocaleLowerCase('tr').trim();}
+function gmMatchFilter(it,f){ if(!it)return false; f=f||{};
+  if(f.op&&it.op!==f.op)return false;
+  if(f.ty&&it.type!==f.ty)return false;
+  if(f.ilce&&gmNorm(it.ilce)!==gmNorm(f.ilce))return false;
+  if(f.oda&&gmNorm(it.oda)!==gmNorm(f.oda))return false;
+  if(f.mah){var q=gmNorm(f.mah);if(gmNorm(it.mah).indexOf(q)<0&&gmNorm(it.ilce).indexOf(q)<0)return false;}
+  var p=+it.price||0;
+  if(f.min&&p<f.min)return false;
+  if(f.max&&p>f.max)return false;
+  return true;
+}
+/* İlçe (PROVINCE'ten) + oda seçim kutularını doldur — idempotent (dataset.f nöbeti) */
+function gmFillFilterControls(){ try{
+  var src=(typeof IZMIR_PROVINCE!=='undefined'&&IZMIR_PROVINCE.districts)?IZMIR_PROVINCE.districts:{};
+  var dists=Object.keys(src);
+  var odas=['1+1','2+1','3+1','4+1','5+1'];
+  ['f','pf'].forEach(function(px){
+    var il=document.getElementById(px+'Ilce');
+    if(il&&!il.dataset.f){il.innerHTML='<option value="">Tüm İlçeler</option>'+dists.map(function(d){return '<option value="'+d+'">'+d+'</option>';}).join('');il.dataset.f='1';}
+    var od=document.getElementById(px+'Oda');
+    if(od&&!od.dataset.f){od.innerHTML='<option value="">Tüm Odalar</option>'+odas.map(function(o){return '<option value="'+o+'">'+o+'</option>';}).join('');od.dataset.f='1';}
+  });
+}catch(e){} }
+/* DOM kontrollerinden filtre state'ini oku (prefix: 'f' → index, 'pf' → portföy) */
+function gmReadFilterControls(px,f){ try{
+  var il=document.getElementById(px+'Ilce'); if(il)f.ilce=il.value||'';
+  var od=document.getElementById(px+'Oda'); if(od)f.oda=od.value||'';
+  var mn=document.getElementById(px+'Min'); if(mn)f.min=+((''+(mn.value||'')).replace(/[^\d]/g,''))||0;
+  var mx=document.getElementById(px+'Max'); if(mx)f.max=+((''+(mx.value||'')).replace(/[^\d]/g,''))||0;
+}catch(e){} return f; }
+function advFilt(){gmReadFilterControls('f',curFilter);renderIlanlar();}
+function pfAdvFilt(){gmReadFilterControls('pf',pfFilter);renderPfIlan();}
+try{document.addEventListener('DOMContentLoaded',function(){gmFillFilterControls();});}catch(e){}
 function renderIlanlar(){
   const g=document.getElementById('lgrid');if(!g)return;
+  gmFillFilterControls();
   let arr=(typeof gmPublicIlan==='function')?gmPublicIlan():ILANLAR.filter(i=>i.status==='aktif');/* EİDS yayın kapısı */
-  if(curFilter.op)arr=arr.filter(i=>i.op===curFilter.op);
-  if(curFilter.ty)arr=arr.filter(i=>i.type===curFilter.ty);
+  arr=arr.filter(i=>gmMatchFilter(i,curFilter));/* op/tip + ilçe/mahalle + fiyat + oda */
   arr.sort((a,b)=>(b.feat||0)-(a.feat||0));
   document.getElementById('fcount').textContent=arr.length+' ilan';
   if(!arr.length){g.innerHTML='<div class="no-res">Bu filtreye uygun ilan bulunamadı. Filtreyi değiştirin veya bizimle iletişime geçin.</div>';return;}
@@ -416,13 +484,14 @@ function renderIlanlar(){
 function filt(btn){const f=btn.dataset.f,v=btn.dataset.v;curFilter[f]=v;
   document.querySelectorAll('.fchip.'+f).forEach(b=>b.classList.toggle('act',b===btn));renderIlanlar();}
 function setOp(btn){document.querySelectorAll('#searchbar .tab').forEach(b=>b.classList.toggle('act',b===btn));window._searchOp=btn.dataset.op;}
-function runSearch(){const op=window._searchOp||'Satılık';const ty=document.getElementById('s_tip').value;
+function runSearch(){const op=window._searchOp||'Satılık';const ty=((document.getElementById('s_tip')||{}).value)||'';
    if(op==='Özel'){if(typeof ozOpen==='function')ozOpen();return;}
   // sync filter chips
   curFilter.op=(op==='Satılık'||op==='Kiralık')?op:'';curFilter.ty=ty;
+  gmReadFilterControls('f',curFilter);/* ilçe/mahalle + fiyat + oda kontrolleri de dikkate alınır */
   document.querySelectorAll('.fchip.op').forEach(b=>b.classList.toggle('act',b.dataset.v===curFilter.op));
   document.querySelectorAll('.fchip.ty').forEach(b=>b.classList.toggle('act',b.dataset.v===curFilter.ty));
-  renderIlanlar();document.getElementById('ilanlar').scrollIntoView({behavior:'smooth'});
+  renderIlanlar();var _il=document.getElementById('ilanlar');if(_il)_il.scrollIntoView({behavior:'smooth'});
 }
 
 /* ============ ÖZEL PORTFÖY ============ */
@@ -504,14 +573,14 @@ function pfCardHtml(it){
         +'<a class="tel" onclick="event.stopPropagation()" href="tel:'+tel+'">'+ozIco(OZI.phone,15)+' Ara</a></div>'
     +'</div></article>';
 }
-var pfFilter={op:'',ty:''};
+var pfFilter={op:'',ty:'',ilce:'',mah:'',oda:'',min:0,max:0};
 function pfFilt(btn){var f=btn.dataset.f,v=btn.dataset.v;pfFilter[f]=v;
   document.querySelectorAll('#pfIlanlar .pf-chip.'+f).forEach(function(b){b.classList.toggle('act',b===btn);});renderPfIlan();}
 function renderPfIlan(){
   var g=document.getElementById('pfGrid');if(!g||typeof ILANLAR==='undefined')return;
+  gmFillFilterControls();
   var arr=(typeof gmPublicIlan==='function')?gmPublicIlan():ILANLAR.filter(function(i){return i.status==='aktif';});/* EİDS yayın kapısı */
-  if(pfFilter.op)arr=arr.filter(function(i){return i.op===pfFilter.op;});
-  if(pfFilter.ty)arr=arr.filter(function(i){return i.type===pfFilter.ty;});
+  arr=arr.filter(function(i){return gmMatchFilter(i,pfFilter);});/* op/tip + ilçe/mahalle + fiyat + oda */
   var sort=(document.getElementById('pfSort')||{}).value||'feat';
   arr.sort(function(a,b){
     if(sort==='price-asc')return a.price-b.price;
@@ -3300,8 +3369,10 @@ function renderBlogRows(){const tb=document.getElementById('blogRows');if(!tb)re
 
 /* ---------- REFERANS ---------- */
 function renderRefGrid(){const g=document.getElementById('refGrid');if(!g)return;
+  const _refMon=d=>{if(!d)return '';const m=(''+d).split('-');const nm={'01':'Oca','02':'Şub','03':'Mar','04':'Nis','05':'May','06':'Haz','07':'Tem','08':'Ağu','09':'Eyl','10':'Eki','11':'Kas','12':'Ara'};return m[1]?((nm[m[1]]||m[1])+' '+m[0]):(''+d);};
   g.innerHTML=REFS.map(r=>{const ini=r.name.split(' ').map(x=>x[0]).slice(0,2).join('');
-    return `<div class="tst"><div class="stars">★★★★★</div><p>"${r.text}"</p><div class="who"><div class="av">${ini}</div><div><div class="nm">${r.name}</div><div class="rl">${r.meta}</div></div></div></div>`;}).join('');}
+    const sub=[r.prop,_refMon(r.date)].filter(Boolean).join(' · ');
+    return `<div class="tst"><div class="stars">★★★★★</div><p>"${r.text}"</p><div class="who"><div class="av">${ini}</div><div><div class="nm">${r.name}</div><div class="rl">${r.meta}</div>${sub?`<div class="rl2" style="color:var(--muted);font-size:12px;margin-top:2px">${sub}</div>`:''}</div></div></div>`;}).join('');}
 let editingRef=null;
 function newRef(){editingRef=null;['rf_name','rf_meta','rf_text'].forEach(i=>document.getElementById(i).value='');document.getElementById('refEditCard').style.display='block';}
 function editRef(id){const r=REFS.find(x=>x.id===id);if(!r)return;editingRef=id;

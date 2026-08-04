@@ -308,7 +308,8 @@
             +'<div class="lstd-eids-row">'+_badge(l)+'</div>'   /* TEK EİDS göstergesi */
             +(L._extEnergy?L._extEnergy(l):'')
             +(agent||(brand?'<div class="lstd-brand">'+esc(brand)+'</div>':''))
-            +'<button type="button" class="lstd-btn pri" onclick="Listings._contact(\''+esc(cfg.ns||'')+'\',\''+esc(l.id)+'\')"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Randevu Al</button>'
+            +'<button type="button" id="lstdApptBtn" class="lstd-btn pri" onclick="Listings._randevu(\''+esc(cfg.ns||'')+'\',\''+esc(l.id)+'\')"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Randevu Al</button>'
+            +'<div class="lstd-appt" id="lstdAppt"></div>'
             +(tel?'<a class="lstd-btn tel" href="'+esc(tel)+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.4 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg> Ara</a>':'')
             +(wa?'<a class="lstd-btn lstwa" href="'+esc(wa)+'" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 .9-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4-.1.6.5l.8 1.9c.1.1.1.3 0 .5l-.4.5-.3.3c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l1.8.9c.2.1.4.2.4.3.1.1.1.6-.1 1.2Z"/></svg> WhatsApp\'tan Yaz</a>':'')
             +'<button type="button" class="lstd-btn lst-favline'+(L.isFav(cfg.ns,l.id)?' on':'')+'" data-fid="'+esc(l.id)+'" onclick="Listings.toggleFav(\''+esc(cfg.ns||'')+'\',\''+esc(l.id)+'\',this,event)">'+(L.isFav(cfg.ns,l.id)?'♥ Favorilerimde':'♡ Favorilere Ekle')+'</button>'
@@ -382,6 +383,49 @@
   L.register=function(ns,cfg){ cfg=cfg||{}; cfg.ns=ns; L._reg[ns]=cfg; return cfg; };
   L._open=function(ns,id){ var c=L._reg[ns]; if(!c)return; if(c.onOpen)c.onOpen(id); else L.openDetail(ns,id); };
   L._contact=function(ns,id){ var c=L._reg[ns]; if(c&&c.onContact)c.onContact(id); };
+  /* ---- GERÇEK RANDEVU / BİLGİ TALEBİ (opt-in: cfg.appointment) ----
+     Sadece cfg.appointment===true olan siteler satır-içi formu gösterir; diğerleri
+     (danışman/insaat) eski _contact davranışına düşer → etkilenmez. Form gönderiminde
+     cfg.onContact(id, data) çağrılır; data={name,phone,date,note,...}. */
+  L._apptCss=function(){ try{ if(document.getElementById('lstApptCss'))return; var s=document.createElement('style'); s.id='lstApptCss';
+    s.textContent='.lstd-appt-form{display:grid;gap:8px;margin-top:10px;padding:12px;border:1.5px solid var(--line,#e5e7eb);border-radius:12px;background:var(--surface,#f8fafc)}'
+      +'.lstd-appt-t{font-weight:800;font-size:14px;color:var(--ink,#0f172a)}'
+      +'.lstd-appt-i{width:100%;padding:9px 11px;border:1.5px solid var(--line,#e5e7eb);border-radius:9px;font-family:inherit;font-size:14px;color:var(--ink,#0f172a);background:#fff;box-sizing:border-box}'
+      +'.lstd-appt-i:focus{outline:none;border-color:var(--accent,#1e40af)}'
+      +'.lstd-appt-k{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--ink-2,#475569);line-height:1.4;cursor:pointer}'
+      +'.lstd-appt-k input{margin-top:2px;flex:0 0 auto}'
+      +'.lstd-appt-ok{margin-top:10px;padding:14px;border:1.5px solid var(--accent,#1e40af);border-radius:12px;background:var(--surface,#f8fafc);font-size:14px;color:var(--ink,#0f172a);line-height:1.5}';
+    document.head.appendChild(s); }catch(e){} };
+  L._randevu=function(ns,id){ var c=L._reg[ns]; if(!c)return;
+    if(!c.appointment){ return L._contact(ns,id); }/* opt-in yoksa eski davranış */
+    var box=document.getElementById('lstdAppt'); if(!box){ return L._contact(ns,id); }
+    L._apptCss();
+    var btn=document.getElementById('lstdApptBtn'); if(btn)btn.style.display='none';
+    box.innerHTML=''
+      +'<form class="lstd-appt-form" onsubmit="return Listings._randevuSubmit(\''+esc(ns)+'\',\''+esc(id)+'\')">'
+      +'<div class="lstd-appt-t">Randevu / Bilgi Talebi</div>'
+      +'<input class="lstd-appt-i" id="lstAp_name" type="text" placeholder="Ad Soyad *" autocomplete="name">'
+      +'<input class="lstd-appt-i" id="lstAp_phone" type="tel" placeholder="Telefon *" autocomplete="tel">'
+      +'<input class="lstd-appt-i" id="lstAp_date" type="date" aria-label="Tercih edilen tarih">'
+      +'<textarea class="lstd-appt-i" id="lstAp_note" rows="2" placeholder="Not (isteğe bağlı)"></textarea>'
+      +'<label class="lstd-appt-k"><input type="checkbox" id="lstAp_kvkk"> <span>KVKK kapsamında tarafımla iletişim kurulmasını onaylıyorum.</span></label>'
+      +'<button type="submit" class="lstd-btn pri">Talebi Gönder</button>'
+      +'</form>';
+    try{var e=document.getElementById('lstAp_name');if(e)e.focus();}catch(e){}
+  };
+  L._randevuSubmit=function(ns,id){ try{
+    var c=L._reg[ns]||{}; var l=L._cur||{};
+    var g=function(x){var e=document.getElementById(x);return e?(''+(e.value||'')).trim():'';};
+    var name=g('lstAp_name'), phone=g('lstAp_phone'), date=g('lstAp_date'), note=g('lstAp_note');
+    var kv=document.getElementById('lstAp_kvkk');
+    if(!name||!phone){ try{if(typeof toast==='function')toast('Lütfen ad ve telefon girin.');}catch(e){} return false; }
+    if(kv&&!kv.checked){ try{if(typeof toast==='function')toast('Lütfen KVKK onayını işaretleyin.');}catch(e){} return false; }
+    var data={name:name,phone:phone,date:date,note:note,id:id,title:l.title||'',il:l.il||'',ilce:l.ilce||'',mah:l.mah||'',op:l.op||'',priceText:l.priceText||''};
+    try{ if(typeof c.onContact==='function')c.onContact(id,data); }catch(e){}
+    var box=document.getElementById('lstdAppt');
+    if(box){ box.innerHTML='<div class="lstd-appt-ok"><b>✓ Talebiniz alındı.</b><br>'+esc(name)+', danışmanımız en kısa sürede sizinle iletişime geçecek'+(date?(' — tercih ettiğiniz tarih ('+esc(date)+') iletildi'):'')+'.</div>'; }
+    return false;
+  }catch(e){ return false; } };
 
   /* ---- GERÇEK KONUM HARİTASI (Nominatim geocode + OSM embed; dış JS YOK) ----
      Fare tekeri ile kaza zoom'u yok: harita "koruma" katmanıyla gelir; kullanıcı
