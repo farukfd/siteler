@@ -35,11 +35,11 @@ try{var TH=(d.THEME&&d.THEME.accent)?d.THEME:null;if(TH){
   var _lx=function(h,a){var n=parseInt(h.slice(1),16),r=Math.min(255,(n>>16)+a),g=Math.min(255,((n>>8)&255)+a),b=Math.min(255,(n&255)+a);return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);};
   var _dk=function(h,a){var n=parseInt(h.slice(1),16),r=Math.max(0,(n>>16)-a),g=Math.max(0,((n>>8)&255)-a),b=Math.max(0,(n&255)-a);return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);};
   var rs=document.documentElement.style,ac=TH.accent,gr=TH.green||'#1e7e3a',nv=TH.navy||'#0f1f3d';
-  rs.setProperty('--accent',ac);rs.setProperty('--accent-2',_lx(ac,18));
-  rs.setProperty('--green',gr);rs.setProperty('--green-700',_dk(gr,16));rs.setProperty('--green-200',_lx(gr,34));
+  rs.setProperty('--accent',ac);rs.setProperty('--accent-2',_lx(ac,18));rs.setProperty('--accent-deep',_dk(ac,22));
+  rs.setProperty('--green',gr);rs.setProperty('--green-700',_dk(gr,16));rs.setProperty('--green-200',_lx(gr,34));rs.setProperty('--success',gr);rs.setProperty('--success-700',_dk(gr,16));
   rs.setProperty('--c-bg-navy',nv);rs.setProperty('--c-bg-deep',_dk(nv,6));
-  /* WIPE-PROOF: kalıcı <style> bloğu (index ile aynı) — documentElement.style sıfırlanırsa devrede */
-  try{var _tst=document.getElementById('tenant-theme');if(!_tst){_tst=document.createElement('style');_tst.id='tenant-theme';}_tst.textContent=':root{--accent:'+ac+';--accent-2:'+_lx(ac,18)+';--green:'+gr+';--green-700:'+_dk(gr,16)+';--green-200:'+_lx(gr,34)+';--c-bg-navy:'+nv+';--c-bg-deep:'+_dk(nv,6)+';}';(document.head||document.documentElement).appendChild(_tst);}catch(e){}
+  /* WIPE-PROOF: kalıcı <style> bloğu (index ile aynı) — documentElement.style sıfırlanırsa devrede. --accent-deep türetilir → gradyan/ibre tenant rengine döner. */
+  try{var _tst=document.getElementById('tenant-theme');if(!_tst){_tst=document.createElement('style');_tst.id='tenant-theme';}_tst.textContent=':root{--accent:'+ac+';--accent-2:'+_lx(ac,18)+';--accent-deep:'+_dk(ac,22)+';--green:'+gr+';--green-700:'+_dk(gr,16)+';--green-200:'+_lx(gr,34)+';--success:'+gr+';--c-bg-navy:'+nv+';--c-bg-deep:'+_dk(nv,6)+';}';(document.head||document.documentElement).appendChild(_tst);}catch(e){}
 }}catch(e){}
 /* Tipografi teması (statik sayfalar): d.THEME.font → Google Fonts yükle + gövde fontu (base.css'i kırmadan) */
 try{var _tf=(d.THEME&&d.THEME.font)||'';var _CF={'Inter':'Inter:wght@400;500;600;700;800','Poppins':'Poppins:wght@400;500;600;700','Manrope':'Manrope:wght@400;500;600;700;800','Sora':'Sora:wght@400;500;600;700','DM Sans':'DM+Sans:wght@400;500;600;700','Nunito':'Nunito:wght@400;600;700;800','Montserrat':'Montserrat:wght@400;500;600;700','Figtree':'Figtree:wght@400;500;600;700','Playfair Display':'Playfair+Display:wght@500;600;700'};

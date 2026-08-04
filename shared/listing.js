@@ -229,6 +229,8 @@
   /* ---- PROFESYONEL KART (görsel + WhatsApp/Ara hızlı iletişim) ---- */
   L.cardHTML=function(l,cfg){
     cfg=cfg||{}; var cov=_cover(l); var specs=_specsOf(l).slice(0,3);
+    var _tl=function(n){return (''+(n||0)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');};
+    var _dt=function(s){if(!s)return '';var p=(''+s).split('-');return p.length===3?(p[2]+'.'+p[1]+'.'+p[0]):(''+s);};
     var open=(cfg.onOpen||cfg.ns)?('Listings._open(\''+esc(cfg.ns||'')+'\',\''+esc(l.id)+'\')'):'';
     var wa=_waHref(cfg,l), tel=_telHref(cfg);
     var cta=(wa||tel)?('<div class="lst-cta">'
@@ -246,7 +248,9 @@
         +'<div class="lst-loc"><span class="lst-cat">'+esc(l.type||L.catLabel(l))+'</span> · 📍 '+esc(_loc(l)||'—')+'</div>'
         +'<h3 class="lst-title">'+esc(l.title||'')+'</h3>'
         +'<div class="lst-chips">'+specs.map(function(s){var v=esc(s.v)+((/m²/.test(s.k)&&!/m²/.test(''+s.v))?' m²':'');return '<span>'+v+'</span>';}).join('')+'</div>'
-        +'<div class="lst-foot"><span class="lst-price">'+esc(l.priceText||l.price||'')+'</span><span class="lst-go">İncele →</span></div>'
+        +((l.endeks||l.skor)?('<div class="lst-data">'+(l.endeks?'<span class="lst-endeks" title="'+esc((l.ilce||'')+' bölge m² ortalaması — ProX endeksi')+'">📊 Bölge ort. '+_tl(l.endeks)+' ₺/m²</span>':'')+(l.skor?'<span class="lst-skor" title="Bölge yatırım skoru (0-100)">⭐ Yatırım '+esc(l.skor)+'</span>':'')+'</div>'):'')
+        +'<div class="lst-foot"><span class="lst-priceblk"><span class="lst-price">'+esc(l.priceText||l.price||'')+'</span>'+(l.ppm?'<span class="lst-ppm">'+_tl(l.ppm)+' ₺/m²</span>':'')+'</span><span class="lst-go" aria-hidden="true">→</span></div>'
+        +((l.ilanNo||l.tarih)?('<div class="lst-meta">'+(l.ilanNo?'<span>İlan No: '+esc(l.ilanNo)+'</span>':'')+(l.tarih?'<span>📅 '+esc(_dt(l.tarih))+'</span>':'')+'</div>'):'')
         +cta
       +'</div></article>';
   };
@@ -263,8 +267,8 @@
   L._pick=function(btn,u){ var m=document.getElementById('lstdMain'); if(m)m.src=u; try{var p=btn.parentNode;var ths=[].slice.call(p.querySelectorAll('.lstd-th'));ths.forEach(function(b,i){b.classList.toggle('on',b===btn);if(b===btn)L._lbIdx=i;});}catch(e){} };
 
   /* ---- KAPSAMLI DETAY İÇERİĞİ (site chrome'una sarılır) ---- */
-  function _agentCard(cfg){
-    var a=(cfg.agent&&cfg.agent())||null; if(!a||!a.name)return '';
+  function _agentCard(cfg,l){
+    var a=(cfg.agent&&cfg.agent(l))||null; if(!a||!a.name)return '';
     var initials=(a.name||'').trim().split(/\s+/).map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
     var ph=a.photo?('<img src="'+esc(a.photo)+'" alt="'+esc(a.name)+'" onerror="this.style.display=\'none\';this.parentNode.classList.add(\'noimg\')"><span class="lstd-ag-ini">'+esc(initials)+'</span>')
       :('<span class="lstd-ag-ini">'+esc(initials)+'</span>');
@@ -280,7 +284,7 @@
     var brand=(cfg.brand&&cfg.brand())||''; var wa=_waHref(cfg,l), tel=_telHref(cfg);
     var desc=String(l.desc||l.aciklama||'').split(/\n{2,}/).map(function(p){return '<p>'+esc(p).replace(/\n/g,'<br>')+'</p>';}).join('')||'<p class="lstd-muted">Bu ilan için detaylı açıklama yakında eklenecek.</p>';
     var mapQ=(cfg.mapQuery&&cfg.mapQuery(l))||[l.mah,l.ilce,l.il].filter(Boolean).join(', ');
-    var agent=_agentCard(cfg);
+    var agent=_agentCard(cfg,l);
     var h='<div class="lstd">'
       +'<div class="lstd-head"><div><span class="lst-op '+_opClass(l.op)+'">'+esc(l.op||'Satılık')+'</span>'
         +(l.type?' <span class="lstd-type">'+esc(l.type)+'</span>':'')+'</div>'
@@ -445,7 +449,7 @@
     +'.lst-grid.home3{grid-template-columns:repeat(3,1fr)}'/* ana sayfa: 3×2 = 6 ilan simetrik */
     +'@media(max-width:980px){.lst-grid.home3{grid-template-columns:repeat(2,1fr)}}'
     +'@media(max-width:600px){.lst-grid,.lst-grid.home3{grid-template-columns:1fr}}'
-    +'.lst-card{background:'+SURF+';border:1px solid '+LINE+';border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .18s,box-shadow .18s;display:flex;flex-direction:column}'
+    +'.lst-card{background:'+SURF+';border:1px solid '+LINE+';border-top:3px solid '+A+';border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .18s,box-shadow .18s;display:flex;flex-direction:column}'
     +'.lst-card:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(0,0,0,.13)}'
     +'.lst-card:focus-visible{outline:2px solid '+A+';outline-offset:2px}'
     +'.lst-ph{position:relative;aspect-ratio:4/3;background:linear-gradient(135deg,rgba(0,0,0,.05),rgba(0,0,0,.12));overflow:hidden}'
@@ -460,9 +464,16 @@
     +'.lst-title{font-size:16.5px;line-height:1.3;margin:0;color:'+INK+';font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}'
     +'.lst-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:2px}'
     +'.lst-chips span{font-size:12px;font-weight:700;color:'+INK+';background:rgba(0,0,0,.05);padding:4px 9px;border-radius:8px}.lst-chips i{font-style:normal;font-weight:500;color:'+MUT+'}'
-    +'.lst-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:8px;border-top:1px solid '+LINE+'}'
-    +'.lst-price{font-size:18px;font-weight:800;color:'+A+'}'
-    +'.lst-go{font-size:13px;font-weight:700;color:'+MUT+'}'
+    +'.lst-data{display:flex;flex-wrap:wrap;gap:6px}'
+    +'.lst-endeks,.lst-skor{font-size:11px;font-weight:700;padding:4px 8px;border-radius:7px;white-space:nowrap;font-variant-numeric:tabular-nums}'
+    +'.lst-endeks{color:'+A+';background:color-mix(in srgb,'+A+' 9%,transparent);border:1px solid color-mix(in srgb,'+A+' 22%,transparent)}'
+    +'.lst-skor{color:var(--success,#1e7e3a);background:var(--success-bg,rgba(30,126,58,.10));border:1px solid var(--success-line,rgba(30,126,58,.30))}'
+    +'.lst-foot{display:flex;align-items:flex-end;justify-content:space-between;margin-top:auto;padding-top:10px;border-top:1px solid '+LINE+'}'
+    +'.lst-priceblk{display:flex;flex-direction:column;gap:1px;min-width:0}'
+    +'.lst-price{font-size:22px;font-weight:800;color:'+INK+';font-family:var(--num),var(--body),sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1.1}'
+    +'.lst-ppm{font-size:11.5px;font-weight:600;color:'+MUT+';font-variant-numeric:tabular-nums}'
+    +'.lst-go{font-size:20px;font-weight:800;color:'+A+';line-height:1;align-self:center}'
+    +'.lst-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:10.5px;color:'+MUT+';font-weight:600;padding-top:2px;font-variant-numeric:tabular-nums}'
     /* DETAY */
     +'.lstd{max-width:1080px;margin:0 auto;padding:8px 4px 40px;color:'+INK+'}'
     +'.lstd-head{margin:0 0 18px}'

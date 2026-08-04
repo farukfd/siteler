@@ -1,20 +1,45 @@
 /* gayrimenkul TEMA: Meridyen (varsayılan lacivert-mavi) · themes kütüphanesi
-   Yeni tema uretmek icin: bu :root token'larini kopyala, renk/font/radius degistir. */
+   Yeni tema uretmek icin: bu :root token'larini kopyala, renk/font/radius degistir.
+   NOT: gradyanlar artık --accent'ten türer → wl.js tek --accent override'ı tüm
+   primary yüzeylere (hero/CTA/ibre) yansır (beyaz-etiket tutarlılığı). */
 :root{
   /* emlakekspertizi aile renkleri */
   --c-bg-deep:#0a1631; --c-bg-navy:#0f1f3d; --c-bg-slate:#1e2742;
-  --accent:#1e40af; --accent-2:#3b82f6; --blue-g:#4285f4;
+  --accent:#1e40af; --accent-2:#3b82f6; --accent-deep:#16306b; --blue-g:#4285f4;   /* --accent-deep: gradyan/ibre koyu ucu; wl.js tenant'a göre _dk(accent) yeniden üretir */
   --green:#1e7e3a; --green-700:#155e2b; --green-200:#7ed598; --green-bright:#34a853;   /* a11y AA: --green metin+beyaz-buton 4.5:1 (eski #34a853=3.05); --green-bright dekoratif/büyük-alan için */
   --yellow:#fbbc04;
   --ink:#0f1f3d; --ink-2:#334155; --muted:#586475; --line:#e2e8f0; --line-2:#eef2f7;   /* a11y AA: --muted #64748b→#586475 (surface 5.6:1) */
   --surface:#f5f7fa; --surface-2:#eef3f9; --white:#ffffff;
+  /* semantik renk rolleri (durum/emlak: fiyat-artış=success, düşüş=danger) */
+  --success:#1e7e3a; --success-bg:rgba(30,126,58,.10); --success-line:rgba(30,126,58,.30);
+  --warning:#b45309; --warning-bg:#fffbeb; --warning-line:rgba(180,83,9,.28);
+  --danger:#b91c1c;  --danger-bg:#fef2f2;  --danger-line:#fecaca;
+  --info:var(--accent); --info-bg:color-mix(in srgb,var(--accent) 8%,transparent);
   --head:'Poppins'; --body:'Inter'; --num:'Space Grotesk';
-  --radius:16px; --radius-lg:22px; --radius-sm:11px; --maxw:1240px;
+  /* boşluk ölçeği (8px tabanlı) + duyarlı bölüm ritmi */
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px; --sp-7:48px; --sp-8:64px; --sp-9:96px;
+  --sec-y:clamp(56px,7vw,96px);
+  /* tip ölçeği (yarım-piksel kayması yerine tutarlı adımlar) */
+  --fs-xs:12px; --fs-sm:13px; --fs-base:15px; --fs-md:16px; --fs-lg:18px; --fs-xl:21px;
+  --fs-2xl:clamp(20px,2.4vw,26px); --fs-3xl:clamp(26px,3.6vw,40px);
+  --lh-tight:1.14; --lh-snug:1.4; --lh-body:1.62;
+  --radius:16px; --radius-lg:22px; --radius-sm:11px; --maxw:1240px; --maxw-narrow:1180px; --gutter:clamp(16px,4vw,24px);
+  /* yükseklik (gölge) merdiveni — lacivert-tonlu, niyetli derinlik */
   --shadow:0 22px 60px -28px rgba(13,30,60,.40);
   --shadow-sm:0 10px 30px -18px rgba(13,30,60,.30);
   --shadow-card:0 14px 36px -20px rgba(13,30,60,.22);
-  --grad-hero:linear-gradient(135deg,#0f1f3d 0%,#0a1631 58%,#16306b 100%);
-  --grad-cta:linear-gradient(135deg,#1e40af 0%,#3b82f6 100%);
-  --grad-blue:linear-gradient(135deg,#3b82f6 0%,#1e40af 100%);
-  --grad-ai:linear-gradient(135deg,#10b981 0%,#0284c7 50%,#8b5cf6 100%);
+  --elev-1:0 1px 2px rgba(13,30,60,.06),0 1px 3px rgba(13,30,60,.10);
+  --elev-2:0 4px 12px -4px rgba(13,30,60,.14);
+  --elev-3:var(--shadow-card);
+  --elev-4:0 30px 70px -30px rgba(13,30,60,.45);
+  --elev-btn:0 10px 26px -12px color-mix(in srgb,var(--accent) 55%,transparent);
+  --ring:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent);
+  /* hareket token'ları (tek ease, tutarlı süreler) */
+  --dur-fast:.15s; --dur:.2s; --dur-slow:.4s; --ease:cubic-bezier(.2,.8,.2,1);
+  --lift-sm:-2px; --lift:-4px;
+  /* gradyanlar — --accent'ten türer (tek override tüm yüzeye yansır) */
+  --grad-hero:linear-gradient(135deg,var(--c-bg-navy) 0%,var(--c-bg-deep) 58%,var(--accent-deep) 100%);
+  --grad-cta:linear-gradient(135deg,var(--accent) 0%,var(--accent-2) 100%);
+  --grad-blue:linear-gradient(135deg,var(--accent-2) 0%,var(--accent) 100%);
+  --grad-ai:linear-gradient(135deg,var(--green) 0%,#0284c7 50%,#22D3EE 100%);   /* mor #8b5cf6 YASAK → cyan (proje kuralı) */
 }

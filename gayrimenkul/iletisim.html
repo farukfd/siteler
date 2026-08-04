@@ -1835,6 +1835,12 @@ body.tenant-dan #searchbar,body.tenant-dan .hero .hero-eye,body.tenant-dan .hero
 .kunye-empty{color:var(--accent)!important;font-style:italic;opacity:.9}
 .legal-draft{margin:26px 0 0;padding:12px 16px;border:1px dashed var(--accent);border-radius:11px;font-size:13px;color:var(--muted);line-height:1.6;background:var(--surface)}
 @media(max-width:640px){.legal-wrap{padding:48px 16px 56px}}
+/* Ofis konum haritası — css/base.css .info-map ile uyumlu (bu sayfa base.css yüklemiyor) */
+.info-map{position:relative;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--surface-2);margin:8px 0 4px}
+.info-map iframe{width:100%;height:360px;border:0;display:block}
+.info-map-link{position:absolute;right:14px;bottom:14px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-size:13px;font-weight:700;color:var(--accent);text-decoration:none;box-shadow:0 8px 24px -12px rgba(15,31,61,.4)}
+.info-map-link:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media(max-width:560px){.info-map iframe{height:300px}}
 </style>
 <main>
 <div class="legal-wrap">
@@ -1849,6 +1855,12 @@ body.tenant-dan #searchbar,body.tenant-dan .hero .hero-eye,body.tenant-dan .hero
     <li><b>WhatsApp:</b> <a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">0532 000 00 00</a></li>
     <li><b>Çalışma saatleri:</b> Hafta içi 09:00–19:00 · Cumartesi 10:00–17:00</li>
   </ul>
+  <h2>Ofis konumu</h2>
+  <p>Ofisimiz Konak / İzmir merkezindedir. Aşağıdaki haritadan konumu görebilir, tek dokunuşla yol tarifi alabilirsiniz.</p>
+  <div class="info-map">
+    <iframe src="https://maps.google.com/maps?q=Alsancak%20Mah.%20K%C4%B1br%C4%B1s%20%C5%9Eehitleri%20Cad.%20No%3A1%2C%20Konak%2C%20%C4%B0zmir&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Meridyen Gayrimenkul ofis konumu" style="border:0"></iframe>
+    <a class="info-map-link" href="https://www.google.com/maps/dir/?api=1&destination=Alsancak%20Mah.%20K%C4%B1br%C4%B1s%20%C5%9Eehitleri%20Cad.%20No%3A1%2C%20Konak%2C%20%C4%B0zmir" target="_blank" rel="noopener noreferrer">Yol tarifi al ↗</a>
+  </div>
   <h2>Hızlı iletişim</h2>
   <p>En hızlı yanıt için WhatsApp'tan yazabilir veya doğrudan arayabilirsiniz. Satılık/kiralık ilanlar için <a href="ilanlar.html">İlanlar</a>, gizli işlemler için <a href="ozel/">Özel Portföy</a> sayfamıza göz atın.</p>
   <p>Ekibimiz; alım, satım, kiralama, değerleme ve yatırım danışmanlığı konularında size bölgesel veriyle destek olur.</p>
@@ -1960,7 +1972,7 @@ document.addEventListener('DOMContentLoaded',function(){ if(location.hash){var e
 </script>
 <script src="js/tr-grammar.js?v=4"></script>
 <script src="js/tr-iller.js?v=2"></script>
-<script src="js/wl.js?v=4"></script>
+<script src="js/wl.js?v=5"></script>
 <script src="js/seo-chrome.js?v=3"></script>
 <script>
 /* Künye doldurucu: yayınlanan config → [data-kunye]. Veri yoksa görünür yer tutucu bırakır. */

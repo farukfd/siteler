@@ -6,8 +6,8 @@ const HERO_KEYS=['hero1','hero2','hero3'];
 const LIST_IMGS=['l1','l2','l3','l4','l5','l6'];
 
 /* ============ DEFAULT DATA ============ */
-const DEF_FIRMA={name:'Meridyen Gayrimenkul',tel:'+90 232 000 00 00',mail:'info@meridyengm.com',wa:'905000000000',adres:'Alsancak Mah. Kıbrıs Şehitleri Cad. No:00, Konak / İzmir',hours:'Hafta içi 09:00–19:00 · Cumartesi 10:00–17:00',vergi:'6100000000',yetkili:'',
-  kurulus:2007,vergiDaire:'Konak Vergi Dairesi',mersis:'0648010000000000',ticaretSicil:'İzmir Ticaret Sicil · 000000',oda:'İzmir Ticaret Odası · Üye No 00000',kep:'meridyengm@hs01.kep.tr',calisan:42,
+const DEF_FIRMA={name:'Meridyen Gayrimenkul',tel:'+90 232 464 64 64',mail:'info@meridyengm.com',wa:'905324646464',adres:'Alsancak Mah. Kıbrıs Şehitleri Cad. No:1, Konak / İzmir',hours:'Hafta içi 09:00–19:00 · Cumartesi 10:00–17:00',vergi:'6100561234',yetkili:'',
+  kurulus:2007,vergiDaire:'Konak Vergi Dairesi',mersis:'0648010012340001',ticaretSicil:'İzmir Ticaret Sicil · 214785',oda:'İzmir Ticaret Odası · Üye No 41287',kep:'meridyengm@hs01.kep.tr',calisan:42,
   lat:38.4322,lng:27.1419,
   social:{fb:'',ig:'',x:'',li:'',yt:''},/* boş → demo sosyal linkleri gizlenir (Meridyen'e gitmez); sihirbaz/admin doldurur */
   eids:{yetkili:true,belgeNo:'4827193',unvan:'Meridyen Gayrimenkul Danışmanlık Ltd. Şti.'}};
@@ -181,22 +181,22 @@ const TYPE_F={'Daire':1,'Villa':1.18,'Müstakil Ev':1.1,'Ofis / İş Yeri':0.94,
 function mkSpark(chg){let pts=[],n=7,base=40-(chg/12);for(let i=0;i<n;i++){let y=base-(i*(base-4)/(n-1));pts.push((i*20)+','+Math.max(3,Math.min(38,y)).toFixed(1));}return pts.join(' ');}
 
 const DEF_ILANLAR=[
- {id:1,title:'Körfez Manzaralı 3+1 Lüks Daire',op:'Satılık',type:'Daire',m2:165,oda:'3+1',kat:'7',ilce:'Konak',mah:'Alsancak',price:18500000,status:'aktif',feat:1,img:'l3',desc:'Yeni nesil rezidans, kapalı otopark, 7/24 güvenlik.',energy:'B',tour360Url:'../shared/vendor/sample-360.jpg',floorplanUrl:'../shared/vendor/sample-floorplan.svg'},
- {id:2,title:'Bahçeli Müstakil Villa',op:'Satılık',type:'Villa',m2:320,oda:'5+2',kat:'-',ilce:'Urla',mah:'Zeytinalanı',price:42000000,status:'aktif',feat:1,img:'l1',desc:'Özel bahçe, havuz, akıllı ev sistemi.'},
- {id:3,title:'Deniz Manzaralı 2+1 Daire',op:'Satılık',type:'Daire',m2:110,oda:'2+1',kat:'4',ilce:'Karşıyaka',mah:'Mavişehir',price:11200000,status:'aktif',feat:1,img:'l2',desc:'Sahile yürüme mesafesi, ferah salon.'},
- {id:4,title:'Modern Kiralık 1+1 Stüdyo',op:'Kiralık',type:'Daire',m2:62,oda:'1+1',kat:'3',ilce:'Bornova',mah:'Kazımdirik',price:38000,status:'aktif',feat:0,img:'l5',desc:'Eşyalı, metroya 3 dk, ofis bölgesinde.'},
- {id:5,title:'Geniş Aile Dairesi 4+1',op:'Satılık',type:'Daire',m2:210,oda:'4+1',kat:'9',ilce:'Buca',mah:'Şirinyer',price:9800000,status:'aktif',feat:0,img:'l6',desc:'Site içi, sosyal tesis, yeni bina.'},
- {id:6,title:'Plaza Katı Kiralık Ofis',op:'Kiralık',type:'Ofis / İş Yeri',m2:240,oda:'-',kat:'12',ilce:'Konak',mah:'Alsancak',price:185000,status:'aktif',feat:0,img:'l4',desc:'Açık ofis, toplantı odaları, otopark.'},
- {id:7,title:'Yatırımlık Arsa (İmarlı)',op:'Satılık',type:'Arsa',m2:600,oda:'-',kat:'-',ilce:'Menderes',mah:'Gümüldür',price:28000000,status:'aktif',feat:0,img:'l1',desc:'Konut imarlı, yola cepheli.'},
- {id:8,title:'Taş Mimari 3+1 Restorasyonlu',op:'Satılık',type:'Daire',m2:140,oda:'3+1',kat:'2',ilce:'Çeşme',mah:'Alaçatı',price:14500000,status:'aktif',feat:0,img:'l3',desc:'Karakteristik bina, yenilenmiş iç mekan.'},
- {id:9,title:'Sahil Yakını 2+1 Kiralık',op:'Kiralık',type:'Daire',m2:95,oda:'2+1',kat:'5',ilce:'Karşıyaka',mah:'Bostanlı',price:42000,status:'aktif',feat:0,img:'l2',desc:'Marina yakını, asansörlü, aydınlık.'}
+ {id:1,title:'Körfez Manzaralı 3+1 Lüks Daire',op:'Satılık',type:'Daire',m2:165,oda:'3+1',kat:'7',ilce:'Konak',mah:'Alsancak',price:18500000,status:'aktif',feat:1,img:'l3',desc:'Yeni nesil rezidans, kapalı otopark, 7/24 güvenlik.',energy:'B',ilanNo:'MG-1042',tarih:'2026-07-28',tour360Url:'../shared/vendor/sample-360.jpg',floorplanUrl:'../shared/vendor/sample-floorplan.svg'},
+ {id:2,title:'Bahçeli Müstakil Villa',op:'Satılık',type:'Villa',m2:320,oda:'5+2',kat:'-',ilce:'Urla',mah:'Zeytinalanı',price:42000000,status:'aktif',feat:1,img:'l1',desc:'Özel bahçe, havuz, akıllı ev sistemi.',energy:'A',ilanNo:'MG-1039',tarih:'2026-07-24'},
+ {id:3,title:'Deniz Manzaralı 2+1 Daire',op:'Satılık',type:'Daire',m2:110,oda:'2+1',kat:'4',ilce:'Karşıyaka',mah:'Mavişehir',price:11200000,status:'aktif',feat:1,img:'l2',desc:'Sahile yürüme mesafesi, ferah salon.',energy:'B',ilanNo:'MG-1051',tarih:'2026-07-30'},
+ {id:4,title:'Modern Kiralık 1+1 Stüdyo',op:'Kiralık',type:'Daire',m2:62,oda:'1+1',kat:'3',ilce:'Bornova',mah:'Kazımdirik',price:38000,status:'aktif',feat:0,img:'l5',desc:'Eşyalı, metroya 3 dk, ofis bölgesinde.',energy:'C',ilanNo:'MG-1055',tarih:'2026-08-01'},
+ {id:5,title:'Geniş Aile Dairesi 4+1',op:'Satılık',type:'Daire',m2:210,oda:'4+1',kat:'9',ilce:'Buca',mah:'Şirinyer',price:9800000,status:'aktif',feat:0,img:'l6',desc:'Site içi, sosyal tesis, yeni bina.',energy:'B',ilanNo:'MG-1033',tarih:'2026-07-19'},
+ {id:6,title:'Plaza Katı Kiralık Ofis',op:'Kiralık',type:'Ofis / İş Yeri',m2:240,oda:'-',kat:'12',ilce:'Konak',mah:'Alsancak',price:185000,status:'aktif',feat:0,img:'l4',desc:'Açık ofis, toplantı odaları, otopark.',energy:'C',ilanNo:'MG-1047',tarih:'2026-07-26'},
+ {id:7,title:'Yatırımlık Arsa (İmarlı)',op:'Satılık',type:'Arsa',m2:600,oda:'-',kat:'-',ilce:'Menderes',mah:'Gümüldür',price:28000000,status:'aktif',feat:0,img:'bolge',desc:'Konut imarlı, yola cepheli.',ilanNo:'MG-1028',tarih:'2026-07-15'},
+ {id:8,title:'Taş Mimari 3+1 Restorasyonlu',op:'Satılık',type:'Daire',m2:140,oda:'3+1',kat:'2',ilce:'Çeşme',mah:'Alaçatı',price:14500000,status:'aktif',feat:0,img:'pano',desc:'Karakteristik bina, yenilenmiş iç mekan.',energy:'D',ilanNo:'MG-1044',tarih:'2026-07-25'},
+ {id:9,title:'Sahil Yakını 2+1 Kiralık',op:'Kiralık',type:'Daire',m2:95,oda:'2+1',kat:'5',ilce:'Karşıyaka',mah:'Bostanlı',price:42000,status:'aktif',feat:0,img:'hero2',desc:'Marina yakını, asansörlü, aydınlık.',energy:'B',ilanNo:'MG-1058',tarih:'2026-08-03'}
 ];
 const DAN_COLORS=['#1e40af','#1e7e3a','#8b5cf6','#0284c7','#f59e0b','#0f766e','#be185d','#1e7e3a'];
 const DEF_DAN=[
- {id:1,name:'Ahmet Yılmaz',role:'Kıdemli Emlak Danışmanı',area:'Karşıyaka · Bostanlı · Mavişehir',wa:'905000000001',tel:'+90 532 000 00 01',sales:142,rating:4.9,exp:12,feat:1,demo:1,foto:'dan1',bio:'12 yıllık tecrübe, Karşıyaka–Bostanlı hattının lüks konut uzmanı.'},
- {id:2,name:'Zeynep Aksoy',role:'Yatırım Danışmanı',area:'Konak · Alsancak · Göztepe',wa:'905000000002',tel:'+90 532 000 00 02',sales:118,rating:4.8,exp:9,feat:1,demo:1,foto:'dan2',bio:'Konak–Alsancak yatırım gayrimenkulleri ve getiri analizi.'},
- {id:3,name:'Mehmet Demir',role:'Portföy Uzmanı',area:'Çeşme · Urla · Alaçatı',wa:'905000000003',tel:'+90 532 000 00 03',sales:96,rating:4.9,exp:7,feat:0,demo:1,foto:'dan3',bio:'Çeşme–Urla sahil ve villa portföyü konusunda uzman.'},
- {id:4,name:'Selin Kara',role:'Kiralama Uzmanı',area:'Bornova · Buca',wa:'905000000004',tel:'+90 532 000 00 04',sales:134,rating:5.0,exp:8,feat:0,demo:1,foto:'dan4',bio:'Kurumsal kiralama ve kira yönetimi süreçleri.'}
+ {id:1,name:'Ahmet Yılmaz',role:'Kıdemli Emlak Danışmanı',area:'Karşıyaka · Bostanlı · Mavişehir',wa:'905324646461',tel:'+90 532 464 64 61',sales:142,rating:4.9,exp:12,feat:1,demo:1,foto:'dan1',bio:'12 yıllık tecrübe, Karşıyaka–Bostanlı hattının lüks konut uzmanı.'},
+ {id:2,name:'Zeynep Aksoy',role:'Yatırım Danışmanı',area:'Konak · Alsancak · Göztepe',wa:'905324646462',tel:'+90 532 464 64 62',sales:118,rating:4.8,exp:9,feat:1,demo:1,foto:'dan2',bio:'Konak–Alsancak yatırım gayrimenkulleri ve getiri analizi.'},
+ {id:3,name:'Mehmet Demir',role:'Portföy Uzmanı',area:'Çeşme · Urla · Alaçatı',wa:'905324646463',tel:'+90 532 464 64 63',sales:96,rating:4.9,exp:7,feat:0,demo:1,foto:'dan3',bio:'Çeşme–Urla sahil ve villa portföyü konusunda uzman.'},
+ {id:4,name:'Selin Kara',role:'Kiralama Uzmanı',area:'Bornova · Buca',wa:'905324646464',tel:'+90 532 464 64 64',sales:134,rating:5.0,exp:8,feat:0,demo:1,foto:'dan4',bio:'Kurumsal kiralama ve kira yönetimi süreçleri.'}
 ];
 
 /* ============ STATE + STORAGE ============ */
@@ -234,7 +234,7 @@ const DEF_RENTS=[
  {id:502,prop:'Ataköy 2+1',tenant:'Selin Demir',amount:42000,start:'2026-01-15',due:10,status:'bekliyor'},
  {id:503,prop:'Fulya Ofis Katı',tenant:'NovaTech Ltd.',amount:185000,start:'2024-11-01',due:1,status:'gecikti'}
 ];
-const DEF_CONTENT={heroEyebrow:'İzmir & Ege · 480M+ kayıtlık endeks ile çalışıyoruz',heroTitle:'Doğru evi,',heroTitle2:'doğru veriyle buluşturuyoruz',heroDesc:'Satılık ve kiralık portföyümüzün her ilanında mahalle fiyat endeksi, yatırım skoru ve bölge analizi var. Duyguyla değil; veriyle karar verin.',aboutText:'Meridyen Gayrimenkul, İzmir ve Ege bölgesinde 18 yıldır faaliyet gösteriyor. Bizi farklı kılan, her ilan ve her danışmanlığın arkasındaki veri disiplinimiz: Türkiye\'nin kapsamlı endeks altyapısıyla, müşterilerimize duygu değil rakam sunuyoruz.'};
+const DEF_CONTENT={heroEyebrow:'İzmir & Ege · 480M+ kayıtlık endeks ile çalışıyoruz',heroTitle:'Doğru evi,',heroTitle2:'doğru veriyle buluşturuyoruz',heroDesc:'Satılık ve kiralık portföyümüzün her ilanında mahalle fiyat endeksi, yatırım skoru ve bölge analizi var. Duyguyla değil; veriyle karar verin.',aboutText:'Meridyen Gayrimenkul, İzmir ve Ege bölgesinde 2007 yılından bu yana faaliyet gösteriyor. Bizi farklı kılan, her ilan ve her danışmanlığın arkasındaki veri disiplinimiz: Türkiye\'nin kapsamlı endeks altyapısıyla, müşterilerimize duygu değil rakam sunuyoruz.'};
 const DEF_BLOGS=[{id:1,title:'2026\'da değer kazanacak 5 İzmir mahallesi',cat:'Yatırım',sum:'Endeks verileri ışığında yükseliş potansiyeli en yüksek bölgeler.',icon:'📈',meta:'8 dk okuma · Haz 2026',date:'2026-06-18',src:'firma',body:'Bölge seçimi, gayrimenkul yatırımının en belirleyici adımıdır. m² fiyatının bugünkü seviyesi kadar, o bölgenin son 5 yıldaki reel değişim eğilimi ve yatırım skoru da önemlidir.\n\nUlaşım yatırımları, kentsel dönüşüm hareketliliği ve altyapı gelişimi, bir mahallenin orta vadeli prim potansiyelini yukarı çeker. Aşırı prim yapmış bölgeler yerine, gelişim koridorundaki mahalleler daha yüksek getiri sunabilir.\n\nKarar vermeden önce bölge endeksini, kira çarpanını ve arz-talep dengesini birlikte değerlendirin. Kesin rakamlar için güncel ProX endeksiyle teyit alın.'},
  {id:2,title:'Konut kredisinde 2026 faiz rehberi',cat:'Kredi',sum:'Banka banka oranlar, uygunluk kriterleri ve esnek ödeme planları.',icon:'🏦',meta:'6 dk okuma · Haz 2026',date:'2026-06-10',src:'firma',body:'Konut kredisi kararında yalnızca faiz oranı değil; ekspertiz değeri, kredi/değer oranı, vade ve toplam maliyet birlikte değerlendirilmelidir.\n\nGenel kural olarak kredi, ekspertiz değerinin belirli bir yüzdesine kadar kullanılabilir; kalan tutar peşinat olarak gerekir. Ödeme planınızı gelir istikrarınıza göre kurgulayın.\n\nBaşvuru öncesi evraklarınızı hazırlamak süreci belirgin hızlandırır. Size en uygun yapı için ücretsiz ön değerlendirme alın.'},
  {id:3,title:'Tapu devrinde dikkat edilmesi gereken 9 şey',cat:'Hukuk',sum:'Alıcı ve satıcı için TKGM süreci, vergiler ve sık yapılan hatalar.',icon:'📋',meta:'10 dk okuma · May 2026',date:'2026-05-22',src:'firma',body:'Tapu devri, gayrimenkul işleminin hukuki olarak tamamlandığı kritik aşamadır. Web Tapu başvurusu, harç ödemesi ve randevu adımları eksiksiz yürütülmelidir.\n\nDevir öncesi tapu kaydında haciz, ipotek veya şerh olup olmadığı mutlaka kontrol edilmelidir. Alıcı ve satıcının kimlik ve yetki belgeleri hazır olmalıdır.\n\nHarç ve döner sermaye bedelleri, taraflar arasında önceden yazılı olarak netleştirilmelidir. Süreci hatasız yönetmek için profesyonel destek almanızı öneririz.'}];
@@ -343,9 +343,14 @@ function gmIlanView(){
 }
 function gmPublicIlan(){var v=gmIlanView();return (window.Listings&&Listings.publicList)?Listings.publicList(v):v.filter(function(i){return i.eids&&i.eids.status==='dogrulandi';});}
 function gmListNormalize(r){ if(!r)return null;
+  var _dist=(typeof IZMIR_PROVINCE!=='undefined'&&IZMIR_PROVINCE.districts&&IZMIR_PROVINCE.districts[r.ilce])||null;
+  var _m2=+(r.m2||(r.attrs&&r.attrs.m2))||0;
   return {id:r.id,title:r.title,op:r.op,type:r.type,
     priceText:(r.op==='Kiralık'?fmt(r.price)+' ₺/ay':fmt(r.price)+' ₺'),
-    images:((window.Listings&&Listings.catImages)?Listings.catImages(r,4):[imgSrc(r.img)].concat(_gmGal(r))), il:r.il,ilce:r.ilce,mah:r.mah,
+    m2num:_m2, price:+r.price||0,
+    ppm:(r.op!=='Kiralık'&&r.price&&_m2)?Math.round(r.price/_m2):0,
+    endeks:(_dist?_dist.m2:0), endeksChg:(_dist?_dist.chg:0), skor:(_dist?_dist.score:0),
+    images:(function(){var own=(typeof imgSrc==='function'&&r.img)?imgSrc(r.img):'';var rest=(window.Listings&&Listings.catImages)?Listings.catImages(r,4):_gmGal(r);rest=(rest||[]).filter(function(x){return x&&x!==own;});return own?[own].concat(rest).slice(0,5):rest;})(), il:r.il,ilce:r.ilce,mah:r.mah,
     specs:[{k:'Brüt m²',v:((r.m2||(r.attrs&&r.attrs.m2))?((r.m2||r.attrs.m2)+' m²'):'')},{k:'Oda',v:r.oda||(r.attrs&&r.attrs.oda)},{k:'Kat',v:(r.kat&&r.kat!=='-'?r.kat:(r.attrs&&r.attrs.kat))},{k:'Tip',v:r.type}],
     features:r.features||[], attrs:r.attrs, desc:r.desc, eids:r.eids,
     videoUrl:r.videoUrl, tour360Url:r.tour360Url, floorplanUrl:r.floorplanUrl, media:r.media, energy:r.energy, ilanNo:r.ilanNo, tarih:r.tarih };
@@ -353,8 +358,8 @@ function gmListNormalize(r){ if(!r)return null;
 var GM_LIST_CFG={ns:'gm',
   brand:function(){try{return (typeof brandName==='function'?brandName():((FIRMA&&FIRMA.name)||'Meridyen Gayrimenkul'));}catch(e){return 'Meridyen Gayrimenkul';}},
   phone:function(){try{return (typeof FIRMA!=='undefined'&&FIRMA.tel)||'+90 232 444 55 66';}catch(e){return '+90 232 444 55 66';}},
-  whatsapp:function(){return '905320000000';},
-  agent:function(){try{return {name:'Emre Yıldız',photo:(typeof imgSrc==='function'?imgSrc('dan1'):''),title:((typeof brandName==='function'?brandName():'Meridyen')+' · Gayrimenkul Danışmanı'),experience:12};}catch(e){return {name:'Emre Yıldız',title:'Gayrimenkul Danışmanı',experience:12};}},
+  whatsapp:function(){try{return (typeof FIRMA!=='undefined'&&FIRMA.wa)||'905324646464';}catch(e){return '905324646464';}},
+  agent:function(l){try{var dans=(typeof DANISMANLAR!=='undefined'&&DANISMANLAR&&DANISMANLAR.length)?DANISMANLAR:DEF_DAN;var ilce=(l&&l.ilce)||'';var pick=null;for(var i=0;i<dans.length;i++){if((dans[i].area||'').indexOf(ilce)>=0){pick=dans[i];break;}}if(!pick){var sahil=['Çeşme','Urla','Alaçatı','Menderes','Seferihisar','Karaburun','Gümüldür','Foça'];pick=(sahil.indexOf(ilce)>=0)?(dans[2]||dans[0]):(dans[1]||dans[0]);}var br=(typeof brandName==='function'?brandName():'Meridyen');return {name:pick.name,photo:(typeof imgSrc==='function'?imgSrc(pick.foto||'dan1'):''),title:br+' · '+(pick.role||'Gayrimenkul Danışmanı'),experience:pick.exp||10,wa:pick.wa,tel:pick.tel,area:pick.area,rating:pick.rating};}catch(e){return {name:'Meridyen Danışmanı',title:'Gayrimenkul Danışmanı',experience:10};}},
   navHTML:function(){try{var el=document.querySelector('header')||document.querySelector('.siteNav');return el?el.outerHTML:'';}catch(e){return '';}},
   footerHTML:function(){try{var el=document.querySelector('footer.siteFooter, .siteFooter, footer');return el?el.outerHTML:'';}catch(e){return '';}},
   onContact:function(){try{if(window.Listings)Listings.closeDetail();}catch(e){}try{toast('Talebiniz alındı — danışmanımız kısa sürede sizinle iletişime geçecek.');}catch(e){}},
@@ -4443,6 +4448,12 @@ function mountSiteChrome(){document.querySelectorAll('.siteNav').forEach(functio
   try{if(typeof brandSweep==='function')brandSweep(document.body);}catch(e){}
   try{if(typeof applyFirma==='function')applyFirma();}catch(e){}/* geç-render footer: iletişim + sosyal href'leri (applySocial) uygula */}
 mountSiteChrome();
+/* GÜVENLİK AĞI: tenant FIRMA mount'tan sonra (async) yüklenirse chrome WhatsApp
+   linkleri sentinel'de (905000000000/905320000000) kalabilir → gerçek numaraya çek.
+   Geç-render + re-mount'ları yakalamak için birkaç gecikmede tekrar dener. */
+function _gmFixChromeWa(){try{var _fw=(typeof FIRMA!=='undefined'&&FIRMA&&FIRMA.wa)||'';_fw=String(_fw).replace(/[^0-9]/g,'');if(_fw&&_fw!=='905000000000'){document.querySelectorAll('a[href*="wa.me/905000000000"],a[href*="wa.me/905320000000"]').forEach(function(a){a.href=a.href.split('905000000000').join(_fw).split('905320000000').join(_fw);});}}catch(e){}}
+[300,900,1800,3000].forEach(function(d){setTimeout(_gmFixChromeWa,d);});
+addEventListener('load',_gmFixChromeWa);
 function gmDockSync(){try{var mb=document.querySelector('.mbar');if(!mb)return;var as=mb.querySelectorAll('a');for(var i=0;i<as.length;i++){if((as[i].className||'').indexOf('wa')<0)as[i].classList.remove('active');}var y=(window.scrollY||window.pageYOffset||0)+150;var il=document.getElementById('ilanlar'),hk=document.getElementById('hakkimizda');var idx=0;if(il&&y>=il.offsetTop)idx=0;if(hk&&y>=hk.offsetTop)idx=1;if(as[idx]&&(as[idx].className||'').indexOf('wa')<0)as[idx].classList.add('active');}catch(e){}}
 addEventListener('scroll',gmDockSync,{passive:true});setTimeout(gmDockSync,120);
 /* ============================================================
