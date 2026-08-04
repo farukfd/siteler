@@ -134,7 +134,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <!-- TEMA: themes kütüphanesinden seç (tenant başına değiştir). Aktif: Meridyen -->
   <link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=4">
-  <link rel="stylesheet" href="css/base.css?v=23">
+  <link rel="stylesheet" href="css/base.css?v=25">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg">
 <script src="js/brand.js?v=3"></script>
@@ -180,21 +180,30 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   <div class="wrap">
     <div class="pcw" id="pusulaHero">
       <div class="pc-controls">
-        <div class="pc-seg" id="pc_amac" role="group" aria-label="Amaç">
-          <button class="on" data-a="Satılık">Satılık</button>
-          <button data-a="Kiralık">Kiralık</button>
-          <button data-a="Günlük">Günlük</button>
+        <div class="pc-step">
+          <span class="pc-step-l"><b>1</b> Amaç</span>
+          <div class="pc-seg" id="pc_amac" role="group" aria-label="Amaç">
+            <button class="on" data-a="Satılık">Satılık</button>
+            <button data-a="Kiralık">Kiralık</button>
+            <button data-a="Günlük">Günlük</button>
+          </div>
         </div>
-        <div class="pc-chips" id="pc_butce">
-          <button class="on" data-b="0">Bütçe: Farketmez</button>
-          <button data-b="5000000">≤5M</button>
-          <button data-b="10000000">≤10M</button>
-          <button data-b="20000000">≤20M</button>
-          <button data-b="50000000">≤50M</button>
+        <div class="pc-step">
+          <span class="pc-step-l"><b>2</b> Bütçe</span>
+          <div class="pc-chips" id="pc_butce" role="group" aria-label="Bütçe">
+            <button class="on" data-b="0">Farketmez</button>
+            <button data-b="5000000">≤5M</button>
+            <button data-b="10000000">≤10M</button>
+            <button data-b="20000000">≤20M</button>
+            <button data-b="50000000">≤50M</button>
+          </div>
         </div>
-        <select id="pc_bolge" class="pc-sel" aria-label="Bölge">
-          <option value="">Tüm Bölgeler</option><option>Konak</option><option>Karşıyaka</option><option>Bornova</option><option>Buca</option><option>Çeşme</option><option>Urla</option>
-        </select>
+        <div class="pc-step">
+          <span class="pc-step-l"><b>3</b> Bölge</span>
+          <select id="pc_bolge" class="pc-sel" aria-label="Bölge">
+            <option value="">Tüm Bölgeler</option><option>Konak</option><option>Karşıyaka</option><option>Bornova</option><option>Buca</option><option>Çeşme</option><option>Urla</option>
+          </select>
+        </div>
       </div>
 
       <div class="pc-compass" id="pc_compass">
@@ -225,10 +234,13 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
         </div>
       </div>
 
-      <div class="pc-prio">
-        <span class="pc-prio-l">🏡 Yaşam · Konfor</span>
-        <input type="range" id="pc_oncelik" min="0" max="100" value="50" aria-label="Öncelik: Yaşam ↔ Yatırım">
-        <span class="pc-prio-r">Yatırım · Getiri 📈</span>
+      <div class="pc-prio-wrap">
+        <span class="pc-step-l center"><b>4</b> Öncelik</span>
+        <div class="pc-prio">
+          <span class="pc-prio-l">🏡 Yaşam · Konfor</span>
+          <input type="range" id="pc_oncelik" min="0" max="100" value="50" aria-label="Öncelik: Yaşam ↔ Yatırım">
+          <span class="pc-prio-r">Yatırım · Getiri 📈</span>
+        </div>
       </div>
 
       <div class="pc-ozel" id="pc_ozel" hidden></div>
@@ -2034,7 +2046,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   <script src="../shared/cs-engine.js?v=2"></script>
   <script src="js/app.js?v=53"></script>
   <script src="js/content-studio.js?v=19"></script>
-  <script src="js/hero-pusula.js?v=2"></script>
+  <script src="js/hero-pusula.js?v=3"></script>
   <script src="../shared/mahalle-endeks.js?v=2"></script>
   <script src="js/mahalle-endeks.js?v=10"></script>
   <script src="js/kurumsal-sayfalar.js?v=4"></script>
