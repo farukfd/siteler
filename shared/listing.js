@@ -237,7 +237,7 @@
       +(wa?'<a class="lst-cta-b lstwa" href="'+esc(wa)+'" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 .9-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4-.1.6.5l.8 1.9c.1.1.1.3 0 .5l-.4.5-.3.3c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l1.8.9c.2.1.4.2.4.3.1.1.1.6-.1 1.2Z"/></svg> WhatsApp</a>':'')
       +(tel?'<a class="lst-cta-b tel" href="'+esc(tel)+'" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.4 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg> Ara</a>':'')
       +'</div>'):'';
-    return '<article class="lst-card" '+(open?('tabindex="0" role="button" onclick="'+open+'" onkeydown="if(event.key===\'Enter\'){'+open+'}"'):'')+'>'
+    return '<article class="lst-card" '+(open?('tabindex="0" role="button" aria-label="'+esc((l.title||'İlan')+(l.priceText?(' — '+l.priceText):''))+'" onclick="'+open+'" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();'+open+'}"'):'')+'>'
       +'<div class="lst-ph">'+(cov?'<img src="'+esc(cov)+'" alt="'+esc(l.title||'')+'" loading="lazy" decoding="async" onerror="this.style.display=\'none\';this.parentNode.classList.add(\'noimg\')">':'')+'<span class="lst-ph-x">🏢</span>'
         +'<span class="lst-op '+_opClass(l.op)+'">'+esc(l.op||'Satılık')+'</span>'
         +_favBtn(l,cfg)
@@ -261,7 +261,7 @@
     if(L._extGallery){try{var _g=L._extGallery(l);if(_g)return _g;}catch(e){}}
     var im=_arr(l.images); if(!im.length)return '<div class="lstd-cover lstd-empty"><span>🏢</span></div>';
     var main='<div class="lstd-cover" onclick="if(Listings._extLightbox)Listings._extLightbox(Listings._lbIdx||0)" style="cursor:zoom-in"><img id="lstdMain" src="'+esc(im[0])+'" alt="'+esc(l.title||'')+'" onerror="this.style.display=\'none\'"><span class="lstd-zoom" aria-hidden="true">⛶</span></div>';
-    var thumbs=im.length>1?('<div class="lstd-thumbs">'+im.map(function(u,i){return '<button type="button" class="lstd-th'+(i===0?' on':'')+'" onclick="Listings._pick(this,\''+esc(u)+'\')"><img src="'+esc(u)+'" alt="" loading="lazy"></button>';}).join('')+'</div>'):'';
+    var thumbs=im.length>1?('<div class="lstd-thumbs">'+im.map(function(u,i){return '<button type="button" class="lstd-th'+(i===0?' on':'')+'" aria-label="Fotoğraf '+(i+1)+'" onclick="Listings._pick(this,\''+esc(u)+'\')"><img src="'+esc(u)+'" alt="" loading="lazy"></button>';}).join('')+'</div>'):'';
     return main+thumbs;
   }
   L._pick=function(btn,u){ var m=document.getElementById('lstdMain'); if(m)m.src=u; try{var p=btn.parentNode;var ths=[].slice.call(p.querySelectorAll('.lstd-th'));ths.forEach(function(b,i){b.classList.toggle('on',b===btn);if(b===btn)L._lbIdx=i;});}catch(e){} };
@@ -404,10 +404,10 @@
     box.innerHTML=''
       +'<form class="lstd-appt-form" onsubmit="return Listings._randevuSubmit(\''+esc(ns)+'\',\''+esc(id)+'\')">'
       +'<div class="lstd-appt-t">Randevu / Bilgi Talebi</div>'
-      +'<input class="lstd-appt-i" id="lstAp_name" type="text" placeholder="Ad Soyad *" autocomplete="name">'
-      +'<input class="lstd-appt-i" id="lstAp_phone" type="tel" placeholder="Telefon *" autocomplete="tel">'
+      +'<input class="lstd-appt-i" id="lstAp_name" type="text" placeholder="Ad Soyad *" aria-label="Ad Soyad" autocomplete="name" required aria-required="true">'
+      +'<input class="lstd-appt-i" id="lstAp_phone" type="tel" placeholder="Telefon *" aria-label="Telefon" autocomplete="tel" required aria-required="true">'
       +'<input class="lstd-appt-i" id="lstAp_date" type="date" aria-label="Tercih edilen tarih">'
-      +'<textarea class="lstd-appt-i" id="lstAp_note" rows="2" placeholder="Not (isteğe bağlı)"></textarea>'
+      +'<textarea class="lstd-appt-i" id="lstAp_note" rows="2" placeholder="Not (isteğe bağlı)" aria-label="Not"></textarea>'
       +'<label class="lstd-appt-k"><input type="checkbox" id="lstAp_kvkk"> <span>KVKK kapsamında tarafımla iletişim kurulmasını onaylıyorum.</span></label>'
       +'<button type="submit" class="lstd-btn pri">Talebi Gönder</button>'
       +'</form>';
@@ -500,7 +500,7 @@
     +'.lst-ph img{width:100%;height:100%;object-fit:cover;transition:transform .4s}.lst-card:hover .lst-ph img{transform:scale(1.06)}'
     +'.lst-ph-x{position:absolute;inset:0;display:grid;place-items:center;font-size:40px;opacity:.4}'
     +'.lst-op{position:absolute;top:12px;left:12px;font-size:11.5px;font-weight:800;letter-spacing:.02em;color:#fff;padding:5px 11px;border-radius:999px;text-transform:uppercase;box-shadow:0 2px 8px rgba(0,0,0,.2)}'
-    +'.lst-op.sale{background:'+A+'}.lst-op.rent{background:#b4791f}.lst-op.proj{background:#5b6470}'
+    +'.lst-op.sale{background:'+A+'}.lst-op.rent{background:#8a5a00}.lst-op.proj{background:#5b6470}'
     +'.lst-eids-mini{position:absolute;top:12px;right:12px;display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:800;color:#fff;background:rgba(15,122,61,.92);padding:4px 8px;border-radius:999px}'
     +'.lst-count{position:absolute;bottom:12px;right:12px;font-size:11px;font-weight:700;color:#fff;background:rgba(0,0,0,.55);padding:3px 9px;border-radius:999px}'
     +'.lst-body{padding:15px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}'

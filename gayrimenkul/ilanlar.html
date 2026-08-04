@@ -128,7 +128,7 @@
 
 <script src="../shared/eids.js?v=1"></script>
 <link rel="stylesheet" href="../shared/vendor/pannellum.css?v=1">
-<script src="../shared/listing.js?v=19"></script>
+<script src="../shared/listing.js?v=20"></script>
 <script src="../shared/vendor/pannellum.js?v=1"></script>
 <script src="../shared/listing-extras.js?v=7"></script>
 <script src="../shared/listings-page.js?v=1"></script>
@@ -193,7 +193,11 @@
       videoUrl:r.videoUrl, tour360Url:r.tour360Url, floorplanUrl:r.floorplanUrl, media:r.media, energy:r.energy,
       ilanNo:r.ilanNo||('MG-'+(1000+(+r.id||0))), tarih:r.tarih||_tar(r.id) };
   }
-  function listFn(){ return ilanView().map(norm).filter(Boolean); }
+  function listFn(){ var arr=ilanView().map(norm).filter(Boolean);
+    /* KAPAK BENZERSİZLİĞİ: kategori-havuzu hash çakışması aynı kapağı iki ilana verebilir
+       (id3≡id9 vb.) → görünür kartlarda kapak tekrarını önlemek için galeriyi döndür */
+    var seen={}; arr.forEach(function(l){ if(l&&l.images&&l.images.length){ var g=0; while(seen[l.images[0]]&&g<l.images.length){ l.images.push(l.images.shift()); g++; } seen[l.images[0]]=1; } });
+    return arr; }
 
   /* js/app.js DEF_DAN — gerçek 4 danışman (ilçe→bölge eşlemesi GM_LIST_CFG.agent ile birebir) */
   var GM_DAN=[

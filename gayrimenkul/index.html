@@ -140,6 +140,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <script src="js/brand.js?v=3"></script>
 </head>
 <body>
+<a href="#ilanlar" style="position:absolute;left:-9999px;top:0;z-index:9999;background:var(--accent);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:700;text-decoration:none" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">İçeriğe geç</a>
 <div id="site">
 
 <!-- ===== TOPBAR ===== -->
@@ -536,7 +537,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
     <button onclick="aiQuick('Bütçem 12 milyon, hangi bölgeyi önerirsin?')">12M ile nereye?</button>
     <button onclick="aiQuick('Ev değerleme nasıl yapılıyor?')">Değerleme nasıl?</button>
   </div>
-  <div class="ai-input"><input id="aiChatIn" placeholder="Bir soru yazın..." onkeydown="if(event.key==='Enter')aiSend()"><button onclick="aiSend()">➤</button></div>
+  <div class="ai-input"><input id="aiChatIn" placeholder="Bir soru yazın..." onkeydown="if(event.key==='Enter')aiSend()"><button onclick="aiSend()" aria-label="Gönder">➤</button></div>
 </div>
 
 <!-- 360° / VR GÖZLÜK GEZİNTİ -->
@@ -563,7 +564,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 </div>
 
 <!-- ===== TOAST ===== -->
-<div id="toast"></div>
+<div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <!-- ===== LEAD MODAL ===== -->
 <div class="modal" id="leadModal" onclick="if(event.target.id==='leadModal')closeLead()"><div class="mbox">
@@ -2027,7 +2028,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
   <script src="../shared/eids.js?v=1"></script>
   <link rel="stylesheet" href="../shared/vendor/pannellum.css?v=1">
-<script src="../shared/listing.js?v=19"></script>
+<script src="../shared/listing.js?v=20"></script>
 <script src="../shared/vendor/pannellum.js?v=1"></script>
 <script src="../shared/listing-extras.js?v=7"></script>
   <script src="../shared/cs-engine.js?v=2"></script>
