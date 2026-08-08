@@ -246,9 +246,14 @@
   function _cmpLoad(){ try{return JSON.parse(localStorage.getItem('lst_compare')||'[]')||[];}catch(e){return [];} }
   function _cmpSave(a){ try{localStorage.setItem('lst_compare',JSON.stringify(a.slice(0,4)));}catch(e){} }
   function _cmpHas(ns,id){ return _cmpLoad().some(function(x){return x.ns===ns&&String(x.id)===String(id);}); }
-  L._extToggleCmp=function(ns,id,btn){ var a=_cmpLoad(); var i=a.findIndex(function(x){return x.ns===ns&&String(x.id)===String(id);});
+  L._extHasCmp=function(ns,id){ return _cmpHas(ns,id); };
+  L._extToggleCmp=function(ns,id,btn,ev){ if(ev&&ev.stopPropagation){ev.stopPropagation();if(ev.preventDefault)ev.preventDefault();}
+    var a=_cmpLoad(); var i=a.findIndex(function(x){return x.ns===ns&&String(x.id)===String(id);});
     if(i>=0)a.splice(i,1); else { if(a.length>=4){alert('En fazla 4 ilan karşılaştırılır.');return;} a.push({ns:ns,id:String(id)}); }
-    _cmpSave(a); if(btn){var on=i<0;btn.classList.toggle('on',on);btn.textContent=on?'✓ Karşılaştırmada':'⇄ Karşılaştır';} _cmpBar();
+    _cmpSave(a); var on=i<0;
+    if(btn){ if(btn.classList.contains('lst-cmpc')){btn.classList.toggle('on',on);btn.title=on?'Karşılaştırmadan çıkar':'Karşılaştırmaya ekle';}
+      else {btn.classList.toggle('on',on);btn.textContent=on?'✓ Karşılaştırmada':'⇄ Karşılaştır';} }
+    _cmpBar();
   };
   function _cmpResolve(){ return _cmpLoad().map(function(x){ var c=L._reg&&L._reg[x.ns]; var arr=(c&&c.list&&c.list())||[]; var l=arr.filter(function(y){return String(y.id)===String(x.id);})[0]; return l?{l:l,cfg:c,ns:x.ns}:null; }).filter(Boolean); }
   function _cmpBar(){ var n=_cmpLoad().length; var bar=document.getElementById('lstCmpBar');

@@ -164,3 +164,10 @@ Blog ana sayfası (`index.html#blog`) ve **haber detay sayfası** emlakekspertiz
 - Sunucu, kiracının Google Business Profile verisini **Places API ile günde 1-2 kez** çeker ve önbellekler (anahtar istemciye inmez).
 - place_id, kurulum sihirbazı 1. adımda toplanan "Mevcut web / Google işletme URL" (`wl_brandUrl` → tenant kaydı) alanından türetilir.
 - İstemci 6 saat localStorage önbelleği kullanır; uç yoksa temsilî 4,9 · "demo" rozetiyle düşer (gmGoogleRating, js/app.js).
+
+## Kayıtlı Arama Bildirim Ucu (İlanlar sayfası — 🔔 Aramayı kaydet)
+İstemci kayıtlı aramaları `lp_saved_searches` (misafir) / üye kaydı `gm_ss_<email>` içinde tutar ve
+sayfa açılışında yeni-eşleşme rozetini İSTEMCİDE hesaplar. Sunucu e-posta bildirimi için:
+`POST /api/v1/tenant/saved-search`  → {memberEmail, name, criteria{dur,kat,il,ilce,q}, ts}
+`DELETE /api/v1/tenant/saved-search/:id`
+Sunucu cron: yeni ilan yayınlandığında kriterlerle eşleşen kayıtlı aramalara e-posta (ileride push/SMS §5).

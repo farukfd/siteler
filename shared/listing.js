@@ -191,6 +191,8 @@
     try{[].forEach.call(document.querySelectorAll('.lst-fav[data-fid="'+id+'"]'),function(b){b.classList.toggle('on',on);b.innerHTML=on?'♥':'♡';});}catch(e){}
     try{[].forEach.call(document.querySelectorAll('.lst-favline[data-fid="'+id+'"]'),function(b){b.classList.toggle('on',on);b.innerHTML=on?'♥ Favorilerimde':'♡ Favorilere Ekle';});}catch(e){}
     var c=L._reg[ns]; if(c&&c.onFav){try{c.onFav(id,on);}catch(e){}} return on; };
+  function _cmpCardBtn(l,cfg){ if(!(L._extToggleCmp))return ''; var ns=cfg.ns||''; var on=!!(L._extHasCmp&&L._extHasCmp(ns,l.id));
+    return '<button type="button" class="lst-cmpc'+(on?' on':'')+'" data-cid="'+esc(l.id)+'" title="'+(on?'Karşılaştırmadan çıkar':'Karşılaştırmaya ekle')+'" aria-label="Karşılaştır" onclick="Listings._extToggleCmp(\''+esc(ns)+'\',\''+esc(l.id)+'\',this,event)">⇄</button>'; }
   function _favBtn(l,cfg){ var ns=cfg.ns||''; var on=L.isFav(ns,l.id); return '<button type="button" class="lst-fav'+(on?' on':'')+'" data-fid="'+esc(l.id)+'" title="Favorilere ekle" aria-label="Favori" onclick="Listings.toggleFav(\''+esc(ns)+'\',\''+esc(l.id)+'\',this,event)">'+(on?'♥':'♡')+'</button>'; }
 
   /* ---- AI BAŞLIK (admin) ---- */
@@ -247,7 +249,7 @@
     return '<article class="lst-card" '+(open?('tabindex="0" role="button" aria-label="'+esc((l.title||'İlan')+(l.priceText?(' — '+l.priceText):''))+'" onclick="'+open+'" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();'+open+'}"'):'')+'>'
       +'<div class="lst-ph">'+(cov?'<img src="'+esc(cov)+'" alt="'+esc(l.title||'')+'" loading="lazy" decoding="async" onerror="this.style.display=\'none\';this.parentNode.classList.add(\'noimg\')">':'')+'<span class="lst-ph-x">🏢</span>'
         +'<span class="lst-op '+_opClass(l.op)+'">'+esc(l.op||'Satılık')+'</span>'
-        +_favBtn(l,cfg)
+        +_favBtn(l,cfg)+_cmpCardBtn(l,cfg)
         +(_canPub(l)?'<span class="lst-eids-mini" title="EİDS Doğrulandı">'+(window.EIDS&&EIDS.shield?EIDS.shield(12):'')+' EİDS</span>':'')
         +(_arr(l.images).length>1?'<span class="lst-count">📷 '+_arr(l.images).length+'</span>':'')
       +'</div>'
@@ -576,6 +578,7 @@
     +'.lst-cta-b{flex:1 1 0;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 8px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;border:1px solid '+LINE+';cursor:pointer;box-sizing:border-box}'
     +'.lst-cta-b.lstwa{background:#25d366;color:#fff;border-color:transparent}'
     +'.lst-cta-b.tel{background:color-mix(in srgb,var(--accent) 10%,#fff);border-color:color-mix(in srgb,var(--accent) 38%,transparent);color:'+A+'}.lst-cta-b.tel:hover{background:color-mix(in srgb,var(--accent) 18%,#fff);border-color:'+A+'}'
+    +'.lst-cmpc{position:absolute;top:52px;right:12px;z-index:3;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#0e7490;font-size:15px;font-weight:800;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.22);display:grid;place-items:center;transition:transform .12s}.lst-cmpc:hover{transform:scale(1.08)}.lst-cmpc.on{background:#0e7490;color:#fff}'
     +'.lst-fav{position:absolute;top:12px;right:12px;z-index:3;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#e0245e;font-size:17px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.22);display:grid;place-items:center;transition:transform .12s}'
     +'.lst-fav:hover{transform:scale(1.12)}'
     +'.lst-eids-mini{right:54px}'

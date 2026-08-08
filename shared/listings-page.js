@@ -55,7 +55,8 @@
           +'<option value="fiyat-azalan">Fiyat (Azalan)</option>'
         +'</select>'
       +'</div>'
-      +'<div class="lp-meta"><span class="lp-live"><span class="lp-dot"></span>EİDS yetki belgeli</span> · <b id="lpCount">0</b> ilan listeleniyor <button type="button" class="lp-clear" id="lpClear" onclick="ListingsPage.clear()">Filtreleri temizle</button></div>'
+      +'<div class="lp-meta"><span class="lp-live"><span class="lp-dot"></span>EİDS yetki belgeli</span> · <b id="lpCount">0</b> ilan listeleniyor <button type="button" class="lp-clear" id="lpClear" onclick="ListingsPage.clear()">Filtreleri temizle</button><button type="button" class="lp-savebtn" id="lpSaveBtn" onclick="ListingsPage.saveSearch()">🔔 Aramayı kaydet</button></div>'
+    +'<div class="lp-saved" id="lpSaved" hidden></div>'
     +'</div>'
     +'<div class="lst-grid" id="lpGrid"><div class="lp-skel">İlanlar yükleniyor…</div></div>';
   }
@@ -108,6 +109,54 @@
     try{if(LP._opts.onRender)LP._opts.onRender(f);}catch(e){}
   };
 
+  /* ═══ KAYITLI ARAMA (üyelik kancalı: GM_SS_READ/SYNC — tanımsız sitede yerel) ═══ */
+  function _ssLoad(){ try{if(window.GM_SS_READ){var r=window.GM_SS_READ();if(r)return r;}}catch(e){}
+    try{return JSON.parse(localStorage.getItem('lp_saved_searches')||'[]')||[];}catch(e){return[];} }
+  function _ssSave(a){ a=(a||[]).slice(0,12);
+    try{localStorage.setItem('lp_saved_searches',JSON.stringify(a));}catch(e){}
+    try{if(window.GM_SS_SYNC)window.GM_SS_SYNC(a);}catch(e){} }
+  function _ssCount(st){ try{var all=(LP._opts.list&&LP._opts.list())||[];var pub=all.filter(function(l){return l.status!=='pasif';});
+    var keep=ST; ST=st; var n=_filtered(pub).length; ST=keep; return n; }catch(e){return 0;} }
+  LP.saveSearch=function(){
+    var auto=[(ST.dur!=='hepsi'?ST.dur:''),(ST.kat!=='tumu'?ST.kat:''),ST.il,ST.ilce,ST.q].filter(Boolean).join(' · ')||'Tüm ilanlar';
+    var name=null; try{name=prompt('Bu aramaya bir ad verin:',auto);}catch(e){name=auto;}
+    if(name==null)return; name=(name||auto).trim().slice(0,48)||auto;
+    var a=_ssLoad();
+    a.unshift({id:'ss'+Date.now(),name:name,st:{dur:ST.dur,kat:ST.kat,il:ST.il,ilce:ST.ilce,q:ST.q,sort:ST.sort},count:_ssCount({dur:ST.dur,kat:ST.kat,il:ST.il,ilce:ST.ilce,q:ST.q,sort:ST.sort}),ts:Date.now()});
+    _ssSave(a); _ssRender();
+    try{if(window.toast)toast('🔔 Arama kaydedildi — yeni ilan düşünce burada rozetle göreceksiniz.');}catch(e){}
+  };
+  LP.applySaved=function(id){
+    var a=_ssLoad(),s=null; a.forEach(function(x){if(x.id===id)s=x;}); if(!s)return;
+    ST={dur:s.st.dur||'hepsi',kat:s.st.kat||'tumu',il:s.st.il||'',ilce:s.st.ilce||'',q:s.st.q||'',sort:s.st.sort||'oner'};
+    /* kontrolleri eşitle */
+    ['lpDur','lpKat'].forEach(function(bid){var box=document.getElementById(bid);if(!box)return;var k=box.dataset.k;
+      box.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.v===ST[k]);});});
+    var q=document.getElementById('lpSearch');if(q)q.value=ST.q;
+    var il=document.getElementById('lpIl');if(il)il.value=ST.il; _fillIlce();
+    var ic=document.getElementById('lpIlce');if(ic)ic.value=ST.ilce;
+    var so=document.getElementById('lpSort');if(so)so.value=ST.sort;
+    LP.render();
+    /* rozet tüketildi: sayacı güncelle */
+    s.count=_ssCount(s.st); _ssSave(a); _ssRender();
+  };
+  LP.delSaved=function(id,ev){ if(ev&&ev.stopPropagation)ev.stopPropagation();
+    _ssSave(_ssLoad().filter(function(x){return x.id!==id;})); _ssRender(); };
+  function _ssRender(){
+    var host=document.getElementById('lpSaved'); if(!host)return;
+    var a=_ssLoad(); if(!a.length){host.hidden=true;host.innerHTML='';return;}
+    host.hidden=false;
+    host.innerHTML='<span class="lp-ss-lab">Kayıtlı aramalarım:</span>'+a.map(function(s){
+      var cur=_ssCount(s.st), diff=Math.max(0,cur-(+s.count||0));
+      return '<span class="lp-ss-chip" role="button" tabindex="0" onclick="ListingsPage.applySaved(\''+s.id+'\')" onkeydown="if(event.key===\'Enter\')ListingsPage.applySaved(\''+s.id+'\')">🔔 '+esc(s.name)
+        +(diff?'<b class="lp-ss-new">+'+diff+' yeni</b>':'')
+        +'<i title="Sil" onclick="ListingsPage.delSaved(\''+s.id+'\',event)">✕</i></span>';
+    }).join('');
+  }
+  LP._ssBoot=function(){ try{_ssRender();
+    var t=0; _ssLoad().forEach(function(s){t+=Math.max(0,_ssCount(s.st)-(+s.count||0));});
+    if(t&&window.toast)toast('🔔 Kayıtlı aramalarınızda '+t+' yeni ilan var.');
+  }catch(e){} };
   LP.clear=function(){ ST={dur:'hepsi',kat:'tumu',il:'',ilce:'',q:'',sort:'oner'};
     ['lpDur','lpKat'].forEach(function(id){var box=document.getElementById(id);if(box)box.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-v')===(id==='lpDur'?'hepsi':'tumu'));});});
     var q=document.getElementById('lpSearch');if(q)q.value=''; var so=document.getElementById('lpSort');if(so)so.value='oner';
@@ -172,7 +221,7 @@
     +'.lp-search input{flex:1;min-width:0;border:0;background:transparent;padding:12px 0;font:500 14px/1 system-ui,-apple-system,sans-serif;color:'+INK+';outline:none}'
     +'.lp-sel{border:1px solid '+LINE+';background:'+SURF+';color:'+INK+';border-radius:11px;padding:11px 12px;font:600 13px/1 system-ui,-apple-system,sans-serif;cursor:pointer;min-width:130px;flex:0 1 auto}'
     +'.lp-sel:disabled{opacity:.5;cursor:not-allowed}'
-    +'.lp-meta{margin-top:14px;padding-top:13px;border-top:1px dashed '+LINE+';font:500 13px/1.5 system-ui,-apple-system,sans-serif;color:'+MUT+';display:flex;align-items:center;gap:8px;flex-wrap:wrap}'
+    +'.lp-savebtn{margin-left:10px;border:1px solid var(--accent,#0e7490);background:#fff;color:var(--accent,#0e7490);border-radius:99px;padding:6px 13px;font:700 12.5px inherit;cursor:pointer}.lp-savebtn:hover{background:var(--accent,#0e7490);color:#fff}.lp-saved{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0 2px}.lp-ss-lab{font:700 12px inherit;color:#64748b;text-transform:uppercase;letter-spacing:.04em}.lp-ss-chip{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #e2e8f0;border-radius:99px;padding:6px 12px;font:600 13px inherit;color:#0f172a;cursor:pointer}.lp-ss-chip:hover{border-color:var(--accent,#0e7490)}.lp-ss-new{color:#fff;background:#16a34a;border-radius:99px;padding:2px 8px;font-size:11px}.lp-ss-chip i{font-style:normal;color:#94a3b8;cursor:pointer;padding:0 2px}.lp-ss-chip i:hover{color:#dc2626}.lp-meta{margin-top:14px;padding-top:13px;border-top:1px dashed '+LINE+';font:500 13px/1.5 system-ui,-apple-system,sans-serif;color:'+MUT+';display:flex;align-items:center;gap:8px;flex-wrap:wrap}'
     +'.lp-meta b{color:'+A+';font-size:15px}'
     +'.lp-live{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:'+INK+'}'
     +'.lp-dot{width:8px;height:8px;border-radius:50%;background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.18)}'
@@ -195,7 +244,7 @@
     var root=document.getElementById(o.mountId||'ilanlarApp'); if(!root)return;
     root.innerHTML=_shell(o);
     var all=(o.list&&o.list())||[]; var pub=(window.Listings&&Listings.publicList)?Listings.publicList(all):all;
-    _fillGeo(pub); _bind(); _applyQuery(); LP.render(); _seo(o);
+    _fillGeo(pub); _bind(); _applyQuery(); LP.render(); _seo(o); try{LP._ssBoot();}catch(e){}
   };
   LP.refresh=function(){ try{var all=(LP._opts.list&&LP._opts.list())||[];var pub=(window.Listings&&Listings.publicList)?Listings.publicList(all):all;_fillGeo(pub);}catch(e){} LP.render(); };
 

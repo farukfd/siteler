@@ -85,9 +85,14 @@
   function gmFavReflect(){try{var f=gmAllFavs();document.querySelectorAll('.fav[data-fid],.pf-fav[data-fid],.lc-fav[data-fid]').forEach(function(b){var id=b.getAttribute('data-fid');var on=f.indexOf(id)>=0;b.classList.toggle('on',on);if(/^[♡♥]$/.test(b.textContent.trim()))b.innerHTML=on?'♥':'♡';});}catch(e){}}
   function _mergeGuestFavs(){try{var g=_guestFavs();if(g.length&&authSession()){var f=authFavs();g.forEach(function(id){if(f.indexOf(id)<0)f.unshift(id);});_uSet('fav',f);_guestFavsSet([]);}}catch(e){}
     /* İlanlar sayfası kalpleri (shared/listing.js ns=gmpage) de hesapla birleşir */
+    try{if(authSession()){var gss=JSON.parse(localStorage.getItem('lp_saved_searches')||'[]')||[];
+      if(gss.length){var as=_uGet('ss',[])||[];gss.forEach(function(x){if(!as.some(function(y){return y.id===x.id||y.name===x.name;}))as.unshift(x);});_uSet('ss',as.slice(0,12));}}}catch(e){}
     try{if(authSession()){var lp=JSON.parse(localStorage.getItem('gmpage_favs')||'[]')||[];if(lp.length){var f2=authFavs();lp.forEach(function(id){id=String(id);if(f2.indexOf(id)<0)f2.unshift(id);});_uSet('fav',f2);}}}catch(e){}}
   /* ---- HESAP-SENKRON KÖPRÜSÜ: shared/listing.js favorileri (İlanlar/Harita kartları) ----
      Girişliyken tek kaynak üye kaydıdır (user.fav); misafirde yerel depo sürer. */
+  /* Kayıtlı aramalar da hesapla senkron (İlanlar sayfası — lp_saved_searches) */
+  window.GM_SS_READ=function(){ return authSession()?_uGet('ss',[]):null; };
+  window.GM_SS_SYNC=function(a){ if(!authSession())return; try{_uSet('ss',(a||[]).slice(0,12));}catch(e){} };
   window.GM_FAV_READ=function(ns){ if(ns!=='gmpage')return null; return authSession()?authFavs():null; };
   window.GM_FAV_SYNC=function(ns,list){ if(ns!=='gmpage')return; if(!authSession())return; try{_uSet('fav',(list||[]).map(String).slice(0,300));}catch(e){} try{var fp=document.getElementById('hs_favcount');if(fp)fp.textContent=authFavs().length;}catch(e){} };
   window.gmFav=gmFav;window.gmIsFav=gmIsFav;window.gmFavReflect=gmFavReflect;
