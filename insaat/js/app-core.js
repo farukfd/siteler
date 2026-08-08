@@ -265,8 +265,27 @@ function applyMenuText(){
       var d=f.querySelector('.desc');if(d)d.textContent=F.desc;
       var h=f.querySelectorAll('.fgrid h4');if(h[0])h[0].textContent=F.colKurumsal;if(h[1])h[1].textContent=F.colHizmetler;if(h[2])h[2].textContent=F.colIletisim;
       var cols=f.querySelectorAll('.fgrid > div');if(cols[3]){var fa=cols[3].querySelector('a');if(fa)fa.innerHTML=F.adres;}
-      if(cols[1]){var _kk=en?['About Us','Vision & Mission','Management Team','Quality & Certificates','Media & Press','Regional Expertise','Careers']:['Hakkımızda','Vizyon & Misyon','Yönetim Kadrosu','Kalite & Sertifikalar','Medya & Basında Biz','Bölge Ekspertizi','Kariyer'];cols[1].querySelectorAll('a').forEach(function(a,i){if(_kk[i])a.textContent=_kk[i];});}
-      if(cols[2]){var _hh=en?['All Listings','For Sale','For Rent','🔒 Private Portfolio','Regional Intelligence','Residential Construction','Urban Renewal','Turnkey']:['Tüm İlanlar','Satılık İlanlar','Kiralık İlanlar','🔒 Özel Portföy','Bölge Zekası','Konut İnşaatı','Kentsel Dönüşüm','Anahtar Teslim'];cols[2].querySelectorAll('a').forEach(function(a,i){if(_hh[i])a.textContent=_hh[i];});}
+      /* HREF-TABANLI yeniden etiketleme (nav'daki _navMap kalıbı) — konum-indeksli dizi,
+         araya yeni link (Harita/Emlak Ekspertizi) girince etiketleri kaydırıyordu. */
+      var _footMap=[
+        ['hakkimizda',en?'About Us':'Hakkımızda'],['vizyon-misyon.html',en?'Vision & Mission':'Vizyon & Misyon'],
+        ['yonetim.html',en?'Management Team':'Yönetim Kadrosu'],['kalite.html',en?'Quality & Certificates':'Kalite & Sertifikalar'],
+        ['medya.html',en?'Media & Press':'Medya & Basında Biz'],['bolge-ekspertizi',en?'Regional Expertise':'Bölge Ekspertizi'],
+        ['kariyer.html',en?'Careers':'Kariyer'],
+        ['ilanlar.html?op=Sat',en?'For Sale':'Satılık İlanlar'],['ilanlar.html?op=Kir',en?'For Rent':'Kiralık İlanlar'],
+        ['ozel-portfoy',en?'🔒 Private Portfolio':'🔒 Özel Portföy'],['bolge',en?'Regional Intelligence':'Bölge Zekası'],
+        ['konut-insaat',en?'Residential Construction':'Konut İnşaatı'],['kentsel',en?'Urban Renewal':'Kentsel Dönüşüm'],
+        ['anahtar',en?'Turnkey':'Anahtar Teslim'],
+        ['harita.html',en?'Map':'Harita'],['emlak-ekspertizi.html',en?'Property Analysis':'Emlak Ekspertizi']
+      ];
+      [cols[1],cols[2]].forEach(function(col){ if(!col)return;
+        col.querySelectorAll('a').forEach(function(a){
+          var href=a.getAttribute('href')||'';
+          if(/^ilanlar\.html$/.test(href)){a.textContent=en?'All Listings':'Tüm İlanlar';return;}
+          for(var k=0;k<_footMap.length;k++){ if(href.indexOf(_footMap[k][0])>-1){a.textContent=_footMap[k][1];return;} }
+          /* haritada olmayan linkler (özelleştirme) olduğu gibi bırakılır */
+        });
+      });
       f.querySelectorAll('.flegal a').forEach(function(a,i){var _lg=en?['GDPR','Privacy','Cookie Policy']:['KVKK','Gizlilik','Çerez Politikası'];if(_lg[i])a.textContent=_lg[i];});
       var _wa=cols[3]?cols[3].querySelector('a[href*="wa.me"]'):null;if(_wa)_wa.textContent=en?'💬 WhatsApp Line':'💬 WhatsApp Hattı';
       var tel=f.querySelector('a.js-tel');if(tel)tel.textContent=F.tel;
