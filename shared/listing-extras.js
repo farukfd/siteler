@@ -135,7 +135,16 @@
   };
   L._mountPanoStage=function(it){ try{ var el=document.getElementById('lstdPano'); if(!el)return;
     function init(url){ if(!url){el.innerHTML='<div class="lstd-mload">Sanal tur görseli bulunamadı.</div>';return;}
-      if(!window.pannellum){el.innerHTML='<div class="lstd-mload">360° görüntüleyici yüklenemedi.</div>';return;}
+      if(!window.pannellum){
+        /* PERF: Pannellum (56KB) yalnız 360° tur açılınca yüklenir; yol bu script'in src'sinden türetilir */
+        if(el.dataset.pnl){el.innerHTML='<div class="lstd-mload">360° görüntüleyici yüklenemedi.</div>';return;}
+        el.dataset.pnl='1'; el.innerHTML='<div class="lstd-mload">360° yükleniyor…</div>';
+        var base=(function(){var t=document.querySelector('script[src*="listing-extras"]');return t?t.src.replace(/listing-extras\.js.*$/,''):'../shared/';})();
+        var c=document.createElement('link');c.rel='stylesheet';c.href=base+'vendor/pannellum.css?v=1';document.head.appendChild(c);
+        var sc=document.createElement('script');sc.src=base+'vendor/pannellum.js?v=1';
+        sc.onload=function(){el.dataset.pnl='';try{init(url);}catch(e){el.innerHTML='<div class="lstd-mload">Sanal tur başlatılamadı.</div>';}};
+        sc.onerror=function(){el.innerHTML='<div class="lstd-mload">360° görüntüleyici yüklenemedi.</div>';};
+        document.head.appendChild(sc);return;}
       el.innerHTML=''; try{ window.pannellum.viewer(el,{type:'equirectangular',panorama:url,autoLoad:true,showZoomCtrl:true,showFullscreenCtrl:true,autoRotate:-2,compass:false}); }catch(e){ el.innerHTML='<div class="lstd-mload">Sanal tur başlatılamadı.</div>'; } }
     if(it.u)init(it.u); else if(it.file&&L._cur)MediaStore.url(L._cur.id,'tour360').then(init); else init(null);
   }catch(e){} };

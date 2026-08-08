@@ -1,3 +1,16 @@
+/* PERF: Leaflet yalnız gerektiğinde (harita bölümü/ilan haritası) yüklenir — 148KB+css */
+var _lfQ=null;
+function gmEnsureLeaflet(cb){
+  if(window.L){cb&&cb();return;}
+  if(_lfQ){_lfQ.push(cb);return;}
+  _lfQ=[cb];
+  var c=document.createElement('link');c.rel='stylesheet';c.href='../shared/vendor/leaflet/leaflet.css?v=1';document.head.appendChild(c);
+  var s=document.createElement('script');s.src='../shared/vendor/leaflet/leaflet.js?v=1';
+  s.onload=function(){var q=_lfQ;_lfQ=null;(q||[]).forEach(function(f){try{f&&f();}catch(e){}});};
+  s.onerror=function(){_lfQ=null;};
+  document.head.appendChild(s);
+}
+window.gmEnsureLeaflet=gmEnsureLeaflet;
 /* gayrimenkul · app.js — engine (P1 ayrıştırma; index.html'den çıkarıldı) */
 /* ============ IMAGE DATA ============ */
 const IMG = {"hero1": "img/gayrimenkul/img1.webp", "hero2": "img/gayrimenkul/img2.webp", "hero3": "img/gayrimenkul/img3.webp", "l1": "img/gayrimenkul/img4.webp", "l2": "img/gayrimenkul/img5.webp", "l3": "img/gayrimenkul/img6.webp", "l4": "img/gayrimenkul/img7.webp", "l5": "img/gayrimenkul/img8.webp", "l6": "img/gayrimenkul/img9.webp", "bolge": "img/gayrimenkul/img10.webp", "about": "img/gayrimenkul/img11.webp"};
@@ -1900,7 +1913,21 @@ function animateCounters(){
 }
 
 /* ============ ADMIN: AÇ / KAPAT / GİRİŞ ============ */
-function openAdmin(){document.getElementById('adminApp').classList.add('show');document.body.style.overflow='hidden';try{admGateNav();}catch(e){}}
+function openAdmin(){
+  var el=document.getElementById('adminApp');if(!el)return;
+  /* PERF: 77KB admin markup'ı yalnız admin açılınca yüklenir (js/admin-markup.js) */
+  if(!el.dataset.loaded){
+    if(window.__ADMIN_HTML){_admInject(el);}
+    else{var sc=document.createElement('script');sc.src='js/admin-markup.js?v=1';sc.onload=function(){_admInject(el);};sc.onerror=function(){toast('Admin paneli yüklenemedi.');};document.head.appendChild(sc);return;}
+  }
+  el.classList.add('show');document.body.style.overflow='hidden';try{admGateNav();}catch(e){}
+}
+function _admInject(el){
+  el.innerHTML=window.__ADMIN_HTML||'';el.dataset.loaded='1';try{delete window.__ADMIN_HTML;}catch(e){}
+  el.classList.add('show');document.body.style.overflow='hidden';
+  try{admGateNav();}catch(e){}
+  try{var d=el.querySelector('.adm-nav.act')||el.querySelector('.adm-nav');if(d)d.click();}catch(e){}
+}
 /* ===== SÜPER-ADMİN / BAYİ PANELİ (emlakekspertizi.com — client prototip) ===== */
 function superSeed(){var s=null;try{s=JSON.parse(localStorage.getItem('wl_super_tenants')||'null');}catch(e){}
   if(s&&s.length)return s;
@@ -3695,7 +3722,8 @@ async function proxLoadArsiv(){ try{
 function renderHaritaMap(){
   try{
     var host=document.getElementById('hmapReal');if(!host)return;
-    if(!(window.GMHarita&&window.L)){host.innerHTML='<div class="gm-map-fb">Harita yüklenemedi — internet bağlantısını kontrol edin. <a href="harita.html">Tam sayfada dene →</a></div>';return;}
+    if(!window.L){gmEnsureLeaflet(function(){renderHaritaMap();});return;}
+    if(!window.GMHarita){host.innerHTML='<div class="gm-map-fb">Harita yüklenemedi — internet bağlantısını kontrol edin. <a href="harita.html">Tam sayfada dene →</a></div>';return;}
     GMHarita.build({ mapEl:'hmapReal',
       data:{ ilanlar:(typeof ILANLAR!=='undefined'?ILANLAR:[]), ozel:(typeof OZEL!=='undefined'?OZEL:[]) },
       province:(typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name)||'İzmir',
@@ -3706,7 +3734,7 @@ function renderHaritaMap(){
 function renderIletMap(){
   try{
     var el=document.getElementById('iletMap');if(!el)return;
-    if(!window.L){el.innerHTML='<div class="gm-map-fb">Harita yüklenemedi — internet bağlantısını kontrol edin.</div>';return;}
+    if(!window.L){gmEnsureLeaflet(function(){renderIletMap();});return;}
     if(el._m){try{el._m.remove();}catch(e){}el._m=null;}
     var ll=[38.4378,27.1440]; /* varsayılan: Alsancak (İzmir) */
     try{ if(typeof FIRMA!=='undefined'&&FIRMA&&isFinite(+FIRMA.lat)&&isFinite(+FIRMA.lng)&&+FIRMA.lat&&+FIRMA.lng)ll=[+FIRMA.lat,+FIRMA.lng]; }catch(e){}
