@@ -6,10 +6,10 @@
 <meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde bu satır KALDIRILIR -->
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"><!-- üretim tenant -->
 <title>Meridyen Gayrimenkul · Satılık & Kiralık Konut, Ofis, Arsa</title>
-<meta name="description" content="Meridyen Gayrimenkul — İzmir ve çevresinde satılık/kiralık konut, ofis, arsa. Mahalle bazlı fiyat endeksi, yatırım skoru ve ücretsiz değerleme.">
+<meta name="description" content="Meridyen Gayrimenkul — İzmir ve çevresinde satılık/kiralık konut, ofis, arsa. Mahalle bazlı fiyat endeksi, yatırım skoru ve ücretsiz emlak ekspertizi.">
 <meta name="theme-color" content="#0a1631">
 <meta property="og:title" content="Meridyen Gayrimenkul · Veriyle Emlak">
-<meta property="og:description" content="Veri odaklı emlak danışmanlığı. Mahalle endeksi, yatırım skoru, ücretsiz değerleme.">
+<meta property="og:description" content="Veri odaklı emlak danışmanlığı. Mahalle endeksi, yatırım skoru, ücretsiz emlak ekspertizi.">
 <meta property="og:type" content="website">
 <!-- ===== EMLAK API-FIRST SAAS CORE (additive) ===== -->
 <script>
@@ -77,7 +77,7 @@ function applyFeatureGates(){
 window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 </script>
 <!-- ===== /EMLAK API-FIRST SAAS CORE ===== -->
-<script src="js/tr-grammar.js?v=4"></script><!-- Türkçe gramer tek kaynak (SPA + wl.js ortak) -->
+<script defer src="js/tr-grammar.js?v=4"></script><!-- Türkçe gramer tek kaynak (SPA + wl.js ortak) -->
 
 <!-- ===== SEO: canonical + OpenGraph + Twitter (additive) ===== -->
 <link rel="canonical" href="https://www.emlakekspertizi.com/demo/gayrimenkul/">
@@ -87,7 +87,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <meta property="og:image" content="https://www.emlakekspertizi.com/demo/gayrimenkul/og-image.webp">
 <meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/gayrimenkul/og-image.webp">
 <meta name="twitter:title" content="Meridyen Gayrimenkul · Veriyle Emlak">
-<meta name="twitter:description" content="Veri odaklı emlak danışmanlığı. Mahalle endeksi, yatırım skoru, ücretsiz değerleme.">
+<meta name="twitter:description" content="Veri odaklı emlak danışmanlığı. Mahalle endeksi, yatırım skoru, ücretsiz emlak ekspertizi.">
 <!-- ===== JSON-LD: WebSite + SearchAction + sameAs (AEO/GEO — statik, crawler-görünür; base marka Meridyen, üretim tenant'ta yeniden üretilir) ===== -->
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebSite","@id":"https://www.emlakekspertizi.com/demo/gayrimenkul/#website","name":"Meridyen Gayrimenkul","url":"https://www.emlakekspertizi.com/demo/gayrimenkul/","inLanguage":["tr","en","ru","zh","ar"],"publisher":{"@type":"Organization","name":"Meridyen Gayrimenkul","url":"https://www.emlakekspertizi.com/demo/gayrimenkul/","areaServed":["İzmir","Ege"],"sameAs":["https://facebook.com/meridyengayrimenkul","https://instagram.com/meridyengayrimenkul","https://x.com/meridyengm","https://www.linkedin.com/company/meridyengayrimenkul","https://www.youtube.com/@meridyengayrimenkul"]},"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://www.emlakekspertizi.com/demo/gayrimenkul/ilanlar.html?q={search_term_string}"},"query-input":"required name=search_term_string"}}
@@ -131,13 +131,14 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <!-- ===== /SEO ===== -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <!-- TEMA: themes kütüphanesinden seç (tenant başına değiştir). Aktif: Meridyen -->
-  <link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=4">
-  <link rel="stylesheet" href="css/base.css?v=25">
+  <link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=5">
+  <link rel="stylesheet" href="css/base.css?v=63">
+  <link rel="stylesheet" href="../shared/vendor/leaflet/leaflet.css?v=1">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg">
-<script src="js/brand.js?v=3"></script>
+<script defer src="js/brand.js?v=3"></script>
 </head>
 <body>
 <a href="#ilanlar" style="position:absolute;left:-9999px;top:0;z-index:9999;background:var(--accent);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:700;text-decoration:none" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">İçeriğe geç</a>
@@ -151,6 +152,8 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   <nav class="main siteNav"></nav>
   <div class="nav-cta siteCta"></div>
 </div></header>
+<!-- ===== DÖVİZ & ALTIN BANDI (bilgi amaçlı; fiyatlar ₺) ===== -->
+<div class="doviz-bandi" id="dovizBandi"></div>
 
 <!-- ===== MOBILE NAV ===== -->
 <div class="mnav" id="mnav" onclick="if(event.target.id==='mnav')this.classList.remove('open')"><div class="panel">
@@ -161,7 +164,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   <a href="portfoy.html" onclick="closeAllOverlays();mclose()">Portföy</a>
   <a href="prox-asistan.html" class="mnav-asistan" onclick="if(typeof openProxAsistanPage==='function'){openProxAsistanPage();mclose();return false}"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>
   <div class="mnav-div">Al · Sat · Kirala</div>
-  <a href="ilanlar.html">İlanlar</a><a href="ozel/" onclick="goPortfoy('ozel',event);mclose()">Özel Portföy</a>
+  <a href="ilanlar.html">İlanlar</a><a href="harita.html">Harita</a><a href="ozel/" onclick="goPortfoy('ozel',event);mclose()">Özel Portföy</a>
   <a href="sat/" onclick="goView('sat');mclose();return false">Sat ve Kirala</a>
   <a href="#danismanlar" onclick="closeAllOverlays();mclose()">Danışmanlar</a>
   <div class="mnav-div">Kurumsal</div>
@@ -178,78 +181,70 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
     <img class="on" id="hi0" alt="" fetchpriority="high" decoding="async"><img id="hi1" alt="" fetchpriority="low" decoding="async"><img id="hi2" alt="" fetchpriority="low" decoding="async">
   </div>
   <div class="wrap">
-    <div class="pcw" id="pusulaHero">
-      <div class="pc-controls">
-        <div class="pc-step">
-          <span class="pc-step-l"><b>1</b> Amaç</span>
-          <div class="pc-seg" id="pc_amac" role="group" aria-label="Amaç">
-            <button class="on" data-a="Satılık">Satılık</button>
-            <button data-a="Kiralık">Kiralık</button>
-            <button data-a="Günlük">Günlük</button>
+    <div class="pcw kk" id="pusulaHero">
+      <div class="kk-grid">
+        <div class="kk-ctrl">
+          <div class="pc-step">
+            <span class="pc-step-l"><b>1</b> Amaç</span>
+            <div class="pc-seg" id="pc_amac" role="group" aria-label="Amaç">
+              <button class="on" data-a="Satılık">Satılık</button>
+              <button data-a="Kiralık">Kiralık</button>
+              <button data-a="Günlük">Günlük</button>
+            </div>
+          </div>
+          <div class="pc-step">
+            <span class="pc-step-l"><b>2</b> Bütçe</span>
+            <div class="pc-chips" id="pc_butce" role="group" aria-label="Bütçe">
+              <button class="on" data-b="0">Farketmez</button>
+              <button data-b="5000000">≤5M</button>
+              <button data-b="10000000">≤10M</button>
+              <button data-b="20000000">≤20M</button>
+              <button data-b="50000000">≤50M</button>
+            </div>
+          </div>
+          <div class="pc-step">
+            <span class="pc-step-l"><b>3</b> Bölge</span>
+            <select id="pc_bolge" class="pc-sel" aria-label="Bölge">
+              <option value="">Tüm Bölgeler · İzmir</option><option>Konak</option><option>Karşıyaka</option><option>Bornova</option><option>Buca</option><option>Çeşme</option><option>Urla</option>
+            </select>
+          </div>
+          <div class="pc-step">
+            <span class="pc-step-l"><b>4</b> Öncelik</span>
+            <input type="range" id="pc_oncelik" min="0" max="100" value="50" class="kk-range" aria-label="Öncelik: Yaşam ↔ Yatırım">
+            <div class="kk-prio-ends"><span class="pc-prio-l">🏡 Yaşam · Konfor</span><span class="pc-prio-r">Yatırım · Getiri 📈</span></div>
           </div>
         </div>
-        <div class="pc-step">
-          <span class="pc-step-l"><b>2</b> Bütçe</span>
-          <div class="pc-chips" id="pc_butce" role="group" aria-label="Bütçe">
-            <button class="on" data-b="0">Farketmez</button>
-            <button data-b="5000000">≤5M</button>
-            <button data-b="10000000">≤10M</button>
-            <button data-b="20000000">≤20M</button>
-            <button data-b="50000000">≤50M</button>
+
+        <div class="kk-panel">
+          <div class="kk-top">
+            <div class="kk-countbox">
+              <div class="kk-countlbl">Canlı Eşleşme</div>
+              <div class="kk-count"><span id="pc_count">—</span><small>mülk</small></div>
+            </div>
+            <div class="kk-conf" id="pc_conf" hidden>
+              <div class="kk-ring"><b id="pc_confv">—</b></div>
+              <span>uyum güveni</span>
+            </div>
+          </div>
+
+          <div class="kk-spot" id="pc_spot" hidden></div>
+
+          <div class="kk-pulse" id="pc_pulse" hidden>
+            <div class="kk-p"><span class="k">Bölge ₺/m²</span><span class="v" id="pc_m2">—</span></div>
+            <div class="kk-p"><span class="k">Yatırım Skoru</span><span class="v" id="pc_skor">—</span></div>
+            <div class="kk-p"><span class="k" id="pc_yk">Kira Getirisi</span><span class="v" id="pc_yield">—</span></div>
+          </div>
+
+          <div class="pc-actions">
+            <button class="pc-cta" onclick="pcGoResults()">Sonuçları Gör <span aria-hidden="true">→</span></button>
+            <button class="pc-ghost" onclick="pcAllListings()">Tüm portföyü gör</button>
+            <button class="pc-ghost pc-save" onclick="pcSaveSearch()" title="Bu arama kriterlerini kaydet"><span aria-hidden="true">🔖</span> Aramayı kaydet</button>
+            <span class="pc-trust">Ücretsiz · 30 sn · kayıt yok · 480M+ veri</span>
           </div>
         </div>
-        <div class="pc-step">
-          <span class="pc-step-l"><b>3</b> Bölge</span>
-          <select id="pc_bolge" class="pc-sel" aria-label="Bölge">
-            <option value="">Tüm Bölgeler</option><option>Konak</option><option>Karşıyaka</option><option>Bornova</option><option>Buca</option><option>Çeşme</option><option>Urla</option>
-          </select>
-        </div>
       </div>
 
-      <div class="pc-compass" id="pc_compass">
-        <svg class="pc-rose" viewBox="0 0 320 320" fill="none" aria-hidden="true">
-          <circle cx="160" cy="160" r="151" stroke="rgba(255,255,255,.08)" stroke-width="1.5"/>
-          <circle cx="160" cy="160" r="140" stroke="rgba(255,255,255,.30)" stroke-width="7" stroke-dasharray="2 16.3" stroke-linecap="round"/>
-          <circle cx="160" cy="160" r="112" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
-          <path d="M160 30 L166 46 L160 42 L154 46 Z" fill="rgba(126,213,152,.9)"/>
-          <circle cx="160" cy="160" r="90" fill="rgba(9,20,44,.45)" stroke="rgba(255,255,255,.10)" stroke-width="1.5"/>
-          <g stroke="rgba(255,255,255,.16)" stroke-width="1.4"><path d="M160 60 V78 M160 242 V260 M60 160 H78 M242 160 H260"/></g>
-        </svg>
-        <span class="pc-lbl pc-n">Bütçe</span>
-        <span class="pc-lbl pc-e">Yatırım<small>Getiri</small></span>
-        <span class="pc-lbl pc-s">Bölge</span>
-        <span class="pc-lbl pc-w">Yaşam<small>Konfor</small></span>
-        <div class="pc-needle" id="pc_needle">
-          <svg viewBox="0 0 26 210" width="26" height="210" aria-hidden="true">
-            <defs><linearGradient id="pcn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent-2,#3b82f6)"/><stop offset=".5" stop-color="var(--accent,#1e40af)"/><stop offset="1" stop-color="var(--accent-deep,#16306b)"/></linearGradient></defs>
-            <path d="M13 8 L21 100 L13 118 L5 100 Z" fill="url(#pcn)"/>
-            <path d="M13 118 L18 176 L13 202 L8 176 Z" fill="rgba(255,255,255,.28)"/>
-            <circle cx="13" cy="105" r="9" fill="#fff"/><circle cx="13" cy="105" r="4.5" fill="var(--accent,#1e40af)"/>
-          </svg>
-        </div>
-        <div class="pc-core">
-          <div class="pc-count" id="pc_count">—</div>
-          <div class="pc-count-lbl">canlı eşleşme</div>
-          <div class="pc-best" id="pc_best">Seçiminizi yapın; pusula en uygun evinizi göstersin.</div>
-        </div>
-      </div>
-
-      <div class="pc-prio-wrap">
-        <span class="pc-step-l center"><b>4</b> Öncelik</span>
-        <div class="pc-prio">
-          <span class="pc-prio-l">🏡 Yaşam · Konfor</span>
-          <input type="range" id="pc_oncelik" min="0" max="100" value="50" aria-label="Öncelik: Yaşam ↔ Yatırım">
-          <span class="pc-prio-r">Yatırım · Getiri 📈</span>
-        </div>
-      </div>
-
-      <div class="pc-ozel" id="pc_ozel" hidden></div>
-
-      <div class="pc-actions">
-        <button class="pc-cta" onclick="pcGoResults()">Sonuçları Gör <span aria-hidden="true">→</span></button>
-        <button class="pc-ghost" onclick="pcAllListings()">Tüm portföyü gör</button>
-        <span class="pc-trust">Ücretsiz · 30 sn · kayıt yok · 480M+ veri</span>
-      </div>
+      <div class="pc-saved" id="pc_saved" hidden></div>
 
       <div class="pc-results-panel" id="pc_resultsPanel" hidden>
         <div class="pc-results-head">Size en uygun ilk eşleşmeler</div>
@@ -278,6 +273,23 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
     <button class="btn btn-primary" onclick="goView('ozel')">Tüm Özel Portföyü Gör →</button>
   </div>
   <div id="mahEndeks"></div>
+  <div class="ozh-cards-wrap" id="ozHomeWrap" hidden>
+    <div class="ozh-cards-head">
+      <span class="eyebrow" style="color:var(--accent)">Özel Portföy'den fırsatlar</span>
+      <span class="ozh-note">🔒 İfşasız — mahalle, kategori ve m² görünür; adres ve ilan gizli kalır.</span>
+    </div>
+    <div class="pc-results ozh-cards" id="ozHomeCards"></div>
+  </div>
+</div></section>
+
+<!-- ===== HARİTADAN KEŞFET (İzmir ilçe haritası) ===== -->
+<section id="harita"><div class="wrap">
+  <div class="sec-head center"><div class="eyebrow"><span class="dot"></span> Haritadan Keşfet</div><h2>İzmir'de portföyümüz haritada</h2><p style="color:var(--ink-2);font-size:13px;margin-top:6px">Satılık &amp; kiralık ilanlar ve <b>🔒 Özel Portföy</b> tek haritada — baloncuğa tıklayın, detay açılır. <b>Konumlar ilçe/mahalle-merkez yaklaşık</b>; tam adres mahremiyet gereği paylaşılmaz.</p></div>
+  <div id="hmapReal" class="hmap-real"></div>
+  <div class="hmap-cta-row">
+    <span class="hmap-legend"><span><i class="s"></i>Satılık</span><span><i class="k"></i>Kiralık</span><span><i class="o"></i>🔒 Özel Portföy</span></span>
+    <a class="btn btn-primary" href="harita.html">Tam ekran haritada aç →</a>
+  </div>
 </div></section>
 
 <section id="ilanlar"><div class="wrap">
@@ -290,7 +302,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   </div>
   <div class="oz-funnel">
     <div class="t"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2.4"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-      <div><b>Portföyümüzün çoğu burada görünmez.</b><span>Mahremiyetine önem veren mülk sahiplerinin mülklerini, ifşa etmeden — veri odaklı eşleştirmeyle — Özel Portföy'de yönetiyoruz. Asıl gücümüz burada.</span></div></div>
+      <div><b>Açık ilanlarımız burada.</b><span>Portföyümüzün çoğu ise mahremiyet gereği Özel Portföy'de — ifşa etmeden, veri odaklı eşleştirmeyle yönetilir.</span></div></div>
     <button class="btn btn-primary" onclick="goPortfoy('ozel')">Özel Portföy'ü Gör →</button>
   </div>
   <div class="filterbar" id="filterbar">
@@ -311,26 +323,29 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
     <span class="fcount" id="fcount"></span>
   </div>
   <div class="lgrid" id="lgrid"></div>
-  <div class="lst-foot"><a class="btn btn-line" href="ilanlar.html">Tüm İlanları Görüntüle →</a></div>
+  <div class="lst-more"><a class="btn btn-line" href="ilanlar.html">Tüm İlanları Görüntüle →</a></div>
 </div></section>
 
 
 <!-- ===== DEĞERLEME WIDGET ===== -->
 <section id="degerleme"><div class="wrap dgr">
   <div>
-    <div class="eyebrow" style="color:var(--green-200)">Ücretsiz · 30 saniye</div>
-    <h2>Evimin değeri <span class="hl">ne kadar?</span></h2>
-    <p class="lead">Türkiye'nin kapsamlı 81 il · 50.000+ mahalle ve köy endeks altyapısına bağlı analiz motorumuzla, gayrimenkulünüzün güncel piyasa değerine dair anlık ön tahmin alın. Sonra uzman danışmanımız sizi arasın.</p>
-    <ul>
-      <li><span class="ico">✓</span><span><b>Mahalle bazlı m² endeksi</b> — bölgenizin gerçek verisiyle</span></li>
-      <li><span class="ico">✓</span><span><b>Yatırım skoru & 5 yıllık trend</b> — değer kaybı mı, kazancı mı?</span></li>
-      <li><span class="ico">✓</span><span><b>Şirket logolu PDF rapor</b> talep edebilirsiniz</span></li>
-      <li><span class="ico">✓</span><span>Resmî değer için <b>lisanslı değerleme kuruluşuna</b> yönlendirme</span></li>
-    </ul>
+    <div class="eyebrow" style="color:var(--green-200)">Emlak Ekspertizi · ProX</div>
+    <h2>Mülkünüzü <span class="hl">değerleyin değil, anlayın.</span></h2>
+    <p class="lead"><b>Resmî değerleme</b> SPK lisanslı ayrı bir süreçtir ve lisanslı çözüm ortaklarıyla yürütülür. Biz; mahalle bazlı veri modeli, canlı piyasa hareketleri ve emsal analiziyle mülkünüzün <b>risk ve potansiyelini</b> ortaya koyan <b>veri destekli emlak ekspertizi — karar analizi</b> sunarız.</p>
+    <div class="dgr-chips">
+      <span>📍 Bölgesel veri analizi</span><span>⚠️ Risk değerlendirmesi</span><span>📊 Emsal karşılaştırması</span><span>🛡️ Veri güven skoru</span><span>👤 Uzman + veri modeli</span>
+    </div>
+    <div class="dgr-tiers">
+      <div class="dgr-tier"><span class="dt-tag">Tier 1 · Resmî</span><b>Resmî Değerleme</b><p>SPK lisanslı çözüm ortakları · banka, kredi/ipotek, resmî kurum süreçleri.</p></div>
+      <div class="dgr-tier main"><span class="dt-tag">Tier 2 · Ana Ürün</span><b>Gayrimenkul Karar Analizi</b><p>Veri destekli premium ekspertiz · değer aralığı, bölgesel risk, emsal, güven skoru.</p></div>
+      <div class="dgr-tier"><span class="dt-tag">Tier 3 · Kurumsal</span><b>Kurumsal Veri Çözümleri</b><p>ProX Intelligence · API servisleri · white-label rapor · dashboard.</p></div>
+    </div>
+    <div class="dgr-scope">🗺️ 81 il · 973 ilçe · 50.000+ mahalle · 480M+ veri noktası · çok kaynaklı çapraz doğrulama</div>
   </div>
   <div class="valbox">
-    <h3>Hızlı Değer Tahmini</h3>
-    <div class="sub">Gayrimenkulünüzün bilgilerini girin</div>
+    <h3>Hızlı Ekspertiz Ön Analizi</h3>
+    <div class="sub">Gayrimenkulünüzün bilgilerini girin · 30 sn · ücretsiz</div>
     <div class="vrow">
       <div class="vfld"><label>İlçe</label>
         <select id="v_ilce" aria-label="İlçe" onchange="valMahalle()"><option value="">Seçin</option></select></div>
@@ -343,10 +358,10 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <div class="vfld"><label>Brüt m²</label>
         <input id="v_m2" type="number" inputmode="numeric" placeholder="örn. 120" min="20" max="2000"></div>
     </div>
-    <button class="btn btn-primary" onclick="hesaplaDeger()">Değeri Hesapla →</button>
+    <button class="btn btn-primary" onclick="hesaplaDeger()">Karar Analizi Başlat →</button>
 
     <div class="val-result" id="valResult">
-      <div class="vt">Tahmini Piyasa Değeri</div>
+      <div class="vt">Tahmini Piyasa Değer Aralığı</div>
       <div class="vbig num" id="valBig">—</div>
       <div class="vrange" id="valRange"></div>
       <div class="val-lead" id="valLead">
@@ -356,9 +371,9 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
           <div class="vfld"><input id="vl_tel" placeholder="Telefonunuz"></div>
         </div>
         <label style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--muted);margin:4px 0 10px"><input type="checkbox" id="vl_kvkk" style="margin-top:3px">KVKK Aydınlatma Metni'ni okudum, iletişim için onaylıyorum.</label>
-        <button class="btn btn-blue" style="width:100%" onclick="valLead()">Ücretsiz Detaylı Rapor İste</button>
+        <button class="btn btn-primary" style="width:100%" onclick="valLead()">Ücretsiz Detaylı Rapor İste</button>
       </div>
-      <div class="vnote">⚠️ Bu bir ön tahmindir; resmî değer beyanı değildir. Canlı veride <span style="color:var(--accent)">Türkiye geneli bölge endeks altyapısı</span> ucuna bağlanır. Resmî değerleme yetkili/lisanslı değerleme uzmanı imzasıyla geçerlidir.</div>
+      <div class="vnote">⚠️ Bu, <span style="color:var(--accent)">veri destekli bir ekspertiz ön analizidir</span>; resmî değer beyanı değildir. <b>Resmî değerleme</b> yalnızca SPK lisanslı/yetkili değerleme uzmanı imzasıyla geçerlidir; talep halinde lisanslı çözüm ortağımıza yönlendiririz. Canlı veride Türkiye geneli ProX bölge endeksine bağlanır.</div>
     </div>
   </div>
 </div></section>
@@ -376,12 +391,12 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <section id="hizmetler"><div class="wrap">
   <div class="sec-head center"><div class="eyebrow">Hizmetlerimiz</div><h2>Alımdan yönetime, uçtan uca emlak</h2><p>Tek bir işlemden ibaret değiliz; gayrimenkulünüzün tüm yaşam döngüsünde yanınızdayız.</p></div>
   <div class="hgrid">
-    <div class="hcard"><div class="hi"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5h4v5"/></svg></div><h3>Alım & Satım Danışmanlığı</h3><p>Doğru alıcı ve satıcıyı, doğru fiyatla buluşturuyoruz. Pazarlık ve sözleşme süreçlerini biz yönetiriz.</p><span class="more">Detay →</span></div>
-    <div class="hcard"><div class="hi"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4.2"/><path d="M11 12l8.4-8.4"/><path d="M16.4 6.6l2.6 2.6"/><path d="M13.6 9.4l2.4 2.4"/></svg></div><h3>Kiralama & Kira Yönetimi</h3><p>Kiracı bulma, kontrat, tahsilat ve mülk yönetimi. Kira garantili yönetim seçenekleriyle.</p><span class="more">Detay →</span></div>
-    <div class="hcard"><div class="hi"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 13l3-3 3 3 4-5"/></svg></div><h3>Değerleme & Ön Ekspertiz</h3><p>Türkiye geneli endeks verisiyle ön değer tahmini; resmî rapor için lisanslı değerleme kuruluşuna yönlendirme.</p><span class="more">Detay →</span></div>
-    <div class="hcard"><div class="hi"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M16 7h5v5"/></svg></div><h3>Yatırım Danışmanlığı</h3><p>Bölge endeksi, yatırım skoru ve ROI projeksiyonuyla portföyünüze en doğru gayrimenkulü seçiyoruz.</p><span class="more">Detay →</span></div>
-    <div class="hcard"><div class="hi"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2.5"/><path d="M9 2.5v3M15 2.5v3M9 18.5v3M15 18.5v3M2.5 9h3M2.5 15h3M18.5 9h3M18.5 15h3"/><rect x="9.5" y="9.5" width="5" height="5" rx="1.2"/></svg></div><h3>Kredi & Ödeme Planı Simülasyonu</h3><p>Konut kredisi ve ödeme planı için <b>bilgilendirici simülasyon</b>. Kredi onayı, kesin faiz veya finansal danışmanlık değildir; banka teklifi yerine geçmez, faiz oranları örnektir.</p><span class="more">Detay →</span></div>
-    <div class="hcard"><div class="hi"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="4" width="13" height="17" rx="2.2"/><path d="M9 4.2V3.2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="M9 10h6M9 13.5h6M9 17h4"/></svg></div><h3>Tapu & Hukuki Süreç</h3><p>Tapu devri, TKGM işlemleri, ipotek ve hukuki danışmanlık desteğiyle güvenli işlem.</p><span class="more">Detay →</span></div>
+    <div class="hcard"><div class="hi"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5h4v5"/></svg></div><h3>Alım & Satım Danışmanlığı</h3><p>Doğru alıcı ve satıcıyı, doğru fiyatla buluşturuyoruz. Pazarlık ve sözleşme süreçlerini biz yönetiriz.</p><a class="more" href="hizmetlerimiz.html">Detay →</a></div>
+    <div class="hcard"><div class="hi"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4.2"/><path d="M11 12l8.4-8.4"/><path d="M16.4 6.6l2.6 2.6"/><path d="M13.6 9.4l2.4 2.4"/></svg></div><h3>Kiralama & Kira Yönetimi</h3><p>Kiracı bulma, kontrat, tahsilat ve mülk yönetimi. Kira garantili yönetim seçenekleriyle.</p><a class="more" href="hizmetlerimiz.html">Detay →</a></div>
+    <div class="hcard"><div class="hi"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 13l3-3 3 3 4-5"/></svg></div><h3>Değerleme & Ön Ekspertiz</h3><p>Türkiye geneli endeks verisiyle ön değer tahmini; resmî rapor için lisanslı değerleme kuruluşuna yönlendirme.</p><a class="more" href="hizmetlerimiz.html">Detay →</a></div>
+    <div class="hcard"><div class="hi"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M16 7h5v5"/></svg></div><h3>Yatırım Danışmanlığı</h3><p>Bölge endeksi, yatırım skoru ve ROI projeksiyonuyla portföyünüze en doğru gayrimenkulü seçiyoruz.</p><a class="more" href="hizmetlerimiz.html">Detay →</a></div>
+    <div class="hcard"><div class="hi"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2.5"/><path d="M9 2.5v3M15 2.5v3M9 18.5v3M15 18.5v3M2.5 9h3M2.5 15h3M18.5 9h3M18.5 15h3"/><rect x="9.5" y="9.5" width="5" height="5" rx="1.2"/></svg></div><h3>Kredi & Ödeme Planı Simülasyonu</h3><p>Konut kredisi ve ödeme planı için <b>bilgilendirici simülasyon</b>. Kredi onayı, kesin faiz veya finansal danışmanlık değildir; banka teklifi yerine geçmez, faiz oranları örnektir.</p><a class="more" href="hizmetlerimiz.html">Detay →</a></div>
+    <div class="hcard"><div class="hi"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="4" width="13" height="17" rx="2.2"/><path d="M9 4.2V3.2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="M9 10h6M9 13.5h6M9 17h4"/></svg></div><h3>Tapu & Hukuki Süreç</h3><p>Tapu devri, TKGM işlemleri, ipotek ve hukuki danışmanlık desteğiyle güvenli işlem.</p><a class="more" href="hizmetlerimiz.html">Detay →</a></div>
   </div>
 </div></section>
 
@@ -411,13 +426,24 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <section id="alarm"><div class="wrap">
   <div class="alarm-box">
     <div>
-      <h3><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 4.5 2 5.5 2 5.5H4s2-1 2-5.5"/><path d="M10 20a2 2 0 0 0 4 0"/></svg> Bölgenizdeki fiyatlar değişince ilk siz öğrenin</h3>
-      <p>Takip etmek istediğiniz bölgeyi seçin; m² fiyatı veya uygun ilan çıktığında size e-posta gönderelim. E-posta doğrulaması (çift onay) ile çalışır; dilediğinizde tek tıkla abonelikten çıkabilirsiniz.</p>
+      <span class="eyebrow" style="color:var(--green-200)">Fiyat Alarmı</span>
+      <h3 style="margin-top:10px"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 4.5 2 5.5 2 5.5H4s2-1 2-5.5"/><path d="M10 20a2 2 0 0 0 4 0"/></svg> Bölgenizdeki fiyatlar değişince ilk siz öğrenin</h3>
+      <p>Takip etmek istediğiniz bölgeyi seçin; m² fiyatı veya uygun ilan çıktığında size e-posta gönderelim. Çift onaylı; dilediğinizde tek tıkla çıkabilirsiniz.</p>
     </div>
     <div class="alarm-form">
-      <select id="al_bolge" aria-label="Bölge"><option value="">Bölge seçin</option><option>Konak</option><option>Karşıyaka</option><option>Bornova</option><option>Buca</option><option>Çeşme</option></select>
-      <input id="al_mail" type="email" placeholder="E-posta adresiniz">
-      <button class="btn btn-primary" onclick="createAlarm()" style="min-width:130px">Alarm Kur</button>
+      <div class="alarm-chips" id="al_chips" role="group" aria-label="Bölge seçimi">
+        <button type="button" class="al-chip on" data-b="" onclick="alChip(this)">Tüm İzmir</button>
+        <button type="button" class="al-chip" data-b="Konak" onclick="alChip(this)">Konak</button>
+        <button type="button" class="al-chip" data-b="Karşıyaka" onclick="alChip(this)">Karşıyaka</button>
+        <button type="button" class="al-chip" data-b="Bornova" onclick="alChip(this)">Bornova</button>
+        <button type="button" class="al-chip" data-b="Buca" onclick="alChip(this)">Buca</button>
+        <button type="button" class="al-chip" data-b="Çeşme" onclick="alChip(this)">Çeşme</button>
+      </div>
+      <select id="al_bolge" aria-label="Bölge" hidden><option value="">Tüm İzmir</option><option>Konak</option><option>Karşıyaka</option><option>Bornova</option><option>Buca</option><option>Çeşme</option></select>
+      <div class="alarm-row">
+        <input id="al_mail" type="email" placeholder="E-posta adresiniz">
+        <button class="btn btn-primary" onclick="createAlarm()">Alarm Kur</button>
+      </div>
     </div>
   </div>
 </div></section>
@@ -426,10 +452,26 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <section id="referans"><div class="wrap">
   <div class="sec-head center"><div class="eyebrow">Referanslar</div><h2>Müşterilerimiz ne diyor?</h2><p style="color:var(--ink-2);font-size:13px;margin-top:6px">Demo sürüm — aşağıdaki görüşler ve logolar <b>temsilî örneklerdir</b>.</p></div>
   <div class="tst-grid" id="refGrid"></div>
-  <div class="logos">
-    <div class="l">ANKA<br>HOLDİNG</div><div class="l">Vega<br>GYO</div><div class="l">Marmara<br>Yapı</div>
-    <div class="l">Nova<br>İnşaat</div><div class="l">Atlas<br>Bank</div><div class="l">Kıyı<br>Sigorta</div>
+  <div class="logos" aria-label="Kurumsal referanslar (temsilî)">
+    <span class="lg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20 12 5l9 15M8 20l4-7 4 7"/></svg><span>ANKA<b>Holding</b></span></span>
+    <span class="lg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.7 6.3L20 11l-6.3 1.7L12 19l-1.7-6.3L4 11l6.3-1.7z"/></svg><span>Vega<b>GYO</b></span></span>
+    <span class="lg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="16" rx="1.4"/><path d="M9 20V9h6v11M9 12h6M9 15.5h6"/></svg><span>Marmara<b>Yapı</b></span></span>
+    <span class="lg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3.5M12 18.5V22M4.9 4.9l2.5 2.5M16.6 16.6l2.5 2.5M2 12h3.5M18.5 12H22M4.9 19.1l2.5-2.5M16.6 7.4l2.5-2.5"/></svg><span>Nova<b>İnşaat</b></span></span>
+    <span class="lg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16M5 9l7-5 7 5M4 9h16M7 9v11M12 9v11M17 9v11"/></svg><span>Atlas<b>Bank</b></span></span>
+    <span class="lg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg><span>Kıyı<b>Sigorta</b></span></span>
   </div>
+</div></section>
+
+<!-- ===== KAPANAN İŞLEMLER (Satılan / Kiralanan Arşivi) ===== -->
+<section id="arsiv"><div class="wrap">
+  <div class="sec-head center"><div class="eyebrow"><span class="dot"></span> Track Record</div><h2>Kapanan işlemler — sattığımız ve kiraladığımız portföy</h2><p style="color:var(--ink-2);font-size:13px;margin-top:6px">Sonuç odaklıyız: aşağıda tamamladığımız gerçek işlem tipleri, süreleri ve liste fiyatına yakınlığı. <b>Demo sürüm — kayıtlar temsilîdir</b>; canlı sürümde ProX'ten beslenir.</p></div>
+  <div class="ars-stats" id="arsivStats"></div>
+  <div class="al-chips" id="arsivChips" role="tablist" aria-label="Kapanan işlem filtresi" style="justify-content:center;margin:22px 0 4px">
+    <button class="al-chip on" data-f="all" onclick="arsivFilter('all')">Tümü</button>
+    <button class="al-chip" data-f="Satılık" onclick="arsivFilter('Satılık')">Satılan</button>
+    <button class="al-chip" data-f="Kiralık" onclick="arsivFilter('Kiralık')">Kiralanan</button>
+  </div>
+  <div class="ars-grid" id="arsivGrid"></div>
 </div></section>
 
 <!-- ===== BLOG ===== -->
@@ -441,7 +483,12 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
 <!-- ===== İLETİŞİM ===== -->
 <section id="iletisim"><div class="wrap">
-  <div class="sec-head"><div class="eyebrow">İletişim</div><h2>Hemen bir danışmanla görüşün</h2><p>Aklınızdaki gayrimenkul ne olursa olsun, 1 saat içinde size dönüş yapalım.</p></div>
+  <div class="sec-head"><div class="eyebrow">İletişim</div><h2>Hemen bir danışmanla görüşün</h2><p>Aklınızdaki gayrimenkul ne olursa olsun, <b>1 saat içinde</b> size dönüş yapalım.</p></div>
+  <div class="ilet-quick">
+    <a class="iq-card call" href="tel:+902324646464"><span class="iq-ic" aria-hidden="true">📞</span><span class="iq-b"><b>Hemen Ara</b><span class="js-tel2">+90 232 464 64 64</span></span><span class="iq-go" aria-hidden="true">→</span></a>
+    <a class="iq-card wa" href="https://wa.me/905000000000?text=Merhaba%2C%20gayrimenkul%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener noreferrer"><span class="iq-ic" aria-hidden="true">💬</span><span class="iq-b"><b>WhatsApp</b><span>7/24 anında yanıt</span></span><span class="iq-go" aria-hidden="true">→</span></a>
+    <a class="iq-card dir" href="https://www.google.com/maps/dir/?api=1&amp;destination=Alsancak%20K%C4%B1br%C4%B1s%20%C5%9Eehitleri%20Caddesi%20Konak%20%C4%B0zmir" target="_blank" rel="noopener noreferrer"><span class="iq-ic" aria-hidden="true">🧭</span><span class="iq-b"><b>Yol Tarifi</b><span>Ofise gel</span></span><span class="iq-go" aria-hidden="true">→</span></a>
+  </div>
   <div class="ilet-grid">
     <div>
       <div class="ilet-info">
@@ -450,11 +497,15 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
         <div class="row"><div class="ico"><svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.2-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg></div><div><b>WhatsApp</b><span>+90 500 000 00 00 · 7/24 mesaj</span></div></div>
         <div class="row"><div class="ico"><svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg></div><div><b>Çalışma Saatleri</b><span class="js-hours2">Hafta içi 09:00–19:00 · Cumartesi 10:00–17:00</span></div></div>
       </div>
-      <div class="mapbox"><div class="mglow"></div><div class="pin"><div class="p"></div><b>Meridyen Gayrimenkul</b><span>Alsancak, Konak</span></div></div>
+      <div class="ilet-map-wrap">
+        <div id="iletMap" class="ilet-map" aria-label="Ofis konumu — Alsancak, Konak / İzmir"></div>
+        <div class="map-label"><b class="js-firma">Meridyen Gayrimenkul</b><span>Alsancak, Konak / İzmir</span></div>
+        <a class="map-dir" href="https://www.google.com/maps/dir/?api=1&amp;destination=Alsancak%20K%C4%B1br%C4%B1s%20%C5%9Eehitleri%20Caddesi%20Konak%20%C4%B0zmir" target="_blank" rel="noopener noreferrer">🧭 Yol tarifi al →</a>
+      </div>
     </div>
     <div class="cform">
       <div class="crow"><input id="f_ad" placeholder="Adınız Soyadınız *"><input id="f_tel" placeholder="Telefon *"></div>
-      <div class="crow"><input id="f_mail" placeholder="E-posta"><select id="f_konu" aria-label="Konu"><option>Satılık ilan</option><option>Kiralık ilan</option><option>Evimi satmak istiyorum</option><option>Değerleme talebi</option><option>Yatırım danışmanlığı</option><option>Diğer</option></select></div>
+      <div class="crow"><input id="f_mail" placeholder="E-posta"><select id="f_konu" aria-label="Konu"><option>Satılık ilan</option><option>Kiralık ilan</option><option>Evimi satmak istiyorum</option><option>Emlak Ekspertizi talebi</option><option>Yatırım danışmanlığı</option><option>Diğer</option></select></div>
       <textarea id="f_msg" rows="3" placeholder="Mesajınız..." style="margin-bottom:12px"></textarea>
       <label class="kvkk"><input type="checkbox" id="f_kvkk" style="margin-top:3px"> <span><b>KVKK Aydınlatma Metni</b>'ni okudum, kişisel verilerimin işlenmesini onaylıyorum.</span></label>
       <button class="btn btn-primary" style="width:100%" onclick="submitLead('form')">Mesaj Gönder →</button>
@@ -466,7 +517,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <!-- ===== FOOTER ===== -->
 <!-- ===== DEMO & KURUMSAL BANT (üstten alındı; footer üstünde) ===== -->
 <style>
-  .demo-band{background:linear-gradient(180deg,#0b1f38,#0f2740);color:#dbeafe;border-top:1px solid rgba(255,255,255,.1);font-family:system-ui,-apple-system,sans-serif}
+  .demo-band{background:var(--grad-hero,linear-gradient(180deg,#0b1f38,#0f2740));color:#dbeafe;border-top:1px solid rgba(255,255,255,.1);font-family:var(--body),system-ui,-apple-system,sans-serif}
   .demo-band .db-in{max-width:1240px;margin:0 auto;padding:18px clamp(16px,4vw,40px);display:flex;flex-wrap:wrap;align-items:center;gap:16px 26px;justify-content:space-between}
   .demo-band .db-lead{flex:1 1 320px;min-width:260px}
   .demo-band .db-badge{display:inline-flex;align-items:center;gap:6px;background:#22c55e;color:#052e16;font-weight:800;font-size:10.5px;letter-spacing:.07em;padding:3px 9px;border-radius:6px;margin-bottom:8px}
@@ -513,18 +564,34 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <p>Veri odaklı emlak danışmanlığı. İzmir ve Ege'de satılık, kiralık konut, ofis ve arsa portföyü. Her ilanda gerçek bölge endeksi.</p>
       <div class="fsocial"><a href="https://facebook.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a><a href="https://instagram.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a><a href="https://x.com/meridyengm" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg></a><a href="https://www.linkedin.com/company/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg></a><a href="https://www.youtube.com/@meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a><a href="https://nsosyal.com" target="_blank" rel="noopener noreferrer" aria-label="NEXT Sosyal (Türkiye)" title="NEXT Sosyal — Türkiye'nin yerli sosyal medya platformu"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg></a></div><div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
     </div>
-    <div><h4>Kurumsal</h4><ul><li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="#danismanlar">Danışmanlar</a></li><li><a href="hizmetlerimiz.html">Hizmetler</a></li><li><a href="#referans">Referanslar</a></li><li><a href="#blog" onclick="goView('blog')">Blog</a></li><li><a href="iletisim.html">İletişim</a></li></ul></div>
-    <div><h4>Hizmetler</h4><ul><li><a href="ilanlar.html"><b>Tüm İlanlar</b></a></li><li><a href="ilanlar.html?op=Satılık">Satılık İlanlar</a></li><li><a href="ilanlar.html?op=Kiralık">Kiralık İlanlar</a></li><li><a href="portfoy.html">Özel Portföy</a></li><li><a href="#" onclick="goView('sat')">Sat / Kirala</a></li><li><a href="#degerleme">Ücretsiz Değerleme</a></li><li><a href="#" onclick="goView('analiz')">Bölge Analizi</a></li><li><a href="#alarm">Fiyat Alarmı</a></li></ul></div>
+    <div><h4>Kurumsal</h4><ul>
+      <li><a href="hakkimizda.html" onclick="closeAllOverlays()">Hakkımızda</a></li>
+      <li><a href="index.html#danismanlar" onclick="closeAllOverlays()">Danışmanlar</a></li>
+      <li><a href="hizmetlerimiz.html" onclick="closeAllOverlays()">Hizmetler</a></li><li><a href="nedenbiz.html" onclick="closeAllOverlays()">Neden Biz</a></li>
+      <li><a href="index.html#referans" onclick="closeAllOverlays()">Referanslar</a></li>
+      <li><a href="index.html#arsiv" onclick="closeAllOverlays()">Kapanan İşlemler</a></li>
+      <li><a href="index.html#blog" onclick="closeAllOverlays()">Blog</a></li>
+      <li><a href="iletisim.html" onclick="closeAllOverlays()">İletişim</a></li>
+    </ul></div>
+    <div><h4>Hizmetler</h4><ul>
+      <li><a href="ilanlar.html">İlanlar</a></li>
+      <li><a href="harita.html">Harita</a></li>
+      <li><a href="ozel/">Özel Portföy</a></li>
+      <li><a href="sat/" onclick="closeAllOverlays();satOpen();return false">Sat ve Kirala</a></li>
+      <li><a href="index.html#degerleme" onclick="closeAllOverlays()">Emlak Ekspertizi</a></li>
+      <li><a href="analiz/" onclick="closeAllOverlays();brOpen();return false">Analiz Merkezi</a></li>
+      <li><a href="index.html#alarm" onclick="closeAllOverlays()">Fiyat Alarmı</a></li><li><a href="prox-asistan.html">ProX Asistan</a></li>
+    </ul></div>
     <div><h4>Yasal & Araçlar</h4><ul>
       <li><a href="kvkk.html">KVKK Aydınlatma Metni</a></li>
-      <li><a href="cerez.html">Çerez Politikası</a></li>
-      <li><a href="kullanim-kosullari.html">Mesafeli Hizmet & Kullanım</a></li>
+      <li><a href="cerez.html">Çerez Politikası</a></li><li><a href="gizlilik.html">Gizlilik Politikası</a></li>
+      <li><a href="kullanim-kosullari.html">Mesafeli Hizmet &amp; Kullanım</a></li>
       <li><a href="https://parselsorgu.tkgm.gov.tr" target="_blank" rel="noopener noreferrer">TKGM Ada/Parsel Sorgu ↗</a></li>
-      <li><a href="#" onclick="openAdmin();return false"><svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> Yönetim Paneli</a></li>
+      <li><a href="#" onclick="closeAllOverlays();openSaasPortal();return false">Müşteri Portalı / Giriş</a></li><li><a href="#" onclick="closeAllOverlays();openAdmin();return false">Yönetim Paneli</a></li>
     </ul></div>
   </div>
   <div class="fbot">
-    <span>© 2026 Meridyen Gayrimenkul · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span></span><a class="gm-prox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="gm-prox-lead">Powered by</span><span class="gm-prox-mark"><span class="gm-prox-pro">Pro</span><span class="gm-prox-x">X</span></span></a>
+    <span>© 2026 Meridyen Gayrimenkul · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span> · <span style="opacity:.85">🔗 emlakekspertizi.com Veri Ortağı</span></span><div class="lang-sw" title="Dil / Language"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><select aria-label="Dil / Language" onchange="if(typeof gmLang==='function')gmLang(this.value)"><option value="tr">TR</option><option value="en">EN</option><option value="ru">RU</option><option value="zh">ZH</option><option value="ar">AR</option></select></div><a class="gm-prox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="gm-prox-lead">Powered by</span><span class="gm-prox-mark"><span class="gm-prox-pro">Pro</span><span class="gm-prox-x">X</span></span></a>
     
   </div>
 </div></footer>
@@ -581,11 +648,11 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <!-- ===== LEAD MODAL ===== -->
 <div class="modal" id="leadModal" onclick="if(event.target.id==='leadModal')closeLead()"><div class="mbox">
   <button class="mclose" onclick="closeLead()">✕</button>
-  <h3 id="leadTitle">Ücretsiz Değerleme</h3>
+  <h3 id="leadTitle">Ücretsiz Emlak Ekspertizi</h3>
   <div class="msub">Bilgilerinizi bırakın, uzman danışmanımız 1 saat içinde sizi arasın.</div>
   <input id="m_ad" placeholder="Adınız Soyadınız *">
   <input id="m_tel" placeholder="Telefon *">
-  <select id="m_konu"><option>Ücretsiz Değerleme</option><option>Satılık ilan ilgisi</option><option>Kiralık ilan ilgisi</option><option>Evimi satmak istiyorum</option><option>Yatırım danışmanlığı</option></select>
+  <select id="m_konu"><option>Ücretsiz Emlak Ekspertizi</option><option>Satılık ilan ilgisi</option><option>Kiralık ilan ilgisi</option><option>Evimi satmak istiyorum</option><option>Yatırım danışmanlığı</option></select>
   <textarea id="m_msg" rows="2" placeholder="Eklemek istedikleriniz (opsiyonel)"></textarea>
   <label class="kvkk"><input type="checkbox" id="m_kvkk" style="margin-top:3px"> <span><b>KVKK Aydınlatma Metni</b>'ni okudum ve onaylıyorum.</span></label>
   <button class="btn btn-primary" style="width:100%" onclick="submitLead('modal')">Talebimi Gönder →</button>
@@ -1646,7 +1713,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <ul class="ozo-bul">
         <li><b>Mahremiyet garantisi</b> — komşu, kiracı veya çevre haberdar olmaz.</li>
         <li><b>Doğrulanmış alıcılar</b> — bütçesi ve niyeti teyit edilmiş talep havuzu.</li>
-        <li><b>Gerçek bölge endeksi</b> — mülkünüze veriyle dayalı doğru fiyat.</li>
+        <li><b>Gerçek bölge endeksi</b> — mülkünüze veriye dayalı doğru fiyat.</li>
         <li><b>e-Devlet yetkili süreç</b> — tapu ve yetki belgesiyle güvenli satış.</li>
       </ul>
       <div class="ozo-form">
@@ -1664,28 +1731,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
     </div>
   </section>
     </div>
-<footer class="siteFooter"><div class="wrap">
-  <div class="fcols">
-    <div>
-      <div class="logo"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Gayrimenkul</span></span></div>
-      <p>Veri odaklı emlak danışmanlığı. İzmir ve Ege'de satılık, kiralık konut, ofis ve arsa portföyü. Her ilanda gerçek bölge endeksi.</p>
-      <div class="fsocial"><a href="https://facebook.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a><a href="https://instagram.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a><a href="https://x.com/meridyengm" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg></a><a href="https://www.linkedin.com/company/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg></a><a href="https://www.youtube.com/@meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a><a href="https://nsosyal.com" target="_blank" rel="noopener noreferrer" aria-label="NEXT Sosyal (Türkiye)" title="NEXT Sosyal — Türkiye'nin yerli sosyal medya platformu"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg></a></div><div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
-    </div>
-    <div><h4>Kurumsal</h4><ul><li><a href="#hakkimizda">Hakkımızda</a></li><li><a href="#danismanlar">Danışmanlar</a></li><li><a href="hizmetlerimiz.html">Hizmetler</a></li><li><a href="#blog" onclick="goView('blog')">Blog</a></li><li><a href="#iletisim">İletişim</a></li></ul></div>
-    <div><h4>Hizmetler</h4><ul><li><a href="#ilanlar">Satılık İlanlar</a></li><li><a href="#ilanlar">Kiralık İlanlar</a></li><li><span style="color:var(--accent);font-weight:700">Özel Portföy</span></li><li><a href="#degerleme">Ücretsiz Değerleme</a></li><li><a href="#" onclick="goView('analiz')">Bölge Analizi</a></li><li><a href="#alarm">Fiyat Alarmı</a></li></ul></div>
-    <div><h4>Yasal & Araçlar</h4><ul>
-      <li><a href="kvkk.html">KVKK Aydınlatma Metni</a></li>
-      <li><a href="cerez.html">Çerez Politikası</a></li>
-      <li><a href="kullanim-kosullari.html">Mesafeli Hizmet & Kullanım</a></li>
-      <li><a href="https://parselsorgu.tkgm.gov.tr" target="_blank" rel="noopener noreferrer">TKGM Ada/Parsel Sorgu ↗</a></li>
-      <li><a href="#" onclick="openAdmin();return false"><svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> Yönetim Paneli</a></li>
-    </ul></div>
-  </div>
-  <div class="fbot">
-    <span>© 2026 Meridyen Gayrimenkul · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span></span><a class="gm-prox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="gm-prox-lead">Powered by</span><span class="gm-prox-mark"><span class="gm-prox-pro">Pro</span><span class="gm-prox-x">X</span></span></a>
-    
-  </div>
-</div></footer>
+<footer class="siteFooter"></footer>
   </div>
 </div>
 
@@ -1840,7 +1886,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       </section>
 
       <section class="sat-sec">
-        <div class="sat-sec-h"><div class="eyebrow">Anında ön değerleme</div><h2>Mülkünüzün tahmini değerini saniyeler içinde görün</h2></div>
+        <div class="sat-sec-h"><div class="eyebrow">Anında ön analiz</div><h2>Mülkünüzün tahmini değerini saniyeler içinde görün</h2></div>
         <div class="sat-calc">
           <div class="sc-form">
             <label>İlçe</label>
@@ -1889,7 +1935,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
         <div class="sat-sec-h"><div class="eyebrow">Mülk sahipleri ne diyor?</div><h2>Bize güvenenler kazandı</h2></div>
         <div class="sat-tst">
           <div class="ts"><svg class="q" viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M7 7h4v4H9c0 2 .5 3 2 3v3c-3 0-5-2-5-6V7zm9 0h4v4h-2c0 2 .5 3 2 3v3c-3 0-5-2-5-6V7z"/></svg><p>Dairemin satışa çıktığını kimsenin duymasını istemiyordum. Özel Portföy ile 3 hafta içinde, hedeflediğim fiyata sattım. Süreç boyunca tek bir danışmanla çalışmak çok rahattı.</p><div class="who"><span class="av" style="background:#1f8b43">A.Y.</span><div><b>Ahmet Y.</b><span>Karşıyaka · Satılık daire</span></div></div></div>
-          <div class="ts"><svg class="q" viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M7 7h4v4H9c0 2 .5 3 2 3v3c-3 0-5-2-5-6V7zm9 0h4v4h-2c0 2 .5 3 2 3v3c-3 0-5-2-5-6V7z"/></svg><p>Bölge endeksli fiyat raporu sayesinde gerçek değeri öğrendim; komşu fiyatına bakıp düşük satmaktan kurtuldum. Veriyle çalışmaları fark yaratıyor.</p><div class="who"><span class="av" style="background:#2563eb">S.D.</span><div><b>Selin D.</b><span>Urla · Satılık villa</span></div></div></div>
+          <div class="ts"><svg class="q" viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M7 7h4v4H9c0 2 .5 3 2 3v3c-3 0-5-2-5-6V7zm9 0h4v4h-2c0 2 .5 3 2 3v3c-3 0-5-2-5-6V7z"/></svg><p>Bölge endeksli fiyat raporu sayesinde gerçek değeri öğrendim; komşu fiyatına bakıp düşük satmaktan kurtuldum. Veriyle çalışmaları fark yaratıyor.</p><div class="who"><span class="av" style="background:#0e7490">S.D.</span><div><b>Selin D.</b><span>Urla · Satılık villa</span></div></div></div>
           <div class="ts"><svg class="q" viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M7 7h4v4H9c0 2 .5 3 2 3v3c-3 0-5-2-5-6V7zm9 0h4v4h-2c0 2 .5 3 2 3v3c-3 0-5-2-5-6V7z"/></svg><p>Kiracı ön elemesi ve sözleşme yönetimi tam profesyoneldi. Mülküm yalnızca 9 gün boş kaldı, ödemeler düzenli geliyor. İçim çok rahat.</p><div class="who"><span class="av" style="background:#b9820a">M.K.</span><div><b>Murat K.</b><span>Bornova · Kiralık daire</span></div></div></div>
         </div>
       </section>
@@ -1899,11 +1945,11 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
           <div class="ozo-head">
             <div class="eyebrow"><span class="dot"></span> Portföy Bırak</div>
             <h2>Mülkünüzü değerlendirelim — ücretsiz</h2>
-            <p>Bilgilerinizi bırakın; bölge endeksiyle dayalı ücretsiz bir değerleme ve yol haritası için danışmanımız sizi arasın. Dilerseniz Özel Portföy ile mülkünüz açık ilana çıkmadan değerlendirilir.</p>
+            <p>Bilgilerinizi bırakın; bölge endeksine dayalı ücretsiz bir emlak ekspertizi ve yol haritası için danışmanımız sizi arasın. Dilerseniz Özel Portföy ile mülkünüz açık ilana çıkmadan değerlendirilir.</p>
           </div>
           <div class="ozo-grid">
             <ul class="ozo-bul">
-              <li><b>Ücretsiz değerleme</b> — veriyle dayalı doğru fiyat aralığı.</li>
+              <li><b>Ücretsiz emlak ekspertizi</b> — veriye dayalı doğru fiyat aralığı.</li>
               <li><b>Özel Portföy seçeneği</b> — mülkünüz ifşa olmadan tanıtım.</li>
               <li><b>Doğrulanmış alıcılar</b> — niyeti ve bütçesi teyitli havuz.</li>
               <li><b>Sürpriz ücret yok</b> — yalnızca başarılı işlemde, yasal oranda.</li>
@@ -1931,7 +1977,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
           <details><summary>Komisyon / ücret nasıl işliyor?</summary><div>Yalnızca başarılı satış veya kira sözleşmesinde, yasal oranlarda hizmet bedeli alınır. Başta sürpriz ücret yoktur; tüm koşullar yazılı olarak paylaşılır.</div></details>
           <details><summary>Satış fiyatını kim belirler?</summary><div>Kararı siz verirsiniz. Biz 480M+ kayıtlık endeks ve bölge analiziyle veriye dayalı bir fiyat aralığı öneririz; son söz her zaman mülk sahibinindir.</div></details>
           <details><summary>Süreç ne kadar sürer?</summary><div>Talebinizin ardından genellikle 24 saat içinde ekspertiz planlanır. Doğru fiyatlı mülkler ortalama 21 günde alıcısıyla buluşur.</div></details>
-          <details><summary>Ön değerleme ücretli mi?</summary><div>Hayır. Hem siteden anında alacağınız ön tahmin hem de uzmanımızın yerinde yapacağı ekspertiz ve fiyat raporu tamamen ücretsizdir; hiçbir yükümlülük doğurmaz.</div></details>
+          <details><summary>Ön analiz ücretli mi?</summary><div>Hayır. Hem siteden anında alacağınız ön tahmin hem de uzmanımızın yerinde yapacağı ekspertiz ve fiyat raporu tamamen ücretsizdir; hiçbir yükümlülük doğurmaz.</div></details>
           <details><summary>Başka şehirde / ilçede mülküm var, bakar mısınız?</summary><div>Önceliğimiz İzmir ve Ege bölgesidir; ancak çevre illerdeki mülkler için de danışmanlık ve veri desteği sunabiliyoruz. Formda konumu belirtmeniz yeterli.</div></details>
         </div>
       </section>
@@ -1939,21 +1985,16 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <section class="sat-final">
         <div class="in">
           <h2>Mülkünüzü doğru fiyata, doğru alıcıyla buluşturalım</h2>
-          <p>Ücretsiz ve yükümlülüksüz ön değerleme için bilgilerinizi bırakın; uzman danışmanımız size özel bir yol haritasıyla dönsün.</p>
+          <p>Ücretsiz ve yükümlülüksüz ön analiz için bilgilerinizi bırakın; uzman danışmanımız size özel bir yol haritasıyla dönsün.</p>
           <div class="sat-final-cta">
-            <button class="ozh-btn primary" onclick="satScrollForm('Satmak istiyorum')">Ücretsiz değerleme al</button>
+            <button class="ozh-btn primary" onclick="satScrollForm('Satmak istiyorum')">Ücretsiz ekspertiz al</button>
             <a class="ozh-btn ghost" href="https://wa.me/905000000000" target="_blank" rel="noopener noreferrer">WhatsApp'tan yazın</a>
           </div>
         </div>
       </section>
     </div>
 
-    <footer class="siteFooter"><div class="wrap">
-      <div class="fbot" style="border-top:0">
-        <span>© 2026 Meridyen Gayrimenkul · Veri odaklı emlak danışmanlığı · İzmir & Ege</span>
-        <a class="ozh-btn ghost" style="padding:9px 16px;font-size:13px" href="https://wa.me/905000000000" target="_blank" rel="noopener noreferrer">WhatsApp ile yazın</a>
-      </div>
-    </div></footer>
+    <footer class="siteFooter"></footer>
   </div>
 </div>
 
@@ -1965,15 +2006,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
     <div class="nav-cta siteCta"></div>
   </div>
   <div class="br-scroll" id="blogScroll">
-    <section class="br-hero2" style="min-height:auto">
-      <div class="br-hero-bg"></div><div class="grid-motif"></div>
-      <div class="in">
-        <div class="eyebrow" style="display:block;margin-bottom:10px">Bilgi Merkezi</div>
-        <h2 style="font-family:var(--head);font-size:clamp(30px,5vw,52px);line-height:1.05;margin-bottom:14px">Emlak &amp; Yatırım Blogu</h2>
-        <p style="max-width:640px;color:var(--muted);font-size:16px;line-height:1.6">Firma yazılarımız ve ProX güncel sektör içerikleri — veri odaklı rehberler, piyasa analizleri ve yatırım ipuçları.</p>
-      </div>
-    </section>
-    <section class="wrap" style="padding:26px 0 70px">
+    <section class="wrap" style="padding:24px 0 70px">
       <div id="blogListWrap"></div>
       <div id="blogDetailWrap" style="display:none"></div>
     </section>
@@ -2040,18 +2073,21 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
   <script src="../shared/eids.js?v=1"></script>
   <link rel="stylesheet" href="../shared/vendor/pannellum.css?v=1">
-<script src="../shared/listing.js?v=20"></script>
+<script src="../shared/listing.js?v=22"></script>
 <script src="../shared/vendor/pannellum.js?v=1"></script>
 <script src="../shared/listing-extras.js?v=7"></script>
   <script src="../shared/cs-engine.js?v=2"></script>
-  <script src="js/app.js?v=53"></script>
+  <script src="../shared/vendor/leaflet/leaflet.js?v=1"></script>
+  <script src="../shared/harita.js?v=5"></script>
+  <script src="../shared/doviz.js?v=2"></script>
+  <script src="js/app.js?v=81"></script>
   <script src="js/content-studio.js?v=19"></script>
-  <script src="js/hero-pusula.js?v=3"></script>
-  <script src="../shared/mahalle-endeks.js?v=2"></script>
-  <script src="js/mahalle-endeks.js?v=10"></script>
-  <script src="js/kurumsal-sayfalar.js?v=4"></script>
+  <script src="js/hero-pusula.js?v=17"></script>
+  <script src="../shared/mahalle-endeks.js?v=14"></script>
+  <script src="js/mahalle-endeks.js?v=14"></script>
+  <script src="js/kurumsal-sayfalar.js?v=12"></script>
   <script src="js/uyelik-asistan.js?v=14"></script>
-<script src="js/i18n/_common.js?v=7"></script><script src="js/i18n/index.js?v=2"></script><script src="js/i18n.js?v=4"></script>
+<script src="js/i18n/_common.js?v=8"></script><script src="js/i18n/index.js?v=3"></script><script src="js/i18n.js?v=4"></script>
 </body>
 </html>
 

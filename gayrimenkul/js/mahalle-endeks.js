@@ -40,7 +40,8 @@
       goOzel: function () { try { if (typeof goView === 'function') goView('ozel'); } catch (e) {} },
       onLead: function (id) { try { if (id && typeof ozLead === 'function') ozLead(id); else if (typeof goView === 'function') goView('ozel'); } catch (e) {} },
       waHref: function (t) { try { return (typeof waHref === 'function') ? waHref(t) : '#'; } catch (e) { return '#'; } },
-      accent: accent || '#0e7c86'
+      accent: accent || '#0e7c86',
+      hideOzelBand: true   /* gm ana sayfa: endeks widget'ta özel/sokak bant KAPALI — özel portföy alttaki tek-tip fırsat kartlarıyla */
     });
   }
   /* geriye dönük stub'lar (eski markup onchange'leri) */

@@ -182,9 +182,14 @@
         +'<div class="me-sec-h">📊 Tüm kategori endeksi · ProX gerçek veri</div>'
         +'<div class="me-cats" id="me_cats"></div>'
         +'<div class="me-profile" id="me_profile"></div>'
-        +'<div class="me-ozel" id="me_ozel"></div>'
-        +'<div class="me-sec-h">📍 Bu mahallede cadde/sokak bazında başlangıç fiyatları</div>'
-        +'<div class="me-streets" id="me_streets"></div>';
+        /* me-ozel (özel portföy kartları) + me-streets (sokak kartları) yalnız cfg.hideOzelBand!==true iken.
+           gm ana sayfasında bunlar KAPALI (hideOzelBand:true) — özel portföy alttaki tek-tip "fırsatlar"
+           (ozHomeCards) kartlarıyla sunuluyor; endeks widget yalnız ENDEKS verisine odaklanır.
+           insaat/danışman özel-portföy sayfalarında bant açık kalır (varsayılan). */
+        +(cfg.hideOzelBand ? '' : (''
+          +'<div class="me-ozel" id="me_ozel"></div>'
+          +'<div class="me-sec-h">📍 Bu mahallede cadde/sokak bazında başlangıç fiyatları</div>'
+          +'<div class="me-streets" id="me_streets"></div>'));
       var ic=$('me_ilce'),mh=$('me_mah');
       if(ic)ic.onchange=function(){_il=ic.value;fillMah();render();};
       if(mh)mh.onchange=function(){_mh=mh.value;render();};
@@ -249,16 +254,16 @@
             +(az.veri?'<span class="me-val-i"><small>Veri noktası</small><b>'+fmt(az.veri)+'</b></span>':'')+'</div>';
         } else { v.hidden=true; v.innerHTML=''; } }
       var c=$('me_cats');
-      if(c)c.innerHTML=catCard('Daire · Satılık',M(per90),'90 m² · '+fmt(ds.m2)+' ₺/m²',ser(ds.m2),'#1e40af',yrTxt,ds.ilan,ds.live)
+      if(c)c.innerHTML=catCard('Daire · Satılık',M(per90),'90 m² · '+fmt(ds.m2)+' ₺/m²',ser(ds.m2),'#0e7490',yrTxt,ds.ilan,ds.live)
         +catCard('Daire · Kiralık',fmt(kira90)+' ₺<small>/ay</small>','90 m² · '+fmt(dk.m2)+' ₺/m²·ay',ser(dk.m2,0.6),'#1e7e3a',yrTxt,dk.ilan,dk.live)
         +catCard('İşyeri · Satılık',fmt(ts.m2)+' ₺<small>/m²</small>','dükkan · ofis · vitrin',ser(ts.m2),'#0891b2',yrTxt,ts.ilan,ts.live)
-        +catCard('İşyeri · Kiralık',fmt(tk.m2)+' ₺<small>/m²·ay</small>','ticari kira',ser(tk.m2,0.6),'#7c3aed',yrTxt,tk.ilan,tk.live)
+        +catCard('İşyeri · Kiralık',fmt(tk.m2)+' ₺<small>/m²·ay</small>','ticari kira',ser(tk.m2,0.6),'#ea580c',yrTxt,tk.ilan,tk.live)
         +catCard('Arsa',fmt(ar.m2)+' ₺<small>/m²</small>','imarlı · yatırım',ser(ar.m2,1.15),'#d4af37',yrTxt,ar.ilan,ar.live);
       var dm=m.demo,p=$('me_profile');
       if(p){ var pie=function(t,labels,vals,colors,center){return '<div class="me-pie"><div class="me-pie-t">'+t+'</div>'+donut(vals,colors,center)+legend(labels,vals,colors)+'</div>';};
         p.innerHTML='<div class="me-prof-head">👥 Mahalle profili · demografi & yaşam <em>(tahmini profil)</em></div>'
           +'<div class="me-prof-grid">'
-          +pie('Yaş dağılımı',['0–17','18–34','35–54','55+'],dm.yas,BLUE)
+          +pie('Yaş dağılımı',['0–17','18–34','35–54','55+'],dm.yas,TEAL)
           +pie('Eğitim',['İlköğretim','Lise','Ön Lisans','Lisans','Lisansüstü'],dm.egitim,TEAL)
           +pie('Gelir grubu',['Alt','Alt-Orta','Orta-Üst','Üst'],dm.gelir,GOLD)
           +pie('Mülk sahipliği',['Ev sahibi','Kiracı'],[dm.sahiplik,100-dm.sahiplik],OWN,'%'+Math.round(dm.sahiplik))+'</div>'
@@ -396,6 +401,16 @@
     +'.me-st-prices{display:flex;flex-direction:column;gap:3px;font:600 12px/1.4 system-ui;margin-bottom:10px}.me-pr b{font-weight:800}.me-pr.sale{color:'+A+'}.me-pr.rent{color:#1e7e3a}'
     +'.me-st-cta{display:flex;gap:6px}.me-st-cta button{flex:1;border:1px solid var(--me-line);background:var(--me-surf);border-radius:8px;padding:8px;font:700 11.5px/1 system-ui;cursor:pointer;color:var(--me-ink)}'
     +'.me-st-wa{display:grid;place-items:center;padding:0 12px;border-radius:8px;background:#25D366;color:#fff;text-decoration:none;font:700 11.5px/1 system-ui}';
+    /* ── MODERN / İLERİ SEVİYE: widget'ı site tasarım sistemine hizala (Sora/Hanken/Space Grotesk) + cila ── */
+    css = css.replace(/system-ui,-apple-system,sans-serif/g, 'var(--me-body)').replace(/ system-ui\b/g, ' var(--me-body)');
+    css += '.me-root{--me-body:var(--body,"Hanken Grotesk",ui-sans-serif,system-ui,sans-serif);border-radius:22px;box-shadow:0 26px 64px -32px rgba(15,23,42,.32)}'
+      + '.me-h-big b,.me-h-big,.me-cc-val,.me-stat b,.me-score-ring span,.me-donut-c,.me-val-i b{font-family:var(--num,"Space Grotesk",ui-monospace,system-ui);letter-spacing:-.01em}'
+      + '.me-badge,.me-sec-h,.me-prof-head,.me-h-mah,.me-cc-lab,.me-prof-head{font-family:var(--head,"Sora",system-ui,sans-serif)}'
+      + '.me-head{border-radius:18px;padding:20px 22px}.me-h-big b{font-size:34px}'
+      + '.me-score-ring{width:84px;height:84px}.me-score-ring span{font-size:25px}'
+      + '.me-live{background:color-mix(in srgb,var(--me-accent) 8%,#fff);padding:7px 13px;border-radius:999px;border:1px solid color-mix(in srgb,var(--me-accent) 18%,transparent);font-weight:700}'
+      + '.me-cc{border-radius:16px;position:relative;overflow:hidden}.me-cc::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--me-accent);opacity:.85}.me-cc-val{font-size:21px}'
+      + '.me-sec-h{font-size:12px}';
     var st=document.createElement('style'); st.id='meSharedCSS'; st.textContent=css;
     (document.head||document.documentElement).appendChild(st);
   }

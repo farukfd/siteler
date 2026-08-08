@@ -20,11 +20,11 @@
 <meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/gayrimenkul/og-image.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"><!-- ana sayfayla aynı font (Poppins/Inter) — logo/başlık birebir -->
-<link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=4">
-<link rel="stylesheet" href="css/base.css?v=25">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"><!-- ana sayfayla aynı font (Sora/Hanken) — logo/başlık birebir -->
+<link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=5">
+<link rel="stylesheet" href="css/base.css?v=63">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<script src="js/brand.js?v=3"></script>
+<script defer src="js/brand.js?v=3"></script>
 <style>
   body{margin:0}
   .il-hero{background:linear-gradient(135deg,color-mix(in srgb,var(--accent,#0e7c86) 12%,#fff),var(--surface,#fff));border-bottom:1px solid var(--line,#e6e8ec);padding:38px 0 30px}
@@ -44,6 +44,7 @@
     <a href="nedenbiz.html">Neden <span class="nb-x">?</span> Biz</a>
     <a href="portfoy.html">Portföy</a>
     <a href="ilanlar.html" class="active">İlanlar</a>
+    <a href="harita.html">Harita</a>
     <a href="prox-asistan.html" class="nav-asistan"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>
   </nav>
   <div class="nav-cta siteCta">
@@ -53,6 +54,7 @@
     <button class="burger" onclick="document.getElementById('mnav').classList.add('open')" aria-label="Menü"><span></span><span></span><span></span></button>
   </div>
 </div></header>
+<div class="doviz-bandi" id="dovizBandi"></div>
 
 <div class="mnav" id="mnav" onclick="if(event.target.id==='mnav')this.classList.remove('open')"><div class="panel">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-family:var(--head);font-size:18px">Menü</b>
@@ -60,7 +62,7 @@
   <a href="hizmetlerimiz.html">Hizmetlerimiz</a>
   <a href="nedenbiz.html">Neden <span class="nb-x">?</span> Biz</a>
   <a href="portfoy.html">Portföy</a>
-  <a href="ilanlar.html">İlanlar</a>
+  <a href="ilanlar.html">İlanlar</a><a href="harita.html">Harita</a>
   <a href="prox-asistan.html"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>
   <a class="btn btn-primary" style="margin-top:14px" href="index.html#degerleme">Ücretsiz Ekspertiz</a>
   <a class="btn btn-line" style="margin-top:8px" href="https://wa.me/905324646464" target="_blank" rel="noopener noreferrer">WhatsApp ile Yaz</a>
@@ -110,31 +112,51 @@
     <div>
       <div class="logo"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Gayrimenkul</span></span></div>
       <p>Veri odaklı emlak danışmanlığı. İzmir ve Ege'de satılık, kiralık konut, ofis ve arsa portföyü. Her ilanda gerçek bölge endeksi.</p>
-      <div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer"><b>emlak</b>jet</a></div>
+      <div class="fsocial"><a href="https://facebook.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a><a href="https://instagram.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a><a href="https://x.com/meridyengm" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg></a><a href="https://www.linkedin.com/company/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg></a><a href="https://www.youtube.com/@meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a><a href="https://nsosyal.com" target="_blank" rel="noopener noreferrer" aria-label="NEXT Sosyal (Türkiye)" title="NEXT Sosyal — Türkiye'nin yerli sosyal medya platformu"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg></a></div><div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
     </div>
-    <div><h4>Kurumsal</h4><ul><li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="index.html#danismanlar">Danışmanlar</a></li><li><a href="hizmetlerimiz.html">Hizmetler</a></li><li><a href="nedenbiz.html">Neden Biz</a></li><li><a href="iletisim.html">İletişim</a></li></ul></div>
-    <div><h4>Hizmetler</h4><ul><li><a href="ilanlar.html"><b>Tüm İlanlar</b></a></li><li><a href="ilanlar.html?op=Satılık">Satılık İlanlar</a></li><li><a href="ilanlar.html?op=Kiralık">Kiralık İlanlar</a></li><li><a href="ozel/">Özel Portföy</a></li><li><a href="index.html#degerleme">Ücretsiz Değerleme</a></li></ul></div>
+    <div><h4>Kurumsal</h4><ul>
+      <li><a href="hakkimizda.html" onclick="closeAllOverlays()">Hakkımızda</a></li>
+      <li><a href="index.html#danismanlar" onclick="closeAllOverlays()">Danışmanlar</a></li>
+      <li><a href="hizmetlerimiz.html" onclick="closeAllOverlays()">Hizmetler</a></li><li><a href="nedenbiz.html" onclick="closeAllOverlays()">Neden Biz</a></li>
+      <li><a href="index.html#referans" onclick="closeAllOverlays()">Referanslar</a></li>
+      <li><a href="index.html#arsiv" onclick="closeAllOverlays()">Kapanan İşlemler</a></li>
+      <li><a href="index.html#blog" onclick="closeAllOverlays()">Blog</a></li>
+      <li><a href="iletisim.html" onclick="closeAllOverlays()">İletişim</a></li>
+    </ul></div>
+    <div><h4>Hizmetler</h4><ul>
+      <li><a href="ilanlar.html">İlanlar</a></li>
+      <li><a href="harita.html">Harita</a></li>
+      <li><a href="ozel/">Özel Portföy</a></li>
+      <li><a href="sat/" onclick="closeAllOverlays();satOpen();return false">Sat ve Kirala</a></li>
+      <li><a href="index.html#degerleme" onclick="closeAllOverlays()">Emlak Ekspertizi</a></li>
+      <li><a href="analiz/" onclick="closeAllOverlays();brOpen();return false">Analiz Merkezi</a></li>
+      <li><a href="index.html#alarm" onclick="closeAllOverlays()">Fiyat Alarmı</a></li><li><a href="prox-asistan.html">ProX Asistan</a></li>
+    </ul></div>
     <div><h4>Yasal & Araçlar</h4><ul>
       <li><a href="kvkk.html">KVKK Aydınlatma Metni</a></li>
-      <li><a href="cerez.html">Çerez Politikası</a></li>
-      <li><a href="kullanim-kosullari.html">Mesafeli Hizmet & Kullanım</a></li>
+      <li><a href="cerez.html">Çerez Politikası</a></li><li><a href="gizlilik.html">Gizlilik Politikası</a></li>
+      <li><a href="kullanim-kosullari.html">Mesafeli Hizmet &amp; Kullanım</a></li>
       <li><a href="https://parselsorgu.tkgm.gov.tr" target="_blank" rel="noopener noreferrer">TKGM Ada/Parsel Sorgu ↗</a></li>
+      <li><a href="#" onclick="closeAllOverlays();openSaasPortal();return false">Müşteri Portalı / Giriş</a></li><li><a href="#" onclick="closeAllOverlays();openAdmin();return false">Yönetim Paneli</a></li>
     </ul></div>
   </div>
   <div class="fbot">
-    <span>© 2026 Meridyen Gayrimenkul · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span></span><div class="lang-sw" title="Dil / Language" style="display:inline-flex;align-items:center;gap:5px;margin:0 14px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><select aria-label="Dil / Language" style="background:transparent;border:1px solid currentColor;border-radius:8px;padding:3px 7px;font-weight:700;font-size:12px;color:inherit;cursor:pointer"><option value="tr">TR</option><option value="en">EN</option><option value="ru">RU</option><option value="zh">中文</option><option value="ar">AR</option></select></div><a class="gm-prox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="gm-prox-lead">Powered by</span><span class="gm-prox-mark"><span class="gm-prox-pro">Pro</span><span class="gm-prox-x">X</span></span></a>
+    <span>© 2026 Meridyen Gayrimenkul · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span> · <span style="opacity:.85">🔗 emlakekspertizi.com Veri Ortağı</span></span><div class="lang-sw" title="Dil / Language"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><select aria-label="Dil / Language" onchange="if(typeof gmLang==='function')gmLang(this.value)"><option value="tr">TR</option><option value="en">EN</option><option value="ru">RU</option><option value="zh">ZH</option><option value="ar">AR</option></select></div><a class="gm-prox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="gm-prox-lead">Powered by</span><span class="gm-prox-mark"><span class="gm-prox-pro">Pro</span><span class="gm-prox-x">X</span></span></a>
+    
   </div>
 </div></footer>
 
 <script src="../shared/eids.js?v=1"></script>
 <link rel="stylesheet" href="../shared/vendor/pannellum.css?v=1">
-<script src="../shared/listing.js?v=20"></script>
+<script src="../shared/listing.js?v=22"></script>
 <script src="../shared/vendor/pannellum.js?v=1"></script>
 <script src="../shared/listing-extras.js?v=7"></script>
 <script src="../shared/listings-page.js?v=1"></script>
+<script>try{var _gmS=JSON.parse(localStorage.getItem('meridyenGM_v1')||'{}');window.GM_DOVIZ_OFF=!!(_gmS&&_gmS.FIRMA&&_gmS.FIRMA.dovizOff);}catch(e){}</script>
+<script src="../shared/doviz.js?v=2"></script>
 <script src="js/wl.js?v=5"></script><!-- white-label: üretim tenant domain/marka rebrand (canonical/og) -->
 <script src="js/seo-chrome.js?v=3"></script><!-- admin WhatsApp/marka DOM yayılımı -->
-<script src="js/i18n/_common.js?v=7"></script><script src="js/i18n/ilanlar.js?v=1"></script><script src="js/i18n.js?v=4"></script>
+<script src="js/i18n/_common.js?v=8"></script><script src="js/i18n/ilanlar.js?v=1"></script><script src="js/i18n.js?v=4"></script>
 <script>
 /* ====== GERÇEK İLAN VERİSİ — ana sayfa & admin ile AYNI store (meridyenGM_v1) ====== */
 (function(){

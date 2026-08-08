@@ -191,7 +191,7 @@ const DEF_ILANLAR=[
  {id:8,title:'Taş Mimari 3+1 Restorasyonlu',op:'Satılık',type:'Daire',m2:140,oda:'3+1',kat:'2',ilce:'Çeşme',mah:'Alaçatı',price:14500000,status:'aktif',feat:0,img:'pano',desc:'Karakteristik bina, yenilenmiş iç mekan.',energy:'D',ilanNo:'MG-1044',tarih:'2026-07-25'},
  {id:9,title:'Sahil Yakını 2+1 Kiralık',op:'Kiralık',type:'Daire',m2:95,oda:'2+1',kat:'5',ilce:'Karşıyaka',mah:'Bostanlı',price:42000,status:'aktif',feat:0,img:'hero2',desc:'Marina yakını, asansörlü, aydınlık.',energy:'B',ilanNo:'MG-1058',tarih:'2026-08-03'}
 ];
-const DAN_COLORS=['#1e40af','#1e7e3a','#8b5cf6','#0284c7','#f59e0b','#0f766e','#be185d','#1e7e3a'];
+const DAN_COLORS=['#0e7490','#1e7e3a','#ea580c','#0284c7','#f59e0b','#0f766e','#be185d','#1e7e3a'];
 const DEF_DAN=[
  {id:1,name:'Ahmet Yılmaz',role:'Kıdemli Emlak Danışmanı',area:'Karşıyaka · Bostanlı · Mavişehir',wa:'905324646461',tel:'+90 532 464 64 61',sales:142,rating:4.9,exp:12,feat:1,demo:1,foto:'dan1',bio:'12 yıllık tecrübe, Karşıyaka–Bostanlı hattının lüks konut uzmanı.'},
  {id:2,name:'Zeynep Aksoy',role:'Yatırım Danışmanı',area:'Konak · Alsancak · Göztepe',wa:'905324646462',tel:'+90 532 464 64 62',sales:118,rating:4.8,exp:9,feat:1,demo:1,foto:'dan2',bio:'Konak–Alsancak yatırım gayrimenkulleri ve getiri analizi.'},
@@ -201,7 +201,7 @@ const DEF_DAN=[
 
 /* ============ STATE + STORAGE ============ */
 const LS='meridyenGM_v1';
-let FIRMA,ILANLAR,DANISMANLAR,LEADS,THEME,CONTENT,BLOGS,REFS,SEO,GOOGLE,PROX,AICFG,P3,KISILER,DEALS,TASKS,COMMS,RENTS,MSGLOG,RAPORLOG,ACT,CONTRACTS,OZEL;
+let FIRMA,ILANLAR,DANISMANLAR,LEADS,THEME,CONTENT,BLOGS,REFS,SEO,GOOGLE,PROX,AICFG,P3,KISILER,DEALS,TASKS,COMMS,RENTS,MSGLOG,RAPORLOG,ACT,CONTRACTS,OZEL,ARSIV;
 const _td=(o)=>{const d=new Date();d.setDate(d.getDate()+o);return d.toISOString().slice(0,16);};
 const DEF_KISILER=[
  {id:101,name:'Cem Aydın',tel:'+90 532 111 22 33',email:'cem@mail.com',type:'alici',source:'Web Sitesi',dan:1,note:'Deniz manzarası önemli. Peşinat hazır.',op:'Satılık',tip:'Daire',oda:'3+1',min:12000000,max:20000000,ilceler:['Konak','Karşıyaka'],created:'2026-06-10'},
@@ -235,9 +235,69 @@ const DEF_RENTS=[
  {id:503,prop:'Fulya Ofis Katı',tenant:'NovaTech Ltd.',amount:185000,start:'2024-11-01',due:1,status:'gecikti'}
 ];
 const DEF_CONTENT={heroEyebrow:'İzmir & Ege · 480M+ kayıtlık endeks ile çalışıyoruz',heroTitle:'Doğru evi,',heroTitle2:'doğru veriyle buluşturuyoruz',heroDesc:'Satılık ve kiralık portföyümüzün her ilanında mahalle fiyat endeksi, yatırım skoru ve bölge analizi var. Duyguyla değil; veriyle karar verin.',aboutText:'Meridyen Gayrimenkul, İzmir ve Ege bölgesinde 2007 yılından bu yana faaliyet gösteriyor. Bizi farklı kılan, her ilan ve her danışmanlığın arkasındaki veri disiplinimiz: Türkiye\'nin kapsamlı endeks altyapısıyla, müşterilerimize duygu değil rakam sunuyoruz.'};
-const DEF_BLOGS=[{id:1,title:'2026\'da değer kazanacak 5 İzmir mahallesi',cat:'Yatırım',sum:'Endeks verileri ışığında yükseliş potansiyeli en yüksek bölgeler.',icon:'📈',meta:'8 dk okuma · Haz 2026',date:'2026-06-18',src:'firma',body:'Bölge seçimi, gayrimenkul yatırımının en belirleyici adımıdır. m² fiyatının bugünkü seviyesi kadar, o bölgenin son 5 yıldaki reel değişim eğilimi ve yatırım skoru da önemlidir.\n\nUlaşım yatırımları, kentsel dönüşüm hareketliliği ve altyapı gelişimi, bir mahallenin orta vadeli prim potansiyelini yukarı çeker. Aşırı prim yapmış bölgeler yerine, gelişim koridorundaki mahalleler daha yüksek getiri sunabilir.\n\nKarar vermeden önce bölge endeksini, kira çarpanını ve arz-talep dengesini birlikte değerlendirin. Kesin rakamlar için güncel ProX endeksiyle teyit alın.'},
- {id:2,title:'Konut kredisinde 2026 faiz rehberi',cat:'Kredi',sum:'Banka banka oranlar, uygunluk kriterleri ve esnek ödeme planları.',icon:'🏦',meta:'6 dk okuma · Haz 2026',date:'2026-06-10',src:'firma',body:'Konut kredisi kararında yalnızca faiz oranı değil; ekspertiz değeri, kredi/değer oranı, vade ve toplam maliyet birlikte değerlendirilmelidir.\n\nGenel kural olarak kredi, ekspertiz değerinin belirli bir yüzdesine kadar kullanılabilir; kalan tutar peşinat olarak gerekir. Ödeme planınızı gelir istikrarınıza göre kurgulayın.\n\nBaşvuru öncesi evraklarınızı hazırlamak süreci belirgin hızlandırır. Size en uygun yapı için ücretsiz ön değerlendirme alın.'},
- {id:3,title:'Tapu devrinde dikkat edilmesi gereken 9 şey',cat:'Hukuk',sum:'Alıcı ve satıcı için TKGM süreci, vergiler ve sık yapılan hatalar.',icon:'📋',meta:'10 dk okuma · May 2026',date:'2026-05-22',src:'firma',body:'Tapu devri, gayrimenkul işleminin hukuki olarak tamamlandığı kritik aşamadır. Web Tapu başvurusu, harç ödemesi ve randevu adımları eksiksiz yürütülmelidir.\n\nDevir öncesi tapu kaydında haciz, ipotek veya şerh olup olmadığı mutlaka kontrol edilmelidir. Alıcı ve satıcının kimlik ve yetki belgeleri hazır olmalıdır.\n\nHarç ve döner sermaye bedelleri, taraflar arasında önceden yazılı olarak netleştirilmelidir. Süreci hatasız yönetmek için profesyonel destek almanızı öneririz.'}];
+const _DEF_BLOGS_CURATED=[{id:1,cover:'img/blog/sehir.jpg',title:'2026\'da değer kazanacak 5 İzmir mahallesi',cat:'Yatırım',sum:'Endeks verileri ışığında yükseliş potansiyeli en yüksek bölgeler.',icon:'📈',meta:'8 dk okuma · Haz 2026',date:'2026-06-18',src:'firma',body:'Bölge seçimi, gayrimenkul yatırımının en belirleyici adımıdır. m² fiyatının bugünkü seviyesi kadar, o bölgenin son 5 yıldaki reel değişim eğilimi ve yatırım skoru da önemlidir.\n\nUlaşım yatırımları, kentsel dönüşüm hareketliliği ve altyapı gelişimi, bir mahallenin orta vadeli prim potansiyelini yukarı çeker. Aşırı prim yapmış bölgeler yerine, gelişim koridorundaki mahalleler daha yüksek getiri sunabilir.\n\nKarar vermeden önce bölge endeksini, kira çarpanını ve arz-talep dengesini birlikte değerlendirin. Kesin rakamlar için güncel ProX endeksiyle teyit alın.'},
+ {id:2,cover:'img/blog/kredi.jpg',title:'Konut kredisinde 2026 faiz rehberi',cat:'Kredi',sum:'Banka banka oranlar, uygunluk kriterleri ve esnek ödeme planları.',icon:'🏦',meta:'6 dk okuma · Haz 2026',date:'2026-06-10',src:'firma',body:'Konut kredisi kararında yalnızca faiz oranı değil; ekspertiz değeri, kredi/değer oranı, vade ve toplam maliyet birlikte değerlendirilmelidir.\n\nGenel kural olarak kredi, ekspertiz değerinin belirli bir yüzdesine kadar kullanılabilir; kalan tutar peşinat olarak gerekir. Ödeme planınızı gelir istikrarınıza göre kurgulayın.\n\nBaşvuru öncesi evraklarınızı hazırlamak süreci belirgin hızlandırır. Size en uygun yapı için ücretsiz ön değerlendirme alın.'},
+ {id:3,cover:'img/blog/tapu.jpg',title:'Tapu devrinde dikkat edilmesi gereken 9 şey',cat:'Hukuk',sum:'Alıcı ve satıcı için TKGM süreci, vergiler ve sık yapılan hatalar.',icon:'📋',meta:'10 dk okuma · May 2026',date:'2026-05-22',src:'firma',body:'Tapu devri, gayrimenkul işleminin hukuki olarak tamamlandığı kritik aşamadır. Web Tapu başvurusu, harç ödemesi ve randevu adımları eksiksiz yürütülmelidir.\n\nDevir öncesi tapu kaydında haciz, ipotek veya şerh olup olmadığı mutlaka kontrol edilmelidir. Alıcı ve satıcının kimlik ve yetki belgeleri hazır olmalıdır.\n\nHarç ve döner sermaye bedelleri, taraflar arasında önceden yazılı olarak netleştirilmelidir. Süreci hatasız yönetmek için profesyonel destek almanızı öneririz.'},
+ {id:4,cover:'img/blog/piyasa.jpg',title:'2026 2. çeyrek İzmir konut piyasası: nabız',cat:'Piyasa',sum:'Satış hacmi, m² fiyat trendi ve bölge bölge fırsat haritası.',icon:'📊',meta:'7 dk okuma · Tem 2026',date:'2026-07-05',src:'firma',body:'İzmir konut piyasası 2026 ikinci çeyrekte bölgeler arası ayrışma gösterdi. Merkez ilçelerde m² fiyatları yatay seyrederken, gelişim koridorundaki mahallelerde talep canlı kaldı.\n\nKira çarpanları ve arz-talep dengesi, yatırımcı için en sağlıklı bölge seçimini belirliyor. Aşırı prim yapmış bölgeler yerine altyapısı güçlenen mahalleler öne çıkıyor.\n\nGüncel ve bölgeye özel rakamlar için ProX endeksiyle teyit alın; kararınızı veriyle destekleyin.'},
+ {id:5,cover:'img/blog/donusum.jpg',title:'Kentsel dönüşümde hak sahibi için 8 adım',cat:'Kentsel Dönüşüm',sum:'Riskli yapı tespitinden yeni tapuya: süreç, haklar ve dikkat noktaları.',icon:'🏗️',meta:'9 dk okuma · Haz 2026',date:'2026-06-28',src:'firma',body:'Kentsel dönüşüm, riskli yapı tespitiyle başlayan hukuki bir süreçtir. Malik olarak haklarınızı ve yükümlülüklerinizi baştan bilmek, mağduriyeti önler.\n\nMüteahhit sözleşmesinde metrekare, teslim süresi ve gecikme cezası net yazılmalıdır. Ortak kararlarda çoğunluk ve tebligat kuralları önemlidir.\n\nSüreci sözleşme ve teknik denetimle yürütmek hak kaybını önler; profesyonel danışmanlıkla ilerlemenizi öneririz.'},
+ {id:6,cover:'img/blog/vergi.jpg',title:'Kira geliri vergisi ve istisna: 2026 rehberi',cat:'Vergi',sum:'Beyan sınırı, götürü/gerçek gider ve sık yapılan hatalar.',icon:'🧾',meta:'6 dk okuma · May 2026',date:'2026-05-14',src:'firma',body:'Konut kira geliri, belirli bir istisna tutarının üzerindeyse beyana tabidir. İstisna ile gerçek/götürü gider yöntemi seçimi, toplam vergiyi birlikte belirler.\n\nGötürü gider basit olsa da gerçek gider yöntemi bazı durumlarda daha avantajlıdır. Kira sözleşmesi ve ödemelerin bankadan yapılması olası cezaları önler.\n\nDurumunuza en uygun yöntem için mali müşavir desteği alın; kayıtlarınızı düzenli tutun.'},
+ {id:7,cover:'img/blog/sehir.jpg',title:'İzmir Bornova Konut Piyasası 2026: Metrekare Fiyatları ve Yatırım',cat:'Piyasa',sum:'Bornova\'da güncel m² fiyatları, kira çarpanı ve gelişim koridoru analizi.',icon:'📊',meta:'5 dk okuma · Ağu 2026',date:'2026-08-06',src:'firma',body:'Bornova, üniversite ve ulaşım aksıyla İzmir\'in en canlı konut bölgelerinden biri. 2026 itibarıyla ortalama m² fiyatları merkez mahallelerde belirgin şekilde yükseldi.\n\nÖğrenci ve çalışan yoğunluğu, kira talebini yüksek tutuyor; kira çarpanı yatırımcı için elverişli seyrediyor. Metro hattına yakın mahalleler primini korumaya devam ediyor.\n\nBölgeye özel güncel rakamlar ve mahalle bazlı endeks için ProX verisiyle teyit alın.'},
+ {id:8,cover:'img/blog/konut.jpg',title:'İzmir Karşıyaka Ağustos 2026: Metrekare Fiyatları ve Kira Getirisi',cat:'Piyasa',sum:'Mavişehir ve Bostanlı hattında satış/kira dengesi ve deniz etkisi.',icon:'🏙️',meta:'5 dk okuma · Ağu 2026',date:'2026-08-05',src:'firma',body:'Karşıyaka, sahil hattı ve sosyal donatılarıyla prim potansiyeli yüksek bir ilçe. Mavişehir ve Bostanlı, deniz manzarası ve yürüyüş aksıyla fiyat başı çekiyor.\n\nSatılık m² fiyatları sahile yakınlıkla ciddi farklılaşırken, kira getirisi merkez mahallelerde dengeli seyrediyor. Yeni projeler arzı beslese de talep güçlü.\n\nDoğru mahalle ve cadde seçimi için endeks + kira çarpanını birlikte değerlendirin.'},
+ {id:9,cover:'img/blog/yatirim.jpg',title:'İzmir Konak Konut Fiyatları 2026: Alsancak ve Merkez Analizi',cat:'Piyasa',sum:'Alsancak\'ta m² fiyatı, ticari-konut dengesi ve merkez talebi.',icon:'📈',meta:'6 dk okuma · Ağu 2026',date:'2026-08-04',src:'firma',body:'Konak, İzmir\'in kalbi; Alsancak ise hem konut hem ticari talebin en yoğun olduğu bölge. Merkez konum, m² fiyatlarını il ortalamasının üzerinde tutuyor.\n\nCadde üzeri ticari birimler ile arka sokak konutları arasında belirgin fiyat farkı var. Yatırımcı için likidite ve kira istikrarı öne çıkıyor.\n\nMerkez bölgede doğru fiyatı yakalamak için güncel ProX endeksi şart.'},
+ {id:10,cover:'img/blog/piyasa.jpg',title:'Çeşme & Alaçatı 2026: Tatil Bölgesi Konut Yatırımı Rehberi',cat:'Yatırım',sum:'Sezonluk kira, taş mimari prim ve tatil bölgesi likiditesi.',icon:'🌊',meta:'7 dk okuma · Tem 2026',date:'2026-07-30',src:'firma',body:'Çeşme ve Alaçatı, tatil bölgesi talebiyle Türkiye\'nin en yüksek m² fiyatlı noktalarından. Taş mimari dokuya yakın konutlar belirgin prim yapıyor.\n\nSezonluk kira geliri yüksek olsa da doluluk ve işletme maliyeti birlikte hesaplanmalı. Likidite, merkez ilçelere göre daha dalgalı olabilir.\n\nTatil bölgesi yatırımında konum, imar ve sezon verisini ProX ile doğrulayın.'},
+ {id:11,cover:'img/blog/konut1.jpg',title:'İzmir Buca Konut Piyasası 2026: Metrekare Fiyatları ve Yatırım',cat:'Piyasa',sum:'Buca\'da uygun m² fiyatı, aile talebi ve gelişim potansiyeli.',icon:'📊',meta:'5 dk okuma · Ağu 2026',date:'2026-08-03',src:'firma',body:'Buca, geniş konut stoğu ve görece uygun m² fiyatlarıyla İzmir\'de ilk ev alıcıları için cazip bir bölge. Ulaşım yatırımları prim potansiyelini destekliyor.\n\nAile tipi 3+1 daireler bölgede talep görüyor; kira getirisi merkeze göre dengeli seyrediyor.\n\nMahalle bazlı güncel rakamlar için ProX endeksiyle teyit alın.'},
+ {id:12,cover:'img/blog/konut2.jpg',title:'İzmir Gaziemir Konut Fiyatları 2026: Ulaşım ve Yatırım Etkisi',cat:'Piyasa',sum:'Metro ve havalimanı aksında Gaziemir\'in yükselen değeri.',icon:'🏙️',meta:'5 dk okuma · Ağu 2026',date:'2026-08-02',src:'firma',body:'Gaziemir, metro ve havalimanı bağlantısıyla ulaşımı güçlü bir ilçe. Yeni projeler arzı artırırken talep de canlı.\n\nYatırımlık daireler ve ticari birimler bölgede öne çıkıyor; kira çarpanı elverişli.\n\nBölgeye özel fiyat ve trend için ProX verisini inceleyin.'},
+ {id:13,cover:'img/blog/konut8.jpg',title:'İzmir Çiğli Konut Piyasası 2026: Gelişen Bölge Analizi',cat:'Piyasa',sum:'Sanayi-konut dengesi, yeni konut arzı ve fiyat seyri.',icon:'📈',meta:'5 dk okuma · Ağu 2026',date:'2026-08-01',src:'firma',body:'Çiğli, gelişen altyapısı ve yeni konut projeleriyle orta vadeli prim potansiyeli taşıyor. Uygun giriş fiyatları yatırımcı ilgisini çekiyor.\n\nAtaşehir ve çevresi konut talebinde öne çıkarken, sanayi yakınlığı kira talebini besliyor.\n\nDoğru mahalle seçimi için endeks ve arz-talep dengesini değerlendirin.'},
+ {id:14,cover:'img/blog/konut3.jpg',title:'Ekspertiz raporu neden şart? Alıcı ve satıcı için rehber',cat:'Ekspertiz',sum:'Kredi, pazarlık ve risk yönetiminde ekspertizin rolü.',icon:'🛡️',meta:'6 dk okuma · Tem 2026',date:'2026-07-28',src:'firma',body:'Ekspertiz raporu, gayrimenkulün gerçek değerini ve risklerini bağımsız şekilde ortaya koyar. Konut kredisinde bankalar için zorunlu, alım-satımda ise güçlü bir pazarlık aracıdır.\n\nRapor; konum, yapı durumu, imar ve bölge verilerini birlikte değerlendirir. Alıcıyı olası sürprizlere karşı korur.\n\nDoğru fiyatla işlem için bağımsız ekspertiz almanızı öneririz.'},
+ {id:15,cover:'img/blog/konut4.jpg',title:'Kira sözleşmesinde dikkat edilecek 10 madde',cat:'Hukuk',sum:'Depozito, artış oranı, tahliye ve sık yapılan hatalar.',icon:'📋',meta:'7 dk okuma · Tem 2026',date:'2026-07-24',src:'firma',body:'Kira sözleşmesi, tarafların hak ve yükümlülüklerini netleştiren temel belgedir. Depozito, artış oranı ve sözleşme süresi açıkça yazılmalıdır.\n\nTahliye şartları ve tebligat kuralları, ileride yaşanabilecek uyuşmazlıkları önler. Ödemelerin bankadan yapılması ispat kolaylığı sağlar.\n\nHak kaybı yaşamamak için sözleşmeyi eksiksiz düzenleyin.'},
+ {id:16,cover:'img/blog/konut5.jpg',title:'Deprem yönetmeliği ve yapı denetimi: bilmeniz gerekenler',cat:'İmar',sum:'Yapı ruhsatı, zemin etüdü ve güvenli konut kriterleri.',icon:'🏗️',meta:'8 dk okuma · Tem 2026',date:'2026-07-20',src:'firma',body:'Güvenli konut, sağlam zemin ve yönetmeliğe uygun yapı denetimiyle başlar. Zemin etüdü ve yapı ruhsatı, riskin en önemli göstergeleridir.\n\nEski yapılarda güçlendirme veya kentsel dönüşüm seçenekleri değerlendirilmelidir. Yapı denetim raporları alım öncesi incelenmelidir.\n\nDeprem güvenliği için teknik rapor ve bölge zemin verisini birlikte okuyun.'},
+ {id:17,cover:'img/blog/konut6.jpg',title:'2026 emlak vergisi ödeme takvimi ve muafiyetler',cat:'Vergi',sum:'Taksit tarihleri, değer artışı ve muafiyet halleri.',icon:'🧾',meta:'6 dk okuma · Haz 2026',date:'2026-06-25',src:'firma',body:'Emlak vergisi, taşınmazın rayiç değeri üzerinden yıllık olarak tahakkuk eder ve genellikle iki taksitte ödenir. Ödeme tarihlerini kaçırmamak gecikme faizini önler.\n\nBazı hallerde (tek konut, emekli, engelli vb.) muafiyet veya indirim uygulanabilir. Beyan ve güncelleme yükümlülükleri takip edilmelidir.\n\nDurumunuza uygun muafiyet için belediyenizle teyit edin.'},
+ {id:18,cover:'img/blog/konut7.jpg',title:'Yabancıya konut satışı ve vatandaşlık süreci 2026',cat:'Yatırım',sum:'Değerleme raporu, döviz bozdurma ve tapu süreci.',icon:'🌐',meta:'7 dk okuma · Haz 2026',date:'2026-06-15',src:'firma',body:'Yabancıya konut satışında bağımsız değerleme raporu ve döviz bozdurma belgesi süreçin temel adımlarıdır. İşlem, tapu müdürlüğünde tamamlanır.\n\nVatandaşlık için belirlenen değer eşiği ve elde tutma süresi kurallarına uyulmalıdır. Süreç, doğru evrakla hızlı ilerler.\n\nUluslararası alıcılar için uçtan uca danışmanlık almanızı öneririz.'},
+ {id:19,cover:'img/blog/konut9.jpg',title:'Kentsel dönüşümde kira yardımı ve hak sahibi hakları',cat:'Kentsel Dönüşüm',sum:'Kira desteği, taşınma yardımı ve süreç takvimi.',icon:'🔑',meta:'6 dk okuma · Haz 2026',date:'2026-06-08',src:'firma',body:'Kentsel dönüşüm sürecinde hak sahiplerine belirli koşullarda kira yardımı ve taşınma desteği sağlanabilir. Başvuru ve belge takvimi önemlidir.\n\nMüteahhit sözleşmesi, teslim süresi ve yeni bağımsız bölüm koşulları net olmalıdır. Ortak kararlarda çoğunluk kuralları geçerlidir.\n\nHaklarınızı korumak için süreci sözleşme ve teknik denetimle yürütün.'},
+ {id:20,cover:'img/blog/konut10.jpg',title:'İlk ev alacaklara 2026 konut kredisi rehberi',cat:'Kredi',sum:'Peşinat, kredi/değer oranı ve bütçe planlaması.',icon:'🏦',meta:'6 dk okuma · May 2026',date:'2026-05-30',src:'firma',body:'İlk ev alımında en kritik adım, gelir istikrarına uygun bir ödeme planı kurmaktır. Kredi, ekspertiz değerinin belirli bir oranına kadar kullanılabilir.\n\nPeşinat, toplam maliyet ve vade birlikte değerlendirilmelidir. Başvuru öncesi evrak hazırlığı süreci hızlandırır.\n\nSize en uygun yapı için ücretsiz ön değerlendirme alın.'}];
+/* ===== ÖRNEK HABER ÜRETECİ (emlakekspertizi.com/blog tarzı — şehir/ilçe konut piyasası analizi) =====
+   Gerçekte ProX API'den gelir (proxBlogFeed → /api/v1/tenant/blog/feed); bu set demo/örnektir.
+   Her haber: kapak görseli + HIZLI BAKIŞ istatistikleri (m²/kira/min/max/yıllık/ilçe sıralaması) + yapılandırılmış gövde (## başlıklar). */
+var _BLOG_IMGS=['img/blog/konut1.jpg','img/blog/konut2.jpg','img/blog/konut3.jpg','img/blog/konut4.jpg','img/blog/konut5.jpg','img/blog/konut6.jpg','img/blog/konut7.jpg','img/blog/konut8.jpg','img/blog/konut9.jpg','img/blog/konut10.jpg','img/blog/sehir.jpg','img/blog/konut.jpg','img/blog/yatirim.jpg','img/blog/piyasa.jpg'];
+var _BLOG_CITY=[
+ ['Konak',62000,260,41000,98000,34,1.6,38,[['Alsancak',88000],['Göztepe',72000],['Güzelyalı',68000],['Basmane',44000]]],
+ ['Karşıyaka',58000,250,38000,92000,32,1.5,36,[['Mavişehir',86000],['Bostanlı',74000],['Bahçelievler',56000],['Örnekköy',42000]]],
+ ['Bornova',46000,210,30000,74000,36,1.7,33,[['Kazımdirik',58000],['Erzene',54000],['Evka 3',44000],['Işıkkent',38000]]],
+ ['Bayraklı',52000,230,34000,84000,40,1.9,35,[['Manavkuyu',72000],['Adalet',58000],['Turan',40000],['Çiçek',36000]]],
+ ['Buca',38000,175,24000,60000,33,1.5,34,[['Şirinyer',46000],['Barış',40000],['Kozağaç',34000],['Adatepe',30000]]],
+ ['Gaziemir',40000,185,27000,62000,35,1.6,34,[['Atıfbey',48000],['Irmak',42000],['Sarnıç',34000],['Emrez',38000]]],
+ ['Çiğli',36000,165,24000,56000,34,1.5,32,[['Ataşehir',44000],['Balatçık',38000],['Egekent',34000],['Küçük Çiğli',30000]]],
+ ['Çeşme',78000,320,48000,160000,30,1.4,45,[['Alaçatı',140000],['Ilıca',96000],['Dalyan',84000],['Şifne',72000]]],
+ ['Urla',64000,240,40000,120000,31,1.4,42,[['Zeytinalanı',96000],['İskele',84000],['Altıntaş',60000],['Bademler',48000]]],
+ ['Menderes',34000,160,22000,54000,33,1.5,33,[['Gümüldür',48000],['Özdere',52000],['Cumaovası',30000],['Görece',28000]]],
+ ['Konya',25804,157,15482,41286,38,1.8,35,[['Selçuklu',34792],['Meram',27500],['Karatay',24100],['Ereğli',19000]]],
+ ['Gaziantep',24500,150,14800,39000,42,2.0,33,[['Şehitkamil',31000],['Şahinbey',26000],['Oğuzeli',19000],['Nizip',17000]]],
+ ['Adana',23000,145,14000,37000,36,1.7,34,[['Çukurova',32000],['Seyhan',25000],['Sarıçam',21000],['Yüreğir',19000]]],
+ ['Antalya',57764,260,34000,120000,33,1.6,40,[['Muratpaşa',72000],['Konyaaltı',68000],['Döşemealtı',52000],['Kepez',44000]]],
+ ['Bursa',38000,190,24000,68000,35,1.7,36,[['Nilüfer',52000],['Mudanya',46000],['Osmangazi',38000],['Yıldırım',30000]]],
+ ['İstanbul',82000,380,45000,220000,30,1.5,41,[['Beşiktaş',180000],['Kadıköy',120000],['Şişli',110000],['Bakırköy',96000]]],
+ ['Ankara',42000,200,26000,88000,32,1.6,37,[['Çankaya',72000],['Yenimahalle',44000],['Etimesgut',40000],['Keçiören',36000]]],
+ ['Muğla',62000,280,38000,150000,31,1.4,43,[['Bodrum',150000],['Marmaris',96000],['Fethiye',72000],['Menteşe',48000]]],
+ ['Manisa',26000,150,16000,42000,34,1.6,35,[['Yunusemre',30000],['Şehzadeler',27000],['Turgutlu',22000],['Salihli',20000]]],
+ ['Aydın',34000,175,21000,68000,33,1.5,39,[['Kuşadası',86000],['Didim',64000],['Efeler',40000],['Nazilli',26000]]]
+];
+function _genBlogSamples(){
+  var moNm=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  return _BLOG_CITY.map(function(a,i){
+    var ad=a[0],m2=a[1],kira=a[2],min=a[3],max=a[4],yil=a[5],ay=a[6],yas=a[7],ilc=a[8]||[];
+    var d=7-(i%7), dd=(d<10?'0':'')+d;
+    var body=ad+'\'da Ağustos 2026 itibarıyla satılık konutlarda ortalama metrekare fiyatı '+fmt(m2)+' TL seviyesine ulaştı. En düşük m² fiyatı '+fmt(min)+' TL, en yüksek ise '+fmt(max)+' TL olarak kaydedildi. Kiralık konutlarda ortalama m² kira bedeli '+fmt(kira)+' TL/ay olarak ölçüldü.\n\n'
+      +'## '+ad+'\'da Konut Fiyatlarını Ne Belirliyor?\nFiyat hareketinin temelinde sınırlı arz, yükselen inşaat maliyetleri ve bölgesel talep dinamikleri yatıyor. İl içi fiyat makası açıldıkça lokasyon bazlı değerleme her zamankinden kritik hale geliyor; aynı ilçede cadde/sokak bazında fiyat farkı belirginleşiyor.\n\n'
+      +'## Bölge Bölge Fiyat Farkı\nEn yüksek m² '+(ilc[0]?ilc[0][0]+' ('+fmt(ilc[0][1])+' TL)':'')+(ilc[1]?' ve '+ilc[1][0]+' ('+fmt(ilc[1][1])+' TL)':'')+' hattında öne çıkıyor. Merkeze uzak ve gelişmekte olan mahallelerde giriş fiyatları daha uygun; doğru mahalle seçimi orta vadeli getiriyi belirliyor.\n\n'
+      +'## Yatırımcı İçin Değerlendirme\nOrtalama '+fmt(kira)+' TL/m²·ay kira ile brüt getiri makul bantta seyrediyor. Aşırı prim yapmış bölgeler yerine ulaşım ve altyapı yatırımıyla güçlenen gelişim koridorları öne çıkıyor. Kesin ve güncel rakamlar için '+ad+' geneli ve mahalle bazlı ProX endeksiyle teyit alın.';
+    return {id:'city-'+ad.toLocaleLowerCase('tr').replace(/\s+/g,'')+'-2608',cover:_BLOG_IMGS[i%_BLOG_IMGS.length],
+      title:ad+' Konut Piyasası Ağustos 2026: Metrekare '+fmt(m2)+' TL',cat:'Emlak Haberleri',
+      sum:ad+'\'da ortalama m² '+fmt(m2)+' TL, kira '+fmt(kira)+' TL/m²·ay. Bölge bölge fiyatlar ve yatırım analizi.',
+      icon:'📊',meta:'5 dk okuma · '+d+' '+moNm[7]+' 2026',date:'2026-08-'+dd,src:'firma',author:'Meridyen Editör',
+      stats:{sehir:ad,m2:m2,kira:kira,min:min,max:max,yil:yil,ay:ay,yas:yas,ilceler:ilc},body:body};
+  });
+}
+const DEF_BLOGS=_genBlogSamples().concat(_DEF_BLOGS_CURATED);
 const DEF_REFS=[{id:1,name:'Ayşe Yıldırım',meta:'Satıcı · Konak',prop:'3+1 Daire · Alsancak',date:'2026-05',text:'Evimizi piyasanın üstünde bir fiyata, üstelik 3 haftada sattılar. Bölge endeksini gösterip fiyatı veriyle savundular; alıcı ikna oldu.'},
  {id:2,name:'Murat Kaya',meta:'Yatırımcı · Bornova',prop:'2+1 Daire · Kazımdirik',date:'2026-04',text:'Yatırım için daire arıyordum. Yatırım skoru ve 5 yıllık trend analizi sayesinde doğru mahalleyi seçtim. Bir yılda değer kazandı.'},
  {id:3,name:'Elif Demir',meta:'Alıcı · Karşıyaka',prop:'2+1 Daire · Mavişehir',date:'2026-06',text:'Danışmanımız bölgeyi avucunun içi gibi biliyordu. WhatsApp\'tan anında dönüş, şeffaf süreç. Kesinlikle tavsiye ederim.'}];
@@ -278,18 +338,36 @@ const DEF_OZEL=[
  {id:'o19',op:'Kiralık',tip:'Depo',ilce:'Çiğli',mah:'Ataşehir',cadde:'Sanayi sitesi',m2:900,oda:'-',fiyat:120000,durum:'aktif',not:'Yüksek tavan, tır manevra alanı.'},
  {id:'o20',op:'Satılık',tip:'Bağ-Bahçe',ilce:'Urla',mah:'Bademler',cadde:'Bağ yolu',m2:2100,oda:'-',fiyat:3900000,durum:'aktif',not:'Zeytinlik + bağ, su mevcut.'}
 ];
+/* ── KAPANAN İŞLEMLER (Satılan / Kiralanan Arşivi) ──────────────────────────
+   Track-record sosyal kanıtı. GERÇEK veri ProX'ten gelir (proxLoadArsiv → GET
+   /api/v1/tenant/closed-deals); aşağıdaki set fallback/demo'dur (temsilî). liste
+   = ilan çıkış fiyatı, satis = kapanış fiyatı; gun = portföyde kalma süresi. */
+const DEF_ARSIV=[
+ {id:'a1',op:'Satılık',tip:'Daire',ilce:'Konak',mah:'Alsancak',m2:120,oda:'3+1',kat:'4',liste:6250000,satis:6400000,gun:23,tarih:'2026-06'},
+ {id:'a2',op:'Satılık',tip:'Daire',ilce:'Karşıyaka',mah:'Mavişehir',m2:165,oda:'4+1',kat:'12',liste:12800000,satis:12500000,gun:41,tarih:'2026-05'},
+ {id:'a3',op:'Kiralık',tip:'Daire',ilce:'Bornova',mah:'Erzene',m2:110,oda:'3+1',kat:'3',liste:27000,satis:28000,gun:11,tarih:'2026-06'},
+ {id:'a4',op:'Satılık',tip:'Villa',ilce:'Urla',mah:'Zeytinalanı',m2:240,oda:'4+1',liste:18500000,satis:18000000,gun:66,tarih:'2026-04'},
+ {id:'a5',op:'Satılık',tip:'İşyeri',ilce:'Konak',mah:'Alsancak',m2:80,oda:'-',liste:7600000,satis:7800000,gun:34,tarih:'2026-05'},
+ {id:'a6',op:'Kiralık',tip:'Ofis',ilce:'Konak',mah:'Alsancak',m2:140,oda:'-',liste:46000,satis:48000,gun:19,tarih:'2026-05'},
+ {id:'a7',op:'Satılık',tip:'Daire',ilce:'Gaziemir',mah:'Atıfbey',m2:105,oda:'2+1',kat:'2',liste:3450000,satis:3500000,gun:28,tarih:'2026-03'},
+ {id:'a8',op:'Satılık',tip:'Daire',ilce:'Çeşme',mah:'Alaçatı',m2:110,oda:'2+1',kat:'2',liste:9200000,satis:9500000,gun:52,tarih:'2026-02'},
+ {id:'a9',op:'Kiralık',tip:'İşyeri',ilce:'Bornova',mah:'Kazımdirik',m2:200,oda:'-',liste:82000,satis:85000,gun:15,tarih:'2026-01'},
+ {id:'a10',op:'Satılık',tip:'Arsa',ilce:'Menderes',mah:'Gümüldür',m2:520,oda:'-',liste:5200000,satis:5400000,gun:78,tarih:'2025-12'},
+ {id:'a11',op:'Kiralık',tip:'Daire',ilce:'Buca',mah:'Şirinyer',m2:125,oda:'3+1',kat:'5',liste:26000,satis:27000,gun:14,tarih:'2026-06'},
+ {id:'a12',op:'Satılık',tip:'Dükkan',ilce:'Karşıyaka',mah:'Bostanlı',m2:95,oda:'-',liste:9800000,satis:9950000,gun:31,tarih:'2026-04'}
+];
 function loadAll(){
   try{const d=JSON.parse(localStorage.getItem(LS));if(d){/* H2: nesne-config'ler varsayılanın ÜZERİNE birleşir → sonradan eklenen alanlar (lat/lng/mersis/kep…) eski kayıtlarda da dolu gelir; diziler wholesale */
     FIRMA={...DEF_FIRMA,...(d.FIRMA||{})};ILANLAR=d.ILANLAR||clone(DEF_ILANLAR);DANISMANLAR=d.DANISMANLAR||clone(DEF_DAN);LEADS=d.LEADS||[];THEME=d.THEME||null;
     CONTENT={...DEF_CONTENT,...(d.CONTENT||{})};BLOGS=d.BLOGS||clone(DEF_BLOGS);REFS=d.REFS||clone(DEF_REFS);SEO={...DEF_SEO,...(d.SEO||{})};GOOGLE={...DEF_GOOGLE,...(d.GOOGLE||{})};PROX={...clone(DEF_PROX),...(d.PROX||{})};AICFG={...DEF_AICFG,...(d.AICFG||{})};P3=d.P3||{};
     KISILER=d.KISILER||clone(DEF_KISILER);DEALS=d.DEALS||clone(DEF_DEALS);TASKS=d.TASKS||clone(DEF_TASKS);COMMS=d.COMMS||clone(DEF_COMMS);RENTS=d.RENTS||clone(DEF_RENTS);MSGLOG=d.MSGLOG||[];RAPORLOG=d.RAPORLOG||[];ACT=d.ACT||{};CONTRACTS=d.CONTRACTS||clone(DEF_CONTRACTS);
-    OZEL=d.OZEL||clone(DEF_OZEL);if(!PROX.modules)PROX.modules=clone(DEF_MODULES);return;}}catch(e){}
+    OZEL=d.OZEL||clone(DEF_OZEL);ARSIV=d.ARSIV||clone(DEF_ARSIV);if(!PROX.modules)PROX.modules=clone(DEF_MODULES);return;}}catch(e){}
   FIRMA={...DEF_FIRMA};ILANLAR=clone(DEF_ILANLAR);DANISMANLAR=clone(DEF_DAN);LEADS=[];THEME=null;
   CONTENT={...DEF_CONTENT};BLOGS=clone(DEF_BLOGS);REFS=clone(DEF_REFS);SEO={...DEF_SEO};GOOGLE={...DEF_GOOGLE};PROX=clone(DEF_PROX);AICFG={...DEF_AICFG};P3={};
-  KISILER=clone(DEF_KISILER);DEALS=clone(DEF_DEALS);TASKS=clone(DEF_TASKS);COMMS=clone(DEF_COMMS);RENTS=clone(DEF_RENTS);MSGLOG=[];RAPORLOG=[];ACT={};CONTRACTS=clone(DEF_CONTRACTS);OZEL=clone(DEF_OZEL);
+  KISILER=clone(DEF_KISILER);DEALS=clone(DEF_DEALS);TASKS=clone(DEF_TASKS);COMMS=clone(DEF_COMMS);RENTS=clone(DEF_RENTS);MSGLOG=[];RAPORLOG=[];ACT={};CONTRACTS=clone(DEF_CONTRACTS);OZEL=clone(DEF_OZEL);ARSIV=clone(DEF_ARSIV);
 }
 function saveAll(){
-  var payload={FIRMA,ILANLAR,DANISMANLAR,LEADS,THEME,CONTENT,BLOGS,REFS,SEO,GOOGLE,PROX,AICFG,P3,KISILER,DEALS,TASKS,COMMS,RENTS,MSGLOG,RAPORLOG,ACT,CONTRACTS,OZEL};
+  var payload={FIRMA,ILANLAR,DANISMANLAR,LEADS,THEME,CONTENT,BLOGS,REFS,SEO,GOOGLE,PROX,AICFG,P3,KISILER,DEALS,TASKS,COMMS,RENTS,MSGLOG,RAPORLOG,ACT,CONTRACTS,OZEL,ARSIV};
   try{localStorage.setItem(LS,JSON.stringify(payload));return true;}
   catch(e){
     /* H3: Kota aşımı ESKİDEN sessizce yutuluyordu → görünmez veri kaybı. Artık: büyük gömülü
@@ -325,6 +403,15 @@ function eidsEnsure(){var ch=false;
 }
 function eidsShieldSvg(s){return '<svg width="'+(s||14)+'" height="'+(s||14)+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="M9 12l2 2 4-4"/></svg>';}
 function fmt(n){return Number(n).toLocaleString('tr-TR');}
+/* ===== FİYATLAR YALNIZCA ₺ (YASAL ZORUNLULUK) =====
+   Gayrimenkul ilan/portföy fiyatları Türkiye'de TL ile gösterilir; site içinde DÖVİZE
+   DÖNÜŞTÜRME YOKTUR. Döviz ($/€/£) ve altın kurları YALNIZCA bilgi amaçlı "döviz bandı"nda
+   (ticker) gösterilir → shared/doviz.js. Kurlar ProX API'den gelir (bkz. PROX-API notu). */
+window.gmMoney = function(tryN){
+  tryN = +tryN || 0;
+  if(tryN>=1e6) return (tryN/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+'M ₺';
+  return fmt(Math.round(tryN))+' ₺';
+};
 function imgSrc(k){return (k&&k.startsWith&&k.startsWith('data:'))?k:(IMG[k]||IMG.l1);}
 function bolgeOf(ilce){return BAZ[ilce]||{m2:90000,chg:160,score:75,risk:'Veri hesaplanıyor'};}
 /* ===== İLAN: EİDS yayın kapısı + kapsamlı detay (shared/listing.js) ===== */
@@ -346,7 +433,7 @@ function gmListNormalize(r){ if(!r)return null;
   var _dist=(typeof IZMIR_PROVINCE!=='undefined'&&IZMIR_PROVINCE.districts&&IZMIR_PROVINCE.districts[r.ilce])||null;
   var _m2=+(r.m2||(r.attrs&&r.attrs.m2))||0;
   return {id:r.id,title:r.title,op:r.op,type:r.type,
-    priceText:(r.op==='Kiralık'?fmt(r.price)+' ₺/ay':fmt(r.price)+' ₺'),
+    priceText:(r.op==='Kiralık'?gmMoney(r.price)+'/ay':gmMoney(r.price)),
     m2num:_m2, price:+r.price||0,
     ppm:(r.op!=='Kiralık'&&r.price&&_m2)?Math.round(r.price/_m2):0,
     endeks:(_dist?_dist.m2:0), endeksChg:(_dist?_dist.chg:0), skor:(_dist?_dist.score:0),
@@ -682,9 +769,9 @@ function ozOpen(){portfoyOpen('ozel');}   /* geriye dönük: mnav / oz-funnel / 
 function ozClose(){portfoyClose();}
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){var o=document.getElementById('portfoyPage');if(o&&o.classList.contains('open'))portfoyClose();}});
 function renderOzTalep(){const t=document.getElementById('ozTalepRows');if(!t)return;const arr=(typeof LEADS!=='undefined'?LEADS:[]).filter(l=>l.src==='Özel Portföy Talebi');
-  t.innerHTML=arr.length?arr.map(l=>`<tr><td>${l.date||'-'}</td><td>${l.entryLabel||l.konu||'-'}</td><td><b>${l.ad||'-'}</b></td><td>${l.tel||'-'}</td><td>${l.mail||'-'}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">Henüz detay talebi yok.</td></tr>';}
+  t.innerHTML=arr.length?arr.map(l=>`<tr><td>${_be(l.date||'-')}</td><td>${_be(l.entryLabel||l.konu||'-')}</td><td><b>${_be(l.ad||'-')}</b></td><td>${_be(l.tel||'-')}</td><td>${_be(l.mail||'-')}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">Henüz detay talebi yok.</td></tr>';}
 function renderOzAlarm(){const t=document.getElementById('ozAlarmRows');if(!t)return;const arr=(typeof LEADS!=='undefined'?LEADS:[]).filter(l=>l.src==='Bölge Alıcı Talebi');
-  t.innerHTML=arr.length?arr.map(l=>`<tr><td>${l.date||'-'}</td><td><b>${l.ad||'-'}</b></td><td>${l.tel||'-'}</td><td>${l.bolge||'-'}</td><td>${l.kategori||'-'}</td><td>${l.butce?fmt(l.butce)+' ₺':'-'}</td></tr>`).join(''):'<tr><td colspan="6" class="empty">Henüz bölge alıcı talebi yok.</td></tr>';}
+  t.innerHTML=arr.length?arr.map(l=>`<tr><td>${_be(l.date||'-')}</td><td><b>${_be(l.ad||'-')}</b></td><td>${_be(l.tel||'-')}</td><td>${_be(l.bolge||'-')}</td><td>${_be(l.kategori||'-')}</td><td>${l.butce?fmt(l.butce)+' ₺':'-'}</td></tr>`).join(''):'<tr><td colspan="6" class="empty">Henüz bölge alıcı talebi yok.</td></tr>';}
 function ozHero(){
   const host=document.getElementById('ozCover');if(!host||typeof OZEL==='undefined')return;
   const byIlce={};OZEL.forEach(o=>{byIlce[o.ilce]=(byIlce[o.ilce]||0)+1;});
@@ -913,7 +1000,7 @@ async function rebuildOzelFromProx(il,silent){
     });
     OZEL=_manual.concat(out);saveAll();
     try{localStorage.setItem('wl_ozel_ts',JSON.stringify({il:il,ts:Date.now(),n:out.length,real:realCount}));}catch(e){}
-    try{if(typeof renderOzel==='function')renderOzel();if(typeof renderOzHome==='function')renderOzHome();if(typeof ozHero==='function')ozHero();if(typeof renderOzelRows==='function')renderOzelRows();if(typeof proxRenderStatus==='function')proxRenderStatus();}catch(e){}
+    try{if(typeof renderOzel==='function')renderOzel();if(typeof renderOzHome==='function')renderOzHome();if(typeof renderOzHomeCards==='function')renderOzHomeCards();if(typeof renderArsiv==='function')renderArsiv();if(typeof ozHero==='function')ozHero();if(typeof renderOzelRows==='function')renderOzelRows();if(typeof proxRenderStatus==='function')proxRenderStatus();}catch(e){}
     if(!silent)toast('✓ Özel Portföy '+il+': '+out.length+' yeni ProX kaydı ('+realCount+' gerçek analiz fiyatı)'+(_manual.length?' · '+_manual.length+' elle kayıt korundu':'')+'.');
   }catch(e){if(!silent)toast('Özel Portföy güncellenemedi.');}
   _ozBusy=false;
@@ -1093,7 +1180,7 @@ const BZ_METRICS={
   price:{key:'priceSeries',label:'m² Fiyat Endeksi',color:'#60a5fa',grad:'bzgP',unit:'₺',fmt:v=>fmt(v)+' ₺'},
   score:{key:'scoreSeries',label:'Yatırım Skoru',color:'#34d399',grad:'bzgS',unit:'/100',fmt:v=>v+'/100'},
   rent:{key:'rentSeries',label:'Brüt Kira Getirisi',color:'#fbbf24',grad:'bzgR',unit:'%',fmt:v=>v+'%'},
-  sales:{key:'salesSeries',label:'Tapu İşlem Hacmi',color:'#c084fc',grad:'bzgV',unit:'adet',fmt:v=>fmt(v)+' adet'}
+  sales:{key:'salesSeries',label:'Tapu İşlem Hacmi',color:'#22d3ee',grad:'bzgV',unit:'adet',fmt:v=>fmt(v)+' adet'}
 };
 function bzRenderChart(){
   const host=document.getElementById('bzChart');const d=BZ_CUR.data;if(!host||!d)return;
@@ -1130,7 +1217,7 @@ function bzRenderChart(){
       <linearGradient id="bzgP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#60a5fa" stop-opacity=".42"/><stop offset="1" stop-color="#60a5fa" stop-opacity="0"/></linearGradient>
       <linearGradient id="bzgS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34d399" stop-opacity=".42"/><stop offset="1" stop-color="#34d399" stop-opacity="0"/></linearGradient>
       <linearGradient id="bzgR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbbf24" stop-opacity=".42"/><stop offset="1" stop-color="#fbbf24" stop-opacity="0"/></linearGradient>
-      <linearGradient id="bzgV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c084fc" stop-opacity=".95"/><stop offset="1" stop-color="#7c3aed" stop-opacity=".55"/></linearGradient>
+      <linearGradient id="bzgV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22d3ee" stop-opacity=".95"/><stop offset="1" stop-color="#0891b2" stop-opacity=".55"/></linearGradient>
     </defs>
     ${grid}${body}${xl}
     <rect id="bzHit" x="${pad.l}" y="${pad.t}" width="${iw}" height="${ih}" fill="transparent"/>
@@ -1495,7 +1582,7 @@ function brDetailRender(d){
         <p>Bu mahalledeki güncel portföyümüz, satılık/kiralık fırsatlar ve ücretsiz ön değerleme için uzmanınızla görüşün. Veriyi sizinle birlikte yorumlayalım.</p>
         <div class="br-cta-btns">
           <button class="p" onclick="brClose();openLead('Bölge Analizi: ${d.mah}, ${d.ilce}')">Bu Bölgede Danışmanla Görüş</button>
-          <button class="s" onclick="brClose();openLead('Ücretsiz Değerleme')">Ücretsiz Değerleme</button>
+          <button class="s" onclick="brClose();openLead('Ücretsiz Emlak Ekspertizi')">Emlak Ekspertizi</button>
         </div>
       </div>
       ${brAdvisorHTML(d)}
@@ -1555,7 +1642,7 @@ function brChart(){
       <linearGradient id="brgP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#60a5fa" stop-opacity=".42"/><stop offset="1" stop-color="#60a5fa" stop-opacity="0"/></linearGradient>
       <linearGradient id="brgS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34d399" stop-opacity=".42"/><stop offset="1" stop-color="#34d399" stop-opacity="0"/></linearGradient>
       <linearGradient id="brgR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbbf24" stop-opacity=".42"/><stop offset="1" stop-color="#fbbf24" stop-opacity="0"/></linearGradient>
-      <linearGradient id="brgV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c084fc" stop-opacity=".95"/><stop offset="1" stop-color="#7c3aed" stop-opacity=".55"/></linearGradient>
+      <linearGradient id="brgV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22d3ee" stop-opacity=".95"/><stop offset="1" stop-color="#0891b2" stop-opacity=".55"/></linearGradient>
     </defs>
     ${grid}${body}${xl}
     <rect id="brHit" x="${pad.l}" y="${pad.t}" width="${iw}" height="${ih}" fill="transparent"/>
@@ -1877,14 +1964,32 @@ function obSeed(){try{var f=(typeof FIRMA!=='undefined'&&FIRMA)||{};var keep=fun
   OB.key=(typeof PROX!=='undefined'&&PROX.key&&PROX.key.indexOf('emlaktahadimkoy')<0)?PROX.key:'';
 }catch(e){}}
 function obCollect(){function v(id){var e=document.getElementById(id);return e?e.value.trim():undefined;}
-  var m={ob_il:'il',ob_brandUrl:'brandUrl',ob_name:'name',ob_unvan:'unvan',ob_vergi:'vergi',ob_vergiDaire:'vergiDaire',ob_adres:'adres',ob_tel:'tel',ob_mail:'mail',ob_wa:'wa',ob_mersis:'mersis',ob_ticaretSicil:'ticaretSicil',ob_oda:'oda',ob_kep:'kep',ob_belge:'belge',ob_logo:'logo',ob_favicon:'favicon',ob_accent:'accent',ob_font:'font',ob_fb:'fb',ob_ig:'ig',ob_x:'x',ob_li:'li',ob_yt:'yt',ob_seoTitle:'seoTitle',ob_seoDesc:'seoDesc',ob_demoMode:'demoMode',ob_key:'key'};
+  var m={ob_il:'il',ob_brandUrl:'brandUrl',ob_name:'name',ob_unvan:'unvan',ob_vergi:'vergi',ob_vergiDaire:'vergiDaire',ob_adres:'adres',ob_lat:'lat',ob_lng:'lng',ob_tel:'tel',ob_mail:'mail',ob_wa:'wa',ob_mersis:'mersis',ob_ticaretSicil:'ticaretSicil',ob_oda:'oda',ob_kep:'kep',ob_belge:'belge',ob_logo:'logo',ob_favicon:'favicon',ob_accent:'accent',ob_font:'font',ob_fb:'fb',ob_ig:'ig',ob_x:'x',ob_li:'li',ob_yt:'yt',ob_seoTitle:'seoTitle',ob_seoDesc:'seoDesc',ob_demoMode:'demoMode',ob_key:'key'};
   Object.keys(m).forEach(function(id){var val=v(id);if(val!==undefined)OB[m[id]]=val;});
-  try{var dm=document.querySelector('input[name="ob_demoMode"]:checked');if(dm)OB.demoMode=dm.value;}catch(e){}}
+  try{var dm=document.querySelector('input[name="ob_demoMode"]:checked');if(dm)OB.demoMode=dm.value;}catch(e){}
+  try{var dz=document.getElementById('ob_doviz');if(dz)OB.dovizOff=!dz.checked;}catch(e){}}
 /* GÜVENLİK: e() eskiden yalnız çift tırnak kaçırıyordu. Değerler obCollect()
    ile form girdilerinden geliyor ve hem öznitelik (value="…") hem HTML metin
    (<b>…</b>) bağlamına basılıyor; < > kaçmadığı için metin bağlamında etiket
    enjekte edilebiliyordu. Aynı dosyadaki _le (satır ~1571) beş karakteri de
    kaçırıyor — çoğaltmak yerine ona devrediyoruz. */
+/* Sihirbaz: adres → koordinat (Nominatim; ~1 istek/sn nezaket kuralı) */
+var _obGeoBusy=false;
+function obGeocode(){
+  obCollect();
+  var msg=document.getElementById('ob_geo_msg');
+  if(!OB.adres){if(msg)msg.textContent='Önce adres girin.';return;}
+  if(_obGeoBusy)return; _obGeoBusy=true; if(msg)msg.textContent='Aranıyor…';
+  var q=[OB.adres,OB.il,'Türkiye'].filter(Boolean).join(', ');
+  fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=tr&accept-language=tr&q='+encodeURIComponent(q))
+    .then(function(r){if(!r.ok)throw 0;return r.json();})
+    .then(function(a){var la=document.getElementById('ob_lat'),lo=document.getElementById('ob_lng');
+      if(a&&a[0]&&la&&lo){la.value=(+a[0].lat).toFixed(6);lo.value=(+a[0].lon).toFixed(6);OB.lat=la.value;OB.lng=lo.value;if(msg)msg.textContent='✓ Bulundu.';}
+      else if(msg)msg.textContent='Bulunamadı — elle girebilirsiniz.';})
+    .catch(function(){if(msg)msg.textContent='Sorgu başarısız (internet gerekli).';})
+    .then(function(){_obGeoBusy=false;});
+}
+window.obGeocode=obGeocode;
 function obBody(n){var e=_le;
   if(n===1){var ils=(typeof trIlList==='function'?trIlList():['İzmir']).slice().sort(function(a,b){return a.localeCompare(b,'tr');});
     return '<p class="csub">Sitenizin yayınlanacağı ili seçin; ProX il/ilçe/mahalle endeksi buna göre çekilir.</p><div class="afield"><label>İl</label><select id="ob_il" style="width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;font:inherit">'+ils.map(function(il){return '<option'+(il===OB.il?' selected':'')+'>'+il+'</option>';}).join('')+'</select></div>'
@@ -1894,7 +1999,9 @@ function obBody(n){var e=_le;
     +'<div class="afield"><label>Ticari Unvan</label><input id="ob_unvan" value="'+e(OB.unvan)+'" placeholder="ör. Antalya Elite Gayrimenkul A.Ş."></div>'
     +'<div class="ed2"><div class="afield"><label>Telefon</label><input id="ob_tel" value="'+e(OB.tel)+'" placeholder="+90 ..."></div><div class="afield"><label>WhatsApp</label><input id="ob_wa" value="'+e(OB.wa)+'" placeholder="90 5xx ..."></div></div>'
     +'<div class="afield"><label>E-posta</label><input id="ob_mail" value="'+e(OB.mail)+'" placeholder="info@firmaniz.com"></div>'
-    +'<div class="afield"><label>Adres</label><input id="ob_adres" value="'+e(OB.adres)+'"></div>';}
+    +'<div class="afield"><label>Adres</label><input id="ob_adres" value="'+e(OB.adres)+'"></div>'
+    +'<div class="ed2"><div class="afield"><label>Ofis Enlem (lat) <span style="color:var(--muted);font-weight:400">(harita pini)</span></label><input id="ob_lat" value="'+e(OB.lat)+'" placeholder="38.4378" inputmode="decimal"></div><div class="afield"><label>Ofis Boylam (lng)</label><input id="ob_lng" value="'+e(OB.lng)+'" placeholder="27.1440" inputmode="decimal"></div></div>'
+    +'<button type="button" class="btn btn-line" style="margin-top:4px" onclick="obGeocode()">📍 Adresten koordinat bul</button><span class="csub" id="ob_geo_msg" style="margin-left:10px"></span>';}
   if(n===3){return '<p class="csub">Yasal künye — KVKK/gizlilik/çerez/kullanım "Veri Sorumlusu Künyesi" bunlardan dolar. Boş bırakılan alan sayfada "[Doldurulacak]" görünür.</p>'
     +'<div class="ed2"><div class="afield"><label>Vergi No</label><input id="ob_vergi" value="'+e(OB.vergi)+'"></div><div class="afield"><label>Vergi Dairesi</label><input id="ob_vergiDaire" value="'+e(OB.vergiDaire)+'"></div></div>'
     +'<div class="ed2"><div class="afield"><label>MERSİS No</label><input id="ob_mersis" value="'+e(OB.mersis)+'"></div><div class="afield"><label>Ticaret Sicil No</label><input id="ob_ticaretSicil" value="'+e(OB.ticaretSicil)+'"></div></div>'
@@ -1920,6 +2027,7 @@ function obBody(n){var e=_le;
     +'<div style="margin-top:6px;font-size:14px"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="ob_demoMode" value="temiz"'+(OB.demoMode==='temiz'?' checked':'')+'> Temiz başla (tüm demo içerik silinsin)</label></div></div>';}
   if(n===7){return '<p class="csub">ProX API anahtarı (canlı il/ilçe/mahalle + değerleme + AI). Boşsa demo veriyle kurulur; sonra admin → ProX\'tan eklenir.</p>'
     +'<div class="afield"><label>ProX API Anahtarı <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="ob_key" value="'+e(OB.key)+'" placeholder="prox_..." style="font-family:monospace;font-size:12px"></div>'
+    +'<label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13.5px;cursor:pointer"><input type="checkbox" id="ob_doviz"'+(OB.dovizOff?'':' checked')+'> Döviz / altın bilgi bandını göster <span style="color:var(--muted)">(ProX kurları · ilan fiyatları daima TL)</span></label>'
     +'<div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.9"><b>Kurulum özeti</b><br>'
       +'İl: <b>'+e(OB.il)+'</b> · Firma: <b>'+e(OB.name||'—')+'</b><br>'
       +(OB.name?'✓':'○')+' Firma adı · '+((OB.tel||OB.mail)?'✓':'○')+' İletişim · '+((OB.mersis||OB.vergi)?'✓':'○')+' Künye · '+(OB.belge?'✓':'○')+' EİDS<br>'
@@ -1949,6 +2057,10 @@ function obFinish(){obCollect();if(!OB.name){OB.step=2;obRender();toast('Firma a
       if(OB.adres)FIRMA.adres=OB.adres;if(OB.tel)FIRMA.tel=OB.tel;if(OB.mail)FIRMA.mail=OB.mail;if(OB.wa)FIRMA.wa=OB.wa.replace(/[^0-9]/g,'');
       if(OB.mersis)FIRMA.mersis=OB.mersis;if(OB.ticaretSicil)FIRMA.ticaretSicil=OB.ticaretSicil;if(OB.oda)FIRMA.oda=OB.oda;if(OB.kep)FIRMA.kep=OB.kep;
       if(OB.favicon)FIRMA.favicon=OB.favicon;
+      if(OB.lat&&OB.lng&&isFinite(+OB.lat)&&isFinite(+OB.lng)){FIRMA.lat=+OB.lat;FIRMA.lng=+OB.lng;}
+      FIRMA.dovizOff=!!OB.dovizOff;
+      try{window.GM_DOVIZ_OFF=!!FIRMA.dovizOff;var _dh=document.getElementById('dovizBandi');if(_dh)_dh.style.display=FIRMA.dovizOff?'none':'';if(!FIRMA.dovizOff&&window.GMDoviz)window.GMDoviz.render();}catch(e){}
+      try{renderIletMap();}catch(e){}
       FIRMA.social={fb:OB.fb||'',ig:OB.ig||'',x:OB.x||'',li:OB.li||'',yt:OB.yt||''};
       FIRMA.eids=FIRMA.eids||{};if(OB.unvan)FIRMA.eids.unvan=OB.unvan;else if(!FIRMA.eids.unvan||FIRMA.eids.unvan.indexOf('Meridyen')>=0)FIRMA.eids.unvan=OB.name+' Danışmanlık Ltd. Şti.';
       if(OB.belge){FIRMA.eids.belgeNo=OB.belge.replace(/[^0-9]/g,'');FIRMA.eids.yetkili=!!(FIRMA.eids.belgeNo.length>=7);}
@@ -1961,7 +2073,7 @@ function obFinish(){obCollect();if(!OB.name){OB.step=2;obRender();toast('Firma a
     /* SEO */
     try{if(typeof SEO!=='undefined'){if(OB.seoTitle)SEO.title=OB.seoTitle;if(OB.seoDesc)SEO.desc=OB.seoDesc;}}catch(e){}
     /* DEMO İÇERİK: 'temiz' → ilan/danışman/referans/özel/blog demo temizle (kullanıcı seçimi) */
-    if(OB.demoMode==='temiz'){try{ILANLAR=[];DANISMANLAR=[];REFS=[];OZEL=[];if(typeof BLOGS!=='undefined')BLOGS=[];}catch(e){}}
+    if(OB.demoMode==='temiz'){try{ILANLAR=[];DANISMANLAR=[];REFS=[];OZEL=[];ARSIV=[];if(typeof BLOGS!=='undefined')BLOGS=[];}catch(e){}}
     if(typeof applyBrand==='function')applyBrand(OB.name);
     if(OB.logo){try{if(typeof SAAS_CONFIG!=='undefined'&&SAAS_CONFIG.tenantSettings){SAAS_CONFIG.tenantSettings.logoUrl=OB.logo;if(typeof applySaaSSettings==='function')applySaaSSettings();}}catch(e){}}
     if(OB.key&&typeof PROX!=='undefined'){PROX.key=OB.key;PROX.il=OB.il;PROX.region=OB.il;if(typeof applyProxTenant==='function')applyProxTenant();}
@@ -1988,7 +2100,7 @@ function admLogin(){
     renderP3();render3dForm();fillContent();renderBlogRows();renderRefRows();fillSeo();fillGoogle();fillProx();renderModules();renderEpRows();fillAiCfg();
     renderAllCrm();
     document.getElementById('adm_pass').value='';
-  }else{toast('Hatalı kullanıcı adı veya şifre. (admin / 1234)');}
+  }else{toast('Hatalı kullanıcı adı veya şifre.');}
 }
 function admLogout(){document.getElementById('adminApp').classList.remove('authed');toast('Çıkış yapıldı.');}
 /* ===== PAKET / ÖZELLİK KİLİDİ (admin panel) — upsell'li =====
@@ -2743,15 +2855,20 @@ function applyFirma(){
   if(FIRMA.wa){document.querySelectorAll('a[href^="https://wa.me/905000000000"]').forEach(a=>{a.href=a.href.replace('905000000000',FIRMA.wa);});}
   try{applySocial();}catch(e){}
 }
-/* Sosyal medya: FIRMA.social'dan href yaz; boşsa demo linkini GİZLE (Meridyen hesabına gitmesin).
+/* Sosyal medya: FIRMA.social doluysa gerçek href yazılır; BOŞSA statik demo href KALIR ve
+   ikon GÖRÜNÜR (eski hâli — sosyal ikonlar her zaman görünür). Admin/sihirbaz gerçek hesapla ezer.
    Demo-handle deseniyle çalışır → SPA footer + geç render + statik footer (wl.js de çağırır). */
 function applySocial(){
   var S=(FIRMA&&FIRMA.social)||{};
-  [['fb','facebook.com/meridyengayrimenkul'],['ig','instagram.com/meridyengayrimenkul'],['x','x.com/meridyengm'],['li','linkedin.com/company/meridyengayrimenkul'],['yt','youtube.com/@meridyengayrimenkul']].forEach(function(m){
+  var P=[['fb','facebook.com/meridyengayrimenkul'],['ig','instagram.com/meridyengayrimenkul'],['x','x.com/meridyengm'],['li','linkedin.com/company/meridyengayrimenkul'],['yt','youtube.com/@meridyengayrimenkul']];
+  /* Kiracı en az bir hesap girdiyse boşlar gizlenir (sihirbaz vaadi); hiçbiri
+     girilmemişse saf demo → ikonlar demo hesaplarla görünür kalır. */
+  var anySet=P.some(function(m){return (S[m[0]]||'').trim();});
+  P.forEach(function(m){
     var key=m[0],demo=m[1],v=(S[key]||'').trim();
     document.querySelectorAll('a[href*="'+demo+'"]').forEach(function(a){
-      if(v){a.href=/^https?:\/\//i.test(v)?v:('https://'+v.replace(/^\/+/,''));a.style.display='';}
-      else{a.style.display='none';}
+      if(v){a.href=/^https?:\/\//i.test(v)?v:('https://'+v.replace(/^\/+/,''));}
+      a.style.display=(anySet&&!v)?'none':'';
     });
   });
 }
@@ -3175,7 +3292,7 @@ function applyFontTheme(font){try{
 window.applyFontTheme=applyFontTheme;window.CURATED_FONTS=CURATED_FONTS;
 
 /* ============ ADMIN: YEDEK ============ */
-function exportData(){const data={FIRMA,ILANLAR,DANISMANLAR,LEADS,THEME,CONTENT,BLOGS,REFS,SEO,GOOGLE,PROX,AICFG,P3,KISILER,DEALS,TASKS,COMMS,RENTS,MSGLOG,RAPORLOG,ACT,CONTRACTS,OZEL,_exported:new Date().toISOString(),_brand:'Meridyen Gayrimenkul'};/* M2: CRM + Özel Portföy dilimleri de yedeklenir (import zaten okuyordu → parite) */
+function exportData(){const data={FIRMA,ILANLAR,DANISMANLAR,LEADS,THEME,CONTENT,BLOGS,REFS,SEO,GOOGLE,PROX,AICFG,P3,KISILER,DEALS,TASKS,COMMS,RENTS,MSGLOG,RAPORLOG,ACT,CONTRACTS,OZEL,ARSIV,_exported:new Date().toISOString(),_brand:'Meridyen Gayrimenkul'};/* M2: CRM + Özel Portföy dilimleri de yedeklenir (import zaten okuyordu → parite) */
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='meridyen-gm-yedek-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(url);
   toast('✓ Yedek indirildi.');}
@@ -3184,10 +3301,10 @@ function importData(inp){const f=inp.files[0];if(!f)return;const r=new FileReade
     if(d.FIRMA)FIRMA=d.FIRMA;if(d.ILANLAR)ILANLAR=d.ILANLAR;if(d.DANISMANLAR)DANISMANLAR=d.DANISMANLAR;if(d.LEADS)LEADS=d.LEADS;if(d.THEME)THEME=d.THEME;
     if(d.CONTENT)CONTENT=d.CONTENT;if(d.BLOGS)BLOGS=d.BLOGS;if(d.REFS)REFS=d.REFS;if(d.SEO)SEO=d.SEO;if(d.GOOGLE)GOOGLE=d.GOOGLE;if(d.PROX)PROX=d.PROX;if(d.AICFG)AICFG=d.AICFG;if(d.P3)P3=d.P3;
     if(d.KISILER)KISILER=d.KISILER;if(d.DEALS)DEALS=d.DEALS;if(d.TASKS)TASKS=d.TASKS;if(d.COMMS)COMMS=d.COMMS;if(d.RENTS)RENTS=d.RENTS;if(d.MSGLOG)MSGLOG=d.MSGLOG;if(d.RAPORLOG)RAPORLOG=d.RAPORLOG;if(d.ACT)ACT=d.ACT;
-    if(d.CONTRACTS)CONTRACTS=d.CONTRACTS;if(d.OZEL)OZEL=d.OZEL;/* M2: sözleşme + Özel Portföy de içe aktarılır */
+    if(d.CONTRACTS)CONTRACTS=d.CONTRACTS;if(d.OZEL)OZEL=d.OZEL;if(d.ARSIV)ARSIV=d.ARSIV;/* M2: sözleşme + Özel Portföy + kapanan işlemler de içe aktarılır */
     if(PROX&&!PROX.modules)PROX.modules=clone(DEF_MODULES);
     saveAll();applyFirma();applyContent();if(THEME)setTheme(THEME.accent,THEME.green,THEME.navy);try{applyFontTheme(THEME&&THEME.font);}catch(e){}
-    renderIlanlar();renderDan();renderBlogFeed();renderRefGrid();applyModuleVisibility();initAiAssistant();
+    renderIlanlar();renderDan();renderBlogFeed();renderRefGrid();renderArsiv();renderHaritaMap();applyModuleVisibility();initAiAssistant();
     try{if(typeof renderOzel==='function')renderOzel();if(typeof renderOzHome==='function')renderOzHome();if(typeof ozHero==='function')ozHero();if(typeof renderOzelRows==='function')renderOzelRows();}catch(e){}/* M2: içe aktarılan Özel Portföy'ü de bas */
     renderIlanRows();renderDanRows();renderLeads();renderRecentLeads();renderKpis();renderBolgeRows();fillFirmaForm();renderThemeGrid();
     renderP3();render3dForm();fillContent();renderBlogRows();renderRefRows();fillSeo();fillGoogle();fillProx();renderModules();renderEpRows();fillAiCfg();renderAllCrm();
@@ -3200,7 +3317,7 @@ function resetData(){if(!confirm('Tüm değişiklikler silinip demo verisine dö
     Object.keys(localStorage).forEach(function(k){if(k.indexOf('wl_i18n_')===0)localStorage.removeItem(k);});
     document.documentElement.setAttribute('dir','ltr');document.documentElement.lang='tr';}catch(e){}
   loadAll();eidsEnsure();applyProxTenant();try{if(typeof applyCanonical==='function')applyCanonical();}catch(e){}try{if(PROX&&PROX.il&&PROX.il!==PROVINCE.name)applyProvince(PROX.il,true);}catch(e){}try{if(typeof FIRMA!=='undefined'&&FIRMA.name!==BRAND_ORIG&&typeof applySeoHead==='function')applySeoHead();}catch(e){}try{if(typeof applySchema==='function')applySchema();}catch(e){}applyFirma();applyContent();document.documentElement.removeAttribute('style');
-  renderIlanlar();renderDan();renderBlogFeed();renderRefGrid();applyModuleVisibility();initAiAssistant();
+  renderIlanlar();renderDan();renderBlogFeed();renderRefGrid();renderArsiv();renderHaritaMap();applyModuleVisibility();initAiAssistant();
   renderIlanRows();renderDanRows();renderLeads();renderRecentLeads();renderKpis();renderBolgeRows();fillFirmaForm();renderThemeGrid();
   renderP3();render3dForm();fillContent();renderBlogRows();renderRefRows();fillSeo();fillGoogle();fillProx();renderModules();renderEpRows();fillAiCfg();renderAllCrm();
   toast('⟲ Demo verisine sıfırlandı.');}
@@ -3211,8 +3328,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(THEME&&THEME.accent)setTheme(THEME.accent,THEME.green,THEME.navy);
   try{applyFontTheme(THEME&&THEME.font);}catch(e){}
   applyContent();
-  initHero();renderIlanlar();renderOzel();ozHero();renderOzHome();renderDan();renderBolgePick();initVal();applyFirma();renderBlogFeed();renderRefGrid();
-  initAiAssistant();applyModuleVisibility();try{brandSweep(document.body);brandObserve();}catch(e){}try{abApply();}catch(e){}
+  initHero();renderIlanlar();renderOzel();ozHero();renderOzHome();renderDan();renderBolgePick();initVal();applyFirma();renderBlogFeed();renderRefGrid();renderArsiv();renderHaritaMap();renderIletMap();
+  initAiAssistant();applyModuleVisibility();try{brandSweep(document.body);brandObserve();}catch(e){}try{abApply();}catch(e){}try{proxLoadArsiv();}catch(e){}
   /* GEÇ TEMA RE-APPLY: init render'ları (applyProvince vb.) documentElement.style'ı sıfırlayabiliyor → accent/font kayboluyordu. Sona + kısa gecikmeyle yeniden uygula. */
   function _reTheme(){try{if(THEME&&THEME.accent)setTheme(THEME.accent,THEME.green,THEME.navy);if(THEME&&THEME.font)applyFontTheme(THEME.font);}catch(e){}}
   _reTheme();setTimeout(_reTheme,180);
@@ -3260,10 +3377,37 @@ function saveContent(){const g=id=>document.getElementById(id).value;
   saveAll();applyContent();toast('✓ Sayfa metinleri güncellendi.');}
 
 /* ---------- BLOG ---------- */
+function _blogCover(b){return (typeof b.cover==='string'&&b.cover)?b.cover:((b.img&&typeof b.img==='object'&&b.img.url)?b.img.url:(typeof b.img==='string'?b.img:''));}
+/* Ortak modern haber kartı (ana sayfa feed + blog ana sayfa ızgarası) */
+function _blogCardHTML(b,i){
+  var cover=_blogCover(b);
+  var cat=_be(b.cat||'Haber')+(b.src==='prox'?' · ProX':b.src==='ai'?' · AI':'');
+  var head=cover
+    ? '<div class="bcov" style="background-image:url(\''+_be(cover)+'\')"><span class="bcat">'+cat+'</span></div>'
+    : '<div class="bi n'+(((i||0)%3)+1)+'"><span class="bcat">'+cat+'</span><span class="bemoji" aria-hidden="true">'+_be(b.icon||'📄')+'</span></div>';
+  return '<article class="bpost" data-bid="'+_be(b.id)+'" data-cat="'+_be(b.cat||'')+'" role="link" tabindex="0" '
+    +'onclick="if(typeof blogOpen===\'function\')blogOpen(this.getAttribute(\'data-bid\'))" '
+    +'onkeydown="if((event.key===\'Enter\'||event.key===\' \')&&typeof blogOpen===\'function\'){event.preventDefault();blogOpen(this.getAttribute(\'data-bid\'))}" style="cursor:pointer">'
+    +head+'<div class="bbody"><h3>'+_be(b.title)+'</h3><p>'+_be(b.sum||'')+'</p>'
+    +'<div class="bauthor">✍️ '+_be(b.author||'Meridyen Editör')+'</div>'
+    +'<div class="bmeta"><span>'+_be(b.meta||'')+'</span><span class="bmore">Okumaya Başla →</span></div></div></article>';
+}
 function renderBlogFeed(){const g=document.getElementById('blogFeed');if(!g)return;
   var posts=(typeof blogAllPosts==='function'?blogAllPosts():BLOGS).slice(0,6);
-  g.innerHTML=posts.map(b=>`<div class="bpost" data-bid="${_be(b.id)}" onclick="if(typeof blogOpen==='function')blogOpen(this.getAttribute('data-bid'))" style="cursor:pointer">
-    <div class="bi">${_be(b.icon||'📄')}</div><div class="bbody"><div class="cat">${_be(b.cat)}${b.src==='prox'?' · ProX':b.src==='ai'?' · AI':''}</div><h3>${_be(b.title)}</h3><p>${_be(b.sum)}</p><div class="meta"><span>${_be(b.meta||'')}</span></div></div></div>`).join('');}
+  /* Ana sayfada HER ZAMAN 6 haber kartı: üretilen/yayınlanan post azsa küratörlü varsayılanlarla tamamla */
+  if(posts.length<6&&typeof DEF_BLOGS!=='undefined'&&DEF_BLOGS){
+    var _have={};posts.forEach(function(p){_have[String(p.title||'').toLocaleLowerCase('tr')]=1;});
+    DEF_BLOGS.forEach(function(d){if(posts.length<6&&!_have[String(d.title||'').toLocaleLowerCase('tr')])posts.push(d);});
+  }
+  g.innerHTML=posts.map(_blogCardHTML).join('');}
+/* Blog ana sayfa kategori filtresi */
+function blogFilterCat(btn){try{
+  var box=document.getElementById('blogCats');if(box)box.querySelectorAll('.bc-chip').forEach(function(c){c.classList.toggle('on',c===btn);});
+  var cat=btn.getAttribute('data-cat')||'';var grid=document.getElementById('blogGrid');if(!grid)return;var vis=0;
+  grid.querySelectorAll('.bpost').forEach(function(c){var ok=(cat==='Tümü'||!cat)||c.getAttribute('data-cat')===cat;c.style.display=ok?'':'none';if(ok)vis++;});
+  var em=document.getElementById('blogGridEmpty');if(em)em.style.display=vis?'none':'';
+}catch(e){}}
+window.blogFilterCat=blogFilterCat;
 /* ProX blog akışı — /api/blog/feed (sunucuda eklenecek; 404→[] fallback). Normalize + cache. */
 var _proxBlogCache=null;
 async function proxBlogFeed(force){if(_proxBlogCache&&!force)return _proxBlogCache;var out=[];
@@ -3286,7 +3430,15 @@ try{window.csRunSchedule=csRunSchedule;}catch(e){}
 function blogAllPosts(){try{if(typeof csRunSchedule==='function')csRunSchedule();}catch(e){}/* zamanı gelen haberleri otomatik yayınla */
   var px=_proxBlogCache||[];var local=(typeof BLOGS!=='undefined'?BLOGS:[]).filter(function(b){return !b.status||b.status==='published';});/* taslak/zamanlı gizli */
   var seen={},all=[];
-  local.concat(px).forEach(function(b){var k=(b.title||'').toLocaleLowerCase('tr');if(k&&!seen[k]){seen[k]=1;all.push(b);}});return all;}
+  local.concat(px).forEach(function(b){var k=(b.title||'').toLocaleLowerCase('tr');if(k&&!seen[k]){seen[k]=1;all.push(b);}});
+  /* GÖRSELSİZ haberleri kaldır — yalnız kapak/görsel içeren yazılar listelenir (kullanıcı isteği) */
+  all=all.filter(function(b){return !!_blogCover(b);});
+  /* Beyaz-etiket: kiracı ili İzmir değilse İzmir'e özel küratörlü yazılar gizlenir;
+     şehir-piyasa serisi + jenerik (kredi/tapu/vergi/dönüşüm) yazılar kalır. */
+  try{var _pv=(typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name)||'İzmir';
+    if(_pv!=='İzmir')all=all.filter(function(b){if(b.stats&&b.stats.sehir)return !/izmir/i.test(b.stats.sehir)||b.stats.sehir===_pv;return !/İzmir/i.test((b.title||'')+' '+(b.sum||''));});
+  }catch(e){}
+  return all;}
 async function blogFetchProx(){var btn=document.getElementById('blFetchBtn');if(btn){btn.disabled=true;btn.textContent='Çekiliyor…';}
   var posts=await proxBlogFeed(true);
   if(btn){btn.disabled=false;btn.textContent='📰 ProX Blog Akışını Çek';}
@@ -3305,29 +3457,113 @@ async function blogOpen(id){var p=document.getElementById('blogPage');if(!p)retu
   var sc=document.getElementById('blogScroll');if(sc)sc.scrollTop=0;
   setOverlayPage('Blog · Bilgi Merkezi','#blog');}
 function blogShowList(){var l=document.getElementById('blogListWrap'),d=document.getElementById('blogDetailWrap');if(l)l.style.display='';if(d)d.style.display='none';var sc=document.getElementById('blogScroll');if(sc)sc.scrollTop=0;}
+/* BLOG ANA SAYFASI — emlakekspertizi.com/blog tarzı: Günün Manşeti (carousel + yan manşetler)
+   + filtre sekmeleri (En Yeni/En Çok Okunan/Yüksek Kalite/Editör Seçimi) + kategori + haber ızgarası. */
+var _manIdx=0;
+function _blogManPool(){var p=(window._blogPosts||[]);return p.slice(0,Math.min(p.length,20));}
+function _manSideCard(b){var cov=_blogCover(b);
+  return '<article class="man-side-c" role="link" tabindex="0" onclick="blogOpen(\''+_be(b.id)+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();blogOpen(\''+_be(b.id)+'\')}">'
+    +(cov?'<span class="man-side-th" style="background-image:url(\''+_be(cov)+'\')"></span>':'<span class="man-side-th bi n1"><span class="bemoji">'+_be(b.icon||'📄')+'</span></span>')
+    +'<span class="man-side-b"><span class="man-side-cat">'+_be(b.cat||'Haber')+'</span><span class="man-side-t">'+_be(b.title)+'</span></span></article>';
+}
+function _mansetHTML(){
+  var man=_blogManPool();if(!man.length)return '';
+  if(_manIdx>=man.length||_manIdx<0)_manIdx=0;
+  var b=man[_manIdx],cov=_blogCover(b);
+  var big='<article class="man-big">'
+    +'<div class="man-big-cov'+(cov?'':' bi n1')+'"'+(cov?' style="background-image:url(\''+_be(cov)+'\')"':'')+'>'
+      +(cov?'':'<span class="bemoji">'+_be(b.icon||'📄')+'</span>')
+      +'<span class="man-counter">'+(_manIdx+1)+' / '+man.length+'</span>'
+      +'<button type="button" class="man-arrow prev" onclick="blogManGo('+(_manIdx-1)+')" aria-label="Önceki manşet">‹</button>'
+      +'<button type="button" class="man-arrow next" onclick="blogManGo('+(_manIdx+1)+')" aria-label="Sonraki manşet">›</button>'
+      +'<span class="man-cat">'+_be(b.cat||'Haber')+'</span>'
+    +'</div>'
+    +'<div class="man-big-body" role="link" tabindex="0" onclick="blogOpen(\''+_be(b.id)+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();blogOpen(\''+_be(b.id)+'\')}">'
+      +'<h3>'+_be(b.title)+'</h3><p>'+_be(b.sum||'')+'</p><span class="man-date">🕒 '+_be(b.meta||'')+'</span></div>'
+    +'<div class="man-pag">'+man.map(function(x,i){return '<button type="button" class="man-dot'+(i===_manIdx?' on':'')+'" onclick="blogManGo('+i+')">'+(i+1)+'</button>';}).join('')+'</div>'
+    +'</article>';
+  var side='<aside class="man-side">'+[1,2,3].map(function(k){return _manSideCard(man[(_manIdx+k)%man.length]);}).join('')+'</aside>';
+  return '<section class="man-sec"><div class="man-head"><h2><span class="hl">Günün</span> Manşeti</h2><span class="man-count">'+man.length+' başlık · ProX seçimi</span></div><div class="man-wrap">'+big+side+'</div></section>';
+}
+function blogManGo(i){var man=_blogManPool();if(!man.length)return;_manIdx=((i%man.length)+man.length)%man.length;var host=document.querySelector('.man-sec');if(host)host.outerHTML=_mansetHTML();}
+window.blogManGo=blogManGo;
+function blogSortTab(btn){
+  var box=document.getElementById('blogTabs');if(box)box.querySelectorAll('.bt-tab').forEach(function(t){t.classList.toggle('on',t===btn);});
+  var mode=btn.getAttribute('data-mode'),posts=(window._blogPosts||[]).slice();
+  if(mode==='Yüksek Kalite')posts.sort(function(a,b){return String(b.body||'').length-String(a.body||'').length;});
+  else if(mode==='Editör Seçimi')posts.sort(function(a,b){return (b.src==='firma'?1:0)-(a.src==='firma'?1:0);});
+  else if(mode==='En Çok Okunan')posts.sort(function(a,b){return _arsHash(b.title)-_arsHash(a.title);});
+  else posts.sort(function(a,b){return String(b.date||'').localeCompare(String(a.date||''));}); /* En Yeni */
+  var grid=document.getElementById('blogGrid');if(grid)grid.innerHTML=posts.map(_blogCardHTML).join('');
+  var cbox=document.getElementById('blogCats');if(cbox)cbox.querySelectorAll('.bc-chip').forEach(function(c,i){c.classList.toggle('on',i===0);});
+  var em=document.getElementById('blogGridEmpty');if(em)em.style.display='none';
+}
+window.blogSortTab=blogSortTab;
 function renderBlogList(){var w=document.getElementById('blogListWrap');if(!w)return;var posts=blogAllPosts();
-  w.innerHTML=posts.length?('<div class="bgrid">'+posts.map(function(b){var head=(b.img&&b.img.url)?('<div class="bi" style="padding:0;overflow:hidden;height:150px"><img src="'+_be(b.img.url)+'" alt="'+_be(b.img.alt||b.title)+'" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"></div>'):('<div class="bi">'+(b.icon||'📄')+'</div>');return '<div class="bpost" onclick="blogDetail(\''+b.id+'\')" style="cursor:pointer">'+head+'<div class="bbody"><div class="cat">'+_be(b.cat)+(b.src==='prox'?' · ProX':b.src==='ai'?' · AI':'')+'</div><h3>'+_be(b.title)+'</h3><p>'+_be(b.sum||'')+'</p><div class="meta"><span>'+_be(b.meta||'')+'</span></div></div></div>';}).join('')+'</div>'):'<p style="text-align:center;color:var(--muted);padding:40px 0">Henüz yazı yok. Admin → ✨ İçerik Stüdyosu\'ndan SEO uyumlu makale oluşturabilirsiniz.</p>';}
+  /* blog ana sayfası dolu görünsün: manşette 10 haber dönebilsin diye en az 10'a küratörlü varsayılanlarla tamamla */
+  if(posts.length<10&&typeof DEF_BLOGS!=='undefined'&&DEF_BLOGS){var _hv={};posts.forEach(function(p){_hv[String(p.title||'').toLocaleLowerCase('tr')]=1;});DEF_BLOGS.forEach(function(d){if(!_hv[String(d.title||'').toLocaleLowerCase('tr')])posts.push(d);});}
+  if(!posts.length){w.innerHTML='<p style="text-align:center;color:var(--muted);padding:40px 0">Henüz yazı yok. Admin → ✨ İçerik Stüdyosu\'ndan SEO uyumlu makale oluşturabilirsiniz.</p>';return;}
+  window._blogPosts=posts;
+  var tabs='<div class="blogtabs" id="blogTabs">'+['En Yeni','En Çok Okunan','Yüksek Kalite','Editör Seçimi'].map(function(t,i){return '<button type="button" class="bt-tab'+(i===0?' on':'')+'" data-mode="'+t+'" onclick="blogSortTab(this)">'+t+'</button>';}).join('')+'<span class="bt-count">'+posts.length+' yazı</span></div>';
+  var cats=['Tümü'];posts.forEach(function(p){if(p.cat&&cats.indexOf(p.cat)<0)cats.push(p.cat);});
+  var chips='<div class="blogcats" id="blogCats" role="tablist" aria-label="Kategori filtresi">'
+    +cats.map(function(c,i){return '<button class="bc-chip'+(i===0?' on':'')+'" data-cat="'+_be(c)+'" onclick="blogFilterCat(this)">'+_be(c)+'</button>';}).join('')+'</div>';
+  var grid='<div class="bgrid" id="blogGrid">'+posts.map(_blogCardHTML).join('')+'</div>'
+    +'<p id="blogGridEmpty" style="display:none;text-align:center;color:var(--muted);padding:24px 0">Bu kategoride başka yazı yok.</p>';
+  w.innerHTML=_mansetHTML()+'<div class="blogsec-h"><h3>Tüm Yazılar</h3></div>'+tabs+chips+grid;
+}
+/* HABER DETAY — emlakekspertizi.com/blog/post/... tarzı: breadcrumb + yazar + hero + başlık kartı
+   + HIZLI BAKIŞ istatistikleri + ilçe sıralaması + CANLI VERİ (ProX) bandı + yapılandırılmış gövde + paylaşım. */
+function _bdShare(b){
+  var url='https://www.emlakekspertizi.com/demo/gayrimenkul/#blog',t=encodeURIComponent(b.title||''),u=encodeURIComponent(url);
+  return '<div class="bd-share"><span class="bd-share-l">Paylaş</span>'
+    +'<a class="bd-sh tw" href="https://twitter.com/intent/tweet?text='+t+'&url='+u+'" target="_blank" rel="noopener noreferrer" aria-label="X\'te paylaş">𝕏</a>'
+    +'<a class="bd-sh wa" href="https://wa.me/?text='+t+'%20'+u+'" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp\'ta paylaş">✆</a>'
+    +'<a class="bd-sh li" href="https://www.linkedin.com/sharing/share-offsite/?url='+u+'" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn\'de paylaş">in</a>'
+    +'<button type="button" class="bd-sh cp" onclick="try{navigator.clipboard.writeText(\''+url+'\');toast(\'✓ Bağlantı kopyalandı\')}catch(e){}" aria-label="Bağlantıyı kopyala">⧉</button></div>';
+}
 function blogDetail(id){var b=blogAllPosts().filter(function(x){return (''+x.id)===(''+id);})[0];if(!b){blogShowList();return;}
   var d=document.getElementById('blogDetailWrap'),l=document.getElementById('blogListWrap');if(l)l.style.display='none';if(d)d.style.display='';
   var body;
-  if(b.blocks&&b.blocks.length&&typeof ContentStudio!=='undefined'&&ContentStudio.blocksToHtml){body=ContentStudio.blocksToHtml(b.blocks);}/* yeni blok modeli */
+  if(b.blocks&&b.blocks.length&&typeof ContentStudio!=='undefined'&&ContentStudio.blocksToHtml){body=ContentStudio.blocksToHtml(b.blocks);}
   else{var hasMd=/(^|\n)\s*#{1,3}\s|(^|\n)\s*[-*]\s/.test(b.body||'');
     body=(typeof ContentStudio!=='undefined'&&ContentStudio.mdToHtml&&hasMd)?ContentStudio.mdToHtml(b.body)
-      :(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p style="margin:0 0 16px">'+_be(par).replace(/\n/g,'<br>')+'</p>';}).join('');}
-  var _cap='';if(b.img&&b.img.credit&&!/yüklenen|yuklenen/i.test(b.img.credit)&&!/^data:/.test(b.img.url||''))_cap='<figcaption style="font-size:12px;color:var(--muted);margin-top:6px">📷 '+_be(b.img.credit)+'</figcaption>';
-  var cover=(b.img&&b.img.url)?('<figure style="margin:0 0 22px"><img src="'+_be(b.img.url)+'" alt="'+_be((b.img.alt||b.title))+'" style="width:100%;border-radius:14px;display:block">'+_cap+'</figure>'):'';
-  /* VİDEO alanı — yalnız video linki varsa (yoksa hiç alan çıkmaz) */
-  var vid=(b.video&&b.video.url&&typeof ContentStudio!=='undefined'&&ContentStudio.videoHtml)?ContentStudio.videoHtml(b.video.url,(b.video.caption||'')):'';
-  var tags=(b.tags&&b.tags.length)?('<div style="margin-top:24px;display:flex;gap:8px;flex-wrap:wrap">'+b.tags.map(function(t){return '<span style="background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:12.5px">#'+_be(t)+'</span>';}).join('')+'</div>'):'';
-  d.innerHTML='<button class="br-back" onclick="blogShowList()"><svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg> Tüm yazılar</button>'
-    +'<article style="max-width:760px;margin:22px auto 0"><div class="cat" style="color:var(--accent);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em">'+_be(b.cat)+(b.src==='prox'?' · ProX':b.src==='ai'?' · AI':'')+'</div>'
-    +'<h1 style="font-family:var(--head);font-size:clamp(26px,4vw,40px);line-height:1.15;margin:8px 0 10px">'+_be(b.title)+'</h1>'
-    +'<div class="meta" style="color:var(--muted);font-size:13.5px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--line)">'+_be(b.meta||'')+'</div>'
-    +cover
-    +vid
-    +'<div class="cs-article" style="font-size:16px;line-height:1.75;color:var(--ink-2,#334155)">'+body+'</div>'
-    +tags
-    +'<div style="margin-top:30px;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:14px;text-align:center"><b style="font-size:16px">Bu konuda uzman desteği mi istiyorsunuz?</b><div style="margin-top:10px"><button class="btn btn-primary" onclick="closeAllOverlays();satScrollForm(\'Blog danışmanlık talebi\')">Ücretsiz Danışmanlık Alın</button></div></div></article>';
+      :(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p>'+_be(par).replace(/\n/g,'<br>')+'</p>';}).join('');}
+  var covUrl=_blogCover(b);
+  var author=_be(b.author||'Meridyen Editör');
+  var hero=covUrl?('<figure class="bd-hero"><img src="'+_be(covUrl)+'" alt="'+_be(b.title)+'" loading="lazy"></figure>'):'';
+  var cat=_be(b.cat||'Haber')+(b.src==='prox'?' · ProX':b.src==='ai'?' · AI':'');
+  /* HIZLI BAKIŞ + ilçe sıralaması + canlı ProX bandı — yalnız istatistikli (şehir piyasa) haberlerde */
+  var s=b.stats,quick='',rank='',live='';
+  if(s&&+s.m2>0){
+    quick='<div class="bd-quick"><div class="bd-quick-h">⚡ HIZLI BAKIŞ'+(s.sehir?' · '+_be(s.sehir):'')+'</div><div class="bd-stats">'
+      +'<div class="bd-st"><span>Satılık ort. m²</span><b>'+fmt(s.m2)+' ₺</b></div>'
+      +'<div class="bd-st"><span>Kiralık ort. m²</span><b>'+fmt(s.kira)+' ₺<small>/ay</small></b></div>'
+      +'<div class="bd-st"><span>En düşük m²</span><b>'+fmt(s.min)+' ₺</b></div>'
+      +'<div class="bd-st"><span>En yüksek m²</span><b>'+fmt(s.max)+' ₺</b></div>'
+      +'<div class="bd-st up"><span>Yıllık değişim</span><b>▲ %'+s.yil+'</b></div>'
+      +'<div class="bd-st"><span>Ort. bina yaşı</span><b>'+s.yas+'</b></div>'
+      +'</div></div>';
+    if(s.ilceler&&s.ilceler.length){
+      rank='<div class="bd-rank"><div class="bd-rank-h">📍 '+_be(s.sehir||'')+' İlçe Sıralaması · ₺/m²</div><ol class="bd-rank-list">'
+        +s.ilceler.slice(0,6).map(function(x,i){return '<li><span class="bd-rk">#'+(i+1)+'</span><span class="bd-rk-ad">'+_be(x[0])+'</span><b>'+fmt(x[1])+' ₺</b></li>';}).join('')
+        +'</ol><div class="bd-rank-src">Kaynak: ProX Endeksi · ilçe baz serisi · günlük güncellenir</div></div>';
+    }
+    live='<div class="bd-live"><span class="bd-live-b"><span class="dot"></span> CANLI VERİ · ProX</span>'
+      +'<p><b>12 aylık m² fiyat seyri</b>, <b>3 ay projeksiyon</b> ve <b>bölge karşılaştırması</b> ProX gerçek zamanlı endeksinden beslenir. Canlı grafik, ProX API anahtarı bağlandığında bu alanda görüntülenir.</p>'
+      +'<a class="bd-live-cta" href="index.html#degerleme" onclick="closeAllOverlays();return true">Tam Endeks Analizini Aç →</a></div>';
+  }
+  d.innerHTML='<div class="bd-crumb"><button type="button" class="bd-crumb-back" onclick="blogShowList()">‹ Tüm Haberler</button><span class="bd-crumb-sep">/</span><span class="bd-crumb-cat">'+cat+'</span></div>'
+    +'<article class="bd-article">'
+    +'<div class="bd-author"><span class="bd-avatar">'+author.slice(0,1).toUpperCase()+'</span><span class="bd-author-n">'+author+'</span><span class="bd-author-m">· '+_be(b.meta||'')+'</span></div>'
+    +hero
+    +'<div class="bd-titlecard"><span class="bd-cat">'+cat+'</span><h1>'+_be(b.title)+'</h1>'+(b.sum?'<p class="bd-lead">'+_be(b.sum)+'</p>':'')+'</div>'
+    +_bdShare(b)
+    +quick+rank+live
+    +'<div class="cs-article bd-body">'+body+'</div>'
+    +'<div class="bd-note">🛈 Bu içerik ProX altyapısıyla zenginleştirilir; rakamlar demo/temsilîdir, canlı sürümde ProX endeksinden gelir.</div>'
+    +'<div class="bd-cta"><b>Bu bölgede alım/satım mı düşünüyorsunuz?</b><button class="btn btn-primary" onclick="closeAllOverlays();satScrollForm(\'Blog danışmanlık talebi\')">Ücretsiz Danışmanlık Alın</button></div>'
+    +'</article>';
   try{if(typeof ContentStudio!=='undefined'&&ContentStudio.applyArticleSEO)ContentStudio.applyArticleSEO(b);}catch(e){}
   var sc=document.getElementById('blogScroll');if(sc)sc.scrollTop=0;}
 window.blogOpen=blogOpen;window.blogDetail=blogDetail;window.blogShowList=blogShowList;window.renderBlogList=renderBlogList;
@@ -3365,7 +3601,7 @@ async function blogAiGen(){var konu=((document.getElementById('bl_konu')||{}).va
   toast('✓ İçerik Asistanı makalesi üretildi — düzenleyip "Kaydet & Yayınla" deyin.');}
 function delBlog(id){if(!confirm('Yazı silinsin mi?'))return;BLOGS=BLOGS.filter(x=>x.id!==id);saveAll();renderBlogRows();renderBlogFeed();toast('Yazı silindi.');}
 function renderBlogRows(){const tb=document.getElementById('blogRows');if(!tb)return;
-  tb.innerHTML=BLOGS.length?BLOGS.map(b=>`<tr><td><b>${b.title}</b>${b.src==='ai'?' <span class="atag" style="background:#ede9fe;color:#6d28d9">AI</span>':b.src==='prox'?' <span class="atag" style="background:#dbeafe;color:#1e40af">ProX</span>':''}${b.body?'':' <span class="tsub">(özet)</span>'}</td><td>${b.cat}</td><td class="ta"><button class="ico-btn" onclick="editBlog(${b.id})">✎</button><button class="ico-btn del" onclick="delBlog(${b.id})">🗑</button></td></tr>`).join(''):'<tr><td colspan="3" class="empty">Yazı yok.</td></tr>';}
+  tb.innerHTML=BLOGS.length?BLOGS.map(b=>`<tr><td><b>${b.title}</b>${b.src==='ai'?' <span class="atag" style="background:#e0f2fe;color:#0e7490">AI</span>':b.src==='prox'?' <span class="atag" style="background:#dbeafe;color:#1e40af">ProX</span>':''}${b.body?'':' <span class="tsub">(özet)</span>'}</td><td>${b.cat}</td><td class="ta"><button class="ico-btn" onclick="editBlog(${b.id})">✎</button><button class="ico-btn del" onclick="delBlog(${b.id})">🗑</button></td></tr>`).join(''):'<tr><td colspan="3" class="empty">Yazı yok.</td></tr>';}
 
 /* ---------- REFERANS ---------- */
 function renderRefGrid(){const g=document.getElementById('refGrid');if(!g)return;
@@ -3373,6 +3609,118 @@ function renderRefGrid(){const g=document.getElementById('refGrid');if(!g)return
   g.innerHTML=REFS.map(r=>{const ini=r.name.split(' ').map(x=>x[0]).slice(0,2).join('');
     const sub=[r.prop,_refMon(r.date)].filter(Boolean).join(' · ');
     return `<div class="tst"><div class="stars">★★★★★</div><p>"${r.text}"</p><div class="who"><div class="av">${ini}</div><div><div class="nm">${r.name}</div><div class="rl">${r.meta}</div>${sub?`<div class="rl2" style="color:var(--muted);font-size:12px;margin-top:2px">${sub}</div>`:''}</div></div></div>`;}).join('');}
+
+/* ── KAPANAN İŞLEMLER (Satılan / Kiralanan Arşivi) ── track-record sosyal kanıtı */
+const _ARS_MON={'01':'Ocak','02':'Şubat','03':'Mart','04':'Nisan','05':'Mayıs','06':'Haziran','07':'Temmuz','08':'Ağustos','09':'Eylül','10':'Ekim','11':'Kasım','12':'Aralık'};
+function _arsMon(d){if(!d)return '';const p=(''+d).split('-');return p[1]?((_ARS_MON[p[1]]||p[1])+' '+p[0]):(''+d);}
+let _arsFilt='all';
+let _arsivProx=null;
+/* Kapanan İşlemler kaynağı — İL-FARKINDA + her zaman 12 kart (kalıcı localStorage donması bypass):
+   • ProX gerçek kapanan-işlem ucu gelirse (_arsivProx) o kullanılır.
+   • İzmir/varsayılan (regionalize OZEL yok) → küratörlü DEF_ARSIV (12, kat dahil).
+   • Farklı il tenant (white-label; OZEL _gen ile regionalize) → OZEL'den 12 KARIŞIK kapanan işlem türet
+     → arşiv tenant şehriyle uyumlu (İstanbul tenant → İstanbul kapanan işlemler). */
+function _arsHash(s){var h=0,x=String(s||'');for(var i=0;i<x.length;i++){h=(h*31+x.charCodeAt(i))|0;}return Math.abs(h);}
+function deriveArsiv(){
+  if(_arsivProx&&_arsivProx.length)return _arsivProx.slice(0,12);
+  var prov=(typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name)||'İzmir';
+  var oz=(typeof OZEL!=='undefined'&&Array.isArray(OZEL))?OZEL:[];
+  var regional=oz.some(function(o){return o&&o._gen;});
+  if(prov==='İzmir'){ return (typeof DEF_ARSIV!=='undefined'?DEF_ARSIV.slice(0,12):[]); }
+  /* İzmir dışı + yeterli bölgesel veri yoksa İzmir demo arşivini MİRAS BIRAKMA:
+     boş dön → renderArsiv bölümü gizler (yanlış-il kartından iyidir). */
+  if(!regional||oz.length<8) return [];
+  var MON=['2026-06','2026-05','2026-06','2026-04','2026-05','2026-05','2026-03','2026-02','2026-01','2025-12','2026-06','2026-04'];
+  var n=Math.min(12,oz.length),picks=[],seen={};
+  for(var i=0;i<n;i++){var idx=Math.floor(i*oz.length/n);while(seen[idx])idx=(idx+1)%oz.length;seen[idx]=1;picks.push(oz[idx]);}
+  return picks.map(function(o,i){
+    var h=_arsHash((o.id||'')+'|'+(o.mah||'')+i);
+    var gun=9+(h%62), ratio=0.97+((h>>3)%8)/100;
+    var satis=Math.round(+o.fiyat||0)||1000000, liste=Math.round(satis/ratio/1000)*1000;
+    return {id:'ard'+i,op:o.op||'Satılık',tip:o.tip||'Daire',ilce:String(o.ilce||'').replace(/\s*\([^)]*\)\s*$/,'').trim(),mah:o.mah||'',m2:+o.m2||0,oda:o.oda||'-',kat:o.kat||'',liste:liste,satis:satis,gun:gun,tarih:MON[i%MON.length]};
+  });
+}
+function arsivFilter(op){_arsFilt=op;const box=document.getElementById('arsivChips');if(box)box.querySelectorAll('.al-chip').forEach(c=>c.classList.toggle('on',c.dataset.f===op));renderArsiv();}
+function renderArsiv(){
+  const g=document.getElementById('arsivGrid');if(!g)return;
+  const all=deriveArsiv();
+  const sec=document.getElementById('arsiv');if(sec)sec.hidden=all.length===0;
+  if(!all.length){g.innerHTML='';return;}
+  const M=(typeof gmMoney==='function')?gmMoney:(x=>x);
+  const esc=(typeof _be==='function')?_be:(x=>x);
+  const n=all.length;
+  const avgGun=Math.round(all.reduce((s,x)=>s+(+x.gun||0),0)/n);
+  const avgRatio=Math.round(all.reduce((s,x)=>s+(x.liste?(x.satis/x.liste*100):100),0)/n);
+  const satN=all.filter(x=>x.op==='Satılık').length, kirN=n-satN;
+  const st=document.getElementById('arsivStats');
+  if(st)st.innerHTML=[['🔑',n,'kapanan işlem'],['⏱️',avgGun+' gün','ort. portföyde kalış'],['🎯','%'+avgRatio,'liste fiyatına yakınlık'],['🤝',satN+' / '+kirN,'satılan / kiralanan']]
+    .map(s=>`<div class="ars-stat"><span class="ars-si" aria-hidden="true">${s[0]}</span><b class="num">${s[1]}</b><span>${s[2]}</span></div>`).join('');
+  const list=_arsFilt==='all'?all:all.filter(x=>x.op===_arsFilt);
+  g.innerHTML=list.map(x=>{
+    const kira=x.op==='Kiralık';
+    const stamp=kira?'KİRALANDI':'SATILDI';
+    const ratio=x.liste?Math.round(x.satis/x.liste*100):100;
+    const price=M(x.satis)+(kira?'<small>/ay</small>':'');
+    return `<article class="ars-card ${kira?'kir':'sat'}">
+      <div class="ars-stamp"><span>${stamp}</span></div>
+      <div class="ars-b">
+        <div class="ars-t">${esc(x.tip)} · ${esc(x.mah)}</div>
+        <div class="ars-meta">${esc(x.ilce)} · ${(+x.m2||0)} m²${x.oda&&x.oda!=='-'?' · '+esc(x.oda):''}${x.kat&&x.kat!=='-'?' · Kat '+esc(x.kat):''}</div>
+        <div class="ars-p num">${price}</div>
+        <div class="ars-tags">
+          <span class="ars-tag">⏱️ ${(+x.gun||0)} günde</span>
+          <span class="ars-tag ${ratio>=100?'up':''}">🎯 liste %${ratio}</span>
+          <span class="ars-tag mon">${_arsMon(x.tarih)}</span>
+        </div>
+      </div>
+    </article>`;}).join('');
+}
+/* GERÇEK veri ProX'ten: kapanan işlemler. Başarısızsa demo/fallback korunur. */
+async function proxLoadArsiv(){ try{
+  var r = await proxApi('/api/v1/tenant/closed-deals?limit=24');
+  if(r && !r.fallback && Array.isArray(r.data) && r.data.length){
+    _arsivProx = r.data.map(function(d,i){ return {
+      id:'px'+(d.id||i), op:(d.op||d.durum||'Satılık'), tip:(d.tip||d.kategori||'Konut'),
+      ilce:(d.ilce||''), mah:(d.mah||d.mahalle||''), m2:(+d.m2||0), oda:(d.oda||'-'),
+      liste:(+d.liste||+d.listeFiyat||+d.satis||0), satis:(+d.satis||+d.satisFiyat||+d.fiyat||0),
+      gun:(+d.gun||+d.gunSayisi||0), tarih:(d.tarih||d.ay||'') }; });
+    renderArsiv();
+  }
+}catch(e){} }
+
+/* ── HARİTADAN KEŞFET (ana sayfa önizleme) ── GERÇEK harita (Leaflet, shared/harita.js)
+   İlan + 🔒 Özel Portföy fiyat-baloncuğu (₺); konum ilçe/mahalle-merkez yaklaşık (geocode yok).
+   Tam sayfa: harita.html. */
+function renderHaritaMap(){
+  try{
+    var host=document.getElementById('hmapReal');if(!host)return;
+    if(!(window.GMHarita&&window.L)){host.innerHTML='<div class="gm-map-fb">Harita yüklenemedi — internet bağlantısını kontrol edin. <a href="harita.html">Tam sayfada dene →</a></div>';return;}
+    GMHarita.build({ mapEl:'hmapReal',
+      data:{ ilanlar:(typeof ILANLAR!=='undefined'?ILANLAR:[]), ozel:(typeof OZEL!=='undefined'?OZEL:[]) },
+      province:(typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name)||'İzmir',
+      full:false });
+  }catch(e){}
+}
+/* İLETİŞİM — GERÇEK ofis haritası (Leaflet); ofis Alsancak/Konak/İzmir. */
+function renderIletMap(){
+  try{
+    var el=document.getElementById('iletMap');if(!el)return;
+    if(!window.L){el.innerHTML='<div class="gm-map-fb">Harita yüklenemedi — internet bağlantısını kontrol edin.</div>';return;}
+    if(el._m){try{el._m.remove();}catch(e){}el._m=null;}
+    var ll=[38.4378,27.1440]; /* varsayılan: Alsancak (İzmir) */
+    try{ if(typeof FIRMA!=='undefined'&&FIRMA&&isFinite(+FIRMA.lat)&&isFinite(+FIRMA.lng)&&+FIRMA.lat&&+FIRMA.lng)ll=[+FIRMA.lat,+FIRMA.lng]; }catch(e){}
+    var map=window.L.map(el,{center:ll,zoom:15,scrollWheelZoom:false,zoomControl:true,attributionControl:true});
+    el._m=map;
+    window.L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}'+((window.L.Browser&&window.L.Browser.retina)?'@2x':'')+'.png',{maxZoom:20,subdomains:'abcd',attribution:'© OpenStreetMap · © CARTO'}).addTo(map);
+    var nm=(typeof FIRMA!=='undefined'&&FIRMA&&FIRMA.name)||'Meridyen Gayrimenkul';
+    var dir='https://www.google.com/maps/dir/?api=1&destination='+ll[0].toFixed(6)+'%2C'+ll[1].toFixed(6);
+    var mk=window.L.marker(ll,{icon:window.L.divIcon({className:'gm-mk gm-mk-sat',html:'<span class="gm-mk-b">📍 Ofis</span>',iconSize:null,iconAnchor:[0,0]})}).addTo(map);
+    mk.bindPopup('<div class="gm-pop"><span class="gm-pop-tag sat">MERKEZ OFİS</span><b>'+_be(nm)+'</b><div class="gm-pop-m">'+_be((typeof FIRMA!=='undefined'&&FIRMA&&FIRMA.adres)||'Alsancak, Konak / İzmir')+'</div><div class="gm-pop-act"><a class="gm-pop-b" href="'+dir+'" target="_blank" rel="noopener noreferrer">🧭 Yol tarifi →</a></div></div>',{className:'gm-pop-wrap',maxWidth:240});
+    function fix(){try{map.invalidateSize();map.setView(ll,15);}catch(e){}}
+    setTimeout(fix,220);
+    if(window.ResizeObserver){var lw=0,rt=null;var ro=new window.ResizeObserver(function(){var w=el.clientWidth;if(w>40&&Math.abs(w-lw)>8){lw=w;clearTimeout(rt);rt=setTimeout(fix,90);}});try{ro.observe(el);}catch(e){}}
+  }catch(e){}
+}
 let editingRef=null;
 function newRef(){editingRef=null;['rf_name','rf_meta','rf_text'].forEach(i=>document.getElementById(i).value='');document.getElementById('refEditCard').style.display='block';}
 function editRef(id){const r=REFS.find(x=>x.id===id);if(!r)return;editingRef=id;
@@ -3679,7 +4027,7 @@ function saveSeo(){const g=id=>document.getElementById(id);
   saveAll();toast('✓ SEO ayarları kaydedildi ve sayfaya uygulandı.');}
 function previewArtifact(type){const pre=document.getElementById('seoPreview');pre.style.display='block';
   if(type==='schema'){pre.textContent=JSON.stringify({"@context":"https://schema.org","@type":"RealEstateAgent",name:FIRMA.name,telephone:FIRMA.tel,email:FIRMA.mail,address:{"@type":"PostalAddress",streetAddress:FIRMA.adres,addressLocality:PROX.region,addressCountry:"TR"},areaServed:PROX.region,knowsAbout:["Gayrimenkul Değerleme","Emlak Endeksi","Yatırım Danışmanlığı"],url:"https://meridyengm.com"},null,2);}
-  else if(type==='llms'){pre.textContent=`# ${FIRMA.name}\n\n> ${SEO.desc}\n\n## Hizmetler\n- Satılık & kiralık portföy (veri destekli)\n- Ücretsiz online değerleme\n- Mahalle bazlı fiyat endeksi & yatırım skoru\n- Fay/deprem risk analizi\n\n## Veri Ortağı\nTürkiye geneli endeks altyapısı · 81 il · 973 ilçe · 50.000+ mahalle ve köy endeksi\n\n## İletişim\n${FIRMA.tel} · ${FIRMA.mail}`;}
+  else if(type==='llms'){pre.textContent=`# ${FIRMA.name}\n\n> ${SEO.desc}\n\n## Hizmetler\n- Satılık & kiralık portföy (veri destekli)\n- Ücretsiz emlak ekspertizi (online ön analiz)\n- Mahalle bazlı fiyat endeksi & yatırım skoru\n- Fay/deprem risk analizi\n\n## Veri Ortağı\nTürkiye geneli endeks altyapısı · 81 il · 973 ilçe · 50.000+ mahalle ve köy endeksi\n\n## İletişim\n${FIRMA.tel} · ${FIRMA.mail}`;}
   else{const slugs=Object.keys(BAZ).map(k=>`  <url><loc>https://meridyengm.com/bolge/${k.toLowerCase().replace(/ı/g,'i').replace(/ş/g,'s').replace(/ç/g,'c').replace(/ö/g,'o').replace(/ü/g,'u').replace(/ğ/g,'g')}</loc></url>`).join('\n');
     pre.textContent=`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>https://meridyengm.com/</loc></url>\n  <url><loc>https://meridyengm.com/ilanlar</loc></url>\n  <url><loc>https://meridyengm.com/danismanlar</loc></url>\n${SEO.prog?slugs:''}\n</urlset>`;}
 }
@@ -4208,38 +4556,41 @@ function ozToggleDetail(btn){const c=btn.closest('.ozcard');if(c)c.classList.tog
 
 /* — geliştirilmiş kart — */
 function ozCardHTML(o){
-  const opc=o.op==='Satılık'?'sat':'kir';
-  const oda=(o.oda&&o.oda!=='-')?' · '+_le(o.oda):'';
-  const fav=ozIsFav(o.id),dog=ozDog(o);
+  /* MODERN kart (ana sayfa Özel Portföy tasarımı) — ifşasız bilgi paneli + Satılık/Kiralık rozeti */
+  const opCls=o.op==='Kiralık'?'kir':(o.op==='Günlük'?'gun':'sat');
+  const tipOda=_le(o.tip)+((o.oda&&o.oda!=='-')?' · '+_le(o.oda):'');
   const kira=o.op==='Kiralık';
-  const price='<div class="ozprice"><span class="from">başlangıç</span><b>'+fmt(o.fiyat)+' ₺</b>'+(kira?'<small>/ay</small>':'')+'<span class="den">\'den</span></div>';
+  const fav=ozIsFav(o.id),dog=ozDog(o);
   const avg=o.ort||(function(){var st=kira?500:1000;return Math.max(o.fiyat+st,Math.round(o.fiyat*1.18/st)*st);})();
-  const ortHTML='<div class="ozort">'+ozIco(OZI.info,12)+' Bölge ortalaması <b>'+fmt(avg)+' ₺'+(kira?'/ay':'')+'</b><span class="kat">'+_le(o.op)+' '+_le(o.tip)+'</span></div>';
-  const sahil=(o.sahil||isSahil(o.il||(typeof PROVINCE!=='undefined'&&PROVINCE&&PROVINCE.name)||'İzmir',o.ilce))?ozSahilBadge():'';
-  const facts=ozFacts(o);
-  const factsHTML='<div class="ozfacts">'+facts.map(f=>'<div><span>'+_le(f.k)+'</span><b>'+_le(f.v)+'</b></div>').join('')+(o.not?'<p class="ozfnote">“'+_le(o.not)+'”</p>':'')+'</div>';
-  const verified=dog?'<span class="ozver" title="e-Devlet yetkilendirmesi tamamlandı">'+ozIco(OZI.shield,12)+' Doğrulanmış</span>':'<span class="ozver pend" title="Yetkilendirme sürecinde">Yetki sürecinde</span>';
-  return '<div class="ozcard" data-id="'+o.id+'">'
-    +'<div class="ozmask '+ozCatClass(o.tip)+'">'+ozScene(o.tip)
-    +'<span class="ozbadge '+opc+'">'+_le(o.op)+'</span>'
-    +'<span class="ozcat">'+_le(o.tip)+'</span>'
-    +'<span class="ozlock">'+ozIco(OZI.lock,12)+' Özel Portföy</span>'
-    +sahil
-    +'<div class="ozmeta"><span class="loc">'+ozIco(OZI.pin,13)+' '+_le(o.mah)+', '+_le(o.ilce)+'</span><span class="m2">'+o.m2+' m²'+oda+'</span></div>'
+  const verified=dog
+    ?'<span class="pcr-vf on" title="e-Devlet yetkilendirmesi tamamlandı">'+ozIco(OZI.shield,11)+' Doğrulanmış</span>'
+    :'<span class="pcr-vf" title="Yetkilendirme sürecinde">Yetki sürecinde</span>';
+  return '<article class="pcr-card oz ozcard" data-id="'+o.id+'">'
+    +'<div class="pcr-media" role="button" tabindex="0" aria-label="'+_le(o.op+' · '+tipOda+' · '+o.mah)+' — detay iste" onclick="ozLead(\''+o.id+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();ozLead(\''+o.id+'\')}">'
+      +'<span class="pcr-ph">'
+        +'<span class="pcr-ozinfo"><span class="pcr-oz-grid">'
+          +'<span class="pcr-oz-kv"><i>Mahalle</i><b>'+_le(o.mah)+'</b></span>'
+          +'<span class="pcr-oz-kv"><i>Kategori</i><b>'+_le(tipOda)+'</b></span>'
+          +'<span class="pcr-oz-kv"><i>m²</i><b>'+o.m2+'</b></span>'
+        +'</span></span>'
+        +'<span class="pcr-op '+opCls+'">'+_le(o.op)+'</span>'
+        +'<span class="pcr-tag oz">'+ozIco(OZI.lock,11)+' Özel Portföy</span>'
+      +'</span>'
     +'</div>'
-    +'<div class="ozbody">'
-    +'<div class="oztoprow"><div class="ozcadde">'+ozIco(OZI.road,15)+' '+_le(o.cadde)+' <span>civarı</span></div>'+verified+'</div>'
-    +price+ortHTML+ozValBadge(o)
-    +'<div class="ozdetail">'+factsHTML+'</div>'
-    +'<div class="oznote">'+ozIco(OZI.info,13)+' Bölge ortalama/başlangıç değeridir; belirli bir ilana ait değildir. Tam adres, kat ve bina danışmanla paylaşılır. <span class="ozrefn">Ref '+ozRefOf(o)+'</span></div>'
-    +'<div class="ozcta">'
-    +'<button class="btn btn-primary btn-sm" onclick="ozLead(\''+o.id+'\')">Detay İste</button>'
-    +'<button class="ozdt" onclick="ozToggleDetail(this)" title="Özellikleri göster"><span>Özellikler</span>'+ozIco(OZI.chev,15)+'</button>'
-    +'<button class="ozfav'+(fav?' on':'')+'" onclick="ozToggleFav(\''+o.id+'\',this)" title="Favori" aria-label="Favori">'+ozIco(OZI.heart,16)+'</button>'
-    +'<a class="ozwa" href="'+ozWaLink(o)+'" target="_blank" rel="noopener noreferrer" title="WhatsApp\'tan sor">'+ozIco(OZI.wa,16)+'</a>'
-    +'</div>'
-    +'<label class="ozcmp"><input type="checkbox" data-id="'+o.id+'" onclick="ozCmpToggle(\''+o.id+'\',this)"> Karşılaştırmaya ekle</label>'
-    +'</div></div>';
+    +'<div class="pcr-b">'
+      +'<div class="pcr-l"><b>'+_le(o.op)+'</b> · '+ozIco(OZI.pin,12)+' '+_le(o.mah)+', '+_le(o.ilce)+'</div>'
+      +'<div class="pcr-t">'+_le(o.cadde)+' civarı · ifşasız</div>'
+      +'<div class="pcr-meta"><span>'+o.m2+' m²</span>'+((o.oda&&o.oda!=='-')?'<span>'+_le(o.oda)+'</span>':'')+verified+'</div>'
+      +'<div class="pcr-p num">'+gmMoney(o.fiyat)+(kira?'<small>/ay</small>':'')+' <small>başlangıç</small></div>'
+      +'<div class="pcr-ozort">'+ozIco(OZI.info,11)+' Bölge ort. <b>'+fmt(avg)+' ₺'+(kira?'/ay':'')+'</b> · Ref '+ozRefOf(o)+'</div>'
+      +'<div class="pcr-act">'
+        +'<button type="button" class="pcr-inc" onclick="ozLead(\''+o.id+'\')">Detay İste <span aria-hidden="true">→</span></button>'
+        +'<div class="pcr-act2">'
+          +'<a class="pcr-wa" href="'+ozWaLink(o)+'" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" aria-label="WhatsApp\'tan sor">'+ozIco(OZI.wa,15)+'<span>WhatsApp</span></a>'
+          +'<button type="button" class="pcr-tel pcr-fav'+(fav?' on':'')+'" onclick="event.stopPropagation();ozToggleFav(\''+o.id+'\',this)" aria-label="Favori">'+ozIco(OZI.heart,15)+'<span>Favori</span></button>'
+        +'</div>'
+      +'</div>'
+    +'</div></article>';
 }
 
 /* — filtre seçeneklerini doldur — */
@@ -4451,7 +4802,8 @@ const SITE_NAV=`
   <a href="nedenbiz.html" onclick="closeAllOverlays()">Neden <span class="nb-x">?</span> Biz</a>
   <a href="portfoy.html" onclick="closeAllOverlays()">Portföy</a>
   <a href="ilanlar.html">İlanlar</a>
-  <a href="index.html#asistan" class="nav-asistan" onclick="if(typeof openProxAsistanPage==='function'){openProxAsistanPage();return false}"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>`;
+  <a href="harita.html">Harita</a>
+  <a href="prox-asistan.html" class="nav-asistan" onclick="if(typeof openProxAsistanPage==='function'){openProxAsistanPage();return false}"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>`;
 const SITE_FOOTER=`<div class="wrap">
   <div class="fcols">
     <div>
@@ -4463,23 +4815,26 @@ const SITE_FOOTER=`<div class="wrap">
       <li><a href="hakkimizda.html">Hakkımızda</a></li>
       <li><a href="index.html#danismanlar">Danışmanlar</a></li>
       <li><a href="hizmetlerimiz.html">Hizmetler</a></li>
+      <li><a href="nedenbiz.html">Neden Biz</a></li>
       <li><a href="index.html#referans">Referanslar</a></li>
+      <li><a href="index.html#arsiv">Kapanan İşlemler</a></li>
       <li><a href="blog/" onclick="goView('blog');return false">Blog</a></li>
       <li><a href="iletisim.html">İletişim</a></li>
     </ul></div>
     <div><h4>Hizmetler</h4><ul>
-      <li><a href="ilanlar.html"><b>Tüm İlanlar</b></a></li>
-      <li><a href="ilanlar.html?op=Satılık">Satılık İlanlar</a></li>
-      <li><a href="ilanlar.html?op=Kiralık">Kiralık İlanlar</a></li>
+      <li><a href="ilanlar.html"><b>İlanlar</b></a></li>
+      <li><a href="harita.html">Harita</a></li>
       <li><a href="ozel/" onclick="goView('ozel');return false">Özel Portföy</a></li>
       <li><a href="sat/" onclick="goView('sat');return false">Sat ve Kirala</a></li>
-      <li><a href="index.html#degerleme">Ücretsiz Değerleme</a></li>
+      <li><a href="index.html#degerleme">Emlak Ekspertizi</a></li>
       <li><a href="analiz/" onclick="goView('analiz');return false">Analiz Merkezi</a></li>
       <li><a href="index.html#alarm">Fiyat Alarmı</a></li>
+      <li><a href="prox-asistan.html">ProX Asistan</a></li>
     </ul></div>
     <div><h4>Yasal & Araçlar</h4><ul>
       <li><a href="kvkk.html">KVKK Aydınlatma Metni</a></li>
       <li><a href="cerez.html">Çerez Politikası</a></li>
+      <li><a href="gizlilik.html">Gizlilik Politikası</a></li>
       <li><a href="kullanim-kosullari.html">Mesafeli Hizmet &amp; Kullanım</a></li>
       <li><a href="https://parselsorgu.tkgm.gov.tr" target="_blank" rel="noopener noreferrer">TKGM Ada/Parsel Sorgu ↗</a></li>
       <li><a href="#" onclick="closeAllOverlays();openSaasPortal();return false">Müşteri Portalı / Giriş</a></li><li><a href="#" onclick="closeAllOverlays();openAdmin();return false">Yönetim Paneli</a></li>
@@ -4695,7 +5050,7 @@ function pwLeadSubmit(){const g=id=>{const e=document.getElementById(id);return 
   const prop=it?(it.tip+' · '+it.mah+', '+it.ilce+(it.ozel?' (Özel Portföy)':' (İlan)')):'-';
   const crit=pwCritSummary();
   const line='[Pusula Lead] '+ad+' - '+tel+' - Kriterler: '+crit+' - İlgilenilen Mülk: '+prop;
-  console.log(line);
+  window.__PROX_DEBUG&&console.log(line);
   if(typeof pushLead==='function')pushLead({ad,tel,konu:'Mülk Pusulası',src:'Mülk Pusulası',msg:(not?not+' · ':'')+'Kriterler: '+crit+' · Mülk: '+prop});
   if(typeof proxSubmitLead==='function')proxSubmitLead({sourcePage:'mulk-pusulasi',formType:'pwLead',name:ad,phone:tel,email:'',location:(it?(it.mah+', '+it.ilce):''),message:'Kriterler: '+crit+' · Mülk: '+prop,requestedService:'Mülk Pusulası'});
   pwBody('<div class="pw-intro"><div class="big" style="background:rgba(52,168,83,.15);color:var(--green-700)"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><h3>Talebiniz alındı 🎉</h3><p>Danışmanımız <b>'+ad+'</b>, en kısa sürede sizi arayacak. Seçtiğiniz mülk ve tüm kriterleriniz ekibimize iletildi.</p></div>');
@@ -4779,7 +5134,7 @@ async function fetchSaaSData(){
   const all=_saasNormalize(), properties=all.filter(p=>_saasInScope(p.ilce)), regions={};
   if(typeof PROVINCE!=='undefined') Object.keys(PROVINCE.districts).forEach(k=>{if(_saasInScope(k))regions[k]=PROVINCE.districts[k];});
   const sc=SAAS_CONFIG.allowedRegions;
-  console.log('[SaaS API] '+SAAS_CONFIG.tenantName+' · yetki: '+(sc.ilceler&&sc.ilceler.length?sc.ilceler.join(', '):'Tüm '+sc.il)+' → '+properties.length+' mülk · '+Object.keys(regions).length+' bölge');
+  window.__PROX_DEBUG&&console.log('[SaaS API] '+SAAS_CONFIG.tenantName+' · yetki: '+(sc.ilceler&&sc.ilceler.length?sc.ilceler.join(', '):'Tüm '+sc.il)+' → '+properties.length+' mülk · '+Object.keys(regions).length+' bölge');
   return {tenant:{id:SAAS_CONFIG.tenantId,name:SAAS_CONFIG.tenantName,type:SAAS_CONFIG.tenantType,theme:SAAS_CONFIG.themeColor},allowedRegions:sc,properties,regions,count:properties.length};
 }
 /* yetki sınırını canlı siteye uygula — yalnızca izinli ilçeler basılır */
@@ -4840,7 +5195,7 @@ function thValuationSubmit(){const g=id=>{const e=document.getElementById(id);re
   if(typeof pushLead==='function')pushLead({ad,tel,konu:'Değerleme Talebi: '+tip+' ('+amac+')',src:'Değerleme Talebi',msg:ilce});
   if(typeof proxSubmitLead==='function')proxSubmitLead({sourcePage:'degerleme-talebi',formType:'thValuation',name:ad,phone:tel,email:'',location:ilce||'',message:tip+' · '+amac,requestedService:'Değerleme Talebi'});
   ['tv_ad','tv_tel','tv_ilce'].forEach(i=>{const e=document.getElementById(i);if(e)e.value='';});
-  toast('✅ Değerleme talebiniz alındı. Lisanslı eksperimiz sizi arayacak.');
+  toast('✅ Emlak Ekspertizi talebiniz alındı. Uzman ekibimiz sizi arayacak.');
 }
 /* merkez panel: tenant tipini canlı değiştir (reload yok) */
 window.saasSetTenantType=function(t){SAAS_CONFIG.tenantType=t;applyTenantType();};
@@ -4878,7 +5233,7 @@ async function proxAiQuery(userMessage,contextType){
   const base=(SAAS_CONFIG.proxAiPrompts&&(SAAS_CONFIG.proxAiPrompts[ctx]||SAAS_CONFIG.proxAiPrompts.default))||'';
   const custom=(typeof saasResolve==='function'?saasResolve('customPrompt'):'')||'';
   const prompt=base+(custom?' '+custom:'');
-  console.log('[İçerik Asistanı →] '+SAAS_CONFIG.tenantName+' · ctx='+ctx+' · prompt="'+prompt.slice(0,46)+'…" · soru: '+userMessage);
+  window.__PROX_DEBUG&&console.log('[İçerik Asistanı →] '+SAAS_CONFIG.tenantName+' · ctx='+ctx+' · prompt="'+prompt.slice(0,46)+'…" · soru: '+userMessage);
   let answer=null;
   try{                                                   // API-first İçerik Asistanı; fallback = local _proxSimulate
     const r=await aiChat({persona:'office',prompt:aiGuard(prompt),context:ctx,message:userMessage});
@@ -4888,7 +5243,7 @@ async function proxAiQuery(userMessage,contextType){
     await new Promise(r=>setTimeout(r,300));               // emlakekspertizi.com ProX API gecikmesi
     answer=_proxSimulate(userMessage,ctx);
   }
-  console.log('[İçerik Asistanı ←] '+answer);
+  window.__PROX_DEBUG&&console.log('[İçerik Asistanı ←] '+answer);
   const out=_proxOut(); if(out) out.innerHTML='<div class="prox-q">'+userMessage+'</div><div class="prox-a">'+answer+'</div>';
   return answer;
 }
@@ -4902,7 +5257,7 @@ async function saasAutoThemeFromLogo(logoUrl){
   SAAS_CONFIG.tenantSettings.themeColor=theme;           // tenant override (merkez izniyle)
   initSaaSTheme();
   const pal=SAAS_THEMES[theme]||{};
-  console.log('[Logo Adaptasyon] '+logoUrl+' → tema: '+theme+' · --accent='+pal.accent);
+  window.__PROX_DEBUG&&console.log('[Logo Adaptasyon] '+logoUrl+' → tema: '+theme+' · --accent='+pal.accent);
   return theme;
 }
 /* 3) Profesyonel 38-Kategori PDF Raporu Altyapısı */
@@ -4916,7 +5271,7 @@ async function saasGenerateReportPDF(propertyId){
   if(typeof requireFeature==='function'&&!requireFeature('canUsePdfReports'))return; // paket kontrolü
   try{                                                   // API-first PDF üretimi; başarısızsa local simülasyon
     const pp=_saasFindProperty(propertyId),pilce=pp?pp.ilce:'-';
-    const title='Profesyonel Değerleme Raporu · '+(pp?(pp.tip+' · '+pp.mah+', '+pilce):propertyId);
+    const title='Profesyonel Emlak Ekspertizi Raporu · '+(pp?(pp.tip+' · '+pp.mah+', '+pilce):propertyId);
     const html='<h1>'+title+'</h1><p>38 kategorilik analiz · emlakekspertizi.com</p><ul>'
       +SAAS_38_CATEGORIES.map(c=>'<li>'+c+'</li>').join('')+'</ul>';
     const r=await proxApi('/api/v1/tenant/pdf/generate',{method:'POST',body:{
@@ -4938,10 +5293,10 @@ async function saasGenerateReportPDF(propertyId){
   const p=_saasFindProperty(propertyId),ilce=p?p.ilce:'-';
   const b=(typeof BAZ!=='undefined'&&BAZ[ilce])?BAZ[ilce]:null;
   const line='Profesyonel PDF Raporu Oluşturuldu: '+propertyId+' - 38 Kategori Analizi Dahil';
-  console.log(line);
-  console.log('  · Bölge: '+ilce+(b?(' · m² endeks: '+fmt(b.m2)+' ₺ · 5y: %'+b.chg+' · skor: '+b.score+'/100 · risk: '+b.risk):' · (bölge verisi yok)'));
+  window.__PROX_DEBUG&&console.log(line);
+  window.__PROX_DEBUG&&console.log('  · Bölge: '+ilce+(b?(' · m² endeks: '+fmt(b.m2)+' ₺ · 5y: %'+b.chg+' · skor: '+b.score+'/100 · risk: '+b.risk):' · (bölge verisi yok)'));
   const out=_proxOut();
-  if(out) out.innerHTML='<div class="prox-pdf"><div class="prox-pdf-h"><b>📄 Profesyonel Değerleme Raporu</b><span>'+propertyId+' · '+(p?p.tip+' · '+p.mah+', '+ilce:ilce)+'</span></div>'
+  if(out) out.innerHTML='<div class="prox-pdf"><div class="prox-pdf-h"><b>📄 Profesyonel Emlak Ekspertizi Raporu</b><span>'+propertyId+' · '+(p?p.tip+' · '+p.mah+', '+ilce:ilce)+'</span></div>'
     +(b?'<div class="prox-pdf-kpi"><div><b>'+fmt(b.m2)+' ₺</b><span>m² endeks</span></div><div><b>%'+b.chg+'</b><span>5y değişim</span></div><div><b>'+b.score+'/100</b><span>yatırım skoru</span></div></div>':'')
     +'<div class="prox-pdf-cats"><b>38 Kategori Analizi</b><div class="cats">'+SAAS_38_CATEGORIES.map(c=>'<i>'+c+'</i>').join('')+'</div></div>'
     +'<div class="prox-pdf-ft">emlakekspertizi.com · 2005’ten bugüne 38 kategorilik veri gücü</div></div>';
@@ -4978,7 +5333,7 @@ function applySaaSSettings(){
     if(ga&&!document.getElementById('saas-gtag')){
       const s=document.createElement('script');s.id='saas-gtag';s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+ga;document.head.appendChild(s);
       const s2=document.createElement('script');s2.id='saas-gtag-init';s2.text='window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","'+ga+'");';document.head.appendChild(s2);
-      console.log('[SaaS] Google Analytics enjekte edildi: '+ga);
+      window.__PROX_DEBUG&&console.log('[SaaS] Google Analytics enjekte edildi: '+ga);
     }
     /* contactPhone → tüm tel: linkleri */
     const phone=saasResolve('contactPhone'); if(phone)document.querySelectorAll('a[href^="tel:"]').forEach(a=>a.href='tel:'+(''+phone).replace(/[^0-9+]/g,''));
@@ -5115,3 +5470,6 @@ function _saasPortalPanelHTML(){
 window._saasPortalHost=_saasPortalHost;window.saasPortalRenderNav=saasPortalRenderNav;
 /* F) Load'da navbar durumunu uygula. */
 window.addEventListener('load',function(){try{if(typeof saasPortalRenderNav==='function')saasPortalRenderNav();}catch(e){}});
+
+/* Döviz bandı görünürlüğü — beyaz-etiket bayrağı (shared/doviz.js init'ten önce, parse zamanında) */
+try{window.GM_DOVIZ_OFF=!!(typeof FIRMA!=='undefined'&&FIRMA&&FIRMA.dovizOff);}catch(e){}
