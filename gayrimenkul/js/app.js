@@ -4846,7 +4846,7 @@ const SITE_FOOTER=`<div class="wrap">
       <li><a href="nedenbiz.html">Neden Biz</a></li>
       <li><a href="referanslar/" onclick="goView('referans');return false">Referanslar</a></li>
       <li><a href="index.html#arsiv">Kapanan İşlemler</a></li>
-      <li><a href="blog/" onclick="goView('blog');return false">Blog</a></li>
+      <li><a href="blog.html">Blog</a></li>
       <li><a href="iletisim.html">İletişim</a></li>
     </ul></div>
     <div><h4>Hizmetler</h4><ul>
@@ -4868,6 +4868,7 @@ const SITE_FOOTER=`<div class="wrap">
       <li><a href="#" onclick="closeAllOverlays();openSaasPortal();return false">Müşteri Portalı / Giriş</a></li><li><a href="index.html#giris" onclick="closeAllOverlays()">Üye Girişi / Hesabım</a></li><li><a href="#" onclick="closeAllOverlays();openAdmin();return false">Yönetim Paneli</a></li>
     </ul></div>
   </div>
+  <div class="fbolge"><b>Bölge Rehberleri:</b> <a href="karsiyaka.html">Karşıyaka</a> · <a href="bornova.html">Bornova</a> · <a href="konak.html">Konak</a> · <a href="bayrakli.html">Bayraklı</a> · <a href="cesme.html">Çeşme</a> · <a href="urla.html">Urla</a></div>
   <div class="fbot">
     <span>© 2026 Meridyen Gayrimenkul · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span> · <span style="opacity:.85">🔗 emlakekspertizi.com Veri Ortağı</span></span><a class="gm-prox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="gm-prox-lead">Powered by</span><span class="gm-prox-mark"><span class="gm-prox-pro">Pro</span><span class="gm-prox-x">X</span></span></a>
     

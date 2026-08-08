@@ -16,3 +16,10 @@ Not: Kurgusal tanıtım demosudur — ilan, fiyat ve istatistikler temsilîdir.
 WhatsApp ve telefonla randevu; ücretsiz değer analizi.
 - [Harita](harita.html): Tüm portföyün gerçek konum haritası; uydu görünümü ve fiyat baloncukları.
 - [Emlak Ekspertizi](emlak-ekspertizi.html): Ücretsiz keşif + ücretsiz Karar Raporu — bölge m² endeksi, güven skoru; SPK lisanslı resmî değerleme yerine geçmez.
+- [Blog](blog.html): Piyasa notları ve lüks konut haberleri.
+- [Randevu](randevu.html): Ücretsiz ön görüşme ve değer analizi randevusu.
+- [Referanslar](referanslar.html): Müşteri görüşleri ve Google puanı.
+- [Süreç](surec.html): 6 aşamalı danışmanlık sürecim.
+- [Yatırım Rehberi](yatirim-rehberi.html): İstanbul lüks konut yatırım rehberi.
+- [Semt Rehberi](semtler.html): Boğaz hattı ve prestij semtleri; temsilî m² bantları.
+- [Gizlilik](gizlilik.html): Gizlilik politikası.

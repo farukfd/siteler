@@ -20,3 +20,13 @@ Not: Kurgusal tanıtım demosudur — ilan, fiyat, danışman ve istatistikler t
 ## Kurumsal & İletişim
 - [İletişim](iletisim.html): Ofis bilgileri, randevu talebi ve ücretsiz emlak ekspertizi analizi.
 WhatsApp ve telefonla randevu; ücretsiz emlak ekspertizi analizi talebi.
+
+## Bölge Rehberleri
+- [Karşıyaka](karsiyaka.html): Karşıyaka satılık & kiralık bölge rehberi; temsilî m² endeksi ve öne çıkan mahalleler.
+- [Bornova](bornova.html): Bornova satılık & kiralık bölge rehberi; temsilî m² endeksi ve öne çıkan mahalleler.
+- [Konak](konak.html): Konak satılık & kiralık bölge rehberi; temsilî m² endeksi ve öne çıkan mahalleler.
+- [Bayraklı](bayrakli.html): Bayraklı satılık & kiralık bölge rehberi; temsilî m² endeksi ve öne çıkan mahalleler.
+- [Çeşme](cesme.html): Çeşme satılık & kiralık bölge rehberi; temsilî m² endeksi ve öne çıkan mahalleler.
+- [Urla](urla.html): Urla satılık & kiralık bölge rehberi; temsilî m² endeksi ve öne çıkan mahalleler.
+- [SSS](sss.html): Alım-satım, kiralama, Emlak Ekspertizi ve Özel Portföy hakkında 18 soru.
+- [Blog](blog.html): Emlak haberleri ve piyasa notları arşivi.
