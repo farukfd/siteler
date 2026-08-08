@@ -503,9 +503,9 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
     </div>
     <div><h4>Kurumsal</h4><ul>
       <li><a href="hakkimizda.html" onclick="closeAllOverlays()">Hakkımızda</a></li>
-      <li><a href="index.html#danismanlar" onclick="closeAllOverlays()">Danışmanlar</a></li>
+      <li><a href="danismanlar/" onclick="if(typeof goView==='function'){closeAllOverlays();goView('danismanlar');return false}">Danışmanlar</a></li>
       <li><a href="hizmetlerimiz.html" onclick="closeAllOverlays()">Hizmetler</a></li><li><a href="nedenbiz.html" onclick="closeAllOverlays()">Neden Biz</a></li>
-      <li><a href="index.html#referans" onclick="closeAllOverlays()">Referanslar</a></li>
+      <li><a href="referanslar/" onclick="if(typeof goView==='function'){closeAllOverlays();goView('referans');return false}">Referanslar</a></li>
       <li><a href="index.html#arsiv" onclick="closeAllOverlays()">Kapanan İşlemler</a></li>
       <li><a href="index.html#blog" onclick="closeAllOverlays()">Blog</a></li>
       <li><a href="iletisim.html" onclick="closeAllOverlays()">İletişim</a></li>
@@ -515,9 +515,9 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
       <li><a href="harita.html">Harita</a></li>
       <li><a href="ozel/">Özel Portföy</a></li>
       <li><a href="sat/" onclick="closeAllOverlays();satOpen();return false">Sat ve Kirala</a></li>
-      <li><a href="index.html#degerleme" onclick="closeAllOverlays()">Emlak Ekspertizi</a></li>
+      <li><a href="emlak-ekspertizi/" onclick="if(typeof goView==='function'){closeAllOverlays();goView('degerleme');return false}">Emlak Ekspertizi</a></li>
       <li><a href="analiz/" onclick="closeAllOverlays();brOpen();return false">Analiz Merkezi</a></li>
-      <li><a href="index.html#alarm" onclick="closeAllOverlays()">Fiyat Alarmı</a></li><li><a href="prox-asistan.html">ProX Asistan</a></li>
+      <li><a href="fiyat-alarmi/" onclick="if(typeof goView==='function'){closeAllOverlays();goView('alarm');return false}">Fiyat Alarmı</a></li><li><a href="prox-asistan.html">ProX Asistan</a></li>
     </ul></div>
     <div><h4>Yasal & Araçlar</h4><ul>
       <li><a href="kvkk.html">KVKK Aydınlatma Metni</a></li>

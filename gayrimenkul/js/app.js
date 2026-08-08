@@ -4841,10 +4841,10 @@ const SITE_FOOTER=`<div class="wrap">
     </div>
     <div><h4>Kurumsal</h4><ul>
       <li><a href="hakkimizda.html">Hakkımızda</a></li>
-      <li><a href="index.html#danismanlar">Danışmanlar</a></li>
+      <li><a href="danismanlar/" onclick="goView('danismanlar');return false">Danışmanlar</a></li>
       <li><a href="hizmetlerimiz.html">Hizmetler</a></li>
       <li><a href="nedenbiz.html">Neden Biz</a></li>
-      <li><a href="index.html#referans">Referanslar</a></li>
+      <li><a href="referanslar/" onclick="goView('referans');return false">Referanslar</a></li>
       <li><a href="index.html#arsiv">Kapanan İşlemler</a></li>
       <li><a href="blog/" onclick="goView('blog');return false">Blog</a></li>
       <li><a href="iletisim.html">İletişim</a></li>
@@ -4854,9 +4854,9 @@ const SITE_FOOTER=`<div class="wrap">
       <li><a href="harita.html">Harita</a></li>
       <li><a href="ozel/" onclick="goView('ozel');return false">Özel Portföy</a></li>
       <li><a href="sat/" onclick="goView('sat');return false">Sat ve Kirala</a></li>
-      <li><a href="index.html#degerleme">Emlak Ekspertizi</a></li>
+      <li><a href="emlak-ekspertizi/" onclick="goView('degerleme');return false">Emlak Ekspertizi</a></li>
       <li><a href="analiz/" onclick="goView('analiz');return false">Analiz Merkezi</a></li>
-      <li><a href="index.html#alarm">Fiyat Alarmı</a></li>
+      <li><a href="fiyat-alarmi/" onclick="goView('alarm');return false">Fiyat Alarmı</a></li>
       <li><a href="prox-asistan.html">ProX Asistan</a></li>
     </ul></div>
     <div><h4>Yasal & Araçlar</h4><ul>
@@ -5501,3 +5501,25 @@ window.addEventListener('load',function(){try{if(typeof saasPortalRenderNav==='f
 
 /* Döviz bandı görünürlüğü — beyaz-etiket bayrağı (shared/doviz.js init'ten önce, parse zamanında) */
 try{window.GM_DOVIZ_OFF=!!(typeof FIRMA!=='undefined'&&FIRMA&&FIRMA.dovizOff);}catch(e){}
+
+/* ═══ CANLI GOOGLE PUANI — proxy ucu /api/v1/tenant/google-rating (6 saat önbellek);
+   uç yoksa temsilî değer + 'demo' rozeti (PROX-API-GEREKSINIM-NOTU.md). ═══ */
+async function gmGoogleRating(){
+  try{
+    var host=document.getElementById('gRateBadge'); if(!host)return;
+    var c=null; try{c=JSON.parse(localStorage.getItem('gm_grate')||'null');}catch(e){}
+    var d=(c&&(Date.now()-c.ts<21600000))?c.d:null;
+    if(!d){
+      try{var r=await proxApi('/api/v1/tenant/google-rating');
+        if(r&&!r.fallback&&r.rating)d={rating:+r.rating,count:+r.count||0,url:r.url||'',demo:false};}catch(e){}
+      if(!d)d={rating:4.9,count:127,url:'',demo:true};
+      try{localStorage.setItem('gm_grate',JSON.stringify({ts:Date.now(),d:d}));}catch(e){}
+    }
+    var href=d.url||((typeof FIRMA!=='undefined'&&FIRMA&&FIRMA.brandUrl)||'https://www.google.com/maps/search/'+encodeURIComponent((FIRMA&&FIRMA.name)||'Meridyen Gayrimenkul'));
+    host.innerHTML='<a class="grate" href="'+_be(href)+'" target="_blank" rel="noopener noreferrer" aria-label="Google puanımız">'
+      +'<span class="grate-g" aria-hidden="true">G</span><span class="grate-stars" aria-hidden="true">★★★★★</span>'
+      +'<b>'+d.rating.toFixed(1).replace('.',',')+'</b><span class="grate-n">'+(d.count||0)+' değerlendirme</span>'
+      +(d.demo?'<span class="grate-demo">demo</span>':'')+'</a>';
+  }catch(e){}
+}
+try{ if(document.readyState!=='loading')setTimeout(gmGoogleRating,400); else document.addEventListener('DOMContentLoaded',function(){setTimeout(gmGoogleRating,400);}); }catch(e){}

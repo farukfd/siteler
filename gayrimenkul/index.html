@@ -145,7 +145,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <!-- TEMA: themes kütüphanesinden seç (tenant başına değiştir). Aktif: Meridyen -->
   <link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=5">
-  <link rel="stylesheet" href="css/base.css?v=65">
+  <link rel="stylesheet" href="css/base.css?v=66">
 <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg?v=2">
 <script defer src="js/brand.js?v=3"></script>
@@ -460,7 +460,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 
 <!-- ===== REFERANSLAR ===== -->
 <section id="referans"><div class="wrap">
-  <div class="sec-head center"><div class="eyebrow">Referanslar</div><h2>Müşterilerimiz ne diyor?</h2><p style="color:var(--ink-2);font-size:13px;margin-top:6px">Demo sürüm — aşağıdaki görüşler ve logolar <b>temsilî örneklerdir</b>.</p></div>
+  <div class="sec-head center"><div class="eyebrow">Referanslar</div><h2>Müşterilerimiz ne diyor?</h2><div id="gRateBadge" class="grate-wrap" aria-live="polite"></div><p style="color:var(--ink-2);font-size:13px;margin-top:6px">Demo sürüm — aşağıdaki görüşler ve logolar <b>temsilî örneklerdir</b>.</p></div>
   <div class="tst-grid" id="refGrid"></div>
   <div class="logos" aria-label="Kurumsal referanslar (temsilî)">
     <span class="lg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20 12 5l9 15M8 20l4-7 4 7"/></svg><span>ANKA<b>Holding</b></span></span>
@@ -576,9 +576,9 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
     </div>
     <div><h4>Kurumsal</h4><ul>
       <li><a href="hakkimizda.html" onclick="closeAllOverlays()">Hakkımızda</a></li>
-      <li><a href="index.html#danismanlar" onclick="closeAllOverlays()">Danışmanlar</a></li>
+      <li><a href="danismanlar/" onclick="if(typeof goView==='function'){closeAllOverlays();goView('danismanlar');return false}">Danışmanlar</a></li>
       <li><a href="hizmetlerimiz.html" onclick="closeAllOverlays()">Hizmetler</a></li><li><a href="nedenbiz.html" onclick="closeAllOverlays()">Neden Biz</a></li>
-      <li><a href="index.html#referans" onclick="closeAllOverlays()">Referanslar</a></li>
+      <li><a href="referanslar/" onclick="if(typeof goView==='function'){closeAllOverlays();goView('referans');return false}">Referanslar</a></li>
       <li><a href="index.html#arsiv" onclick="closeAllOverlays()">Kapanan İşlemler</a></li>
       <li><a href="index.html#blog" onclick="closeAllOverlays()">Blog</a></li>
       <li><a href="iletisim.html" onclick="closeAllOverlays()">İletişim</a></li>
@@ -588,9 +588,9 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
       <li><a href="harita.html">Harita</a></li>
       <li><a href="ozel/">Özel Portföy</a></li>
       <li><a href="sat/" onclick="closeAllOverlays();satOpen();return false">Sat ve Kirala</a></li>
-      <li><a href="index.html#degerleme" onclick="closeAllOverlays()">Emlak Ekspertizi</a></li>
+      <li><a href="emlak-ekspertizi/" onclick="if(typeof goView==='function'){closeAllOverlays();goView('degerleme');return false}">Emlak Ekspertizi</a></li>
       <li><a href="analiz/" onclick="closeAllOverlays();brOpen();return false">Analiz Merkezi</a></li>
-      <li><a href="index.html#alarm" onclick="closeAllOverlays()">Fiyat Alarmı</a></li><li><a href="prox-asistan.html">ProX Asistan</a></li>
+      <li><a href="fiyat-alarmi/" onclick="if(typeof goView==='function'){closeAllOverlays();goView('alarm');return false}">Fiyat Alarmı</a></li><li><a href="prox-asistan.html">ProX Asistan</a></li>
     </ul></div>
     <div><h4>Yasal & Araçlar</h4><ul>
       <li><a href="kvkk.html">KVKK Aydınlatma Metni</a></li>
@@ -1340,21 +1340,21 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 </div>
 
   <script src="../shared/eids.js?v=1"></script>
-<script src="../shared/listing.js?v=22"></script>
+<script src="../shared/listing.js?v=23"></script>
 <script src="../shared/listing-extras.js?v=8"></script>
   <script src="../shared/cs-engine.js?v=2"></script>
   <script src="../shared/harita.js?v=5"></script>
   <script src="../shared/doviz.js?v=2"></script>
-  <script src="js/app.js?v=86"></script>
+  <script src="js/app.js?v=88"></script>
   <script src="js/content-studio.js?v=20"></script>
   <script src="js/hero-pusula.js?v=17"></script>
   <script src="../shared/mahalle-endeks.js?v=14"></script>
   <script src="js/mahalle-endeks.js?v=14"></script>
   <script src="js/kurumsal-sayfalar.js?v=12"></script>
-  <script src="js/uyelik-asistan.js?v=14"></script>
+  <script src="js/uyelik-asistan.js?v=15"></script>
 <script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir (TR ziyaretçiye ~%40 JS tasarrufu) */
 (function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('gm_lang')||'tr';}catch(e){}
-if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=9"><\/script><script src="js/i18n/index.js?v=4"><\/script>');}})();</script><script src="js/i18n.js?v=4"></script>
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=9"><\/script><script src="js/i18n/index.js?v=5"><\/script>');}})();</script><script src="js/i18n.js?v=4"></script>
 </body>
 </html>
 

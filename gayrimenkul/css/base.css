@@ -2599,3 +2599,13 @@ a.hk-cc:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0
 @media(max-width:900px){.ek-hero-band{padding:44px 0 46px}.ek-band{padding:52px 0}}
 @media(max-width:560px){.ek-wrap{padding:0 18px}.ek-nav-in{padding:9px 18px}.ek-nav .ek-nav-cta{margin-left:0}}
 @media(max-width:380px){.ek-stats{grid-template-columns:1fr}.ek-stat b{font-size:26px}}
+
+/* ── Canlı Google puan rozeti (referans bölümü) ── */
+.grate-wrap{display:flex;justify-content:center;margin:10px 0 2px}
+.grate{display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:8px 16px;text-decoration:none;color:var(--ink);box-shadow:0 8px 24px -14px rgba(15,23,42,.25);transition:.16s}
+.grate:hover{transform:translateY(-1px);border-color:var(--accent)}
+.grate-g{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;font:800 14px/1 var(--head);color:#fff;background:conic-gradient(from -45deg,#4285F4 0 25%,#34A853 0 50%,#FBBC05 0 75%,#EA4335 0 100%)}
+.grate-stars{color:#f5b301;font-size:13px;letter-spacing:1px}
+.grate b{font-family:var(--num);font-size:16px}
+.grate-n{color:var(--muted);font-size:12.5px}
+.grate-demo{font:700 10px/1 var(--head);text-transform:uppercase;letter-spacing:.05em;color:#b45309;background:rgba(180,83,9,.1);border-radius:6px;padding:3px 7px}

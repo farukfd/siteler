@@ -158,3 +158,9 @@ Blog ana sayfası (`index.html#blog`) ve **haber detay sayfası** emlakekspertiz
 3. **CANLI VERİ grafiği** (detaydaki 12 aylık m² seyri + 3 ay projeksiyon + bölge karşılaştırması): mevcut **endeks uçlarından** beslenir (`/api/v1/tenant/endeks`, `/prox/analyze`). Şu an detayda "ProX API bağlanınca burada görüntülenir" bandı var; canlı grafik komponenti uç gelince bu alana bağlanacak.
 
 **Not:** 404/fallback → istemci demo/örnek 20 haberle çalışır (kırılmaz). Görseller için **ücretsiz stok** (Unsplash/Pexels) veya tenant yüklemesi; istemci `cover` URL'ini olduğu gibi kullanır. Öncelik: **Orta-Yüksek** — SEO/AEO ve içerik tazeliği için değerli.
+
+## Google Puan Ucu (canlı rozet — gayrimenkul referans bölümü)
+`GET /api/v1/tenant/google-rating` → `{ "rating": 4.8, "count": 214, "url": "https://maps.google.com/..." }`
+- Sunucu, kiracının Google Business Profile verisini **Places API ile günde 1-2 kez** çeker ve önbellekler (anahtar istemciye inmez).
+- place_id, kurulum sihirbazı 1. adımda toplanan "Mevcut web / Google işletme URL" (`wl_brandUrl` → tenant kaydı) alanından türetilir.
+- İstemci 6 saat localStorage önbelleği kullanır; uç yoksa temsilî 4,9 · "demo" rozetiyle düşer (gmGoogleRating, js/app.js).

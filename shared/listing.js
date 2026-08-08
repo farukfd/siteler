@@ -181,9 +181,13 @@
 
   /* ---- ÜYE FAVORİ (site-başı localStorage; kalp) ---- */
   function _favKey(ns){return (ns||'lst')+'_favs';}
-  L.favs=function(ns){ try{return JSON.parse(localStorage.getItem(_favKey(ns))||'[]')||[];}catch(e){return [];} };
+  L.favs=function(ns){
+    /* Hesap-senkron kancası: üyelik katmanı tanımlıysa favoriler hesaptan okunur (misafirde null → yerel) */
+    try{if(window.GM_FAV_READ){var r=window.GM_FAV_READ(ns);if(r)return r.slice();}}catch(e){}
+    try{return JSON.parse(localStorage.getItem(_favKey(ns))||'[]')||[];}catch(e){return [];} };
   L.isFav=function(ns,id){ return L.favs(ns).indexOf(''+id)>=0; };
   L.toggleFav=function(ns,id,btn,ev){ if(ev&&ev.stopPropagation)ev.stopPropagation(); id=''+id; var f=L.favs(ns); var i=f.indexOf(id); var on; if(i>=0){f.splice(i,1);on=false;}else{f.unshift(id);on=true;} try{localStorage.setItem(_favKey(ns),JSON.stringify(f.slice(0,300)));}catch(e){}
+    try{if(window.GM_FAV_SYNC)window.GM_FAV_SYNC(ns,f.slice(0,300));}catch(e){}
     try{[].forEach.call(document.querySelectorAll('.lst-fav[data-fid="'+id+'"]'),function(b){b.classList.toggle('on',on);b.innerHTML=on?'♥':'♡';});}catch(e){}
     try{[].forEach.call(document.querySelectorAll('.lst-favline[data-fid="'+id+'"]'),function(b){b.classList.toggle('on',on);b.innerHTML=on?'♥ Favorilerimde':'♡ Favorilere Ekle';});}catch(e){}
     var c=L._reg[ns]; if(c&&c.onFav){try{c.onFav(id,on);}catch(e){}} return on; };
