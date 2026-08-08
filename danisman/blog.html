@@ -297,6 +297,29 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><
 <script>/* CMS içerik yükleyici — admin'de (dn_content) düzenlenen metinleri uygular */
 (function(){try{var c=JSON.parse(localStorage.getItem('dn_content')||'{}');if(!c)return;var esc=function(s){return String(s).replace(/[&<>]/g,function(x){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[x];});};[].forEach.call(document.querySelectorAll('[data-cms]'),function(el){var v=c[el.getAttribute('data-cms')];if(v==null||v==='')return;var dot=el.querySelector('.eb-dot');if(dot)el.innerHTML='<span class="eb-dot"></span>'+esc(v);else el.textContent=v;});}catch(e){}})();
 </script>
+<script>
+/* İçerik Stüdyosu makaleleri — admin'de yayınlanan yazılar (dn_articles) ızgaranın başına eklenir.
+   Metinler textContent ile basılır (XSS güvenli). */
+(function(){
+  var arts=[];
+  try{arts=(JSON.parse(localStorage.getItem('dn_articles')||'[]')||[]).filter(function(a){return a&&(a.status==='published'||!a.status);});}catch(e){}
+  if(!arts.length)return;
+  var grid=document.getElementById('dnBlogGridStatic'); if(!grid)return;
+  arts.slice(0,12).reverse().forEach(function(a){
+    var card=document.createElement('a'); card.className='bcard'; card.href='index.html#blog';
+    var ic=document.createElement('div'); ic.className='bcard-ic'; ic.textContent=a.icon||'✨'; card.appendChild(ic);
+    var body=document.createElement('div'); body.className='bcard-body';
+    var cat=document.createElement('div'); cat.className='bcard-cat'; cat.textContent=a.cat||'İçerik Stüdyosu'; body.appendChild(cat);
+    var h3=document.createElement('h3'); h3.textContent=a.title||''; body.appendChild(h3);
+    var p=document.createElement('p'); p.textContent=a.sum||''; body.appendChild(p);
+    var meta=document.createElement('div'); meta.className='bcard-meta';
+    var s1=document.createElement('span'); s1.textContent=(a.date||'')+' · ✨ İçerik Stüdyosu'; meta.appendChild(s1);
+    var s2=document.createElement('span'); s2.className='bcard-go'; s2.textContent='Oku →'; meta.appendChild(s2);
+    body.appendChild(meta); card.appendChild(body);
+    grid.insertBefore(card,grid.firstChild);
+  });
+})();
+</script>
 <script src="../shared/doviz.js?v=2"></script>
 </body>
 </html>

@@ -16,6 +16,7 @@ Not: Kurgusal tanıtım demosudur — proje, ilan ve istatistikler temsilîdir.
 - [Yönetim Kadrosu](yonetim.html): Deneyimli, alanında uzman yönetim ekibi ve sorumluluk alanları.
 - [Kalite & Sertifikalar](kalite.html): Kalite politikası ve sertifikalar — ISO 9001/14001/45001, TBDY 2018, yapı denetimi, BIM.
 - [Kariyer](kariyer.html): Açık pozisyonlar ve başvuru.
+- [Blog & Rehberler](blog.html): Kat karşılığı, TBDY 2018 deprem güvenliği, tadilat bütçesi, kentsel dönüşüm, imar & ruhsat ve arsa fizibilitesi üzerine uzman rehber yazıları; İçerik Stüdyosu makaleleri dahil.
 - [Medya & Basında Biz](medya.html): Basın bültenleri, haberler ve medya kiti.
 
 ## İletişim
