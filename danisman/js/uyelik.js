@@ -97,20 +97,20 @@
      listing.js id-dizisi bekler → id'ye indirger, senkronda snapshot üretir. */
   window.GM_FAV_READ=function(ns){
     if(ns!=='dnil')return null; if(!authSession())return null;
-    try{return _favArr().filter(function(f){return (f.type||'ilan')==='ilan';}).map(function(f){return String(f.id);});}catch(e){return null;}
+    try{return _favArr().filter(function(f){return (f.type||'ilan')==='ilan';}).map(function(f){return String(f.id).replace(/^ln/,'');});}catch(e){return null;}
   };
   window.GM_FAV_SYNC=function(ns,ids){
     if(ns!=='dnil'||!authSession())return;
     try{
       ids=(ids||[]).map(String);
       var a=_favArr();
-      a=a.filter(function(f){return (f.type||'ilan')!=='ilan'||ids.indexOf(String(f.id))>=0;});
-      var have={}; a.forEach(function(f){have[String(f.id)]=1;});
+      a=a.filter(function(f){return (f.type||'ilan')!=='ilan'||ids.indexOf(String(f.id).replace(/^ln/,''))>=0;});
+      var have={}; a.forEach(function(f){have[String(f.id).replace(/^ln/,'')]=1;});
       var reg=(window.Listings&&window.Listings._reg&&window.Listings._reg[ns])||null;
       var list=(reg&&reg.list&&reg.list())||[];
       ids.forEach(function(id){ if(have[id])return;
         var l=null; for(var i=0;i<list.length;i++){if(String(list[i].id)===id){l=list[i];break;}}
-        a.unshift({id:id,type:'ilan',ts:Date.now(),t:(l&&l.title)||('İlan #'+id),s:l?[l.ilce,l.mah].filter(Boolean).join(' / '):'',p:(l&&(l.priceText||l.price))||'',u:''});
+        a.unshift({id:'ln'+id,type:'ilan',ts:Date.now(),t:(l&&(l.title||l.baslik))||('İlan #'+id),s:l?[l.ilce,l.mah].filter(Boolean).join(' / '):'',p:(l&&(l.priceText||l.price))||'',u:''});
       });
       _favSave(a);
       try{var kc=document.getElementById('hs_favcount');if(kc)kc.textContent=_favArr().length;}catch(e){}

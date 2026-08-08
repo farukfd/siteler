@@ -2045,7 +2045,21 @@ function buildSwatches(){const el=document.getElementById('admSwatches');if(!el)
 
 /* ---------------- ADMIN ---------------- */
 function openAdmin(){try{history.replaceState(null,'','#admin');}catch(e){}showAdmin();}
-function showAdmin(){document.getElementById('adminApp').classList.add('show');document.body.style.overflow='hidden';buildSwatches();}
+function showAdmin(){
+  var el=document.getElementById('adminApp'); if(!el)return;
+  /* PERF: 49KB admin markup yalnız panel açılınca yüklenir (js/admin-markup.js) */
+  if(!el.dataset.loaded){
+    if(window.__INS_ADMIN_HTML){_admInject(el);}
+    else{var sc=document.createElement('script');sc.src='js/admin-markup.js?v=1';sc.onload=function(){_admInject(el);};sc.onerror=function(){try{toast('Admin paneli yüklenemedi.');}catch(e){alert('Admin paneli yüklenemedi.');}};document.head.appendChild(sc);return;}
+  }
+  el.classList.add('show');document.body.style.overflow='hidden';try{buildSwatches();}catch(e){}
+}
+function _admInject(el){
+  el.innerHTML=window.__INS_ADMIN_HTML||'';el.dataset.loaded='1';try{delete window.__INS_ADMIN_HTML;}catch(e){}
+  el.classList.add('show');document.body.style.overflow='hidden';
+  try{buildSwatches();}catch(e){}
+  try{var act=el.querySelector('.adm-nav.act,[data-pane].act,.adm-tab.act')||el.querySelector('.adm-nav,[data-pane],.adm-tab');if(act&&act.click)act.click();}catch(e){}
+}
 function closeAdmin(){document.getElementById('adminApp').classList.remove('show');document.body.style.overflow='';if(location.hash==='#admin')try{history.replaceState(null,'',location.pathname);}catch(e){};}
 function admLogin(){const p=document.getElementById('admPass').value;const u=document.getElementById('admUser').value;if(p===(SETTINGS&&SETTINGS.admPass||'1234')){document.getElementById('adminApp').classList.add('authed');document.getElementById('admErr').style.display='none';refreshAdmin();}else{document.getElementById('admErr').style.display='block';}}
 function admLogout(){document.getElementById('adminApp').classList.remove('authed');document.getElementById('admPass').value='';}
