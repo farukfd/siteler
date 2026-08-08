@@ -2184,7 +2184,7 @@ function renderKpis(){
   const gecikenKira=(typeof RENTS!=='undefined')?RENTS.filter(r=>r.status==='gecikti').length:0;
   const kpis=[
     {n:(typeof KISILER!=='undefined'?KISILER.length:0),l:'Kişi (CRM)',i:'👤',c:'var(--accent)'},
-    {n:acikFirsat,l:'Açık Fırsat',i:'🪜',c:'#8b5cf6'},
+    {n:acikFirsat,l:'Açık Fırsat',i:'🪜',c:'#0891b2'},
     {n:fmtK(pipeVal)+'₺',l:'Pipeline Değeri',i:'💰',c:'var(--green-700)',raw:1},
     {n:bugunGorev,l:'Bugünkü Görev',i:'📅',c:'#0284c7'},
     {n:aktif,l:'Aktif İlan',i:'🏠',c:'#b45309'},
@@ -3244,7 +3244,8 @@ function admAddContract(tip){
 
 /* ============ ADMIN: TEMA ============ */
 const THEMES=[
-  {id:'mavi',name:'Kurumsal Mavi',accent:'#1e40af',green:'#1e7e3a',navy:'#0f1f3d',def:1},
+  {id:'meridyen',name:'Meridyen Teal',accent:'#0e7490',green:'#1e7e3a',navy:'#16306b',def:1},
+  {id:'mavi',name:'Kurumsal Mavi',accent:'#1e40af',green:'#1e7e3a',navy:'#0f1f3d'},
   {id:'okyanus',name:'Okyanus',accent:'#0284c7',green:'#0d9488',navy:'#0c2230'},
   {id:'zumrut',name:'Zümrüt',accent:'#1e7e3a',green:'#1e7e3a',navy:'#0c1f17'},
   {id:'safir',name:'Safir Gece',accent:'#3b82f6',green:'#22c55e',navy:'#0a1631'},
@@ -4045,7 +4046,7 @@ document.addEventListener('input',e=>{if(e.target&&(e.target.id==='seo_title'||e
 /* ============================================================
    PART 4 — GAYRİMENKUL CRM
    ============================================================ */
-const STAGES=[{k:'yeni',n:'Yeni',c:'#586475'},{k:'iletisim',n:'İletişim',c:'#3b82f6'},{k:'gosterim',n:'Gösterim',c:'#8b5cf6'},{k:'teklif',n:'Teklif',c:'#f59e0b'},{k:'sozlesme',n:'Kapanış',c:'#1e7e3a'}];
+const STAGES=[{k:'yeni',n:'Yeni',c:'#586475'},{k:'iletisim',n:'İletişim',c:'#3b82f6'},{k:'gosterim',n:'Gösterim',c:'#0891b2'},{k:'teklif',n:'Teklif',c:'#f59e0b'},{k:'sozlesme',n:'Kapanış',c:'#1e7e3a'}];
 const TYPE_LBL={alici:'Alıcı',satici:'Satıcı',kiraci:'Kiracı',yatirimci:'Yatırımcı'};
 const TASK_LBL={arama:'📞 Arama',gosterim:'🏠 Gösterim',toplanti:'🤝 Toplantı',tapu:'📋 Tapu/Söz.',takip:'🔔 Takip'};
 function danName(id){const d=DANISMANLAR.find(x=>x.id===id);return d?d.name:'—';}
@@ -4178,7 +4179,7 @@ let editingComm=null;
 function commVal(c){return Math.round((+c.amount||0)*(+c.rate||0)/100);}
 function renderFinKpi(){const box=document.getElementById('finKpi');if(!box)return;
   const toplam=COMMS.reduce((a,b)=>a+commVal(b),0);const tahsil=COMMS.filter(c=>c.status==='tahsil').reduce((a,b)=>a+commVal(b),0);const bekleyen=toplam-tahsil;const ciro=COMMS.reduce((a,b)=>a+(+b.amount||0),0);
-  const items=[['Toplam Komisyon',fmt(toplam)+' ₺','var(--accent)'],['Tahsil Edilen',fmt(tahsil)+' ₺','var(--green-700)'],['Bekleyen',fmt(bekleyen)+' ₺','#b45309'],['İşlem Cirosu',fmtK(ciro)+' ₺','#8b5cf6']];
+  const items=[['Toplam Komisyon',fmt(toplam)+' ₺','var(--accent)'],['Tahsil Edilen',fmt(tahsil)+' ₺','var(--green-700)'],['Bekleyen',fmt(bekleyen)+' ₺','#b45309'],['İşlem Cirosu',fmtK(ciro)+' ₺','#0891b2']];
   box.innerHTML=items.map(it=>`<div class="fin-card"><div class="fl">${it[0]}</div><div class="fv" style="color:${it[2]}">${it[1]}</div></div>`).join('');}
 function renderCommRows(){const tb=document.getElementById('commRows');if(!tb)return;
   tb.innerHTML=COMMS.length?COMMS.map(c=>`<tr><td><b>${_le(c.title)}</b><div class="tsub">${c.date||''} · ${c.side==='her'?'Her iki taraf':c.side==='alici'?'Alıcı':'Satıcı'}</div></td><td>${danName(c.danId)}</td><td class="num">${fmt(c.amount)} ₺</td><td class="num" style="color:var(--green-700)">${fmt(commVal(c))} ₺ <span class="tsub">(%${c.rate})</span></td>
@@ -4233,7 +4234,7 @@ function barChart(elId,data,fmtv){const el=document.getElementById(elId);if(!el)
   el.innerHTML=data.map(d=>`<div class="bcol"><div class="bv">${fmtv?fmtv(d.v):d.v}</div><div class="bar" style="height:${Math.max(3,d.v/max*130)}px;background:${d.c||'var(--grad-blue)'}"></div><div class="bl">${d.l}</div></div>`).join('');}
 function renderReports(){
   const box=document.getElementById('repKpi');if(box){const pipeVal=DEALS.filter(d=>d.stage!=='sozlesme').reduce((a,b)=>a+(+b.value||0),0);const won=DEALS.filter(d=>d.stage==='sozlesme').length;const conv=DEALS.length?Math.round(won/DEALS.length*100):0;
-    const items=[['Aktif Fırsat',DEALS.filter(d=>d.stage!=='sozlesme').length,'var(--accent)'],['Pipeline Değeri',fmtK(pipeVal)+'₺','#8b5cf6'],['Kazanılan',won,'var(--green-700)'],['Dönüşüm','%'+conv,'#0284c7']];
+    const items=[['Aktif Fırsat',DEALS.filter(d=>d.stage!=='sozlesme').length,'var(--accent)'],['Pipeline Değeri',fmtK(pipeVal)+'₺','#0891b2'],['Kazanılan',won,'var(--green-700)'],['Dönüşüm','%'+conv,'#0284c7']];
     box.innerHTML=items.map(it=>`<div class="fin-card"><div class="fl">${it[0]}</div><div class="fv" style="color:${it[2]}">${it[1]}</div></div>`).join('');}
   barChart('repPipeline',STAGES.map(s=>({l:s.n,v:DEALS.filter(d=>d.stage===s.k).length,c:s.c})));
   barChart('repDan',DANISMANLAR.map((d,i)=>({l:d.name.split(' ')[0],v:DEALS.filter(x=>x.danId===d.id).length,c:DAN_COLORS[i%DAN_COLORS.length]})));
@@ -5102,7 +5103,7 @@ const SAAS_THEMES={
   'Mavi':{accent:'#1e40af',accent2:'#3b82f6',grad:'linear-gradient(135deg,#3b82f6 0%,#1e40af 100%)'},
   'Turuncu':{accent:'#ea6a1e',accent2:'#ff9d4d',grad:'linear-gradient(135deg,#ff9d4d 0%,#ea6a1e 100%)'},
   'Yeşil':{accent:'#1e7e3a',accent2:'#1e7e3a',grad:'linear-gradient(135deg,#1e7e3a 0%,#1e7e3a 100%)'},
-  'Mor':{accent:'#6d28d9',accent2:'#a78bfa',grad:'linear-gradient(135deg,#a78bfa 0%,#6d28d9 100%)'}
+  'Kehribar':{accent:'#b45309',accent2:'#f59e0b',grad:'linear-gradient(135deg,#f59e0b 0%,#b45309 100%)'}
 };
 /* 1) DİNAMİK TEMA — merkezden gelen renk tek saniyede uygulanır */
 function initSaaSTheme(){

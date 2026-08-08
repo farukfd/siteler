@@ -19,9 +19,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=5">
-<link rel="stylesheet" href="css/base.css?v=64">
+<link rel="stylesheet" href="css/base.css?v=65">
 <link rel="stylesheet" href="../shared/vendor/leaflet/leaflet.css?v=1">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <script defer src="js/brand.js?v=3"></script>
 <style>
   body{margin:0}
@@ -46,6 +46,7 @@
   .map-legend i{width:12px;height:12px;border-radius:50%;display:inline-block}
   @media(max-width:900px){.map-layout{grid-template-columns:1fr}#gmMap{height:56vh;min-height:360px}.map-side{height:auto;max-height:none;min-height:0}.mtb-count{margin-left:0;width:100%}}
 </style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://www.emlakekspertizi.com/demo/gayrimenkul/#org", "name": "Meridyen Gayrimenkul", "url": "https://www.emlakekspertizi.com/demo/gayrimenkul/", "logo": "https://www.emlakekspertizi.com/demo/gayrimenkul/favicon.svg"}, {"@type": "WebSite", "@id": "https://www.emlakekspertizi.com/demo/gayrimenkul/#website", "url": "https://www.emlakekspertizi.com/demo/gayrimenkul/", "name": "Meridyen Gayrimenkul", "publisher": {"@id": "https://www.emlakekspertizi.com/demo/gayrimenkul/#org"}}, {"@type": "WebPage", "@id": "https://www.emlakekspertizi.com/demo/gayrimenkul/harita.html", "url": "https://www.emlakekspertizi.com/demo/gayrimenkul/harita.html", "name": "Portföy Haritası — Satılık & Kiralık", "description": "Tüm portföyün gerçek konum haritası; uydu görünümü, fiyat baloncukları ve ilçe/mahalle filtreleri.", "inLanguage": "tr-TR", "isPartOf": {"@id": "https://www.emlakekspertizi.com/demo/gayrimenkul/#website"}}]}</script>
 </head>
 <body>
 <!-- ===== ÜST MENÜ ===== -->
@@ -212,5 +213,10 @@ function gmMapInit(){
 if(document.readyState==='complete')gmMapInit();
 else window.addEventListener('load',gmMapInit);
 </script>
+
+<script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir (TR ziyaretçiye ~%40 JS tasarrufu) */
+(function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('gm_lang')||'tr';}catch(e){}
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=8"><\/script>');}})();</script>
+<script defer src="js/i18n.js?v=4"></script>
 </body>
 </html>

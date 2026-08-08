@@ -12,13 +12,19 @@ const ALLOW_PREFIX = "/api/v1/tenant/";
 const PORT = 8790;
 const DEV_ORIGIN = "http://localhost:8799";
 
-/* Yerel test için tenant→key (repoda zaten mevcut demo anahtarları). Üretimde secret store. */
-const KEYS = {
-  emlaktahadimkoy_com: "prox_emlaktahadimkoy_com_5d318fd5639d630018d37e2b219cbd0c",
-  consultant:          "prox_consultant_a383eb07bb544ce3db7323150370bb46",
-  construction:        "prox_construction_910783dfb8dd6be9cb9549bc818a60ee",
-  nadas:               "prox_nadas_43ffdf3fe0501d5510e71616b618cfea",
-};
+/* GÜVENLİK: Anahtarlar REPOYA GİRMEZ. scripts/prox-keys.local.json (gitignore'lu) veya
+   PROX_KEY_<TENANT> ortam değişkeninden okunur. Örnek: prox-keys.local.json.example.
+   NOT: Eski anahtarlar git geçmişinde kaldı → emlakekspertizi.com'da ROTATE edilmeli. */
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+const __dir = dirname(fileURLToPath(import.meta.url));
+let KEYS = {};
+try { KEYS = JSON.parse(readFileSync(join(__dir, "prox-keys.local.json"), "utf8")); }
+catch (e) { console.warn("prox-keys.local.json yok — PROX_KEY_* env değişkenlerine bakılıyor."); }
+for (const [k, v] of Object.entries(process.env)) {
+  const m = k.match(/^PROX_KEY_(.+)$/); if (m && v) KEYS[m[1].toLowerCase()] = v;
+}
 const safeId = (id) => (typeof id === "string" && /^[a-z0-9_.-]{2,64}$/i.test(id) ? id : null);
 
 function cors(res, status) {

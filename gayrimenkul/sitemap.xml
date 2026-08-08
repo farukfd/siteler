@@ -14,4 +14,9 @@
   <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/gizlilik.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/cerez.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/kullanim-kosullari.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/harita.html</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/sat/</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/analiz/</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/blog/</loc></url>
 </urlset>

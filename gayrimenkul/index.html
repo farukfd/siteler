@@ -5,6 +5,7 @@
 <style>/* ov-pre kritik CSS — derin-link kapısı harici CSS'e muhtaç olmasın */
 html.ov-pre body{visibility:hidden}
 html.ov-pre .br-page.open,html.ov-pre #infoPage.open,html.ov-pre #portfoyPage.open,html.ov-pre #brPage.open,html.ov-pre #satPage.open,html.ov-pre #blogPage.open{visibility:visible}</style>
+<link rel="preload" as="image" href="img/gayrimenkul/img1.webp" fetchpriority="high">
 <script>/* Derin-link ön-kapısı: hedef bir overlay ise ana sayfa hiç boyanmaz (flash önleme).
    Overlay açılınca ovBoot kaldırır; güvenlik ağı: 2.6sn sonra her koşulda açılır. */
 try{var _h=(location.hash||'').replace('#','');var _ovp=false;
@@ -144,10 +145,10 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <!-- TEMA: themes kütüphanesinden seç (tenant başına değiştir). Aktif: Meridyen -->
   <link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=5">
-  <link rel="stylesheet" href="css/base.css?v=64">
+  <link rel="stylesheet" href="css/base.css?v=65">
   <link rel="stylesheet" href="../shared/vendor/leaflet/leaflet.css?v=1">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="favicon.svg">
+<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg?v=2">
 <script defer src="js/brand.js?v=3"></script>
 </head>
 <body>
@@ -188,7 +189,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <!-- ===== HERO ===== -->
 <section class="hero" style="padding-top:0;padding-bottom:0">
   <div class="hero-bg">
-    <img class="on" id="hi0" alt="" fetchpriority="high" decoding="async"><img id="hi1" alt="" fetchpriority="low" decoding="async"><img id="hi2" alt="" fetchpriority="low" decoding="async">
+    <img class="on" id="hi0" alt="" src="img/gayrimenkul/img1.webp" fetchpriority="high" decoding="async"><img id="hi1" alt="" fetchpriority="low" decoding="async"><img id="hi2" alt="" fetchpriority="low" decoding="async">
   </div>
   <div class="wrap">
     <div class="pcw kk" id="pusulaHero">
@@ -2090,14 +2091,16 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   <script src="../shared/vendor/leaflet/leaflet.js?v=1"></script>
   <script src="../shared/harita.js?v=5"></script>
   <script src="../shared/doviz.js?v=2"></script>
-  <script src="js/app.js?v=84"></script>
-  <script src="js/content-studio.js?v=19"></script>
+  <script src="js/app.js?v=85"></script>
+  <script src="js/content-studio.js?v=20"></script>
   <script src="js/hero-pusula.js?v=17"></script>
   <script src="../shared/mahalle-endeks.js?v=14"></script>
   <script src="js/mahalle-endeks.js?v=14"></script>
   <script src="js/kurumsal-sayfalar.js?v=12"></script>
   <script src="js/uyelik-asistan.js?v=14"></script>
-<script src="js/i18n/_common.js?v=8"></script><script src="js/i18n/index.js?v=3"></script><script src="js/i18n.js?v=4"></script>
+<script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir (TR ziyaretçiye ~%40 JS tasarrufu) */
+(function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('gm_lang')||'tr';}catch(e){}
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=8"><\/script><script src="js/i18n/index.js?v=3"><\/script>');}})();</script><script src="js/i18n.js?v=4"></script>
 </body>
 </html>
 

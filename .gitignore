@@ -11,3 +11,7 @@ qa/.report/
 qa/.artifacts/
 qa/test-results/
 .unlighthouse/
+
+# gizli anahtarlar — repoya asla girmez
+scripts/prox-keys.local.json
+.env

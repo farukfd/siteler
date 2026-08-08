@@ -106,6 +106,7 @@ origin) + JS/CSS için standart cache. `?v=` bump yapılınca ekstra purge gerek
 no-cache olduğundan yeni sürüm referansları anında yayılır.
 
 ## 5) Kontrol listesi (üretim)
+- [ ] **Admin paneli üretimde İSTEMCİDEN ÇIKARILMALI** — mevcut giriş (admin/1234) tamamen istemci-taraflı ve yalnız demo içindir; gerçek dağıtımda admin ayrı origin + sunucu-taraflı kimlik doğrulama (session/JWT) arkasında olmalı, statik pakete admin markup/JS dahil edilmemeli.
 - [ ] HTML `Cache-Control: no-cache, must-revalidate`; JS/CSS `max-age=31536000, immutable` (bkz. §4).
 - [ ] Proxy/Edge kuruldu; `X-Tenant-Key` istemciye sızmıyor (Network sekmesinde header yok).
 - [ ] Proxy yalnızca `/api/v1/tenant/*` allow-list + per-tenant CORS.
