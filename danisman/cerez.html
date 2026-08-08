@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde kaldırılır -->
 <title>Çerez Politikası · Selin Meridyen Gayrimenkul Danışmanlığı</title>
 <meta name="description" content="Selin Meridyen Çerez Politikası: web sitesinde kullanılan çerez türleri, amaçları ve çerez tercihlerinizi nasıl yönetebileceğiniz.">
 <link rel="canonical" href="https://www.emlakekspertizi.com/demo/danisman/cerez.html">
-<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"><!-- üretim tenant -->
 <meta name="author" content="Selin Meridyen">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı">
@@ -14,10 +15,10 @@
 <meta property="og:description" content="Web sitesinde kullanılan çerez türleri, amaçları ve tercih yönetimi.">
 <meta property="og:url" content="https://www.emlakekspertizi.com/demo/danisman/cerez.html">
 <meta property="og:locale" content="tr_TR">
-<meta property="og:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.png">
+<meta property="og:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.png">
+<meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,14 +29,16 @@
   "isPartOf":{"@type":"WebSite","name":"Selin Meridyen","url":"index.html"},
   "about":{"@type":"RealEstateAgent","name":"Selin Meridyen · Lüks Konut & Özel Portföy Danışmanlığı"} }
 </script>
-<link rel="stylesheet" href="css/base.css?v=21">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="favicon.svg">
-<script src="js/brand.js?v=3"></script>
-<script src="js/tr-grammar.js?v=3"></script><script src="js/content.js?v=9"></script>
-<script src="js/i18n/_common.js?v=1"></script><script src="js/i18n/cerez.js?v=1"></script><script src="js/i18n.js?v=1"></script>
-<script src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
-<script src="js/a11y.js?v=1"></script>
+<link rel="stylesheet" href="css/base.css?v=22">
+<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg?v=2">
+<script defer src="js/brand.js?v=3"></script>
+<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=10"></script>
+<script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
+(function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><script src="js/i18n/cerez.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
+<script defer src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
+<script defer src="js/a11y.js?v=1"></script>
 <script>document.documentElement.classList.add('js')</script>
 <style>
 /* ============ Yasal sayfa — scoped .lg-* (base.css bozulmadan) ============ */
@@ -71,25 +74,9 @@
 .lg-links a:hover{border-color:var(--gold);color:var(--gold-ink)}
 </style>
 <!-- ============ STITCH DÖNÜŞÜMÜ (yasal · ortak .lg-* shell) ============ -->
-<style id="lgStitch">
-.lg-main{background:#f9f9f8!important}
-.lg-hero{background:#f9f9f8!important;border-bottom-color:#e1e3e2!important}
-.lg-hero h1{font-family:'Playfair Display',Georgia,serif!important;color:#00452b!important}
-.lg-crumb span,.lg-crumb a:hover{color:#795901!important}
-.lg-body .intro{font-family:'IBM Plex Sans',system-ui,sans-serif!important;color:#3f4942!important}
-.lg-art h2{font-family:'Playfair Display',Georgia,serif!important;color:#00452b!important}
-.lg-art h2 .n{color:#795901!important}
-.lg-art p,.lg-art li{color:#3f4942!important;font-family:'IBM Plex Sans',system-ui,sans-serif!important}
-.lg-art b{color:#191c1c!important}
-.lg-note{border-color:#e1e3e2!important;border-left-color:#c39b45!important;border-radius:8px!important;background:#fff!important}
-.lg-note h3{font-family:'Playfair Display',Georgia,serif!important;color:#00452b!important}
-.lg-note a{color:#795901!important}
-.lg-links a{border-color:#e1e3e2!important;color:#3f4942!important;background:#fff!important;font-family:'IBM Plex Sans',system-ui,sans-serif!important}
-.lg-links a:hover{border-color:#c39b45!important;color:#795901!important}
-</style>
+<link rel="stylesheet" href="css/legal-ortak.css?v=1">
 </head>
 <body>
-
 <!-- ============ ÜST MENÜ (birebir) ============ -->
 <header class="nav scrolled" id="nav">
   <div class="wrap nav-in">
@@ -110,12 +97,13 @@
       <a class="nav-wa" href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.21 8.21 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.4-8.24 8.4Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z"/></svg>
       </a>
-      <a class="btn btn-gold" href="iletisim.html" onclick="dnQuickContact();return false;">Ücretsiz Ekspertiz</a>
+      <a class="btn btn-gold hide-mobile-cta" href="iletisim.html" onclick="dnQuickContact();return false;">Ücretsiz Ekspertiz</a>
       <a class="nav-giris" href="index.html#giris">Giriş</a>
       <button class="burger" id="burger" aria-label="Menü"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
+<div class="doviz-bandi" id="dovizBandi" aria-label="Döviz ve altın bilgi bandı"></div>
 
 <main class="lg-main">
   <section class="lg-hero">
@@ -198,9 +186,9 @@
         </div>
         <div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
       </div>
-      <div><h4>Keşfet</h4><ul><li><a href="ilanlar.html">İlanlar</a></li><li><a href="ozel-portfoy.html">Özel Portföy</a></li><li><a href="index.html#surec">Süreç</a></li><li><a href="index.html#randevu">Ücretsiz Analiz</a></li></ul></div>
-      <div><h4>Kurumsal</h4><ul><li><a href="index.html">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="sss.html">S.S.S</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>
-      <div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li></ul></div>
+      <div><h4>Keşfet</h4><ul><li><a href="ilanlar.html">İlanlar</a> <a href="harita.html">Harita</a> <a href="emlak-ekspertizi.html">Emlak Ekspertizi</a></li><li><a href="ozel-portfoy.html">Özel Portföy</a></li><li><a href="blog.html">Blog</a></li><li><a href="semtler.html">Semt Rehberi</a></li><li><a href="yatirim-rehberi.html">Yatırım Rehberi</a></li><li><a href="index.html#surec">Süreç</a></li><li><a href="index.html#randevu">Ücretsiz Analiz</a></li></ul></div>
+      <div><h4>Kurumsal</h4><ul><li><a href="index.html">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="referanslar.html">Referanslar</a></li><li><a href="sss.html">S.S.S</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>
+      <div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="gizlilik.html">Gizlilik Politikası</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li></ul></div>
     </div>
     <div class="fbot">
       <span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span>
@@ -220,5 +208,6 @@
 <script>/* CMS içerik yükleyici — admin'de (dn_content) düzenlenen metinleri uygular */
 (function(){try{var c=JSON.parse(localStorage.getItem('dn_content')||'{}');if(!c)return;var esc=function(s){return String(s).replace(/[&<>]/g,function(x){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[x];});};[].forEach.call(document.querySelectorAll('[data-cms]'),function(el){var v=c[el.getAttribute('data-cms')];if(v==null||v==='')return;var dot=el.querySelector('.eb-dot');if(dot)el.innerHTML='<span class="eb-dot"></span>'+esc(v);else el.textContent=v;});}catch(e){}})();
 </script>
+<script src="../shared/doviz.js?v=2"></script>
 </body>
 </html>

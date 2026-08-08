@@ -1,11 +1,3 @@
-# Meridyen Yapı — robots.txt
+# DEMO — arama motorlarına kapalı. Üretim tenant sitelerinde tenant başına dinamik üretilir.
 User-agent: *
-Allow: /
-# Temiz-URL yükleyici stub dizinleri (noindex redirect) — taranmasına gerek yok
-Disallow: /hizmetler/
-Disallow: /projeler/
-Disallow: /bolge/
-Disallow: /iletisim/
-Disallow: /soru-cevap/
-
-Sitemap: https://www.meridyenyapi.com/sitemap.xml
+Disallow: /

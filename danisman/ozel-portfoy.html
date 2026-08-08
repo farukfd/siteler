@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde kaldırılır -->
 <title>Özel Portföy — Mahalle Fiyat Endeksi & Fırsat Radarı · Selin Meridyen</title>
 <meta name="description" content="Hizmet verdiğim mahallelerde ProX canlı endeksinden satılık &amp; kiralık konut, işyeri ve arsa başlangıç fiyatları, yatırım skoru ve yükselen fırsatlar. Ücretsiz değer analizi ve kişisel danışmanlık.">
 <meta name="keywords" content="mahalle fiyat endeksi, m² fiyatları, satılık kiralık başlangıç fiyat, bölge fiyat analizi, yatırım fırsatı, gayrimenkul değer analizi, ProX endeks, emlak danışmanlığı">
-<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"><!-- üretim tenant -->
 <link rel="canonical" href="https://www.emlakekspertizi.com/demo/danisman/ozel-portfoy.html">
 <meta name="author" content="Selin Meridyen">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,10 +19,10 @@
 <meta property="og:description" content="ProX canlı endeksinden mahalle mahalle başlangıç fiyatları, yatırım skoru ve yükselen fırsatlar. Ücretsiz değer analizi ve kişisel danışmanlık.">
 <meta property="og:url" content="https://www.emlakekspertizi.com/demo/danisman/ozel-portfoy.html">
 <meta property="og:locale" content="tr_TR">
-<meta property="og:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.png">
+<meta property="og:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.png">
+<meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Özel Portföy · Selin Meridyen — Mahalle Fiyat Endeksi & Fırsat Radarı">
 <meta name="twitter:description" content="Mahalle mahalle ProX canlı endeksi, başlangıç fiyatları ve yükselen fırsatlar. Ücretsiz değer analizi.">
@@ -31,17 +32,19 @@
   "isPartOf":{"@type":"WebSite","name":"Selin Meridyen","url":"index.html"},
   "about":{"@type":"RealEstateAgent","name":"Selin Meridyen · Lüks Konut & Özel Portföy Danışmanlığı","provider":{"@type":"Person","name":"Selin Meridyen"}} }
 </script>
-<link rel="stylesheet" href="css/base.css?v=21">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="favicon.svg">
-<script src="js/brand.js?v=3"></script>
-<script src="js/tr-grammar.js?v=3"></script><script src="js/content.js?v=9"></script>
-<script src="js/i18n/_common.js?v=1"></script><script src="js/i18n/ozel-portfoy.js?v=1"></script><script src="js/i18n.js?v=1"></script>
-<script src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
-<script src="js/a11y.js?v=1"></script>
-<link rel="stylesheet" href="css/portfoy.css?v=9">
+<link rel="stylesheet" href="css/base.css?v=22">
+<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg?v=2">
+<script defer src="js/brand.js?v=3"></script>
+<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=10"></script>
+<script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
+(function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><script src="js/i18n/ozel-portfoy.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
+<script defer src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
+<script defer src="js/a11y.js?v=1"></script>
+<link rel="stylesheet" href="css/portfoy.css?v=10">
 <script src="js/ist-ilce.js?v=1"></script><!-- İstanbul ilçe sınırları (radar haritası · gerçek GeoJSON, sadeleştirilmiş) -->
-<script src="js/ilan-data.js?v=1"></script><!-- gerçek ilan verisi (radar işaretleri · DN_ILAN) -->
+<script src="js/ilan-data.js?v=4"></script><!-- gerçek ilan verisi (radar işaretleri · DN_ILAN) -->
 <script src="js/ist-mahalle.js?v=1"></script><!-- İstanbul 934 mahalle GERÇEK koordinatı (radar konumlama · OSM türevi) -->
 <script src="js/share.js?v=5"></script>
 <!-- ============ ÖZEL PORTFÖY HERO (ilana çıkmayan portföy + radar) · scoped ============ -->
@@ -194,7 +197,6 @@
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body class="pf-page">
-
 <!-- ============ ÜST MENÜ (birebir) ============ -->
 <header class="nav scrolled" id="nav">
   <div class="wrap nav-in">
@@ -221,6 +223,7 @@
     </div>
   </div>
 </header>
+<div class="doviz-bandi" id="dovizBandi" aria-label="Döviz ve altın bilgi bandı"></div>
 
 <main>
 <!-- ============ HERO ============ -->
@@ -361,6 +364,13 @@
     </div>
   </div>
 </section>
+<!-- ============ MAHALLE ENDEKSİ + ÖZEL PORTFÖY (shared/mahalle-endeks.js) ============ -->
+<section class="ozfx-sec" id="ozMahEndeksSec" style="padding:44px 0"><div class="wrap">
+  <div class="ozfx-head"><div class="ozfx-eyebrow"><span class="d"></span>ProX Mahalle Endeksi · Demografi & Özel Portföy</div>
+    <h2 style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(24px,3.4vw,34px);margin:10px 0 6px;color:#00452b">Mahalle mahalle canlı endeks, demografi ve gizli portföy</h2>
+    <p style="max-width:640px;color:#4b5563">Seçtiğiniz mahalle için ProX canlı değerleme, kategori endeksi, demografik profil ve <b>ifşasız</b> Özel Portföy başlangıç fiyatları.</p></div>
+  <div id="mahEndeks" style="margin-top:22px"></div>
+</div></section>
 </main>
 
 <!-- ============ FOOTER (birebir) ============ -->
@@ -380,9 +390,9 @@
         </div>
         <div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
       </div>
-      <div><h4>Keşfet</h4><ul><li><a href="ilanlar.html">İlanlar</a></li><li><a href="ozel-portfoy.html">Özel Portföy</a></li><li><a href="index.html#surec">Süreç</a></li><li><a href="index.html#randevu">Ücretsiz Analiz</a></li></ul></div>
-      <div><h4>Kurumsal</h4><ul><li><a href="index.html">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="sss.html">S.S.S</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>
-      <div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li></ul></div>
+      <div><h4>Keşfet</h4><ul><li><a href="ilanlar.html">İlanlar</a> <a href="harita.html">Harita</a> <a href="emlak-ekspertizi.html">Emlak Ekspertizi</a></li><li><a href="ozel-portfoy.html">Özel Portföy</a></li><li><a href="blog.html">Blog</a></li><li><a href="semtler.html">Semt Rehberi</a></li><li><a href="yatirim-rehberi.html">Yatırım Rehberi</a></li><li><a href="index.html#surec">Süreç</a></li><li><a href="index.html#randevu">Ücretsiz Analiz</a></li></ul></div>
+      <div><h4>Kurumsal</h4><ul><li><a href="index.html">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="referanslar.html">Referanslar</a></li><li><a href="sss.html">S.S.S</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>
+      <div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="gizlilik.html">Gizlilik Politikası</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li></ul></div>
     </div>
     <div class="fbot">
       <span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span>
@@ -391,14 +401,16 @@
   </div>
 </footer>
 
-<script src="js/tr-iller.js?v=2"></script>
+<script defer src="js/tr-iller.js?v=2"></script>
 <script src="js/portfoy-visuals.js?v=1"></script>
 <script>
+window.EMLAK_PROXY_MODE=window.EMLAK_PROXY_MODE!==false;/* güvenlik: proxy modunda anahtar istemciden GİTMEZ */
+
 /* ============ ProX API ÇEKİRDEĞİ ============ */
 var EMLAK_API_BASE="https://www.emlakekspertizi.com";
-var EMLAK_TENANT={tenant_id:"consultant",tenant_key:"prox_consultant_a383eb07bb544ce3db7323150370bb46"};
+var EMLAK_TENANT={tenant_id:"consultant",tenant_key:""};
 try{var _dp=JSON.parse(localStorage.getItem('dn_prox')||'null');if(_dp&&_dp.key){EMLAK_TENANT.tenant_key=_dp.key;if(_dp.tenant)EMLAK_TENANT.tenant_id=_dp.tenant;}}catch(e){}
-async function proxApi(path){try{var res=await fetch(EMLAK_API_BASE+path,{method:"GET",mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":EMLAK_TENANT.tenant_id,"X-Tenant-Key":EMLAK_TENANT.tenant_key}});if(!res.ok)throw new Error("ProX "+res.status);return await res.json();}catch(e){return {fallback:true,_err:e.message};}}
+async function proxApi(path){try{var res=await fetch(EMLAK_API_BASE+path,{method:"GET",mode:"cors",headers:(function(){var h={"Content-Type":"application/json","X-Tenant-Id":EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h["X-Tenant-Key"]=EMLAK_TENANT.tenant_key;return h;})()});if(!res.ok)throw new Error("ProX "+res.status);return await res.json();}catch(e){return {fallback:true,_err:e.message};}}
 var TR_ILILCE=window.TR_ILILCE||{};
 function adminPrimaryIl(){try{var sa=JSON.parse(localStorage.getItem('dn_service_area')||'null');if(sa&&sa.primary&&TR_ILILCE[sa.primary])return sa.primary;}catch(e){}return 'İstanbul';}
 var _c={};
@@ -570,7 +582,7 @@ function ozTalepSubmit(viaWa){
   var parts=['📍 '+loc];if(oda)parts.push('Oda '+oda);if(butce)parts.push('Bütçe '+butce);if(not)parts.push(not);
   var msg=parts.join(' · ');
   ozLeadStore({name:ad,phone:tel.replace(/[^\d+]/g,''),konu:konu,msg:msg,src:(OZ_TALEP.ozel?'Özel Portföy Talebi':'Bölge Talebi')});
-  try{fetch(EMLAK_API_BASE+'/api/v1/tenant/lead',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id,'X-Tenant-Key':EMLAK_TENANT.tenant_key},body:JSON.stringify({name:ad,phone:tel,konu:konu,mesaj:msg,il:k.il,ilce:k.ilce,mahalle:k.mah,cadde:cadde,islem:islem,tip:tip,butce:butce,oda:oda,kaynak:'ozel-portfoy'})}).catch(function(){});}catch(e){}
+  try{fetch(EMLAK_API_BASE+'/api/v1/tenant/lead',{method:'POST',mode:'cors',headers:(function(){var h={'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h['X-Tenant-Key']=EMLAK_TENANT.tenant_key;return h;})(),body:JSON.stringify({name:ad,phone:tel,konu:konu,mesaj:msg,il:k.il,ilce:k.ilce,mahalle:k.mah,cadde:cadde,islem:islem,tip:tip,butce:butce,oda:oda,kaynak:'ozel-portfoy'})}).catch(function(){});}catch(e){}
   if(viaWa){var wt='Merhaba, '+loc+' bölgesinde '+(islem==='kiralik'?'kiralık':'satılık')+' '+tip+' arıyorum.'+(oda?(' Oda: '+oda+'.'):'')+(butce?(' Bütçe: '+butce+'.'):'')+(not?(' '+not):'')+' — '+ad+' ('+tel+')';window.open('https://wa.me/'+ozWaNum()+'?text='+encodeURIComponent(wt),'_blank');}
   ozTalepDone(viaWa);
 }
@@ -628,7 +640,7 @@ var _azCache={};
 async function fetchAnalyze(il,ilce,mah){
   var k='az|'+[il,ilce,mah||''].join('|');if(_azCache[k]!==undefined)return _azCache[k];var out=null;
   try{var pc=_pcLoad(),e=pc[k];if(e&&e.ts&&(Date.now()-e.ts)<PROX_TTL){_azCache[k]=e.v;return e.v;}}catch(e2){}
-  try{var r=await fetch(EMLAK_API_BASE+'/api/v1/tenant/prox/analyze',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id,'X-Tenant-Key':EMLAK_TENANT.tenant_key},body:JSON.stringify({il:il,ilce:ilce,mahalle:mah||'',kategori:'konut',durum:'satilik',brut_m2:90,attrs:{}})});
+  try{var r=await fetch(EMLAK_API_BASE+'/api/v1/tenant/prox/analyze',{method:'POST',mode:'cors',headers:(function(){var h={'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h['X-Tenant-Key']=EMLAK_TENANT.tenant_key;return h;})(),body:JSON.stringify({il:il,ilce:ilce,mahalle:mah||'',kategori:'konut',durum:'satilik',brut_m2:90,attrs:{}})});
     var j=await r.json();
     if(j&&j.success===true){var rg=j.range||{};out={strong:+j.strongest_value||0,min:+rg.min_value||0,max:+rg.max_value||0,spread:+rg.spread_pct||0,conf:(isFinite(+j.confidence)?+j.confidence:null),band:j.confidence_band||'',yon:j.piyasa_yonu||'',pazarlik:(isFinite(+j.pazarlik_payi_pct)?+j.pazarlik_payi_pct:null),ozet:j.karar_ozeti||'',veri:+j.veri_adedi||0};}
   }catch(e){}_azCache[k]=out;if(out)_pcPut(k,out);return out;
@@ -1454,6 +1466,34 @@ function ozRadarInit(){
 }
 if(document.readyState!=='loading')ozInit();else document.addEventListener('DOMContentLoaded',ozInit);
 </script>
-<script src="js/uyelik.js?v=4"></script>
+<script src="js/uyelik.js?v=5"></script>
+<script src="../shared/mahalle-endeks.js?v=2"></script>
+<script>
+/* danışman — MAHALLE ENDEKSİ bootstrap → shared/mahalle-endeks.js (İstanbul · gerçek mahalle) */
+(function(){
+  var _inst=null, ISTIL='İstanbul';
+  function districts(){ var d={}; try{ var T=(window.TR_ILILCE&&TR_ILILCE[ISTIL])||null; if(T&&T.ilce)T.ilce.forEach(function(ic){ if(!/il Merkezi|^Merkez$/.test(ic))d[ic]=[]; }); }catch(e){} return d; }
+  function mProx(u,o){ try{
+    if(o&&o.method==='POST'){ return fetch(EMLAK_API_BASE+u,{method:'POST',mode:'cors',headers:(function(){var h={'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h['X-Tenant-Key']=EMLAK_TENANT.tenant_key;return h;})(),body:JSON.stringify(o.body||{})}).then(function(r){return r.ok?r.json():{fallback:true};}).catch(function(){return {fallback:true};}); }
+    return (typeof proxApi==='function')?proxApi(u):Promise.resolve(null);
+  }catch(e){return Promise.resolve(null);} }
+  function loadMah(il,ilce){ try{ if(typeof fetchMahalleler==='function'){ return Promise.resolve(fetchMahalleler(il,ilce)).then(function(a){ a=Array.isArray(a)?a:((a&&a.mahalleler)||[]); return a.map(function(x){return (x&&(x.ad||x.name||x.mahalle))||x;}).filter(Boolean).slice(0,40); }).catch(function(){return [];}); } }catch(e){} return Promise.resolve([]); }
+  function waHref(t){ return 'https://wa.me/905320000000?text='+encodeURIComponent(t); }
+  function boot(){
+    var host=document.getElementById('mahEndeks'); if(!host||!window.MahalleEndeks)return;
+    if(_inst){try{_inst.refresh();}catch(e){}return;}
+    _inst=window.MahalleEndeks.mount(host,{
+      proxApi:mProx, province:function(){return ISTIL;}, districts:districts, loadMah:loadMah,
+      ozData:function(){return [];},
+      goOzel:function(){try{var e=document.getElementById('ozFiyatMatris');if(e)e.scrollIntoView({behavior:'smooth'});}catch(e){}},
+      onLead:function(){try{if(typeof ozOpenTalep==='function')ozOpenTalep();else if(typeof navGo==='function')navGo('randevu');else location.href='index.html#randevu';}catch(e){}},
+      waHref:waHref, accent:'#00452b'
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,300);});
+  else setTimeout(boot,300);
+})();
+</script>
+<script src="../shared/doviz.js?v=2"></script>
 </body>
 </html>

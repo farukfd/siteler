@@ -1,0 +1,71 @@
+/* insaat/css/chrome.css
+   Ana sayfa (index) ve alt sayfalarla BİREBİR AYNI header + footer "kabuk" CSS'i.
+   Alt sayfaların self-contained inline <style>'ından çıkarıldı; base.css'ten SONRA
+   yüklenir → yüksek özgüllük (header#hdr…) + geç yükleme ile kabuğu birebir eşitler.
+   Değişkenler (--accent, --ink, --surface, --brand, --head, --body…) base.css/brand.js'ten gelir. */
+
+.wrap{max-width:var(--maxw,1240px);margin:0 auto;padding:0 24px}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:13px 22px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;border:0;transition:.2s;font-family:var(--body)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--on-accent);box-shadow:var(--shadow-sm)}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff}
+header#hdr{position:sticky;top:0;z-index:60;transition:.25s;background:transparent}
+header#hdr .bar{display:flex;align-items:center;justify-content:space-between;height:72px}
+header#hdr .logo{display:flex;align-items:center;gap:11px;font-family:var(--head);font-weight:800;font-size:22px;letter-spacing:-.02em;color:#fff}
+header#hdr .logo .mark{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-size:19px;box-shadow:var(--shadow-sm)}
+header#hdr .logo .lo2{color:var(--accent-2)}
+header#hdr nav.main{display:flex;gap:28px;align-items:center;margin-left:auto;margin-right:26px}
+header#hdr nav.main a{font-weight:600;font-size:15px;color:rgba(255,255,255,.86);position:static}
+header#hdr nav.main a::after{content:none}
+header#hdr nav.main a:hover{color:#fff}
+header#hdr .nav-cta{display:flex;align-items:center;gap:12px}
+/* header CTA butonları — TÜM sayfalarda birebir aynı (alt sayfaların kompakt .btn'iyle eşit; nav konumu kaymasın) */
+header#hdr .nav-cta .btn{font-family:var(--head);font-weight:600;font-size:14.5px;padding:11px 20px;border-radius:10px}
+header#hdr.scrolled{background:var(--surface);box-shadow:0 6px 24px -16px rgba(13,30,60,.4);backdrop-filter:blur(12px)}
+header#hdr.scrolled .logo{color:var(--ink)}
+header#hdr.scrolled nav.main a{color:var(--muted)}
+header#hdr.scrolled nav.main a:hover{color:var(--ink)}
+header#hdr.scrolled .btn-ghost{border-color:rgba(255,255,255,.22);color:var(--ink)}
+header#hdr.scrolled .burger span{background:var(--ink)}
+header#hdr.scrolled .lang-sel{color:var(--ink)}
+header#hdr.scrolled .nav-wa{color:var(--ink)}
+header#hdr .burger{display:none;background:none;border:0;cursor:pointer;width:42px;height:42px}
+header#hdr .burger span{display:block;height:2px;background:#fff;margin:5px 0;transition:.2s}
+@media(max-width:980px){header#hdr nav.main,header#hdr .nav-cta .btn-ghost{display:none}header#hdr .burger{display:block}}
+@media(max-width:600px){header#hdr .nav-cta .btn-primary{display:none}header#hdr .logo{font-size:19px;gap:9px}header#hdr .bar{height:64px}}
+.mnav{position:fixed;inset:0;background:rgba(8,16,30,.6);backdrop-filter:blur(4px);z-index:80;opacity:0;pointer-events:none;transition:.25s}
+.mnav.open{opacity:1;pointer-events:auto}
+.mnav .panel{position:absolute;right:0;top:0;height:100%;width:min(320px,84vw);background:var(--surface);padding:26px 22px;display:flex;flex-direction:column;gap:4px;transform:translateX(100%);transition:.3s}
+.mnav.open .panel{transform:none}.mnav a{padding:13px 8px;border-bottom:1px solid var(--line);font-weight:600;color:var(--ink)}
+footer.insaatFooter{background:var(--brand);color:#b9c6dc;padding:60px 0 0;margin-top:0}
+footer.insaatFooter .fgrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:32px;padding-bottom:36px}
+footer.insaatFooter h4{color:#fff;font-size:15px;margin-bottom:14px}
+footer.insaatFooter a{display:block;color:#a9b8d0;padding:5px 0;font-size:14px}footer.insaatFooter a:hover{color:#fff}
+footer.insaatFooter .lo{color:#fff;font-family:var(--head);font-weight:800;font-size:22px;margin-bottom:12px}footer.insaatFooter .lo .lo2{color:var(--accent-2)}
+footer.insaatFooter p.desc{font-size:14px;color:#9fb0ca;max-width:34ch}
+footer.insaatFooter .fbot{border-top:1px solid rgba(255,255,255,.1);padding:18px 0;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13px;color:#8fa0bb}
+@media(max-width:880px){footer.insaatFooter .fgrid{grid-template-columns:1fr 1fr;gap:24px}}
+.nb-x{display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;background:var(--accent);color:#160a03;border-radius:6px;font-weight:800;font-size:.9em;line-height:1;vertical-align:middle;position:relative;top:-1px;margin:0 3px}
+.nav-wa{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;color:#25d366;border:1px solid var(--line);background:rgba(255,255,255,.05);transition:.2s;text-decoration:none}
+.nav-wa:hover{background:rgba(37,211,102,.16)}.nav-wa svg{width:20px;height:20px}
+.lang-sw{display:inline-flex;align-items:center;gap:5px}.lang-sw>svg{width:17px;height:17px;color:var(--muted)}
+.lang-sel{border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:9px;padding:7px 8px;font-family:var(--body);font-weight:700;font-size:12.5px;color:#fff;cursor:pointer;outline:none}
+@media(max-width:980px){.nav-wa,.lang-sw{display:none}}
+.fsocial{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.fsocial a{width:38px;height:38px;border-radius:11px;display:inline-grid;place-items:center;padding:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);color:#b9c6dc;transition:.2s ease}
+.fsocial a:hover{background:var(--accent);border-color:transparent;color:#fff;transform:translateY(-2px)}
+.fsocial svg{width:17px;height:17px;fill:currentColor;display:block}
+.flegal{display:flex;flex-wrap:wrap;gap:8px;font-size:12.5px;margin-top:14px}
+.flegal a{display:inline-block;color:#8fa0bd;padding:2px 0}.flegal a:hover{color:#fff}
+.fportals{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:16px}
+.fportals .fp-lead{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8fa0bb;margin-right:2px}
+.fportals .fp{font-family:var(--head);font-weight:800;font-size:12.5px;line-height:1;padding:7px 12px;border-radius:8px;text-decoration:none;transition:.2s ease;box-shadow:0 4px 12px -6px rgba(0,0,0,.5)}
+.fportals .fp:hover{transform:translateY(-2px);filter:brightness(1.05)}
+.fportals .fp-sah{background:#ffe800;color:#12100a}
+.fportals .fp-hep{background:#ff5000;color:#fff}
+.fportals .fp-ejt{background:#0a4bd6;color:#fff}
+.fprox{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.fprox .fprox-lead{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#7f8ea8;font-weight:600}
+.fprox .fprox-pro{font-family:var(--head);font-weight:800;font-size:15px;color:#fff}
+.fprox .fprox-x{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;height:1.4em;background:#16a34a;color:#0b1220;border-radius:6px;font-family:var(--head);font-weight:800;font-size:14px;margin-left:2px}
+.fvo{color:#b9c6dc;font-weight:600}

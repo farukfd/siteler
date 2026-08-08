@@ -2,7 +2,12 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
+<style>/* ov-pre: derin-link kapısı — overlay hedefliyse ana sayfa boyanmaz */
+html.ov-pre body{visibility:hidden}</style>
+<script>try{var _h=location.hash;if(['#kur','#blog','#randevu','#admin'].indexOf(_h)>=0){document.documentElement.classList.add('ov-pre');setTimeout(function(){document.documentElement.classList.remove('ov-pre');},2600);}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde kaldırılır -->
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"><!-- üretim tenant -->
 <title>Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı</title>
 <meta name="description" content="Yetki belgeli kişiye özel emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy, ücretsiz gayrimenkul değer analizi ve ProX AI danışman.">
 <meta name="keywords" content="lüks konut danışmanı, özel portföy, yalı, penthouse, kişiye özel emlak, ücretsiz gayrimenkul analizi, gizli satış">
@@ -13,7 +18,8 @@
 <!-- ============ ProX SaaS API ÇEKİRDEĞİ (additive, single-file) ============ -->
 <script>
 window.EMLAK_API_BASE = "https://www.emlakekspertizi.com";
-window.EMLAK_TENANT = { id:"consultant", tenant_id:"consultant", tenant_key:"prox_consultant_a383eb07bb544ce3db7323150370bb46", domain:location.hostname, sector:"real_estate_consultant", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"BUSINESS", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"consultant", legalMode:"standard" };
+window.EMLAK_PROXY_MODE = true;/* güvenlik: gizli anahtar istemciye gömülmez */
+window.EMLAK_TENANT = { id:"consultant", tenant_id:"consultant", tenant_key:"", domain:location.hostname, sector:"real_estate_consultant", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"BUSINESS", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"consultant", legalMode:"standard" };
 /* SATIN ALINMIŞ PAKET TABANI — bu site BUSINESS müşterisine aittir; hiçbir alanda "yükselt" kilidi görünmez.
    Sunucu bootstrap yalnızca YUKARI (BUSINESS→ENTERPRISE) yükseltebilir, aşağı düşüremez. */
 window.EMLAK_PACKAGE_FLOOR = "BUSINESS";
@@ -47,14 +53,18 @@ window.proxBootstrap=proxBootstrap;
 <meta property="og:description" content="Yetki belgeli kişiye özel emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy, ücretsiz gayrimenkul değer analizi ve ProX AI danışman.">
 <meta property="og:url" content="https://www.emlakekspertizi.com/demo/danisman/">
 <meta property="og:locale" content="tr_TR">
-<meta property="og:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.png">
+<meta property="og:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.png">
+<meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı">
 <meta name="twitter:description" content="Yetki belgeli kişiye özel emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy, ücretsiz gayrimenkul değer analizi ve ProX AI danışman.">
 
+<!-- ============ JSON-LD · WebSite + SearchAction (AEO/GEO — statik, crawler-görünür) ============ -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","@id":"https://www.emlakekspertizi.com/demo/danisman/#website","name":"Selin Meridyen","url":"https://www.emlakekspertizi.com/demo/danisman/","inLanguage":["tr","en","ru","zh","ar"],"publisher":{"@type":"Organization","name":"Selin Meridyen"},"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://www.emlakekspertizi.com/demo/danisman/ilanlar.html?q={search_term_string}"},"query-input":"required name=search_term_string"}}
+</script>
 <!-- ============ JSON-LD · Person + ProfessionalService ============ -->
 <script type="application/ld+json">
 {
@@ -79,17 +89,19 @@ window.proxBootstrap=proxBootstrap;
   ]
 }
 </script>
-  <link rel="stylesheet" href="css/base.css?v=21">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="favicon.svg">
-<script src="js/brand.js?v=3"></script>
-<script src="js/content.js?v=9"></script>
-<script src="js/i18n/_common.js?v=1"></script><script src="js/i18n/index.js?v=1"></script><script src="js/i18n.js?v=1"></script>
-<script src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
-<script src="js/a11y.js?v=1"></script>
+  <link rel="stylesheet" href="css/base.css?v=22">
+<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg?v=2">
+<script defer src="js/brand.js?v=3"></script>
+<script defer src="js/content.js?v=10"></script>
+<script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
+(function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><script src="js/i18n/index.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
+<script defer src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
+<script defer src="js/a11y.js?v=1"></script>
   <style>/* ana sayfa tam yeşil — overscroll/alt beyaz ekranı önle */html,body{background:#0a3527;overscroll-behavior:none}</style>
-<script src="js/tr-grammar.js?v=3"></script>
-<script src="js/tr-iller.js?v=2"></script><!-- Türkçe gramer tek kaynak (gayrimenkul.html ile ortak) -->
+<script defer src="js/tr-grammar.js?v=3"></script>
+<script defer src="js/tr-iller.js?v=2"></script><!-- Türkçe gramer tek kaynak (gayrimenkul.html ile ortak) -->
 <!-- ============ STITCH DÖNÜŞÜMÜ (ana sayfa · hero/nav/footer HARİÇ tüm bölümler) ============ -->
 <style id="ixStitch">
 /* Konteyner koyu emerald → cool near-white; hero kendi .hero-bg'siyle KOYU KALIR */
@@ -192,7 +204,6 @@ window.proxBootstrap=proxBootstrap;
 </style>
 </head>
 <body>
-
 <!-- ============ TEK SABİT NAV (her sayfada birebir aynı) ============ -->
 <header class="nav" id="nav">
   <div class="wrap nav-in">
@@ -264,6 +275,7 @@ window.proxBootstrap=proxBootstrap;
 
 <!-- CANLI ProX ZEKÂ BANDI (veri paneli hero'dan indi) -->
 <!-- ============ CANLI ProX BÖLGE ZEKÂSI (birleştirilmiş · hero altı · canlı panel) ============ -->
+<div class="doviz-bandi" id="dovizBandi" aria-label="Döviz ve altın bilgi bandı"></div>
 <section class="sec-pad bz-sec" id="bolgeAnaliz">
   <div class="wrap">
     <div class="sec-h reveal">
@@ -328,7 +340,7 @@ window.proxBootstrap=proxBootstrap;
       <h2>Açık portföy · tam şeffaf bilgi</h2>
       <p>Fiyat, oda, metrekare ve bölge bilgisi açıkça paylaşılan güncel lüks ilanlar. Detaylı bilgi ve ücretsiz değer analizi için bana ulaşın.</p>
     </div>
-    <div class="card-grid" id="homeListings"></div>
+    <div class="lst-grid home3" id="homeListings"></div>
     <div style="text-align:center;margin-top:40px"><a class="btn btn-line" onclick="navGo('ilanlar')">Tüm İlanları Aç</a></div>
   </div>
 </section>
@@ -418,6 +430,7 @@ window.proxBootstrap=proxBootstrap;
   <div class="wrap">
     <div class="ref-head">
       <div class="eyebrow" data-cms="ref_eyebrow"><span class="eb-dot"></span>Referanslar · Müşteri Deneyimi</div>
+      <div id="gRateBadge" class="grate-wrap" aria-live="polite"></div>
       <h2 data-cms="ref_title">Güven, <span class="serif-it">sonuçla</span> kazanılır.</h2>
     </div>
     <div class="ref-grid" id="refGrid">
@@ -432,10 +445,15 @@ window.proxBootstrap=proxBootstrap;
 <div id="siteFooter"></div>
 </div><!-- /homeView -->
 
-<script src="js/ilan-data.js?v=1"></script><!-- ortak gerçek ilan verisi (ilanlar.html ile paylaşımlı) -->
+<script src="js/ilan-data.js?v=4"></script><!-- ortak gerçek ilan verisi (ilanlar.html ile paylaşımlı) -->
 <script src="../shared/eids.js?v=1"></script>
-<script src="js/app.js?v=32"></script>
-<script src="js/uyelik.js?v=4"></script>
+<script src="../shared/listing.js?v=24"></script>
+<script src="../shared/listing-extras.js?v=9"></script>
+<script src="../shared/cs-engine.js?v=2"></script>
+<script src="js/content-studio.js?v=3"></script>
+<script src="js/app.js?v=52"></script>
+<script src="js/uyelik.js?v=5"></script>
+<script src="../shared/doviz.js?v=2"></script>
 </body>
 </html>
 

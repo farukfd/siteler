@@ -1,7 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- DEMO tabanı: üretim tenant sitesinde base kök alan adına göre yeniden üretilir. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.emlakekspertizi.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://www.emlakekspertizi.com/hizmetlerimiz.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.emlakekspertizi.com/nedenbiz.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.emlakekspertizi.com/portfoy.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/index.html</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/ilanlar.html</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/portfoy.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/ozel/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/hizmetlerimiz.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/nedenbiz.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/prox-asistan.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/hakkimizda.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/iletisim.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/kvkk.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/gizlilik.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/cerez.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/kullanim-kosullari.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/harita.html</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/sat/</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/analiz/</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/blog/</loc></url>
+
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/emlak-ekspertizi/</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/danismanlar/</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/referanslar/</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/fiyat-alarmi/</loc></url>
+
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/sss.html</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/blog.html</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/karsiyaka.html</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/bornova.html</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/konak.html</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/bayrakli.html</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/cesme.html</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/gayrimenkul/urla.html</loc></url>
 </urlset>

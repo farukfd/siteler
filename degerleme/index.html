@@ -1050,8 +1050,10 @@ html{transition:none}
 
 </style>
 <script src="js/brand.js?v=2"></script>
+<script src="../shared/cs-engine.js?v=2"></script>
 </head>
 <body>
+<div role="note" aria-label="Demo bildirimi" style="background:#0f2740;color:#dbeafe;font:600 12.5px/1.45 system-ui,-apple-system,sans-serif;text-align:center;padding:7px 14px;border-bottom:1px solid rgba(255,255,255,.12)">🔎 <b>DEMO · Tanıtım sürümü</b> — Bu sitedeki içerik, ekip, referans ve örnekler <b>temsilîdir</b>, gerçek veri değildir. Kurumsal firmalara özel gerçek sürüm: <a href="https://www.nadas.com.tr/white-label.html" style="color:#7dd3fc;text-decoration:underline">nadas.com.tr</a></div>
 
 <!-- ===== HEADER (5 link) ===== -->
 <header class="hdr">
@@ -1812,9 +1814,20 @@ html{transition:none}
   try { degApplySettings(); } catch (e) {}
 
   /* ---- ProX AI köprüsü (chat hook'u — UI sonraki adım) ---- */
+  /* Site Asistanı ajanı (deg_cs_site) — İçerik Ajanı'ndan bağımsız; kendi anahtar+prompt+yetenek */
+  var _degSite=null;
+  function _degSiteEng(){ try{ if(!window.CSEngine)return null; if(!_degSite){ _degSite=CSEngine.create({store:'deg_cs_site',tenantId:(window.EMLAK_TENANT&&EMLAK_TENANT.tenant_id)||'valuation',proxBase:(window.EMLAK_API_BASE||'https://www.emlakekspertizi.com')}); if(!localStorage.getItem('deg_cs_site')){try{var a=JSON.parse(localStorage.getItem('deg_admin')||'{}');_degSite.setKeys({proxKey:a.proxKey||'',dsKey:a.deepseekKey||''});}catch(e){}} } }catch(e){} return _degSite; }
   window.degProxAi = async function (prompt) {
-    var r = await proxApi('/api/v1/tenant/prox/ai', { method: 'POST', body: { prompt: String(prompt || '') } });
-    return (r && r.answer) ? r.answer : 'ProX yanıtı şu anda alınamadı; lütfen başvuru üzerinden uzmanımıza ulaşın.';
+    var E=_degSiteEng();
+    if(E){ var lang='tr'; try{lang=localStorage.getItem('deg_lang')||'tr';}catch(e){}
+      var caps=E.getCaps(); if(!caps||!Object.keys(caps).length)caps={phone:true,lead:true,advice:true,match:false,multilang:true};
+      try{ var r=await E.reply({ message:String(prompt||''), brand:(typeof brandName==='function'?brandName():'Meridyen Değerleme'), city:'', lang:lang, caps:caps, prompt:E.sysPrompt(),
+        onLead:function(l){ try{ if(typeof window.degSaveLead==='function')window.degSaveLead({name:'',phone:l.phone,konu:'Site Asistanı — geri arama talebi',mesaj:l.message,source:'site-asistan'}); }catch(e){} } });
+        if(r&&r.ok)return r.answer;
+      }catch(e){}
+    }
+    var rr = await proxApi('/api/v1/tenant/prox/ai', { method: 'POST', body: { prompt: String(prompt || '') } });
+    return (rr && rr.answer) ? rr.answer : 'ProX yanıtı şu anda alınamadı; lütfen başvuru üzerinden uzmanımıza ulaşın.';
   };
 
   /* ---- Blog: emlakekspertizi.com/blog API (varsa #blog'u doldurur; yoksa statik kalır) ---- */
@@ -1978,7 +1991,7 @@ html{transition:none}
     document.documentElement.dir = _i18nRTL[lang] ? 'rtl' : 'ltr';
     if (lang === 'tr') { _nodes.forEach(function (x) { x.n.nodeValue = x.tr; }); _phs.forEach(function (x) { x.el.setAttribute('placeholder', x.tr); }); return; }
     var d = _i18n[lang];
-    if (!d) { try { var r = await fetch('assets/i18n/' + lang + '.json'); d = await r.json(); } catch (e) { d = {}; } _i18n[lang] = d; }
+    if (!d) { try { var r = await fetch('assets/i18n/' + lang + '.json?v=2'); d = await r.json(); } catch (e) { d = {}; } _i18n[lang] = d; }
     _nodes.forEach(function (x) { var k = x.tr.trim(); var t = d[k]; x.n.nodeValue = t ? x.tr.replace(k, t) : x.tr; });
     _phs.forEach(function (x) { var t = d[(x.tr || '').trim()]; x.el.setAttribute('placeholder', t || x.tr); });
   }

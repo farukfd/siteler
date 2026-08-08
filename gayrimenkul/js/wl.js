@@ -35,13 +35,23 @@ try{var TH=(d.THEME&&d.THEME.accent)?d.THEME:null;if(TH){
   var _lx=function(h,a){var n=parseInt(h.slice(1),16),r=Math.min(255,(n>>16)+a),g=Math.min(255,((n>>8)&255)+a),b=Math.min(255,(n&255)+a);return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);};
   var _dk=function(h,a){var n=parseInt(h.slice(1),16),r=Math.max(0,(n>>16)-a),g=Math.max(0,((n>>8)&255)-a),b=Math.max(0,(n&255)-a);return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);};
   var rs=document.documentElement.style,ac=TH.accent,gr=TH.green||'#1e7e3a',nv=TH.navy||'#0f1f3d';
-  rs.setProperty('--accent',ac);rs.setProperty('--accent-2',_lx(ac,18));
-  rs.setProperty('--green',gr);rs.setProperty('--green-700',_dk(gr,16));rs.setProperty('--green-200',_lx(gr,34));
+  rs.setProperty('--accent',ac);rs.setProperty('--accent-2',_lx(ac,18));rs.setProperty('--accent-deep',_dk(ac,22));
+  rs.setProperty('--green',gr);rs.setProperty('--green-700',_dk(gr,16));rs.setProperty('--green-200',_lx(gr,34));rs.setProperty('--success',gr);rs.setProperty('--success-700',_dk(gr,16));
   rs.setProperty('--c-bg-navy',nv);rs.setProperty('--c-bg-deep',_dk(nv,6));
+  /* WIPE-PROOF: kalıcı <style> bloğu (index ile aynı) — documentElement.style sıfırlanırsa devrede. --accent-deep türetilir → gradyan/ibre tenant rengine döner. */
+  try{var _tst=document.getElementById('tenant-theme');if(!_tst){_tst=document.createElement('style');_tst.id='tenant-theme';}_tst.textContent=':root{--accent:'+ac+';--accent-2:'+_lx(ac,18)+';--accent-deep:'+_dk(ac,22)+';--green:'+gr+';--green-700:'+_dk(gr,16)+';--green-200:'+_lx(gr,34)+';--success:'+gr+';--c-bg-navy:'+nv+';--c-bg-deep:'+_dk(nv,6)+';}';(document.head||document.documentElement).appendChild(_tst);}catch(e){}
 }}catch(e){}
+/* Tipografi teması (statik sayfalar): d.THEME.font → Google Fonts yükle + gövde fontu (base.css'i kırmadan) */
+try{var _tf=(d.THEME&&d.THEME.font)||'';var _CF={'Inter':'Inter:wght@400;500;600;700;800','Poppins':'Poppins:wght@400;500;600;700','Manrope':'Manrope:wght@400;500;600;700;800','Sora':'Sora:wght@400;500;600;700','DM Sans':'DM+Sans:wght@400;500;600;700','Nunito':'Nunito:wght@400;600;700;800','Montserrat':'Montserrat:wght@400;500;600;700','Figtree':'Figtree:wght@400;500;600;700','Playfair Display':'Playfair+Display:wght@500;600;700'};
+if(_tf&&_CF[_tf]){var _lid='brand-font-'+_tf.replace(/\s+/g,'');if(!document.getElementById(_lid)){var _l=document.createElement('link');_l.rel='stylesheet';_l.id=_lid;_l.href='https://fonts.googleapis.com/css2?family='+_CF[_tf]+'&display=swap';(document.head||document.documentElement).appendChild(_l);}
+  var _ap=function(){if(document.body)document.body.style.fontFamily="'"+_tf+"', system-ui, -apple-system, sans-serif";};if(document.body)_ap();else document.addEventListener('DOMContentLoaded',_ap);}}catch(e){}
 
 /* ---- 2) Marka + gramerli şehir ---- */
-var shortN=name.split(/\s+/)[0]||OSHORT;
+/* Kısa marka adı: jenerik kategori/hukuki ekleri at ("Batı Ege Gayrimenkul"→"Batı Ege",
+   "Yıldız Gayrimenkul Danışmanlık A.Ş."→"Yıldız"). Demo "Meridyen Gayrimenkul"→"Meridyen".
+   Tek-kelime kalırsa/hepsi jenerikse ilk kelimeye düş. */
+function _wlShort(nm,fb){nm=(nm||'').trim();if(!nm)return fb;var s=nm.replace(/\s*(a\.?\s*ş\.?|ltd\.?\s*şti\.?|ltd\.?|şti\.?|inc\.?|llc)\s*$/gi,'').trim();s=s.replace(/\b(gayrimenkul|emlak|danışmanlık|danismanlik|inşaat|insaat|yapı|yapi|real\s*estate|realty|holding|group|grup|proje|müşavirlik|musavirlik)\b/gi,' ').replace(/\s+/g,' ').trim();return s||nm.split(/\s+/)[0]||fb;}
+var shortN=_wlShort(name,OSHORT);
 function lv(w){var m=(w||'').toLowerCase().match(/[aeıioöuü]/g);return m?m[m.length-1]:'a';}
 function bk(v){return 'aıou'.indexOf(v)>=0;}function ro(v){return 'ouöü'.indexOf(v)>=0;}
 function I(v){return bk(v)?(ro(v)?'u':'ı'):(ro(v)?'ü':'i');}function A(v){return bk(v)?'a':'e';}
@@ -155,7 +165,20 @@ async function wlLang(v){
 }
 try{window.gmLang=wlLang;}catch(e){}   /* statik "yakında" stub'ını gerçek çeviriyle değiştir */
 
-function start(){buildBolge();sweep();if(customized&&'MutationObserver' in window){obs=new MutationObserver(function(){clearTimeout(to);to=setTimeout(function(){sweep();},150);});obs.observe(document.body,{childList:true,subtree:true});}setTimeout(function(){buildBolge();sweep();},400);
+/* Sosyal medya (statik sayfalar): FIRMA.social'dan href yaz; boşsa demo linkini gizle (tenant'ta Meridyen'e gitmesin) */
+function applySocialWL(){try{var S=(d.FIRMA&&d.FIRMA.social)||{};if(!customized)return;
+  var P=[['fb','facebook.com/meridyengayrimenkul'],['ig','instagram.com/meridyengayrimenkul'],['x','x.com/meridyengm'],['li','linkedin.com/company/meridyengayrimenkul'],['yt','youtube.com/@meridyengayrimenkul']];
+  /* En az bir hesap girildiyse boşlar gizlenir (kiracı Meridyen'e gitmesin); HİÇBİRİ
+     girilmemişse demo ikonlar görünür kalır — yoksa yalnız nsosyal kalıyordu (bug). */
+  var anySet=P.some(function(m){return (S[m[0]]||'').trim();});
+  P.forEach(function(m){
+    var v=(S[m[0]]||'').trim();
+    document.querySelectorAll('a[href*="'+m[1]+'"]').forEach(function(a){
+      if(v){a.href=/^https?:\/\//i.test(v)?v:('https://'+v.replace(/^\/+/,''));a.style.display='';}else{a.style.display=anySet?'none':'';}
+    });
+  });
+}catch(e){}}
+function start(){buildBolge();sweep();applySocialWL();if(customized&&'MutationObserver' in window){obs=new MutationObserver(function(){clearTimeout(to);to=setTimeout(function(){sweep();},150);});obs.observe(document.body,{childList:true,subtree:true});}setTimeout(function(){buildBolge();sweep();},400);
   /* kaydedilmiş dil TR değilse otomatik uygula (SPA ile tutarlı çok-dillilik) */
   try{var _sv=localStorage.getItem('wl_lang');if(_sv&&_sv!=='tr')setTimeout(function(){try{wlLang(_sv);}catch(e){}},550);}catch(e){}}
 if(document.readyState!=='loading')start();else document.addEventListener('DOMContentLoaded',start);

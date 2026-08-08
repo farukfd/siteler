@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Meridyen Yapı — indekslenebilir sayfalar. Deploy'da domain kiracıya göre değişir. -->
+<!-- Meridyen Yapı — DEMO tabanı; üretim tenant sitesinde base kök alan adına göre yeniden üretilir. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.meridyenyapi.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://www.meridyenyapi.com/hizmetlerimiz.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.meridyenyapi.com/projelerimiz.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.meridyenyapi.com/bolge.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.meridyenyapi.com/soru-cevap.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.meridyenyapi.com/neden-biz.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/index.html</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/ilanlar.html</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/projelerimiz.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/hizmetlerimiz.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/ozel-portfoy.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/bolge.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/neden-biz.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/soru-cevap.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/vizyon-misyon.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/yonetim.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/kalite.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/kariyer.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/medya.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/kvkk.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/gizlilik.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/cerez.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/kullanim-kosullari.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/harita.html</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/emlak-ekspertizi.html</loc></url>
 </urlset>

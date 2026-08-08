@@ -91,7 +91,32 @@
     return on;
   }
   function dnFavReflect(){try{var a=_favArr();document.querySelectorAll('.vc-fav[data-fid],.pf-fav[data-fid]').forEach(function(b){var on=a.some(function(f){return f.id===b.getAttribute('data-fid');});b.classList.toggle('on',on);b.innerHTML=on?'♥':'♡';});}catch(e){}}
-  function _mergeGuestFavs(){try{var g=[];try{g=JSON.parse(localStorage.getItem(DN_FAV_GUEST)||'[]');}catch(e){}if(g.length&&authSession()){var a=_favArr();g.forEach(function(f){if(!a.some(function(x){return x.id===f.id;}))a.unshift(f);});_favSave(a);localStorage.removeItem(DN_FAV_GUEST);}}catch(e){}}
+
+  /* ── HESAP-SENKRON KÖPRÜSÜ: shared/listing.js (ns=dnil) ↔ üye snapshot favorileri ──
+     Girişliyken tek kaynak üye kaydıdır (dn_fav_<email>, snapshot nesneleri);
+     listing.js id-dizisi bekler → id'ye indirger, senkronda snapshot üretir. */
+  window.GM_FAV_READ=function(ns){
+    if(ns!=='dnil')return null; if(!authSession())return null;
+    try{return _favArr().filter(function(f){return (f.type||'ilan')==='ilan';}).map(function(f){return String(f.id).replace(/^ln/,'');});}catch(e){return null;}
+  };
+  window.GM_FAV_SYNC=function(ns,ids){
+    if(ns!=='dnil'||!authSession())return;
+    try{
+      ids=(ids||[]).map(String);
+      var a=_favArr();
+      a=a.filter(function(f){return (f.type||'ilan')!=='ilan'||ids.indexOf(String(f.id).replace(/^ln/,''))>=0;});
+      var have={}; a.forEach(function(f){have[String(f.id).replace(/^ln/,'')]=1;});
+      var reg=(window.Listings&&window.Listings._reg&&window.Listings._reg[ns])||null;
+      var list=(reg&&reg.list&&reg.list())||[];
+      ids.forEach(function(id){ if(have[id])return;
+        var l=null; for(var i=0;i<list.length;i++){if(String(list[i].id)===id){l=list[i];break;}}
+        a.unshift({id:'ln'+id,type:'ilan',ts:Date.now(),t:(l&&(l.title||l.baslik))||('İlan #'+id),s:l?[l.ilce,l.mah].filter(Boolean).join(' / '):'',p:(l&&(l.priceText||l.price))||'',u:''});
+      });
+      _favSave(a);
+      try{var kc=document.getElementById('hs_favcount');if(kc)kc.textContent=_favArr().length;}catch(e){}
+    }catch(e){}
+  };
+  function _mergeGuestFavs(){try{var g=[];try{g=JSON.parse(localStorage.getItem(DN_FAV_GUEST)||'[]');}catch(e){}if(g.length&&authSession()){var a=_favArr();g.forEach(function(f){if(!a.some(function(x){return x.id===f.id;}))a.unshift(f);});_favSave(a);localStorage.removeItem(DN_FAV_GUEST);}try{var lg=JSON.parse(localStorage.getItem('dnil_favs')||'[]')||[];if(lg.length&&authSession()){var a2=_favArr();lg.map(String).forEach(function(id){if(!a2.some(function(x){return String(x.id)===id;}))a2.unshift({id:id,type:'ilan',ts:Date.now(),t:'İlan #'+id,s:'',p:'',u:''});});_favSave(a2);localStorage.removeItem('dnil_favs');}}catch(e){}}catch(e){}}
 
   /* ===================== 3) ÜYE HESABI (Profil + Talepler) ===================== */
   function _uKey(p){var s=authSession();return s?('dn_'+p+'_'+s.email):null;}

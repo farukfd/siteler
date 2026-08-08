@@ -13,6 +13,7 @@
      2) ProX POST /api/v1/tenant/lead → sunucu CRM (best-effort, CORS açık)
      3) WhatsApp deep-link (ön-dolu mesaj) → danışmanın telefonuna anında (kesin)
    ========================================================================== */
+if(typeof window!=='undefined'&&window.EMLAK_PROXY_MODE===undefined)window.EMLAK_PROXY_MODE=true;/* güvenlik */
 (function () {
   'use strict';
 
@@ -24,7 +25,7 @@
   function tenant() {
     var t = {
       tenant_id: 'consultant',
-      tenant_key: 'prox_consultant_a383eb07bb544ce3db7323150370bb46'
+      tenant_key: ''
     };
     try {
       if (window.EMLAK_TENANT) {
@@ -86,11 +87,7 @@
       return fetch(API_BASE + '/api/v1/tenant/lead', {
         method: 'POST',
         mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Tenant-Id': t.tenant_id,
-          'X-Tenant-Key': t.tenant_key
-        },
+        headers: (function(){var h={'Content-Type':'application/json','X-Tenant-Id':t.tenant_id};if(!window.EMLAK_PROXY_MODE)h['X-Tenant-Key']=t.tenant_key;return h;})(),
         body: JSON.stringify({
           name: rec.name, phone: rec.phone, email: rec.email,
           konu: rec.konu, mesaj: rec.msg, message: rec.msg,

@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde kaldırılır -->
 <title>Satılık & Kiralık İlanlar · Konut, İş Yeri, Arsa — Selin Meridyen</title>
 <meta name="description" content="Selin Meridyen açık portföyü: satılık & kiralık daire, villa, iş yeri ve arsa ilanları. EİDS yetki belgeli ofis; ilanlar Ticaret Bakanlığı EİDS ile doğrulanır. Gerçek görseller, tam detay ve ücretsiz değer analizi.">
 <meta name="keywords" content="satılık daire, kiralık daire, satılık villa, satılık işyeri, kiralık ofis, satılık arsa, EİDS yetki belgeli, lüks konut ilanları, İstanbul emlak">
-<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"><!-- üretim tenant -->
 <link rel="canonical" href="https://www.emlakekspertizi.com/demo/danisman/ilanlar.html">
 <meta name="author" content="Selin Meridyen">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,10 +19,10 @@
 <meta property="og:description" content="Daire, villa, iş yeri ve arsa; gerçek görseller ve tam detayla. EİDS yetki belgeli ofis; ilanlar EİDS ile doğrulanır.">
 <meta property="og:url" content="https://www.emlakekspertizi.com/demo/danisman/ilanlar.html">
 <meta property="og:locale" content="tr_TR">
-<meta property="og:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.png">
+<meta property="og:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.png">
+<meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="İlanlar · Selin Meridyen (EİDS yetki belgeli)">
 <meta name="twitter:description" content="Satılık & kiralık daire, villa, iş yeri, arsa — gerçek görseller, tam detay.">
@@ -31,17 +32,21 @@
   "isPartOf":{"@type":"WebSite","name":"Selin Meridyen","url":"index.html"},
   "about":{"@type":"RealEstateAgent","name":"Selin Meridyen · Lüks Konut & Özel Portföy Danışmanlığı","provider":{"@type":"Person","name":"Selin Meridyen"}} }
 </script>
-<link rel="stylesheet" href="css/base.css?v=21">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="favicon.svg">
-<script src="js/brand.js?v=3"></script>
-<script src="js/tr-grammar.js?v=3"></script><script src="js/content.js?v=9"></script>
-<script src="js/i18n/_common.js?v=1"></script><script src="js/i18n/ilanlar.js?v=1"></script><script src="js/i18n.js?v=1"></script>
-<script src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
-<script src="js/a11y.js?v=1"></script>
+<link rel="stylesheet" href="css/base.css?v=22">
+<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg?v=2">
+<script defer src="js/brand.js?v=3"></script>
+<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=10"></script>
+<script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
+(function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><script src="js/i18n/ilanlar.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
+<script defer src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
+<script defer src="js/a11y.js?v=1"></script>
 <script src="js/share.js?v=5"></script>
 <script src="../shared/eids.js?v=1"></script>
-<link rel="stylesheet" href="css/portfoy.css?v=9">
+<script src="../shared/listing.js?v=24"></script>
+<script src="../shared/listing-extras.js?v=9"></script>
+<link rel="stylesheet" href="css/portfoy.css?v=10">
 <!-- ============ STITCH DÖNÜŞÜMÜ (ilanlar · ozel-portfoy "Aegean Heritage Wealth" diliyle hizalı) ============ -->
 <style id="ilStitch">
 /* Sayfa zemini — cool near-white */
@@ -139,7 +144,6 @@ window.dnTrack=function(ev,params){try{gtag('event',ev,params||{});}catch(e){}tr
 </script>
 </head>
 <body class="pf-page">
-
 <!-- ============ ÜST MENÜ (birebir) ============ -->
 <header class="nav scrolled" id="nav">
   <div class="wrap nav-in">
@@ -167,6 +171,7 @@ window.dnTrack=function(ev,params){try{gtag('event',ev,params||{});}catch(e){}tr
   </div>
 </header>
 
+<div class="doviz-bandi" id="dovizBandi" aria-label="Döviz ve altın bilgi bandı"></div>
 <main>
 <!-- ============ HERO CAROUSEL (öne çıkan ilanlar döner) ============ -->
 <section class="ilh" id="ilHero" style="padding-top:78px"><div id="ilHeroSlides"></div>
@@ -210,7 +215,7 @@ window.dnTrack=function(ev,params){try{gtag('event',ev,params||{});}catch(e){}tr
     </div>
     <div class="pf-grid" id="ilGrid"><div class="pf-skel">İlanlar yükleniyor…</div></div>
     <div class="pf-mapview" id="ilMapView"><div id="ilLeaflet"></div></div>
-    <div class="pf-note">Ofisimiz <b>EİDS yetki belgelidir</b> (Taşınmaz Ticareti Yetki Belgesi). Her ilan T.C. Ticaret Bakanlığı EİDS ile doğrulanır; kartında doğrulama durumu (doğrulandı / bekliyor) gösterilir. Detay ve yerinde inceleme için <a href="index.html#randevu">ücretsiz ekspertiz</a> alın.</div>
+    <div class="pf-note">Ofisimiz <b>EİDS yetki belgelidir</b> (Taşınmaz Ticareti Yetki Belgesi). Her ilanın EİDS yetki durumu kartında (doğrulandı / bekliyor) takip edilir; resmî doğrulama, yetkili EİDS/TTBS bağlantısı üzerinden yapılır.<!-- HONESTY (P0-10): "her ilan EİDS ile doğrulanır" (canlı doğrulama izlenimi) → durum-takibi + resmî doğrulamanın yetkili bağlantıyla yapıldığı. --> Detay ve yerinde inceleme için <a href="index.html#randevu">ücretsiz ekspertiz</a> alın.</div>
   </div>
 </section>
 
@@ -300,9 +305,9 @@ window.dnTrack=function(ev,params){try{gtag('event',ev,params||{});}catch(e){}tr
         </div>
         <div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
       </div>
-      <div><h4>Keşfet</h4><ul><li><a href="ilanlar.html">İlanlar</a></li><li><a href="ozel-portfoy.html">Özel Portföy</a></li><li><a href="index.html#surec">Süreç</a></li><li><a href="index.html#randevu">Ücretsiz Analiz</a></li></ul></div>
-      <div><h4>Kurumsal</h4><ul><li><a href="index.html">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="sss.html">S.S.S</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>
-      <div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li></ul></div>
+      <div><h4>Keşfet</h4><ul><li><a href="ilanlar.html">İlanlar</a> <a href="harita.html">Harita</a> <a href="emlak-ekspertizi.html">Emlak Ekspertizi</a></li><li><a href="ozel-portfoy.html">Özel Portföy</a></li><li><a href="blog.html">Blog</a></li><li><a href="semtler.html">Semt Rehberi</a></li><li><a href="yatirim-rehberi.html">Yatırım Rehberi</a></li><li><a href="index.html#surec">Süreç</a></li><li><a href="index.html#randevu">Ücretsiz Analiz</a></li></ul></div>
+      <div><h4>Kurumsal</h4><ul><li><a href="index.html">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="referanslar.html">Referanslar</a></li><li><a href="sss.html">S.S.S</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>
+      <div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="gizlilik.html">Gizlilik Politikası</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li></ul></div>
     </div>
     <div class="fbot">
       <span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span>
@@ -396,6 +401,9 @@ function ilSetView(v){VIEW=v;document.querySelectorAll('#ilView button').forEach
   if(v==='harita'){grid.style.display='none';map.classList.add('on');ilMapRender();}
   else{grid.style.display='';map.classList.remove('on');}}
 
+function pfCmp(l){ if(!(window.Listings&&Listings._extToggleCmp))return '';
+  var on=!!(Listings._extHasCmp&&Listings._extHasCmp('dnil',String(l.id)));
+  return '<button class="pf-cmp'+(on?' on':'')+'" title="'+(on?'Karşılaştırmadan çıkar':'Karşılaştırmaya ekle')+'" aria-label="Karşılaştır" onclick="event.stopPropagation();Listings._extToggleCmp(\'dnil\',\''+l.id+'\',this,event)">⇄</button>'; }
 function pfFav(l){var snap={t:l.baslik,s:(l.bolge||'')+' · '+l.durum,p:(l.kira?fmtTL(l.fiyat)+' /ay':fmtTL(l.fiyat)),u:'ilanlar.html'};
   return '<button class="pf-fav" data-fid="ln'+l.id+'" data-ftype="ilan" data-ft="'+esc(snap.t)+'" data-fs="'+esc(snap.s)+'" data-fp="'+esc(snap.p)+'" data-fu="ilanlar.html" onclick="event.stopPropagation();if(window.dnFav)dnFav(this.getAttribute(\'data-fid\'),\'ilan\',this)" aria-label="Favorilere ekle">♡</button>';}
 function pfShare(l){return '<button class="pf-share" onclick="event.stopPropagation();ilShare('+l.id+')" aria-label="Paylaş" title="Sosyal medyada paylaş"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.3M8.3 13.2l7.4 4.3"/></svg></button>';}
@@ -414,7 +422,7 @@ function ilCard(l){
     +'<div class="pf-media"><div class="imwrap"><img src="'+imgURL(l.img)+'" alt="'+esc(l.baslik)+'" loading="lazy" decoding="async"></div><div class="pf-scrim"></div>'
     +'<span class="pf-badge'+(l.kira?'':' gold')+'">'+esc(l.durum)+'</span>'
     +'<span class="pf-eids-m">'+(window.EIDS?EIDS.badgeHTML(l.eids,11):'')+'</span>'
-    +pfFav(l)+pfShare(l)+'</div>'
+    +pfFav(l)+pfShare(l)+pfCmp(l)+'</div>'
     +'<div class="pf-body"><div class="pf-loc">'+ICO_PIN+esc(l.bolge||l.il||'')+'</div>'
     +'<h3 class="pf-title">'+esc(l.baslik)+'</h3>'
     +'<span class="pf-eids">'+(window.EIDS?EIDS.badgeHTML(l.eids,11):'')+'</span>'
@@ -578,6 +586,41 @@ document.addEventListener('keydown',function(e){
 document.addEventListener('click',function(e){var lb=document.getElementById('ilbOverlay');if(lb&&lb.classList.contains('on')&&e.target===lb)ilbClose();});
 if(document.readyState!=='loading')ilInit();else document.addEventListener('DOMContentLoaded',ilInit);
 </script>
-<script src="js/uyelik.js?v=4"></script>
+<script src="js/uyelik.js?v=5"></script>
+<script>
+/* ====== SHARED DETAY MOTORU KÖPRÜSÜ ======
+   Bespoke liste/hero/filtre/harita/funnel/üyelik KORUNUR; yalnız ilan DETAYI
+   ortak motora (shared/listing.js + listing-extras.js) devredilir → medya-entegre
+   galeri (video+360°+kat planı), konut kredisi hesaplama, benzer ilan, karşılaştır,
+   lightbox, enerji rozeti — 3 sitede birebir aynı deneyim. */
+(function(){
+  if(!window.Listings)return;
+  function fmt(n){try{return (window.fmtTL?fmtTL(n):(Math.round(n||0).toLocaleString('tr-TR')+' ₺'));}catch(e){return (n||'')+' ₺';}}
+  function norm(r){ if(!r)return null; var base={type:r.tip||r.type,title:r.baslik||r.title,op:r.durum||r.op};
+    return {id:r.id, title:r.baslik||r.title, op:r.durum||r.op, type:r.tip||r.type,
+      priceText:(r.kira?fmt(r.fiyat)+' /ay':fmt(r.fiyat)),
+      images:((window.Listings&&Listings.catImages)?Listings.catImages(base,4):[]),
+      il:r.il, ilce:r.ilce, mah:r.mahalle||r.mah,
+      specs:[{k:'Brüt m²',v:r.m2},{k:'Oda',v:r.oda},{k:'Kat',v:r.kat},{k:'Isıtma',v:r.isitma}],
+      features:(r.ek&&r.ek.length?r.ek:(r.features||[])), attrs:r.attrs, desc:r.desc, eids:r.eids,
+      videoUrl:r.videoUrl, tour360Url:r.tour360Url, floorplanUrl:r.floorplanUrl, energy:r.energy, ilanNo:r.ilanNo, tarih:r.tarih };
+  }
+  var DN_CFG={ns:'dnil',
+    brand:function(){try{return (document.getElementById('brandName')||{}).textContent||'Selin Meridyen';}catch(e){return 'Selin Meridyen';}},
+    phone:function(){return '+90 532 000 00 00';},
+    whatsapp:function(){return '905320000000';},
+    agent:function(){return {name:'Selin Meridyen',photo:'img/danisman-portresi.jpg',title:'Lüks Konut & Özel Portföy Danışmanı',experience:18};},
+    navHTML:function(){try{var el=document.querySelector('header#nav')||document.querySelector('header');return el?el.outerHTML:'';}catch(e){return '';}},
+    footerHTML:function(){try{var el=document.querySelector('footer');return el?el.outerHTML:'';}catch(e){return '';}},
+    mapQuery:function(l){return [l.mah,l.ilce,l.il].filter(Boolean).join(', ');},
+    onContact:function(){try{Listings.closeDetail();}catch(e){}try{location.href='index.html#randevu';}catch(e){}},
+    list:function(){try{return (window.ALL||[]).map(norm).filter(Boolean);}catch(e){return [];}}
+  };
+  try{Listings.register('dnil',DN_CFG);}catch(e){}
+  /* bespoke ilDetail'i ortak detaya yönlendir (ilCard onclick="ilDetail(id)") */
+  window.ilDetail=function(id){ try{ var l=(window.ALL||[]).filter(function(x){return String(x.id)===String(id);})[0]; if(l)Listings.openDetail(norm(l),DN_CFG); }catch(e){} };
+})();
+</script>
+<script src="../shared/doviz.js?v=2"></script>
 </body>
 </html>

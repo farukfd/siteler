@@ -75,7 +75,39 @@ Tek dosya mimarisi her müşteri için ayrı domaine kopyalanır; farklılıklar
 3. Kiracıya özel `tenant.json` (firma, il, proxyUrl, tenantId, EİDS) → deploy sonrası admin’den bir kez yüklenir **veya** build-time enjekte edilir.
 4. Proxy secret’ları (KEY_*) merkezi secret store’da; repoya asla girmez.
 
-## 4) Kontrol listesi (üretim)
+## 4) Önbellek başlıkları (Cache-Control) — HTML bayat kalmasın
+Sitede tüm JS/CSS `?v=N` sürüm parametresiyle yüklenir; ancak **HTML dosyasının kendisi**
+sürümlenemez. Sunucu HTML için önbellek başlığı göndermezse tarayıcılar sezgisel (heuristic)
+önbellekleme yapar → kullanıcı güncellemeleri ve derin-link kapısını (ov-pre) **eski HTML**
+yüzünden görmez. (Lokal `python3 -m http.server` da başlık göndermediği için aynı belirti
+geliştirmede de görülür; tek seferlik sert yenileme gerekir.)
+
+**Kural:** HTML = her istekte doğrula; sürümlü varlıklar (`?v=`) = uzun süre önbellek.
+
+```nginx
+# nginx
+location ~* \.html$ { add_header Cache-Control "no-cache, must-revalidate"; }
+location ~* \.(js|css)$ { add_header Cache-Control "public, max-age=31536000, immutable"; }
+location ~* \.(jpg|jpeg|png|webp|svg)$ { add_header Cache-Control "public, max-age=604800"; }
+```
+
+```apache
+# Apache .htaccess
+<FilesMatch "\.html$">
+  Header set Cache-Control "no-cache, must-revalidate"
+</FilesMatch>
+<FilesMatch "\.(js|css)$">
+  Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+```
+
+Cloudflare kullanılıyorsa: HTML için **Cache Rule → Bypass cache** (veya Edge TTL: Respect
+origin) + JS/CSS için standart cache. `?v=` bump yapılınca ekstra purge gerekmez; HTML
+no-cache olduğundan yeni sürüm referansları anında yayılır.
+
+## 5) Kontrol listesi (üretim)
+- [ ] **Admin paneli üretimde İSTEMCİDEN ÇIKARILMALI** — mevcut giriş (admin/1234) tamamen istemci-taraflı ve yalnız demo içindir; gerçek dağıtımda admin ayrı origin + sunucu-taraflı kimlik doğrulama (session/JWT) arkasında olmalı, statik pakete admin markup/JS dahil edilmemeli.
+- [ ] HTML `Cache-Control: no-cache, must-revalidate`; JS/CSS `max-age=31536000, immutable` (bkz. §4).
 - [ ] Proxy/Edge kuruldu; `X-Tenant-Key` istemciye sızmıyor (Network sekmesinde header yok).
 - [ ] Proxy yalnızca `/api/v1/tenant/*` allow-list + per-tenant CORS.
 - [ ] Kiracı kotası (rate-limit) proxy’de uygulanıyor.

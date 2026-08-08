@@ -1,0 +1,25 @@
+# Selin Meridyen — Lüks Konut & Özel Portföy Danışmanı
+
+> Yetki belgeli, kişiye özel emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy, ücretsiz gayrimenkul değer analizi ve ProX yapay zeka destekli emlak asistanı.
+
+Not: Kurgusal tanıtım demosudur — ilan, fiyat ve istatistikler temsilîdir.
+
+## Ana Sayfalar
+- [İlanlar](ilanlar.html): Açık portföy; şeffaf fiyat, oda, m² ve bölge bilgisiyle güncel lüks ilanlar.
+- [Özel Portföy](ozel-portfoy.html): Davet usulü, mahremiyeti korunan ayrıcalıklı gayrimenkuller.
+- [Bölge Analizi](bolge-analizi.html): Mahalle m² karşılaştırması ve yatırım skoru.
+- [Hizmetlerimiz](hizmetlerimiz.html) · [Hakkımızda](hakkimizda.html) · [S.S.S](sss.html)
+- [ProX Asistan](prox-asistan.html): ProX veri altyapısına dayalı canlı emlak asistanı.
+
+## İletişim
+- [İletişim](iletisim.html): Randevu talebi, ofis bilgileri ve ücretsiz gayrimenkul değer analizi.
+WhatsApp ve telefonla randevu; ücretsiz değer analizi.
+- [Harita](harita.html): Tüm portföyün gerçek konum haritası; uydu görünümü ve fiyat baloncukları.
+- [Emlak Ekspertizi](emlak-ekspertizi.html): Ücretsiz keşif + ücretsiz Karar Raporu — bölge m² endeksi, güven skoru; SPK lisanslı resmî değerleme yerine geçmez.
+- [Blog](blog.html): Piyasa notları ve lüks konut haberleri.
+- [Randevu](randevu.html): Ücretsiz ön görüşme ve değer analizi randevusu.
+- [Referanslar](referanslar.html): Müşteri görüşleri ve Google puanı.
+- [Süreç](surec.html): 6 aşamalı danışmanlık sürecim.
+- [Yatırım Rehberi](yatirim-rehberi.html): İstanbul lüks konut yatırım rehberi.
+- [Semt Rehberi](semtler.html): Boğaz hattı ve prestij semtleri; temsilî m² bantları.
+- [Gizlilik](gizlilik.html): Gizlilik politikası.

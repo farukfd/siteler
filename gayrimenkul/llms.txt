@@ -1,0 +1,32 @@
+# Meridyen Gayrimenkul
+
+> İzmir ve Ege'de veri odaklı emlak danışmanlığı. EİDS onaylı satılık & kiralık konut, ofis, dükkan ve arsa ilanları; ücretsiz emlak ekspertizi (keşif + Karar Raporu), mahalle bazlı fiyat endeksi ve bölge analizi.
+
+Not: Kurgusal tanıtım demosudur — ilan, fiyat, danışman ve istatistikler temsilîdir.
+
+## Ana Sayfalar
+- [İlanlar](ilanlar.html): EİDS onaylı satılık & kiralık gayrimenkul ilanları; gerçek konum haritası, sahibinden düzeyinde kapsamlı özellik tablosu, 360° sanal tur, video, kat planı, konut kredisi hesaplama, benzer ilan ve karşılaştırma.
+- [Harita](harita.html): Tüm portföyün gerçek konum haritası; uydu görünümü ve fiyat baloncukları.
+- [Portföy](portfoy.html): Açık portföy ve kategori bazlı ilan vitrini.
+- [Özel Portföy](ozel/): Davet/VIP erişimli, gizli/off-market gayrimenkul portföyü.
+- [Hizmetlerimiz](hizmetlerimiz.html): Alım-satım, kiralama, emlak ekspertizi, bölge/yatırım analizi.
+- [Neden Biz](nedenbiz.html): Fark yaratan veri odaklı yaklaşım.
+- [ProX Asistan](prox-asistan.html): ProX'un 480 milyon+ doğrulanmış emlak verisine dayalı canlı emlak danışman sohbeti (satılık/kiralık arama, değerleme, yatırım yönlendirmesi).
+- [Hakkımızda](hakkimizda.html): Kurumsal kimlik, deneyim ve veri odaklı danışmanlık yaklaşımı.
+
+## Emlak Ekspertizi
+- [Emlak Ekspertizi](index.html#degerleme): Ücretsiz keşif + ücretsiz Karar Raporu — 480M+ veri noktası, mahalle m² endeksi, güven skoru; SPK lisanslı resmî değerleme yerine geçmez, gerektiğinde çözüm ortağına yönlendirilir.
+
+## Kurumsal & İletişim
+- [İletişim](iletisim.html): Ofis bilgileri, randevu talebi ve ücretsiz emlak ekspertizi analizi.
+WhatsApp ve telefonla randevu; ücretsiz emlak ekspertizi analizi talebi.
+
+## Bölge Rehberleri
+- [Karşıyaka](karsiyaka.html): Karşıyaka satılık & kiralık bölge rehberi; temsilî m² endeksi ve öne çıkan mahalleler.
+- [Bornova](bornova.html): Bornova satılık & kiralık bölge rehberi; temsilî m² endeksi ve öne çıkan mahalleler.
+- [Konak](konak.html): Konak satılık & kiralık bölge rehberi; temsilî m² endeksi ve öne çıkan mahalleler.
+- [Bayraklı](bayrakli.html): Bayraklı satılık & kiralık bölge rehberi; temsilî m² endeksi ve öne çıkan mahalleler.
+- [Çeşme](cesme.html): Çeşme satılık & kiralık bölge rehberi; temsilî m² endeksi ve öne çıkan mahalleler.
+- [Urla](urla.html): Urla satılık & kiralık bölge rehberi; temsilî m² endeksi ve öne çıkan mahalleler.
+- [SSS](sss.html): Alım-satım, kiralama, Emlak Ekspertizi ve Özel Portföy hakkında 18 soru.
+- [Blog](blog.html): Emlak haberleri ve piyasa notları arşivi.

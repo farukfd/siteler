@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ProX Asistan — Canlı Emlak Zekâsı · Meridyen Gayrimenkul</title>
+<meta name="description" content="Meridyen Gayrimenkul ProX Asistan: satılık & kiralık konut, ofis, arsa, değerleme ve yatırım için ProX'un 480 milyon+ doğrulanmış emlak verisine dayalı, kişiye özel canlı emlak danışman sohbeti.">
+<meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde bu satır KALDIRILIR -->
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"><!-- üretim tenant -->
+<meta name="theme-color" content="#0a1631">
+<link rel="canonical" href="https://www.emlakekspertizi.com/demo/gayrimenkul/prox-asistan.html">
+<link rel="alternate" hreflang="tr" href="https://www.emlakekspertizi.com/demo/gayrimenkul/prox-asistan.html">
+<link rel="alternate" hreflang="en" href="https://www.emlakekspertizi.com/demo/gayrimenkul/prox-asistan.html?lang=en">
+<link rel="alternate" hreflang="ru" href="https://www.emlakekspertizi.com/demo/gayrimenkul/prox-asistan.html?lang=ru">
+<link rel="alternate" hreflang="zh" href="https://www.emlakekspertizi.com/demo/gayrimenkul/prox-asistan.html?lang=zh">
+<link rel="alternate" hreflang="ar" href="https://www.emlakekspertizi.com/demo/gayrimenkul/prox-asistan.html?lang=ar">
+<link rel="alternate" hreflang="x-default" href="https://www.emlakekspertizi.com/demo/gayrimenkul/prox-asistan.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Meridyen Gayrimenkul">
+<meta property="og:url" content="https://www.emlakekspertizi.com/demo/gayrimenkul/prox-asistan.html">
+<meta property="og:title" content="ProX Asistan · Meridyen Gayrimenkul">
+<meta property="og:description" content="ProX'un 480 milyon+ doğrulanmış emlak verisine dayalı, kişiye özel canlı gayrimenkul danışman sohbeti.">
+<meta property="og:image" content="https://www.emlakekspertizi.com/demo/gayrimenkul/og-image.webp">
+<meta property="og:locale" content="tr_TR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ProX Asistan · Meridyen Gayrimenkul">
+<meta name="twitter:description" content="ProX'un 480 milyon+ doğrulanmış emlak verisine dayalı canlı gayrimenkul danışman sohbeti.">
+<meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/gayrimenkul/og-image.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"><!-- ana sayfayla aynı font (Sora/Hanken) — logo/başlık birebir -->
+<link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=5">
+<link rel="stylesheet" href="css/base.css?v=67">
+<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
+<script defer src="js/brand.js?v=3"></script>
+<style>
+/* ===================== PROX ASİSTAN · tam-sayfa kilitli sohbet (.pa-*) — gm teması ===================== */
+html,body{height:100%}
+.pa-body{min-height:100vh;height:auto;overflow:visible;display:flex;flex-direction:column;background:var(--surface,#f5f7fa)}
+/* Konsol tam viewport doldurur (header ~75px düşülür); standart siteFooter konsolun ALTINDA akar —
+   footer eklendiğinde flex'in .pa-app'i 0'a sıkıştırması hatası buradan düzeltildi. */
+.pa-app{height:calc(100vh - 75px)}
+.pa-body>footer.siteFooter{flex:none}
+.pa-body header#hdr{position:relative!important;flex:0 0 auto;z-index:40}
+.pa-app{flex:none;display:flex;min-height:0;width:100%;overflow:hidden}
+/* ---- sidebar (koyu lacivert; tenant --c-bg-navy) ---- */
+.pa-sb{flex:0 0 288px;background:linear-gradient(180deg,var(--c-bg-navy,#0f1f3d),var(--c-bg-deep,#0a1631));color:#dbe6f5;display:flex;flex-direction:column;padding:16px 14px;gap:12px;min-height:0}
+.pa-sb-head{display:flex;align-items:center;gap:10px}
+.pa-newchat{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--accent,#1e40af);color:#fff;border:0;border-radius:12px;padding:12px;font:inherit;font-weight:700;cursor:pointer;transition:.15s;font-family:var(--body)}
+.pa-newchat span{font-size:18px;line-height:1}
+.pa-newchat:hover{filter:brightness(1.1)}
+.pa-sb-x{display:none;background:none;border:0;color:#9fb3d4;font-size:20px;cursor:pointer;flex:0 0 auto}
+.pa-hist-lbl{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#9fb3d4;margin:6px 4px 0;font-weight:700}
+.pa-history{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:3px;min-height:0}
+.pa-history::-webkit-scrollbar{width:6px}.pa-history::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:6px}
+.pa-hist{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:9px;cursor:pointer;color:#cdd9ee;font-size:13.5px;border:1px solid transparent;transition:.14s}
+.pa-hist:hover{background:rgba(255,255,255,.06);color:#fff}
+.pa-hist.act{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.14)}
+.pa-hist .t{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pa-hist .del{opacity:0;background:none;border:0;color:#9fb3d4;cursor:pointer;font-size:15px;flex:0 0 auto;line-height:1}
+.pa-hist:hover .del{opacity:.7}.pa-hist .del:hover{opacity:1;color:#f0a68c}
+.pa-hist-empty{color:#9fb3d4;font-size:12.5px;padding:8px 4px;line-height:1.5}
+.pa-sb-foot{border-top:1px solid rgba(255,255,255,.12);padding-top:12px;display:flex;flex-direction:column;gap:9px}
+.pa-back{color:#dbe6f5;font-weight:600;font-size:13px;text-decoration:none}
+.pa-back:hover{color:#fff}
+.pa-legal{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:11.5px}
+.pa-legal a{color:#9fb3d4;text-decoration:none;font-weight:500}
+.pa-legal a:hover{color:#fff;text-decoration:underline}
+.pa-legal span{color:#9fb3d4;opacity:.6}
+.pa-lang{display:inline-flex;align-items:center;gap:6px;color:#9fb3d4}
+.pa-lang select{background:transparent;border:1px solid rgba(255,255,255,.24);border-radius:8px;padding:3px 7px;font-weight:700;font-size:12px;color:#dbe6f5;cursor:pointer}
+.pa-lang select option{color:#0f1f3d}
+.pa-poweredby{font-size:11px;color:#9fb3d4;display:flex;align-items:center;gap:5px;line-height:1.4}
+.pa-poweredby .prox-x{background:#19c37d;color:#04120c;border-radius:4px;padding:0 3px;font-weight:800}
+/* ---- ana bölge ---- */
+.pa-main{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--surface,#f5f7fa)}
+.pa-appbar{display:flex;align-items:center;gap:12px;padding:13px 22px;border-bottom:1px solid var(--line);flex:0 0 auto;background:var(--white,#fff)}
+.pa-menu{display:none;background:none;border:0;color:var(--ink);font-size:20px;cursor:pointer}
+.pa-title{flex:1;font-family:var(--head);font-weight:700;font-size:16px;display:flex;align-items:center;gap:7px;color:var(--ink)}
+.pa-title .prox-x{background:#19c37d;color:#04120c;border-radius:4px;padding:0 3px;font-weight:800}
+.pa-online{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#0b7a4f;font-weight:700}
+.pa-online i{width:7px;height:7px;border-radius:50%;background:#19c37d;box-shadow:0 0 0 0 rgba(25,195,125,.5);animation:paPulse 2.4s infinite}
+@keyframes paPulse{0%{box-shadow:0 0 0 0 rgba(25,195,125,.5)}70%{box-shadow:0 0 0 7px rgba(25,195,125,0)}100%{box-shadow:0 0 0 0 rgba(25,195,125,0)}}
+.pa-log{flex:1;overflow-y:auto;padding:26px clamp(14px,4vw,40px);display:flex;flex-direction:column;min-height:0}
+.pa-log-inner{width:100%;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.pa-welcome{margin:auto;text-align:center;max-width:640px;padding:20px}
+.pa-welcome .w-logo{font-size:30px;margin-bottom:10px;font-family:var(--head);font-weight:800;color:var(--ink)}
+.pa-welcome .w-logo .prox-x{background:#19c37d;color:#04120c;border-radius:6px;padding:0 5px}
+.pa-welcome h2{font-family:var(--head);font-size:clamp(22px,3.2vw,30px);margin:0 0 12px;color:var(--ink);line-height:1.15;text-wrap:balance}
+.pa-welcome p{color:var(--muted);line-height:1.7;margin:0 0 24px;font-size:15px}
+.pa-suggests{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left}
+.pa-chip{background:var(--white,#fff);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13.5px;cursor:pointer;transition:.16s;color:var(--ink);font-family:var(--body)}
+.pa-chip:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.pa-msg{display:flex;gap:12px;max-width:100%}
+.pa-msg .av{flex:0 0 32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;font-family:var(--head);color:#fff}
+.pa-msg.bot .av{background:#19c37d;color:#04140c}
+.pa-msg.me{flex-direction:row-reverse}
+.pa-msg.me .av{background:var(--accent)}
+.pa-bubble{background:var(--white,#fff);border:1px solid var(--line);border-radius:14px;padding:12px 16px;line-height:1.62;font-size:15px;white-space:pre-wrap;word-break:break-word;max-width:calc(100% - 46px);color:var(--ink)}
+.pa-msg.me .pa-bubble{background:color-mix(in srgb,var(--accent) 9%,#fff);border-color:color-mix(in srgb,var(--accent) 26%,transparent)}
+.pa-cta{margin-top:10px}
+.pa-cta a{display:inline-block;background:var(--accent);color:#fff;font-weight:700;font-size:13px;padding:8px 15px;border-radius:9px;text-decoration:none}
+.pa-composer{flex:0 0 auto;border-top:1px solid var(--line);padding:14px clamp(14px,4vw,40px) 10px;background:var(--white,#fff)}
+.pa-form{display:flex;gap:10px;max-width:760px;margin:0 auto}
+.pa-form textarea{flex:1;resize:none;background:var(--surface,#f5f7fa);border:1px solid var(--line);border-radius:13px;padding:13px 15px;color:var(--ink);font:inherit;font-size:15px;max-height:150px;line-height:1.5}
+.pa-form textarea:focus{outline:none;border-color:var(--accent)}
+.pa-send{flex:0 0 48px;height:48px;align-self:flex-end;border:0;border-radius:13px;background:var(--accent);color:#fff;font-size:19px;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center}
+.pa-send:hover{filter:brightness(1.1)}.pa-send:disabled{opacity:.45;cursor:default}
+.pa-disc{font-size:11px;color:var(--muted);text-align:center;padding:9px 0 0;max-width:760px;margin:0 auto;line-height:1.5}
+.pa-typing{display:inline-flex;gap:4px;padding:4px 0}
+.pa-typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:paBlink 1.2s infinite}
+.pa-typing i:nth-child(2){animation-delay:.2s}.pa-typing i:nth-child(3){animation-delay:.4s}
+@keyframes paBlink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+@media(max-width:820px){
+  .pa-sb{position:fixed;left:-320px;top:0;bottom:0;width:286px;max-width:86vw;flex:none;transition:left .25s ease;z-index:60;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+  .pa-sb.open{left:0}
+  .pa-sb-x{display:block}
+  .pa-menu{display:flex}
+  .pa-suggests{grid-template-columns:1fr}
+}
+[dir="rtl"] .pa-msg.me{flex-direction:row}
+[dir="rtl"] .pa-sb{left:auto;right:-320px}
+[dir="rtl"] .pa-sb.open{right:0}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"ProX Asistan — Canlı Emlak Zekâsı","description":"ProX veri altyapısına dayalı, gayrimenkul sorularınızı yanıtlayan canlı emlak asistanı.","url":"https://www.emlakekspertizi.com/demo/gayrimenkul/prox-asistan.html","inLanguage":["tr","en","ru","zh","ar"],"isPartOf":{"@type":"WebSite","name":"Meridyen Gayrimenkul","url":"https://www.emlakekspertizi.com/demo/gayrimenkul/"},"about":{"@type":"SoftwareApplication","name":"ProX Asistan","applicationCategory":"BusinessApplication","operatingSystem":"Web"},"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana Sayfa","item":"https://www.emlakekspertizi.com/demo/gayrimenkul/index.html"},{"@type":"ListItem","position":2,"name":"ProX Asistan","item":"https://www.emlakekspertizi.com/demo/gayrimenkul/prox-asistan.html"}]}}</script>
+</head>
+<body class="pa-body">
+<!-- ===== ÜST MENÜ (standart — tüm sayfalarla birebir, base.css) ===== -->
+<header id="hdr"><div class="wrap bar">
+  <a class="logo" href="index.html"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Gayrimenkul</span></span></a>
+  <nav class="main siteNav">
+    <a href="hizmetlerimiz.html">Hizmetlerimiz</a>
+    <a href="nedenbiz.html">Neden <span class="nb-x">?</span> Biz</a>
+    <a href="portfoy.html">Portföy</a>
+    <a href="ilanlar.html">İlanlar</a>
+    <a href="prox-asistan.html" class="nav-asistan active" aria-current="page"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>
+  </nav>
+  <div class="nav-cta siteCta">
+    <a class="nav-wa-ic" aria-label="WhatsApp" title="WhatsApp" href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"></path></svg></a>
+    <a class="btn btn-primary btn-sm hide-xs" href="index.html#degerleme">Ücretsiz Ekspertiz</a>
+    <a class="btn btn-line btn-sm js-giris" href="index.html#giris">Giriş</a>
+    <button class="burger" onclick="document.getElementById('mnav').classList.add('open')" aria-label="Menü"><span></span><span></span><span></span></button>
+  </div>
+</div></header>
+<div class="doviz-bandi" id="dovizBandi" aria-label="Döviz ve altın bilgi bandı"></div>
+
+<div class="mnav" id="mnav" onclick="if(event.target.id==='mnav')this.classList.remove('open')"><div class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-family:var(--head);font-size:18px">Menü</b>
+    <button style="background:none;border:0;font-size:24px;cursor:pointer;color:var(--muted)" onclick="document.getElementById('mnav').classList.remove('open')" aria-label="Kapat">✕</button></div>
+  <a href="hizmetlerimiz.html">Hizmetlerimiz</a>
+  <a href="nedenbiz.html">Neden <span class="nb-x">?</span> Biz</a>
+  <a href="portfoy.html">Portföy</a>
+  <a href="ilanlar.html">İlanlar</a><a href="harita.html">Harita</a>
+  <a href="prox-asistan.html" class="active"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</a>
+  <a class="btn btn-primary" style="margin-top:14px" href="index.html#degerleme">Ücretsiz Ekspertiz</a>
+  <a class="btn btn-line" style="margin-top:8px" href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp ile Yaz</a>
+</div></div>
+
+<div class="pa-app">
+  <aside class="pa-sb" id="paSb">
+    <div class="pa-sb-head">
+      <button class="pa-newchat" onclick="paNewChat()"><span>＋</span> Yeni sohbet</button>
+      <button class="pa-sb-x" onclick="document.getElementById('paSb').classList.remove('open')" aria-label="Kapat">✕</button>
+    </div>
+    <div class="pa-hist-lbl">Konuşma geçmişi</div>
+    <div class="pa-history" id="paHistory"></div>
+    <div class="pa-sb-foot">
+      <a class="pa-back" href="index.html">← Ana sayfaya dön</a>
+      <div class="pa-lang" title="Dil / Language">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg>
+        <select class="lang-sw" aria-label="Dil / Language"><option value="tr">TR</option><option value="en">EN</option><option value="ru">RU</option><option value="zh">中文</option><option value="ar">AR</option></select>
+      </div>
+      <nav class="pa-legal" aria-label="Yasal"><a href="kvkk.html">KVKK</a><span>·</span><a href="cerez.html">Çerez</a><span>·</span><a href="kullanim-kosullari.html">Kullanım</a></nav>
+      <div class="pa-poweredby"><span class="prox-logo" style="font-size:.95em">Pro<span class="prox-x">X</span></span> · 480 milyon+ doğrulanmış emlak verisi</div>
+    </div>
+  </aside>
+  <main class="pa-main">
+    <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0">ProX Asistan · Meridyen Gayrimenkul Canlı Emlak Danışmanı</h1>
+    <div class="pa-appbar">
+      <button class="pa-menu" onclick="document.getElementById('paSb').classList.toggle('open')" aria-label="Konuşma geçmişi">☰</button>
+      <div class="pa-title"><span class="prox-logo">Pro<span class="prox-x">X</span></span> Asistan</div>
+      <span class="pa-online"><i></i>Çevrimiçi</span>
+    </div>
+    <div class="pa-log" id="paLog"></div>
+    <div class="pa-composer">
+      <form class="pa-form" onsubmit="return paSend(event)">
+        <textarea id="paInput" rows="1" placeholder="Mesajınızı yazın… (ör. Karşıyaka'da 3+1 satılık daire var mı?)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();paSend(event)}"></textarea>
+        <button type="submit" class="pa-send" aria-label="Gönder">➤</button>
+      </form>
+      <div class="pa-disc">ProX Asistan, ProX'un 480 milyon+ doğrulanmış emlak verisine dayanır; bilgilendirme amaçlıdır, kesin teklif için danışmanımızla görüşün.</div>
+    </div>
+  </main>
+</div>
+
+<script src="js/tr-grammar.js?v=4"></script>
+<script src="js/tr-iller.js?v=2"></script>
+<script src="js/wl.js?v=6"></script>
+<script src="js/seo-chrome.js?v=3"></script>
+<script src="../shared/cs-engine.js?v=2"></script>
+<script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir (TR ziyaretçiye ~%40 JS tasarrufu) */
+(function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('gm_lang')||'tr';}catch(e){}
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=9"><\/script>');}})();</script><script src="js/i18n.js?v=4"></script>
+<script>
+(function(){
+"use strict";
+/* ============ ProX Asistan · bağımsız (CSEngine motoru; app.js'e bağımlı DEĞİL) ============ */
+/* Marka: brand.js/wl.js DOM'u tenant adına çevirir; persona metnini de tenant adına uyarla. */
+function _brand(){try{var d=JSON.parse(localStorage.getItem('meridyenGM_v1')||'{}');return ((d.FIRMA&&d.FIRMA.name)||'').trim()||'Meridyen Gayrimenkul';}catch(e){return 'Meridyen Gayrimenkul';}}
+function _paBS(s){var b=_brand();var sh=(b.split(/\s+/)[0])||b;return (''+s).split('Meridyen Gayrimenkul').join(b).split('Meridyen').join(sh);}
+function _lang(){try{return (window.GMI18N&&GMI18N.lang&&GMI18N.lang())||localStorage.getItem('gm_lang')||'tr';}catch(e){return 'tr';}}
+
+/* ---- motor (CSEngine · gm_cs_site anahtarlarını okur — admin ProX/DeepSeek/OpenAI/Claude ayarları) ---- */
+function _deriveTenantId(key){var m=/^prox_(.+)_[a-f0-9]{16,}$/i.exec(key||'');return m?m[1]:'emlaktahadimkoy_com';}
+var _E=null;
+function _eng(){ if(_E)return _E; if(!window.CSEngine)return null;
+  var kk={};try{kk=JSON.parse(localStorage.getItem('gm_cs_site')||'{}');}catch(e){}
+  var tid=kk.proxKey?_deriveTenantId(kk.proxKey):'emlaktahadimkoy_com';
+  _E=CSEngine.create({store:'gm_cs_site',tenantId:tid,proxBase:'https://www.emlakekspertizi.com'});
+  return _E;
+}
+
+/* ---- persona (SADECE ProX markası; "yapay zeka" ifadesi kullanılmaz) ---- */
+var PA_SUGGESTS=['Satılık ev / daire arıyorum','Kiralık arıyorum','Mülkümü satmak / kiralamak istiyorum','Değerleme / ekspertiz istiyorum'];
+var PA_SYS='Sen Meridyen Gayrimenkul’ün ProX Asistanısın — sıcak, samimi ve SATIŞ ODAKLI bir emlak danışmanı. ANA GÖREVİN: ziyaretçiyi DİNLEYEREK gerçek ihtiyacını anlamak ve onu Meridyen Gayrimenkul’ün ilanları, Özel Portföyü ve hizmetleriyle eşleştirerek MÜŞTERİYE dönüştürmek.\n\nDAVRANIŞ KURALLARI:\n1) SELAMLAŞMA yalnızca konuşmanın İLK yanıtında olur: kısa selam ver, kendini tanıt ("Ben Meridyen Gayrimenkul ProX Asistanı") ve müşteriye ne aradığını SOR. "Önceki konuşma" verilmişse ARTIK selamlaşma/kendini tekrar tanıtma — doğrudan konuya devam et. ASLA hazır uzun metin DÖKME.\n2) Önce NİYETİ anla: müşteri (a) satılık ev/daire mi arıyor, (b) kiralık mı, (c) mülkünü SATMAK/KİRAYA vermek mi istiyor, (d) DEĞERLEME/ekspertiz mi, (e) YATIRIM danışmanlığı mı, (f) Özel Portföy mü? Emin değilsen 1-2 KISA soruyla netleştir (hangi il/ilçe, bütçe, m², kaç oda, satılık/kiralık).\n3) İhtiyacı anladıkça İLGİLİ ilanları/hizmetleri kısa ve çekici tanıt; müşteriyi ilanı görme, ücretsiz ekspertiz, portföy talebi gibi bir sonraki adıma yönlendir. Güven ver, baskı yapma.\n4) Uygun her fırsatta müşteriyi CANLI danışmanımıza yönlendir: "Dilerseniz danışmanımız sizi arasın; telefon numaranızı bırakırsanız kısa sürede size ulaşırız."\n5) Müşteri telefon numarası PAYLAŞIRSA: teşekkür et ve "Danışmanımız kısa sürede sizinle iletişime geçecek" de.\n\nÜSLUP: Kısa (2-4 cümle), sıcak, samimi, profesyonel. Yanıtların ProX’un 480 milyon+dan fazla GERÇEK ve DOĞRULANMIŞ emlak verisine dayanır; ProX bir yapay zekâ veya veri üreticisi DEĞİLDİR, veri uydurmazsın. Kesin fiyat/taahhüt verme; tahmini bilgi ver ve ücretsiz ekspertiz öner. Konu dışı sorularda kibarca gayrimenkul konusuna yönlendir.';
+var PA_CTX='HİZMETLER: Satılık/kiralık portföy (konut, ofis, arsa), Özel Portföy (VIP erişim), değerleme/ekspertiz, bölge & yatırım analizi, alım-satım-kiralama danışmanlığı, sat/kirala aracılık. BÖLGE: İzmir ve Ege.';
+var PA_FALLBACK='Şu an ProX veri servisine ulaşılamıyor gibi görünüyor. Sorunuzu aldım — dilerseniz telefon numaranızı bırakın, danışmanımız kısa sürede sizi arasın; WhatsApp hattımızdan da yazabilirsiniz.';
+
+/* Çıktı güvenlik korkuluğu: ProX ASLA "yapay zeka"/"AI" olarak GÖRÜNMEZ (marka + dürüstlük kuralı) */
+function scrubProx(s){ if(s==null)return s; return String(s)
+  .replace(/yapay\s+zek[aâ][\wçğıöşüİ]*/gi,'ProX')
+  .replace(/\bA\.?\s?I\.?\b/g,'ProX'); }
+
+/* ---- konuşma deposu (prox_asistan_gm_convos_v1 — overlay + admin Görüşmeler panosu ile ORTAK) ---- */
+var STORE='prox_asistan_gm_convos_v1';
+var _convos=[],_curId=null,_msgs=[],_busy=false;
+function _load(){try{_convos=JSON.parse(localStorage.getItem(STORE)||'[]');if(!Array.isArray(_convos))_convos=[];}catch(e){_convos=[];}}
+function _save(){try{localStorage.setItem(STORE,JSON.stringify(_convos.slice(0,50)));}catch(e){}}
+function _cur(){for(var i=0;i<_convos.length;i++)if(_convos[i].id===_curId)return _convos[i];return null;}
+function _syncCur(){var c=_cur();if(c){c.msgs=_msgs.filter(function(m){return !m.typing;}).map(function(m){return {role:m.role==='me'?'me':'bot',text:m.text};});c.ts=Date.now();_save();}}
+function esc(s){return (''+s).replace(/[&<>"]/g,function(x){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[x];});}
+function pushLead(phone,msg){try{var c=_cur();if(c){c.lead=true;c.phone=phone;_save();}}catch(e){}}
+
+function paRenderHistory(){var h=document.getElementById('paHistory');if(!h)return;
+  if(!_convos.length){h.innerHTML='<div class="pa-hist-empty">Henüz konuşma yok — sorunuzu yazın, ProX Asistan yardımcı olsun.</div>';return;}
+  h.innerHTML=_convos.map(function(c){return '<div class="pa-hist'+(c.id===_curId?' act':'')+'" onclick="paOpen(\''+c.id+'\')"><span class="t">'+esc(c.title||'Sohbet')+'</span><button class="del" onclick="event.stopPropagation();paDel(\''+c.id+'\')" aria-label="Sil">🗑</button></div>';}).join('');
+}
+function paRenderLog(){var l=document.getElementById('paLog');if(!l)return;
+  if(!_msgs.length){
+    l.innerHTML='<div class="pa-welcome"><div class="w-logo">Pro<span class="prox-x">X</span> Asistan</div><h2>Gayrimenkulünüzü <em style="font-style:italic;color:var(--accent)">veriyle</em> konuşalım.</h2><p>'+esc(_paBS('ProX’un 480 milyon+ doğrulanmış emlak verisine dayanarak; doğru fiyat, doğru bölge ve size en uygun gayrimenkul için yanınızdayım. Bir konu seçin ya da yazın:'))+'</p><div class="pa-suggests">'+PA_SUGGESTS.map(function(s){return '<button class="pa-chip" onclick="paChip(this)">'+esc(s)+'</button>';}).join('')+'</div></div>';
+    return;
+  }
+  var inner='<div class="pa-log-inner">';
+  _msgs.forEach(function(m){
+    if(m.typing){inner+='<div class="pa-msg bot"><div class="av">Px</div><div class="pa-bubble"><span class="pa-typing"><i></i><i></i><i></i></span></div></div>';return;}
+    var me=m.role==='me';
+    var cta=(!me&&m.cta)?'<div class="pa-cta"><a href="index.html#degerleme">📐 Ücretsiz Ekspertiz Al</a></div>':'';
+    inner+='<div class="pa-msg '+(me?'me':'bot')+'"><div class="av">'+(me?'Siz':'Px')+'</div><div class="pa-bubble">'+esc(m.text)+cta+'</div></div>';
+  });
+  inner+='</div>';l.innerHTML=inner;l.scrollTop=l.scrollHeight;
+}
+function paNewChat(){_curId=null;_msgs=[];paRenderLog();paRenderHistory();var i=document.getElementById('paInput');if(i)i.focus();document.getElementById('paSb').classList.remove('open');}
+function paOpen(id){var c=null;for(var i=0;i<_convos.length;i++)if(_convos[i].id===id)c=_convos[i];if(!c)return;_curId=id;_msgs=(c.msgs||[]).map(function(m){return {role:m.role,text:m.text};});paRenderLog();paRenderHistory();document.getElementById('paSb').classList.remove('open');}
+function paDel(id){_convos=_convos.filter(function(c){return c.id!==id;});if(_curId===id){_curId=null;_msgs=[];}_save();paRenderHistory();paRenderLog();}
+function paChip(btn){var i=document.getElementById('paInput');if(i)i.value=btn.textContent;paSend();}
+
+async function paSend(ev){
+  if(ev&&ev.preventDefault)ev.preventDefault();
+  if(_busy)return false;
+  var inp=document.getElementById('paInput');var q=((inp&&inp.value)||'').trim();if(!q)return false;
+  inp.value='';inp.style.height='';
+  _load();
+  if(!_curId){_curId='c'+Date.now();_convos.unshift({id:_curId,title:q.slice(0,42),ts:Date.now(),msgs:[]});}
+  _msgs.push({role:'me',text:q});paRenderLog();_syncCur();paRenderHistory();
+  _busy=true;var btn=document.querySelector('.pa-send');if(btn)btn.disabled=true;
+  _msgs.push({role:'bot',typing:true});paRenderLog();
+  var hist=_msgs.filter(function(m){return !m.typing&&m.text;}).slice(0,-1).map(function(m){return {role:(m.role==='me'?'user':'assistant'),content:m.text};});
+  var ans='';
+  try{
+    var E=_eng();
+    var r=E?await E.reply({message:q,history:hist,brand:_brand(),city:'İzmir',lang:_lang(),
+      caps:{phone:true,lead:true,advice:true,match:true,multilang:true},
+      prompt:_paBS(PA_SYS),portfolio:PA_CTX,max_tokens:900,
+      onLead:function(o){try{pushLead(o.phone,o.message);}catch(e){}}}):null;
+    ans=(r&&r.ok)?r.answer:'';
+    if(!ans)ans=_paBS(PA_FALLBACK);
+  }catch(e){ans=_paBS(PA_FALLBACK);}
+  ans=scrubProx(ans);
+  _msgs=_msgs.filter(function(m){return !m.typing;});
+  _msgs.push({role:'bot',text:ans,cta:true});
+  paRenderLog();_syncCur();paRenderHistory();
+  _busy=false;if(btn)btn.disabled=false;
+  return false;
+}
+
+window.paSend=paSend;window.paNewChat=paNewChat;window.paOpen=paOpen;window.paDel=paDel;window.paChip=paChip;
+_load();paRenderHistory();paRenderLog();
+setTimeout(function(){var i=document.getElementById('paInput');if(i)i.focus();},120);
+})();
+</script>
+<footer class="siteFooter"><div class="wrap">
+  <div class="fcols">
+    <div>
+      <div class="logo"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Gayrimenkul</span></span></div>
+      <p>Veri odaklı emlak danışmanlığı. İzmir ve Ege'de satılık, kiralık konut, ofis ve arsa portföyü. Her ilanda gerçek bölge endeksi.</p>
+      <div class="fsocial"><a href="https://facebook.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a><a href="https://instagram.com/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a><a href="https://x.com/meridyengm" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg></a><a href="https://www.linkedin.com/company/meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg></a><a href="https://www.youtube.com/@meridyengayrimenkul" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a><a href="https://nsosyal.com" target="_blank" rel="noopener noreferrer" aria-label="NEXT Sosyal (Türkiye)" title="NEXT Sosyal — Türkiye'nin yerli sosyal medya platformu"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg></a></div><div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
+    </div>
+    <div><h4>Kurumsal</h4><ul>
+      <li><a href="hakkimizda.html" onclick="closeAllOverlays()">Hakkımızda</a></li>
+      <li><a href="danismanlar/" onclick="if(typeof goView==='function'){closeAllOverlays();goView('danismanlar');return false}">Danışmanlar</a></li>
+      <li><a href="hizmetlerimiz.html" onclick="closeAllOverlays()">Hizmetler</a></li><li><a href="nedenbiz.html" onclick="closeAllOverlays()">Neden Biz</a></li>
+      <li><a href="referanslar/" onclick="if(typeof goView==='function'){closeAllOverlays();goView('referans');return false}">Referanslar</a></li>
+      <li><a href="index.html#arsiv" onclick="closeAllOverlays()">Kapanan İşlemler</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="sss.html">SSS</a></li>
+      <li><a href="iletisim.html" onclick="closeAllOverlays()">İletişim</a></li>
+    </ul></div>
+    <div><h4>Hizmetler</h4><ul>
+      <li><a href="ilanlar.html">İlanlar</a></li>
+      <li><a href="harita.html">Harita</a></li>
+      <li><a href="ozel/">Özel Portföy</a></li>
+      <li><a href="sat/" onclick="closeAllOverlays();satOpen();return false">Sat ve Kirala</a></li>
+      <li><a href="emlak-ekspertizi/" onclick="if(typeof goView==='function'){closeAllOverlays();goView('degerleme');return false}">Emlak Ekspertizi</a></li>
+      <li><a href="analiz/" onclick="closeAllOverlays();brOpen();return false">Analiz Merkezi</a></li>
+      <li><a href="fiyat-alarmi/" onclick="if(typeof goView==='function'){closeAllOverlays();goView('alarm');return false}">Fiyat Alarmı</a></li><li><a href="prox-asistan.html">ProX Asistan</a></li>
+    </ul></div>
+    <div><h4>Yasal & Araçlar</h4><ul>
+      <li><a href="kvkk.html">KVKK Aydınlatma Metni</a></li>
+      <li><a href="cerez.html">Çerez Politikası</a></li><li><a href="gizlilik.html">Gizlilik Politikası</a></li>
+      <li><a href="kullanim-kosullari.html">Mesafeli Hizmet &amp; Kullanım</a></li>
+      <li><a href="https://parselsorgu.tkgm.gov.tr" target="_blank" rel="noopener noreferrer">TKGM Ada/Parsel Sorgu ↗</a></li>
+      <li><a href="#" onclick="closeAllOverlays();openSaasPortal();return false">Müşteri Portalı / Giriş</a></li><li><a href="index.html#giris" onclick="closeAllOverlays()">Üye Girişi / Hesabım</a></li><li><a href="#" onclick="closeAllOverlays();openAdmin();return false">Yönetim Paneli</a></li>
+    </ul></div>
+  </div>
+  <div class="fbolge"><b>Bölge Rehberleri:</b> <a href="karsiyaka.html">Karşıyaka</a> · <a href="bornova.html">Bornova</a> · <a href="konak.html">Konak</a> · <a href="bayrakli.html">Bayraklı</a> · <a href="cesme.html">Çeşme</a> · <a href="urla.html">Urla</a></div>
+  <div class="fbot">
+    <span>© 2026 Meridyen Gayrimenkul · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span> · <span style="opacity:.85">🔗 emlakekspertizi.com Veri Ortağı</span></span><div class="lang-sw" title="Dil / Language"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><select aria-label="Dil / Language" onchange="if(typeof gmLang==='function')gmLang(this.value)"><option value="tr">TR</option><option value="en">EN</option><option value="ru">RU</option><option value="zh">ZH</option><option value="ar">AR</option></select></div><a class="gm-prox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="gm-prox-lead">Powered by</span><span class="gm-prox-mark"><span class="gm-prox-pro">Pro</span><span class="gm-prox-x">X</span></span></a>
+    
+  </div>
+</div></footer>
+<script>try{var _gmS=JSON.parse(localStorage.getItem('meridyenGM_v1')||'{}');window.GM_DOVIZ_OFF=!!(_gmS&&_gmS.FIRMA&&_gmS.FIRMA.dovizOff);}catch(e){}</script>
+<script src="../shared/doviz.js?v=2"></script>
+</body>
+</html>

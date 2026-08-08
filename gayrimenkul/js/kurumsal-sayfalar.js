@@ -16,7 +16,7 @@
   function toasty(m) { try { if (typeof toast === 'function') return toast(m); } catch (e) {} alert(m); }
 
   var TITLES = {
-    iletisim: 'İletişim', danismanlar: 'Danışman Kadromuz', degerleme: 'Ücretsiz Değerleme',
+    iletisim: 'İletişim', danismanlar: 'Danışman Kadromuz', degerleme: 'Emlak Ekspertizi',
     referans: 'Referanslar', alarm: 'Fiyat Alarmı', kvkk: 'KVKK Aydınlatma Metni',
     cerez: 'Çerez Politikası', mesafeli: 'Mesafeli Hizmet & Kullanım'
   };
@@ -40,6 +40,35 @@
     document.body.appendChild(d.firstChild);
   }
 
+  /* Ofis haritası: adresten geocode (Nominatim) → #gmOfisMap taşı + FIRMA.lat/lng cache.
+     Nominatim serbest-metni sevmez → normalize + aşamalı sorgu (tam → ilçe,il → il). */
+  function _gmGeoMap(adres) {
+    var fr = document.getElementById('gmOfisMap'); if (!fr || !adres) return;
+    var norm = String(adres).replace(/No[:.]?\s*\d+\w*/gi, '').replace(/\bKat\b[^,]*/gi, '').replace(/\bD[:.]?\s*\d+/gi, '')
+      .replace(/\bCad\.?\b/gi, 'Caddesi').replace(/\bCd\.?\b/gi, 'Caddesi').replace(/\bMah\.?\b/gi, 'Mahallesi').replace(/\bMh\.?\b/gi, 'Mahallesi')
+      .replace(/\bSok\.?\b/gi, 'Sokak').replace(/\bSk\.?\b/gi, 'Sokak').replace(/\bBul(v)?\.?\b/gi, 'Bulvarı').replace(/\bBlv\.?\b/gi, 'Bulvarı')
+      .replace(/[\/]/g, ',').replace(/\s+/g, ' ').replace(/\s*,\s*/g, ', ').replace(/(,\s*)+/g, ', ').replace(/^[,\s]+|[,\s]+$/g, '').trim();
+    var parts = norm.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+    var cands = []; if (norm) cands.push(norm); if (parts.length >= 2) cands.push(parts.slice(-2).join(', ')); if (parts.length >= 1) cands.push(parts[parts.length - 1]);
+    var apply = function (lat, lng) {
+      lat = +lat; lng = +lng; if (isNaN(lat) || isNaN(lng)) return;
+      var bb = (lng - 0.012) + ',' + (lat - 0.008) + ',' + (lng + 0.012) + ',' + (lat + 0.008);
+      fr.setAttribute('src', 'https://www.openstreetmap.org/export/embed.html?bbox=' + encodeURIComponent(bb) + '&layer=mapnik&marker=' + lat + ',' + lng);
+      var lk = document.getElementById('gmOfisMapLink'); if (lk) lk.href = 'https://www.openstreetmap.org/?mlat=' + lat + '&mlon=' + lng + '#map=16/' + lat + '/' + lng;
+      try { if (typeof FIRMA !== 'undefined' && FIRMA) { FIRMA.lat = lat; FIRMA.lng = lng; if (typeof saveAll === 'function') saveAll(); } } catch (e) {}
+    };
+    var tryNext = function (i) {
+      if (i >= cands.length) return;
+      try {
+        fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=tr&accept-language=tr&q=' + encodeURIComponent(cands[i]))
+          .then(function (r) { return r.ok ? r.json() : []; })
+          .then(function (a) { if (a && a[0] && a[0].lat && a[0].lon) apply(a[0].lat, a[0].lon); else tryNext(i + 1); })
+          ['catch'](function () { tryNext(i + 1); });
+      } catch (e) {}
+    };
+    tryNext(0);
+  }
+
   /* ---------- İLETİŞİM ---------- */
   function renderIletisim() {
     var f = F(), e = f.eids || {};
@@ -50,7 +79,7 @@
       '<div class="hk-cc"><div class="ic">🕑</div><div><b>Çalışma Saatleri</b><span>' + esc(f.hours || '—') + '</span></div></div></div>';
     var form = '<div class="info-form"><h3>Bize yazın</h3><p class="info-form-sub">Formu doldurun, uzman danışmanımız en kısa sürede size dönsün.</p>' +
       '<div class="if-grid"><input id="if_ad" placeholder="Adınız Soyadınız"><input id="if_tel" placeholder="Telefonunuz"><input id="if_mail" placeholder="E-posta (opsiyonel)">' +
-      '<select id="if_konu"><option>Genel bilgi</option><option>Satılık ilan</option><option>Kiralık ilan</option><option>Mülkümü satmak/kiralamak</option><option>Değerleme talebi</option><option>Özel Portföy</option></select></div>' +
+      '<select id="if_konu"><option>Genel bilgi</option><option>Satılık ilan</option><option>Kiralık ilan</option><option>Mülkümü satmak/kiralamak</option><option>Emlak Ekspertizi talebi</option><option>Özel Portföy</option></select></div>' +
       '<textarea id="if_msg" rows="4" placeholder="Mesajınız…"></textarea>' +
       '<label class="if-kvkk"><input type="checkbox" id="if_kvkk"> <span><a href="#" onclick="goView(\'kvkk\');return false">KVKK Aydınlatma Metni</a>\'ni okudum, iletişim için onaylıyorum.</span></label>' +
       '<button class="btn btn-primary" onclick="infoContactSubmit()">Mesajı Gönder →</button></div>';
@@ -59,9 +88,12 @@
       '<span>📍 ' + esc(f.adres || '') + '</span></div>';
     var lat = +f.lat || 38.4322, lng = +f.lng || 27.1419;
     var bbox = (lng - 0.012) + ',' + (lat - 0.008) + ',' + (lng + 0.012) + ',' + (lat + 0.008);
+    /* koordinat yok ama adres varsa → render sonrası adresten geocode ile haritayı taşı (demo İzmir'e düşmesin) */
+    var needGeo = !(+f.lat && +f.lng) && !!(f.adres && ('' + f.adres).trim());
+    if (needGeo) { try { setTimeout(function () { _gmGeoMap(f.adres); }, 60); } catch (e) {} }
     var mapSec = '<section class="hk-block"><div class="hk-h"><span class="hk-kick">Ofisimiz</span><h2>Bizi ziyaret edin</h2><p>' + esc(f.adres || '') + '</p></div>' +
-      '<div class="info-map"><iframe title="Ofis konumu" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=' + encodeURIComponent(bbox) + '&amp;layer=mapnik&amp;marker=' + lat + ',' + lng + '"></iframe>' +
-      '<a class="info-map-link" href="https://www.openstreetmap.org/?mlat=' + lat + '&mlon=' + lng + '#map=16/' + lat + '/' + lng + '" target="_blank" rel="noopener noreferrer">Haritada aç · yol tarifi al ↗</a></div></section>';
+      '<div class="info-map"><iframe id="gmOfisMap" title="Ofis konumu" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=' + encodeURIComponent(bbox) + '&amp;layer=mapnik&amp;marker=' + lat + ',' + lng + '"></iframe>' +
+      '<a id="gmOfisMapLink" class="info-map-link" href="https://www.openstreetmap.org/?mlat=' + lat + '&mlon=' + lng + '#map=16/' + lat + '/' + lng + '" target="_blank" rel="noopener noreferrer">Haritada aç · yol tarifi al ↗</a></div></section>';
     return '<section class="hk-block"><div class="hk-h"><span class="hk-kick">Bize Ulaşın</span><h2>İletişim Kanallarımız</h2><p>Telefon, e-posta veya WhatsApp ile bize ulaşın; ofisimizde de sizi ağırlamaktan memnuniyet duyarız.</p></div>' +
       cc + '</section>' +
       '<section class="hk-block if-wrap">' + form + kunye + '</section>' +
@@ -84,26 +116,131 @@
       '<div class="info-cta-band"><div><b>Ekibimize katılmak ister misiniz?</b><span>Deneyimli ve gelişime açık danışmanlarla büyüyoruz.</span></div><a class="btn btn-primary" href="#" onclick="goView(\'iletisim\');return false">Başvurun →</a></div></section>';
   }
 
-  /* ---------- DEĞERLEME ---------- */
+  /* ---------- EMLAK EKSPERTİZİ ---------- */
   function renderDegerleme() {
+    var _pv = (typeof PROVINCE !== 'undefined' && PROVINCE && PROVINCE.name) || 'İzmir';
     var ilceler = (typeof PROVINCE !== 'undefined' && PROVINCE && PROVINCE.districts) ? Object.keys(PROVINCE.districts) : [];
     var opts = ilceler.map(function (k) { return '<option>' + esc(k) + '</option>'; }).join('');
-    var steps = '<div class="info-steps">' +
-      '<div class="ist"><span class="n">1</span><b>Bilgileri girin</b><p>İlçe, mahalle, emlak tipi ve m² bilgisini seçin.</p></div>' +
-      '<div class="ist"><span class="n">2</span><b>Anlık ön tahmin</b><p>Mahalle m² endeksiyle tahmini piyasa değeri.</p></div>' +
-      '<div class="ist"><span class="n">3</span><b>Uzman raporu</b><p>Danışmanımız detaylı, şirket logolu rapor hazırlar.</p></div></div>';
-    var form = '<div class="info-valbox"><h3>Hızlı Değer Tahmini</h3><div class="ivb-sub">Ücretsiz · yaklaşık 30 saniye</div>' +
+    function d(i) { return i > 0 ? ' rv-d' + (Math.min(i, 5) + 1) : ''; }
+    /* Tam-genişlik bant: her bölüm kendi zemin bandında, içerik .ek-wrap ile ortalanır */
+    function band(id, cls, inner) { return '<section class="ek-band' + (cls ? ' ' + cls : '') + '" id="' + id + '"><div class="ek-wrap">' + inner + '</div></section>'; }
+    /* ---------- HERO — üst menüye sıfır, koyu, animasyonlu ---------- */
+    var chips = ['📍 Mahalle bazlı m² endeksi', '🛡️ Veri güven skoru', '📈 257 aylık tarihsel seri', '🗄️ 12+ veri kaynağı', '👤 Uzman + veri hibriti', '🔒 KVKK uyumlu, gizli'];
+    var statBoxes = [['480', 'M+', 'veri noktası'], ['257', '', 'aylık tarihsel seri'], ['50000', '+', 'mahalle'], ['12', '+', 'veri kaynağı']];
+    var hero = '<section class="ek-hero-band"><span class="ek-blob b1"></span><span class="ek-blob b2"></span><span class="ek-blob b3"></span><div class="grid-motif"></div>'
+      + '<div class="ek-wrap ek-hero">'
+      + '<div class="ek-hero-l"><span class="ek-kick rv">Meridyen Gayrimenkul · ProX Veri Motoru · '+esc(_pv)+'</span>'
+      + '<h1 class="ek-h1 rv">Emlak <span class="ek-grad">Ekspertizi</span></h1>'
+      + '<div class="ek-sub rv rv-d2">Gayrimenkulünüzün gerçeğini <b>duyguyla değil, veriyle</b> görün.</div>'
+      + '<p class="ek-lead rv rv-d2">Saha keşfini ProX veri motorunun <b>480M+ veri noktasıyla</b> birleştirir; alma, satma ya da elde tutma kararınızı netleştiren bir <b>Karar Raporu</b> sunarız. Keşif de rapor da <b>ücretsizdir</b>.</p>'
+      + '<div class="ek-microtrust rv rv-d3">✓ Taahhüt yok · ✓ Ödeme yok · ✓ 48 saat içinde dönüş</div>'
+      + '<div class="info-chips rv rv-d3">' + chips.map(function (c) { return '<span>' + c + '</span>'; }).join('') + '</div>'
+      + '<div class="ek-cta rv rv-d4"><button class="btn btn-primary" onclick="_ekScroll(\'ekTool\')">Ücretsiz Keşif Talep Et</button><button class="btn btn-line" onclick="_ekScroll(\'ekTool\')">Ücretsiz Karar Raporu Al</button></div>'
+      + '<div class="ek-honesty rv rv-d5"><b>Emlak ekspertizi</b>, veri destekli bir karar analizidir; resmî (SPK lisanslı) değerleme gerektiğinde sizi <b>çözüm ortağımıza</b> yönlendiririz.</div></div>'
+      + '<div class="ek-stats rv rv-r">' + statBoxes.map(function (s) { return '<div class="ek-stat"><b class="ek-num" data-count="' + s[0] + '" data-suf="' + s[1] + '">0</b><span>' + s[2] + '</span></div>'; }).join('') + '</div>'
+      + '</div></section>';
+    /* ---------- YAPIŞKAN BÖLÜM NAVİGASYONU ---------- */
+    var navItems = [['ekKesif', 'Ücretsiz Keşif'], ['ekRapor', 'Karar Raporu'], ['ekUrun', 'Hizmet Katmanları'], ['ekSurec', 'Süreç & Araç'], ['ekNeden', 'Neden Meridyen'], ['ekMetod', 'Metodoloji'], ['ekSss', 'SSS']];
+    /* Klavye erişimi: href'siz <a> odaklanamaz → role=button + tabindex + Enter/Space (proje a11y kalıbı) */
+    var navA = function (attrs, target, label) { return '<a ' + attrs + ' role="button" tabindex="0" onclick="_ekScroll(\'' + target + '\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();_ekScroll(\'' + target + '\')}">' + label + '</a>'; };
+    var secnav = '<nav class="ek-nav" aria-label="Sayfa bölümleri"><div class="ek-wrap ek-nav-in">'
+      + navItems.map(function (n, i) { return navA('data-t="' + n[0] + '"' + (i === 0 ? ' class="on"' : ''), n[0], n[1]); }).join('')
+      + navA('class="ek-nav-cta"', 'ekTool', 'Ücretsiz Keşif →') + '</div></nav>';
+    /* ---------- ÜCRETSİZ KEŞİF ---------- */
+    var kesifCover = [
+      ['📍', 'Konum ve çevre', 'Mahalle dokusu, komşu kullanım, gelişim yönü, sosyal donatılara yakınlık.'],
+      ['🚌', 'Ulaşım', 'Ana arter ve toplu taşımaya erişim, trafik yükü, otopark koşulları.'],
+      ['🏢', 'Bina ve kat', 'Bina yaşı, kat konumu, asansör, cephe yönü, manzara, ışık ve gürültü.'],
+      ['🧱', 'Cephe ve yapı durumu', 'Görünür yapısal durum, dış cephe, ortak alan bakımı, ısıtma, yıpranma.'],
+      ['🔑', 'Kullanım potansiyeli', 'Konut/ofis/kira uygunluğu, tadilat/dönüşüm potansiyeli, likidite sezgisi.'],
+      ['📄', 'Belge ön kontrolü', 'Tapu, imar, iskân durumunun genel çerçevede gözden geçirilmesi (hukuki inceleme değil).']
+    ];
+    var kesif = '<div class="hk-h rv"><span class="hk-kick">Ücretsiz Keşif · Saha Keşfi</span><h2>Önce mülkü tanırız</h2><p>Her doğru ekspertiz, mülkün ve çevresinin gerçek durumunu görmekle başlar. Veri, ancak sahayla eşleştiğinde anlam kazanır — keşif yerinde ya da uzaktan yürütülebilir.</p></div>'
+      + '<div class="info-feats">' + kesifCover.map(function (f, i) { return '<div class="if-card rv' + d(i % 3) + '"><span class="if-ic">' + f[0] + '</span><b>' + f[1] + '</b><p>' + f[2] + '</p></div>'; }).join('') + '</div>'
+      + '<div class="ek-two">'
+      + '<div class="ek-proc rv rv-l"><h4>Süreç</h4><ol>' + ['Talep — mülk tipi ve adresi paylaşın.', 'Planlama — size uygun keşif zamanı (yerinde/uzaktan).', 'Keşif — standart kontrol listesiyle inceleme.', 'Kayıt — gözlemler ProX analiz sürecine aktarılır.'].map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol><p class="ek-dur">⏱️ Yerinde keşif 30–45 dk · uzaktan keşif belgeler ulaşınca aynı gün · <b>tamamen ücretsiz</b>.</p></div>'
+      + '<div class="ek-nocover rv rv-r"><h4>⚠️ Neyi kapsamaz</h4><ul>' + ['SPK lisanslı resmî değerleme raporu yerine geçmez; emlak ekspertizi karar desteğidir.', 'Banka/ipotek/resmî işlem raporu SPK lisanslı çözüm ortağımızca hazırlanır.', 'Statik onay, hukuki tapu incelemesi ve enerji kimlik belgesi kapsam dışıdır; ilgili uzmana yönlendirilir.'].map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>'
+      + '</div>';
+    /* ---------- ÜCRETSİZ KARAR RAPORU (10 bölüm) ---------- */
+    var raporSecs = [
+      ['01', 'Yönetici Özeti', 'Tüm bulgular tek bakışta: değer aralığı, güven skoru, 3 fırsat + 3 risk ve net bir öneri cümlesi.', 'Değer aralığı · güven skoru · fırsat/risk · tek cümle öneri', 0],
+      ['02', 'Tahmini Değer Aralığı + Güven', 'Tek fiyat değil; alt–orta–üst aralık ve o tahminin ne kadar sağlam veriye dayandığını gösteren güven skoru.', 'Alt/orta/üst bant · ₺/m² · güven skoru · örneklem', 86],
+      ['03', 'Mahalle m² Endeksi & 12 Ay Trend', 'Mahalle m² endeksi ve son 12 ayın trend eğrisi — fiyat hangi yönde, hangi hızda hareket ediyor?', 'Mahalle m² · 12 ay trend · mülk-mahalle sapması · ivme', 0],
+      ['04', 'Emsal Karşılaştırma', 'En yakın özellikteki gerçek arz/işlem verisi tablo halinde; oda, m², kat, yaş ve fiyat kıyası.', 'Emsal listesi · medyan/çeyreklik · mülkün emsale göre yeri', 0],
+      ['05', 'Bölgesel Risk Analizi', 'Zemin/deprem, likidite, arz-talep dengesi ve fiyat oynaklığı dört başlıkta değerlendirilir.', 'Zemin risk · likidite · arz-talep · oynaklık', 0],
+      ['06', 'Yatırım Skoru & Kira Getirisi', 'Yatırım cazibesi tek skorla; kira çarpanı, brüt/net getiri ve amortisman süresi hesaplanır.', 'Skor 0–100 · kira · getiri % · çarpan · boşluk riski', 78],
+      ['07', '3 Ay Projeksiyon', 'Kısa vadeli fiyat yönü iyimser / baz / temkinli üç senaryoyla — "şimdi mi, birkaç ay sonra mı?".', '3 senaryo · olasılık ağırlığı · tetikleyici faktörler', 0],
+      ['08', 'Bölge Karşılaştırması', 'Mülk; mahalle, ilçe ve il geneliyle kıyaslanır — hangi ölçekte primli ya da iskontolu?', 'Mahalle/ilçe/il m² · prim/iskonto % · segment konumu', 0],
+      ['09', 'Karar Destek Çerçevesi', 'Bulgular senaryonuza (sat / al / tut / kirala) uygun net bir aksiyona dönüşür. Bağlayıcı değil, öneri.', 'Senaryoya özel öneri · fiyat/aksiyon aralığı · zamanlama', 0],
+      ['10', 'Kaynak & Metodoloji', 'Kaynaklar, verinin nasıl doğrulandığı ve güven skorunun nasıl hesaplandığı şeffaf biçimde açıklanır.', 'Kaynak listesi · veri tazeliği · örneklem · metodoloji', 0]
+    ];
+    var rapor = '<div class="hk-h rv"><span class="hk-kick">Ücretsiz Karar Raporu</span><h2>Kararınızı veriye dayandırın</h2><p>Keşif gözlemleri ProX motorunun <b>480M+ veri noktası</b> ve <b>257 aylık</b> tarihsel serisiyle birleşince premium bir karar dokümanı çıkar. Ortalama <b>12–18 sayfa</b>, sade ve okunur — aşağıdaki bölümlerin tamamını içerir.</p></div>'
+      + '<div class="ek-rapor">' + raporSecs.map(function (r, i) {
+        var bar = r[4] ? '<div class="ek-bar"><span class="bar-fill" data-w="' + r[4] + '"></span></div><div class="ek-barlab">örnek güven skoru · <b class="ek-num" data-count="' + r[4] + '" data-suf="%">0</b></div>' : '';
+        return '<div class="ek-rsec rv' + d(i % 3) + '"><span class="ek-rn">' + r[0] + '</span><h4>' + r[1] + '</h4><p>' + r[2] + '</p>' + bar + '<div class="ek-rmetrics">' + r[3] + '</div></div>';
+      }).join('') + '</div>'
+      + '<div class="ek-rnote rv">🛈 Örnek rakamlar temsilîdir; canlı raporda gerçek ProX çıktısıyla gelir. Rapor karar desteği amaçlıdır ve SPK lisanslı resmî değerleme yerine geçmez.</div>';
+    /* ---------- ÜRÜN AİLESİ ---------- */
+    var tiers = '<div class="info-tiers">' +
+      '<div class="it-card rv rv-l"><span class="it-tag">Tier 1 · Çözüm Ortağı</span><h4>SPK Lisanslı Değerleme</h4><p>Banka, ipotek, mahkeme ve resmî işlemler için gereken yasal rapor <b>SPK lisanslı çözüm ortaklarımızca</b> verilir; Meridyen yönlendirir ve koordine eder.</p><ul><li>SPK lisanslı, yasal geçerli</li><li>Banka ve resmî kurum işlemleri</li><li>Koordinasyonu Meridyen üstlenir</li></ul></div>' +
+      '<div class="it-card main rv"><span class="it-tag">Tier 2 · Ana Ürün</span><h4>Gayrimenkul Karar Analizi</h4><p>Meridyen\'in asıl uzmanlık alanı: ücretsiz keşif + ProX ile hazırlanan Karar Raporu; alma/satma/elde tutma kararlarınızı veriye dayandırır.</p><ul><li>Ücretsiz keşif + Karar Raporu</li><li>Değer aralığı + güven + risk + projeksiyon</li><li>Uzman görüşmesiyle teslim</li></ul></div>' +
+      '<div class="it-card rv rv-r"><span class="it-tag">Tier 3 · Kurumsal</span><h4>Kurumsal Veri Çözümleri</h4><p>Banka, GYO, geliştirici ve kurumsal portföyler için ProX API, toplu veri ve white-label çözümleri.</p><ul><li>ProX API + toplu veri</li><li>White-label panel</li><li>On-premise seçeneği</li></ul></div>' +
+      '</div>';
+    /* ---------- NASIL ÇALIŞIR + ARAÇ ---------- */
+    var steps4 = [['1', 'Talep', 'Formu doldurun veya arayın; mülk tipi, adres ve hedefinizi (sat/al/tut) paylaşın. Taahhüt yok.'], ['2', 'Ücretsiz Keşif', 'Uzmanımız mülkü yerinde/uzaktan inceler; konum, bina, kat, cephe ve çevre gözlemlerini kaydeder.'], ['3', 'Veri Analizi · ProX', 'Saha gözlemleri 480M+ veri ve 257 aylık seriyle çapraz analiz edilir; güven skoru hesaplanır.'], ['4', 'Karar Raporu + Uzman', 'Size özel rapor PDF olarak teslim edilir ve bir uzmanla adım adım yorumlanır.']];
+    var steps = '<div class="info-steps ek-steps4">' + steps4.map(function (s, i) { return '<div class="ist rv' + d(i) + '"><span class="n">' + s[0] + '</span><b>' + s[1] + '</b><p>' + s[2] + '</p></div>'; }).join('') + '</div>';
+    var form = '<div class="info-valbox rv" id="ekTool"><h3>Hızlı Ekspertiz Ön Analizi</h3><div class="ivb-sub">Ücretsiz · yaklaşık 30 saniye</div>' +
       '<div class="iv-grid"><div class="iv-f"><label>İlçe</label><select id="iv_ilce" onchange="infoValMah()"><option value="">Seçin</option>' + opts + '</select></div>' +
       '<div class="iv-f"><label>Mahalle</label><select id="iv_mah"><option value="">Önce ilçe seçin</option></select></div>' +
       '<div class="iv-f"><label>Emlak Tipi</label><select id="iv_tip"><option>Daire</option><option>Villa</option><option>Müstakil Ev</option><option>İşyeri</option><option>Ofis</option><option>Arsa</option></select></div>' +
       '<div class="iv-f"><label>Brüt m²</label><input id="iv_m2" type="number" inputmode="numeric" placeholder="örn. 120" min="20" max="5000"></div></div>' +
-      '<button class="btn btn-primary" onclick="infoValHesapla()">Değeri Hesapla →</button>' +
-      '<div class="iv-result" id="iv_result" hidden><div class="ivr-lab">Tahmini Piyasa Değeri</div><div class="ivr-big" id="iv_big">—</div><div class="ivr-range" id="iv_range"></div>' +
-      '<div class="iv-lead"><div class="ivl-h">Detaylı raporu uzmanımız hazırlasın →</div><div class="iv-grid2"><input id="iv_ad" placeholder="Adınız Soyadınız"><input id="iv_tel" placeholder="Telefonunuz"></div>' +
-      '<button class="btn btn-blue" style="width:100%" onclick="infoValLead()">Ücretsiz Detaylı Rapor İste</button></div>' +
-      '<div class="iv-note">⚠️ Bu bir ön tahmindir; resmî değer beyanı değildir. Resmî değerleme, lisanslı değerleme uzmanı imzasıyla geçerlidir.</div></div></div>';
-    return '<section class="hk-block"><div class="hk-h"><span class="hk-kick">Ücretsiz Değerleme</span><h2>Evimin değeri ne kadar?</h2><p>Türkiye\'nin kapsamlı 81 il · 50.000+ mahalle endeks altyapısına bağlı motorumuzla anlık ön tahmin alın; sonra uzman danışmanımız sizi arasın.</p></div>' +
-      steps + form + '</section>';
+      '<button class="btn btn-primary" onclick="infoValHesapla()">Karar Analizi Başlat →</button>' +
+      '<div class="iv-result" id="iv_result" hidden><div class="ivr-lab">Tahmini Piyasa Değer Aralığı</div><div class="ivr-big" id="iv_big">—</div><div class="ivr-range" id="iv_range"></div>' +
+      '<div class="iv-lead"><div class="ivl-h">Ücretsiz keşif + detaylı Karar Raporu için →</div><div class="iv-grid2"><input id="iv_ad" placeholder="Adınız Soyadınız"><input id="iv_tel" placeholder="Telefonunuz"></div>' +
+      '<button class="btn btn-blue" style="width:100%" onclick="infoValLead()">Ücretsiz Keşif & Karar Raporu İste</button></div>' +
+      '<div class="iv-note">⚠️ Bu, veri destekli bir ekspertiz ön analizidir; resmî değer beyanı değildir. <b>Resmî değerleme</b> yalnızca SPK lisanslı/yetkili uzman imzasıyla geçerlidir; talep halinde lisanslı çözüm ortağımıza yönlendiririz.</div></div></div>';
+    /* ---------- NEDEN MERİDYEN ---------- */
+    var feats = '<div class="info-feats">' + [
+      ['🗺️', 'Mahalle Bazlı Veri', 'İl/ilçe ortalaması değil; mülkün mahallesi ölçeğinde analiz. 50.000+ mahalle çözünürlüğü.'],
+      ['🛡️', 'Veri Güven Skoru', 'Her tahminin yanında ne kadar sağlam veriye dayandığını gösteren şeffaf skor. Belirsizliği gösteririz.'],
+      ['📡', 'Canlı Piyasa Analizi', 'Arz, talep ve fiyat aylık kalibre edilir; rapor bugünün piyasasını yansıtır, geçmişin fotoğrafını değil.'],
+      ['👤', 'Uzman + Veri Hibriti', 'Algoritma sahayı göremez, uzman tüm veriyi tek işleyemez. İkisini birleştiririz: insan gözü + ProX.'],
+      ['🧱', 'Çok Katmanlı Veri', '12+ kaynak çapraz doğrulanır; tek bir ilan sitesine ya da kaynağa bağlı kalmayız.'],
+      ['📈', 'Tarihsel Hafıza', '257 aylık seri, bir mahallenin yıllarca nasıl davrandığını hatırlar; trendi ve oynaklığı bu hafızayla okuruz.']
+    ].map(function (f, i) { return '<div class="if-card rv' + d(i % 3) + '"><span class="if-ic">' + f[0] + '</span><b>' + f[1] + '</b><p>' + f[2] + '</p></div>'; }).join('') + '</div>';
+    /* ---------- METODOLOJİ & GÜVEN ---------- */
+    var conf = [['Örneklem büyüklüğü', 88], ['Veri tazeliği', 82], ['Emsal benzerliği', 90], ['Kaynak tutarlılığı', 85]];
+    var method = '<div class="ek-method">'
+      + '<div class="ek-mcol rv rv-l"><h4>🔗 Çok kaynaklı çapraz doğrulama</h4><ul>' + ['<b>İlan verisi</b> — aktif + arşiv arz sürekli derlenir.', '<b>Tapu/işlem sinyalleri</b> — kamuya açık gerçekleşmiş eğilimler.', '<b>Saha verisi</b> — ücretsiz keşif gözlemleri analize dahil.', '<b>Açık veri</b> — zemin, ulaşım, demografi, donatı katmanları.'].map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul><p class="ek-mnote">Anomali filtresi: aykırı kayıtlar <b>p2–p98</b> bandıyla elenir (~<b>%6</b> eleme); endeks <b>aylık</b> kalibre edilir.</p></div>'
+      + '<div class="ek-mcol rv rv-r"><h4>🛡️ Güven skoru nasıl hesaplanır?</h4>' + conf.map(function (c) { return '<div class="ek-conf"><div class="ek-conf-t"><span>' + c[0] + '</span><b class="ek-num" data-count="' + c[1] + '" data-suf="%">0</b></div><div class="ek-bar"><span class="bar-fill" data-w="' + c[1] + '"></span></div></div>'; }).join('') + '<p class="ek-mnote">Skor bu dört faktörün ağırlıklı bileşimidir; düşük skor "az veri var, temkinli olun" demenin dürüst yoludur.</p></div>'
+      + '</div>';
+    /* ---------- SSS ---------- */
+    var faqs = [
+      ['Bu resmî değerleme mi?', 'Hayır. Karar Raporu veri destekli bir ekspertiz ve karar analizidir; SPK lisanslı resmî değerleme yerine geçmez. Kredi/ipotek/resmî işlem için değerleme gerekirse sizi SPK lisanslı çözüm ortağımıza yönlendiririz.'],
+      ['Gerçekten ücretsiz mi?', 'Evet. Hem saha keşfi hem Karar Raporu ücretsizdir. Ödeme ya da mülkü bize verme zorunluluğu yoktur; amacımız önce güven oluşturmaktır.'],
+      ['Ne kadar sürer?', 'Talepten teslime ortalama 48 saat. Yerinde keşif 30–45 dk, uzaktan keşif belgeler ulaştığında aynı gün tamamlanabilir.'],
+      ['Hangi mülk tiplerini kapsıyor?', 'Konut (daire, müstakil), ofis/ticari ve arsa için analiz sunuyoruz. Mülk tipine göre bazı bölümler (ör. kira getirisi) farklılaşır.'],
+      ['Verilerim gizli kalıyor mu?', 'Evet. Süreç KVKK\'ya uygun yürütülür; paylaştığınız bilgiler yalnızca sizin raporunuz için kullanılır, üçüncü taraflarla izinsiz paylaşılmaz.'],
+      ['Rapor bağlayıcı mı?', 'Hayır. Rapor bir karar desteğidir; öneriler bağlayıcı talimat değil, veriye dayalı yol göstericidir. Kararı siz verirsiniz.'],
+      ['Bankalar bu raporu kabul eder mi?', 'Kredi/ipotek için bankalar SPK lisanslı resmî değerleme ister. Karar Raporu bu işlemler için değil, sizin stratejik kararınız içindir; resmî değerleme gerektiğinde çözüm ortağımıza yönlendiririz.'],
+      [esc(_pv)+' dışında hizmet var mı?', 'Merkezimiz '+esc(_pv)+' ilinde; saha keşfinde önceliğimiz '+esc(_pv)+'. ProX 81 ili kapsadığından il dışı mülkler için uzaktan keşif ve veri analizi sunabiliyoruz.']
+    ];
+    var faq = '<div class="ek-faq">' + faqs.map(function (q, i) { return '<details class="ek-q rv' + d(i % 3) + '"' + (i === 0 ? ' open' : '') + '><summary>' + q[0] + '</summary><div class="ek-a">' + q[1] + '</div></details>'; }).join('') + '</div>';
+    /* ---------- KAPANIŞ ---------- */
+    var final = '<section class="ek-final-band"><span class="ek-blob b1"></span><span class="ek-blob b2"></span><div class="ek-wrap"><div class="ek-final-in rv"><h2>Kararınızı tahmine değil, veriye emanet edin</h2>'
+      + '<p>Bir mülkü almadan, satmadan ya da elde tutmadan önce gerçeği görün. Ücretsiz keşif ve ücretsiz Karar Raporu ile başlayın — taahhüt yok, sürpriz yok.</p>'
+      + '<div class="ek-cta"><button class="btn btn-primary" onclick="_ekScroll(\'ekTool\')">Ücretsiz Keşif Talep Et</button><button class="btn btn-line" onclick="_ekScroll(\'ekTool\')">Ücretsiz Karar Raporu Al</button></div>'
+      + '<div class="ek-microtrust">KVKK uyumlu · 48 saat içinde dönüş · Ödeme yok · Resmî işlem gerektiğinde SPK lisanslı ortağımızla</div></div></div></section>';
+
+    return hero + secnav
+      + band('ekKesif', '', kesif)
+      + band('ekRapor', 'ek-band--alt', rapor)
+      + band('ekUrun', '', '<div class="hk-h rv"><span class="hk-kick">Hizmet Katmanları</span><h2>İhtiyacınıza göre üç katman</h2><p>Resmî bir belgeden stratejik karara, kurumsal veri altyapısına kadar üç net katman.</p></div>' + tiers)
+      + band('ekSurec', 'ek-band--alt', '<div class="hk-h rv"><span class="hk-kick">Nasıl Çalışır</span><h2>Dört adımda netlik</h2><p>Talepten karara, ortalama 48 saat.</p></div>' + steps + form)
+      + band('ekNeden', '', '<div class="hk-h rv"><span class="hk-kick">Neden Meridyen</span><h2>Biri tahmin eder, diğeri ölçer. Biz ölçeriz.</h2><p>Çok katmanlı, güven skorlu ve tarihsel derinlikli emlak ekspertizi.</p></div>' + feats)
+      + band('ekMetod', 'ek-band--alt', '<div class="hk-h rv"><span class="hk-kick">Metodoloji & Güven</span><h2>Rakamların arkasındaki yöntem</h2><p>Güven şeffaflıkla başlar; veriyi nasıl toplayıp doğruladığımızı gösteriyoruz.</p></div>' + method)
+      + band('ekSss', '', '<div class="hk-h rv"><span class="hk-kick">SSS</span><h2>Merak edilenler</h2></div>' + faq)
+      + final;
   }
   function infoValMah() {
     var ic = $('iv_ilce'), mh = $('iv_mah'); if (!ic || !mh) return;
@@ -127,8 +264,8 @@
     var ad = ($('iv_ad') || {}).value, tel = ($('iv_tel') || {}).value, c = window.__ivCtx || {};
     if (!ad || !tel) { toasty('Lütfen ad ve telefon girin.'); return; }
     var label = (c.tip || 'Mülk') + ' · ' + (c.mh ? c.mh + ', ' : '') + (c.ic || '') + ' · ' + (c.m2 || '') + ' m²';
-    try { if (typeof pushLead === 'function') pushLead({ ad: ad, tel: tel, konu: 'Değerleme: ' + label, src: 'Değerleme Talebi', entryLabel: label }); } catch (e) {}
-    try { if (typeof proxSubmitLead === 'function') proxSubmitLead({ sourcePage: 'degerleme', formType: 'valuation', name: ad, phone: tel, location: (c.mh || '') + ', ' + (c.ic || ''), message: label, requestedService: 'Ücretsiz Değerleme Raporu' }); } catch (e) {}
+    try { if (typeof pushLead === 'function') pushLead({ ad: ad, tel: tel, konu: 'Emlak Ekspertizi: ' + label, src: 'Emlak Ekspertizi Talebi', entryLabel: label }); } catch (e) {}
+    try { if (typeof proxSubmitLead === 'function') proxSubmitLead({ sourcePage: 'degerleme', formType: 'valuation', name: ad, phone: tel, location: (c.mh || '') + ', ' + (c.ic || ''), message: label, requestedService: 'Ücretsiz Karar Raporu (Emlak Ekspertizi)' }); } catch (e) {}
     toasty('Talebiniz alındı — uzman danışmanımız kısa sürede sizi arayacak.');
     if ($('iv_ad')) $('iv_ad').value = ''; if ($('iv_tel')) $('iv_tel').value = '';
   }
@@ -180,7 +317,7 @@
   /* ---------- yönlendirici ---------- */
   var LEADS = { iletisim: 'Doğru danışmanla, doğru kanaldan buluşun. Size en hızlı biçimde dönelim.',
     danismanlar: 'Alanında uzman, yetki belgeli danışmanlarımızla tanışın.',
-    degerleme: 'Gayrimenkulünüzün güncel piyasa değerine dair anlık, ücretsiz ön tahmin.',
+    degerleme: 'Veri destekli emlak ekspertizi & gayrimenkul karar analizi — ücretsiz keşif + ücretsiz Karar Raporu.',
     referans: 'Bizi tercih eden mülk sahipleri ve yatırımcıların deneyimleri.',
     alarm: 'Bölgenizdeki fiyat hareketlerini ve fırsatları kaçırmayın.',
     kvkk: '6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında aydınlatma metni.',
@@ -206,10 +343,72 @@
     if ($('info_title')) $('info_title').textContent = TITLES[topic] || 'Kurumsal';
     if ($('info_lead')) $('info_lead').textContent = LEADS[topic] || '';
     if ($('info_eye')) $('info_eye').textContent = (topic === 'kvkk' || topic === 'cerez' || topic === 'mesafeli') ? 'Yasal' : 'Kurumsal';
+    /* Emlak Ekspertizi: jenerik overlay hero'su gizlenir; sayfa kendi tam-genişlik hero'suyla
+       üst menüye sıfır başlar (ek-mode bant mimarisi). */
+    var isEk = topic === 'degerleme';
+    p.classList.toggle('ek-mode', isEk);
+    var gh = p.querySelector('.info-hero'); if (gh) gh.style.display = isEk ? 'none' : '';
     if ($('infoBody')) $('infoBody').innerHTML = render(topic);
     try { if (typeof brandSweep === 'function') brandSweep(p); } catch (e) {}
     try { if (typeof setOverlayPage === 'function') setOverlayPage(TITLES[topic] || 'Kurumsal', '#' + topic); } catch (e) {}
+    try { infoMotion(); } catch (e) {}
   }
+  /* ── İLERİ SEVİYE HAFİF MOTION (scroll-reveal + stagger + sayaç + animasyonlu bar) ──
+     Vanilya/IntersectionObserver; reduced-motion güvenli; ağır kütüphane yok. */
+  var _infoIO = null, _ekNavIO = null;
+  function _ekCount(el) {
+    var to = parseFloat(el.getAttribute('data-count')) || 0, dur = 1150, dec = +el.getAttribute('data-dec') || 0, suf = el.getAttribute('data-suf') || '', pre = el.getAttribute('data-pre') || '', st = null;
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches) { el.textContent = pre + to.toLocaleString('tr-TR', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + suf; return; }
+    function step(t) { if (st === null) st = t; var p = Math.min((t - st) / dur, 1), e = 1 - Math.pow(1 - p, 3), v = to * e; el.textContent = pre + v.toLocaleString('tr-TR', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + suf; if (p < 1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  function _infoActivate(el) {
+    el.classList.add('in');
+    /* Sayaç idempotency: aynı düğüm iki kez aktive edilirse (IO + güvenlik ağı yarışı)
+       count-up ikinci kez 0'dan başlamasın. */
+    if (el.hasAttribute('data-count') && !el.__ekc) { el.__ekc = 1; _ekCount(el); }
+    if (el.querySelectorAll) el.querySelectorAll('.bar-fill[data-w]').forEach(function (b) { b.style.width = (parseFloat(b.getAttribute('data-w')) || 0) + '%'; });
+    if (el.matches && el.matches('.bar-fill[data-w]')) el.style.width = (parseFloat(el.getAttribute('data-w')) || 0) + '%';
+  }
+  function infoMotion() {
+    var sc = $('infoScroll'); if (!sc) return;
+    var sel = '.rv,.rv-l,.rv-r,.rv-sc,[data-count],.bar-fill[data-w]';
+    var nodes = sc.querySelectorAll(sel);
+    if (!nodes.length) return;
+    if (!('IntersectionObserver' in window)) { nodes.forEach(_infoActivate); return; }
+    if (_infoIO) { try { _infoIO.disconnect(); } catch (e) {} }
+    _infoIO = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { _infoActivate(en.target); _infoIO.unobserve(en.target); } }); }, { root: sc, threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    /* İlk açılışta (deep-link) layout henüz oturmamış olabilir → rAF ile ertele. */
+    var motionOK = false;
+    var pass = function () {
+      var sr = sc.getBoundingClientRect(), vh = sc.clientHeight;
+      /* Kapsayıcı ölçülemiyorsa (vh≈0) reveal'ları görünmez bırakma: hepsini doğrudan aç. */
+      if (vh <= 1) { nodes.forEach(_infoActivate); return; }
+      motionOK = true;
+      nodes.forEach(function (el) { var r = el.getBoundingClientRect(); if (r.top < sr.top + vh * 0.96 && r.bottom > sr.top) _infoActivate(el); else _infoIO.observe(el); });
+    };
+    if (window.requestAnimationFrame) requestAnimationFrame(pass); else pass();
+    /* Güvenlik ağı: yalnız layout ölçülemediyse (motionOK=false) devreye girer — sağlıklı
+       durumda fold-altı reveal'lar IO'ya bırakılır ki scroll animasyonları gerçekten oynasın. */
+    setTimeout(function () {
+      if (motionOK) return;
+      sc.querySelectorAll('.rv:not(.in),.rv-l:not(.in),.rv-r:not(.in),.rv-sc:not(.in),[data-count]:not(.in),.bar-fill[data-w]:not(.in)').forEach(_infoActivate);
+    }, 1400);
+    /* ek-mode: yapışkan bölüm navigasyonunda aktif bölüm takibi */
+    if (_ekNavIO) { try { _ekNavIO.disconnect(); } catch (e) {} _ekNavIO = null; }
+    var nv = sc.querySelector('.ek-nav');
+    if (nv) {
+      _ekNavIO = new IntersectionObserver(function (es) {
+        es.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          var id = en.target.id;
+          nv.querySelectorAll('a[data-t]').forEach(function (a) { a.classList.toggle('on', a.getAttribute('data-t') === id); });
+        });
+      }, { root: sc, rootMargin: '-22% 0px -64% 0px' });
+      sc.querySelectorAll('.ek-band[id]').forEach(function (b) { _ekNavIO.observe(b); });
+    }
+  }
+  window._ekScroll = function (id) { try { var el = document.getElementById(id), sc = $('infoScroll'); if (el && sc) { var nv = sc.querySelector('.ek-nav'), off = nv ? nv.offsetHeight + 14 : 24; sc.scrollTo({ top: Math.max(0, el.offsetTop - off), behavior: 'smooth' }); } else if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {} };
 
   function infoContactSubmit() {
     var ad = ($('if_ad') || {}).value, tel = ($('if_tel') || {}).value, mail = ($('if_mail') || {}).value, konu = ($('if_konu') || {}).value, msg = ($('if_msg') || {}).value, kv = ($('if_kvkk') || {}).checked;

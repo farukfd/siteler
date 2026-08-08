@@ -1,0 +1,31 @@
+# ============================================================================
+# GÜVENLİK BAŞLIKLARI — Cloudflare Pages / Netlify `_headers` formatı (#41)
+# ----------------------------------------------------------------------------
+# DURUM: Bu dosya STATİK demolar için HEMEN dağıtılabilir (Pages/Netlify okur).
+# nginx/Apache kullanıyorsan aşağıdaki başlıkları sunucu config'ine çevir.
+#
+# NOT (dürüstlük): Mevcut siteler TEK-DOSYA ve YOĞUN INLINE script/style içerir;
+# bu yüzden CSP'de script-src/style-src 'unsafe-inline' ZORUNLU (yoksa siteler
+# kırılır). ÜRETİM HEDEFİ: inline'ları nonce/hash'e taşı → 'unsafe-inline' kaldır
+# (bu bir BUILD adımı gerektirir = B-kovası). Şimdilik güvenli-ama-esnek CSP.
+# ============================================================================
+
+/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(self), camera=(), microphone=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://www.emlakekspertizi.com https://www.googletagmanager.com https://region1.google-analytics.com https://nominatim.openstreetmap.org https://unpkg.com https://api.openverse.org https://api.pexels.com https://api.deepseek.com https://api.openai.com https://api.anthropic.com; frame-src https://www.openstreetmap.org https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com; upgrade-insecure-requests
+
+# Yönetim/hesap yolları — indekslenmesin (sunucu-taraf auth ayrıca ZORUNLU, #24/#2)
+/panel*
+  X-Robots-Tag: noindex, nofollow
+/admin*
+  X-Robots-Tag: noindex, nofollow
+/login*
+  X-Robots-Tag: noindex, nofollow
+
+# ÜRETİM TENANT sitesinde demo noindex başlığı KALDIRILIR; burada demo için:
+# (statik demolarda ayrıca sayfa-içi <meta robots noindex> var)

@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde kaldırılır -->
 <title>İstanbul Bölge Analizi — m² Fiyat & Kira Getirisi · Selin Meridyen</title>
 <meta name="description" content="İstanbul'un 39 ilçesi ve mahalleleri için canlı ProX m² fiyat endeksi, brüt kira getirisi, yatırım skoru ve piyasa yönü. Konut, arsa ve ticari; satılık ve kiralık.">
 <meta name="keywords" content="istanbul bölge analizi, mahalle m² fiyat, emlak endeksi, kira getirisi, yatırım skoru, gayrimenkul piyasa analizi, ilçe fiyat karşılaştırması, canlı ProX, konut arsa ticari, satılık kiralık, likidite">
-<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"><!-- üretim tenant -->
 <link rel="canonical" href="https://www.emlakekspertizi.com/demo/danisman/bolge-analizi.html">
 <meta name="author" content="Selin Meridyen">
 
@@ -21,10 +22,10 @@
 <meta property="og:description" content="39 ilçe, yüzlerce mahalle; canlı ProX m² endeksi, brüt kira getirisi, yatırım skoru ve piyasa yönü. Nerede değer, nerede prestij — veriyle görün.">
 <meta property="og:url" content="https://www.emlakekspertizi.com/demo/danisman/bolge-analizi.html">
 <meta property="og:locale" content="tr_TR">
-<meta property="og:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.png">
+<meta property="og:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.png">
+<meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="İstanbul Bölge Analizi · Selin Meridyen — Canlı ProX Piyasa Zekâsı">
 <meta name="twitter:description" content="Mahalle bazlı m² fiyat, kira getirisi, yatırım skoru ve likidite. Veri odaklı, kişiye özel gayrimenkul danışmanlığı.">
@@ -130,14 +131,16 @@
 }
 </script>
 
-<link rel="stylesheet" href="css/base.css?v=21">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="favicon.svg">
-<script src="js/brand.js?v=3"></script>
-<script src="js/tr-grammar.js?v=3"></script><script src="js/content.js?v=9"></script>
-<script src="js/i18n/_common.js?v=1"></script><script src="js/i18n/bolge-analizi.js?v=1"></script><script src="js/i18n.js?v=1"></script>
-<script src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
-<script src="js/a11y.js?v=1"></script>
+<link rel="stylesheet" href="css/base.css?v=22">
+<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg?v=2">
+<script defer src="js/brand.js?v=3"></script>
+<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=10"></script>
+<script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
+(function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><script src="js/i18n/bolge-analizi.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
+<script defer src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
+<script defer src="js/a11y.js?v=1"></script>
 <style>
 /* ===================== BÖLGE ANALİZİ · amiral "Piyasa Zekâsı Konsolu" (.ba-*) ===================== */
 html,body{background:var(--em-deep);overscroll-behavior:none}
@@ -359,7 +362,6 @@ body{overflow-x:clip}
 </style>
 </head>
 <body>
-
 <!-- ============ ÜST MENÜ (birebir) ============ -->
 <header class="nav scrolled" id="nav">
   <div class="wrap nav-in">
@@ -386,6 +388,7 @@ body{overflow-x:clip}
     </div>
   </div>
 </header>
+<div class="doviz-bandi" id="dovizBandi" aria-label="Döviz ve altın bilgi bandı"></div>
 
 <main>
 <!-- ============ HERO ============ -->
@@ -619,9 +622,9 @@ body{overflow-x:clip}
         </div>
         <div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
       </div>
-      <div><h4>Keşfet</h4><ul><li><a href="ilanlar.html">İlanlar</a></li><li><a href="ozel-portfoy.html">Özel Portföy</a></li><li><a href="index.html#surec">Süreç</a></li><li><a href="index.html#randevu">Ücretsiz Analiz</a></li></ul></div>
-      <div><h4>Kurumsal</h4><ul><li><a href="index.html">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="sss.html">S.S.S</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>
-      <div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li></ul></div>
+      <div><h4>Keşfet</h4><ul><li><a href="ilanlar.html">İlanlar</a> <a href="harita.html">Harita</a> <a href="emlak-ekspertizi.html">Emlak Ekspertizi</a></li><li><a href="ozel-portfoy.html">Özel Portföy</a></li><li><a href="blog.html">Blog</a></li><li><a href="semtler.html">Semt Rehberi</a></li><li><a href="yatirim-rehberi.html">Yatırım Rehberi</a></li><li><a href="index.html#surec">Süreç</a></li><li><a href="index.html#randevu">Ücretsiz Analiz</a></li></ul></div>
+      <div><h4>Kurumsal</h4><ul><li><a href="index.html">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="referanslar.html">Referanslar</a></li><li><a href="sss.html">S.S.S</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>
+      <div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="gizlilik.html">Gizlilik Politikası</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li></ul></div>
     </div>
     <div class="fbot">
       <span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span>
@@ -630,8 +633,10 @@ body{overflow-x:clip}
   </div>
 </footer>
 
-<script src="js/tr-iller.js?v=2"></script>
+<script defer src="js/tr-iller.js?v=2"></script>
 <script>
+window.EMLAK_PROXY_MODE=window.EMLAK_PROXY_MODE!==false;/* güvenlik: proxy modunda anahtar istemciden GİTMEZ */
+
 /* ===================== BÖLGE ANALİZİ · izole motor (app.js YÜKLENMEZ) =====================
    document.hidden kalıcı olabilir → RAF durur, setTimeout güvenilmez.
    Kural: paint() nihai durumu SENKRON yazar; animate() yalnızca süstür. Sıra: paint → animate.
@@ -642,11 +647,11 @@ var RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').m
 
 /* ---- ProX (izole minimal kopya — yalnız VERİ uçları) ---- */
 var EMLAK_API_BASE="https://www.emlakekspertizi.com";
-var EMLAK_TENANT={tenant_id:"consultant",tenant_key:"prox_consultant_a383eb07bb544ce3db7323150370bb46"};
+var EMLAK_TENANT={tenant_id:"consultant",tenant_key:""};
 try{var _dp=JSON.parse(localStorage.getItem('dn_prox')||'null');if(_dp&&_dp.key){EMLAK_TENANT.tenant_key=_dp.key;if(_dp.tenant)EMLAK_TENANT.tenant_id=_dp.tenant;}}catch(e){}/* admin ProX anahtarı (dn_prox) */
 async function proxApi(path){
   try{
-    var res=await fetch(EMLAK_API_BASE+path,{method:"GET",mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":EMLAK_TENANT.tenant_id,"X-Tenant-Key":EMLAK_TENANT.tenant_key}});
+    var res=await fetch(EMLAK_API_BASE+path,{method:"GET",mode:"cors",headers:(function(){var h={"Content-Type":"application/json","X-Tenant-Id":EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h["X-Tenant-Key"]=EMLAK_TENANT.tenant_key;return h;})()});
     if(!res.ok)throw new Error("ProX "+res.status);
     return await res.json();
   }catch(e){return {fallback:true,_err:e.message};}
@@ -992,5 +997,6 @@ function wireChrome(){
 wireChrome();wireControls();loadIl();
 })();
 </script>
+<script src="../shared/doviz.js?v=2"></script>
 </body>
 </html>

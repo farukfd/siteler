@@ -744,7 +744,7 @@
      üzerinde giden parçacıklar (additive glow) + ince grid. Tek rAF; ekran dışında durur
      (IntersectionObserver); prefers-reduced-motion'da tek statik kare çizer. */
   var EMLAK_API_BASE = "https://www.emlakekspertizi.com";
-  var EMLAK_TENANT = { tenant_id: "nadas", tenant_key: "prox_nadas_43ffdf3fe0501d5510e71616b618cfea" };   /* NADAS ProX anahtarı — canlı endeks. NOT: istemci-tarafı görünür; salt-okunur/alan-kısıtlı olmalı. */
+  var EMLAK_TENANT = { tenant_id: "nadas", tenant_key: "" };   /* NADAS ProX anahtarı — canlı endeks. NOT: istemci-tarafı görünür; salt-okunur/alan-kısıtlı olmalı. */
   function proxApi(path, opts) {
     if (!EMLAK_TENANT.tenant_key) return Promise.resolve({ fallback: true });
     opts = opts || {};

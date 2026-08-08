@@ -2,10 +2,15 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
+<style>/* ov-pre: derin-link kapısı (stub yönlendirmeleri) */
+html.ov-pre body{visibility:hidden}
+html.ov-pre #hizmetlerPage.on,html.ov-pre #projelerPage.on,html.ov-pre #ilanlarPage.on,html.ov-pre #bolgePage.on,html.ov-pre #iletisimPage.on,html.ov-pre #faqPage.on,html.ov-pre #proxAsistanPage.on,html.ov-pre #hizmetlerPage.open,html.ov-pre #projelerPage.open,html.ov-pre #ilanlarPage.open,html.ov-pre #bolgePage.open,html.ov-pre #iletisimPage.open,html.ov-pre #faqPage.open,html.ov-pre #proxAsistanPage.open{visibility:visible}</style>
+<script>try{var _o=sessionStorage.getItem('_ins_ov');if(_o&&['hizmetler','projeler','ilanlar','bolge','iletisim','soru-cevap','asistan'].indexOf(_o)>=0){document.documentElement.classList.add('ov-pre');setTimeout(function(){document.documentElement.classList.remove('ov-pre');},2600);}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO -->
 <title>Meridyen Yapı · Kurumsal İnşaat, Tadilat ve Gayrimenkul Geliştirme</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23ff7a2f'/%3E%3Ctext x='16' y='23' font-family='sans-serif' font-size='20' font-weight='800' fill='%231a1205' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
-<script src="js/brand.js?v=2"></script>
+<script defer src="js/brand.js?v=2"></script>
 <meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/insaat/og-image.jpg">
 <meta property="og:image" content="https://www.emlakekspertizi.com/demo/insaat/og-image.jpg">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -14,7 +19,8 @@
 <!-- ===== ProX API-first SaaS çekirdeği (additive) ===== -->
 <script>
 window.EMLAK_API_BASE = "https://www.emlakekspertizi.com";
-window.EMLAK_TENANT = { id:"construction", tenant_id:"construction", tenant_key:"prox_construction_910783dfb8dd6be9cb9549bc818a60ee", domain:location.hostname, sector:"construction_company", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"PRO", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"construction", legalMode:"standard" };
+window.EMLAK_PROXY_MODE = true;/* güvenlik */
+window.EMLAK_TENANT = { id:"construction", tenant_id:"construction", tenant_key:"", domain:location.hostname, sector:"construction_company", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"PRO", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"construction", legalMode:"standard" };
 window.EMLAK_PACKAGES = {
   BASIC:["canUseMarketAnalysis","canUsePriceEstimate","canUseLeadCRM","canUseSvgGraphics"],
   PRO:["canUseMarketAnalysis","canUsePriceEstimate","canUseRentEstimate","canUseInvestmentScore","canUsePdfReports","canUseLeadCRM","canUseSvgGraphics","canUseAnalytics","canUseSeoContent","canUseMarketingContent"],
@@ -24,7 +30,7 @@ window.EMLAK_PACKAGES = {
 window.EMLAK_TENANT.enabledFeatures = window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode] || window.EMLAK_PACKAGES.PRO;
 window.hasFeature = function(f){ return window.EMLAK_TENANT.enabledFeatures.indexOf(f)!==-1; };
 window.requireFeature = function(f){ if(window.hasFeature(f)) return true; var m="Bu özellik mevcut paketinizde aktif değildir. Kurumsal paketinizi yükseltin."; if(typeof toast==="function")toast(m); else alert(m); return false; };
-async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ const res=await fetch(window.EMLAK_API_BASE+path,{method,mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id,"X-Tenant-Key":window.EMLAK_TENANT.tenant_key,...headers},body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
+async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ const res=await fetch(window.EMLAK_API_BASE+path,{method,mode:"cors",headers:(function(){var _h={"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)_h["X-Tenant-Key"]=window.EMLAK_TENANT.tenant_key;return Object.assign(_h,headers);})(),body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
 function proxFallback(path,options={}){ return { fallback:true, message:"API baglantisi yok. Demo/fallback veri kullaniliyor.", path, data:(window.EMLAK_FALLBACK?window.EMLAK_FALLBACK(path,options):null) }; }
 async function submitLead(lead){ lead=lead||{}; /* Canlı /lead body: {sourcePage,formType,name,phone,email,message,extra} */ var body={ sourcePage:lead.sourcePage||"insaat", formType:lead.formType||"", name:lead.name||"", phone:lead.phone||"", email:lead.email||"", message:lead.message||"", extra:Object.assign({ tenant_id:window.EMLAK_TENANT.tenant_id, sector:window.EMLAK_TENANT.sector, location:lead.location||"", requestedService:lead.requestedService||"" }, lead.extra||{}) }; try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:body}); if(!r||r.fallback||r.success!==true)throw new Error("fallback"); return {ok:true,online:r.online!==false,data:r,lead_id:r.lead_id}; }catch(e){ try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(Object.assign({id:"lead_"+Date.now(),createdAt:new Date().toISOString(),status:"new"},body));localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:body}; } }
 window.injectSchema=function(o){try{var s=document.createElement("script");s.type="application/ld+json";s.text=JSON.stringify(o);document.head.appendChild(s);}catch(e){}};
@@ -83,13 +89,17 @@ else proxBootstrap();
 <meta name="twitter:title" content="Meridyen Yapı · Kurumsal İnşaat, Tadilat ve Gayrimenkul Geliştirme">
 <meta name="twitter:description" content="Anahtar teslim inşaat, kentsel dönüşüm, kat karşılığı ve tadilat hizmetlerinde kurumsal müteahhitlik.">
 
+<!-- ===== JSON-LD: WebSite + SearchAction (AEO/GEO — statik, crawler-görünür) ===== -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","@id":"https://www.meridyenyapi.com/#website","name":"Meridyen Yapı","url":"https://www.meridyenyapi.com/","inLanguage":["tr","en","ru","zh","ar"],"publisher":{"@id":"https://www.meridyenyapi.com/#organization"},"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://www.meridyenyapi.com/ilanlar.html?q={search_term_string}"},"query-input":"required name=search_term_string"}}
+</script>
 <!-- ===== JSON-LD: Organization + LocalBusiness + Service ===== -->
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.meridyenyapi.com/#organization","name":"Meridyen Yapı","url":"https://www.meridyenyapi.com/","description":"Kurumsal inşaat firması: anahtar teslim konut, ticari ve karma projeler, kentsel dönüşüm, kat karşılığı ve tadilat.","areaServed":"TR","knowsAbout":["Anahtar teslim inşaat","Kentsel dönüşüm","Kat karşılığı inşaat","Tadilat ve renovasyon","Proje fizibilitesi"],"telephone":"+90-212-000-00-00","email":"info@meridyenyapi.com","logo":{"@type":"ImageObject","url":"https://www.meridyenyapi.com/img/img1.jpg"},"image":"https://www.meridyenyapi.com/img/img1.jpg","address":{"@type":"PostalAddress","streetAddress":"Levent Mah. Büyükdere Cad. No:1","addressLocality":"Beşiktaş","addressRegion":"İstanbul","postalCode":"34330","addressCountry":"TR"},"geo":{"@type":"GeoCoordinates","latitude":41.0812,"longitude":29.0094},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"09:00","closes":"18:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"09:00","closes":"14:00"}],"sameAs":["https://nsosyal.com"],"foundingDate":"1986"},{"@type":"LocalBusiness","@id":"https://www.meridyenyapi.com/#localbusiness","name":"Meridyen Yapı","url":"https://www.meridyenyapi.com/","image":"https://www.meridyenyapi.com/img/img1.jpg","priceRange":"$$$","areaServed":{"@type":"Country","name":"Türkiye"},"parentOrganization":{"@id":"https://www.meridyenyapi.com/#organization"},"telephone":"+90-212-000-00-00","email":"info@meridyenyapi.com","logo":{"@type":"ImageObject","url":"https://www.meridyenyapi.com/img/img1.jpg"},"address":{"@type":"PostalAddress","streetAddress":"Levent Mah. Büyükdere Cad. No:1","addressLocality":"Beşiktaş","addressRegion":"İstanbul","postalCode":"34330","addressCountry":"TR"},"geo":{"@type":"GeoCoordinates","latitude":41.0812,"longitude":29.0094},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"09:00","closes":"18:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"09:00","closes":"14:00"}],"sameAs":["https://nsosyal.com"],"foundingDate":"1986"},{"@type":"Service","@id":"https://www.meridyenyapi.com/#hizmet","serviceType":"Kurumsal İnşaat ve Proje Geliştirme","provider":{"@id":"https://www.meridyenyapi.com/#organization"},"areaServed":"TR","name":"Anahtar Teslim İnşaat, Kentsel Dönüşüm ve Kat Karşılığı","description":"Konum analizi, fizibilite ve uçtan uca proje yönetimiyle anahtar teslim inşaat, kentsel dönüşüm, kat karşılığı ortaklık ve tadilat hizmetleri.","hasOfferCatalog":{"@type":"OfferCatalog","name":"İnşaat Hizmetleri","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Anahtar teslim inşaat"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Kentsel dönüşüm"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Kat karşılığı inşaat"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Tadilat ve renovasyon"}}]}}]}</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&family=Manrope:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/base.css?v=2">
   <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
@@ -171,7 +181,6 @@ header.scrolled .lang-sel{color:var(--ink)}
 </style>
 </head>
 <body>
-
 <!-- ============ PUBLIC SITE ============ -->
 <div id="site">
 <header id="hdr"><div class="wrap bar">
@@ -180,17 +189,17 @@ header.scrolled .lang-sel{color:var(--ink)}
     <a href="hizmetler" onclick="event.preventDefault();openHizmetlerPage()">Hizmetlerimiz</a>
     <a href="neden-biz.html">Neden <span class="nb-x">?</span> Biz</a>
     <a href="projeler" onclick="event.preventDefault();openProjelerPage()">Projeler</a>
-    <a href="#ilanlar" onclick="event.preventDefault();openIlanlarPage()">İlanlar</a>
-    <a href="bolge" onclick="event.preventDefault();openBolgePage()">Bölge Zekası</a>
+    <a href="ilanlar.html">İlanlar</a>
+    <a href="index.html#asistan" onclick="return goPage('asistan',event)" class="nav-asistan"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a>
   </nav>
   <div class="nav-cta insaatCta">
     <a class="nav-wa" href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg></a>
     <button class="btn btn-primary" onclick="openTeklif()">Ücretsiz Keşif</button>
-    <div class="lang-sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg><select class="lang-sel" aria-label="Dil / Language" onchange="applyLang(this.value)"><option value="tr">TR</option><option value="en">EN</option></select></div>
     <a class="btn btn-ghost js-giris" href="#giris" onclick="event.preventDefault();openGiris()">Giriş</a>
     <button class="burger" onclick="document.getElementById('mnav').classList.add('open')"><span></span><span></span><span></span></button>
   </div>
 </div></header>
+<div class="doviz-bandi" id="dovizBandi" aria-label="Döviz ve altın bilgi bandı"></div>
 
 <div class="mnav" id="mnav" onclick="if(event.target.id==='mnav')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
 
@@ -309,6 +318,14 @@ header.scrolled .lang-sel{color:var(--ink)}
   <div style="text-align:center;margin-top:34px"><button class="btn btn-primary" onclick="openProjelerPage()">Tüm Projeleri Görüntüle →</button></div>
 </div></section>
 
+<section id="ilanlarHome" class="sec-pad" style="padding:70px 0"><div class="wrap">
+  <div class="sec-head center"><div class="eyebrow">🛡️ EİDS Onaylı İlanlar</div>
+    <h2>Satılık &amp; Kiralık Gayrimenkul İlanları</h2>
+    <p style="margin-left:auto;margin-right:auto">Projelerimizden bağımsız, güncel gayrimenkul ilanları. Yalnızca <b>EİDS (Elektronik İlan Doğrulama Sistemi)</b> ile doğrulanmış ilanlar yayınlanır.</p></div>
+  <div class="lst-grid home3" id="insHomeIlan" style="margin-top:34px"></div>
+  <div style="text-align:center;margin-top:34px"><a class="btn btn-primary" href="ilanlar.html">Tüm İlanları Görüntüle →</a></div>
+</div></section>
+
 <section class="why" id="neden-biz"><div class="wrap">
   <div class="sec-head center"><div class="eyebrow">Neden Meridyen Yapı?</div>
     <h2>Güveni rastlantıya bırakmıyoruz</h2>
@@ -368,7 +385,7 @@ header.scrolled .lang-sel{color:var(--ink)}
     <div class="eyebrow">Bölge Zekası · Veriyle Yatırım</div>
     <h2>Her projemizin altında, bölgenin gerçek verisi var</h2>
     <p>Sıradan müteahhitlerden farkımız: her projeyi mahalle bazlı fiyat endeksi, 5 yıllık değer trendi, yatırım skoru ve deprem/fay analiziyle sunuyoruz. Yatırımınızı duyguyla değil, veriyle yapın.</p>
-    <div class="partner">🔗 Canlı Bölge Veri Ağı · 81 il · 50.000+ mahalle endeksi</div>
+    <div class="partner">🔗 Canlı Bölge Veri Ağı · 81 il · 50.000+ mahalle ve köy endeksi</div>
     <div style="margin-top:22px"><button class="btn btn-primary" onclick="openBolgePage()">Bölge Zekası & Saha Gücümüz →</button></div>
   </div>
   <div class="dataw">
@@ -389,7 +406,7 @@ header.scrolled .lang-sel{color:var(--ink)}
 </div></section>
 
 <section id="medya"><div class="wrap">
-  <div class="sec-head center"><div class="eyebrow">Referanslar & İş Ortakları</div><h2>Bize güvenen kurumlar</h2></div>
+  <div class="sec-head center"><div class="eyebrow">Referanslar & İş Ortakları</div><h2>Bize güvenen kurumlar</h2><div id="gRateBadge" class="grate-wrap" style="justify-content:center" aria-live="polite"></div></div>
   <div class="logos">
     <div class="l">ANKA<br>HOLDİNG</div><div class="l">Vega<br>İnşaat</div><div class="l">Marmara<br>GYO</div>
     <div class="l">Nova<br>Yapı</div><div class="l">Atlas<br>Mimarlık</div><div class="l">Kıyı<br>Bank</div>
@@ -477,7 +494,28 @@ header.scrolled .lang-sel{color:var(--ink)}
   <div class="pp-count" id="ppCount"></div>
   <div class="pp-grid" id="ppGrid"></div>
 
-  <footer class="insaatFooter"></footer>
+  <!-- ===== DEMO & KURUMSAL BANT (üstten alındı; her sayfada footer üstünde) ===== -->
+<link rel="stylesheet" href="css/kabuk-ortak.css?v=2">
+<section class="demo-band" aria-label="Demo ve kurumsal bilgi">
+  <div class="db-in">
+    <div class="db-lead">
+      <span class="db-badge">🔎 CANLI DEMO</span>
+      <p>Bu, kuruma özel hazırlanmış <b>gerçek bir tanıtım sürümüdür</b> — tüm özellikleri buradan deneyimleyebilirsiniz. Kurumsal bilgi &amp; başvuru: <a href="https://www.emlakekspertizi.com" target="_blank" rel="noopener noreferrer">emlakekspertizi.com</a> · <a href="https://www.nadas.com.tr" target="_blank" rel="noopener noreferrer">nadas.com.tr</a></p>
+    </div>
+    <ul class="db-feats">
+      <li>🎨 Şirkete özel arayüz</li>
+      <li>📄 Firmaya özel +5 sayfa</li>
+      <li>🗓️ Her ay +1 ek sayfa</li>
+      <li>📰 Günlük SEO uyumlu haber</li>
+    </ul>
+    <a class="db-wa" href="https://api.whatsapp.com/send?phone=905324919453" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp ile iletişim">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg>
+      <span><b>CRM &amp; Yönetim Paneli erişimi için</b><br>WhatsApp: 0532 491 94 53</span>
+    </a>
+  </div>
+</section>
+
+<footer class="insaatFooter"></footer>
 </div>
 
 <!-- ===== İLANLAR & ÖZEL PORTFÖY SAYFASI ===== -->
@@ -501,11 +539,26 @@ header.scrolled .lang-sel{color:var(--ink)}
   <div class="mnav" id="mnavIL" onclick="if(event.target.id==='mnavIL')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
 
   <div class="pp-hero">
-    <div class="eyebrow">İlanlar & Özel Portföy</div>
-    <h1>İlanlar ve Özel Portföy</h1>
-    <p>İlanlarımız T.C. Ticaret Bakanlığı Elektronik İlan Doğrulama Sistemi (EİDS) üzerinden doğrulanır; her ilan kartında doğrulama durumu (doğrulandı / bekliyor) açıkça gösterilir. Ayrıca ProX bölge verisinden üretilen off-market kapalı portföy tahminlerini inceleyin.</p>
+    <div class="eyebrow">🔒 Özel Portföy · Mahalle Endeksi</div>
+    <h1>Özel Portföy — kapalı / off-market</h1>
+    <p>Mülkünüzü <b>açık ilana koymadan</b>, tam konum ve EİDS paylaşmadan; ProX mahalle verisiyle doğru alıcı/kiracıyla eşleştiriyoruz. Aşağıda mahalle bazlı canlı endeks, demografi ve "…dan başlayan" özel portföy fiyatlarını inceleyin. Kamuya açık EİDS ilanları en altta.</p>
   </div>
 
+  <!-- ÖZEL PORTFÖY (üstte) -->
+  <div class="ins-oz-section">
+    <div class="ins-oz-head">
+      <h2>🔒 Özel Portföy <span>— kapalı / off-market</span></h2>
+      <p>ProX bölge verisinden üretilen pazar tahminleri. Kamuya açık EİDS ilanı değildir; fiyatlar ProX endeks/analiz tahminidir. Detay için bizimle iletişime geçin.</p>
+    </div>
+    <div id="mahEndeks" style="margin:0 0 26px"></div>
+    <div class="ins-oz-grid" id="insOzelGrid"></div>
+  </div>
+
+  <!-- KAMUYA AÇIK İLANLAR (en altta) -->
+  <div class="ins-oz-head" style="margin-top:40px">
+    <h2>🛡️ Kamuya Açık İlanlar <span>— EİDS doğrulamalı</span></h2>
+    <p>T.C. Ticaret Bakanlığı EİDS üzerinden doğrulanan açık ilanlarımız. Tüm ilanlar için <a href="ilanlar.html">İlanlar sayfası →</a> <a href="harita.html">Harita</a> <a href="emlak-ekspertizi.html">Emlak Ekspertizi</a></p>
+  </div>
   <div class="pp-toolbar">
     <div class="pp-filters" id="insIlanFilters">
       <button class="ppf active" onclick="insIlanFilterSet('op','',this)">Tümü</button>
@@ -515,14 +568,6 @@ header.scrolled .lang-sel{color:var(--ink)}
   </div>
   <div class="pp-count" id="insIlanCount"></div>
   <div class="pp-grid" id="insIlanGrid"></div>
-
-  <div class="ins-oz-section">
-    <div class="ins-oz-head">
-      <h2>🔒 Özel Portföy <span>— kapalı / off-market</span></h2>
-      <p>ProX bölge verisinden üretilen pazar tahminleri. Kamuya açık EİDS ilanı değildir; fiyatlar ProX endeks/analiz tahminidir. Detay için bizimle iletişime geçin.</p>
-    </div>
-    <div class="ins-oz-grid" id="insOzelGrid"></div>
-  </div>
 
   <footer class="insaatFooter"></footer>
 </div>
@@ -785,8 +830,8 @@ header.scrolled .lang-sel{color:var(--ink)}
 <footer class="insaatFooter"></footer>
 <button class="totop" id="totop" onclick="_totopClick()" aria-label="Sayfa başına dön" title="Yukarı çık">↑</button>
 <nav class="mdock" aria-label="Hızlı erişim">
-  <a href="#" onclick="event.preventDefault();closeAllInsaatOverlays();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openHizmetlerPage()" aria-label="Hizmetlerimiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a6 6 0 0 1 6-6"/><path d="M14 6a6 6 0 0 1 6 6v3"/></svg><span>Hizmetler</span></a>
-  <a href="#" onclick="event.preventDefault();closeAllInsaatOverlays();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openProjelerPage()" aria-label="Projeler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4M10 10h4M10 14h4M10 18h4"/></svg><span>Projeler</span></a>
+  <a href="hizmetlerimiz.html" onclick="event.preventDefault();closeAllInsaatOverlays();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openHizmetlerPage()" aria-label="Hizmetlerimiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a6 6 0 0 1 6-6"/><path d="M14 6a6 6 0 0 1 6 6v3"/></svg><span>Hizmetler</span></a>
+  <a href="projelerimiz.html" onclick="event.preventDefault();closeAllInsaatOverlays();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openProjelerPage()" aria-label="Projeler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4M10 10h4M10 14h4M10 18h4"/></svg><span>Projeler</span></a>
   <a href="neden-biz.html" aria-label="Neden Biz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg><span>Neden Biz</span></a>
   <a class="mdwa" href="https://wa.me/905001234567" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg><span>WhatsApp</span></a>
 </nav>
@@ -838,530 +883,15 @@ function cookieChoice(v){
 <div class="toast" id="toast"></div>
 
 <!-- ============ ADMIN APP (/#admin) ============ -->
-<div id="adminApp">
-  <div class="adm-login">
-    <div class="card">
-      <div class="lg"><span class="mark">M</span>Meridyen Yönetim</div>
-      <p>Firma yönetici paneline giriş yapın.</p>
-      <div class="err" id="admErr">Hatalı şifre. Tekrar deneyin.</div>
-      <input type="text" id="admUser" placeholder="Kullanıcı adı (admin)" value="admin">
-      <input type="password" id="admPass" placeholder="Şifre" onkeydown="if(event.key==='Enter')admLogin()">
-      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="admLogin()">Giriş Yap</button>
-      <div class="hint">Yetkili girişi · Şifrenizi bilmiyorsanız sistem yöneticinizle görüşün.</div>
-      <div class="hint"><a href="#" onclick="closeAdmin();return false" style="color:var(--accent)">← Siteye dön</a></div>
-    </div>
-  </div>
-  <div class="adm-dash">
-    <div class="adm-side">
-      <div class="lg"><span class="mark">M</span>Meridyen</div>
-      <button class="on" data-pane="dash" onclick="admNav('dash',this)">📊 Genel Bakış</button>
-      <button data-pane="content" onclick="admNav('content',this)">✏️ Site İçeriği</button>
-      <button data-pane="brand" onclick="admNav('brand',this)">🖼️ Marka & Logo</button>
-      <button data-pane="menutext" onclick="admNav('menutext',this)">🔤 Menü & Footer Yazıları</button>
-      <button data-pane="ads" onclick="admNav('ads',this)">🔌 Google & Reklam</button>
-      <button data-pane="diller" onclick="admNav('diller',this)">🌐 Diller & İçerik (TR/EN)</button>
-      <button data-pane="iletisim" onclick="admNav('iletisim',this)">📞 İletişim Sayfası & Konum</button>
-      <button data-pane="faq" onclick="admNav('faq',this)">❓ İnşaat Soru-Cevap</button>
-      <button data-pane="social" onclick="admNav('social',this)">🔗 Sosyal & İlan Linkleri</button>
-      <button data-pane="stats" onclick="admNav('stats',this)">📊 İstatistik & Sertifika</button>
-      <button data-pane="projects" onclick="admNav('projects',this)">🏗️ Projeler</button>
-      <button data-pane="services" onclick="admNav('services',this)">🧰 Hizmetler</button>
-      <button data-pane="arsa" onclick="admNav('arsa',this)">🤝 Kat Karşılığı Hesap</button>
-      <button data-pane="ilanlar" onclick="admNav('ilanlar',this)">🏘️ İlanlar (EİDS)</button>
-      <button data-pane="portfoy" onclick="admNav('portfoy',this)">🔒 Özel Portföy (ProX)</button>
-      <button data-pane="proje3d" onclick="admNav('proje3d',this)">🏗️ 3D Proje Üretici (Kat Karşılığı)</button>
-      <button data-pane="dwgproje" onclick="admNav('dwgproje',this)">📐 DWG Mimari Proje</button>
-      <button data-pane="contracts" onclick="admNav('contracts',this)">📋 Sözleşmeler</button>
-      <button data-pane="leads" onclick="admNav('leads',this)">👥 Müşteriler / Teklifler</button>
-      <button data-pane="gorusmeler" onclick="admNav('gorusmeler',this)">💬 Görüşmeler & Teklifler (ProX)</button>
-      <button data-pane="theme" onclick="admNav('theme',this)">🎨 Tema & Renk</button>
-      <button data-pane="settings" onclick="admNav('settings',this)">⚙️ Ayarlar & Güvenlik</button>
-      <div class="sp"></div>
-      <button onclick="closeAdmin()">🌐 Siteyi Görüntüle</button>
-      <button onclick="admLogout()">🚪 Çıkış Yap</button>
-    </div>
-    <div class="adm-main">
-      <div class="adm-pane on" id="pane-dash">
-        <h2>Genel Bakış</h2><div class="crumb">Hoş geldiniz, Yönetici · Meridyen Yapı</div>
-        <div class="kpi" id="kpi"></div>
-        <div class="panelcard"><h3>Son Teklif Talepleri</h3><div id="dashLeads"></div></div>
-      </div>
-      <div class="adm-pane" id="pane-content">
-        <h2>Site İçeriği</h2><div class="crumb">Ana sayfa metinleri ve marka bilgileri</div>
-        <div class="panelcard">
-          <label>Firma Adı</label><input type="text" id="a_brand" value="Meridyen Yapı">
-          <label>Telefon</label><input type="text" id="a_tel" value="+90 212 000 00 00">
-          <label>Hero Başlığı</label><textarea id="a_h1" rows="2">Şehrin silüetini güvenle yeniden inşa ediyoruz</textarea>
-          <label>Hero Alt Metni</label><textarea id="a_sub" rows="2">Konut, ticari ve karma projelerde anahtar teslim mühendislik; kentsel dönüşüm, kat karşılığı ve tadilat hizmetlerinde 38 yıllık güven.</textarea>
-          <label>Hakkımızda Metni</label><textarea id="a_about" rows="4">Meridyen Yapı; 1986'da temellerini attığı kurumsal kültürünü üç kuşaktır aynı titizlikle sürdüren bir yapı ve gayrimenkul geliştirme şirketidir. Arsa analizinden anahtar teslime kadar her aşamayı kendi mühendis kadromuzla yönetir; deprem güvenliği, malzeme kalitesi ve teslim takvimini taviz verilmez ilkeler olarak görürüz.</textarea>
-          <button class="btn btn-primary" style="margin-top:16px" onclick="saveContent()">Değişiklikleri Kaydet</button>
-        </div>
-      </div>
-      <div class="adm-pane" id="pane-brand">
-        <h2>Marka & Logo</h2><div class="crumb">Logoyu bilgisayarınızdan yükleyin — üst menü, alt menü ve tüm sayfalara uygulanır. "Yayınla" ile kaydedilir ve neden-biz dâhil her sayfaya işlenir.</div>
-        <div class="panelcard">
-          <label>Üst Menü Logosu (header)</label>
-          <div style="display:flex;gap:16px;align-items:center;margin:8px 0 4px">
-            <div id="bp_logo" style="width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-weight:800;font-size:24px;overflow:hidden;flex-shrink:0">M</div>
-            <div style="flex:1"><input type="file" id="f_logo" accept="image/*" onchange="brandUpload(this,'logo')"><div style="font-size:12px;color:#888;margin-top:4px">PNG/SVG · şeffaf zemin önerilir · <a href="#" onclick="brandClear('logo');return false" style="color:var(--accent)">kaldır (M harfine dön)</a></div></div>
-          </div>
-          <label style="margin-top:16px;display:block">Alt Menü Logosu (footer) — boş bırakılırsa üst logo kullanılır</label>
-          <div style="display:flex;gap:16px;align-items:center;margin:8px 0 4px">
-            <div id="bp_logoFooter" style="width:64px;height:44px;border-radius:10px;background:#14161c;display:grid;place-items:center;color:#9aa0ab;font-size:12px;overflow:hidden;flex-shrink:0">—</div>
-            <div style="flex:1"><input type="file" id="f_logoFooter" accept="image/*" onchange="brandUpload(this,'logoFooter')"><div style="font-size:12px;color:#888;margin-top:4px"><a href="#" onclick="brandClear('logoFooter');return false" style="color:var(--accent)">kaldır</a></div></div>
-          </div>
-          <label style="margin-top:16px;display:block">Favicon (tarayıcı sekme ikonu)</label>
-          <div style="display:flex;gap:16px;align-items:center;margin:8px 0 4px">
-            <div id="bp_favicon" style="width:36px;height:36px;border-radius:8px;background:#14161c;display:grid;place-items:center;color:#9aa0ab;font-size:16px;overflow:hidden;flex-shrink:0">★</div>
-            <div style="flex:1"><input type="file" id="f_favicon" accept="image/*" onchange="brandUpload(this,'favicon')"><div style="font-size:12px;color:#888;margin-top:4px"><a href="#" onclick="brandClear('favicon');return false" style="color:var(--accent)">kaldır</a></div></div>
-          </div>
-          <label style="margin-top:16px;display:block">Marka Adı (yazı — logo yanında/altında)</label>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><input type="text" id="b_name" placeholder="Meridyen" oninput="BRAND.name=this.value;applyBrand()"><input type="text" id="b_name2" placeholder=" Yapı" oninput="BRAND.name2=this.value;applyBrand()"></div>
-          <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;align-items:center">
-            <button class="btn btn-primary" onclick="publishSite()">🚀 Yayınla</button>
-            <span style="font-size:12.5px;color:#888">Kaydedilir ve neden-biz dâhil tüm sayfalara uygulanır.</span>
-          </div>
-        </div>
-      </div>
-      <div class="adm-pane" id="pane-menutext">
-        <h2>Menü & Footer Yazıları</h2><div class="crumb">Üst menü, mobil menü ve footer yazıları — değiştir, canlı görün, "Yayınla" ile tüm sayfalara (neden-biz dâhil) uygula.</div>
-        <div class="panelcard">
-          <h3 style="margin-top:0">Üst Menü</h3>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 12px">
-            <div><label>Hizmetler</label><input id="m_hizmetler" oninput="MENU.hizmetler=this.value;applyMenuText()"></div>
-            <div><label>Neden ? Biz (? vurgulu kalır)</label><input id="m_nedenBiz" oninput="MENU.nedenBiz=this.value;applyMenuText()"></div>
-            <div><label>Projeler</label><input id="m_projeler" oninput="MENU.projeler=this.value;applyMenuText()"></div>
-            <div><label>Bölge Zekası</label><input id="m_bolge" oninput="MENU.bolge=this.value;applyMenuText()"></div>
-            <div><label>Giriş</label><input id="m_giris" oninput="MENU.giris=this.value;applyMenuText()"></div>
-            <div><label>Teklif butonu</label><input id="m_teklif" oninput="MENU.teklif=this.value;applyMenuText()"></div>
-          </div>
-        </div>
-        <div class="panelcard">
-          <h3 style="margin-top:0">Footer (Alt Menü)</h3>
-          <label>Marka açıklaması</label><textarea id="fo_desc" rows="2" oninput="FOOT.desc=this.value;applyMenuText()"></textarea>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-            <div><label>Kolon 1 başlığı</label><input id="fo_k" oninput="FOOT.colKurumsal=this.value;applyMenuText()"></div>
-            <div><label>Kolon 2 başlığı</label><input id="fo_h" oninput="FOOT.colHizmetler=this.value;applyMenuText()"></div>
-            <div><label>Kolon 3 başlığı</label><input id="fo_i" oninput="FOOT.colIletisim=this.value;applyMenuText()"></div>
-          </div>
-          <label>Adres (satır için &lt;br&gt; kullanın)</label><input id="fo_adres" oninput="FOOT.adres=this.value;applyMenuText()">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-            <div><label>Telefon</label><input id="fo_tel" oninput="FOOT.tel=this.value;applyMenuText()"></div>
-            <div><label>E-posta</label><input id="fo_email" oninput="FOOT.email=this.value;applyMenuText()"></div>
-          </div>
-          <label>Telif metni (copyright)</label><input id="fo_copy" oninput="FOOT.copyright=this.value;applyMenuText()">
-          <div style="margin-top:18px"><button class="btn btn-primary" onclick="publishSite()">🚀 Yayınla</button></div>
-        </div>
-      </div>
-      <div class="adm-pane" id="pane-ads">
-        <h2>Google & Reklam</h2><div class="crumb">Google Analytics, Search Console ve reklam/izleme kodları — "Yayınla" ile tüm sayfalara uygulanır.</div>
-        <div class="panelcard">
-          <h3 style="margin-top:0">Google</h3>
-          <label>Google Analytics ID (G-XXXX)</label><input id="ad_ga" placeholder="G-XXXXXXXXXX" oninput="SETTINGS.googleAnalytics=this.value">
-          <label>Google Search Console doğrulama</label><input id="ad_gsv" placeholder="google-site-verification içeriği" oninput="SETTINGS.googleSiteVerif=this.value">
-          <div style="font-size:12px;color:#888;margin-top:6px">Yayınlayınca sayfaya gtag.js ve doğrulama meta etiketi otomatik eklenir.</div>
-        </div>
-        <div class="panelcard">
-          <h3 style="margin-top:0">Reklam / İzleme Kodu (kod yazmadan yapıştırın)</h3>
-          <label>&lt;head&gt; kodu — AdSense yükleyici, Google Tag Manager, piksel vb.</label>
-          <textarea id="ads_head" rows="4" placeholder="&lt;script async src=&quot;https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXX&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;" oninput="ADS.head=this.value"></textarea>
-          <label>Sayfa içi reklam / kod (body)</label>
-          <textarea id="ads_body" rows="4" placeholder="&lt;ins class=&quot;adsbygoogle&quot; ...&gt;&lt;/ins&gt;" oninput="ADS.body=this.value"></textarea>
-          <div style="font-size:12px;color:#888;margin-top:6px">⚠ Buraya yapıştırılan &lt;script&gt; kodları sayfada çalıştırılır — yalnızca güvendiğiniz kaynakları ekleyin.</div>
-        </div>
-        <div><button class="btn btn-primary" onclick="publishAds()">🚀 Yayınla</button></div>
-      </div>
-      <div class="adm-pane" id="pane-diller">
-        <h2>Diller & İçerik (TR / EN)</h2><div class="crumb">Ana sayfadaki her başlık ve paragraf otomatik listelenir. Türkçesini düzenleyin, İngilizcesini girin — üstteki TR/EN düğmesiyle önizleyin, "Yayınla" ile kaydedin.</div>
-        <div class="panelcard">
-          <div id="dillerList"></div>
-          <button class="btn btn-primary" style="margin-top:14px" onclick="publishSite()">🚀 Yayınla</button>
-        </div>
-      </div>
-      <div class="adm-pane" id="pane-iletisim">
-        <h2>İletişim Sayfası & Konum</h2><div class="crumb">İletişim sayfasındaki harita konumu, iletişim bilgileri ve yasal şirket künyesi. Kaydedince sayfaya anında yansır.</div>
-        <div class="panelcard">
-          <h3 style="margin-top:0">📍 Harita Konumu</h3>
-          <div style="font-size:12px;color:#9fb0cc;margin-bottom:10px;line-height:1.5">Haritaya <b>tıklayarak</b> firmanızın konumunu seçin — işaretçiyi sürükleyerek de taşıyabilirsiniz. Seçtiğiniz nokta <b>hem ana sayfada hem iletişim sayfasında</b> haritada görünür ve adres otomatik doldurulur. API anahtarı gerekmez.</div>
-          <div id="il_pickmap" style="height:320px;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#0d1420;position:relative;z-index:0"><div id="il_pickmap_ph" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#8fa0bb;font-size:13px;text-align:center;padding:16px">🗺️ Harita yükleniyor…</div></div>
-          <div id="il_pickinfo" style="font-size:12px;color:#9fb0cc;margin-top:8px;min-height:16px"></div>
-          <div class="fld2" style="margin-top:12px;align-items:end">
-            <div class="field" style="margin:0"><label>Konum — adres ya da "enlem,boylam"</label><input id="il_mapq" placeholder="Levent Mah., Beşiktaş, İstanbul"></div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-mini" onclick="ilMapSearch()">🔎 Adresten bul</button></div>
-          </div>
-        </div>
-        <div class="panelcard">
-          <h3 style="margin-top:0">İletişim Bilgileri</h3>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label>Adres</label><input id="il_adres"></div><div><label>Telefon</label><input id="il_tel"></div></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label>E-posta</label><input id="il_email"></div><div><label>WhatsApp No</label><input id="il_wa" placeholder="905001234567"></div></div>
-          <label>Çalışma Saatleri</label><input id="il_calisma">
-        </div>
-        <div class="panelcard">
-          <h3 style="margin-top:0">Yasal Künye (Türk Ticaret Kanunu)</h3>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label>Ünvan</label><input id="il_unvan"></div><div><label>Yetkili</label><input id="il_yetkili"></div></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label>Vergi Dairesi</label><input id="il_vd"></div><div><label>Vergi No</label><input id="il_vno"></div></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label>MERSİS No</label><input id="il_mersis"></div><div><label>Ticaret Sicil No</label><input id="il_tsicil"></div></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label>Ticaret Odası</label><input id="il_oda"></div><div><label>KEP Adresi</label><input id="il_kep"></div></div>
-          <div style="margin-top:16px"><button class="btn btn-primary" onclick="saveIletisimInfo()">🚀 Kaydet & Yayınla</button></div>
-        </div>
-      </div>
-      <div class="adm-pane" id="pane-faq">
-        <h2>❓ İnşaat Soru-Cevap (S.S.S.)</h2><div class="crumb">Google'dan organik ziyaretçi çeken inşaat rehberi. Soru ekleyin, düzenleyin, silin. "Kaydet & Yayınla" ile siteye ve arama motoru yapısal verisine (FAQ Schema) anında yansır.</div>
-        <div class="panelcard">
-          <h3 style="margin-top:0">➕ Yeni Soru Ekle</h3>
-          <label>Kategori</label><select id="faqNewCat"></select>
-          <label>Soru</label><input id="faqNewQ" placeholder="ör: Villa yaptırmak ne kadar sürer?">
-          <label>Cevap <span style="color:#888;font-weight:400">(HTML: &lt;b&gt; &lt;ul&gt; &lt;li&gt; &lt;br&gt;)</span></label><textarea id="faqNewA" style="min-height:90px"></textarea>
-          <div style="margin-top:12px"><button class="btn btn-primary" onclick="faqAdd()">+ Soruyu Ekle</button></div>
-        </div>
-        <div class="panelcard">
-          <div class="fadm-bar">
-            <input id="faqAdminSearch" type="search" placeholder="🔍 Soru ara..." oninput="renderFaqAdmin()">
-            <select id="faqAdminCat" onchange="renderFaqAdmin()"></select>
-            <span class="fadm-count" id="faqAdminCount">0</span>
-            <button class="btn btn-primary" onclick="faqSaveAll()">💾 Kaydet & Yayınla</button>
-          </div>
-          <div id="faqAdminList" class="fadm-list"></div>
-        </div>
-      </div>
-      <div class="adm-pane" id="pane-social">
-        <h2>🔗 Sosyal Medya & İlan Portalleri</h2><div class="crumb">Footer'daki sosyal medya ikonları ve ilan sitesi linkleri (sahibinden · hepsiemlak · emlakjet) buradan yönetilir. Boş bırakılan ikon sitede otomatik gizlenir. "Kaydet & Uygula" tüm sayfalara yansır.</div>
-        <div class="panelcard">
-          <h3 style="margin-top:0">Sosyal Medya Hesapları</h3>
-          <div class="soc-grid">
-            <div><label>Facebook</label><input id="soc_facebook" placeholder="https://facebook.com/meridyenyapi"></div>
-            <div><label>Instagram</label><input id="soc_instagram" placeholder="https://instagram.com/meridyenyapi"></div>
-            <div><label>X (Twitter)</label><input id="soc_x" placeholder="https://x.com/meridyenyapi"></div>
-            <div><label>LinkedIn</label><input id="soc_linkedin" placeholder="https://linkedin.com/company/meridyenyapi"></div>
-            <div><label>YouTube</label><input id="soc_youtube" placeholder="https://youtube.com/@meridyenyapi"></div>
-            <div><label>NEXT Sosyal</label><input id="soc_nsosyal" placeholder="https://nsosyal.com/meridyenyapi"></div>
-          </div>
-        </div>
-        <div class="panelcard">
-          <h3 style="margin-top:0">İlan Portalleri</h3>
-          <div class="soc-grid">
-            <div><label>sahibinden.com</label><input id="soc_sahibinden" placeholder="https://sahibinden.com/magaza/..."></div>
-            <div><label>hepsiemlak</label><input id="soc_hepsiemlak" placeholder="https://hepsiemlak.com/emlak-ofisi/..."></div>
-            <div><label>emlakjet</label><input id="soc_emlakjet" placeholder="https://emlakjet.com/emlak-ofisi/..."></div>
-          </div>
-          <div style="margin-top:16px"><button class="btn btn-primary" onclick="saveSocial()">🚀 Kaydet & Uygula</button></div>
-        </div>
-      </div>
-      <div class="adm-pane" id="pane-stats">
-        <h2>📊 İstatistikler & Sertifikalar</h2><div class="crumb">Ana sayfa ve Hizmetler sayfasındaki kurumsal rakamlar + standart/sertifika rozetleri. Rakamı sade sayı girin; site otomatik biçimlendirir (8400 → 8.400+, 2100000 → 2,1M m²). "Kaydet & Uygula" tüm sayfalara yansır.</div>
-        <div class="panelcard">
-          <h3 style="margin-top:0">Kurumsal Rakamlar</h3>
-          <div class="soc-grid">
-            <div><label>Yıllık Tecrübe</label><input id="st_yil" type="number" min="0"></div>
-            <div><label>Teslim Edilen Konut</label><input id="st_konut" type="number" min="0"></div>
-            <div><label>Tamamlanan Proje</label><input id="st_proje" type="number" min="0"></div>
-            <div><label>Aktif Şantiye</label><input id="st_santiye" type="number" min="0"></div>
-            <div><label>Toplam İnşa Alanı (m²)</label><input id="st_alan" type="number" min="0"></div>
-          </div>
-        </div>
-        <div class="panelcard">
-          <h3 style="margin-top:0">Standartlar & Sertifikalar</h3>
-          <label>Her satıra bir rozet yazın</label>
-          <textarea id="st_certs" style="min-height:130px" placeholder="TBDY 2018&#10;ISO 9001 · 14001 · 45001&#10;BIM Koordinasyon"></textarea>
-          <div style="margin-top:16px"><button class="btn btn-primary" onclick="saveStats()">🚀 Kaydet & Uygula</button></div>
-        </div>
-      </div>
-      <div class="adm-pane" id="pane-projects">
-        <h2>Projeler</h2><div class="crumb">Projeleri ekleyin, düzenleyin veya silin · değişiklikler otomatik kaydedilir, ana sayfaya anında yansır</div>
-        <div class="adm-toolbar">
-          <button class="btn-mini" onclick="exportData()">⬇ Tüm Veriyi Yedekle (JSON)</button>
-          <button class="btn-mini" onclick="document.getElementById('importFile').click()">⬆ Yedekten Geri Yükle</button>
-          <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importData(this)">
-        </div>
-        <div class="panelcard"><div id="admPjList"></div>
-          <button class="miniadd" onclick="admAddProject()">+ Yeni Proje Ekle</button></div>
-      </div>
-      <div class="adm-pane" id="pane-services">
-        <h2>Hizmetler</h2><div class="crumb">Hizmet kartlarını yönetin</div>
-        <div class="panelcard"><div id="admSvcList"></div>
-          <button class="miniadd" onclick="admAddSvc()">+ Yeni Hizmet Ekle</button></div>
-      </div>
-      <div class="adm-pane" id="pane-leads">
-        <h2>Müşteriler / Teklif Talepleri</h2><div class="crumb">Siteden gelen teklif ve iletişim talepleri</div>
-        <div class="panelcard"><table class="adm-tbl"><thead><tr><th>Ad Soyad</th><th>Telefon</th><th>Konu</th><th>Kaynak</th><th>Tarih</th></tr></thead>
-          <tbody id="leadsBody"></tbody></table><div id="leadsEmpty" style="color:var(--muted);font-size:14px;padding:14px 4px">Henüz teklif talebi yok. Sitedeki formdan gelen talepler burada listelenir.</div></div>
-      </div>
-      <!-- GÖRÜŞMELER & TEKLİFLER (ProX Asistan + üye teklifleri) -->
-      <div class="adm-pane" id="pane-gorusmeler">
-        <h2>Görüşmeler & Teklifler</h2>
-        <div class="crumb">Site kullanıcılarının ProX Asistan yapay zekâ görüşmeleri, teklif talepleri ve üye kayıtları — yetkili olarak tam ve detaylı takip edin, geri arama taleplerini yönetin.</div>
-        <div class="adm-toolbar"><button class="btn-mini" onclick="renderGorusmeler()">↻ Yenile</button></div>
-        <div id="gorusmelerBody"></div>
-      </div>
-      <!-- ARSA & BAĞIMSIZ BÖLÜM YÖNETİMİ -->
-      <div class="adm-pane" id="pane-arsa">
-        <h2>Kat Karşılığı Hesaplama & Fizibilite</h2>
-        <div class="crumb">Arsa m² + imar durumu girin → tahmini daire adedi, arsa sahibi/müteahhit paylaşımı, satış geliri ve net kâr otomatik hesaplansın.</div>
-        <div class="adm-toolbar">
-          <button class="btn-mini" onclick="admAddArsa()">+ Yeni Fizibilite Hesabı</button>
-        </div>
-        <div id="arsaList"></div>
-      </div>
-      <!-- İLANLAR (EİDS üzerinden yayın) -->
-      <div class="adm-pane" id="pane-ilanlar">
-        <h2>İlanlar</h2>
-        <div class="crumb">Kendi taşınmazlarınızı bağımsız ilan olarak yayınlayın. Her ilan <b>T.C. Ticaret Bakanlığı EİDS</b> (Elektronik İlan Doğrulama Sistemi) üzerinden doğrulanır. 15 Şubat 2026'dan beri tüm ilanlarda doğrulama zorunludur.</div>
-        <div class="panelcard ins-eids-bar">
-          <div class="ins-eids-belge"><label>Taşınmaz Ticareti Yetki Belgesi No <span class="ins-req">(kurumsal)</span></label><input id="insEidsYetkiBelge" placeholder="Emlak işletmesi yetki belge no" oninput="insEidsSetBelge(this.value)"></div>
-          <div class="ins-note">🛡️ Doğrulama, NADAS sunucusu (ProX / emlakekspertizi.com) üzerinden Ticaret Bakanlığı EİDS sistemine yapılır. <b>Kod uydurulmaz.</b> Canlı EİDS bağlantısı devrede değilken ilanlar dürüstçe <b>“Doğrulama Bekliyor”</b> durumunda kalır. Doğrulanan ilan yeşil <b>EİDS Doğrulandı</b> rozetiyle görünür.</div>
-        </div>
-        <div class="panelcard">
-          <h3 style="margin:0 0 6px">📤 Toplu İlan Aktar</h3>
-          <div class="crumb" style="margin:0 0 10px">Excel / Google Sheets’ten satırları kopyalayıp aşağıya yapıştırın (sütun ayracı sekme, <b>;</b> veya <b>,</b> — otomatik algılanır). Sıra: <b>Başlık · İşlem · Tip · İl · İlçe · Mahalle · m² · Oda · Kat · Fiyat · Açıklama</b>. Yalnız <b>size ait</b> ilanlar — portal izinsiz taraması yapılmaz.</div>
-          <textarea id="insBulk_in" rows="5" style="width:100%;box-sizing:border-box;font-family:ui-monospace,Menlo,monospace;font-size:12px" placeholder="Levent Rezidans 2+1&#9;Satılık&#9;Daire&#9;İstanbul&#9;Beşiktaş&#9;Levent&#9;112&#9;2+1&#9;14&#9;14750000&#9;Açıklama…"></textarea>
-          <div class="adm-toolbar" style="margin-top:8px">
-            <button class="btn-mini" onclick="insBulkSample()">Örnek Doldur</button>
-            <button class="btn-mini" onclick="insBulkPreview()">👁 Önizle</button>
-            <button class="btn-mini" style="background:var(--accent);color:#fff" onclick="insBulkImport()">📥 İçe Aktar</button>
-          </div>
-          <div id="insBulk_out" style="margin-top:8px"></div>
-        </div>
-        <div class="adm-toolbar"><button class="btn-mini" onclick="insIlanAdd()">+ Yeni İlan Ekle</button></div>
-        <div class="panelcard"><div id="insIlanList"></div></div>
-      </div>
-      <!-- ÖZEL PORTFÖY (ProX destekli üretim · EİDS hariç) -->
-      <div class="adm-pane" id="pane-portfoy">
-        <h2>Özel Portföy</h2>
-        <div class="crumb">Off-market / kapalı portföy. Kayıtlar <b>ProX bölge verisinden üretilir</b> (pazar tahmini) — kamuya açık EİDS ilanı değildir, bu yüzden <b>EİDS kapsamı dışındadır</b>. Fiyatlar ProX endeks/analiz tahminidir, kesin ilan fiyatı değildir.</div>
-        <div class="adm-toolbar">
-          <button class="btn-mini" id="insOzGenBtn" style="background:var(--accent);color:#fff" onclick="insOzelGen()">⚡ ProX ile Portföy Üret</button>
-        </div>
-        <div class="panelcard"><div id="insOzelList"></div></div>
-      </div>
-      <!-- 3D PROJE ÜRETİCİ & FİZİBİLİTE RAPORU -->
-      <div class="adm-pane" id="pane-proje3d">
-        <h2>3D Proje Üretici & Fizibilite Raporu</h2>
-        <div class="crumb">Müşterinizin arsasını girin → 3D model + dükkan/daire dağılımı + kat karşılığı pay paylaşımı + arsa payına kadar detaylı rapor → 4 görsel & not ekleyin → PDF indirin / gönderin.</div>
-        <div class="p3d-layout">
-          <div class="p3d-controls">
-            <div class="panelcard">
-              <h3 style="margin:0 0 12px">👤 Müşteri & Arsa Bilgileri</h3>
-              <label>Müşteri Adı Soyadı</label><input type="text" id="p3_musteri" value="" placeholder="Örn. Mehmet Yılmaz" oninput="updateProje3D()">
-              <label>Proje / Arsa Adı</label><input type="text" id="p3_ad" value="Müşteri Arsası" oninput="updateProje3D()">
-              <div class="ed3">
-                <div><label>İl</label><input type="text" id="p3_il" value="İstanbul" oninput="updateProje3D()"></div>
-                <div><label>İlçe</label><input type="text" id="p3_ilce" value="" oninput="updateProje3D()"></div>
-                <div><label>Mahalle</label><input type="text" id="p3_mah" value="" oninput="updateProje3D()"></div>
-              </div>
-              <div class="ed2">
-                <div><label>Ada</label><input type="text" id="p3_ada" value="" placeholder="Örn. 1234" oninput="updateProje3D()"></div>
-                <div><label>Parsel</label><input type="text" id="p3_parsel" value="" placeholder="Örn. 56" oninput="updateProje3D()"></div>
-              </div>
-            </div>
-            <div class="panelcard" style="margin-top:14px">
-              <h3 style="margin:0 0 12px">📐 İmar & Yapı</h3>
-              <label>Arsa m²</label><input type="number" id="p3_m2" value="1500" oninput="updateProje3D()">
-              <div class="ed2">
-                <div><label>Emsal (KAKS)</label><input type="number" step="0.01" id="p3_emsal" value="2.0" oninput="updateProje3D()"></div>
-                <div><label>TAKS</label><input type="number" step="0.01" id="p3_taks" value="0.40" oninput="updateProje3D()"></div>
-              </div>
-              <div class="ed2">
-                <div><label>Kat Adedi</label><input type="number" id="p3_kat" value="6" oninput="updateProje3D()"></div>
-                <div><label>Blok Sayısı</label><input type="number" id="p3_blok" value="2" min="1" max="6" oninput="updateProje3D()"></div>
-              </div>
-              <label>Bina Tipi</label>
-              <select id="p3_tip" onchange="updateProje3D()">
-                <option value="konut">Konut (Apartman)</option>
-                <option value="rezidans">Rezidans (Yüksek Kat)</option>
-                <option value="villa">Villa Sitesi</option>
-                <option value="ticari">Ticari / Karma</option>
-              </select>
-            </div>
-            <div class="panelcard" style="margin-top:14px;border:1px solid var(--accent)">
-              <h3 style="margin:0 0 8px">🏛️ Gerçek Mimari Proje (GLB/glTF)</h3>
-              <p style="font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.5">Mimarınızın 3D modelini (Revit/ArchiCAD/SketchUp/Lumion → <b>.glb</b> export) yükleyin. Müşteriye gerçek projeyi 3D olarak gösterin. Konsept kütle yerine gerçek model görünür.</p>
-              <input type="file" id="glbInput" accept=".glb,.gltf" style="display:none" onchange="loadGLBModel(this)">
-              <button class="btn-mini" style="width:100%" onclick="document.getElementById('glbInput').click()">📤 Mimari Model Yükle (.glb)</button>
-              <div id="glbStatus" style="font-size:12px;margin-top:8px;color:var(--muted)"></div>
-              <button class="btn-mini" id="glbClearBtn" style="width:100%;margin-top:8px;display:none" onclick="clearGLBModel()">🗑️ Modeli Kaldır (konsepte dön)</button>
-            </div>
-            <div class="panelcard" style="margin-top:14px">
-              <h3 style="margin:0 0 12px">🏬 Bağımsız Bölüm Dağılımı</h3>
-              <div class="ed2">
-                <div><label>Zemin Dükkan Sayısı</label><input type="number" id="p3_dukkan" value="4" min="0" oninput="updateProje3D()"></div>
-                <div><label>Ort. Dükkan m²</label><input type="number" id="p3_dukkanM2" value="60" oninput="updateProje3D()"></div>
-              </div>
-              <div class="ed2">
-                <div><label>Ort. Daire m²</label><input type="number" id="p3_daireM2" value="115" oninput="updateProje3D()"></div>
-                <div><label>Daire/Kat (blok başı)</label><input type="number" id="p3_daireKat" value="4" oninput="updateProje3D()"></div>
-              </div>
-            </div>
-            <div class="panelcard" style="margin-top:14px">
-              <h3 style="margin:0 0 12px">🤝 Kat Karşılığı Paylaşımı</h3>
-              <div class="ed2">
-                <div><label>Arsa Sahibi Payı %</label><input type="number" id="p3_payArsa" value="45" oninput="updateProje3D()"></div>
-                <div><label>Müteahhit Payı %</label><input type="number" id="p3_payMut" value="55" readonly style="opacity:.7"></div>
-              </div>
-              <div class="ed2">
-                <div><label>Daire Satış ₺/m²</label><input type="number" id="p3_satisM2" value="75000" oninput="updateProje3D()"></div>
-                <div><label>İnşaat ₺/m² Maliyet</label><input type="number" id="p3_maliyetM2" value="18000" oninput="updateProje3D()"></div>
-              </div>
-            </div>
-            <div class="panelcard" style="margin-top:14px">
-              <h3 style="margin:0 0 12px">🖼️ Rapor Görselleri (max 4)</h3>
-              <div class="p3img-grid" id="p3imgGrid"></div>
-              <input type="file" id="p3imgInput" accept="image/*" style="display:none" onchange="addReportImage(this)">
-              <button class="btn-mini" style="margin-top:8px;width:100%" onclick="document.getElementById('p3imgInput').click()">+ Görsel Ekle</button>
-            </div>
-            <div class="panelcard" style="margin-top:14px">
-              <h3 style="margin:0 0 12px">📝 Rapor Notu</h3>
-              <textarea class="adm-ta" rows="3" id="p3_not" placeholder="Müşteriye özel notlar, öneriler, açıklamalar..." oninput="saveP3Note()"></textarea>
-            </div>
-            <button class="btn-mini" data-feature="canUsePdfReports" style="margin-top:14px;width:100%;background:var(--accent);color:#0e0f13;border-color:var(--accent);font-weight:700" onclick="generateReport()">📄 Fizibilite Raporu Oluştur (PDF)</button>
-            <button class="btn-mini" style="margin-top:8px;width:100%" onclick="sendProje3DWhatsApp()">📱 Özeti WhatsApp'tan Gönder</button>
-            <button class="btn-mini" style="margin-top:8px;width:100%" onclick="showKatPlani()">📐 Kat Planı Oluştur (m² · daire/dükkan)</button>
-            <button class="btn-mini" style="margin-top:8px;width:100%" onclick="captureProje3D()">📸 3D Görüntüyü İndir (PNG)</button>
-          </div>
-          <div class="p3d-right">
-            <div class="p3d-stage">
-              <canvas id="adminBuild3d"></canvas>
-              <div class="p3d-hint">🖱️ Döndür · tekerlek ile yakınlaştır</div>
-            </div>
-            <div class="panelcard" style="margin-top:14px">
-              <h3 style="margin:0 0 10px">📊 Anlık Fizibilite Özeti</h3>
-              <div id="p3_stats"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- DWG MİMARİ PROJE -->
-      <div class="adm-pane" id="pane-dwgproje">
-        <h2>📐 DWG Mimari Proje → Projeler</h2>
-        <div class="crumb">Mimarın <b>.dwg</b> dosyasını yükleyin → çizim <b>eksiksiz okunur</b> (2B gerçek vektör plan) → <b>Pro<span style="background:#16a34a;color:#07130a;border-radius:4px;padding:0 5px;font-weight:800">X</span></b> dosyanın <b>Alan Cetvelinden</b> gerçek verileri (kat · bağımsız bölüm · toplam inşaat alanı · m²) okur — <b>hiçbir şey uydurmaz</b> + <b>gerçek kat planları görsele</b> çevrilir (her kat ayrı) → <b>Projeler</b> sayfasına kaydedilir. Daire tipleri/fiyatlar admin panelde tamamlanır.</div>
-        <div class="p3d-layout">
-          <div class="p3d-controls">
-            <div class="panelcard">
-              <h3 style="margin:0 0 12px">🏷️ Proje Bilgileri</h3>
-              <label>Proje Adı</label><input type="text" id="dwg_ad" placeholder="Örn. Fatih Menteşe Konutları">
-              <div class="ed3">
-                <div><label>İl</label><input type="text" id="dwg_il" value="İstanbul"></div>
-                <div><label>İlçe</label><input type="text" id="dwg_ilce" value="" placeholder="Örn. Kadıköy"></div>
-                <div><label>Mahalle</label><input type="text" id="dwg_mah" value=""></div>
-              </div>
-              <div class="ed2">
-                <div><label>Ada</label><input type="text" id="dwg_ada" value="" placeholder="Örn. 1234"></div>
-                <div><label>Parsel</label><input type="text" id="dwg_parsel" value="" placeholder="Örn. 56"></div>
-              </div>
-            </div>
-            <div class="panelcard" style="margin-top:14px;border:1px solid var(--accent)">
-              <h3 style="margin:0 0 8px">📤 Mimari Proje Yükle</h3>
-              <p style="font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.5"><b>.dwg</b> (veya .dxf) seçin → <b>Yapıyı Otomatik Çöz</b> ile kat/mahal/m² + 2B plan çıkar. (libredwg-web · WASM · arayüz donmaz)</p>
-              <input type="file" id="apsFile" accept=".dwg,.dxf" style="display:none" onchange="if(this.files[0])window.dwgLocalPreview(this.files[0]);this.value=''">
-              <button class="btn-mini" style="width:100%;background:var(--accent);color:#0e0f13;border-color:var(--accent);font-weight:700" onclick="document.getElementById('apsFile').click()">📤 .dwg / .dxf Seç</button>
-              <div id="apsStatus" style="font-size:12px;margin-top:8px;color:var(--muted);line-height:1.45"></div>
-              <div id="apsPreview" style="margin-top:8px"></div>
-              <button class="btn-mini" id="apsBackBtn" style="width:100%;margin-top:8px;display:none" onclick="apsCloseViewer()">← Planı Kapat</button>
-            </div>
-          </div>
-          <div class="p3d-right">
-            <div id="apsViewerWrap" style="display:none">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-                <b style="font-family:var(--head)">📐 Gerçek Vektör Kat Planı (.dwg)</b>
-                <button class="btn-mini" onclick="apsCloseViewer()" style="width:auto">✕ Kapat</button>
-              </div>
-              <div id="apsViewer" style="position:relative;width:100%;height:560px;background:#0b0d12;border:1px solid var(--line);border-radius:12px;overflow:hidden"></div>
-              <p style="font-size:11.5px;color:var(--muted);margin:8px 0 0">Gerçek vektör kat planı. Sağ üstteki <b>＋ / －</b> ile yakınlaştırıp kaydırarak inceleyin.</p>
-            </div>
-            <div id="dwgAnalyz"></div>
-            <div id="dwgFloorPlans"></div>
-            <div id="dwgAiResult"></div>
-            <div class="panelcard" id="dwgHint" style="margin-top:14px">
-              <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.6">💡 <b>1)</b> Soldan bir <b>.dwg</b> yükleyip <b>🏗️ Yapıyı Otomatik Çöz</b>'e basın (2B plan açılır). <b>2)</b> <b>Pro<span style="background:#16a34a;color:#07130a;border-radius:3px;padding:0 4px;font-weight:800">X</span> ile Çözümle</b> ile Alan Cetvelinden gerçek veriler okunur (uydurma yok). <b>3)</b> <b>Portföye Ekle</b> ile kaydedin; daire tipi/fiyat admin panelde tamamlanır. Büyük dosyalar Web Worker'da işlenir (arayüz donmaz); ilk seferde ~9 MB motor iner.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- SÖZLEŞMELER -->
-      <div class="adm-pane" id="pane-contracts">
-        <h2>Sözleşmeler</h2>
-        <div class="crumb">İnşaat, kat karşılığı ve taşeron sözleşmelerini tek yerden yönetin.</div>
-        <div class="adm-toolbar">
-          <button class="btn-mini" onclick="admAddContract('insaat')">+ İnşaat Sözleşmesi</button>
-          <button class="btn-mini" onclick="admAddContract('kat-karsiligi')">+ Kat Karşılığı Sözleşmesi</button>
-          <button class="btn-mini" onclick="admAddContract('taseron')">+ Taşeron Sözleşmesi</button>
-        </div>
-        <div id="contractList"></div>
-      </div>
-      <!-- AYARLAR -->
-      <div class="adm-pane" id="pane-settings">
-        <h2>Ayarlar & Güvenlik</h2>
-        <div class="crumb">Yönetici şifresi, Google entegrasyonları ve site meta ayarları.</div>
-        <div class="panelcard">
-          <h3 style="margin:0 0 14px">🔐 Yönetici Girişi</h3>
-          <div class="ed2">
-            <div><label>Kullanıcı Adı</label><input type="text" id="set_user"></div>
-            <div><label>Mevcut Şifre (doğrulama)</label><input type="password" id="set_curpass" placeholder="Mevcut şifreniz"></div>
-          </div>
-          <div class="ed2">
-            <div><label>Yeni Şifre</label><input type="password" id="set_newpass" placeholder="Yeni şifre"></div>
-            <div><label>Yeni Şifre (tekrar)</label><input type="password" id="set_newpass2" placeholder="Tekrar"></div>
-          </div>
-          <button class="btn-mini" style="margin-top:12px" onclick="changePassword()">🔑 Şifreyi Değiştir</button>
-          <div id="passMsg" style="margin-top:8px;font-size:13px"></div>
-        </div>
-        <div class="panelcard" style="margin-top:16px">
-          <h3 style="margin:0 0 14px">🏢 Firma Bilgileri (sözleşmelerde otomatik kullanılır)</h3>
-          <div class="ed2">
-            <div><label>Firma Ünvanı</label><input type="text" id="set_funvan"></div>
-            <div><label>Vergi No</label><input type="text" id="set_fvergi"></div>
-          </div>
-          <div class="ed2">
-            <div><label>MERSİS No</label><input type="text" id="set_fmersis"></div>
-            <div><label>Yetkili</label><input type="text" id="set_fyetkili"></div>
-          </div>
-          <label>Firma Adresi</label><input type="text" id="set_fadres">
-          <div class="ed2">
-            <div><label>Telefon</label><input type="text" id="set_ftel"></div>
-            <div><label>E-posta</label><input type="text" id="set_femail"></div>
-          </div>
-          <button class="btn-mini" style="margin-top:12px" onclick="saveFirmaInfo()">💾 Firma Bilgilerini Kaydet</button>
-        </div>
-        <div class="panelcard" style="margin-top:16px">
-          <h3 style="margin:0 0 14px">🌐 Google & Entegrasyonlar</h3>
-          <label>Google Maps API Anahtarı</label><input type="text" id="set_gmaps" placeholder="AIza...">
-          <label>Google Analytics ID (G-XXXX)</label><input type="text" id="set_ga" placeholder="G-XXXXXXX">
-          <label>Google Search Console Doğrulama Kodu</label><input type="text" id="set_gsv" placeholder="google-site-verification içeriği">
-          <label>reCAPTCHA Site Anahtarı</label><input type="text" id="set_recaptcha" placeholder="6Lc...">
-          <button class="btn-mini" style="margin-top:12px" onclick="saveGoogleSettings()">💾 Entegrasyonları Kaydet</button>
-        </div>
-        <div class="panelcard" style="margin-top:16px">
-          <h3 style="margin:0 0 14px">🔎 SEO & Meta</h3>
-          <label>Site Başlığı (meta title)</label><input type="text" id="set_mtitle">
-          <label>Site Açıklaması (meta description)</label><textarea class="adm-ta" rows="2" id="set_mdesc"></textarea>
-          <label>WhatsApp Numarası (90 ile, başında + yok)</label><input type="text" id="set_wa" placeholder="905001234567">
-          <button class="btn-mini" style="margin-top:12px" onclick="saveSeoSettings()">💾 SEO Ayarlarını Kaydet</button>
-        </div>
-      </div>
-      <div class="adm-pane" id="pane-theme">
-        <h2>Tema & Renk</h2><div class="crumb">Site renk şemasını seçin · 10 hazır tema + özel renk</div>
-        <div class="panelcard"><h3>Hazır Temalar</h3><div class="swatches" id="admSwatches"></div>
-          <label>Özel vurgu renkleri (ana / ikincil)</label>
-          <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
-            <input type="color" id="a_accent" value="#2563eb" oninput="setVar('--accent',this.value)" style="width:48px;height:40px;border:1px solid var(--line);border-radius:9px">
-            <input type="color" id="a_accent2" value="#c8962f" oninput="setVar('--accent-2',this.value)" style="width:48px;height:40px;border:1px solid var(--line);border-radius:9px">
-            <button class="btn btn-ghost" style="border-color:var(--line);color:var(--ink);padding:8px 14px;font-size:13px" onclick="applyMode('dark')">Koyu Mod</button>
-            <button class="btn btn-ghost" style="border-color:var(--line);color:var(--ink);padding:8px 14px;font-size:13px" onclick="applyMode('light')">Açık Mod</button>
-          </div>
-          <label style="margin-top:16px">Zemin renkleri (genel / koyu şeritler / kart)</label>
-          <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
-            <input type="color" id="a_bg" value="#0e0f13" oninput="setVar('--bg',this.value)" title="Sayfa zemini" style="width:48px;height:40px;border:1px solid var(--line);border-radius:9px">
-            <input type="color" id="a_brand" value="#0e0f13" oninput="setVar('--brand',this.value)" title="Koyu şeritler (istatistik / bölge)" style="width:48px;height:40px;border:1px solid var(--line);border-radius:9px">
-            <input type="color" id="a_surface" value="#181a20" oninput="setVar('--surface',this.value)" title="Kart zemini" style="width:48px;height:40px;border:1px solid var(--line);border-radius:9px">
-          </div>
-          <div class="crumb" style="margin-top:8px">Renk değiştirdiğinizde yazı renkleri okunabilirlik için otomatik ayarlanır.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<div id="adminApp"><!-- lazy: js/admin-markup.js --></div>
 
+<script src="js/tr-iller.js?v=1"></script>
 <script src="../shared/eids.js?v=1"></script>
-<script src="js/app-core.js?v=3"></script>
+<script src="../shared/listing.js?v=24"></script>
+<script src="../shared/listing-extras.js?v=9"></script>
+<script src="../shared/cs-engine.js?v=2"></script>
+<script src="js/content-studio.js?v=3"></script>
+<script src="js/app-core.js?v=34"></script>
 
 
 
@@ -2138,7 +1668,7 @@ window.initProje3D=async function(){
       '<div class="si"><span>Zemin Dükkan</span><b>'+p.dukkan+' adet ('+f.dukkanAlan.toLocaleString('tr-TR')+' m²)</b></div>'+
       '<div class="si"><span>Tahmini Daire</span><b>'+f.daireSayisi+' adet</b></div>'+
       '<div class="si"><span>Toplam Bağımsız Bölüm</span><b>'+f.toplamBB+'</b></div>'+
-      '<div class="si" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px"><span>↳ Arsa Sahibi ('+p.payArsa+'%)</span><b style="color:#a78bfa">'+f.arsaPayDaire+' daire + '+f.arsaPayDukkan+' dükkan</b></div>'+
+      '<div class="si" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px"><span>↳ Arsa Sahibi ('+p.payArsa+'%)</span><b style="color:#0e7490">'+f.arsaPayDaire+' daire + '+f.arsaPayDukkan+' dükkan</b></div>'+
       '<div class="si"><span>↳ Müteahhit ('+p.payMut+'%)</span><b style="color:#60a5fa">'+f.mutDaire+' daire + '+f.mutDukkan+' dükkan</b></div>'+
       '<div class="si" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px"><span>Toplam Satış Geliri</span><b>'+fmtTL3(f.toplamSatis)+'</b></div>'+
       '<div class="si"><span>Müteahhit Net Kâr</span><b style="color:'+(f.mutNetKar>=0?'#34d399':'#f0698c')+'">'+fmtTL3(f.mutNetKar)+'</b></div>';
@@ -2226,7 +1756,8 @@ window.initProje3D=async function(){
     H+='<div class="disc">⚠️ Bu rapor ön fizibilite amaçlıdır. Kesin daire adedi, paylaşım ve değerler onaylı mimari projeye, belediye imar durumuna ve piyasa koşullarına göre değişir. Resmi sözleşme için hukuki danışmanlık alınmalıdır.</div>';
     H+='<div class="rfoot">'+firma+' · '+(S.firmaEmail||"")+' · '+today+'</div>';
     H+='<div class="noprint" style="text-align:center;margin-top:20px"><button onclick="window.print()" style="background:#ff7a2f;color:#fff;border:0;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">🖨️ PDF Olarak Kaydet / Yazdır</button></div>';
-    H+='</body></html>';
+    H+='<script src="../shared/doviz.js?v=2"></script>
+</body></html>';
     /* API-first: canlı /pdf/generate {title,pages:[{id,html}],css} → {success,pdf_base64} dönerse blob indir; aksi halde yerel yazdırılabilir pencere fallback. */
     var _apiDone=false;
     try{
@@ -2297,7 +1828,7 @@ window.initProje3D=async function(){
     var W=Math.round(plotW*SC), D=Math.round(plotD*SC);
     var pad=60;
     // colors
-    var cArsa='#a78bfa', cMut='#60a5fa', cShop='#ff9a4f', cCore='#cbd5e1';
+    var cArsa='#0e7490', cMut='#60a5fa', cShop='#ff9a4f', cCore='#cbd5e1';
     function svgFloor(title, units, isGround){
       var svg='<svg width="'+(W+pad*2)+'" height="'+(D+pad*2+30)+'" xmlns="http://www.w3.org/2000/svg" style="background:#fff">';
       // title
@@ -2360,7 +1891,7 @@ window.initProje3D=async function(){
       '<div class="kh"><div class="kl">'+(firma[0]||'M')+'</div><div><div class="kf">'+firma+'</div><div class="ks">Şematik Kat Planları · '+(p.musteri||'')+' · '+p.ad+'</div></div></div>'+
       '<div class="meta">📐 Arsa: '+p.m2+' m² · Emsal '+p.emsal+' · Toplam inşaat '+f.insaat.toLocaleString('tr-TR')+' m² · '+p.dukkan+' dükkan + '+f.daireSayisi+' daire · '+p.kat+' kat</div>'+
       '<div class="legend">'+
-        '<div class="lg"><span class="sw" style="background:#a78bfa"></span> Arsa Sahibi payı</div>'+
+        '<div class="lg"><span class="sw" style="background:#0e7490"></span> Arsa Sahibi payı</div>'+
         '<div class="lg"><span class="sw" style="background:#60a5fa"></span> Müteahhit payı (daire)</div>'+
         '<div class="lg"><span class="sw" style="background:#ff9a4f"></span> Dükkan</div>'+
         '<div class="lg"><span class="sw" style="background:#cbd5e1"></span> Ortak alan (merdiven/asansör)</div>'+
@@ -2526,8 +2057,45 @@ async function hesapQuickQuote(){var m=document.getElementById('hq_msg');var r=a
 </script>
 
 <script src="js/app-ui.js"></script>
+<script src="../shared/mahalle-endeks.js?v=2"></script>
+<script>
+/* insaat — MAHALLE ENDEKSİ bootstrap → shared/mahalle-endeks.js (İstanbul) */
+(function(){
+  var _inst=null, ISTIL='İstanbul';
+  function districts(){ var d={}; try{ var T=window.TR_ILILCE&&TR_ILILCE[ISTIL]; if(T&&T.ilce)T.ilce.forEach(function(ic){ if(!/il Merkezi|^Merkez$/.test(ic))d[ic]=[]; }); }catch(e){} return d; }
+  function loadMah(il,ilce){ try{ if(typeof proxApi!=='function')return Promise.resolve([]);
+    return proxApi('/api/v1/tenant/locations/mahalleler?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce)).then(function(r){
+      var a=(r&&(r.data||r.mahalleler||r))||[]; a=Array.isArray(a)?a:(a.mahalleler||[]);
+      return a.map(function(x){return (x&&(x.ad||x.name||x.mahalle))||x;}).filter(Boolean).slice(0,40);
+    }).catch(function(){return [];});
+  }catch(e){return Promise.resolve([]);} }
+  function waHref(t){ try{ var wn=(typeof SETTINGS!=='undefined'&&(SETTINGS.waNumber||SETTINGS.whatsapp))||'905001234567'; return 'https://wa.me/'+String(wn).replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(t); }catch(e){return '#';} }
+  function boot(){
+    var host=document.getElementById('mahEndeks'); if(!host||!window.MahalleEndeks)return;
+    if(_inst){try{_inst.refresh();}catch(e){}return;}
+    var accent=''; try{accent=(getComputedStyle(document.documentElement).getPropertyValue('--accent')||'').trim();}catch(e){}
+    _inst=window.MahalleEndeks.mount(host,{
+      proxApi:function(u,o){return (typeof proxApi==='function')?proxApi(u,o):Promise.resolve(null);},
+      province:function(){return ISTIL;},
+      districts:districts, loadMah:loadMah,
+      ozData:function(){return (typeof OZEL!=='undefined'&&OZEL)||[];},
+      goOzel:function(){try{if(typeof openIlanlarPage==='function')openIlanlarPage();}catch(e){}},
+      onLead:function(){try{if(typeof openTeklif==='function')openTeklif();else if(typeof openIletisimPage==='function')openIletisimPage();}catch(e){}},
+      waHref:waHref, accent:accent||'#ff7a2f'
+    });
+  }
+  window.insMahEndeksBoot=boot;
+  /* özel portföy public render'ında paneli tazele */
+  var _r=window.renderInsOzelPublic;
+  window.renderInsOzelPublic=function(){ try{if(_r)_r.apply(this,arguments);}catch(e){} try{boot();}catch(e){} };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,300);});
+  else setTimeout(boot,300);
+})();
+</script>
 
-<script src="js/i18n/_common.js?v=3"></script><script src="js/i18n/index.js?v=2"></script><script src="js/i18n.js?v=2"></script>
+<script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
+(function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('in_lang')||'tr';}catch(e){}
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=6"><\/script><script src="js/i18n/index.js?v=2"><\/script>');}})();</script><script src="js/i18n.js?v=2"></script>
 </body>
 </html>
 

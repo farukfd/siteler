@@ -126,6 +126,26 @@
   window.DN_FOOTER_INNER = INNER;
   window.DN_FOOTER_HTML = '<footer>' + INNER + '</footer>';
   window.DN_LANG_SWITCHER = LANGSW;
+  /* DEMO & KURUMSAL BANT — üstteki 'role=note' şerit alta alındı; footer öncesine kanonik enjekte (tüm sayfalar, insaat/gm ile aynı) */
+  window.DN_DEMOBAND = '<style>'
+    +'.demo-band{background:linear-gradient(180deg,#0b1f38,#0f2740);color:#dbeafe;border-top:1px solid rgba(255,255,255,.1);font-family:system-ui,-apple-system,sans-serif}'
+    +'.demo-band .db-in{max-width:1240px;margin:0 auto;padding:18px clamp(16px,4vw,40px);display:flex;flex-wrap:wrap;align-items:center;gap:16px 26px;justify-content:space-between}'
+    +'.demo-band .db-lead{flex:1 1 320px;min-width:260px}'
+    +'.demo-band .db-badge{display:inline-flex;align-items:center;gap:6px;background:#22c55e;color:#052e16;font-weight:800;font-size:10.5px;letter-spacing:.07em;padding:3px 9px;border-radius:6px;margin-bottom:8px}'
+    +'.demo-band p{margin:0;font-size:13px;line-height:1.55;color:#c7d6ea}'
+    +'.demo-band a{color:#7dd3fc;text-decoration:none;font-weight:600}.demo-band a:hover{text-decoration:underline}'
+    +'.demo-band .db-feats{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}'
+    +'.demo-band .db-feats li{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:6px 10px;font-size:11.5px;font-weight:600;color:#e2ecf7;white-space:nowrap}'
+    +'.demo-band .db-wa{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#04240f;padding:10px 15px;border-radius:12px;font-size:12.5px;line-height:1.3;text-decoration:none;white-space:nowrap}'
+    +'.demo-band .db-wa:hover{filter:brightness(1.06);text-decoration:none}.demo-band .db-wa b{font-size:13px;font-weight:800}'
+    +'@media(max-width:640px){.demo-band .db-in{flex-direction:column;align-items:flex-start}.demo-band .db-wa{width:100%;justify-content:center}}'
+    +'</style>'
+    +'<section class="demo-band" aria-label="Demo ve kurumsal bilgi"><div class="db-in">'
+    +'<div class="db-lead"><span class="db-badge">🔎 CANLI DEMO</span>'
+    +'<p>Bu, kuruma özel hazırlanmış <b>gerçek bir tanıtım sürümüdür</b> — tüm özellikleri buradan deneyimleyebilirsiniz. Kurumsal bilgi &amp; başvuru: <a href="https://www.emlakekspertizi.com" target="_blank" rel="noopener noreferrer">emlakekspertizi.com</a> · <a href="https://www.nadas.com.tr" target="_blank" rel="noopener noreferrer">nadas.com.tr</a></p></div>'
+    +'<ul class="db-feats"><li>🎨 Şirkete özel arayüz</li><li>📄 Firmaya özel +5 sayfa</li><li>🗓️ Her ay +1 ek sayfa</li><li>📰 Günlük SEO uyumlu haber</li></ul>'
+    +'<a class="db-wa" href="https://api.whatsapp.com/send?phone=905324919453" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp ile iletişim"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.5 14.13c-.23.65-1.36 1.25-1.87 1.3-.5.05-.97.23-3.27-.68-2.76-1.09-4.5-3.91-4.64-4.09-.14-.18-1.11-1.48-1.11-2.82s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .4-.06.62.47.23.56.79 1.93.86 2.07.07.14.11.3.02.48-.62 1.23-1.28 1.18-.93 1.78.66 1.13 1.32 1.52 2.33 2.03.27.14.43.12.59-.07.18-.21.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.6.75 1.87.89.27.14.45.2.52.32.07.11.07.65-.16 1.3Z"/></svg><span><b>CRM &amp; Yönetim Paneli erişimi için</b><br>WhatsApp: 0532 491 94 53</span></a>'
+    +'</div></section>';
   function mountFooters() {
     // Bağımsız dil seçici yuvaları — footer'ı olmayan minimal sayfalar (404, prox-asistan) için tek kaynak
     var slots = document.querySelectorAll('[data-dn-lang-slot]');
@@ -136,19 +156,175 @@
     // statik sayfaların inline <footer>'ı → kanonikle değiştir (app.js yoksa tek kaynak budur)
     var fs = document.querySelectorAll("footer");
     for (var i = 0; i < fs.length; i++) { var f = fs[i]; if (f.closest && f.closest("#pageOverlay")) continue; try { f.innerHTML = INNER; } catch (e) {} }
+    /* DEMO bant — ana footer öncesine, sayfada bir kez (üst şerit alta alındı) */
+    try {
+      if (!document.querySelector(".demo-band")) {
+        var anc = document.getElementById("siteFooter");
+        if (!anc) { for (var j = 0; j < fs.length; j++) { if (!(fs[j].closest && fs[j].closest("#pageOverlay"))) { anc = fs[j]; break; } } }
+        if (anc) anc.insertAdjacentHTML("beforebegin", window.DN_DEMOBAND);
+      }
+    } catch (e) {}
   }
   window.dnMountFooters = mountFooters;
   ready(mountFooters);
   /* WhatsApp/telefon bağlantılarını admin numarasına (dn_iletisim.wa) güncelle — TÜM sayfalar (nav+footer+CTA).
      Numara girilmemişse placeholder kalır (danışman admin'den kendi numarasını girmeli). */
   function waNumC() { try { var c = JSON.parse(localStorage.getItem("dn_iletisim") || "null"); if (c && c.wa) return ("" + c.wa).replace(/[^\d]/g, ""); } catch (e) {} return ""; }
+  function _mailC() { try { var c = JSON.parse(localStorage.getItem("dn_iletisim") || "{}") || {}; if (c.mail) return c.mail; var f = JSON.parse(localStorage.getItem("dn_firma") || "{}") || {}; return f.mail || ""; } catch (e) { return ""; } }
   function applyWaLinks() {
-    var n = waNumC(); if (!n) return;
-    [].forEach.call(document.querySelectorAll('a[href*="wa.me/"]'), function (a) { a.href = a.href.replace(/wa\.me\/\d+/, "wa.me/" + n); });
-    [].forEach.call(document.querySelectorAll('a[href^="tel:"]'), function (a) { a.href = "tel:+" + n; });
+    var n = waNumC();
+    if (n) {
+      [].forEach.call(document.querySelectorAll('a[href*="wa.me/"]'), function (a) { a.href = a.href.replace(/wa\.me\/\d+/, "wa.me/" + n); });
+      [].forEach.call(document.querySelectorAll('a[href^="tel:"]'), function (a) { a.href = "tel:+" + n; });
+    }
+    /* E-POSTA: mailto href + demo 'info@selinmeridyen.com' metni/öznitelikleri (statik sayfalarda sızıyordu; applyWaLinks eskiden mailto'ya dokunmuyordu) */
+    var mail = _mailC();
+    if (mail) {
+      [].forEach.call(document.querySelectorAll('a[href^="mailto:"]'), function (a) { a.href = "mailto:" + mail; });
+      try {
+        var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false), ns = [], nx;
+        while (nx = w.nextNode()) { if (nx.nodeValue && nx.nodeValue.indexOf("info@selinmeridyen.com") >= 0) ns.push(nx); }
+        ns.forEach(function (nn) { nn.nodeValue = nn.nodeValue.split("info@selinmeridyen.com").join(mail); });
+      } catch (e) {}
+    }
   }
   window.dnApplyWaLinks = applyWaLinks;
-  ready(function () { applyWaLinks(); setTimeout(applyWaLinks, 350); });
+  /* SOSYAL MEDYA: dn_social'dan footer href'leri yaz; boşsa gizle. Tenant yapılandırmadıysa demo'ya dokunma. */
+  function dnApplySocial() {
+    var raw = null; try { raw = localStorage.getItem("dn_social"); } catch (e) {} if (!raw) return;
+    var S = {}; try { S = JSON.parse(raw) || {}; } catch (e) {}
+    [["fb", "facebook.com"], ["ig", "instagram.com"], ["x", "x.com"], ["li", "linkedin.com"], ["yt", "youtube.com"]].forEach(function (m) {
+      var v = (S[m[0]] || "").trim();
+      [].forEach.call(document.querySelectorAll('footer a[href*="' + m[1] + '"]'), function (a) {
+        if (v) { a.href = /^https?:\/\//i.test(v) ? v : ("https://" + v.replace(/^\/+/, "")); a.style.display = ""; }
+        else { a.style.display = "none"; }
+      });
+    });
+  }
+  window.dnApplySocial = dnApplySocial;
+  /* TİPOGRAFİ: dn_theme.font → Google Fonts yükle + gövde fontu (base.css'i kırmadan). CSP _headers'ta izinli. */
+  function dnApplyFont() {
+    var f = ""; try { f = (JSON.parse(localStorage.getItem("dn_theme") || "{}") || {}).font || ""; } catch (e) {}
+    var CF = { "Playfair Display": "Playfair+Display:wght@500;600;700", "Cormorant": "Cormorant:wght@500;600;700", "Inter": "Inter:wght@400;500;600;700;800", "Poppins": "Poppins:wght@400;500;600;700", "Manrope": "Manrope:wght@400;500;600;700;800", "Sora": "Sora:wght@400;500;600;700", "Jost": "Jost:wght@400;500;600;700" };
+    if (!f || !CF[f]) return;
+    var lid = "brand-font-" + f.replace(/\s+/g, "");
+    if (!document.getElementById(lid)) { var l = document.createElement("link"); l.rel = "stylesheet"; l.id = lid; l.href = "https://fonts.googleapis.com/css2?family=" + CF[f] + "&display=swap"; (document.head || document.documentElement).appendChild(l); }
+    if (document.body) document.body.style.fontFamily = "'" + f + "', system-ui, -apple-system, sans-serif";
+  }
+  window.dnApplyFont = dnApplyFont;
+  /* TEMA (accent): dn_theme.accent → statik sayfalar. index initSaaSTheme accent'i
+     HEM --accent HEM --gold'a yazıyor (zümrüt+altın teması); statik sayfada da öyle.
+     Wipe-proof <style id=tenant-theme> + inline root (sayfanın kendi :root'unu kaskadta yener). */
+  function _dnLighten(hex, amt) { try { var n = parseInt(hex.slice(1), 16); var r = Math.min(255, (n >> 16) + amt), g = Math.min(255, ((n >> 8) & 255) + amt), b = Math.min(255, (n & 255) + amt); return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1); } catch (e) { return hex; } }
+  function _dnDarken(hex, amt) { try { var n = parseInt(hex.slice(1), 16); var r = Math.max(0, (n >> 16) - amt), g = Math.max(0, ((n >> 8) & 255) - amt), b = Math.max(0, (n & 255) - amt); return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1); } catch (e) { return hex; } }
+  function _dnRgba(hex, a) { try { var n = parseInt(hex.slice(1), 16); return "rgba(" + (n >> 16) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; } catch (e) { return hex; } }
+  function dnApplyTheme() {
+    var a = ""; try { a = (JSON.parse(localStorage.getItem("dn_theme") || "{}") || {}).accent || ""; } catch (e) {}
+    if (!a || ("" + a).charAt(0) !== "#") return;
+    /* accent → TÜM altın ailesi + gradyan. İmza altını süren TEK değişken --grad-gold;
+       bütün .mark/.btn-gold/.hs-btn... var(--grad-gold) kullanır → accent seçilince altın accent'e döner.
+       Zümrüt (--em*) yapısal koyu neutral olarak kalır (danışman iki-tonlu kimliği). */
+    var a2 = _dnLighten(a, 18), soft = _dnLighten(a, 30), dp = _dnDarken(a, 22), ink = _dnDarken(a, 40), sf = _dnRgba(a, .14);
+    var grad = "linear-gradient(135deg," + soft + "," + a + " 55%," + dp + ")";
+    var css = ":root{--accent:" + a + ";--accent-2:" + a2 + ";--gold:" + a + ";--gold-soft:" + soft + ";--gold-deep:" + dp + ";--gold-ink:" + ink + ";--grad-gold:" + grad + ";--gold-a14:" + sf + ";}";
+    var st = document.getElementById("tenant-theme");
+    if (!st) { st = document.createElement("style"); st.id = "tenant-theme"; }
+    st.textContent = css; (document.head || document.documentElement).appendChild(st);
+    var r = document.documentElement.style;
+    r.setProperty("--accent", a); r.setProperty("--accent-2", a2); r.setProperty("--gold", a);
+    r.setProperty("--gold-soft", soft); r.setProperty("--gold-deep", dp); r.setProperty("--gold-ink", ink); r.setProperty("--grad-gold", grad);
+  }
+  window.dnApplyTheme = dnApplyTheme;
+
+  /* YASAL KÜNYE TABLOSU: statik yasal sayfalara (kvkk/kullanım/çerez) TAM künye kartı enjekte et
+     — demo müşterisi tüm kurumsal bilgiyi görsün (Unvan/Vergi/MERSİS/Sicil/Oda/KEP/Adres/Tel/E-posta/EİDS).
+     Veri: dn_firma (+ dn_iletisim fallback). Sadece dolu alan gösterilir. Kişi-anlatısı korunur, tablo EK'tir. */
+  function _kEsc(s){return ('' + (s == null ? '' : s)).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });}
+  function dnLegalKunye(){
+    var body = document.querySelector('.lg-body'); if (!body) return;             // yalnız yasal sayfalar
+    if (document.getElementById('dnLegalKunye')) return;                          // tek sefer
+    var f = {}, il = {};
+    try { f = JSON.parse(localStorage.getItem('dn_firma') || '{}') || {}; } catch (e) {}
+    try { il = JSON.parse(localStorage.getItem('dn_iletisim') || '{}') || {}; } catch (e) {}
+    var e = f.eids || {};
+    var brand = ''; try { brand = (JSON.parse(localStorage.getItem('dn_brand') || '{}') || {}).name || ''; } catch (er) {}
+    var unvan = f.unvan || brand || 'Bilgi girilmedi';
+    var vergiDaire = f.vergiDaire || '', vergiNo = f.vergi || '';
+    var vergi = (vergiDaire || vergiNo) ? [vergiDaire, vergiNo].filter(Boolean).join(' / ') : '';
+    var rows = [
+      ['Ticari Unvan', unvan, 1],
+      ['Danışman / Yetkili', f.advisor || brand, 0],
+      ['Vergi Dairesi / No', vergi, 0],
+      ['MERSİS No', f.mersis, 0],
+      ['Ticaret Sicil No', f.sicil, 0],
+      ['Ticaret Odası', f.oda, 0],
+      ['KEP Adresi', f.kep, 0],
+      ['EİDS Yetki Belge No', e.belgeNo, 0],
+      ['Adres', f.adres || il.adres, 1],
+      ['Telefon', f.tel || il.tel, 0],
+      ['E-posta', f.mail || il.mail, 0]
+    ].filter(function (r) { return r[1]; });
+    var g = 'color:var(--gold);font-weight:700';
+    var html = '<div id="dnLegalKunye" style="background:var(--cream,#f7f4ec);border:1px solid var(--line-soft,#e7e0cf);border-radius:12px;padding:16px 18px;margin:0 0 22px">'
+      + '<div style="font-family:var(--serif,Georgia),serif;color:var(--gold);font-size:17px;font-weight:700;margin-bottom:10px">Veri Sorumlusu Künyesi</div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px 24px;font-size:13.5px;line-height:1.65">'
+      + rows.map(function (r) { return '<div' + (r[2] ? ' style="grid-column:1/-1"' : '') + '><b style="' + g + '">' + _kEsc(r[0]) + ':</b> ' + _kEsc(r[1]) + '</div>'; }).join('')
+      + '</div></div>';
+    var intro = body.querySelector('.intro');
+    if (intro && intro.parentNode) intro.insertAdjacentHTML('afterend', html);
+    else body.insertAdjacentHTML('afterbegin', html);
+  }
+  window.dnLegalKunye = dnLegalKunye;
+
+  /* İLETİŞİM HARİTASI (KONUM): tenant adresini OSM'de göster. Adres → Nominatim geocode
+     (CSP connect-src'de nominatim.openstreetmap.org izinli) → OSM embed bbox+marker.
+     Sonuç dn_iletisim.geo'ya cache'lenir (adres değişince yenilenir). Geocode başarısızsa
+     mevcut demo iframe korunur (kırılmaz). Ayrıca "Yol Tarifi" linki adrese göre güncellenir. */
+  function dnApplyMap() {
+    var frame = document.querySelector('.ct-map iframe'); if (!frame) return;      // yalnız iletişim
+    var il = {}, f = {};
+    try { il = JSON.parse(localStorage.getItem('dn_iletisim') || '{}') || {}; } catch (e) {}
+    try { f = JSON.parse(localStorage.getItem('dn_firma') || '{}') || {}; } catch (e) {}
+    var adres = (il.adres || f.adres || '').trim();
+    if (!adres) return;                                                            // tenant yok → demo iframe kalsın
+    var setMap = function (lat, lon) {
+      lat = parseFloat(lat); lon = parseFloat(lon); if (isNaN(lat) || isNaN(lon)) return;
+      var w = (lon - 0.010).toFixed(5), s = (lat - 0.007).toFixed(5), e = (lon + 0.010).toFixed(5), n = (lat + 0.007).toFixed(5);
+      frame.src = 'https://www.openstreetmap.org/export/embed.html?bbox=' + w + '%2C' + s + '%2C' + e + '%2C' + n + '&layer=mapnik&marker=' + lat.toFixed(5) + '%2C' + lon.toFixed(5);
+      // "Yol Tarifi" / haritada aç linkleri (varsa) — OSM directions
+      [].forEach.call(document.querySelectorAll('.ct-map a, a.js-map, a[data-map]'), function (a) { a.href = 'https://www.openstreetmap.org/?mlat=' + lat + '&mlon=' + lon + '#map=16/' + lat + '/' + lon; a.target = '_blank'; a.rel = 'noopener'; });
+    };
+    // cache?
+    var g = il.geo;
+    if (g && g.q === adres && g.lat && g.lon) { setMap(g.lat, g.lon); return; }
+    // Nominatim serbest-metin adresi sevmez ("No:200", "Cad.", "/") → normalize + aşamalı sorgu
+    var norm = adres
+      .replace(/No[:.]?\s*\d+\w*/gi, '').replace(/\bKat\b[^,]*/gi, '').replace(/\bD[:.]?\s*\d+/gi, '')
+      .replace(/\bCad\.?\b/gi, 'Caddesi').replace(/\bCd\.?\b/gi, 'Caddesi').replace(/\bMah\.?\b/gi, 'Mahallesi').replace(/\bMh\.?\b/gi, 'Mahallesi')
+      .replace(/\bSok\.?\b/gi, 'Sokak').replace(/\bSk\.?\b/gi, 'Sokak').replace(/\bBul(v)?\.?\b/gi, 'Bulvarı').replace(/\bBlv\.?\b/gi, 'Bulvarı')
+      .replace(/[\/]/g, ',').replace(/\s+/g, ' ').replace(/\s*,\s*/g, ', ').replace(/(,\s*)+/g, ', ').replace(/^[,\s]+|[,\s]+$/g, '').trim();
+    var parts = norm.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+    var cands = [norm];                                                            // 1) tam normalize
+    if (parts.length >= 2) cands.push(parts.slice(-2).join(', '));                 // 2) ilçe, il
+    if (parts.length >= 1) cands.push(parts[parts.length - 1]);                    // 3) il
+    var tryNext = function (i) {
+      if (i >= cands.length) return;
+      try {
+        fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=tr&q=' + encodeURIComponent(cands[i]), { headers: { 'Accept': 'application/json' } })
+          .then(function (r) { return r.ok ? r.json() : []; })
+          .then(function (arr) {
+            if (arr && arr[0] && arr[0].lat && arr[0].lon) {
+              setMap(arr[0].lat, arr[0].lon);
+              try { il.geo = { q: adres, lat: arr[0].lat, lon: arr[0].lon }; localStorage.setItem('dn_iletisim', JSON.stringify(il)); } catch (e) {}
+            } else { tryNext(i + 1); }
+          })["catch"](function () { tryNext(i + 1); });
+      } catch (e) {}
+    };
+    tryNext(0);
+  }
+  window.dnApplyMap = dnApplyMap;
+
+  ready(function () { applyWaLinks(); setTimeout(applyWaLinks, 350); dnApplySocial(); dnApplyFont(); dnApplyTheme(); dnLegalKunye(); dnApplyMap(); setTimeout(function(){ dnApplySocial(); dnApplyFont(); dnApplyTheme(); }, 400); });
 })();
 
 /* ===================================================================

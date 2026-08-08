@@ -105,8 +105,38 @@
     }
   }
 
+  /* --- TENANT TEMA (accent + font) — pub.THEME'den; statik/yasal sayfalarda app-core.js yok, sweep gibi BURASI uygular.
+       Wipe-proof <style id="tenant-theme"> (base css'i kaskadta geçer) + Google Fonts. --- */
+  function applyThemePub() {
+    try {
+      var p = pub(), th = (p.THEME && typeof p.THEME === "object") ? p.THEME : {};
+      var accent = th.accent, font = th.font;
+      if (accent && ("" + accent).charAt(0) === "#") {
+        var lg = function (hex, amt) { try { var n = parseInt(hex.slice(1), 16); var r = Math.min(255, (n >> 16) + amt), g = Math.min(255, ((n >> 8) & 255) + amt), bb = Math.min(255, (n & 255) + amt); return "#" + ((1 << 24) + (r << 16) + (g << 8) + bb).toString(16).slice(1); } catch (e) { return hex; } };
+        var lum = function (hex) { try { var n = parseInt(hex.slice(1), 16); return .2126 * ((n >> 16) / 255) + .7152 * (((n >> 8) & 255) / 255) + .0722 * ((n & 255) / 255); } catch (e) { return 1; } };
+        var on = lum(accent) > .5 ? "#10151f" : "#ffffff";
+        var css = ":root{--accent:" + accent + ";--accent-2:" + lg(accent, 20) + ";--on-accent:" + on + ";}";
+        var st = document.getElementById("tenant-theme");
+        if (!st) { st = document.createElement("style"); st.id = "tenant-theme"; }
+        st.textContent = css; (document.head || document.documentElement).appendChild(st);
+        /* inline root — sayfanın kendi geç-gelen :root{--accent} stillerini kaskadta YENER (app-core.js yok) */
+        var rs = document.documentElement.style; rs.setProperty("--accent", accent); rs.setProperty("--accent-2", lg(accent, 20)); rs.setProperty("--on-accent", on);
+      }
+      if (font) {
+        var FONTS = { "Inter": "Inter:wght@400;500;600;700;800", "Poppins": "Poppins:wght@400;500;600;700", "Manrope": "Manrope:wght@400;500;600;700;800", "Sora": "Sora:wght@400;500;600;700", "DM Sans": "DM+Sans:wght@400;500;600;700", "Nunito": "Nunito:wght@400;600;700;800", "Montserrat": "Montserrat:wght@400;500;600;700", "Figtree": "Figtree:wght@400;500;600;700", "Playfair Display": "Playfair+Display:wght@500;600;700" };
+        if (FONTS[font]) {
+          var lid = "brand-font-" + font.replace(/\s+/g, "");
+          if (!document.getElementById(lid)) { var l = document.createElement("link"); l.rel = "stylesheet"; l.id = lid; l.href = "https://fonts.googleapis.com/css2?family=" + FONTS[font] + "&display=swap"; (document.head || document.documentElement).appendChild(l); }
+          document.documentElement.style.setProperty("--brand-font", "'" + font + "'");
+          ready(function () { if (document.body) document.body.style.fontFamily = "'" + font + "', system-ui, -apple-system, sans-serif"; });
+        }
+      }
+    } catch (e) {}
+  }
+
   var _obs = null, _to = null;
   function apply() {
+    applyThemePub();
     var b = brand();
     var ini = initialOf(b), nm = nameOf(b), full = fullOf(b), custom = isCustom(b) || !!(b.initial && ("" + b.initial).trim());
     // favicon + Organization: HEMEN (head) — favicon yalnız custom'da (yoksa mevcut inline 'M' kalır)

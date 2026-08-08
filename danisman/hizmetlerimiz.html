@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde kaldırılır -->
 <title>Hizmetlerimiz — Lüks Konut, Değerleme, Yatırım · Selin Meridyen</title>
 <meta name="description" content="İstanbul'da lüks konut alım-satımı, davet usulü satış, ücretsiz değerleme, yatırım analizi, kiralama, tapu-hukuk ve miras. Canlı ProX verisiyle danışmanlık.">
 <meta name="keywords" content="lüks konut danışmanı, gayrimenkul değerleme, yatırım danışmanlığı, davet usulü satış, kira garantili yönetim, tapu danışmanlığı, kentsel dönüşüm, yabancıya satış, miras intikal, Boğaz yalısı, Nişantaşı, Bebek">
-<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"><!-- üretim tenant -->
 <link rel="canonical" href="https://www.emlakekspertizi.com/demo/danisman/hizmetlerimiz.html">
 <meta name="author" content="Selin Meridyen">
 
@@ -21,10 +22,10 @@
 <meta property="og:description" content="İstanbul'da uçtan uca, kişiye özel lüks gayrimenkul danışmanlığı: alım-satım, değerleme, yatırım analizi, kiralama, tapu-hukuk, kentsel dönüşüm, yabancıya satış ve miras/intikal — canlı ProX bölge verisiyle.">
 <meta property="og:url" content="https://www.emlakekspertizi.com/demo/danisman/hizmetlerimiz.html">
 <meta property="og:locale" content="tr_TR">
-<meta property="og:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.png">
+<meta property="og:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.png">
+<meta name="twitter:image" content="https://www.emlakekspertizi.com/demo/danisman/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Hizmetlerimiz · Selin Meridyen — Kişiye Özel Lüks Gayrimenkul Danışmanlığı">
 <meta name="twitter:description" content="Alım-satımdan değerlemeye, yatırımdan miras/intikale; İstanbul'un en özel adreslerinde canlı ProX verisiyle uçtan uca danışmanlık.">
@@ -82,14 +83,16 @@
 }
 </script>
 
-<link rel="stylesheet" href="css/base.css?v=21">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="favicon.svg">
-<script src="js/brand.js?v=3"></script>
-<script src="js/tr-grammar.js?v=3"></script><script src="js/content.js?v=9"></script>
-<script src="js/i18n/_common.js?v=1"></script><script src="js/i18n/hizmetlerimiz.js?v=2"></script><script src="js/i18n.js?v=1"></script>
-<script src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
-<script src="js/a11y.js?v=1"></script>
+<link rel="stylesheet" href="css/base.css?v=22">
+<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg?v=2">
+<script defer src="js/brand.js?v=3"></script>
+<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=10"></script>
+<script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
+(function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><script src="js/i18n/hizmetlerimiz.js?v=2"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
+<script defer src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
+<script defer src="js/a11y.js?v=1"></script>
 
 <style>
 /* ============ Hizmetlerimiz — scoped .hz-* (base.css tokenlarını kullanır) ============ */
@@ -285,7 +288,6 @@
 </style>
 </head>
 <body>
-
 <!-- ============ ÜST MENÜ (birebir) ============ -->
 <header class="nav scrolled" id="nav">
   <div class="wrap nav-in">
@@ -312,6 +314,7 @@
     </div>
   </div>
 </header>
+<div class="doviz-bandi" id="dovizBandi" aria-label="Döviz ve altın bilgi bandı"></div>
 
 <main class="hz-main">
 
@@ -651,9 +654,9 @@
         </div>
         <div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
       </div>
-      <div><h4>Keşfet</h4><ul><li><a href="ilanlar.html">İlanlar</a></li><li><a href="ozel-portfoy.html">Özel Portföy</a></li><li><a href="index.html#surec">Süreç</a></li><li><a href="index.html#randevu">Ücretsiz Analiz</a></li></ul></div>
-      <div><h4>Kurumsal</h4><ul><li><a href="index.html">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="sss.html">S.S.S</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>
-      <div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li></ul></div>
+      <div><h4>Keşfet</h4><ul><li><a href="ilanlar.html">İlanlar</a> <a href="harita.html">Harita</a> <a href="emlak-ekspertizi.html">Emlak Ekspertizi</a></li><li><a href="ozel-portfoy.html">Özel Portföy</a></li><li><a href="blog.html">Blog</a></li><li><a href="semtler.html">Semt Rehberi</a></li><li><a href="yatirim-rehberi.html">Yatırım Rehberi</a></li><li><a href="index.html#surec">Süreç</a></li><li><a href="index.html#randevu">Ücretsiz Analiz</a></li></ul></div>
+      <div><h4>Kurumsal</h4><ul><li><a href="index.html">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="referanslar.html">Referanslar</a></li><li><a href="sss.html">S.S.S</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>
+      <div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="gizlilik.html">Gizlilik Politikası</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li></ul></div>
     </div>
     <div class="fbot">
       <span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span>
@@ -706,5 +709,6 @@
 <script>/* CMS içerik yükleyici — admin'de (dn_content) düzenlenen metinleri uygular */
 (function(){try{var c=JSON.parse(localStorage.getItem('dn_content')||'{}');if(!c)return;var esc=function(s){return String(s).replace(/[&<>]/g,function(x){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[x];});};[].forEach.call(document.querySelectorAll('[data-cms]'),function(el){var v=c[el.getAttribute('data-cms')];if(v==null||v==='')return;var dot=el.querySelector('.eb-dot');if(dot)el.innerHTML='<span class="eb-dot"></span>'+esc(v);else el.textContent=v;});}catch(e){}})();
 </script>
+<script src="../shared/doviz.js?v=2"></script>
 </body>
 </html>

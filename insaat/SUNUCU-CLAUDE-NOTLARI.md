@@ -63,7 +63,7 @@ Overlay URL'leri **HASH tabanlıdır**: `/insaat/#bolge`, `/insaat/#hizmetler`, 
 ## 3) ProX API (canlı veri — istemci tarafı, TASARIM GEREĞİ)
 - Base: `https://emlakekspertizi.com` · Endpoint: `POST /api/v1/tenant/prox/ai` (asistan/teklif),
   `POST /api/v1/tenant/lead` (CRM), `GET /api/v1/tenant/prox/endeks?il=&ilce=&mahalle=` (bölge verisi).
-- Tenant kimliği: `window.EMLAK_TENANT` (index.html ~satır 16). Key: **`prox_construction_910783dfb8dd6be9cb9549bc818a60ee`**.
+- Tenant kimliği: `window.EMLAK_TENANT` (index.html ~satır 16). Key: **`prox_construction_***REDACTED-ROTATE***`**.
 - **Bu key istemci tarafında GÜVENLİDİR** (tasarım: tenant-scoped, sadece kendi verisine erişir, CORS açık).
   Gizli API anahtarı DEĞİL. Yine de sunucu tarafında rate-limit + origin kontrolü önerilir.
 - **ProX = VERİTABANI, yapay zekâ değil.** +1 milyar doğrulanmış emlak verisi. Kopya metinleri buna göre;

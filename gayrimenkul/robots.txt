@@ -1,4 +1,3 @@
+# DEMO ortamı — arama motorlarına kapalı. Üretim tenant sitelerinde bu dosya tenant başına dinamik üretilir.
 User-agent: *
-Allow: /
-
-Sitemap: https://www.emlakekspertizi.com/sitemap.xml
+Disallow: /
