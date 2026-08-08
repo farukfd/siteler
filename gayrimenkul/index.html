@@ -2,6 +2,16 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
+<style>/* ov-pre kritik CSS — derin-link kapısı harici CSS'e muhtaç olmasın */
+html.ov-pre body{visibility:hidden}
+html.ov-pre .br-page.open,html.ov-pre #infoPage.open,html.ov-pre #portfoyPage.open,html.ov-pre #brPage.open,html.ov-pre #satPage.open,html.ov-pre #blogPage.open{visibility:visible}</style>
+<script>/* Derin-link ön-kapısı: hedef bir overlay ise ana sayfa hiç boyanmaz (flash önleme).
+   Overlay açılınca ovBoot kaldırır; güvenlik ağı: 2.6sn sonra her koşulda açılır. */
+try{var _h=(location.hash||'').replace('#','');var _ovp=false;
+var _L=['analiz','sat','blog','portfoy','portfoy-ilan','ozel','portfoy-ozel','hakkimizda','iletisim','danismanlar','degerleme','referans','alarm','kvkk','cerez','mesafeli'];
+if(_L.indexOf(_h)>=0)_ovp=true;
+try{if(sessionStorage.getItem('_ov'))_ovp=true;}catch(e){}
+if(_ovp){document.documentElement.classList.add('ov-pre');setTimeout(function(){document.documentElement.classList.remove('ov-pre');},2600);}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde bu satır KALDIRILIR -->
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"><!-- üretim tenant -->
@@ -77,13 +87,6 @@ function applyFeatureGates(){
 window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 </script>
 <!-- ===== /EMLAK API-FIRST SAAS CORE ===== -->
-<script>/* Derin-link ön-kapısı: hedef bir overlay ise ana sayfayı hiç boyama (flash önleme).
-   Güvenlik ağı: 2.6sn sonra her koşulda kaldırılır → JS aksarsa sayfa asla boş kalmaz. */
-try{var _h=(location.hash||'').replace('#','');var _ovp=false;
-var _L=['analiz','sat','blog','portfoy','portfoy-ilan','ozel','portfoy-ozel','hakkimizda','iletisim','danismanlar','degerleme','referans','alarm','kvkk','cerez','mesafeli'];
-if(_L.indexOf(_h)>=0)_ovp=true;
-try{if(sessionStorage.getItem('_ov'))_ovp=true;}catch(e){}
-if(_ovp){document.documentElement.classList.add('ov-pre');setTimeout(function(){document.documentElement.classList.remove('ov-pre');},2600);}}catch(e){}</script>
 <script defer src="js/tr-grammar.js?v=4"></script><!-- Türkçe gramer tek kaynak (SPA + wl.js ortak) -->
 
 <!-- ===== SEO: canonical + OpenGraph + Twitter (additive) ===== -->
