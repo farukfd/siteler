@@ -530,7 +530,7 @@ function _dnHashOpen(){var h=location.hash;try{
   else if(h==='#admin'&&typeof openAdminGate==='function')openAdminGate();
 }catch(e){}}
 window.addEventListener('hashchange',_dnHashOpen);
-window.addEventListener('load',function(){try{var h=location.hash;if(h==='#kur'||h==='#blog'||h==='#randevu'||h==='#admin')setTimeout(_dnHashOpen,480);}catch(e){}});
+window.addEventListener('load',function(){try{var h=location.hash;if(h==='#kur'||h==='#blog'||h==='#randevu'||h==='#admin')setTimeout(function(){_dnHashOpen();try{document.documentElement.classList.remove('ov-pre');}catch(e){}},480);}catch(e){}});
 function initSaaSTheme(){const r=document.documentElement.style;const a=saasResolve('accent'),a2=saasResolve('accent2'),as=saasResolve('accentSoft');
   if(a){r.setProperty('--accent',a);r.setProperty('--gold',a);
     /* accent → imza altın ailesi + gradyan (--grad-gold TÜM .mark/.btn-gold'u sürer) */
@@ -2539,3 +2539,25 @@ function dnApplySocial(){try{
       if(v){a.href=/^https?:\/\//i.test(v)?v:('https://'+v.replace(/^\/+/,''));}
       a.style.display=(anySet&&!v)?'none':'';});});
 }catch(e){}}
+
+/* CANLI GOOGLE PUANI — proxy ucu /api/v1/tenant/google-rating (6 saat önbellek);
+   uç yoksa temsilî değer + 'demo' rozeti. */
+async function dnGoogleRating(){
+  try{
+    var host=document.getElementById('gRateBadge'); if(!host)return;
+    var c=null; try{c=JSON.parse(localStorage.getItem('dn_grate')||'null');}catch(e){}
+    var d=(c&&(Date.now()-c.ts<21600000))?c.d:null;
+    if(!d){
+      try{var r=await proxApi('/api/v1/tenant/google-rating');
+        if(r&&!r.fallback&&r.rating)d={rating:+r.rating,count:+r.count||0,url:r.url||'',demo:false};}catch(e){}
+      if(!d)d={rating:4.9,count:94,url:'',demo:true};
+      try{localStorage.setItem('dn_grate',JSON.stringify({ts:Date.now(),d:d}));}catch(e){}
+    }
+    var href=d.url||'https://www.google.com/maps/search/'+encodeURIComponent('Selin Meridyen Gayrimenkul');
+    host.innerHTML='<a class="grate" href="'+href.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener noreferrer" aria-label="Google puanımız">'
+      +'<span class="grate-g" aria-hidden="true">G</span><span class="grate-stars" aria-hidden="true">★★★★★</span>'
+      +'<b>'+d.rating.toFixed(1).replace('.',',')+'</b><span class="grate-n">'+(d.count||0)+' değerlendirme</span>'
+      +(d.demo?'<span class="grate-demo">demo</span>':'')+'</a>';
+  }catch(e){}
+}
+try{ if(document.readyState!=='loading')setTimeout(dnGoogleRating,500); else document.addEventListener('DOMContentLoaded',function(){setTimeout(dnGoogleRating,500);}); }catch(e){}

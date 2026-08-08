@@ -931,3 +931,28 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 .iln-eids-msg{font-size:11.5px;color:var(--muted);line-height:1.4}
 .vcard-eids{margin:2px 0 6px}
 .crm-card .eids-b{font-size:10.5px;padding:2px 7px}
+
+/* Canlı Google puan rozeti */
+.grate-wrap{display:flex;margin:12px 0 4px}
+.grate{display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:99px;padding:8px 16px;text-decoration:none;color:#1a1a1a;box-shadow:0 8px 24px -14px rgba(0,0,0,.3);transition:.16s}
+.grate:hover{transform:translateY(-1px)}
+.grate-g{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;font-weight:800;font-size:14px;color:#fff;background:conic-gradient(from -45deg,#4285F4 0 25%,#34A853 0 50%,#FBBC05 0 75%,#EA4335 0 100%)}
+.grate-stars{color:#f5b301;font-size:13px;letter-spacing:1px}
+.grate b{font-size:16px}
+.grate-n{color:#666;font-size:12.5px}
+.grate-demo{font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#b45309;background:rgba(180,83,9,.12);border-radius:6px;padding:3px 7px}
+
+/* Döviz/altın bilgi bandı (TL-only ilan fiyatları; bant yalnız bilgi) */
+.doviz-bandi{background:#0d241a;color:#eaf6ef;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.09)}
+.doviz-bandi .db-mask{overflow:hidden;width:100%}
+.doviz-bandi .db-track{display:inline-flex;align-items:center;white-space:nowrap;padding:8px 0;animation:db-scroll 46s linear infinite;will-change:transform}
+.doviz-bandi:hover .db-track,.doviz-bandi:focus-within .db-track{animation-play-state:paused}
+@keyframes db-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.doviz-bandi .db-i{display:inline-flex;align-items:center;gap:7px;padding:0 20px;font-size:13px}
+.doviz-bandi .db-ic{font-size:14px;line-height:1}
+.doviz-bandi .db-l{color:#b7d4c4;font-weight:600;font-size:12px}
+.doviz-bandi .db-v{font-weight:700;letter-spacing:.01em}
+.doviz-bandi .db-ch{font-size:11px;font-weight:700}
+.doviz-bandi .db-ch.up{color:#7be0a3}.doviz-bandi .db-ch.dn{color:#ff9d9d}
+.doviz-bandi .db-note{color:#8fae9d;font-size:11px;padding:0 20px}
+@media(prefers-reduced-motion:reduce){.doviz-bandi .db-track{animation:none;flex-wrap:wrap;white-space:normal}}

@@ -32,7 +32,7 @@
   "isPartOf":{"@type":"WebSite","name":"Selin Meridyen","url":"index.html"},
   "about":{"@type":"RealEstateAgent","name":"Selin Meridyen · Lüks Konut & Özel Portföy Danışmanlığı","provider":{"@type":"Person","name":"Selin Meridyen"}} }
 </script>
-<link rel="stylesheet" href="css/base.css?v=21">
+<link rel="stylesheet" href="css/base.css?v=22">
 <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg?v=2">
 <script defer src="js/brand.js?v=3"></script>
@@ -171,6 +171,7 @@ window.dnTrack=function(ev,params){try{gtag('event',ev,params||{});}catch(e){}tr
   </div>
 </header>
 
+<div class="doviz-bandi" id="dovizBandi" aria-label="Döviz ve altın bilgi bandı"></div>
 <main>
 <!-- ============ HERO CAROUSEL (öne çıkan ilanlar döner) ============ -->
 <section class="ilh" id="ilHero" style="padding-top:78px"><div id="ilHeroSlides"></div>
@@ -617,5 +618,6 @@ if(document.readyState!=='loading')ilInit();else document.addEventListener('DOMC
   window.ilDetail=function(id){ try{ var l=(window.ALL||[]).filter(function(x){return String(x.id)===String(id);})[0]; if(l)Listings.openDetail(norm(l),DN_CFG); }catch(e){} };
 })();
 </script>
+<script src="../shared/doviz.js?v=2"></script>
 </body>
 </html>

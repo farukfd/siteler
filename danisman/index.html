@@ -2,6 +2,9 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
+<style>/* ov-pre: derin-link kapısı — overlay hedefliyse ana sayfa boyanmaz */
+html.ov-pre body{visibility:hidden}</style>
+<script>try{var _h=location.hash;if(['#kur','#blog','#randevu','#admin'].indexOf(_h)>=0){document.documentElement.classList.add('ov-pre');setTimeout(function(){document.documentElement.classList.remove('ov-pre');},2600);}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive"><!-- DEMO: üretim tenant sitesinde kaldırılır -->
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"><!-- üretim tenant -->
@@ -86,7 +89,7 @@ window.proxBootstrap=proxBootstrap;
   ]
 }
 </script>
-  <link rel="stylesheet" href="css/base.css?v=21">
+  <link rel="stylesheet" href="css/base.css?v=22">
 <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg?v=2">
 <script defer src="js/brand.js?v=3"></script>
@@ -272,6 +275,7 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><
 
 <!-- CANLI ProX ZEKÂ BANDI (veri paneli hero'dan indi) -->
 <!-- ============ CANLI ProX BÖLGE ZEKÂSI (birleştirilmiş · hero altı · canlı panel) ============ -->
+<div class="doviz-bandi" id="dovizBandi" aria-label="Döviz ve altın bilgi bandı"></div>
 <section class="sec-pad bz-sec" id="bolgeAnaliz">
   <div class="wrap">
     <div class="sec-h reveal">
@@ -426,6 +430,7 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><
   <div class="wrap">
     <div class="ref-head">
       <div class="eyebrow" data-cms="ref_eyebrow"><span class="eb-dot"></span>Referanslar · Müşteri Deneyimi</div>
+      <div id="gRateBadge" class="grate-wrap" aria-live="polite"></div>
       <h2 data-cms="ref_title">Güven, <span class="serif-it">sonuçla</span> kazanılır.</h2>
     </div>
     <div class="ref-grid" id="refGrid">
@@ -446,8 +451,9 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><
 <script src="../shared/listing-extras.js?v=9"></script>
 <script src="../shared/cs-engine.js?v=2"></script>
 <script src="js/content-studio.js?v=3"></script>
-<script src="js/app.js?v=48"></script>
+<script src="js/app.js?v=49"></script>
 <script src="js/uyelik.js?v=4"></script>
+<script src="../shared/doviz.js?v=2"></script>
 </body>
 </html>
 

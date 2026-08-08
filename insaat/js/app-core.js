@@ -3193,7 +3193,7 @@ function insBoot(){
   try{var s=sessionStorage.getItem('_ins_ov');if(s){sessionStorage.removeItem('_ins_ov');if(_INS_OV[s])target=s;}}catch(e){}
   if(!target)target=_insSlugFromHash();
   if(!target){try{var slug=_insSlug(decodeURIComponent(location.pathname.slice(_INS_BASE.length)));if(slug&&_INS_OV[slug])target=slug;}catch(e){}}
-  if(target){try{document.documentElement.classList.add('ov-boot');}catch(e){}try{if(_insCurUrl()!==_insUrl(target))history.replaceState({p:target},'',_insUrl(target));}catch(e){}_insApply(target);var _rm=function(){try{document.documentElement.classList.remove('ov-boot');}catch(e){}};try{requestAnimationFrame(function(){requestAnimationFrame(_rm);});}catch(e){}setTimeout(_rm,120);}
+  if(target){try{document.documentElement.classList.add('ov-boot');setTimeout(function(){try{var de=document.documentElement;de.classList.remove('ov-boot');de.classList.remove('ov-pre');}catch(e){}},80);}catch(e){}try{if(_insCurUrl()!==_insUrl(target))history.replaceState({p:target},'',_insUrl(target));}catch(e){}_insApply(target);var _rm=function(){try{document.documentElement.classList.remove('ov-boot');}catch(e){}};try{requestAnimationFrame(function(){requestAnimationFrame(_rm);});}catch(e){}setTimeout(_rm,120);}
   checkHash();
   /* #medya kesin scroll — alt sayfalardan index.html#medya ile gelince (native jump async
      içerik kaymasıyla ıskalıyordu); overlay değil sayfa-içi scroll hedefi. Sitenin kendi
@@ -3369,3 +3369,25 @@ window.addEventListener('load',function(){try{
   var fresh=!localStorage.getItem('meridyen_site_v1')&&!localStorage.getItem('ins_onboarded');
   if(fresh)setTimeout(openOnboarding,1400);
 }catch(e){}});
+
+/* CANLI GOOGLE PUANI — proxy ucu /api/v1/tenant/google-rating (6 saat önbellek);
+   uç yoksa temsilî değer + 'demo' rozeti. */
+async function insGoogleRating(){
+  try{
+    var host=document.getElementById('gRateBadge'); if(!host)return;
+    var c=null; try{c=JSON.parse(localStorage.getItem('ins_grate')||'null');}catch(e){}
+    var d=(c&&(Date.now()-c.ts<21600000))?c.d:null;
+    if(!d){
+      try{var r=await proxApi('/api/v1/tenant/google-rating');
+        if(r&&!r.fallback&&r.rating)d={rating:+r.rating,count:+r.count||0,url:r.url||'',demo:false};}catch(e){}
+      if(!d)d={rating:4.9,count:61,url:'',demo:true};
+      try{localStorage.setItem('ins_grate',JSON.stringify({ts:Date.now(),d:d}));}catch(e){}
+    }
+    var href=d.url||'https://www.google.com/maps/search/'+encodeURIComponent('Meridyen Yapı İnşaat');
+    host.innerHTML='<a class="grate" href="'+href.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener noreferrer" aria-label="Google puanımız">'
+      +'<span class="grate-g" aria-hidden="true">G</span><span class="grate-stars" aria-hidden="true">★★★★★</span>'
+      +'<b>'+d.rating.toFixed(1).replace('.',',')+'</b><span class="grate-n">'+(d.count||0)+' değerlendirme</span>'
+      +(d.demo?'<span class="grate-demo">demo</span>':'')+'</a>';
+  }catch(e){}
+}
+try{ if(document.readyState!=='loading')setTimeout(insGoogleRating,500); else document.addEventListener('DOMContentLoaded',function(){setTimeout(insGoogleRating,500);}); }catch(e){}
