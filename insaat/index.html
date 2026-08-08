@@ -199,6 +199,7 @@ header.scrolled .lang-sel{color:var(--ink)}
     <button class="burger" onclick="document.getElementById('mnav').classList.add('open')"><span></span><span></span><span></span></button>
   </div>
 </div></header>
+<div class="doviz-bandi" id="dovizBandi" aria-label="Döviz ve altın bilgi bandı"></div>
 
 <div class="mnav" id="mnav" onclick="if(event.target.id==='mnav')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
 
@@ -494,7 +495,7 @@ header.scrolled .lang-sel{color:var(--ink)}
   <div class="pp-grid" id="ppGrid"></div>
 
   <!-- ===== DEMO & KURUMSAL BANT (üstten alındı; her sayfada footer üstünde) ===== -->
-<link rel="stylesheet" href="css/kabuk-ortak.css?v=1">
+<link rel="stylesheet" href="css/kabuk-ortak.css?v=2">
 <section class="demo-band" aria-label="Demo ve kurumsal bilgi">
   <div class="db-in">
     <div class="db-lead">
@@ -1755,7 +1756,8 @@ window.initProje3D=async function(){
     H+='<div class="disc">⚠️ Bu rapor ön fizibilite amaçlıdır. Kesin daire adedi, paylaşım ve değerler onaylı mimari projeye, belediye imar durumuna ve piyasa koşullarına göre değişir. Resmi sözleşme için hukuki danışmanlık alınmalıdır.</div>';
     H+='<div class="rfoot">'+firma+' · '+(S.firmaEmail||"")+' · '+today+'</div>';
     H+='<div class="noprint" style="text-align:center;margin-top:20px"><button onclick="window.print()" style="background:#ff7a2f;color:#fff;border:0;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">🖨️ PDF Olarak Kaydet / Yazdır</button></div>';
-    H+='</body></html>';
+    H+='<script src="../shared/doviz.js?v=2"></script>
+</body></html>';
     /* API-first: canlı /pdf/generate {title,pages:[{id,html}],css} → {success,pdf_base64} dönerse blob indir; aksi halde yerel yazdırılabilir pencere fallback. */
     var _apiDone=false;
     try{

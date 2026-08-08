@@ -13,3 +13,18 @@
   .demo-band .db-wa:hover{filter:brightness(1.06);text-decoration:none}
   .demo-band .db-wa b{font-size:13px;font-weight:800}
   @media(max-width:640px){.demo-band .db-in{flex-direction:column;align-items:flex-start}.demo-band .db-wa{width:100%;justify-content:center}}
+
+/* Döviz/altın bilgi bandı (TL-only ilkesi; bant yalnız bilgi) */
+.doviz-bandi{background:#201406;color:#ffe9d6;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.09)}
+.doviz-bandi .db-mask{overflow:hidden;width:100%}
+.doviz-bandi .db-track{display:inline-flex;align-items:center;white-space:nowrap;padding:8px 0;animation:db-scroll 46s linear infinite;will-change:transform}
+.doviz-bandi:hover .db-track{animation-play-state:paused}
+@keyframes db-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.doviz-bandi .db-i{display:inline-flex;align-items:center;gap:7px;padding:0 20px;font-size:13px}
+.doviz-bandi .db-ic{font-size:14px;line-height:1}
+.doviz-bandi .db-l{color:#d9b28c;font-weight:600;font-size:12px}
+.doviz-bandi .db-v{font-weight:700}
+.doviz-bandi .db-ch{font-size:11px;font-weight:700}
+.doviz-bandi .db-ch.up{color:#8fe3a8}.doviz-bandi .db-ch.dn{color:#ff9d9d}
+.doviz-bandi .db-note{color:#b08b64;font-size:11px;padding:0 20px}
+@media(prefers-reduced-motion:reduce){.doviz-bandi .db-track{animation:none;flex-wrap:wrap;white-space:normal}}

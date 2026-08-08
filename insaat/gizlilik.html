@@ -47,6 +47,7 @@
     <button class="burger" onclick="document.getElementById('mnav').classList.add('open')" aria-label="Menü"><span></span><span></span><span></span></button>
   </div>
 </div></header>
+<div class="doviz-bandi" id="dovizBandi" aria-label="Döviz ve altın bilgi bandı"></div>
 <main>
   <div class="legal-wrap">
     <div class="legal-kicker">Privacy Policy</div>
@@ -96,7 +97,7 @@
   </div>
 </main>
 <!-- ===== DEMO & KURUMSAL BANT (üstten alındı; her sayfada footer üstünde) ===== -->
-<link rel="stylesheet" href="css/kabuk-ortak.css?v=1">
+<link rel="stylesheet" href="css/kabuk-ortak.css?v=2">
 <section class="demo-band" aria-label="Demo ve kurumsal bilgi">
   <div class="db-in">
     <div class="db-lead">
@@ -289,4 +290,5 @@ document.addEventListener('DOMContentLoaded',function(){try{nbHarvest();nbLang(N
 <script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
 (function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('in_lang')||'tr';}catch(e){}
 if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=6"><\/script><script src="js/i18n/gizlilik.js?v=2"><\/script>');}})();</script><script src="js/i18n.js?v=2"></script>
+<script src="../shared/doviz.js?v=2"></script>
 </body></html>
