@@ -439,8 +439,27 @@ function obSeed(){try{var s=SAAS_CONFIG.systemSettings,f=SAAS_CONFIG.firma||{},e
   var seo=(typeof SAAS_CONFIG!=='undefined'&&SAAS_CONFIG.tenantSettings)||{};OB.seoTitle=keep(seo.metaTitle,'Selin');OB.seoDesc=keep(seo.metaDescription,'Selin');
   try{var _s=JSON.parse(localStorage.getItem('dn_social')||'{}')||{};OB.fb=_s.fb||'';OB.ig=_s.ig||'';OB.x=_s.x||'';OB.li=_s.li||'';OB.yt=_s.yt||'';}catch(_e){}
   OB.il=(function(){try{return (typeof saLoad==='function'?saLoad().primary:null)||'İstanbul';}catch(_e){return 'İstanbul';}})();OB.key='';}catch(e){}}
+
+/* Sihirbaz: adres -> koordinat (Nominatim, ~1 istek/sn) */
+var _obGeoBusy=false;
+function obGeocode(){
+  try{obCollect();}catch(e){}
+  var msg=document.getElementById('ob_geo_msg');
+  var adres=(window.OB&&OB.adres)||'';
+  if(!adres){if(msg)msg.textContent='Once adres girin.';return;}
+  if(_obGeoBusy)return; _obGeoBusy=true; if(msg)msg.textContent='Araniyor...';
+  var q=[adres,(window.OB&&OB.il)||'','Turkiye'].filter(Boolean).join(', ');
+  fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=tr&accept-language=tr&q='+encodeURIComponent(q))
+    .then(function(r){if(!r.ok)throw 0;return r.json();})
+    .then(function(a){var la=document.getElementById('ob_lat'),lo=document.getElementById('ob_lng');
+      if(a&&a[0]&&la&&lo){la.value=(+a[0].lat).toFixed(6);lo.value=(+a[0].lon).toFixed(6);if(window.OB){OB.lat=la.value;OB.lng=lo.value;}if(msg)msg.textContent='Bulundu.';}
+      else if(msg)msg.textContent='Bulunamadi - elle girebilirsiniz.';})
+    .catch(function(){if(msg)msg.textContent='Sorgu basarisiz (internet gerekli).';})
+    .then(function(){_obGeoBusy=false;});
+}
+window.obGeocode=obGeocode;
 function obCollect(){function v(id){var e=document.getElementById(id);return e?e.value.trim():undefined;}
-  var m={ob_brandUrl:'brandUrl',ob_advisor:'advisor',ob_brand:'brand',ob_unvan:'unvan',ob_vergi:'vergi',ob_vergiDaire:'vergiDaire',ob_mail:'mail',ob_tel:'tel',ob_wa:'wa',ob_adres:'adres',ob_mersis:'mersis',ob_ticaretSicil:'ticaretSicil',ob_oda:'oda',ob_kep:'kep',ob_belge:'belge',ob_accent:'accent',ob_font:'font',ob_logo:'logo',ob_favicon:'favicon',ob_fb:'fb',ob_ig:'ig',ob_x:'x',ob_li:'li',ob_yt:'yt',ob_seoTitle:'seoTitle',ob_seoDesc:'seoDesc',ob_il:'il',ob_key:'key'};
+  var m={ob_brandUrl:'brandUrl',ob_advisor:'advisor',ob_brand:'brand',ob_unvan:'unvan',ob_vergi:'vergi',ob_vergiDaire:'vergiDaire',ob_mail:'mail',ob_tel:'tel',ob_wa:'wa',ob_adres:'adres',ob_lat:'lat',ob_lng:'lng',ob_mersis:'mersis',ob_ticaretSicil:'ticaretSicil',ob_oda:'oda',ob_kep:'kep',ob_belge:'belge',ob_accent:'accent',ob_font:'font',ob_logo:'logo',ob_favicon:'favicon',ob_fb:'fb',ob_ig:'ig',ob_x:'x',ob_li:'li',ob_yt:'yt',ob_seoTitle:'seoTitle',ob_seoDesc:'seoDesc',ob_il:'il',ob_key:'key'};
   Object.keys(m).forEach(function(id){var val=v(id);if(val!==undefined)OB[m[id]]=val;});
   try{var dm=document.querySelector('input[name="ob_demoMode"]:checked');if(dm)OB.demoMode=dm.value;}catch(e){}}
 function _obe(s){return (s||'').replace(/"/g,'&quot;');}
@@ -450,7 +469,9 @@ function obBody(n){
     +'<div class="sta-f"><label>Marka / Logo Yazısı</label><input id="ob_brand" value="'+_obe(OB.brand)+'" placeholder="ör. Deniz Yıldız"></div>'
     +'<div class="sta-f"><label>Ticari Unvan</label><input id="ob_unvan" value="'+_obe(OB.unvan)+'" placeholder="... Gayrimenkul Danışmanlık Ltd. Şti."></div>'
     +'<div class="sta-row2"><div class="sta-f"><label>Telefon</label><input id="ob_tel" value="'+_obe(OB.tel)+'"></div><div class="sta-f"><label>WhatsApp</label><input id="ob_wa" value="'+_obe(OB.wa)+'" placeholder="90 5xx ..."></div></div>'
-    +'<div class="sta-row2"><div class="sta-f"><label>E-posta</label><input id="ob_mail" value="'+_obe(OB.mail)+'"></div><div class="sta-f"><label>Adres</label><input id="ob_adres" value="'+_obe(OB.adres)+'"></div></div>'
+    +'<div class="sta-row2"><div class="sta-f"><label>E-posta</label><input id="ob_mail" value="'+_obe(OB.mail)+'"></div><div class="sta-f"><label>Adres</label><input id="ob_adres" value="'+_obe(OB.adres)+'"></div>'
+    +'<div class="sta-row2"><div class="sta-f"><label>Ofis Enlem (lat)</label><input id="ob_lat" value="'+_obe(OB.lat)+'" placeholder="41.0850" inputmode="decimal"></div><div class="sta-f"><label>Ofis Boylam (lng)</label><input id="ob_lng" value="'+_obe(OB.lng)+'" placeholder="29.0093" inputmode="decimal"></div></div>'
+    +'<button type="button" onclick="obGeocode()" style="margin-top:4px;padding:8px 14px;border:1px solid rgba(220,195,137,.5);background:transparent;color:inherit;border-radius:9px;cursor:pointer;font:600 12.5px inherit">Adresten koordinat bul</button><span id="ob_geo_msg" style="margin-left:10px;font-size:12px;opacity:.8"></span></div>'
     +'<div class="sta-f"><label>✨ Mevcut web / Google işletme URL\'niz <span style="color:var(--muted)">(opsiyonel — otomatik marka)</span></label><input id="ob_brandUrl" value="'+_obe(OB.brandUrl)+'" placeholder="https://siteniz.com"></div>';
   if(n===2)return '<p class="sub">Yasal künye — KVKK/gizlilik/çerez sayfaları ve künye bunlardan dolar. Boş alan "[Doldurulacak]" görünür.</p>'
     +'<div class="sta-row2"><div class="sta-f"><label>Vergi No</label><input id="ob_vergi" value="'+_obe(OB.vergi)+'"></div><div class="sta-f"><label>Vergi Dairesi</label><input id="ob_vergiDaire" value="'+_obe(OB.vergiDaire)+'"></div></div>'
@@ -511,7 +532,7 @@ function obFinish(){obCollect();if(!(OB.brand||OB.advisor)){OB.step=1;obRender()
     var _bn=OB.brand||OB.advisor;
     try{if(window.dnSetBrand)dnSetBrand({name:_bn,initial:(_bn||'M').trim().charAt(0).toLocaleUpperCase('tr'),favicon:OB.favicon||''});}catch(e){}
     try{localStorage.setItem('dn_firma',JSON.stringify(Object.assign({},SAAS_CONFIG.firma||{},{advisor:SAAS_CONFIG.advisorName,unvan:f.unvan,vergi:f.vergi,vergiDaire:f.vergiDaire,mersis:f.mersis,sicil:f.sicil,oda:f.oda,kep:f.kep,adres:f.adres,tel:f.tel,mail:f.mail,eids:f.eids})));}catch(e){}
-    try{localStorage.setItem('dn_iletisim',JSON.stringify({wa:_wa,tel:OB.tel||'',mail:OB.mail||'',adres:OB.adres||''}));}catch(e){}
+    try{(function(){var o={wa:_wa,tel:OB.tel||'',mail:OB.mail||'',adres:OB.adres||''};if(OB.lat&&OB.lng&&isFinite(+OB.lat)&&isFinite(+OB.lng)){o.lat=+OB.lat;o.lng=+OB.lng;o.geo={q:OB.adres||'',lat:+OB.lat,lon:+OB.lng};}try{var _old=JSON.parse(localStorage.getItem('dn_iletisim')||'{}')||{};['t1','t2','t3'].forEach(function(k){if(_old[k]&&!o[k])o[k]=_old[k];});}catch(e){}localStorage.setItem('dn_iletisim',JSON.stringify(o));})();}catch(e){}
     try{if(OB.key)localStorage.setItem('dn_prox',JSON.stringify({key:OB.key}));}catch(e){}
     try{localStorage.setItem('dn_theme',JSON.stringify({accent:OB.accent||'',logo:OB.logo||'',font:OB.font||''}));}catch(e){}
     try{localStorage.setItem('dn_social',JSON.stringify({fb:OB.fb||'',ig:OB.ig||'',x:OB.x||'',li:OB.li||'',yt:OB.yt||''}));}catch(e){}
@@ -857,7 +878,7 @@ function csMountDN(){ if(!window.ContentStudio||!DN_CONTENT)return; var host=doc
     proxInfo:function(){return DN_CONTENT.proxInfo();},
     getSchedule:function(){return DN_CONTENT.getSchedule();},
     setSchedule:function(s){DN_CONTENT.setSchedule(s);},
-    topicPool:function(){return ['İstanbul lüks konut piyasası','Boğaz hattı yalı yatırımı','Kentsel dönüşümde değer artışı','Kira getirisi mi değer artışı mı','Özel portföy ve mahremiyet','Gayrimenkul değerleme süreci','Tapu ve ekspertiz rehberi','Yatırım için doğru bölge analizi','Konut kredisi ve faizin etkisi','Prestij semtlerde arz-talep dengesi','Emlak vergisi ve alım-satım masrafları','Yabancıya konut satışı rehberi'];},
+    topicPool:function(){var il=_dnCity();var T=[il+' lüks konut piyasası','Kentsel dönüşümde değer artışı','Kira getirisi mi değer artışı mı','Özel portföy ve mahremiyet','Gayrimenkul değerleme süreci','Tapu ve ekspertiz rehberi','Yatırım için doğru bölge analizi','Konut kredisi ve faizin etkisi',il+' prestij semtlerinde arz-talep dengesi','Emlak vergisi ve alım-satım masrafları','Yabancıya konut satışı rehberi'];if(il==='İstanbul')T.splice(1,0,'Boğaz hattı yalı yatırımı');return T;},
     toast:function(m){try{toast(m);}catch(e){}},
     guard:function(p){var sp='';try{sp=DN_CONTENT.sysPrompt();}catch(e){}return (sp?sp+'\n\n':'')+p;}
   });

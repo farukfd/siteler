@@ -984,7 +984,7 @@ function renderBolgePage(){
   // HERO — "bölgeye hâkimiz"
   h+=`<div class="bzhero bz-rv"><div class="bzhero-grid"></div><div class="bzhero-in">
       <span class="bzh-eye"><i></i> Canlı Bölge Zekâsı · Meridyen Veri Ağı</span>
-      <h1>İstanbul'un yatırım koridorları,<br><span class="hl">metrekaresine kadar.</span></h1>
+      <h1>${(typeof SETTINGS!=='undefined'&&SETTINGS.firmaIl&&SETTINGS.firmaIl!=='İstanbul')?(SETTINGS.firmaIl+' yatırım koridorları,'):('İstanbul\'un yatırım koridorları,')}<br><span class="hl">metrekaresine kadar.</span></h1>
       <p>Faaliyet gösterdiğimiz her bölgede m² fiyatını, inşaat maliyetini, kira getirisini ve deprem riskini güncel veriyle izliyoruz. Kararı rakamlar verir.</p>
       <div class="bzh-stats">
         <div class="bzh-s"><b data-count="${BOLGELER.length}">0</b><span>izlenen ilçe</span></div>
@@ -3247,7 +3247,7 @@ var OB_CSS='#obWrap{position:fixed;inset:0;z-index:99999;display:none;align-item
 var _OB_ILLER=['Adana','Adıyaman','Afyonkarahisar','Ağrı','Aksaray','Amasya','Ankara','Antalya','Ardahan','Artvin','Aydın','Balıkesir','Bartın','Batman','Bayburt','Bilecik','Bingöl','Bitlis','Bolu','Burdur','Bursa','Çanakkale','Çankırı','Çorum','Denizli','Diyarbakır','Düzce','Edirne','Elazığ','Erzincan','Erzurum','Eskişehir','Gaziantep','Giresun','Gümüşhane','Hakkâri','Hatay','Iğdır','Isparta','İstanbul','İzmir','Kahramanmaraş','Karabük','Karaman','Kars','Kastamonu','Kayseri','Kırıkkale','Kırklareli','Kırşehir','Kilis','Kocaeli','Konya','Kütahya','Malatya','Manisa','Mardin','Mersin','Muğla','Muş','Nevşehir','Niğde','Ordu','Osmaniye','Rize','Sakarya','Samsun','Siirt','Sinop','Sivas','Şanlıurfa','Şırnak','Tekirdağ','Tokat','Trabzon','Tunceli','Uşak','Van','Yalova','Yozgat','Zonguldak'];
 function _obE(s){return (''+(s==null?'':s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 
-var OB={step:1,brandUrl:'',il:'',name:'',name2:'',unvan:'',vergi:'',vergiDaire:'',adres:'',tel:'',mail:'',wa:'',yetkili:'',calisma:'',mersis:'',ticaretSicil:'',oda:'',kep:'',belge:'',logo:'',favicon:'',accent:'',font:'',fb:'',ig:'',x:'',li:'',yt:'',seoTitle:'',seoDesc:'',demoMode:'ornek'};
+var OB={step:1,brandUrl:'',il:'',name:'',name2:'',unvan:'',vergi:'',vergiDaire:'',adres:'',lat:'',lng:'',tel:'',mail:'',wa:'',yetkili:'',calisma:'',mersis:'',ticaretSicil:'',oda:'',kep:'',belge:'',logo:'',favicon:'',accent:'',font:'',fb:'',ig:'',x:'',li:'',yt:'',seoTitle:'',seoDesc:'',demoMode:'ornek'};
 var OB_STEPS=['İl & Marka','Firma & İletişim','Yasal Künye','Marka & Tema','Sosyal Medya','SEO & İçerik','Yayın'];
 function obSeed(){try{
   var S=(typeof SETTINGS!=='undefined'&&SETTINGS)||{},B=(typeof BRAND!=='undefined'&&BRAND)||{},SO=(typeof SOCIAL!=='undefined'&&SOCIAL)||{};
@@ -3262,8 +3262,27 @@ function obSeed(){try{
   OB.fb=SO.facebook||'';OB.ig=SO.instagram||'';OB.x=SO.x||'';OB.li=SO.linkedin||'';OB.yt=SO.youtube||'';
   OB.seoTitle=keep(S.metaTitle,'Meridyen');OB.seoDesc=keep(S.metaDesc,'Meridyen');
 }catch(e){}}
+
+/* Sihirbaz: adres -> koordinat (Nominatim, ~1 istek/sn) */
+var _obGeoBusy=false;
+function obGeocode(){
+  try{obCollect();}catch(e){}
+  var msg=document.getElementById('ob_geo_msg');
+  var adres=(window.OB&&OB.adres)||'';
+  if(!adres){if(msg)msg.textContent='Once adres girin.';return;}
+  if(_obGeoBusy)return; _obGeoBusy=true; if(msg)msg.textContent='Araniyor...';
+  var q=[adres,(window.OB&&OB.il)||'','Turkiye'].filter(Boolean).join(', ');
+  fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=tr&accept-language=tr&q='+encodeURIComponent(q))
+    .then(function(r){if(!r.ok)throw 0;return r.json();})
+    .then(function(a){var la=document.getElementById('ob_lat'),lo=document.getElementById('ob_lng');
+      if(a&&a[0]&&la&&lo){la.value=(+a[0].lat).toFixed(6);lo.value=(+a[0].lon).toFixed(6);if(window.OB){OB.lat=la.value;OB.lng=lo.value;}if(msg)msg.textContent='Bulundu.';}
+      else if(msg)msg.textContent='Bulunamadi - elle girebilirsiniz.';})
+    .catch(function(){if(msg)msg.textContent='Sorgu basarisiz (internet gerekli).';})
+    .then(function(){_obGeoBusy=false;});
+}
+window.obGeocode=obGeocode;
 function obCollect(){function v(id){var e=document.getElementById(id);return e?e.value.trim():undefined;}
-  var m={ob_il:'il',ob_brandUrl:'brandUrl',ob_name:'name',ob_name2:'name2',ob_unvan:'unvan',ob_vergi:'vergi',ob_vergiDaire:'vergiDaire',ob_adres:'adres',ob_tel:'tel',ob_mail:'mail',ob_wa:'wa',ob_yetkili:'yetkili',ob_calisma:'calisma',ob_mersis:'mersis',ob_ticaretSicil:'ticaretSicil',ob_oda:'oda',ob_kep:'kep',ob_belge:'belge',ob_logo:'logo',ob_favicon:'favicon',ob_accent:'accent',ob_font:'font',ob_fb:'fb',ob_ig:'ig',ob_x:'x',ob_li:'li',ob_yt:'yt',ob_seoTitle:'seoTitle',ob_seoDesc:'seoDesc'};
+  var m={ob_il:'il',ob_brandUrl:'brandUrl',ob_name:'name',ob_name2:'name2',ob_unvan:'unvan',ob_vergi:'vergi',ob_vergiDaire:'vergiDaire',ob_adres:'adres',ob_lat:'lat',ob_lng:'lng',ob_tel:'tel',ob_mail:'mail',ob_wa:'wa',ob_yetkili:'yetkili',ob_calisma:'calisma',ob_mersis:'mersis',ob_ticaretSicil:'ticaretSicil',ob_oda:'oda',ob_kep:'kep',ob_belge:'belge',ob_logo:'logo',ob_favicon:'favicon',ob_accent:'accent',ob_font:'font',ob_fb:'fb',ob_ig:'ig',ob_x:'x',ob_li:'li',ob_yt:'yt',ob_seoTitle:'seoTitle',ob_seoDesc:'seoDesc'};
   Object.keys(m).forEach(function(id){var val=v(id);if(val!==undefined)OB[m[id]]=val;});
   try{var dm=document.querySelector('input[name="ob_demoMode"]:checked');if(dm)OB.demoMode=dm.value;}catch(e){}}
 function obBody(n){var e=_obE;
@@ -3277,6 +3296,8 @@ function obBody(n){var e=_obE;
     +'<div class="ob-2"><div><label>Telefon</label><input id="ob_tel" value="'+e(OB.tel)+'" placeholder="+90 ..."></div><div><label>WhatsApp</label><input id="ob_wa" value="'+e(OB.wa)+'" placeholder="90 5xx ..."></div></div>'
     +'<div class="ob-field"><label>E-posta</label><input id="ob_mail" value="'+e(OB.mail)+'" placeholder="info@firmaniz.com"></div>'
     +'<div class="ob-field"><label>Adres</label><input id="ob_adres" value="'+e(OB.adres)+'"></div>'
+    +'<div class="ob-2"><div class="ob-field"><label>Ofis Enlem (lat)</label><input id="ob_lat" value="'+e(OB.lat)+'" placeholder="41.0850" inputmode="decimal"></div><div class="ob-field"><label>Ofis Boylam (lng)</label><input id="ob_lng" value="'+e(OB.lng)+'" placeholder="29.0093" inputmode="decimal"></div></div>'
+    +'<button type="button" onclick="obGeocode()" style="margin-top:4px;padding:8px 14px;border:1px solid var(--line,#ddd);background:#fff;border-radius:9px;cursor:pointer;font:600 12.5px inherit">Adresten koordinat bul</button><span id="ob_geo_msg" style="margin-left:10px;font-size:12px;color:#888"></span>'
     +'<div class="ob-2"><div><label>Yetkili</label><input id="ob_yetkili" value="'+e(OB.yetkili)+'" placeholder="Genel Müdür"></div><div><label>Çalışma Saatleri</label><input id="ob_calisma" value="'+e(OB.calisma)+'" placeholder="Hafta içi 09:00–18:00"></div></div>';}
   if(n===3){return '<p class="ob-sub">Yasal künye — KVKK/gizlilik/çerez/kullanım "Veri Sorumlusu Künyesi" bunlardan dolar. Boş bırakılan alan sayfada "[Doldurulacak]" görünür.</p>'
     +'<div class="ob-2"><div><label>Vergi No</label><input id="ob_vergi" value="'+e(OB.vergi)+'"></div><div><label>Vergi Dairesi</label><input id="ob_vergiDaire" value="'+e(OB.vergiDaire)+'"></div></div>'
@@ -3331,6 +3352,11 @@ function obFinish(){obCollect();if(!OB.name){OB.step=1;obRender();toast('Marka a
     if(typeof SETTINGS!=='undefined'){var S=SETTINGS;
       if(OB.unvan){S.firmaUnvan=OB.unvan;S.eidsUnvan=OB.unvan;}else if(OB.name){S.firmaUnvan=OB.name+(OB.name2?(' '+OB.name2):'')+' İnşaat A.Ş.';S.eidsUnvan=S.firmaUnvan;}
       if(OB.tel)S.firmaTel=OB.tel;if(OB.mail)S.firmaEmail=OB.mail;if(OB.adres)S.firmaAdres=OB.adres;if(OB.wa)S.waNumber=OB.wa.replace(/[^0-9]/g,'');
+      /* Ofis konumu: lat/lng girildiyse dogrudan; yoksa il secimi mapQuery'e adres-string olarak (Nominatim cozer). Il artik PERSIST ediliyor (eski dekoratif secici islevsellesti). */
+      if(OB.lat&&OB.lng&&isFinite(+OB.lat)&&isFinite(+OB.lng))S.mapQuery=(+OB.lat).toFixed(6)+','+(+OB.lng).toFixed(6);
+      else if(OB.adres)S.mapQuery=OB.adres;
+      else if(OB.il)S.mapQuery=OB.il;
+      if(OB.il)S.firmaIl=OB.il;
       if(OB.yetkili)S.firmaYetkili=OB.yetkili;if(OB.calisma)S.firmaCalisma=OB.calisma;
       if(OB.vergi)S.firmaVergiNo=OB.vergi;if(OB.vergiDaire)S.firmaVergiDairesi=OB.vergiDaire;if(OB.mersis)S.firmaMersis=OB.mersis;
       if(OB.ticaretSicil)S.firmaTicaretSicil=OB.ticaretSicil;if(OB.oda)S.firmaOda=OB.oda;if(OB.kep)S.firmaKep=OB.kep;
