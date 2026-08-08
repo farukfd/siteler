@@ -167,10 +167,14 @@ try{window.gmLang=wlLang;}catch(e){}   /* statik "yakında" stub'ını gerçek �
 
 /* Sosyal medya (statik sayfalar): FIRMA.social'dan href yaz; boşsa demo linkini gizle (tenant'ta Meridyen'e gitmesin) */
 function applySocialWL(){try{var S=(d.FIRMA&&d.FIRMA.social)||{};if(!customized)return;
-  [['fb','facebook.com/meridyengayrimenkul'],['ig','instagram.com/meridyengayrimenkul'],['x','x.com/meridyengm'],['li','linkedin.com/company/meridyengayrimenkul'],['yt','youtube.com/@meridyengayrimenkul']].forEach(function(m){
+  var P=[['fb','facebook.com/meridyengayrimenkul'],['ig','instagram.com/meridyengayrimenkul'],['x','x.com/meridyengm'],['li','linkedin.com/company/meridyengayrimenkul'],['yt','youtube.com/@meridyengayrimenkul']];
+  /* En az bir hesap girildiyse boşlar gizlenir (kiracı Meridyen'e gitmesin); HİÇBİRİ
+     girilmemişse demo ikonlar görünür kalır — yoksa yalnız nsosyal kalıyordu (bug). */
+  var anySet=P.some(function(m){return (S[m[0]]||'').trim();});
+  P.forEach(function(m){
     var v=(S[m[0]]||'').trim();
     document.querySelectorAll('a[href*="'+m[1]+'"]').forEach(function(a){
-      if(v){a.href=/^https?:\/\//i.test(v)?v:('https://'+v.replace(/^\/+/,''));a.style.display='';}else{a.style.display='none';}
+      if(v){a.href=/^https?:\/\//i.test(v)?v:('https://'+v.replace(/^\/+/,''));a.style.display='';}else{a.style.display=anySet?'none':'';}
     });
   });
 }catch(e){}}

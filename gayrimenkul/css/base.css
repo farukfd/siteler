@@ -566,6 +566,9 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
 @keyframes brFade{from{opacity:0}to{opacity:1}}
 /* G3: derin-link/yükleme açılışında (ov-boot) overlay SOLMADAN opak açılır → ana sayfa flash etmez */
 html.ov-boot .br-page.open,html.ov-boot #portfoyPage.open,html.ov-boot #brPage.open,html.ov-boot #satPage.open,html.ov-boot #blogPage.open{animation:none!important;opacity:1!important}
+/* Derin-link ön-kapısı (ov-pre): hedef overlay açılana dek ana sayfa boyanmaz; overlay açılınca görünür */
+html.ov-pre body{visibility:hidden}
+html.ov-pre .br-page.open,html.ov-pre #infoPage.open,html.ov-pre #portfoyPage.open,html.ov-pre #brPage.open,html.ov-pre #satPage.open,html.ov-pre #blogPage.open{visibility:visible}
 /* Overlay/tam-ekran sayfa header'ı — ANA SAYFA header#hdr + .wrap.bar ile BİREBİR:
    içerik --maxw(1240px) ortalı, 74px yükseklik, 22px gap; arka plan tam genişlik (calc-padding). */
 .br-hd{flex:none;display:flex;align-items:center;gap:22px;height:74px;padding:0 max(24px,calc((100% - var(--maxw,1240px))/2 + 24px));background:rgba(255,255,255,.92);backdrop-filter:saturate(150%) blur(12px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:90}

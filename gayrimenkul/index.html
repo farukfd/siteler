@@ -77,6 +77,13 @@ function applyFeatureGates(){
 window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 </script>
 <!-- ===== /EMLAK API-FIRST SAAS CORE ===== -->
+<script>/* Derin-link ön-kapısı: hedef bir overlay ise ana sayfayı hiç boyama (flash önleme).
+   Güvenlik ağı: 2.6sn sonra her koşulda kaldırılır → JS aksarsa sayfa asla boş kalmaz. */
+try{var _h=(location.hash||'').replace('#','');var _ovp=false;
+var _L=['analiz','sat','blog','portfoy','portfoy-ilan','ozel','portfoy-ozel','hakkimizda','iletisim','danismanlar','degerleme','referans','alarm','kvkk','cerez','mesafeli'];
+if(_L.indexOf(_h)>=0)_ovp=true;
+try{if(sessionStorage.getItem('_ov'))_ovp=true;}catch(e){}
+if(_ovp){document.documentElement.classList.add('ov-pre');setTimeout(function(){document.documentElement.classList.remove('ov-pre');},2600);}}catch(e){}</script>
 <script defer src="js/tr-grammar.js?v=4"></script><!-- Türkçe gramer tek kaynak (SPA + wl.js ortak) -->
 
 <!-- ===== SEO: canonical + OpenGraph + Twitter (additive) ===== -->
@@ -134,7 +141,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <!-- TEMA: themes kütüphanesinden seç (tenant başına değiştir). Aktif: Meridyen -->
   <link rel="stylesheet" href="themes/gayrimenkul/meridyen.css?v=5">
-  <link rel="stylesheet" href="css/base.css?v=63">
+  <link rel="stylesheet" href="css/base.css?v=64">
   <link rel="stylesheet" href="../shared/vendor/leaflet/leaflet.css?v=1">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg">
@@ -2080,7 +2087,7 @@ window.proxBootstrap=proxBootstrap; window.applyFeatureGates=applyFeatureGates;
   <script src="../shared/vendor/leaflet/leaflet.js?v=1"></script>
   <script src="../shared/harita.js?v=5"></script>
   <script src="../shared/doviz.js?v=2"></script>
-  <script src="js/app.js?v=83"></script>
+  <script src="js/app.js?v=84"></script>
   <script src="js/content-studio.js?v=19"></script>
   <script src="js/hero-pusula.js?v=17"></script>
   <script src="../shared/mahalle-endeks.js?v=14"></script>

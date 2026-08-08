@@ -4786,10 +4786,10 @@ function ovBoot(){
   try{var s=sessionStorage.getItem('_ov');if(s){sessionStorage.removeItem('_ov');if(_OV[s])target=s;}}catch(e){}
   if(!target){try{var hs=(location.hash||'').replace(/^#/,'');var hm={analiz:'analiz',sat:'sat',blog:'blog',portfoy:'portfoy','portfoy-ilan':'ilanlar',ozel:'ozel','portfoy-ozel':'ozel',hakkimizda:'hakkimizda',iletisim:'iletisim',danismanlar:'danismanlar',degerleme:'degerleme',referans:'referans',alarm:'alarm',kvkk:'kvkk',cerez:'cerez',mesafeli:'mesafeli'};if(hm[hs]&&_OV[hm[hs]]){history.replaceState({},'',_OVBASE);target=hm[hs];}}catch(e){}}
   if(!target){try{var seg=decodeURIComponent(location.pathname.slice(_OVBASE.length)).replace(/\/$/,'').replace(/^index\.html$/,'');if(_OV[seg])target=seg;}catch(e){}}
-  if(!target){ovRoute();return;}
+  if(!target){try{document.documentElement.classList.remove('ov-pre');}catch(e){}ovRoute();return;}
   try{document.documentElement.classList.add('ov-boot');}catch(e){}
   goView(target);
-  var _rmBoot=function(){try{document.documentElement.classList.remove('ov-boot');}catch(e){}};
+  var _rmBoot=function(){try{var de=document.documentElement;de.classList.remove('ov-boot');de.classList.remove('ov-pre');}catch(e){}};
   try{requestAnimationFrame(function(){requestAnimationFrame(_rmBoot);});}catch(e){}
   setTimeout(_rmBoot,120);   /* rAF throttle'a karşı güvenilir backstop → sonraki in-app açılışlar fade'i geri alır */
 }
