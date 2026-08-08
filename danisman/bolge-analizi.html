@@ -632,6 +632,8 @@ body{overflow-x:clip}
 
 <script src="js/tr-iller.js?v=2"></script>
 <script>
+window.EMLAK_PROXY_MODE=window.EMLAK_PROXY_MODE!==false;/* güvenlik: proxy modunda anahtar istemciden GİTMEZ */
+
 /* ===================== BÖLGE ANALİZİ · izole motor (app.js YÜKLENMEZ) =====================
    document.hidden kalıcı olabilir → RAF durur, setTimeout güvenilmez.
    Kural: paint() nihai durumu SENKRON yazar; animate() yalnızca süstür. Sıra: paint → animate.
@@ -646,7 +648,7 @@ var EMLAK_TENANT={tenant_id:"consultant",tenant_key:""};
 try{var _dp=JSON.parse(localStorage.getItem('dn_prox')||'null');if(_dp&&_dp.key){EMLAK_TENANT.tenant_key=_dp.key;if(_dp.tenant)EMLAK_TENANT.tenant_id=_dp.tenant;}}catch(e){}/* admin ProX anahtarı (dn_prox) */
 async function proxApi(path){
   try{
-    var res=await fetch(EMLAK_API_BASE+path,{method:"GET",mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":EMLAK_TENANT.tenant_id,"X-Tenant-Key":EMLAK_TENANT.tenant_key}});
+    var res=await fetch(EMLAK_API_BASE+path,{method:"GET",mode:"cors",headers:(function(){var h={"Content-Type":"application/json","X-Tenant-Id":EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h["X-Tenant-Key"]=EMLAK_TENANT.tenant_key;return h;})()});
     if(!res.ok)throw new Error("ProX "+res.status);
     return await res.json();
   }catch(e){return {fallback:true,_err:e.message};}

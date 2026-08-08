@@ -729,7 +729,7 @@ ANA YÜKLENİCİ                                        TAŞERON
 {{FIRMA_UNVAN}}                          {{KARSI_TARAF}}`}
 };
 const DURUM_LABEL={satildi:'Satıldı',kiralandi:'Kiralandı',bos:'Boş',rezerve:'Rezerve',['arsa-sahibi']:'Arsa Sahibi'};
-const DURUM_COLOR={satildi:'#1a7f4a',kiralandi:'#2563eb',bos:'#9aa0ab',rezerve:'#c8962f',['arsa-sahibi']:'#7c3aed'};
+const DURUM_COLOR={satildi:'#1a7f4a',kiralandi:'#2563eb',bos:'#9aa0ab',rezerve:'#c8962f',['arsa-sahibi']:'#0e7490'};
 const ST_LABEL={devam:'Devam Eden',tamam:'Tamamlandı',plan:'Planlanan'};
 const imgFor=(k)=> (k&&/^(https?:|data:)/.test(k))?k:(IMG[k]||'');
 
@@ -1496,7 +1496,7 @@ const SAAS_THEMES={
   'Turuncu':{accent:'#ff7a2f',accent2:'#ffb070'},
   'Mavi':{accent:'#2563eb',accent2:'#60a5fa'},
   'Yeşil':{accent:'#1e7e3a',accent2:'#34d399'},
-  'Mor':{accent:'#6d28d9',accent2:'#a78bfa'},
+  'Kehribar':{accent:'#b45309',accent2:'#f59e0b'},
   'Kırmızı':{accent:'#dc2626',accent2:'#f87171'}
 };
 /* 1) DİNAMİK TEMA — merkezden gelen renk anında uygulanır (primary gradyanı --accent/--accent-2'den beslenir) */
@@ -1650,7 +1650,7 @@ async function proxAiQuery(userMessage,contextType){const ctx=contextType||'defa
 window.proxAiQuery=proxAiQuery;
 /* Logo→tema */
 async function saasAutoThemeFromLogo(logoUrl){await new Promise(r=>setTimeout(r,150));const u=(logoUrl||'').toLocaleLowerCase('tr');let theme='Turuncu';
-  if(/mavi|blue/.test(u))theme='Mavi';else if(/turuncu|orange/.test(u))theme='Turuncu';else if(/ye[şs]il|green/.test(u))theme='Yeşil';else if(/mor|purple/.test(u))theme='Mor';else if(/k[ıi]rm[ıi]z[ıi]|red/.test(u))theme='Kırmızı';else{let h=0;for(let i=0;i<u.length;i++)h=(h*31+u.charCodeAt(i))>>>0;theme=['Turuncu','Mavi','Yeşil','Mor','Kırmızı'][h%5];}
+  if(/mavi|blue/.test(u))theme='Mavi';else if(/turuncu|orange/.test(u))theme='Turuncu';else if(/ye[şs]il|green/.test(u))theme='Yeşil';else if(/mor|purple|kehribar|amber/.test(u))theme='Kehribar';else if(/k[ıi]rm[ıi]z[ıi]|red/.test(u))theme='Kırmızı';else{let h=0;for(let i=0;i<u.length;i++)h=(h*31+u.charCodeAt(i))>>>0;theme=['Turuncu','Mavi','Yeşil','Kehribar','Kırmızı'][h%5];}
   SAAS_CONFIG.tenantSettings.logoUrl=logoUrl;SAAS_CONFIG.tenantSettings.themeColor=theme;initSaaSTheme();window.__PROX_DEBUG&&console.log('[Logo Adaptasyon] '+logoUrl+' → tema: '+theme);return theme;}
 window.saasAutoThemeFromLogo=saasAutoThemeFromLogo;
 /* 38-Kategori Proje Analiz Raporu */
@@ -2018,7 +2018,7 @@ const THEMES=[
   {n:'Çelik',brand:'#16324f',accent:'#0ea5e9',a2:'#38bdf8',bg:'#f4f8fb',sf:'#fff',sf2:'#e9f1f7',ink:'#112233',mut:'#56697e',line:'#e2ecf3',on:'#04222e'},
   {n:'Zümrüt',brand:'#0f2e25',accent:'#10b981',a2:'#34d399',bg:'#f4faf7',sf:'#fff',sf2:'#e8f5ef',ink:'#0f241d',mut:'#51695f',line:'#e0efe8',on:'#04231a'},
   {n:'Bordo',brand:'#4a1020',accent:'#b91c4b',a2:'#e0698c',bg:'#faf6f3',sf:'#fff',sf2:'#f4e9e6',ink:'#2b1119',mut:'#7a5e66',line:'#efe3df',on:'#fff'},
-  {n:'Mor',brand:'#241546',accent:'#7c3aed',a2:'#a78bfa',bg:'#f7f5fc',sf:'#fff',sf2:'#eee9f7',ink:'#1c1330',mut:'#66607e',line:'#e9e4f3',on:'#fff'},
+  {n:'Kehribar',brand:'#4a2a06',accent:'#b45309',a2:'#f59e0b',bg:'#fdf8f2',sf:'#fff',sf2:'#f7ecdd',ink:'#241708',mut:'#7a6a55',line:'#efe3d2',on:'#fff'},
   {n:'Okyanus',brand:'#0b2b3a',accent:'#0891b2',a2:'#22d3ee',bg:'#f2f9fb',sf:'#fff',sf2:'#e6f3f6',ink:'#0a2330',mut:'#4f6b76',line:'#ddeef2',on:'#03222b'},
   {n:'Toprak',brand:'#3b2a1a',accent:'#b4732a',a2:'#d99a4e',bg:'#faf7f2',sf:'#fff',sf2:'#f1ebe1',ink:'#2a2014',mut:'#6f6253',line:'#ece3d6',on:'#fff'},
   {n:'Gece',brand:'#0b0e14',accent:'#3b82f6',a2:'#60a5fa',bg:'#0b0e14',sf:'#141a23',sf2:'#1b222d',ink:'#e7eef7',mut:'#93a1b3',line:'#222b36',on:'#fff',dark:1},

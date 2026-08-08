@@ -26,7 +26,7 @@ window.EMLAK_PACKAGES = {
 window.EMLAK_TENANT.enabledFeatures = window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode] || window.EMLAK_PACKAGES.PRO;
 window.hasFeature = function(f){ return window.EMLAK_TENANT.enabledFeatures.indexOf(f)!==-1; };
 window.requireFeature = function(f){ if(window.hasFeature(f)) return true; var m="Bu özellik mevcut paketinizde aktif değildir. Kurumsal paketinizi yükseltin."; if(typeof toast==="function")toast(m); else alert(m); return false; };
-async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ const res=await fetch(window.EMLAK_API_BASE+path,{method,mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id,"X-Tenant-Key":window.EMLAK_TENANT.tenant_key,...headers},body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
+async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ const res=await fetch(window.EMLAK_API_BASE+path,{method,mode:"cors",headers:(function(){var _h={"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)_h["X-Tenant-Key"]=window.EMLAK_TENANT.tenant_key;return Object.assign(_h,headers);})(),body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
 function proxFallback(path,options={}){ return { fallback:true, message:"API baglantisi yok. Demo/fallback veri kullaniliyor.", path, data:(window.EMLAK_FALLBACK?window.EMLAK_FALLBACK(path,options):null) }; }
 async function submitLead(lead){ lead=lead||{}; /* Canlı /lead body: {sourcePage,formType,name,phone,email,message,extra} */ var body={ sourcePage:lead.sourcePage||"insaat", formType:lead.formType||"", name:lead.name||"", phone:lead.phone||"", email:lead.email||"", message:lead.message||"", extra:Object.assign({ tenant_id:window.EMLAK_TENANT.tenant_id, sector:window.EMLAK_TENANT.sector, location:lead.location||"", requestedService:lead.requestedService||"" }, lead.extra||{}) }; try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:body}); if(!r||r.fallback||r.success!==true)throw new Error("fallback"); return {ok:true,online:r.online!==false,data:r,lead_id:r.lead_id}; }catch(e){ try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(Object.assign({id:"lead_"+Date.now(),createdAt:new Date().toISOString(),status:"new"},body));localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:body}; } }
 window.injectSchema=function(o){try{var s=document.createElement("script");s.type="application/ld+json";s.text=JSON.stringify(o);document.head.appendChild(s);}catch(e){}};
@@ -1456,13 +1456,11 @@ function cookieChoice(v){
 
 <script src="js/tr-iller.js?v=1"></script>
 <script src="../shared/eids.js?v=1"></script>
-<link rel="stylesheet" href="../shared/vendor/pannellum.css?v=1">
 <script src="../shared/listing.js?v=24"></script>
-<script src="../shared/vendor/pannellum.js?v=1"></script>
 <script src="../shared/listing-extras.js?v=9"></script>
 <script src="../shared/cs-engine.js?v=2"></script>
-<script src="js/content-studio.js?v=2"></script>
-<script src="js/app-core.js?v=29"></script>
+<script src="js/content-studio.js?v=3"></script>
+<script src="js/app-core.js?v=30"></script>
 
 
 
@@ -2239,7 +2237,7 @@ window.initProje3D=async function(){
       '<div class="si"><span>Zemin Dükkan</span><b>'+p.dukkan+' adet ('+f.dukkanAlan.toLocaleString('tr-TR')+' m²)</b></div>'+
       '<div class="si"><span>Tahmini Daire</span><b>'+f.daireSayisi+' adet</b></div>'+
       '<div class="si"><span>Toplam Bağımsız Bölüm</span><b>'+f.toplamBB+'</b></div>'+
-      '<div class="si" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px"><span>↳ Arsa Sahibi ('+p.payArsa+'%)</span><b style="color:#a78bfa">'+f.arsaPayDaire+' daire + '+f.arsaPayDukkan+' dükkan</b></div>'+
+      '<div class="si" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px"><span>↳ Arsa Sahibi ('+p.payArsa+'%)</span><b style="color:#0e7490">'+f.arsaPayDaire+' daire + '+f.arsaPayDukkan+' dükkan</b></div>'+
       '<div class="si"><span>↳ Müteahhit ('+p.payMut+'%)</span><b style="color:#60a5fa">'+f.mutDaire+' daire + '+f.mutDukkan+' dükkan</b></div>'+
       '<div class="si" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px"><span>Toplam Satış Geliri</span><b>'+fmtTL3(f.toplamSatis)+'</b></div>'+
       '<div class="si"><span>Müteahhit Net Kâr</span><b style="color:'+(f.mutNetKar>=0?'#34d399':'#f0698c')+'">'+fmtTL3(f.mutNetKar)+'</b></div>';
@@ -2398,7 +2396,7 @@ window.initProje3D=async function(){
     var W=Math.round(plotW*SC), D=Math.round(plotD*SC);
     var pad=60;
     // colors
-    var cArsa='#a78bfa', cMut='#60a5fa', cShop='#ff9a4f', cCore='#cbd5e1';
+    var cArsa='#0e7490', cMut='#60a5fa', cShop='#ff9a4f', cCore='#cbd5e1';
     function svgFloor(title, units, isGround){
       var svg='<svg width="'+(W+pad*2)+'" height="'+(D+pad*2+30)+'" xmlns="http://www.w3.org/2000/svg" style="background:#fff">';
       // title
@@ -2461,7 +2459,7 @@ window.initProje3D=async function(){
       '<div class="kh"><div class="kl">'+(firma[0]||'M')+'</div><div><div class="kf">'+firma+'</div><div class="ks">Şematik Kat Planları · '+(p.musteri||'')+' · '+p.ad+'</div></div></div>'+
       '<div class="meta">📐 Arsa: '+p.m2+' m² · Emsal '+p.emsal+' · Toplam inşaat '+f.insaat.toLocaleString('tr-TR')+' m² · '+p.dukkan+' dükkan + '+f.daireSayisi+' daire · '+p.kat+' kat</div>'+
       '<div class="legend">'+
-        '<div class="lg"><span class="sw" style="background:#a78bfa"></span> Arsa Sahibi payı</div>'+
+        '<div class="lg"><span class="sw" style="background:#0e7490"></span> Arsa Sahibi payı</div>'+
         '<div class="lg"><span class="sw" style="background:#60a5fa"></span> Müteahhit payı (daire)</div>'+
         '<div class="lg"><span class="sw" style="background:#ff9a4f"></span> Dükkan</div>'+
         '<div class="lg"><span class="sw" style="background:#cbd5e1"></span> Ortak alan (merdiven/asansör)</div>'+

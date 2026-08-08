@@ -31,13 +31,15 @@
 <script src="js/i18n/_common.js?v=4"></script><script src="js/i18n/prox-asistan.js?v=1"></script><script src="js/i18n.js?v=1"></script>
 <script src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
 <script src="js/a11y.js?v=1"></script>
-<script src="js/lead.js?v=1"></script>
+<script src="js/lead.js?v=2"></script>
 <style>
 /* ===================== PROX ASİSTAN · tam-sayfa kilitli sohbet (.pa-*) ===================== */
 html,body{height:100%}
-.pa-body{height:100vh;overflow:hidden;display:flex;flex-direction:column;background:var(--cream)}
+.pa-body{min-height:100vh;height:auto;overflow:visible;display:flex;flex-direction:column;background:var(--cream)}
+.pa-app{height:calc(100vh - 80px)}
+.pa-body>footer{flex:none}
 .pa-body header.nav{position:relative!important;flex:0 0 auto;z-index:20}
-.pa-app{flex:1;display:flex;min-height:0;width:100%;overflow:hidden}
+.pa-app{flex:none;display:flex;min-height:0;width:100%;overflow:hidden}
 /* sidebar */
 .pa-sb{flex:0 0 286px;background:var(--em-deep);color:var(--cream-on-em);display:flex;flex-direction:column;padding:16px 14px;gap:12px;min-height:0}
 .pa-sb-head{display:flex;align-items:center;gap:10px}
@@ -193,6 +195,8 @@ html,body{height:100%}
 </div>
 
 <script>
+window.EMLAK_PROXY_MODE=window.EMLAK_PROXY_MODE!==false;/* güvenlik: proxy modunda anahtar istemciden GİTMEZ */
+
 (function(){
 "use strict";
 /* ---- ProX (izole) + DeepSeek yönlendirme (admin anahtarlarını okur) ---- */
@@ -202,7 +206,7 @@ try{var _dp=JSON.parse(localStorage.getItem('dn_prox')||'null');if(_dp&&_dp.key)
 function _dsKey(){try{return (localStorage.getItem('dn_dskey')||'').trim();}catch(e){return '';}}
 function _dsModel(){try{return (localStorage.getItem('dn_dsmodel')||'deepseek-chat').trim()||'deepseek-chat';}catch(e){return 'deepseek-chat';}}
 async function proxApi(path,body){
-  try{var res=await fetch(EMLAK_API_BASE+path,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','X-Tenant-Id':TENANT.id,'X-Tenant-Key':TENANT.key},body:JSON.stringify(body||{})});
+  try{var res=await fetch(EMLAK_API_BASE+path,{method:'POST',mode:'cors',headers:(function(){var h={'Content-Type':'application/json','X-Tenant-Id':TENANT.id};if(!window.EMLAK_PROXY_MODE)h['X-Tenant-Key']=TENANT.key;return h;})(),body:JSON.stringify(body||{})});
     if(!res.ok)throw new Error('ProX '+res.status);return await res.json();}catch(e){return {fallback:true};}
 }
 async function _deepseek(sys,msgs){var key=_dsKey();if(!key)return null;

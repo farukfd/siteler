@@ -401,11 +401,13 @@
 <script src="js/tr-iller.js?v=2"></script>
 <script src="js/portfoy-visuals.js?v=1"></script>
 <script>
+window.EMLAK_PROXY_MODE=window.EMLAK_PROXY_MODE!==false;/* güvenlik: proxy modunda anahtar istemciden GİTMEZ */
+
 /* ============ ProX API ÇEKİRDEĞİ ============ */
 var EMLAK_API_BASE="https://www.emlakekspertizi.com";
 var EMLAK_TENANT={tenant_id:"consultant",tenant_key:""};
 try{var _dp=JSON.parse(localStorage.getItem('dn_prox')||'null');if(_dp&&_dp.key){EMLAK_TENANT.tenant_key=_dp.key;if(_dp.tenant)EMLAK_TENANT.tenant_id=_dp.tenant;}}catch(e){}
-async function proxApi(path){try{var res=await fetch(EMLAK_API_BASE+path,{method:"GET",mode:"cors",headers:{"Content-Type":"application/json","X-Tenant-Id":EMLAK_TENANT.tenant_id,"X-Tenant-Key":EMLAK_TENANT.tenant_key}});if(!res.ok)throw new Error("ProX "+res.status);return await res.json();}catch(e){return {fallback:true,_err:e.message};}}
+async function proxApi(path){try{var res=await fetch(EMLAK_API_BASE+path,{method:"GET",mode:"cors",headers:(function(){var h={"Content-Type":"application/json","X-Tenant-Id":EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h["X-Tenant-Key"]=EMLAK_TENANT.tenant_key;return h;})()});if(!res.ok)throw new Error("ProX "+res.status);return await res.json();}catch(e){return {fallback:true,_err:e.message};}}
 var TR_ILILCE=window.TR_ILILCE||{};
 function adminPrimaryIl(){try{var sa=JSON.parse(localStorage.getItem('dn_service_area')||'null');if(sa&&sa.primary&&TR_ILILCE[sa.primary])return sa.primary;}catch(e){}return 'İstanbul';}
 var _c={};
@@ -577,7 +579,7 @@ function ozTalepSubmit(viaWa){
   var parts=['📍 '+loc];if(oda)parts.push('Oda '+oda);if(butce)parts.push('Bütçe '+butce);if(not)parts.push(not);
   var msg=parts.join(' · ');
   ozLeadStore({name:ad,phone:tel.replace(/[^\d+]/g,''),konu:konu,msg:msg,src:(OZ_TALEP.ozel?'Özel Portföy Talebi':'Bölge Talebi')});
-  try{fetch(EMLAK_API_BASE+'/api/v1/tenant/lead',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id,'X-Tenant-Key':EMLAK_TENANT.tenant_key},body:JSON.stringify({name:ad,phone:tel,konu:konu,mesaj:msg,il:k.il,ilce:k.ilce,mahalle:k.mah,cadde:cadde,islem:islem,tip:tip,butce:butce,oda:oda,kaynak:'ozel-portfoy'})}).catch(function(){});}catch(e){}
+  try{fetch(EMLAK_API_BASE+'/api/v1/tenant/lead',{method:'POST',mode:'cors',headers:(function(){var h={'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h['X-Tenant-Key']=EMLAK_TENANT.tenant_key;return h;})(),body:JSON.stringify({name:ad,phone:tel,konu:konu,mesaj:msg,il:k.il,ilce:k.ilce,mahalle:k.mah,cadde:cadde,islem:islem,tip:tip,butce:butce,oda:oda,kaynak:'ozel-portfoy'})}).catch(function(){});}catch(e){}
   if(viaWa){var wt='Merhaba, '+loc+' bölgesinde '+(islem==='kiralik'?'kiralık':'satılık')+' '+tip+' arıyorum.'+(oda?(' Oda: '+oda+'.'):'')+(butce?(' Bütçe: '+butce+'.'):'')+(not?(' '+not):'')+' — '+ad+' ('+tel+')';window.open('https://wa.me/'+ozWaNum()+'?text='+encodeURIComponent(wt),'_blank');}
   ozTalepDone(viaWa);
 }
@@ -635,7 +637,7 @@ var _azCache={};
 async function fetchAnalyze(il,ilce,mah){
   var k='az|'+[il,ilce,mah||''].join('|');if(_azCache[k]!==undefined)return _azCache[k];var out=null;
   try{var pc=_pcLoad(),e=pc[k];if(e&&e.ts&&(Date.now()-e.ts)<PROX_TTL){_azCache[k]=e.v;return e.v;}}catch(e2){}
-  try{var r=await fetch(EMLAK_API_BASE+'/api/v1/tenant/prox/analyze',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id,'X-Tenant-Key':EMLAK_TENANT.tenant_key},body:JSON.stringify({il:il,ilce:ilce,mahalle:mah||'',kategori:'konut',durum:'satilik',brut_m2:90,attrs:{}})});
+  try{var r=await fetch(EMLAK_API_BASE+'/api/v1/tenant/prox/analyze',{method:'POST',mode:'cors',headers:(function(){var h={'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h['X-Tenant-Key']=EMLAK_TENANT.tenant_key;return h;})(),body:JSON.stringify({il:il,ilce:ilce,mahalle:mah||'',kategori:'konut',durum:'satilik',brut_m2:90,attrs:{}})});
     var j=await r.json();
     if(j&&j.success===true){var rg=j.range||{};out={strong:+j.strongest_value||0,min:+rg.min_value||0,max:+rg.max_value||0,spread:+rg.spread_pct||0,conf:(isFinite(+j.confidence)?+j.confidence:null),band:j.confidence_band||'',yon:j.piyasa_yonu||'',pazarlik:(isFinite(+j.pazarlik_payi_pct)?+j.pazarlik_payi_pct:null),ozet:j.karar_ozeti||'',veri:+j.veri_adedi||0};}
   }catch(e){}_azCache[k]=out;if(out)_pcPut(k,out);return out;
@@ -1469,7 +1471,7 @@ if(document.readyState!=='loading')ozInit();else document.addEventListener('DOMC
   var _inst=null, ISTIL='İstanbul';
   function districts(){ var d={}; try{ var T=(window.TR_ILILCE&&TR_ILILCE[ISTIL])||null; if(T&&T.ilce)T.ilce.forEach(function(ic){ if(!/il Merkezi|^Merkez$/.test(ic))d[ic]=[]; }); }catch(e){} return d; }
   function mProx(u,o){ try{
-    if(o&&o.method==='POST'){ return fetch(EMLAK_API_BASE+u,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id,'X-Tenant-Key':EMLAK_TENANT.tenant_key},body:JSON.stringify(o.body||{})}).then(function(r){return r.ok?r.json():{fallback:true};}).catch(function(){return {fallback:true};}); }
+    if(o&&o.method==='POST'){ return fetch(EMLAK_API_BASE+u,{method:'POST',mode:'cors',headers:(function(){var h={'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h['X-Tenant-Key']=EMLAK_TENANT.tenant_key;return h;})(),body:JSON.stringify(o.body||{})}).then(function(r){return r.ok?r.json():{fallback:true};}).catch(function(){return {fallback:true};}); }
     return (typeof proxApi==='function')?proxApi(u):Promise.resolve(null);
   }catch(e){return Promise.resolve(null);} }
   function loadMah(il,ilce){ try{ if(typeof fetchMahalleler==='function'){ return Promise.resolve(fetchMahalleler(il,ilce)).then(function(a){ a=Array.isArray(a)?a:((a&&a.mahalleler)||[]); return a.map(function(x){return (x&&(x.ad||x.name||x.mahalle))||x;}).filter(Boolean).slice(0,40); }).catch(function(){return [];}); } }catch(e){} return Promise.resolve([]); }
