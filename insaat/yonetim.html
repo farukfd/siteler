@@ -25,28 +25,8 @@
 </script>
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/chrome.css?v=1"><!-- ana sayfa ile birebir header+footer kabuğu -->
-<script src="js/brand.js?v=2"></script>
-<style>
-  body{margin:0}
-  .nb-x{display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;background:var(--accent);color:#160a03;border-radius:6px;font-weight:800;font-size:.9em;line-height:1;vertical-align:middle;position:relative;top:-1px;margin:0 3px}
-  .il-hero{position:relative;overflow:hidden;background:var(--bg,#0e0f13);border-bottom:1px solid var(--line,#262932);padding:56px 0 44px}
-  .il-hero .il-hbg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(58% 120% at 14% -10%,color-mix(in srgb,var(--accent,#ff7a2f) 30%,transparent),transparent 60%),radial-gradient(46% 100% at 100% 120%,color-mix(in srgb,var(--accent-2,#ffb070) 16%,transparent),transparent 55%)}
-  .il-hero .il-hbg::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:46px 46px;-webkit-mask-image:radial-gradient(72% 100% at 28% 0%,#000,transparent 72%);mask-image:radial-gradient(72% 100% at 28% 0%,#000,transparent 72%)}
-  .il-hero .wrap{position:relative;max-width:1240px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
-  .il-eyebrow{display:inline-flex;align-items:center;gap:8px;font:800 11.5px/1 system-ui;letter-spacing:.09em;text-transform:uppercase;color:var(--accent,#ff7a2f);background:color-mix(in srgb,var(--accent,#ff7a2f) 14%,transparent);border:1px solid color-mix(in srgb,var(--accent,#ff7a2f) 34%,transparent);padding:8px 14px;border-radius:999px}
-  .il-hero h1{font-family:var(--head,inherit);font-weight:800;font-size:clamp(28px,4.6vw,44px);line-height:1.06;letter-spacing:-.02em;margin:18px 0 12px;color:#fff}
-  .il-hero p{max-width:700px;margin:0;color:#c9cfd8;font:500 16px/1.65 system-ui}
-  .doc-wrap{max-width:880px;margin:0 auto;padding:44px clamp(16px,4vw,40px) 24px}
-  .doc-article h2{font-family:var(--head);font-weight:800;font-size:clamp(20px,2.8vw,26px);color:var(--ink);margin:34px 0 12px;letter-spacing:-.01em}
-  .doc-article h2:first-child{margin-top:0}
-  .doc-article h3{font-family:var(--head);font-weight:700;font-size:17.5px;color:var(--ink);margin:24px 0 6px}
-  .doc-article p{color:#c3c9d2;font:400 15.5px/1.8 system-ui;margin:0 0 15px}
-  .doc-article ul{margin:4px 0 18px;padding:0;list-style:none}
-  .doc-article li{position:relative;color:#c3c9d2;font:400 15px/1.65 system-ui;padding:9px 0 9px 28px;border-bottom:1px solid var(--line)}
-  .doc-article li:last-child{border-bottom:0}
-  .doc-article li:before{content:"";position:absolute;left:3px;top:16px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
-  .doc-article b{color:var(--ink);font-weight:700}
-</style>
+<script defer src="js/brand.js?v=2"></script>
+<link rel="stylesheet" href="css/kurumsal-ortak.css?v=1">
 <script>function openTeklif(){location.href='index.html#iletisim'}function openGiris(){location.href='index.html#giris'}function nbLang(){}
 addEventListener('scroll',function(){var h=document.getElementById('hdr');if(h)h.classList.toggle('scrolled',scrollY>24);},{passive:true});</script>
 </head>
@@ -91,21 +71,7 @@ addEventListener('scroll',function(){var h=document.getElementById('hdr');if(h)h
 </div></div>
 
 <!-- ===== DEMO & KURUMSAL BANT (üstten alındı; her sayfada footer üstünde) ===== -->
-<style>
-  .demo-band{background:linear-gradient(180deg,#0b1f38,#0f2740);color:#dbeafe;border-top:1px solid rgba(255,255,255,.1);font-family:system-ui,-apple-system,sans-serif}
-  .demo-band .db-in{max-width:1240px;margin:0 auto;padding:18px clamp(16px,4vw,40px);display:flex;flex-wrap:wrap;align-items:center;gap:16px 26px;justify-content:space-between}
-  .demo-band .db-lead{flex:1 1 320px;min-width:260px}
-  .demo-band .db-badge{display:inline-flex;align-items:center;gap:6px;background:#22c55e;color:#052e16;font-weight:800;font-size:10.5px;letter-spacing:.07em;padding:3px 9px;border-radius:6px;margin-bottom:8px}
-  .demo-band p{margin:0;font-size:13px;line-height:1.55;color:#c7d6ea}
-  .demo-band a{color:#7dd3fc;text-decoration:none;font-weight:600}
-  .demo-band a:hover{text-decoration:underline}
-  .demo-band .db-feats{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
-  .demo-band .db-feats li{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:6px 10px;font-size:11.5px;font-weight:600;color:#e2ecf7;white-space:nowrap}
-  .demo-band .db-wa{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#04240f;padding:10px 15px;border-radius:12px;font-size:12.5px;line-height:1.3;text-decoration:none;white-space:nowrap}
-  .demo-band .db-wa:hover{filter:brightness(1.06);text-decoration:none}
-  .demo-band .db-wa b{font-size:13px;font-weight:800}
-  @media(max-width:640px){.demo-band .db-in{flex-direction:column;align-items:flex-start}.demo-band .db-wa{width:100%;justify-content:center}}
-</style>
+<link rel="stylesheet" href="css/kabuk-ortak.css?v=1">
 <section class="demo-band" aria-label="Demo ve kurumsal bilgi">
   <div class="db-in">
     <div class="db-lead">
@@ -158,7 +124,9 @@ addEventListener('scroll',function(){var h=document.getElementById('hdr');if(h)h
 </div></footer>
 
 <script src="js/insaat-seo-chrome.js" defer></script><!-- ProX Asistan enjekte + lang-sw→footer + auth (diğer sayfalarla aynı kabuk) -->
-<script src="js/i18n/_common.js?v=6"></script><script src="js/i18n/yonetim.js?v=1"></script><script src="js/i18n.js?v=2"></script><!-- 5-dil i18n (TR·EN·RU·ZH·AR) — chrome sözlüğü -->
+<script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
+(function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('in_lang')||'tr';}catch(e){}
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=6"><\/script><script src="js/i18n/yonetim.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=2"></script><!-- 5-dil i18n (TR·EN·RU·ZH·AR) — chrome sözlüğü -->
 
 </body>
 </html>
