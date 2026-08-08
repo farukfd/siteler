@@ -18,4 +18,7 @@
   <url><loc>https://www.emlakekspertizi.com/demo/insaat/gizlilik.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.emlakekspertizi.com/demo/insaat/cerez.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.emlakekspertizi.com/demo/insaat/kullanim-kosullari.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/harita.html</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/insaat/emlak-ekspertizi.html</loc></url>
 </urlset>

@@ -20,3 +20,5 @@ Not: Kurgusal tanıtım demosudur — proje, ilan ve istatistikler temsilîdir.
 
 ## İletişim
 WhatsApp ve telefonla ücretsiz keşif/teklif.
+- [Harita](harita.html): Tüm portföyün gerçek konum haritası; uydu görünümü ve fiyat baloncukları.
+- [Emlak Ekspertizi](emlak-ekspertizi.html): Ücretsiz keşif + ücretsiz Karar Raporu — bölge m² endeksi, güven skoru; SPK lisanslı resmî değerleme yerine geçmez.

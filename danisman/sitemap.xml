@@ -12,4 +12,7 @@
   <url><loc>https://www.emlakekspertizi.com/demo/danisman/kvkk.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.emlakekspertizi.com/demo/danisman/cerez.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.emlakekspertizi.com/demo/danisman/kullanim.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+
+  <url><loc>https://www.emlakekspertizi.com/demo/danisman/harita.html</loc></url>
+  <url><loc>https://www.emlakekspertizi.com/demo/danisman/emlak-ekspertizi.html</loc></url>
 </urlset>
