@@ -917,6 +917,12 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 .bcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius,16px);overflow:hidden;cursor:pointer;transition:.25s;display:flex;flex-direction:column;box-shadow:0 10px 30px -22px rgba(10,53,39,.35)}
 .bcard-media{position:relative;height:150px;background-size:cover;background-position:center;background-color:#e9e4d8}
 .bcard-media .vc-fav{position:absolute;top:10px;right:10px}
+/* Blog/haber görünümleri bandsız — sabit nav'ın altından nefes payıyla başlar */
+.blog-ust{padding-top:118px}
+.bd-head{margin:2px 0 22px}
+.bd-kat{display:inline-block;font-family:var(--body);font-size:.71875rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--gold-ink,#795901);background:rgba(195,155,69,.14);border:1px solid rgba(195,155,69,.32);border-radius:999px;padding:6px 13px;margin-bottom:14px}
+.bd-head h1{font-family:var(--serif);font-size:clamp(1.75rem,3.6vw,2.625rem);line-height:1.16;margin:0 0 10px;color:var(--em-deep,#0a3527)}
+.bd-meta{font-size:.84375rem;color:var(--muted)}
 .bcard:hover{transform:translateY(-5px);border-color:var(--gold-soft);box-shadow:0 26px 50px -30px rgba(10,53,39,.5)}
 .bcard-ic{position:relative;height:120px;display:grid;place-items:center;font-size:2.75rem;background:radial-gradient(90% 120% at 80% 10%,rgba(195,155,69,.18),transparent 55%),var(--grad-em);color:var(--cream-on-em)}
 .bcard-body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
