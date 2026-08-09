@@ -3445,11 +3445,62 @@ function blogFilterCat(btn){try{
 window.blogFilterCat=blogFilterCat;
 /* ProX blog akışı — /api/blog/feed (sunucuda eklenecek; 404→[] fallback). Normalize + cache. */
 var _proxBlogCache=null;
-async function proxBlogFeed(force){if(_proxBlogCache&&!force)return _proxBlogCache;var out=[];
-  try{var r=await proxApi('/api/v1/tenant/blog/feed');
-    if(r&&!r.fallback){var arr=r.posts||r.data||r.items||(Array.isArray(r)?r:[]);
-      out=(arr||[]).map(function(p,i){return {id:'px'+(p.id||i),title:p.title||p.baslik||'',cat:p.cat||p.category||p.kategori||'ProX',sum:p.summary||p.ozet||p.excerpt||(''+(p.body||p.content||'')).slice(0,150),body:p.body||p.content||p.icerik||'',icon:'📰',date:p.date||p.published||'',meta:((p.date||p.published||'')+' · ProX Blog').trim(),src:'prox'};}).filter(function(p){return p.title;});}}catch(e){}
-  _proxBlogCache=out;return out;}
+/* GERÇEK ProX Haber Merkezi akışı — EmlakEkspertizi.com /api/blog/posts (20.000+ gerçek haber).
+   Yayında (demo emlakekspertizi.com/demo/ altında) AYNI ORIGIN → CORS engeli yok; lokalde CORS
+   kapalıysa sessizce boş döner (yerel 40 makale fallback). 10 dk sessionStorage cache. */
+function _gmTarihTR(iso){try{var a=(''+iso).slice(0,10).split('-');var AY=['','Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];return (+a[2])+' '+AY[+a[1]]+' '+a[0];}catch(e){return '';}}
+async function proxBlogFeed(force){if(_proxBlogCache&&!force)return _proxBlogCache;
+  try{var c=JSON.parse(sessionStorage.getItem('gm_pxnews')||'null');if(!force&&c&&c.t>Date.now()-6e5&&c.p&&c.p.length){_proxBlogCache=c.p;return c.p;}}catch(e){}
+  var out=[];
+  try{
+    var r=await fetch(window.EMLAK_API_BASE+'/api/blog/posts?status=published&limit=24',{mode:'cors'});
+    if(r.ok){var j=await r.json();
+      out=(j.posts||[]).filter(function(p){return p.title&&(p.image_url||p.featured_image);}).map(function(p){
+        var d=(p.published_at||p.created_at||'').slice(0,10);
+        return {id:'px_'+(p.slug||p.id),slug:p.slug||'',title:p.title,cat:p.category_name||p.category||'Emlak Haberleri',
+          sum:p.summary||'',cover:p.image_url||p.featured_image||'',date:d,meta:(_gmTarihTR(d)+' · ProX Haber').trim(),
+          author:p.author_name||'EmlakEkspertizi Editör',src:'prox',qs:p.quality_score||0,feat:!!p.is_featured};});
+    }
+  }catch(e){}
+  if(!out.length){/* eski beyaz-etiket tenant ucu — yayına alınırsa otomatik devreye girer */
+    try{var r2=await proxApi('/api/v1/tenant/blog/feed');
+      if(r2&&!r2.fallback){var arr=r2.posts||r2.data||r2.items||(Array.isArray(r2)?r2:[]);
+        out=(arr||[]).map(function(p,i){return {id:'px'+(p.id||i),title:p.title||p.baslik||'',cat:p.cat||p.category||'ProX',sum:p.summary||p.ozet||'',body:p.body||p.content||'',icon:'📰',date:p.date||'',meta:((p.date||'')+' · ProX Blog').trim(),src:'prox'};}).filter(function(p){return p.title;});}}catch(e){}
+  }
+  _proxBlogCache=out;
+  try{if(out.length)sessionStorage.setItem('gm_pxnews',JSON.stringify({t:Date.now(),p:out}));}catch(e){}
+  return out;}
+/* Canlı haber gövdesi — allowlist sanitizer (dış HTML güvenle render edilir) */
+function _gmSaniHaber(html){try{
+  var OK={H2:1,H3:1,H4:1,P:1,UL:1,OL:1,LI:1,STRONG:1,B:1,EM:1,I:1,BR:1,A:1,TABLE:1,THEAD:1,TBODY:1,TR:1,TH:1,TD:1,BLOCKQUOTE:1,IMG:1,FIGURE:1,FIGCAPTION:1};
+  var doc=new DOMParser().parseFromString('<div>'+(html||'')+'</div>','text/html');
+  var kok=doc.body.firstChild,outp=document.createElement('div');
+  (function gez(src,dst){
+    src.childNodes.forEach(function(n){
+      if(n.nodeType===3){dst.appendChild(document.createTextNode(n.nodeValue));return;}
+      if(n.nodeType!==1)return;
+      var t=n.tagName;
+      if(!OK[t]){gez(n,dst);return;}
+      var e=document.createElement(t.toLowerCase());
+      if(t==='A'){var h=n.getAttribute('href')||'';if(/^https?:\/\//i.test(h)){e.setAttribute('href',h);e.setAttribute('target','_blank');e.setAttribute('rel','noopener noreferrer');}}
+      if(t==='IMG'){var s2=n.getAttribute('src')||'';if(!/^https:\/\//i.test(s2))return;e.setAttribute('src',s2);e.setAttribute('alt',n.getAttribute('alt')||'');e.setAttribute('loading','lazy');}
+      gez(n,e);dst.appendChild(e);
+    });
+  })(kok,outp);
+  return outp.innerHTML;
+}catch(e){return '';}}
+/* px_ haberin tam gövdesini çek → sanitize → yeniden render (başarısızsa kaynak-linkli özet) */
+async function _gmHaberDetay(b){
+  try{
+    var r=await fetch(window.EMLAK_API_BASE+'/api/blog/posts/'+encodeURIComponent(b.slug),{mode:'cors'});
+    if(r.ok){var j=await r.json();var p=j.post||j;
+      var ic=_gmSaniHaber(p.content||p.icerik||'');
+      if(ic){b.body=ic;b.author=p.author_name||b.author;}
+      else b._pxErr=1;
+    }else b._pxErr=1;
+  }catch(e){b._pxErr=1;}
+  try{var d=document.getElementById('blogDetailWrap');if(d&&d.style.display!=='none')blogDetail(b.id);}catch(e){}
+}
 /* Zamanlı haberleri otomatik yayınla — BLOGS tabanlı (public sayfalarda studio mount OLMADAN çalışır).
    Master switch: AICFG.schedule.enabled===false ise DURDURULMUŞ → yayınlama (beklet). */
 function csRunSchedule(){try{
@@ -3462,10 +3513,12 @@ function csRunSchedule(){try{
   return pend;
 }catch(e){return 0;}}
 try{window.csRunSchedule=csRunSchedule;}catch(e){}
+/* Ana sayfa haber şeridi + açık blog listesi, canlı ProX akışı gelince tazelenir */
+try{proxBlogFeed().then(function(px){if(px&&px.length){try{if(document.getElementById('blogFeed'))renderBlogFeed();}catch(e){}try{var l=document.getElementById('blogListWrap');if(l&&l.style.display!=='none'&&typeof renderBlogList==='function')renderBlogList();}catch(e){}}}).catch(function(){});}catch(e){}
 function blogAllPosts(){try{if(typeof csRunSchedule==='function')csRunSchedule();}catch(e){}/* zamanı gelen haberleri otomatik yayınla */
   var px=_proxBlogCache||[];var local=(typeof BLOGS!=='undefined'?BLOGS:[]).filter(function(b){return !b.status||b.status==='published';});/* taslak/zamanlı gizli */
   var seen={},all=[];
-  local.concat(px).forEach(function(b){var k=(b.title||'').toLocaleLowerCase('tr');if(k&&!seen[k]){seen[k]=1;all.push(b);}});
+  px.concat(local).forEach(function(b){var k=(b.title||'').toLocaleLowerCase('tr');if(k&&!seen[k]){seen[k]=1;all.push(b);}});/* GERÇEK ProX haberleri önde → manşetler canlı akıştan */
   /* GÖRSELSİZ haberleri kaldır — yalnız kapak/görsel içeren yazılar listelenir (kullanıcı isteği) */
   all=all.filter(function(b){return !!_blogCover(b);});
   /* Beyaz-etiket: kiracı ili İzmir değilse İzmir'e özel küratörlü yazılar gizlenir;
@@ -3565,7 +3618,14 @@ function _bdShare(b){
 function blogDetail(id){var b=blogAllPosts().filter(function(x){return (''+x.id)===(''+id);})[0];if(!b){blogShowList();return;}
   var d=document.getElementById('blogDetailWrap'),l=document.getElementById('blogListWrap');if(l)l.style.display='none';if(d)d.style.display='';
   var body;
-  if(b.blocks&&b.blocks.length&&typeof ContentStudio!=='undefined'&&ContentStudio.blocksToHtml){body=ContentStudio.blocksToHtml(b.blocks);}
+  if(b.src==='prox'&&b.slug&&!b.body){/* canlı haber — tam gövde henüz yok: çek, gelince yeniden render */
+    body='<p class="bd-lead2">'+_be(b.sum||'')+'</p>'+(b._pxErr
+      ?'<p class="bd-srcnote">Haberin tam metni için: <a href="https://www.emlakekspertizi.com/blog/post/'+encodeURIComponent(b.slug)+'" target="_blank" rel="noopener noreferrer">EmlakEkspertizi.com ProX Haber Merkezi →</a></p>'
+      :'<p class="bd-srcwait">Haberin tamamı yükleniyor…</p>');
+    if(!b._pxErr&&!b._pxT){b._pxT=1;_gmHaberDetay(b);}
+  }
+  else if(b.src==='prox'&&b.body){body=b.body;/* _gmSaniHaber'den geçmiş güvenli HTML */}
+  else if(b.blocks&&b.blocks.length&&typeof ContentStudio!=='undefined'&&ContentStudio.blocksToHtml){body=ContentStudio.blocksToHtml(b.blocks);}
   else{var hasMd=/(^|\n)\s*#{1,3}\s|(^|\n)\s*[-*]\s/.test(b.body||'');
     body=(typeof ContentStudio!=='undefined'&&ContentStudio.mdToHtml&&hasMd)?ContentStudio.mdToHtml(b.body)
       :(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p>'+_be(par).replace(/\n/g,'<br>')+'</p>';}).join('');}
@@ -3601,7 +3661,9 @@ function blogDetail(id){var b=blogAllPosts().filter(function(x){return (''+x.id)
     +_bdShare(b)
     +quick+rank+live
     +'<div class="cs-article bd-body">'+body+'</div>'
-    +'<div class="bd-note">🛈 Bu içerik ProX altyapısıyla zenginleştirilir; rakamlar demo/temsilîdir, canlı sürümde ProX endeksinden gelir.</div>'
+    +(b.src==='prox'
+      ?('<div class="bd-note">🛰️ Kaynak: <a href="https://www.emlakekspertizi.com/blog'+(b.slug?('/post/'+encodeURIComponent(b.slug)):'')+'" target="_blank" rel="noopener noreferrer">EmlakEkspertizi.com · ProX Haber Merkezi</a> — veriler ProX gerçek zamanlı endeksinden derlenir.</div>')
+      :'<div class="bd-note">🛈 Bu içerik ProX altyapısıyla zenginleştirilir; rakamlar demo/temsilîdir, canlı sürümde ProX endeksinden gelir.</div>')
     +'<div class="bd-cta"><b>Bu bölgede alım/satım mı düşünüyorsunuz?</b><button class="btn btn-primary" onclick="closeAllOverlays();satScrollForm(\'Blog danışmanlık talebi\')">Ücretsiz Danışmanlık Alın</button></div>'
     +'</article>';
   try{if(typeof ContentStudio!=='undefined'&&ContentStudio.applyArticleSEO)ContentStudio.applyArticleSEO(b);}catch(e){}
