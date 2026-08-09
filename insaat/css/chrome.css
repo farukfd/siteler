@@ -6,6 +6,7 @@
 
 .wrap{max-width:var(--maxw,1240px);margin:0 auto;padding:0 24px}
 .btn{display:inline-flex;align-items:center;gap:9px;padding:13px 22px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;border:0;transition:.2s;font-family:var(--body)}
+.btn:active{transform:scale(.97);transition:transform .1s ease-out}/* §1 Response — pointer-down geri bildirim (apple-design Dalga A) */
 .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--on-accent);box-shadow:var(--shadow-sm)}
 .btn-primary:hover{transform:translateY(-2px)}
 .btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff}

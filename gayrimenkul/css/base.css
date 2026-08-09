@@ -2614,3 +2614,8 @@ a.hk-cc:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0
 .fbolge{padding:10px 0;border-top:1px solid rgba(255,255,255,.08);font-size:12.5px;color:#9db4d8}
 .fbolge b{color:#c9d6ee;font-weight:700;margin-right:6px}
 .fbolge a{color:#9db4d8;text-decoration:none}.fbolge a:hover{color:#fff;text-decoration:underline}
+
+/* §1 Response — pointer-down anlık geri bildirim (apple-design Dalga A); dokunmatikte hover tetiklenmez,
+   basış anında görsel tepki bu kurallardan gelir. Kart aileleri .98, CTA'lar .97 ölçek. */
+.lcard:active,.ozcard:active,.hcard:active,.bpost:active,.rep-card:active,.pcr-card:active,.ars-card:active,.iq-card:active,.kk-spot:active,.dcard:active,.grate:active,.br-mc:active{transform:scale(.98);transition:transform .1s ease-out}
+.pf-hbtn:active{transform:scale(.97);transition:transform .1s ease-out}

@@ -101,7 +101,7 @@
 
 ## Önerilen uygulama sırası
 
-1. **Dalga A — dokunuş hissi (3 site birden, düşük risk):** ortak `:active` kuralları + dn `.btn-primary` tanımı + ins `scroll-behavior` reduced-motion satırı + dn `.vcard` transition birleştirme.
+1. **Dalga A — dokunuş hissi (3 site birden, düşük risk):** ortak `:active` kuralları + dn `.btn-primary` tanımı + ins `scroll-behavior` reduced-motion satırı + dn `.vcard` transition birleştirme. — ✅ **UYGULANDI** (9 Ağu 2026): gm base v68 (12 kart ailesi + .pf-hbtn), dn base v23 (.btn/.dnqc-btn/.nav-links/.nav-giris/.vcard:active + .btn-primary altın-gradyan + tanımsız .btn-blue→zümrüt + .vcard üçlü-transition birleştirildi, tilt artık .16s), ins base v3+chrome v2 (.btn:active her iki kabukta + reduced-motion scroll-behavior:auto). Canlıda styleSheets üzerinden doğrulandı.
 2. **Dalga B — erişilebilirlik medya sorguları (3 site):** `prefers-reduced-transparency` + `prefers-contrast` blokları; ins döngü animasyonlarını reduced-motion kapsamına al.
 3. **Dalga C — çıkış animasyonları:** site başına ortak `.closing` deseni (gm 4 overlay ailesi, dn pageOverlay+modallar, ins 9 overlay + 3 modal).
 4. **Dalga D — performans cilası:** bar'lar scaleX'e, pfTilt/vcard transition çakışmaları, will-change temizliği, blog manşet crossfade.

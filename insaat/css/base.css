@@ -1505,3 +1505,8 @@ body.cookie-on .wa{bottom:86px}
 .grate b{font-size:16px}
 .grate-n{color:#666;font-size:12.5px}
 .grate-demo{font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#b45309;background:rgba(180,83,9,.12);border-radius:6px;padding:3px 7px}
+
+/* §1 Response — pointer-down anlık geri bildirim (apple-design Dalga A) */
+.btn:active{transform:scale(.97);transition:transform .1s ease-out}
+/* §14 Reduced motion — anchor scroll'ları hareketsiz bırak */
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
