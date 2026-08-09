@@ -1510,3 +1510,18 @@ body.cookie-on .wa{bottom:86px}
 .btn:active{transform:scale(.97);transition:transform .1s ease-out}
 /* §14 Reduced motion — anchor scroll'ları hareketsiz bırak */
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* §14 Reduced motion — dekoratif SONSUZ döngü animasyonları durur (apple-design Dalga B);
+   .pa-typing bilinçli hariç (işlevsel "yazıyor" göstergesi). */
+@media (prefers-reduced-motion:reduce){
+  .hero-scroll,.lb-poster:after,.sd-gfx.in .hook,.hs-svc.in .pulse,.hs-svc.in .pop.pulse,.hp-scene.in .pulse,.hp-scene.in .pop.pulse,.bzhero-grid,.bzh-eye i,.pin .ring,.il-hero .il-eyebrow i,.doc-hero .doc-eyebrow i,.faq-eyebrow i{animation:none!important}
+}
+/* §14 Erişilebilirlik — saydamlık/kontrast tercihleri (apple-design Dalga B) */
+@media (prefers-reduced-transparency:reduce){
+  .mnav,.modal,.hero-stats,.card .st,.lb-label,.pd-close,.pp-fav,.ts-tag,.il-map .il-map-tag{-webkit-backdrop-filter:none;backdrop-filter:none}
+  .mnav{background:var(--bg)}
+}
+@media (prefers-contrast:more){
+  .card,.vcard,.pcard{border-color:#5b6372}
+  .btn-ghost{border-width:2px}
+}

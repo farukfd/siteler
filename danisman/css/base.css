@@ -72,6 +72,17 @@ section{position:relative}
 .btn:active,.dnqc-btn:active,.nav-links a.lnk:active,.nav-giris:active{transform:scale(.97);transition:transform .1s ease-out}
 .vcard:active{transform:scale(.98);transition:transform .1s ease-out}
 
+/* §14 Erişilebilirlik — saydamlık/kontrast tercihleri (apple-design Dalga B) */
+@media (prefers-reduced-transparency:reduce){
+  header.nav.scrolled{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--em-deep)}
+  .hero-panel,.vcard-lock,.vc-fav,.adgate-ov,.sta-ov,.sp-ov,.crm-modal-ov{-webkit-backdrop-filter:none;backdrop-filter:none}
+}
+@media (prefers-contrast:more){
+  header.nav.scrolled{border-bottom:2px solid rgba(255,255,255,.55)}
+  .btn-line{border-width:2px}
+  .vcard{border-color:rgba(220,195,137,.45)}
+}
+
 /* ---------- Nav (koyu zümrüt bant) ---------- */
 header.nav{position:fixed;top:0;left:0;right:0;z-index:400;transition:.35s;padding:18px 0;background:transparent}
 header.nav.scrolled{background:rgba(10,53,39,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line-on-em);padding:12px 0;box-shadow:0 14px 40px -26px rgba(6,30,20,.7)}

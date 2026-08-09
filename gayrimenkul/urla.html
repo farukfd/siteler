@@ -204,6 +204,10 @@ nav.main a:hover{color:var(--accent);background:var(--surface)}
 .lang-sw svg{width:16px;height:16px;flex:none}
 .lang-sw select{border:0;background:transparent;color:var(--ink,#0f172a);font:inherit;font-size:13px;font-weight:600;cursor:pointer;outline:none}
 @media(max-width:820px){.lang-sw{display:none}}
+
+/* §14 Erişilebilirlik — saydamlık/kontrast tercihleri (apple-design Dalga B) */
+@media (prefers-reduced-transparency:reduce){header#hdr,.mnav .panel,.mbar{-webkit-backdrop-filter:none;backdrop-filter:none;background:#fff}}
+@media (prefers-contrast:more){header#hdr{border-bottom:2px solid var(--ink,#0f172a)}.btn-line{border-width:2px}}
 </style>
 
 <link rel="canonical" href="https://www.emlakekspertizi.com/demo/gayrimenkul/urla.html">

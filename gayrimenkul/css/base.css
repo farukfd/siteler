@@ -2619,3 +2619,16 @@ a.hk-cc:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0
    basış anında görsel tepki bu kurallardan gelir. Kart aileleri .98, CTA'lar .97 ölçek. */
 .lcard:active,.ozcard:active,.hcard:active,.bpost:active,.rep-card:active,.pcr-card:active,.ars-card:active,.iq-card:active,.kk-spot:active,.dcard:active,.grate:active,.br-mc:active{transform:scale(.98);transition:transform .1s ease-out}
 .pf-hbtn:active{transform:scale(.97);transition:transform .1s ease-out}
+
+/* §14 Erişilebilirlik — saydamlık/kontrast tercihleri (apple-design Dalga B).
+   reduced-transparency: translucent chrome donuklaşır (blur kalkar, zemin opaklaşır);
+   contrast: chrome çizgileri ve çizgili butonlar belirginleşir. */
+@media (prefers-reduced-transparency:reduce){
+  header#hdr,.mnav .panel,.mbar,.ek-nav,.br-hd,#portfoyPage .pf-subnav .inner{-webkit-backdrop-filter:none;backdrop-filter:none;background:#fff}
+  .modal .mbox,.ct-modal,#saasPortalModal .sp-card,.br-hcard,.ek-hero-band .ek-stat{-webkit-backdrop-filter:none;backdrop-filter:none}
+}
+@media (prefers-contrast:more){
+  header#hdr,.br-hd,.ek-nav{border-bottom:2px solid var(--ink,#0f172a)}
+  .mbar{border-top:2px solid var(--ink,#0f172a)}
+  .btn-line{border-width:2px}
+}
