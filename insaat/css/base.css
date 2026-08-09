@@ -1536,3 +1536,37 @@ body.cookie-on .wa{bottom:86px}
 .modal.open .box{animation:insMdIn .26s cubic-bezier(.2,.7,.3,1)}
 .modal.closing{display:flex;animation:insOvOut .18s ease-in forwards;pointer-events:none}
 .modal.closing .box{animation:insMdOut .18s ease-in forwards}
+
+/* ===== GÜNÜN MANŞETİ (gm portu — dark carousel + yan manşetler; İNŞAAT paleti: kahve-siyah zemin + amber vurgu) ===== */
+.man-sec{background:linear-gradient(160deg,#1a1205,#140e04);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:16px 18px 16px;margin-bottom:24px;color:#e9f0fb}
+.man-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.man-head h2{font-family:var(--head);font-weight:800;font-size:1.1875rem;color:#fff;margin:0}
+.man-head h2 .hl{color:#ffb066}
+.man-count{font-size:.78125rem;color:#9db4d8}
+.man-wrap{display:grid;grid-template-columns:1.55fr 1fr;gap:18px}
+@media(max-width:900px){.man-wrap{grid-template-columns:1fr}}
+.man-big{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.man-big-cov{position:relative;height:228px;background-size:cover;background-position:center;background-color:#171006}
+.man-big-cov.bi{display:grid;place-items:center}.man-big-cov.bi .bemoji{font-size:4rem}
+.man-big-cov::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,18,5,.12),rgba(26,18,5,.62))}
+.man-counter{position:absolute;top:12px;right:14px;z-index:2;font-family:var(--num,inherit);font-weight:700;font-size:.75rem;color:#fff;background:rgba(26,18,5,.6);padding:5px 11px;border-radius:99px}
+.man-cat{position:absolute;left:14px;bottom:14px;z-index:2;font-family:var(--head);font-size:.6875rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--on-accent,#1a1205);background:#ffb066;padding:5px 12px;border-radius:99px}
+.man-arrow{position:absolute;top:42%;transform:translateY(-50%);z-index:3;width:40px;height:40px;border-radius:50%;border:0;background:rgba(26,18,5,.55);color:#fff;font-size:1.5rem;line-height:1;cursor:pointer;display:grid;place-items:center;transition:.15s}
+.man-arrow:hover{background:var(--accent)}
+.man-arrow.prev{left:12px}.man-arrow.next{right:12px}
+.man-big-body{padding:14px 18px 6px;cursor:pointer}
+.man-big-body h3{font-family:var(--head);font-weight:800;font-size:clamp(1.0625rem,2vw,1.375rem);line-height:1.2;color:#fff;margin:0 0 6px}
+.man-big-body p{color:#b9c8de;font-size:.84375rem;line-height:1.5;margin:0 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.man-date{font-size:.75rem;color:#8ba0c4}
+.man-pag{display:flex;flex-wrap:wrap;gap:5px;padding:10px 16px 4px;border-top:1px solid rgba(255,255,255,.08);margin-top:6px}
+.man-dot{min-width:26px;height:26px;border-radius:7px;border:1px solid rgba(255,255,255,.16);background:transparent;color:#9db4d8;font-family:var(--num,inherit);font-weight:700;font-size:.75rem;cursor:pointer;transition:.14s;padding:0 2px}
+.man-dot:hover{border-color:#ffb066;color:#fff}
+.man-dot.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.man-side{display:flex;flex-direction:column;gap:12px}
+.man-side-c{display:flex;gap:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:13px;overflow:hidden;padding:10px;cursor:pointer;transition:.15s;flex:1;align-items:center}
+.man-side-c:hover{border-color:#ffb066;background:rgba(255,176,102,.08)}
+.man-side-th{width:96px;height:74px;flex:none;border-radius:9px;background-size:cover;background-position:center;background-color:#171006}
+.man-side-th.bi{display:grid;place-items:center;color:#fff}.man-side-th.bi .bemoji{font-size:1.625rem}
+.man-side-b{display:flex;flex-direction:column;gap:5px;min-width:0}
+.man-side-cat{font-family:var(--head);font-size:.625rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#ffb066}
+.man-side-t{font-family:var(--head);font-weight:700;font-size:.84375rem;line-height:1.3;color:#eaf1fb;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}

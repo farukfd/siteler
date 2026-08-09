@@ -546,12 +546,16 @@ window.openOnboarding=openOnboarding;window.obGo=obGo;window.obClose=obClose;win
 /* Footer/başka sayfa → index.html#hash ile overlay aç (birebir footer için) */
 function _dnHashOpen(){var h=location.hash;try{
   if(h==='#kur')openOnboarding();
-  else if(h==='#blog'&&typeof navGo==='function')navGo('blog');
+  else if((h==='#blog'||h.indexOf('#blog/')===0)&&typeof navGo==='function'){
+    var _bid=h.indexOf('#blog/')===0?h.slice(6):'';
+    navGo('blog');
+    if(_bid)setTimeout(function(){try{dnBlogDetail(decodeURIComponent(_bid));}catch(e){}},350);
+  }
   else if(h==='#randevu'&&typeof navGo==='function')navGo('randevu');
   else if(h==='#admin'&&typeof openAdminGate==='function')openAdminGate();
 }catch(e){}}
 window.addEventListener('hashchange',_dnHashOpen);
-window.addEventListener('load',function(){try{var h=location.hash;if(h==='#kur'||h==='#blog'||h==='#randevu'||h==='#admin')setTimeout(function(){_dnHashOpen();try{document.documentElement.classList.remove('ov-pre');}catch(e){}},480);}catch(e){}});
+window.addEventListener('load',function(){try{var h=location.hash;if(h==='#kur'||h==='#blog'||h.indexOf('#blog/')===0||h==='#randevu'||h==='#admin')setTimeout(function(){_dnHashOpen();try{document.documentElement.classList.remove('ov-pre');}catch(e){}},480);}catch(e){}});
 function initSaaSTheme(){const r=document.documentElement.style;const a=saasResolve('accent'),a2=saasResolve('accent2'),as=saasResolve('accentSoft');
   if(a){r.setProperty('--accent',a);r.setProperty('--gold',a);
     /* accent → imza altın ailesi + gradyan (--grad-gold TÜM .mark/.btn-gold'u sürer) */
@@ -822,45 +826,140 @@ const DN_BLOGS=[
   {"id": "a11", "cat": "Piyasa", "icon": "📊", "title": "Bağdat Caddesi Lüks Konut Rehberi", "date": "2026-05-17", "meta": "2 dk okuma · May 2026", "src": "firma", "sum": "Bağdat Caddesi hattında lüks konut piyasasını inceliyoruz: fiyat trendleri, semt bazlı değerlendirme ve yatırım fırsatları.", "body": "## Bağdat Caddesi Hattı: Anadolu Yakası'nın Yıldızı\n\nİstanbul'un Anadolu Yakası denildiğinde akla ilk gelen lokasyonlardan biri, şüphesiz Bağdat Caddesi ve çevresidir. Kadıköy'den Maltepe'ye uzanan bu yaklaşık 14 kilometrelik hat, yalnızca bir alışveriş aksı değil; aynı zamanda üst segment konut piyasasının en dinamik bölgelerinden biridir. Son beş yılda artan arsa değerleri, yenilenen projeler ve değişen yaşam talepleri, bu hattı lüks konut yatırımcılarının odağına yerleştirmiştir.\n\nBu makalede, Bağdat Caddesi hattındaki lüks konut piyasasını; fiyat dinamikleri, popüler alt bölgeler, yatırım getirileri ve gelecek projeksiyonları açısından detaylı biçimde ele alıyoruz. Amacımız, hem satın almayı düşünen son kullanıcılar hem de portföyünü büyütmek isteyen yatırımcılar için güncel ve güvenilir bir perspektif sunmaktır.\n\n## Hattın Kırılım Noktaları: Semt Bazlı Fiyat Analizi\n\nBağdat Caddesi hattı, her biri farklı karaktere sahip mahallelerden oluşur. Göztepe, Caddebostan ve Suadiye; hattın en bilinen ve en yüksek birim fiyatlarına sahip bölgeleri olarak öne çıkar. Bu bölgelerde deniz manzaralı, yeni yapılmış rezidansların metrekare satış fiyatları, bölgeden bölgeye geniş bir aralıkta değişmektedir. Özellikle Caddebostan'da, caddeye sıfır konumda bulunan, 3+1 ve 4+1 düzenindeki lüks daireler, hem yabancı yatırımcıların hem de yerli alıcıların ilk tercihleri arasındadır.\n\nBiraz daha iç kesimlerde, Erenköy ve Sahrayıcedid'de ise fiyatlar daha dengeli bir seyir izler. Bu bölgelerde, çevredeki premium hatta kıyasla daha uygun fiyat seviyelerinde, geniş bahçeli müstakil evler ve az katlı butik apartman daireleri bulmak mümkündür. Erenköy'ün imar durumu, yeni projelere açık olması nedeniyle yakın gelecekte değer artışı potansiyeli en yüksek alt bölgelerden biri olarak değerlendirilmektedir.\n\n## Yeni Projeler ve Dönüşen Mahalleler\n\nSon üç yılda Öğüt Sokak, Şaşkınbakkal ve Bostancı'nın sahil bandında ciddi bir yenilenme yaşandı. Eski yapılar yerini, spa alanları, kapalı otopark ve akıllı ev sistemleriyle donatılmış modern rezidanslara bırakıyor. Bu dönüşüm, bölgedeki arsa değerlerini de tetiklemiş durumda. Özellikle Bostancı'da, denize sıfır konumdaki imar parsellerinde, lüks konut segmentinin gelecek iki yıl içinde en çok büyüyeceği projelerin hayata geçmesi bekleniyor.\n\nDikkat çeken bir diğer nokta ise butik projelerin yükselişi. Bağdat Caddesi hattında, büyük ölçekli rezidanslardan çok,", "img": {"url": "img/blog/d20.jpg", "alt": "Facade apartment building city brown", "credit": "Openverse · Openverse", "creditUrl": "https://www.rawpixel.com/image/3290406/free-photo-image-cc0-pattern-brick-apartment"}}
 ];
 var _dnBlogCache=null;
-/* ProX haber/blog akışı — /api/v1/tenant/blog/feed (ProX API anahtarıyla; uç yoksa []→yalnız yerel). */
+/* GERÇEK ProX Haber Merkezi akışı — EmlakEkspertizi.com /api/blog/posts (20.000+ gerçek haber).
+   Yayında (demo emlakekspertizi.com/demo/ altında) AYNI ORIGIN → CORS engeli yok; lokalde CORS
+   kapalıysa sessizce boş döner (yerel DN_BLOGS fallback). 10 dk sessionStorage cache. */
+function _dnTarihTR(iso){try{var a=(''+iso).slice(0,10).split('-');var AY=['','Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];return (+a[2])+' '+AY[+a[1]]+' '+a[0];}catch(e){return '';}}
 async function proxBlogFeed(force){
-  if(_dnBlogCache&&!force)return _dnBlogCache;var out=[];
-  try{var r=await proxApi('/api/v1/tenant/blog/feed');
-    if(r&&!r.fallback){var arr=r.posts||r.data||r.items||(Array.isArray(r)?r:[]);
-      out=(arr||[]).map(function(p,i){var bd=p.body||p.content||p.icerik||'';return {id:'px'+(p.id||i),title:p.title||p.baslik||'',cat:p.cat||p.category||p.kategori||'ProX Haber',sum:p.summary||p.ozet||p.excerpt||(''+bd).slice(0,150),body:bd,icon:'📰',date:p.date||p.published||'',meta:((p.date||p.published||'')+' · ProX Haber').trim(),src:'prox'};}).filter(function(p){return p.title;});}
+  if(_dnBlogCache&&!force)return _dnBlogCache;
+  try{var c=JSON.parse(sessionStorage.getItem('dn_pxnews')||'null');if(!force&&c&&c.t>Date.now()-6e5&&c.p&&c.p.length){_dnBlogCache=c.p;return c.p;}}catch(e){}
+  var out=[];
+  try{
+    var r=await fetch((window.EMLAK_API_BASE||'https://www.emlakekspertizi.com')+'/api/blog/posts?status=published&limit=24',{mode:'cors'});
+    if(r.ok){var j=await r.json();
+      out=(j.posts||[]).filter(function(p){return p.title&&(p.image_url||p.featured_image);}).map(function(p){
+        var d=(p.published_at||p.created_at||'').slice(0,10);
+        return {id:'px_'+(p.slug||p.id),slug:p.slug||'',title:p.title,cat:p.category_name||p.category||'Emlak Haberleri',
+          sum:p.summary||'',cover:p.image_url||p.featured_image||'',date:d,meta:(_dnTarihTR(d)+' · ProX Haber').trim(),
+          author:p.author_name||'EmlakEkspertizi Editör',src:'prox',qs:p.quality_score||0,feat:!!p.is_featured};});
+    }
   }catch(e){}
-  _dnBlogCache=out;return out;}
+  if(!out.length){/* eski beyaz-etiket tenant ucu — yayına alınırsa otomatik devreye girer */
+    try{var r2=await proxApi('/api/v1/tenant/blog/feed');
+      if(r2&&!r2.fallback){var arr=r2.posts||r2.data||r2.items||(Array.isArray(r2)?r2:[]);
+        out=(arr||[]).map(function(p,i){var bd=p.body||p.content||p.icerik||'';return {id:'px'+(p.id||i),title:p.title||p.baslik||'',cat:p.cat||p.category||p.kategori||'ProX Haber',sum:p.summary||p.ozet||p.excerpt||(''+bd).slice(0,150),body:bd,icon:'📰',date:p.date||p.published||'',meta:((p.date||p.published||'')+' · ProX Haber').trim(),src:'prox'};}).filter(function(p){return p.title;});}}catch(e){}
+  }
+  _dnBlogCache=out;
+  try{if(out.length)sessionStorage.setItem('dn_pxnews',JSON.stringify({t:Date.now(),p:out}));}catch(e){}
+  return out;}
+/* Canlı haber gövdesi — allowlist sanitizer (dış HTML güvenle render edilir) */
+function _dnSaniHaber(html){try{
+  var OK={H2:1,H3:1,H4:1,P:1,UL:1,OL:1,LI:1,STRONG:1,B:1,EM:1,I:1,BR:1,A:1,TABLE:1,THEAD:1,TBODY:1,TR:1,TH:1,TD:1,BLOCKQUOTE:1,IMG:1,FIGURE:1,FIGCAPTION:1};
+  var doc=new DOMParser().parseFromString('<div>'+(html||'')+'</div>','text/html');
+  var kok=doc.body.firstChild,outp=document.createElement('div');
+  (function gez(src,dst){
+    src.childNodes.forEach(function(n){
+      if(n.nodeType===3){dst.appendChild(document.createTextNode(n.nodeValue));return;}
+      if(n.nodeType!==1)return;
+      var t=n.tagName;
+      if(!OK[t]){gez(n,dst);return;}
+      var e=document.createElement(t.toLowerCase());
+      if(t==='A'){var h=n.getAttribute('href')||'';if(/^https?:\/\//i.test(h)){e.setAttribute('href',h);e.setAttribute('target','_blank');e.setAttribute('rel','noopener noreferrer');}}
+      if(t==='IMG'){var s2=n.getAttribute('src')||'';if(!/^https:\/\//i.test(s2))return;e.setAttribute('src',s2);e.setAttribute('alt',n.getAttribute('alt')||'');e.setAttribute('loading','lazy');}
+      gez(n,e);dst.appendChild(e);
+    });
+  })(kok,outp);
+  return outp.innerHTML;
+}catch(e){return '';}}
+/* px_ haberin tam gövdesini çek → sanitize → yeniden render (başarısızsa kaynak-linkli özet) */
+async function _dnHaberDetay(b){
+  try{
+    var r=await fetch((window.EMLAK_API_BASE||'https://www.emlakekspertizi.com')+'/api/blog/posts/'+encodeURIComponent(b.slug),{mode:'cors'});
+    if(r.ok){var j=await r.json();var p=j.post||j;
+      var ic=_dnSaniHaber(p.content||p.icerik||'');
+      if(ic){b.body=ic;b.author=p.author_name||b.author;}
+      else b._pxErr=1;
+    }else b._pxErr=1;
+  }catch(e){b._pxErr=1;}
+  try{var ov=document.getElementById('pageOverlay');if(ov&&ov.classList.contains('on'))dnBlogDetail(b.id);}catch(e){}
+}
 function dnBlogAll(){try{dnRunSchedule();}catch(e){}var px=_dnBlogCache||[];var seen={},all=[];
   var arts=[];try{arts=dnArts().filter(function(a){return a.status==='published'||!a.status;}).map(function(a){return {id:a.id,cat:a.cat||'Haber',icon:a.icon||'📝',title:a.title,date:a.date,meta:a.meta||(((a.words||'')&&(a.words+' kelime · '))+(a.date||'')),src:'firma',sum:a.sum||'',body:a.body||'',blocks:a.blocks,video:a.video,img:a.img,tags:a.tags,seo:a.seo};});}catch(e){}
-  arts.concat(DN_BLOGS).concat(px).forEach(function(b){var k=(b.title||'').toLocaleLowerCase('tr');if(k&&!seen[k]){seen[k]=1;all.push(b);}});return all;}
+  arts.concat(px).concat(DN_BLOGS).forEach(function(b){var k=(b.title||'').toLocaleLowerCase('tr');if(k&&!seen[k]){seen[k]=1;all.push(b);}});return all;}
 function dnBlogById(id){var a=dnBlogAll();for(var i=0;i<a.length;i++){if((''+a[i].id)===(''+id))return a[i];}return null;}
-function _dnBlogCard(b){var mImg=(b.img&&b.img.url)?b.img.url:'';return '<article class="bcard" onclick="dnBlogDetail(\''+_leD(b.id)+'\')">'
+function _dnBlogCard(b){var mImg=(b.img&&b.img.url)||b.cover||'';return '<article class="bcard" onclick="dnBlogDetail(\''+_leD(b.id)+'\')">'
   +(mImg?('<div class="bcard-media" style="background-image:url(\''+_leD(mImg)+'\')" role="img" aria-label="'+_leD((b.img&&b.img.alt)||b.title||'')+'">'+_favBtn('bl-'+b.id,'blog',{t:b.title,s:(b.cat||'')+' · '+(b.meta||''),p:'',u:'index.html#blog'})+'</div>')
         :('<div class="bcard-ic">'+(b.icon||'📄')+_favBtn('bl-'+b.id,'blog',{t:b.title,s:(b.cat||'')+' · '+(b.meta||''),p:'',u:'index.html#blog'})+'</div>'))
   +'<div class="bcard-body"><div class="bcard-cat">'+_leD(b.cat||'Genel')+(b.src==='prox'?' · <b class="bcard-prox">Pro<span>X</span></b>':'')+'</div>'
   +'<h3>'+_leD(b.title||'')+'</h3><p>'+_leD(b.sum||'')+'</p>'
   +'<div class="bcard-meta"><span>'+_leD(b.meta||'')+'</span><span class="bcard-go">Oku →</span></div></div></article>';}
-function dnBlogListHTML(){var posts=dnBlogAll();return '<section class="sec-pad"><div class="wrap"><div class="bgrid" id="dnBlogGrid">'+posts.map(_dnBlogCard).join('')+'</div>'
+/* GÜNÜN MANŞETİ — carousel + yan manşetler (gm portu). Havuz: görseli olan ilk 20 yazı. */
+var _dnManIdx=0;
+function _dnManPool(){var p=dnBlogAll().filter(function(b){return !!((b.img&&b.img.url)||b.cover);});return p.slice(0,Math.min(p.length,20));}
+function _dnManSideCard(b){var cov=(b.img&&b.img.url)||b.cover||'';
+  return '<article class="man-side-c" role="link" tabindex="0" onclick="dnBlogDetail(\''+_leD(b.id)+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();dnBlogDetail(\''+_leD(b.id)+'\')}">'
+    +(cov?'<span class="man-side-th" style="background-image:url(\''+_leD(cov)+'\')"></span>':'<span class="man-side-th bi n1"><span class="bemoji">'+_leD(b.icon||'📄')+'</span></span>')
+    +'<span class="man-side-b"><span class="man-side-cat">'+_leD(b.cat||'Haber')+'</span><span class="man-side-t">'+_leD(b.title)+'</span></span></article>';
+}
+function _dnMansetHTML(){
+  var man=_dnManPool();if(!man.length)return '';
+  if(_dnManIdx>=man.length||_dnManIdx<0)_dnManIdx=0;
+  var b=man[_dnManIdx],cov=(b.img&&b.img.url)||b.cover||'';
+  var big='<article class="man-big">'
+    +'<div class="man-big-cov'+(cov?'':' bi n1')+'"'+(cov?' style="background-image:url(\''+_leD(cov)+'\')"':'')+'>'
+      +(cov?'':'<span class="bemoji">'+_leD(b.icon||'📄')+'</span>')
+      +'<span class="man-counter">'+(_dnManIdx+1)+' / '+man.length+'</span>'
+      +'<button type="button" class="man-arrow prev" onclick="dnManGo('+(_dnManIdx-1)+')" aria-label="Önceki manşet">‹</button>'
+      +'<button type="button" class="man-arrow next" onclick="dnManGo('+(_dnManIdx+1)+')" aria-label="Sonraki manşet">›</button>'
+      +'<span class="man-cat">'+_leD(b.cat||'Haber')+'</span>'
+    +'</div>'
+    +'<div class="man-big-body" role="link" tabindex="0" onclick="dnBlogDetail(\''+_leD(b.id)+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();dnBlogDetail(\''+_leD(b.id)+'\')}">'
+      +'<h3>'+_leD(b.title)+'</h3><p>'+_leD(b.sum||'')+'</p><span class="man-date">🕒 '+_leD(b.meta||'')+'</span></div>'
+    +'<div class="man-pag">'+man.map(function(x,i){return '<button type="button" class="man-dot'+(i===_dnManIdx?' on':'')+'" onclick="dnManGo('+i+')">'+(i+1)+'</button>';}).join('')+'</div>'
+    +'</article>';
+  var side='<aside class="man-side">'+[1,2,3].map(function(k){return _dnManSideCard(man[(_dnManIdx+k)%man.length]);}).join('')+'</aside>';
+  return '<section class="man-sec"><div class="man-head"><h2><span class="hl">Günün</span> Manşeti</h2><span class="man-count">'+man.length+' başlık · ProX seçimi</span></div><div class="man-wrap">'+big+side+'</div></section>';
+}
+/* manşet geçişi teleport yerine kısa crossfade (reduced-motion'da anında) */
+function dnManGo(i){var man=_dnManPool();if(!man.length)return;_dnManIdx=((i%man.length)+man.length)%man.length;var host=document.querySelector('.man-sec');if(!host)return;
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches){host.outerHTML=_dnMansetHTML();return;}
+  host.style.transition='opacity .16s ease';host.style.opacity='0';
+  setTimeout(function(){var h=document.querySelector('.man-sec');if(!h)return;h.outerHTML=_dnMansetHTML();var y=document.querySelector('.man-sec');
+    if(y){y.style.opacity='0';y.style.transition='opacity .2s ease';requestAnimationFrame(function(){requestAnimationFrame(function(){y.style.opacity='1';});});}},170);}
+window.dnManGo=dnManGo;
+function dnBlogListHTML(){var posts=dnBlogAll();return '<section class="sec-pad"><div class="wrap">'+_dnMansetHTML()+'<div class="bgrid" id="dnBlogGrid">'+posts.map(_dnBlogCard).join('')+'</div>'
   +'<div class="vault-note" style="margin-top:36px">📰 Güncel haber ve analizler <b>ProX doğrulanmış emlak verisiyle</b> beslenir · üye iseniz beğendiğiniz yazıyı <b>favorilerinize</b> ekleyebilirsiniz.</div></div></section>';}
 function dnBlogDetail(id){var b=dnBlogById(id);if(!b){navGo('blog');return;}
   var body;
-  if(b.blocks&&b.blocks.length&&window.ContentStudio&&ContentStudio.blocksToHtml){body=ContentStudio.blocksToHtml(b.blocks);}
+  if(b.src==='prox'&&b.slug&&!b.body){/* canlı haber — tam gövde henüz yok: çek, gelince yeniden render */
+    body='<p style="margin:0 0 17px">'+_leD(b.sum||'')+'</p>'+(b._pxErr
+      ?'<p class="bd-srcnote">Haberin tam metni için: <a href="https://www.emlakekspertizi.com/blog/post/'+encodeURIComponent(b.slug)+'" target="_blank" rel="noopener noreferrer">EmlakEkspertizi.com ProX Haber Merkezi →</a></p>'
+      :'<p class="bd-srcwait">Haberin tamamı yükleniyor…</p>');
+    if(!b._pxErr&&!b._pxT){b._pxT=1;_dnHaberDetay(b);}
+  }
+  else if(b.src==='prox'&&b.body){body=b.body;/* _dnSaniHaber'den geçmiş güvenli HTML */}
+  else if(b.blocks&&b.blocks.length&&window.ContentStudio&&ContentStudio.blocksToHtml){body=ContentStudio.blocksToHtml(b.blocks);}
   else if(window.ContentStudio&&ContentStudio.mdToHtml&&/(^|\n)\s*(#{1,3}\s|[-*]\s|>\s)|\*\*|!\[/.test(b.body||'')){body=ContentStudio.mdToHtml(b.body||'');}
   else{body=(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p style="margin:0 0 17px">'+_leD(par).replace(/\n/g,'<br>')+'</p>';}).join('');}
-  var cover=(b.img&&b.img.url)?'<figure class="blog-cover" style="margin:0 0 22px"><img src="'+_leD(b.img.url)+'" alt="'+_leD(b.img.alt||b.title||'')+'" style="width:100%;border-radius:14px;display:block">'+(b.img.credit?'<figcaption style="font-size:.75rem;color:var(--muted);margin-top:6px">📷 '+_leD(b.img.credit)+'</figcaption>':'')+'</figure>':'';
+  var covUrl=(b.img&&b.img.url)||b.cover||'';
+  var cover=covUrl?'<figure class="blog-cover" style="margin:0 0 22px"><img src="'+_leD(covUrl)+'" alt="'+_leD((b.img&&b.img.alt)||b.title||'')+'" style="width:100%;border-radius:14px;display:block">'+(b.img&&b.img.credit?'<figcaption style="font-size:.75rem;color:var(--muted);margin-top:6px">📷 '+_leD(b.img.credit)+'</figcaption>':'')+'</figure>':'';
   var vid=(b.video&&b.video.url&&window.ContentStudio&&ContentStudio.videoEmbed&&ContentStudio.videoEmbed(b.video.url))?ContentStudio.videoHtml(b.video.url,''):'';
+  /* prox haberde kaynak atfı; yerel makalede mevcut davranış (not yok) değişmez */
+  var srcNote=(b.src==='prox')?('<div class="bd-note" style="margin:18px 0;padding:12px 16px;border-radius:10px;background:rgba(195,155,69,.08);border:1px solid rgba(195,155,69,.25);font-size:.8125rem;color:var(--muted)">🛰️ Kaynak: <a href="https://www.emlakekspertizi.com/blog/post/'+encodeURIComponent(b.slug||'')+'" target="_blank" rel="noopener noreferrer">EmlakEkspertizi.com · ProX Haber Merkezi</a></div>'):'';
   try{if(window.ContentStudio&&ContentStudio.applyArticleSEO&&b.src==='firma'&&b.blocks)ContentStudio.applyArticleSEO(b);}catch(e){}
   var ov=document.getElementById('pageOverlay');
   ov.innerHTML='<div class="pov-band"><div class="wrap"><div class="eyebrow">Blog · '+_leD(b.cat||'Haber')+(b.src==='prox'?' · ProX Haber':'')+'</div><h1>'+_leD(b.title||'')+'</h1><p>'+_leD(b.meta||'')+'</p></div></div>'
     +'<section class="sec-pad"><div class="wrap" style="max-width:780px"><button class="btn btn-line" onclick="navGo(\'blog\')" style="margin-bottom:22px">← Tüm yazılar</button>'
-    +'<div class="blog-article">'+cover+vid+body+'</div>'
+    +'<div class="blog-article">'+cover+vid+body+'</div>'+srcNote
     +'<div class="blog-cta"><b>Bu konuda kişiye özel danışmanlık mı istiyorsunuz?</b><a class="btn btn-gold" onclick="navGo(\'randevu\')">Ücretsiz Analiz Randevusu</a></div>'
     +'</div></section>'+footerHTML();
   ov.classList.add('on');ov.scrollTop=0;document.body.classList.add('lock');
   var hv=document.getElementById('homeView');if(hv)hv.style.display='none';
   var nv=document.getElementById('nav');if(nv)nv.classList.add('scrolled');
   try{setActiveNav(null);}catch(e){}
-  try{window.dnFavReflect&&dnFavReflect();}catch(e){}}
+  try{window.dnFavReflect&&dnFavReflect();}catch(e){}
+  try{history.replaceState(null,'','#blog/'+encodeURIComponent(id));}catch(e){}/* paylaşılabilir haber linki */
+}
 try{window.proxBlogFeed=proxBlogFeed;window.dnBlogAll=dnBlogAll;window.dnBlogById=dnBlogById;window.dnBlogDetail=dnBlogDetail;window.dnBlogListHTML=dnBlogListHTML;}catch(e){}
 
 /* =====================================================================
@@ -952,7 +1051,7 @@ function openPage(key,opts){
 function _dnAnimKapat(el,done){try{if(!el||matchMedia('(prefers-reduced-motion:reduce)').matches||el.classList.contains('closing')){if(el)el.classList.remove('closing');done();return;}el.classList.add('closing');var f=false,end=function(){if(f)return;f=true;el.classList.remove('closing');done();};el.addEventListener('animationend',end,{once:true});setTimeout(end,340);}catch(e){try{done();}catch(_){}}}
 function closePage(){const ov=document.getElementById('pageOverlay');if(!ov)return;document.body.classList.remove('lock');document.getElementById('homeView').style.display='';document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);setActiveNav(null);if(!ov.classList.contains('on')){ov.innerHTML='';return;}_dnAnimKapat(ov,function(){ov.classList.remove('on');ov.innerHTML='';});}
 function goHome(){closeNav();closePage();window.scrollTo(0,0);}
-function navGo(k){closeNav();openPage(k);}
+function navGo(k){closeNav();try{if(k==='blog'&&/^#blog\//.test(location.hash))history.replaceState(null,'','#blog');}catch(e){}openPage(k);}
 function contactLead(){if(typeof submitLead==='function')submitLead({sourcePage:'danisman',formType:'contact',name:'',phone:'',email:'',location:'',message:'İletişim bölümünden randevu talebi',requestedService:'Ücretsiz Analiz'});navGo('randevu');}
 function leadFor(name){if(typeof closeNav==='function')closeNav();if(typeof submitLead==='function')submitLead({sourcePage:'danisman',formType:'vip',name:'',phone:'',email:'',location:name,message:name+' (ücretsiz analiz talebi)',requestedService:'Ücretsiz Analiz'});openPage('randevu',{note:name+' (ücretsiz analiz talebi)'});toast('🔍 <b>'+name+'</b> için ücretsiz analiz randevusuna yönlendirildiniz.');}
 

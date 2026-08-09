@@ -1945,8 +1945,31 @@ function _paHistArr(){try{var m=(typeof _paMsgs!=='undefined'&&_paMsgs)?_paMsgs.
 function insArts(){try{return JSON.parse(localStorage.getItem('ins_articles')||'[]')||[];}catch(e){return [];}}
 function insArtsSave(a){try{localStorage.setItem('ins_articles',JSON.stringify(a||[]));}catch(e){}}
 function insRunSchedule(){try{var a=insArts(),now=Date.now(),ch=false,en=true;try{en=(INS_CONTENT.getSchedule().enabled!==false);}catch(e){}if(en)a.forEach(function(x){if(x&&x.status==='scheduled'&&x.publishAt&&x.publishAt<=now){x.status='published';ch=true;}});if(ch)insArtsSave(a);}catch(e){}}
+/* GERÇEK ProX Haber Merkezi akışı — EmlakEkspertizi.com /api/blog/posts (gm portu).
+   Yayında (demo emlakekspertizi.com/demo/ altında) AYNI ORIGIN → CORS engeli yok; lokalde CORS
+   kapalıysa sessizce boş döner (seed BLOG fallback). 10 dk sessionStorage cache. */
+var _insPxCache=null;
+function _insTarihTR(iso){try{var a=(''+iso).slice(0,10).split('-');var AY=['','Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];return (+a[2])+' '+AY[+a[1]]+' '+a[0];}catch(e){return '';}}
+async function insProxFeed(force){if(_insPxCache&&!force)return _insPxCache;
+  try{var c=JSON.parse(sessionStorage.getItem('ins_pxnews')||'null');if(!force&&c&&c.t>Date.now()-6e5&&c.p&&c.p.length){_insPxCache=c.p;return c.p;}}catch(e){}
+  var out=[];
+  try{
+    var r=await fetch('https://www.emlakekspertizi.com/api/blog/posts?status=published&limit=24',{mode:'cors'});
+    if(r.ok){var j=await r.json();
+      out=(j.posts||[]).filter(function(p){return p.title&&(p.image_url||p.featured_image);}).map(function(p){
+        var d=(p.published_at||p.created_at||'').slice(0,10);
+        return {id:'px_'+(p.slug||p.id),slug:p.slug||'',t:p.title,d:p.summary||'',cat:p.category_name||p.category||'İnşaat Haberleri',
+          img:p.image_url||p.featured_image||'',date:_insTarihTR(d),author:p.author_name||'EmlakEkspertizi Editör',src:'prox',qs:p.quality_score||0,feat:!!p.is_featured};});
+    }
+  }catch(e){}
+  _insPxCache=out;
+  try{if(out.length)sessionStorage.setItem('ins_pxnews',JSON.stringify({t:Date.now(),p:out}));}catch(e){}
+  return out;}
+window.insProxFeed=insProxFeed;
+try{insProxFeed().then(function(px){if(px&&px.length){window._insPxNews=px;try{renderBlog();}catch(e){}try{insMansetBas();}catch(e){}}}).catch(function(){})}catch(e){}
 function insBlogAll(){try{insRunSchedule();}catch(e){}var out=[];
   try{insArts().filter(function(a){return a.status==='published'||!a.status;}).forEach(function(a){out.push({id:a.id,img:(a.img&&a.img.url)||'',imgObj:a.img,date:a.date||'',t:a.title||'',d:a.sum||'',cat:a.cat,blocks:a.blocks,video:a.video,body:a.body,tags:a.tags,seo:a.seo,src:'ai'});});}catch(e){}
+  try{(window._insPxNews||[]).forEach(function(p){out.push(p);});}catch(e){}/* stüdyo → CANLI ProX haberleri → seed sırası */
   (typeof BLOG!=='undefined'?BLOG:[]).forEach(function(b,i){out.push({id:'seed'+i,img:b.img,date:b.date,t:b.t,d:b.d,body:b.body,cat:b.cat,
     imgObj:(b.imgCredit?{url:imgFor(b.img),alt:b.imgAlt||b.t,credit:b.imgCredit,creditUrl:b.imgCreditUrl||''}:null)});});
   return out;}
@@ -1954,11 +1977,85 @@ function insBlogById(id){var a=insBlogAll();for(var i=0;i<a.length;i++){if(Strin
 function _csInsBrand(){try{var S=(typeof SETTINGS!=='undefined')?SETTINGS:{};if(S.firmaUnvan)return S.firmaUnvan;var b=(typeof BRAND!=='undefined')?BRAND:{};return (b.name||'Meridyen')+(b.name2||' Yapı');}catch(e){return 'Meridyen Yapı';}}
 function _insCity(){try{var r=SAAS_CONFIG&&SAAS_CONFIG.allowedRegions;if(r&&r.ilceler&&r.ilceler.length)return r.ilceler[0];if(r&&r.il)return r.il;}catch(e){}return 'İstanbul';}
 function _insEsc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+/* Canlı haber gövdesi — allowlist sanitizer (dış HTML güvenle render edilir; gm _gmSaniHaber portu) */
+function _insSaniHaber(html){try{
+  var OK={H2:1,H3:1,H4:1,P:1,UL:1,OL:1,LI:1,STRONG:1,B:1,EM:1,I:1,BR:1,A:1,TABLE:1,THEAD:1,TBODY:1,TR:1,TH:1,TD:1,BLOCKQUOTE:1,IMG:1,FIGURE:1,FIGCAPTION:1};
+  var doc=new DOMParser().parseFromString('<div>'+(html||'')+'</div>','text/html');
+  var kok=doc.body.firstChild,outp=document.createElement('div');
+  (function gez(src,dst){
+    src.childNodes.forEach(function(n){
+      if(n.nodeType===3){dst.appendChild(document.createTextNode(n.nodeValue));return;}
+      if(n.nodeType!==1)return;
+      var t=n.tagName;
+      if(!OK[t]){gez(n,dst);return;}
+      var e=document.createElement(t.toLowerCase());
+      if(t==='A'){var h=n.getAttribute('href')||'';if(/^https?:\/\//i.test(h)){e.setAttribute('href',h);e.setAttribute('target','_blank');e.setAttribute('rel','noopener noreferrer');}}
+      if(t==='IMG'){var s2=n.getAttribute('src')||'';if(!/^https:\/\//i.test(s2))return;e.setAttribute('src',s2);e.setAttribute('alt',n.getAttribute('alt')||'');e.setAttribute('loading','lazy');}
+      gez(n,e);dst.appendChild(e);
+    });
+  })(kok,outp);
+  return outp.innerHTML;
+}catch(e){return '';}}
+/* px_ haberin tam gövdesini çek → sanitize → yeniden render (başarısızsa kaynak-linkli özet; gm _gmHaberDetay portu) */
+async function _insHaberDetay(b){
+  try{
+    var r=await fetch('https://www.emlakekspertizi.com/api/blog/posts/'+encodeURIComponent(b.slug),{mode:'cors'});
+    if(r.ok){var j=await r.json();var p=j.post||j;
+      var ic=_insSaniHaber(p.content||p.icerik||'');
+      if(ic){b.body=ic;b.author=p.author_name||b.author;}
+      else b._pxErr=1;
+    }else b._pxErr=1;
+  }catch(e){b._pxErr=1;}
+  try{if(document.getElementById('insBlogOverlay'))insBlogDetail(b.id);}catch(e){}
+}
+/* GÜNÜN MANŞETİ — carousel + yan manşetler (gm _manIdx/_blogManPool/_manSideCard/_mansetHTML/blogManGo portu) */
+var _insManIdx=0;
+function _insManCover(b){var v=(b.img&&/^(https?:|data:|blob:)/.test(b.img))?b.img:imgFor(b.img);return v||'';}
+function _insManPool(){var p=insBlogAll().filter(function(b){return !!_insManCover(b);});return p.slice(0,Math.min(p.length,20));}
+function _insManSideCard(b){var cov=_insManCover(b),ids=String(b.id).replace(/[^A-Za-z0-9_-]/g,'');
+  return '<article class="man-side-c" role="link" tabindex="0" onclick="insBlogDetail(\''+ids+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();insBlogDetail(\''+ids+'\')}">'
+    +(cov?'<span class="man-side-th" style="background-image:url(\''+_insEsc(cov)+'\')"></span>':'<span class="man-side-th"></span>')
+    +'<span class="man-side-b"><span class="man-side-cat">'+_insEsc(b.cat||'Haber')+'</span><span class="man-side-t">'+_insEsc(b.t||'')+'</span></span></article>';
+}
+function _insMansetHTML(){
+  var man=_insManPool();if(!man.length)return '';
+  if(_insManIdx>=man.length||_insManIdx<0)_insManIdx=0;
+  var b=man[_insManIdx],cov=_insManCover(b),ids=String(b.id).replace(/[^A-Za-z0-9_-]/g,'');
+  var big='<article class="man-big">'
+    +'<div class="man-big-cov"'+(cov?' style="background-image:url(\''+_insEsc(cov)+'\')"':'')+'>'
+      +'<span class="man-counter">'+(_insManIdx+1)+' / '+man.length+'</span>'
+      +'<button type="button" class="man-arrow prev" onclick="insManGo('+(_insManIdx-1)+')" aria-label="Önceki manşet">‹</button>'
+      +'<button type="button" class="man-arrow next" onclick="insManGo('+(_insManIdx+1)+')" aria-label="Sonraki manşet">›</button>'
+      +'<span class="man-cat">'+_insEsc(b.cat||'Haber')+'</span>'
+    +'</div>'
+    +'<div class="man-big-body" role="link" tabindex="0" onclick="insBlogDetail(\''+ids+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();insBlogDetail(\''+ids+'\')}">'
+      +'<h3>'+_insEsc(b.t||'')+'</h3><p>'+_insEsc(b.d||'')+'</p><span class="man-date">🕒 '+_insEsc(b.date||'')+'</span></div>'
+    +'<div class="man-pag">'+man.map(function(x,i){return '<button type="button" class="man-dot'+(i===_insManIdx?' on':'')+'" onclick="insManGo('+i+')">'+(i+1)+'</button>';}).join('')+'</div>'
+    +'</article>';
+  var side='<aside class="man-side">'+[1,2,3].map(function(k){return _insManSideCard(man[(_insManIdx+k)%man.length]);}).join('')+'</aside>';
+  return '<section class="man-sec"><div class="man-head"><h2><span class="hl">Günün</span> Manşeti</h2><span class="man-count">'+man.length+' başlık · ProX seçimi</span></div><div class="man-wrap">'+big+side+'</div></section>';
+}
+/* manşet geçişi teleport yerine kısa crossfade (reduced-motion'da anında) — gm §7 Dalga D portu */
+function insManGo(i){var man=_insManPool();if(!man.length)return;_insManIdx=((i%man.length)+man.length)%man.length;var host=document.querySelector('#insManset .man-sec');if(!host)return;
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches){host.outerHTML=_insMansetHTML();return;}
+  host.style.transition='opacity .16s ease';host.style.opacity='0';
+  setTimeout(function(){var h=document.querySelector('#insManset .man-sec');if(!h)return;h.outerHTML=_insMansetHTML();var y=document.querySelector('#insManset .man-sec');
+    if(y){y.style.opacity='0';y.style.transition='opacity .2s ease';requestAnimationFrame(function(){requestAnimationFrame(function(){y.style.opacity='1';});});}},170);}
+function insMansetBas(){var host=document.getElementById('insManset');if(!host)return;host.innerHTML=_insMansetHTML();}
+window.insManGo=insManGo;window.insMansetBas=insMansetBas;
 function insBlogDetail(id){var b=insBlogById(id);if(!b)return;
   var body;
-  if(b.blocks&&b.blocks.length&&window.ContentStudio&&ContentStudio.blocksToHtml)body=ContentStudio.blocksToHtml(b.blocks);
+  if(b.src==='prox'&&b.slug&&!b.body){/* canlı haber — tam gövde henüz yok: çek, gelince yeniden render */
+    body='<p>'+_insEsc(b.d||'')+'</p>'+(b._pxErr
+      ?'<p><a href="https://www.emlakekspertizi.com/blog/post/'+encodeURIComponent(b.slug)+'" target="_blank" rel="noopener noreferrer">Haberin tam metni için: EmlakEkspertizi.com ProX Haber Merkezi →</a></p>'
+      :'<p style="opacity:.7">Haberin tamamı yükleniyor…</p>');
+    if(!b._pxErr&&!b._pxT){b._pxT=1;_insHaberDetay(b);}
+  }
+  else if(b.src==='prox'&&b.body){body=b.body;/* _insSaniHaber'den geçmiş güvenli HTML */}
+  else if(b.blocks&&b.blocks.length&&window.ContentStudio&&ContentStudio.blocksToHtml)body=ContentStudio.blocksToHtml(b.blocks);
   else if(window.ContentStudio&&ContentStudio.mdToHtml&&/(^|\n)\s*(#{1,3}\s|[-*]\s|>\s)|\*\*|!\[/.test(b.body||''))body=ContentStudio.mdToHtml(b.body||'');
   else body=String(b.body||b.d||'').split(/\n{2,}/).map(function(p){return '<p>'+_insEsc(p).replace(/\n/g,'<br>')+'</p>';}).join('');
+  if(b.src==='prox')body+='<div style="margin-top:22px;padding-top:16px;border-top:1px solid var(--line,#2a2f37);font-size:.85rem;opacity:.75">🛰️ Kaynak: <a href="https://www.emlakekspertizi.com/blog/post/'+encodeURIComponent(b.slug||'')+'" target="_blank" rel="noopener noreferrer">EmlakEkspertizi.com · ProX Haber Merkezi</a></div>';
   var imgU=(b.imgObj&&b.imgObj.url)||((b.img&&/^(https?:|data:|blob:)/.test(b.img))?b.img:(imgFor(b.img)||''));
   var cover=imgU?'<figure style="margin:0 0 22px"><img src="'+_insEsc(imgU)+'" style="width:100%;border-radius:14px;display:block" alt="'+_insEsc((b.imgObj&&b.imgObj.alt)||b.t||'')+'">'+((b.imgObj&&b.imgObj.credit)?'<figcaption style="font-size:.75rem;opacity:.65;margin-top:6px">📷 '+_insEsc(b.imgObj.credit)+'</figcaption>':'')+'</figure>':'';
   var vid=(b.video&&b.video.url&&window.ContentStudio&&ContentStudio.videoEmbed&&ContentStudio.videoEmbed(b.video.url))?ContentStudio.videoHtml(b.video.url,''):'';
@@ -1966,14 +2063,15 @@ function insBlogDetail(id){var b=insBlogById(id);if(!b)return;
   var ov=document.getElementById('insBlogOverlay');
   if(!ov){ov=document.createElement('div');ov.id='insBlogOverlay';ov.style.cssText='position:fixed;inset:0;z-index:99999;background:var(--bg,#0b0e13);color:var(--ink,#e6e9ef);overflow:auto';document.body.appendChild(ov);}
   ov.innerHTML='<div class="cs-article" style="max-width:820px;margin:0 auto;padding:40px 20px 90px;line-height:1.75;font-size:1.0625rem">'
-    +'<button onclick="insBlogClose()" style="background:var(--surface,#161b22);color:inherit;border:1px solid var(--line,#2a2f37);border-radius:10px;padding:9px 16px;cursor:pointer;margin-bottom:24px;font:inherit">← Tüm yazılar</button>'
-    +'<div style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;opacity:.55;margin-bottom:8px">Blog'+(b.cat?' · '+_insEsc(b.cat):'')+'</div>'
+    +'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:24px"><button onclick="insBlogClose()" style="background:var(--surface,#161b22);color:inherit;border:1px solid var(--line,#2a2f37);border-radius:10px;padding:9px 16px;cursor:pointer;font:inherit">← Tüm yazılar</button>'+(b.cat?'<span style="opacity:.6;font-size:.8125rem">/ '+_insEsc(b.cat)+'</span>':'')+'</div>'
     +'<h1 style="font-size:clamp(1.75rem,5vw,2.75rem);line-height:1.15;margin:0 0 10px">'+_insEsc(b.t||'')+'</h1>'
-    +'<div style="opacity:.55;margin-bottom:28px">'+_insEsc(b.date||'')+'</div>'
+    +'<div style="opacity:.7;margin-bottom:28px;font-size:.875rem">'+_insEsc(b.author||'Meridyen Yapı')+' · '+_insEsc(b.date||'')+(b.src==='prox'?' · ProX Haber':'')+'</div>'
     +cover+vid+'<div>'+body+'</div></div>';
+  try{var f=document.querySelector('footer.insaatFooter');if(f){var fh=f.outerHTML.replace(/\sid="[^"]*"/g,'');ov.insertAdjacentHTML('beforeend',fh);}}catch(e){}
+  try{history.replaceState(null,'','#blog/'+encodeURIComponent(id));}catch(e){}
   ov.scrollTop=0;document.body.style.overflow='hidden';
 }
-function insBlogClose(){var ov=document.getElementById('insBlogOverlay');if(ov)ov.remove();document.body.style.overflow='';}
+function insBlogClose(){var ov=document.getElementById('insBlogOverlay');if(ov)ov.remove();document.body.style.overflow='';try{if(/^#blog\//.test(location.hash||''))history.replaceState(null,'','#blog');}catch(e){}}
 window.insBlogDetail=insBlogDetail;window.insBlogClose=insBlogClose;window.insArts=insArts;window.insRunSchedule=insRunSchedule;
 /* studio anahtarlarını sitede zaten girilmiş DeepSeek/ProX anahtarından tohumla */
 function _insAgentFill(E,pre){try{var k=E.getKeys();var set=function(id,v){var e=document.getElementById(id);if(e)e.value=v||'';};set(pre+'provider',k.provider||'auto');set(pre+'prox',k.proxKey);set(pre+'ds',k.dsKey);set(pre+'oa',k.oaKey);set(pre+'cl',k.clKey);set(pre+'sys',k.sysPrompt);var pex=document.getElementById(pre+'pex');if(pex)pex.value=k.pexelsKey||'';}catch(e){}}
@@ -2004,9 +2102,10 @@ function insContentTest(){if(INS_CONTENT)_insAgentTest(INS_CONTENT,'cxci_status'
 function insSiteTest(){if(INS_SITE)_insAgentTest(INS_SITE,'cxsi_status');}
 window.insStudioFill=insStudioFill;window.insContentFill=insContentFill;window.insSiteFill=insSiteFill;window.insContentSave=insContentSave;window.insSiteSave=insSiteSave;window.insContentTest=insContentTest;window.insSiteTest=insSiteTest;
 
-function renderBlog(){var el=document.getElementById('blogGrid');if(!el)return;var posts=insBlogAll();el.innerHTML=posts.map(function(b){var s=(b.img&&/^(https?:|data:|blob:)/.test(b.img))?b.img:imgFor(b.img);var ids=String(b.id).replace(/[^A-Za-z0-9]/g,'');
+function renderBlog(){var el=document.getElementById('blogGrid');if(!el)return;var posts=insBlogAll();el.innerHTML=posts.map(function(b){var s=(b.img&&/^(https?:|data:|blob:)/.test(b.img))?b.img:imgFor(b.img);var ids=String(b.id).replace(/[^A-Za-z0-9_-]/g,'');
   return '<div class="post" style="cursor:pointer" onclick="insBlogDetail(\''+ids+'\')"><div class="ph">'+(s?'<img src="'+s+'" alt="" loading="lazy" decoding="async">':'')+'</div>'
-  +'<div class="body"><div class="date">'+_insEsc(b.date)+'</div><h3>'+_insEsc(b.t)+'</h3><p>'+_insEsc(b.d)+'</p></div></div>';}).join('');}
+  +'<div class="body"><div class="date">'+_insEsc(b.date)+'</div><h3>'+_insEsc(b.t)+'</h3><p>'+_insEsc(b.d)+'</p></div></div>';}).join('');
+  try{insMansetBas();}catch(e){}}
 function paintImgs(){const a=document.getElementById('img-about');if(a&&IMG.about)a.src=IMG.about;const sf=document.getElementById('stageFb');if(sf&&IMG.p_office)sf.src=IMG.p_office;}
 loadAll();insEidsMigrate();renderServices();renderProjects();renderBlog();paintImgs();
 try{setTimeout(function(){try{renderInsHomeIlan();}catch(e){}},0);}catch(e){}/* INS_LIST_CFG dosyanın ilerisinde tanımlı → defer */
@@ -3263,7 +3362,12 @@ function insBoot(){
   /* #medya kesin scroll — alt sayfalardan index.html#medya ile gelince (native jump async
      içerik kaymasıyla ıskalıyordu); overlay değil sayfa-içi scroll hedefi. Sitenin kendi
      fGo() mekanizmasını kullan (footer 'Medya' linkiyle birebir; içerik yerleştikten sonra). */
-  try{var _lsh=(location.hash||'');if(_lsh==='#medya'||_lsh==='#blog'){var _lsid=_lsh.slice(1);var _md=function(){if(typeof fGo==='function')fGo(_lsid);else{var el=document.getElementById(_lsid);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}};if(document.readyState==='complete')setTimeout(_md,300);else window.addEventListener('load',function(){setTimeout(_md,300);});}}catch(e){}
+  try{var _lsh=(location.hash||'');
+    if(/^#blog\//.test(_lsh)){/* derin link: tekil haber/yazı — scroll yerine doğrudan detay overlay'i aç */
+      var _bid=_lsh.slice(6);var _mdb=function(){setTimeout(function(){try{insBlogDetail(decodeURIComponent(_bid));}catch(e){}},400);};
+      if(document.readyState==='complete')_mdb();else window.addEventListener('load',_mdb);
+    }else if(_lsh==='#medya'||_lsh==='#blog'){var _lsid=_lsh.slice(1);var _md=function(){if(typeof fGo==='function')fGo(_lsid);else{var el=document.getElementById(_lsid);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}};if(document.readyState==='complete')setTimeout(_md,300);else window.addEventListener('load',function(){setTimeout(_md,300);});}
+  }catch(e){}
 }
 window.addEventListener('popstate',insRoute);
 addEventListener('hashchange',checkHash);insBoot();
