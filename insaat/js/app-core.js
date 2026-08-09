@@ -1412,6 +1412,8 @@ function renderSdBody(){
 // overlay içi reveal + sayaç animasyonu (root=overlay → fixed overlay'de de çalışır)
 function _ovReveal(id){
   var root=document.getElementById(id);if(!root)return;
+  /* PERF: her açılışta yeni scroll/resize dinleyicisi BİRİKMESİN — eskisini söküp yenisini bağla */
+  if(root._ovRvOff){try{root._ovRvOff();}catch(e){}}
   if(typeof i18nInit==='function')i18nInit();
   var items=[].slice.call(root.querySelectorAll('.sd-rv,.hp-rv'));
   var cnt=function(el){var t=+el.dataset.count;if(!t)return;var s=0,st=t/60;var f=function(n){return el.dataset.fmt==='m2'?(n/1e6).toFixed(1).replace('.',',')+'M m²':Math.floor(n).toLocaleString('tr-TR')+(el.dataset.suf||'');};(function tick(){s+=st;if(s>=t){el.textContent=f(t);}else{el.textContent=f(s);requestAnimationFrame(tick);}})();};
@@ -1422,6 +1424,7 @@ function _ovReveal(id){
   var onScroll=function(){requestAnimationFrame(check);};
   root.addEventListener('scroll',onScroll,{passive:true});
   window.addEventListener('resize',onScroll,{passive:true});
+  root._ovRvOff=function(){root.removeEventListener('scroll',onScroll);window.removeEventListener('resize',onScroll);};
   setTimeout(check,260);
   setTimeout(function(){for(var i=0;i<items.length;i++)show(items[i]);},1600); // içerik asla gizli kalmasın
 }

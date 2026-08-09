@@ -36,7 +36,7 @@
 <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg?v=2">
 <script defer src="js/brand.js?v=3"></script>
-<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=13"></script>
+<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=14"></script>
 <script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
 (function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
 if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><script src="js/i18n/ilanlar.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
@@ -459,8 +459,8 @@ function similarOf(l){var cat=catOf(l.tip),same=[],near=[];ALL.forEach(function(
 function simCard(l){var price=l.kira?fmtTL(l.fiyat)+' /ay':fmtTL(l.fiyat);return '<div class="ild-simcard" onclick="ilDetail('+l.id+')"><div class="im"><img src="'+imgURL(l.img)+'" alt="'+esc(l.baslik)+'" loading="lazy"><span class="b">'+esc(l.durum)+'</span></div><div class="bd"><div class="l">'+esc(l.bolge||l.il||'')+'</div><div class="t">'+esc(l.baslik)+'</div><div class="p">'+price+'</div></div></div>';}
 var _ilMap=null,_ilMarkers=[];
 function loadLeaflet(cb){if(window.L)return cb();
-  if(!document.getElementById('leaflet-css')){var css=document.createElement('link');css.id='leaflet-css';css.rel='stylesheet';css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(css);}
-  var s=document.createElement('script');s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';s.onload=cb;s.onerror=function(){document.getElementById('ilMapView').innerHTML='<div style="display:grid;place-items:center;height:100%;color:var(--muted);font-size:.875rem;text-align:center;padding:24px">Harita yüklenemedi (internet gerekli).<br>Liste görünümünü kullanabilirsiniz.</div>';};document.head.appendChild(s);}
+  if(!document.getElementById('leaflet-css')){var css=document.createElement('link');css.id='leaflet-css';css.rel='stylesheet';css.href='../shared/vendor/leaflet/leaflet.css?v=1';document.head.appendChild(css);}
+  var s=document.createElement('script');s.src='../shared/vendor/leaflet/leaflet.js?v=1';s.onload=cb;s.onerror=function(){document.getElementById('ilMapView').innerHTML='<div style="display:grid;place-items:center;height:100%;color:var(--muted);font-size:.875rem;text-align:center;padding:24px">Harita yüklenemedi (internet gerekli).<br>Liste görünümünü kullanabilirsiniz.</div>';};document.head.appendChild(s);}
 function ilMapRender(){loadLeaflet(function(){
   var list=filtered();
   if(!_ilMap){_ilMap=L.map('ilLeaflet',{scrollWheelZoom:false}).setView([41.02,28.97],10);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(_ilMap);}
