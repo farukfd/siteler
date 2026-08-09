@@ -1531,7 +1531,7 @@ body.cookie-on .wa{bottom:86px}
 #blogPage{position:fixed;inset:0;z-index:55;background:var(--surface-2);overflow-y:auto;display:none;color:var(--ink)}
 #blogPage.on{display:block;animation:pdIn .2s ease}
 #blogPage.closing{display:block;animation:insOvOut .2s ease-in forwards;pointer-events:none}
-#blogPage .bp-in{max-width:1240px;margin:0 auto;padding:96px clamp(16px,4vw,40px) 44px}
+#blogPage .bp-in{max-width:1240px;margin:0 auto;padding:28px clamp(16px,4vw,40px) 44px}
 
 /* §7/§12 — overlay simetrik çıkış + modal materialize (apple-design Dalga C).
    .closing'i _insAnimKapat verir; animationend'de on/open kalkar. */

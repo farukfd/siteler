@@ -1556,7 +1556,7 @@ window.saasSetTheme=function(name){SAAS_CONFIG.themeColor=name;initSaaSTheme();}
 function _insAnimKapat(el,done){try{if(!el||matchMedia('(prefers-reduced-motion:reduce)').matches||el.classList.contains('closing')){if(el)el.classList.remove('closing');done();return;}el.classList.add('closing');var f=false,end=function(){if(f)return;f=true;el.classList.remove('closing');done();};el.addEventListener('animationend',end,{once:true});setTimeout(end,340);}catch(e){try{done();}catch(_){}}}
 function _insOvKapat(id){var el=document.getElementById(id);if(!el||!el.classList.contains('on'))return;_insAnimKapat(el,function(){el.classList.remove('on');});}
 window._insAnimKapat=_insAnimKapat;window._insOvKapat=_insOvKapat;
-function closeAllInsaatOverlays(){['closeProjelerPage','closeHizmetlerPage','closeSvcDetail','closeProjectDetail','closeBolgePage','closeIletisimPage','closeIlanlarPage','closeDoc','closeFaqPage','closeProxAsistanPage','closeHesap'].forEach(fn=>{try{if(typeof window[fn]==='function')window[fn]();}catch(e){}});document.body.style.overflow='';}
+function closeAllInsaatOverlays(){['closeProjelerPage','closeHizmetlerPage','closeSvcDetail','closeProjectDetail','closeBolgePage','closeIletisimPage','closeIlanlarPage','closeDoc','closeFaqPage','closeProxAsistanPage','closeHesap'].forEach(fn=>{try{if(typeof window[fn]==='function')window[fn]();}catch(e){}});try{insBlogPageKapat();}catch(e){}document.body.style.overflow='';}
 function openInsaatMobile(){var ov=document.querySelector('#projelerPage.on,#hizmetlerPage.on,#bolgePage.on,#svcDetail.on,#pjDetail.on,#iletisimPage.on,#docPage.on,#faqPage.on');var m=ov?ov.querySelector('.mnav'):document.getElementById('mnav');if(m)m.classList.add('open');}
 const INSAAT_NAV=`<a href="hizmetlerimiz.html" onclick="return goPage('hizmetler',event)">Hizmetlerimiz</a>`
   +`<a href="neden-biz.html">Neden <span class="nb-x">?</span> Biz</a>`
@@ -2115,17 +2115,22 @@ function renderBlog(){var el=document.getElementById('blogGrid');if(!el)return;
   el.innerHTML=insBlogAll().slice(0,9).map(_insBlogKart).join('');}
 /* ---- BLOG SAYFASI (tam ekran; üst menü z-60 üstte görünür/tıklanabilir kalır) ---- */
 function insBlogPageAc(){var p=document.getElementById('blogPage');if(!p)return;
-  if(!p.dataset.kurulu){p.dataset.kurulu='1';
-    p.innerHTML='<div class="bp-in"><div id="bpManset"></div>'
+  /* KABUK GARANTİSİ: sayfa KENDİ header+footer klonunu taşır (index'in header durumuna ve
+     runtime-footer zamanlamasına bağımlılık yok). Klonlar hazır değilse 'kurulu' işaretlenmez
+     → bir sonraki açılışta yeniden denenir. */
+  var hdr=document.getElementById('hdr'), foot=document.querySelector('footer.insaatFooter');
+  if(!p.dataset.kurulu){
+    var hK=hdr?('<div class="bp-hdr">'+hdr.outerHTML.replace(/ id="[^"]*"/g,'').replace('<header','<header class="scrolled"').replace(/class="scrolled"([^>]*?)class="/,'$1class="scrolled ')+'</div>'):'';
+    var fK=foot?foot.outerHTML.replace(/ id="[^"]*"/g,''):'';
+    p.innerHTML=hK
+      +'<div class="bp-in"><div id="bpManset"></div>'
       +'<div class="sec-head" style="margin:30px 0 18px"><div class="eyebrow">Bilgi Merkezi</div><h2>Tüm haberler &amp; rehberler</h2><p>İnşaat, tadilat, yatırım ve kentsel dönüşüm üzerine uzman içerikler.</p></div>'
-      +'<div class="blog-grid" id="bpGrid"></div></div>';
-    var f=document.querySelector('footer.insaatFooter');
-    if(f)p.insertAdjacentHTML('beforeend',f.outerHTML.replace(/ id="[^"]*"/g,''));
+      +'<div class="blog-grid" id="bpGrid"></div></div>'+fK;
+    if(hdr&&foot)p.dataset.kurulu='1';
   }
-  try{var g=document.getElementById('bpGrid');if(g)g.innerHTML=insBlogAll().map(_insBlogKart).join('');}catch(e){}
+  try{var g=p.querySelector('#bpGrid');if(g)g.innerHTML=insBlogAll().map(_insBlogKart).join('');}catch(e){}
   try{insMansetBas();}catch(e){}
   p.classList.add('on');document.body.style.overflow='hidden';
-  var h=document.getElementById('hdr');if(h)h.classList.add('scrolled');
   try{if(!/^#blog/.test(location.hash||''))history.pushState(null,'','#blog');}catch(e){}
   p.scrollTop=0;}
 function insBlogPageKapat(){var p=document.getElementById('blogPage');if(!p||!p.classList.contains('on'))return;
@@ -2135,7 +2140,8 @@ window.insBlogPageAc=insBlogPageAc;window.insBlogPageKapat=insBlogPageKapat;
 /* #blog hash'i her değişimde blog sayfasını açar (footer linki sayfa içindeyken de) */
 window.addEventListener('hashchange',function(){var h=location.hash||'';
   if(h==='#blog'){insBlogPageAc();}
-  else if(/^#blog\//.test(h)){insBlogPageAc();setTimeout(function(){try{insBlogDetail(decodeURIComponent(h.slice(6)));}catch(e){}},250);}});
+  else if(/^#blog\//.test(h)){insBlogPageAc();setTimeout(function(){try{insBlogDetail(decodeURIComponent(h.slice(6)));}catch(e){}},250);}
+  else{try{insBlogPageKapat();}catch(e){}}});
 function paintImgs(){const a=document.getElementById('img-about');if(a&&IMG.about)a.src=IMG.about;const sf=document.getElementById('stageFb');if(sf&&IMG.p_office)sf.src=IMG.p_office;}
 loadAll();insEidsMigrate();renderServices();renderProjects();renderBlog();paintImgs();
 try{setTimeout(function(){try{renderInsHomeIlan();}catch(e){}},0);}catch(e){}/* INS_LIST_CFG dosyanın ilerisinde tanımlı → defer */
