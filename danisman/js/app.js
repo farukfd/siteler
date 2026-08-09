@@ -942,15 +942,16 @@ function dnBlogDetail(id){var b=dnBlogById(id);if(!b){navGo('blog');return;}
   else if(window.ContentStudio&&ContentStudio.mdToHtml&&/(^|\n)\s*(#{1,3}\s|[-*]\s|>\s)|\*\*|!\[/.test(b.body||'')){body=ContentStudio.mdToHtml(b.body||'');}
   else{body=(b.body||b.sum||'').split(/\n{2,}/).map(function(par){return '<p style="margin:0 0 17px">'+_leD(par).replace(/\n/g,'<br>')+'</p>';}).join('');}
   var covUrl=(b.img&&b.img.url)||b.cover||'';
-  var cover=covUrl?'<figure class="blog-cover" style="margin:0 0 22px"><img src="'+_leD(covUrl)+'" alt="'+_leD((b.img&&b.img.alt)||b.title||'')+'" style="width:100%;border-radius:14px;display:block">'+(b.img&&b.img.credit?'<figcaption style="font-size:.75rem;color:var(--muted);margin-top:6px">📷 '+_leD(b.img.credit)+'</figcaption>':'')+'</figure>':'';
+  var cover=covUrl?'<figure class="blog-cover" style="margin:0 0 18px"><img src="'+_leD(covUrl)+'" alt="'+_leD((b.img&&b.img.alt)||b.title||'')+'" style="width:100%;border-radius:14px;display:block">'+(b.img&&b.img.credit?'<figcaption style="font-size:.75rem;color:var(--muted);margin-top:6px">📷 '+_leD(b.img.credit)+'</figcaption>':'')+'</figure>':'';
   var vid=(b.video&&b.video.url&&window.ContentStudio&&ContentStudio.videoEmbed&&ContentStudio.videoEmbed(b.video.url))?ContentStudio.videoHtml(b.video.url,''):'';
   /* prox haberde kaynak atfı; yerel makalede mevcut davranış (not yok) değişmez */
   var srcNote=(b.src==='prox')?('<div class="bd-note" style="margin:18px 0;padding:12px 16px;border-radius:10px;background:rgba(195,155,69,.08);border:1px solid rgba(195,155,69,.25);font-size:.8125rem;color:var(--muted)">🛰️ Kaynak: <a href="https://www.emlakekspertizi.com/blog/post/'+encodeURIComponent(b.slug||'')+'" target="_blank" rel="noopener noreferrer">EmlakEkspertizi.com · ProX Haber Merkezi</a></div>'):'';
   try{if(window.ContentStudio&&ContentStudio.applyArticleSEO&&b.src==='firma'&&b.blocks)ContentStudio.applyArticleSEO(b);}catch(e){}
   var ov=document.getElementById('pageOverlay');
   /* Haber detayı da bandsız — kompakt başlık bloğu içerikte, üst menünün hemen altında */
-  ov.innerHTML='<section class="sec-pad blog-ust"><div class="wrap" style="max-width:780px"><button class="btn btn-line" onclick="navGo(\'blog\')" style="margin-bottom:22px">← Tüm yazılar</button>'
-    +'<div class="bd-head"><span class="bd-kat">Blog · '+_leD(b.cat||'Haber')+(b.src==='prox'?' · ProX Haber':'')+'</span><h1>'+_leD(b.title||'')+'</h1><div class="bd-meta">'+_leD(b.author||'Selin Meridyen')+(b.meta?' · '+_leD(b.meta):'')+'</div></div>'
+  ov.innerHTML='<section class="sec-pad blog-ust blog-detay"><div class="wrap" style="max-width:780px">'
+    +'<div class="bd-crumbrow"><button class="btn btn-line bd-back" onclick="navGo(\'blog\')">← Tüm yazılar</button><span class="bd-kat">Blog · '+_leD(b.cat||'Haber')+(b.src==='prox'?' · ProX Haber':'')+'</span></div>'
+    +'<div class="bd-head"><h1>'+_leD(b.title||'')+'</h1><div class="bd-meta">'+_leD(b.author||'Selin Meridyen')+(b.meta?' · '+_leD(b.meta):'')+'</div></div>'
     +'<div class="blog-article">'+cover+vid+body+'</div>'+srcNote
     +'<div class="blog-cta"><b>Bu konuda kişiye özel danışmanlık mı istiyorsunuz?</b><a class="btn btn-gold" onclick="navGo(\'randevu\')">Ücretsiz Analiz Randevusu</a></div>'
     +'</div></section>'+footerHTML();

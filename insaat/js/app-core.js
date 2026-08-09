@@ -2060,15 +2060,17 @@ function insBlogDetail(id){var b=insBlogById(id);if(!b)return;
   else body=String(b.body||b.d||'').split(/\n{2,}/).map(function(p){return '<p>'+_insEsc(p).replace(/\n/g,'<br>')+'</p>';}).join('');
   if(b.src==='prox')body+='<div style="margin-top:22px;padding-top:16px;border-top:1px solid var(--line,#2a2f37);font-size:.85rem;opacity:.75">🛰️ Kaynak: <a href="https://www.emlakekspertizi.com/blog/post/'+encodeURIComponent(b.slug||'')+'" target="_blank" rel="noopener noreferrer">EmlakEkspertizi.com · ProX Haber Merkezi</a></div>';
   var imgU=(b.imgObj&&b.imgObj.url)||((b.img&&/^(https?:|data:|blob:)/.test(b.img))?b.img:(imgFor(b.img)||''));
-  var cover=imgU?'<figure style="margin:0 0 22px"><img src="'+_insEsc(imgU)+'" style="width:100%;border-radius:14px;display:block" alt="'+_insEsc((b.imgObj&&b.imgObj.alt)||b.t||'')+'">'+((b.imgObj&&b.imgObj.credit)?'<figcaption style="font-size:.75rem;opacity:.65;margin-top:6px">📷 '+_insEsc(b.imgObj.credit)+'</figcaption>':'')+'</figure>':'';
+  var cover=imgU?'<figure style="margin:0 0 18px"><img src="'+_insEsc(imgU)+'" style="width:100%;border-radius:14px;display:block" alt="'+_insEsc((b.imgObj&&b.imgObj.alt)||b.t||'')+'">'+((b.imgObj&&b.imgObj.credit)?'<figcaption style="font-size:.75rem;opacity:.65;margin-top:6px">📷 '+_insEsc(b.imgObj.credit)+'</figcaption>':'')+'</figure>':'';
   var vid=(b.video&&b.video.url&&window.ContentStudio&&ContentStudio.videoEmbed&&ContentStudio.videoEmbed(b.video.url))?ContentStudio.videoHtml(b.video.url,''):'';
   try{if(window.ContentStudio&&ContentStudio.applyArticleSEO&&b.src==='ai'&&b.blocks)ContentStudio.applyArticleSEO(b);}catch(e){}
   var ov=document.getElementById('insBlogOverlay');
   if(!ov){ov=document.createElement('div');ov.id='insBlogOverlay';ov.style.cssText='position:fixed;inset:0;z-index:99999;background:var(--bg,#0b0e13);color:var(--ink,#e6e9ef);overflow:auto';document.body.appendChild(ov);}
-  ov.innerHTML='<div class="cs-article" style="max-width:820px;margin:0 auto;padding:40px 20px 90px;line-height:1.75;font-size:1.0625rem">'
-    +'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:24px"><button onclick="insBlogClose()" style="background:var(--surface,#161b22);color:inherit;border:1px solid var(--line,#2a2f37);border-radius:10px;padding:9px 16px;cursor:pointer;font:inherit">← Tüm yazılar</button>'+(b.cat?'<span style="opacity:.6;font-size:.8125rem">/ '+_insEsc(b.cat)+'</span>':'')+'</div>'
-    +'<h1 style="font-size:clamp(1.75rem,5vw,2.75rem);line-height:1.15;margin:0 0 10px">'+_insEsc(b.t||'')+'</h1>'
-    +'<div style="opacity:.7;margin-bottom:28px;font-size:.875rem">'+_insEsc(b.author||'Meridyen Yapı')+' · '+_insEsc(b.date||'')+(b.src==='prox'?' · ProX Haber':'')+'</div>'
+  /* dn kompakt-modern detay düzeniyle aynı: geri butonu + kategori ROZETİ yan yana, sıkı boşluklar */
+  ov.innerHTML='<div class="cs-article" style="max-width:820px;margin:0 auto;padding:26px 20px 70px;line-height:1.75;font-size:1.0625rem">'
+    +'<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px"><button onclick="insBlogClose()" style="background:var(--surface,#161b22);color:inherit;border:1px solid var(--line,#2a2f37);border-radius:10px;padding:9px 16px;cursor:pointer;font:inherit;font-size:.8125rem">← Tüm yazılar</button>'
+    +'<span style="display:inline-block;font-weight:700;font-size:.71875rem;letter-spacing:.09em;text-transform:uppercase;color:#ffb066;background:rgba(255,122,47,.14);border:1px solid rgba(255,122,47,.35);border-radius:999px;padding:6px 13px">Blog · '+_insEsc(b.cat||'Haber')+(b.src==='prox'?' · ProX Haber':'')+'</span></div>'
+    +'<h1 style="font-size:clamp(1.75rem,5vw,2.75rem);line-height:1.15;margin:0 0 8px">'+_insEsc(b.t||'')+'</h1>'
+    +'<div style="opacity:.7;margin-bottom:16px;font-size:.875rem">'+_insEsc(b.author||'Meridyen Yapı')+' · '+_insEsc(b.date||'')+(b.src==='prox'?' · ProX Haber':'')+'</div>'
     +cover+vid+'<div>'+body+'</div></div>';
   try{var f=document.querySelector('footer.insaatFooter');if(f){var fh=f.outerHTML.replace(/\sid="[^"]*"/g,'');ov.insertAdjacentHTML('beforeend',fh);}}catch(e){}
   try{history.replaceState(null,'','#blog/'+encodeURIComponent(id));}catch(e){}
