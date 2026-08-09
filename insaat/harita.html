@@ -23,8 +23,8 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://www.emlakekspertizi.com/demo/insaat/harita.html#webpage","url":"https://www.emlakekspertizi.com/demo/insaat/harita.html","name":"Harita — Projeler & Portföy · Meridyen Yapı","description":"Meridyen Yapı projeleri ve portföyü harita üzerinde: satılık & kiralık konut, iş yeri ve arsa.","inLanguage":"tr","isPartOf":{"@type":"WebSite","name":"Meridyen Yapı","url":"https://www.emlakekspertizi.com/demo/insaat/"},"publisher":{"@type":"Organization","name":"Meridyen Yapı"},"breadcrumb":{"@id":"https://www.emlakekspertizi.com/demo/insaat/harita.html#breadcrumb"}},{"@type":"BreadcrumbList","@id":"https://www.emlakekspertizi.com/demo/insaat/harita.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana Sayfa","item":"https://www.emlakekspertizi.com/demo/insaat/index.html"},{"@type":"ListItem","position":2,"name":"İlanlar","item":"https://www.emlakekspertizi.com/demo/insaat/ilanlar.html"},{"@type":"ListItem","position":3,"name":"Harita","item":"https://www.emlakekspertizi.com/demo/insaat/harita.html"}]}]}
 </script>
-<link rel="stylesheet" href="css/base.css?v=5">
-<link rel="stylesheet" href="css/chrome.css?v=3"><!-- ana sayfa ile birebir header+footer kabuğu -->
+<link rel="stylesheet" href="css/base.css?v=74">
+<link rel="stylesheet" href="css/chrome.css?v=4"><!-- ana sayfa ile birebir header+footer kabuğu -->
 <link rel="stylesheet" href="../shared/vendor/leaflet/leaflet.css?v=1">
 <script defer src="js/brand.js?v=2"></script>
 <style>
@@ -35,26 +35,26 @@
   .il-hero .il-hbg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(58% 120% at 14% -10%,color-mix(in srgb,var(--accent,#ff7a2f) 30%,transparent),transparent 60%),radial-gradient(46% 100% at 100% 120%,color-mix(in srgb,var(--accent-2,#ffb070) 16%,transparent),transparent 55%)}
   .il-hero .il-hbg::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:46px 46px;-webkit-mask-image:radial-gradient(72% 100% at 28% 0%,#000,transparent 72%);mask-image:radial-gradient(72% 100% at 28% 0%,#000,transparent 72%)}
   .il-hero .wrap{position:relative;max-width:1240px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
-  .il-eyebrow{display:inline-flex;align-items:center;gap:8px;font:800 11.5px/1 system-ui;letter-spacing:.09em;text-transform:uppercase;color:var(--accent,#ff7a2f);background:color-mix(in srgb,var(--accent,#ff7a2f) 14%,transparent);border:1px solid color-mix(in srgb,var(--accent,#ff7a2f) 34%,transparent);padding:8px 14px;border-radius:999px}
-  .il-hero h1{font-family:var(--head,inherit);font-weight:800;font-size:clamp(28px,4.8vw,48px);line-height:1.05;letter-spacing:-.02em;margin:18px 0 12px;color:#fff}
+  .il-eyebrow{display:inline-flex;align-items:center;gap:8px;font:800 .71875rem/1 system-ui;letter-spacing:.09em;text-transform:uppercase;color:var(--accent,#ff7a2f);background:color-mix(in srgb,var(--accent,#ff7a2f) 14%,transparent);border:1px solid color-mix(in srgb,var(--accent,#ff7a2f) 34%,transparent);padding:8px 14px;border-radius:999px}
+  .il-hero h1{font-family:var(--head,inherit);font-weight:800;font-size:clamp(1.75rem,4.8vw,3rem);line-height:1.05;letter-spacing:-.02em;margin:18px 0 12px;color:#fff}
   .il-hero h1 .il-hl{background:linear-gradient(120deg,var(--accent,#ff7a2f),var(--accent-2,#ffb070));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
-  .il-hero p{max-width:680px;margin:0 0 22px;color:#c9cfd8;font:500 16px/1.65 system-ui}
+  .il-hero p{max-width:680px;margin:0 0 22px;color:#c9cfd8;font:500 1rem/1.65 system-ui}
   .il-trust{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:9px}
-  .il-trust li{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:11px;padding:8px 13px;font-size:12.5px;font-weight:600;color:#e6eaf0}
+  .il-trust li{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:11px;padding:8px 13px;font-size:.78125rem;font-weight:600;color:#e6eaf0}
   main.il-main{max-width:1240px;margin:0 auto;padding:30px clamp(16px,4vw,40px) 70px}
 
   /* ===== araç çubuğu + düzen ===== */
   .map-toolbar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-bottom:16px}
   .mtb-seg{display:inline-flex;gap:6px;background:var(--surface-2);border:1px solid var(--line);border-radius:99px;padding:4px}
-  .mtb-seg [data-fop]{border:0;background:none;font-family:var(--head);font-weight:700;font-size:13px;color:var(--muted);padding:8px 15px;border-radius:99px;cursor:pointer;transition:.15s}
+  .mtb-seg [data-fop]{border:0;background:none;font-family:var(--head);font-weight:700;font-size:.8125rem;color:var(--muted);padding:8px 15px;border-radius:99px;cursor:pointer;transition:.15s}
   .mtb-seg [data-fop].on{background:var(--accent);color:var(--on-accent)}
-  .mtb-sel{font-family:var(--head);font-weight:600;font-size:13px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer}
-  .mtb-count{font-family:var(--head);font-weight:700;font-size:13px;color:var(--accent-2);margin-left:auto}
+  .mtb-sel{font-family:var(--head);font-weight:600;font-size:.8125rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer}
+  .mtb-count{font-family:var(--head);font-weight:700;font-size:.8125rem;color:var(--accent-2);margin-left:auto}
   .map-layout{display:grid;grid-template-columns:1fr 380px;gap:18px;align-items:stretch}
   #gmMap{height:72vh;min-height:460px;border-radius:var(--radius);border:1px solid var(--line);overflow:hidden;z-index:0}
   .map-side{height:72vh;min-height:460px;overflow-y:auto;padding-right:4px}
-  .map-side-h{font-family:var(--head);font-weight:700;font-size:13px;color:var(--muted);margin:2px 0 12px;position:sticky;top:0;background:linear-gradient(var(--bg),var(--bg) 70%,transparent);padding-bottom:8px;z-index:1}
-  .map-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:12px;color:var(--muted)}
+  .map-side-h{font-family:var(--head);font-weight:700;font-size:.8125rem;color:var(--muted);margin:2px 0 12px;position:sticky;top:0;background:linear-gradient(var(--bg),var(--bg) 70%,transparent);padding-bottom:8px;z-index:1}
+  .map-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:.75rem;color:var(--muted)}
   .map-legend span{display:inline-flex;align-items:center;gap:6px}
   .map-legend i{width:12px;height:12px;border-radius:50%;display:inline-block}
   @media(max-width:900px){.map-layout{grid-template-columns:1fr}#gmMap{height:56vh;min-height:360px}.map-side{height:auto;max-height:none;min-height:0}.mtb-count{margin-left:0;width:100%}}
@@ -69,49 +69,49 @@
      çalışır. Kenar liste (.gm-ml-row) zaten insaat'ın kendi kart bileşenleriyle aynı mantıkla
      var(--surface) kullanır, ek müdahale gerekmedi. Kiralık yeşili (#2f9e46) ve WhatsApp yeşili
      projede sabit, değiştirilmedi. ===== */
-  .gm-map-fb{display:grid;place-items:center;height:100%;min-height:300px;color:var(--muted);font-size:14px;padding:20px;text-align:center}
+  .gm-map-fb{display:grid;place-items:center;height:100%;min-height:300px;color:var(--muted);font-size:.875rem;padding:20px;text-align:center}
   .gm-mk{background:none;border:0}
-  .gm-mk-b{display:inline-block;transform:translate(-50%,-115%);white-space:nowrap;font-family:var(--head);font-weight:700;font-size:12px;line-height:1;padding:6px 11px;border-radius:99px;box-shadow:0 4px 12px -2px rgba(0,0,0,.5);border:2px solid #fff;position:relative;cursor:pointer;transition:transform .13s,box-shadow .13s}
+  .gm-mk-b{display:inline-block;transform:translate(-50%,-115%);white-space:nowrap;font-family:var(--head);font-weight:700;font-size:.75rem;line-height:1;padding:6px 11px;border-radius:99px;box-shadow:0 4px 12px -2px rgba(0,0,0,.5);border:2px solid #fff;position:relative;cursor:pointer;transition:transform .13s,box-shadow .13s}
   .gm-mk-b::after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);border:5px solid transparent;border-top-color:inherit;margin-top:0}
   .gm-mk:hover{z-index:650!important}
   .gm-mk:hover .gm-mk-b{transform:translate(-50%,-128%) scale(1.06);box-shadow:0 8px 18px -4px rgba(0,0,0,.55)}
   .gm-mk-sat .gm-mk-b{background:#ff7a2f;border-top-color:#ff7a2f;color:#1a1205}
   .gm-mk-kir .gm-mk-b{background:#2f9e46;border-top-color:#2f9e46;color:#fff}
-  .gm-mk-oz .gm-mk-b{background:#1a1205;border-top-color:#1a1205;color:#ffb066;font-size:13px;padding:6px 9px}
+  .gm-mk-oz .gm-mk-b{background:#1a1205;border-top-color:#1a1205;color:#ffb066;font-size:.8125rem;padding:6px 9px}
   .gm-mk.sel{z-index:660!important}
   .gm-mk.sel .gm-mk-b{transform:translate(-50%,-130%) scale(1.12);box-shadow:0 0 0 4px rgba(255,176,102,.45),0 10px 22px -6px rgba(0,0,0,.55)}
   .gm-sat .leaflet-tile-container img{filter:none}
   .gm-basectl{display:flex;gap:0;background:#fff;border-radius:11px;overflow:hidden;box-shadow:0 4px 14px -4px rgba(0,0,0,.4);border:1px solid rgba(0,0,0,.08)}
-  .gm-basectl button{border:0;background:#fff;font-family:var(--head);font-weight:700;font-size:12.5px;color:#3a2e22;padding:8px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:.14s}
+  .gm-basectl button{border:0;background:#fff;font-family:var(--head);font-weight:700;font-size:.78125rem;color:#3a2e22;padding:8px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:.14s}
   .gm-basectl button+button{border-left:1px solid #eee5d8}
   .gm-basectl button.on{background:#ff7a2f;color:#1a1205}
   .gm-basectl button:not(.on):hover{background:#f5f0e6}
   .gm-pop-wrap .leaflet-popup-content-wrapper{background:var(--surface);border-radius:16px;box-shadow:0 22px 50px -18px rgba(0,0,0,.6);border:1px solid var(--line);padding:0;overflow:hidden}
   .gm-pop-wrap .leaflet-popup-content{margin:0;width:auto!important}
   .gm-pop-wrap .leaflet-popup-tip{background:var(--surface);box-shadow:0 6px 14px -6px rgba(0,0,0,.4)}
-  .gm-pop-wrap a.leaflet-popup-close-button{color:#fff;top:8px;right:9px;width:24px;height:24px;font-size:18px;line-height:22px;background:rgba(0,0,0,.45);border-radius:50%;text-align:center;font-weight:400}
+  .gm-pop-wrap a.leaflet-popup-close-button{color:#fff;top:8px;right:9px;width:24px;height:24px;font-size:1.125rem;line-height:1.375rem;background:rgba(0,0,0,.45);border-radius:50%;text-align:center;font-weight:400}
   .gm-pop-wrap a.leaflet-popup-close-button:hover{background:rgba(0,0,0,.68);color:#fff}
   .gm-card{width:272px;font-family:var(--body)}
   .gm-card-img{height:132px;background-size:cover;background-position:center;position:relative;background-color:#2a2a2a}
   .gm-card-img.noimg,.gm-card-img.locked{background:linear-gradient(135deg,#1a1205,#ff7a2f);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#fff}
   .gm-card-img.locked .gm-lock{opacity:.95}
-  .gm-card-img.locked .gm-lock-tx{font-family:var(--head);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.92}
-  .gm-card-op{position:absolute;top:10px;left:10px;font-family:var(--head);font-size:10.5px;font-weight:800;letter-spacing:.03em;padding:4px 10px;border-radius:99px;color:#1a1205;text-transform:uppercase;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+  .gm-card-img.locked .gm-lock-tx{font-family:var(--head);font-weight:700;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;opacity:.92}
+  .gm-card-op{position:absolute;top:10px;left:10px;font-family:var(--head);font-size:.65625rem;font-weight:800;letter-spacing:.03em;padding:4px 10px;border-radius:99px;color:#1a1205;text-transform:uppercase;box-shadow:0 2px 6px rgba(0,0,0,.3)}
   .gm-card-op.sat{background:#ff7a2f}
   .gm-card-op.kir{background:#2f9e46;color:#fff}
   .gm-card-op.oz{background:rgba(26,18,5,.72);color:#ffb066;backdrop-filter:blur(2px)}
   .gm-card-b{padding:13px 15px 15px}
-  .gm-card-t{font-family:var(--head);font-weight:700;font-size:15.5px;color:var(--ink);margin:0 0 4px;line-height:1.22}
-  .gm-card-loc{font-size:12.5px;color:var(--muted)}
-  .gm-approx{opacity:.75;font-size:11px}
+  .gm-card-t{font-family:var(--head);font-weight:700;font-size:.96875rem;color:var(--ink);margin:0 0 4px;line-height:1.22}
+  .gm-card-loc{font-size:.78125rem;color:var(--muted)}
+  .gm-approx{opacity:.75;font-size:.6875rem}
   .gm-card-feat{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
-  .gm-card-feat span{font-family:var(--head);font-size:11.5px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:4px 9px}
+  .gm-card-feat span{font-family:var(--head);font-size:.71875rem;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:4px 9px}
   .gm-card-feat b{font-weight:700;color:var(--ink)}
-  .gm-card-p{font-family:var(--head);font-weight:700;font-size:20px;color:var(--accent);margin-top:11px;letter-spacing:-.01em}
-  .gm-card-p small{font-size:11px;color:var(--muted);font-weight:600}
-  .gm-card-note{font-size:10.5px;color:var(--muted);margin-top:7px;line-height:1.35}
+  .gm-card-p{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--accent);margin-top:11px;letter-spacing:-.01em}
+  .gm-card-p small{font-size:.6875rem;color:var(--muted);font-weight:600}
+  .gm-card-note{font-size:.65625rem;color:var(--muted);margin-top:7px;line-height:1.35}
   .gm-card-act{display:flex;gap:8px;margin-top:12px}
-  .gm-card-btn{flex:1;text-align:center;font-family:var(--head);font-weight:700;font-size:12.5px;padding:9px 12px;border-radius:10px;text-decoration:none;transition:.14s}
+  .gm-card-btn{flex:1;text-align:center;font-family:var(--head);font-weight:700;font-size:.78125rem;padding:9px 12px;border-radius:10px;text-decoration:none;transition:.14s}
   .gm-card-btn.primary{color:#1a1205;background:linear-gradient(135deg,#ff7a2f,#ffb066)}
   .gm-card-btn.primary:hover{filter:brightness(1.08)}
   .gm-card-btn.wa{color:#25d366;background:rgba(37,211,102,.14);border:1px solid rgba(37,211,102,.32)}
@@ -122,12 +122,12 @@
   .gm-ml-row.oz{border-left:3px solid #1a1205}
   .gm-ml-th{width:52px;height:52px;border-radius:10px;flex:none;background-size:cover;background-position:center;background-color:#2a2a2a}
   .gm-ml-th.noimg{background:linear-gradient(135deg,#ffb066,#ff7a2f)}
-  .gm-ml-th.oz{display:grid;place-items:center;font-size:20px;background:linear-gradient(135deg,#1a1205,#ff7a2f)}
-  .gm-ml-t{flex:1;min-width:0;font-family:var(--head);font-weight:600;font-size:13px;color:var(--ink);line-height:1.22}
-  .gm-ml-t i{display:block;font-style:normal;font-weight:400;font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .gm-ml-p{font-family:var(--head);font-weight:700;font-size:13px;color:var(--accent);flex:none;text-align:right}
-  .gm-ml-p small{font-size:10px;color:var(--muted);font-weight:600}
-  .gm-map-empty{color:var(--muted);font-size:13px;padding:14px;text-align:center}
+  .gm-ml-th.oz{display:grid;place-items:center;font-size:1.25rem;background:linear-gradient(135deg,#1a1205,#ff7a2f)}
+  .gm-ml-t{flex:1;min-width:0;font-family:var(--head);font-weight:600;font-size:.8125rem;color:var(--ink);line-height:1.22}
+  .gm-ml-t i{display:block;font-style:normal;font-weight:400;font-size:.6875rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gm-ml-p{font-family:var(--head);font-weight:700;font-size:.8125rem;color:var(--accent);flex:none;text-align:right}
+  .gm-ml-p small{font-size:.625rem;color:var(--muted);font-weight:600}
+  .gm-map-empty{color:var(--muted);font-size:.8125rem;padding:14px;text-align:center}
 </style>
 <script>function openTeklif(){location.href='index.html#iletisim'}function openGiris(){location.href='index.html#giris'}function nbLang(){}
 /* header scroll durumu — ana sayfa/alt sayfalarla birebir (transparent → surface) */
@@ -155,7 +155,7 @@ addEventListener('scroll',function(){var h=document.getElementById('hdr');if(h)h
 
 <div class="mnav" id="mnav" onclick="if(event.target.id==='mnav')this.classList.remove('open')"><div class="panel">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><b style="font-family:var(--head)">Menü</b>
-    <button style="background:none;border:0;font-size:22px;cursor:pointer;color:var(--ink)" onclick="document.getElementById('mnav').classList.remove('open')">✕</button></div>
+    <button style="background:none;border:0;font-size:1.375rem;cursor:pointer;color:var(--ink)" onclick="document.getElementById('mnav').classList.remove('open')">✕</button></div>
   <a href="index.html#hizmetler" >Hizmetlerimiz</a><a href="neden-biz.html" onclick="document.getElementById('mnav').classList.remove('open')">Neden <span class="nb-x">?</span> Biz</a><a href="index.html#projeler" >Projeler</a>
   <a href="ilanlar.html" onclick="document.getElementById('mnav').classList.remove('open')">İlanlar</a><a href="index.html#bolge" >Bölge Zekası</a><a href="#giris" onclick="event.preventDefault();document.getElementById('mnav').classList.remove('open');openGiris()">Giriş</a>
   <button class="btn btn-primary" style="margin-top:14px;justify-content:center" onclick="openTeklif();document.getElementById('mnav').classList.remove('open')">Ücretsiz Keşif</button>
@@ -206,7 +206,7 @@ addEventListener('scroll',function(){var h=document.getElementById('hdr');if(h)h
 </main>
 
 <!-- ===== DEMO & KURUMSAL BANT (her sayfada footer üstünde) ===== -->
-<link rel="stylesheet" href="css/kabuk-ortak.css?v=2">
+<link rel="stylesheet" href="css/kabuk-ortak.css?v=3">
 <section class="demo-band" aria-label="Demo ve kurumsal bilgi">
   <div class="db-in">
     <div class="db-lead">

@@ -33,8 +33,8 @@
       '<div class="br-scroll" id="infoScroll">' +
       '<section class="br-hero2 info-hero" style="min-height:auto"><div class="br-hero-bg"></div><div class="grid-motif"></div>' +
       '<div class="in"><div class="eyebrow" id="info_eye" style="display:block;margin-bottom:10px">Kurumsal</div>' +
-      '<h1 id="info_title" style="font-family:var(--head);font-size:clamp(28px,5vw,50px);line-height:1.06;margin-bottom:12px">—</h1>' +
-      '<p id="info_lead" style="max-width:680px;color:var(--muted);font-size:16.5px;line-height:1.6"></p></div></section>' +
+      '<h1 id="info_title" style="font-family:var(--head);font-size:clamp(1.75rem,5vw,3.125rem);line-height:1.06;margin-bottom:12px">—</h1>' +
+      '<p id="info_lead" style="max-width:680px;color:var(--muted);font-size:1.03125rem;line-height:1.6"></p></div></section>' +
       '<div class="wrap hk-wrap" id="infoBody"></div>' +
       '<footer class="siteFooter"></footer></div></div>';
     document.body.appendChild(d.firstChild);

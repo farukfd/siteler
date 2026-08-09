@@ -6,16 +6,16 @@
   .il-hero .il-hbg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(58% 120% at 14% -10%,color-mix(in srgb,var(--accent,#ff7a2f) 30%,transparent),transparent 60%),radial-gradient(46% 100% at 100% 120%,color-mix(in srgb,var(--accent-2,#ffb070) 16%,transparent),transparent 55%)}
   .il-hero .il-hbg::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:46px 46px;-webkit-mask-image:radial-gradient(72% 100% at 28% 0%,#000,transparent 72%);mask-image:radial-gradient(72% 100% at 28% 0%,#000,transparent 72%)}
   .il-hero .wrap{position:relative;max-width:1240px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
-  .il-eyebrow{display:inline-flex;align-items:center;gap:8px;font:800 11.5px/1 system-ui;letter-spacing:.09em;text-transform:uppercase;color:var(--accent,#ff7a2f);background:color-mix(in srgb,var(--accent,#ff7a2f) 14%,transparent);border:1px solid color-mix(in srgb,var(--accent,#ff7a2f) 34%,transparent);padding:8px 14px;border-radius:999px}
-  .il-hero h1{font-family:var(--head,inherit);font-weight:800;font-size:clamp(28px,4.6vw,44px);line-height:1.06;letter-spacing:-.02em;margin:18px 0 12px;color:#fff}
-  .il-hero p{max-width:700px;margin:0;color:#c9cfd8;font:500 16px/1.65 system-ui}
+  .il-eyebrow{display:inline-flex;align-items:center;gap:8px;font:800 .71875rem/1 system-ui;letter-spacing:.09em;text-transform:uppercase;color:var(--accent,#ff7a2f);background:color-mix(in srgb,var(--accent,#ff7a2f) 14%,transparent);border:1px solid color-mix(in srgb,var(--accent,#ff7a2f) 34%,transparent);padding:8px 14px;border-radius:999px}
+  .il-hero h1{font-family:var(--head,inherit);font-weight:800;font-size:clamp(1.75rem,4.6vw,2.75rem);line-height:1.06;letter-spacing:-.02em;margin:18px 0 12px;color:#fff}
+  .il-hero p{max-width:700px;margin:0;color:#c9cfd8;font:500 1rem/1.65 system-ui}
   .doc-wrap{max-width:880px;margin:0 auto;padding:44px clamp(16px,4vw,40px) 24px}
-  .doc-article h2{font-family:var(--head);font-weight:800;font-size:clamp(20px,2.8vw,26px);color:var(--ink);margin:34px 0 12px;letter-spacing:-.01em}
+  .doc-article h2{font-family:var(--head);font-weight:800;font-size:clamp(1.25rem,2.8vw,1.625rem);color:var(--ink);margin:34px 0 12px;letter-spacing:-.01em}
   .doc-article h2:first-child{margin-top:0}
-  .doc-article h3{font-family:var(--head);font-weight:700;font-size:17.5px;color:var(--ink);margin:24px 0 6px}
-  .doc-article p{color:#c3c9d2;font:400 15.5px/1.8 system-ui;margin:0 0 15px}
+  .doc-article h3{font-family:var(--head);font-weight:700;font-size:1.09375rem;color:var(--ink);margin:24px 0 6px}
+  .doc-article p{color:#c3c9d2;font:400 .96875rem/1.8 system-ui;margin:0 0 15px}
   .doc-article ul{margin:4px 0 18px;padding:0;list-style:none}
-  .doc-article li{position:relative;color:#c3c9d2;font:400 15px/1.65 system-ui;padding:9px 0 9px 28px;border-bottom:1px solid var(--line)}
+  .doc-article li{position:relative;color:#c3c9d2;font:400 .9375rem/1.65 system-ui;padding:9px 0 9px 28px;border-bottom:1px solid var(--line)}
   .doc-article li:last-child{border-bottom:0}
   .doc-article li:before{content:"";position:absolute;left:3px;top:16px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
   .doc-article b{color:var(--ink);font-weight:700}

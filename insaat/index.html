@@ -99,7 +99,7 @@ else proxBootstrap();
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&family=Manrope:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/base.css?v=5">
+  <link rel="stylesheet" href="css/base.css?v=74">
   <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
@@ -115,7 +115,7 @@ else proxBootstrap();
 .nav-wa svg{width:20px;height:20px}
 .lang-sw{display:inline-flex;align-items:center;gap:5px}
 .lang-sw>svg{width:17px;height:17px;color:var(--muted)}
-.lang-sel{border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:9px;padding:7px 8px;font-family:var(--body);font-weight:700;font-size:12.5px;color:#fff;cursor:pointer;outline:none}
+.lang-sel{border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:9px;padding:7px 8px;font-family:var(--body);font-weight:700;font-size:.78125rem;color:#fff;cursor:pointer;outline:none}
 header.scrolled .lang-sel{color:var(--ink)}
 .lang-sel option{color:#111}
 @media(max-width:980px){.nav-wa,.lang-sw{display:none}}
@@ -124,59 +124,59 @@ header.scrolled .lang-sel{color:var(--ink)}
 .gmodal.closing{display:block;animation:insOvOut .18s ease-in forwards;pointer-events:none}/* §7 Dalga C */
 .gm-ov{position:absolute;inset:0;background:rgba(6,8,14,.72);backdrop-filter:blur(3px)}
 .gm-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,92vw);background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
-.gm-x{position:absolute;right:14px;top:12px;background:none;border:0;color:var(--muted);font-size:20px;cursor:pointer}
-.gm-head{display:flex;align-items:center;gap:10px;margin-bottom:16px;font-family:var(--head);font-weight:800;font-size:17px;color:var(--on-surface)}
+.gm-x{position:absolute;right:14px;top:12px;background:none;border:0;color:var(--muted);font-size:1.25rem;cursor:pointer}
+.gm-head{display:flex;align-items:center;gap:10px;margin-bottom:16px;font-family:var(--head);font-weight:800;font-size:1.0625rem;color:var(--on-surface)}
 .gm-head .mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-weight:800}
 .gm-tabs{display:flex;gap:8px;margin-bottom:14px}
-.gm-tabs button{flex:1;background:var(--surface-2);border:1px solid var(--line);color:var(--on-surface-mut);border-radius:10px;padding:9px;font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;transition:.15s}
+.gm-tabs button{flex:1;background:var(--surface-2);border:1px solid var(--line);color:var(--on-surface-mut);border-radius:10px;padding:9px;font-family:var(--body);font-weight:700;font-size:.8125rem;cursor:pointer;transition:.15s}
 .gm-tabs button.act{background:var(--accent);color:var(--on-accent);border-color:transparent}
-.gm-pane .sub{font-size:12.5px;color:var(--on-surface-mut);margin:0 0 6px}
-.gm-pane label{display:block;font-size:12.5px;color:var(--on-surface-mut);margin:10px 0 5px;font-weight:600}
-.gm-pane input{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:11px 12px;color:var(--on-surface);font-size:14px;outline:none}
-.gm-btn{width:100%;margin-top:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--on-accent);border:0;border-radius:10px;padding:12px;font-family:var(--body);font-weight:700;font-size:14px;cursor:pointer}
-.gm-err{color:#ff8a8a;font-size:12.5px;margin-top:8px;min-height:16px}
-.gm-note{font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.5}
+.gm-pane .sub{font-size:.78125rem;color:var(--on-surface-mut);margin:0 0 6px}
+.gm-pane label{display:block;font-size:.78125rem;color:var(--on-surface-mut);margin:10px 0 5px;font-weight:600}
+.gm-pane input{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:11px 12px;color:var(--on-surface);font-size:.875rem;outline:none}
+.gm-btn{width:100%;margin-top:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--on-accent);border:0;border-radius:10px;padding:12px;font-family:var(--body);font-weight:700;font-size:.875rem;cursor:pointer}
+.gm-err{color:#ff8a8a;font-size:.78125rem;margin-top:8px;min-height:16px}
+.gm-note{font-size:.71875rem;color:var(--muted);margin-top:12px;line-height:1.5}
 .gm-note a{text-decoration:none}
-.gm-kvkk{display:flex;gap:8px;align-items:flex-start;margin-top:12px;font-size:12px;color:var(--muted)}
+.gm-kvkk{display:flex;gap:8px;align-items:flex-start;margin-top:12px;font-size:.75rem;color:var(--muted)}
 .gm-kvkk input{width:auto;margin:2px 0 0;flex:0 0 auto}
-.gm-kvkk label{margin:0;font-weight:400;font-size:12px}
+.gm-kvkk label{margin:0;font-weight:400;font-size:.75rem}
 .au-prof{display:flex;align-items:center;gap:14px;padding:8px 0 2px}
-.au-av{width:52px;height:52px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-weight:800;font-size:22px;font-family:var(--head);flex:0 0 auto}
-.au-pname{font-family:var(--head);font-weight:700;font-size:17px;color:var(--on-surface)}
-.au-pmail{font-size:13px;color:var(--muted)}
+.au-av{width:52px;height:52px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-weight:800;font-size:1.375rem;font-family:var(--head);flex:0 0 auto}
+.au-pname{font-family:var(--head);font-weight:700;font-size:1.0625rem;color:var(--on-surface)}
+.au-pmail{font-size:.8125rem;color:var(--muted)}
 .js-giris.logged::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#19c37d;margin-right:7px;vertical-align:middle}
 /* Footer alt şerit + Powered by ProX (X yeşil kutu) */
-.fbrand{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 16px;margin-top:14px;padding:16px 0 4px;border-top:1px solid rgba(255,255,255,.09);font-size:12px;color:#8fa0bd;text-align:center}
+.fbrand{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 16px;margin-top:14px;padding:16px 0 4px;border-top:1px solid rgba(255,255,255,.09);font-size:.75rem;color:#8fa0bd;text-align:center}
 .fbrand .fvo{color:#b9c6dc;font-weight:600}
 .fprox{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
 .fprox .fprox-mark{display:inline-flex;align-items:center}
-.fprox .fprox-lead{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#7f8ea8;font-weight:600}
-.fprox .fprox-pro{font-family:var(--head);font-weight:800;font-size:15px;color:#fff}
-.fprox .fprox-x{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;height:1.4em;background:#16a34a;color:#0b1220;border-radius:6px;font-family:var(--head);font-weight:800;font-size:14px;margin-left:2px}
+.fprox .fprox-lead{font-size:.59375rem;letter-spacing:.12em;text-transform:uppercase;color:#7f8ea8;font-weight:600}
+.fprox .fprox-pro{font-family:var(--head);font-weight:800;font-size:.9375rem;color:#fff}
+.fprox .fprox-x{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;height:1.4em;background:#16a34a;color:#0b1220;border-radius:6px;font-family:var(--head);font-weight:800;font-size:.875rem;margin-left:2px}
 .fprox:hover .fprox-x{background:#1fb155}
 .fvo{color:#b9c6dc;font-weight:600}
 .fsocial{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
 .fsocial a{width:38px;height:38px;border-radius:11px;display:inline-grid;place-items:center;padding:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);color:#b9c6dc;transition:.2s ease}
 .fsocial a:hover{background:var(--accent);border-color:transparent;color:#fff;transform:translateY(-2px);box-shadow:0 8px 20px -8px var(--accent)}
 .fsocial svg{width:17px;height:17px;fill:currentColor;display:block}
-.flegal{display:flex;flex-wrap:wrap;align-items:center;gap:8px 8px;font-size:12.5px;margin-top:14px}
+.flegal{display:flex;flex-wrap:wrap;align-items:center;gap:8px 8px;font-size:.78125rem;margin-top:14px}
 .fportals{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:16px}
-.fportals .fp-lead{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8fa0bb;margin-right:2px}
-.fportals .fp{font-family:var(--head);font-weight:800;font-size:12.5px;letter-spacing:-.01em;line-height:1;padding:7px 12px;border-radius:8px;text-decoration:none;transition:.2s ease;box-shadow:0 4px 12px -6px rgba(0,0,0,.5)}
+.fportals .fp-lead{font-size:.6875rem;letter-spacing:.08em;text-transform:uppercase;color:#8fa0bb;margin-right:2px}
+.fportals .fp{font-family:var(--head);font-weight:800;font-size:.78125rem;letter-spacing:-.01em;line-height:1;padding:7px 12px;border-radius:8px;text-decoration:none;transition:.2s ease;box-shadow:0 4px 12px -6px rgba(0,0,0,.5)}
 .fportals .fp:hover{transform:translateY(-2px);filter:brightness(1.05)}
 .fportals .fp-sah{background:#ffe800;color:#12100a}
 .fportals .fp-hep{background:#ff5000;color:#fff}
 .fportals .fp-ejt{background:#0a4bd6;color:#fff}
 .fportals .fp-ejt b{font-weight:800}
-.flegal a{display:inline-block;position:relative;color:#8fa0bd;padding:2px 0;font-size:12.5px;transition:color .15s}
+.flegal a{display:inline-block;position:relative;color:#8fa0bd;padding:2px 0;font-size:.78125rem;transition:color .15s}
 .flegal a:not(:last-child)::after{content:"·";color:#4a5876;margin-left:8px}
 .flegal a:hover{color:#fff}
 .fbot{justify-content:space-between;align-items:center;gap:10px 16px;flex-wrap:wrap}
 .fbot .fcopy{color:#8fa0bb;text-align:left}
 .fbot .fprox{margin-left:auto}
-.dwg-kpi{background:var(--surface-2,var(--surface));border:1px solid var(--line);border-radius:9px;padding:6px 12px;font-size:12px;color:var(--muted)}
-.dwg-kpi b{color:var(--accent);font-family:var(--head);font-size:15px;margin-right:4px}
-.dwg-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.dwg-kpi{background:var(--surface-2,var(--surface));border:1px solid var(--line);border-radius:9px;padding:6px 12px;font-size:.75rem;color:var(--muted)}
+.dwg-kpi b{color:var(--accent);font-family:var(--head);font-size:.9375rem;margin-right:4px}
+.dwg-tbl{width:100%;border-collapse:collapse;font-size:.78125rem}
 .dwg-tbl td{padding:5px 8px;border-bottom:1px solid var(--line);color:var(--on-surface,var(--ink))}
 .dwg-tbl tr:last-child td{border-bottom:0}
 </style>
@@ -353,7 +353,7 @@ header.scrolled .lang-sel{color:var(--ink)}
   </div>
   <!-- Yatırım Değer Artışı Eğrisi (additive SVG · turuncu tema · responsive) -->
   <div style="margin-top:34px">
-    <div class="sec-head center" style="margin-bottom:14px"><div class="eyebrow">Yatırım Perspektifi</div><h3 style="font-size:clamp(20px,2.4vw,28px)">Lansmandan teslime tahmini değer artışı</h3></div>
+    <div class="sec-head center" style="margin-bottom:14px"><div class="eyebrow">Yatırım Perspektifi</div><h3 style="font-size:clamp(1.25rem,2.4vw,1.75rem)">Lansmandan teslime tahmini değer artışı</h3></div>
     <svg viewBox="0 0 800 300" width="100%" role="img" aria-label="Proje lansmanından anahtar teslime kadar tahmini yatırım değer artışı eğrisi" preserveAspectRatio="xMidYMid meet" style="max-width:880px;display:block;margin:0 auto;height:auto">
       <defs>
         <linearGradient id="yatirimFill" x1="0" y1="0" x2="0" y2="1">
@@ -377,7 +377,7 @@ header.scrolled .lang-sel{color:var(--ink)}
       </g>
       <text x="770" y="42" text-anchor="end" font-family="var(--head,inherit)" font-size="13" font-weight="700" fill="var(--accent)">+ Değer Artışı</text>
     </svg>
-    <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px;max-width:620px;margin-inline:auto">Temsili eğri; lokasyon, proje tipi ve piyasa koşullarına göre değişir.</p>
+    <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:8px;max-width:620px;margin-inline:auto">Temsili eğri; lokasyon, proje tipi ve piyasa koşullarına göre değişir.</p>
   </div>
 </div></section>
 
@@ -397,7 +397,7 @@ header.scrolled .lang-sel{color:var(--ink)}
       <div class="dw-cell"><div class="k">5 Yıllık Değişim</div><div class="v">+218<span class="up">%</span></div></div>
       <div class="dw-cell"><div class="k">Yatırım Skoru</div><div class="gauge">
         <svg width="54" height="54" viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="7"/><circle cx="28" cy="28" r="24" fill="none" stroke="#34d399" stroke-width="7" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="27" transform="rotate(-90 28 28)"/></svg>
-        <div class="v" style="font-size:23px">82<span style="font-size:13px;color:#9fb0ca">/100</span></div></div></div>
+        <div class="v" style="font-size:1.4375rem">82<span style="font-size:.8125rem;color:#9fb0ca">/100</span></div></div></div>
       <div class="dw-cell"><div class="k">5 Yıllık Trend</div>
         <svg width="100%" height="38" viewBox="0 0 120 40" preserveAspectRatio="none" style="margin-top:6px">
           <polyline points="0,34 20,30 40,26 60,18 80,14 100,8 120,4" fill="none" stroke="#60a5fa" stroke-width="2.5"/>
@@ -496,7 +496,7 @@ header.scrolled .lang-sel{color:var(--ink)}
   <div class="pp-grid" id="ppGrid"></div>
 
   <!-- ===== DEMO & KURUMSAL BANT (üstten alındı; her sayfada footer üstünde) ===== -->
-<link rel="stylesheet" href="css/kabuk-ortak.css?v=2">
+<link rel="stylesheet" href="css/kabuk-ortak.css?v=3">
 <section class="demo-band" aria-label="Demo ve kurumsal bilgi">
   <div class="db-in">
     <div class="db-lead">
@@ -887,12 +887,12 @@ function cookieChoice(v){
 <div id="adminApp"><!-- lazy: js/admin-markup.js --></div>
 
 <script src="js/tr-iller.js?v=1"></script>
-<script src="../shared/eids.js?v=1"></script>
-<script src="../shared/listing.js?v=24"></script>
-<script src="../shared/listing-extras.js?v=9"></script>
+<script src="../shared/eids.js?v=2"></script>
+<script src="../shared/listing.js?v=25"></script>
+<script src="../shared/listing-extras.js?v=10"></script>
 <script src="../shared/cs-engine.js?v=2"></script>
 <script src="js/content-studio.js?v=3"></script>
-<script src="js/app-core.js?v=38"></script>
+<script src="js/app-core.js?v=39"></script>
 
 
 
@@ -1706,21 +1706,21 @@ window.initProje3D=async function(){
     var tipLabel=({konut:'Konut (Apartman)',rezidans:'Rezidans',villa:'Villa Sitesi',ticari:'Ticari/Karma'})[p.tip]||p.tip;
     var H="";
     H+='<!DOCTYPE html><html><head><meta charset="utf-8"><title>Fizibilite Raporu</title><style>';
-    H+='@page{size:A4;margin:16mm}body{font-family:Arial,sans-serif;color:#1a1d24;line-height:1.5;font-size:12px}';
+    H+='@page{size:A4;margin:16mm}body{font-family:Arial,sans-serif;color:#1a1d24;line-height:1.5;font-size:.75rem}';
     H+='.rhead{display:flex;align-items:center;gap:14px;border-bottom:3px solid #ff7a2f;padding-bottom:14px;margin-bottom:18px}';
-    H+='.rlogo{width:54px;height:54px;border-radius:10px;background:#ff7a2f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700}';
-    H+='.rfirma{font-size:20px;font-weight:700}.rsub{font-size:11px;color:#666;margin-top:2px}';
-    H+='.rtitle{font-size:17px;font-weight:700;margin:18px 0 4px}';
-    H+='.rmeta{background:#f5f5f0;border-radius:8px;padding:12px 14px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr;gap:5px 20px;font-size:12px}';
+    H+='.rlogo{width:54px;height:54px;border-radius:10px;background:#ff7a2f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.625rem;font-weight:700}';
+    H+='.rfirma{font-size:1.25rem;font-weight:700}.rsub{font-size:.6875rem;color:#666;margin-top:2px}';
+    H+='.rtitle{font-size:1.0625rem;font-weight:700;margin:18px 0 4px}';
+    H+='.rmeta{background:#f5f5f0;border-radius:8px;padding:12px 14px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr;gap:5px 20px;font-size:.75rem}';
     H+='.rmeta div{display:flex;justify-content:space-between;border-bottom:1px dotted #ddd;padding:3px 0}';
-    H+='.sec{font-size:14px;font-weight:700;color:#ff7a2f;margin:18px 0 8px;border-left:4px solid #ff7a2f;padding-left:8px}';
-    H+='table{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:11.5px}th,td{border:1px solid #ddd;padding:7px 9px;text-align:left}th{background:#0e0f13;color:#fff}tr:nth-child(even){background:#faf9f7}';
+    H+='.sec{font-size:.875rem;font-weight:700;color:#ff7a2f;margin:18px 0 8px;border-left:4px solid #ff7a2f;padding-left:8px}';
+    H+='table{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:.71875rem}th,td{border:1px solid #ddd;padding:7px 9px;text-align:left}th{background:#0e0f13;color:#fff}tr:nth-child(even){background:#faf9f7}';
     H+='.share{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}.sbox{padding:14px;border-radius:9px}.sarsa{background:#f3eefe;border:1px solid #c9b3f5}.smut{background:#eaf1fc;border:1px solid #aecbf2}';
-    H+='.sbox .sl{font-size:11px;font-weight:700;color:#666}.sbox .sn{font-size:21px;font-weight:700;margin:4px 0}.sbox .sd{font-size:12px;color:#444}';
+    H+='.sbox .sl{font-size:.6875rem;font-weight:700;color:#666}.sbox .sn{font-size:1.3125rem;font-weight:700;margin:4px 0}.sbox .sd{font-size:.75rem;color:#444}';
     H+='.imgrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}.imgrow img{width:100%;border-radius:8px;border:1px solid #ddd}';
     H+='.snap{width:100%;border-radius:10px;border:1px solid #ddd;margin-bottom:14px}';
-    H+='.note{background:#fff8f2;border-left:3px solid #ff7a2f;padding:12px 14px;border-radius:0 8px 8px 0;font-size:12px;margin-bottom:14px;white-space:pre-wrap}';
-    H+='.disc{font-size:9.5px;color:#999;font-style:italic;margin-top:8px}.rfoot{margin-top:22px;border-top:1px solid #ccc;padding-top:10px;font-size:9.5px;color:#888;text-align:center}';
+    H+='.note{background:#fff8f2;border-left:3px solid #ff7a2f;padding:12px 14px;border-radius:0 8px 8px 0;font-size:.75rem;margin-bottom:14px;white-space:pre-wrap}';
+    H+='.disc{font-size:.59375rem;color:#999;font-style:italic;margin-top:8px}.rfoot{margin-top:22px;border-top:1px solid #ccc;padding-top:10px;font-size:.59375rem;color:#888;text-align:center}';
     H+='@media print{.noprint{display:none}}</style></head><body>';
     H+='<div class="rhead"><div class="rlogo">'+(firma[0]||"M")+'</div><div><div class="rfirma">'+firma+'</div><div class="rsub">'+(S.firmaAdres||"")+' · '+(S.firmaTel||"")+' · '+(S.firmaEmail||"")+'</div></div></div>';
     H+='<div class="rtitle">KAT KARŞILIĞI FİZİBİLİTE & PROJE RAPORU</div><div class="rsub" style="margin-bottom:14px">Rapor Tarihi: '+today+'</div>';
@@ -1756,7 +1756,7 @@ window.initProje3D=async function(){
     if(note)H+='<div class="sec">Notlar</div><div class="note">'+note.replace(/</g,"&lt;")+'</div>';
     H+='<div class="disc">⚠️ Bu rapor ön fizibilite amaçlıdır. Kesin daire adedi, paylaşım ve değerler onaylı mimari projeye, belediye imar durumuna ve piyasa koşullarına göre değişir. Resmi sözleşme için hukuki danışmanlık alınmalıdır.</div>';
     H+='<div class="rfoot">'+firma+' · '+(S.firmaEmail||"")+' · '+today+'</div>';
-    H+='<div class="noprint" style="text-align:center;margin-top:20px"><button onclick="window.print()" style="background:#ff7a2f;color:#fff;border:0;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">🖨️ PDF Olarak Kaydet / Yazdır</button></div>';
+    H+='<div class="noprint" style="text-align:center;margin-top:20px"><button onclick="window.print()" style="background:#ff7a2f;color:#fff;border:0;padding:12px 28px;border-radius:8px;font-size:.875rem;font-weight:700;cursor:pointer">🖨️ PDF Olarak Kaydet / Yazdır</button></div>';
     H+='</body></html>';
     /* API-first: canlı /pdf/generate {title,pages:[{id,html}],css} → {success,pdf_base64} dönerse blob indir; aksi halde yerel yazdırılabilir pencere fallback. */
     var _apiDone=false;
@@ -1879,13 +1879,13 @@ window.initProje3D=async function(){
     var html='<!DOCTYPE html><html><head><meta charset="utf-8"><title>Kat Planı</title><style>'+
       'body{font-family:Arial,sans-serif;padding:24px;background:#fafafa;color:#1a1d24}'+
       '.kh{display:flex;align-items:center;gap:12px;border-bottom:3px solid #ff7a2f;padding-bottom:12px;margin-bottom:18px}'+
-      '.kl{width:46px;height:46px;border-radius:9px;background:#ff7a2f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700}'+
-      '.kf{font-size:18px;font-weight:700}.ks{font-size:11px;color:#666}'+
-      '.legend{display:flex;gap:18px;margin:14px 0;flex-wrap:wrap;font-size:12px}'+
+      '.kl{width:46px;height:46px;border-radius:9px;background:#ff7a2f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.375rem;font-weight:700}'+
+      '.kf{font-size:1.125rem;font-weight:700}.ks{font-size:.6875rem;color:#666}'+
+      '.legend{display:flex;gap:18px;margin:14px 0;flex-wrap:wrap;font-size:.75rem}'+
       '.lg{display:flex;align-items:center;gap:6px}.sw{width:18px;height:18px;border-radius:3px;border:1px solid #0e0f13}'+
       '.plans{display:flex;gap:30px;flex-wrap:wrap;justify-content:center}'+
       '.pcard{background:#fff;border-radius:10px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,.08)}'+
-      '.meta{font-size:12px;color:#444;margin-bottom:8px}'+
+      '.meta{font-size:.75rem;color:#444;margin-bottom:8px}'+
       '@media print{.noprint{display:none}body{background:#fff}}'+
       '</style></head><body>'+
       '<div class="kh"><div class="kl">'+(firma[0]||'M')+'</div><div><div class="kf">'+firma+'</div><div class="ks">Şematik Kat Planları · '+(p.musteri||'')+' · '+p.ad+'</div></div></div>'+
@@ -1900,7 +1900,7 @@ window.initProje3D=async function(){
         (p.dukkan>0?'<div class="pcard">'+svgFloor('ZEMİN KAT — Dükkanlar',groundUnits,true)+'</div>':'')+
         '<div class="pcard">'+svgFloor('TİP KAT — Daireler ('+perFloor+' daire/kat)',typUnits,false)+'</div>'+
       '</div>'+
-      '<div class="noprint" style="text-align:center;margin-top:20px"><button onclick="window.print()" style="background:#ff7a2f;color:#fff;border:0;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">🖨️ Kat Planını Yazdır / PDF</button></div>'+
+      '<div class="noprint" style="text-align:center;margin-top:20px"><button onclick="window.print()" style="background:#ff7a2f;color:#fff;border:0;padding:12px 28px;border-radius:8px;font-size:.875rem;font-weight:700;cursor:pointer">🖨️ Kat Planını Yazdır / PDF</button></div>'+
       '</body></html>';
     w.document.write(html);w.document.close();
   };
@@ -2057,7 +2057,7 @@ async function hesapQuickQuote(){var m=document.getElementById('hq_msg');var r=a
 </script>
 
 <script src="js/app-ui.js"></script>
-<script src="../shared/mahalle-endeks.js?v=2"></script>
+<script src="../shared/mahalle-endeks.js?v=15"></script>
 <script>
 /* insaat — MAHALLE ENDEKSİ bootstrap → shared/mahalle-endeks.js (İstanbul) */
 (function(){

@@ -1183,8 +1183,8 @@ function bzPaint(d,live){
   document.getElementById('dwName').textContent=d.mah+' · '+d.ilce+' / '+((typeof PROVINCE!=='undefined'&&PROVINCE.name)||'İzmir');
   document.getElementById('dwM2').textContent=fmt(d.m2)+' ₺';
   document.getElementById('dwChg').innerHTML='+'+d.chg+'<span class="up">%</span>';
-  document.getElementById('dwScore').innerHTML=d.score+'<span style="font-size:13px;color:#9fb0ca">/100</span>';
-  const kEl=document.getElementById('dwKira');if(kEl)kEl.innerHTML=d.kira+'<span class="up" style="font-size:14px">%</span>';
+  document.getElementById('dwScore').innerHTML=d.score+'<span style="font-size:.8125rem;color:#9fb0ca">/100</span>';
+  const kEl=document.getElementById('dwKira');if(kEl)kEl.innerHTML=d.kira+'<span class="up" style="font-size:.875rem">%</span>';
   const risk=document.getElementById('dwRisk');risk.textContent=d.risk;risk.className='badge-risk'+(d.warn?' warn':'');
   const arc=document.getElementById('dwGaugeArc');if(arc){const circ=150.8;const off=circ-(circ*d.score/100);arc.style.transition='stroke-dashoffset 1s ease';setTimeout(()=>arc.style.strokeDashoffset=off,40);}
   bzRenderChart();
@@ -1358,11 +1358,11 @@ function brComputeStats(){
 }
 function brOverview(){
   const o=BR_OVER,host=document.getElementById('brOv');if(!host)return;
-  host.innerHTML=`<div style="font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:14px">${PROVINCE.name} geneli özet</div>
+  host.innerHTML=`<div style="font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:14px">${PROVINCE.name} geneli özet</div>
   <div class="br-ov-grid">
     <div class="br-ov-c"><div class="v num">${fmt(o.avgM2)} ₺</div><div class="l">İl geneli ort. m² fiyatı</div></div>
     <div class="br-ov-c"><div class="v num up">+%${o.avgChg}</div><div class="l">5 yıllık ort. değer değişimi</div></div>
-    <div class="br-ov-c"><div class="v num">${o.avgScore}<small style="font-size:13px;color:var(--muted)">/100</small></div><div class="l">Ortalama yatırım skoru</div></div>
+    <div class="br-ov-c"><div class="v num">${o.avgScore}<small style="font-size:.8125rem;color:var(--muted)">/100</small></div><div class="l">Ortalama yatırım skoru</div></div>
     <div class="br-ov-c"><div class="v num">${o.nIlce}</div><div class="l">İlçe veri kapsamında</div><div class="sub">En değerli: ${o.topVal.d}</div></div>
     <div class="br-ov-c"><div class="v num">${PROVINCE.mahCount}</div><div class="l">Mahalle veri kapsamında</div><div class="sub">En çok yükselen: ${o.topChg.d}</div></div>
   </div>`;
@@ -1374,7 +1374,7 @@ function brHighlights(){
   const firsat=BR_ALL.filter(x=>x.score>=74&&x.chg>=200&&x.m2<=BR_OVER.avgM2*1.35).sort((a,b)=>(b.chg+b.score)-(a.chg+a.score)).slice(0,5);
   const tgt='<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.4"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>';
   const row=(x,i,val,up)=>`<div class="br-hl-row" onclick="brOpenMah('${x.ilce}','${x.mah.replace(/'/g,"\\'")}')"><span class="rk">${i+1}</span><span class="nm">${x.mah}<small>${x.ilce}</small></span><span class="vv num ${up?'up':''}">${val}</span></div>`;
-  host.innerHTML=`<div style="font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:14px">Öne çıkanlar</div>
+  host.innerHTML=`<div style="font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:14px">Öne çıkanlar</div>
   <div class="br-hl-grid">
     <div class="br-hl-card"><h3>${brIco(BRI.spark,16)} En Değerli Mahalleler</h3><div class="hd">m² fiyatına göre</div>${byM2.map((x,i)=>row(x,i,fmt(x.m2)+' ₺',false)).join('')}</div>
     <div class="br-hl-card"><h3>${brIco(BRI.trend,16)} En Çok Değer Kazananlar</h3><div class="hd">son 5 yıl değişim</div>${byChg.map((x,i)=>row(x,i,'+%'+x.chg,true)).join('')}</div>
@@ -1465,7 +1465,7 @@ function brSelD(ilce,btn){
     <div class="di-main"><h3>${ilce}</h3><p>${a.n} mahalle · ${brGrpName(ilce)} · ${risk}</p></div>
     <div class="di-s"><div class="v num">${fmt(a.m2)} ₺</div><div class="l">Ort. m² fiyatı</div></div>
     <div class="di-s"><div class="v num up">+%${a.chg}</div><div class="l">5 yıllık değişim</div></div>
-    <div class="di-s"><div class="v num">${a.score}<small style="font-size:13px;color:var(--muted)">/100</small></div><div class="l">Yatırım skoru</div></div>`;
+    <div class="di-s"><div class="v num">${a.score}<small style="font-size:.8125rem;color:var(--muted)">/100</small></div><div class="l">Yatırım skoru</div></div>`;
   brNeighChart(ilce);brGrid(ilce);
 }
 function brCardHTML(ilce,mah,showIlce){
@@ -1580,7 +1580,7 @@ function brDetailRender(d){
         <div class="dw-cell"><div class="k">5 Yıllık Değişim</div><div class="v num" style="color:#7ed598">+%${d.chg}</div></div>
         <div class="dw-cell"><div class="k">Yatırım Skoru</div>
           <div class="gauge"><svg width="44" height="44" viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="7"/><circle cx="28" cy="28" r="24" fill="none" stroke="#34d399" stroke-width="7" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 28 28)"/></svg>
-          <div class="v num" style="font-size:18px">${d.score}<span style="font-size:12px;color:#9fb0ca">/100</span></div></div></div>
+          <div class="v num" style="font-size:1.125rem">${d.score}<span style="font-size:.75rem;color:#9fb0ca">/100</span></div></div></div>
         <div class="dw-cell"><div class="k">Brüt Kira Getirisi</div><div class="v num">${d.kira}%</div></div>
       </div>
       <div class="bz-metric" id="brMetric">
@@ -1752,7 +1752,7 @@ async function refineDegerFromAnalyze(il,tip,m2,localB,mah){
     const res=document.getElementById('valResult');
     if(res){
       let info=res.querySelector('#valProxInfo');
-      if(!info){info=document.createElement('div');info.id='valProxInfo';info.style.cssText='margin-top:10px;font-size:13.5px;color:var(--muted);line-height:1.55';res.appendChild(info);}
+      if(!info){info=document.createElement('div');info.id='valProxInfo';info.style.cssText='margin-top:10px;font-size:.84375rem;color:var(--muted);line-height:1.55';res.appendChild(info);}
       const ko=r.karar_ozeti?('<div><b style="color:var(--ink)">Karar:</b> '+r.karar_ozeti+'</div>'):'';
       const ri=r.risk_ozeti?('<div style="margin-top:4px"><b style="color:var(--ink)">Risk:</b> '+r.risk_ozeti+'</div>'):'';
       info.innerHTML=ko+ri;
@@ -1794,7 +1794,7 @@ function renderWlAb(){try{var box=document.getElementById('wlAbBox');if(!box)ret
   var ilRows=Object.keys(s.byIl).sort(function(a,b){return s.byIl[b]-s.byIl[a];}).slice(0,6).map(function(il){return '<tr><td>'+il+'</td><td class="num">'+s.byIl[il]+'</td></tr>';}).join('')||'<tr><td colspan="2" class="tsub">Henüz dönüşüm yok.</td></tr>';
   function cr(x){return x.imp?Math.round(x.lead/x.imp*100):0;}
   box.innerHTML='<div class="csub" style="margin:6px 0">Yerel dönüşüm günlüğü (GA4 etkinse ayrıca canlıya gönderilir · il+firma+paket etiketli)</div>'
-    +'<div class="ed2"><div><b>A/B Dönüşüm (hero CTA)</b><div style="font-size:13px;line-height:1.8;margin-top:4px">A: <b>'+s.ab.A.lead+'</b> lead / '+s.ab.A.imp+' gösterim (%'+cr(s.ab.A)+')<br>B: <b>'+s.ab.B.lead+'</b> lead / '+s.ab.B.imp+' gösterim (%'+cr(s.ab.B)+')</div></div>'
+    +'<div class="ed2"><div><b>A/B Dönüşüm (hero CTA)</b><div style="font-size:.8125rem;line-height:1.8;margin-top:4px">A: <b>'+s.ab.A.lead+'</b> lead / '+s.ab.A.imp+' gösterim (%'+cr(s.ab.A)+')<br>B: <b>'+s.ab.B.lead+'</b> lead / '+s.ab.B.imp+' gösterim (%'+cr(s.ab.B)+')</div></div>'
     +'<div><b>İl bazında dönüşüm</b><table class="atable" style="margin-top:4px"><tbody>'+ilRows+'</tbody></table></div></div>';}catch(e){}}
 function pushLead(o){var lead={...o,sync:'pending',date:new Date().toLocaleString('tr-TR')};LEADS.unshift(lead);window._lastLead=lead;saveAll();if(typeof trackEvent==='function')trackEvent('generate_lead',{source:o.src||'',konu:o.konu||''});if(typeof renderLeads==='function')renderLeads();if(typeof renderKpis==='function')renderKpis();if(typeof renderWlAb==='function')renderWlAb();return lead;}
 function submitLead(src){
@@ -1829,7 +1829,7 @@ function _le(s){return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&
 function firmaKunye(){var f=(typeof FIRMA==='object'&&FIRMA)||{};var e=f.eids||{};
   return {name:f.name||e.unvan||'—',unvan:e.unvan||f.name||'—',adres:f.adres||'—',mail:f.mail||'—',tel:f.tel||'—',vergi:f.vergi||'',belge:e.belgeNo||''};}
 function legalKunyeRows(){var k=firmaKunye();
-  return '<div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 12px;font-size:12.5px;line-height:1.7">'
+  return '<div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 12px;font-size:.78125rem;line-height:1.7">'
     +'<div><b>Veri Sorumlusu / Unvan:</b> '+_le(k.unvan)+'</div>'
     +'<div><b>Adres:</b> '+_le(k.adres)+'</div>'
     +'<div><b>E-posta:</b> '+_le(k.mail)+' &nbsp;·&nbsp; <b>Tel:</b> '+_le(k.tel)+'</div>'
@@ -1861,7 +1861,7 @@ function openCerez(){openLegal('cerez');}
 function openMesafeli(){openLegal('mesafeli');}
 function closeKvkk(){var m=document.getElementById('kvkkModal');_gmAnimKapat(m,function(){m.classList.remove('open');});}
 function eidsQrSvg(seed){var s=0,i;for(i=0;i<(seed||'x').length;i++)s=(s*31+seed.charCodeAt(i))>>>0;var n=7,r='',x,y;for(y=0;y<n;y++)for(x=0;x<n;x++){s=(s*1103515245+12345)>>>0;var on=((s>>16)&1)||(x<2&&y<2)||(x>n-3&&y<2)||(x<2&&y>n-3);if(on)r+='<rect x="'+(x*7)+'" y="'+(y*7)+'" width="7" height="7"/>';}return '<svg viewBox="0 0 49 49" width="100%" height="100%" fill="#0f1f3d" aria-hidden="true">'+r+'</svg>';}
-function detEidsHtml(it){var e=it.eids||{};var seed=e.referans||e.tasinmazNo||('il'+it.id);return '<div class="det-eids"><div class="deh"><span class="sh">'+eidsShieldSvg(17)+'</span> '+_le(window.EIDS?EIDS.stateLabel(e):'EİDS Doğrulandı')+'</div><div class="dnote">Bu ilan T.C. Ticaret Bakanlığı Elektronik İlan Doğrulama Sistemi (EİDS) ile doğrulanmıştır. İl/ilçe/ada/parsel resmi kayıttan gelir.</div><div class="dcode"><div><div style="font-size:11.5px;color:var(--muted);margin-top:6px">Taşınmaz No '+_le(e.tasinmazNo||'-')+' · Ada '+_le(e.ada||'-')+' / Parsel '+_le(e.parsel||'-')+(e.referans?(' · Ref '+_le(e.referans)):'')+(e.tarih?(' · '+_le(e.tarih)):'')+'</div></div><div class="qr" onclick="eidsSorgu('+it.id+')" title="Doğrulama detayını gör">'+eidsQrSvg(seed)+'</div></div><button class="verifybtn" style="margin-top:8px" onclick="eidsSorgu('+it.id+')">Doğrulama detayını görüntüle →</button></div>';}
+function detEidsHtml(it){var e=it.eids||{};var seed=e.referans||e.tasinmazNo||('il'+it.id);return '<div class="det-eids"><div class="deh"><span class="sh">'+eidsShieldSvg(17)+'</span> '+_le(window.EIDS?EIDS.stateLabel(e):'EİDS Doğrulandı')+'</div><div class="dnote">Bu ilan T.C. Ticaret Bakanlığı Elektronik İlan Doğrulama Sistemi (EİDS) ile doğrulanmıştır. İl/ilçe/ada/parsel resmi kayıttan gelir.</div><div class="dcode"><div><div style="font-size:.71875rem;color:var(--muted);margin-top:6px">Taşınmaz No '+_le(e.tasinmazNo||'-')+' · Ada '+_le(e.ada||'-')+' / Parsel '+_le(e.parsel||'-')+(e.referans?(' · Ref '+_le(e.referans)):'')+(e.tarih?(' · '+_le(e.tarih)):'')+'</div></div><div class="qr" onclick="eidsSorgu('+it.id+')" title="Doğrulama detayını gör">'+eidsQrSvg(seed)+'</div></div><button class="verifybtn" style="margin-top:8px" onclick="eidsSorgu('+it.id+')">Doğrulama detayını görüntüle →</button></div>';}
 function eidsSorgu(id){var it=ILANLAR.find(function(x){return x.id===id;});var e=it&&it.eids;if(!e)return;var b=document.getElementById('eidsQBody');if(!b)return;
   b.innerHTML='<div class="qrow"><b>İlan</b><span class="val" style="max-width:58%;text-align:right;font-family:inherit">'+_le(it.title)+'</span></div>'
    +'<div class="qrow"><b>Durum</b><span class="val" style="font-family:inherit">'+_le(window.EIDS?EIDS.stateLabel(e):(e.status||''))+'</span></div>'
@@ -1878,7 +1878,7 @@ function openDet(id){
   if(window.Listings&&typeof gmListNormalize==='function'){var _rw=gmIlanView().filter(function(x){return String(x.id)===String(id);})[0];if(_rw){Listings.openDetail(gmListNormalize(_rw),GM_LIST_CFG);return;}}
   const it=ILANLAR.find(x=>x.id===id);if(!it)return;const s=ilanScore(it);
   document.getElementById('detImg').src=imgSrc(it.img);
-  document.getElementById('detPrice').innerHTML=it.op==='Kiralık'?fmt(it.price)+' ₺ <span style="font-size:15px;color:var(--muted)">/ay</span>':fmt(it.price)+' ₺';
+  document.getElementById('detPrice').innerHTML=it.op==='Kiralık'?fmt(it.price)+' ₺ <span style="font-size:.9375rem;color:var(--muted)">/ay</span>':fmt(it.price)+' ₺';
   document.getElementById('detTitle').textContent=it.title;window._detT=it.title;
   document.getElementById('detLoc').textContent='📍 '+it.mah+', '+it.ilce+(it.il?' / '+it.il:'');
   document.getElementById('detTags').innerHTML=`<span class="ltag ${it.op==='Satılık'?'sat':'kir'}">${it.op}</span><span class="ltag" style="background:rgba(10,22,49,.8)">${it.type}</span>`;
@@ -1944,7 +1944,7 @@ function superSeed(){var s=null;try{s=JSON.parse(localStorage.getItem('wl_super_
      {id:'trabzonyildiz_com',firma:'Yıldız Gayrimenkul',il:'Trabzon',paket:'BASIC',domain:'yildizgm.com',kotaKullanim:640,kotaMax:5000,durum:'deneme'}];
   try{localStorage.setItem('wl_super_tenants',JSON.stringify(s));}catch(e){}return s;}
 function superStats(list){var tot=0,mx=0,il={};list.forEach(function(t){tot+=t.kotaKullanim||0;mx+=t.kotaMax||0;il[t.il]=1;});return {bayi:list.length,tot:tot,mx:mx,il:Object.keys(il).length,aktif:list.filter(function(t){return t.durum==='aktif';}).length};}
-function _kpi(v,l,c){return '<div style="flex:1;min-width:120px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px"><div style="font-size:22px;font-weight:800;color:'+(c||'var(--ink)')+'">'+v+'</div><div class="tsub">'+l+'</div></div>';}
+function _kpi(v,l,c){return '<div style="flex:1;min-width:120px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px"><div style="font-size:1.375rem;font-weight:800;color:'+(c||'var(--ink)')+'">'+v+'</div><div class="tsub">'+l+'</div></div>';}
 function openSuperAdmin(){var list=superSeed(),st=superStats(list),pct=st.mx?Math.round(st.tot/st.mx*100):0;
   var id='superAdmin',m=document.getElementById(id);
   if(!m){m=document.createElement('div');m.id=id;m.className='modal';m.addEventListener('click',function(e){if(e.target.id===id)m.classList.remove('open');});document.body.appendChild(m);}
@@ -1973,7 +1973,7 @@ function superPreviewExit(){var b=document.getElementById('superPrevBar');if(b)b
   try{if(typeof PROX!=='undefined'){PROX.il=s.il;PROX.region=s.region;}if(typeof applyProvince==='function')applyProvince(s.prov);}catch(e){}
   if(typeof toast==='function')toast('Önizlemeden çıkıldı — kendi siteniz geri yüklendi.');}
 function _superPrevBar(txt){var b=document.getElementById('superPrevBar');
-  if(!b){b=document.createElement('div');b.id='superPrevBar';b.style.cssText='position:fixed;left:0;right:0;top:0;z-index:99999;background:#0f1f3d;color:#fff;padding:9px 16px;display:flex;gap:12px;align-items:center;justify-content:center;font:600 13px/1.4 system-ui,-apple-system,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.28)';document.body.appendChild(b);}
+  if(!b){b=document.createElement('div');b.id='superPrevBar';b.style.cssText='position:fixed;left:0;right:0;top:0;z-index:99999;background:#0f1f3d;color:#fff;padding:9px 16px;display:flex;gap:12px;align-items:center;justify-content:center;font:600 .8125rem/1.4 system-ui,-apple-system,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.28)';document.body.appendChild(b);}
   b.innerHTML='👁 Bayi önizlemesi: '+_le(txt)+' <button onclick="superPreviewExit()" style="margin-left:14px;background:#fff;color:#0f1f3d;border:0;border-radius:6px;padding:5px 13px;font-weight:700;cursor:pointer">← Önizlemeden çık</button>';}
 function superAddDealer(){var firma=prompt('Yeni bayi firma adı:');if(!firma)return;var il=prompt('İl:','İstanbul')||'İstanbul';
   var list=superSeed();list.push({id:firma.toLocaleLowerCase('tr').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,''),firma:firma,il:il,paket:'PRO',domain:'',kotaKullanim:0,kotaMax:10000,durum:'deneme'});
@@ -2057,12 +2057,12 @@ function obBody(n){var e=_le;
     +'<div class="afield"><label>SEO Başlık</label><input id="ob_seoTitle" value="'+e(OB.seoTitle)+'" placeholder="Firma Adı · Şehir Emlak & Gayrimenkul"></div>'
     +'<div class="afield"><label>SEO Açıklama</label><input id="ob_seoDesc" value="'+e(OB.seoDesc)+'" placeholder="Kısa tanıtım (≤160 karakter)"></div>'
     +'<div class="afield" style="margin-top:10px"><label>Demo içerik (ilan / danışman / referans)</label>'
-    +'<div style="margin-top:6px;font-size:14px"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="ob_demoMode" value="ornek"'+(OB.demoMode!=='temiz'?' checked':'')+'> Örnekle başla (marka döner, içerik temsilî — sonra düzenle)</label></div>'
-    +'<div style="margin-top:6px;font-size:14px"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="ob_demoMode" value="temiz"'+(OB.demoMode==='temiz'?' checked':'')+'> Temiz başla (tüm demo içerik silinsin)</label></div></div>';}
+    +'<div style="margin-top:6px;font-size:.875rem"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="ob_demoMode" value="ornek"'+(OB.demoMode!=='temiz'?' checked':'')+'> Örnekle başla (marka döner, içerik temsilî — sonra düzenle)</label></div>'
+    +'<div style="margin-top:6px;font-size:.875rem"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="ob_demoMode" value="temiz"'+(OB.demoMode==='temiz'?' checked':'')+'> Temiz başla (tüm demo içerik silinsin)</label></div></div>';}
   if(n===7){return '<p class="csub">ProX API anahtarı (canlı il/ilçe/mahalle + değerleme + AI). Boşsa demo veriyle kurulur; sonra admin → ProX\'tan eklenir.</p>'
-    +'<div class="afield"><label>ProX API Anahtarı <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="ob_key" value="'+e(OB.key)+'" placeholder="prox_..." style="font-family:monospace;font-size:12px"></div>'
-    +'<label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13.5px;cursor:pointer"><input type="checkbox" id="ob_doviz"'+(OB.dovizOff?'':' checked')+'> Döviz / altın bilgi bandını göster <span style="color:var(--muted)">(ProX kurları · ilan fiyatları daima TL)</span></label>'
-    +'<div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.9"><b>Kurulum özeti</b><br>'
+    +'<div class="afield"><label>ProX API Anahtarı <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="ob_key" value="'+e(OB.key)+'" placeholder="prox_..." style="font-family:monospace;font-size:.75rem"></div>'
+    +'<label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:.84375rem;cursor:pointer"><input type="checkbox" id="ob_doviz"'+(OB.dovizOff?'':' checked')+'> Döviz / altın bilgi bandını göster <span style="color:var(--muted)">(ProX kurları · ilan fiyatları daima TL)</span></label>'
+    +'<div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px;font-size:.8125rem;line-height:1.9"><b>Kurulum özeti</b><br>'
       +'İl: <b>'+e(OB.il)+'</b> · Firma: <b>'+e(OB.name||'—')+'</b><br>'
       +(OB.name?'✓':'○')+' Firma adı · '+((OB.tel||OB.mail)?'✓':'○')+' İletişim · '+((OB.mersis||OB.vergi)?'✓':'○')+' Künye · '+(OB.belge?'✓':'○')+' EİDS<br>'
       +(OB.logo?'✓':'○')+' Logo · '+(OB.accent?'✓':'○')+' Renk · '+(OB.font?'✓':'○')+' Font · '+((OB.ig||OB.fb||OB.x||OB.li||OB.yt)?'✓':'○')+' Sosyal · '+(OB.seoTitle?'✓':'○')+' SEO<br>'
@@ -2070,7 +2070,7 @@ function obBody(n){var e=_le;
   return '';}
 function obRender(){var id='obWizard',m=document.getElementById(id);
   if(!m){m=document.createElement('div');m.id=id;m.className='modal';document.body.appendChild(m);}
-  var dots=OB_STEPS.map(function(t,i){var n=i+1,on=n===OB.step,done=n<OB.step;return '<div style="flex:1;text-align:center;font-size:11px;color:'+(on?'var(--accent)':done?'#1a7f4b':'var(--muted)')+';font-weight:'+(on?'700':'500')+'"><div style="height:6px;border-radius:3px;background:'+(on||done?'var(--accent)':'var(--line)')+';margin-bottom:5px"></div>'+(done?'✓ ':'')+t+'</div>';}).join('');
+  var dots=OB_STEPS.map(function(t,i){var n=i+1,on=n===OB.step,done=n<OB.step;return '<div style="flex:1;text-align:center;font-size:.6875rem;color:'+(on?'var(--accent)':done?'#1a7f4b':'var(--muted)')+';font-weight:'+(on?'700':'500')+'"><div style="height:6px;border-radius:3px;background:'+(on||done?'var(--accent)':'var(--line)')+';margin-bottom:5px"></div>'+(done?'✓ ':'')+t+'</div>';}).join('');
   var last=OB.step===OB_STEPS.length;
   m.innerHTML='<div class="mbox" style="max-width:600px"><button class="mclose" onclick="obClose()">✕</button>'
     +'<h3>🚀 Kurulum Sihirbazı <span class="tsub" style="font-weight:400">— '+OB.step+'/'+OB_STEPS.length+'</span></h3>'
@@ -2146,39 +2146,39 @@ var PKG_KAPSAM={BASIC:'Piyasa analizi · Fiyat tahmini · Lead CRM · SVG grafik
 function featHas(f){return typeof window.hasFeature==='function'?window.hasFeature(f):true;}
 function featMinPackage(f){var P=window.EMLAK_PACKAGES||{};for(var i=0;i<PKG_ORDER.length;i++){if((P[PKG_ORDER[i]]||[]).indexOf(f)>=0)return PKG_ORDER[i];}return 'ENTERPRISE';}
 function admPaneGated(p){var f=ADMIN_PANE_FEAT[p];return !!(f&&!featHas(f));}
-function admGateNav(){try{document.querySelectorAll('.adm-nav[data-p]').forEach(function(b){var f=ADMIN_PANE_FEAT[b.dataset.p];var old=b.querySelector('.lock-badge');if(old)old.remove();b.classList.remove('locked');b.style.removeProperty('opacity');if(f&&!featHas(f)){b.classList.add('locked');b.style.opacity='.62';var s=document.createElement('span');s.className='lock-badge';s.textContent='🔒';s.style.cssText='margin-left:auto;font-size:12px';b.appendChild(s);}});}catch(e){}}
+function admGateNav(){try{document.querySelectorAll('.adm-nav[data-p]').forEach(function(b){var f=ADMIN_PANE_FEAT[b.dataset.p];var old=b.querySelector('.lock-badge');if(old)old.remove();b.classList.remove('locked');b.style.removeProperty('opacity');if(f&&!featHas(f)){b.classList.add('locked');b.style.opacity='.62';var s=document.createElement('span');s.className='lock-badge';s.textContent='🔒';s.style.cssText='margin-left:auto;font-size:.75rem';b.appendChild(s);}});}catch(e){}}
 function featUpsell(p){var f=ADMIN_PANE_FEAT[p];if(!f)return;var need=featMinPackage(f),cur=(window.EMLAK_TENANT&&window.EMLAK_TENANT.packageCode)||'—',label=FEAT_LABEL[f]||f;
   var id='upsellModal',m=document.getElementById(id);
   if(!m){m=document.createElement('div');m.id=id;m.className='modal';m.addEventListener('click',function(ev){if(ev.target.id===id)m.classList.remove('open');});document.body.appendChild(m);}
   m.innerHTML='<div class="mbox" style="max-width:520px;text-align:center"><button class="mclose" onclick="document.getElementById(\''+id+'\').classList.remove(\'open\')">✕</button>'
-    +'<div style="font-size:34px">🔒</div><h3 style="margin:6px 0">'+_le(label)+' · <span style="color:var(--accent)">'+_le(need)+'</span> paketi</h3>'
+    +'<div style="font-size:2.125rem">🔒</div><h3 style="margin:6px 0">'+_le(label)+' · <span style="color:var(--accent)">'+_le(need)+'</span> paketi</h3>'
     +'<div class="msub">Mevcut paketiniz: <b>'+_le(cur)+'</b>. Bu özellik <b>'+_le(need)+'</b> ve üzeri paketlerde açıktır.</div>'
-    +'<div style="text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:13px;line-height:1.7"><b>'+_le(need)+' paketi kapsamı:</b><br>'+_le(PKG_KAPSAM[need]||'')+'</div>'
+    +'<div style="text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.8125rem;line-height:1.7"><b>'+_le(need)+' paketi kapsamı:</b><br>'+_le(PKG_KAPSAM[need]||'')+'</div>'
     +'<button class="btn btn-primary" style="width:100%" onclick="document.getElementById(\''+id+'\').classList.remove(\'open\');if(typeof toast===\'function\')toast(\''+_le(need)+' paketi yükseltme talebiniz iletildi.\')">'+_le(need)+' Paketine Yükselt</button>'
     +'<div class="tsub" style="margin-top:8px">emlakekspertizi.com · ProX bayi paketleri</div></div>';
   m.classList.add('open');}
 /* ===== Hizmet Alanı — admin dinamik CRUD arayüzü ===== */
 function saEsc(s){return (''+s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
-function saDelChip(txt,fn){return '<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:13px">'+txt+' <b onclick="'+fn+'(\''+saEsc(txt)+'\')" style="cursor:pointer;opacity:.55">✕</b></span>';}
+function saDelChip(txt,fn){return '<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:.8125rem">'+txt+' <b onclick="'+fn+'(\''+saEsc(txt)+'\')" style="cursor:pointer;opacity:.55">✕</b></span>';}
 function renderSA(){saLoad();
   saCurIl=(saCurIl&&SERVICE_AREA.iller[saCurIl])?saCurIl:SERVICE_AREA.primary;
   var ilBox=document.getElementById('saIlChips');
   if(ilBox)ilBox.innerHTML=Object.keys(SERVICE_AREA.iller).map(function(il){var isP=il===SERVICE_AREA.primary,cur=il===saCurIl;
-    return '<span onclick="saSelectIl(\''+saEsc(il)+'\')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border:1px solid '+(cur?'var(--accent)':'var(--line)')+';border-radius:999px;background:'+(cur?'var(--accent)':'var(--surface)')+';color:'+(cur?'#fff':'var(--ink)')+';cursor:pointer;font-size:13px;font-weight:600">'+il+(isP?' ★':'')+(isP?'':' <b onclick="event.stopPropagation();saRemoveProvince(\''+saEsc(il)+'\')" style="cursor:pointer;opacity:.75">✕</b>')+'</span>';}).join('');
+    return '<span onclick="saSelectIl(\''+saEsc(il)+'\')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border:1px solid '+(cur?'var(--accent)':'var(--line)')+';border-radius:999px;background:'+(cur?'var(--accent)':'var(--surface)')+';color:'+(cur?'#fff':'var(--ink)')+';cursor:pointer;font-size:.8125rem;font-weight:600">'+il+(isP?' ★':'')+(isP?'':' <b onclick="event.stopPropagation();saRemoveProvince(\''+saEsc(il)+'\')" style="cursor:pointer;opacity:.75">✕</b>')+'</span>';}).join('');
   var addSel=document.getElementById('saAddIl');
   if(addSel){var have=Object.keys(SERVICE_AREA.iller);var opts=(typeof trIlList==='function'?trIlList():[]).filter(function(il){return have.indexOf(il)<0;}).sort(function(a,b){return a.localeCompare(b,'tr');});addSel.innerHTML=opts.map(function(il){return '<option>'+il+'</option>';}).join('');}
   var lbl=document.getElementById('saCurIlLbl');if(lbl)lbl.textContent='· '+saCurIl;
   var ilceBox=document.getElementById('saIlceList');
   if(ilceBox){var rec=SERVICE_AREA.iller[saCurIl];var ilcs=rec?Object.keys(rec.ilceler):[];
     ilceBox.innerHTML=ilcs.map(function(ic){var e=rec.ilceler[ic],on=e.aktif!==false,cur=ic===saCurIlce,mn=(e.mahalleler&&e.mahalleler.length)||0;
-      return '<label style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid '+(cur?'var(--accent)':'var(--line)')+';border-radius:9px;background:var(--surface);cursor:pointer;font-size:13px;opacity:'+(on?'1':'.5')+'"><input type="checkbox" '+(on?'checked':'')+' onchange="saToggleIlce(\''+saEsc(ic)+'\')"><span onclick="saSelectIlce(\''+saEsc(ic)+'\')">'+ic+(mn?' <b style="color:var(--accent)">('+mn+')</b>':'')+'</span></label>';}).join('')||'<span class="tsub">İlçe bulunamadı.</span>';}
+      return '<label style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid '+(cur?'var(--accent)':'var(--line)')+';border-radius:9px;background:var(--surface);cursor:pointer;font-size:.8125rem;opacity:'+(on?'1':'.5')+'"><input type="checkbox" '+(on?'checked':'')+' onchange="saToggleIlce(\''+saEsc(ic)+'\')"><span onclick="saSelectIlce(\''+saEsc(ic)+'\')">'+ic+(mn?' <b style="color:var(--accent)">('+mn+')</b>':'')+'</span></label>';}).join('')||'<span class="tsub">İlçe bulunamadı.</span>';}
   var mlbl=document.getElementById('saCurIlceLbl');if(mlbl)mlbl.textContent=saCurIlce?('· '+saCurIlce+', '+saCurIl):'· (ilçe seçin)';
   var mBox=document.getElementById('saMahChips');
   if(mBox){if(!saCurIlce)mBox.innerHTML='<span class="tsub">Yukarıdan bir ilçe seçin, sonra mahalle ekleyin.</span>';
     else{var e=SERVICE_AREA.iller[saCurIl].ilceler[saCurIlce],ms=(e&&e.mahalleler)||[];
       var sug=(typeof realMah==='function'?realMah(saCurIl,saCurIlce,8):[]).filter(function(m){return ms.indexOf(m)<0;});
       mBox.innerHTML=(ms.length?ms.map(function(m){return saDelChip(m,'saRemoveMahalle');}).join(''):'<span class="tsub">Tüm mahalleler hizmet alanında (özel seçim yok).</span>')
-        +(sug.length?'<div style="width:100%;margin-top:8px;font-size:12px;color:var(--muted)">Öneri: '+sug.map(function(m){return '<span onclick="saAddMahalleName(\''+saEsc(m)+'\')" style="cursor:pointer;color:var(--accent);margin-right:10px;white-space:nowrap">+ '+m+'</span>';}).join('')+'</div>':'');}}
+        +(sug.length?'<div style="width:100%;margin-top:8px;font-size:.75rem;color:var(--muted)">Öneri: '+sug.map(function(m){return '<span onclick="saAddMahalleName(\''+saEsc(m)+'\')" style="cursor:pointer;color:var(--accent);margin-right:10px;white-space:nowrap">+ '+m+'</span>';}).join('')+'</div>':'');}}
   var kBox=document.getElementById('saKatChips');
   if(kBox)kBox.innerHTML=SERVICE_AREA.kategoriler.map(function(k){return saDelChip(k,'saRemoveKat');}).join('')||'<span class="tsub">Kategori yok.</span>';}
 function saAddProvince(){saLoad();var sel=document.getElementById('saAddIl');var il=sel&&sel.value;if(!il)return;if(!SERVICE_AREA.iller[il])SERVICE_AREA.iller[il]=saBuildIl(il);saCurIl=il;saCurIlce='';renderSA();toast('Hizmet ili eklendi: '+il);}
@@ -2387,9 +2387,9 @@ function eidsVerifiedBox(rec){
   return '<div class="eids-status ok" style="margin-top:10px">'+eidsShieldSvg(13)+' '+_le((window.EIDS?EIDS.stateLabel(rec):'EİDS Doğrulandı'))+'</div>'
    +'<div class="eids-locked">'
    +'<div class="eids-lk"><b>İl / İlçe</b><span class="v">'+_le((rec.il||'-')+' / '+(rec.ilce||'-'))+'</span></div>'
-   +'<div class="eids-lk"><b>Taşınmaz No</b><span class="v" style="font-size:11px">'+_le(rec.tasinmazNo||'-')+'</span></div>'
+   +'<div class="eids-lk"><b>Taşınmaz No</b><span class="v" style="font-size:.6875rem">'+_le(rec.tasinmazNo||'-')+'</span></div>'
    +'<div class="eids-lk"><b>Ada / Parsel</b><span class="v">'+_le((rec.ada||'-')+' / '+(rec.parsel||'-'))+'</span></div>'
-   +(rec.referans?'<div class="eids-lk"><b>Doğrulama Ref.</b><span class="v" style="font-size:11px">'+_le(rec.referans)+'</span></div>':'')
+   +(rec.referans?'<div class="eids-lk"><b>Doğrulama Ref.</b><span class="v" style="font-size:.6875rem">'+_le(rec.referans)+'</span></div>':'')
    +(rec.tarih?'<div class="eids-lk"><b>Tarih</b><span class="v">'+_le(rec.tarih)+'</span></div>':'')
    +'</div>'
    +'<div class="csub" style="margin-top:6px">Bu bilgiler T.C. Ticaret Bakanlığı EİDS kaydından gelir; kod/durum uydurulmaz.</div>';
@@ -2435,7 +2435,7 @@ function renderDanDemoBanner(){var b=document.getElementById('danDemoBanner');if
   var demoN=(typeof DANISMANLAR!=='undefined'?DANISMANLAR.filter(function(d){return d.demo;}).length:0);
   if(wl&&demoN>0){
     b.innerHTML='<div style="background:rgba(230,150,20,.12);border:1px solid rgba(230,150,20,.42);border-radius:11px;padding:12px 14px;margin-bottom:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">'
-      +'<div style="flex:1;min-width:230px;font-size:13.5px;line-height:1.5"><b>⚠ Örnek ekip görünüyor</b> — listedeki <b>'+demoN+'</b> danışman İzmir demo verisidir. Ziyaretçilerinize <b>kendi gerçek ekibinizi</b> tanıtın; güven ve dönüşüm belirgin artar.</div>'
+      +'<div style="flex:1;min-width:230px;font-size:.84375rem;line-height:1.5"><b>⚠ Örnek ekip görünüyor</b> — listedeki <b>'+demoN+'</b> danışman İzmir demo verisidir. Ziyaretçilerinize <b>kendi gerçek ekibinizi</b> tanıtın; güven ve dönüşüm belirgin artar.</div>'
       +'<button class="btn btn-primary btn-sm" onclick="newDan()">+ Danışman Ekle</button>'
       +'<button class="abtn" onclick="danClearDemo()">Demo ekibi temizle</button></div>';
   }else{b.innerHTML='';}}
@@ -2448,7 +2448,7 @@ function renderDanRows(){const tb=document.getElementById('danRows');if(!tb)retu
   renderDanDemoBanner();
   if(!DANISMANLAR.length){tb.innerHTML='<tr><td colspan="5" class="empty">Henüz danışman yok.</td></tr>';return;}
   tb.innerHTML=DANISMANLAR.map(d=>{const src=d.foto?(IMG[d.foto]||d.foto):'';const ini=d.name.split(' ').map(x=>x[0]).slice(0,2).join('');
-    const av=src?`<img src="${src}" class="tthumb" loading="lazy" decoding="async" style="border-radius:50%;width:38px;height:38px">`:`<span class="tthumb" style="border-radius:50%;width:38px;height:38px;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:12px;font-weight:700">${ini}</span>`;
+    const av=src?`<img src="${src}" class="tthumb" loading="lazy" decoding="async" style="border-radius:50%;width:38px;height:38px">`:`<span class="tthumb" style="border-radius:50%;width:38px;height:38px;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:.75rem;font-weight:700">${ini}</span>`;
     return `<tr><td><div class="trow">${av}<div><b>${_le(d.name)}</b>${d.feat?' <span class="atag" style="background:#fef3c7;color:#92400e">★</span>':''}</div></div></td><td>${_le(d.role)}</td><td>${_le(d.area)}</td><td class="num">${d.sales}</td>
     <td class="ta"><button class="ico-btn" onclick="editDan(${d.id})">✎</button><button class="ico-btn del" onclick="delDan(${d.id})">🗑</button></td></tr>`;}).join('');}
 
@@ -2679,7 +2679,7 @@ async function aiDsTest(){
   var _prev=(typeof AICFG!=='undefined'&&AICFG&&AICFG.dsKey)||'';try{if(typeof AICFG!=='undefined'&&AICFG)AICFG.dsKey=key;}catch(e){}
   var r=await _deepseekChat({message:'Sadece "OK" yaz.'},{max_tokens:8,temperature:0});
   try{if(typeof AICFG!=='undefined'&&AICFG)AICFG.dsKey=_prev;}catch(e){}
-  if(r&&r.answer){if(el)el.innerHTML='<div class="eids-yetki on" style="margin:0"><span class="ic">◉</span><div>DeepSeek bağlı ✓ · model '+_dsModel()+'<div style="font-weight:500;font-size:12px;opacity:.85">Kaydet\'e basınca tüm yapay zeka DeepSeek ile çalışır.</div></div></div>';}
+  if(r&&r.answer){if(el)el.innerHTML='<div class="eids-yetki on" style="margin:0"><span class="ic">◉</span><div>DeepSeek bağlı ✓ · model '+_dsModel()+'<div style="font-weight:500;font-size:.75rem;opacity:.85">Kaydet\'e basınca tüm yapay zeka DeepSeek ile çalışır.</div></div></div>';}
   else{var st=(r&&r.status);var msg=st===401?'anahtar geçersiz (401)':st===402?'bakiye/kota yetersiz (402)':st===429?'hız limiti (429)':'bağlantı kurulamadı';if(el)el.innerHTML='<div class="eids-yetki off" style="margin:0"><span class="ic">⚠️</span><div>DeepSeek testi başarısız · '+msg+'. Anahtarı kontrol edin.</div></div>';}
 }
 function aiDsStatus(){var el=document.getElementById('ai_dsstatus');if(!el)return;var k=_dsKey();
@@ -2691,14 +2691,14 @@ var AI_RISK_PATTERNS=[
   {re:/ödül|sertifika|patent|dünya\s*markası/i,t:'doğrulanmamış ödül/sertifika'}
 ];
 function aiRiskScan(t){var h=[];AI_RISK_PATTERNS.forEach(function(p){if(p.re.test(t||''))h.push(p.t);});return h;}
-function aiGuardBadge(t){var h=aiRiskScan(t);if(!h.length)return '<div class="ai-guard-ok" style="margin-top:8px;padding:7px 10px;border-radius:8px;background:rgba(30,160,90,.10);border:1px solid rgba(30,160,90,.28);font-size:12px;color:#1a7f4b">✓ AI güvenlik denetimi: riskli iddia bulunamadı — yine de yayınlamadan önce gözden geçirin.</div>';return '<div class="ai-guard-warn" style="margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(230,150,20,.13);border:1px solid rgba(230,150,20,.4);font-size:12.5px;color:#8a5a00"><b>⚠ İnsan onayı gerekli</b> — doğrulanması gereken ifade: '+h.join(', ')+'. Yayınlamadan önce ProX verisiyle teyit edin veya düzeltin.</div>';}
+function aiGuardBadge(t){var h=aiRiskScan(t);if(!h.length)return '<div class="ai-guard-ok" style="margin-top:8px;padding:7px 10px;border-radius:8px;background:rgba(30,160,90,.10);border:1px solid rgba(30,160,90,.28);font-size:.75rem;color:#1a7f4b">✓ AI güvenlik denetimi: riskli iddia bulunamadı — yine de yayınlamadan önce gözden geçirin.</div>';return '<div class="ai-guard-warn" style="margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(230,150,20,.13);border:1px solid rgba(230,150,20,.4);font-size:.78125rem;color:#8a5a00"><b>⚠ İnsan onayı gerekli</b> — doğrulanması gereken ifade: '+h.join(', ')+'. Yayınlamadan önce ProX verisiyle teyit edin veya düzeltin.</div>';}
 async function kurumsalGenerate(){
   var name=(document.getElementById("ki_name").value||"").trim();
   var il=(document.getElementById("ki_il")||{}).value||(typeof PROX!=="undefined"&&PROX.il)||"İzmir";
   var hint=(document.getElementById("ki_hint").value||"").trim();
   var out=document.getElementById("ki_out");
   if(!name){toast("Firma adını girin.");return;}
-  out.innerHTML='<div class="eids-yetki on" style="margin:0"><span class="ic">⏳</span><div>İçerik Asistanı kapsamlı kurumsal kimliğinizi oluşturuyor…<div style="font-weight:500;font-size:12px;opacity:.85">DeepSeek · '+name+' · '+il+'</div></div></div>';
+  out.innerHTML='<div class="eids-yetki on" style="margin:0"><span class="ic">⏳</span><div>İçerik Asistanı kapsamlı kurumsal kimliğinizi oluşturuyor…<div style="font-weight:500;font-size:.75rem;opacity:.85">DeepSeek · '+name+' · '+il+'</div></div></div>';
   var prompt="Sen ProX kurumsal kimlik ve Google SEO uzmanısın (emlakekspertizi.com). "+name+" adlı, "+il+" ilinde faaliyet gösteren TAM KAPSAMLI bir gayrimenkul/emlak ofisi için içerik üret. Ofis tüm alanlarda hizmet verir: konut (daire, villa, müstakil ev), arsa ve arazi, ticari & ofis/dükkan, kiralama, gayrimenkul değerleme, yatırım danışmanlığı ve miras/intikal işlemleri."+(hint?(" Öne çıkan uzmanlık: "+hint+"."):"")+" Profesyonel, güven veren, Google SEO uyumlu Türkçe kullan. Belirli tek bir nişe (sadece sahil/daire) sıkışma; tüm kategorileri kapsa. SADECE şu formatta yanıtla, başka açıklama ekleme:\nSLOGAN: <il ismi geçen tek cümle vurucu slogan>\nHERO1: <ana sayfa başlığı 1. satır, 2-4 kelime>\nHERO2: <ana sayfa başlığı 2. satır, 2-4 kelime>\nHERODESC: <hero alt açıklaması 20-30 kelime, veri odaklı, birkaç kategoriye atıf>\nHAKKINDA: <160-200 kelime kapsamlı hakkımızda; "+name+", "+il+", konut+arsa+ticari+miras+değerleme+yatırım hizmetleri, veri odaklı yaklaşım>\nSEOTITLE: <55-60 karakter; "+name+" + "+il+" + gayrimenkul/emlak>\nSEODESC: <150-155 karakter; hizmet çeşitliliği ("+il+" satılık/kiralık konut, arsa, ticari, değerleme, miras)>\nSEOKW: <virgülle 10-12 anahtar kelime; "+il+" emlak, "+il+" satılık daire, "+il+" kiralık, "+il+" arsa, "+il+" ticari gayrimenkul, "+il+" gayrimenkul değerleme, miras intikal, yatırım danışmanlığı>";
   var text=null;
   try{var r=await aiChat({persona:"office",tool:"kurumsal",prompt:aiGuard(prompt)});
@@ -2783,7 +2783,7 @@ function saveFirma(){const g=id=>document.getElementById(id).value.trim();
   if(typeof renderEidsYetki==='function')renderEidsYetki();if(typeof renderIlanRows==='function')renderIlanRows();if(typeof applySchema==='function')applySchema();
   toast('✓ Firma bilgileri kaydedildi ve siteye uygulandı'+(_il?' · il: '+_il:'')+'.');}
 function eidsConnect(){var e=(FIRMA.eids||(FIRMA.eids={}));var bno=document.getElementById('cf_eidsBelge');if(bno)e.belgeNo=(bno.value||'').replace(/[^0-9]/g,'');e.yetkili=!!(e.belgeNo&&e.belgeNo.length>=7);saveAll();fillFirmaForm();if(typeof renderIlanRows==='function')renderIlanRows();toast(e.yetkili?'✓ Yetki Belgesi kaydedildi. Her ilan için Taşınmaz No/Ada/Parsel ile ayrıca EİDS doğrulaması yapın (malikin e-Devlet yetkisi gerekir).':'Geçerli (7+ haneli) Taşınmaz Ticareti Yetki Belgesi No girin.');}
-function renderEidsYetki(){var box=document.getElementById('eidsYetkiBox');if(!box)return;var e=(FIRMA&&FIRMA.eids)||{};if(e.yetkili){box.innerHTML='<div class="eids-yetki on"><span class="ic"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z\"/><path d=\"M9 12l2 2 4-4\"/></svg></span><div>Yetki Belgesi girildi — ilanları EİDS ile doğrulayıp yayınlayabilirsiniz.<div style="font-weight:500;font-size:12px;opacity:.85">Yetki Belgesi No '+_le(e.belgeNo||'—')+' · Doğrulama her ilan için ayrıca yapılır (Taşınmaz No + Ada/Parsel). Kod uydurulmaz.</div></div></div>';}else{box.innerHTML='<div class="eids-yetki off"><span class="ic">⚠️</span><div>Yetki Belgesi Yok — 7+ haneli Taşınmaz Ticareti Yetki Belgesi No girin.<div style="font-weight:500;font-size:12px;opacity:.85">Malikin e-Devlet yetkisi ayrıca gereklidir (turkiye.gov.tr).</div></div></div>';}}
+function renderEidsYetki(){var box=document.getElementById('eidsYetkiBox');if(!box)return;var e=(FIRMA&&FIRMA.eids)||{};if(e.yetkili){box.innerHTML='<div class="eids-yetki on"><span class="ic"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z\"/><path d=\"M9 12l2 2 4-4\"/></svg></span><div>Yetki Belgesi girildi — ilanları EİDS ile doğrulayıp yayınlayabilirsiniz.<div style="font-weight:500;font-size:.75rem;opacity:.85">Yetki Belgesi No '+_le(e.belgeNo||'—')+' · Doğrulama her ilan için ayrıca yapılır (Taşınmaz No + Ada/Parsel). Kod uydurulmaz.</div></div></div>';}else{box.innerHTML='<div class="eids-yetki off"><span class="ic">⚠️</span><div>Yetki Belgesi Yok — 7+ haneli Taşınmaz Ticareti Yetki Belgesi No girin.<div style="font-weight:500;font-size:.75rem;opacity:.85">Malikin e-Devlet yetkisi ayrıca gereklidir (turkiye.gov.tr).</div></div></div>';}}
 /* ===== KUSURSUZ MARKA MOTORU (white-label · Meridyen -> firma adı) ===== */
 const BRAND_ORIG='Meridyen Gayrimenkul',BRAND_ORIG_SHORT='Meridyen';
 function brandName(){return ((typeof FIRMA!=='undefined'&&FIRMA&&FIRMA.name)||BRAND_ORIG).trim();}
@@ -3254,10 +3254,10 @@ function printContract(){
   w.document.write(`<html><head><title>Sözleşme</title><meta charset="utf-8"><style>
     body{font-family:'Times New Roman',serif;padding:40px;color:#15233f;line-height:1.6}
     .ct-doc-head{display:flex;gap:14px;align-items:center;border-bottom:2px solid #1e40af;padding-bottom:14px;margin-bottom:20px}
-    .ct-logo{width:48px;height:48px;border-radius:8px;background:#1e40af;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;font-family:sans-serif}
-    .ct-firma{font-weight:700;font-size:18px}.ct-firma-sub{font-size:11px;color:#555;margin-top:3px}
-    .ct-body{white-space:pre-wrap;font-family:'Times New Roman',serif;font-size:13px;line-height:1.7;margin:0}
-    .ct-doc-foot{margin-top:24px;border-top:1px solid #ccc;padding-top:10px;font-size:10px;color:#777;text-align:center}
+    .ct-logo{width:48px;height:48px;border-radius:8px;background:#1e40af;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.375rem;font-family:sans-serif}
+    .ct-firma{font-weight:700;font-size:1.125rem}.ct-firma-sub{font-size:.6875rem;color:#555;margin-top:3px}
+    .ct-body{white-space:pre-wrap;font-family:'Times New Roman',serif;font-size:.8125rem;line-height:1.7;margin:0}
+    .ct-doc-foot{margin-top:24px;border-top:1px solid #ccc;padding-top:10px;font-size:.625rem;color:#777;text-align:center}
   </style></head><body>${area.innerHTML}</body></html>`);
   w.document.close();setTimeout(()=>{try{w.print();}catch(e){}},350);
 }
@@ -3648,7 +3648,7 @@ function renderRefGrid(){const g=document.getElementById('refGrid');if(!g)return
   const _refMon=d=>{if(!d)return '';const m=(''+d).split('-');const nm={'01':'Oca','02':'Şub','03':'Mar','04':'Nis','05':'May','06':'Haz','07':'Tem','08':'Ağu','09':'Eyl','10':'Eki','11':'Kas','12':'Ara'};return m[1]?((nm[m[1]]||m[1])+' '+m[0]):(''+d);};
   g.innerHTML=REFS.map(r=>{const ini=r.name.split(' ').map(x=>x[0]).slice(0,2).join('');
     const sub=[r.prop,_refMon(r.date)].filter(Boolean).join(' · ');
-    return `<div class="tst"><div class="stars">★★★★★</div><p>"${r.text}"</p><div class="who"><div class="av">${ini}</div><div><div class="nm">${r.name}</div><div class="rl">${r.meta}</div>${sub?`<div class="rl2" style="color:var(--muted);font-size:12px;margin-top:2px">${sub}</div>`:''}</div></div></div>`;}).join('');}
+    return `<div class="tst"><div class="stars">★★★★★</div><p>"${r.text}"</p><div class="who"><div class="av">${ini}</div><div><div class="nm">${r.name}</div><div class="rl">${r.meta}</div>${sub?`<div class="rl2" style="color:var(--muted);font-size:.75rem;margin-top:2px">${sub}</div>`:''}</div></div></div>`;}).join('');}
 
 /* ── KAPANAN İŞLEMLER (Satılan / Kiralanan Arşivi) ── track-record sosyal kanıtı */
 const _ARS_MON={'01':'Ocak','02':'Şubat','03':'Mart','04':'Nisan','05':'Mayıs','06':'Haziran','07':'Temmuz','08':'Ağustos','09':'Eylül','10':'Ekim','11':'Kasım','12':'Aralık'};
@@ -4010,12 +4010,12 @@ function saveProx(){PROX.key=document.getElementById('px_key').value.trim();
 function proxRenderStatus(){var el=document.getElementById('px_status');if(!el)return;var t=window.EMLAK_TENANT||{};
   var oz=null,bl=null,q=null;try{oz=JSON.parse(localStorage.getItem('wl_ozel_ts')||'null');}catch(e){}try{bl=JSON.parse(localStorage.getItem('wl_bolge')||'null');}catch(e){}try{q=JSON.parse(localStorage.getItem('prox_quota')||'null');}catch(e){}
   var fresh='';
-  if(PROX.key){fresh='<div style="font-weight:500;font-size:12px;opacity:.85;margin-top:5px;border-top:1px solid rgba(0,0,0,.08);padding-top:5px">'
+  if(PROX.key){fresh='<div style="font-weight:500;font-size:.75rem;opacity:.85;margin-top:5px;border-top:1px solid rgba(0,0,0,.08);padding-top:5px">'
     +'📦 Özel Portföy: '+(oz&&oz.ts?('<b>'+wlAgo(oz.ts)+'</b> · '+oz.n+' kayıt / '+(oz.real||0)+' gerçek analiz fiyatı'):'henüz çekilmedi')
     +' &nbsp;·&nbsp; 🗺️ Bölge: '+(bl&&bl.ts?('<b>'+wlAgo(bl.ts)+'</b>'):'—')
     +(q?(' &nbsp;·&nbsp; 📊 Kota: '+fmt(q.count)+' istek ('+q.month+')'):'')+'</div>';}
-  var secBadge=window.EMLAK_PROXY_MODE?'<div style="font-weight:600;font-size:12px;color:#1a7f4b;margin-top:3px">🔒 Güvenli mod: gizli anahtar sunucuda (proxy) — istemciden gönderilmiyor</div>':((PROX.key)?'<div style="font-weight:500;font-size:12px;color:#b26a00;margin-top:3px">⚠ Doğrudan mod: anahtar istemcide. Üretimde Proxy/Edge modunu önerilir (DEPLOY-VE-GUVENLIK-NOTU.md).</div>':'');
-  el.innerHTML='<div class="eids-yetki '+((PROX.key||window.EMLAK_PROXY_MODE)?'on':'off')+'" style="margin:0"><span class="ic">'+((PROX.key||window.EMLAK_PROXY_MODE)?'◉':'⚠️')+'</span><div>'+((PROX.key||window.EMLAK_PROXY_MODE)?('ProX bağlı · tenant '+(t.tenant_id||'-')+' · aktif il '+(PROX.il||'İzmir')):'API anahtarı girilmedi')+'<div style="font-weight:500;font-size:12px;opacity:.85">Base: '+(window.EMLAK_API_BASE||'-')+'</div>'+secBadge+fresh+'</div></div>';}
+  var secBadge=window.EMLAK_PROXY_MODE?'<div style="font-weight:600;font-size:.75rem;color:#1a7f4b;margin-top:3px">🔒 Güvenli mod: gizli anahtar sunucuda (proxy) — istemciden gönderilmiyor</div>':((PROX.key)?'<div style="font-weight:500;font-size:.75rem;color:#b26a00;margin-top:3px">⚠ Doğrudan mod: anahtar istemcide. Üretimde Proxy/Edge modunu önerilir (DEPLOY-VE-GUVENLIK-NOTU.md).</div>':'');
+  el.innerHTML='<div class="eids-yetki '+((PROX.key||window.EMLAK_PROXY_MODE)?'on':'off')+'" style="margin:0"><span class="ic">'+((PROX.key||window.EMLAK_PROXY_MODE)?'◉':'⚠️')+'</span><div>'+((PROX.key||window.EMLAK_PROXY_MODE)?('ProX bağlı · tenant '+(t.tenant_id||'-')+' · aktif il '+(PROX.il||'İzmir')):'API anahtarı girilmedi')+'<div style="font-weight:500;font-size:.75rem;opacity:.85">Base: '+(window.EMLAK_API_BASE||'-')+'</div>'+secBadge+fresh+'</div></div>';}
 async function proxTest(){var el=document.getElementById('px_status');if(el)el.innerHTML='<div class="csub">● ProX API test ediliyor…</div>';
   PROX.key=(document.getElementById('px_key')||{}).value.trim()||PROX.key;applyProxTenant();
   try{var b=await proxApi('/api/v1/tenant/bootstrap');
@@ -4023,7 +4023,7 @@ async function proxTest(){var el=document.getElementById('px_status');if(el)el.i
     var il=(document.getElementById('px_il')||{}).value||PROX.il||'İzmir';
     var e=await proxApi('/api/v1/tenant/endeks?il='+encodeURIComponent(il));
     var m2=(e&&e.success&&e.data)?e.data.m2:null;
-    if(el)el.innerHTML='<div class="eids-yetki on" style="margin:0"><span class="ic">✅</span><div>ProX bağlı · '+(b.package||'')+' paketi · tenant '+b.tenant_id+'<div style="font-weight:500;font-size:12px;opacity:.85">'+il+' geneli canlı m²: '+(m2?fmt(m2)+' ₺':'—')+' · '+((b.enabled_features||[]).length)+' modül aktif</div></div></div>';
+    if(el)el.innerHTML='<div class="eids-yetki on" style="margin:0"><span class="ic">✅</span><div>ProX bağlı · '+(b.package||'')+' paketi · tenant '+b.tenant_id+'<div style="font-weight:500;font-size:.75rem;opacity:.85">'+il+' geneli canlı m²: '+(m2?fmt(m2)+' ₺':'—')+' · '+((b.enabled_features||[]).length)+' modül aktif</div></div></div>';
     toast('✓ ProX API bağlantısı doğrulandı.');
   }catch(err){if(el)el.innerHTML='<div class="eids-yetki off" style="margin:0"><span class="ic">⚠️</span><div>Hata: '+err.message+'</div></div>';}}
 function renderModules(){const box=document.getElementById('moduleList');if(!box)return;
@@ -4368,14 +4368,14 @@ function reportToPdf(){if(!lastReport)return;const R=lastReport;const st=R.st;
   win.document.write(`<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>${R.type.name} - ${R.locName}</title>
   <style>*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}body{color:#0f1f3d;padding:0}
   .hd{background:linear-gradient(135deg,#0f1f3d,#0a1631,#1e40af);color:#fff;padding:34px 40px;display:flex;justify-content:space-between;align-items:center}
-  .hd h1{font-size:23px}.hd .sub{color:#bcd;font-size:13px;margin-top:5px}.brand{font-weight:800;font-size:20px}
+  .hd h1{font-size:1.4375rem}.hd .sub{color:#bcd;font-size:.8125rem;margin-top:5px}.brand{font-weight:800;font-size:1.25rem}
   .body{padding:34px 40px}
   .m{display:flex;gap:16px;margin:0 0 24px}.mc{flex:1;border:1px solid #e2e8f0;border-radius:12px;padding:16px;text-align:center}
-  .mc .v{font-size:22px;font-weight:800;color:#1e40af}.mc .l{font-size:12px;color:#586475;margin-top:4px}
-  h2{font-size:15px;color:#1e40af;margin:20px 0 8px;border-bottom:2px solid #e2e8f0;padding-bottom:6px}
-  p{font-size:14px;line-height:1.7;margin-bottom:10px;color:#334155}
-  .ft{margin-top:30px;padding:20px 40px;background:#f5f7fa;font-size:11.5px;color:#586475;border-top:1px solid #e2e8f0}
-  .badge{display:inline-block;background:#1e7e3a;color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px}
+  .mc .v{font-size:1.375rem;font-weight:800;color:#1e40af}.mc .l{font-size:.75rem;color:#586475;margin-top:4px}
+  h2{font-size:.9375rem;color:#1e40af;margin:20px 0 8px;border-bottom:2px solid #e2e8f0;padding-bottom:6px}
+  p{font-size:.875rem;line-height:1.7;margin-bottom:10px;color:#334155}
+  .ft{margin-top:30px;padding:20px 40px;background:#f5f7fa;font-size:.71875rem;color:#586475;border-top:1px solid #e2e8f0}
+  .badge{display:inline-block;background:#1e7e3a;color:#fff;font-size:.6875rem;font-weight:700;padding:4px 12px;border-radius:99px}
   @media print{.noprint{display:none}}</style></head><body>
   <div class="hd"><div><div class="brand">${logo?`<img src="${logo}" style="height:40px;vertical-align:middle"> `:''}${FIRMA.name}</div><div class="sub">${R.type.name} · ProX Rapor Motoru</div></div><div style="text-align:right"><div class="badge">ML/MML + ProX</div><div class="sub" style="margin-top:8px">${R.date.toLocaleDateString('tr-TR')}</div></div></div>
   <div class="body">
@@ -4385,7 +4385,7 @@ function reportToPdf(){if(!lastReport)return;const R=lastReport;const st=R.st;
     ${R.type.k==='parsel'?`<h2>İmar Özeti</h2><p>TAKS ~0.40 · KAKS ~2.07 · Konut alanı. Tahmini değer aralığı ${fmt(Math.round(st.m2*0.7))}–${fmt(Math.round(st.m2*1.1))} ₺/m². Resmi teyit TKGM / İlçe Belediyesi'nden alınmalıdır.</p>`:''}
   </div>
   <div class="ft"><b>${FIRMA.name}</b> · ${FIRMA.tel||''} · ${FIRMA.mail||''}<br><svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="M9 12l2 2 4-4"/></svg> Saha Veri Ortağı · Bu rapor bilgilendirme amaçlıdır; resmi değer beyanı yerine geçmez. Veriler örnek/tahminîdir, güncel endeks ve resmi kurum teyidi gereklidir.</div>
-  <div class="noprint" style="padding:20px 40px;text-align:center"><button onclick="window.print()" style="background:#1e40af;color:#fff;border:0;padding:12px 28px;border-radius:10px;font-size:15px;cursor:pointer">🖨 PDF olarak kaydet / yazdır</button></div>
+  <div class="noprint" style="padding:20px 40px;text-align:center"><button onclick="window.print()" style="background:#1e40af;color:#fff;border:0;padding:12px 28px;border-radius:10px;font-size:.9375rem;cursor:pointer">🖨 PDF olarak kaydet / yazdır</button></div>
   </body></html>`);
   win.document.close();setTimeout(()=>{try{win.print();}catch(e){}},600);
   toast('📄 PDF raporu yeni sekmede hazırlandı.');}
@@ -4458,14 +4458,14 @@ async function aiKisiInsight(id){const k=KISILER.find(x=>x.id===id);const box=do
 function kisiPortfoyPdf(id){const k=KISILER.find(x=>x.id===id);const scored=ILANLAR.map(it=>({it,s:matchScore(k,it)})).filter(x=>x.s>=45).sort((a,b)=>b.s-a.s).slice(0,5);
   const logo=(IMG[FIRMA.logo]||'');const win=window.open('','_blank');if(!win){toast('Pop-up engellendi.');return;}
   win.document.write(`<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>Portföy Sunumu - ${_le(k.name)}</title>
-  <style>*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}.hd{background:linear-gradient(135deg,#0f1f3d,#1e40af);color:#fff;padding:30px 40px}.hd h1{font-size:22px}.hd .s{color:#bcd;font-size:13px;margin-top:5px}
+  <style>*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}.hd{background:linear-gradient(135deg,#0f1f3d,#1e40af);color:#fff;padding:30px 40px}.hd h1{font-size:1.375rem}.hd .s{color:#bcd;font-size:.8125rem;margin-top:5px}
   .body{padding:30px 40px}.card{display:flex;gap:16px;border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin-bottom:14px}.card img{width:140px;height:100px;object-fit:cover;border-radius:8px}
-  .card h3{font-size:16px;color:#0f1f3d}.card .loc{color:#586475;font-size:13px;margin:4px 0}.card .pr{font-size:18px;font-weight:800;color:#1e7e3a}.card .sc{font-size:12px;color:#1e40af;font-weight:700}
-  .ft{padding:18px 40px;background:#f5f7fa;font-size:11.5px;color:#586475}@media print{.noprint{display:none}}</style></head><body>
+  .card h3{font-size:1rem;color:#0f1f3d}.card .loc{color:#586475;font-size:.8125rem;margin:4px 0}.card .pr{font-size:1.125rem;font-weight:800;color:#1e7e3a}.card .sc{font-size:.75rem;color:#1e40af;font-weight:700}
+  .ft{padding:18px 40px;background:#f5f7fa;font-size:.71875rem;color:#586475}@media print{.noprint{display:none}}</style></head><body>
   <div class="hd"><h1>${logo?`<img src="${logo}" style="height:34px;vertical-align:middle"> `:''}Size Özel Portföy Sunumu</h1><div class="s">${_le(k.name)} için seçilmiş ${scored.length} gayrimenkul · ${_le(FIRMA.name)}</div></div>
   <div class="body">${scored.map(({it,s})=>`<div class="card"><img src="${imgSrc(it.img)}"><div><h3>${it.title}</h3><div class="loc">📍 ${it.mah}, ${it.ilce} · ${it.oda} · ${it.m2}m²</div><div class="pr">${fmt(it.price)} ₺</div><div class="sc">Uyum: %${s}</div></div></div>`).join('')||'<p>Uygun ilan bulunamadı.</p>'}</div>
   <div class="ft"><b>${FIRMA.name}</b> · ${FIRMA.tel||''} · <svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z"/><path d="M9 12l2 2 4-4"/></svg> Saha Veri Ortağı</div>
-  <div class="noprint" style="padding:20px 40px;text-align:center"><button onclick="window.print()" style="background:#1e40af;color:#fff;border:0;padding:12px 28px;border-radius:10px;font-size:15px;cursor:pointer">🖨 PDF olarak kaydet</button></div></body></html>`);
+  <div class="noprint" style="padding:20px 40px;text-align:center"><button onclick="window.print()" style="background:#1e40af;color:#fff;border:0;padding:12px 28px;border-radius:10px;font-size:.9375rem;cursor:pointer">🖨 PDF olarak kaydet</button></div></body></html>`);
   win.document.close();setTimeout(()=>{try{win.print();}catch(e){}},600);toast('📄 Portföy sunumu hazırlandı.');}
 
 
@@ -4790,7 +4790,7 @@ function satCalc(){var v=function(id){var e=document.getElementById(id);return e
       +'<div><span>Tahmini aylık kira</span><b>'+fmt(rent)+' ₺</b></div>'
       +'<div><span>Zemin / risk</span><b class="sc-risk">'+(b.risk||'-')+'</b></div>'
     +'</div>'
-    +'<div class="sc-note" style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5;border-top:1px solid rgba(255,255,255,.08);padding-top:8px">⚠️ Bu, güncel bölge verisine dayalı bir <b>ön tahmin aralığıdır</b>; resmî değerleme veya SPK lisanslı ekspertiz raporu değildir ve tek kesin fiyat vermez. Kesin ve resmî değer, yetkili/lisanslı değerleme uzmanının imzasıyla geçerlidir. (Demo — veriler temsilîdir.)</div>'
+    +'<div class="sc-note" style="font-size:.6875rem;color:var(--muted);margin-top:10px;line-height:1.5;border-top:1px solid rgba(255,255,255,.08);padding-top:8px">⚠️ Bu, güncel bölge verisine dayalı bir <b>ön tahmin aralığıdır</b>; resmî değerleme veya SPK lisanslı ekspertiz raporu değildir ve tek kesin fiyat vermez. Kesin ve resmî değer, yetkili/lisanslı değerleme uzmanının imzasıyla geçerlidir. (Demo — veriler temsilîdir.)</div>'
     +'<button class="ozh-btn primary sc-cta" onclick="satScrollForm(\'Satmak istiyorum\')">Bu mülk için ücretsiz ekspertiz al</button>';
 }
 /* ====================================================================
@@ -5064,7 +5064,7 @@ function pwResults(){
   let h='<div class="pw-q">Size en uygun '+(r.length||'')+' mülk</div>'
     +'<div class="pw-rescount">Kriterlerinize göre <b>'+r.length+'</b> eşleşme — eşleşme yüzdesi ve <b>neden</b> rozetleriyle sıralandı.</div>';
   h+= r.length ? '<div class="pw-reslist">'+r.map(pwResCard).join('')+'</div>'
-    : '<p style="color:var(--muted);font-size:14px">Bu kriterlere tam uyan kayıt bulunamadı. Geri dönüp aralığı genişletin ya da talebinizi iletin; sizin için arayalım.</p>';
+    : '<p style="color:var(--muted);font-size:.875rem">Bu kriterlere tam uyan kayıt bulunamadı. Geri dönüp aralığı genişletin ya da talebinizi iletin; sizin için arayalım.</p>';
   h+='<div class="pw-res-foot"><button class="pw-back" onclick="PW.idx=-1;pwRender()">↺ Yeniden başla</button><button class="pw-go" onclick="pwClose();openLead(\'Mülk Pusulası listesi\')">Bu listeyi danışmandan iste</button></div>';
   pwBody(h);
   const prog=document.getElementById('pwProgress'),foot=document.getElementById('pwFoot');
@@ -5316,7 +5316,7 @@ async function saasGenerateReportPDF(propertyId){
     const html='<h1>'+title+'</h1><p>38 kategorilik analiz · emlakekspertizi.com</p><ul>'
       +SAAS_38_CATEGORIES.map(c=>'<li>'+c+'</li>').join('')+'</ul>';
     const r=await proxApi('/api/v1/tenant/pdf/generate',{method:'POST',body:{
-      title:title, pages:[{id:propertyId,html:html}], css:'body{font-family:Inter,Arial,sans-serif;color:#0f1f3d}h1{font-size:20px}'
+      title:title, pages:[{id:propertyId,html:html}], css:'body{font-family:Inter,Arial,sans-serif;color:#0f1f3d}h1{font-size:1.25rem}'
     }});
     if(r&&!r.fallback&&r.success===true&&r.pdf_base64){
       try{                                               // base64 → Blob (application/pdf) → indir

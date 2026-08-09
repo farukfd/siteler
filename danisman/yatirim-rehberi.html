@@ -42,11 +42,11 @@
 }
 </script>
 
-<link rel="stylesheet" href="css/base.css?v=25">
+<link rel="stylesheet" href="css/base.css?v=74">
 <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg?v=2">
 <script defer src="js/brand.js?v=3"></script>
-<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=11"></script>
+<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=12"></script>
 <script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
 (function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
 if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><script src="js/i18n/yatirim-rehberi.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
@@ -57,28 +57,28 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><
 /* ============ Yatırım rehberi sayfası — scoped .hk-* + .yr-* (base.css bozulmadan) ============ */
 .hk-main{padding-top:88px}
 .hk-hero{position:relative;padding:74px 0 40px;border-bottom:1px solid var(--line-soft);overflow:hidden}
-.hk-crumb{font-size:12px;letter-spacing:.06em;color:var(--muted);margin-bottom:22px}
+.hk-crumb{font-size:.75rem;letter-spacing:.06em;color:var(--muted);margin-bottom:22px}
 .hk-crumb a{color:var(--muted);text-decoration:none;transition:.2s}
 .hk-crumb a:hover{color:var(--gold)}
 .hk-crumb span{color:var(--gold-ink)}
-.hk-hero h1{font-size:clamp(32px,5vw,54px);margin:6px 0 0;max-width:800px}
-.hk-lede{font-size:clamp(16px,2.1vw,20px);color:var(--muted);max-width:700px;margin:24px 0 0;font-weight:300}
+.hk-hero h1{font-size:clamp(2rem,5vw,3.375rem);margin:6px 0 0;max-width:800px}
+.hk-lede{font-size:clamp(1rem,2.1vw,1.25rem);color:var(--muted);max-width:700px;margin:24px 0 0;font-weight:300}
 .hk-sec{padding:56px 0 74px}
 
 .yr-art{max-width:760px;margin:0 auto}
-.yr-art h2{font-size:clamp(22px,3vw,30px);margin:44px 0 16px;line-height:1.2}
+.yr-art h2{font-size:clamp(1.375rem,3vw,1.875rem);margin:44px 0 16px;line-height:1.2}
 .yr-art h2:first-child{margin-top:0}
-.yr-art h3{font-family:var(--serif-2);font-style:italic;font-weight:600;font-size:19px;color:var(--gold-deep);margin:26px 0 10px}
-.yr-art p{color:var(--ink-2);font-size:16px;line-height:1.85;margin:0 0 16px;font-weight:300}
+.yr-art h3{font-family:var(--serif-2);font-style:italic;font-weight:600;font-size:1.1875rem;color:var(--gold-deep);margin:26px 0 10px}
+.yr-art p{color:var(--ink-2);font-size:1rem;line-height:1.85;margin:0 0 16px;font-weight:300}
 .yr-art p b{color:var(--ink);font-weight:600}
 .yr-note{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:12px;padding:18px 20px;margin:26px 0}
-.yr-note p{margin:0;font-size:14.5px;color:var(--ink-2)}
+.yr-note p{margin:0;font-size:.90625rem;color:var(--ink-2)}
 .yr-toc{display:flex;flex-wrap:wrap;gap:8px 10px;margin:28px 0 0}
-.yr-toc a{font-size:12.5px;font-weight:600;color:var(--ink-2);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 14px;text-decoration:none;transition:.18s}
+.yr-toc a{font-size:.78125rem;font-weight:600;color:var(--ink-2);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 14px;text-decoration:none;transition:.18s}
 .yr-toc a:hover{border-color:var(--gold);color:var(--gold-ink)}
 .yr-cta{background:linear-gradient(160deg,rgba(195,155,69,.08),transparent 70%);border:1px solid var(--line);padding:clamp(30px,5vw,48px);text-align:center;margin-top:48px;border-radius:4px}
 .yr-cta h2{margin-top:0!important}
-.yr-cta p{color:var(--muted);font-size:16px;max-width:540px;margin:14px auto 26px;font-weight:300}
+.yr-cta p{color:var(--muted);font-size:1rem;max-width:540px;margin:14px auto 26px;font-weight:300}
 </style>
 <!-- ============ STITCH DÖNÜŞÜMÜ (yatırım rehberi · Aegean Heritage Wealth) ============ -->
 <style id="yrStitch">
@@ -223,7 +223,7 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><
       </article>
 
       <div class="yr-cta">
-        <h2 style="font-size:clamp(22px,3vw,30px)">Bu rehberi kendi portföyünüze uyarlayalım</h2>
+        <h2 style="font-size:clamp(1.375rem,3vw,1.875rem)">Bu rehberi kendi portföyünüze uyarlayalım</h2>
         <p>Bölgenize özel, ProX endeksiyle desteklenen ücretsiz bir değer analizi için randevu oluşturun.</p>
         <a class="btn btn-gold" href="randevu.html">Randevu Oluştur</a>
       </div>

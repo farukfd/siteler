@@ -121,7 +121,7 @@
   function injectCSS(){
     if(_cssDone||typeof document==='undefined')return;_cssDone=true;
     var css=''
-      +'.eids-b{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;line-height:1.2;white-space:nowrap}'
+      +'.eids-b{display:inline-flex;align-items:center;gap:5px;font-size:.71875rem;font-weight:700;padding:3px 9px;border-radius:999px;line-height:1.2;white-space:nowrap}'
       +'.eids-b .eids-shield{flex:0 0 auto}'
       +'.eids-b.ok{color:#0f7a3d;background:rgba(22,163,74,.13)}'
       +'.eids-b.no{color:#c0392b;background:rgba(192,57,43,.12)}'
