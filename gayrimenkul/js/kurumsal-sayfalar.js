@@ -367,8 +367,8 @@
     /* Sayaç idempotency: aynı düğüm iki kez aktive edilirse (IO + güvenlik ağı yarışı)
        count-up ikinci kez 0'dan başlamasın. */
     if (el.hasAttribute('data-count') && !el.__ekc) { el.__ekc = 1; _ekCount(el); }
-    if (el.querySelectorAll) el.querySelectorAll('.bar-fill[data-w]').forEach(function (b) { b.style.width = (parseFloat(b.getAttribute('data-w')) || 0) + '%'; });
-    if (el.matches && el.matches('.bar-fill[data-w]')) el.style.width = (parseFloat(el.getAttribute('data-w')) || 0) + '%';
+    if (el.querySelectorAll) el.querySelectorAll('.bar-fill[data-w]').forEach(function (b) { b.style.transform = 'scaleX(' + ((parseFloat(b.getAttribute('data-w')) || 0) / 100) + ')'; });
+    if (el.matches && el.matches('.bar-fill[data-w]')) el.style.transform = 'scaleX(' + ((parseFloat(el.getAttribute('data-w')) || 0) / 100) + ')';
   }
   function infoMotion() {
     var sc = $('infoScroll'); if (!sc) return;

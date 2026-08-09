@@ -735,12 +735,16 @@ function pfReveal(){
   }else document.querySelectorAll('#portfoyPage .pf-reveal').forEach(function(el){el.classList.add('in');});
 }
 /* 3B tilt (yalnız ince işaretçi + hareket açıksa) */
+/* §11 Dalga D — bar dolumu compositor-dostu: width yerine scaleX (kücük degerlere .04 görünürlük tabani) */
+function _sclX(el,w){var f=(parseFloat(w)||0)/100;el.style.transform='scaleX('+(f>0?Math.max(f,.04):0)+')';}
 function pfTilt(){
   if(window.matchMedia&&(matchMedia('(prefers-reduced-motion:reduce)').matches||!matchMedia('(pointer:fine)').matches))return;
   document.querySelectorAll('#portfoyPage .pf-card').forEach(function(c){
     if(c._pfTilt)return;c._pfTilt=1;
+    /* §2 Dalga D — takip sırasında CSS transition kapatılır (1:1 imleç), ayrılınca .32s yumuşak dönüş */
+    c.addEventListener('pointerenter',function(){c.style.transition='none';});
     c.addEventListener('pointermove',function(e){var r=c.getBoundingClientRect();var x=(e.clientX-r.left)/r.width-0.5,y=(e.clientY-r.top)/r.height-0.5;c.style.transform='perspective(900px) rotateX('+(-y*5).toFixed(2)+'deg) rotateY('+(x*6).toFixed(2)+'deg) translateY(-4px)';});
-    c.addEventListener('pointerleave',function(){c.style.transform='';});
+    c.addEventListener('pointerleave',function(){c.style.transition='';c.style.transform='';});
   });
 }
 /* segment pili + bölüme kaydırma */
@@ -818,7 +822,7 @@ function ozHero(){
    </div>
    ${catCards?`<div class="ozc-cats"><div class="ozc-h">Kategori bazında başlangıç fiyatları</div><div class="ozc-catg">${catCards}</div></div>`:''}
    <div class="ozc-chips"><span class="lbl">Aktif bölgelerimiz:</span> ${chips.slice(0,12).map(c=>`<i>${c}</i>`).join('')}</div>`;
-  requestAnimationFrame(()=>{host.querySelectorAll('.ozc-bars .f').forEach(e=>e.style.width=e.dataset.w+'%');});
+  requestAnimationFrame(()=>{host.querySelectorAll('.ozc-bars .f').forEach(e=>_sclX(e,e.dataset.w));});
 }
 function ozSvg(inner){return '<div class="oz-scene"><svg viewBox="0 0 320 160" preserveAspectRatio="xMidYMid slice" fill="none" stroke="rgba(255,255,255,.84)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">'+inner+'</svg></div>';}
 function ozCatKey(t){t=(t||'').toLocaleLowerCase('tr');
@@ -1303,7 +1307,7 @@ function bzRenderDemo(d){
     </div>
     <div class="bz-disc">Veriler mahalle bazlı örnek/temsilî değerlerdir; canlı modda Türkiye geneli endeks & yaşam kalitesi veri altyapısından çekilir.</div>`;
   // animate hbars
-  requestAnimationFrame(()=>{host.querySelectorAll('.hf').forEach(el=>{el.style.transition='width .8s cubic-bezier(.2,.8,.2,1)';el.style.width=el.dataset.w+'%';});});
+  requestAnimationFrame(()=>{host.querySelectorAll('.hf').forEach(el=>{el.style.transition='transform .8s cubic-bezier(.2,.8,.2,1)';_sclX(el,el.dataset.w);});});
 }
 
 
@@ -1407,7 +1411,7 @@ function brHero(){
   document.getElementById('brHeroChg').textContent=BR_OVER.avgChg;
   const top=BR_DAGG.slice().sort((a,b)=>b.m2-a.m2).slice(0,6),max=top[0].m2;
   document.getElementById('brHeroBars').innerHTML=top.map(x=>`<div class="hb" onclick="brJumpDistrict('${x.d}')"><span class="l">${x.d}</span><span class="t"><span class="f" data-w="${(x.m2/max*100).toFixed(1)}"></span></span><span class="v">${fmt(x.m2)}</span></div>`).join('');
-  requestAnimationFrame(()=>{document.querySelectorAll('#brHeroBars .f').forEach(e=>e.style.width=e.dataset.w+'%');});
+  requestAnimationFrame(()=>{document.querySelectorAll('#brHeroBars .f').forEach(e=>_sclX(e,e.dataset.w));});
 }
 const BR_GCOL={metropol:'#3b82f6',sahil:'#1e7e3a',ic:'#f59e0b'};
 function brDistrictChart(sort){
@@ -1430,7 +1434,7 @@ function brDistrictChart(sort){
     <div class="br-mrows">${rows}</div>
     <div class="br-mavgnote"><i></i> İl ortalaması: <b>${avgtxt}</b> · ilçeye tıklayıp mahallelerini açın</div>
   </div>`;
-  requestAnimationFrame(()=>{host.querySelectorAll('.bf').forEach(e=>{e.style.width=e.dataset.w+'%';});});
+  requestAnimationFrame(()=>{host.querySelectorAll('.bf').forEach(e=>{_sclX(e,e.dataset.w);});});
 }
 function brJumpDistrict(d){
   BR.group='all';document.querySelectorAll('#brGroups button').forEach((b,i)=>b.classList.toggle('act',i===0));
@@ -1444,7 +1448,7 @@ function brNeighChart(ilce){
   const maxV=arr[0].m2,avg=brAgg(ilce).m2,avgPct=(avg/maxV*100).toFixed(1);
   const rows=arr.map((x,i)=>`<div class="br-mrow" onclick="brOpenMah('${ilce}','${x.mah.replace(/'/g,"\\'")}')"><span class="rk">${i+1}</span><span class="dn">${x.mah}</span><span class="bt"><span class="bf" style="background:linear-gradient(90deg,#1e40af,#3b82f6)" data-w="${(x.m2/maxV*100).toFixed(1)}"></span><i class="avg" style="left:${avgPct}%"></i></span><span class="mv">${fmt(x.m2)} ₺</span></div>`).join('');
   host.innerHTML=`<div class="br-mc-card"><div class="br-mc-head"><div><h3>${ilce} · mahalle m² fiyat sıralaması</h3><div class="sub">${arr.length} mahalle · ortalama m² fiyatına göre · mahalleye tıklayıp detayını açın</div></div></div><div class="br-mrows">${rows}</div><div class="br-mavgnote"><i></i> İlçe ortalaması: <b>${fmt(avg)} ₺</b></div></div>`;
-  requestAnimationFrame(()=>{host.querySelectorAll('.bf').forEach(e=>{e.style.width=e.dataset.w+'%';});});
+  requestAnimationFrame(()=>{host.querySelectorAll('.bf').forEach(e=>{_sclX(e,e.dataset.w);});});
 }
 function brAgg(ilce){
   const ms=MAH[ilce]||[];let m2=0,chg=0,sc=0;
@@ -1601,7 +1605,7 @@ function brDetailRender(d){
       ${brAdvisorHTML(d)}
     </div>`;
   brChart();brDemo(d);
-  requestAnimationFrame(()=>{document.querySelectorAll('#brDBody .br-cmprow .seg').forEach(el=>{el.style.width=el.dataset.w+'%';});});
+  requestAnimationFrame(()=>{document.querySelectorAll('#brDBody .br-cmprow .seg').forEach(el=>{_sclX(el,el.dataset.w);});});
 }
 function brSetMetric(m,btn){BR.metric=m;if(btn){document.querySelectorAll('#brMetric button').forEach(b=>b.classList.toggle('act',b===btn));}brChart();}
 function brDemo(d){
@@ -1623,7 +1627,7 @@ function brDemo(d){
       <div class="bz-panel bz-wide"><div class="bp-t"><span class="bp-tl">${brIco(BRI.cap,15)} Eğitim Durumu</span></div>${bzHbars(egitim,'#7dd3fc')}</div>
     </div>
     <div class="bz-disc">Veriler mahalle bazlı örnek/temsilî değerlerdir; canlı modda Türkiye geneli endeks & yaşam kalitesi veri altyapısından çekilir.</div>`;
-  requestAnimationFrame(()=>{host.querySelectorAll('.hf').forEach(el=>{el.style.transition='width .8s cubic-bezier(.2,.8,.2,1)';el.style.width=el.dataset.w+'%';});});
+  requestAnimationFrame(()=>{host.querySelectorAll('.hf').forEach(el=>{el.style.transition='transform .8s cubic-bezier(.2,.8,.2,1)';_sclX(el,el.dataset.w);});});
 }
 function brChart(){
   const host=document.getElementById('brChartHost');const d=BR.data;if(!host||!d)return;
@@ -3516,7 +3520,12 @@ function _mansetHTML(){
   var side='<aside class="man-side">'+[1,2,3].map(function(k){return _manSideCard(man[(_manIdx+k)%man.length]);}).join('')+'</aside>';
   return '<section class="man-sec"><div class="man-head"><h2><span class="hl">Günün</span> Manşeti</h2><span class="man-count">'+man.length+' başlık · ProX seçimi</span></div><div class="man-wrap">'+big+side+'</div></section>';
 }
-function blogManGo(i){var man=_blogManPool();if(!man.length)return;_manIdx=((i%man.length)+man.length)%man.length;var host=document.querySelector('.man-sec');if(host)host.outerHTML=_mansetHTML();}
+/* §7 Dalga D — manşet geçişi teleport yerine kısa crossfade (reduced-motion'da anında) */
+function blogManGo(i){var man=_blogManPool();if(!man.length)return;_manIdx=((i%man.length)+man.length)%man.length;var host=document.querySelector('.man-sec');if(!host)return;
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches){host.outerHTML=_mansetHTML();return;}
+  host.style.transition='opacity .16s ease';host.style.opacity='0';
+  setTimeout(function(){var h=document.querySelector('.man-sec');if(!h)return;h.outerHTML=_mansetHTML();var y=document.querySelector('.man-sec');
+    if(y){y.style.opacity='0';y.style.transition='opacity .2s ease';requestAnimationFrame(function(){requestAnimationFrame(function(){y.style.opacity='1';});});}},170);}
 window.blogManGo=blogManGo;
 function blogSortTab(btn){
   var box=document.getElementById('blogTabs');if(box)box.querySelectorAll('.bt-tab').forEach(function(t){t.classList.toggle('on',t===btn);});
@@ -3987,7 +3996,7 @@ function fillProx(){document.getElementById('px_key').value=PROX.key||'';
   if(sel){var cur=PROX.il||PROX.region||'İzmir';sel.innerHTML=trIlList().sort(function(a,b){return a.localeCompare(b,'tr');}).map(function(il){return '<option'+(il===cur?' selected':'')+'>'+il+'</option>';}).join('');}
   var _q=null;try{_q=JSON.parse(localStorage.getItem('prox_quota')||'null');}catch(e){}
   var _used=(_q&&_q.count)||PROX.quotaUsed||0,_max=PROX.quotaMax||10000;
-  const pct=Math.min(100,Math.round(_used/_max*100));document.getElementById('px_fill').style.width=pct+'%';
+  const pct=Math.min(100,Math.round(_used/_max*100));_sclX(document.getElementById('px_fill'),pct);
   document.getElementById('px_quotaTxt').textContent=fmt(_used)+' / '+fmt(_max)+' istek'+(_q?' · '+_q.month:'');
   if(typeof fillAiKeys==='function')fillAiKeys();/* aynı sekmedeki YZ anahtar alanlarını da doldur */
   if(typeof proxRenderStatus==='function')proxRenderStatus();}
