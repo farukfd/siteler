@@ -2120,6 +2120,11 @@ function obFinish(){obCollect();if(!OB.name){OB.step=2;obRender();toast('Firma a
     if(typeof toast==='function')toast('✓ Kurulum tamam! '+OB.name+' · '+OB.il+' yayında.'+(OB.key?'':' (ProX anahtarını admin→ProX\'tan ekleyebilirsiniz.)'));
   }catch(e){if(typeof toast==='function')toast('Kurulumda hata: '+(e&&e.message||e));}}
 window.addEventListener('hashchange',function(){if(location.hash==='#kur')openOnboarding();});
+/* #blog → manşetli Haber/Blog ana sayfası; #blog/<id> → doğrudan haber detayı (derin link).
+   Statik sayfalardaki tüm index.html#blog linkleri bu yönlendiriciyle gerçek blog sayfasını açar. */
+function _gmBlogHashAc(){var h=location.hash||'';if(h==='#blog'){blogOpen();return true;}var m=h.match(/^#blog\/(.+)$/);if(m){blogOpen(decodeURIComponent(m[1]));return true;}return false;}
+window.addEventListener('hashchange',_gmBlogHashAc);
+window.addEventListener('load',function(){if(/^#blog(\/|$)/.test(location.hash||''))setTimeout(_gmBlogHashAc,350);});
 window.addEventListener('load',function(){try{
   if(location.hash==='#kur'){setTimeout(openOnboarding,400);return;}
   var fresh=!localStorage.getItem('meridyenGM_v1')&&!localStorage.getItem('wl_onboarded');
@@ -3544,7 +3549,7 @@ async function blogOpen(id){var p=document.getElementById('blogPage');if(!p)retu
   try{if(typeof brandSweep==='function')brandSweep(p);}catch(e){}
   var sc=document.getElementById('blogScroll');if(sc)sc.scrollTop=0;
   setOverlayPage('Blog · Bilgi Merkezi','#blog');}
-function blogShowList(){var l=document.getElementById('blogListWrap'),d=document.getElementById('blogDetailWrap');if(l)l.style.display='';if(d)d.style.display='none';var sc=document.getElementById('blogScroll');if(sc)sc.scrollTop=0;}
+function blogShowList(){var l=document.getElementById('blogListWrap'),d=document.getElementById('blogDetailWrap');if(l)l.style.display='';if(d)d.style.display='none';try{if(/^#blog\//.test(location.hash))history.replaceState(null,'','#blog');}catch(e){}var sc=document.getElementById('blogScroll');if(sc)sc.scrollTop=0;}
 /* BLOG ANA SAYFASI — emlakekspertizi.com/blog tarzı: Günün Manşeti (carousel + yan manşetler)
    + filtre sekmeleri (En Yeni/En Çok Okunan/Yüksek Kalite/Editör Seçimi) + kategori + haber ızgarası. */
 var _manIdx=0;
@@ -3667,6 +3672,7 @@ function blogDetail(id){var b=blogAllPosts().filter(function(x){return (''+x.id)
     +'<div class="bd-cta"><b>Bu bölgede alım/satım mı düşünüyorsunuz?</b><button class="btn btn-primary" onclick="closeAllOverlays();satScrollForm(\'Blog danışmanlık talebi\')">Ücretsiz Danışmanlık Alın</button></div>'
     +'</article>';
   try{if(typeof ContentStudio!=='undefined'&&ContentStudio.applyArticleSEO)ContentStudio.applyArticleSEO(b);}catch(e){}
+  try{history.replaceState(null,'','#blog/'+encodeURIComponent(id));}catch(e){}/* paylaşılabilir haber linki */
   var sc=document.getElementById('blogScroll');if(sc)sc.scrollTop=0;}
 window.blogOpen=blogOpen;window.blogDetail=blogDetail;window.blogShowList=blogShowList;window.renderBlogList=renderBlogList;
 let editingBlog=null;
@@ -4920,7 +4926,7 @@ const SITE_FOOTER=`<div class="wrap">
       <li><a href="nedenbiz.html">Neden Biz</a></li>
       <li><a href="referanslar/" onclick="goView('referans');return false">Referanslar</a></li>
       <li><a href="index.html#arsiv">Kapanan İşlemler</a></li>
-      <li><a href="blog.html">Blog</a></li>
+      <li><a href="index.html#blog" onclick="if(typeof blogOpen==='function'){blogOpen();return false}">Blog & Haberler</a></li>
       <li><a href="iletisim.html">İletişim</a></li>
     </ul></div>
     <div><h4>Hizmetler</h4><ul>

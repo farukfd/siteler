@@ -1,4 +1,12 @@
 # CLAUDE.md - Sistem ve Ajan Davranış Kuralları
+
+## ÖZELLİK = YOLCULUK kuralı (tek turda bitirme disiplini)
+Bir özellik, fonksiyonu çalıştığında DEĞİL, kullanıcının TÜM giriş yollarından tıklayarak ulaşabildiğinde biter. Her özellik işe başlamadan önce KABUL LİSTESİ yazılır ve tek turda tamamı kapatılır:
+1. **Giriş yolları**: Bu ekrana kullanıcı NERELERDEN gelir? (URL/hash ile doğrudan, üst menü, alt menü, mobil menü, ana sayfa CTA'sı, statik sayfalardaki linkler, kardeş sitelerin linkleri). Her yol tarayıcıda TIKLANARAK doğrulanır — fonksiyonu elle çağırmak test sayılmaz.
+2. **Kabuk bütünlüğü**: Yeni ekran/overlay üst menü + alt menü (footer) taşır; menülerinden diğer sayfalara ÇIKILABİLİR.
+3. **Dönüş & derin link**: Ekrandan geriye dönüş çalışır; paylaşılabilir URL/hash yazılır.
+4. **Bayat-önbellek kontrolü**: Doğrulama her zaman cache-bust'lı URL ile yapılır (`?ts=N`); python http.server'ın aynı-saniye Last-Modified 304'ü bayat sürüm gösterir. Kullanıcıya "bitti" demeden önce sürümün (?v=) canlıda yüklendiği teyit edilir.
+5. Kabul listesi kapanmadan commit mesajına "tamamlandı" yazılmaz.
 - Sen en üst düzey Claude Opus modelisin. Web arayüzündeki gibi derin felsefi, mimari ve stratejik düşünme yeteneğine sahipsin.
 - Basit/generic kodlar yazmak yerine, her zaman en ileri seviye, temiz ve modern (clean code) standartlarını uygula.
 - Bir göreve başlamadan önce arka planda mutlaka "Düşünme Seansı" (Sequential Thinking) yap, sorunun kök nedenini analiz et ve bunu bana üst düzey bir dille açıkla.
