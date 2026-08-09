@@ -2044,7 +2044,7 @@ function insManGo(i){var man=_insManPool();if(!man.length)return;_insManIdx=((i%
   host.style.transition='opacity .16s ease';host.style.opacity='0';
   setTimeout(function(){var h=document.querySelector('#insManset .man-sec');if(!h)return;h.outerHTML=_insMansetHTML();var y=document.querySelector('#insManset .man-sec');
     if(y){y.style.opacity='0';y.style.transition='opacity .2s ease';requestAnimationFrame(function(){requestAnimationFrame(function(){y.style.opacity='1';});});}},170);}
-function insMansetBas(){var host=document.getElementById('insManset');if(!host)return;host.innerHTML=_insMansetHTML();}
+function insMansetBas(){var host=document.getElementById('bpManset');if(!host)return;host.innerHTML=_insMansetHTML();}
 window.insManGo=insManGo;window.insMansetBas=insMansetBas;
 function insBlogDetail(id){var b=insBlogById(id);if(!b)return;
   var body;
@@ -2107,10 +2107,35 @@ function insContentTest(){if(INS_CONTENT)_insAgentTest(INS_CONTENT,'cxci_status'
 function insSiteTest(){if(INS_SITE)_insAgentTest(INS_SITE,'cxsi_status');}
 window.insStudioFill=insStudioFill;window.insContentFill=insContentFill;window.insSiteFill=insSiteFill;window.insContentSave=insContentSave;window.insSiteSave=insSiteSave;window.insContentTest=insContentTest;window.insSiteTest=insSiteTest;
 
-function renderBlog(){var el=document.getElementById('blogGrid');if(!el)return;var posts=insBlogAll();el.innerHTML=posts.map(function(b){var s=(b.img&&/^(https?:|data:|blob:)/.test(b.img))?b.img:imgFor(b.img);var ids=String(b.id).replace(/[^A-Za-z0-9_-]/g,'');
+function _insBlogKart(b){var s=(b.img&&/^(https?:|data:|blob:)/.test(b.img))?b.img:imgFor(b.img);var ids=String(b.id).replace(/[^A-Za-z0-9_-]/g,'');
   return '<div class="post" style="cursor:pointer" onclick="insBlogDetail(\''+ids+'\')"><div class="ph">'+(s?'<img src="'+s+'" alt="" loading="lazy" decoding="async">':'')+'</div>'
-  +'<div class="body"><div class="date">'+_insEsc(b.date)+'</div><h3>'+_insEsc(b.t)+'</h3><p>'+_insEsc(b.d)+'</p></div></div>';}).join('');
-  try{insMansetBas();}catch(e){}}
+  +'<div class="body"><div class="date">'+_insEsc(b.date)+'</div><h3>'+_insEsc(b.t)+'</h3><p>'+_insEsc(b.d)+'</p></div></div>';}
+function renderBlog(){var el=document.getElementById('blogGrid');if(!el)return;
+  /* Ana sayfa = 9 kartlık VİTRİN; manşet + tüm yazılar GERÇEK Blog sayfasında (#blogPage, dn paritesi) */
+  el.innerHTML=insBlogAll().slice(0,9).map(_insBlogKart).join('');}
+/* ---- BLOG SAYFASI (tam ekran; üst menü z-60 üstte görünür/tıklanabilir kalır) ---- */
+function insBlogPageAc(){var p=document.getElementById('blogPage');if(!p)return;
+  if(!p.dataset.kurulu){p.dataset.kurulu='1';
+    p.innerHTML='<div class="bp-in"><div id="bpManset"></div>'
+      +'<div class="sec-head" style="margin:30px 0 18px"><div class="eyebrow">Bilgi Merkezi</div><h2>Tüm haberler &amp; rehberler</h2><p>İnşaat, tadilat, yatırım ve kentsel dönüşüm üzerine uzman içerikler.</p></div>'
+      +'<div class="blog-grid" id="bpGrid"></div></div>';
+    var f=document.querySelector('footer.insaatFooter');
+    if(f)p.insertAdjacentHTML('beforeend',f.outerHTML.replace(/ id="[^"]*"/g,''));
+  }
+  try{var g=document.getElementById('bpGrid');if(g)g.innerHTML=insBlogAll().map(_insBlogKart).join('');}catch(e){}
+  try{insMansetBas();}catch(e){}
+  p.classList.add('on');document.body.style.overflow='hidden';
+  var h=document.getElementById('hdr');if(h)h.classList.add('scrolled');
+  try{if(!/^#blog/.test(location.hash||''))history.pushState(null,'','#blog');}catch(e){}
+  p.scrollTop=0;}
+function insBlogPageKapat(){var p=document.getElementById('blogPage');if(!p||!p.classList.contains('on'))return;
+  _insAnimKapat(p,function(){p.classList.remove('on');});document.body.style.overflow='';
+  try{if(/^#blog/.test(location.hash||''))history.pushState(null,'',location.pathname);}catch(e){}}
+window.insBlogPageAc=insBlogPageAc;window.insBlogPageKapat=insBlogPageKapat;
+/* #blog hash'i her değişimde blog sayfasını açar (footer linki sayfa içindeyken de) */
+window.addEventListener('hashchange',function(){var h=location.hash||'';
+  if(h==='#blog'){insBlogPageAc();}
+  else if(/^#blog\//.test(h)){insBlogPageAc();setTimeout(function(){try{insBlogDetail(decodeURIComponent(h.slice(6)));}catch(e){}},250);}});
 function paintImgs(){const a=document.getElementById('img-about');if(a&&IMG.about)a.src=IMG.about;const sf=document.getElementById('stageFb');if(sf&&IMG.p_office)sf.src=IMG.p_office;}
 loadAll();insEidsMigrate();renderServices();renderProjects();renderBlog();paintImgs();
 try{setTimeout(function(){try{renderInsHomeIlan();}catch(e){}},0);}catch(e){}/* INS_LIST_CFG dosyanın ilerisinde tanımlı → defer */
@@ -3368,10 +3393,13 @@ function insBoot(){
      içerik kaymasıyla ıskalıyordu); overlay değil sayfa-içi scroll hedefi. Sitenin kendi
      fGo() mekanizmasını kullan (footer 'Medya' linkiyle birebir; içerik yerleştikten sonra). */
   try{var _lsh=(location.hash||'');
-    if(/^#blog\//.test(_lsh)){/* derin link: tekil haber/yazı — scroll yerine doğrudan detay overlay'i aç */
-      var _bid=_lsh.slice(6);var _mdb=function(){setTimeout(function(){try{insBlogDetail(decodeURIComponent(_bid));}catch(e){}},400);};
+    if(/^#blog\//.test(_lsh)){/* derin link: Blog sayfası + tekil haber detayı */
+      var _bid=_lsh.slice(6);var _mdb=function(){setTimeout(function(){try{insBlogPageAc();insBlogDetail(decodeURIComponent(_bid));}catch(e){}},350);};
       if(document.readyState==='complete')_mdb();else window.addEventListener('load',_mdb);
-    }else if(_lsh==='#medya'||_lsh==='#blog'){var _lsid=_lsh.slice(1);var _md=function(){if(typeof fGo==='function')fGo(_lsid);else{var el=document.getElementById(_lsid);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}};if(document.readyState==='complete')setTimeout(_md,300);else window.addEventListener('load',function(){setTimeout(_md,300);});}
+    }else if(_lsh==='#blog'){/* GERÇEK Blog sayfası (dn paritesi) — index bölümüne scroll DEĞİL */
+      var _mbp=function(){setTimeout(function(){try{insBlogPageAc();}catch(e){}},300);};
+      if(document.readyState==='complete')_mbp();else window.addEventListener('load',_mbp);
+    }else if(_lsh==='#medya'){var _lsid=_lsh.slice(1);var _md=function(){if(typeof fGo==='function')fGo(_lsid);else{var el=document.getElementById(_lsid);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}};if(document.readyState==='complete')setTimeout(_md,300);else window.addEventListener('load',function(){setTimeout(_md,300);});}
   }catch(e){}
 }
 window.addEventListener('popstate',insRoute);
