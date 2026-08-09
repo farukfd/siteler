@@ -1525,3 +1525,14 @@ body.cookie-on .wa{bottom:86px}
   .card,.vcard,.pcard{border-color:#5b6372}
   .btn-ghost{border-width:2px}
 }
+
+/* §7/§12 — overlay simetrik çıkış + modal materialize (apple-design Dalga C).
+   .closing'i _insAnimKapat verir; animationend'de on/open kalkar. */
+@keyframes insOvOut{from{opacity:1}to{opacity:0}}
+@keyframes insMdIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes insMdOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(10px) scale(.985)}}
+#projelerPage.closing,#hizmetlerPage.closing,#svcDetail.closing,#pjDetail.closing,#bolgePage.closing,#iletisimPage.closing,#ilanlarPage.closing,#docPage.closing,#faqPage.closing{display:block;animation:insOvOut .2s ease-in forwards;pointer-events:none}
+.modal.open{animation:pdIn .2s ease}
+.modal.open .box{animation:insMdIn .26s cubic-bezier(.2,.7,.3,1)}
+.modal.closing{display:flex;animation:insOvOut .18s ease-in forwards;pointer-events:none}
+.modal.closing .box{animation:insMdOut .18s ease-in forwards}

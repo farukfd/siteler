@@ -99,7 +99,7 @@ else proxBootstrap();
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&family=Manrope:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/base.css?v=4">
+  <link rel="stylesheet" href="css/base.css?v=5">
   <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
@@ -120,7 +120,8 @@ header.scrolled .lang-sel{color:var(--ink)}
 .lang-sel option{color:#111}
 @media(max-width:980px){.nav-wa,.lang-sw{display:none}}
 .gmodal{position:fixed;inset:0;z-index:3000;display:none}
-.gmodal.on{display:block}
+.gmodal.on{display:block;animation:pdIn .2s ease}
+.gmodal.closing{display:block;animation:insOvOut .18s ease-in forwards;pointer-events:none}/* §7 Dalga C */
 .gm-ov{position:absolute;inset:0;background:rgba(6,8,14,.72);backdrop-filter:blur(3px)}
 .gm-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,92vw);background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
 .gm-x{position:absolute;right:14px;top:12px;background:none;border:0;color:var(--muted);font-size:20px;cursor:pointer}
@@ -891,7 +892,7 @@ function cookieChoice(v){
 <script src="../shared/listing-extras.js?v=9"></script>
 <script src="../shared/cs-engine.js?v=2"></script>
 <script src="js/content-studio.js?v=3"></script>
-<script src="js/app-core.js?v=37"></script>
+<script src="js/app-core.js?v=38"></script>
 
 
 
@@ -2007,7 +2008,7 @@ function applyAuthUI(){
 }
 function _authPrefill(){var s=authSession();if(!s)return;[['f_ad','f_mail'],['il_ad','il_mail']].forEach(function(p){var n=document.getElementById(p[0]),m=document.getElementById(p[1]);if(n&&!n.value)n.value=s.name;if(m&&!m.value)m.value=s.email;});}
 function openGiris(){var m=document.getElementById('girisModal');if(!m)return;m.classList.add('on');var s=authSession();if(s){_authFillProfile();girisTab('profile');}else girisTab('login');}
-function closeGiris(){var m=document.getElementById('girisModal');if(m)m.classList.remove('on');}
+function closeGiris(){var m=document.getElementById('girisModal');if(!m)return;if(window._insAnimKapat)_insAnimKapat(m,function(){m.classList.remove('on');});else m.classList.remove('on');}
 function _authFillProfile(){var s=authSession();if(!s)return;var n=document.getElementById('au_pname'),e=document.getElementById('au_pmail'),a=document.getElementById('au_pav');if(n)n.textContent=s.name;if(e)e.textContent=s.email;if(a)a.textContent=((s.name||'M').trim()[0]||'M').toUpperCase();}
 function girisTab(t){
   ['login','register','profile','personel'].forEach(function(p){var el=document.getElementById('gp_'+p);if(el)el.hidden=(p!==t);});

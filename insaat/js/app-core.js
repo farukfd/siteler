@@ -836,7 +836,7 @@ function openBolgePage(){
   }catch(_){}
 }
 function closeBolgePage(){
-  document.getElementById('bolgePage').classList.remove('on');document.body.style.overflow='';
+  _insOvKapat('bolgePage');document.body.style.overflow='';
   /* URL: temiz router yönetir */
 }
 function openIletisimPage(){
@@ -846,7 +846,7 @@ function openIletisimPage(){
   /* URL: temiz router yönetir */
 }
 function closeIletisimPage(){
-  document.getElementById('iletisimPage').classList.remove('on');document.body.style.overflow='';
+  _insOvKapat('iletisimPage');document.body.style.overflow='';
   /* URL: temiz router yönetir */
 }
 /* ===== ProX Asistan — bağımsız tam-ekran kilitli AI uygulaması + konuşma geçmişi (localStorage) ===== */
@@ -937,7 +937,7 @@ function openDoc(key){
   try{history.replaceState(null,'','#doc-'+key);}catch(e){}
 }
 function closeDoc(){
-  document.getElementById('docPage').classList.remove('on');document.body.style.overflow='';
+  _insOvKapat('docPage');document.body.style.overflow='';
   if((location.hash||'').indexOf('#doc-')===0)try{history.replaceState(null,'',location.pathname);}catch(e){}
 }
 function renderDoc(key){
@@ -1155,7 +1155,7 @@ function openHizmetlerPage(){
   /* URL: temiz router yönetir */
 }
 function closeHizmetlerPage(){
-  document.getElementById('hizmetlerPage').classList.remove('on');
+  _insOvKapat('hizmetlerPage');
   document.body.style.overflow='';
   /* URL: temiz router yönetir */
 }
@@ -1320,7 +1320,7 @@ function openSvcDetail(i){
   const ov=document.getElementById('svcDetail');ov.classList.add('on');document.body.style.overflow='hidden';ov.scrollTop=0;
 }
 function closeSvcDetail(){
-  document.getElementById('svcDetail').classList.remove('on');
+  _insOvKapat('svcDetail');
   // hizmetler sayfası hâlâ açıksa scroll kilidi kalsın
   if(!document.getElementById('hizmetlerPage').classList.contains('on'))document.body.style.overflow='';
 }
@@ -1333,7 +1333,7 @@ function sdGo(id){
 }
 // hizmet detayını kapatıp hizmetler listesine dön
 function sdBackToHizmetler(){
-  document.getElementById('svcDetail').classList.remove('on');
+  _insOvKapat('svcDetail');
   if(!document.getElementById('hizmetlerPage').classList.contains('on'))openHizmetlerPage();
   else {document.body.style.overflow='hidden';document.getElementById('hizmetlerPage').scrollTo({top:0,behavior:'smooth'});}
 }
@@ -1450,7 +1450,7 @@ function openProjelerPage(){
   /* URL: temiz router yönetir */
 }
 function closeProjelerPage(){
-  document.getElementById('projelerPage').classList.remove('on');
+  _insOvKapat('projelerPage');
   document.body.style.overflow='';
   /* URL: temiz router yönetir */
 }
@@ -1538,6 +1538,10 @@ const SAAS_THEMES={
 function initSaaSTheme(){const color=(typeof saasResolve==='function'&&saasResolve('themeColor'))||SAAS_CONFIG.themeColor;const t=SAAS_THEMES[color]||SAAS_THEMES['Turuncu'],s=document.documentElement.style;s.setProperty('--accent',t.accent);s.setProperty('--accent-2',t.accent2);}
 window.saasSetTheme=function(name){SAAS_CONFIG.themeColor=name;initSaaSTheme();};
 /* 2) GLOBAL DİNAMİK MENÜ — 6 statik navbar yerine tek kaynak */
+/* §7 Dalga C — overlay/modal kapanışı giriş animasyonunun aynasıyla; reduced-motion'da anında. */
+function _insAnimKapat(el,done){try{if(!el||matchMedia('(prefers-reduced-motion:reduce)').matches||el.classList.contains('closing')){if(el)el.classList.remove('closing');done();return;}el.classList.add('closing');var f=false,end=function(){if(f)return;f=true;el.classList.remove('closing');done();};el.addEventListener('animationend',end,{once:true});setTimeout(end,340);}catch(e){try{done();}catch(_){}}}
+function _insOvKapat(id){var el=document.getElementById(id);if(!el||!el.classList.contains('on'))return;_insAnimKapat(el,function(){el.classList.remove('on');});}
+window._insAnimKapat=_insAnimKapat;window._insOvKapat=_insOvKapat;
 function closeAllInsaatOverlays(){['closeProjelerPage','closeHizmetlerPage','closeSvcDetail','closeProjectDetail','closeBolgePage','closeIletisimPage','closeIlanlarPage','closeDoc','closeFaqPage','closeProxAsistanPage','closeHesap'].forEach(fn=>{try{if(typeof window[fn]==='function')window[fn]();}catch(e){}});document.body.style.overflow='';}
 function openInsaatMobile(){var ov=document.querySelector('#projelerPage.on,#hizmetlerPage.on,#bolgePage.on,#svcDetail.on,#pjDetail.on,#iletisimPage.on,#docPage.on,#faqPage.on');var m=ov?ov.querySelector('.mnav'):document.getElementById('mnav');if(m)m.classList.add('open');}
 const INSAAT_NAV=`<a href="hizmetlerimiz.html" onclick="return goPage('hizmetler',event)">Hizmetlerimiz</a>`
@@ -1785,7 +1789,7 @@ function openProjectDetail(i){
   ov.scrollTop=0;
 }
 function closeProjectDetail(){
-  document.getElementById('pjDetail').classList.remove('on');
+  _insOvKapat('pjDetail');
   if(!document.getElementById('projelerPage').classList.contains('on'))document.body.style.overflow='';
 }
 // proje detayından ana sayfada bölüme git
@@ -1797,7 +1801,7 @@ function jdGo(id){
 }
 // proje detayını kapatıp projeler listesine dön
 function jdBackToProjeler(){
-  document.getElementById('pjDetail').classList.remove('on');
+  _insOvKapat('pjDetail');
   if(!document.getElementById('projelerPage').classList.contains('on'))openProjelerPage();
   else {document.body.style.overflow='hidden';document.getElementById('projelerPage').scrollTo({top:0,behavior:'smooth'});}
 }
@@ -2027,7 +2031,7 @@ if(totop){totop.onclick=_totopClick;['faqPage','docPage','iletisimPage','bolgePa
 
 /* teklif modal + leads */
 function openTeklif(){document.getElementById('teklifModal').classList.add('open');}
-function closeTeklif(){document.getElementById('teklifModal').classList.remove('open');}
+function closeTeklif(){var m=document.getElementById('teklifModal');_insAnimKapat(m,function(){m.classList.remove('open');});}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
 function submitLead(src){
   const g=id=>document.getElementById(id);
@@ -2797,7 +2801,7 @@ function openIlanlarPage(){
   renderInsIlanPublic();renderInsOzelPublic();
   ov.classList.add('on');try{_insSyncUrl('ilanlar');}catch(e){}document.body.style.overflow='hidden';ov.scrollTop=0;
 }
-function closeIlanlarPage(){var ov=document.getElementById('ilanlarPage');if(ov)ov.classList.remove('on');document.body.style.overflow='';}
+function closeIlanlarPage(){_insOvKapat('ilanlarPage');document.body.style.overflow='';}
 
 // ============ SÖZLEŞMELER (şablon + önizleme + yazdır + WhatsApp) ============
 const CT_LABEL={insaat:'Anahtar Teslim İnşaat',['kat-karsiligi']:'Kat Karşılığı',taseron:'Taşeron'};
@@ -3118,7 +3122,7 @@ function _faqCatLabel(k){for(var i=0;i<FAQ_CATS.length;i++){if(FAQ_CATS[i].k===k
 function _faqCatIcon(k){for(var i=0;i<FAQ_CATS.length;i++){if(FAQ_CATS[i].k===k)return FAQ_CATS[i].i;}return '•';}
 var _faqCat='all', _faqQ='';
 function openFaqPage(){renderFaqPage();var ov=document.getElementById('faqPage');ov.classList.add('on');_insSyncUrl('soru-cevap');document.body.style.overflow='hidden';ov.scrollTop=0;if(typeof i18nInit==='function')i18nInit();}
-function closeFaqPage(){document.getElementById('faqPage').classList.remove('on');document.body.style.overflow='';var h=location.hash||'';if(h==='#sss'||h==='#soru-cevap'||h==='#faq')try{history.replaceState(null,'',location.pathname);}catch(e){}}
+function closeFaqPage(){_insOvKapat('faqPage');document.body.style.overflow='';var h=location.hash||'';if(h==='#sss'||h==='#soru-cevap'||h==='#faq')try{history.replaceState(null,'',location.pathname);}catch(e){}}
 function renderFaqPage(){
   var en=(typeof LANG!=='undefined'&&LANG==='en');
   var total=FAQ_DATA.length;

@@ -936,7 +936,9 @@ function openPage(key,opts){
     try{proxBlogFeed().then(function(px){if(px&&px.length){var g=document.getElementById('dnBlogGrid');if(g)g.innerHTML=dnBlogAll().map(_dnBlogCard).join('');}try{window.dnFavReflect&&dnFavReflect();}catch(e){}}).catch(function(){});}catch(e){}}
   try{window.dnFavReflect&&dnFavReflect();}catch(e){}
 }
-function closePage(){const ov=document.getElementById('pageOverlay');ov.classList.remove('on');ov.innerHTML='';document.body.classList.remove('lock');document.getElementById('homeView').style.display='';document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);setActiveNav(null);}
+/* §7 Dalga C — overlay fade-out ile kapanır; homeView SENKRON geri gelir ki fade altından belirsin. */
+function _dnAnimKapat(el,done){try{if(!el||matchMedia('(prefers-reduced-motion:reduce)').matches||el.classList.contains('closing')){if(el)el.classList.remove('closing');done();return;}el.classList.add('closing');var f=false,end=function(){if(f)return;f=true;el.classList.remove('closing');done();};el.addEventListener('animationend',end,{once:true});setTimeout(end,340);}catch(e){try{done();}catch(_){}}}
+function closePage(){const ov=document.getElementById('pageOverlay');if(!ov)return;document.body.classList.remove('lock');document.getElementById('homeView').style.display='';document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);setActiveNav(null);if(!ov.classList.contains('on')){ov.innerHTML='';return;}_dnAnimKapat(ov,function(){ov.classList.remove('on');ov.innerHTML='';});}
 function goHome(){closeNav();closePage();window.scrollTo(0,0);}
 function navGo(k){closeNav();openPage(k);}
 function contactLead(){if(typeof submitLead==='function')submitLead({sourcePage:'danisman',formType:'contact',name:'',phone:'',email:'',location:'',message:'İletişim bölümünden randevu talebi',requestedService:'Ücretsiz Analiz'});navGo('randevu');}

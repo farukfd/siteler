@@ -2632,3 +2632,17 @@ a.hk-cc:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0
   .mbar{border-top:2px solid var(--ink,#0f172a)}
   .btn-line{border-width:2px}
 }
+
+/* §7 — overlay'ler girdiği yoldan çıkar (apple-design Dalga C): her giriş keyframe'inin
+   aynası; .closing sınıfını JS _gmAnimKapat verir, animationend'de open/on kalkar. */
+@keyframes slideout{from{transform:none;opacity:1}to{transform:translateX(40px);opacity:.5}}
+@keyframes fadeDown{from{opacity:1;transform:none}to{opacity:0;transform:translateY(10px)}}
+@keyframes brFadeOut{from{opacity:1}to{opacity:0}}
+@keyframes spOut{from{opacity:1;transform:translate(-50%,-50%) scale(1)}to{opacity:0;transform:translate(-50%,-46%) scale(.97)}}
+.mnav.closing{display:block;animation:brFadeOut .22s ease-in forwards;pointer-events:none}
+.mnav.closing .panel{animation:slideout .22s ease-in forwards}
+.modal.closing{display:grid;animation:brFadeOut .2s ease-in forwards;pointer-events:none}
+.modal.closing .mbox{animation:fadeDown .2s ease-in forwards}
+.br-page.closing{display:flex;animation:brFadeOut .22s ease-in forwards;pointer-events:none}
+#saasPortalModal.closing{display:block;animation:brFadeOut .24s ease-in forwards;pointer-events:none}
+#saasPortalModal.closing .sp-card{animation:spOut .24s ease-in forwards}

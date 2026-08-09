@@ -1816,7 +1816,10 @@ function createAlarm(){const b=document.getElementById('al_bolge').value,m=docum
 
 /* ============ MODALS ============ */
 function openLead(t){document.getElementById('leadTitle').textContent=t||'İletişim';if(t&&document.getElementById('m_konu')){const s=document.getElementById('m_konu');for(let o of s.options){if(o.text===t){s.value=o.value;break;}}}document.getElementById('leadModal').classList.add('open');}
-function closeLead(){document.getElementById('leadModal').classList.remove('open');}
+/* §7 Dalga C — kapanışı giriş animasyonunun aynasıyla oynat; reduced-motion'da anında kapat.
+   .closing sınıfı base.css'teki ters keyframe'i tetikler; animationend/360ms sonunda done koşar. */
+function _gmAnimKapat(el,done){try{if(!el||matchMedia('(prefers-reduced-motion:reduce)').matches||el.classList.contains('closing')){if(el)el.classList.remove('closing');done();return;}el.classList.add('closing');var f=false,end=function(){if(f)return;f=true;el.classList.remove('closing');done();};el.addEventListener('animationend',end,{once:true});setTimeout(end,360);}catch(e){try{done();}catch(_){}}}
+function closeLead(){var m=document.getElementById('leadModal');_gmAnimKapat(m,function(){m.classList.remove('open');});}
 /* ===== YASAL METİN MOTORU — firma künyesinden otomatik dolar (per-firma) ===== */
 function _le(s){return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function firmaKunye(){var f=(typeof FIRMA==='object'&&FIRMA)||{};var e=f.eids||{};
@@ -1852,7 +1855,7 @@ function openLegal(type){var d=legalDoc(type);var m=document.getElementById('kvk
 function openKvkk(){openLegal('kvkk');}
 function openCerez(){openLegal('cerez');}
 function openMesafeli(){openLegal('mesafeli');}
-function closeKvkk(){document.getElementById('kvkkModal').classList.remove('open');}
+function closeKvkk(){var m=document.getElementById('kvkkModal');_gmAnimKapat(m,function(){m.classList.remove('open');});}
 function eidsQrSvg(seed){var s=0,i;for(i=0;i<(seed||'x').length;i++)s=(s*31+seed.charCodeAt(i))>>>0;var n=7,r='',x,y;for(y=0;y<n;y++)for(x=0;x<n;x++){s=(s*1103515245+12345)>>>0;var on=((s>>16)&1)||(x<2&&y<2)||(x>n-3&&y<2)||(x<2&&y>n-3);if(on)r+='<rect x="'+(x*7)+'" y="'+(y*7)+'" width="7" height="7"/>';}return '<svg viewBox="0 0 49 49" width="100%" height="100%" fill="#0f1f3d" aria-hidden="true">'+r+'</svg>';}
 function detEidsHtml(it){var e=it.eids||{};var seed=e.referans||e.tasinmazNo||('il'+it.id);return '<div class="det-eids"><div class="deh"><span class="sh">'+eidsShieldSvg(17)+'</span> '+_le(window.EIDS?EIDS.stateLabel(e):'EİDS Doğrulandı')+'</div><div class="dnote">Bu ilan T.C. Ticaret Bakanlığı Elektronik İlan Doğrulama Sistemi (EİDS) ile doğrulanmıştır. İl/ilçe/ada/parsel resmi kayıttan gelir.</div><div class="dcode"><div><div style="font-size:11.5px;color:var(--muted);margin-top:6px">Taşınmaz No '+_le(e.tasinmazNo||'-')+' · Ada '+_le(e.ada||'-')+' / Parsel '+_le(e.parsel||'-')+(e.referans?(' · Ref '+_le(e.referans)):'')+(e.tarih?(' · '+_le(e.tarih)):'')+'</div></div><div class="qr" onclick="eidsSorgu('+it.id+')" title="Doğrulama detayını gör">'+eidsQrSvg(seed)+'</div></div><button class="verifybtn" style="margin-top:8px" onclick="eidsSorgu('+it.id+')">Doğrulama detayını görüntüle →</button></div>';}
 function eidsSorgu(id){var it=ILANLAR.find(function(x){return x.id===id;});var e=it&&it.eids;if(!e)return;var b=document.getElementById('eidsQBody');if(!b)return;
@@ -1896,8 +1899,8 @@ function openDet(id){
   }else{wrap.style.display='none';}
   document.getElementById('detModal').classList.add('open');
 }
-function closeDet(){document.getElementById('detModal').classList.remove('open');}
-function mclose(){document.getElementById('mnav').classList.remove('open');}
+function closeDet(){var m=document.getElementById('detModal');_gmAnimKapat(m,function(){m.classList.remove('open');});}
+function mclose(){var m=document.getElementById('mnav');_gmAnimKapat(m,function(){m.classList.remove('open');});}
 
 /* ============ TOAST + COOKIE ============ */
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),3200);}
@@ -5443,7 +5446,7 @@ function _saasPortalSimProfile(k){ var n=(k||"").trim(); return { companyName: n
 function saasPortalDisconnect(){ window.SAAS_USER={ isLoggedIn:false, portalToken:null, clientProfile:{ companyName:'', role:'', regionAuth:[] } }; saasPortalRenderNav(); openSaasPortal(); }
 function saasPortalRenderNav(){ var els=document.querySelectorAll('.portal-trigger'); for(var i=0;i<els.length;i++){ var el=els[i]; if(window.SAAS_USER.isLoggedIn){ el.classList.add('portal-on'); el.innerHTML='<span class="pdot"></span> Müşteri Portalı · '+(window.SAAS_USER.clientProfile.companyName||'Üye'); } else { el.classList.remove('portal-on'); el.innerHTML='Müşteri Portalı'; } } }
 function openSaasPortal(){ var m=_saasPortalHost(); document.getElementById('saasPortalBody').innerHTML = window.SAAS_USER.isLoggedIn?_saasPortalPanelHTML():_saasPortalLoginHTML(); m.classList.add('on'); var i=document.getElementById('spClientKey'); if(i) setTimeout(function(){i.focus();},60); }
-function closeSaasPortal(){ var m=document.getElementById('saasPortalModal'); if(m) m.classList.remove('on'); }
+function closeSaasPortal(){ var m=document.getElementById('saasPortalModal'); if(m)_gmAnimKapat(m,function(){m.classList.remove('on');}); }
 async function saasPortalSubmit(){ var k=((document.getElementById('spClientKey')||{}).value||'').trim(); var p=(document.getElementById('spPass')||{}).value||''; var err=document.getElementById('spErr'); if(err)err.textContent=''; var btn=document.getElementById('spGo'); if(btn){btn.disabled=true;btn.textContent='Bağlanıyor…';} var r=await saasPortalConnect(k,p); if(btn){btn.disabled=false;btn.textContent='Güvenli Giriş →';} if(r.ok){ if(typeof toast==='function')toast('✓ Müşteri portalına bağlanıldı · '+r.profile.companyName); document.getElementById('saasPortalBody').innerHTML=_saasPortalPanelHTML(); } else { if(err)err.textContent='⚠ '+(r.error||'Giriş başarısız.'); var c=document.querySelector('#saasPortalModal .sp-card'); if(c){c.classList.add('sp-shake');setTimeout(function(){c.classList.remove('sp-shake');},450);} } }
 window.openSaasPortal=openSaasPortal;window.closeSaasPortal=closeSaasPortal;window.saasPortalSubmit=saasPortalSubmit;window.saasPortalConnect=saasPortalConnect;window.saasPortalDisconnect=saasPortalDisconnect;
 
