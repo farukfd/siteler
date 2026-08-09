@@ -296,7 +296,7 @@ function applyMenuText(){
       var _footMap=[
         ['hakkimizda',en?'About Us':'Hakkımızda'],['vizyon-misyon.html',en?'Vision & Mission':'Vizyon & Misyon'],
         ['yonetim.html',en?'Management Team':'Yönetim Kadrosu'],['kalite.html',en?'Quality & Certificates':'Kalite & Sertifikalar'],
-        ['blog.html',en?'Blog & Guides':'Blog & Rehberler'],
+        ['#blog',en?'Blog & Guides':'Blog & Rehberler'],
         ['medya.html',en?'Media & Press':'Medya & Basında Biz'],['bolge-ekspertizi',en?'Regional Expertise':'Bölge Ekspertizi'],
         ['kariyer.html',en?'Careers':'Kariyer'],
         ['ilanlar.html?op=Sat',en?'For Sale':'Satılık İlanlar'],['ilanlar.html?op=Kir',en?'For Rent':'Kiralık İlanlar'],
@@ -1589,7 +1589,7 @@ const INSAAT_FOOTER=`<div class="wrap">
       <div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
       <div class="flegal"><a href="kvkk.html">KVKK</a><a href="gizlilik.html">Gizlilik</a><a href="cerez.html">Çerez Politikası</a><a href="kullanim-kosullari.html">Kullanım Koşulları</a></div>
     </div>
-    <div><h4>Kurumsal</h4><a href="neden-biz.html">Hakkımızda</a><a href="vizyon-misyon.html">Vizyon & Misyon</a><a href="yonetim.html">Yönetim Kadrosu</a><a href="kalite.html">Kalite & Sertifikalar</a><a href="blog.html">Blog & Rehberler</a><a href="medya.html">Medya & Basında Biz</a><a href="bolge.html">Bölge Ekspertizi</a><a href="kariyer.html">Kariyer</a><a href="soru-cevap.html">İnşaata Başlamadan Dikkat Edilecekler</a></div>
+    <div><h4>Kurumsal</h4><a href="neden-biz.html">Hakkımızda</a><a href="vizyon-misyon.html">Vizyon & Misyon</a><a href="yonetim.html">Yönetim Kadrosu</a><a href="kalite.html">Kalite & Sertifikalar</a><a href="index.html#blog">Blog & Rehberler</a><a href="medya.html">Medya & Basında Biz</a><a href="bolge.html">Bölge Ekspertizi</a><a href="kariyer.html">Kariyer</a><a href="soru-cevap.html">İnşaata Başlamadan Dikkat Edilecekler</a></div>
     <div><h4>Hizmetler</h4><a href="ilanlar.html"><b>Tüm İlanlar</b></a><a href="harita.html">Harita</a><a href="emlak-ekspertizi.html">Emlak Ekspertizi</a><a href="ilanlar.html?op=Satılık">Satılık İlanlar</a><a href="ilanlar.html?op=Kiralık">Kiralık İlanlar</a><a href="ozel-portfoy.html">🔒 Özel Portföy</a><a href="bolge.html">Bölge Zekası</a><a href="hizmetlerimiz.html#konut-insaati">Konut İnşaatı</a><a href="hizmetlerimiz.html#kentsel-donusum">Kentsel Dönüşüm</a><a href="hizmetlerimiz.html#anahtar-teslim">Anahtar Teslim</a></div>
     <div><h4>İletişim</h4>
       <a href="#iletisim" onclick="closeAllInsaatOverlays();openIletisimPage();return false">Levent Mah. Yapı Cad. No:1<br>Beşiktaş / İstanbul</a>
