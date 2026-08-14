@@ -2064,7 +2064,7 @@ function insBlogDetail(id){var b=insBlogById(id);if(!b)return;
   var vid=(b.video&&b.video.url&&window.ContentStudio&&ContentStudio.videoEmbed&&ContentStudio.videoEmbed(b.video.url))?ContentStudio.videoHtml(b.video.url,''):'';
   try{if(window.ContentStudio&&ContentStudio.applyArticleSEO&&b.src==='ai'&&b.blocks)ContentStudio.applyArticleSEO(b);}catch(e){}
   var ov=document.getElementById('insBlogOverlay');
-  if(!ov){ov=document.createElement('div');ov.id='insBlogOverlay';ov.style.cssText='position:fixed;inset:0;z-index:99999;background:var(--bg,#0b0e13);color:var(--ink,#e6e9ef);overflow:auto';document.body.appendChild(ov);}
+  if(!ov){ov=document.createElement('div');ov.id='insBlogOverlay';ov.style.cssText='position:fixed;inset:0;z-index:57;background:var(--bg,#0b0e13);color:var(--ink,#e6e9ef);overflow:auto;padding-top:72px'/* header(z-60) ÜSTTE görünür/tıklanabilir kalır; içerik header altından başlar */;document.body.appendChild(ov);}
   /* dn kompakt-modern detay düzeniyle aynı: geri butonu + kategori ROZETİ yan yana, sıkı boşluklar */
   ov.innerHTML='<div class="cs-article" style="max-width:820px;margin:0 auto;padding:26px 20px 70px;line-height:1.75;font-size:1.0625rem">'
     +'<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px"><button onclick="insBlogClose()" style="background:var(--surface,#161b22);color:inherit;border:1px solid var(--line,#2a2f37);border-radius:10px;padding:9px 16px;cursor:pointer;font:inherit;font-size:.8125rem">← Tüm yazılar</button>'
@@ -2074,7 +2074,7 @@ function insBlogDetail(id){var b=insBlogById(id);if(!b)return;
     +cover+vid+'<div>'+body+'</div></div>';
   try{var f=document.querySelector('footer.insaatFooter');if(f){var fh=f.outerHTML.replace(/\sid="[^"]*"/g,'');ov.insertAdjacentHTML('beforeend',fh);}}catch(e){}
   try{history.replaceState(null,'','#blog/'+encodeURIComponent(id));}catch(e){}
-  ov.scrollTop=0;document.body.style.overflow='hidden';
+  ov.scrollTop=0;document.body.style.overflow='hidden';try{var _dh=document.getElementById('hdr');if(_dh)_dh.classList.add('scrolled');}catch(e){}
 }
 function insBlogClose(){var ov=document.getElementById('insBlogOverlay');if(ov)ov.remove();document.body.style.overflow='';try{if(/^#blog\//.test(location.hash||''))history.replaceState(null,'','#blog');}catch(e){}}
 window.insBlogDetail=insBlogDetail;window.insBlogClose=insBlogClose;window.insArts=insArts;window.insRunSchedule=insRunSchedule;
