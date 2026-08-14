@@ -687,6 +687,7 @@ function loadBrandUI(){
   var n=document.getElementById('b_name'),n2=document.getElementById('b_name2');
   if(n)n.value=b.name||''; if(n2)n2.value=(b.name2||'');
 }
+/*__ADMIN_BLOK__*/ /* Bu bölge üretim paketinde admin-assets/ altına ayrılır (public bundle inmez) */
 // ===== SÖZLEŞME ŞABLONLARI (gerçek Türk hukuk metinleri esas alınmıştır) =====
 // Yer tutucular: {{FIRMA_UNVAN}}, {{FIRMA_VERGI}}, {{FIRMA_ADRES}}, {{FIRMA_YETKILI}},
 // {{KARSI_TARAF}}, {{KARSI_TC}}, {{KARSI_ADRES}}, {{ARSA_IL}}, {{ARSA_ILCE}}, {{ARSA_MAHALLE}},
@@ -775,6 +776,7 @@ ANA YÜKLENİCİ                                        TAŞERON
 };
 const DURUM_LABEL={satildi:'Satıldı',kiralandi:'Kiralandı',bos:'Boş',rezerve:'Rezerve',['arsa-sahibi']:'Arsa Sahibi'};
 const DURUM_COLOR={satildi:'#1a7f4a',kiralandi:'#2563eb',bos:'#9aa0ab',rezerve:'#c8962f',['arsa-sahibi']:'#0e7490'};
+/*__ADMIN_BLOK_SON__*/
 const ST_LABEL={devam:'Devam Eden',tamam:'Tamamlandı',plan:'Planlanan'};
 const imgFor=(k)=> (k&&/^(https?:|data:|img\/)/.test(k))?k:(IMG[k]||'');
 
@@ -2275,7 +2277,7 @@ function buildSwatches(){const el=document.getElementById('admSwatches');if(!el)
 (function(){try{if(typeof window.__pendingTheme==='number'&&THEMES[window.__pendingTheme]){applyTheme(THEMES[window.__pendingTheme]);markSw&&markSw(window.__pendingTheme);}}catch(e){}initContrast();})();
 
 /* ---------------- ADMIN ---------------- */
-function openAdmin(){try{history.replaceState(null,'','#admin');}catch(e){}showAdmin();}
+function openAdmin(){try{window.__adminYukle&&window.__adminYukle();}catch(e){}try{history.replaceState(null,'','#admin');}catch(e){}showAdmin();}
 function showAdmin(){
   var el=document.getElementById('adminApp'); if(!el)return;
   /* PERF: 49KB admin markup yalnız panel açılınca yüklenir (js/admin-markup.js) */
@@ -2311,6 +2313,7 @@ function renderKpi(){
   dl.innerHTML=LEADS.length?('<table class="adm-tbl"><thead><tr><th>Ad</th><th>Telefon</th><th>Konu</th><th>Tarih</th></tr></thead><tbody>'+LEADS.slice(0,5).map(l=>`<tr><td>${l.ad}</td><td>${l.tel}</td><td>${l.konu}</td><td>${l.date}</td></tr>`).join('')+'</tbody></table>'):'<div style="color:var(--muted);font-size:.875rem">Henüz teklif talebi yok.</div>';
 }
 function renderLeads(){const b=document.getElementById('leadsBody');if(!b)return;b.innerHTML=LEADS.map(l=>`<tr><td>${l.ad}</td><td>${l.tel}</td><td>${l.konu}</td><td>${l.src}</td><td>${l.date}</td></tr>`).join('');document.getElementById('leadsEmpty').style.display=LEADS.length?'none':'block';renderKpi();}
+/*__ADMIN_BLOK__*/ /* Bu bölge üretim paketinde admin-assets/ altına ayrılır (public bundle inmez) */
 /* ===== GÖRÜŞMELER & TEKLİFLER — yetkili takip panosu ===== */
 function _gEsc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function _gJSON(k,f){try{var v=JSON.parse(localStorage.getItem(k)||'null');return v==null?f:v;}catch(e){return f;}}
@@ -2646,6 +2649,7 @@ function renderArsa(){
 function admAddArsa(){ARSALAR.unshift({id:'ar'+Date.now(),ad:'Yeni Kat Karşılığı Fizibilite',adres:'',m2:1000,imar:{emsal:2.0,taks:0.4,katAdedi:5,gabari:'',ada:'',parsel:''},kk:{arsaSahibiPay:50,muteahhitPay:50,sahip:'',ortalamaDaireM2:120,daireSatisM2Fiyat:70000,insaatM2Maliyet:18000,not:''}});renderArsa();saveAll();}
 function admDelArsa(i){if(confirm('Bu arsa/projeyi ve tüm bağımsız bölümlerini silmek istediğinize emin misiniz?')){ARSALAR.splice(i,1);renderArsa();saveAll();}}
 
+/*__ADMIN_BLOK_SON__*/
 /* ============================================================
    İLANLAR (EİDS üzerinden) + ÖZEL PORTFÖY (ProX destekli üretim)
    — dürüstlük disiplini:
@@ -3001,6 +3005,7 @@ function openIlanlarPage(){
 }
 function closeIlanlarPage(){_insOvKapat('ilanlarPage');document.body.style.overflow='';}
 
+/*__ADMIN_BLOK__*/ /* Bu bölge üretim paketinde admin-assets/ altına ayrılır (public bundle inmez) */
 // ============ SÖZLEŞMELER (şablon + önizleme + yazdır + WhatsApp) ============
 const CT_LABEL={insaat:'Anahtar Teslim İnşaat',['kat-karsiligi']:'Kat Karşılığı',taseron:'Taşeron'};
 const CT_DURUM={aktif:'Aktif',tamamlandi:'Tamamlandı',iptal:'İptal',taslak:'Taslak'};
@@ -3301,6 +3306,7 @@ function admDelSvc(i){if(confirm('Hizmet silinsin mi?')){SERVICES.splice(i,1);re
 function admAddSvc(){SERVICES.unshift({i:'🔧',t:'Yeni Hizmet',d:'Açıklama girin.'});renderServices();admSvcList();renderKpi();document.getElementById('asv0').classList.add('open');}
 
 /* route */
+/*__ADMIN_BLOK_SON__*/
 /* ==================== İNŞAAT SORU-CEVAP (SEO FAQ) ==================== */
 var FAQ_CATS=[
  {k:'ruhsat',l:'Ruhsat & İzinler',i:'📋'},

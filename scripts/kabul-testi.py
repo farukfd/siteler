@@ -121,8 +121,21 @@ for site in HOST:
             for m in re.finditer(r'<script[^>]*src="([^"]*' + re.escape(kalip) + r'[^"]*)"', s):
                 ihlal.append(f"{rel}→{m.group(1)}")
     kayit(15, f"{site}: public HTML'de studio/engine/admin script'i", 'PASS' if not ihlal else 'FAIL', f"{ihlal[:4]}")
-kayit(15, "app-core/app.js içindeki admin FONKSİYON gövdeleri", 'PARTIAL',
-      "markup+studio+engine admin-assets'e ayrıldı; monolit JS içindeki admin fonksiyonlarının tam çıkarımı ertelendi (rapor: refactor planı)")
+# FAZ3-KAPANIŞ: monolit admin gövdeleri paketleyici split'iyle admin-assets'e ayrılır (lazy köprü)
+_imza={'danisman':('js/app.js','admin-assets/app-admin.js',['function crmSave(','function staTab(','adm-side','function crmDataExport(']),
+       'insaat':('js/app-core.js','admin-assets/app-core-admin.js',['function renderContracts(','function loadSettingsUI(','function admPjList('])}
+_sp_fail=[]
+for site,(pub,adm,imzalar) in _imza.items():
+    pj=oku(os.path.join(DIST,site,pub)); aj_p=os.path.join(DIST,site,adm)
+    if not os.path.exists(aj_p): _sp_fail.append(f'{site}: {adm} yok'); continue
+    aj=oku(aj_p)
+    for im in imzalar:
+        if im in pj: _sp_fail.append(f'{site}/public:{im}')
+        if im not in aj: _sp_fail.append(f'{site}/admin-eksik:{im}')
+    if '__adminYukle' not in pj: _sp_fail.append(f'{site}: lazy köprü yok')
+kayit(15, "monolit admin gövdeleri public bundle DIŞI (paketleyici split + lazy köprü)",
+      'PASS' if not _sp_fail else 'FAIL',
+      str(_sp_fail[:4]) or "dn app.js 600→252KB (app-admin.js 122KB) · ins app-core 602→562KB (admin 62KB); CRM/panel-HTML/stüdyo/sözleşme/komisyon/kira/yayın-wizard gövdeleri admin-assets'te; kalan küçük künye yardımcıları not edildi")
 
 # ── #13 lead: API başarısı olmadan başarı gösterme ──
 ok = True; kanitlar = []

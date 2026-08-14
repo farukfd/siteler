@@ -71,7 +71,7 @@ def yaz(p, s):
     os.makedirs(os.path.dirname(p), exist_ok=True)
     with open(p, 'w', encoding='utf-8') as f: f.write(s)
 
-def donustur_metin(s, site, host):
+def donustur_metin(s, site, host, html=False):
     # 1) hostname
     s = s.replace(f'https://www.emlakekspertizi.com/demo/{site}/', f'https://{host}/')
     s = s.replace(f'https://www.emlakekspertizi.com/demo/{site}',  f'https://{host}')
@@ -84,14 +84,40 @@ def donustur_metin(s, site, host):
     s = re.sub(r'window\.EMLAK_API_BASE\s*=\s*"https://www\.emlakekspertizi\.com";', 'window.EMLAK_API_BASE="";/* same-origin BFF */', s)
     # 4) shared düzleştirme
     s = s.replace('../shared/', 'shared/')
-    # 4b) FAZ3: üretim depolama bekçisi her sayfaya (kurumsal localStorage otoritesi söker)
-    if '</head>' in s and 'storage-guard' not in s:
+    # 4b) FAZ3: üretim depolama bekçisi her SAYFAYA (yalnız HTML — JS içindeki şablon string'lerine dokunma!)
+    if html and '</head>' in s and 'storage-guard' not in s:
         s = s.replace('</head>', '<script>window.EMLAK_DEMO=false;</script><script src="shared/storage-guard.js?v=1"></script>\n</head>', 1)
     # 7) index.html → kök
     s = re.sub(r'href="(?:\./)?index\.html', 'href="/', s)
     s = s.replace("location.href='index.html", "location.href='/")
     s = s.replace('location.href="index.html', 'location.href="/')
     return s
+
+# FAZ3-KAPANIŞ: monolit admin bölgeleri public bundle'dan ayrılır (kaynak tek-dosya kalır).
+# İşaretli /*__ADMIN_BLOK__*/…/*__ADMIN_BLOK_SON__*/ bölgeleri admin-assets/<ad>-admin.js'e taşınır;
+# public dosyaya lazy köprü eklenir: giriş fonksiyonları yükler, diğer stub'lar yükleme başlamadıysa
+# no-op (boot zinciri kırılmaz), başladıysa kuyruğa girip gerçek fonksiyonla koşar.
+ADMIN_SPLIT = {'danisman': ('js/app.js', 'app-admin.js', ['openSaasAdmin']),
+               'insaat':   ('js/app-core.js', 'app-core-admin.js', [])}
+_BLOK_RE = re.compile(r'/\*__ADMIN_BLOK__\*/[^\n]*\n([\s\S]*?)/\*__ADMIN_BLOK_SON__\*/\n?')
+
+def admin_split(s, admin_dosya, giris):
+    bloklar = _BLOK_RE.findall(s)
+    if not bloklar:
+        return s, None
+    admin_js = '\n/* ── admin blok ── */\n'.join(bloklar)
+    fns = sorted(set(re.findall(r'function\s+([A-Za-z_$][\w$]*)\s*\(', admin_js)))
+    s = _BLOK_RE.sub('/* admin bölgesi → admin-assets/%s (lazy) */\n' % admin_dosya, s)
+    kopru = ("\n/* NADAS admin-lazy köprüsü — admin kodu yalnız gerektiğinde iner */\n"
+        "(function(){var YOL='admin-assets/" + admin_dosya + "?v=1';var GIRIS=" + json.dumps(giris) + ";\n"
+        "var _p=null,_ok=false;function yukle(){if(_ok)return Promise.resolve();if(!_p){_p=new Promise(function(res){var sc=document.createElement('script');sc.src=YOL;sc.onload=function(){_ok=true;res();};sc.onerror=function(){res();};document.head.appendChild(sc);});}return _p;}\n"
+        "window.__adminYukle=yukle;\n"
+        "var F=" + json.dumps(fns) + ";\n"
+        "F.forEach(function(ad){if(window[ad]!==undefined)return;var st=function(){var a=arguments,self=this;\n"
+        "  if(!_p&&GIRIS.indexOf(ad)<0)return;/* boot no-op: yükleme başlamadıysa sessiz */\n"
+        "  return yukle().then(function(){var f=window[ad];if(f&&!f.__stub)return f.apply(self,a);});};\n"
+        " st.__stub=1;window[ad]=st;});})();\n")
+    return s + kopru, admin_js
 
 def demo_band_sok(s):
     # <section class="demo-band" ...> ... </section> (+ öncesindeki kabuk-ortak link satırı kalabilir)
@@ -126,13 +152,20 @@ def paketle(site, cfg):
         if rel.endswith('.html'):
             s = oku(yol)
             once = s
-            s = donustur_metin(s, site, host)
+            s = donustur_metin(s, site, host, html=True)
             s2 = demo_band_sok(s)
             if s2 != s: sayac['demo_band'] += 1
             s = admin_yollari(s2)
             yaz(dst, s); sayac['html'] += 1
         elif rel.endswith(('.js', '.css', '.xml', '.txt')):
             s = admin_yollari(donustur_metin(oku(yol), site, host))
+            # FAZ3-KAPANIŞ: monolit admin-split (işaretli bölgeler admin-assets'e)
+            sp = ADMIN_SPLIT.get(site)
+            if sp and rel == sp[0]:
+                s, admin_js = admin_split(s, sp[1], sp[2])
+                if admin_js is not None:
+                    yaz(os.path.join(hedef, 'admin-assets', sp[1]), banner_ekle(admin_js))
+                    sayac['admin'] += 1
             if rel.endswith(('.js', '.css')): s = banner_ekle(s)
             yaz(dst, s); sayac['js' if rel.endswith('.js') else 'css' if rel.endswith('.css') else 'diger'] += 1
         else:

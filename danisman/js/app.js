@@ -1176,6 +1176,7 @@ function renderGorusmelerD(){
   host.innerHTML=H;
 }
 try{window.renderGorusmelerD=renderGorusmelerD;window.dnPushLead=dnPushLead;}catch(e){}
+/*__ADMIN_BLOK__*/ /* Bu bölge üretim paketinde admin-assets/ altına ayrılır (public bundle inmez) */
 /* ===================== CRM · TAM FONKSİYONLU YÖNETİM (Panel · Kişiler · Satış Hattı · Görevler) =====================
    Tek depo dn_crm_v1 = {seq, kisiler[], deals[], tasks[]}. Gelen talepler (dn_leads) kişiye dönüştürülür. */
 var CRM_KEY='dn_crm_v1';
@@ -1371,6 +1372,7 @@ function crmSeedDemo(){crmLoad();if(_crm.kisiler.length&&!confirm('Mevcut CRM ve
 }
 function crmExport(){crmLoad();try{var blob=new Blob([JSON.stringify(_crm,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='meridyen-crm-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();toast('CRM verisi indirildi.');}catch(e){toast('Dışa aktarılamadı.');}}
 /* CRM fonksiyonları global scope'ta (function bildirimleri window'a bağlıdır) → onclick handler'ları bare isimle erişir. */
+/*__ADMIN_BLOK_SON__*/
 /* ===================== İLAN YÖNETİMİ (açık portföy CRUD + EİDS yayın kapısı) ===================== */
 var ILN_KEY='dn_listings_v1';
 var ILN_TIP=[{k:'penthouse',t:'Penthouse'},{k:'rezidans',t:'Rezidans'},{k:'villa',t:'Villa'},{k:'yali',t:'Yalı'},{k:'loft',t:'Loft / Daire'},{k:'arsa',t:'Arsa'}];
@@ -1382,6 +1384,7 @@ function ilanEnsureIds(){var mx=0;LISTINGS.forEach(function(l){if(l.id)mx=Math.m
 });return mx;}
 function ilanLoad(){try{var a=JSON.parse(localStorage.getItem(ILN_KEY)||'null');if(Array.isArray(a)){LISTINGS.length=0;a.forEach(function(x){LISTINGS.push(x);});}}catch(e){}ilanEnsureIds();_eidsMigrate();}
 function ilanSave(){try{localStorage.setItem(ILN_KEY,JSON.stringify(LISTINGS));}catch(e){try{toast('Kayıt alanı dolu.');}catch(_){}}}
+/*__ADMIN_BLOK__*/ /* Bu bölge üretim paketinde admin-assets/ altına ayrılır (public bundle inmez) */
 function ilanBolge(l){return [l.ilce,l.mahalle].filter(Boolean).join(' · ')||l.bolge||'';}
 var _ilnImg='',_ilnEids=null,_ilnAttrs={},_ilnFeats=[];
 function dnRenderAttrs(){try{var t=(document.getElementById('il_tip')||{}).value||'';var cat=(window.Listings?Listings.catOf({type:t}):'konut');var box=document.getElementById('il_attrBox');if(box&&window.Listings)box.innerHTML=Listings.attrFormHTML(cat,_ilnAttrs||{},_ilnFeats||[]);}catch(e){}}
@@ -1715,6 +1718,7 @@ function crmDataImport(input){var f=input.files&&input.files[0];if(!f)return;if(
   var r=new FileReader();r.onload=function(e){try{var o=JSON.parse(e.target.result);var n=0;Object.keys(o).forEach(function(k){if(k.indexOf('dn_')===0||k==='emlak_leads_fallback'){localStorage.setItem(k,o[k]);n++;}});_crm=null;toast('✓ '+n+' kayıt geri yüklendi. Yenileniyor…');setTimeout(function(){location.reload();},1000);}catch(err){toast('Geçersiz yedek dosyası.');}};r.readAsText(f);}
 function crmDataReset(){if(!confirm('CRM, ilan, sözleşme ve tüm yerel veriler silinsin mi? Önce yedek almanız önerilir — bu işlem geri alınamaz.'))return;
   try{var rm=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('dn_')===0)rm.push(k);}rm.forEach(function(k){localStorage.removeItem(k);});}catch(e){}_crm=null;toast('Veriler sıfırlandı. Yenileniyor…');setTimeout(function(){location.reload();},1000);}
+/*__ADMIN_BLOK_SON__*/
 /* ===================== İÇERİK CMS (ana sayfa hero metinleri) ===================== */
 var CMS_KEY='dn_content';
 /* dn_content = yayınlanan içerik (DN_PUBLISHED.content) ⊕ admin taslağı (localStorage) — taslak üstün.
@@ -1943,6 +1947,7 @@ async function proxCfgTest(){var st=document.getElementById('px_status');proxCfg
     if(r&&!r.fallback&&r.success===true){if(st)st.innerHTML='<div class="iln-eids">✓ Bağlandı · Sektör: '+_leD(r.sector||'—')+' · Paket: '+_leD(r.package||'—')+' · Özellikler: '+_leD((r.enabled_features||[]).join(", "))+'</div>';toast('✓ ProX bağlantısı doğrulandı.');}
     else{if(st)st.innerHTML='<div class="iln-eids no">Bağlanamadı — Tenant ID ve API anahtarını kontrol edin.</div>';}
   }catch(e){if(st)st.innerHTML='<div class="iln-eids no">Hata: '+_leD(e.message||'bağlantı')+'</div>';}}
+/*__ADMIN_BLOK__*/ /* Bu bölge üretim paketinde admin-assets/ altına ayrılır (public bundle inmez) */
 /* ===================== AKILLI EŞLEŞTİRME (kişi kriterleri ↔ açık ilan) ===================== */
 function _matchScore(k,l){var kr=(k.tip==='Kiracı');
   if(kr&&l.durum!=='Kiralık')return 0;if(!kr&&l.durum!=='Satılık')return 0;var s=2;
@@ -2289,6 +2294,7 @@ window.openSaasAdmin=openSaasAdmin;window.closeSaasAdmin=closeSaasAdmin;window.s
 window.toggleNav=toggleNav;window.closeNav=closeNav;window.goHome=goHome;window.navGo=navGo;window.openPage=openPage;window.closePage=closePage;window.leadFor=leadFor;window.contactLead=contactLead;
 window.pickDay=pickDay;window.pickSlot=pickSlot;window.apptSubmit=apptSubmit;window.proxSend=proxSend;window.proxQuick=proxQuick;window.proxToAnaliz=proxToAnaliz;
 
+/*__ADMIN_BLOK_SON__*/
 /* ===== B2B Müşteri Portalı (Faz 20) ===== */
 window.SAAS_USER = { isLoggedIn:false, portalToken:null, clientProfile:{ companyName:'', role:'', regionAuth:[] } };
 async function saasPortalConnect(clientKey, securePass){
