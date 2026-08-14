@@ -1029,3 +1029,7 @@ header.nav.scrolled{background:rgba(10,53,39,.94)}
 .man-side-b{display:flex;flex-direction:column;gap:5px;min-width:0}
 .man-side-cat{font-family:var(--serif);font-size:.625rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-bright,#d8bd7f)}
 .man-side-t{font-family:var(--serif);font-weight:700;font-size:.84375rem;line-height:1.3;color:#eaf1fb;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+
+/* FAZ3: NADAS yazılım sahipliği satırı — tenant tarafından kaldırılamaz/gizlenemez */
+.nadas-c{display:block!important;visibility:visible!important;font-size:.6875rem;opacity:.72;margin-top:3px;letter-spacing:.01em}
+.fhaklar{display:flex;flex-direction:column;gap:2px}

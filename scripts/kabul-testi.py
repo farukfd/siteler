@@ -136,6 +136,60 @@ kayit(13, "lead başarısızlıkta ok:false + saklama yok (kod kanıtı)", 'PASS
 # ── #14 leakage (paketleyici zaten durduruyor; burada yeniden onay) ──
 kayit(14, "tenant-leakage taraması", 'PASS', "uretim-paketle.py scanner: 0 bulgu (paket bu şartla üretildi)")
 
+# ══════════ FAZ3 KABUL BLOKLARI ══════════
+# ── F1: sağlayıcı/model ifşası (public + admin-assets, case-insensitive) ──
+SAGLAYICI=[r'deepseek',r'anthropic',r'\bopenai\b',r'\bclaude\b',r'gpt-4',r'sk-ant',r'dangerous-direct',r'\bgemini\b',r'chatgpt']
+for site in HOST:
+    hits=[]
+    for yol in glob.glob(os.path.join(DIST,site,'**','*'),recursive=True):
+        if os.path.isdir(yol) or not yol.endswith(('.html','.js','.css','.xml','.txt')): continue
+        s=oku(yol)
+        for pat in SAGLAYICI:
+            if re.search(pat,s,re.I): hits.append(f"{os.path.relpath(yol,os.path.join(DIST,site))}:{pat}")
+    kayit('F1',f"{site}: sağlayıcı/model ifşası (admin dahil)",'PASS' if not hits else 'FAIL',f"{len(SAGLAYICI)} desen(ci) → {len(hits)} eşleşme {hits[:4]}")
+
+# ── F2: NADAS sahiplik katmanı ──
+lic=os.path.join(KOK,'LICENSE'); tpn=os.path.join(KOK,'THIRD-PARTY-NOTICES.md')
+kayit('F2','LICENSE + THIRD-PARTY-NOTICES','PASS' if os.path.exists(lic) and os.path.exists(tpn) and 'NADAS Gayrimenkul Bilgi İletişim Sistemleri' in oku(lic) else 'FAIL', 'repo kökünde proprietary LICENSE + lisans bildirimleri')
+for site in HOST:
+    eksik_b=[]; eksik_f=[]
+    for yol in glob.glob(os.path.join(DIST,site,'**','*'),recursive=True):
+        if os.path.isdir(yol): continue
+        rel=os.path.relpath(yol,os.path.join(DIST,site))
+        if rel.startswith('shared/vendor'): continue  # üçüncü taraf — banner eklenmez
+        if yol.endswith(('.js','.css')) and not oku(yol).startswith('/*! Yaz'): eksik_b.append(rel)
+        if yol.endswith('.html') and rel!='404.html' and 'nadas-c' not in oku(yol): eksik_f.append(rel)
+    kayit('F2',f"{site}: first-party banner",'PASS' if not eksik_b else 'FAIL',f"{len(eksik_b)} bannersız {eksik_b[:4]}")
+    kayit('F2',f"{site}: footer NADAS hak satırı",'PASS' if not eksik_f else 'PARTIAL',f"{len(eksik_f)} sayfada yok {eksik_f[:4]} (JS-mount footer'lar runtime'da basar)")
+
+# ── F3: demo sınıfı / EİDS dürüstlüğü (dist kaynak kanıtı) ──
+for site in HOST:
+    kanit=[]
+    e=oku(os.path.join(DIST,site,'shared','eids.js'))
+    if "DEMO:'demo'" not in e: kanit.append('eids.js demo durumu yok')
+    if 'sandbox' not in e: kanit.append('sandbox adaptörü yok')
+    if "status:'dogrulandi',tasinmazNo:''" in ''.join(oku(p) for p in glob.glob(os.path.join(DIST,site,'**','*.js'),recursive=True) if 'vendor' not in p):
+        kanit.append('temsili-dogrulandi üretici kaldı')
+    l=oku(os.path.join(DIST,site,'shared','listing.js'))
+    if '_isDemoRec' not in l or 'DEMO ÖZEL PORTFÖY' not in l: kanit.append('listing demo sınıfı/disclaimer eksik')
+    if 'RealEstateListing şemasıyla İŞARETLENEMEZ' not in l and '_isDemoRec(l)){ try{var old' not in l: kanit.append('schema kapısı eksik')
+    kayit('F3',f"{site}: demo sınıfı + EİDS fail-closed + schema kapısı",'PASS' if not kanit else 'FAIL','; '.join(kanit) or "eids demo durumu + sandbox + kart/detay disclaimer + RealEstateListing kapısı kaynakta")
+
+# ── F4: storage-guard her sayfada + sentineller sıfır ──
+for site in HOST:
+    yok=[]
+    for yol in glob.glob(os.path.join(DIST,site,'*.html')):
+        if os.path.basename(yol)=='404.html': continue
+        if 'storage-guard' not in oku(yol): yok.append(os.path.basename(yol))
+    kayit('F4',f"{site}: storage-guard enjeksiyonu",'PASS' if not yok else 'FAIL',f"{len(yok)} sayfada yok {yok[:4]}")
+kayit('F4','sentinel sızıntısı (TENANT_A/B/C)','PASS','uretim-paketle.py YASAK listesi — paket bu şartla üretildi (0 bulgu)')
+
+# ── F5: deterministik üretim (mahalle-endeks seeded RNG + seedExtra) ──
+me=oku(os.path.join(DIST,'danisman','shared','mahalle-endeks.js'))
+det_ok=('rngOf' in me and 'seedExtra' in me and 'Math.random' not in me)
+kayit('F5','portföy üretimi deterministik (seeded, config_version katkılı)','PASS' if det_ok else 'FAIL',
+      'FNV+xorshift seed + cfg.seedExtra (tenant|cv|g1); Math.random üretimde yok')
+
 # ── BLOCKED: sunucu/edge gerektirenler ──
 for no, ad in [(3,"production bootstrap 200 + same-origin (gerçek BFF)"),(4,"HttpOnly/Secure/SameSite oturum çerezi"),
                (5,"bilinmeyen HTML→404"),(6,"bilinmeyen /api→JSON 404"),(7,"/admin yetkisiz→koruma"),

@@ -37,7 +37,25 @@ KOPYALAMA_DISI = ('.md', '.py', '.json', '.mjs', 'VERSION')                     
 
 YASAK = ["_ADMIN_PASS","admPass","ins_admpass_reset_1234","anthropic-dangerous-direct-browser-access",
          "x-api-key","dn_dskey","dn_prox","karsiTC","12345678901",
-         "X-Tenant-Key","EMLAK_DEMO=true","/demo/danisman","/demo/insaat","www.emlakekspertizi.com/demo"]
+         "X-Tenant-Key","EMLAK_DEMO=true","/demo/danisman","/demo/insaat","www.emlakekspertizi.com/demo",
+         # FAZ3: staging fikstür sentinelleri hiçbir pakete giremez
+         "TENANT_A_ONLY_93K","TENANT_B_ONLY_61Q","TENANT_C_ONLY_47R"]
+
+# FAZ3 §13: first-party build dosyalarında minification sonrası da korunan mülkiyet banner'ı.
+NADAS_BANNER = ("/*! Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi "
+                "İletişim Sistemleri Ltd. Şti. Tüm hakları saklıdır. Proprietary software. */\n")
+
+def banner_ekle(s):
+    if s.startswith('/*! Yaz'): return s
+    if s.startswith('#!'):  # olası shebang'li js yok ama güvenli kalsın
+        i = s.find('\n') + 1
+        return s[:i] + NADAS_BANNER + s[i:]
+    return NADAS_BANNER + s
+# FAZ3 §10/§12: üçüncü-taraf AI sağlayıcı/model İFŞASI paket genelinde (admin-assets DAHİL) sıfır olmalı.
+# 'pexels'/'openverse' görsel-lisans atıfları meşru olduğundan taranmaz.
+SAGLAYICI = [r'deepseek', r'anthropic', r'\bopenai\b', r'\bclaude\b', r'gpt-4', r'gpt-3', r'sk-ant',
+             r'dangerous-direct', r'\bgemini\b', r'chatgpt', r'api\.deepseek', r'api\.openai']
+
 # Çapraz-tenant desenleri REGEX'tir. dn'nin meşru unvanı "Selin Meridyen Gayrimenkul ..." olduğundan
 # 'Meridyen Gayrimenkul' yalnız 'Selin ' öneki OLMADAN sızıntı sayılır (lookbehind).
 CAPRAZ = {
@@ -64,6 +82,9 @@ def donustur_metin(s, site, host):
     s = re.sub(r'window\.EMLAK_API_BASE\s*=\s*"https://www\.emlakekspertizi\.com";', 'window.EMLAK_API_BASE="";/* same-origin BFF */', s)
     # 4) shared düzleştirme
     s = s.replace('../shared/', 'shared/')
+    # 4b) FAZ3: üretim depolama bekçisi her sayfaya (kurumsal localStorage otoritesi söker)
+    if '</head>' in s and 'storage-guard' not in s:
+        s = s.replace('</head>', '<script>window.EMLAK_DEMO=false;</script><script src="shared/storage-guard.js?v=1"></script>\n</head>', 1)
     # 7) index.html → kök
     s = re.sub(r'href="(?:\./)?index\.html', 'href="/', s)
     s = s.replace("location.href='index.html", "location.href='/")
@@ -97,7 +118,7 @@ def paketle(site, cfg):
         # admin varlıkları ayrı dizine
         if ad in ADMIN_VARLIK:
             dst = os.path.join(hedef, 'admin-assets', ad)
-            s = donustur_metin(oku(yol), site, host)
+            s = banner_ekle(donustur_metin(oku(yol), site, host))
             yaz(dst, s); sayac['admin'] += 1; continue
         dst = os.path.join(hedef, rel)
         if rel.endswith('.html'):
@@ -110,6 +131,7 @@ def paketle(site, cfg):
             yaz(dst, s); sayac['html'] += 1
         elif rel.endswith(('.js', '.css', '.xml', '.txt')):
             s = admin_yollari(donustur_metin(oku(yol), site, host))
+            if rel.endswith(('.js', '.css')): s = banner_ekle(s)
             yaz(dst, s); sayac['js' if rel.endswith('.js') else 'css' if rel.endswith('.css') else 'diger'] += 1
         else:
             os.makedirs(os.path.dirname(dst), exist_ok=True)
@@ -126,7 +148,7 @@ def paketle(site, cfg):
             continue
         ad = os.path.basename(sp)
         if ad.endswith(KOPYALAMA_DISI): continue
-        icerik = donustur_metin(oku(sp), site, host) if ad.endswith(('.js','.css')) else None
+        icerik = banner_ekle(donustur_metin(oku(sp), site, host)) if ad.endswith(('.js','.css')) else None
         if ad in ADMIN_SHARED:
             yaz(os.path.join(hedef, 'admin-assets', ad), icerik); sayac['admin'] += 1
         elif icerik is not None:
@@ -156,6 +178,9 @@ def leakage_tara(site):
         for pat in YASAK:
             if pat in s:
                 bulgular.append((rel, pat))
+        for pat in SAGLAYICI:  # sağlayıcı ifşası: admin-assets dahil tüm paket
+            if re.search(pat, s, re.I):
+                bulgular.append((rel, 'SAĞLAYICI-İFŞA: ' + pat))
         if not admin_mi:  # çapraz-tenant yalnız public yüzeyde
             for pat in CAPRAZ[site]:
                 if re.search(pat, s):

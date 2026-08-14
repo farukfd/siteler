@@ -226,27 +226,27 @@
     }).catch(function(e){ stat('Dosya okunamadı: '+((e&&e.message)||e),'err'); });
   };
   /* ========== ProX — dosyanın Alan Cetvelindeki GERÇEK veriyi okur (sıfır uydurma) ========== */
-  // GÜVENLİK: ProX/DeepSeek anahtarı İSTEMCİYE GÖMÜLMEZ (tarayıcıdan görülüp fatura üretilebilir).
-  // Anahtar YALNIZCA çalışma-zamanında girilir: localStorage.setItem('deepseek_key','sk-...') VEYA
-  // window.PROX_DS_KEY. Yayında: sunucu-taraflı proxy arkasına alın. Anahtar yoksa DWG-AI özelliği pasif kalır.
+  // GÜVENLİK: motor anahtarı İSTEMCİYE GÖMÜLMEZ. Bağlantı yalnız çalışma-zamanında etkinleştirilir
+  // (localStorage 'ins_m1_key' — yalnız demo ortamı) VEYA window.PROX_DS_KEY. Üretimde üretim same-origin
+  // /api/ai/generate ile çalışır; bağlantı yoksa DWG özet özelliği pasif kalır.
   var _DS_KEY_DEFAULT='';
-  function _dsKey(){var k='';try{k=localStorage.getItem('deepseek_key')||'';}catch(e){}if(!k&&typeof window!=='undefined'&&window.PROX_DS_KEY)k=window.PROX_DS_KEY;return k||_DS_KEY_DEFAULT;}
+  function _dsKey(){var k='';try{k=localStorage.getItem('ins_m1_key')||'';}catch(e){}if(!k&&typeof window!=='undefined'&&window.PROX_DS_KEY)k=window.PROX_DS_KEY;return k||_DS_KEY_DEFAULT;}
   function _esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   // ProX marka rozeti (footer stiliyle: X yeşil kutuda)
   function _prox(sz){sz=sz||14;return '<span style="display:inline-flex;align-items:center;font-family:var(--head);font-weight:800;vertical-align:middle;font-size:'+sz+'px"><span style="color:var(--ink,#e8eefc)">Pro</span><span style="display:inline-flex;align-items:center;justify-content:center;min-width:1.35em;height:1.35em;background:#16a34a;color:#07130a;border-radius:5px;margin-left:2px">X</span></span>';}
   var _PROX_INLINE='Pro<span style="background:#16a34a;color:#07130a;border-radius:4px;padding:0 5px;font-weight:800">X</span>';
   // Güven/kaynak rozeti — her değerin nereden geldiğini gösterir (uydurma önleyici şeffaflık)
   function _srcTag(src){var m={labeled:['🏷️','çizimde yazılı','#2f7fe0'],measured:['📐','ölçüldü','#16a34a'],derived:['≈','türetildi','#d9930a'],unknown:['—','belirtilmemiş','#8892a0']}[src];if(!m)return '';return '<span title="'+m[1]+'" style="font-size:9px;background:'+m[2]+'22;color:'+m[2]+';border:1px solid '+m[2]+'55;border-radius:5px;padding:0 4px;margin-left:4px;vertical-align:middle;white-space:nowrap;font-weight:600">'+m[0]+' '+m[1]+'</span>';}
-  function _deepseek(messages){
+  function _motor1(messages){
     var ctrl=(typeof AbortController!=='undefined')?new AbortController():null;
     var to=ctrl?setTimeout(function(){try{ctrl.abort();}catch(e){}},120000):0;
     var done=function(v){clearTimeout(to);return v;};
-    return fetch('https://api.deepseek.com/chat/completions',{method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+_dsKey()},
-      body:JSON.stringify({model:'deepseek-chat',temperature:0.1,max_tokens:8192,response_format:{type:'json_object'},messages:messages}),
+    return fetch('/api/ai/generate',{method:'POST',credentials:'same-origin',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({profile:'m1',temperature:0.1,max_tokens:8192,format:'json',messages:messages}),
       signal:ctrl?ctrl.signal:undefined
     }).then(function(r){if(!r.ok)return r.text().then(function(t){throw new Error('HTTP '+r.status+' — '+t.slice(0,140));});return r.json();})
-      .then(function(j){return (j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||'';})
+      .then(function(j){return j.answer||(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||'';})
       .then(done,function(e){clearTimeout(to);throw (e&&e.name==='AbortError')?new Error('zaman aşımı (120 sn) — dosya çok karmaşık olabilir'):e;});
   }
   function _rname(r){return (r&&typeof r==='object')?(r.name||''):String(r||'');}
@@ -363,7 +363,7 @@
     var facts={dosya:F.fileName, katSayisi:F.floorCount, katlar:F.floors, bagimsizBolumSayisi:F.bbCount, toplamInsaatAlaniM2:F.totalArea, daireSayisiTahmini:F.daireN||null, dukkanSayisiTahmini:F.dukkanN||null, teknikHacim:F.tech, gercekM2Adedi:F.m2.length, enBuyukM2:F.m2.length?Math.max.apply(null,F.m2):null, katmanlar:F.layerNames};
     var sys='Sen bir mimari sunum editörüsün. Sana bir DWG projesinden DETERMİNİSTİK olarak çıkarılmış GERÇEK VERİLER (JSON) veriliyor. Görevin SADECE bu verilerden akıcı, profesyonel Türkçe bir yapı tanıtımı üretmek.\n\nKESİN KURALLAR (ihlal = ret):\n1) Verilmeyen HİÇBİR sayı/m²/birim/kat/tip UYDURMA. Yalnız verilen alanlardaki değerleri kullanabilirsin.\n2) Daire tipi (2+1, dubleks vb.) VERİLMEDİ → asla tahmin etme, yazma.\n3) summary yalnız verilen gerçeklere dayanır; başka rakam üretme.\n4) buildingTypeLabel: verilere göre kısa etiket (ör. "Konut + Ticari", "Konut", "Kamu Yapısı"). Emin değilsen "Yapı".\n\nSADECE şu JSON (başka metin yok): {"buildingTypeLabel":"kısa etiket","summary":"2-3 cümle, yalnız verilen gerçeklerle","highlights":["kısa madde","kısa madde"]}';
     var usr='GERÇEK VERİLER (yalnızca bunları kullan):\n'+JSON.stringify(facts);
-    _deepseek([{role:'system',content:sys},{role:'user',content:usr}]).then(function(txt){
+    _motor1([{role:'system',content:sys},{role:'user',content:usr}]).then(function(txt){
       var ai=_dsParse(txt)||{};
       window.__dwgProx={buildingTypeLabel:_valStr(ai.buildingTypeLabel)||_autoType(F), summary:_sanitize(ai.summary,F), highlights:(ai.highlights||[]).map(function(x){return _sanitize(x,F);}).filter(Boolean).slice(0,6)};
       _renderProx(F,window.__dwgProx);

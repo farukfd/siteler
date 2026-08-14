@@ -202,24 +202,23 @@ window.EMLAK_PROXY_MODE=window.EMLAK_PROXY_MODE!==false;/* güvenlik: proxy modu
 
 (function(){
 "use strict";
-/* ---- ProX (izole) + DeepSeek yönlendirme (admin anahtarlarını okur) ---- */
+/* ---- ProX (izole) + Motor-1 yönlendirme (admin bağlantısını okur) ---- */
 var EMLAK_API_BASE="https://www.emlakekspertizi.com";
 var TENANT={id:"consultant",key:""};
 /* P0: tenant anahtarı tarayıcıya girmez — sunucu Host'tan çözer */
-function _dsKey(){try{return (localStorage.getItem('dn_ai_ds')||'').trim();}catch(e){return '';}}
-function _dsModel(){try{return (localStorage.getItem('dn_dsmodel')||'deepseek-chat').trim()||'deepseek-chat';}catch(e){return 'deepseek-chat';}}
+function _dsKey(){try{return (localStorage.getItem('dn_m1_key')||'').trim();}catch(e){return '';}}
 async function proxApi(path,body){
   try{var res=await fetch(((window.EMLAK_DEMO===true)?EMLAK_API_BASE:'')+path,{method:'POST',mode:'cors',headers:(function(){return {'Content-Type':'application/json'};})()/* P0: tenant kimliği/anahtarı istemciden gitmez */,body:JSON.stringify(body||{})});
     if(!res.ok)throw new Error('ProX '+res.status);return await res.json();}catch(e){return {fallback:true};}
 }
-async function _deepseek(sys,msgs){var key=_dsKey();if(!key)return null;
-  try{var arr=[{role:'system',content:sys}].concat(msgs);
-    var res=await fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:_dsModel(),messages:arr,temperature:0.7,max_tokens:900,stream:false})});
-    if(!res.ok)return null;var j=await res.json();var t=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;return (t&&t.trim())?t.trim():null;}catch(e){return null;}
+async function _motor1(msgs){if(!_dsKey())return null;
+  /* Nötr üretim ucu: persona/sistem yönergesi SUNUCUDA eklenir — istemciden prompt gitmez. */
+  try{var res=await fetch('/api/ai/generate',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({profile:'m1',persona:'consultant-asistan',messages:msgs,temperature:0.7,max_tokens:900})});
+    if(!res.ok)return null;var j=await res.json();var t=j&&(j.answer||(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content));return (t&&t.trim())?t.trim():null;}catch(e){return null;}
 }
 /* ---- persona (SADECE ProX markası; "yapay zeka" ifadesi kullanılmaz) ---- */
 var PA_GREET='Merhaba, ben Selin Meridyen ProX Asistanı 👋 Lüks konut, yatırım, değerleme ya da davet usulü gizli satış — hangi konuda yardımcı olayım? İhtiyacınızı birkaç kısa soruyla netleştirip size en uygun gayrimenkulü bulalım. Yanıtlarım ProX\'un 480 milyon+ doğrulanmış emlak verisine dayanır.';
-var PA_SYS='Sen Selin Meridyen lüks gayrimenkul danışmanının ProX Asistanısın — sıcak, zarif, üst-segment ve SATIŞ ODAKLI bir müşteri danışmanı. GÖREVİN: ziyaretçiyi DİNLEYEREK gerçek ihtiyacını anla ve onu Selin Meridyen portföyü/hizmetleriyle eşleştirerek müşteriye dönüştür.\nKURALLAR: 1) SELAMLAŞMA yalnızca konuşmanın İLK yanıtında olur; "Önceki konuşma" verilmişse tekrar selamlama/kendini tanıtma yapma, doğrudan konuya devam et. Hazır uzun metin DÖKME. 2) Önce niyeti anla: (a) konut alım/satım (b) yatırım/prim (c) değerleme (d) kiralama (e) miras/intikal (f) gizli/davet usulü satış? Emin değilsen 1-2 KISA soruyla netleştir (konum, bütçe, m², tip). 3) İhtiyacı anladıkça ilgili portföy/hizmeti kısa ve çekici tanıt; müşteriyi bir sonraki adıma (ücretsiz analiz, randevu) yönlendir; güven ver, baskı yapma. 4) Uygun her fırsatta canlı danışmana yönlendir: "Dilerseniz danışmanımız sizi arasın; telefon numaranızı bırakırsanız kısa sürede ulaşırız." 5) Müşteri telefon paylaşırsa teşekkür et ve "danışmanımız kısa sürede sizinle iletişime geçecek" de.\nÜSLUP: Türkçe, kısa (2-4 cümle), sıcak, samimi, üst-segment, profesyonel. Yanıtların ProX\'un 480 milyon+dan fazla GERÇEK ve DOĞRULANMIŞ emlak verisine dayanır; ProX bir yapay zekâ veya veri üreticisi DEĞİLDİR, veri UYDURMAZSIN. Yanıtlarında \'yapay zeka\' ya da \'AI\' kelimelerini ASLA yazma; gerekiyorsa kendini yalnızca \'ProX\' veya \'canlı emlak zekâsı\' olarak tanımla. Kesin fiyat/garanti getiri verme; tahmini bilgi ver ve ücretsiz analiz öner. Konu dışı sorularda kibarca gayrimenkule yönlendir.';
+/* Persona yönergesi SUNUCUDADIR (persona:'consultant-asistan') — istemcide sistem promptu tutulmaz. */
 var PA_SUGGESTS=['Yatırımlık, prim potansiyeli yüksek ne önerirsiniz?','Boğaz\'da yalı / özel portföyünüz var mı?','Gayrimenkulümü gizlilikle nasıl satabilirsiniz?','Ücretsiz değer analizi almak istiyorum'];
 var PA_FALLBACK='Şu an ProX veri servisine ulaşılamıyor gibi görünüyor. Sorunuzu aldım — dilerseniz telefon numaranızı bırakın, danışmanımız kısa sürede sizi arasın; WhatsApp hattımızdan da yazabilirsiniz.';
 
@@ -284,12 +283,12 @@ async function paSend(ev){
   _busy=true;var btn=document.querySelector('.pa-send');if(btn)btn.disabled=true;
   _msgs.push({role:'bot',typing:true});paRenderLog();
   var hist=_histCtx();var ans='';
-  /* 1) DeepSeek anahtarı varsa DeepSeek; 2) yoksa/başarısızsa ProX (/prox/ai) */
+  /* 1) Motor-1 bağlantısı varsa Motor-1; 2) yoksa/başarısızsa ProX çekirdeği (/prox/ai) */
   try{
     var dmsgs=_msgs.filter(function(m){return !m.typing&&m.text;}).map(function(m){return {role:m.role==='me'?'user':'assistant',content:m.text};});
-    var ds=await _deepseek(PA_SYS,dmsgs);
+    var ds=await _motor1(dmsgs);
     if(ds){ans=ds;}
-    else{var r=await proxApi('/api/v1/tenant/prox/ai',{persona:'consultant',context:hist||'default',prompt:PA_SYS,message:(hist?('Önceki konuşma:\n'+hist+'\n\nMüşterinin yeni mesajı: '):'')+q});
+    else{var r=await proxApi('/api/v1/tenant/prox/ai',{persona:'consultant',context:hist||'default',message:(hist?('Önceki konuşma:\n'+hist+'\n\nMüşterinin yeni mesajı: '):'')+q});
       ans=(r&&(r.answer||(r.data&&r.data.answer)))||'';if(!ans||(r&&r.fallback))ans=PA_FALLBACK;}
   }catch(e){ans=PA_FALLBACK;}
   ans=scrubProx(ans);
@@ -329,7 +328,7 @@ setTimeout(function(){var i=document.getElementById('paInput');if(i)i.focus();},
       <div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="gizlilik.html">Gizlilik Politikası</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li></ul></div>
     </div>
     <div class="fbot">
-      <span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span>
+      <span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Kurumsal marka ve içerik hakları.</span><span class="nadas-c">Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.</span>
       <a class="fprox" href="https://emlakekspertizi.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a>
     </div>
   </div>

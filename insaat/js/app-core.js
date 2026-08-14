@@ -396,7 +396,7 @@ function applyAds(){
   }catch(e){console.warn('applyAds',e);}
 }
 function loadAdsUI(){var h=document.getElementById('ads_head'),b=document.getElementById('ads_body');if(h)h.value=(ADS.head||'');if(b)b.value=(ADS.body||'');var ga=document.getElementById('ad_ga'),gs=document.getElementById('ad_gsv');if(ga)ga.value=(SETTINGS.googleAnalytics||'');if(gs)gs.value=(SETTINGS.googleSiteVerif||'');}
-function applyGoogle(){try{var ga=SETTINGS.googleAnalytics;if(ga&&!document.getElementById('saas-gtag')){var s=document.createElement('script');s.id='saas-gtag';s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+ga;document.head.appendChild(s);var s2=document.createElement('script');s2.id='saas-gtag-init';s2.text='window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","'+ga+'");';document.head.appendChild(s2);}var gsv=SETTINGS.googleSiteVerif;if(gsv){var mv=document.querySelector('meta[name="google-site-verification"]');if(!mv){mv=document.createElement('meta');mv.name='google-site-verification';document.head.appendChild(mv);}mv.content=(''+gsv).replace(/^google-site-verification=/,'');}}catch(e){}}
+function applyGoogle(){try{var ga=SETTINGS.googleAnalytics;if(!/^[A-Za-z0-9_-]{4,32}$/.test(''+ga))ga='';/* doğrulanmamış GA kimliği enjekte edilmez */if(ga&&!document.getElementById('saas-gtag')){var s=document.createElement('script');s.id='saas-gtag';s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+ga;document.head.appendChild(s);var s2=document.createElement('script');s2.id='saas-gtag-init';s2.text='window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","'+ga+'");';document.head.appendChild(s2);}var gsv=SETTINGS.googleSiteVerif;if(gsv){var mv=document.querySelector('meta[name="google-site-verification"]');if(!mv){mv=document.createElement('meta');mv.name='google-site-verification';document.head.appendChild(mv);}mv.content=(''+gsv).replace(/^google-site-verification=/,'');}}catch(e){}}
 function publishAds(){applyGoogle();applyAds();saveAll();var el=document.getElementById('saveToast');if(el)el.textContent='🚀 Google & Reklam yayınlandı';}
 // ===== DİL (i18n) + İÇERİK DÜZENLEME MOTORU (kaynak-metin anahtar) =====
 let LANG='tr'; try{LANG=localStorage.getItem('meridyen_lang')||'tr';}catch(e){}
@@ -679,7 +679,7 @@ function brandClear(which){ BRAND[which]=''; var i=document.getElementById(which
 function publishSite(){ saveAll(); var el=document.getElementById('saveToast'); if(el)el.textContent='🚀 Yayınlandı · neden-biz dâhil tüm sayfalara uygulandı'; }
 function loadBrandUI(){
   var b=BRAND;
-  function prev(id,val,fb){var el=document.getElementById(id);if(!el)return;el.innerHTML=val?('<img src="'+val+'" style="width:100%;height:100%;object-fit:contain">'):fb;}
+  function prev(id,val,fb){var el=document.getElementById(id);if(!el)return;if(val){el.textContent='';var im=document.createElement('img');im.style.cssText='width:100%;height:100%;object-fit:contain';im.src=val;el.appendChild(im);}else el.textContent=fb;}
   prev('bp_logo',b.logo,'M');
   prev('bp_logoFooter',b.logoFooter||b.logo,'—');
   prev('bp_favicon',b.favicon,'★');
@@ -1602,7 +1602,7 @@ const INSAAT_FOOTER=`<div class="wrap">
     </div>
   </div>
   <div class="fbot">
-    <div class="fcopy">© 2026 Meridyen Yapı A.Ş. · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span></div>
+    <div class="fcopy">© 2026 Meridyen Yapı A.Ş. · Kurumsal marka ve içerik hakları. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span><div class="nadas-c">Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.</div></div>
     <div class="flang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><select class="lang-sel" aria-label="Dil / Language" onchange="applyLang(this.value)"><option value="tr">TR</option><option value="en">EN</option></select></div>
     <a class="fprox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a>
   </div>
@@ -1666,8 +1666,8 @@ function applySaaSSettings(){try{
   const gsv=saasResolve('googleSiteVerification');if(gsv)_saasMeta('google-site-verification',(''+gsv).replace(/^google-site-verification=/,''));
   const fav=saasResolve('faviconUrl');if(fav){_saasLink('icon',fav);_saasLink('apple-touch-icon',fav);}
   const logo=saasResolve('logoUrl');
-  if(logo){document.querySelectorAll('img.logo-img, .js-logo img').forEach(im=>im.src=logo);document.querySelectorAll('.logo .mark').forEach(mk=>{mk.innerHTML='<img class="logo-img" src="'+logo+'" alt="logo" style="width:100%;height:100%;object-fit:contain;border-radius:inherit">';});}
-  const ga=saasResolve('googleAnalytics');
+  if(logo){document.querySelectorAll('img.logo-img, .js-logo img').forEach(im=>im.src=logo);document.querySelectorAll('.logo .mark').forEach(mk=>{mk.textContent='';var im=document.createElement('img');im.className='logo-img';im.alt='logo';im.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:inherit';im.src=logo;mk.appendChild(im);});}
+  var _gaR=saasResolve('googleAnalytics');const ga=(/^[A-Za-z0-9_-]{4,32}$/.test(''+_gaR))?_gaR:'';
   if(ga&&!document.getElementById('saas-gtag')){const s=document.createElement('script');s.id='saas-gtag';s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+ga;document.head.appendChild(s);const s2=document.createElement('script');s2.id='saas-gtag-init';s2.text='window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","'+ga+'");';document.head.appendChild(s2);window.__PROX_DEBUG&&console.log('[SaaS] Google Analytics enjekte: '+ga);}
   const phone=saasResolve('contactPhone');if(phone)document.querySelectorAll('a[href^="tel:"]').forEach(a=>a.href='tel:'+(''+phone).replace(/[^0-9+]/g,''));
   if(typeof mountInsaatMenu==='function')mountInsaatMenu();
@@ -1936,8 +1936,8 @@ try{ if(window.CSEngine){ INS_CONTENT=CSEngine.create({store:'ins_cs_content',te
 function _insMigrateAgents(){try{
   var old=JSON.parse(localStorage.getItem('ins_aicfg')||'null');
   if(old&&!localStorage.getItem('ins_cs_content'))localStorage.setItem('ins_cs_content',JSON.stringify(old));
-  var dk=(localStorage.getItem('deepseek_key')||window.PROX_DS_KEY||''), pk=(window.EMLAK_TENANT&&EMLAK_TENANT.tenant_key)||'';
-  [INS_CONTENT,INS_SITE].forEach(function(E){ if(!E)return; var k=E.getKeys(),patch={}; if(!k.dsKey&&dk)patch.dsKey=dk; if(!k.proxKey&&pk)patch.proxKey=pk; if(Object.keys(patch).length)E.setKeys(patch); });
+  var dk=(localStorage.getItem('ins_m1_key')||window.PROX_DS_KEY||''), pk=(window.EMLAK_TENANT&&EMLAK_TENANT.tenant_key)||'';
+  [INS_CONTENT,INS_SITE].forEach(function(E){ if(!E)return; var k=E.getKeys(),patch={}; if(!k.m1Key&&dk)patch.m1Key=dk; if(!k.proxKey&&pk)patch.proxKey=pk; if(Object.keys(patch).length)E.setKeys(patch); });
 }catch(e){}}
 window.INS_CONTENT=INS_CONTENT;window.INS_SITE=INS_SITE;
 /* Site Asistanı bağlam yardımcıları */
@@ -2076,8 +2076,8 @@ function insBlogDetail(id){var b=insBlogById(id);if(!b)return;
 }
 function insBlogClose(){var ov=document.getElementById('insBlogOverlay');if(ov)ov.remove();document.body.style.overflow='';try{if(/^#blog\//.test(location.hash||''))history.replaceState(null,'','#blog');}catch(e){}}
 window.insBlogDetail=insBlogDetail;window.insBlogClose=insBlogClose;window.insArts=insArts;window.insRunSchedule=insRunSchedule;
-/* studio anahtarlarını sitede zaten girilmiş DeepSeek/ProX anahtarından tohumla */
-function _insAgentFill(E,pre){try{var k=E.getKeys();var set=function(id,v){var e=document.getElementById(id);if(e)e.value=v||'';};set(pre+'provider',k.provider||'auto');set(pre+'prox',k.proxKey);set(pre+'ds',k.dsKey);set(pre+'oa',k.oaKey);set(pre+'cl',k.clKey);set(pre+'sys',k.sysPrompt);var pex=document.getElementById(pre+'pex');if(pex)pex.value=k.pexelsKey||'';}catch(e){}}
+/* studio bağlantılarını sitede zaten girilmiş Motor-1/ProX bağlantısından tohumla */
+function _insAgentFill(E,pre){try{var k=E.getKeys();var set=function(id,v){var e=document.getElementById(id);if(e)e.value=v||'';};set(pre+'provider',k.provider||'auto');set(pre+'prox',k.proxKey);set(pre+'ds',k.m1Key);set(pre+'oa',k.m2Key);set(pre+'cl',k.m3Key);set(pre+'sys',k.sysPrompt);var pex=document.getElementById(pre+'pex');if(pex)pex.value=k.mediaKey||'';}catch(e){}}
 function _csModulYukle(cb){var L=["../shared/cs-engine.js?v=2", "js/content-studio.js?v=3"];var i=0;(function next(){if(i>=L.length){cb();return;}if(document.querySelector('script[data-csmod="'+L[i]+'"]')){i++;next();return;}var sc=document.createElement('script');sc.src=L[i];sc.dataset.csmod=L[i];sc.onload=function(){i++;next();};sc.onerror=function(){i++;next();};document.head.appendChild(sc);})();}
 function csMountINS(){if(!window.ContentStudio){_csModulYukle(function(){csMountINS();});return;}
    if(!window.ContentStudio||!INS_CONTENT)return; var host=document.getElementById('csHost'); if(!host)return;
@@ -2693,7 +2693,7 @@ function renderInsIlan(){
   }).join('');
 }
 function insIlanAdd(){
-  ILANLAR.unshift({id:'il'+Date.now(),title:'Yeni İlan',op:'Satılık',type:'Daire',status:'pasif',il:'İstanbul',ilce:'',mah:'',m2:0,oda:'',kat:'',price:0,feat:0,desc:'',img:INS_LIST_IMGS[Math.floor(Math.random()*INS_LIST_IMGS.length)],eids:(window.EIDS?EIDS.newRecord({il:'İstanbul',malikTip:'malik'}):null)});
+  ILANLAR.unshift({id:'il'+Date.now(),title:'Yeni İlan',op:'Satılık',type:'Daire',status:'pasif',il:'İstanbul',ilce:'',mah:'',m2:0,oda:'',kat:'',price:0,feat:0,desc:'',img:INS_LIST_IMGS[(function(id){var h=0;for(var i=0;i<id.length;i++)h=(h*31+id.charCodeAt(i))>>>0;return h%INS_LIST_IMGS.length;})('il'+Date.now())],eids:(window.EIDS?EIDS.newRecord({il:'İstanbul',malikTip:'malik'}):null)});
   renderInsIlan();saveAll();
 }
 function insIlanDel(i){if(!confirm('Bu ilanı silmek istediğinize emin misiniz?'))return;ILANLAR.splice(i,1);renderInsIlan();renderInsIlanPublic();saveAll();}
@@ -2839,7 +2839,7 @@ function insIlanFilterSet(k,v,btn){_insIlanFilter[k]=(_insIlanFilter[k]===v?'':v
   if(btn&&_insIlanFilter[k])btn.classList.add('active');renderInsIlanPublic();}
 /* ===== İLAN: EİDS yayın kapısı + kapsamlı detay (shared/listing.js) ===== */
 try{if(window.EIDS_DEMO===undefined)window.EIDS_DEMO=true;}catch(e){}
-function _insDemoEids(){return {status:'dogrulandi',tasinmazNo:'',il:'',ilce:'',ada:'',parsel:'',malikTip:'isletme',yetkiBelgeNo:'',referans:'',tarih:'2026-08-02',mesaj:'Demo: temsilî EİDS doğrulaması — gerçek Bakanlık kodu üretilmez.'};}
+function _insDemoEids(){try{if(window.EIDS&&EIDS.demoRecord)return EIDS.demoRecord();}catch(e){}return {status:'demo',listing_kind:'demo_private_portfolio',referans:'',tarih:'',mesaj:'Demo tanıtım kaydı — EİDS doğrulaması yapılmaz, gerçek Bakanlık kodu üretilmez.'};}
 function _insPendEids(){return {status:'beklemede',mesaj:'EİDS doğrulama bekliyor — bu ilan yayınlanmaz.'};}
 function _insGal(r){var b=(parseInt((''+(r.img||'')).replace(/\D/g,''),10)||1);var g=[];for(var k=0;k<3;k++){g.push('img/img'+(((b+k*3)%14)+1)+'.jpg');}return g;}
 function insIlanView(){
@@ -2847,10 +2847,10 @@ function insIlanView(){
     var e=(window.EIDS_DEMO)?((i.eids&&(i.eids.status==='dogrulandi'||i.eids.status==='reddedildi'))?i.eids:_insDemoEids()):(i.eids||_insPendEids());
     return Object.assign({},i,{eids:e});
   });
-  if(window.EIDS_DEMO&&arr.length>6){for(var k=arr.length-1;k>=0;k--){if(arr[k].eids.status==='dogrulandi'){arr[k]=Object.assign({},arr[k],{eids:_insPendEids()});break;}}}
+  if(window.EIDS_DEMO&&arr.length>6){for(var k=arr.length-1;k>=0;k--){if(arr[k].eids.status==='dogrulandi'||arr[k].eids.status==='demo'){arr[k]=Object.assign({},arr[k],{eids:_insPendEids()});break;}}}
   return arr;
 }
-function insPublicIlan(){var v=insIlanView();return (window.Listings&&Listings.publicList)?Listings.publicList(v):v.filter(function(i){return i.eids&&i.eids.status==='dogrulandi';});}
+function insPublicIlan(){var v=insIlanView();return (window.Listings&&Listings.publicList)?Listings.publicList(v):v.filter(function(i){return i.eids&&i.eids.status==='dogrulandi'||(window.EMLAK_DEMO!==false&&i.eids.status==='demo');});}
 function insListNormalize(r){ if(!r)return null;
   return {id:r.id,title:r.title,op:r.op,type:r.type,
     priceText:(_ifmt(r.price)+' ₺'+(r.op==='Kiralık'?' /ay':'')), images:((window.Listings&&Listings.catImages)?Listings.catImages(r,4):[imgFor(r.img)].concat(_insGal(r))),

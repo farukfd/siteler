@@ -18,8 +18,8 @@
    ===================================================================== */
 (function(){
   'use strict';
-  var STATES={ BEKLEMEDE:'beklemede', DOGRULANDI:'dogrulandi', REDDEDILDI:'reddedildi' };
-  var LABEL={ beklemede:'EİDS Doğrulama Bekliyor', dogrulandi:'EİDS Doğrulandı', reddedildi:'EİDS Doğrulanamadı' };
+  var STATES={ BEKLEMEDE:'beklemede', DOGRULANDI:'dogrulandi', REDDEDILDI:'reddedildi', DEMO:'demo' };
+  var LABEL={ beklemede:'EİDS Doğrulama Bekliyor', dogrulandi:'EİDS Doğrulandı', reddedildi:'EİDS Doğrulanamadı', demo:'DEMO İLAN' };
   /* Kim ilan verebilir (gerçek EİDS malik tipleri) */
   var MALIK_TIPLERI=[
     {k:'malik',   ad:'Malik (tapu sahibi)'},
@@ -62,9 +62,25 @@
     return eksik;
   }
 
+  /* Demo sınıfı kaydı (DEMO_PRIVATE_PORTFOLIO) — rozet 'DEMO İLAN', asla EİDS rozeti değil.
+     Sahte kod/durum üretmez; yayın kapısından geçemez. */
+  function demoRecord(){
+    return { status:STATES.DEMO, listing_kind:'demo_private_portfolio', tasinmazNo:'', il:'', ilce:'', ada:'', parsel:'',
+      malikTip:'', yetkiBelgeNo:'', referans:'', tarih:'',
+      mesaj:'Demo tanıtım kaydı — EİDS doğrulaması yapılmaz, gerçek Bakanlık kodu üretilmez. Gerçek ilan değildir.' };
+  }
+
   /* GERÇEK doğrulama: alanları backend'e gönderir. proxApi yoksa/canlı değilse dürüst 'beklemede'. */
   function verify(fields){
     var rec=newRecord(fields);
+    /* SANDBOX ADAPTÖRÜ: demo ortamından gerçek Bakanlık/EİDS servisine istek GÖNDERİLMEZ.
+       Akış temsilî gösterilir; sonuç asla 'dogrulandi' olmaz, gerçek ilan tablosuna yazılamaz. */
+    if(window.EMLAK_DEMO!==false){
+      rec.status=STATES.BEKLEMEDE;
+      rec.sandbox=true;
+      rec.mesaj='Sandbox: demo ortamında gerçek EİDS doğrulaması yapılmaz — akış temsilîdir, kod üretilmez.';
+      return Promise.resolve(rec);
+    }
     var eksik=eksikAlanlar(rec);
     if(eksik.length){
       rec.status=STATES.BEKLEMEDE;
@@ -104,14 +120,24 @@
     return Promise.race([live,to]);
   }
 
-  /* Yayın kapısı: yalnız GERÇEKTEN doğrulanmış ilan yayınlanabilir. */
-  function canPublish(eids){return !!(eids&&eids.status===STATES.DOGRULANDI);}
-  function isVerified(eids){return !!(eids&&eids.status===STATES.DOGRULANDI);}
+  /* Yayın kapısı: yalnız GERÇEKTEN doğrulanmış ilan yayınlanabilir.
+     Demo sınıfı (demo_private_portfolio) ve sandbox sonuçları HİÇBİR koşulda geçemez. */
+  function canPublish(eids){
+    if(!eids)return false;
+    if(eids.status===STATES.DEMO||eids.listing_kind==='demo_private_portfolio'||eids.sandbox===true)return false;
+    return eids.status===STATES.DOGRULANDI;
+  }
+  function isVerified(eids){return canPublish(eids);}
+  function isDemo(eids){return !!(eids&&(eids.status===STATES.DEMO||eids.listing_kind==='demo_private_portfolio'));}
   function stateLabel(eids){return (eids&&LABEL[eids.status])||LABEL.beklemede;}
 
-  /* Rozet — durum ne ise onu gösterir; kod uydurmaz. */
+  /* Rozet — durum ne ise onu gösterir; kod uydurmaz.
+     Demo kayıt EİDS rozeti TAŞIYAMAZ: kalkansız, gri 'DEMO İLAN' etiketi basılır. */
   function badgeHTML(eids,sz){
     var st=(eids&&eids.status)||STATES.BEKLEMEDE;
+    if(st===STATES.DEMO){
+      return '<span class="eids-b demo" title="Temsilî tanıtım kaydı — EİDS doğrulaması yapılmamıştır. Gerçek ilan değildir.">DEMO İLAN</span>';
+    }
     var cls=st===STATES.DOGRULANDI?'ok':st===STATES.REDDEDILDI?'no':'wait';
     var ttl=st===STATES.DOGRULANDI&&eids&&eids.tasinmazNo?(' · Taşınmaz No: '+esc(eids.tasinmazNo)):'';
     return '<span class="eids-b '+cls+'" title="'+esc(LABEL[st]||'')+ttl+'">'+shield(sz)+' '+esc(LABEL[st]||'')+'</span>';
@@ -126,6 +152,7 @@
       +'.eids-b.ok{color:#0f7a3d;background:rgba(22,163,74,.13)}'
       +'.eids-b.no{color:#c0392b;background:rgba(192,57,43,.12)}'
       +'.eids-b.wait{color:#b45309;background:rgba(217,119,6,.13)}'
+      +'.eids-b.demo{color:#475569;background:rgba(100,116,139,.16);letter-spacing:.4px}'
       +'.eids-b.solid.ok{color:#fff;background:#0f7a3d}'
       +'.eids-b.solid.wait{color:#fff;background:#b45309}'
       +'.eids-b.solid.no{color:#fff;background:#c0392b}';
@@ -137,8 +164,8 @@
 
   window.EIDS={
     STATES:STATES, LABEL:LABEL, MALIK_TIPLERI:MALIK_TIPLERI, VERIFY_PATH:VERIFY_PATH,
-    newRecord:newRecord, eksikAlanlar:eksikAlanlar, verify:verify,
-    canPublish:canPublish, isVerified:isVerified, stateLabel:stateLabel,
+    newRecord:newRecord, demoRecord:demoRecord, eksikAlanlar:eksikAlanlar, verify:verify,
+    canPublish:canPublish, isVerified:isVerified, isDemo:isDemo, stateLabel:stateLabel,
     badgeHTML:badgeHTML, shield:shield, esc:esc, injectCSS:injectCSS
   };
 })();

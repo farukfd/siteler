@@ -17,8 +17,8 @@
 ];
   function imgURL(v){if(!v)return 'img/gayrimenkul/img2.webp';if((''+v).indexOf('data:')===0||(''+v).indexOf('http')===0||(''+v).charAt(0)==='/'||(''+v).indexOf('../')===0)return v;if(/^img\d+$/.test(v))return 'img/gayrimenkul/'+v+'.webp';return 'img/gayrimenkul/img2.webp';}
   function catOf(t){t=(t||'').toLowerCase();if(/arsa/.test(t))return 'arsa';if(/ofis|is ?yeri|dukkan|ticari/.test(t))return 'ticari';return 'konut';}
-  /* DEMO EİDS — temsilî 'doğrulandı' (gerçek Bakanlık kodu UYDURULMAZ; referans boş). 1 ilan bilinçli 'beklemede' → EİDS kapısı onu gizler. */
-  function _demoEids(){return {status:'dogrulandi',tasinmazNo:'',il:'',ilce:'',ada:'',parsel:'',malikTip:'isletme',yetkiBelgeNo:'',referans:'',tarih:'2026-08-02',mesaj:'Demo: temsilî EİDS doğrulaması — gerçek Bakanlık kodu üretilmez.'};}
+  /* DEMO_PRIVATE_PORTFOLIO sınıfı — EİDS rozeti/kodu ÜRETİLMEZ; kart 'DEMO İLAN' etiketi taşır. 1 ilan bilinçli 'beklemede' → EİDS kapısı akışı görünür. */
+  function _demoEids(){try{if(window.EIDS&&EIDS.demoRecord)return EIDS.demoRecord();}catch(e){}return {status:'demo',listing_kind:'demo_private_portfolio',referans:'',tarih:'',mesaj:'Demo tanıtım kaydı — EİDS doğrulaması yapılmaz, gerçek Bakanlık kodu üretilmez.'};}
   function _pendEids(){return {status:'beklemede',mesaj:'EİDS doğrulama bekliyor — bu ilan sitede yayınlanmaz.'};}
   function _galOf(l){var base=parseInt((''+(l.img||'img1')).replace(/\D/g,''),10)||1;var g=[];for(var k=0;k<4;k++){g.push('img'+(((base-1+k*3)%16)+1));}return g;}
   /* DEMO modu: temsilî ilanları EİDS-doğrulanmış göster (üretimde EIDS_DEMO=false → gerçek kapı). */
@@ -36,7 +36,7 @@
         gallery:(l.gallery&&l.gallery.length?l.gallery:_galOf(l)),eids:eids});
     });
     /* DEMO: EİDS kapısını göstermek için SON doğrulanmış ilanı 'beklemede' bırak — YALNIZ 6'dan fazla ilan varsa (ana sayfada hep ≥6 kalsın) */
-    if(DEMO&&mapped.length>6){for(var i=mapped.length-1;i>=0;i--){if(mapped[i].eids&&mapped[i].eids.status==='dogrulandi'){mapped[i]=Object.assign({},mapped[i],{eids:_pendEids()});break;}}}
+    if(DEMO&&mapped.length>6){for(var i=mapped.length-1;i>=0;i--){var _st=mapped[i].eids&&mapped[i].eids.status;if(_st==='dogrulandi'||_st==='demo'){mapped[i]=Object.assign({},mapped[i],{eids:_pendEids()});break;}}}
     return mapped;
   }
   window.DN_ILAN={SEED:SEED,imgURL:imgURL,catOf:catOf,get:get};

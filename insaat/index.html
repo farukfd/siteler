@@ -517,7 +517,7 @@ header.scrolled .lang-sel{color:var(--ink)}
   </div>
 </section>
 
-<footer class="insaatFooter"></footer>
+<footer class="insaatFooter"><div class="nadas-c" style="text-align:center;padding:14px 16px">Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.</div></footer>
 </div>
 
 <!-- ===== İLANLAR & ÖZEL PORTFÖY SAYFASI ===== -->
@@ -1988,13 +1988,26 @@ async function authRegister(name,email,pw){
   if(name.length<2)return{err:'Lütfen ad soyad girin.'};
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return{err:'Geçerli bir e-posta girin.'};
   if((pw||'').length<6)return{err:'Şifre en az 6 karakter olmalı.'};
+  if(window.EMLAK_DEMO!==true){ /* ÜRETİM: parola tarayıcıda işlenmez/saklanmaz — sunucu auth */
+    try{var rr=await fetch('/api/auth/user/register',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,email:email,password:pw})});
+      if(rr.ok){var jj=await rr.json();if(jj&&jj.ok){_authSetSession({email:email,name:name,ts:Date.now()});return{ok:true};}}
+      return{err:'Kayıt başarısız — bilgilerinizi kontrol edin.'};
+    }catch(e){return{err:'Üyelik servisi yapılandırılmadı (auth servisine erişilemiyor).'};}
+  }
   var users=_authUsers();if(users[email])return{err:'Bu e-posta zaten kayıtlı. Giriş yapın.'};
   var salt='s'+Date.now().toString(36)+Math.random().toString(36).slice(2);
   users[email]={name:name,email:email,salt:salt,hash:await _authHash(pw,salt),createdAt:new Date().toISOString()};
   _authSaveUsers(users);_authSetSession({email:email,name:name,ts:Date.now()});return{ok:true};
 }
 async function authLogin(email,pw){
-  email=(email||'').trim().toLowerCase();var u=_authUsers()[email];
+  email=(email||'').trim().toLowerCase();
+  if(window.EMLAK_DEMO!==true){ /* ÜRETİM: karşılaştırma sunucuda (Argon2id + HttpOnly oturum) */
+    try{var rr=await fetch('/api/auth/user/login',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pw})});
+      if(rr.ok){var jj=await rr.json();if(jj&&jj.ok){_authSetSession({email:email,name:(jj.name||email),ts:Date.now()});return{ok:true};}}
+      return{err:'E-posta veya şifre hatalı.'};
+    }catch(e){return{err:'Üyelik servisi yapılandırılmadı (auth servisine erişilemiyor).'};}
+  }
+  var u=_authUsers()[email];
   if(!u)return{err:'Bu e-postayla kayıt bulunamadı. Önce kayıt olun.'};
   if(await _authHash(pw,u.salt)!==u.hash)return{err:'E-posta veya şifre hatalı.'};
   _authSetSession({email:email,name:u.name,ts:Date.now()});return{ok:true};
@@ -2063,8 +2076,10 @@ async function hesapQuickQuote(){var m=document.getElementById('hq_msg');var r=a
 <script>
 /* insaat — MAHALLE ENDEKSİ bootstrap → shared/mahalle-endeks.js (İstanbul) */
 (function(){
-  var _inst=null, ISTIL='İstanbul';
-  function districts(){ var d={}; try{ var T=window.TR_ILILCE&&TR_ILILCE[ISTIL]; if(T&&T.ilce)T.ilce.forEach(function(ic){ if(!/il Merkezi|^Merkez$/.test(ic))d[ic]=[]; }); }catch(e){} return d; }
+  var _inst=null;
+  /* FAZ3: il sihirbaz config'inden (SETTINGS.firmaIl) — sabit İstanbul zinciri koptu */
+  function ISTIL(){try{if(typeof SETTINGS!=='undefined'&&SETTINGS.firmaIl&&window.TR_ILILCE&&TR_ILILCE[SETTINGS.firmaIl])return SETTINGS.firmaIl;}catch(e){}return 'İstanbul';}
+  function districts(){ var d={}; try{ var T=window.TR_ILILCE&&TR_ILILCE[ISTIL()]; if(T&&T.ilce)T.ilce.forEach(function(ic){ if(!/il Merkezi|^Merkez$/.test(ic))d[ic]=[]; }); }catch(e){} return d; }
   function loadMah(il,ilce){ try{ if(typeof proxApi!=='function')return Promise.resolve([]);
     return proxApi('/api/v1/tenant/locations/mahalleler?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce)).then(function(r){
       var a=(r&&(r.data||r.mahalleler||r))||[]; a=Array.isArray(a)?a:(a.mahalleler||[]);
@@ -2078,7 +2093,7 @@ async function hesapQuickQuote(){var m=document.getElementById('hq_msg');var r=a
     var accent=''; try{accent=(getComputedStyle(document.documentElement).getPropertyValue('--accent')||'').trim();}catch(e){}
     _inst=window.MahalleEndeks.mount(host,{
       proxApi:function(u,o){return (typeof proxApi==='function')?proxApi(u,o):Promise.resolve(null);},
-      province:function(){return ISTIL;},
+      province:ISTIL, seedExtra:'construction|g1',
       districts:districts, loadMah:loadMah,
       ozData:function(){return (typeof OZEL!=='undefined'&&OZEL)||[];},
       goOzel:function(){try{if(typeof openIlanlarPage==='function')openIlanlarPage();}catch(e){}},

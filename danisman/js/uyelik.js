@@ -27,6 +27,12 @@
     if(name.length<2)return{err:'Lütfen ad soyad girin.'};
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return{err:'Geçerli bir e-posta girin.'};
     if((pw||'').length<6)return{err:'Şifre en az 6 karakter olmalı.'};
+    if(window.EMLAK_DEMO!==true){ /* ÜRETİM: parola tarayıcıda işlenmez/saklanmaz — sunucu auth */
+      try{var rr=await fetch('/api/auth/user/register',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,email:email,password:pw})});
+        if(rr.ok){var jj=await rr.json();if(jj&&jj.ok){_setSession({email:email,name:name,ts:Date.now()});return{ok:true};}}
+        return{err:'Kayıt başarısız — bilgilerinizi kontrol edin.'};
+      }catch(e){return{err:'Üyelik servisi yapılandırılmadı (auth servisine erişilemiyor).'};}
+    }
     var users=_users();if(users[email])return{err:'Bu e-posta zaten kayıtlı. Giriş yapın.'};
     var salt='s'+Date.now().toString(36)+Math.random().toString(36).slice(2);
     users[email]={name:name,email:email,salt:salt,hash:await _hash(pw,salt),phone:'',createdAt:new Date().toISOString()};
@@ -35,7 +41,14 @@
     return{ok:true};
   }
   async function authLogin(email,pw){
-    email=(email||'').trim().toLowerCase();var u=_users()[email];
+    email=(email||'').trim().toLowerCase();
+    if(window.EMLAK_DEMO!==true){ /* ÜRETİM: karşılaştırma sunucuda (Argon2id + HttpOnly oturum) */
+      try{var rr=await fetch('/api/auth/user/login',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pw})});
+        if(rr.ok){var jj=await rr.json();if(jj&&jj.ok){_setSession({email:email,name:(jj.name||email),ts:Date.now()});return{ok:true};}}
+        return{err:'E-posta veya şifre hatalı.'};
+      }catch(e){return{err:'Üyelik servisi yapılandırılmadı (auth servisine erişilemiyor).'};}
+    }
+    var u=_users()[email];
     if(!u)return{err:'Bu e-postayla kayıt bulunamadı. Önce üye olun.'};
     if(await _hash(pw,u.salt)!==u.hash)return{err:'E-posta veya şifre hatalı.'};
     _setSession({email:email,name:u.name,ts:Date.now()});return{ok:true};
@@ -128,7 +141,7 @@
   async function authAddQuote(konu,mesaj){var s=authSession();if(!s)return{err:'Giriş yapın.'};var q={id:'q'+Date.now(),konu:konu||'Genel',mesaj:(mesaj||'').trim(),date:new Date().toISOString(),status:'pending',cevap:''};var arr=authQuotes();arr.unshift(q);_uSet('quotes',arr);
     try{if(typeof dnPushLead==='function'){var u=(_users()[s.email]||{});dnPushLead({name:s.name,email:s.email,phone:u.phone||'',konu:q.konu,msg:q.mesaj,src:'Üye Talebi'});}}catch(e){}
     _quoteRespond(q.id,q.konu,q.mesaj);return{ok:true,id:q.id};}
-  /* ProX yanıtı: admin DeepSeek anahtarı girdiyse app.js aiChat (DeepSeek) ile, yoksa ProX sunucu yanıtı. */
+  /* ProX yanıtı: admin Motor-1 bağlantısı etkinse app.js aiChat (Motor-1) ile, yoksa ProX çekirdeği. */
   function _proxCall(body){return (typeof window!=='undefined'&&window.aiChat)?window.aiChat(body):proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:body});}
   async function _quoteRespond(id,konu,mesaj){var reply='';var m=(mesaj||'').trim();
     try{var r=await _proxCall({persona:'consultant',context:'default',prompt:'Sen '+BRAND+'\'in ProX Asistanısın — sıcak, kişiye özel bir gayrimenkul danışmanı. Üye "'+konu+'" konusunda bir talep formu doldurdu. GÖREV: mesajı dikkatle oku, ne istediğini anla. Mesaj yalnızca selam ya da çok kısa/boşsa: kibarca selam ver, kendini tanıt ("Ben '+BRAND+' ProX Asistanı") ve "'+konu+'" için ihtiyacı netleştirecek 1-2 KISA soru sor (il/ilçe, bütçe, m², oda, satılık/kiralık) — hazır uzun metin DÖKME. Gerçek talep varsa: 2-3 cümlelik samimi ön değerlendirme ver ve üyeyi ücretsiz ekspertiz / portföy görüşmesi gibi bir sonraki adıma yönlendir. Telefon bırakırsa danışman kısa sürede arar. Türkçe, kısa. Kesin fiyat verme, ücretsiz ekspertiz öner. Yanıtın ProX\'un doğrulanmış emlak verisine dayanır; ProX veri uydurmaz.',message:konu+' — '+(m||'(üye mesaj bırakmadı)')});reply=(r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text))))||'';}catch(e){}

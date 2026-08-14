@@ -73,3 +73,7 @@ footer.insaatFooter .fbot{border-top:1px solid rgba(255,255,255,.1);padding:18px
 .fprox .fprox-pro{font-family:var(--head);font-weight:800;font-size:.9375rem;color:#fff}
 .fprox .fprox-x{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;height:1.4em;background:#16a34a;color:#0b1220;border-radius:6px;font-family:var(--head);font-weight:800;font-size:.875rem;margin-left:2px}
 .fvo{color:#b9c6dc;font-weight:600}
+
+/* FAZ3: NADAS yazılım sahipliği satırı — tenant tarafından kaldırılamaz/gizlenemez */
+.nadas-c{display:block!important;visibility:visible!important;font-size:.6875rem;opacity:.72;margin-top:3px;letter-spacing:.01em}
+.fhaklar{display:flex;flex-direction:column;gap:2px}

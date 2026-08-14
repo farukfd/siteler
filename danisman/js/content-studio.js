@@ -6,7 +6,7 @@
      cfg.persona    : üretim editör kimliği (metin)
      cfg.city()     : aktif il (prompt'a girer)  → string
      cfg.brand()    : marka adı                   → string
-     cfg.ai(body)   : Promise<{answer}>  (çok-sağlayıcı YZ; ProX+DeepSeek+OpenAI+Claude)
+     cfg.ai(body)   : Promise<{answer}>  (çok-sağlayıcı YZ; çok-motorlu ProX)
      cfg.image(q)   : Promise<[{url,thumb,alt,credit,creditUrl}]>  (Pexels)
      cfg.list()     : mevcut makale dizisi
      cfg.save(arts) : makale dizisini kaydet+yayınla
@@ -161,8 +161,8 @@
     var a=await _genOne(o,function(){_status('Makale genişletiliyor (≥'+o.minWords+' kelime)…','wait');});
     if(btn){btn.disabled=false;btn.textContent=btn._t;}
     if(!a){ var hint=_hasAnyKey()
-        ?'Sağlayıcıya ulaşılamadı. ProX yoğun ardışık isteği kısıtlayabilir — birkaç saniye sonra tekrar deneyin, ya da 🔌 ProX API & Modüller → kendi DeepSeek/OpenAI/Claude anahtarınızı kullanın.'
-        :'Önce yapay zekâ anahtarı girin: 🔌 ProX API & Modüller sekmesi → “Yapay Zekâ Sağlayıcı & Anahtarlar”.';
+        ?'Sağlayıcıya ulaşılamadı. ProX yoğun ardışık isteği kısıtlayabilir — birkaç saniye sonra tekrar deneyin, ya da 🔌 ProX API & Modüller → kendi ProX motor bağlantılarınızı kullanın.'
+        :'Önce ProX motor bağlantısı yapın: 🔌 ProX API & Modüller sekmesi → “ProX Motorları & Anahtarlar”.';
       _status('YZ yanıt vermedi. '+hint,'err'); return; }
     DRAFT=a; _fillEditor(DRAFT);
     _status('✓ Makale üretildi ('+a.words+' kelime'+(a.words>=o.minWords?', hedef tamam':', hedefin altında')+'). Görsel aranıyor…','ok');
@@ -202,7 +202,7 @@
     }
     if(btn){btn.disabled=false;btn.textContent=btn._t;}
     var pub=arts.filter(function(x){return x.status==='published';}).length, sc=arts.filter(function(x){return x.status==='scheduled';}).length;
-    _status((made?'✓ '+made+' haber üretildi'+(fail?(', '+fail+' atlandı (rate-limit — tekrar deneyin)'):'')+'. '+(sc?sc+' zamanlandı, ':'')+'zamanı gelen /blog\'da yayında.':'Üretilemedi ('+fail+' atlandı). ProX rate-limit olabilir; sağlayıcıyı DeepSeek/OpenAI yapıp tekrar deneyin.'),made?'ok':'err');
+    _status((made?'✓ '+made+' haber üretildi'+(fail?(', '+fail+' atlandı (rate-limit — tekrar deneyin)'):'')+'. '+(sc?sc+' zamanlandı, ':'')+'zamanı gelen /blog\'da yayında.':'Üretilemedi ('+fail+' atlandı). ProX rate-limit olabilir; sağlayıcıyı motor bağlantısını kontrol edip tekrar deneyin.'),made?'ok':'err');
     CS.runSchedule();
   };
   /* Zamanı gelen scheduled → published (statik "lazy-cron"; her sayfa yüklemesinde çalışır) */
@@ -220,7 +220,7 @@
     q=(q||($('cs_imgq')||{}).value||(DRAFT&&DRAFT.imgq)||'').trim(); if(!q){toast('Görsel arama terimi girin.');return;}
     var wrap=$('cs_imgResults'); if(wrap)wrap.innerHTML=Array(6).fill('<div class="cs-img cs-skeleton"></div>').join('');
     var res=await CFG.image(q);
-    if(!res||res._err||!res.length){ if(wrap)wrap.innerHTML='<div class="cs-muted">Görsel bulunamadı. Pexels anahtarı ekleyin (Ayarlar) veya arama terimini değiştirin.</div>'; return; }
+    if(!res||res._err||!res.length){ if(wrap)wrap.innerHTML='<div class="cs-muted">Görsel bulunamadı. Görsel servisi anahtarı ekleyin (Ayarlar) veya arama terimini değiştirin.</div>'; return; }
     if(wrap)wrap.innerHTML=res.slice(0,8).map(function(p,i){return '<button type="button" class="cs-img'+(DRAFT&&DRAFT.img&&DRAFT.img.url===p.url?' sel':'')+'" onclick="ContentStudio.pickImage('+i+')" title="'+esc(p.credit)+'"><img src="'+esc(p.thumb||p.url)+'" alt="'+esc(p.alt)+'" loading="lazy"></button>';}).join('');
     CS._imgs=res;
     if(!DRAFT.img){CS.pickImage(0);} /* ilkini otomatik seç */
@@ -380,7 +380,7 @@
     }).join('');
   };
 
-  function _provLabel(){var k=(CFG.getKeys&&CFG.getKeys())||{};var p=k.provider||'auto';var m={auto:'Otomatik',prox:'ProX',deepseek:'DeepSeek',openai:'OpenAI',claude:'Claude'};return m[p]||p;}
+  function _provLabel(){var k=(CFG.getKeys&&CFG.getKeys())||{};var p=k.provider||'auto';var m={auto:'Otomatik',prox:'ProX',m1:'Motor-1',m2:'Motor-2',m3:'Motor-3'};return m[p]||p;}
   function _status(msg,kind){var el=$('cs_status');if(!el)return;el.className='cs-status '+(kind||'');el.textContent=msg;}
 
   /* ---------- ANAHTAR / SAĞLAYICI AYARLARI ---------- */
@@ -405,7 +405,7 @@
   function _hasAnyKey(){var k=(CFG.getKeys&&CFG.getKeys())||{};return !!(k.proxKey||k.dsKey||k.oaKey||k.clKey);}
   function _renderProvChips(){
     var host=$('cs_provChips'); if(!host)return; var k=(CFG.getKeys&&CFG.getKeys())||{};
-    var defs=[['prox','ProX',!!k.proxKey],['deepseek','DeepSeek',!!k.dsKey],['openai','OpenAI',!!k.oaKey],['claude','Claude',!!k.clKey]];
+    var defs=[['prox','ProX',!!k.proxKey],['m1','Motor-1',!!k.m1Key],['m2','Motor-2',!!k.m2Key],['m3','Motor-3',!!k.m3Key]];
     host.innerHTML='<span class="cs-chip'+((k.provider||'auto')==='auto'?' on':'')+'" onclick="ContentStudio.setProvider(\'auto\')">Otomatik</span>'
       +defs.map(function(d){return '<span class="cs-chip'+(k.provider===d[0]?' on':'')+(d[2]?' has':'')+'" onclick="ContentStudio.setProvider(\''+d[0]+'\')">'+d[1]+(d[2]?' ✓':'')+'</span>';}).join('');
   }
@@ -438,7 +438,7 @@
     /* HERO */
     +'<div class="cs-hero"><div class="cs-hero-ic">✨</div><div><h2>İçerik Stüdyosu</h2>'
       +'<p>SEO uyumlu, ProX destekli makaleler + günlük otomatik haber — gerçek görselle <b>/blog</b>\'da yayınlayın.</p></div></div>'
-    +'<div class="cs-status" id="cs_status">'+(noKey?'⚠️ Yapay zekâ anahtarı yok — <b>🔌 ProX API &amp; Modüller</b> sekmesinden ProX/DeepSeek/OpenAI/Claude anahtarını girin, sonra üretin.':'Hazır — konu girin ve üretin. (Sağlayıcı & anahtarlar: 🔌 ProX API &amp; Modüller)')+'</div>'
+    +'<div class="cs-status" id="cs_status">'+(noKey?'⚠️ ProX motor bağlantısı yok — <b>🔌 ProX API &amp; Modüller</b> sekmesinden ProX motor bağlantısını (Ayarlar) yapın, sonra üretin.':'Hazır — konu girin ve üretin. (Sağlayıcı & anahtarlar: 🔌 ProX API &amp; Modüller)')+'</div>'
     /* SEKME NAV — yalnız içerik üretimi (AI ayarları ProX sekmesinde) */
     +'<div class="cs-tabs">'
       +'<button type="button" class="cs-tab on" data-t="uret" onclick="ContentStudio.tab(\'uret\',this)">✍️ Makale Üret</button>'

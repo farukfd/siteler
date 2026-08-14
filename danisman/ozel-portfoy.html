@@ -395,7 +395,7 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><
       <div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="gizlilik.html">Gizlilik Politikası</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li></ul></div>
     </div>
     <div class="fbot">
-      <span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span>
+      <span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Kurumsal marka ve içerik hakları.</span><span class="nadas-c">Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.</span>
       <a class="fprox" href="https://emlakekspertizi.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a>
     </div>
   </div>
@@ -1471,19 +1471,23 @@ if(document.readyState!=='loading')ozInit();else document.addEventListener('DOMC
 <script>
 /* danışman — MAHALLE ENDEKSİ bootstrap → shared/mahalle-endeks.js (İstanbul · gerçek mahalle) */
 (function(){
-  var _inst=null, ISTIL='İstanbul';
-  function districts(){ var d={}; try{ var T=(window.TR_ILILCE&&TR_ILILCE[ISTIL])||null; if(T&&T.ilce)T.ilce.forEach(function(ic){ if(!/il Merkezi|^Merkez$/.test(ic))d[ic]=[]; }); }catch(e){} return d; }
+  var _inst=null;
+  /* FAZ3: il ve WhatsApp tenant config'inden — sabit İstanbul/numara zinciri koptu */
+  function ISTIL(){try{var sa=JSON.parse(localStorage.getItem('dn_service_area')||'null');if(sa&&sa.primary&&window.TR_ILILCE&&TR_ILILCE[sa.primary])return sa.primary;}catch(e){}return 'İstanbul';}
+  function _twa(){try{var c=JSON.parse(localStorage.getItem('dn_iletisim')||'null');if(c&&c.wa)return (''+c.wa).replace(/[^\d]/g,'');}catch(e){}return '905320000000';}
+  function _cfgrev(){try{return localStorage.getItem('dn_cfgrev')||'0';}catch(e){return '0';}}
+  function districts(){ var d={}; try{ var T=(window.TR_ILILCE&&TR_ILILCE[ISTIL()])||null; if(T&&T.ilce)T.ilce.forEach(function(ic){ if(!/il Merkezi|^Merkez$/.test(ic))d[ic]=[]; }); }catch(e){} return d; }
   function mProx(u,o){ try{
     if(o&&o.method==='POST'){ return fetch(((window.EMLAK_DEMO===true)?EMLAK_API_BASE:'')+u,{method:'POST',mode:'cors',headers:(function(){return {'Content-Type':'application/json'};})()/* P0: tenant kimliği/anahtarı istemciden gitmez */,body:JSON.stringify(o.body||{})}).then(function(r){return r.ok?r.json():{fallback:true};}).catch(function(){return {fallback:true};}); }
     return (typeof proxApi==='function')?proxApi(u):Promise.resolve(null);
   }catch(e){return Promise.resolve(null);} }
   function loadMah(il,ilce){ try{ if(typeof fetchMahalleler==='function'){ return Promise.resolve(fetchMahalleler(il,ilce)).then(function(a){ a=Array.isArray(a)?a:((a&&a.mahalleler)||[]); return a.map(function(x){return (x&&(x.ad||x.name||x.mahalle))||x;}).filter(Boolean).slice(0,40); }).catch(function(){return [];}); } }catch(e){} return Promise.resolve([]); }
-  function waHref(t){ return 'https://wa.me/905320000000?text='+encodeURIComponent(t); }
+  function waHref(t){ return 'https://wa.me/'+_twa()+'?text='+encodeURIComponent(t); }
   function boot(){
     var host=document.getElementById('mahEndeks'); if(!host||!window.MahalleEndeks)return;
     if(_inst){try{_inst.refresh();}catch(e){}return;}
     _inst=window.MahalleEndeks.mount(host,{
-      proxApi:mProx, province:function(){return ISTIL;}, districts:districts, loadMah:loadMah,
+      proxApi:mProx, province:ISTIL, districts:districts, loadMah:loadMah, seedExtra:'consultant|cv'+_cfgrev()+'|g1',
       ozData:function(){return [];},
       goOzel:function(){try{var e=document.getElementById('ozFiyatMatris');if(e)e.scrollIntoView({behavior:'smooth'});}catch(e){}},
       onLead:function(){try{if(typeof ozOpenTalep==='function')ozOpenTalep();else if(typeof navGo==='function')navGo('randevu');else location.href='index.html#randevu';}catch(e){}},

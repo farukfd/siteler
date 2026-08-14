@@ -21,6 +21,10 @@
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
   function _arr(x){return Array.isArray(x)?x:(x?[x]:[]);}
   function _canPub(l){ try{ return (window.EIDS&&EIDS.canPublish)?EIDS.canPublish(l&&l.eids):(l&&l.eids&&l.eids.status==='dogrulandi'); }catch(e){ return false; } }
+  /* DEMO_PRIVATE_PORTFOLIO sınıfı: yalnız demo ortamında listelenir; EİDS rozeti taşıyamaz,
+     RealEstateListing şeması alamaz, resmî yayına geçemez. */
+  function _isDemoRec(l){ try{ return !!(l&&((window.EIDS&&EIDS.isDemo&&EIDS.isDemo(l.eids))||(l.eids&&l.eids.status==='demo')||l.listing_kind==='demo_private_portfolio')); }catch(e){ return false; } }
+  L.isDemoRec=_isDemoRec;
 
   /* ---- TAM TÜRK EMLAK KATEGORİ TAKSONOMİSİ (sahibinden/hepsiemlak yapısı) ---- */
   L.TR_CATS={
@@ -207,7 +211,11 @@
 
   /* ---- EİDS YAYIN KAPISI ---- */
   L.canPublish=function(l){return _canPub(l);};
-  L.publicList=function(arr){ return (arr||[]).filter(function(l){return l&&_canPub(l);}); };
+  L.publicList=function(arr){ return (arr||[]).filter(function(l){
+    if(!l)return false;
+    if(_canPub(l))return true;                                   /* OFFICIAL_LISTING: gerçek EİDS doğrulaması */
+    return window.EMLAK_DEMO!==false&&_isDemoRec(l);             /* DEMO sınıfı yalnız demo ortamında görünür (üretim paketi her sayfada false tanımlar) */
+  }); };
   L.pendingList=function(arr){ return (arr||[]).filter(function(l){return l&&!_canPub(l);}); };
 
   /* ---- yardımcı parçalar ---- */
@@ -250,7 +258,8 @@
       +'<div class="lst-ph">'+(cov?'<img src="'+esc(cov)+'" alt="'+esc(l.title||'')+'" loading="lazy" decoding="async" onerror="this.style.display=\'none\';this.parentNode.classList.add(\'noimg\')">':'')+'<span class="lst-ph-x">🏢</span>'
         +'<span class="lst-op '+_opClass(l.op)+'">'+esc(l.op||'Satılık')+'</span>'
         +_favBtn(l,cfg)+_cmpCardBtn(l,cfg)
-        +(_canPub(l)?'<span class="lst-eids-mini" title="EİDS Doğrulandı">'+(window.EIDS&&EIDS.shield?EIDS.shield(12):'')+' EİDS</span>':'')
+        +(_canPub(l)?'<span class="lst-eids-mini" title="EİDS Doğrulandı">'+(window.EIDS&&EIDS.shield?EIDS.shield(12):'')+' EİDS</span>'
+          :_isDemoRec(l)?'<span class="lst-eids-mini lst-demo-mini" title="DEMO ÖZEL PORTFÖY — ProX piyasa verileriyle oluşturulmuş tanıtım senaryosudur. Gerçek ilan veya EİDS doğrulanmış taşınmaz kaydı değildir.">DEMO</span>':'')
         +(_arr(l.images).length>1?'<span class="lst-count">📷 '+_arr(l.images).length+'</span>':'')
       +'</div>'
       +'<div class="lst-body">'
@@ -372,6 +381,8 @@
     var setMeta=function(sel,val){var m=document.querySelector(sel);if(!m){m=document.createElement('meta');var kv=sel.match(/\[(name|property)="([^"]+)"\]/);if(kv)m.setAttribute(kv[1],kv[2]);document.head.appendChild(m);}m.setAttribute('content',val);};
     setMeta('meta[name="description"]',desc); setMeta('meta[property="og:title"]',title); setMeta('meta[property="og:description"]',desc); setMeta('meta[property="og:type"]','website');
     var cov=_cover(l); if(cov){setMeta('meta[property="og:image"]',cov);setMeta('meta[name="twitter:image"]',cov);}
+    /* DEMO sınıfı RealEstateListing şemasıyla İŞARETLENEMEZ — varsa eski LD temizlenir, yenisi basılmaz. */
+    if(_isDemoRec(l)){ try{var old=document.getElementById('lst-ld');if(old)old.textContent='';}catch(e){} return; }
     var price=parseInt((''+(l.priceText||l.price||'')).replace(/[^\d]/g,''),10)||undefined;
     var ld={"@context":"https://schema.org","@type":"RealEstateListing","name":(l.title||''),"description":desc,"url":location.href};
     if(cov)ld.image=_arr(l.images).slice(0,4);
@@ -382,9 +393,9 @@
     var s=document.getElementById('lst-ld'); if(!s){s=document.createElement('script');s.type='application/ld+json';s.id='lst-ld';document.head.appendChild(s);} s.textContent=JSON.stringify(ld);
   }catch(e){} };
 
-  /* ---- DEMO EİDS: temsilî 'doğrulandı' — UYDURMA Bakanlık kodu YOK (referans boş) ---- */
-  L.demoEids=function(f){ f=f||{}; var d=''; try{d=new Date().toISOString().slice(0,10);}catch(e){}
-    return {status:'dogrulandi',tasinmazNo:(f.tasinmazNo||''),il:(f.il||''),ilce:(f.ilce||''),ada:'',parsel:'',malikTip:'isletme',yetkiBelgeNo:'',referans:'',tarih:d,mesaj:'Demo: temsilî EİDS doğrulaması — gerçek Bakanlık kodu üretilmez.'}; };
+  /* ---- DEMO sınıfı EİDS alanı: 'demo' durumu — EİDS rozeti/kodu ASLA üretilmez ---- */
+  L.demoEids=function(){ try{ if(window.EIDS&&EIDS.demoRecord)return EIDS.demoRecord(); }catch(e){}
+    return {status:'demo',listing_kind:'demo_private_portfolio',referans:'',tarih:'',mesaj:'Demo tanıtım kaydı — EİDS doğrulaması yapılmaz, gerçek Bakanlık kodu üretilmez. Gerçek ilan değildir.'}; };
   L.pendingEids=function(f){ try{ return (window.EIDS&&EIDS.newRecord)?EIDS.newRecord(f||{}):{status:'beklemede'}; }catch(e){ return {status:'beklemede'}; } };
 
   /* ---- site kaydı: kart tıklaması/CTA'yı doğru siteye yönlendir ---- */
@@ -477,9 +488,10 @@
     var navHtml=(cfg.navHTML&&cfg.navHTML())||''; var foot=(cfg.footerHTML&&cfg.footerHTML())||'';
     var ov=document.getElementById('lstDetailOverlay');
     if(!ov){ ov=document.createElement('div'); ov.id='lstDetailOverlay'; ov.className='lstd-ov'; document.body.appendChild(ov); }
+    var demoNote=_isDemoRec(l)?('<div class="lstd-demo-note" role="note"><b>DEMO ÖZEL PORTFÖY</b> — ProX piyasa verileriyle oluşturulmuş tanıtım senaryosudur. Gerçek ilan veya EİDS doğrulanmış taşınmaz kaydı değildir.</div>'):'';
     ov.innerHTML=(navHtml||_ovNav(cfg,l))
       +'<div class="lstd-ovwrap"><button type="button" class="lstd-back" onclick="Listings.closeDetail()">← Tüm ilanlar</button>'
-      +L.detailInnerHTML(l,cfg)+'</div>'+foot;
+      +demoNote+L.detailInnerHTML(l,cfg)+'</div>'+foot;
     ov.classList.add('on'); ov.scrollTop=0; try{document.body.style.overflow='hidden';}catch(e){}
     try{setTimeout(function(){L.mountMaps();},80);}catch(e){}
     try{if(L._extAfterOpen)setTimeout(function(){L._extAfterOpen(l,ov,cfg);},60);}catch(e){}
@@ -511,6 +523,8 @@
     +'.lst-op{position:absolute;top:12px;left:12px;font-size:.71875rem;font-weight:800;letter-spacing:.02em;color:#fff;padding:5px 11px;border-radius:999px;text-transform:uppercase;box-shadow:0 2px 8px rgba(0,0,0,.2)}'
     +'.lst-op.sale{background:'+A+'}.lst-op.rent{background:#8a5a00}.lst-op.proj{background:#5b6470}'
     +'.lst-eids-mini{position:absolute;top:12px;right:12px;display:inline-flex;align-items:center;gap:4px;font-size:.65625rem;font-weight:800;color:#fff;background:rgba(15,122,61,.92);padding:4px 8px;border-radius:999px}'
+    +'.lst-demo-mini{background:rgba(71,85,105,.92);letter-spacing:.6px}'
+    +'.lstd-demo-note{margin:10px 0 14px;padding:10px 14px;border:1.5px dashed rgba(71,85,105,.45);border-radius:12px;background:rgba(100,116,139,.08);color:var(--muted,#475569);font-size:.8125rem;line-height:1.5}'
     +'.lst-count{position:absolute;bottom:12px;right:12px;font-size:.6875rem;font-weight:700;color:#fff;background:rgba(0,0,0,.55);padding:3px 9px;border-radius:999px}'
     +'.lst-body{padding:12px 14px 13px;display:flex;flex-direction:column;gap:6px;flex:1}'
     +'.lst-loc{font-size:.78125rem;color:'+MUT+';font-weight:600}'

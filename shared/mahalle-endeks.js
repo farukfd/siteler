@@ -141,8 +141,8 @@
     return {exact:exact,inIlce:inIlce,rest:rest};
   }
   var _CAD=['Atatürk Cd.','Cumhuriyet Cd.','İstiklal Cd.','Gazi Blv.','Sahil Yolu','Fevzi Çakmak Cd.','İnönü Cd.','19 Mayıs Cd.','Kışla Cd.'];
-  function ozelGen(m,n){
-    var r=rngOf(m.ilce+'|'+m.mah+'|ozgen'),base=m.cats.daireSat.m2,kmo=m.cats.daireKira.m2,tic=m.cats.ticariSat.m2,out=[],cad=function(){return _CAD[Math.floor(r()*_CAD.length)];};
+  function ozelGen(m,n,extra){
+    var r=rngOf(m.ilce+'|'+m.mah+'|ozgen|'+(extra||'')),base=m.cats.daireSat.m2,kmo=m.cats.daireKira.m2,tic=m.cats.ticariSat.m2,out=[],cad=function(){return _CAD[Math.floor(r()*_CAD.length)];};
     var a=95+Math.round(r()*40);out.push({gen:true,op:'Satılık',tip:'Daire',ilce:m.ilce,mah:m.mah,cadde:cad(),m2:a,oda:a>120?'3+1':'2+1',fiyat:Math.round(base*a*0.88/50000)*50000});
     var k=80+Math.round(r()*30);out.push({gen:true,op:'Kiralık',tip:'Daire',ilce:m.ilce,mah:m.mah,cadde:cad(),m2:k,oda:'2+1',fiyat:Math.round(kmo*k*0.9/500)*500});
     var t=70+Math.round(r()*60);out.push({gen:true,op:'Satılık',tip:'İşyeri',ilce:m.ilce,mah:m.mah,cadde:cad(),m2:t,oda:'-',fiyat:Math.round(tic*t*0.85/50000)*50000});
@@ -150,14 +150,14 @@
   }
   function ozelList(cfg,m){
     var R=ozelReal(cfg,m.ilce,m.mah),out=R.exact.slice();
-    var need=Math.max(0,3-out.length); if(need)out=out.concat(ozelGen(m,need));
+    var need=Math.max(0,3-out.length); if(need)out=out.concat(ozelGen(m,need,(cfg&&cfg.seedExtra)||''));
     R.inIlce.concat(R.rest).forEach(function(o){if(out.length<6)out.push(o);});
     return out.slice(0,6);
   }
   var _STR=['Atatürk Cd.','Cumhuriyet Cd.','Kıbrıs Şehitleri Cd.','1418. Sk.','Gül Sk.','Zafer Sk.','Sahil Blv.','İstasyon Cd.','Menekşe Sk.','Papatya Sk.','Lale Cd.','Çınar Sk.','2. Sk.','Şair Eşref Blv.'];
   var _KAT=['Giriş Kat','Ara Kat','Orta Kat','Orta Kat','Yüksek Kat','Çatı Dubleks'],_ODA=['1+1','2+1','2+1','3+1','3+1','4+1'];
-  function streets(m){
-    var r=rngOf(m.ilce+'|'+m.mah+'|st'),out=[],used={},base=m.cats.daireSat.m2,kmo=m.cats.daireKira.m2,i,n;
+  function streets(m,extra){
+    var r=rngOf(m.ilce+'|'+m.mah+'|st|'+(extra||'')),out=[],used={},base=m.cats.daireSat.m2,kmo=m.cats.daireKira.m2,i,n;
     for(i=0;i<4;i++){var name;n=0;do{name=_STR[Math.floor(r()*_STR.length)];n++;}while(used[name]&&n<30);used[name]=1;
       var mm=85+Math.round(r()*55),kat=_KAT[Math.floor(r()*_KAT.length)],oda=_ODA[Math.floor(r()*_ODA.length)];
       var kf=/Giriş/.test(kat)?0.93:(/Yüksek|Çatı/.test(kat)?1.07:1.0);
@@ -290,7 +290,7 @@
           var wtxt='Özel Portföy — '+x.op+' '+x.tip+' ('+m.mah+', '+(x.cadde||m.ilce)+') '+x.m2+' m² hakkında bilgi almak istiyorum.';
           return '<div class="me-oz-card">'
             +'<div class="me-oz-op '+(x.op==='Kiralık'?'k':'s')+'">'+esc(x.op)+'</div>'
-            +'<div class="me-oz-tip">'+esc(x.tip)+'</div>'
+            +'<div class="me-oz-tip">'+esc(x.tip)+(x.gen?' <span class="me-oz-gen" title="ProX piyasa verileriyle oluşturulmuş temsilî tanıtım kaydı — gerçek ilan veya EİDS doğrulanmış taşınmaz değildir.">Temsilî · DEMO</span>':'')+'</div>'
             +'<div class="me-oz-loc">📍 '+esc(m.mah)+' · '+esc(x.cadde||x.ilce)+'</div>'
             +'<div class="me-oz-tech"><span>'+x.m2+' m²</span>'+(x.oda&&x.oda!=='-'?'<span>'+esc(x.oda)+'</span>':'')+'</div>'
             +'<div class="me-oz-price">'+money+'<small>’den başlayan</small></div>'
@@ -303,7 +303,7 @@
           +'<div class="me-oz-actions"><button class="me-oz-all" data-me-act="all">Tüm Özel Portföyü Gör →</button>'
           +'<a class="me-oz-owner" href="'+esc(waHref('Merhaba, mülkümü ifşa etmeden Özel Portföy\'e eklemek / değer analizi almak istiyorum.'))+'" target="_blank" rel="noopener noreferrer">🏠 Mülkümü gizli portföye ekle</a></div></div>';
       }
-      var st=streets(m),s=$('me_streets');
+      var st=streets(m,(cfg&&cfg.seedExtra)||''),s=$('me_streets');
       if(s)s.innerHTML=st.map(function(x){
         var wtxt='Özel Portföy — '+m.mah+' '+x.name+' civarı '+x.m2+' m² '+x.oda+' hakkında bilgi almak istiyorum.';
         return '<div class="me-st"><div class="me-st-name">📍 '+esc(m.mah)+' · <b>'+esc(x.name)+'</b></div>'
@@ -384,7 +384,7 @@
     +'.me-oz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media(max-width:820px){.me-oz-grid{grid-template-columns:1fr 1fr}}@media(max-width:520px){.me-oz-grid{grid-template-columns:1fr}}'
     +'.me-oz-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:13px;padding:13px;transition:.15s}.me-oz-card:hover{border-color:'+A+';background:rgba(255,255,255,.08)}'
     +'.me-oz-op{display:inline-block;font:800 .625rem/1 system-ui;padding:4px 8px;border-radius:6px;text-transform:uppercase}.me-oz-op.s{background:'+A+';color:#fff}.me-oz-op.k{background:#c99a2e;color:#1a1206}'
-    +'.me-oz-tip{font:700 .8125rem/1 system-ui;color:#fff;margin:8px 0 4px}.me-oz-loc{font:600 .75rem/1.3 system-ui;color:#aebfd2}'
+    +'.me-oz-tip{font:700 .8125rem/1 system-ui;color:#fff;margin:8px 0 4px}.me-oz-gen{display:inline-block;font-size:.59375rem;font-weight:800;letter-spacing:.5px;color:#475569;background:rgba(100,116,139,.16);border-radius:999px;padding:2px 7px;margin-left:6px;vertical-align:middle}.me-oz-loc{font:600 .75rem/1.3 system-ui;color:#aebfd2}'
     +'.me-oz-tech{display:flex;gap:6px;margin:8px 0}.me-oz-tech span{background:rgba(255,255,255,.08);border-radius:6px;padding:3px 8px;font:600 .6875rem/1 system-ui;color:#cdd9e8}'
     +'.me-oz-price{font:800 1.0625rem/1 system-ui;color:#fff;margin:6px 0 10px}.me-oz-price small{display:block;font-size:.65625rem;color:#9fb0c4;font-weight:600;margin-top:3px}'
     +'.me-oz-cta{display:flex;gap:6px}'

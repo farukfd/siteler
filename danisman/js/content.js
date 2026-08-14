@@ -121,7 +121,7 @@
     + '</div>'
     + '<div class="fbot">'
     + LANGSW
-    + '<span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Tüm hakları saklıdır.</span><a class="fprox" href="https://emlakekspertizi.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a></div>'
+    + '<span class="fhaklar"><span>© 2026 Selin Meridyen · Lüks Konut &amp; Özel Portföy Danışmanlığı · Kurumsal marka ve içerik hakları.</span><span class="nadas-c">Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.</span></span><a class="fprox" href="https://emlakekspertizi.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a></div>'
     + '</div>';
   window.DN_FOOTER_INNER = INNER;
   window.DN_FOOTER_HTML = '<footer>' + INNER + '</footer>';

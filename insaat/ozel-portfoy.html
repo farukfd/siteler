@@ -196,7 +196,7 @@ addEventListener('scroll',function(){var h=document.getElementById('hdr');if(h)h
     </div>
   </div>
   <div class="fbot">
-    <div class="fcopy">© 2026 Meridyen Yapı A.Ş. · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span></div>
+    <div class="fcopy">© 2026 Meridyen Yapı A.Ş. · Tüm hakları saklıdır. · <span style="opacity:.7">Kurgusal tanıtım demosu.</span><div class="nadas-c">Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.</div></div>
     <div class="lang-sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg><select class="lang-sel" aria-label="Dil / Language"><option value="tr">TR</option><option value="en">EN</option><option value="ru">RU</option><option value="zh">ZH</option><option value="ar">AR</option></select></div>
     <a class="fprox" href="https://nadas.com.tr" target="_blank" rel="noopener noreferrer" aria-label="Powered by ProX"><span class="fprox-lead">Powered by</span><span class="fprox-mark"><span class="fprox-pro">Pro</span><span class="fprox-x">X</span></span></a>
   </div>
@@ -207,13 +207,15 @@ addEventListener('scroll',function(){var h=document.getElementById('hdr');if(h)h
 <script>
 /* insaat/ozel-portfoy.html — Özel Portföy mahalle endeksi paneli (İstanbul · sentetik) */
 (function(){
-  var ISTIL='İstanbul';
-  function districts(){var d={};try{var T=window.TR_ILILCE&&TR_ILILCE[ISTIL];if(T&&T.ilce)T.ilce.forEach(function(ic){if(!/il Merkezi|^Merkez$/.test(ic))d[ic]=[];});}catch(e){}return d;}
-  function waHref(t){return 'https://wa.me/905001234567?text='+encodeURIComponent(t||'Merhaba, özel portföy hakkında bilgi almak istiyorum.');}
+  /* FAZ3: il + WhatsApp tenant yayınından (meridyen_site_v1/pub) — sabitler koptu */
+  function ISTIL(){try{var d=JSON.parse(localStorage.getItem('meridyen_site_v1')||'null');var il=d&&d.SETTINGS&&d.SETTINGS.firmaIl;if(il&&window.TR_ILILCE&&TR_ILILCE[il])return il;}catch(e){}return 'İstanbul';}
+  function _twa(){try{var p=JSON.parse(localStorage.getItem('meridyen_pub_v1')||'null');var w=p&&p.SEO&&p.SEO.wa;if(w)return (''+w).replace(/[^\d]/g,'');}catch(e){}return '905001234567';}
+  function districts(){var d={};try{var T=window.TR_ILILCE&&TR_ILILCE[ISTIL()];if(T&&T.ilce)T.ilce.forEach(function(ic){if(!/il Merkezi|^Merkez$/.test(ic))d[ic]=[];});}catch(e){}return d;}
+  function waHref(t){return 'https://wa.me/'+_twa()+'?text='+encodeURIComponent(t||'Merhaba, özel portföy hakkında bilgi almak istiyorum.');}
   function boot(){var host=document.getElementById('mahEndeks');if(!host||!window.MahalleEndeks)return;
     var ac='';try{ac=(getComputedStyle(document.documentElement).getPropertyValue('--accent')||'').trim();}catch(e){}
     window.MahalleEndeks.mount(host,{
-      proxApi:function(){return Promise.resolve(null);}, province:function(){return ISTIL;}, districts:districts,
+      proxApi:function(){return Promise.resolve(null);}, province:ISTIL, districts:districts, seedExtra:'construction|g1',
       ozData:function(){return [];}, goOzel:function(){location.href='index.html#iletisim';},
       onLead:function(){location.href='index.html#iletisim';}, waHref:waHref, accent:ac||'#ff7a2f'
     });
