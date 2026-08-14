@@ -647,7 +647,7 @@ var RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').m
 
 /* ---- ProX (izole minimal kopya — yalnız VERİ uçları) ---- */
 var EMLAK_API_BASE="https://www.emlakekspertizi.com";
-var EMLAK_TENANT={tenant_id:"consultant",tenant_key:""};
+var EMLAK_TENANT={tenant_id:"consultant",veriYetki:""};
 /* P0: tenant anahtarı tarayıcıya girmez — sunucu Host'tan çözer */
 async function proxApi(path){
   try{

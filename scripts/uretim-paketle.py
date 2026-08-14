@@ -39,7 +39,9 @@ YASAK = ["_ADMIN_PASS","admPass","ins_admpass_reset_1234","anthropic-dangerous-d
          "x-api-key","dn_dskey","dn_prox","karsiTC","12345678901",
          "X-Tenant-Key","EMLAK_DEMO=true","/demo/danisman","/demo/insaat","www.emlakekspertizi.com/demo",
          # FAZ3: staging fikstür sentinelleri hiçbir pakete giremez
-         "TENANT_A_ONLY_93K","TENANT_B_ONLY_61Q","TENANT_C_ONLY_47R"]
+         "TENANT_A_ONLY_93K","TENANT_B_ONLY_61Q","TENANT_C_ONLY_47R",
+         # FAZ3C son-tarama desenleri
+         "EIDS_DEMO","_insDemoEids","_demoEids","0034812","tenant_key","system prompt","sistem promptu"]
 
 # FAZ3 §13: first-party build dosyalarında minification sonrası da korunan mülkiyet banner'ı.
 NADAS_BANNER = ("/*! Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi "

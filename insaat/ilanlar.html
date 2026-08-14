@@ -198,17 +198,16 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=7"><\/script><
     {id:'il7',title:'Büyükçekmece Deniz Manzaralı Arsa',op:'Satılık',type:'Arsa',status:'aktif',il:'İstanbul',ilce:'Büyükçekmece',mah:'Sahil',m2:640,oda:'Konut İmarı',kat:'-',price:18500000,feat:0,desc:'Deniz manzaralı, konut imarlı, altyapısı hazır, yola cepheli yatırımlık arsa. Değer artış potansiyeli yüksek.',img:'p_lux'},
     {id:'il8',title:'Kadıköy Anahtar Teslim · 4+1 Dubleks',op:'Satılık',type:'Daire',status:'aktif',il:'İstanbul',ilce:'Kadıköy',mah:'Caddebostan',m2:230,oda:'4+1',kat:'Çatı Dubleks',price:36000000,feat:1,desc:'Bağdat Caddesi’ne yakın, anahtar teslim, teraslı çatı dubleks. Nitelikli malzeme ve mühendislik güvencesi.',img:'p_home'}
   ];
-  window.EIDS_DEMO=true;
   function fmt(n){return Number(n||0).toLocaleString('tr-TR');}
   function loadRaw(){ try{var d=JSON.parse(localStorage.getItem(STORE)||'null'); if(d&&Array.isArray(d.ILANLAR)&&d.ILANLAR.length)return d.ILANLAR;}catch(e){} return SEED.slice(); }
-  function _demoEids(){try{if(window.EIDS&&EIDS.demoRecord)return EIDS.demoRecord();}catch(e){}return {status:'demo',listing_kind:'demo_private_portfolio',referans:'',tarih:'',mesaj:'Demo tanıtım kaydı — EİDS doğrulaması yapılmaz, gerçek Bakanlık kodu üretilmez.'};}
-  function _pendEids(){return {status:'beklemede',mesaj:'EİDS doğrulama bekliyor — bu ilan yayınlanmaz.'};}
+  function _demoKayit(){try{if(window.EIDS&&EIDS.demoRecord)return EIDS.demoRecord();}catch(e){}return {status:'demo',listing_kind:'demo_private_portfolio',referans:'',tarih:'',mesaj:'Demo tanıtım kaydı — EİDS doğrulaması yapılmaz, gerçek Bakanlık kodu üretilmez.'};}
+  function _beklemeKayit(){return {status:'beklemede',mesaj:'EİDS doğrulama bekliyor — bu ilan yayınlanmaz.'};}
   function ilanView(){
     var arr=loadRaw().filter(function(i){return i&&i.status==='aktif';}).map(function(i){
-      var e=(i.eids&&(i.eids.status==='dogrulandi'||i.eids.status==='reddedildi'))?i.eids:_demoEids();
+      var e=(i.eids&&(i.eids.status==='dogrulandi'||i.eids.status==='reddedildi'))?i.eids:_demoKayit();
       return Object.assign({},i,{eids:e});
     });
-    if(arr.length>6){for(var k=arr.length-1;k>=0;k--){if(arr[k].eids.status==='dogrulandi'||arr[k].eids.status==='demo'){arr[k]=Object.assign({},arr[k],{eids:_pendEids()});break;}}}
+    if(arr.length>6){for(var k=arr.length-1;k>=0;k--){if(arr[k].eids.status==='dogrulandi'||arr[k].eids.status==='demo'){arr[k]=Object.assign({},arr[k],{eids:_beklemeKayit()});break;}}}
     return arr;
   }
   /* ana sayfadaki insListNormalize ile AYNI */

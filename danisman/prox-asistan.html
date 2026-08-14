@@ -218,7 +218,7 @@ async function _motor1(msgs){if(!_dsKey())return null;
 }
 /* ---- persona (SADECE ProX markası; "yapay zeka" ifadesi kullanılmaz) ---- */
 var PA_GREET='Merhaba, ben Selin Meridyen ProX Asistanı 👋 Lüks konut, yatırım, değerleme ya da davet usulü gizli satış — hangi konuda yardımcı olayım? İhtiyacınızı birkaç kısa soruyla netleştirip size en uygun gayrimenkulü bulalım. Yanıtlarım ProX\'un 480 milyon+ doğrulanmış emlak verisine dayanır.';
-/* Persona yönergesi SUNUCUDADIR (persona:'consultant-asistan') — istemcide sistem promptu tutulmaz. */
+/* Persona yönergesi SUNUCUDADIR (persona:'consultant-asistan') — istemcide persona yönergesi tutulmaz. */
 var PA_SUGGESTS=['Yatırımlık, prim potansiyeli yüksek ne önerirsiniz?','Boğaz\'da yalı / özel portföyünüz var mı?','Gayrimenkulümü gizlilikle nasıl satabilirsiniz?','Ücretsiz değer analizi almak istiyorum'];
 var PA_FALLBACK='Şu an ProX veri servisine ulaşılamıyor gibi görünüyor. Sorunuzu aldım — dilerseniz telefon numaranızı bırakın, danışmanımız kısa sürede sizi arasın; WhatsApp hattımızdan da yazabilirsiniz.';
 

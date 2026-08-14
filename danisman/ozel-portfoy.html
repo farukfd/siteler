@@ -408,7 +408,7 @@ window.EMLAK_PROXY_MODE=window.EMLAK_PROXY_MODE!==false;/* güvenlik: proxy modu
 
 /* ============ ProX API ÇEKİRDEĞİ ============ */
 var EMLAK_API_BASE="https://www.emlakekspertizi.com";
-var EMLAK_TENANT={tenant_id:"consultant",tenant_key:""};
+var EMLAK_TENANT={tenant_id:"consultant",veriYetki:""};
 /* P0: tenant anahtarı tarayıcıya girmez — sunucu Host'tan çözer */
 async function proxApi(path){try{var res=await fetch(((window.EMLAK_DEMO===true)?EMLAK_API_BASE:'')+path,{method:"GET",mode:"cors",headers:(function(){return {'Content-Type':'application/json'};})()/* P0: tenant kimliği/anahtarı istemciden gitmez */});if(!res.ok)throw new Error("ProX "+res.status);return await res.json();}catch(e){return {fallback:true,_err:e.message};}}
 var TR_ILILCE=window.TR_ILILCE||{};

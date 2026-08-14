@@ -246,6 +246,37 @@ for site,dvar,gerek in [('danisman','__DN_I18N_COMMON',['İncele','Gram Altın',
     kayit('B8',f"{site}: i18n sızıntı anahtarları + tek dict sürümü",'PASS' if not eksik and len(vs)==1 else 'FAIL',
           f"eksik:{eksik[:3]} sürümler:{sorted(vs)}")
 
+# ══════════ FAZ3C BLOKLARI ══════════
+# ── C1: son-tarama desenleri sıfır (paketleyici de durduruyor; yeniden onay) ──
+C_PAT=["EIDS_DEMO","_insDemoEids","_demoEids","0034812","tenant_key","admin / 1234","system prompt"]
+hits=[]
+for site in HOST:
+    for rel,p in public_dosyalar(site):
+        if not p.endswith(('.html','.js','.css','.json','.xml','.txt')): continue
+        st=oku(p)
+        for pat in C_PAT:
+            if pat in st: hits.append(f"{site}/{rel}:{pat}")
+kayit('C1','FAZ3C son-tarama desenleri sıfır','PASS' if not hits else 'FAIL', str(hits[:5]) or f'{len(C_PAT)} desen × public+admin → 0')
+# ── C2: portal fail-closed (kaynak kanıtı) ──
+da=oku(os.path.join(DIST,'danisman','index.html'))+''.join(oku(p) for r,p in public_dosyalar('danisman') if p.endswith('app.js'))
+c2=('_saasPortalSimProfile KALDIRILDI' in da and 'secure_pass: securePass' in da and 'portal_"+Math.random' not in da)
+kayit('C2','portal fail-closed: sim profil/rastgele token YOK, parola sunucuya','PASS' if c2 else 'FAIL','securePass→/portal/login; başarısızlık=giriş yok')
+# ── C3: yayın-tarih kapısı + gelecek tarihli seed sıfır ──
+dnb=''.join(oku(p) for r,p in public_dosyalar('danisman') if p.endswith('app.js'))
+inb=''.join(oku(p) for r,p in public_dosyalar('insaat') if p.endswith('app-core.js'))
+gel=[]
+for m in re.finditer(r'2026-08-(\d{2})', dnb):
+    if int(m.group(1))>14: gel.append('dn:'+m.group(0))
+for m in re.finditer(r'(1[5-9]|2[0-9]|3[01]) Ağustos 2026', inb): gel.append('ins:'+m.group(0))
+c3=('YAYIN KAPISI' in dnb and 'YAYIN KAPISI' in inb and not gel)
+kayit('C3','içerik zamanlama: yayın kapısı + gelecek tarihli seed sıfır','PASS' if c3 else 'FAIL', f'gelecekli:{gel[:3]}')
+# ── C4: consent fail-closed + harita iki aşamalı onay ──
+c4=('_insConsentOk' in inb and '_mapOnayVar' in oku(os.path.join(DIST,'danisman','shared','harita.js')))
+kayit('C4','analitik/pazarlama fail-closed + harita tık-kapısı','PASS' if c4 else 'FAIL','onay yoksa GA/ads yüklenmez; OSM karoları tıkla-yükle')
+# ── C5: service-area il filtresi (istemci; backend spec ayrıca) ──
+c5=('hizmet alanı DIŞI il public listede GÖRÜNMEZ' in ''.join(oku(p) for r,p in public_dosyalar('danisman') if p.endswith('ilan-data.js')))
+kayit('C5','tenant ili dışındaki ilan public listede görünmez (istemci katmanı)','PASS' if c5 else 'FAIL','dn ilan-data il filtresi; backend sorgu zorlaması BLOCKED-spec')
+
 # ── BLOCKED: sunucu/edge gerektirenler ──
 for no, ad in [(3,"production bootstrap 200 + same-origin (gerçek BFF)"),(4,"HttpOnly/Secure/SameSite oturum çerezi"),
                (5,"bilinmeyen HTML→404"),(6,"bilinmeyen /api→JSON 404"),(7,"/admin yetkisiz→koruma"),

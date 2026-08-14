@@ -154,7 +154,25 @@
       '</div></article>';
   }
 
+  /* FAZ3C: HARİCİ İÇERİK İKİ AŞAMALI ONAYI — OpenStreetMap karoları (üçüncü taraf istek)
+     ziyaretçi açıkça onaylamadan YÜKLENMEZ; tercih ui_map_ok'ta hatırlanır (zararsız-tercih). */
+  function _mapOnayVar(){try{return localStorage.getItem('ui_map_ok')==='1';}catch(e){return false;}}
   function build(opts) {
+    if(!_mapOnayVar()){
+      var el0=typeof opts.mapEl==='string'?(document.getElementById(opts.mapEl)||document.querySelector(opts.mapEl)):opts.mapEl;
+      if(el0&&!el0._gmGate){
+        el0._gmGate=1;
+        el0.innerHTML='<div class="gm-map-gate" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;height:100%;min-height:220px;padding:22px;text-align:center;background:var(--surface,#f4f6f8);border-radius:inherit">'
+          +'<p style="margin:0;font-size:.8125rem;opacity:.8;max-width:420px">Harita, OpenStreetMap karolarını üçüncü taraf sunucudan yükler. Konum verisi yaklaşık bölge merkezidir; tam adres paylaşılmaz.</p>'
+          +'<button type="button" style="border:0;border-radius:10px;padding:10px 18px;font-weight:700;cursor:pointer;background:var(--accent,#0e7c86);color:#fff">🗺️ Haritayı yükle (OpenStreetMap)</button></div>';
+        var btn=el0.querySelector('button');
+        if(btn)btn.addEventListener('click',function(){try{localStorage.setItem('ui_map_ok','1');}catch(e){}el0._gmGate=0;el0.innerHTML='';build(opts);});
+      }
+      return null;
+    }
+    return _buildIc(opts);
+  }
+  function _buildIc(opts) {
     opts = opts || {};
     var el = typeof opts.mapEl === 'string' ? document.getElementById(opts.mapEl) : opts.mapEl;
     if (!el) return null;

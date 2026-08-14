@@ -25,12 +25,12 @@ if(typeof window!=='undefined'&&window.EMLAK_PROXY_MODE===undefined)window.EMLAK
   function tenant() {
     var t = {
       tenant_id: 'consultant',
-      tenant_key: ''
+      veriYetki: ''
     };
     try {
       if (window.EMLAK_TENANT) {
         if (window.EMLAK_TENANT.tenant_id) t.tenant_id = window.EMLAK_TENANT.tenant_id;
-        if (window.EMLAK_TENANT.tenant_key) t.tenant_key = window.EMLAK_TENANT.tenant_key;
+        if (window.EMLAK_TENANT.veriYetki) t.veriYetki = window.EMLAK_TENANT.veriYetki;
       }
     } catch (e) {}
     try {
