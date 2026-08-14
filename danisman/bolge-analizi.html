@@ -648,10 +648,10 @@ var RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').m
 /* ---- ProX (izole minimal kopya — yalnız VERİ uçları) ---- */
 var EMLAK_API_BASE="https://www.emlakekspertizi.com";
 var EMLAK_TENANT={tenant_id:"consultant",tenant_key:""};
-try{var _dp=JSON.parse(localStorage.getItem('dn_prox')||'null');if(_dp&&_dp.key){EMLAK_TENANT.tenant_key=_dp.key;if(_dp.tenant)EMLAK_TENANT.tenant_id=_dp.tenant;}}catch(e){}/* admin ProX anahtarı (dn_prox) */
+/* P0: tenant anahtarı tarayıcıya girmez — sunucu Host'tan çözer */
 async function proxApi(path){
   try{
-    var res=await fetch(EMLAK_API_BASE+path,{method:"GET",mode:"cors",headers:(function(){var h={"Content-Type":"application/json","X-Tenant-Id":EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h["X-Tenant-Key"]=EMLAK_TENANT.tenant_key;return h;})()});
+    var res=await fetch(((window.EMLAK_DEMO===true)?EMLAK_API_BASE:'')+path,{method:"GET",mode:"cors",headers:(function(){return {'Content-Type':'application/json'};})()/* P0: tenant kimliği/anahtarı istemciden gitmez */});
     if(!res.ok)throw new Error("ProX "+res.status);
     return await res.json();
   }catch(e){return {fallback:true,_err:e.message};}

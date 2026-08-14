@@ -205,11 +205,11 @@ window.EMLAK_PROXY_MODE=window.EMLAK_PROXY_MODE!==false;/* güvenlik: proxy modu
 /* ---- ProX (izole) + DeepSeek yönlendirme (admin anahtarlarını okur) ---- */
 var EMLAK_API_BASE="https://www.emlakekspertizi.com";
 var TENANT={id:"consultant",key:""};
-try{var _dp=JSON.parse(localStorage.getItem('dn_prox')||'null');if(_dp&&_dp.key){TENANT.key=_dp.key;if(_dp.tenant)TENANT.id=_dp.tenant;}}catch(e){}
-function _dsKey(){try{return (localStorage.getItem('dn_dskey')||'').trim();}catch(e){return '';}}
+/* P0: tenant anahtarı tarayıcıya girmez — sunucu Host'tan çözer */
+function _dsKey(){try{return (localStorage.getItem('dn_ai_ds')||'').trim();}catch(e){return '';}}
 function _dsModel(){try{return (localStorage.getItem('dn_dsmodel')||'deepseek-chat').trim()||'deepseek-chat';}catch(e){return 'deepseek-chat';}}
 async function proxApi(path,body){
-  try{var res=await fetch(EMLAK_API_BASE+path,{method:'POST',mode:'cors',headers:(function(){var h={'Content-Type':'application/json','X-Tenant-Id':TENANT.id};if(!window.EMLAK_PROXY_MODE)h['X-Tenant-Key']=TENANT.key;return h;})(),body:JSON.stringify(body||{})});
+  try{var res=await fetch(((window.EMLAK_DEMO===true)?EMLAK_API_BASE:'')+path,{method:'POST',mode:'cors',headers:(function(){return {'Content-Type':'application/json'};})()/* P0: tenant kimliği/anahtarı istemciden gitmez */,body:JSON.stringify(body||{})});
     if(!res.ok)throw new Error('ProX '+res.status);return await res.json();}catch(e){return {fallback:true};}
 }
 async function _deepseek(sys,msgs){var key=_dsKey();if(!key)return null;

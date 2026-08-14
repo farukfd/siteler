@@ -100,7 +100,7 @@ Konsol hatası YOK (8 JS-yoğun sayfa) · kırık iç link/asset YOK · SEO/OG/r
 
 **Zaten domain-bağımsız (kod tarafı):**
 - Tüm asset yolları GÖRECELİ (herhangi bir domain/alt-yolda çalışır: `domain.com/` kökü de `domain.com/danisman/` de).
-- Kiracı kimliği domainden: `EMLAK_TENANT.domain = location.hostname`, ProX çağrıları `X-Tenant-Id`/`X-Tenant-Key` ile ayrışır.
+- Kiracı kimliği domainden: `EMLAK_TENANT.domain = location.hostname`, ProX çağrıları `X-Tenant-Id`/`X-Tenant-Key(SUNUCU-TARAFINA TAŞINDI)` ile ayrışır.
 - **`EMLAK_API_BASE = https://www.emlakekspertizi.com` MERKEZÎ kalır** (tüm tenant'lar aynı ProX API'yi çağırır; domain başına değişMEZ). CORS açık.
 - **canonical + og:url + og:image + twitter:image → çalışma-zamanı JS ile MEVCUT domaine ayarlanır** (content.js, tüm ana sayfalar). Böylece her domain Google'a KENDİ canonical'ını bildirir (yoksa Google hepsini tek domaine birleştirir → SEO ölür). Sunucu ayarı GEREKMEZ.
 

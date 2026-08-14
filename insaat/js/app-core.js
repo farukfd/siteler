@@ -121,8 +121,7 @@ function loadAll(){
     if(d.ILANLAR&&Array.isArray(d.ILANLAR))ILANLAR.splice(0,ILANLAR.length,...d.ILANLAR);
     if(d.OZEL&&Array.isArray(d.OZEL))OZEL.splice(0,OZEL.length,...d.OZEL);
     if(d.SETTINGS)Object.assign(SETTINGS,d.SETTINGS);
-    /* GÖÇ: eski admin şifresini (ör. meridyen2026) 1234'e sıfırla — tek sefer; sonraki değişikliklere dokunmaz */
-    try{if(!localStorage.getItem('ins_admpass_reset_1234')){SETTINGS.admPass='1234';d.SETTINGS=Object.assign({},d.SETTINGS||{},{admPass:'1234'});localStorage.setItem(STORE_KEY,JSON.stringify(d));localStorage.setItem('ins_admpass_reset_1234','1');}}catch(e){}
+    /* P0: istemci-taraf admin parolası kaldırıldı — auth same-origin /api/auth/admin/login */
     if(d.BRAND)Object.assign(BRAND,d.BRAND);
     if(d.MENU)Object.assign(MENU,d.MENU);
     if(d.FOOT)Object.assign(FOOT,d.FOOT);
@@ -170,10 +169,10 @@ let ARSALAR=[
    kk:{arsaSahibiPay:45,muteahhitPay:55,sahip:'Ahmet Yılmaz',ortalamaDaireM2:120,daireSatisM2Fiyat:75000,insaatM2Maliyet:18000,not:''}},
 ];
 let CONTRACTS=[
-  {id:'c1',tip:'kat-karsiligi',baslik:'Levent Karma Proje – Kat Karşılığı',karsiTaraf:'Ahmet Yılmaz',karsiTC:'12345678901',karsiAdres:'Levent Mah. No:5, İstanbul',
+  {id:'c1',tip:'kat-karsiligi',baslik:'Levent Karma Proje – Kat Karşılığı',karsiTaraf:'Ahmet Yılmaz',karsiKimlik:'***********',karsiAdres:'Levent Mah. No:5, İstanbul',
    il:'İstanbul',ilce:'Beşiktaş',mahalle:'Levent',ada:'1234',parsel:'56',arsaM2:500,payArsa:45,payMuteahhit:55,sureAy:18,gecikmeTL:'25.000',tarih:'2025-03-12',durum:'aktif',
    ozelMetin:''},
-  {id:'c2',tip:'insaat',baslik:'Bosphorus Loft – Anahtar Teslim',karsiTaraf:'Boğaz Gayrimenkul A.Ş.',karsiTC:'9876543210',karsiAdres:'Beşiktaş, İstanbul',
+  {id:'c2',tip:'insaat',baslik:'Bosphorus Loft – Anahtar Teslim',karsiTaraf:'Boğaz Gayrimenkul A.Ş.',karsiKimlik:'***********',karsiAdres:'Beşiktaş, İstanbul',
    il:'İstanbul',ilce:'Beşiktaş',mahalle:'Bebek',ada:'220',parsel:'14',arsaM2:1200,payArsa:0,payMuteahhit:0,sureAy:24,gecikmeTL:'80.000',tarih:'2025-06-01',durum:'aktif',ozelMetin:''},
 ];
 // ===== İLANLAR (satılık/kiralık bağımsız ilan · EİDS üzerinden yayın) =====
@@ -215,13 +214,12 @@ let OZEL=[
   {id:'oz2',op:'Satılık',tip:'Arsa',il:'İstanbul',ilce:'Çekmeköy',mah:'Merkez',cadde:'İmarlı parsel bölgesi',m2:640,oda:'-',fiyat:9600000,ort:11200000,durum:'aktif',not:'ProX Çekmeköy arsa tahmini · imar emsal ~2.0 · kapalı portföy',_gen:true}
 ];
 let SETTINGS={
-  admUser:'admin', admPass:'1234',
   // EİDS (Elektronik İlan Doğrulama Sistemi) — Ticaret Bakanlığı. Kurumsal ilan için Taşınmaz Ticareti Yetki Belgesi No.
   // Doğrulama gerçek backend (ProX/emlakekspertizi) üzerinden yapılır; canlı gelene kadar ilanlar "beklemede" kalır.
   eidsYetkiBelgeNo:'', eidsUnvan:'Meridyen Yapı İnşaat A.Ş.',
   googleMapsKey:'', googleAnalytics:'', googleSiteVerif:'', recaptchaKey:'',
   waNumber:'905001234567', metaTitle:'Meridyen Yapı – Kurumsal İnşaat', metaDesc:'38 yıllık güven, anahtar teslim mühendislik.',
-  firmaUnvan:'Meridyen Yapı İnşaat A.Ş.', firmaVergiNo:'1234567890', firmaMersis:'0123456789012345',
+  firmaUnvan:'Meridyen Yapı İnşaat A.Ş.', firmaVergiNo:'0000000000', firmaMersis:'0000000000000000',
   firmaAdres:'Levent Mah. Yapı Cad. No:1, Beşiktaş / İstanbul', firmaTel:'+90 212 000 00 00',
   firmaEmail:'info@meridyenyapi.com', firmaYetkili:'Genel Müdür',
   firmaVergiDairesi:'Beşiktaş Vergi Dairesi', firmaTicaretSicil:'İstanbul · 123456-5', firmaOda:'İstanbul Ticaret Odası',
@@ -1932,7 +1930,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
    ===================================================================== */
 /* İKİ BAĞIMSIZ AJAN — ayrı anahtar depoları:
      INS_CONTENT (ins_cs_content) → İçerik Ajanı; INS_SITE (ins_cs_site) → Site Asistanı */
-var INS_TID=(window.EMLAK_TENANT&&EMLAK_TENANT.tenant_id)||'construction', INS_PBASE=(window.EMLAK_API_BASE||'https://www.emlakekspertizi.com');
+var INS_TID=(window.EMLAK_TENANT&&EMLAK_TENANT.tenant_id)||'construction', INS_PBASE=(window.EMLAK_API_BASE||'');
 var INS_CONTENT=null, INS_SITE=null;
 try{ if(window.CSEngine){ INS_CONTENT=CSEngine.create({store:'ins_cs_content',tenantId:INS_TID,proxBase:INS_PBASE}); INS_SITE=CSEngine.create({store:'ins_cs_site',tenantId:INS_TID,proxBase:INS_PBASE}); _insMigrateAgents(); } }catch(e){}
 function _insMigrateAgents(){try{
@@ -2080,7 +2078,9 @@ function insBlogClose(){var ov=document.getElementById('insBlogOverlay');if(ov)o
 window.insBlogDetail=insBlogDetail;window.insBlogClose=insBlogClose;window.insArts=insArts;window.insRunSchedule=insRunSchedule;
 /* studio anahtarlarını sitede zaten girilmiş DeepSeek/ProX anahtarından tohumla */
 function _insAgentFill(E,pre){try{var k=E.getKeys();var set=function(id,v){var e=document.getElementById(id);if(e)e.value=v||'';};set(pre+'provider',k.provider||'auto');set(pre+'prox',k.proxKey);set(pre+'ds',k.dsKey);set(pre+'oa',k.oaKey);set(pre+'cl',k.clKey);set(pre+'sys',k.sysPrompt);var pex=document.getElementById(pre+'pex');if(pex)pex.value=k.pexelsKey||'';}catch(e){}}
-function csMountINS(){ if(!window.ContentStudio||!INS_CONTENT)return; var host=document.getElementById('csHost'); if(!host)return;
+function _csModulYukle(cb){var L=["../shared/cs-engine.js?v=2", "js/content-studio.js?v=3"];var i=0;(function next(){if(i>=L.length){cb();return;}if(document.querySelector('script[data-csmod="'+L[i]+'"]')){i++;next();return;}var sc=document.createElement('script');sc.src=L[i];sc.dataset.csmod=L[i];sc.onload=function(){i++;next();};sc.onerror=function(){i++;next();};document.head.appendChild(sc);})();}
+function csMountINS(){if(!window.ContentStudio){_csModulYukle(function(){csMountINS();});return;}
+   if(!window.ContentStudio||!INS_CONTENT)return; var host=document.getElementById('csHost'); if(!host)return;
   ContentStudio.mount(host,{
     vertical:'insaat', persona:'kurumsal inşaat & gayrimenkul geliştirme içerik editörü',
     city:_insCity, brand:_csInsBrand,
@@ -2247,8 +2247,15 @@ function _admInject(el){
   try{var act=el.querySelector('.adm-nav.act,[data-pane].act,.adm-tab.act')||el.querySelector('.adm-nav,[data-pane],.adm-tab');if(act&&act.click)act.click();}catch(e){}
 }
 function closeAdmin(){document.getElementById('adminApp').classList.remove('show');document.body.style.overflow='';if(location.hash==='#admin')try{history.replaceState(null,'',location.pathname);}catch(e){};}
-function admLogin(){const p=document.getElementById('admPass').value;const u=document.getElementById('admUser').value;if(p===(SETTINGS&&SETTINGS.admPass||'1234')){document.getElementById('adminApp').classList.add('authed');document.getElementById('admErr').style.display='none';refreshAdmin();}else{document.getElementById('admErr').style.display='block';}}
-function admLogout(){document.getElementById('adminApp').classList.remove('authed');document.getElementById('admPass').value='';}
+function admLogin(){const p=document.getElementById('advPwd'),u=document.getElementById('advUsr'),err=document.getElementById('admErr');
+  if(window.EMLAK_DEMO===true){document.getElementById('adminApp').classList.add('authed');if(err)err.style.display='none';refreshAdmin();return;}
+  (async function(){
+    try{const r=await fetch('/api/auth/admin/login',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({user:(u?u.value:'').trim(),pass:p?p.value:''})});
+      if(r.ok){const j=await r.json().catch(function(){return {};});if(j&&j.ok!==false){document.getElementById('adminApp').classList.add('authed');if(err)err.style.display='none';refreshAdmin();return;}}
+      if(err){err.style.display='';err.textContent='Giriş başarısız — bilgiler hatalı ya da hesap kilitli.';}
+    }catch(e){if(err){err.style.display='';err.textContent='Yönetim girişi sunucu tarafında yapılandırılmadı.';}}
+  })();}
+function admLogout(){document.getElementById('adminApp').classList.remove('authed');document.getElementById('advPwd').value='';}
 function admNav(pane,btn){document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('on'));document.getElementById('pane-'+pane).classList.add('on');document.querySelectorAll('.adm-side button[data-pane]').forEach(b=>b.classList.remove('on'));btn.classList.add('on');if(pane==='leads')renderLeads();if(pane==='gorusmeler')renderGorusmeler();if(pane==='dash')renderKpi();if(pane==='arsa')renderArsa();if(pane==='ilanlar')renderInsIlan();if(pane==='portfoy')renderInsOzel();if(pane==='contracts')renderContracts();if(pane==='icstudio'&&window.csMountINS)csMountINS();if(pane==='proxai'&&window.insStudioFill)insStudioFill();if(pane==='settings')loadSettingsUI();if(pane==='brand')loadBrandUI();if(pane==='menutext')loadMenuUI();if(pane==='ads')loadAdsUI();if(pane==='diller')renderDiller();if(pane==='iletisim')loadIletisimUI();if(pane==='faq')renderFaqAdmin();if(pane==='social')loadSocialUI();if(pane==='stats')loadStatsUI();if(pane==='proje3d'&&window.initProje3D)setTimeout(()=>window.initProje3D(),60);if(pane!=='proje3d'&&window.__p3hide)window.__p3hide();}
 function refreshAdmin(){renderKpi();admPjList();admSvcList();renderLeads();try{renderArsa();renderInsIlan();renderInsOzel();renderContracts();loadSettingsUI();loadBrandUI();loadMenuUI();loadAdsUI();loadSocialUI();}catch(e){}}
 function renderKpi(){
@@ -2962,7 +2969,7 @@ function fillTemplate(c){
     '{{FIRMA_ADRES}}':SETTINGS.firmaAdres||'',
     '{{FIRMA_YETKILI}}':SETTINGS.firmaYetkili||'',
     '{{KARSI_TARAF}}':c.karsiTaraf||'..................',
-    '{{KARSI_TC}}':c.karsiTC||'..................',
+    '{{KARSI_TC}}':c.karsiKimlik||'..................',
     '{{KARSI_ADRES}}':c.karsiAdres||'..................',
     '{{ARSA_IL}}':c.il||'......','{{ARSA_ILCE}}':c.ilce||'......','{{ARSA_MAHALLE}}':c.mahalle||'......',
     '{{ADA}}':c.ada||'....','{{PARSEL}}':c.parsel||'....','{{ARSA_M2}}':c.arsaM2||'....',
@@ -2994,7 +3001,7 @@ function renderContracts(){
       </div>
       <div class="ed2">
         <div><label>Karşı Taraf (Arsa Sahibi/İş Sahibi)</label><input value="${(c.karsiTaraf||'').replace(/"/g,'&quot;')}" oninput="CONTRACTS[${i}].karsiTaraf=this.value;saveAll()"></div>
-        <div><label>T.C. / Vergi No</label><input value="${(c.karsiTC||'').replace(/"/g,'&quot;')}" oninput="CONTRACTS[${i}].karsiTC=this.value;saveAll()"></div>
+        <div><label>T.C. / Vergi No</label><input value="${(c.karsiKimlik||'').replace(/"/g,'&quot;')}" oninput="CONTRACTS[${i}].karsiKimlik=this.value;saveAll()"></div>
       </div>
       <label>Karşı Taraf Adresi</label><input value="${(c.karsiAdres||'').replace(/"/g,'&quot;')}" oninput="CONTRACTS[${i}].karsiAdres=this.value;saveAll()" style="width:100%">
       <div class="ed3">
@@ -3083,7 +3090,7 @@ function contractWhatsApp(i){
   const url='https://wa.me/?text='+encodeURIComponent(txt);
   window.open(url,'_blank','noopener,noreferrer');
 }
-function admAddContract(tip){CONTRACTS.unshift({id:'c'+Date.now(),tip:tip||'insaat',baslik:'Yeni '+( {insaat:'İnşaat',['kat-karsiligi']:'Kat Karşılığı',taseron:'Taşeron'}[tip]||'')+' Sözleşmesi',karsiTaraf:'',karsiTC:'',karsiAdres:'',il:'',ilce:'',mahalle:'',ada:'',parsel:'',arsaM2:'',payArsa:50,payMuteahhit:50,sureAy:18,gecikmeTL:'',tarih:new Date().toISOString().slice(0,10),durum:'taslak',ozelMetin:''});renderContracts();saveAll();}
+function admAddContract(tip){CONTRACTS.unshift({id:'c'+Date.now(),tip:tip||'insaat',baslik:'Yeni '+( {insaat:'İnşaat',['kat-karsiligi']:'Kat Karşılığı',taseron:'Taşeron'}[tip]||'')+' Sözleşmesi',karsiTaraf:'',karsiKimlik:'',karsiAdres:'',il:'',ilce:'',mahalle:'',ada:'',parsel:'',arsaM2:'',payArsa:50,payMuteahhit:50,sureAy:18,gecikmeTL:'',tarih:new Date().toISOString().slice(0,10),durum:'taslak',ozelMetin:''});renderContracts();saveAll();}
 
 // ============ AYARLAR & GÜVENLİK ============
 function saveFirmaInfo(){
@@ -3184,7 +3191,7 @@ function loadSettingsUI(){
   if(g('set_fadres'))g('set_fadres').value=SETTINGS.firmaAdres||'';
   if(g('set_ftel'))g('set_ftel').value=SETTINGS.firmaTel||'';
   if(g('set_femail'))g('set_femail').value=SETTINGS.firmaEmail||'';
-  if(g('set_user'))g('set_user').value=SETTINGS.admUser||'admin';
+  if(g('set_user'))g('set_user').value='admin';
   if(g('set_gmaps'))g('set_gmaps').value=SETTINGS.googleMapsKey||'';
   if(g('set_ga'))g('set_ga').value=SETTINGS.googleAnalytics||'';
   if(g('set_gsv'))g('set_gsv').value=SETTINGS.googleSiteVerif||'';
@@ -3199,11 +3206,11 @@ function changePassword(){
   const n2=document.getElementById('set_newpass2').value;
   const msg=document.getElementById('passMsg');
   const user=document.getElementById('set_user').value.trim();
-  if(cur!==SETTINGS.admPass){msg.style.color='#d4416a';msg.textContent='✕ Mevcut şifre yanlış.';return;}
-  if(n1.length<6){msg.style.color='#d4416a';msg.textContent='✕ Yeni şifre en az 6 karakter olmalı.';return;}
-  if(n1!==n2){msg.style.color='#d4416a';msg.textContent='✕ Yeni şifreler eşleşmiyor.';return;}
-  SETTINGS.admPass=n1;if(user)SETTINGS.admUser=user;saveAll();
-  msg.style.color='#1a7f4a';msg.textContent='✓ Şifre başarıyla değiştirildi.';
+  if(window.EMLAK_DEMO===true){msg.style.color='#d4416a';msg.textContent='Demo modunda şifre değiştirilemez; üretimde /api/auth/admin/password üzerinden yönetilir.';return;}
+  fetch('/api/auth/admin/password',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({current:cur,next:n1,user:user})}).then(function(r){
+    if(r.ok){msg.style.color='#1a7f4a';msg.textContent='✓ Şifre sunucuda güncellendi.';}
+    else{msg.style.color='#d4416a';msg.textContent='✕ Şifre değiştirilemedi (mevcut şifre hatalı olabilir).';}
+  }).catch(function(){msg.style.color='#d4416a';msg.textContent='✕ Auth servisi erişilemez.';});
   document.getElementById('set_curpass').value='';document.getElementById('set_newpass').value='';document.getElementById('set_newpass2').value='';
 }
 function saveGoogleSettings(){
@@ -3464,7 +3471,7 @@ function obSeed(){try{
   OB.unvan=keep(S.firmaUnvan,'Meridyen');OB.vergi=keep(S.firmaVergiNo,'1234567890');OB.vergiDaire=keep(S.firmaVergiDairesi,'Beşiktaş');
   OB.adres=keep(S.firmaAdres,'Levent');OB.tel=keep(S.firmaTel,'000 00 00');OB.mail=keep(S.firmaEmail,'meridyen');OB.wa=keep(S.waNumber,'905001234567');
   OB.yetkili=keep(S.firmaYetkili,'Genel Müdür');OB.calisma=keep(S.firmaCalisma,'');
-  OB.mersis=keep(S.firmaMersis,'0123456789012345');OB.ticaretSicil=keep(S.firmaTicaretSicil,'123456');OB.oda=keep(S.firmaOda,'İstanbul Ticaret');OB.kep=keep(S.firmaKep,'meridyenyapi');
+  OB.mersis=keep(S.firmaMersis,'0000000000000000');OB.ticaretSicil=keep(S.firmaTicaretSicil,'123456');OB.oda=keep(S.firmaOda,'İstanbul Ticaret');OB.kep=keep(S.firmaKep,'meridyenyapi');
   OB.belge=keep(S.eidsYetkiBelgeNo,'');
   OB.accent=S.tenantAccent||'';OB.font=S.tenantFont||'';OB.logo='';OB.favicon='';
   OB.fb=SO.facebook||'';OB.ig=SO.instagram||'';OB.x=SO.x||'';OB.li=SO.linkedin||'';OB.yt=SO.youtube||'';

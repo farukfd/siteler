@@ -15,3 +15,4 @@ qa/test-results/
 # gizli anahtarlar — repoya asla girmez
 scripts/prox-keys.local.json
 .env
+dist/

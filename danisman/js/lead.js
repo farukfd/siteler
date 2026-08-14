@@ -13,7 +13,7 @@
      2) ProX POST /api/v1/tenant/lead → sunucu CRM (best-effort, CORS açık)
      3) WhatsApp deep-link (ön-dolu mesaj) → danışmanın telefonuna anında (kesin)
    ========================================================================== */
-if(typeof window!=='undefined'&&window.EMLAK_PROXY_MODE===undefined)window.EMLAK_PROXY_MODE=true;/* güvenlik */
+if(typeof window!=='undefined'&&window.EMLAK_PROXY_MODE===undefined)window.EMLAK_DEMO=true;/* üretim paketinde FALSE — sessiz fallback ve tarayıcı-anahtar akışları kapanır */
 (function () {
   'use strict';
 
@@ -21,7 +21,7 @@ if(typeof window!=='undefined'&&window.EMLAK_PROXY_MODE===undefined)window.EMLAK
                  'https://www.emlakekspertizi.com';
 
   /* ProX kiracı kimliği: sabit "consultant" varsayılanı → window.EMLAK_TENANT →
-     admin'in kaydettiği dn_prox {key, tenant} son sözü söyler. */
+     tenant kimliği SUNUCUDA Host'tan çözülür (P0). */
   function tenant() {
     var t = {
       tenant_id: 'consultant',
@@ -34,9 +34,7 @@ if(typeof window!=='undefined'&&window.EMLAK_PROXY_MODE===undefined)window.EMLAK
       }
     } catch (e) {}
     try {
-      var dp = JSON.parse(localStorage.getItem('dn_prox') || 'null');
-      if (dp && dp.key) { t.tenant_key = dp.key; if (dp.tenant) t.tenant_id = dp.tenant; }
-    } catch (e) {}
+      /* P0: tenant anahtarı tarayıcıdan okunmaz */ }catch (e) {}
     return t;
   }
 
@@ -87,7 +85,7 @@ if(typeof window!=='undefined'&&window.EMLAK_PROXY_MODE===undefined)window.EMLAK
       return fetch(API_BASE + '/api/v1/tenant/lead', {
         method: 'POST',
         mode: 'cors',
-        headers: (function(){var h={'Content-Type':'application/json','X-Tenant-Id':t.tenant_id};if(!window.EMLAK_PROXY_MODE)h['X-Tenant-Key']=t.tenant_key;return h;})(),
+        headers: (function(){return {'Content-Type':'application/json'};})()/* P0: tenant kimliği/anahtarı istemciden gitmez */,
         body: JSON.stringify({
           name: rec.name, phone: rec.phone, email: rec.email,
           konu: rec.konu, mesaj: rec.msg, message: rec.msg,

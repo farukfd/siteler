@@ -409,15 +409,15 @@ window.EMLAK_PROXY_MODE=window.EMLAK_PROXY_MODE!==false;/* güvenlik: proxy modu
 /* ============ ProX API ÇEKİRDEĞİ ============ */
 var EMLAK_API_BASE="https://www.emlakekspertizi.com";
 var EMLAK_TENANT={tenant_id:"consultant",tenant_key:""};
-try{var _dp=JSON.parse(localStorage.getItem('dn_prox')||'null');if(_dp&&_dp.key){EMLAK_TENANT.tenant_key=_dp.key;if(_dp.tenant)EMLAK_TENANT.tenant_id=_dp.tenant;}}catch(e){}
-async function proxApi(path){try{var res=await fetch(EMLAK_API_BASE+path,{method:"GET",mode:"cors",headers:(function(){var h={"Content-Type":"application/json","X-Tenant-Id":EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h["X-Tenant-Key"]=EMLAK_TENANT.tenant_key;return h;})()});if(!res.ok)throw new Error("ProX "+res.status);return await res.json();}catch(e){return {fallback:true,_err:e.message};}}
+/* P0: tenant anahtarı tarayıcıya girmez — sunucu Host'tan çözer */
+async function proxApi(path){try{var res=await fetch(((window.EMLAK_DEMO===true)?EMLAK_API_BASE:'')+path,{method:"GET",mode:"cors",headers:(function(){return {'Content-Type':'application/json'};})()/* P0: tenant kimliği/anahtarı istemciden gitmez */});if(!res.ok)throw new Error("ProX "+res.status);return await res.json();}catch(e){return {fallback:true,_err:e.message};}}
 var TR_ILILCE=window.TR_ILILCE||{};
 function adminPrimaryIl(){try{var sa=JSON.parse(localStorage.getItem('dn_service_area')||'null');if(sa&&sa.primary&&TR_ILILCE[sa.primary])return sa.primary;}catch(e){}return 'İstanbul';}
 var _c={};
 /* localStorage TTL önbelleği — başarılı endeks 6s saklanır → reload + ilçe/mahalle gezinme anında (45 çağrı tekrarı yok) */
 var PROX_TTL=6*3600*1000;
-function _pcLoad(){try{return JSON.parse(localStorage.getItem('dn_prox_cache')||'{}');}catch(e){return {};}}
-function _pcSave(o){try{localStorage.setItem('dn_prox_cache',JSON.stringify(o));}catch(e){}}
+function _pcLoad(){try{return JSON.parse(localStorage.getItem('dn_pfx_cache')||'{}');}catch(e){return {};}}
+function _pcSave(o){try{localStorage.setItem('dn_pfx_cache',JSON.stringify(o));}catch(e){}}
 function _pcPut(k,v){try{var o=_pcLoad();o[k]={v:v,ts:Date.now()};var ks=Object.keys(o);if(ks.length>600){ks.sort(function(a,b){return (o[a].ts||0)-(o[b].ts||0);});ks.slice(0,ks.length-600).forEach(function(x){delete o[x];});}_pcSave(o);}catch(e){}}
 async function fetchEndeks(il,ilce,mah,kat,dur){var k=[il,ilce,mah||'',kat,dur].join('|');if(_c[k]!==undefined)return _c[k];
   try{var pc=_pcLoad(),e=pc[k];if(e&&e.ts&&(Date.now()-e.ts)<PROX_TTL){_c[k]=e.v;return e.v;}}catch(e2){}
@@ -426,10 +426,10 @@ async function fetchEndeks(il,ilce,mah,kat,dur){var k=[il,ilce,mah||'',kat,dur].
   var r=await proxApi(q),out=null;
   if(r&&!r.fallback&&r.success===true&&r.data&&+r.data.m2>0){out={m2:+r.data.m2,score:+r.data.score||0,veri:+r.data.veri_adedi||0,ilan:+r.data.ilan_sayisi||0,delta:+r.data.delta||0,trend:Array.isArray(r.data.trend)?r.data.trend:[]};}
   _c[k]=out;if(out)_pcPut(k,out);return out;}
-/* ============ GERÇEK SNAPSHOT GEÇMİŞİ (dn_prox_hist) — ProX zaman-serisi vermez; her ziyarette gerçek m² kaydı biriktirir ============ */
+/* ============ GERÇEK SNAPSHOT GEÇMİŞİ (dn_pfx_hist) — ProX zaman-serisi vermez; her ziyarette gerçek m² kaydı biriktirir ============ */
 function _histKey(il,ilce,mah,kat,dur){return [il,ilce,mah||'',kat,dur].join('|');}
-function _histLoad(){try{return JSON.parse(localStorage.getItem('dn_prox_hist')||'{}');}catch(e){return {};}}
-function _histSave(h){try{localStorage.setItem('dn_prox_hist',JSON.stringify(h));}catch(e){}}
+function _histLoad(){try{return JSON.parse(localStorage.getItem('dn_pfx_hist')||'{}');}catch(e){return {};}}
+function _histSave(h){try{localStorage.setItem('dn_pfx_hist',JSON.stringify(h));}catch(e){}}
 function _ymNow(){var d=new Date();return ''+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0');}
 function histRecord(il,ilce,mah,kat,dur,m2,proxTrend){
   if(!(m2>0))return [];
@@ -582,7 +582,7 @@ function ozTalepSubmit(viaWa){
   var parts=['📍 '+loc];if(oda)parts.push('Oda '+oda);if(butce)parts.push('Bütçe '+butce);if(not)parts.push(not);
   var msg=parts.join(' · ');
   ozLeadStore({name:ad,phone:tel.replace(/[^\d+]/g,''),konu:konu,msg:msg,src:(OZ_TALEP.ozel?'Özel Portföy Talebi':'Bölge Talebi')});
-  try{fetch(EMLAK_API_BASE+'/api/v1/tenant/lead',{method:'POST',mode:'cors',headers:(function(){var h={'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h['X-Tenant-Key']=EMLAK_TENANT.tenant_key;return h;})(),body:JSON.stringify({name:ad,phone:tel,konu:konu,mesaj:msg,il:k.il,ilce:k.ilce,mahalle:k.mah,cadde:cadde,islem:islem,tip:tip,butce:butce,oda:oda,kaynak:'ozel-portfoy'})}).catch(function(){});}catch(e){}
+  try{fetch(((window.EMLAK_DEMO===true)?EMLAK_API_BASE:'')+'/api/v1/tenant/lead',{method:'POST',mode:'cors',headers:(function(){return {'Content-Type':'application/json'};})()/* P0: tenant kimliği/anahtarı istemciden gitmez */,body:JSON.stringify({name:ad,phone:tel,konu:konu,mesaj:msg,il:k.il,ilce:k.ilce,mahalle:k.mah,cadde:cadde,islem:islem,tip:tip,butce:butce,oda:oda,kaynak:'ozel-portfoy'})}).catch(function(){});}catch(e){}
   if(viaWa){var wt='Merhaba, '+loc+' bölgesinde '+(islem==='kiralik'?'kiralık':'satılık')+' '+tip+' arıyorum.'+(oda?(' Oda: '+oda+'.'):'')+(butce?(' Bütçe: '+butce+'.'):'')+(not?(' '+not):'')+' — '+ad+' ('+tel+')';window.open('https://wa.me/'+ozWaNum()+'?text='+encodeURIComponent(wt),'_blank');}
   ozTalepDone(viaWa);
 }
@@ -640,7 +640,7 @@ var _azCache={};
 async function fetchAnalyze(il,ilce,mah){
   var k='az|'+[il,ilce,mah||''].join('|');if(_azCache[k]!==undefined)return _azCache[k];var out=null;
   try{var pc=_pcLoad(),e=pc[k];if(e&&e.ts&&(Date.now()-e.ts)<PROX_TTL){_azCache[k]=e.v;return e.v;}}catch(e2){}
-  try{var r=await fetch(EMLAK_API_BASE+'/api/v1/tenant/prox/analyze',{method:'POST',mode:'cors',headers:(function(){var h={'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h['X-Tenant-Key']=EMLAK_TENANT.tenant_key;return h;})(),body:JSON.stringify({il:il,ilce:ilce,mahalle:mah||'',kategori:'konut',durum:'satilik',brut_m2:90,attrs:{}})});
+  try{var r=await fetch(((window.EMLAK_DEMO===true)?EMLAK_API_BASE:'')+'/api/v1/tenant/prox/analyze',{method:'POST',mode:'cors',headers:(function(){return {'Content-Type':'application/json'};})()/* P0: tenant kimliği/anahtarı istemciden gitmez */,body:JSON.stringify({il:il,ilce:ilce,mahalle:mah||'',kategori:'konut',durum:'satilik',brut_m2:90,attrs:{}})});
     var j=await r.json();
     if(j&&j.success===true){var rg=j.range||{};out={strong:+j.strongest_value||0,min:+rg.min_value||0,max:+rg.max_value||0,spread:+rg.spread_pct||0,conf:(isFinite(+j.confidence)?+j.confidence:null),band:j.confidence_band||'',yon:j.piyasa_yonu||'',pazarlik:(isFinite(+j.pazarlik_payi_pct)?+j.pazarlik_payi_pct:null),ozet:j.karar_ozeti||'',veri:+j.veri_adedi||0};}
   }catch(e){}_azCache[k]=out;if(out)_pcPut(k,out);return out;
@@ -1474,7 +1474,7 @@ if(document.readyState!=='loading')ozInit();else document.addEventListener('DOMC
   var _inst=null, ISTIL='İstanbul';
   function districts(){ var d={}; try{ var T=(window.TR_ILILCE&&TR_ILILCE[ISTIL])||null; if(T&&T.ilce)T.ilce.forEach(function(ic){ if(!/il Merkezi|^Merkez$/.test(ic))d[ic]=[]; }); }catch(e){} return d; }
   function mProx(u,o){ try{
-    if(o&&o.method==='POST'){ return fetch(EMLAK_API_BASE+u,{method:'POST',mode:'cors',headers:(function(){var h={'Content-Type':'application/json','X-Tenant-Id':EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)h['X-Tenant-Key']=EMLAK_TENANT.tenant_key;return h;})(),body:JSON.stringify(o.body||{})}).then(function(r){return r.ok?r.json():{fallback:true};}).catch(function(){return {fallback:true};}); }
+    if(o&&o.method==='POST'){ return fetch(((window.EMLAK_DEMO===true)?EMLAK_API_BASE:'')+u,{method:'POST',mode:'cors',headers:(function(){return {'Content-Type':'application/json'};})()/* P0: tenant kimliği/anahtarı istemciden gitmez */,body:JSON.stringify(o.body||{})}).then(function(r){return r.ok?r.json():{fallback:true};}).catch(function(){return {fallback:true};}); }
     return (typeof proxApi==='function')?proxApi(u):Promise.resolve(null);
   }catch(e){return Promise.resolve(null);} }
   function loadMah(il,ilce){ try{ if(typeof fetchMahalleler==='function'){ return Promise.resolve(fetchMahalleler(il,ilce)).then(function(a){ a=Array.isArray(a)?a:((a&&a.mahalleler)||[]); return a.map(function(x){return (x&&(x.ad||x.name||x.mahalle))||x;}).filter(Boolean).slice(0,40); }).catch(function(){return [];}); } }catch(e){} return Promise.resolve([]); }

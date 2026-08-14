@@ -19,7 +19,7 @@ html.ov-pre #hizmetlerPage.on,html.ov-pre #projelerPage.on,html.ov-pre #ilanlarP
 <!-- ===== ProX API-first SaaS çekirdeği (additive) ===== -->
 <script>
 window.EMLAK_API_BASE = "https://www.emlakekspertizi.com";
-window.EMLAK_PROXY_MODE = true;/* güvenlik */
+window.EMLAK_DEMO=true;/* üretim paketinde FALSE — sessiz fallback ve tarayıcı-anahtar akışları kapanır */
 window.EMLAK_TENANT = { id:"construction", tenant_id:"construction", tenant_key:"", domain:location.hostname, sector:"construction_company", companyName:"", logo:"", favicon:"", accentColor:"", secondaryColor:"", typography:"", contact:{}, socialLinks:{}, packageCode:"PRO", enabledFeatures:[], apiLimits:{}, seoSettings:{}, analytics:{}, proxPersona:"construction", legalMode:"standard" };
 window.EMLAK_PACKAGES = {
   BASIC:["canUseMarketAnalysis","canUsePriceEstimate","canUseLeadCRM","canUseSvgGraphics"],
@@ -30,9 +30,9 @@ window.EMLAK_PACKAGES = {
 window.EMLAK_TENANT.enabledFeatures = window.EMLAK_PACKAGES[window.EMLAK_TENANT.packageCode] || window.EMLAK_PACKAGES.PRO;
 window.hasFeature = function(f){ return window.EMLAK_TENANT.enabledFeatures.indexOf(f)!==-1; };
 window.requireFeature = function(f){ if(window.hasFeature(f)) return true; var m="Bu özellik mevcut paketinizde aktif değildir. Kurumsal paketinizi yükseltin."; if(typeof toast==="function")toast(m); else alert(m); return false; };
-async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ const res=await fetch(window.EMLAK_API_BASE+path,{method,mode:"cors",headers:(function(){var _h={"Content-Type":"application/json","X-Tenant-Id":window.EMLAK_TENANT.tenant_id};if(!window.EMLAK_PROXY_MODE)_h["X-Tenant-Key"]=window.EMLAK_TENANT.tenant_key;return Object.assign(_h,headers);})(),body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); return proxFallback(path,{method,body}); } }
+async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ const res=await fetch(((window.EMLAK_DEMO===true)?window.EMLAK_API_BASE:'')+path,{method,mode:"cors",headers:(function(){var _h={"Content-Type":"application/json"};/* P0: tenant kimliği/anahtarı istemciden GÖNDERİLMEZ */return Object.assign(_h,headers);})(),body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); if(window.EMLAK_DEMO===true)return proxFallback(path,{method,body});try{window.EMLAK_TELEMETRY&&window.EMLAK_TELEMETRY("api_fail",{path:path,err:String(error&&error.message||error)});}catch(_t){}return {fallback:true,error:true,offline:true,data:null,message:"API erişilemedi (üretim: fallback kapalı)"}; } }
 function proxFallback(path,options={}){ return { fallback:true, message:"API baglantisi yok. Demo/fallback veri kullaniliyor.", path, data:(window.EMLAK_FALLBACK?window.EMLAK_FALLBACK(path,options):null) }; }
-async function submitLead(lead){ lead=lead||{}; /* Canlı /lead body: {sourcePage,formType,name,phone,email,message,extra} */ var body={ sourcePage:lead.sourcePage||"insaat", formType:lead.formType||"", name:lead.name||"", phone:lead.phone||"", email:lead.email||"", message:lead.message||"", extra:Object.assign({ tenant_id:window.EMLAK_TENANT.tenant_id, sector:window.EMLAK_TENANT.sector, location:lead.location||"", requestedService:lead.requestedService||"" }, lead.extra||{}) }; try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:body}); if(!r||r.fallback||r.success!==true)throw new Error("fallback"); return {ok:true,online:r.online!==false,data:r,lead_id:r.lead_id}; }catch(e){ try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(Object.assign({id:"lead_"+Date.now(),createdAt:new Date().toISOString(),status:"new"},body));localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:body}; } }
+async function submitLead(lead){ lead=lead||{}; /* Canlı /lead body: {sourcePage,formType,name,phone,email,message,extra} */ var body={ sourcePage:lead.sourcePage||"insaat", formType:lead.formType||"", name:lead.name||"", phone:lead.phone||"", email:lead.email||"", message:lead.message||"", extra:Object.assign({ tenant_id:window.EMLAK_TENANT.tenant_id, sector:window.EMLAK_TENANT.sector, location:lead.location||"", requestedService:lead.requestedService||"" }, lead.extra||{}) }; try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:body}); if(!r||r.fallback||r.success!==true)throw new Error("fallback"); return {ok:true,online:r.online!==false,data:r,lead_id:r.lead_id}; }catch(e){ if(window.EMLAK_DEMO===true){try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(Object.assign({id:"lead_"+Date.now(),createdAt:new Date().toISOString(),status:"new"},body));localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,data:body};} try{window.EMLAK_TELEMETRY&&window.EMLAK_TELEMETRY("lead_fail",{form:(lead&&lead.formType)||"contact"});}catch(_t){} return {ok:false,offline:true,message:"Talebiniz iletilemedi — lütfen tekrar deneyin ya da bizi arayın."}; } }
 window.injectSchema=function(o){try{var s=document.createElement("script");s.type="application/ld+json";s.text=JSON.stringify(o);document.head.appendChild(s);}catch(e){}};
 window.proxSubmitLead = submitLead; /* API-first lead gönderici (alias; sayfa içi submitLead(src) UI handler'ı ile çakışmasın) */
 
@@ -891,8 +891,8 @@ function cookieChoice(v){
 <script defer src="../shared/eids.js?v=2"></script>
 <script defer src="../shared/listing.js?v=25"></script>
 <script defer src="../shared/listing-extras.js?v=10"></script>
-<script defer src="../shared/cs-engine.js?v=2"></script>
-<script defer src="js/content-studio.js?v=3"></script>
+<!-- P0: admin-only modül — public yükünden çıkarıldı; csMountINS lazy yükler -->
+<!-- P0: admin-only modül — public yükünden çıkarıldı; csMountINS lazy yükler -->
 <script defer src="js/app-core.js?v=49"></script>
 
 

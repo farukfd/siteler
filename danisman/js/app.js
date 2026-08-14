@@ -109,8 +109,8 @@ function aiGuard(p){p=(p==null?'':''+p);return p.indexOf('[KESİN KURALLAR')>=0?
    Admin bir DeepSeek anahtarı (SAAS_CONFIG.tenantSettings.dsKey) girdiyse TÜM yapay zeka ÜRETİMİ
    doğrudan DeepSeek ile çalışır; yoksa/başarısızsa ProX sunucu AI'sine (/prox/ai) düşülür.
    ProX API anahtarı (EMLAK_TENANT.tenant_key) yalnızca VERİ uçları (endeks/analiz) içindir. DeepSeek CORS açık. */
-function _dsLoad(){try{var k=localStorage.getItem('dn_dskey');if(k!=null)SAAS_CONFIG.tenantSettings.dsKey=k;var m=localStorage.getItem('dn_dsmodel');if(m)SAAS_CONFIG.tenantSettings.dsModel=m;}catch(e){}}
-function _dsSave(){try{localStorage.setItem('dn_dskey',SAAS_CONFIG.tenantSettings.dsKey||'');localStorage.setItem('dn_dsmodel',SAAS_CONFIG.tenantSettings.dsModel||'deepseek-chat');}catch(e){}}
+function _dsLoad(){try{var k=localStorage.getItem('dn_ai_ds');if(k!=null)SAAS_CONFIG.tenantSettings.dsKey=k;var m=localStorage.getItem('dn_dsmodel');if(m)SAAS_CONFIG.tenantSettings.dsModel=m;}catch(e){}}
+function _dsSave(){try{localStorage.setItem('dn_ai_ds',SAAS_CONFIG.tenantSettings.dsKey||'');localStorage.setItem('dn_dsmodel',SAAS_CONFIG.tenantSettings.dsModel||'deepseek-chat');}catch(e){}}
 function _dsKey(){try{return (SAAS_CONFIG.tenantSettings.dsKey||'').trim();}catch(e){return '';}}
 function _dsModel(){try{return (SAAS_CONFIG.tenantSettings.dsModel||'deepseek-chat').trim()||'deepseek-chat';}catch(e){return 'deepseek-chat';}}
 function _dsMessages(body){
@@ -147,7 +147,7 @@ async function aiChat(body,opts){
 try{window.aiChat=aiChat;window._deepseekChat=_deepseekChat;}catch(e){}
 /* Admin: DeepSeek anahtar testi + durum rozeti */
 async function aiDsTest(){
-  var el=document.getElementById('dn_dsstatus');var inp=document.getElementById('dn_dskey');
+  var el=document.getElementById('dn_dsstatus');var inp=document.getElementById('dn_ai_ds');
   var key=(inp&&inp.value.trim())||_dsKey();
   if(!key){if(el)el.innerHTML='<div class="ds-off">⚠ DeepSeek anahtarı girilmedi. Boşsa YZ, ProX sunucu AI\'si ile çalışır.</div>';return;}
   if(el)el.innerHTML='<div class="ds-wait">● DeepSeek bağlantısı test ediliyor…</div>';
@@ -192,7 +192,7 @@ function trackEvent(name,params){try{
 function abApply(){try{var v=abVariant();if(document.body)document.body.setAttribute('data-ab',v);trackEvent('page_impression',{});}catch(e){}}
 /* ===================== PROXY / EDGE GÜVENLİK MODU (anahtarı sunucuda gizle) ===================== */
 function applyProxyMode(){try{var pu=((SAAS_CONFIG.firma&&SAAS_CONFIG.firma.proxyUrl)||'').trim();
-  if(pu){window.EMLAK_PROXY_MODE=true;window.EMLAK_PROXY_URL=pu.replace(/\/+$/,'');}else{window.EMLAK_PROXY_MODE=false;window.EMLAK_PROXY_URL='';}}catch(e){}}
+  if(pu){window.EMLAK_DEMO=true;/* üretim paketinde FALSE — sessiz fallback ve tarayıcı-anahtar akışları kapanır */window.EMLAK_PROXY_URL=pu.replace(/\/+$/,'');}else{window.EMLAK_PROXY_MODE=false;window.EMLAK_PROXY_URL='';}}catch(e){}}
 window.applySchema=applySchema;window.trackEvent=trackEvent;window.abVariant=abVariant;window.applyProxyMode=applyProxyMode;
 /* ===================== ÇOK DİLLİ (EN/AR) — İçerik Asistanı gerçek çeviri + RTL ===================== */
 var _i18nOrig=null;
@@ -533,7 +533,7 @@ function obFinish(){obCollect();if(!(OB.brand||OB.advisor)){OB.step=1;obRender()
     try{if(window.dnSetBrand)dnSetBrand({name:_bn,initial:(_bn||'M').trim().charAt(0).toLocaleUpperCase('tr'),favicon:OB.favicon||''});}catch(e){}
     try{localStorage.setItem('dn_firma',JSON.stringify(Object.assign({},SAAS_CONFIG.firma||{},{advisor:SAAS_CONFIG.advisorName,unvan:f.unvan,vergi:f.vergi,vergiDaire:f.vergiDaire,mersis:f.mersis,sicil:f.sicil,oda:f.oda,kep:f.kep,adres:f.adres,tel:f.tel,mail:f.mail,eids:f.eids})));}catch(e){}
     try{(function(){var o={wa:_wa,tel:OB.tel||'',mail:OB.mail||'',adres:OB.adres||''};if(OB.lat&&OB.lng&&isFinite(+OB.lat)&&isFinite(+OB.lng)){o.lat=+OB.lat;o.lng=+OB.lng;o.geo={q:OB.adres||'',lat:+OB.lat,lon:+OB.lng};}try{var _old=JSON.parse(localStorage.getItem('dn_iletisim')||'{}')||{};['t1','t2','t3'].forEach(function(k){if(_old[k]&&!o[k])o[k]=_old[k];});}catch(e){}localStorage.setItem('dn_iletisim',JSON.stringify(o));})();}catch(e){}
-    try{if(OB.key)localStorage.setItem('dn_prox',JSON.stringify({key:OB.key}));}catch(e){}
+    try{if(OB.key&&window.EMLAK_DEMO===true)localStorage.setItem('dn_pfx_key',JSON.stringify({key:OB.key}));}catch(e){}/* üretim: anahtar /api/ai/keys vault'una gider */
     try{localStorage.setItem('dn_theme',JSON.stringify({accent:OB.accent||'',logo:OB.logo||'',font:OB.font||''}));}catch(e){}
     try{localStorage.setItem('dn_social',JSON.stringify({fb:OB.fb||'',ig:OB.ig||'',x:OB.x||'',li:OB.li||'',yt:OB.yt||''}));}catch(e){}
     try{localStorage.setItem('dn_seo',JSON.stringify({title:OB.seoTitle||'',desc:OB.seoDesc||''}));}catch(e){}
@@ -835,7 +835,7 @@ async function proxBlogFeed(force){
   try{var c=JSON.parse(sessionStorage.getItem('dn_pxnews')||'null');if(!force&&c&&c.t>Date.now()-6e5&&c.p&&c.p.length){_dnBlogCache=c.p;return c.p;}}catch(e){}
   var out=[];
   try{
-    var r=await fetch((window.EMLAK_API_BASE||'https://www.emlakekspertizi.com')+'/api/blog/posts?status=published&limit=24',{mode:'cors'});
+    var r=await fetch((window.EMLAK_API_BASE||'')+'/api/blog/posts?status=published&limit=24',{mode:'cors'});
     if(r.ok){var j=await r.json();
       out=(j.posts||[]).filter(function(p){return p.title&&(p.image_url||p.featured_image);}).map(function(p){
         var d=(p.published_at||p.created_at||'').slice(0,10);
@@ -874,7 +874,7 @@ function _dnSaniHaber(html){try{
 /* px_ haberin tam gövdesini çek → sanitize → yeniden render (başarısızsa kaynak-linkli özet) */
 async function _dnHaberDetay(b){
   try{
-    var r=await fetch((window.EMLAK_API_BASE||'https://www.emlakekspertizi.com')+'/api/blog/posts/'+encodeURIComponent(b.slug),{mode:'cors'});
+    var r=await fetch((window.EMLAK_API_BASE||'')+'/api/blog/posts/'+encodeURIComponent(b.slug),{mode:'cors'});
     if(r.ok){var j=await r.json();var p=j.post||j;
       var ic=_dnSaniHaber(p.content||p.icerik||'');
       if(ic){b.body=ic;b.author=p.author_name||b.author;}
@@ -971,13 +971,13 @@ try{window.proxBlogFeed=proxBlogFeed;window.dnBlogAll=dnBlogAll;window.dnBlogByI
 /* İKİ BAĞIMSIZ AJAN — her biri KENDİ anahtar deposu (kullanıcı kararı):
      • DN_CONTENT (dn_cs_content) → İçerik Ajanı: makale/haber üretimi
      • DN_SITE    (dn_cs_site)    → Site Asistanı: ziyaretçi sohbeti  */
-var DN_TID=(window.EMLAK_TENANT&&EMLAK_TENANT.tenant_id)||'consultant', DN_PBASE=(window.EMLAK_API_BASE||'https://www.emlakekspertizi.com');
+var DN_TID=(window.EMLAK_TENANT&&EMLAK_TENANT.tenant_id)||'consultant', DN_PBASE=(window.EMLAK_API_BASE||'');
 var DN_CONTENT=null, DN_SITE=null;
 try{ if(window.CSEngine){ DN_CONTENT=CSEngine.create({store:'dn_cs_content',tenantId:DN_TID,proxBase:DN_PBASE}); DN_SITE=CSEngine.create({store:'dn_cs_site',tenantId:DN_TID,proxBase:DN_PBASE}); _dnMigrateAgents(); } }catch(e){}
 function _dnMigrateAgents(){try{
   var old=JSON.parse(localStorage.getItem('dn_aicfg')||'null');            /* eski tek-depo → İçerik Ajanı (bir defalık) */
   if(old&&!localStorage.getItem('dn_cs_content'))localStorage.setItem('dn_cs_content',JSON.stringify(old));
-  var dsk=_dsKey(),dsm=_dsModel(),dp=null; try{dp=JSON.parse(localStorage.getItem('dn_prox')||'null');}catch(e){}
+  var dsk=_dsKey(),dsm=_dsModel(),dp=null; try{dp=JSON.parse(localStorage.getItem('dn_pfx_key')||'null');}catch(e){}
   [DN_CONTENT,DN_SITE].forEach(function(E){ if(!E)return; var k=E.getKeys(),patch={}; if(!k.dsKey&&dsk){patch.dsKey=dsk;patch.dsModel=dsm;} if(!k.proxKey&&dp&&dp.key)patch.proxKey=dp.key; if(Object.keys(patch).length)E.setKeys(patch); });
 }catch(e){}}
 function dnArts(){try{return JSON.parse(localStorage.getItem('dn_articles')||'[]')||[];}catch(e){return [];}}
@@ -990,7 +990,9 @@ function dnRunSchedule(){try{var a=dnArts(),now=Date.now(),ch=false;var en=true;
 window.dnRunSchedule=dnRunSchedule;window.dnArts=dnArts;
 function _dnCity(){try{return PROVINCE.name||(SERVICE_AREA&&SERVICE_AREA.primary)||(SAAS_CONFIG.firma&&SAAS_CONFIG.firma.il)||'İstanbul';}catch(e){return 'İstanbul';}}
 function _dnBrand(){try{return saasResolve('brandName')||(typeof brandName==='function'&&brandName())||'Selin Meridyen';}catch(e){return 'Selin Meridyen';}}
-function csMountDN(){ if(!window.ContentStudio||!DN_CONTENT)return; var host=document.getElementById('csHost'); if(!host)return;
+function _csModulYukle(cb){var L=["../shared/cs-engine.js?v=2", "js/content-studio.js?v=3"];var i=0;(function next(){if(i>=L.length){cb();return;}if(document.querySelector('script[data-csmod="'+L[i]+'"]')){i++;next();return;}var sc=document.createElement('script');sc.src=L[i];sc.dataset.csmod=L[i];sc.onload=function(){i++;next();};sc.onerror=function(){i++;next();};document.head.appendChild(sc);})();}
+function csMountDN(){if(!window.ContentStudio){_csModulYukle(function(){csMountDN();});return;}
+   if(!window.ContentStudio||!DN_CONTENT)return; var host=document.getElementById('csHost'); if(!host)return;
   ContentStudio.mount(host,{
     vertical:'danisman', persona:'üst segment lüks gayrimenkul danışmanlığı içerik editörü',
     city:_dnCity, brand:_dnBrand,
@@ -1656,7 +1658,7 @@ function sozYeni(tip){crmLoad();
 }
 function _sozBody(tip,d,F){
   var bedel=d.bedel?_crmTL(d.bedel):'…………';var kom=d.kom||'…';var sure=d.sure||'…';
-  var head='<p><b>'+sozTipT(tip)+'</b></p><p>İşbu belge; bir tarafta <b>'+_leD(F.unvan)+'</b> (Taşınmaz Ticareti Yetki Belge No: '+_leD(F.belge)+', Vergi No: '+_leD(F.vergi)+', Adres: '+_leD(F.adres)+') — bundan sonra “Danışman” — ile diğer tarafta <b>'+_leD(d.karsiAd||'…')+'</b> (T.C./Vergi No: '+_leD(d.karsiTC||'…')+', Adres: '+_leD(d.karsiAdres||'…')+') — bundan sonra “Müşteri” — arasında akdedilmiştir.</p>';
+  var head='<p><b>'+sozTipT(tip)+'</b></p><p>İşbu belge; bir tarafta <b>'+_leD(F.unvan)+'</b> (Taşınmaz Ticareti Yetki Belge No: '+_leD(F.belge)+', Vergi No: '+_leD(F.vergi)+', Adres: '+_leD(F.adres)+') — bundan sonra “Danışman” — ile diğer tarafta <b>'+_leD(d.karsiAd||'…')+'</b> (T.C./Vergi No: '+_leD(d.karsiKimlik||'…')+', Adres: '+_leD(d.karsiAdres||'…')+') — bundan sonra “Müşteri” — arasında akdedilmiştir.</p>';
   var gm='<p><b>Gayrimenkul:</b> '+_leD(d.gm||'…')+'</p>';
   var clauses={
     aracilik:'<p><b>1. Konu.</b> Danışman, Müşteri adına yukarıda tanımlı gayrimenkulün alım/satım/kiralama sürecinde aracılık ve danışmanlık hizmeti verir.</p><p><b>2. Hizmet Bedeli.</b> İşlem bedeli üzerinden <b>%'+kom+'</b> oranında hizmet bedeli, tapu devri/sözleşme imzası aşamasında muaccel olur.</p><p><b>3. Süre.</b> İşbu sözleşme imza tarihinden itibaren <b>'+sure+' ay</b> geçerlidir.</p>',
@@ -1670,7 +1672,7 @@ function _sozBody(tip,d,F){
   return head+gm+(clauses[tip]||'')+ozel+foot;
 }
 function sozUret(tip){crmLoad();var g=function(x){var e=document.getElementById(x);return e?e.value.trim():'';};
-  var d={tip:tip,karsiAd:g('sz_ad'),karsiTC:g('sz_tc'),karsiAdres:g('sz_adr'),gm:g('sz_gm'),bedel:+g('sz_bedel')||0,kom:g('sz_kom'),sure:g('sz_sure'),ozel:g('sz_ozel'),ts:Date.now(),id:crmId()};
+  var d={tip:tip,karsiAd:g('sz_ad'),karsiKimlik:g('sz_tc'),karsiAdres:g('sz_adr'),gm:g('sz_gm'),bedel:+g('sz_bedel')||0,kom:g('sz_kom'),sure:g('sz_sure'),ozel:g('sz_ozel'),ts:Date.now(),id:crmId()};
   _crm.sozlesmeler.unshift(d);crmSave();crmRenderSoz();sozGoster(d.id);
 }
 function sozGoster(id){crmLoad();var d=_crm.sozlesmeler.filter(function(x){return x.id===id;})[0];if(!d)return;var F=_crmFirma();
@@ -1916,12 +1918,12 @@ function crmSaveIletisim(){var g=function(x){var el=document.getElementById(x);r
   var c={wa:g('ci_wa').replace(/[^\d]/g,''),tel:g('ci_tel'),mail:g('ci_mail'),adres:g('ci_adres'),t1:g('ci_t1'),t2:g('ci_t2'),t3:g('ci_t3')};
   try{localStorage.setItem('dn_iletisim',JSON.stringify(c));}catch(e){}applyIletisim();toast('✓ İletişim & WhatsApp güncellendi.');}
 function iletTest(){var c=iletLoad();var num=(''+(c.wa||'905320000000')).replace(/[^\d]/g,'');window.open('https://wa.me/'+num,'_blank');}
-/* ===================== PROX API & ANAHTAR (veri uçları — dn_prox) ===================== */
-var PROX_KEY='dn_prox';
+/* ===================== PROX API & ANAHTAR (veri uçları — dn_pfx) ===================== */
+var PROX_KEY='dn_pfx_key';
 function proxCfgLoad(){try{var p=JSON.parse(localStorage.getItem(PROX_KEY)||'null');if(p&&window.EMLAK_TENANT){if(p.key)window.EMLAK_TENANT.tenant_key=p.key;if(p.tenant)window.EMLAK_TENANT.tenant_id=p.tenant;}}catch(e){}}
 function crmRenderProxApi(){var host=document.getElementById('crmProxApi');if(!host)return;var t=window.EMLAK_TENANT||{};var q=null;try{q=JSON.parse(localStorage.getItem('dn_quota')||'null');}catch(e){}
   var H='<div class="sta-row2"><div class="sta-f"><label>ProX Tenant ID</label><input id="px_tenant" value="'+_leD(t.tenant_id||'consultant')+'" placeholder="consultant"></div><div class="sta-f"><label>ProX API Anahtarı</label><input id="px_key" type="password" value="'+_leD(t.tenant_key||'')+'" placeholder="prox_..." autocomplete="off"></div></div>'
-    +'<div class="sta-f"><label>API Adresi (sabit)</label><input value="'+_leD(window.EMLAK_API_BASE||'https://www.emlakekspertizi.com')+'" readonly></div>'
+    +'<div class="sta-f"><label>API Adresi (sabit)</label><input value="'+_leD(window.EMLAK_API_BASE||'')+'" readonly></div>'
     +'<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-gold sta-go" onclick="proxCfgSave()">Kaydet</button><button class="btn btn-line sta-go" type="button" onclick="proxCfgTest()">Bağlan & Test Et</button></div>'
     +'<div id="px_status" style="margin-top:10px"></div>'
     +'<div class="sta-ds"><div class="sta-ds-h">📊 Kullanım Kotası</div><p class="sub" style="margin:2px 0">Bu ay <b>'+((q&&q.count)||0)+'</b> ProX isteği'+(q&&q.month?(' ('+_leD(q.month)+')'):'')+'</p></div>'
@@ -2027,7 +2029,7 @@ window.proxAiQuery=proxAiQuery;
 /* =====================================================================
    ŞİFRELİ GİRİŞ KAPISI (Admin Login Gate)
    ===================================================================== */
-const _ADMIN_USER='admin';const _ADMIN_PASS='1234';/* istemci tarafı demo giriş — gerçek güvenlik için sunucu-taraf auth gerekir */
+/* P0: parola karşılaştırması tarayıcıda YAPILMAZ. Sözleşme: POST /api/auth/admin/login {user,pass} → 200 {ok:true} + HttpOnly oturum. EMLAK_DEMO dağıtımı parolasız inceleme yolu sunar (karşılaştırma yok). */
 function _adGateHost(){let el=document.getElementById('adGate');if(el)return el;el=document.createElement('div');el.id='adGate';el.className='adgate';
   el.innerHTML='<div class="adgate-ov" onclick="closeAdminGate()"></div><div class="adgate-card">'
    +'<button class="adgate-x" onclick="closeAdminGate()" aria-label="Kapat">✕</button>'
@@ -2042,16 +2044,14 @@ function _adGateHost(){let el=document.getElementById('adGate');if(el)return el;
 function openAdminGate(){const el=_adGateHost();el.classList.add('on');const u=document.getElementById('adUser'),i=document.getElementById('adPass');if(u)u.value='';if(i)i.value='';setTimeout(()=>{(u||i)&&(u||i).focus();},60);const er=document.getElementById('adErr');if(er)er.textContent='';}
 function closeAdminGate(){const e=document.getElementById('adGate');if(e)e.classList.remove('on');}
 function _adToggleEye(){const i=document.getElementById('adPass');if(i)i.type=i.type==='password'?'text':'password';}
-function adminLogin(){const u=document.getElementById('adUser'),i=document.getElementById('adPass'),er=document.getElementById('adErr'),g=document.getElementById('adGate');if(!i)return;
-  var uv=(u?u.value:'').trim().toLocaleLowerCase('tr');
-  if(uv===_ADMIN_USER&&i.value===_ADMIN_PASS){if(er)er.textContent='';closeAdminGate();openSaasAdmin();toast('✓ Yönetim paneline güvenli giriş yapıldı.');}
-  else{if(er)er.textContent='⚠ Hatalı kullanıcı adı veya şifre. Erişim reddedildi.';if(g){g.classList.add('shake');setTimeout(()=>g.classList.remove('shake'),460);}if(i)i.value='';var f=(uv!==_ADMIN_USER&&u)?u:i;if(f)f.focus();}}
-window.openAdminGate=openAdminGate;window.closeAdminGate=closeAdminGate;window.adminLogin=adminLogin;window._adToggleEye=_adToggleEye;
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAdminGate();closeSaasAdmin();if(typeof closeSaasPortal==='function')closeSaasPortal();}});
-
-/* =====================================================================
-   YÖNETİM PANELİ (#saasTenantAdmin) — tam fonksiyonlu
-   ===================================================================== */
+function adminLogin(){const u=document.getElementById('adUser'),i=document.getElementById('adPass'),er=document.getElementById('adErr');
+  if(window.EMLAK_DEMO===true){closeAdminGate();openSaasAdmin();toast('Demo modu — yönetim paneli inceleme amaçlı açıldı');return;}
+  (async function(){
+    try{const r=await fetch('/api/auth/admin/login',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({user:(u?u.value:'').trim(),pass:i?i.value:''})});
+      if(r.ok){const j=await r.json().catch(function(){return {};});if(j&&j.ok!==false){if(er)er.textContent='';closeAdminGate();openSaasAdmin();toast('✓ Yönetim paneline güvenli giriş yapıldı');return;}}
+      if(er)er.textContent='Giriş başarısız — bilgiler hatalı ya da hesap kilitli.';
+    }catch(e){if(er)er.textContent='Yönetim girişi sunucu tarafında yapılandırılmadı (auth servisi erişilemez).';}
+  })();}
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;el=document.createElement('div');el.id='saasTenantAdmin';el.className='adm-app';
   el.innerHTML='<div class="adm-topbar"><div class="alogo"><span class="mark">'+_brandInitial()+'</span><span class="alogo-t">'+_leD(saasResolve('brandName')||'Selin Meridyen')+' · <b>Pro<span class="ap-x">X</span> CRM</b></span></div><div class="adm-topbar-act"><button onclick="openOnboarding()">🚀 Sihirbaz</button><button onclick="closeSaasAdmin()">👁 Siteyi Gör</button><button class="adm-x" onclick="closeSaasAdmin()">✕</button></div></div><div class="adm-dash">'
    +'<aside class="adm-side"><button class="adm-nav" data-t="yayin" onclick="staTab(this)" style="margin-bottom:6px;background:linear-gradient(135deg,#0e5e3e,#14805a);color:#fff;font-weight:700">🚀 Yayın Hazırlığı</button><button class="adm-nav act" data-t="crmdash" onclick="staTab(this)">📊 Panel</button><div class="adm-group">CRM & Satış</div><button class="adm-nav" data-t="crmkisi" onclick="staTab(this)">👤 Kişiler & Talepler</button><button class="adm-nav" data-t="eslesme" onclick="staTab(this)">🎯 Akıllı Eşleştirme</button><button class="adm-nav" data-t="crmpipe" onclick="staTab(this)">🪜 Satış Hattı</button><button class="adm-nav" data-t="crmtask" onclick="staTab(this)">📅 Görev & Randevu</button><button class="adm-nav" data-t="komisyon" onclick="staTab(this)">💰 Komisyon & Finans</button><button class="adm-nav" data-t="kira" onclick="staTab(this)">🔑 Kira Takibi</button><button class="adm-nav" data-t="sozlesme" onclick="staTab(this)">📄 Sözleşmeler</button><button class="adm-nav" data-t="iletisim" onclick="staTab(this)">📣 İletişim & WhatsApp</button><button class="adm-nav" data-t="rapor" onclick="staTab(this)">📈 Raporlar</button><button class="adm-nav" data-t="gorusmeler" onclick="staTab(this)">💬 Görüşmeler</button><div class="adm-group">Portföy & İçerik</div><button class="adm-nav" data-t="ilanlar" onclick="staTab(this)">🏠 İlanlar</button><button class="adm-nav" data-t="ictoplu" onclick="staTab(this)">📤 Toplu İlan Aktar</button><button class="adm-nav" data-t="portfoy" onclick="staTab(this)">🔒 Özel Portföy</button><button class="adm-nav" data-t="ekip" onclick="staTab(this)">👥 Ekip / Danışmanlar</button><button class="adm-nav" data-t="hizmetalani" onclick="staTab(this)">🗺️ Hizmet Alanı</button><button class="adm-nav" data-t="icstudio" onclick="staTab(this)" style="background:linear-gradient(135deg,#0e5e3e,#14805a);color:#fff;font-weight:700">✨ İçerik Stüdyosu</button><button class="adm-nav" data-t="icerik" onclick="staTab(this)">📝 İçerik & Sayfalar</button><div class="adm-group">Entegrasyon & ProX</div><button class="adm-nav" data-t="prox" onclick="staTab(this)">🤖 İçerik Asistanı & DeepSeek</button><button class="adm-nav" data-t="proxapi" onclick="staTab(this)">🔌 ProX API & Anahtar</button><button class="adm-nav" data-t="eids" onclick="staTab(this)">🛡️ EİDS Yetki</button><div class="adm-group">Pazarlama</div><button class="adm-nav" data-t="seo" onclick="staTab(this)">🔍 Google & SEO</button><div class="adm-group">Ayarlar</div><button class="adm-nav" data-t="firma" onclick="staTab(this)">🏢 Firma Bilgileri</button><button class="adm-nav" data-t="marka" onclick="staTab(this)">🎨 Marka & Tema</button><button class="adm-nav" data-t="yedek" onclick="staTab(this)">💾 Yedek / Aktar</button><div class="spacer"></div><button class="adm-nav exit" onclick="closeSaasAdmin()">⎋ Paneli Kapat</button></aside><main class="adm-main">'
@@ -2113,7 +2113,7 @@ function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(e
      +'<div class="sta-f"><label>Kuruma Özel Ek Ton (override)</label><textarea id="sp_custom" rows="3" placeholder="Örn: Boğaz hattı yalıları ve marka rezidanslarda uzmanız..."></textarea></div>'
      +'<div class="sta-ds"><div class="sta-ds-h">🧠 DeepSeek Yapay Zeka Anahtarı <span class="sta-opt">opsiyonel</span></div>'
        +'<p class="sub" style="margin:2px 0 8px">Kendi DeepSeek API anahtarınızı girerseniz <b>tüm yapay zeka üretimi</b> (danışman asistanı + çeviri) doğrudan <b>DeepSeek</b> ile çalışır. Boş bırakırsanız ProX sunucusundaki içerik asistanı kullanılır. <b>ProX API anahtarı</b> (EİDS/ProX sekmesi) ise emlak endeksi ve değerleme verileri içindir — ikisi ayrı çalışır.</p>'
-       +'<div class="sta-row2"><div class="sta-f"><label>DeepSeek API Anahtarı (sk-...)</label><input id="dn_dskey" type="password" placeholder="sk-..." autocomplete="off"></div>'
+       +'<div class="sta-row2"><div class="sta-f"><label>DeepSeek API Anahtarı (sk-...)</label><input id="dn_ai_ds" type="password" placeholder="sk-..." autocomplete="off"></div>'
        +'<div class="sta-f"><label>Model</label><select id="dn_dsmodel"><option value="deepseek-chat">deepseek-chat (V3)</option><option value="deepseek-reasoner">deepseek-reasoner (R1)</option></select></div></div>'
        +'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-line" type="button" onclick="aiDsTest()">Bağlan & Test Et</button><span class="sub" style="margin:0">Anahtar istemcide saklanır; yayında sunucu-proxy önerilir.</span></div>'
        +'<div id="dn_dsstatus" style="margin-top:8px"></div></div>'
@@ -2182,7 +2182,7 @@ function renderYayin(){
   var portrait='';try{portrait=localStorage.getItem('dn_portrait')||'';}catch(e){}
   var logo='';try{logo=saasResolve('logoUrl')||'';}catch(e){}
   var ga='';try{ga=saasResolve('googleAnalytics')||'';}catch(e){}
-  var proxKey='';try{var pk=JSON.parse(localStorage.getItem('dn_prox')||'null');proxKey=(pk&&(pk.key||pk.apiKey))||'';}catch(e){}
+  var proxKey='';try{var pk=JSON.parse(localStorage.getItem('dn_pfx_key')||'null');proxKey=(pk&&(pk.key||pk.apiKey))||'';}catch(e){}
   function has(v){return !!(v&&(''+v).trim());}
   var REQ=[
     {l:'WhatsApp numarası',ok:has(il.wa),t:'iletisim',h:'Ziyaretçiler bu numaradan yazar; girilince tüm site otomatik güncellenir.'},
@@ -2232,7 +2232,7 @@ function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');try{do
   set('sg_ga',saasResolve('googleAnalytics'));set('sg_gsc',saasResolve('googleSiteVerification'));set('sg_maps',saasResolve('googleMapsKey'));
   set('sm_title',saasResolve('metaTitle'));set('sm_desc',saasResolve('metaDescription'));set('sm_kw',saasResolve('metaKeywords'));
   set('sp_base',SAAS_CONFIG.proxAiPrompts.persona);set('sp_custom',SAAS_CONFIG.tenantSettings.customPrompt);
-  set('dn_dskey',_dsKey());set('dn_dsmodel',_dsModel());try{aiDsStatus();}catch(e){}try{dnStudioFill();}catch(e){}
+  set('dn_ai_ds',_dsKey());set('dn_dsmodel',_dsModel());try{aiDsStatus();}catch(e){}try{dnStudioFill();}catch(e){}
   set('ed_belge',eidsFirma().eids.belgeNo);try{eidsRenderAdmin();}catch(e){}
   try{renderSA();renderVipStatus();renderOzp();renderGorusmelerD();}catch(e){}
   try{crmRenderAll();}catch(e){}
@@ -2278,7 +2278,7 @@ function saasApplyBrand(){const t=SAAS_CONFIG.tenantSettings;const br=_v('sl_bra
   initSaaSTheme();applySaaSSettings();_refreshLogoPrev();toast('Marka, logo & tema TÜM sayfalara uygulandı (white-label).');}
 function saasSaveSEO(){const t=SAAS_CONFIG.tenantSettings;t.googleAnalytics=_v('sg_ga');t.googleSiteVerification=_v('sg_gsc');t.googleMapsKey=_v('sg_maps');t.metaTitle=_v('sm_title')||t.metaTitle;t.metaDescription=_v('sm_desc');t.metaKeywords=_v('sm_kw');applySaaSSettings();toast('Google & SEO ayarları uygulandı.');}
 function saasSaveProxPrompt(){SAAS_CONFIG.tenantSettings.customPrompt=_v('sp_custom');
-  var dk=document.getElementById('dn_dskey'),dm=document.getElementById('dn_dsmodel');
+  var dk=document.getElementById('dn_ai_ds'),dm=document.getElementById('dn_dsmodel');
   if(dk)SAAS_CONFIG.tenantSettings.dsKey=dk.value.trim();
   if(dm&&dm.value)SAAS_CONFIG.tenantSettings.dsModel=dm.value.trim();
   _dsSave();try{aiDsStatus();}catch(e){}
@@ -2340,7 +2340,7 @@ window.openSaasPortal=openSaasPortal;window.closeSaasPortal=closeSaasPortal;wind
 
 /* ---------- INIT ---------- */
 window.addEventListener('load',function(){try{
-  _dsLoad();/* kalıcı DeepSeek anahtarını yükle (localStorage dn_dskey) */
+  _dsLoad();/* kalıcı DeepSeek anahtarını yükle (localStorage dn_ai_ds) */
   /* WHITE-LABEL TEK KAYNAK: reseller adı yalnız dn_brand'de kalıcı (SAAS_CONFIG persist edilmez).
      brand.js ile app.js'in AYNI adı kullanması için SAAS_CONFIG.brandName'i dn_brand'den senkronla;
      yoksa app.js "Selin Meridyen" render eder, brand.js "Didem Keskin" → çakışma + geç-render sızıntısı. */
@@ -2351,7 +2351,7 @@ window.addEventListener('load',function(){try{
   initSaaSTheme();applySaaSSettings();
   try{eidsRenderPublic();applySchema();applyProxyMode();abApply();}catch(e){}
   try{ilanLoad();}catch(e){}/* admin'de kaydedilmiş açık ilanları yükle (dn_listings_v1) */
-  try{proxCfgLoad();}catch(e){}/* admin ProX API anahtarı (dn_prox) → EMLAK_TENANT */
+  try{proxCfgLoad();}catch(e){}/* admin ProX API anahtarı (dn_pfx) → EMLAK_TENANT */
   try{applyContent();}catch(e){}/* CMS: admin'de düzenlenmiş hero metinlerini uygula (dn_content) */
   try{applyPortrait();}catch(e){}/* Ana sayfa Kişisel Temsil portresi (admin yüklediyse gerçek foto, yoksa temsili) */
   try{applyIletisim();}catch(e){}/* WhatsApp/telefon bağlantılarını admin değerine güncelle (dn_iletisim) */

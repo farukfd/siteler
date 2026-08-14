@@ -41,7 +41,7 @@
     E.init=function(o){ o=o||{}; for(var k in o){ if(o[k]!=null)E.cfg[k]=o[k]; } return E; };
 
     E._get=function(){ try{ return JSON.parse(localStorage.getItem(E.cfg.store)||'{}')||{}; }catch(e){ return {}; } };
-    E._set=function(a){ try{ localStorage.setItem(E.cfg.store,JSON.stringify(a)); }catch(e){} };
+    E._set=function(a){ try{ if(window.EMLAK_DEMO===true){localStorage.setItem(E.cfg.store,JSON.stringify(a));} }catch(e){} };/* ÜRETİM: BYOK anahtarları sunucu vault'una (/api/ai/keys) gider, tarayıcıda saklanmaz */
     E.getKeys=function(){ var a=E._get(); return {provider:a.provider||'auto',proxKey:a.proxKey||'',dsKey:a.dsKey||'',dsModel:a.dsModel||'deepseek-chat',oaKey:a.oaKey||'',oaModel:a.oaModel||'gpt-4o-mini',clKey:a.clKey||'',clModel:a.clModel||'claude-sonnet-4-6',pexelsKey:a.pexelsKey||'',prompt:a.prompt||'',sysPrompt:(a.sysPrompt!=null?a.sysPrompt:(a.prompt||'')),schedule:a.schedule||null,capabilities:a.capabilities||null}; };
     E.setKeys=function(k){ var a=E._get(); ['provider','proxKey','dsKey','dsModel','oaKey','oaModel','clKey','clModel','pexelsKey','prompt','sysPrompt','capabilities'].forEach(function(f){ if(k[f]!==undefined)a[f]=k[f]; }); E._set(a); };
     E.getSchedule=function(){ return E._get().schedule||{}; };
@@ -53,23 +53,23 @@
     E.hasAnyKey=function(){ var k=E.getKeys(); return !!(k.proxKey||k.dsKey||k.oaKey||k.clKey); };
     E._bumpQuota=function(){ try{ var qm=new Date().toISOString().slice(0,7),k=E.cfg.store+'_quota',q=JSON.parse(localStorage.getItem(k)||'null'); if(!q||q.month!==qm)q={month:qm,count:0}; q.count++; localStorage.setItem(k,JSON.stringify(q)); }catch(e){} };
 
-    E._deepseek=async function(body,opts){ opts=opts||{}; var k=E.getKeys(); if(!k.dsKey)return null; var x=_ctrl(opts);
-      try{ var r=await fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k.dsKey},body:JSON.stringify({model:k.dsModel,messages:_msgs(body),temperature:(opts.temperature!=null?opts.temperature:0.7),max_tokens:(opts.max_tokens||3000),stream:false}),signal:x.c?x.c.signal:undefined});
+    E._deepseek=async function(body,opts){ opts=opts||{}; var k=E.getKeys(); var x=_ctrl(opts);
+      try{ var r=await fetch('/api/ai/deepseek',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:k.dsModel,messages:_msgs(body),temperature:(opts.temperature!=null?opts.temperature:0.7),max_tokens:(opts.max_tokens||3000),stream:false}),signal:x.c?x.c.signal:undefined});
         if(x.t)clearTimeout(x.t); if(!r.ok)return {_err:true,status:r.status}; var j=await r.json(); var t=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content; return (t&&t.trim())?{answer:t.trim(),_via:'deepseek'}:{_err:true}; }
       catch(e){ if(x.t)clearTimeout(x.t); return {_err:true,err:''+e}; } };
-    E._openai=async function(body,opts){ opts=opts||{}; var k=E.getKeys(); if(!k.oaKey)return null; var x=_ctrl(opts);
-      try{ var r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k.oaKey},body:JSON.stringify({model:k.oaModel,messages:_msgs(body),temperature:(opts.temperature!=null?opts.temperature:0.7),max_tokens:(opts.max_tokens||3000)}),signal:x.c?x.c.signal:undefined});
+    E._openai=async function(body,opts){ opts=opts||{}; var k=E.getKeys(); var x=_ctrl(opts);
+      try{ var r=await fetch('/api/ai/openai',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:k.oaModel,messages:_msgs(body),temperature:(opts.temperature!=null?opts.temperature:0.7),max_tokens:(opts.max_tokens||3000)}),signal:x.c?x.c.signal:undefined});
         if(x.t)clearTimeout(x.t); if(!r.ok)return {_err:true,status:r.status}; var j=await r.json(); var t=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content; return (t&&t.trim())?{answer:t.trim(),_via:'openai'}:{_err:true}; }
       catch(e){ if(x.t)clearTimeout(x.t); return {_err:true,err:''+e}; } };
-    E._claude=async function(body,opts){ opts=opts||{}; var k=E.getKeys(); if(!k.clKey)return null; var m=_msgs(body);
+    E._claude=async function(body,opts){ opts=opts||{}; var k=E.getKeys(); var m=_msgs(body);
       var sys=m.filter(function(x){return x.role==='system';}).map(function(x){return x.content;}).join('\n');
       var conv=m.filter(function(x){return x.role!=='system';}).map(function(x){return {role:(x.role==='assistant'?'assistant':'user'),content:String(x.content)};}); if(!conv.length)conv=[{role:'user',content:String(body.prompt||body.message||'')}];
       var x=_ctrl(opts);
-      try{ var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':k.clKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:k.clModel,max_tokens:(opts.max_tokens||3000),system:sys||undefined,messages:conv}),signal:x.c?x.c.signal:undefined});
+      try{ var r=await fetch('/api/ai/anthropic',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:k.clModel,max_tokens:(opts.max_tokens||3000),system:sys||undefined,messages:conv}),signal:x.c?x.c.signal:undefined});
         if(x.t)clearTimeout(x.t); if(!r.ok)return {_err:true,status:r.status}; var j=await r.json(); var t=j&&j.content&&j.content[0]&&(j.content[0].text||''); return (t&&t.trim())?{answer:t.trim(),_via:'claude'}:{_err:true}; }
       catch(e){ if(x.t)clearTimeout(x.t); return {_err:true,err:''+e}; } };
-    E._prox=async function(body,opts){ opts=opts||{}; var k=E.getKeys(); if(!k.proxKey)return {fallback:true}; var x=_ctrl(opts);
-      try{ var r=await fetch(E.cfg.proxBase+'/api/v1/tenant/prox/ai',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','X-Tenant-Id':E.cfg.tenantId,'X-Tenant-Key':k.proxKey},body:JSON.stringify(body),signal:x.c?x.c.signal:undefined});
+    E._prox=async function(body,opts){ opts=opts||{}; var k=E.getKeys(); var x=_ctrl(opts);
+      try{ var r=await fetch('/api/v1/tenant/prox/ai',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:x.c?x.c.signal:undefined});
         if(x.t)clearTimeout(x.t); if(!r.ok)return {fallback:true,status:r.status}; E._bumpQuota(); var j=await r.json(); return j; }
       catch(e){ if(x.t)clearTimeout(x.t); return {fallback:true,err:''+e}; } };
 
