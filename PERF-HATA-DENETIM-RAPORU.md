@@ -36,6 +36,19 @@ Not: dn+ins doğrulayıcı ajanları aylık harcama limitine takıldı; o iki si
 - ins `index.html` JSON-LD `streetAddress` doldurulmalı; ins `emlak-ekspertizi.html` demo-band farkı; ins/dn yeni sayfaların sayfa-özel i18n sözlükleri (blog/harita/emlak-ekspertizi) — çeviri içerik işi.
 - proxApi kısa-devre önerisi: `EMLAK_PROXY_MODE && !EMLAK_PROXY_URL` iken uzak isteğe hiç çıkmadan fallback (26+21+8 boşa 401'i keser) — tüm proxApi kopyalarına tek desen.
 
+## İNŞAAT DERİN TURU (9 Ağu 2026 — solo sistematik denetim) ✅
+
+**Otomatik taramalar:** onclick→tanımsız-fonksiyon SIFIR (tam havuz eşleştirmesi; 'if' yakalamaları false-positive) · kırık yerel link/görsel SIFIR (ls-kanıtlı) · setInterval/clearInterval dengeli (3/3) · app-ui.js ölü-dosya şüphesi ÇÜRÜTÜLDÜ (index yüklüyor).
+
+**Canlı ölçümler (soğuk yük, no-cache):** DOMContentLoaded 866ms · load 1.35s · **CLS 0** · yerel 4xx **0** · 3× blogPage aç/kapa bellek döngüsü **sızıntısız (4MB→4MB)** — listener sök-tak fix'i sahada doğrulandı.
+
+**Uygulanan düzeltmeler:**
+- index'te kalan **10 script'e defer** (tr-iller, eids, listing×2, cs-engine, content-studio, app-ui, mahalle-endeks, i18n, doviz) → toplam 12 defer'li kaynak; akış (blog sayfası+manşet+detay) defer düzeninde canlı doğrulandı.
+- **JSON-LD adres tutarsızlığı**: Organization/LocalBusiness `streetAddress` "Büyükdere Cad." ↔ footer "Yapı Cad." çelişiyordu → kanonik "Levent Mah. Yapı Cad. No:1"e eşitlendi (×2).
+- **8 şişkin blog görseli yeniden sıkıştırıldı** (Openverse ham kaynaklar; i11 330KB→117KB dahil; klasör 2.4→1.8MB).
+
+**Dürüst not:** Hero görselleri (img1/2/4, ~150-250KB @1500px) sips ile sıkıştırma DENENDİ ve TERSİNE BÜYÜDÜ (orijinaller zaten verimli encode'lu; sips upscale tuzağı da yaşandı — resampleWidth kaynak genişliğinden büyükse dosyayı şişirir). Değişiklik geri alındı; ileri kazanç için mozjpeg/webp dönüşümü ayrı araç ister (build-yok kısıtıyla manuel iş, rapora ertelendi). app-core 602KB tek dosya — bölme refactor'u hâlâ en büyük tekil fırsat (ertelenenler listesinde).
+
 ## Sunucu-tarafı istekler (emlakekspertizi.com)
 1. `/api/blog/*` CORS başlığı çift `Access-Control-Allow-Origin` döndürüyor (bozuk) — düzelirse lokalde de canlı haber akar.
 2. `tenant/rates`, `tenant/closed-deals`, `tenant/google-rating`, `tenant/blog/feed` uçları 404 — açılınca ilgili modüller canlıya döner.
