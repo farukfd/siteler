@@ -237,6 +237,15 @@ dn_op=oku(os.path.join(DIST,'danisman','ozel-portfoy.html')); ins_op=oku(os.path
 b7=('seedExtra' in me and "consultant|cv" in dn_op and "construction|g1" in ins_op)
 kayit('B7','tenant-özgü üretim anahtarı (site_type+config_version seed)','PASS' if b7 else 'FAIL',"dn seedExtra='consultant|cv<N>|g1' ≠ ins 'construction|g1' → aynı bölgede farklı üretim")
 
+# ── B8: i18n sızıntı-anahtar kapsamı (FAZ3/3B yeni metinleri sözlükte + tek sürüm) ──
+for site,dvar,gerek in [('danisman','__DN_I18N_COMMON',['İncele','Gram Altın','(ÖRNEK)','DEMO İLAN','Temsilî · DEMO','Demo portföy gösterimi.','EİDS Doğrulama Bekliyor','Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.']),
+                        ('insaat','__IN_I18N_COMMON',['DEMO İLAN','Temsilî · DEMO','Temsilî senaryo — resmî ilan değildir','Kurgusal tanıtım demosu.','Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.'])]:
+    c=oku(os.path.join(DIST,site,'js','i18n','_common.js'))
+    eksik=[k for k in gerek if ('"'+k+'"') not in c]
+    vs=set(re.findall(r'_common\.js\?v=(\d+)', ' '.join(oku(pth) for r,pth in public_dosyalar(site) if pth.endswith('.html'))))
+    kayit('B8',f"{site}: i18n sızıntı anahtarları + tek dict sürümü",'PASS' if not eksik and len(vs)==1 else 'FAIL',
+          f"eksik:{eksik[:3]} sürümler:{sorted(vs)}")
+
 # ── BLOCKED: sunucu/edge gerektirenler ──
 for no, ad in [(3,"production bootstrap 200 + same-origin (gerçek BFF)"),(4,"HttpOnly/Secure/SameSite oturum çerezi"),
                (5,"bilinmeyen HTML→404"),(6,"bilinmeyen /api→JSON 404"),(7,"/admin yetkisiz→koruma"),
