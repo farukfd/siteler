@@ -86,3 +86,20 @@ Beş bağımsız **statik** dikey site (build YOK, server-runtime YOK). Dosyalar
 - `DEPLOY-VE-GUVENLIK-NOTU.md` — proxy/edge güvenli mod + Cloudflare Worker + çok-kiracı pipeline (P0 çözümü).
 - `insaat/SUNUCU-CLAUDE-NOTLARI.md` — insaat dikeyi tam devir (dosya yapısı, hash routing detayı).
 - `degerleme/SAAS-SUNUCU-NOTLARI.md` · `docs/SAAS-SUNUCU-AJAN-NOTLARI.md` — SaaS/backend uçları.
+
+---
+
+## ★ FAZ3 SONRASI YAYIN — GÜNCEL AKIŞ (15 Ağu 2026, tag `yayin-2026-08-15`)
+> danisman + insaat artık **paketleyiciyle** yayınlanır; kaynak klasörleri DOĞRUDAN servis ETME (demo modudur).
+
+```bash
+git fetch --tags && git checkout yayin-2026-08-15
+python3 scripts/uretim-paketle.py         # → dist/danisman + dist/insaat (leakage bulursa DURUR)
+python3 scripts/kabul-testi.py            # beklenen: 52 PASS / 0 FAIL (BLOCKED'lar backend)
+# dist/danisman/*  → danisman.emlakekspertizi.com vhost kökü
+# dist/insaat/*    → insaat.emlakekspertizi.com   vhost kökü
+```
+- **/admin-assets/** dizinini auth arkasına al (401/403) — admin/stüdyo/CRM kodu lazy burada.
+- Edge kuralları + backend uçları: **BACKEND-KAPANIS-LISTESI.md** (301'ler, 404, başlıklar, /api sözleşmeleri).
+- 🔴 ROTASYON (hâlâ bekliyor): eski `admin/1234` çiftleri sunucuda geçersiz + ProX tenant anahtarları.
+- Not: Üretimde admin/üyelik/portal/canlı-veri, backend uçları açılana dek bilinçli 'güvenli-başarısız'tır.
