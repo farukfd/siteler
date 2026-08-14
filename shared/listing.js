@@ -46,7 +46,10 @@
   L.ilceOptions=function(il,sel){ var T=(window.TR_ILILCE)||{}; var r=T[il]&&T[il].ilce||[]; return '<option value="">İlçe seçin</option>'+r.map(function(x){return '<option'+(x===sel?' selected':'')+'>'+esc(x)+'</option>';}).join(''); };
 
   /* ---- KATEGORİYE GÖRE ÜCRETSİZ PROFESYONEL GÖRSELLER (Pexels CDN, hotlink-serbest) ---- */
-  function _px(id,slug){return 'https://images.pexels.com/photos/'+id+'/'+(slug||('pexels-photo-'+id))+'.jpeg?auto=compress&cs=tinysrgb&w=1000';}
+  /* FAZ3B: Pexels hotlink KALDIRILDI — görseller lisans kaydıyla indirildi (Pexels lisansı,
+     atıf gerektirmez), tenant asset deposunda yerel servis edilir (shared/img/px/<id>.jpg). */
+  var _PXBASE=(function(){try{var sc=document.querySelector('script[src*="listing.js"]');if(sc&&sc.src.indexOf('/shared/')>-1)return sc.src.split('listing.js')[0]+'img/px/';}catch(e){}return '../shared/img/px/';})();
+  function _px(id,slug){return _PXBASE+id+'.jpg';}
   L.CAT_IMG={
     konut:[_px(1918291),_px(1643383),_px(1080721),_px(1571468),_px(2062426),_px(2724749)],
     villa:[_px(1732414),_px(261102),_px(1396122),_px(2119713),_px(1080721)],

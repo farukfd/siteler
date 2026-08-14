@@ -202,18 +202,18 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=4"><\/script><
       <div class="rv-card">
         <h2>Randevu Talep Formu</h2>
         <p class="rv-sub">Bilgileriniz gizli tutulur; yalnızca görüşme amacıyla kullanılır.</p>
-        <form id="rvForm" onsubmit="return rvSubmit(event)">
+        <form id="rvForm" method="post" action="/api/v1/tenant/lead" onsubmit="return rvSubmit(event)">
           <div class="rv-row2">
-            <div class="rv-f"><label for="rv_ad">Ad Soyad</label><input id="rv_ad" required placeholder="Adınız Soyadınız" autocomplete="name"></div>
-            <div class="rv-f"><label for="rv_tel">Telefon</label><input id="rv_tel" required placeholder="05__ ___ __ __" autocomplete="tel"></div>
+            <div class="rv-f"><label for="rv_ad">Ad Soyad</label><input id="rv_ad" name="name" required placeholder="Adınız Soyadınız" autocomplete="name"></div>
+            <div class="rv-f"><label for="rv_tel">Telefon</label><input id="rv_tel" name="phone" required placeholder="05__ ___ __ __" autocomplete="tel"></div>
           </div>
           <div class="rv-row2">
-            <div class="rv-f"><label for="rv_konu">Konu</label><select id="rv_konu"><option>Alım / Satım</option><option>Kiralama</option><option>Değerleme / Ekspertiz</option><option>Özel Portföy</option><option>Yatırım Danışmanlığı</option><option>Diğer</option></select></div>
-            <div class="rv-f"><label for="rv_gun">Tercih Edilen Gün</label><select id="rv_gun"><option>Bu hafta içi</option><option>Bu hafta sonu</option><option>Gelecek hafta içi</option><option>Gelecek hafta sonu</option><option>Esnek — size uygun olan</option></select></div>
+            <div class="rv-f"><label for="rv_konu">Konu</label><select id="rv_konu" name="konu"><option>Alım / Satım</option><option>Kiralama</option><option>Değerleme / Ekspertiz</option><option>Özel Portföy</option><option>Yatırım Danışmanlığı</option><option>Diğer</option></select></div>
+            <div class="rv-f"><label for="rv_gun">Tercih Edilen Gün</label><select id="rv_gun" name="gun"><option>Bu hafta içi</option><option>Bu hafta sonu</option><option>Gelecek hafta içi</option><option>Gelecek hafta sonu</option><option>Esnek — size uygun olan</option></select></div>
           </div>
-          <div class="rv-f"><label for="rv_saat">Tercih Edilen Saat Aralığı</label><select id="rv_saat"><option>09:00 – 12:00</option><option>12:00 – 15:00</option><option>15:00 – 19:00</option><option>Esnek — size uygun olan</option></select></div>
-          <div class="rv-f"><label for="rv_not">Kısa Not (opsiyonel)</label><textarea id="rv_not" placeholder="Gayrimenkulünüz, bütçeniz ya da ihtiyacınız hakkında kısa bilgi…"></textarea></div>
-          <label class="rv-kvkk"><input type="checkbox" id="rv_kvkk" required><span><a href="kvkk.html" style="color:var(--gold-ink,#795901)">KVKK Aydınlatma Metni</a> kapsamında kişisel verilerimin işlenmesini onaylıyorum.</span></label>
+          <div class="rv-f"><label for="rv_saat">Tercih Edilen Saat Aralığı</label><select id="rv_saat" name="saat"><option>09:00 – 12:00</option><option>12:00 – 15:00</option><option>15:00 – 19:00</option><option>Esnek — size uygun olan</option></select></div>
+          <div class="rv-f"><label for="rv_not">Kısa Not (opsiyonel)</label><textarea id="rv_not" name="msg" placeholder="Gayrimenkulünüz, bütçeniz ya da ihtiyacınız hakkında kısa bilgi…"></textarea></div>
+          <label class="rv-kvkk"><input type="checkbox" id="rv_kvkk" name="kvkk" value="1" required><span><a href="kvkk.html" style="color:var(--gold-ink,#795901)">KVKK Aydınlatma Metni</a> kapsamında kişisel verilerimin işlenmesini onaylıyorum.</span></label>
           <button class="rv-btn" type="submit">Randevu Talebini Gönder →</button>
           <div class="rv-msg" id="rv_msg" role="status"></div>
         </form>

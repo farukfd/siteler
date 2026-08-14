@@ -259,7 +259,7 @@
       ['Ticaret Sicil No', f.sicil, 0],
       ['Ticaret Odası', f.oda, 0],
       ['KEP Adresi', f.kep, 0],
-      ['EİDS Yetki Belge No', e.belgeNo, 0],
+      ['Taşınmaz Ticareti Yetki Belgesi No', e.belgeNo, 0],
       ['Adres', f.adres || il.adres, 1],
       ['Telefon', f.tel || il.tel, 0],
       ['E-posta', f.mail || il.mail, 0]

@@ -16,10 +16,12 @@
   function esc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function _dnHome(){try{if(typeof closeAllOverlays==='function')closeAllOverlays();}catch(e){}try{if(typeof goHome==='function')goHome();}catch(e){}}
 
-  /* ===================== 1) ÜYELİK MOTORU (SHA-256 + salt) ===================== */
-  async function _hash(pw,salt){var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(salt+'::'+pw));return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');}
-  function _users(){try{return JSON.parse(localStorage.getItem(DN_USERS)||'{}');}catch(e){return {};}}
-  function _saveUsers(u){try{localStorage.setItem(DN_USERS,JSON.stringify(u));}catch(e){}}
+  /* ===================== 1) ÜYELİK MOTORU (FAZ3B) =====================
+     Parola TARAYICIDA HİÇBİR KOŞULDA işlenmez, hash'lenmez, saklanmaz.
+     Üretim: same-origin /api/auth/user/* (Argon2id + HttpOnly oturum, sunucuda).
+     Demo:   parolasız ÖRNEK OTURUM — kullanıcı veritabanı yok, parola alanı yok sayılır. */
+  var _eskiUserDb=DN_USERS; try{localStorage.removeItem(_eskiUserDb);}catch(e){} /* eski SHA-256 kayıtları temizlenir */
+  function _users(){return {};} /* tarayıcı kullanıcı DB'si KALDIRILDI — üye kayıtları sunucudadır */
   function authSession(){try{return JSON.parse(localStorage.getItem(DN_SESS)||'null');}catch(e){return null;}}
   function _setSession(s){try{if(s)localStorage.setItem(DN_SESS,JSON.stringify(s));else localStorage.removeItem(DN_SESS);}catch(e){}applyAuthUI();try{if(s)_mergeGuestFavs();dnFavReflect();}catch(e){}}
   async function authRegister(name,email,pw){
@@ -27,31 +29,28 @@
     if(name.length<2)return{err:'Lütfen ad soyad girin.'};
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return{err:'Geçerli bir e-posta girin.'};
     if((pw||'').length<6)return{err:'Şifre en az 6 karakter olmalı.'};
-    if(window.EMLAK_DEMO!==true){ /* ÜRETİM: parola tarayıcıda işlenmez/saklanmaz — sunucu auth */
-      try{var rr=await fetch('/api/auth/user/register',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,email:email,password:pw})});
-        if(rr.ok){var jj=await rr.json();if(jj&&jj.ok){_setSession({email:email,name:name,ts:Date.now()});return{ok:true};}}
-        return{err:'Kayıt başarısız — bilgilerinizi kontrol edin.'};
-      }catch(e){return{err:'Üyelik servisi yapılandırılmadı (auth servisine erişilemiyor).'};}
+    if(window.EMLAK_DEMO!==false){ /* DEMO: parolasız örnek oturum — parola İŞLENMEZ */
+      _setSession({email:email,name:name,demo:true,ts:Date.now()});
+      try{if(typeof renderGorusmelerD==='function')renderGorusmelerD();}catch(e){}
+      return{ok:true,demo:true};
     }
-    var users=_users();if(users[email])return{err:'Bu e-posta zaten kayıtlı. Giriş yapın.'};
-    var salt='s'+Date.now().toString(36)+Math.random().toString(36).slice(2);
-    users[email]={name:name,email:email,salt:salt,hash:await _hash(pw,salt),phone:'',createdAt:new Date().toISOString()};
-    _saveUsers(users);_setSession({email:email,name:name,ts:Date.now()});
-    try{if(typeof renderGorusmelerD==='function')renderGorusmelerD();}catch(e){}
-    return{ok:true};
+    /* ÜRETİM: parola tarayıcıda işlenmez/saklanmaz — sunucu auth */
+    try{var rr=await fetch('/api/auth/user/register',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,email:email,password:pw})});
+      if(rr.ok){var jj=await rr.json();if(jj&&jj.ok){_setSession({email:email,name:name,ts:Date.now()});return{ok:true};}}
+      return{err:'Kayıt başarısız — bilgilerinizi kontrol edin.'};
+    }catch(e){return{err:'Üyelik servisi yapılandırılmadı (auth servisine erişilemiyor).'};}
   }
   async function authLogin(email,pw){
     email=(email||'').trim().toLowerCase();
-    if(window.EMLAK_DEMO!==true){ /* ÜRETİM: karşılaştırma sunucuda (Argon2id + HttpOnly oturum) */
-      try{var rr=await fetch('/api/auth/user/login',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pw})});
-        if(rr.ok){var jj=await rr.json();if(jj&&jj.ok){_setSession({email:email,name:(jj.name||email),ts:Date.now()});return{ok:true};}}
-        return{err:'E-posta veya şifre hatalı.'};
-      }catch(e){return{err:'Üyelik servisi yapılandırılmadı (auth servisine erişilemiyor).'};}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return{err:'Geçerli bir e-posta girin.'};
+    if(window.EMLAK_DEMO!==false){ /* DEMO: parolasız örnek oturum — parola karşılaştırması YOK */
+      _setSession({email:email,name:email.split('@')[0],demo:true,ts:Date.now()});return{ok:true,demo:true};
     }
-    var u=_users()[email];
-    if(!u)return{err:'Bu e-postayla kayıt bulunamadı. Önce üye olun.'};
-    if(await _hash(pw,u.salt)!==u.hash)return{err:'E-posta veya şifre hatalı.'};
-    _setSession({email:email,name:u.name,ts:Date.now()});return{ok:true};
+    /* ÜRETİM: karşılaştırma sunucuda (Argon2id + HttpOnly oturum) */
+    try{var rr=await fetch('/api/auth/user/login',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pw})});
+      if(rr.ok){var jj=await rr.json();if(jj&&jj.ok){_setSession({email:email,name:(jj.name||email),ts:Date.now()});return{ok:true};}}
+      return{err:'E-posta veya şifre hatalı.'};
+    }catch(e){return{err:'Üyelik servisi yapılandırılmadı (auth servisine erişilemiyor).'};}
   }
   function authLogout(){_setSession(null);}
   function applyAuthUI(){
@@ -135,11 +134,18 @@
   function _uKey(p){var s=authSession();return s?('dn_'+p+'_'+s.email):null;}
   function _uGet(p,def){var k=_uKey(p);if(!k)return def;try{var v=JSON.parse(localStorage.getItem(k));return v==null?def:v;}catch(e){return def;}}
   function _uSet(p,v){var k=_uKey(p);if(k)try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
-  async function authUpdateProfile(name,phone){var s=authSession();if(!s)return{err:'Giriş yapın.'};name=(name||'').trim();if(name.length<2)return{err:'Ad soyad gerekli.'};var users=_users(),u=users[s.email];if(u){u.name=name;u.phone=(phone||'').trim();_saveUsers(users);}_setSession({email:s.email,name:name,ts:Date.now()});return{ok:true};}
-  async function authChangePassword(cur,nw){var s=authSession();if(!s)return{err:'Giriş yapın.'};var users=_users(),u=users[s.email];if(!u)return{err:'Kullanıcı bulunamadı.'};if(await _hash(cur,u.salt)!==u.hash)return{err:'Mevcut şifre hatalı.'};if((nw||'').length<6)return{err:'Yeni şifre en az 6 karakter olmalı.'};var salt='s'+Date.now().toString(36)+Math.random().toString(36).slice(2);u.salt=salt;u.hash=await _hash(nw,salt);_saveUsers(users);return{ok:true};}
+  async function authUpdateProfile(name,phone){var s=authSession();if(!s)return{err:'Giriş yapın.'};name=(name||'').trim();if(name.length<2)return{err:'Ad soyad gerekli.'};
+    if(window.EMLAK_DEMO===false){try{var rr=await fetch('/api/auth/user/profile',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,phone:(phone||'').trim()})});if(!rr.ok)return{err:'Profil güncellenemedi.'};}catch(e){return{err:'Üyelik servisine erişilemiyor.'};}}
+    _setSession({email:s.email,name:name,phone:(phone||'').trim(),demo:s.demo,ts:Date.now()});return{ok:true};}
+  async function authChangePassword(cur,nw){var s=authSession();if(!s)return{err:'Giriş yapın.'};
+    if(window.EMLAK_DEMO!==false)return{err:'Demo modunda parola bulunmaz — örnek oturum parolasızdır.'};
+    if((nw||'').length<6)return{err:'Yeni şifre en az 6 karakter olmalı.'};
+    try{var rr=await fetch('/api/auth/user/password',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({current:cur,next:nw})});
+      if(rr.ok){var jj=await rr.json();if(jj&&jj.ok)return{ok:true};}return{err:'Mevcut şifre hatalı.'};
+    }catch(e){return{err:'Üyelik servisine erişilemiyor.'};}}
   function authQuotes(){var q=_uGet('quotes',[]);return Array.isArray(q)?q:[];}
   async function authAddQuote(konu,mesaj){var s=authSession();if(!s)return{err:'Giriş yapın.'};var q={id:'q'+Date.now(),konu:konu||'Genel',mesaj:(mesaj||'').trim(),date:new Date().toISOString(),status:'pending',cevap:''};var arr=authQuotes();arr.unshift(q);_uSet('quotes',arr);
-    try{if(typeof dnPushLead==='function'){var u=(_users()[s.email]||{});dnPushLead({name:s.name,email:s.email,phone:u.phone||'',konu:q.konu,msg:q.mesaj,src:'Üye Talebi'});}}catch(e){}
+    try{if(typeof dnPushLead==='function'){dnPushLead({name:s.name,email:s.email,phone:s.phone||'',konu:q.konu,msg:q.mesaj,src:'Üye Talebi'});}}catch(e){}
     _quoteRespond(q.id,q.konu,q.mesaj);return{ok:true,id:q.id};}
   /* ProX yanıtı: admin Motor-1 bağlantısı etkinse app.js aiChat (Motor-1) ile, yoksa ProX çekirdeği. */
   function _proxCall(body){return (typeof window!=='undefined'&&window.aiChat)?window.aiChat(body):proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:body});}
@@ -153,7 +159,7 @@
   function closeHesap(){var ov=document.getElementById('dnHesapPage');if(ov)ov.classList.remove('on');document.body.style.overflow='';document.documentElement.classList.remove('dn-hide-hdr');}
   function girisOrHesap(){if(authSession())openHesap();else openGiris();}
   var _hesapTabCur='talepler';
-  function renderHesap(){var s=authSession();if(!s)return;var u=_users()[s.email]||{};var g=function(id){return document.getElementById(id);};if(g('hs_name'))g('hs_name').value=s.name;if(g('hs_email'))g('hs_email').textContent=s.email;if(g('hs_phone'))g('hs_phone').value=u.phone||'';if(g('hs_av'))g('hs_av').textContent=((s.name||'M').trim()[0]||'M').toUpperCase();if(g('hs_welcome'))g('hs_welcome').textContent=(s.name||'').split(' ')[0];if(g('hs_qcount'))g('hs_qcount').textContent=authQuotes().length;if(g('hs_favcount'))g('hs_favcount').textContent=_favArr().length;_hesapTab(_hesapTabCur||'talepler');}
+  function renderHesap(){var s=authSession();if(!s)return;var u={phone:s.phone||''};var g=function(id){return document.getElementById(id);};if(g('hs_name'))g('hs_name').value=s.name;if(g('hs_email'))g('hs_email').textContent=s.email;if(g('hs_phone'))g('hs_phone').value=u.phone||'';if(g('hs_av'))g('hs_av').textContent=((s.name||'M').trim()[0]||'M').toUpperCase();if(g('hs_welcome'))g('hs_welcome').textContent=(s.name||'').split(' ')[0];if(g('hs_qcount'))g('hs_qcount').textContent=authQuotes().length;if(g('hs_favcount'))g('hs_favcount').textContent=_favArr().length;_hesapTab(_hesapTabCur||'talepler');}
   function _hesapTab(t){_hesapTabCur=t;['profil','talepler','favoriler'].forEach(function(p){var pane=document.getElementById('hs_'+p),tab=document.getElementById('hst_'+p);if(pane)pane.hidden=(p!==t);if(tab)tab.classList.toggle('act',p===t);});if(t==='talepler')_renderQuotes();if(t==='favoriler')_renderFavs();}
   function _favCardHTML(f){var go=f.u?('<a class="fav-go" href="'+esc(f.u)+'">Gör →</a>'):'';
     return '<div class="fav-card"><div class="fav-cbody"><div class="fav-ct">'+esc(f.t||f.id)+'</div>'+(f.s?('<div class="fav-cl">'+esc(f.s)+'</div>'):'')+(f.p?('<div class="fav-cp">'+esc(f.p)+'</div>'):'')+'</div><div class="fav-cact">'+go+'<button class="fav-rm" title="Favoriden çıkar" onclick="dnFav(\''+esc(f.id)+'\',\''+esc(f.type)+'\')">♥</button></div></div>';}
@@ -289,7 +295,7 @@
       /* register */
       +'<div class="gu-pane" id="gu_register" hidden><label>Ad Soyad</label><input id="gu_rname" placeholder="Adınız Soyadınız" autocomplete="name"><label>E-posta</label><input id="gu_remail" type="email" placeholder="ornek@eposta.com" autocomplete="email"><label>Şifre <span style="opacity:.6">(en az 6 karakter)</span></label><input id="gu_rpass" type="password" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key===\'Enter\')authDoRegister()"><div class="gu-kvkk"><input type="checkbox" id="gu_rkvkk"><label for="gu_rkvkk">KVKK Aydınlatma Metni kapsamında kişisel verilerimin işlenmesini onaylıyorum.</label></div><button class="gu-btn" onclick="authDoRegister()">Üyelik Oluştur →</button><div class="gu-err" id="gu_rerr"></div><div class="gu-note">Zaten üye misiniz? <a href="#" onclick="girisTab(\'login\');return false">Üye girişi</a></div></div>'
       /* profile (logged-in) */
-      +'<div class="gu-pane" id="gu_profile" hidden><div class="gu-prof"><div class="gu-av" id="gu_pav">M</div><div><div class="gu-pname" id="gu_pname">—</div><div class="gu-pmail" id="gu_pmail">—</div></div></div><div class="gu-note" style="margin-top:15px">Üye bilgileriniz yalnızca bu tarayıcıda güvenle saklanır (şifre SHA-256 ile korunur). Talepleriniz ProX doğrulanmış emlak verisiyle ön değerlendirilir.</div><button class="gu-btn" onclick="closeGiris();openHesap()">Hesap Sayfam →</button><button class="gu-btn2" onclick="authDoLogout()">Çıkış Yap</button></div>'
+      +'<div class="gu-pane" id="gu_profile" hidden><div class="gu-prof"><div class="gu-av" id="gu_pav">M</div><div><div class="gu-pname" id="gu_pname">—</div><div class="gu-pmail" id="gu_pmail">—</div></div></div><div class="gu-note" style="margin-top:15px">Demo modunda örnek oturum parolasızdır; parolanız tarayıcıda işlenmez ve saklanmaz. Üretimde üyelik sunucu tarafında güvenle yönetilir. Talepleriniz ProX doğrulanmış emlak verisiyle ön değerlendirilir.</div><button class="gu-btn" onclick="closeGiris();openHesap()">Hesap Sayfam →</button><button class="gu-btn2" onclick="authDoLogout()">Çıkış Yap</button></div>'
       /* yonetim (fallback pane, erişilirse) */
       +'<div class="gu-pane" id="gu_yonetim" hidden><p class="gu-sub">Yalnızca yetkili danışman erişimi.</p><button class="gu-btn gu-btn-yon" style="color:#f3efe2" onclick="_adminGiris()">🔐 Yönetim Paneline Giriş →</button><div class="gu-note"><a href="#" onclick="girisTab(\'login\');return false">← Üye girişi</a></div></div>'
       +'</div></div>'

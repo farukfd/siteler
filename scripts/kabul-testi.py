@@ -190,6 +190,53 @@ det_ok=('rngOf' in me and 'seedExtra' in me and 'Math.random' not in me)
 kayit('F5','portföy üretimi deterministik (seeded, config_version katkılı)','PASS' if det_ok else 'FAIL',
       'FNV+xorshift seed + cfg.seedExtra (tenant|cv|g1); Math.random üretimde yok')
 
+# ══════════ FAZ3B REGRESYON BLOKLARI ══════════
+# ── B1: ins index DOM iskeleti (statik kanıt; canlı sayım raporda) ──
+ii=re.sub(r'<template[\s\S]*?</template>','',oku(os.path.join(DIST,'insaat','index.html')))  # template inert — DOM'a girmez
+b1={'header':len(re.findall(r'<header[\s>]',ii)),'footer':len(re.findall(r'<footer[\s>]',ii)),
+    'h1':len(re.findall(r'<h1[\s>]',ii)),'hrefdiez':ii.count('href="#"'),'tmpl':ii.count('pp-kabuk-t')//1}
+kayit('B1','ins index: header=1 footer=1 h1=1 href#=0 (statik)',
+      'PASS' if b1['header']==1 and b1['footer']==1 and b1['h1']==1 and b1['hrefdiez']==0 else 'FAIL', str(b1))
+# ── B2: SHA-256 / tarayıcı kullanıcı DB'si sıfır ──
+sha=[]
+for site in HOST:
+    for rel,p in public_dosyalar(site):
+        if not p.endswith(('.html','.js')): continue
+        s=oku(p)
+        if 'crypto.subtle.digest' in s or "SHA-256'" in s: sha.append(rel)
+kayit('B2','tarayıcıda parola hash/karşılaştırma sıfır','PASS' if not sha else 'FAIL', f'crypto.subtle taraması → {sha[:4]}')
+# ── B3: 'ProX AI' + sağlayıcı public sıfır (F1 kapsar; ProX AI ayrı) ──
+pai=[]
+for site in HOST:
+    for rel,p in public_dosyalar(site):
+        if p.endswith(('.html','.js')) and 'ProX AI' in oku(p): pai.append(f'{site}/{rel}')
+kayit('B3',"'ProX AI' ifadesi sıfır",'PASS' if not pai else 'FAIL', str(pai[:4]))
+# ── B4: Pexels hotlink sıfır (public yüzey) ──
+px=[]
+for site in HOST:
+    for rel,p in public_dosyalar(site):
+        if p.endswith(('.html','.js')) and 'images.pexels.com' in oku(p): px.append(f'{site}/{rel}')
+kayit('B4','harici Pexels hotlink sıfır (public)','PASS' if not px else 'FAIL', str(px[:4]))
+# ── B5: demo dili yasaklı ifadeler sıfır ──
+yasak_dil=['EİDS zorunlu değil','kapalı kayıtlardan tutuyorum','sattığımız/kiraladığımız size özel mülkler','gerçek kayıt var','EİDS Yetki Belge No']
+yd=[]
+for site in HOST:
+    for rel,p in public_dosyalar(site):
+        if not p.endswith(('.html','.js')): continue
+        s=oku(p)
+        for pat in yasak_dil:
+            if pat in s: yd.append(f'{site}/{rel}:{pat[:24]}')
+kayit('B5','demo portföy yasaklı iddia dili sıfır','PASS' if not yd else 'FAIL', str(yd[:5]))
+# ── B6: form POST + name (randevu) ──
+rv=oku(os.path.join(DIST,'danisman','randevu.html'))
+b6=('method="post"' in rv and 'action="/api/v1/tenant/lead"' in rv and 'name="phone"' in rv and 'name="name"' in rv)
+kayit('B6','dn randevu formu POST same-origin + name/label','PASS' if b6 else 'FAIL','method=post action=/api/v1/tenant/lead + name alanları + label for/id')
+# ── B7: tenant-arası portföy ayrımı (seedExtra kaynak kanıtı) ──
+me=oku(os.path.join(DIST,'danisman','shared','mahalle-endeks.js'))
+dn_op=oku(os.path.join(DIST,'danisman','ozel-portfoy.html')); ins_op=oku(os.path.join(DIST,'insaat','ozel-portfoy.html'))
+b7=('seedExtra' in me and "consultant|cv" in dn_op and "construction|g1" in ins_op)
+kayit('B7','tenant-özgü üretim anahtarı (site_type+config_version seed)','PASS' if b7 else 'FAIL',"dn seedExtra='consultant|cv<N>|g1' ≠ ins 'construction|g1' → aynı bölgede farklı üretim")
+
 # ── BLOCKED: sunucu/edge gerektirenler ──
 for no, ad in [(3,"production bootstrap 200 + same-origin (gerçek BFF)"),(4,"HttpOnly/Secure/SameSite oturum çerezi"),
                (5,"bilinmeyen HTML→404"),(6,"bilinmeyen /api→JSON 404"),(7,"/admin yetkisiz→koruma"),

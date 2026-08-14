@@ -218,7 +218,7 @@ let SETTINGS={
   // Doğrulama gerçek backend (ProX/emlakekspertizi) üzerinden yapılır; canlı gelene kadar ilanlar "beklemede" kalır.
   eidsYetkiBelgeNo:'', eidsUnvan:'Meridyen Yapı İnşaat A.Ş.',
   googleMapsKey:'', googleAnalytics:'', googleSiteVerif:'', recaptchaKey:'',
-  waNumber:'905001234567', metaTitle:'Meridyen Yapı – Kurumsal İnşaat', metaDesc:'38 yıllık güven, anahtar teslim mühendislik.',
+  waNumber:'905001234567', metaTitle:'Meridyen Yapı – Kurumsal İnşaat', metaDesc:'40 yıllık güven, anahtar teslim mühendislik.',
   firmaUnvan:'Meridyen Yapı İnşaat A.Ş.', firmaVergiNo:'0000000000', firmaMersis:'0000000000000000',
   firmaAdres:'Levent Mah. Yapı Cad. No:1, Beşiktaş / İstanbul', firmaTel:'+90 212 000 00 00',
   firmaEmail:'info@meridyenyapi.com', firmaYetkili:'Genel Müdür',
@@ -430,7 +430,7 @@ const _I18N_EN={
  "Mühendis, mimar ve saha ekibi pozisyonları için ekibimize katılın.":"Join our team for engineer, architect and field positions.",
  "İletişim & Teklif":"Contact & Quote",
  "Projenizi konuşalım":"Let's talk about your project",
- "Konut, ticari ve karma projelerde anahtar teslim mühendislik; kentsel dönüşüm, kat karşılığı ve tadilat hizmetlerinde 38 yıllık güven.":"Turnkey engineering for residential, commercial and mixed-use projects; 38 years of trust in urban renewal, land-for-flat and renovation services.",
+ "Konut, ticari ve karma projelerde anahtar teslim mühendislik; kentsel dönüşüm, kat karşılığı ve tadilat hizmetlerinde 40 yıllık güven.":"Turnkey engineering for residential, commercial and mixed-use projects; 38 years of trust in urban renewal, land-for-flat and renovation services.",
  "Bu cümleyi okuduğunuz şu anda, ekibimiz 12 şantiyede üretim yapıyor.":"As you read this sentence, our team is producing on <span class='amber'>12 sites</span>.",
  "Meridyen Yapı; 1986'da temellerini attığı kurumsal kültürünü üç kuşaktır aynı titizlikle sürdüren bir yapı ve gayrimenkul geliştirme şirketidir. Arsa analizinden anahtar teslime kadar her aşamayı kendi mühendis kadromuzla yönetir; deprem güvenliği, malzeme kalitesi ve teslim takvimini taviz verilmez ilkeler olarak görürüz.":"Meridyen Yapı is a construction and real-estate development company that has carried the corporate culture it founded in 1986 with the same rigor for three generations. We manage every stage from land analysis to turnkey delivery with our own engineering staff; we treat earthquake safety, material quality and the delivery schedule as non-negotiable principles.",
  "Bugüne kadar 8.400'ün üzerinde konutu sahiplerine teslim ettik; her projede şeffaf süreç, denetlenebilir kalite ve uzun ömürlü değer ürettik.":"To date we have handed over more than 8,400 homes to their owners; in every project we delivered a transparent process, auditable quality and long-lasting value.",
@@ -959,7 +959,7 @@ function renderDoc(key){
      bilinmeyen anahtarda ise artık bizim sabit metnimiz. */
   var en=(typeof LANG!=='undefined'&&LANG==='en');
   var d=(DOC&&DOC[key])||{t:(en?'Document not found':'Belge bulunamadı'),h:'<p>'+(en?'This content is not available.':'Bu içerik bulunamadı.')+'</p>'};
-  var _bn=((typeof BRAND!=='undefined'&&BRAND.name)||'Meridyen')+((typeof BRAND!=='undefined'&&BRAND.name2)||' Yapı');var h='<div class="doc-hero doc-rv"><div class="doc-eyebrow"><i></i> '+_brandEsc(_bn)+'</div><h1>'+_brandEsc(_brandSubst(d.t))+'</h1></div>';
+  var _bn=((typeof BRAND!=='undefined'&&BRAND.name)||'Meridyen')+((typeof BRAND!=='undefined'&&BRAND.name2)||' Yapı');var h='<div class="doc-hero doc-rv"><div class="doc-eyebrow"><i></i> '+_brandEsc(_bn)+'</div><h2 class="h1x">'+_brandEsc(_brandSubst(d.t))+'</h2></div>';
   h+='<div class="doc-content doc-rv">'+_brandSubst(d.h)+'</div>';
   h+='<div class="doc-back doc-rv"><button class="btn btn-primary" onclick="closeDoc()">'+(en?'← Back to site':'← Siteye dön')+'</button></div>';
   document.getElementById('docBody').innerHTML=h;
@@ -982,7 +982,7 @@ function renderIletisimPage(){
     :{eyebrow:'İletişim',h1:'Projenizi birlikte konuşalım',lead:'Ücretsiz keşif, teklif, tadilat veya kat karşılığı görüşmesi için bize ulaşın. Uzman ekibimiz 24 saat içinde size dönüş yapar.',addr:'Adres',phone:'Telefon',mail:'E-posta',hours:'Çalışma Saatleri',wa:'WhatsApp Hattı',formT:'Teklif Talebi Oluştur',formH:'Formu doldurun, 24 saat içinde uzman ekibimiz sizi arasın.',legalT:'Yasal Bilgiler / Şirket Künyesi',legalS:'Türk Ticaret Kanunu gereği zorunlu kurumsal künye bilgileri.',fUnvan:'Ünvan',fVd:'Vergi Dairesi',fVno:'Vergi No',fMersis:'MERSİS No',fTsicil:'Ticaret Sicil No',fOda:'Ticaret Odası',fKep:'KEP Adresi',fYetkili:'Yetkili',note:'Yukarıdaki bilgiler Türk Ticaret Kanunu ve e-Ticaret mevzuatı (künye zorunluluğu) kapsamında sunulmuştur. Bu bir demodur; bilgiler temsilîdir.'};
   var tel=(s.firmaTel||'').replace(/[^0-9+]/g,''), wa=(s.waNumber||'').replace(/[^0-9]/g,'');
   var h='';
-  h+='<div class="il-hero il-rv"><div class="il-eyebrow"><i></i> '+esc(t.eyebrow)+'</div><h1>'+esc(t.h1)+'</h1><p>'+esc(t.lead)+'</p></div>';
+  h+='<div class="il-hero il-rv"><div class="il-eyebrow"><i></i> '+esc(t.eyebrow)+'</div><h2 class="h1x">'+esc(t.h1)+'</h2><p>'+esc(t.lead)+'</p></div>';
   h+='<div class="il-grid"><div class="il-info">';
   h+='<div class="il-card il-rv"><div class="ic">📍</div><div><div class="k">'+esc(t.addr)+'</div><a class="v" href="https://www.google.com/maps?q='+mapQ+'" target="_blank" rel="noopener noreferrer">'+esc(s.firmaAdres)+'</a></div></div>';
   h+='<div class="il-card il-rv"><div class="ic">📞</div><div><div class="k">'+esc(t.phone)+'</div><a class="v" href="tel:'+tel+'">'+esc(s.firmaTel)+'</a></div></div>';
@@ -1028,7 +1028,7 @@ function renderBolgePage(){
   // HERO — "bölgeye hâkimiz"
   h+=`<div class="bzhero bz-rv"><div class="bzhero-grid"></div><div class="bzhero-in">
       <span class="bzh-eye"><i></i> Canlı Bölge Zekâsı · Meridyen Veri Ağı</span>
-      <h1>${(typeof SETTINGS!=='undefined'&&SETTINGS.firmaIl&&SETTINGS.firmaIl!=='İstanbul')?(SETTINGS.firmaIl+' yatırım koridorları,'):('İstanbul\'un yatırım koridorları,')}<br><span class="hl">metrekaresine kadar.</span></h1>
+      <h2 class="h1x">${(typeof SETTINGS!=='undefined'&&SETTINGS.firmaIl&&SETTINGS.firmaIl!=='İstanbul')?(SETTINGS.firmaIl+' yatırım koridorları,'):('İstanbul\'un yatırım koridorları,')}<br><span class="hl">metrekaresine kadar.</span></h2>
       <p>Faaliyet gösterdiğimiz her bölgede m² fiyatını, inşaat maliyetini, kira getirisini ve deprem riskini güncel veriyle izliyoruz. Kararı rakamlar verir.</p>
       <div class="bzh-stats">
         <div class="bzh-s"><b data-count="${BOLGELER.length}">0</b><span>izlenen ilçe</span></div>
@@ -1531,7 +1531,7 @@ const SAAS_CONFIG={
     googleAnalytics:'', googleMapsKey:'', googleSiteVerification:'',
     metaTitle:'', metaDescription:'', metaKeywords:'', customPrompt:''
   },
-  /* ProX AI — inşaat/proje bağlamına özel promptlar */
+  /* ProX — inşaat/proje bağlamına özel promptlar */
   proxAiPrompts:{
     proje:'Sen Meridyen Yapı’nın proje danışmanısın; teslim tarihi, daire tipleri ve yatırım getirisini veriyle anlat.',
     arsa:'Sen kat karşılığı/fizibilite uzmanısın; arsa payı, emsal ve net kâr paylaşımını net açıkla.',
@@ -1572,7 +1572,7 @@ const INSAAT_MNAV=`<div style="display:flex;justify-content:space-between;align-
   +`<a href="ilanlar.html">İlanlar</a>`
   +`<a href="bolge.html" onclick="document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});return goPage('bolge',event)">Bölge Zekası</a>`
   +`<a href="index.html#asistan" onclick="document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});return goPage('asistan',event)"><span class="prox-logo">Pro<span class="prox-x">X</span></span>&nbsp;Asistan</a>`
-  +`<a href="#" class="js-giris" onclick="event.preventDefault();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});girisOrHesap()">Giriş</a>`
+  +`<a href="#giris" class="js-giris" onclick="event.preventDefault();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});girisOrHesap()">Giriş</a>`
   +`<button class="btn btn-primary" style="margin-top:14px;justify-content:center" onclick="document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openTeklif()">Ücretsiz Keşif</button>`
   +`<div class="mnav-lang"><span>Dil / Language</span><select class="lang-sel" aria-label="Dil / Language" onchange="applyLang(this.value)"><option value="tr">TR</option><option value="en">EN</option></select></div>`;
 const INSAAT_FOOTER=`<div class="wrap">
@@ -1580,11 +1580,11 @@ const INSAAT_FOOTER=`<div class="wrap">
     <div><div class="lo">Meridyen<span class="lo2"> Yapı</span></div>
       <p class="desc">1986'dan bu yana güvenle inşa eden kurumsal yapı, tadilat ve gayrimenkul geliştirme şirketi.</p>
       <div class="fsocial">
-        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a>
-        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a>
-        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg></a>
-        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg></a>
-        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a>
+        <a href="${SOCIAL.facebook||'https://facebook.com'}" class="js-soc-fb" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a>
+        <a href="${SOCIAL.instagram||'https://instagram.com'}" class="js-soc-ig" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a>
+        <a href="${SOCIAL.x||'https://x.com'}" class="js-soc-x" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg></a>
+        <a href="${SOCIAL.linkedin||'https://linkedin.com'}" class="js-soc-li" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.34 0h2.97v1.72h.04c.41-.78 1.42-1.6 2.93-1.6 3.13 0 3.71 2.06 3.71 4.74V21h-3.1v-5.55c0-1.32-.02-3.02-1.84-3.02-1.84 0-2.12 1.44-2.12 2.92V21h-3.1V8.4Z"/></svg></a>
+        <a href="${SOCIAL.youtube||'https://youtube.com'}" class="js-soc-yt" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 3.85 12 3.85 12 3.85s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20.15 12 20.15 12 20.15s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.6 24 12 24 12s0-3.6-.5-5.5ZM9.6 15.6V8.4l6.24 3.6-6.24 3.6Z"/></svg></a>
         <a href="https://nsosyal.com" target="_blank" rel="noopener noreferrer" aria-label="NEXT Sosyal (Türkiye)" title="NEXT Sosyal — Türkiye'nin yerli sosyal medya platformu"><svg viewBox="0 0 575 574" aria-hidden="true"><path d="M171.226 0.078125H0V573.751H171.226V0.078125Z"/><path d="M76.1875 0.0782019L191.016 300.603L275.573 520.404C289.183 552.162 326.104 573.751 367.482 573.751H501.631C538.082 573.751 574.142 535.579 574.142 494.748V0H402.917V323.053L398.458 311.632L278.858 0H76.1875V0.0782019Z"/></svg></a>
       </div>
       <div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>
@@ -1608,6 +1608,41 @@ const INSAAT_FOOTER=`<div class="wrap">
   </div>
 </div>`;
 function fGo(id){try{closeAllInsaatOverlays();}catch(e){}setTimeout(function(){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},250);return false;}
+/* ===== FAZ3B: SAYFA-GORUNUMU KABUK YONETICISI (idempotent) =====
+   Overlay gorunumlerin header/footer'lari statik DOM'da DEGIL <template class="pp-kabuk-t">
+   icinde durur (sayilmaz, render edilmez). Gorunum 'on' olunca kabuk TAKILIR, kapaninca
+   SOKULUR - tekrar mount/cogalma imkansiz (data-kabuk bekcisi). Ana sayfa: 1 header + 1 footer. */
+function _ppKabukTak(pg){
+  if(!pg||pg.dataset.kabuk==='1')return;
+  pg.querySelectorAll('template.pp-kabuk-t').forEach(function(t){
+    try{t.parentNode.insertBefore(t.content.cloneNode(true),t);}catch(e){}
+  });
+  pg.querySelectorAll('footer.insaatFooter').forEach(function(f){ if(!f.innerHTML.trim())f.innerHTML=INSAAT_FOOTER; });
+  pg.dataset.kabuk='1';
+  try{if(typeof applyMenuText==='function')applyMenuText();}catch(e){}
+  try{if(typeof applyBrand==='function')applyBrand();}catch(e){}
+  try{if(typeof applyContactAll==='function')applyContactAll();}catch(e){}
+}
+function _ppKabukSok(pg){
+  if(!pg||pg.dataset.kabuk!=='1')return;
+  pg.querySelectorAll('header.pp-hdr,footer.insaatFooter').forEach(function(el){el.remove();});
+  pg.dataset.kabuk='';
+}
+(function(){
+  if(typeof MutationObserver==='undefined'||typeof document==='undefined')return;
+  var mo=new MutationObserver(function(ms){ms.forEach(function(m){
+    var el=m.target; if(!el||el.nodeType!==1)return;
+    if(el.classList.contains('on'))_ppKabukTak(el); else _ppKabukSok(el);
+  });});
+  function kur(){
+    document.querySelectorAll('template.pp-kabuk-t').forEach(function(t){
+      var pg=t.closest('div[id],section[id]');
+      if(pg&&!pg.dataset.kabukObs){pg.dataset.kabukObs='1';mo.observe(pg,{attributes:true,attributeFilter:['class']});
+        if(pg.classList.contains('on'))_ppKabukTak(pg);}
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',kur);else kur();
+})();
 function mountInsaatMenu(){
   document.querySelectorAll('.insaatNav').forEach(n=>n.innerHTML=INSAAT_NAV);
   document.querySelectorAll('.insaatCta').forEach(el=>el.innerHTML=INSAAT_CTA);
@@ -1653,7 +1688,7 @@ window.saasSetRegions=function(arr){SAAS_CONFIG.allowedRegions.ilceler=arr||[];r
 /* SaaS başlatma — DOMContentLoaded boot'undan SONRA: tema + dinamik menü + bölge yetkisi */
 /* ============================================================
    ProX SaaS Çekirdeği (İnşaat) — çift katman · Google/Meta ·
-   ProX AI · 38-Kategori Proje Raporu · bağımsız bayi admin
+   ProX · 38-Kategori Proje Raporu · bağımsız bayi admin
    ============================================================ */
 function saasResolve(key){const sys=SAAS_CONFIG.systemSettings||{},ten=SAAS_CONFIG.tenantSettings||{},allow=sys.allowTenantOverride||{};if(allow[key]&&ten[key]!=null&&ten[key]!=='')return ten[key];return (sys[key]!=null&&sys[key]!=='')?sys[key]:undefined;}
 function _saasMeta(name,val,prop){if(val==null||val==='')return;const sel=prop?('meta[property="'+name+'"]'):('meta[name="'+name+'"]');let m=document.head.querySelector(sel);if(!m){m=document.createElement('meta');prop?m.setAttribute('property',name):m.setAttribute('name',name);document.head.appendChild(m);}m.setAttribute('content',val);}
@@ -1673,8 +1708,8 @@ function applySaaSSettings(){try{
   if(typeof mountInsaatMenu==='function')mountInsaatMenu();
 }catch(e){console.warn('applySaaSSettings',e);}}
 window.applySaaSSettings=applySaaSSettings;
-/* ProX AI (inşaat) */
-function _proxOut(){let el=document.getElementById('proxPanel');if(!el){el=document.createElement('div');el.id='proxPanel';el.className='prox-panel';el.innerHTML='<div class="prox-hd"><b>⚡ ProX AI</b><button onclick="this.closest(\'.prox-panel\').remove()">✕</button></div><div class="prox-body" id="proxAiOut"></div>';document.body.appendChild(el);}el.classList.add('on');return document.getElementById('proxAiOut');}
+/* ProX (inşaat) */
+function _proxOut(){let el=document.getElementById('proxPanel');if(!el){el=document.createElement('div');el.id='proxPanel';el.className='prox-panel';el.innerHTML='<div class="prox-hd"><b>⚡ ProX</b><button onclick="this.closest(\'.prox-panel\').remove()">✕</button></div><div class="prox-body" id="proxAiOut"></div>';document.body.appendChild(el);}el.classList.add('on');return document.getElementById('proxAiOut');}
 function _proxSimulate(msg,ctx){const m=(msg||'').toLocaleLowerCase('tr');
   if(ctx==='arsa') return 'Kat karşılığı fizibilitesi: emsal (KAKS), arsa payı ve net kâr paylaşımını 38 kategorilik endeksle hesaplarız. Arsanızı girin, 3D fizibilite + pay dağılımı çıkaralım.';
   if(ctx==='bolge') return 'Bu bölgede zemin/deprem riski ve 5 yıllık değer artış projeksiyonu endeksimizde mevcut; yatırım için en uygun parselleri önerebilirim.';
@@ -1685,7 +1720,7 @@ async function proxAiQuery(userMessage,contextType){const ctx=contextType||'defa
   const base=(SAAS_CONFIG.proxAiPrompts&&(SAAS_CONFIG.proxAiPrompts[ctx]||SAAS_CONFIG.proxAiPrompts.default))||'';
   const custom=(typeof saasResolve==='function'?saasResolve('customPrompt'):'')||'';
   const prompt=base+(custom?' '+custom:'');
-  window.__PROX_DEBUG&&console.log('[ProX AI →] '+SAAS_CONFIG.tenantName+' · ctx='+ctx+' · prompt="'+prompt.slice(0,46)+'…" · soru: '+userMessage);
+  window.__PROX_DEBUG&&console.log('[ProX →] '+SAAS_CONFIG.tenantName+' · ctx='+ctx+' · prompt="'+prompt.slice(0,46)+'…" · soru: '+userMessage);
   let answer=null;
   try{
     if(typeof proxApi==='function'){
@@ -1696,7 +1731,7 @@ async function proxAiQuery(userMessage,contextType){const ctx=contextType||'defa
     }
   }catch(_){ answer=null; }
   if(!answer){ await new Promise(r=>setTimeout(r,300)); answer=_proxSimulate(userMessage,ctx); } /* fallback: yerel inşaat yanıtı */
-  window.__PROX_DEBUG&&console.log('[ProX AI ←] '+answer);
+  window.__PROX_DEBUG&&console.log('[ProX ←] '+answer);
   const out=_proxOut();if(out)out.innerHTML='<div class="prox-q">'+userMessage+'</div><div class="prox-a">'+answer+'</div>';return answer;}
 window.proxAiQuery=proxAiQuery;
 /* Logo→tema */
@@ -1743,11 +1778,11 @@ window.saasGenerateReportPDF=saasGenerateReportPDF;
 function _saasAdminCss(){if(document.getElementById('saasAdminCss'))return;const st=document.createElement('style');st.id='saasAdminCss';st.textContent='.saas-admin-btn{position:fixed;left:16px;bottom:16px;z-index:200;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border:0;border-radius:99px;padding:11px 16px;font-weight:700;font-size:.8125rem;cursor:pointer;box-shadow:0 14px 30px -14px rgba(0,0,0,.5);font-family:inherit}.sta-modal{position:fixed;inset:0;z-index:240;display:none}.sta-modal.on{display:block}.sta-ov{position:absolute;inset:0;background:rgba(8,12,20,.62);backdrop-filter:blur(3px)}.sta-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,94vw);max-height:90vh;display:flex;flex-direction:column;background:#fff;color:#111;border-radius:18px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.6)}.sta-hd{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;background:linear-gradient(135deg,#16181f,#0e0f13);color:#fff}.sta-hd b{font-size:.9375rem}.sta-hd button{background:rgba(255,255,255,.14);border:0;color:#fff;width:30px;height:30px;border-radius:8px;cursor:pointer}.sta-tabs{display:flex;gap:6px;padding:12px 16px 0;flex-wrap:wrap;border-bottom:1px solid #eee}.sta-tabs button{border:1px solid #e2e2e6;background:#fff;border-radius:9px 9px 0 0;padding:9px 14px;font-size:.8125rem;font-weight:700;color:#555;cursor:pointer}.sta-tabs button.act{background:var(--accent);border-color:var(--accent);color:#fff}.sta-body{padding:18px;overflow:auto}.sta-pane h4{margin:0 0 4px;font-size:.9375rem}.sta-pane .sub{font-size:.78125rem;color:#777;margin:0 0 12px}.sta-f{margin-bottom:10px}.sta-f label{display:block;font-size:.78125rem;font-weight:700;color:#444;margin-bottom:5px}.sta-f input,.sta-f select,.sta-f textarea{width:100%;padding:11px 13px;border:1px solid #ddd;border-radius:10px;font-size:.875rem;font-family:inherit;outline:none}.sta-f input:focus,.sta-f textarea:focus,.sta-f select:focus{border-color:var(--accent)}.sta-go{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border:0;font-weight:700;font-size:.875rem;padding:11px 18px;border-radius:10px;cursor:pointer;margin-top:4px}.sta-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:520px){.sta-row2{grid-template-columns:1fr}}.prox-panel{position:fixed;right:16px;bottom:16px;z-index:250;width:min(380px,92vw);max-height:74vh;display:flex;flex-direction:column;background:#fff;color:#111;border:1px solid #e2e2e6;border-radius:16px;overflow:hidden;box-shadow:0 30px 70px -28px rgba(0,0,0,.5);opacity:0;transform:translateY(10px);transition:.25s}.prox-panel.on{opacity:1;transform:none}.prox-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;background:linear-gradient(135deg,#16181f,#0e0f13);color:#fff}.prox-hd b{font-size:.84375rem}.prox-hd button{background:rgba(255,255,255,.14);border:0;color:#fff;width:26px;height:26px;border-radius:7px;cursor:pointer}.prox-body{padding:15px;overflow:auto}.prox-q{font-size:.8125rem;font-weight:700;background:#f3f4f6;border-radius:9px;padding:8px 11px;margin-bottom:9px}.prox-a{font-size:.875rem;line-height:1.55;color:#444}.prox-pdf-h b{display:block;font-size:.90625rem}.prox-pdf-h span{font-size:.75rem;color:#777}.prox-pdf-kpi{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin:11px 0}.prox-pdf-kpi>div{background:#f6f7f9;border:1px solid #eee;border-radius:9px;padding:7px;text-align:center}.prox-pdf-kpi b{display:block;font-size:.8125rem;color:var(--accent)}.prox-pdf-kpi span{font-size:.625rem;color:#888}.prox-pdf-cats>b{font-size:.75rem}.prox-pdf-cats .cats{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}.prox-pdf-cats i{font-style:normal;font-size:.625rem;background:#f3f4f6;border:1px solid #e6e6e6;color:#555;padding:3px 7px;border-radius:99px}.prox-pdf-ft{margin-top:10px;font-size:.65625rem;color:#999;border-top:1px dashed #eee;padding-top:9px}';document.head.appendChild(st);}
 function _saasAdminHost(){let el=document.getElementById('saasTenantAdmin');if(el)return el;_saasAdminCss();el=document.createElement('div');el.id='saasTenantAdmin';el.className='sta-modal';
   el.innerHTML='<div class="sta-ov" onclick="closeSaasAdmin()"></div><div class="sta-card"><div class="sta-hd"><b>⚡ ProX SaaS · Bayi Yönetim ('+SAAS_CONFIG.tenantName+')</b><button onclick="closeSaasAdmin()">✕</button></div>'
-   +'<div class="sta-tabs"><button class="act" data-t="tema" onclick="staTab(this)">Tema & Logo</button><button data-t="google" onclick="staTab(this)">Google & Meta</button><button data-t="prox" onclick="staTab(this)">ProX AI</button><button data-t="rapor" onclick="staTab(this)">Raporlar</button></div>'
+   +'<div class="sta-tabs"><button class="act" data-t="tema" onclick="staTab(this)">Tema & Logo</button><button data-t="google" onclick="staTab(this)">Google & Meta</button><button data-t="prox" onclick="staTab(this)">ProX</button><button data-t="rapor" onclick="staTab(this)">Raporlar</button></div>'
    +'<div class="sta-body">'
    +'<div class="sta-pane" data-p="tema"><h4>Logo & Tema</h4><p class="sub">Logo girince kurumsal renk paleti otomatik uyarlanır; favicon tarayıcı sekmesinde anlık değişir.</p><div class="sta-f"><label>Şirket Logo URL</label><input id="sl_logo" placeholder="https://.../logo.png"></div><div class="sta-f"><label>Favicon URL</label><input id="sl_favicon" placeholder="https://.../favicon.png"></div><button class="sta-go" onclick="saasApplyLogo()">Logoyu Uygula & Temayı Uyarla</button></div>'
    +'<div class="sta-pane" data-p="google" hidden><h4>Google & Meta</h4><p class="sub">Arama sonuçları + analytics; kaydedince sayfa yenilenmeden uygulanır.</p><div class="sta-row2"><div class="sta-f"><label>Google Analytics (GA4) ID</label><input id="sg_ga" placeholder="G-XXXXXXXXXX"></div><div class="sta-f"><label>Search Console Doğrulama</label><input id="sg_gsc" placeholder="google-site-verification=..."></div></div><div class="sta-f"><label>Google Maps API Key</label><input id="sg_maps" placeholder="AIza..."></div><div class="sta-f"><label>Meta Başlık</label><input id="sm_title" placeholder="Sayfa başlığı"></div><div class="sta-f"><label>Meta Açıklama</label><input id="sm_desc" placeholder="Açıklama"></div><div class="sta-f"><label>Meta Anahtar Kelimeler</label><input id="sm_kw" placeholder="inşaat, kat karşılığı, ..."></div><button class="sta-go" onclick="saasSaveGoogle()">Kaydet & Uygula</button></div>'
-   +'<div class="sta-pane" data-p="prox" hidden><h4>ProX AI — İnşaat/Proje Özel Promptu</h4><p class="sub">Merkez sistem promptuna eklenir. Örn: "Lüks rezidans ve karma projelerde uzmanız."</p><textarea id="sp_custom" rows="3" placeholder="Lüks rezidans uzmanıyız..."></textarea><button class="sta-go" onclick="saasSaveProxPrompt()" style="margin-top:8px">Özel Promptu Kaydet</button></div>'
+   +'<div class="sta-pane" data-p="prox" hidden><h4>ProX — İnşaat/Proje Özel Promptu</h4><p class="sub">Merkez sistem promptuna eklenir. Örn: "Lüks rezidans ve karma projelerde uzmanız."</p><textarea id="sp_custom" rows="3" placeholder="Lüks rezidans uzmanıyız..."></textarea><button class="sta-go" onclick="saasSaveProxPrompt()" style="margin-top:8px">Özel Promptu Kaydet</button></div>'
    +'<div class="sta-pane" data-p="rapor" hidden><h4>38 Kategori Proje Analiz Raporu</h4><p class="sub">2005’ten bugüne endeks gücüyle proje/arsa için profesyonel fizibilite raporu.</p><div class="sta-f"><label>Proje / Arsa seçin</label><select id="sr_prop"><option value="">Seçin…</option></select></div><button class="sta-go" onclick="saasReportFromAdmin()">📄 Profesyonel 38 Kategorilik Rapor Üret</button></div>'
    +'</div></div>';
   document.body.appendChild(el);return el;}
@@ -2067,7 +2102,7 @@ function insBlogDetail(id){var b=insBlogById(id);if(!b)return;
   ov.innerHTML='<div class="cs-article" style="max-width:820px;margin:0 auto;padding:26px 20px 70px;line-height:1.75;font-size:1.0625rem">'
     +'<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px"><button onclick="insBlogClose()" style="background:var(--surface,#161b22);color:inherit;border:1px solid var(--line,#2a2f37);border-radius:10px;padding:9px 16px;cursor:pointer;font:inherit;font-size:.8125rem">← Tüm yazılar</button>'
     +'<span style="display:inline-block;font-weight:700;font-size:.71875rem;letter-spacing:.09em;text-transform:uppercase;color:#ffb066;background:rgba(255,122,47,.14);border:1px solid rgba(255,122,47,.35);border-radius:999px;padding:6px 13px">Blog · '+_insEsc(b.cat||'Haber')+(b.src==='prox'?' · ProX Haber':'')+'</span></div>'
-    +'<h1 style="font-size:clamp(1.75rem,5vw,2.75rem);line-height:1.15;margin:0 0 8px">'+_insEsc(b.t||'')+'</h1>'
+    +'<h2 class="h1x" style="font-size:clamp(1.75rem,5vw,2.75rem);line-height:1.15;margin:0 0 8px">'+_insEsc(b.t||'')+'</h2>'
     +'<div style="opacity:.7;margin-bottom:16px;font-size:.875rem">'+_insEsc(b.author||'Meridyen Yapı')+' · '+_insEsc(b.date||'')+(b.src==='prox'?' · ProX Haber':'')+'</div>'
     +cover+vid+'<div>'+body+'</div></div>';
   try{var f=document.querySelector('footer.insaatFooter');if(f){var fh=f.outerHTML.replace(/\sid="[^"]*"/g,'');ov.insertAdjacentHTML('beforeend',fh);}}catch(e){}
@@ -3283,7 +3318,7 @@ function renderFaqPage(){
   var wa=((typeof SETTINGS!=='undefined'&&SETTINGS.waNumber)||'905001234567');
   var h='';
   h+='<div class="faq-hero faq-rv"><div class="faq-eyebrow"><i></i> '+(en?'Construction Guide · FAQ':'İnşaat Rehberi · Sık Sorulan Sorular')+'</div>';
-  h+='<h1>'+(en?'Everything to know before you start building':'İnşaata başlamadan bilmeniz gereken her şey')+'</h1>';
+  h+='<h2 class="h1x">'+(en?'Everything to know before you start building':'İnşaata başlamadan bilmeniz gereken her şey')+'</h1>';
   h+='<p>'+(en?('Villa, factory, apartment or renovation — '+total+' expert answers on permits, cost, contractors, urban transformation, earthquake safety, materials and handover. Read this before you decide.'):('Villa, fabrika, bina, daire ya da tadilat farketmez: ruhsattan maliyete, müteahhit seçiminden kentsel dönüşüme, deprem güvenliğinden teslim sürecine kadar '+total+' uzman soru-cevap. Doğru kararı vermeden önce bu rehberi okuyun.'))+'</p>';
   h+='<div class="faq-stats"><span><b>'+total+'</b> '+(en?'Q&A':'Soru-Cevap')+'</span><span><b>'+FAQ_CATS.length+'</b> '+(en?'Topics':'Başlık')+'</span><span><b>38</b> '+(en?'Years':'Yıl Tecrübe')+'</span></div></div>';
   h+='<div class="faq-tools faq-rv"><div class="faq-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input id="faqSearchInp" type="search" autocomplete="off" placeholder="'+(en?'Search: villa cost, permit, contract...':'Ara: villa maliyeti, ruhsat, kat karşılığı, deprem...')+'" oninput="faqSearch(this.value)"></div>';
@@ -3518,7 +3553,7 @@ function obBody(n){var e=_obE;
     +'<div class="ob-2"><div><label>Vergi No</label><input id="ob_vergi" value="'+e(OB.vergi)+'"></div><div><label>Vergi Dairesi</label><input id="ob_vergiDaire" value="'+e(OB.vergiDaire)+'"></div></div>'
     +'<div class="ob-2"><div><label>MERSİS No</label><input id="ob_mersis" value="'+e(OB.mersis)+'"></div><div><label>Ticaret Sicil No</label><input id="ob_ticaretSicil" value="'+e(OB.ticaretSicil)+'"></div></div>'
     +'<div class="ob-2"><div><label>Ticaret Odası</label><input id="ob_oda" value="'+e(OB.oda)+'"></div><div><label>KEP Adresi</label><input id="ob_kep" value="'+e(OB.kep)+'" placeholder="...@hs01.kep.tr"></div></div>'
-    +'<div class="ob-field"><label>EİDS Yetki Belge No <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="ob_belge" value="'+e(OB.belge)+'" placeholder="Yetki belge numarası"></div>';}
+    +'<div class="ob-field"><label>Taşınmaz Ticareti Yetki Belgesi No <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input id="ob_belge" value="'+e(OB.belge)+'" placeholder="Yetki belge numarası"></div>';}
   if(n===4){var fonts=Object.keys(INS_FONTS);
     return '<p class="ob-sub">Marka görseli + tema. Logo girilmezse firma adının baş harfi kullanılır. Renk & font tüm siteye uygulanır.</p>'
     +'<div class="ob-field"><label>Logo URL</label><input id="ob_logo" value="'+e(OB.logo)+'" placeholder="https://... .png"></div>'

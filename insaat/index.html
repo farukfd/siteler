@@ -217,7 +217,7 @@ header.scrolled .lang-sel{color:var(--ink)}
     <div class="hero-content">
       <div class="eyebrow">Meridyen Yapı · 1986'dan beri</div>
       <h1 class="js-h1">Şehrin silüetini <span class="hl">güvenle</span> yeniden inşa ediyoruz</h1>
-      <p class="lead js-sub">Konut, ticari ve karma projelerde anahtar teslim mühendislik; kentsel dönüşüm, kat karşılığı ve tadilat hizmetlerinde 38 yıllık güven.</p>
+      <p class="lead js-sub">Konut, ticari ve karma projelerde anahtar teslim mühendislik; kentsel dönüşüm, kat karşılığı ve tadilat hizmetlerinde 40 yıllık güven.</p>
       <div class="cta">
         <button class="btn btn-primary" onclick="openTeklif()">Ücretsiz Keşif & Teklif →</button>
         <a class="btn btn-ghost" href="projeler" onclick="event.preventDefault();openProjelerPage()">Projelerimiz</a>
@@ -275,7 +275,7 @@ header.scrolled .lang-sel{color:var(--ink)}
   <div><div class="n" data-stat="proje" data-count="146">0</div><div class="l">Tamamlanan Proje</div></div>
   <div><div class="n" data-stat="santiye" data-count="12">0</div><div class="l">Aktif Şantiye</div></div>
   <div><div class="n" data-stat="alan" data-count="2100000" data-fmt="m2">0</div><div class="l">Toplam İnşa Alanı</div></div>
-</div></div></section>
+<div class="demo-ist-not" style="grid-column:1/-1;font-size:.6875rem;opacity:.62;letter-spacing:.02em;text-align:center;margin-top:6px">Temsilî demo verileri — kuruluş yılı, sayılar, sertifikalar ve yorumlar tanıtım amaçlı örnektir; üretimde tenant'ın doğrulanmış kurumsal bilgileri gösterilir.</div></div></div></section>
 
 <section id="hizmetler"><div class="wrap">
   <div class="sec-head"><div class="eyebrow">Hizmetlerimiz</div>
@@ -431,7 +431,7 @@ header.scrolled .lang-sel{color:var(--ink)}
 
 <section><div class="wrap"><div class="cta-band">
   <div><h2>Geleceğin şehirlerini birlikte inşa edelim</h2><p>Mühendis, mimar ve saha ekibi pozisyonları için ekibimize katılın.</p></div>
-  <a class="btn btn-light" href="#" onclick="event.preventDefault();openDoc('kariyer')">Açık Pozisyonlar →</a>
+  <a class="btn btn-light" href="kariyer.html" onclick="event.preventDefault();openDoc('kariyer')">Açık Pozisyonlar →</a>
 </div></div></section>
 
 <section id="iletisim" style="background:var(--surface-2)"><div class="wrap">
@@ -448,13 +448,13 @@ header.scrolled .lang-sel{color:var(--ink)}
     <div class="formcard">
       <h3>Teklif Talebi Oluştur</h3><div class="fhint">Formu doldurun, 24 saat içinde uzman ekibimiz sizi arasın.</div>
       <div class="fld2">
-        <div class="field"><label>Ad Soyad</label><input type="text" id="f_ad" placeholder="Adınız Soyadınız"></div>
-        <div class="field"><label>Telefon</label><input type="text" id="f_tel" placeholder="05__ ___ __ __"></div>
+        <div class="field"><label>Ad Soyad</label><input type="text" id="f_ad" placeholder="Adınız Soyadınız" aria-label="Adınız Soyadınız"></div>
+        <div class="field"><label>Telefon</label><input type="text" id="f_tel" placeholder="05__ ___ __ __" aria-label="05__ ___ __ __"></div>
       </div>
-      <div class="field"><label>E-posta</label><input type="text" id="f_mail" placeholder="ornek@eposta.com"></div>
+      <div class="field"><label>E-posta</label><input type="text" id="f_mail" placeholder="ornek@eposta.com" aria-label="ornek@eposta.com"></div>
       <div class="field"><label>İlgilendiğiniz konu</label>
-        <select id="f_konu"><option>Konut projesi / daire</option><option>Tadilat & Renovasyon</option><option>Kat karşılığı inşaat</option><option>Kentsel dönüşüm</option><option>Ticari yapı / taahhüt</option><option>Kariyer</option><option>Diğer</option></select></div>
-      <div class="field"><label>Mesajınız</label><textarea id="f_msg" placeholder="Projeniz veya talebiniz hakkında kısaca bilgi verin..."></textarea></div>
+        <select id="f_konu" name="konu" aria-label="Konu seçimi"><option>Konut projesi / daire</option><option>Tadilat & Renovasyon</option><option>Kat karşılığı inşaat</option><option>Kentsel dönüşüm</option><option>Ticari yapı / taahhüt</option><option>Kariyer</option><option>Diğer</option></select></div>
+      <div class="field"><label>Mesajınız</label><textarea id="f_msg" placeholder="Projeniz veya talebiniz hakkında kısaca bilgi verin..." aria-label="Projeniz veya talebiniz hakkında kısaca bilgi verin..."></textarea></div>
       <div class="kvkk"><input type="checkbox" id="f_kvkk"><label for="f_kvkk">KVKK Aydınlatma Metni kapsamında kişisel verilerimin işlenmesini onaylıyorum.</label></div>
       <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="submitLead('iletisim')">Teklif Talebini Gönder</button>
     </div>
@@ -463,7 +463,7 @@ header.scrolled .lang-sel{color:var(--ink)}
 
 <!-- ===== /PROJELER LISTE SAYFASI ===== -->
 <div id="projelerPage">
-  <header id="hdr2" class="pp-hdr"><div class="wrap bar">
+  <template class="pp-kabuk-t"><header id="hdr2" class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="./" onclick="insHome(event)"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav">
       <a href="#hakkimizda" onclick="return ppGo('hakkimizda')">Kurumsal</a><a href="hizmetler" onclick="event.preventDefault();openHizmetlerPage();closeProjelerPage()">Hizmetler</a><a href="projeler" onclick="event.preventDefault();var p=document.getElementById('projelerPage');if(p)p.scrollTo({top:0,behavior:'smooth'})">Projeler</a>
@@ -474,13 +474,13 @@ header.scrolled .lang-sel{color:var(--ink)}
       <button class="btn btn-primary" onclick="openTeklif()">Teklif Al</button>
       <button class="burger" onclick="document.getElementById('mnav2').classList.add('open')"><span></span><span></span><span></span></button>
     </div>
-  </div></header>
+  </div></header></template>
 
   <div class="mnav" id="mnav2" onclick="if(event.target.id==='mnav2')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
 
   <div class="pp-hero">
     <div class="eyebrow">Portföyümüz</div>
-    <h1>Yükselen ve Teslim Edilen Projelerimiz</h1>
+    <h2 class="h1x">Yükselen ve Teslim Edilen Projelerimiz</h2>
     <p>Devam eden, tamamlanan ve planlama aşamasındaki tüm projelerimizi inceleyin. Her projede daire seçimi, kat planları ve detaylı bilgilere ulaşabilirsiniz.</p>
   </div>
 
@@ -491,7 +491,7 @@ header.scrolled .lang-sel{color:var(--ink)}
       <button class="ppf" data-f="tamam">Tamamlanan</button>
       <button class="ppf" data-f="plan">Planlanan</button>
     </div>
-    <div class="pp-search">🔍<input type="text" id="ppSearch" placeholder="Proje veya konum ara..." oninput="renderProjelerPage()"></div>
+    <div class="pp-search">🔍<input type="text" id="ppSearch" placeholder="Proje veya konum ara..." oninput="renderProjelerPage()" aria-label="Proje veya konum ara..."></div>
   </div>
   <div class="pp-count" id="ppCount"></div>
   <div class="pp-grid" id="ppGrid"></div>
@@ -517,12 +517,12 @@ header.scrolled .lang-sel{color:var(--ink)}
   </div>
 </section>
 
-<footer class="insaatFooter"><div class="nadas-c" style="text-align:center;padding:14px 16px">Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.</div></footer>
+<template class="pp-kabuk-t"><footer class="insaatFooter"></footer></template>
 </div>
 
 <!-- ===== İLANLAR & ÖZEL PORTFÖY SAYFASI ===== -->
 <div id="ilanlarPage">
-  <header id="hdrIL" class="pp-hdr"><div class="wrap bar">
+  <template class="pp-kabuk-t"><header id="hdrIL" class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="./" onclick="insHome(event)"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav">
       <a href="#hakkimizda" onclick="event.preventDefault();closeIlanlarPage();var e=document.getElementById('hakkimizda');if(e)e.scrollIntoView({behavior:'smooth'})">Kurumsal</a>
@@ -537,12 +537,12 @@ header.scrolled .lang-sel{color:var(--ink)}
       <button class="btn btn-primary" onclick="openTeklif()">Teklif Al</button>
       <button class="burger" onclick="document.getElementById('mnavIL').classList.add('open')"><span></span><span></span><span></span></button>
     </div>
-  </div></header>
+  </div></header></template>
   <div class="mnav" id="mnavIL" onclick="if(event.target.id==='mnavIL')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
 
   <div class="pp-hero">
     <div class="eyebrow">🔒 Özel Portföy · Mahalle Endeksi</div>
-    <h1>Özel Portföy — kapalı / off-market</h1>
+    <h2 class="h1x">Özel Portföy — kapalı / off-market</h2>
     <p>Mülkünüzü <b>açık ilana koymadan</b>, tam konum ve EİDS paylaşmadan; ProX mahalle verisiyle doğru alıcı/kiracıyla eşleştiriyoruz. Aşağıda mahalle bazlı canlı endeks, demografi ve "…dan başlayan" özel portföy fiyatlarını inceleyin. Kamuya açık EİDS ilanları en altta.</p>
   </div>
 
@@ -571,12 +571,12 @@ header.scrolled .lang-sel{color:var(--ink)}
   <div class="pp-count" id="insIlanCount"></div>
   <div class="pp-grid" id="insIlanGrid"></div>
 
-  <footer class="insaatFooter"></footer>
+  <template class="pp-kabuk-t"><footer class="insaatFooter"></footer></template>
 </div>
 
 <!-- ===== /HIZMETLER SAYFASI ===== -->
 <div id="hizmetlerPage">
-  <header id="hdr3" class="pp-hdr"><div class="wrap bar">
+  <template class="pp-kabuk-t"><header id="hdr3" class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="./" onclick="insHome(event)"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav">
       <a href="#hakkimizda" onclick="return hpGo('hakkimizda')">Kurumsal</a><a href="hizmetler" onclick="event.preventDefault();document.getElementById('hizmetlerPage').scrollTo({top:0,behavior:'smooth'})">Hizmetler</a><a href="projeler" onclick="event.preventDefault();openProjelerPage();closeHizmetlerPage()">Projeler</a>
@@ -587,7 +587,7 @@ header.scrolled .lang-sel{color:var(--ink)}
       <button class="btn btn-primary" onclick="openTeklif()">Teklif Al</button>
       <button class="burger" onclick="document.getElementById('mnav3').classList.add('open')"><span></span><span></span><span></span></button>
     </div>
-  </div></header>
+  </div></header></template>
 
   <div class="mnav" id="mnav3" onclick="if(event.target.id==='mnav3')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
 
@@ -602,7 +602,7 @@ header.scrolled .lang-sel{color:var(--ink)}
   <!-- Kurumsal tanıtım (başlık + istatistik + standartlar) — sayfa altına taşındı -->
   <div class="hp-hero">
     <div class="eyebrow">Hizmetlerimiz</div>
-    <h1>Fikirden Teslime, Uçtan Uca Yapı Çözümleri</h1>
+    <h2 class="h1x">Fikirden Teslime, Uçtan Uca Yapı Çözümleri</h2>
     <p>Her hizmet; ayrı proje yönetimi, kendi mühendis ekibi ve kalite kontrol süreciyle yürütülür. Her hizmet sayfasında derin analiz, süreç akışı, mevzuat, risk yönetimi ve sık sorulan soruları bulacaksınız.</p>
   </div>
   <section class="statsband hp-stats sd-rv"><div class="wrap"><div class="grid">
@@ -611,15 +611,15 @@ header.scrolled .lang-sel{color:var(--ink)}
     <div><div class="n" data-stat="proje" data-count="146">0</div><div class="l">Tamamlanan Proje</div></div>
     <div><div class="n" data-stat="santiye" data-count="12">0</div><div class="l">Aktif Şantiye</div></div>
     <div><div class="n" data-stat="alan" data-count="2100000" data-fmt="m2">0</div><div class="l">Toplam İnşa Alanı</div></div>
-  </div></div></section>
+  <div class="demo-ist-not" style="grid-column:1/-1;font-size:.6875rem;opacity:.62;letter-spacing:.02em;text-align:center;margin-top:6px">Temsilî demo verileri — kuruluş yılı, sayılar, sertifikalar ve yorumlar tanıtım amaçlı örnektir; üretimde tenant'ın doğrulanmış kurumsal bilgileri gösterilir.</div></div></div></section>
   <div class="hp-trust sd-rv"><span class="ht-lead">🛡️ Standartlarımız</span><span class="ht-chip">TBDY 2018</span><span class="ht-chip">Yapı Denetimli · 4708</span><span class="ht-chip">6306 Kentsel Dönüşüm</span><span class="ht-chip">ISO 9001 · 14001 · 45001</span><span class="ht-chip">BIM Koordinasyon</span></div>
 
-  <footer class="insaatFooter"></footer>
+  <template class="pp-kabuk-t"><footer class="insaatFooter"></footer></template>
 </div>
 
 <!-- ===== /BOLGE ZEKASI SAYFASI ===== -->
 <div id="bolgePage">
-  <header id="hdr6" class="pp-hdr"><div class="wrap bar">
+  <template class="pp-kabuk-t"><header id="hdr6" class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="./" onclick="insHome(event)"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav">
       <a href="#hakkimizda" onclick="return bzGo('hakkimizda')">Kurumsal</a><a href="hizmetler" onclick="event.preventDefault();openHizmetlerPage();closeBolgePage()">Hizmetler</a><a href="projeler" onclick="event.preventDefault();openProjelerPage();closeBolgePage()">Projeler</a>
@@ -629,18 +629,18 @@ header.scrolled .lang-sel{color:var(--ink)}
       <button class="btn btn-primary" onclick="openTeklif()">Teklif Al</button>
       <button class="burger" onclick="document.getElementById('mnav6').classList.add('open')"><span></span><span></span><span></span></button>
     </div>
-  </div></header>
+  </div></header></template>
 
   <div class="mnav" id="mnav6" onclick="if(event.target.id==='mnav6')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
 
   <div class="bz-body" id="bzBody"></div>
 
-  <footer class="insaatFooter"></footer>
+  <template class="pp-kabuk-t"><footer class="insaatFooter"></footer></template>
 </div>
 
 <!-- ===== HIZMET DETAY OVERLAY ===== -->
 <div id="svcDetail">
-  <header id="hdr4" class="pp-hdr"><div class="wrap bar">
+  <template class="pp-kabuk-t"><header id="hdr4" class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="./" onclick="insHome(event)"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav">
       <a href="#hakkimizda" onclick="return sdGo('hakkimizda')">Kurumsal</a><a href="hizmetler" onclick="event.preventDefault();sdBackToHizmetler()">Hizmetler</a><a href="projeler" onclick="event.preventDefault();closeSvcDetail();openProjelerPage();closeHizmetlerPage()">Projeler</a>
@@ -651,24 +651,24 @@ header.scrolled .lang-sel{color:var(--ink)}
       <button class="btn btn-primary" onclick="openTeklif()">Teklif Al</button>
       <button class="burger" onclick="document.getElementById('mnav4').classList.add('open')"><span></span><span></span><span></span></button>
     </div>
-  </div></header>
+  </div></header></template>
 
   <div class="mnav" id="mnav4" onclick="if(event.target.id==='mnav4')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
 
   <div class="sd-back"><a href="hizmetler" onclick="event.preventDefault();sdBackToHizmetler()">← Tüm Hizmetler</a></div>
   <div class="sd-hero"><div class="wrap">
     <div class="ic" id="sdIc"></div>
-    <h1 id="sdTitle"></h1>
+    <h2 class="h1x" id="sdTitle"></h2>
     <p id="sdLong"></p>
   </div></div>
   <div class="sd-body" id="sdBody"></div>
 
-  <footer class="insaatFooter"></footer>
+  <template class="pp-kabuk-t"><footer class="insaatFooter"></footer></template>
 </div>
 
 <!-- ===== PROJE DETAY OVERLAY ===== -->
 <div id="pjDetail">
-  <header id="hdr5" class="pp-hdr"><div class="wrap bar">
+  <template class="pp-kabuk-t"><header id="hdr5" class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="./" onclick="insHome(event)"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav">
       <a href="#hakkimizda" onclick="return jdGo('hakkimizda')">Kurumsal</a><a href="hizmetler" onclick="event.preventDefault();closeProjectDetail();openHizmetlerPage();closeProjelerPage()">Hizmetler</a><a href="projeler" onclick="event.preventDefault();jdBackToProjeler()">Projeler</a>
@@ -679,7 +679,7 @@ header.scrolled .lang-sel{color:var(--ink)}
       <button class="btn btn-primary" onclick="openTeklif()">Teklif Al</button>
       <button class="burger" onclick="document.getElementById('mnav5').classList.add('open')"><span></span><span></span><span></span></button>
     </div>
-  </div></header>
+  </div></header></template>
 
   <div class="mnav" id="mnav5" onclick="if(event.target.id==='mnav5')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
 
@@ -689,34 +689,34 @@ header.scrolled .lang-sel{color:var(--ink)}
     <div class="pd-hero-c"><div class="wrap">
       <a class="pd-back" href="projeler" onclick="event.preventDefault();jdBackToProjeler()">← Tüm Projeler</a>
       <span class="st" id="pdStatus"></span>
-      <h1 id="pdTitle"></h1>
+      <h2 class="h1x" id="pdTitle"></h2>
       <div class="loc" id="pdLoc"></div>
     </div></div>
   </div>
   <div class="pd-body" id="pdBody"></div>
 
-  <footer class="insaatFooter"></footer>
+  <template class="pp-kabuk-t"><footer class="insaatFooter"></footer></template>
 </div>
 
 <!-- ===== İLETİŞİM SAYFASI ===== -->
 <div id="iletisimPage">
-  <header id="hdr7" class="pp-hdr"><div class="wrap bar">
+  <template class="pp-kabuk-t"><header id="hdr7" class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="./" onclick="insHome(event)"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav"></nav>
     <div class="nav-cta insaatCta"></div>
-  </div></header>
+  </div></header></template>
   <div class="mnav" id="mnav7" onclick="if(event.target.id==='mnav7')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
   <div class="il-body" id="iletisimBody"></div>
-  <footer class="insaatFooter"></footer>
+  <template class="pp-kabuk-t"><footer class="insaatFooter"></footer></template>
 </div>
 
 <!-- ===== ProX ASİSTAN — SİTE ÜST MENÜLÜ, TAM-EKRAN KİLİTLİ AI UYGULAMASI (footer yok) ===== -->
 <div id="proxAsistanPage">
-  <header class="pp-hdr"><div class="wrap bar">
+  <template class="pp-kabuk-t"><header class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="./" onclick="insHome(event)"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav"></nav>
     <div class="nav-cta insaatCta"></div>
-  </div></header>
+  </div></header></template>
   <div class="mnav" id="mnavAI" onclick="if(event.target.id==='mnavAI')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
   <div class="pa-app">
     <aside class="pa-sb" id="paSb">
@@ -738,7 +738,7 @@ header.scrolled .lang-sel{color:var(--ink)}
       <div class="pa-log" id="paLog"></div>
       <div class="pa-composer">
         <form class="pa-form" onsubmit="return paSend(event)">
-          <textarea id="paInput" rows="1" placeholder="Mesajınızı yazın…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();paSend(event)}"></textarea>
+          <textarea id="paInput" rows="1" placeholder="Mesajınızı yazın…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();paSend(event)}" aria-label="Mesajınızı yazın…"></textarea>
           <button type="submit" class="pa-send" aria-label="Gönder">➤</button>
         </form>
         <div class="pa-disc">ProX Asistan, ProX’un 480 milyon+ doğrulanmış emlak verisine dayanır; bilgilendirme amaçlıdır, kesin teklif için ekibimizle görüşün.</div>
@@ -749,11 +749,11 @@ header.scrolled .lang-sel{color:var(--ink)}
 
 <!-- ===== ÜYE HESAP SAYFASI (site üst menülü, animasyonlu) ===== -->
 <div id="hesapPage">
-  <header class="pp-hdr"><div class="wrap bar">
+  <template class="pp-kabuk-t"><header class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="./" onclick="insHome(event)"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav"></nav>
     <div class="nav-cta insaatCta"></div>
-  </div></header>
+  </div></header></template>
   <div class="mnav" id="mnavHesap" onclick="if(event.target.id==='mnavHesap')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
   <div class="hs-body"><div class="wrap">
     <div class="hs-top hs-rv">
@@ -771,17 +771,17 @@ header.scrolled .lang-sel{color:var(--ink)}
       <div class="hs-grid">
         <div class="hs-card">
           <h3>Hesap Bilgileri</h3>
-          <label>Ad Soyad</label><input id="hs_name" autocomplete="name">
+          <label>Ad Soyad</label><input id="hs_name" name="name" autocomplete="name" aria-label="Ad Soyad">
           <label>E-posta</label><div class="hs-ro" id="hs_email">—</div>
-          <label>Telefon</label><input id="hs_phone" placeholder="05__ ___ __ __" autocomplete="tel">
+          <label>Telefon</label><input id="hs_phone" placeholder="05__ ___ __ __" autocomplete="tel" aria-label="05__ ___ __ __">
           <button class="hs-btn" onclick="hesapSaveProfile()">Bilgileri Kaydet</button>
           <div class="hs-msg" id="hs_pmsg"></div>
         </div>
         <div class="hs-card">
           <h3>Şifre Değiştir</h3>
-          <label>Mevcut Şifre</label><input type="password" id="hs_pw0" autocomplete="current-password">
-          <label>Yeni Şifre <span style="opacity:.6">(en az 6)</span></label><input type="password" id="hs_pw1" autocomplete="new-password">
-          <label>Yeni Şifre (tekrar)</label><input type="password" id="hs_pw2" autocomplete="new-password">
+          <label>Mevcut Şifre</label><input type="password" id="hs_pw0" autocomplete="current-password" aria-label="Mevcut şifre">
+          <label>Yeni Şifre <span style="opacity:.6">(en az 6)</span></label><input type="password" id="hs_pw1" autocomplete="new-password" aria-label="Yeni şifre">
+          <label>Yeni Şifre (tekrar)</label><input type="password" id="hs_pw2" autocomplete="new-password" aria-label="Yeni şifre (tekrar)">
           <button class="hs-btn" onclick="hesapChangePw()">Şifreyi Güncelle</button>
           <div class="hs-msg" id="hs_pwmsg"></div>
         </div>
@@ -794,9 +794,9 @@ header.scrolled .lang-sel{color:var(--ink)}
       <div class="hs-card hs-quickq">
         <h3>⚡ Hızlı Teklif Al</h3>
         <div class="hs-q2">
-          <div><label>Konu</label><select id="hq_konu"><option>Konut projesi / daire</option><option>Kat karşılığı inşaat</option><option>Kentsel dönüşüm</option><option>Tadilat & Renovasyon</option><option>Anahtar teslim</option><option>Ticari yapı / taahhüt</option><option>Değerleme / fizibilite</option></select></div>
+          <div><label>Konu</label><select id="hq_konu" name="konu" aria-label="Talep konusu"><option>Konut projesi / daire</option><option>Kat karşılığı inşaat</option><option>Kentsel dönüşüm</option><option>Tadilat & Renovasyon</option><option>Anahtar teslim</option><option>Ticari yapı / taahhüt</option><option>Değerleme / fizibilite</option></select></div>
         </div>
-        <label>Mesajınız</label><textarea id="hq_mesaj" placeholder="Konum, m², beklentiniz… kısaca yazın"></textarea>
+        <label>Mesajınız</label><textarea id="hq_mesaj" placeholder="Konum, m², beklentiniz… kısaca yazın" aria-label="Konum, m², beklentiniz… kısaca yazın"></textarea>
         <button class="hs-btn" onclick="hesapQuickQuote()">Teklif İste →</button>
         <div class="hs-msg" id="hq_msg"></div>
         <div class="hs-qnote">Teklifiniz ProX doğrulanmış emlak verisiyle ön değerlendirilir; ekibimiz 24 saat içinde detaylandırır.</div>
@@ -808,28 +808,28 @@ header.scrolled .lang-sel{color:var(--ink)}
 
 <!-- ===== KURUMSAL / YASAL DOKÜMAN SAYFASI ===== -->
 <div id="docPage">
-  <header id="hdr8" class="pp-hdr"><div class="wrap bar">
+  <template class="pp-kabuk-t"><header id="hdr8" class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="./" onclick="insHome(event)"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav"></nav>
     <div class="nav-cta insaatCta"></div>
-  </div></header>
+  </div></header></template>
   <div class="mnav" id="mnav8" onclick="if(event.target.id==='mnav8')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
   <div class="doc-body" id="docBody"></div>
-  <footer class="insaatFooter"></footer>
+  <template class="pp-kabuk-t"><footer class="insaatFooter"></footer></template>
 </div>
 
 <div id="faqPage">
-  <header id="hdr9" class="pp-hdr"><div class="wrap bar">
+  <template class="pp-kabuk-t"><header id="hdr9" class="pp-hdr"><div class="wrap bar">
     <a class="logo" href="./" onclick="insHome(event)"><span class="mark">M</span><span class="js-logo">Meridyen<span class="lo2"> Yapı</span></span></a>
     <nav class="main insaatNav"></nav>
     <div class="nav-cta insaatCta"></div>
-  </div></header>
+  </div></header></template>
   <div class="mnav" id="mnav9" onclick="if(event.target.id==='mnav9')this.classList.remove('open')"><div class="panel insaatMnav"></div></div>
   <div class="faq-body" id="faqBody"></div>
-  <footer class="insaatFooter"></footer>
+  <template class="pp-kabuk-t"><footer class="insaatFooter"></footer></template>
 </div>
 
-<footer class="insaatFooter"></footer>
+<footer class="insaatFooter"><div class="nadas-c" style="text-align:center;padding:14px 16px">Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.</div></footer>
 <button class="totop" id="totop" onclick="_totopClick()" aria-label="Sayfa başına dön" title="Yukarı çık">↑</button>
 <nav class="mdock" aria-label="Hızlı erişim">
   <a href="hizmetlerimiz.html" onclick="event.preventDefault();closeAllInsaatOverlays();document.querySelectorAll('.mnav').forEach(function(m){m.classList.remove('open')});openHizmetlerPage()" aria-label="Hizmetlerimiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a6 6 0 0 1 6-6"/><path d="M14 6a6 6 0 0 1 6 6v3"/></svg><span>Hizmetler</span></a>
@@ -872,12 +872,12 @@ function cookieChoice(v){
   <button class="x" onclick="closeTeklif()">✕</button>
   <h3>Ücretsiz Keşif & Teklif</h3><div class="fhint">Bilgilerinizi bırakın, uzman ekibimiz 24 saat içinde dönüş yapsın.</div>
   <div class="fld2">
-    <div class="field"><label>Ad Soyad</label><input type="text" id="m_ad" placeholder="Adınız Soyadınız"></div>
-    <div class="field"><label>Telefon</label><input type="text" id="m_tel" placeholder="05__ ___ __ __"></div>
+    <div class="field"><label>Ad Soyad</label><input type="text" id="m_ad" placeholder="Adınız Soyadınız" aria-label="Adınız Soyadınız"></div>
+    <div class="field"><label>Telefon</label><input type="text" id="m_tel" placeholder="05__ ___ __ __" aria-label="05__ ___ __ __"></div>
   </div>
   <div class="field"><label>İlgilendiğiniz hizmet</label>
-    <select id="m_konu"><option>Konut projesi / daire</option><option>Tadilat & Renovasyon</option><option>Kat karşılığı inşaat</option><option>Kentsel dönüşüm</option><option>Ticari yapı / taahhüt</option><option>Diğer</option></select></div>
-  <div class="field"><label>Mesajınız (opsiyonel)</label><textarea id="m_msg" placeholder="Kısaca talebiniz..."></textarea></div>
+    <select id="m_konu" name="konu" aria-label="Mesaj konusu"><option>Konut projesi / daire</option><option>Tadilat & Renovasyon</option><option>Kat karşılığı inşaat</option><option>Kentsel dönüşüm</option><option>Ticari yapı / taahhüt</option><option>Diğer</option></select></div>
+  <div class="field"><label>Mesajınız (opsiyonel)</label><textarea id="m_msg" placeholder="Kısaca talebiniz..." aria-label="Kısaca talebiniz..."></textarea></div>
   <div class="kvkk"><input type="checkbox" id="m_kvkk"><label for="m_kvkk">KVKK kapsamında verilerimin işlenmesini onaylıyorum.</label></div>
   <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="submitLead('modal')">Teklif Talebini Gönder</button>
 </div></div>
@@ -1947,20 +1947,20 @@ window.initProje3D=async function(){
     <div class="gm-head"><span class="mark">M</span><span id="gm_title">Meridyen Yapı · Üye Girişi</span></div>
     <div class="gm-tabs" id="gm_authtabs"><button class="act" id="gt_login" onclick="girisTab('login')">Giriş Yap</button><button id="gt_register" onclick="girisTab('register')">Kayıt Ol</button></div>
     <div class="gm-pane" id="gp_login">
-      <label>E-posta</label><input id="au_lemail" type="email" placeholder="ornek@eposta.com" autocomplete="email">
-      <label>Şifre</label><input id="au_lpass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')authDoLogin()">
+      <label>E-posta</label><input id="au_lemail" type="email" placeholder="ornek@eposta.com" autocomplete="email" aria-label="ornek@eposta.com">
+      <label>Şifre</label><input id="au_lpass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')authDoLogin()" aria-label="••••••••">
       <button class="gm-btn" onclick="authDoLogin()">Giriş Yap →</button>
       <div class="gm-err" id="au_lerr"></div>
-      <div class="gm-note">Hesabın yok mu? <a href="#" onclick="girisTab('register');return false">Kayıt ol</a> · <a href="#" onclick="girisTab('personel');return false">Personel girişi</a></div>
+      <div class="gm-note">Hesabın yok mu? <button type="button" class="gm-lnk" onclick="girisTab('register')">Kayıt ol</button> · <button type="button" class="gm-lnk" onclick="girisTab('personel')">Personel girişi</button></div>
     </div>
     <div class="gm-pane" id="gp_register" hidden>
-      <label>Ad Soyad</label><input id="au_rname" placeholder="Adınız Soyadınız" autocomplete="name">
-      <label>E-posta</label><input id="au_remail" type="email" placeholder="ornek@eposta.com" autocomplete="email">
-      <label>Şifre <span style="opacity:.6">(en az 6 karakter)</span></label><input id="au_rpass" type="password" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')authDoRegister()">
+      <label>Ad Soyad</label><input id="au_rname" placeholder="Adınız Soyadınız" autocomplete="name" aria-label="Adınız Soyadınız">
+      <label>E-posta</label><input id="au_remail" type="email" placeholder="ornek@eposta.com" autocomplete="email" aria-label="ornek@eposta.com">
+      <label>Şifre <span style="opacity:.6">(en az 6 karakter)</span></label><input id="au_rpass" type="password" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')authDoRegister()" aria-label="••••••••">
       <div class="gm-kvkk"><input type="checkbox" id="au_rkvkk"><label for="au_rkvkk">KVKK Aydınlatma Metni kapsamında kişisel verilerimin işlenmesini onaylıyorum.</label></div>
       <button class="gm-btn" onclick="authDoRegister()">Hesap Oluştur →</button>
       <div class="gm-err" id="au_rerr"></div>
-      <div class="gm-note">Zaten üye misin? <a href="#" onclick="girisTab('login');return false">Giriş yap</a></div>
+      <div class="gm-note">Zaten üye misin? <button type="button" class="gm-lnk" onclick="girisTab('login')">Giriş yap</button></div>
     </div>
     <div class="gm-pane" id="gp_profile" hidden>
       <div class="au-prof"><div class="au-av" id="au_pav">M</div><div><div class="au-pname" id="au_pname">—</div><div class="au-pmail" id="au_pmail">—</div></div></div>
@@ -1971,16 +1971,16 @@ window.initProje3D=async function(){
     <div class="gm-pane" id="gp_personel" hidden>
       <p class="sub">Yetkili personel ve yönetim erişimi. Giriş sonrası yönetim paneline yönlendirilirsiniz.</p>
       <button class="gm-btn" onclick="closeGiris();openAdmin()">Yönetim Paneline Giriş →</button>
-      <div class="gm-note">Erişim yönetici parolasıyla doğrulanır. <a href="#" onclick="girisTab('login');return false">← Üye girişi</a></div>
+      <div class="gm-note">Erişim yönetici parolasıyla doğrulanır. <button type="button" class="gm-lnk" onclick="girisTab('login')">← Üye girişi</button></div>
     </div>
   </div>
 </div>
 <script>
-/* ===== Gerçek üyelik sistemi (client-side, localStorage; şifre SHA-256+salt). Üretimde sunucu/ProX ile beslenir. ===== */
+/* ===== ÜYELİK (FAZ3B): parola TARAYICIDA HİÇBİR KOŞULDA işlenmez/saklanmaz.
+   Üretim: same-origin /api/auth/user/* (Argon2id + HttpOnly oturum). Demo: parolasız ÖRNEK oturum. ===== */
 var AUTH_USERS='insaat_users_v1', AUTH_SESS='insaat_session_v1';
-async function _authHash(pw,salt){var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(salt+'::'+pw));return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');}
-function _authUsers(){try{return JSON.parse(localStorage.getItem(AUTH_USERS)||'{}');}catch(e){return {};}}
-function _authSaveUsers(u){try{localStorage.setItem(AUTH_USERS,JSON.stringify(u));}catch(e){}}
+try{localStorage.removeItem(AUTH_USERS);}catch(e){} /* eski tarayıcı kullanıcı DB'si temizlenir */
+function _authUsers(){return {};} /* tarayıcı kullanıcı DB'si KALDIRILDI — üye kayıtları sunucudadır */
 function authSession(){try{return JSON.parse(localStorage.getItem(AUTH_SESS)||'null');}catch(e){return null;}}
 function _authSetSession(s){try{if(s)localStorage.setItem(AUTH_SESS,JSON.stringify(s));else localStorage.removeItem(AUTH_SESS);}catch(e){}applyAuthUI();}
 async function authRegister(name,email,pw){
@@ -1988,29 +1988,26 @@ async function authRegister(name,email,pw){
   if(name.length<2)return{err:'Lütfen ad soyad girin.'};
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return{err:'Geçerli bir e-posta girin.'};
   if((pw||'').length<6)return{err:'Şifre en az 6 karakter olmalı.'};
-  if(window.EMLAK_DEMO!==true){ /* ÜRETİM: parola tarayıcıda işlenmez/saklanmaz — sunucu auth */
-    try{var rr=await fetch('/api/auth/user/register',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,email:email,password:pw})});
-      if(rr.ok){var jj=await rr.json();if(jj&&jj.ok){_authSetSession({email:email,name:name,ts:Date.now()});return{ok:true};}}
-      return{err:'Kayıt başarısız — bilgilerinizi kontrol edin.'};
-    }catch(e){return{err:'Üyelik servisi yapılandırılmadı (auth servisine erişilemiyor).'};}
+  if(window.EMLAK_DEMO!==false){ /* DEMO: parolasız örnek oturum — parola İŞLENMEZ */
+    _authSetSession({email:email,name:name,demo:true,ts:Date.now()});return{ok:true,demo:true};
   }
-  var users=_authUsers();if(users[email])return{err:'Bu e-posta zaten kayıtlı. Giriş yapın.'};
-  var salt='s'+Date.now().toString(36)+Math.random().toString(36).slice(2);
-  users[email]={name:name,email:email,salt:salt,hash:await _authHash(pw,salt),createdAt:new Date().toISOString()};
-  _authSaveUsers(users);_authSetSession({email:email,name:name,ts:Date.now()});return{ok:true};
+  /* ÜRETİM: parola tarayıcıda işlenmez/saklanmaz — sunucu auth */
+  try{var rr=await fetch('/api/auth/user/register',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,email:email,password:pw})});
+    if(rr.ok){var jj=await rr.json();if(jj&&jj.ok){_authSetSession({email:email,name:name,ts:Date.now()});return{ok:true};}}
+    return{err:'Kayıt başarısız — bilgilerinizi kontrol edin.'};
+  }catch(e){return{err:'Üyelik servisi yapılandırılmadı (auth servisine erişilemiyor).'};}
 }
 async function authLogin(email,pw){
   email=(email||'').trim().toLowerCase();
-  if(window.EMLAK_DEMO!==true){ /* ÜRETİM: karşılaştırma sunucuda (Argon2id + HttpOnly oturum) */
-    try{var rr=await fetch('/api/auth/user/login',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pw})});
-      if(rr.ok){var jj=await rr.json();if(jj&&jj.ok){_authSetSession({email:email,name:(jj.name||email),ts:Date.now()});return{ok:true};}}
-      return{err:'E-posta veya şifre hatalı.'};
-    }catch(e){return{err:'Üyelik servisi yapılandırılmadı (auth servisine erişilemiyor).'};}
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return{err:'Geçerli bir e-posta girin.'};
+  if(window.EMLAK_DEMO!==false){ /* DEMO: parolasız örnek oturum */
+    _authSetSession({email:email,name:email.split('@')[0],demo:true,ts:Date.now()});return{ok:true,demo:true};
   }
-  var u=_authUsers()[email];
-  if(!u)return{err:'Bu e-postayla kayıt bulunamadı. Önce kayıt olun.'};
-  if(await _authHash(pw,u.salt)!==u.hash)return{err:'E-posta veya şifre hatalı.'};
-  _authSetSession({email:email,name:u.name,ts:Date.now()});return{ok:true};
+  /* ÜRETİM: karşılaştırma sunucuda (Argon2id + HttpOnly oturum) */
+  try{var rr=await fetch('/api/auth/user/login',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pw})});
+    if(rr.ok){var jj=await rr.json();if(jj&&jj.ok){_authSetSession({email:email,name:(jj.name||email),ts:Date.now()});return{ok:true};}}
+    return{err:'E-posta veya şifre hatalı.'};
+  }catch(e){return{err:'Üyelik servisi yapılandırılmadı (auth servisine erişilemiyor).'};}
 }
 function authLogout(){_authSetSession(null);}
 function applyAuthUI(){
@@ -2046,8 +2043,15 @@ addEventListener('DOMContentLoaded',function(){try{applyAuthUI();}catch(e){}});
 function _uKey(p){var s=authSession();return s?('insaat_'+p+'_'+s.email):null;}
 function _uGet(p,def){var k=_uKey(p);if(!k)return def;try{var v=JSON.parse(localStorage.getItem(k));return v==null?def:v;}catch(e){return def;}}
 function _uSet(p,v){var k=_uKey(p);if(k)try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
-async function authUpdateProfile(name,phone){var s=authSession();if(!s)return{err:'Giriş yapın.'};name=(name||'').trim();if(name.length<2)return{err:'Ad soyad gerekli.'};var users=_authUsers(),u=users[s.email];if(u){u.name=name;u.phone=(phone||'').trim();_authSaveUsers(users);}_authSetSession({email:s.email,name:name,ts:Date.now()});return{ok:true};}
-async function authChangePassword(cur,nw){var s=authSession();if(!s)return{err:'Giriş yapın.'};var users=_authUsers(),u=users[s.email];if(!u)return{err:'Kullanıcı bulunamadı.'};if(await _authHash(cur,u.salt)!==u.hash)return{err:'Mevcut şifre hatalı.'};if((nw||'').length<6)return{err:'Yeni şifre en az 6 karakter olmalı.'};var salt='s'+Date.now().toString(36)+Math.random().toString(36).slice(2);u.salt=salt;u.hash=await _authHash(nw,salt);_authSaveUsers(users);return{ok:true};}
+async function authUpdateProfile(name,phone){var s=authSession();if(!s)return{err:'Giriş yapın.'};name=(name||'').trim();if(name.length<2)return{err:'Ad soyad gerekli.'};
+  if(window.EMLAK_DEMO===false){try{var rr=await fetch('/api/auth/user/profile',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,phone:(phone||'').trim()})});if(!rr.ok)return{err:'Profil güncellenemedi.'};}catch(e){return{err:'Üyelik servisine erişilemiyor.'};}}
+  _authSetSession({email:s.email,name:name,phone:(phone||'').trim(),demo:s.demo,ts:Date.now()});return{ok:true};}
+async function authChangePassword(cur,nw){var s=authSession();if(!s)return{err:'Giriş yapın.'};
+  if(window.EMLAK_DEMO!==false)return{err:'Demo modunda parola bulunmaz — örnek oturum parolasızdır.'};
+  if((nw||'').length<6)return{err:'Yeni şifre en az 6 karakter olmalı.'};
+  try{var rr=await fetch('/api/auth/user/password',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({current:cur,next:nw})});
+    if(rr.ok){var jj=await rr.json();if(jj&&jj.ok)return{ok:true};}return{err:'Mevcut şifre hatalı.'};
+  }catch(e){return{err:'Üyelik servisine erişilemiyor.'};}}
 function authFavs(){var f=_uGet('fav',[]);return Array.isArray(f)?f:[];}
 function authIsFav(id){return authFavs().indexOf(String(id))>=0;}
 function authToggleFav(id){id=String(id);var f=authFavs(),i=f.indexOf(id);if(i>=0)f.splice(i,1);else f.unshift(id);_uSet('fav',f);return i<0;}
@@ -2055,14 +2059,14 @@ function hesapToggleFav(id,btn,fromList){if(!authSession()){openGiris();return;}
 function authQuotes(){var q=_uGet('quotes',[]);return Array.isArray(q)?q:[];}
 async function authAddQuote(konu,mesaj){var s=authSession();if(!s)return{err:'Giriş yapın.'};var q={id:'q'+Date.now(),konu:konu||'Genel',mesaj:(mesaj||'').trim(),date:new Date().toISOString(),status:'pending',cevap:''};var arr=authQuotes();arr.unshift(q);_uSet('quotes',arr);
   /* Teklif talebi CRM'e düşsün — yetkili takip etsin */
-  try{if(typeof proxSubmitLead==='function'){var u=(_authUsers()[s.email]||{});proxSubmitLead({sourcePage:'hesap',formType:'teklif-talebi',name:s.name,email:s.email,phone:u.phone||'',message:q.mesaj,requestedService:q.konu});}}catch(e){}
+  try{if(typeof proxSubmitLead==='function'){var u={phone:s.phone||''};proxSubmitLead({sourcePage:'hesap',formType:'teklif-talebi',name:s.name,email:s.email,phone:u.phone||'',message:q.mesaj,requestedService:q.konu});}}catch(e){}
   _quoteRespond(q.id,q.konu,q.mesaj);return{ok:true,id:q.id};}
 async function _quoteRespond(id,konu,mesaj){var reply='';var m=(mesaj||'').trim();try{var r=await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:{persona:'construction',context:'default',prompt:'Sen Meridyen Yapı ProX Asistanısın — sıcak, satış odaklı bir danışman. Müşteri "'+konu+'" konusunda bir teklif formu doldurdu. GÖREV: mesajı DİKKATLE oku, müşterinin gerçekte ne istediğini anla. Mesaj yalnızca bir selam ya da çok kısa/boşsa: kibarca selam ver, kendini tanıt ("Ben Meridyen Yapı ProX Asistanı") ve "'+konu+'" için ihtiyacı netleştirecek 1-2 KISA soru sor — hazır keşif metni DÖKME. Mesaj gerçek bir talep içeriyorsa: 2-3 cümlelik samimi, profesyonel bir ön değerlendirme ver (yaklaşık süreç/adımlar, ne gerektiği) ve müşteriyi bir sonraki adıma yönlendir. Her durumda müşteriyi canlı temsilciye davet et: telefon numarası bırakırsa temsilcimiz kısa sürede arar. Türkçe, kısa. Kesin fiyat/taahhüt verme, ücretsiz keşif öner. Yanıtın ProX’un doğrulanmış emlak verilerine dayanır.',message:konu+' — '+(m||'(müşteri mesaj bırakmadı)')}});reply=(r&&(r.answer||(r.data&&r.data.answer)))||'';}catch(e){}if(!reply){reply=(m.length<8)?('Merhaba, ben Meridyen Yapı ProX Asistanı 👋 “'+konu+'” konusunda size yardımcı olmak isterim. Kısaca ihtiyacınızı anlatır mısınız — konum, m² ya da beklentiniz nedir? Dilerseniz telefon numaranızı bırakın, müşteri temsilcimiz kısa sürede sizi arasın.'):('Talebinizi aldık. “'+konu+'” için uzman ekibimiz ön değerlendirme yapıp en kısa sürede detaylı teklifle dönecek. Dilerseniz ücretsiz keşif planlayalım ya da telefon numaranızı bırakın, temsilcimiz sizi arasın.');}var arr=authQuotes();for(var i=0;i<arr.length;i++){if(arr[i].id===id){arr[i].status='answered';arr[i].cevap=reply;break;}}_uSet('quotes',arr);try{var hp=document.getElementById('hesapPage');if(hp&&hp.classList.contains('on')&&!document.getElementById('hs_teklifler').hidden)_hesapRenderQuotes();}catch(e){}}
 function openHesap(){if(!authSession()){openGiris();girisTab('login');return;}var ov=document.getElementById('hesapPage');if(!ov)return;try{if(typeof closeAllInsaatOverlays==='function')closeAllInsaatOverlays();}catch(e){}renderHesap();ov.classList.add('on');document.body.style.overflow='hidden';ov.scrollTop=0;}
 function closeHesap(){var ov=document.getElementById('hesapPage');if(ov)ov.classList.remove('on');document.body.style.overflow='';}
 function girisOrHesap(){if(typeof authSession==='function'&&authSession())openHesap();else openGiris();}
 var _hesapCurTab='teklifler';
-function renderHesap(){var s=authSession();if(!s)return;var u=_authUsers()[s.email]||{};var g=function(id){return document.getElementById(id);};if(g('hs_name'))g('hs_name').value=s.name;if(g('hs_email'))g('hs_email').textContent=s.email;if(g('hs_phone'))g('hs_phone').value=u.phone||'';if(g('hs_av'))g('hs_av').textContent=((s.name||'M').trim()[0]||'M').toUpperCase();if(g('hs_welcome'))g('hs_welcome').textContent=(s.name||'').split(' ')[0];if(g('hs_favcount'))g('hs_favcount').textContent=authFavs().length;if(g('hs_qcount'))g('hs_qcount').textContent=authQuotes().length;_hesapTab(_hesapCurTab||'profil');}
+function renderHesap(){var s=authSession();if(!s)return;var u={phone:s.phone||''};var g=function(id){return document.getElementById(id);};if(g('hs_name'))g('hs_name').value=s.name;if(g('hs_email'))g('hs_email').textContent=s.email;if(g('hs_phone'))g('hs_phone').value=u.phone||'';if(g('hs_av'))g('hs_av').textContent=((s.name||'M').trim()[0]||'M').toUpperCase();if(g('hs_welcome'))g('hs_welcome').textContent=(s.name||'').split(' ')[0];if(g('hs_favcount'))g('hs_favcount').textContent=authFavs().length;if(g('hs_qcount'))g('hs_qcount').textContent=authQuotes().length;_hesapTab(_hesapCurTab||'profil');}
 function _hesapTab(t){_hesapCurTab=t;['profil','favoriler','teklifler'].forEach(function(p){var pane=document.getElementById('hs_'+p),tab=document.getElementById('hst_'+p);if(pane)pane.hidden=(p!==t);if(tab)tab.classList.toggle('act',p===t);});if(t==='favoriler')_hesapRenderFavs();if(t==='teklifler')_hesapRenderQuotes();}
 function _hesapRenderFavs(){var g=document.getElementById('hs_favgrid');if(!g)return;var favs=authFavs();if(!favs.length){g.innerHTML='<div class="hs-empty">💛 Henüz favoriniz yok. <a href="projelerimiz.html" onclick="return goPage(\'projeler\',event)">Projeler</a> sayfasındaki kartlarda ❤️ ile ekleyin.</div>';return;}g.innerHTML=favs.map(function(id){var p=(typeof PROJECTS!=='undefined')?PROJECTS[id]:null;if(!p)return '';var src=(typeof imgFor==='function')?imgFor((p.gallery&&p.gallery[0])||p.img):'';return '<div class="hs-favcard"><div class="fimg">'+(src?'<img src="'+src+'" alt="'+_paEsc(p.t)+'" loading="lazy">':'')+'<button class="pp-fav on" data-fid="'+id+'" onclick="hesapToggleFav('+id+',this,true)" aria-label="Favoriden çıkar">♥</button></div><div class="fbody"><div class="ft">'+_paEsc(p.t)+'</div><div class="fl">📍 '+_paEsc(p.loc||'')+'</div><div class="fp">'+_paEsc(p.price||'')+'</div><button class="hs-linkbtn" onclick="closeHesap();openProjectDetailFromList('+id+')">Projeyi Gör →</button></div></div>';}).join('');}
 function _hesapRenderQuotes(){var l=document.getElementById('hs_qlist');if(!l)return;var qs=authQuotes();if(!qs.length){l.innerHTML='<div class="hs-empty">Henüz teklif talebiniz yok — yukarıdaki formdan hızlı teklif alın.</div>';return;}l.innerHTML=qs.map(function(q){var answered=q.status==='answered';var ds='';try{var d=new Date(q.date);ds=d.toLocaleDateString('tr-TR')+' · '+d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});}catch(e){}return '<div class="hs-quote"><div class="qhead"><div><div class="qk">'+_paEsc(q.konu)+'</div><div class="qd">'+ds+'</div></div><span class="qbadge '+(answered?'ok':'wait')+'">'+(answered?'✓ Yanıtlandı':'⏳ Yanıt bekliyor')+'</span></div>'+(q.mesaj?'<div class="qmsg">“'+_paEsc(q.mesaj)+'”</div>':'')+(answered?'<div class="qcevap"><b>ProX ön değerlendirme</b><p>'+_paEsc(q.cevap)+'</p></div>':'<div class="qpending"><span class="pa-typing"><i></i><i></i><i></i></span> ProX yanıt hazırlıyor…</div>')+'</div>';}).join('');}

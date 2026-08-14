@@ -58,7 +58,7 @@ function eidsVerify(){var e=eidsFirma().eids;e.yetkili=!!(e.belgeNo&&(''+e.belge
 function eidsCanPublish(){return eidsVerify();}
 function eidsShieldSvg(sz){return (window.EIDS?EIDS.shield(sz||16):'');}
 function eidsBadgeHTML(){var e=eidsFirma().eids;
-  if(eidsVerify())return '<span class="eids-b ok">'+eidsShieldSvg(14)+' Taşınmaz Ticareti Yetki Belgesi · No '+_leD(e.belgeNo)+'</span>';
+  if(eidsVerify())return '<span class="eids-b ok">'+eidsShieldSvg(14)+' Taşınmaz Ticareti Yetki Belgesi · No '+_leD(e.belgeNo)+(window.EMLAK_DEMO!==false?' <em style="font-style:normal;opacity:.75">(ÖRNEK)</em>':'')+'</span>';
   return '<span class="eids-b wait">'+eidsShieldSvg(14)+' Yetki belgesi bekleniyor</span>';}
 function eidsRenderPublic(){var el=document.getElementById('eidsPublicBadge');if(el)el.innerHTML=eidsBadgeHTML();
   var ql=document.getElementById('eidsListingNote');if(ql)ql.innerHTML=eidsVerify()?(eidsShieldSvg(13)+' İlanlar T.C. Ticaret Bakanlığı EİDS ile doğrulanır'):'';}
@@ -78,7 +78,7 @@ function legalKunyeRows(){var k=firmaKune();var g='color:var(--gold)';
    +'<div><b style="'+g+'">Adres:</b> '+_leD(k.adres)+'</div>'
    +'<div><b style="'+g+'">E-posta:</b> '+_leD(k.mail)+' · <b style="'+g+'">Tel:</b> '+_leD(k.tel)+'</div>'
    +(k.vergi?'<div><b style="'+g+'">Vergi No:</b> '+_leD(k.vergi)+'</div>':'')
-   +(k.belge?'<div><b style="'+g+'">EİDS Yetki Belge No:</b> '+_leD(k.belge)+'</div>':'')+'</div>';}
+   +(k.belge?'<div><b style="'+g+'">Taşınmaz Ticareti Yetki Belgesi No:</b> '+_leD(k.belge)+'</div>':'')+'</div>';}
 function legalDoc(type){var k=firmaKune(),kn=legalKunyeRows();
   if(type==='cerez')return {title:'Çerez Politikası',body:kn
     +'<p><b>Çerez nedir?</b> Siteyi ziyaret ettiğinizde cihazınıza kaydedilen küçük metin dosyalarıdır.</p>'
@@ -177,7 +177,7 @@ function applySchema(){try{var k=firmaKune();var desc=saasResolve('metaDescripti
   var o={"@context":"https://schema.org","@type":"RealEstateAgent","name":k.name,"description":desc,
     "areaServed":areas,"email":k.mail,"telephone":k.tel,"address":k.adres,"priceRange":"₺₺₺₺"};
   try{var kats=(typeof saKategoriler==='function')?saKategoriler():[];if(kats.length)o.knowsAbout=kats;}catch(e){}
-  if(e.belgeNo)o.identifier={"@type":"PropertyValue","name":"EİDS Yetki Belge No","value":''+e.belgeNo};
+  if(e.belgeNo&&window.EMLAK_DEMO===false)o.identifier={"@type":"PropertyValue","name":"Taşınmaz Ticareti Yetki Belgesi No","value":''+e.belgeNo};/* FAZ3B: EİDS ilan-doğrulamasıyla KARIŞTIRILMAZ; demo numara schema'ya yazılmaz */
   var s=document.createElement('script');s.type='application/ld+json';s.id='ld-dyn';s.text=JSON.stringify(o);document.head.appendChild(s);
 }catch(e){}}
 /* ===================== PER-TENANT ANALİTİK + A/B ===================== */
@@ -476,7 +476,7 @@ function obBody(n){
     +'<div class="sta-row2"><div class="sta-f"><label>Vergi No</label><input id="ob_vergi" value="'+_obe(OB.vergi)+'"></div><div class="sta-f"><label>Vergi Dairesi</label><input id="ob_vergiDaire" value="'+_obe(OB.vergiDaire)+'"></div></div>'
     +'<div class="sta-row2"><div class="sta-f"><label>MERSİS No</label><input id="ob_mersis" value="'+_obe(OB.mersis)+'"></div><div class="sta-f"><label>Ticaret Sicil No</label><input id="ob_ticaretSicil" value="'+_obe(OB.ticaretSicil)+'"></div></div>'
     +'<div class="sta-row2"><div class="sta-f"><label>Ticaret Odası</label><input id="ob_oda" value="'+_obe(OB.oda)+'"></div><div class="sta-f"><label>KEP</label><input id="ob_kep" value="'+_obe(OB.kep)+'" placeholder="...@hs01.kep.tr"></div></div>'
-    +'<div class="sta-f"><label>EİDS Yetki Belge No (7+ hane, opsiyonel)</label><input id="ob_belge" value="'+_obe(OB.belge)+'" placeholder="1234567"></div>';
+    +'<div class="sta-f"><label>Taşınmaz Ticareti Yetki Belgesi No (7+ hane, opsiyonel)</label><input id="ob_belge" value="'+_obe(OB.belge)+'" placeholder="1234567"></div>';
   if(n===3)return '<p class="sub">Marka görseli + tema. Logo girilmezse adınızın baş harfi kullanılır.</p>'
     +'<div class="sta-row2"><div class="sta-f"><label>Logo URL</label><input id="ob_logo" value="'+_obe(OB.logo)+'" placeholder="https://.../logo.png"></div><div class="sta-f"><label>Favicon URL</label><input id="ob_favicon" value="'+_obe(OB.favicon)+'" placeholder="https://.../fav.png"></div></div>'
     +'<div class="sta-row2"><div class="sta-f"><label>Marka Rengi</label><input id="ob_accent" type="color" value="'+_obe(OB.accent||'#c39b45')+'" style="height:44px;padding:4px;width:100%"></div><div class="sta-f"><label>Yazı Tipi</label><select id="ob_font" style="width:100%;padding:11px;border:1px solid var(--line-soft);border-radius:9px;background:var(--cream);color:inherit;font:inherit"><option value=""'+(!OB.font?' selected':'')+'>Varsayılan</option>'+['Playfair Display','Cormorant','Inter','Poppins','Manrope','Sora','Jost'].map(function(f){return '<option'+(f===OB.font?' selected':'')+'>'+f+'</option>';}).join('')+'</select></div></div>';
@@ -1879,7 +1879,7 @@ function crmRenderFirma(){var host=document.getElementById('crmFirma');if(!host)
     +'<div class="sta-row2">'+F('cf_mersis','MERSİS No',f.mersis)+F('cf_oda','Bağlı Oda (Ticaret / Esnaf)',f.oda)+'</div>'
     +'<div class="crm-sec-h" style="margin:16px 0 8px">🛡️ Yasal Belgeler</div>'
     +'<div class="sta-row2">'+F('cf_yetki','Taşınmaz Ticareti Yetki Belgesi No',f.yetkiBelge)+F('cf_sorumlu','Sorumlu Emlak Danışmanı (Seviye 5)',f.sorumlu)+'</div>'
-    +'<div class="sta-row2">'+F('cf_belge','EİDS Yetki Belge No (ilan)',e.belgeNo)+F('cf_kep','KEP Adresi',f.kep,'firma@hs01.kep.tr')+'</div>'
+    +'<div class="sta-row2">'+F('cf_belge','Taşınmaz Ticareti Yetki Belgesi No (ilan)',e.belgeNo)+F('cf_kep','KEP Adresi',f.kep,'firma@hs01.kep.tr')+'</div>'
     +'<div class="sta-row2">'+F('cf_vdaire','Vergi Dairesi',f.vergiDaire)+F('cf_vergi','Vergi / TC Kimlik No',f.vergi)+'</div>'
     +'<div class="crm-sec-h" style="margin:16px 0 8px">📍 İletişim</div>'
     +F('cf_adres','Açık Adres',f.adres)
