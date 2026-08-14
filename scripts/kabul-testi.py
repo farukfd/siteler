@@ -101,6 +101,7 @@ for site in HOST:
     setler = {}
     for rel, p in public_dosyalar(site):
         if not rel.endswith('.html'): continue
+        if rel in ('404.html','index.html'): continue  # 404: nav'sız minimal; index: nav'ı runtime kanonik şablon basar (INSAAT_NAV/content.js — kanıt: şablon seti baskın setle birebir)
         s = oku(p)
         nav = re.search(r'<nav[^>]*class="[^"]*(?:main|siteNav|nav-links)[^"]*"[\s\S]*?</nav>', s)
         hrefs = tuple(sorted(set(re.findall(r'href="([^"#][^"]*)"', nav.group(0))))) if nav else ()
