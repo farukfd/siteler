@@ -221,3 +221,58 @@ sözleşme+ETag ✓ · demo-yonetim slash+noindex ✓ · fail2ban kanıtlı ✓.
 (8) İstanbul/ABD vantage ölçümü + CF HTTP/3/0-RTT, (I) PasswordAuthentication=no (konsol + e-ZekaAl
 sudo doğrulaması sizde). Backend değişiklikleri sunucuda (repo dışı): `tenant_saas_routes.py`
 (yedekler /root/*.bak_faz41), nginx conf'ları (.bak_faz4*).
+
+---
+
+# DANIŞMAN NİHAİ KAPANIŞ — Footer + Demo SEO/AEO/GEO + Güvenlik (15 Ağu 2026, main=d16f20b)
+
+## A. Görünür kullanıcı yüzeyi (tarayıcı-render kanıtı)
+- `document.body.innerText` içinde NADAS tam cümlesi: **0** ✓ · `POWERED BY ProX`: görünür ✓ ·
+  tek `<footer>` (çift marka yok) ✓. Kaynaklar: 22 statik HTML + content.js + app.js + demo-yonetim
+  + _common sözlük anahtarı + boş placeholder div — tümü söküldü.
+
+## B. Makine yüzeyleri (NADAS sahipliği KORUNDU — tenant admini erişemez, build-time)
+- `LICENSE` (repo, FAZ3'ten) ✓ · her birinci-taraf JS/CSS başında `/*! Yazılım ve altyapı © … */`
+  banner (paketleyici) ✓ · her HTML head'inde: kaynak yorumu + `<meta name="copyright">` +
+  `<meta name="generator" content="NADAS / ProX">` + WebSite/SoftwareApplication JSON-LD
+  (copyrightHolder/creator=NADAS Organization, copyrightYear 2005, copyrightNotice tam cümle,
+  brand ProX, applicationCategory RealEstateApplication, additionalProperty Site Mode=DEMO) ✓ —
+  runtime'da JSON-LD ayakta doğrulandı (schema hijack yok). `/llms.txt` + `/humans.txt` tam cümleli ✓.
+- Cloaking YOK: Googlebot ve ziyaretçi UA birebir aynı içerik/başlıkları alıyor (kanıt aşağıda);
+  gizli DOM/ekran-dışı teknik kullanılmadı — görünür katmandan kaldırma + makine-katmanına taşıma.
+
+## C. Google demo algısı (canlı, Googlebot UA)
+- HTTP 200 + `X-Robots-Tag: noindex, follow` (nginx server-level, hostname-bazlı) ✓
+- `<meta name="robots" content="noindex,follow,noarchive">` (paketleyici, site_mode=demo dalı) ✓
+- Title `(DEMO)` eki + JSON-LD `Site Mode=DEMO` ✓ · sitemap.xml **0 URL** (30→0) ✓ ·
+  robots.txt: `Allow: /` + yalnız admin-assets Disallow (Google tarayabilir, `Disallow: /` YOK),
+  Sitemap bildirimi kaldırıldı ✓ · insaat (production): `index,follow` + 20-URL sitemap KORUNDU ✓.
+- Karar server-side: nginx vhost (hostname) + paketleyici site_mode; localStorage'a bağlı değil.
+
+## D. Güvenlik
+- Public yasak token 0 (T6+T13) · ilk yüklemede admin asset 0 · admin-assets 403 · auth 501 ·
+  tarayıcı→sağlayıcı doğrudan istek 0 · bootstrap=tenant-config tek kaynak+ETag ·
+  beş dilde öz-yetki iddiası 0 (öz-iddia/dürüst-referans ayrımıyla: 'EIDS-licensed', 'Certified…',
+  '持证', 'بشهادة تفويض', 'Лицензированный…' söküldü; 'SPK-licensed appraisal' YÖNLENDİRMELERİ
+  dürüst 3.-taraf referansı olarak korundu).
+- CSP başlık zinciri: origin 1× enforce + 1× sıkı Report-Only + /csp-report (6r/m limit).
+  **TEK ALTYAPI PARTIAL'İ:** Cloudflare panelindeki eski Transform Rule origin RO'yu ezmeye devam
+  ediyor → Cloudflare → Rules → Transform Rules → Modify Response Header →
+  `Content-Security-Policy-Report-Only` başlığını statik ekleyen (unsafe-eval/pagead2'li) kuralı
+  Disable/Delete. Origin'e yeni CSP başlığı EKLENMEDİ.
+
+## E. Fonksiyon (canlı)
+- Kabul koşucusu **24/25 PASS** (tek FAIL=yukarıdaki CF PARTIAL'i) · ana 6 / ilanlar 9 / merkez 9 ·
+  Bebek 3/3 + Burgazada 0 · **AR taşma 0: 375/768/1353/1366px, ticker animasyonu sırasında**
+  (kök neden .db-track — doviz.js artık `contain:inline-size paint` + ltr mask + width:max-content
+  enjekte ediyor; containment computed-style canlı doğrulandı) + TR/EN 1366 spot 0 ·
+  network/console hata **0** (site-config.json 404'ü boş `{}` yayınıyla kapandı; 62 kaynak temiz) ·
+  ProX cache/streaming, formlar, demo-yonetim, diller regresyonsuz (T seti).
+
+## Kimlikler
+- Kaynak: main=**d16f20b** (push'landı) · build: content-hash'li (örn. app.h3b812bd4.js) ·
+  canlı deploy: rsync /var/www/siteler_dist/{danisman,insaat} (bu commit'in dist'i) ·
+  backend: sunucuda tenant_saas_routes.py (yedekler /root/*.bak_faz41).
+
+**Danışman sitesi kapanmıştır** — tek açık kalem kullanıcı-aksiyonlu CF Transform Rule.
+Bir sonraki adım: İNŞAAT sitesi denetimi.
