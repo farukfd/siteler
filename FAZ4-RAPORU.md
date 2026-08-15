@@ -179,3 +179,45 @@ görüntüsü (`/root/sshd_T_oncesi_faz4i.txt`) alındı; her değişiklik `sshd
 3. ProX streaming/ilk-token (merkez API); PasswordAuthentication=no (konsol doğrulaması sonrası).
 4. emlak-ekspertizi sayfa başlığının (document.title) AR çevirisi; harita.html AR ölçümü OSM onay akışıyla birlikte.
 5. gm/insaat kendi fetchMahalleler kopyalarına aynı taksonomi dedupe portu.
+
+---
+
+# FAZ 4.1 EK RAPORU — Yanlış PASS Temizliği ve Nihai Canlı Kabul (15 Ağu 2026, main=90a23bd)
+
+Yürütme notu: ajan dalgası aylık harcama limitine takıldı (5/5 başarısız, dosya dokunmadı) —
+tüm düzeltmeler ana hatta uygulandı. ssh-agent oturum içinde yeniden boşaldı; `ssh-add
+--apple-load-keychain` ile etkileşimsiz geri yüklendi (kalıcı çözüm).
+
+## Madde-madde sonuç (kaynak testi · canlı HTTP · tarayıcı kanıtı)
+
+| # | Madde | Kaynak testi | Canlı HTTP | Tarayıcı | Durum |
+|---|---|---|---|---|---|
+| 1 | 'Yalnızca EİDS doğrulanmış' | İKİ kaynak: listing-extras.js:300 (.eids) + **listing.js:362 lstd-note (markup-bölünmüş `Yalnızca <b>EİDS</b>` — düz grep'i atlatmıştı)**; ikisi de koşullu dürüst metin: demo→'ÖRNEK İLAN · DEMO — Gerçek ilan veya EİDS doğrulaması değildir.', yalnız real_record+verified→'yayın kapısından geçmiştir' | T12 bundle=0 PASS | overlay text: eski iddia **false**, yeni metin **true** | **PASS** |
+| 2 | AR 46px taşma | index.html bölüm-bazlı `overflow-x:clip` + `min-width:0` + svg/img max-width + rtl guard (kendi ortamımızda 1343/1354px'te üretilemedi — kullanıcı-ortam farkı; yapısal containment her ortamı klipsler) | — | AR 1343px: taşma 0 (önceki 7 sayfa kanıtı) + containment canlıda | **PASS (yapısal)** — kullanıcı ortamında yeniden ölçüm önerilir |
+| 3 | Dil sızıntıları | CTA `#blogCta` render-anında 4 dil; `_BZ_L` tablosu: ortalama m²/Ortalama m²/Yıllık Değişim/Yatırım Skoru/12 ay/12 ay önce/6 ay/Bugün/güç etiketleri render-anında; 9 ilana `baslikI18n`+`DN_ILAN.baslik` (slug/URL TR sabit) | — | EN: CTA 'All News & Blog →', bölge etiketleri EN, TR kaçak 0 (lokal dist); canlı EN detay title 'Emirgan Grove-View Rental Villa' | **PASS** |
+| 4 | ProX cache | anahtar= tenant+dil+norm(context)+norm(prompt), request_id/zaman YOK; çok-turlu cache-dışı; X-ProX-Cache + Server-Timing | dıştan (CF): MISS 8.27s `upstream;dur=8008.9` → **HIT 0.240s** `cache;dur=5.2`, yanıtlar özdeş | asistan aynı yol | **PASS** (HIT ≤250ms) |
+| 5 | Bootstrap tek sözleşme | backend bootstrap = `/var/www/tenant-public/<tid>.json` (deploy'da repo tenant-config.json'dan) + dinamik package/sector/enabled_features/theme; nginx `/tenant-config.json` → AYNI bootstrap'a proxy (tek üretici, iki URL); ETag W/ + If-None-Match 304 + no-cache; Host çözümü nginx vhost allowlist + `_require` | T10 package=PRO+16 alan PASS · T10b ETag PASS · T10c parite PASS | istemci `r.package` karşılanıyor | **PASS** |
+| 6 | Public token | `proxPersona` (index EMLAK_TENANT) silindi; `tenantSettings{m1Key,customPrompt}` ve `proxAiPrompts` public literalden boşaltıldı → admin-blok init | T13=0 PASS (m1Key/customPrompt/proxPersona/proxAiPrompts) + T6=0 | dist 17-token taraması 0 | **PASS** |
+| 7 | CSP | origin: TEK enforce + TEK sıkı RO; `/csp-report` ucu (limit_req 6r/m) canlı; envanter 128+322 handler | T8 FAIL (CF katmanı) | — | **PARTIAL** — CF panel aksiyonu: Rules → Transform Rules → 'Modify Response Header' içinde `Content-Security-Policy-Report-Only` set eden (pagead2/unsafe-eval'li) kuralı SİL; enforce göçü ayrı dalga (ihlal 0 şartı) |
+| 8 | TTFB 3 vantage | — | benim vantage: p50 0.327/p95 0.388 (dns 0.002-0.13/tls +0.13); origin nginx 13ms; **kullanıcı vantage (İstanbul): 2.66-3.99s, TLS 2.3-3.6s — CF edge'e TLS el sıkışması, uygulama değil** | — | **PARTIAL** — İstanbul/ABD probe erişimim yok; TLS-ağırlıklı gecikme için CF panel: HTTP/3+0-RTT aç; kullanıcı `curl -w` çıktısı üçüncü vantage olarak rapora alındı |
+| 9 | /demo-yonetim/ | nginx `location = /demo-yonetim/ → 301` | T11 301 PASS + T4 X-Robots noindex PASS | sandbox 7 sekme/9 ilan/6 portföy/sıfırlama önceki kanıt | **PASS** |
+
+## E — ProX performans nihai ölçümler (thinking-disabled dönüm noktası)
+Kök neden: `deepseek-v4-flash` muhakeme (reasoning) aşaması ~7.5-8s ilk-token'ı yiyordu (uzunluktan
+bağımsız sabit ~8.2s'nin açıklaması). Sağlayıcı `thinking:{type:disabled}` parametresini kabul etti →
+tenant uçlarına uygulandı (aynı model, muhakeme kapalı):
+- **SSE streaming canlı** (`/prox/ai/stream`, nginx proxy_buffering off): **ilk token 1.80s (≤3 ✓)**,
+  toplam 9.26s, 626 ilerlemeli olay (CF üzerinden de ilerlemeli teslim doğrulandı).
+- **10 benzersiz cold prompt (dıştan):** [4.84…8.74] → **p50 6.07s · p95 8.74s (≤10 ✓)**.
+- **Cache HIT:** non-stream 0.240s (≤250ms ✓, origin 5.2ms); stream ilk olay 0.272s.
+- Tarayıcı→sağlayıcı doğrudan istek 0 (yalnız same-origin BFF; prox-asistan fetch-stream + fallback).
+
+## Nihai kabul durumu
+6 ana kart / 9 ilan / 9 harita kaydı (DN_ILAN tek kaynak) ✓ · Bebek 3/3 + Burgazada 0 (karışım yok) ✓ ·
+9/9 kart↔detay ✓ (önceki dalga) · yanlış iddia 0 ✓ · tek görünür+erişilebilir H1 + inert ✓ ·
+cache/streaming/cold hedefleri ✓ · public token 0 + ilk yüklemede admin asset 0 ✓ · bootstrap tek
+sözleşme+ETag ✓ · demo-yonetim slash+noindex ✓ · fail2ban kanıtlı ✓.
+**"Tamamlandı" DENMİYOR** — açık kalanlar: (7) CSP enforce (CF panel RO kaldırma + 450 handler göçü),
+(8) İstanbul/ABD vantage ölçümü + CF HTTP/3/0-RTT, (I) PasswordAuthentication=no (konsol + e-ZekaAl
+sudo doğrulaması sizde). Backend değişiklikleri sunucuda (repo dışı): `tenant_saas_routes.py`
+(yedekler /root/*.bak_faz41), nginx conf'ları (.bak_faz4*).
