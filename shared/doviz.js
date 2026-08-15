@@ -32,7 +32,7 @@
   }
   function trackHTML() {
     var seq = ITEMS.map(itemHTML).filter(Boolean).join('<span class="db-sep" aria-hidden="true">•</span>');
-    var note = '<span class="db-i db-note">Serbest piyasa · bilgi amaçlıdır' + (META.updatedAt ? (' · güncelleme ' + META.updatedAt) : '') + '</span>';
+    var note = '<span class="db-i db-note">' + (META.fallback ? '⚠ Yedek veri — güncel olmayabilir · ' : '') + 'Serbest piyasa · bilgi amaçlıdır' + (META.updatedAt ? (' · güncelleme ' + META.updatedAt) : '') + '</span>';
     return seq + '<span class="db-sep" aria-hidden="true">•</span>' + note + '<span class="db-sep" aria-hidden="true">•</span>';
   }
   function render() {
@@ -46,8 +46,11 @@
   function load() {
     var done = function () { render(); };
     try {
-      if (typeof window.proxApi !== 'function') { render(); return; }
-      Promise.resolve(window.proxApi('/api/v1/tenant/rates')).then(function (r) {
+      /* FAZ3F: proxApi'ye bağımlılık YOK — her sayfa aynı same-origin uçtan aynı canlı kuru alır */
+      var iste = (typeof window.proxApi === 'function')
+        ? Promise.resolve(window.proxApi('/api/v1/tenant/rates'))
+        : fetch((window.EMLAK_API_BASE||'') + '/api/v1/tenant/rates', {credentials:'same-origin'}).then(function(x){return x.ok?x.json():{fallback:true};}).catch(function(){return {fallback:true};});
+      iste.then(function (r) {
         if (r && !r.fallback && r.rates) {
           ['USD', 'EUR', 'GBP', 'gram_altin', 'ceyrek_altin'].forEach(function (c) { if (+r.rates[c] > 0) RATES[c] = +r.rates[c]; });
           var ch = r.rates.change || r.change; if (ch && typeof ch === 'object') CHANGE = ch;

@@ -1313,11 +1313,21 @@ function ozInit(){
   var sel=document.getElementById('ozIl');var iller=Object.keys(TR_ILILCE).sort(function(a,b){return a.localeCompare(b,'tr');});
   if(!iller.length)iller=[OZIL];
   sel.innerHTML=iller.map(function(i){return '<option value="'+esc(i)+'"'+(i===OZIL?' selected':'')+'>'+esc(i)+'</option>';}).join('');
+
+/* FAZ3F: TEK STATE — üst arama (ozIl/ozIlce/ozMah) alt mahalle-endeks panelini (me_ilce/me_mah) eşzamanlar */
+function ozAltSenkron(){try{
+  var mi=document.getElementById('me_ilce'),mm=document.getElementById('me_mah');
+  if(!mi)return;
+  var N={'Akat':'Akatlar','Nisbetiye':'Nispetiye'};
+  var ilce=N[OZILCE]||OZILCE, mah=N[OZMAH]||OZMAH;
+  if(ilce&&mi.value!==ilce){for(var i=0;i<mi.options.length;i++)if(mi.options[i].value===ilce||mi.options[i].text===ilce){mi.selectedIndex=i;mi.dispatchEvent(new Event('change'));break;}}
+  if(mah&&mm){setTimeout(function(){for(var j=0;j<mm.options.length;j++)if(mm.options[j].value===mah||mm.options[j].text===mah){mm.selectedIndex=j;mm.dispatchEvent(new Event('change'));break;}},700);}
+}catch(e){}}
   sel.onchange=function(){OZIL=this.value;OZILCE='';OZMAH='';document.getElementById('ozHeroIl').textContent=OZIL;ozPopulateIlce();ozPopulateMah();ozRender();ozAraRun();};
   var ilceSel=document.getElementById('ozIlce');
-  if(ilceSel)ilceSel.onchange=function(){OZILCE=this.value;OZMAH='';ozPopulateMah();ozRender();ozAraRun();};
+  if(ilceSel)ilceSel.onchange=function(){OZILCE=this.value;OZMAH='';ozPopulateMah();ozRender();ozAraRun();ozAltSenkron();};
   var mahSel=document.getElementById('ozMah');
-  if(mahSel)mahSel.onchange=function(){OZMAH=this.value;ozRender();ozAraRun();};
+  if(mahSel)mahSel.onchange=function(){OZMAH=this.value;ozRender();ozAraRun();ozAltSenkron();};
   var araSel=document.getElementById('ozAra');if(araSel)araSel.onchange=ozAraRun;
   var araBtn=document.getElementById('ozAraBtn');if(araBtn)araBtn.onclick=ozAraRun;
   ozPopulateIlce();ozPopulateMah();
