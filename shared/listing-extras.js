@@ -297,7 +297,7 @@
       +(l.desc?'<h3>Açıklama</h3><div class="desc">'+esc(l.desc)+'</div>':'')
       +(A.length?'<h3>İlan Bilgileri</h3><table><tbody>'+A.map(function(x){return '<tr><td class="k">'+esc(x.k)+'</td><td>'+esc(x.v)+'</td></tr>';}).join('')+'</tbody></table>':'')
       +'<div class="brand">'+esc(brand)+((cfg.phone&&cfg.phone())?(' · '+esc(cfg.phone())):'')+'</div>'
-      +'<div class="eids">🛡️ Yalnızca EİDS doğrulanmış ilanlar yayınlanır. · Kurgusal tanıtım demosu.</div>'
+      +((typeof L._isDemoRec==='function'&&L._isDemoRec(l))||!(l&&l.real_record&&l.eids_status==='verified')?'<div class="eids">🛡️ ÖRNEK İLAN · DEMO — Gerçek ilan veya EİDS doğrulaması değildir.</div>':'<div class="eids">🛡️ EİDS doğrulaması yayın kapısından geçmiştir.</div>')
       +'<script>window.onload=function(){setTimeout(function(){window.print();},250);}<\/script></body></html>';
     w.document.write(html); w.document.close();
   }catch(e){} };

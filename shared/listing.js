@@ -514,6 +514,13 @@
       +'<div class="lstd-ovwrap"><button type="button" class="lstd-back" onclick="Listings.closeDetail()">← Tüm ilanlar</button>'
       +demoNote+L.detailInnerHTML(l,cfg)+'</div>'+foot;
     ov.classList.add('on'); ov.scrollTop=0; try{document.body.style.overflow='hidden';}catch(e){}
+    /* FAZ4.1: arka plan yalnız aria-hidden değil — inert + görsel H1 gizleme (tek görünür/erişilebilir H1) */
+    try{ document.body.classList.add('lst-detay-acik');
+      [].forEach.call(document.body.children,function(ch){
+        if(ch===ov||/^(SCRIPT|STYLE|LINK)$/.test(ch.tagName)||ch.hasAttribute('data-lst-inert'))return;
+        ch.setAttribute('inert',''); ch.setAttribute('data-lst-inert','1');
+      });
+    }catch(e){}
     try{setTimeout(function(){L.mountMaps();},80);}catch(e){}
     try{if(L._extAfterOpen)setTimeout(function(){L._extAfterOpen(l,ov,cfg);},60);}catch(e){}
     /* gerçek header'daki bir bağlantıya/butona tıklanınca overlay'i kapat (site kendi sayfasına gitsin) */
@@ -523,6 +530,9 @@
     try{if(cfg.afterOpen)cfg.afterOpen(l,ov);}catch(e){}
   };
   L.closeDetail=function(){ var ov=document.getElementById('lstDetailOverlay'); if(ov){ov.classList.remove('on');ov.innerHTML='';} try{document.body.style.overflow='';}catch(e){} };
+    try{ document.body.classList.remove('lst-detay-acik');
+      [].forEach.call(document.querySelectorAll('[data-lst-inert]'),function(ch){ch.removeAttribute('inert');ch.removeAttribute('data-lst-inert');});
+    }catch(e){}
 
   /* ---- CSS (kurumsal renkleri --accent'ten miras alır) ---- */
   var _css=false;
@@ -655,7 +665,7 @@
     +'.lstd-share-b .x:hover{background:#111;color:#fff;border-color:transparent}'
     +'.lstd-share-b .fb:hover{background:#1877f2;color:#fff;border-color:transparent}'
     +'.lstd-share-b .cp.done{background:#0f7a3d;color:#fff;border-color:transparent}'
-    +'.lstd-ov{position:fixed;inset:0;z-index:9000;background:'+BG+';color:'+INK+';overflow-y:auto;overflow-x:hidden;display:none}'
+    +'body.lst-detay-acik > :not(#lstDetailOverlay) h1{visibility:hidden}.lstd-ov{position:fixed;inset:0;z-index:9000;background:'+BG+';color:'+INK+';overflow-y:auto;overflow-x:hidden;display:none}'
     +'.lstd-ov.on{display:block}'
     +'.lstd-ovwrap{max-width:1120px;margin:0 auto;padding:20px 18px 30px}'
     +'.lstd-back{background:'+SURF+';color:'+INK+';border:1px solid '+LINE+';border-radius:10px;padding:9px 16px;font-size:.84375rem;font-weight:700;cursor:pointer;margin-bottom:6px}'
