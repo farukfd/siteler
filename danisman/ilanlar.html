@@ -44,6 +44,7 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=6"><\/script><
 <script defer src="js/a11y.js?v=1"></script>
 <script src="js/share.js?v=5"></script>
 <script src="../shared/eids.js?v=2"></script>
+<script src="js/ilan-data.js?v=3"></script>
 <script src="../shared/listing.js?v=25"></script>
 <script src="../shared/listing-extras.js?v=10"></script>
 <link rel="stylesheet" href="css/portfoy.css?v=11">
@@ -363,19 +364,9 @@ function enrich(l){var c=catOf(l.tip);
   return l;
 }
 function loadListings(){
-  var list=null,isSeed=false;
-  try{var a=JSON.parse(localStorage.getItem('dn_listings_v1')||'null');if(Array.isArray(a)&&a.length)list=a;}catch(e){}
-  /* dn_listings_v1 yalnız boş varsayılanlardan ibaretse (görsel+açıklama yok) → zengin demo setini göster */
-  if(list&&list.every(function(l){return !l.img&&!l.desc;}))list=null;
-  if(!list){list=SEED.slice();isSeed=true;}
-  /* DEMO seti yayında gösterilir; EİDS durumu UYDURULMAZ → doğrulanmamış ilan 'beklemede' rozetiyle görünür. */
-  list.forEach(function(l){ if(!l)return; if(isSeed)l.status='aktif';
-    if(!l.eids||l.eids.kod!==undefined||!l.eids.status){l.eids=(window.EIDS?EIDS.newRecord({il:l.il,ilce:l.ilce,tasinmazNo:l.eidsNo||'',malikTip:'isletme'}):{status:'beklemede'});} });
-  /* Yayın kapısı: yayında (aktif) olan ilanlar gösterilir; her kart kendi EİDS durumunu (doğrulandı/bekliyor)
-     dürüstçe gösterir — sahte 'onaylı' damgalanmaz. */
-  list=list.filter(function(l){return l&&l.status==='aktif';});
-  list.forEach(function(l){if(!l.bolge)l.bolge=[l.ilce,l.mahalle].filter(Boolean).join(' · ');if(!l.ilanNo)l.ilanNo='İLN-'+(1000000+((l.id||1)*7919)%9000000);enrich(l);});
-  return list;
+  /* FAZ3E: TEK MERKEZ — ana sayfa, harita ve bu sayfa aynı DN_ILAN kaynağını kullanır (8 örnek ilan, ÖRNEK·DEMO işaretli). */
+  try{ if(window.DN_ILAN&&DN_ILAN.get) return DN_ILAN.get(); }catch(e){}
+  return SEED.slice();
 }
 var ALL=[], DUR='hepsi', KAT='tumu', IL='', ILCE='', ODA='', VIEW='liste';
 function _num(id){var e=document.getElementById(id);var v=e?parseFloat(e.value):NaN;return isNaN(v)?null:v;}
@@ -415,27 +406,14 @@ function ilShare(id){var l=ALL.filter(function(x){return x.id===id;})[0];if(!l||
 try{window.ilShare=ilShare;}catch(e){}
 
 function ilCard(l){
-  var price=l.kira?fmtTL(l.fiyat)+' <span class="per">/ay</span>':fmtTL(l.fiyat);
-  var cat=catOf(l.tip);var ol=(cat==='arsa'?'İmar':(cat==='ticari'?'Tip':'Oda')),kl=(cat==='arsa'?'Nitelik':'Kat');
-  var chips=[];(l.ek||[]).slice(0,l.feat?4:3).forEach(function(x){chips.push('<span class="pf-tag">'+esc(x)+'</span>');});
-  if(l.isitma&&l.isitma!=='—')chips.unshift('<span class="pf-tag">'+esc(l.isitma)+'</span>');
-  return '<div class="pf-card pf-rv" onclick="ilDetail('+l.id+')"><div class="pf-cardw"><div class="pf-inner">'
-    +'<div class="pf-media"><div class="imwrap"><img src="'+imgURL(l.img)+'" alt="'+esc(l.baslik)+'" loading="lazy" decoding="async"></div><div class="pf-scrim"></div>'
-    +'<span class="pf-badge'+(l.kira?'':' gold')+'">'+esc(l.durum)+'</span>'
-    +'<span class="pf-eids-m">'+(window.EIDS?EIDS.badgeHTML(l.eids||(EIDS.demoRecord?EIDS.demoRecord():null),11):'')+'</span>'
-    +pfFav(l)+pfShare(l)+pfCmp(l)+'</div>'
-    +'<div class="pf-body"><div class="pf-loc">'+ICO_PIN+esc(l.bolge||l.il||'')+'</div>'
-    +'<h3 class="pf-title">'+esc(l.baslik)+'</h3>'
-    +'<span class="pf-eids">'+(window.EIDS?EIDS.badgeHTML(l.eids||(EIDS.demoRecord?EIDS.demoRecord():null),11):'')+'</span>'
-    +'<div class="pf-specs">'
-      +'<div class="pf-spec"><div class="sv">'+ICO_AREA+'<span class="val">'+esc(l.m2)+'</span></div><span class="lbl">m² Alan</span></div>'
-      +'<div class="pf-spec"><div class="sv">'+ICO_ODA+'<span class="val">'+esc(l.oda||'—')+'</span></div><span class="lbl">'+ol+'</span></div>'
-      +'<div class="pf-spec"><div class="sv">'+ICO_KAT+'<span class="val">'+esc(l.kat||'—')+'</span></div><span class="lbl">'+kl+'</span></div>'
-    +'</div>'
-    +(chips.length?'<div class="pf-tags">'+chips.join('')+'</div>':'')
-    +'<div class="pf-foot"><div class="pf-price">'+price+'<span class="sub">'+(l.kira?'Aylık Kira':'Satılık')+' · Yetki Belgeli</span></div></div>'
-    +'<div class="pf-foot" style="border:0;padding-top:12px"><span></span><span class="pf-cta">İlanı İncele '+ICO_ARR+'</span></div>'
-    +'</div></div></div></div>';
+  /* FAZ3E: kart, ana sayfadaki merkezi Listings kartıyla BİREBİR aynı (tek şablon, tek veri).
+     norm() kayıt CFG'sinin içindedir → normalize edilmiş kaydı cfg.list()'ten id ile alırız. */
+  try{ if(window.Listings&&Listings.cardHTML&&Listings._reg&&Listings._reg['dnil']){
+    var cfg=Listings._reg['dnil'];
+    var n=(cfg.list()||[]).filter(function(x){return String(x.id)===String(l.id);})[0];
+    if(n)return Listings.cardHTML(n,cfg);
+  } }catch(e){}
+  return '';
 }
 
 function ilRender(){
@@ -618,6 +596,7 @@ if(document.readyState!=='loading')ilInit();else document.addEventListener('DOMC
     list:function(){try{return (window.ALL||[]).map(norm).filter(Boolean);}catch(e){return [];}}
   };
   try{Listings.register('dnil',DN_CFG);}catch(e){}
+  try{ilRender();}catch(e){}/* FAZ3E: merkezi kart şablonu cfg kaydından sonra hazır — yeniden çiz */
   /* bespoke ilDetail'i ortak detaya yönlendir (ilCard onclick="ilDetail(id)") */
   window.ilDetail=function(id){ try{ var l=(window.ALL||[]).filter(function(x){return String(x.id)===String(id);})[0]; if(l)Listings.openDetail(norm(l),DN_CFG); }catch(e){} };
 })();
