@@ -90,7 +90,7 @@
   function _pk(r,a){ return a[Math.floor(r()*a.length)%a.length]; }
   L.detailAttrs=function(l){ var cat=L.catOf(l); var r=_sr(l.id||l.title||cat); var a=l.attrs||{}; var out=[];
     var add=function(k,v){ if(v!==undefined&&v!==null&&v!=='')out.push({k:k,v:''+v}); };
-    add('İlan No', a.ilanNo||('İ'+(('0000000'+(''+(l.id||'')).replace(/\D/g,'')).slice(-7))));
+    add('İlan No', a.ilanNo||l.ilanNo||('İLN-'+(1000000+((parseInt((''+(l.id||'1')).replace(/\D/g,''),10)||1)*7919)%9000000)));/* TEK üreteç: listing-extras ile aynı formül */
     add('İlan Tarihi', a.tarih||l.date||'');
     add('Emlak Tipi', l.type||l.tip||'');
     add('İşlem', l.op||l.durum||'Satılık');

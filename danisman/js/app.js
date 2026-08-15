@@ -673,12 +673,21 @@ function dnListNormalize(r){ if(!r)return null;
     features:(r.features&&r.features.length?r.features:(r.ek||[])), attrs:r.attrs, desc:r.desc, eids:r.eids,
     videoUrl:r.videoUrl, tour360Url:r.tour360Url, floorplanUrl:r.floorplanUrl, media:r.media, energy:r.energy, ilanNo:r.ilanNo, tarih:r.tarih };
 }
+
+/* FAZ3F: kalıcı ilan URL'leri — /ilan/<slug>; tüm giriş noktaları TEK merkezi detaya (disclaimer'lı) gider */
+function dnIlanSlug(l){var t=(l.baslik||l.title||('ilan-'+l.id));return String(t).toLocaleLowerCase('tr').replace(/[çÇ]/g,'c').replace(/[ğĞ]/g,'g').replace(/[ıİI]/g,'i').replace(/[öÖ]/g,'o').replace(/[şŞ]/g,'s').replace(/[üÜ]/g,'u').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')+'-'+l.id;}
+function dnIlanRoute(id){try{var l=((window.DN_ILAN&&DN_ILAN.get())||[]).filter(function(x){return String(x.id)===String(id);})[0];
+  if(l&&window.history&&history.pushState){history.pushState({ilan:id},'','/ilan/'+dnIlanSlug(l));}
+}catch(e){} try{Listings.openDetail('dn',id);}catch(e){}}
+try{window.dnIlanRoute=dnIlanRoute;window.dnIlanSlug=dnIlanSlug;
+  window.addEventListener('popstate',function(){try{if(location.pathname.indexOf('/ilan/')!==0){Listings.closeDetail();}}catch(e){}});
+}catch(e){}
 var DN_LIST_CFG={ns:'dn',
   brand:function(){try{return _dnBrand();}catch(e){return 'Selin Meridyen';}},
   phone:function(){try{return (SAAS_CONFIG.firma&&SAAS_CONFIG.firma.tel)||'+90 532 000 00 00';}catch(e){return '+90 532 000 00 00';}},
   whatsapp:function(){return '905320000000';},
   agent:function(){try{return {name:(_dnBrand()||'Selin Meridyen'),photo:'img/danisman-portresi.jpg',title:'Lüks Konut & Özel Portföy Danışmanı',experience:18};}catch(e){return {name:'Selin Meridyen',photo:'img/danisman-portresi.jpg',title:'Gayrimenkul Danışmanı',experience:18};}},
-  onOpen:function(id){dnListingDetail(id);},
+  onOpen:function(id){dnIlanRoute(id);},/* FAZ3F: bespoke detay emekli — merkezi detay + kalıcı URL */
   onContact:function(){try{var ov=document.getElementById('pageOverlay');if(ov){ov.classList.remove('on');ov.innerHTML='';}document.body.classList.remove('lock');}catch(e){}try{navGo('randevu');}catch(e){}},
   mapQuery:function(l){return [l.mah,l.ilce,l.il].filter(Boolean).join(', ');},
   list:function(){try{return ((window.DN_ILAN&&DN_ILAN.get())||[]).map(dnListNormalize).filter(Boolean);}catch(e){return [];}}
@@ -1038,7 +1047,7 @@ function _dnPortfolioText(){try{var all=LISTINGS.concat(VIP_PORTFOLIO).slice(0,1
    ===================================================================== */
 const PAGES={
   ilanlar:{eyebrow:'Güncel İlanlar',title:'Açık Portföy',em:'tam şeffaf bilgi',desc:'Fiyat, oda, metrekare ve bölge bilgisi açıkça paylaşılan güncel lüks ilanlar. Beğendiğiniz gayrimenkul için ücretsiz değer analizi talep edin.',
-    body:()=>'<section class="sec-pad"><div class="wrap"><div class="lst-grid">'+listingCardsHTML(0)+'</div><div class="vault-note" style="margin-top:36px">🛡️ Tüm ilanlar <b>EİDS (Elektronik İlan Doğrulama Sistemi)</b> ile doğrulanmıştır · yalnızca doğrulanmış ilanlar yayınlanır · detaylı bilgi için <b>ücretsiz analiz</b> alın.</div></div></section>'},
+    body:()=>'<section class="sec-pad"><div class="wrap"><div class="lst-grid">'+listingCardsHTML(0)+'</div><div class="vault-note" style="margin-top:36px">🛡️ Örnek ilan vitrini · <b>DEMO</b> — EİDS alanı temsilî gösterimdir; kayıtlar gerçek ilan veya resmî doğrulama değildir. Detay için <b>ücretsiz analiz</b> alın.</div></div></section>'},
   vip:{eyebrow:'Kişisel VIP Portföyüm',title:'Davet Usulü',em:'gizli özel portföy',desc:'Yalnızca cadde/sokak ismi ve başlangıç değeri paylaşılır. Tam adres, kimlik ve net fiyat mahremiyet gereği yalnızca ön analiz sonrası açıklanır.',
     body:()=>'<section class="vault sec-pad"><div class="wrap"><div class="card-grid">'+vipCardsHTML()+'</div><div class="vault-note" style="margin-top:36px">🔒 <b>Adres gizliliği</b> tüm kayıtlarda esastır · net konum yalnızca <b>ücretsiz analiz görüşmesinde</b> paylaşılır.</div></div></section>'},
   blog:{eyebrow:'Blog · Haberler',title:'Bilgi & Piyasa',em:'ProX veri ışığında',desc:'Lüks konut, yatırım ve piyasa üzerine kişiye özel analizler; ProX doğrulanmış emlak verisiyle beslenen güncel haber akışı.',

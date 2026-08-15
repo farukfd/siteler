@@ -86,6 +86,9 @@ def donustur_metin(s, site, host, html=False):
     s = re.sub(r'window\.EMLAK_API_BASE\s*=\s*"https://www\.emlakekspertizi\.com";', 'window.EMLAK_API_BASE="";/* same-origin BFF */', s)
     # 4) shared düzleştirme
     s = s.replace('../shared/', 'shared/')
+    # FAZ3F: /ilan/<slug> derin-linklerinde göreli asset yolları kırılmasın — base href kökü
+    if html and site == 'danisman' and '<base ' not in s and '<head>' in s:
+        s = s.replace('<head>', '<head>\n<base href="/">', 1)
     # 4b) FAZ3: üretim depolama bekçisi her SAYFAYA (yalnız HTML — JS içindeki şablon string'lerine dokunma!)
     if html and '</head>' in s and 'storage-guard' not in s:
         s = s.replace('</head>', '<script>window.EMLAK_DEMO=false;window.SITE_MODE="__SITEMODE__";</script><script src="shared/storage-guard.js?v=1"></script>\n</head>', 1)
@@ -195,6 +198,15 @@ def paketle(site, cfg):
             os.makedirs(os.path.join(hedef, 'shared'), exist_ok=True)
             shutil.copy2(sp, os.path.join(hedef, 'shared', ad))
 
+    # FAZ3F: dn ilan detay kalıcı URL'leri sitemap'e (SEED slug'ları — ilan-data ile senkron)
+    if site == 'danisman':
+        ILAN_SLUGS = ['levent-deniz-manzarali-3-1-daire-1','zekeriyakoy-havuzlu-mustakil-villa-2','cihangir-bogaz-manzarali-esyali-2-1-3','maslak-a-plaza-ofis-kati-4','nisantasi-cadde-ustu-dukkan-5','beykoz-riva-orman-manzarali-imarli-arsa-6','caddebostan-bahce-kati-4-1-7','atasehir-site-ici-ferah-3-1-8','emirgan-koru-manzarali-kiralik-villa-9']
+        smp0 = os.path.join(hedef, 'sitemap.xml')
+        if os.path.exists(smp0):
+            sm = oku(smp0)
+            ek = ''.join(f'  <url><loc>https://{host}/ilan/{sl}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>\n' for sl in ILAN_SLUGS)
+            sm = sm.replace('</urlset>', ek + '</urlset>')
+            yaz(smp0, sm)
     # robots.txt (üretim)
     yaz(os.path.join(hedef, 'robots.txt'),
         f"User-agent: *\nAllow: /\nDisallow: /admin-assets/\n\nSitemap: https://{host}/sitemap.xml\n")

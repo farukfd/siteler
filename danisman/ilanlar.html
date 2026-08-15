@@ -592,10 +592,13 @@ if(document.readyState!=='loading')ilInit();else document.addEventListener('DOMC
     navHTML:function(){try{var el=document.querySelector('header#nav')||document.querySelector('header');return el?el.outerHTML:'';}catch(e){return '';}},
     footerHTML:function(){try{var el=document.querySelector('footer');return el?el.outerHTML:'';}catch(e){return '';}},
     mapQuery:function(l){return [l.mah,l.ilce,l.il].filter(Boolean).join(', ');},
+    onOpen:function(id){try{var l=(window.ALL||[]).filter(function(x){return String(x.id)===String(id);})[0];if(l&&history.pushState){var t=(l.baslik||'ilan').toLocaleLowerCase('tr').replace(/[çÇ]/g,'c').replace(/[ğĞ]/g,'g').replace(/[ıİI]/g,'i').replace(/[öÖ]/g,'o').replace(/[şŞ]/g,'s').replace(/[üÜ]/g,'u').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');history.pushState({ilan:id},'','/ilan/'+t+'-'+id);}}catch(e){}try{Listings.openDetail('dnil',id);}catch(e){}},
     onContact:function(){try{Listings.closeDetail();}catch(e){}try{location.href='index.html#randevu';}catch(e){}},
     list:function(){try{return (window.ALL||[]).map(norm).filter(Boolean);}catch(e){return [];}}
   };
   try{Listings.register('dnil',DN_CFG);}catch(e){}
+  /* FAZ3F: /ilan/<slug-id> derin bağlantısı — nginx bu path'i ilanlar.html'e düşürür; burada ilgili detay açılır */
+  try{var m=location.pathname.match(/^\/ilan\/(?:.*-)?(\d+)$/);if(m){setTimeout(function(){try{Listings.openDetail('dnil',m[1]);}catch(e){}},250);}}catch(e){}
   try{ilRender();}catch(e){}/* FAZ3E: merkezi kart şablonu cfg kaydından sonra hazır — yeniden çiz */
   /* bespoke ilDetail'i ortak detaya yönlendir (ilCard onclick="ilDetail(id)") */
   window.ilDetail=function(id){ try{ var l=(window.ALL||[]).filter(function(x){return String(x.id)===String(id);})[0]; if(l)Listings.openDetail(norm(l),DN_CFG); }catch(e){} };
