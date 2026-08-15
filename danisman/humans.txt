@@ -1,0 +1,11 @@
+/* TEAM & PLATFORM */
+Platform: ProX
+Software & infrastructure: NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.
+Copyright: 2005-2026
+Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.
+
+/* SITE */
+Site mode: DEMO
+Brand (demo tenant): Selin Meridyen (temsilî)
+Languages: TR EN RU ZH AR
+Standards: HTML5 CSS3 Vanilla JS

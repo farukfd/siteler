@@ -31,8 +31,14 @@ YASAK_IDDIA = ["Yetki Belgeli", "Yetki belgeli", "EİDS yetki belgeli", "EİDS Y
                "Yalnızca EİDS doğrulanmış ilanlar yayınlanır"]
 st, _, smap = al(HOST + "/sitemap.xml")
 urls = re.findall(r"<loc>([^<]+)</loc>", smap) if st == 200 else []
-kayit("T1 sitemap erişimi", st == 200 and len(urls) >= 20, f"{len(urls)} URL")
-sayfa_urls = [u for u in urls if "/ilan/" not in u]
+# FAZ-KAPANIŞ: DEMO host sitemap'i BOŞ olmalı (Google demo'yu indekslemez; sayfalar taranabilir)
+kayit("T1 DEMO sitemap boş (0 URL)", st == 200 and len(urls) == 0, f"{len(urls)} URL")
+SAYFALAR = ["", "ilanlar.html", "ozel-portfoy.html", "harita.html", "bolge-analizi.html",
+            "emlak-ekspertizi.html", "blog.html", "hakkimizda.html", "hizmetlerimiz.html",
+            "referanslar.html", "sss.html", "iletisim.html", "randevu.html", "semtler.html",
+            "surec.html", "yatirim-rehberi.html", "kvkk.html", "cerez.html", "kullanim.html",
+            "gizlilik.html", "prox-asistan.html"]
+sayfa_urls = [HOST + "/" + p for p in SAYFALAR]
 ihlal = []
 for u in sayfa_urls:
     s2, _, gov = al(u)
@@ -45,9 +51,13 @@ for u in sayfa_urls:
 kayit("T2 yetki/EİDS iddiası=0 (statik HTML, tüm sitemap)", not ihlal, "; ".join(ihlal[:4]))
 
 # ── T3: /ilan/ kalıcı URL'ler 9/9
-ilan_urls = [u for u in urls if "/ilan/" in u]
-kotu = [u for u in ilan_urls if al(u)[0] != 200]
-kayit("T3 kalıcı ilan URL'leri 9/9", len(ilan_urls) == 9 and not kotu, f"{len(ilan_urls)-len(kotu)}/{len(ilan_urls)}")
+SLUGLAR = ["levent-deniz-manzarali-3-1-daire-1","zekeriyakoy-havuzlu-mustakil-villa-2",
+           "cihangir-bogaz-manzarali-esyali-2-1-3","maslak-a-plaza-ofis-kati-4",
+           "nisantasi-cadde-ustu-dukkan-5","beykoz-riva-orman-manzarali-imarli-arsa-6",
+           "caddebostan-bahce-kati-4-1-7","atasehir-site-ici-ferah-3-1-8",
+           "emirgan-koru-manzarali-kiralik-villa-9"]
+kotu = [sl for sl in SLUGLAR if al(HOST + "/ilan/" + sl)[0] != 200]
+kayit("T3 kalıcı ilan URL'leri 9/9", not kotu, f"{9-len(kotu)}/9")
 
 # ── T4: /demo-yonetim sandbox
 s4, _, g4 = al(HOST + "/demo-yonetim")
@@ -135,6 +145,22 @@ for v in sorted(varliklar):
     for t in ["m1Key", "customPrompt", "proxPersona", "proxAiPrompts"]:
         if t.lower() in jg.lower(): tihlal2.append(f"{v}: {t}")
 kayit("T13 m1Key/customPrompt/proxPersona/proxAiPrompts=0", not tihlal2, "; ".join(tihlal2[:3]))
+
+
+# ── KAPANIŞ kriterleri
+NADAS_C = "Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti."
+gb, hb, gbody = al(HOST + "/?gbot")
+xr = next((v for k, v in hb.items() if k.lower() == "x-robots-tag"), "")
+kayit("T14 X-Robots-Tag noindex,follow (HTML)", "noindex" in xr and "follow" in xr, xr)
+kayit("T15 meta robots noindex,follow,noarchive", 'content="noindex,follow,noarchive"' in gbody)
+kayit("T16 NADAS makine-yüzeyi: kaynak yorum+meta+JSON-LD", NADAS_C in gbody and 'name="generator" content="NADAS / ProX"' in gbody and '"Site Mode"' in gbody and '"DEMO"' in gbody)
+# görünür katman: nadas-c span'ı kalmamalı (render metni tarayıcıda ayrıca doğrulanır)
+kayit("T17 görünür footer'da nadas-c yok", 'class="nadas-c"' not in gbody)
+s18, _, g18 = al(HOST + "/llms.txt"); s19, _, g19 = al(HOST + "/humans.txt")
+kayit("T18 llms.txt: demo+NADAS+ProX", s18 == 200 and NADAS_C in g18 and "PLATFORM DEMOSU" in g18 and "ProX" in g18)
+kayit("T19 humans.txt: NADAS+DEMO", s19 == 200 and NADAS_C in g19 and "DEMO" in g19)
+# title dürüstlüğü
+kayit("T20 title (DEMO) içerir", re.search(r"<title>[^<]*DEMO[^<]*</title>", gbody) is not None)
 
 print()
 fails = [s for s in SONUC if not s[1]]

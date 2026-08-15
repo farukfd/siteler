@@ -42,6 +42,19 @@
     host.setAttribute('role', 'marquee');
     host.setAttribute('aria-label', 'Güncel döviz ve altın kurları — bilgi amaçlıdır, fiyatlar ₺ ile gösterilir');
     host.innerHTML = '<div class="db-mask"><div class="db-track">' + t + t + '</div></div>';
+    /* FAZ-kapanış F6: RTL'de hareketli track document genişliğine KATILMASIN — gerçek containment.
+       contain:inline-size+paint boyut/boyamayı içeride tutar; mask ltr çalışır (kayan şerit yönü sabit),
+       böylece dir=rtl sayfada scrollWidth büyümez. */
+    try{
+      if(!document.getElementById('dbContainCss')){
+        var st=document.createElement('style'); st.id='dbContainCss';
+        st.textContent='.doviz-bandi{max-width:100%;overflow-x:clip;contain:inline-size paint}'
+          +'.db-mask{max-width:100%;overflow:hidden;direction:ltr;contain:paint}'
+          +'.db-track{width:max-content}'
+          +'@supports not (overflow-x:clip){.doviz-bandi{overflow-x:hidden}}';
+        document.head.appendChild(st);
+      }
+    }catch(e){}
   }
   function load() {
     var done = function () { render(); };

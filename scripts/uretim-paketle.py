@@ -77,8 +77,15 @@ def donustur_metin(s, site, host, html=False):
     s = s.replace(f'https://www.emlakekspertizi.com/demo/{site}',  f'https://{host}')
     s = s.replace(f'https://www.emlakekspertizi.com/{site}/', f'https://{host}/')
     s = s.replace(f'https://www.emlakekspertizi.com/{site}',  f'https://{host}')
-    # 2) çift robots → tek üretim
+    _mode = SITELER.get(site, {}).get('site_mode', 'production')
+    # 2) robots: DEMO host → noindex,follow,noarchive (server-side karar; Googlebot taramalı ama indekslememeli)
     s = re.sub(r'<meta name="robots" content="noindex[^"]*">\s*(<!--[^>]*-->)?\s*', '', s)
+    if _mode == 'demo' and html:
+        s = re.sub(r'<meta name="robots" content="[^"]*">\s*', '', s)
+        if '<head>' in s:
+            s = s.replace('<head>', '<head>\n<meta name="robots" content="noindex,follow,noarchive">', 1)
+        # title'a dürüst (DEMO) eki (zaten DEMO/Demosu içermiyorsa)
+        s = re.sub(r'<title>(?![^<]*(?:DEMO|Demosu))([^<]{1,220})</title>', r'<title>\1 (DEMO)</title>', s, count=1)
     s = re.sub(r'<meta name="robots" content="index,follow[^"]*">\s*<!--[^>]*-->', '<meta name="robots" content="index,follow,max-image-preview:large">', s)
     s = s.replace('<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">', '<meta name="robots" content="index,follow,max-image-preview:large">')
     # 3) demo bayrağı + same-origin taban
@@ -92,6 +99,28 @@ def donustur_metin(s, site, host, html=False):
     # 4b) FAZ3: üretim depolama bekçisi her SAYFAYA (yalnız HTML — JS içindeki şablon string'lerine dokunma!)
     if html and '</head>' in s and 'storage-guard' not in s:
         s = s.replace('</head>', '<script>window.EMLAK_DEMO=false;window.SITE_MODE="__SITEMODE__";</script><script src="shared/storage-guard.js?v=1"></script>\n</head>', 1)
+    # FAZ-KAPANIŞ: NADAS makine-yüzeyleri (kaynak yorumu + meta + WebSite/SoftwareApplication JSON-LD)
+    if html and '</head>' in s and 'name="generator" content="NADAS' not in s:
+        _marka = SITELER.get(site, {}).get('marka', site)
+        _ldsm = 'DEMO' if _mode == 'demo' else 'PRODUCTION'
+        _NC = 'Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.'
+        _ld = json.dumps({"@context": "https://schema.org", "@graph": [
+            {"@type": "WebSite",
+             "name": _marka + (' · Platform Demosu' if _mode == 'demo' else ''),
+             "url": f"https://{host}/",
+             "copyrightHolder": {"@type": "Organization", "name": "NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti."},
+             "copyrightYear": 2005, "copyrightNotice": _NC},
+            {"@type": "SoftwareApplication", "name": "ProX Emlak Platformu",
+             "applicationCategory": "RealEstateApplication", "operatingSystem": "Web",
+             "brand": {"@type": "Brand", "name": "ProX"},
+             "creator": {"@type": "Organization", "name": "NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti."},
+             "additionalProperty": {"@type": "PropertyValue", "name": "Site Mode", "value": _ldsm}}
+        ]}, ensure_ascii=False)
+        s = s.replace('</head>',
+            '<!-- ' + _NC + ' -->\n'
+            '<meta name="copyright" content="' + _NC + '">\n'
+            '<meta name="generator" content="NADAS / ProX">\n'
+            '<script type="application/ld+json">' + _ld + '</script>\n</head>', 1)
     # 7) index.html → kök
     s = re.sub(r'href="(?:\./)?index\.html', 'href="/', s)
     s = s.replace("location.href='index.html", "location.href='/")
@@ -148,7 +177,7 @@ def paketle(site, cfg):
         if os.path.isdir(yol): continue
         rel = os.path.relpath(yol, kaynak)
         # FAZ4C: public tenant sözleşmesi dist'e girer (tek json istisnası)
-        if rel.endswith(KOPYALAMA_DISI) and os.path.basename(rel) != 'tenant-config.json': continue
+        if rel.endswith(KOPYALAMA_DISI) and os.path.basename(rel) not in ('tenant-config.json','site-config.json'): continue
         if any(rel.startswith(px) for px in PAKET_DISI.get(site, ())): continue
         ad = os.path.basename(rel)
         # admin varlıkları ayrı dizine
@@ -201,8 +230,14 @@ def paketle(site, cfg):
             os.makedirs(os.path.join(hedef, 'shared'), exist_ok=True)
             shutil.copy2(sp, os.path.join(hedef, 'shared', ad))
 
+    # FAZ-KAPANIŞ: DEMO host aramada görünmez — sitemap BOŞ, robots Sitemap bildirimi yok (Disallow YOK: Googlebot noindex'i okuyabilmeli)
+    if cfg.get('site_mode') == 'demo':
+        yaz(os.path.join(hedef, 'sitemap.xml'),
+            '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n</urlset>\n')
+        yaz(os.path.join(hedef, 'robots.txt'),
+            "User-agent: *\nAllow: /\nDisallow: /admin-assets/\n")
     # FAZ3F: dn ilan detay kalıcı URL'leri sitemap'e (SEED slug'ları — ilan-data ile senkron)
-    if site == 'danisman':
+    if site == 'danisman' and cfg.get('site_mode') != 'demo':
         ILAN_SLUGS = ['levent-deniz-manzarali-3-1-daire-1','zekeriyakoy-havuzlu-mustakil-villa-2','cihangir-bogaz-manzarali-esyali-2-1-3','maslak-a-plaza-ofis-kati-4','nisantasi-cadde-ustu-dukkan-5','beykoz-riva-orman-manzarali-imarli-arsa-6','caddebostan-bahce-kati-4-1-7','atasehir-site-ici-ferah-3-1-8','emirgan-koru-manzarali-kiralik-villa-9']
         smp0 = os.path.join(hedef, 'sitemap.xml')
         if os.path.exists(smp0):
@@ -210,9 +245,10 @@ def paketle(site, cfg):
             ek = ''.join(f'  <url><loc>https://{host}/ilan/{sl}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>\n' for sl in ILAN_SLUGS)
             sm = sm.replace('</urlset>', ek + '</urlset>')
             yaz(smp0, sm)
-    # robots.txt (üretim)
-    yaz(os.path.join(hedef, 'robots.txt'),
-        f"User-agent: *\nAllow: /\nDisallow: /admin-assets/\n\nSitemap: https://{host}/sitemap.xml\n")
+    # robots.txt (üretim; demo yukarıda yazıldı)
+    if cfg.get('site_mode') != 'demo':
+        yaz(os.path.join(hedef, 'robots.txt'),
+            f"User-agent: *\nAllow: /\nDisallow: /admin-assets/\n\nSitemap: https://{host}/sitemap.xml\n")
     # sitemap: index.html → /
     smp = os.path.join(hedef, 'sitemap.xml')
     if os.path.exists(smp):

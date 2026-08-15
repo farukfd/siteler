@@ -1,25 +1,22 @@
-# Selin Meridyen — Lüks Konut & Özel Portföy Danışmanı
+# Selin Meridyen — Kişiye Özel Emlak Danışmanlığı (PLATFORM DEMOSU)
 
-> Kişiye özel emlak danışmanlığı platform demosu (EİDS/yetkilendirme alanları temsilî gösterimdir; canlı tenantta doğrulanmış künye kullanılır). Güncel lüks ilanlar, davet usulü VIP özel portföy, ücretsiz gayrimenkul değer analizi ve ProX destekli emlak asistanı.
+> Bu host, tam özellikli bir gayrimenkul danışmanlığı PLATFORM DEMOSUDUR (site_mode=demo).
+> İlanlar ve özel portföy kayıtları ÖRNEK/TEMSİLÎDİR; gerçek ilan veya resmî EİDS doğrulaması DEĞİLDİR.
+> Platform markası: ProX. Yazılım ve altyapı NADAS tarafından geliştirilmiştir.
+> Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.
 
-Not: Kurgusal tanıtım demosudur — ilan, fiyat ve istatistikler temsilîdir.
+## Ana kullanıcı yüzeyleri
+- /ilanlar.html — 9 örnek ilan (ÖRNEK İLAN · DEMO etiketli)
+- /ilan/<slug> — ilan detayı (kalıcı URL)
+- /harita.html — ilan haritası
+- /ozel-portfoy.html — mahalle endeksi + davet-usulü örnek özel portföy
+- /bolge-analizi.html — bölge analizi
+- /prox-asistan.html — ProX Asistan (yapay zekâ, same-origin)
+- /demo-yonetim — yönetim paneli sandbox'ı (oturuma özel)
 
-## Ana Sayfalar
-- [İlanlar](ilanlar.html): Açık portföy; şeffaf fiyat, oda, m² ve bölge bilgisiyle güncel lüks ilanlar.
-- [Özel Portföy](ozel-portfoy.html): Davet usulü, mahremiyeti korunan ayrıcalıklı gayrimenkuller.
-- [Bölge Analizi](bolge-analizi.html): Mahalle m² karşılaştırması ve yatırım skoru.
-- [Hizmetlerimiz](hizmetlerimiz.html) · [Hakkımızda](hakkimizda.html) · [S.S.S](sss.html)
-- [ProX Asistan](prox-asistan.html): ProX veri altyapısına dayalı canlı emlak asistanı.
+## Gerçek tenantlarda
+Marka, iletişim, il/ilçe/mahalle kapsamı, kategoriler ve içerikler tenant yapılandırmasına
+göre değişir; EİDS/yetki bilgileri yalnız doğrulanmış kayıtlarla gösterilir.
 
-## İletişim
-- [İletişim](iletisim.html): Randevu talebi, ofis bilgileri ve ücretsiz gayrimenkul değer analizi.
-WhatsApp ve telefonla randevu; ücretsiz değer analizi.
-- [Harita](harita.html): Tüm portföyün gerçek konum haritası; uydu görünümü ve fiyat baloncukları.
-- [Emlak Ekspertizi](emlak-ekspertizi.html): Ücretsiz keşif + ücretsiz Karar Raporu — bölge m² endeksi, güven skoru; SPK lisanslı resmî değerleme yerine geçmez.
-- [Blog](blog.html): Piyasa notları ve lüks konut haberleri.
-- [Randevu](randevu.html): Ücretsiz ön görüşme ve değer analizi randevusu.
-- [Referanslar](referanslar.html): Müşteri görüşleri ve Google puanı.
-- [Süreç](surec.html): 6 aşamalı danışmanlık sürecim.
-- [Yatırım Rehberi](yatirim-rehberi.html): İstanbul lüks konut yatırım rehberi.
-- [Semt Rehberi](semtler.html): Boğaz hattı ve prestij semtleri; temsilî m² bantları.
-- [Gizlilik](gizlilik.html): Gizlilik politikası.
+## Diller
+TR (varsayılan) · EN · RU · ZH · AR
