@@ -44,9 +44,9 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=10"><\/script>
 <script defer src="js/a11y.js?v=1"></script>
 <script src="js/share.js?v=5"></script>
 <script src="../shared/eids.js?v=2"></script>
-<script src="js/ilan-data.js?v=3"></script>
-<script src="../shared/listing.js?v=26"></script>
-<script src="../shared/listing-extras.js?v=12"></script>
+<script src="js/ilan-data.js?v=4"></script>
+<script src="../shared/listing.js?v=27"></script>
+<script src="../shared/listing-extras.js?v=13"></script>
 <link rel="stylesheet" href="css/portfoy.css?v=11">
 <!-- ============ STITCH DÖNÜŞÜMÜ (ilanlar · ozel-portfoy "Aegean Heritage Wealth" diliyle hizalı) ============ -->
 <style id="ilStitch">
@@ -581,7 +581,7 @@ if(document.readyState!=='loading')ilInit();else document.addEventListener('DOMC
   function _ilSlug(l){var t=(l.baslik||'ilan').toLocaleLowerCase('tr').replace(/[çÇ]/g,'c').replace(/[ğĞ]/g,'g').replace(/[ıİI]/g,'i').replace(/[öÖ]/g,'o').replace(/[şŞ]/g,'s').replace(/[üÜ]/g,'u').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');return t+'-'+l.id;}
   function _ilDetaySeo(l){try{
     if(!_ilSeoOnceki){var c0=document.querySelector('link[rel="canonical"]');_ilSeoOnceki={title:document.title,href:c0?c0.getAttribute('href'):null,yok:!c0};}
-    document.title=(l.baslik||'İlan')+' | Selin Meridyen';
+    var _ilDil=(function(){try{return localStorage.getItem('dn_lang')||'tr'}catch(e){return 'tr'}})();document.title=((window.DN_ILAN&&DN_ILAN.baslik)?DN_ILAN.baslik(l,_ilDil):(l.baslik||'İlan'))+' | Selin Meridyen';
     var c=document.querySelector('link[rel="canonical"]');
     if(!c){c=document.createElement('link');c.setAttribute('rel','canonical');document.head.appendChild(c);}
     c.setAttribute('href',location.origin+'/ilan/'+_ilSlug(l));

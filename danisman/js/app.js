@@ -19,10 +19,8 @@ const SAAS_CONFIG={
     metaKeywords:'lüks konut danışmanı, özel portföy, yalı, penthouse, kişiye özel emlak, ücretsiz gayrimenkul analizi',
     googleAnalytics:'', googleSiteVerification:'', googleMapsKey:''
   },
-  tenantSettings:{ customPrompt:'', m1Key:'' },/* m1Key: ProX Motor-1 bağlantısı — ayrıntı ve uçlar admin modülündedir; boşsa ProX çekirdeği. ProX veri anahtarı (endeks/analiz) ayrıdır. */
-  proxAiPrompts:{
-    temelMetin:''/* FAZ4E: yönerge SUNUCUDA — istemcide tutulmaz */
-  },
+  tenantSettings:{},/* alanlar admin modülünde doldurulur */
+  aiAyar:{},/* alanlar admin modülünde doldurulur */
   firma:{
     unvan:'Selin Meridyen Gayrimenkul Danışmanlık', vergi:'', adres:'Nişantaşı, Şişli / İstanbul',
     tel:'+90 212 000 00 00', mail:'info@selinmeridyen.com', proxyUrl:'',
@@ -113,12 +111,14 @@ function aiGuard(p){p=(p==null?'':''+p);return p.indexOf('[KESİN KURALLAR')>=0?
    yüklendiğinde aiChat Motor-1 öncelikli sarmalayıcı ile genişletilir (çağrı zinciri değişmez). */
 async function aiChat(body,opts){
   /* FAZ3E: backend {prompt} bekler — message→prompt eşle + request_id (422 fix) */
-  var _pb={prompt:(body&&(body.prompt||body.message))||'',request_id:'rq'+Date.now().toString(36)+Math.random().toString(36).slice(2,8)};
+  var _pb={lang:(function(){try{return localStorage.getItem('dn_lang')||'tr'}catch(e){return 'tr'}})(),prompt:(body&&(body.prompt||body.message))||'',request_id:'rq'+Date.now().toString(36)+Math.random().toString(36).slice(2,8)};
   if(body&&body.messages&&body.messages.length){_pb.prompt=body.messages.map(function(m){return (m.role==='user'?'Müşteri: ':'')+m.content;}).join('\n').slice(-4000);}
   return await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:_pb});
 }
 try{window.aiChat=aiChat;}catch(e){}
-/*__ADMIN_BLOK__*/ /* Bu bölge üretim paketinde admin-assets/ altına ayrılır (public bundle inmez) */
+/*__ADMIN_BLOK__*/
+try{SAAS_CONFIG.tenantSettings=Object.assign({customPrompt:'',m1Key:''},SAAS_CONFIG.tenantSettings||{});}catch(e){}
+try{SAAS_CONFIG.proxAiPrompts=Object.assign({temelMetin:''},SAAS_CONFIG.proxAiPrompts||{});}catch(e){} /* Bu bölge üretim paketinde admin-assets/ altına ayrılır (public bundle inmez) */
 /* ===== ProX MOTOR-1 ÖNCELİKLİ ÜRETİM YÖNLENDİRMESİ (danışman · yalnız admin) =====
    Admin bir Motor-1 bağlantısı (SAAS_CONFIG.tenantSettings.m1Key) etkinleştirdiyse üretim
    same-origin /api/ai/generate profil ucuyla çalışır; yoksa/başarısızsa ProX çekirdeğine
@@ -700,7 +700,7 @@ function dnIlanSlug(l){var t=(l.baslik||l.title||('ilan-'+l.id));return String(t
 var _dnSeoOnceki=null;/* {title, href, yok} — açılış öncesi durumun anlık görüntüsü */
 function _dnDetaySeo(l){try{
   if(!_dnSeoOnceki){var c0=document.querySelector('link[rel="canonical"]');_dnSeoOnceki={title:document.title,href:c0?c0.getAttribute('href'):null,yok:!c0};}
-  document.title=(l.baslik||l.title||'İlan')+' | '+_dnBrand();
+  document.title=((window.DN_ILAN&&DN_ILAN.baslik)?DN_ILAN.baslik(l,(function(){try{return localStorage.getItem('dn_lang')||'tr'}catch(e){return 'tr'}})()):(l.baslik||l.title||'İlan'))+' | '+_dnBrand();
   /* kanonik: location.search'ten BAĞIMSIZ mutlak URL — ?lang vb. sorgu parametresi bilinçli olarak EKLENMEZ */
   var c=document.querySelector('link[rel="canonical"]');
   if(!c){c=document.createElement('link');c.setAttribute('rel','canonical');document.head.appendChild(c);}
@@ -2683,15 +2683,25 @@ window.addEventListener('load',function(){try{
     var ar='M'+X(0).toFixed(1)+' '+(H-P)+' '+pts.map(function(p){return 'L'+p[0].toFixed(1)+' '+p[1].toFixed(1);}).join(' ')+' L'+X(n-1).toFixed(1)+' '+(H-P)+' Z';
     return {ln:ln.trim(), ar:ar, ex:X(n-1), ey:Y(vals[n-1])};
   }
+
+  /* FAZ4.1-F3: bölge etiketleri dil-farkında — ilk kare dahil (çeviri motorunu beklemez) */
+  var _BZ_L={
+    tr:{once:'12 ay önce',alti:'6 ay',bugun:'Bugün',ay12:'12 ay',ortm2:'ortalama m²',Ortm2:'Ortalama m²',yillik:'Yıllık Değişim',skor:'Yatırım Skoru',cg:'Çok güçlü',g:'Güçlü',ist:'İstikrarlı',gel:'Gelişen',bolge:' bölge',seyir:'12 aylık m² fiyat seyri'},
+    en:{once:'12 mo ago',alti:'6 mo',bugun:'Today',ay12:'12 mo',ortm2:'average m²',Ortm2:'Average m²',yillik:'Annual Change',skor:'Investment Score',cg:'Very strong',g:'Strong',ist:'Stable',gel:'Emerging',bolge:' area',seyir:'12-month m² price trend'},
+    ru:{once:'12 мес назад',alti:'6 мес',bugun:'Сегодня',ay12:'12 мес',ortm2:'средний m²',Ortm2:'Средний m²',yillik:'Годовое изменение',skor:'Инвест-рейтинг',cg:'Очень сильный',g:'Сильный',ist:'Стабильный',gel:'Развивающийся',bolge:' район',seyir:'Динамика цены m² за 12 мес'},
+    zh:{once:'12个月前',alti:'6个月',bugun:'今天',ay12:'12个月',ortm2:'平均 m²',Ortm2:'平均 m²',yillik:'年度变化',skor:'投资评分',cg:'非常强劲',g:'强劲',ist:'稳定',gel:'新兴',bolge:'区域',seyir:'12个月 m² 价格走势'},
+    ar:{once:'قبل 12 شهرًا',alti:'6 أشهر',bugun:'اليوم',ay12:'12 شهرًا',ortm2:'متوسط m²',Ortm2:'متوسط m²',yillik:'التغير السنوي',skor:'درجة الاستثمار',cg:'قوي جدًا',g:'قوي',ist:'مستقر',gel:'ناشئ',bolge:' منطقة',seyir:'اتجاه سعر m² خلال 12 شهرًا'}
+  };
+  function _bzT(k){var d;try{d=localStorage.getItem('dn_lang')||'tr'}catch(e){d='tr'}return (_BZ_L[d]||_BZ_L.tr)[k]||_BZ_L.tr[k];}
   function renderMain(d){
     var W=480,H=200,P=16, p=buildPath(d.tr,W,H,P);
-    var ticks=[[0,'12 ay önce'],[5,'6 ay'],[11,'Bugün']];
+    var ticks=[[0,_bzT('once')],[5,_bzT('alti')],[11,_bzT('bugun')]];
     mainEl.innerHTML=''
-     +'<div class="bz-mhead"><div><div class="lbl">'+d.n+' · ortalama m²</div>'
+     +'<div class="bz-mhead"><div><div class="lbl">'+d.n+' · '+_bzT('ortm2')+'</div>'
        /* KPI FLASH FIX: animasyon tetiklenene dek 0 yerine skeleton — animNum textContent yazınca yerini gerçek değer alır */
        +'<div class="bz-big"><span data-c="'+d.avg+'">'+KPI_SKEL+'</span> <small>₺/m²</small></div></div>'
-       +'<div class="bz-delta'+(Math.abs(d.yoy)<0.1?'':(d.yoy<0?' dn':''))+'">'+(Math.abs(d.yoy)<0.1?('● '+(d.skor>=90?'Çok güçlü':d.skor>=85?'Güçlü':d.skor>=75?'İstikrarlı':'Gelişen')+' bölge'):((d.yoy>=0?'▲ +':'▼ ')+d.yoy+'% <span style="color:var(--muted);font-weight:500">· 12 ay</span>'))+'</div></div>'
-     +'<div class="bz-chart"><svg viewBox="0 0 '+W+' '+(H+18)+'" role="img" aria-label="'+d.n+' 12 aylık m² fiyat seyri">'
+       +'<div class="bz-delta'+(Math.abs(d.yoy)<0.1?'':(d.yoy<0?' dn':''))+'">'+(Math.abs(d.yoy)<0.1?('● '+(d.skor>=90?_bzT('cg'):d.skor>=85?_bzT('g'):d.skor>=75?_bzT('ist'):_bzT('gel'))+_bzT('bolge')):((d.yoy>=0?'▲ +':'▼ ')+d.yoy+'% <span style="color:var(--muted);font-weight:500">· '+_bzT('ay12')+'</span>'))+'</div></div>'
+     +'<div class="bz-chart"><svg viewBox="0 0 '+W+' '+(H+18)+'" role="img" aria-label="'+d.n+' '+_bzT('seyir')+'">'
        +'<defs><linearGradient id="bzGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--gold)" stop-opacity=".30"/><stop offset="1" stop-color="var(--gold)" stop-opacity="0"/></linearGradient></defs>'
        +'<path class="bz-areaP" d="'+p.ar+'" fill="url(#bzGrad)" opacity="0"/>'
        +'<path class="bz-line" d="'+p.ln+'"/>'
@@ -2702,9 +2712,9 @@ window.addEventListener('load',function(){try{
   function renderSide(d){
     sideEl.innerHTML=''
      /* KPI FLASH FIX: ilk frame'de 0 basılmaz — skeleton, animNum ile gerçek değere döner */
-     +'<div class="bz-kpi"><div class="k">Ortalama m²</div><div class="v"><span data-c="'+d.avg+'">'+KPI_SKEL+'</span> <small>₺</small></div></div>'
-     +'<div class="bz-kpi"><div class="k">Yıllık Değişim</div><div class="v"><span class="pos">+<span data-c="'+d.yoy+'" data-dec="1">'+KPI_SKEL+'</span></span><small>%</small></div></div>'
-     +'<div class="bz-kpi"><div class="k">Yatırım Skoru</div><div class="bz-ringwrap"><div class="bz-ring" style="--p:0"><span class="rn" data-c="'+d.skor+'">'+KPI_SKEL+'</span></div><div style="font-size:.71875rem;color:var(--muted);line-height:1.45">100 üzerinden<br><b style="color:var(--em)">'+(d.skor>=90?'Çok Güçlü':d.skor>=85?'Güçlü':'İyi')+'</b></div></div></div>'
+     +'<div class="bz-kpi"><div class="k">'+_bzT('Ortm2')+'</div><div class="v"><span data-c="'+d.avg+'">'+KPI_SKEL+'</span> <small>₺</small></div></div>'
+     +'<div class="bz-kpi"><div class="k">'+_bzT('yillik')+'</div><div class="v"><span class="pos">+<span data-c="'+d.yoy+'" data-dec="1">'+KPI_SKEL+'</span></span><small>%</small></div></div>'
+     +'<div class="bz-kpi"><div class="k">'+_bzT('skor')+'</div><div class="bz-ringwrap"><div class="bz-ring" style="--p:0"><span class="rn" data-c="'+d.skor+'">'+KPI_SKEL+'</span></div><div style="font-size:.71875rem;color:var(--muted);line-height:1.45">100 üzerinden<br><b style="color:var(--em)">'+(d.skor>=90?'Çok Güçlü':d.skor>=85?'Güçlü':'İyi')+'</b></div></div></div>'
      +'<div class="bz-kpi"><div class="k">Likidite</div><div class="v" style="font-size:1.25rem">'+d.likT+'</div><div class="bz-lik"><i data-w="'+d.lik+'"></i></div></div>';
   }
   function renderCmp(){
@@ -2930,3 +2940,12 @@ async function dnGoogleRating(){
   }catch(e){}
 }
 try{ if(document.readyState!=='loading')setTimeout(dnGoogleRating,500); else document.addEventListener('DOMContentLoaded',function(){setTimeout(dnGoogleRating,500);}); }catch(e){}
+
+/* FAZ4.1-F3: haber CTA dil-farkında (ilk boyamada TR flash olmasın diye script çalışır çalışmaz) */
+(function(){try{
+  var d=localStorage.getItem('dn_lang')||'tr';
+  if(d==='tr')return;
+  var M={en:'All News & Blog →',ru:'Все новости и блог →',zh:'全部新闻与博客 →',ar:'كل الأخبار والمدونة ←'};
+  function uygula(){var b=document.getElementById('blogCta');if(b&&M[d])b.textContent=M[d];}
+  uygula(); document.addEventListener('DOMContentLoaded',uygula);
+}catch(e){}})();

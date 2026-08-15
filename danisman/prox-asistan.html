@@ -278,11 +278,44 @@ async function paSend(ev){
   _busy=true;var btn=document.querySelector('.pa-send');if(btn)btn.disabled=true;
   _msgs.push({role:'bot',typing:true});paRenderLog();
   var hist=_histCtx();var ans='';
-  /* Tek yanıt yolu: ProX çekirdeği (/tenant/prox/ai, same-origin) + kural-tabanlı fallback */
+  /* FAZ4.1-E: önce same-origin SSE streaming (/prox/ai/stream) — ilk delta ile balon progresif dolar; hata halinde non-stream + kural-tabanlı fallback */
+  var _dil=(function(){try{return localStorage.getItem('dn_lang')||'tr'}catch(e){return 'tr'}})();
+  var _rid='rq'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+  var _aktim=false;
   try{
-    var r=await proxApi('/api/v1/tenant/prox/ai',{context:hist||'default',request_id:'rq'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),prompt:(hist?('Önceki konuşma:\n'+hist+'\n\nMüşterinin yeni mesajı: '):'')+q});
-    ans=(r&&(r.answer||(r.data&&r.data.answer)))||'';if(!ans||(r&&r.fallback))ans=PA_FALLBACK;
-  }catch(e){ans=PA_FALLBACK;}
+    var sres=await fetch('/api/v1/tenant/prox/ai/stream',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt:(q),context:hist||'default',lang:_dil,request_id:_rid})});
+    if(sres.ok&&sres.body&&/event-stream/.test(sres.headers.get('content-type')||'')){
+      var rd=sres.body.getReader(),dec=new TextDecoder(),buf='';
+      while(true){
+        var ch=await rd.read(); if(ch.done)break;
+        buf+=dec.decode(ch.value,{stream:true});
+        var parça; 
+        while((parça=buf.indexOf('\n\n'))>=0){
+          var satır=buf.slice(0,parça); buf=buf.slice(parça+2);
+          if(satır.indexOf('data:')!==0)continue;
+          try{
+            var ev=JSON.parse(satır.slice(5).trim());
+            if(ev.delta){ans+=ev.delta;_aktim=true;
+              /* progresif balon: typing mesajını canlı metne çevir */
+              var tm=_msgs.filter(function(m2){return m2.typing;})[0];
+              if(tm){delete tm.typing;tm.text='';}
+              var son=_msgs[_msgs.length-1];
+              if(son&&son.role==='bot'){son.text=scrubProx(ans);paRenderLog();}
+            }
+            if(ev.done&&ev.answer){ans=ev.answer;_aktim=true;}
+          }catch(e2){}
+        }
+      }
+      if(!_aktim)throw new Error('bos-akis');
+    } else { throw new Error('akis-yok'); }
+  }catch(eS){
+    /* non-stream düşüş: mevcut davranış birebir */
+    try{
+      var r=await proxApi('/api/v1/tenant/prox/ai',{context:hist||'default',lang:_dil,request_id:_rid,prompt:(q)});
+      ans=(r&&(r.answer||(r.data&&r.data.answer)))||'';if(!ans||(r&&r.fallback))ans=PA_FALLBACK;
+    }catch(e){ans=PA_FALLBACK;}
+  }
   ans=scrubProx(ans);
   _msgs=_msgs.filter(function(m){return !m.typing;});
   _msgs.push({role:'bot',text:ans,cta:true});
