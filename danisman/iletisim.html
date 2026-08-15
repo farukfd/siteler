@@ -33,10 +33,10 @@
 <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg?v=2">
 <script defer src="js/brand.js?v=3"></script>
-<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=14"></script>
+<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=15"></script>
 <script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
 (function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
-if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=8"><\/script><script src="js/i18n/iletisim.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=10"><\/script><script src="js/i18n/iletisim.js?v=2"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
 <script defer src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
 <script defer src="js/a11y.js?v=1"></script>
 <script src="js/lead.js?v=2"></script>
@@ -250,7 +250,7 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=8"><\/script><
     g.innerHTML=rows.map(function(r){
       var v=(r[1]||'').toString().trim(), lnk=r[3], val;
       if(v){ if(lnk==='mail'||lnk==='mailto')val='<a href="mailto:'+esc(v)+'">'+esc(v)+'</a>'; else if(lnk==='tel')val='<a href="tel:'+esc(v.replace(/[^\d+]/g,''))+'">'+esc(v)+'</a>'; else val=esc(v); }
-      else { val='<span class="lk-empty">— yönetici tarafından girilecek</span>'; }
+      else { val='<span class="lk-empty">Demo künye alanı — canlı tenantta doğrulanmış işletme bilgisi gösterilir</span>'; }
       return '<div class="lk-row"><div class="lk-k">'+esc(r[0])+'</div><div class="lk-v">'+val+'</div></div>';
     }).join('');
   })();

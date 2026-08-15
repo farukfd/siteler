@@ -36,17 +36,17 @@
 <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg?v=2">
 <script defer src="js/brand.js?v=3"></script>
-<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=14"></script>
+<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=15"></script>
 <script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
 (function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
-if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=8"><\/script><script src="js/i18n/ilanlar.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=10"><\/script><script src="js/i18n/ilanlar.js?v=2"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
 <script defer src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
 <script defer src="js/a11y.js?v=1"></script>
 <script src="js/share.js?v=5"></script>
 <script src="../shared/eids.js?v=2"></script>
 <script src="js/ilan-data.js?v=3"></script>
-<script src="../shared/listing.js?v=25"></script>
-<script src="../shared/listing-extras.js?v=10"></script>
+<script src="../shared/listing.js?v=26"></script>
+<script src="../shared/listing-extras.js?v=12"></script>
 <link rel="stylesheet" href="css/portfoy.css?v=11">
 <!-- ============ STITCH DÖNÜŞÜMÜ (ilanlar · ozel-portfoy "Aegean Heritage Wealth" diliyle hizalı) ============ -->
 <style id="ilStitch">
@@ -336,16 +336,7 @@ function catOf(tip){tip=(tip||'').toLocaleLowerCase('tr');if(/arsa|tarla|parsel/
 /* EİDS kodu UYDURULMAZ — durum shared/eids.js (window.EIDS) üzerinden gerçek doğrulamadan gelir. */
 
 /* İstanbul odaklı, gerçek görselli örnek ilan seti (admin ilan eklemeden önce) — EİDS durumu uydurulmaz */
-var SEED=[
-  {id:1,durum:'Satılık',tip:'Daire',baslik:'Levent Deniz Manzaralı 3+1 Daire',il:'İstanbul',ilce:'Beşiktaş',mahalle:'Levent',m2:165,oda:'3+1',kat:'12',fiyat:24500000,img:'img3',isitma:'Doğalgaz Kombi',cephe:'Güney',yas:'3',ek:['Asansör','Kapalı Otopark','7/24 Güvenlik','Site İçi'],feat:1,desc:'Boğaz ve şehir manzaralı, geniş salonlu yeni nesil rezidans dairesi. Ebeveyn banyolu, ankastre mutfak ve akıllı ev altyapısıyla; ulaşım akslarına ve prestij okullara yakın konumda.'},
-  {id:2,durum:'Satılık',tip:'Villa',baslik:'Zekeriyaköy Havuzlu Müstakil Villa',il:'İstanbul',ilce:'Sarıyer',mahalle:'Zekeriyaköy',m2:420,oda:'5+2',kat:'3 katlı',fiyat:58000000,img:'img1',isitma:'Yerden Isıtma',cephe:'4 Cephe',yas:'2',ek:['Özel Havuz','Geniş Bahçe','Kapalı Garaj','Akıllı Ev'],feat:1,desc:'Doğayla iç içe, özel havuzlu ve geniş bahçeli müstakil villa. Dört cephe, bol ışık, üstün yapı kalitesi; site içi güvenlikli yaşam.'},
-  {id:3,durum:'Kiralık',tip:'Daire',baslik:'Cihangir Boğaz Manzaralı Eşyalı 2+1',il:'İstanbul',ilce:'Beyoğlu',mahalle:'Cihangir',m2:120,oda:'2+1',kat:'5',fiyat:65000,kira:true,img:'img5',isitma:'Klima',cephe:'Boğaz',yas:'—',ek:['Eşyalı','Yüksek Tavan','Teras'],feat:1,desc:'Karakteristik binada, Boğaz manzaralı, yüksek tavanlı eşyalı daire. Kültür-sanat aksının merkezinde, yürüyüş mesafesinde her şey.'},
-  {id:4,durum:'Satılık',tip:'Ofis / İş Yeri',baslik:'Maslak A+ Plaza Ofis Katı',il:'İstanbul',ilce:'Sarıyer',mahalle:'Maslak',m2:280,oda:'Açık Ofis',kat:'18',fiyat:39000000,img:'img4',isitma:'VRV Klima',cephe:'Cam Cephe',yas:'4',ek:['Otopark','Jeneratör','Resepsiyon','Toplantı Odası'],feat:0,desc:'Prestijli plazada, cam cepheli, bölünebilir açık ofis katı. Kurumsal kimliğinize yakışan konum, otopark ve teknik altyapı.'},
-  {id:5,durum:'Kiralık',tip:'Ofis / İş Yeri',baslik:'Nişantaşı Cadde Üstü Dükkan',il:'İstanbul',ilce:'Şişli',mahalle:'Nişantaşı',m2:110,oda:'Vitrinli',kat:'Zemin',fiyat:145000,kira:true,img:'img6',isitma:'Klima',cephe:'Ana Cadde',yas:'—',ek:['Yüksek Yaya Trafiği','Geniş Vitrin','Depo Alanı'],feat:0,desc:'Nişantaşı’nın en işlek caddesinde, geniş vitrinli, yüksek yaya trafiğine sahip perakende dükkanı. Marka mağazacılığa uygun.'},
-  {id:6,durum:'Satılık',tip:'Arsa',baslik:'Çeşme Alaçatı Deniz Manzaralı İmarlı Arsa',il:'İzmir',ilce:'Çeşme',mahalle:'Alaçatı',m2:850,oda:'Villa İmarı',kat:'—',fiyat:34000000,img:'img8',isitma:'—',cephe:'Deniz',yas:'—',ek:['Villa İmarı','Deniz Manzarası','Altyapı Hazır','Yola Cepheli'],feat:0,desc:'Alaçatı’da deniz manzaralı, villa imarlı yatırımlık arsa. Altyapı hazır, yola cepheli; bölgenin değer artış potansiyeli yüksek.'},
-  {id:7,durum:'Satılık',tip:'Daire',baslik:'Caddebostan Bahçe Katı 4+1',il:'İstanbul',ilce:'Kadıköy',mahalle:'Caddebostan',m2:220,oda:'4+1',kat:'Bahçe Katı',fiyat:32000000,img:'img2',isitma:'Yerden Isıtma',cephe:'Güney',yas:'5',ek:['Özel Bahçe','Otopark','Asansör'],feat:0,desc:'Bağdat Caddesi’ne yakın, özel bahçeli, geniş metrekareli aile dairesi. Sahil ve sosyal yaşam bir arada.'},
-  {id:8,durum:'Kiralık',tip:'Daire',baslik:'Ataşehir Site İçi Ferah 3+1',il:'İstanbul',ilce:'Ataşehir',mahalle:'Barbaros',m2:150,oda:'3+1',kat:'8',fiyat:52000,kira:true,img:'img9',isitma:'Merkezi',cephe:'Doğu',yas:'6',ek:['Site İçi','Yüzme Havuzu','Spor Salonu','Otopark'],feat:0,desc:'Sosyal olanakları geniş, güvenlikli sitede ferah ve aydınlık 3+1 kiralık daire. Finans merkezine yakın konum.'}
-];
+/* FAZ4A: bayat yerel SEED kaldırıldı — TEK VERİ KAYNAĞI js/ilan-data.js (DN_ILAN). */
 
 /* eksik alanları makul varsayılanlarla tamamla → her ilanda tam özellik tablosu */
 function enrich(l){var c=catOf(l.tip);
@@ -366,7 +357,7 @@ function enrich(l){var c=catOf(l.tip);
 function loadListings(){
   /* FAZ3E: TEK MERKEZ — ana sayfa, harita ve bu sayfa aynı DN_ILAN kaynağını kullanır (8 örnek ilan, ÖRNEK·DEMO işaretli). */
   try{ if(window.DN_ILAN&&DN_ILAN.get) return DN_ILAN.get(); }catch(e){}
-  return SEED.slice();
+  return []; /* DN_ILAN yoksa boş — farklı ikinci veri seti ASLA gösterilmez */
 }
 var ALL=[], DUR='hepsi', KAT='tumu', IL='', ILCE='', ODA='', VIEW='liste';
 function _num(id){var e=document.getElementById(id);var v=e?parseFloat(e.value):NaN;return isNaN(v)?null:v;}
@@ -524,7 +515,7 @@ function ilDetail(id){var l=ALL.filter(function(x){return x.id===id;})[0];if(!l)
       +(feats?'<div class="ild-sec"><h3>Özellikler</h3><div class="ild-feats">'+feats+'</div></div>':'')
       +'<div class="ild-sec"><h3>Konum</h3><div class="ild-map"><iframe loading="lazy" title="Konum haritası" src="'+osmEmbed(l)+'"></iframe></div><div class="ild-map-note">'+ICO_PIN+' Yaklaşık konum: '+esc(l.ilce||'')+(l.mahalle?' / '+esc(l.mahalle):'')+' · net adres ücretsiz ekspertiz görüşmesinde paylaşılır.</div></div>'
     +'</div><div class="ild-side"><div class="ild-card">'
-      +'<div class="ild-price">'+price+(l.kira?'<span class="cur"> /ay</span>':'')+'<span class="sub">'+(l.kira?'Aylık Kira':'Satılık')+' · Yetki Belgeli</span></div>'
+      +'<div class="ild-price">'+price+(l.kira?'<span class="cur"> /ay</span>':'')+'<span class="sub">'+(l.kira?'Aylık Kira':'Satılık')+' · Örnek vitrin · DEMO</span></div>'
       +'<div class="ild-eids-box"><div class="ic">'+ICO_SHIELD+'</div><div><b>'+(window.EIDS?esc(EIDS.stateLabel(l.eids)):'EİDS')+'</b><span>'+(window.EIDS&&EIDS.isVerified(l.eids)?('Taşınmaz doğrulandı'+(l.eids.tasinmazNo?(' · '+esc(l.eids.tasinmazNo)):'')):'T.C. Ticaret Bakanlığı EİDS · doğrulama durumu')+'</span></div></div>'
       +'<div class="ild-cta"><a class="btn btn-gold" href="index.html#randevu" onclick="ilLead(\''+esc(l.baslik)+'\')">Ücretsiz Ekspertiz Al</a>'
         +'<a class="btn btn-line" href="tel:+905320000000" onclick="dnTrack(\'contact\',{method:\'phone\'})">📞 Danışmanı Ara</a>'
@@ -565,7 +556,7 @@ document.addEventListener('keydown',function(e){
 document.addEventListener('click',function(e){var lb=document.getElementById('ilbOverlay');if(lb&&lb.classList.contains('on')&&e.target===lb)ilbClose();});
 if(document.readyState!=='loading')ilInit();else document.addEventListener('DOMContentLoaded',ilInit);
 </script>
-<script src="js/uyelik.js?v=6"></script>
+<script src="js/uyelik.js?v=7"></script>
 <script>
 /* ====== SHARED DETAY MOTORU KÖPRÜSÜ ======
    Bespoke liste/hero/filtre/harita/funnel/üyelik KORUNUR; yalnız ilan DETAYI
@@ -584,6 +575,29 @@ if(document.readyState!=='loading')ilInit();else document.addEventListener('DOMC
       features:(r.ek&&r.ek.length?r.ek:(r.features||[])), attrs:r.attrs, desc:r.desc, eids:r.eids,
       videoUrl:r.videoUrl, tour360Url:r.tour360Url, floorplanUrl:r.floorplanUrl, energy:r.energy, ilanNo:r.ilanNo, tarih:r.tarih };
   }
+  /* FAZ4A-2: kalıcı URL SEO — app.js index'te; bu sayfada aynı davranışın yerel kopyası.
+     title + rel=canonical (/ilan/<slug> MUTLAK, ?lang'sız) + arka plan H1 aria-hidden; kapanışta geri alınır. */
+  var _ilSeoOnceki=null;
+  function _ilSlug(l){var t=(l.baslik||'ilan').toLocaleLowerCase('tr').replace(/[çÇ]/g,'c').replace(/[ğĞ]/g,'g').replace(/[ıİI]/g,'i').replace(/[öÖ]/g,'o').replace(/[şŞ]/g,'s').replace(/[üÜ]/g,'u').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');return t+'-'+l.id;}
+  function _ilDetaySeo(l){try{
+    if(!_ilSeoOnceki){var c0=document.querySelector('link[rel="canonical"]');_ilSeoOnceki={title:document.title,href:c0?c0.getAttribute('href'):null,yok:!c0};}
+    document.title=(l.baslik||'İlan')+' | Selin Meridyen';
+    var c=document.querySelector('link[rel="canonical"]');
+    if(!c){c=document.createElement('link');c.setAttribute('rel','canonical');document.head.appendChild(c);}
+    c.setAttribute('href',location.origin+'/ilan/'+_ilSlug(l));
+    [].forEach.call(document.querySelectorAll('h1'),function(h){if(!(h.closest&&h.closest('#lstDetailOverlay'))){h.setAttribute('aria-hidden','true');h.setAttribute('data-dn-h1gizli','1');}});
+  }catch(e){}}
+  function _ilDetaySeoGeri(){try{
+    if(_ilSeoOnceki){document.title=_ilSeoOnceki.title;
+      var c=document.querySelector('link[rel="canonical"]');
+      if(c){if(_ilSeoOnceki.yok&&c.parentNode)c.parentNode.removeChild(c);else if(_ilSeoOnceki.href!=null)c.setAttribute('href',_ilSeoOnceki.href);}
+      _ilSeoOnceki=null;}
+    [].forEach.call(document.querySelectorAll('h1[data-dn-h1gizli]'),function(h){h.removeAttribute('aria-hidden');h.removeAttribute('data-dn-h1gizli');});
+  }catch(e){}}
+  try{if(window.Listings&&Listings.closeDetail&&!Listings._ilSeoSarildi){Listings._ilSeoSarildi=true;
+    var _ilKapatOrj=Listings.closeDetail;
+    Listings.closeDetail=function(){try{_ilDetaySeoGeri();}catch(e){}return _ilKapatOrj.apply(Listings,arguments);};}}catch(e){}
+
   var DN_CFG={ns:'dnil',
     brand:function(){try{return (document.getElementById('brandName')||{}).textContent||'Selin Meridyen';}catch(e){return 'Selin Meridyen';}},
     phone:function(){return '+90 532 000 00 00';},
@@ -592,13 +606,14 @@ if(document.readyState!=='loading')ilInit();else document.addEventListener('DOMC
     navHTML:function(){try{var el=document.querySelector('header#nav')||document.querySelector('header');return el?el.outerHTML:'';}catch(e){return '';}},
     footerHTML:function(){try{var el=document.querySelector('footer');return el?el.outerHTML:'';}catch(e){return '';}},
     mapQuery:function(l){return [l.mah,l.ilce,l.il].filter(Boolean).join(', ');},
-    onOpen:function(id){try{var l=(window.ALL||[]).filter(function(x){return String(x.id)===String(id);})[0];if(l&&history.pushState){var t=(l.baslik||'ilan').toLocaleLowerCase('tr').replace(/[çÇ]/g,'c').replace(/[ğĞ]/g,'g').replace(/[ıİI]/g,'i').replace(/[öÖ]/g,'o').replace(/[şŞ]/g,'s').replace(/[üÜ]/g,'u').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');history.pushState({ilan:id},'','/ilan/'+t+'-'+id);}}catch(e){}try{Listings.openDetail('dnil',id);}catch(e){}},
+
+    onOpen:function(id){var l=null;try{l=(window.ALL||[]).filter(function(x){return String(x.id)===String(id);})[0];if(l&&history.pushState){history.pushState({ilan:id},'','/ilan/'+_ilSlug(l));}}catch(e){}try{Listings.openDetail('dnil',id);}catch(e){}try{if(l)_ilDetaySeo(l);}catch(e){}},
     onContact:function(){try{Listings.closeDetail();}catch(e){}try{location.href='index.html#randevu';}catch(e){}},
     list:function(){try{return (window.ALL||[]).map(norm).filter(Boolean);}catch(e){return [];}}
   };
   try{Listings.register('dnil',DN_CFG);}catch(e){}
   /* FAZ3F: /ilan/<slug-id> derin bağlantısı — nginx bu path'i ilanlar.html'e düşürür; burada ilgili detay açılır */
-  try{var m=location.pathname.match(/^\/ilan\/(?:.*-)?(\d+)$/);if(m){setTimeout(function(){try{Listings.openDetail('dnil',m[1]);}catch(e){}},250);}}catch(e){}
+  try{var m=location.pathname.match(/^\/ilan\/(?:.*-)?(\d+)$/);if(m){setTimeout(function(){try{Listings.openDetail('dnil',m[1]);var l=(window.ALL||[]).filter(function(x){return String(x.id)===String(m[1]);})[0];if(l)_ilDetaySeo(l);}catch(e){}},250);}}catch(e){}
   try{ilRender();}catch(e){}/* FAZ3E: merkezi kart şablonu cfg kaydından sonra hazır — yeniden çiz */
   /* bespoke ilDetail'i ortak detaya yönlendir (ilCard onclick="ilDetail(id)") */
   window.ilDetail=function(id){ try{ var l=(window.ALL||[]).filter(function(x){return String(x.id)===String(id);})[0]; if(l)Listings.openDetail(norm(l),DN_CFG); }catch(e){} };

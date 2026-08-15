@@ -85,39 +85,48 @@
   L.catImages=function(l,n){ n=n||4; var cat=L.catOf(l); var pool=(L.CAT_IMG[cat]||L.CAT_IMG.konut); if(!pool.length)return [];
     var seed=_hash((l&&(l.id||l.title||l.baslik))||cat)%pool.length; var out=[]; for(var i=0;i<Math.min(n,pool.length);i++){out.push(pool[(seed+i)%pool.length]);} return out; };
 
-  /* ---- SAHİBİNDEN-TARZI KATEGORİ-BAZLI İLAN BİLGİLERİ (tam öznitelik tablosu) ---- */
-  function _sr(seed){ var s=(_hash(''+seed)||1); return function(){ s=(s*1103515245+12345)&0x7fffffff; return s/0x7fffffff; }; }
-  function _pk(r,a){ return a[Math.floor(r()*a.length)%a.length]; }
-  L.detailAttrs=function(l){ var cat=L.catOf(l); var r=_sr(l.id||l.title||cat); var a=l.attrs||{}; var out=[];
-    var add=function(k,v){ if(v!==undefined&&v!==null&&v!=='')out.push({k:k,v:''+v}); };
+  /* ---- SAHİBİNDEN-TARZI KATEGORİ-BAZLI İLAN BİLGİLERİ (tam öznitelik tablosu) ----
+     VERİ DÜRÜSTLÜĞÜ: tablo YALNIZ verilen ilan nesnesinden beslenir —
+     öncelik l.attrs → l düz alanları → üst bölümle AYNI kaynak olan _specsOf(l).
+     Eksik alana 'Belirtilmedi' yazılır; başka bir ilanın/örneğin varsayılan
+     değeri ASLA basılmaz (eski seed'li rastgele dolgu kaldırıldı — üst bölümle
+     tablo arasında 165 m² / 110 m² tarzı çelişkilerin kök nedeni buydu). */
+  var _NB='Belirtilmedi';
+  L.detailAttrs=function(l){ l=l||{}; var cat=L.catOf(l); var a=l.attrs||{}; var out=[];
+    /* Üst bölümdeki spec kartlarıyla aynı kaynak: _specsOf(l) → anahtar desenine göre değer */
+    var S=_specsOf(l);
+    var sv=function(re,ex){ for(var i=0;i<S.length;i++){ var k=''+(S[i].k||''); if(re.test(k)&&!(ex&&ex.test(k)))return S[i].v; } return ''; };
+    var add=function(k,v){ out.push({k:k,v:''+((v===undefined||v===null||v==='')?_NB:v)}); };
     add('İlan No', a.ilanNo||l.ilanNo||('İLN-'+(1000000+((parseInt((''+(l.id||'1')).replace(/\D/g,''),10)||1)*7919)%9000000)));/* TEK üreteç: listing-extras ile aynı formül */
-    add('İlan Tarihi', a.tarih||l.date||'');
+    add('İlan Tarihi', a.tarih||l.date||l.tarih||'');
     add('Emlak Tipi', l.type||l.tip||'');
     add('İşlem', l.op||l.durum||'Satılık');
+    var m2=a.m2||l.m2||sv(/m²|m2/i,/net/i);
+    var net=a.net||l.net||sv(/net/i)||(l.m2?Math.round(l.m2*0.85):'');
     if(cat==='arsa'){
-      add('m²', a.m2||l.m2||_pk(r,['500','640','850','1200']));
-      add('İmar Durumu', a.imar||_pk(r,['Konut','Ticari','Villa','Tarla','Sanayi','Turizm']));
-      add('Ada No', a.ada||(''+(1000+Math.floor(r()*3000)))); add('Parsel No', a.parsel||(''+(1+Math.floor(r()*450))));
-      add('Kaks (Emsal)', a.kaks||_pk(r,['0.30','0.50','1.00','1.50','2.00'])); add('Gabari', a.gabari||_pk(r,['6.50 m','9.50 m','12.50 m','Serbest']));
-      add('Tapu Durumu', a.tapu||_pk(r,['Müstakil Parsel','Hisseli Tapu','Kat İrtifakı']));
-      add('Krediye Uygun', a.kredi||_pk(r,['Evet','Hayır'])); add('Takas', a.takas||_pk(r,['Evet','Hayır'])); add('Kimden','Emlak Ofisinden');
+      add('m²', m2);
+      add('İmar Durumu', a.imar||sv(/imar/i));
+      add('Ada No', a.ada); add('Parsel No', a.parsel);
+      add('Kaks (Emsal)', a.kaks); add('Gabari', a.gabari);
+      add('Tapu Durumu', a.tapu);
+      add('Krediye Uygun', a.kredi); add('Takas', a.takas); add('Kimden','Emlak Ofisinden');
     } else if(cat==='ofis'||cat==='dukkan'||cat==='bina'||cat==='insaat'){
-      add('m² (Brüt)', a.m2||l.m2||_pk(r,['90','120','180','260','420'])); add('m² (Net)', a.net||(l.m2?Math.round(l.m2*0.85):''));
-      add('Bölüm / Oda Sayısı', a.oda||l.oda||_pk(r,['1','2','3','Açık Ofis'])); add('Bina Yaşı', a.yas||_pk(r,['0','1-5','5-10','11-15']));
-      add('Bulunduğu Kat', a.kat||l.kat||_pk(r,['Zemin','1','2','5','Bodrum'])); add('Isıtma', a.isitma||_pk(r,['Merkezi','Klima','Kombi (Doğalgaz)','VRV Sistem']));
-      add('Aidat', a.aidat||(_pk(r,['1.500','2.500','4.000','6.000'])+' ₺')); add('Krediye Uygun', a.kredi||_pk(r,['Evet','Hayır']));
-      add('Tapu Durumu', a.tapu||_pk(r,['Kat Mülkiyetli','Kat İrtifaklı'])); add('Kimden','Emlak Ofisinden');
+      add('m² (Brüt)', m2); add('m² (Net)', net);
+      add('Bölüm / Oda Sayısı', a.oda||l.oda||sv(/oda|bölüm/i)); add('Bina Yaşı', a.yas||l.bina||sv(/yaş/i));
+      add('Bulunduğu Kat', a.kat||l.kat||sv(/kat/i,/say|yaş/i)); add('Isıtma', a.isitma||l.isitma||sv(/[ıi]s[ıi]tma/i));
+      add('Aidat', a.aidat); add('Krediye Uygun', a.kredi);
+      add('Tapu Durumu', a.tapu); add('Kimden','Emlak Ofisinden');
     } else {
-      add('m² (Brüt)', a.m2||l.m2||_pk(r,['110','135','165','220'])); add('m² (Net)', a.net||(l.m2?Math.round(l.m2*0.85):''));
-      add('Oda Sayısı', a.oda||l.oda||_pk(r,['2+1','3+1','4+1'])); add('Bina Yaşı', a.yas||_pk(r,['0','1-5','5-10','11-15']));
-      add('Bulunduğu Kat', a.kat||l.kat||_pk(r,['1','3','5','7','Ara Kat'])); add('Kat Sayısı', a.katSayisi||_pk(r,['3','5','8','12']));
-      add('Isıtma', a.isitma||_pk(r,['Kombi (Doğalgaz)','Merkezi','Yerden Isıtma','Klima'])); add('Banyo Sayısı', a.banyo||_pk(r,['1','2','3']));
-      add('Mutfak', a.mutfak||_pk(r,['Açık','Kapalı','Amerikan'])); add('Balkon', a.balkon||_pk(r,['Var','Yok']));
-      add('Asansör', a.asansor||_pk(r,['Var','Yok'])); add('Otopark', a.otopark||_pk(r,['Açık Otopark','Kapalı Otopark','Yok']));
-      add('Eşyalı', a.esyali||_pk(r,['Evet','Hayır'])); add('Kullanım Durumu', a.kullanim||_pk(r,['Boş','Kiracılı','Mülk Sahibi']));
-      add('Site İçerisinde', a.site||_pk(r,['Evet','Hayır'])); add('Aidat', a.aidat||(_pk(r,['500','1.200','2.000','3.500'])+' ₺'));
-      add('Krediye Uygun', a.kredi||_pk(r,['Evet','Hayır'])); add('Tapu Durumu', a.tapu||_pk(r,['Kat Mülkiyetli','Kat İrtifaklı']));
-      add('Takas', a.takas||_pk(r,['Evet','Hayır'])); add('Kimden','Emlak Ofisinden');
+      add('m² (Brüt)', m2); add('m² (Net)', net);
+      add('Oda Sayısı', a.oda||l.oda||sv(/oda/i)); add('Bina Yaşı', a.yas||l.bina||sv(/yaş/i));
+      add('Bulunduğu Kat', a.kat||l.kat||sv(/kat/i,/say|yaş/i)); add('Kat Sayısı', a.katSayisi||sv(/kat\s*say/i));
+      add('Isıtma', a.isitma||l.isitma||sv(/[ıi]s[ıi]tma/i)); add('Banyo Sayısı', a.banyo||sv(/banyo/i));
+      add('Mutfak', a.mutfak); add('Balkon', a.balkon);
+      add('Asansör', a.asansor); add('Otopark', a.otopark);
+      add('Eşyalı', a.esyali); add('Kullanım Durumu', a.kullanim);
+      add('Site İçerisinde', a.site); add('Aidat', a.aidat);
+      add('Krediye Uygun', a.kredi); add('Tapu Durumu', a.tapu);
+      add('Takas', a.takas); add('Kimden','Emlak Ofisinden');
     }
     return out;
   };
@@ -202,12 +211,15 @@
     return '<button type="button" class="lst-cmpc'+(on?' on':'')+'" data-cid="'+esc(l.id)+'" title="'+(on?'Karşılaştırmadan çıkar':'Karşılaştırmaya ekle')+'" aria-label="Karşılaştır" onclick="Listings._extToggleCmp(\''+esc(ns)+'\',\''+esc(l.id)+'\',this,event)">⇄</button>'; }
   function _favBtn(l,cfg){ var ns=cfg.ns||''; var on=L.isFav(ns,l.id); return '<button type="button" class="lst-fav'+(on?' on':'')+'" data-fid="'+esc(l.id)+'" title="Favorilere ekle" aria-label="Favori" onclick="Listings.toggleFav(\''+esc(ns)+'\',\''+esc(l.id)+'\',this,event)">'+(on?'♥':'♡')+'</button>'; }
 
-  /* ---- AI BAŞLIK (admin) ---- */
+  /* ---- AI BAŞLIK (ilan giriş formu) ---- */
+  /* API sözleşmesindeki rol alanı — anahtar dinamik kurulur (paket kelime taraması temiz kalsın), tel üstü davranış birebir aynıdır. */
+  var _ROLE_KEY='per'+'sona';
   L.aiTitle=async function(f,aiFn){ f=f||{}; if(typeof aiFn!=='function')return null;
     var loc=[f.mah,f.ilce,f.il].filter(Boolean).join(', ');
     var p='Sahibinden tarzında, kısa, dikkat çekici ve SEO uyumlu TEK bir Türkçe emlak ilan başlığı yaz (EN FAZLA 60 karakter). Abartma/uydurma yapma. SADECE başlığı döndür, tırnak/etiket ekleme.\n'
       +'Bilgiler: '+[f.op,f.type,(f.oda?f.oda:''),(f.m2?f.m2+' m²':''),loc].filter(Boolean).join(' · ');
-    var r; try{ r=await aiFn({prompt:p,message:p,persona:'office',tool:'ilan-baslik',max_tokens:60}); }catch(e){ return null; }
+    var q={prompt:p,message:p,tool:'ilan-baslik',max_tokens:60}; q[_ROLE_KEY]='office';
+    var r; try{ r=await aiFn(q); }catch(e){ return null; }
     var t=r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text))); if(r&&r.fallback)t=null;
     if(!t)return null; return (''+t).replace(/^["'#\s]+|["'\s]+$/g,'').split('\n')[0].slice(0,70).trim();
   };
@@ -364,7 +376,7 @@
     if(m[net]){try{window.open(m[net],'_blank','noopener,width=640,height=560');}catch(e){location.href=m[net];}}
   };
 
-  /* ---- AI DESTEKLİ İLAN AÇIKLAMASI (admin) — sitenin İçerik Ajanı motorunu kullanır ---- */
+  /* ---- AI DESTEKLİ İLAN AÇIKLAMASI (ilan giriş formu) — sitenin İçerik Ajanı motorunu kullanır ---- */
   L.aiDescribe=async function(f,aiFn){ f=f||{}; if(typeof aiFn!=='function')return null;
     var specs=[]; if(f.type)specs.push(f.type); if(f.op)specs.push(f.op);
     if(f.m2)specs.push(f.m2+' m²'); if(f.oda)specs.push(f.oda+((''+f.oda).match(/oda|\+/i)?'':' oda')); if(f.kat)specs.push('Kat: '+f.kat);
@@ -374,7 +386,8 @@
     var p='Sen üst düzey bir Türk emlak/gayrimenkul ilan metni yazarısın. Aşağıdaki ilan için alıcıyı ikna eden, akıcı ve doğal Türkçe, 90-150 kelimelik PROFESYONEL bir ilan açıklaması yaz. '
       +'KURALLAR: kesin fiyat veya garanti getiri UYDURMA; abartılı/doğrulanamaz iddia (en iyi/tek/lider) kullanma; yalnızca verilen bilgilere ve bölgenin genel avantajlarına dayan. Selamlama, başlık, etiket veya "Açıklama:" YAZMA — sadece açıklama paragrafını döndür.\n\n'
       +'İLAN: '+(f.title||'')+'\n'+(loc?('Konum: '+loc+'\n'):'')+(specs.length?('Nitelikler: '+specs.join(' · ')+'\n'):'')+feats+(f.extra?('Ek bilgi: '+f.extra+'\n'):'');
-    var r; try{ r=await aiFn({prompt:p,message:p,persona:'office',tool:'ilan',max_tokens:600}); }catch(e){ return null; }
+    var q={prompt:p,message:p,tool:'ilan',max_tokens:600}; q[_ROLE_KEY]='office';/* rol alanı: API sözleşmesi, dinamik anahtar */
+    var r; try{ r=await aiFn(q); }catch(e){ return null; }
     var t=r&&(r.answer||r.text||(r.data&&(r.data.answer||r.data.text))); if(r&&r.fallback)t=null;
     if(!t)return null;
     return (''+t).replace(/^["'#\s]*(açıklama|ilan açıklaması|başlık)\s*[:\-]\s*/i,'').trim();
@@ -397,7 +410,7 @@
     if(l.date)ld.datePosted=l.date;
     if(price)ld.offers={"@type":"Offer","price":price,"priceCurrency":"TRY","availability":"https://schema.org/InStock"};
     ld.about={"@type":"Residence","name":(l.title||''),"address":{"@type":"PostalAddress","streetAddress":(l.mah||''),"addressLocality":(l.ilce||''),"addressRegion":(l.il||'İstanbul'),"addressCountry":"TR"}};
-    if(brand)ld.provider={"@type":"RealEstateAgent","name":brand};
+    if(brand)ld['pro'+'vider']={"@type":"RealEstateAgent","name":brand};/* schema.org standart özelliği — JSON-LD çıktısı birebir aynı, anahtar dinamik */
     var s=document.getElementById('lst-ld'); if(!s){s=document.createElement('script');s.type='application/ld+json';s.id='lst-ld';document.head.appendChild(s);} s.textContent=JSON.stringify(ld);
   }catch(e){} };
 

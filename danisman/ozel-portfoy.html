@@ -36,10 +36,10 @@
 <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg?v=2">
 <script defer src="js/brand.js?v=3"></script>
-<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=14"></script>
+<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=15"></script>
 <script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
 (function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
-if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=8"><\/script><script src="js/i18n/ozel-portfoy.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=10"><\/script><script src="js/i18n/ozel-portfoy.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
 <script defer src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
 <script defer src="js/a11y.js?v=1"></script>
 <link rel="stylesheet" href="css/portfoy.css?v=11">
@@ -444,9 +444,15 @@ function histGet(il,ilce,mah,kat,dur){var h=_histLoad();return h[_histKey(il,ilc
 async function fetchIlceler(il){var r=await proxApi('/api/v1/tenant/locations/ilceler?il='+encodeURIComponent(il));
   if(r&&!r.fallback&&r.success===true&&Array.isArray(r.data)&&r.data.length)return r.data.slice();
   var rec=TR_ILILCE[il];return (rec&&rec.ilce)?rec.ilce.slice():[];}
+/* Kanonik mahalle adı haritası (mahalle-endeks.js _MAHNORM ile aynı): ProX/statik
+   listelerdeki alias yazımlar tek kanonik ada indirgenir → dropdown'da mükerrer
+   'Akat'/'Akatlar', 'Nisbetiye'/'Nispetiye' seçenekleri oluşmaz. */
+var _MAHNORM={'Akat':'Akatlar','Nisbetiye':'Nispetiye','Nisbetiye Mah.':'Nispetiye'};
+function mahNorm(x){x=String(x||'').trim();return _MAHNORM[x]||x;}
 async function fetchMahalleler(il,ilce){var r=await proxApi('/api/v1/tenant/locations/mahalleler?il='+encodeURIComponent(il)+'&ilce='+encodeURIComponent(ilce));
   var arr=(r&&!r.fallback&&r.success===true&&Array.isArray(r.data))?r.data:[];
-  var seen={},out=[];arr.forEach(function(m){var nm=(''+m).replace(/\s+(Mah\.?|Mahallesi|Köyü)$/i,'').trim();var kk=nm.toLocaleLowerCase('tr');if(nm&&!seen[kk]){seen[kk]=1;out.push(nm);}});return out;}
+  /* önce ekleri kırp, sonra kanonik ada çevir (mahNorm), sonra tr-küçük-harf anahtarla tekilleştir */
+  var seen={},out=[];arr.forEach(function(m){var nm=mahNorm((''+m).replace(/\s+(Mah\.?|Mahallesi|Köyü)$/i,'').trim());var kk=nm.toLocaleLowerCase('tr');if(nm&&!seen[kk]){seen[kk]=1;out.push(nm);}});return out;}
 
 /* ============ ORTAK KART + REVEAL ============ */
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
@@ -1220,7 +1226,7 @@ function ozLocalizeSeo(il){
 /* ============ MAHALLE FİYAT MATRİSİ — canlı ProX kartlar (satılık/kiralık konut + işyeri) ============ */
 var OZ_FX=['Bebek','Etiler','Nişantaşı','Levent','Caddebostan','Zekeriyaköy','Kandilli','Yeniköy'];
 var _ozFxSeq=0;
-function ozFxAsk(ilce,mah){try{OZILCE=ilce;OZMAH=mah;}catch(e){}ozTalepOpen({ozel:true,islem:'satilik',tip:'Daire'});}
+function ozFxAsk(ilce,mah){try{OZILCE=ilce;OZMAH=mahNorm(mah);}catch(e){}ozTalepOpen({ozel:true,islem:'satilik',tip:'Daire'});}
 function _ozFxCard(mah,ilce,ilanN){
   return '<article class="ozfx-card" data-mah="'+esc(mah)+'">'
     +'<span class="ozfx-accent"></span>'
@@ -1318,8 +1324,8 @@ function ozInit(){
 function ozAltSenkron(){try{
   var mi=document.getElementById('me_ilce'),mm=document.getElementById('me_mah');
   if(!mi)return;
-  var N={'Akat':'Akatlar','Nisbetiye':'Nispetiye'};
-  var ilce=N[OZILCE]||OZILCE, mah=N[OZMAH]||OZMAH;
+  /* kanonik ad: tek kaynak mahNorm (yerel kopya N haritası kaldırıldı) */
+  var ilce=mahNorm(OZILCE), mah=mahNorm(OZMAH);
   if(ilce&&mi.value!==ilce){for(var i=0;i<mi.options.length;i++)if(mi.options[i].value===ilce||mi.options[i].text===ilce){mi.selectedIndex=i;mi.dispatchEvent(new Event('change'));break;}}
   if(mah&&mm){setTimeout(function(){for(var j=0;j<mm.options.length;j++)if(mm.options[j].value===mah||mm.options[j].text===mah){mm.selectedIndex=j;mm.dispatchEvent(new Event('change'));break;}},700);}
 }catch(e){}}
@@ -1476,9 +1482,9 @@ function ozRadarInit(){
 }
 if(document.readyState!=='loading')ozInit();else document.addEventListener('DOMContentLoaded',ozInit);
 </script>
-<script src="js/uyelik.js?v=6"></script>
+<script src="js/uyelik.js?v=7"></script>
 <script src="js/demo-portfoy-seed.js?v=1"></script>
-<script src="../shared/mahalle-endeks.js?v=16"></script>
+<script src="../shared/mahalle-endeks.js?v=17"></script>
 <script>
 /* danışman — MAHALLE ENDEKSİ bootstrap → shared/mahalle-endeks.js (İstanbul · gerçek mahalle) */
 (function(){

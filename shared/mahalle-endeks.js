@@ -27,6 +27,17 @@
 
   var _MAHNORM={'Akat':'Akatlar','Nisbetiye':'Nispetiye','Nisbetiye Mah.':'Nispetiye'};
   function mahNorm(x){x=String(x||'').trim();return _MAHNORM[x]||x;}
+  /* Mahalle listesini kanonik ada çevirip tekilleştirir (Akat/Akatlar, Nisbetiye/Nispetiye
+     gibi alias çiftleri dropdown'da tek seçenek olur; tr-küçük-harf anahtarla Set-dedupe). */
+  function mahDedupe(list){
+    var seen={},out=[];
+    (Array.isArray(list)?list:[]).forEach(function(m){
+      var n=mahNorm(m); if(!n)return;
+      var k=n.toLocaleLowerCase('tr');
+      if(!seen[k]){seen[k]=1;out.push(n);}
+    });
+    return out;
+  }
   var _gid=0;
   /* ---- mini trend ---- */
   function spark(series,color){
@@ -212,11 +223,11 @@
       if(cur!==keys.join('|')){ ic.innerHTML=keys.map(function(k){return '<option>'+esc(k)+'</option>';}).join(''); _il=ic.value||keys[0]||''; fillMah(); }
     }
     function fillMah(){
-      var mh=$('me_mah'); if(!mh)return; var d=districts(); var list=(d[_il]||[]);
+      var mh=$('me_mah'); if(!mh)return; var d=districts(); var list=mahDedupe(d[_il]||[]); /* statik liste: kanonik + tekil */
       mh.innerHTML=(list.length?list:['Merkez']).slice(0,40).map(function(m){return '<option>'+esc(m)+'</option>';}).join('');
       _mh=mh.value||list[0]||'Merkez';
-      /* canlı gerçek mahalle yükleyici varsa güncelle */
-      if(cfg.loadMah){ try{ cfg.loadMah(cfg.province?cfg.province():'',_il).then(function(arr){ if(arr&&arr.length&&mh.value===_mh){ var keep=mh.value; mh.innerHTML=arr.slice(0,40).map(function(m){return '<option>'+esc(m)+'</option>';}).join(''); mh.value=keep&&arr.indexOf(keep)>=0?keep:arr[0]; _mh=mh.value; render(); } }); }catch(e){} }
+      /* canlı gerçek mahalle yükleyici varsa güncelle (ProX listesi de kanonik + tekil basılır) */
+      if(cfg.loadMah){ try{ cfg.loadMah(cfg.province?cfg.province():'',_il).then(function(arr){ arr=mahDedupe(arr); if(arr&&arr.length&&mh.value===_mh){ var keep=mahNorm(mh.value); mh.innerHTML=arr.slice(0,40).map(function(m){return '<option>'+esc(m)+'</option>';}).join(''); mh.value=keep&&arr.indexOf(keep)>=0?keep:arr[0]; _mh=mh.value; render(); } }); }catch(e){} }
     }
 
     function catCard(lab,val,unit,series,color,chgTxt,ilan,live){

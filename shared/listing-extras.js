@@ -47,12 +47,15 @@
   })();
   L.MediaStore=MediaStore;
 
-  /* ================= DEMO MEDYA — tüm ilanlara örnek video + sanal tur + kat planı
-     (yalnız kendi medyası OLMAYAN ilanlar için; kullanıcı yüklerse onunki öncelikli).
-     Aynı-köken vendored dosyalar → CORS-güvenli. L.DEMO_MEDIA=null yaparak kapatılır. */
-  L.DEMO_MEDIA={ video:'../shared/vendor/sample-video.mp4', tour:'../shared/vendor/sample-360.jpg', floor:'../shared/vendor/sample-floorplan.svg' };
+  /* ================= MEDYA DÜRÜSTLÜĞÜ =================
+     Video / 360° tur / kat planı YALNIZ ilanın kendi medyası varsa gösterilir:
+     l.videoUrl / l.tour360Url / l.floorplanUrl veya kullanıcının yüklediği yerel
+     dosya (IndexedDB, l.media bayrakları). Örnek/dolgu medya enjeksiyonu kaldırıldı;
+     hiçbir ilana kendisine ait olmayan medya basılmaz. L.DEMO_MEDIA null sabitlendi
+     (geriye dönük uyum: dışarıdan okunursa 'kapalı' görülür). */
+  L.DEMO_MEDIA=null;
   function mediaOf(l){ var m=(l&&l.media)||{}; l=l||{};
-    var o={
+    return {
       video: !!(l.videoUrl||m.videoUrl||m.video),
       videoUrl: l.videoUrl||m.videoUrl||'',          /* dış URL (YouTube/Vimeo/MP4) */
       videoFile: !!m.video,                          /* IndexedDB'de yerel dosya var mı */
@@ -63,13 +66,6 @@
       floorUrl: l.floorplanUrl||'',
       floorFile: !!m.floorplan
     };
-    var D=L.DEMO_MEDIA;
-    if(D){
-      if(!o.video&&!o.videoFile){ o.video=true; o.videoUrl=D.video; o._demoVideo=true; }
-      if(!o.tour&&!o.tourFile){ o.tour=true; o.tourUrl=D.tour; }
-      if(!o.floor&&!o.floorFile){ o.floor=true; o.floorUrl=D.floor; }
-    }
-    return o;
   }
   function floorLabel(l){ var c=catOf(l); return (c==='arsa')?'Vaziyet / İmar Planı':(c==='bina'||c==='insaat')?'Kat / Vaziyet Planı':'Kat Planı'; }
   function ytId(u){ var m=(''+u).match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/); return m?m[1]:''; }
@@ -167,7 +163,7 @@
   L._extMeta=function(l,cfg){ var v=(_views()[l.id]||0);
     var favN=0; try{favN=(L.favs?L.favs(cfg.ns).length:0);}catch(e){}
     var no=(l.ilanNo||('İLN-'+(1000000+((_num(l.id)||1)*7919)%9000000)));
-    return '<div class="lstd-meta"><span>İlan No: <b>'+esc(no)+'</b></span><span>👁 <b id="lstdViews">'+v+'</b> görüntülenme</span>'+(l.tarih?'<span>📅 '+esc(l.tarih)+'</span>':'')+'</div>';
+    return '<div class="lstd-meta"><span><span>İlan No</span>: <b>'+esc(no)+'</b></span><span>👁 <b id="lstdViews">'+v+'</b> <span>görüntülenme</span></span>'+(l.tarih?'<span>📅 '+esc(l.tarih)+'</span>':'')+'</div>';
   };
 
   /* ================= FAZ 2 (finans) + FAZ 3 (benzer) — ANA SÜTUN SONU ================= */
@@ -315,10 +311,10 @@
     try{_cmpBar();}catch(e){}
   };
 
-  /* ================= ADMIN — MEDYA + ENERJİ FORMU ================= */
+  /* ================= İLAN DÜZENLEME — MEDYA + ENERJİ FORMU ================= */
   /* Ekleme/düzenleme formuna gömülür. containerId benzersiz; listingId kaydederken gerekir. */
   L.mediaFormHTML=function(l){ l=l||{}; var _m=l.media||{}; var fl=floorLabel(l);
-    /* HAM değerler (demo dolgu YOK) — admin kendi medyasını görsün/düzenlesin */
+    /* HAM değerler (dolgu YOK) — düzenleyen kullanıcı kendi medyasını görsün/düzenlesin */
     var M={ videoUrl:(l.videoUrl||_m.videoUrl||''), videoFile:!!_m.video, tourFile:!!_m.tour360, floorFile:!!_m.floorplan };
     return '<div class="lst-mediaform"><div class="lst-mf-h">📸 Medya & Sanal Tur <span>(kullanıcı kendi bilgisayarından yükler)</span></div>'
       +'<div class="lst-mf-grid">'
@@ -435,7 +431,7 @@
     +'.lst-cmp-tbl td{padding:10px 14px;border-bottom:1px solid '+LINE+';border-left:1px solid '+LINE+';font:500 .8125rem/1.4 system-ui;color:'+INK+';vertical-align:top;min-width:150px}'
     +'.lst-cmp-open{border:0;background:'+A+';color:#fff;border-radius:8px;padding:7px 12px;font:700 .75rem/1 system-ui;cursor:pointer}'
     +'.lst-cmp-rm{border:1px solid '+LINE+';background:'+SURF+';border-radius:8px;padding:7px 9px;cursor:pointer;color:'+MUT+'}'
-    /* admin medya formu */
+    /* medya düzenleme formu */
     +'.lst-mediaform{border:1px dashed '+LINE+';border-radius:12px;padding:14px;margin:12px 0;background:rgba(0,0,0,.015)}'
     +'.lst-mf-h{font:800 .875rem/1.3 system-ui;color:'+INK+';margin-bottom:12px}.lst-mf-h span{font-weight:500;color:'+MUT+';font-size:.75rem}'
     +'.lst-mf-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}'
