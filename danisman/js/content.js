@@ -111,7 +111,7 @@
     +   '<a href="?lang=ar" data-lang="ar" style="color:inherit;text-decoration:none;opacity:.7">العربية</a>'
     + '</div>';
   var INNER = '<div class="wrap"><div class="fcols">'
-    + '<div><div class="brand"><a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit"><span class="mark">M</span><span><b>Selin Meridyen</b><small>Kişiye Özel Danışman</small></span></a></div><p>Yetki belgeli kişiye özel emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy ve ücretsiz gayrimenkul değer analizi.</p>'
+    + '<div><div class="brand"><a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit"><span class="mark">M</span><span><b>Selin Meridyen</b><small>Kişiye Özel Danışman</small></span></a></div><p>Kişiye özel emlak danışmanlığı platform demosu. Güncel lüks ilanlar, davet usulü VIP özel portföy ve ücretsiz gayrimenkul değer analizi.</p>'
     + SOC
     + '<div class="fportals"><a class="fp fp-sah" href="https://www.sahibinden.com" target="_blank" rel="noopener noreferrer" aria-label="sahibinden.com ilanlarımız">sahibinden</a><a class="fp fp-hep" href="https://www.hepsiemlak.com" target="_blank" rel="noopener noreferrer" aria-label="hepsiemlak ilanlarımız">hepsiemlak</a><a class="fp fp-ejt" href="https://www.emlakjet.com" target="_blank" rel="noopener noreferrer" aria-label="emlakjet ilanlarımız"><b>emlak</b>jet</a></div>'
     + '</div>'

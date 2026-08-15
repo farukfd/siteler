@@ -83,6 +83,8 @@
     var center = provinceCenter(prov), off = districtOffset(ilce);
     return [center[0] + off[0] + jy, center[1] + off[1] + jx];
   }
+  /* FAZ3F: popup 'İncele' seçilen ilanın KALICI detay URL'sine gider (/ilan/<slug>-<id>) */
+  function detayUrl(it){try{var t=String(it.title||('ilan-'+it.id)).toLocaleLowerCase('tr').replace(/[çÇ]/g,'c').replace(/[ğĞ]/g,'g').replace(/[ıİI]/g,'i').replace(/[öÖ]/g,'o').replace(/[şŞ]/g,'s').replace(/[üÜ]/g,'u').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');return '/ilan/'+t+'-'+it.id;}catch(e){return 'ilanlar.html';}}
   function money(n) { try { return (typeof window.gmMoney === 'function') ? window.gmMoney(n) : (n >= 1e6 ? (n / 1e6).toLocaleString('tr-TR', { maximumFractionDigits: 1 }) + 'M ₺' : (+n).toLocaleString('tr-TR') + ' ₺'); } catch (e) { return n + ' ₺'; } }
   function esc(x) { return String(x == null ? '' : x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function waHref(t) { try { return (typeof window.waHref === 'function') ? window.waHref(t) : ('https://wa.me/?text=' + encodeURIComponent(t)); } catch (e) { return '#'; } }
@@ -145,11 +147,11 @@
     return '<article class="gm-card">' +
       img + '<span class="gm-card-op ' + it.kind + '">' + esc(it.op) + '</span></div>' +
       '<div class="gm-card-b">' +
-        '<h4 class="gm-card-t">' + esc(it.title) + '</h4>' +
+        '<h4 class="gm-card-t">' + esc(it.title) + ' <span style="font-size:.55em;background:rgba(71,85,105,.9);color:#fff;border-radius:99px;padding:2px 7px;vertical-align:middle">ÖRNEK · DEMO</span></h4>' +
         '<div class="gm-card-loc">📍 ' + esc(loc) + '</div>' +
         featRow(it) +
         '<div class="gm-card-p">' + money(it.price) + (it.op === 'Kiralık' ? '<small>/ay</small>' : '') + '</div>' +
-        '<div class="gm-card-act"><a class="gm-card-btn primary" href="ilanlar.html">İncele</a>' +
+        '<div class="gm-card-act"><a class="gm-card-btn primary" href="' + esc(detayUrl(it)) + '">İncele</a>' +
           '<a class="gm-card-btn wa" href="' + wa2 + '" target="_blank" rel="noopener noreferrer">WhatsApp</a></div>' +
       '</div></article>';
   }
