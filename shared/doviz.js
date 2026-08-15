@@ -32,7 +32,7 @@
   }
   function trackHTML() {
     var seq = ITEMS.map(itemHTML).filter(Boolean).join('<span class="db-sep" aria-hidden="true">•</span>');
-    var note = '<span class="db-i db-note">' + (META.fallback ? '⚠ Yedek veri — güncel olmayabilir · ' : '') + 'Serbest piyasa · bilgi amaçlıdır' + (META.updatedAt ? (' · güncelleme ' + META.updatedAt) : '') + '</span>';
+    var note = '<span class="db-i db-note">' + (META.fallback ? '<span>⚠ Yedek veri — güncel olmayabilir</span> · ' : '') + '<span>Serbest piyasa · bilgi amaçlıdır</span>' + (META.updatedAt ? (' · <span>güncelleme</span> <time>' + META.updatedAt.slice(0,16).replace('T',' ') + '</time>') : '') + '</span>';
     return seq + '<span class="db-sep" aria-hidden="true">•</span>' + note + '<span class="db-sep" aria-hidden="true">•</span>';
   }
   function render() {
