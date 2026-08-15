@@ -98,6 +98,44 @@ kayit("T8 CSP Report-Only sıkı politika canlı", "script-src 'self'" in cro an
 # ── T9: canonical'da ?lang kirliliği yok (statik)
 kayit("T9 canonical temiz", 'rel="canonical"' in ana and "?lang" not in re.search(r'<link rel="canonical"[^>]+>', ana).group(0))
 
+
+# ── FAZ4.1 ek kriterler
+# T10: bootstrap TEK SÖZLEŞME — package + 16 alan + tenant-config paritesi
+s10, h10, g10 = al(HOST + "/api/v1/tenant/bootstrap")
+try: b10 = json.loads(g10)
+except Exception: b10 = {}
+kayit("T10 bootstrap package+sözleşme", s10 == 200 and b10.get("package") and all(k in b10 for k in zorunlu),
+      f"package={b10.get('package')} eksik={[k for k in zorunlu if k not in b10][:3]}")
+kayit("T10b bootstrap ETag var", any(k.lower() == "etag" for k in h10),
+      next((v for k, v in h10.items() if k.lower() == "etag"), ""))
+kayit("T10c tenant-config == bootstrap (tek kaynak)",
+      s5 == 200 and s10 == 200 and cfg.get("config_version") == b10.get("config_version") and cfg.get("package") == b10.get("package"))
+
+# T11: /demo-yonetim/ → 301 → /demo-yonetim
+import urllib.request as _ur
+class _NoRedir(_ur.HTTPRedirectHandler):
+    def redirect_request(self, *a, **k): return None
+_op = _ur.build_opener(_NoRedir)
+try:
+    r11 = _op.open(_ur.Request(HOST + "/demo-yonetim/", headers=UA), timeout=20)
+    k11, l11 = r11.status, r11.headers.get("Location", "")
+except Exception as e:
+    k11 = getattr(e, "code", -1); l11 = getattr(e, "headers", {}).get("Location", "") if hasattr(e, "headers") else ""
+kayit("T11 /demo-yonetim/ → 301 /demo-yonetim", k11 == 301 and l11.rstrip("/").endswith("/demo-yonetim"), f"kod={k11} loc={l11}")
+
+# T12: yanlış EİDS cümlesi canlı bundle'da 0
+_le = re.search(r'(shared/listing-extras\.h[0-9a-f]{8}\.js)', ana)
+g12 = al(HOST + "/" + _le.group(1))[2] if _le else ""
+kayit("T12 'Yalnızca EİDS doğrulanmış' bundle=0", _le is not None and "Yalnızca EİDS doğrulanmış" not in g12)
+
+# T13: F6 ek tokenlar canlı bundle'da 0
+tihlal2 = []
+for v in sorted(varliklar):
+    _, _, jg = al(HOST + "/" + v.lstrip("/"))
+    for t in ["m1Key", "customPrompt", "proxPersona", "proxAiPrompts"]:
+        if t.lower() in jg.lower(): tihlal2.append(f"{v}: {t}")
+kayit("T13 m1Key/customPrompt/proxPersona/proxAiPrompts=0", not tihlal2, "; ".join(tihlal2[:3]))
+
 print()
 fails = [s for s in SONUC if not s[1]]
 print(f"TOPLAM: {len(SONUC)-len(fails)}/{len(SONUC)} PASS")
