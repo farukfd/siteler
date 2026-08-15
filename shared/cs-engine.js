@@ -47,13 +47,13 @@
        Eski depo alanları (dsKey/oaKey/clKey/pexelsKey) okumada m1/m2/m3/media'ya göç edilir. */
     E.getKeys=function(){ var a=E._get(); return {provider:a.provider||'auto',proxKey:a.proxKey||'',
       m1Key:a.m1Key||a.dsKey||'',m2Key:a.m2Key||a.oaKey||'',m3Key:a.m3Key||a.clKey||'',mediaKey:a.mediaKey||a.pexelsKey||'',
-      prompt:a.prompt||'',sysPrompt:(a.sysPrompt!=null?a.sysPrompt:(a.prompt||'')),schedule:a.schedule||null,capabilities:a.capabilities||null}; };
-    E.setKeys=function(k){ var a=E._get(); ['provider','proxKey','m1Key','m2Key','m3Key','mediaKey','prompt','sysPrompt','capabilities'].forEach(function(f){ if(k[f]!==undefined)a[f]=k[f]; }); E._set(a); };
+      prompt:a.prompt||'',yonerge:(a.yonerge!=null?a.yonerge:(a.prompt||'')),schedule:a.schedule||null,capabilities:a.capabilities||null}; };
+    E.setKeys=function(k){ var a=E._get(); ['provider','proxKey','m1Key','m2Key','m3Key','mediaKey','prompt','yonerge','capabilities'].forEach(function(f){ if(k[f]!==undefined)a[f]=k[f]; }); E._set(a); };
     E.getSchedule=function(){ return E._get().schedule||{}; };
     E.setSchedule=function(s){ var a=E._get(); a.schedule=s; E._set(a); };
     E.getPrompt=function(){ return ((E._get().prompt||'')+'').trim(); };
     E.getCaps=function(){ var c=E._get().capabilities; return c||{}; };
-    E.sysPrompt=function(){ var a=E._get(); return (((a.sysPrompt!=null?a.sysPrompt:a.prompt)||'')+'').trim(); };
+    E.yonerge=function(){ var a=E._get(); return (((a.yonerge!=null?a.yonerge:a.prompt)||'')+'').trim(); };
     E.proxInfo=function(){ try{ var q=JSON.parse(localStorage.getItem(E.cfg.store+'_quota')||'{}'); return {count:q.count||0,max:10000}; }catch(e){ return {count:0,max:10000}; } };
     E.hasAnyKey=function(){ var k=E.getKeys(); return !!(k.proxKey||k.m1Key||k.m2Key||k.m3Key); };
     E._bumpQuota=function(){ try{ var qm=new Date().toISOString().slice(0,7),k=E.cfg.store+'_quota',q=JSON.parse(localStorage.getItem(k)||'null'); if(!q||q.month!==qm)q={month:qm,count:0}; q.count++; localStorage.setItem(k,JSON.stringify(q)); }catch(e){} };
@@ -93,7 +93,7 @@
     /* Site Asistanı tek-çağrı yanıtı: sistem-promptu derler + geçmişle sorar + telefon yakalarsa lead düşer */
     E.reply=async function(ctx){ ctx=ctx||{};
       var stored=E.getCaps(); var caps=(stored&&Object.keys(stored).length)?stored:(ctx.caps||{});
-      var sys=API.assistantPrompt({brand:ctx.brand,city:ctx.city,lang:ctx.lang,caps:caps,prompt:(ctx.prompt!=null?ctx.prompt:E.sysPrompt()),portfolio:ctx.portfolio,role:ctx.role});
+      var sys=API.assistantPrompt({brand:ctx.brand,city:ctx.city,lang:ctx.lang,caps:caps,prompt:(ctx.prompt!=null?ctx.prompt:E.yonerge()),portfolio:ctx.portfolio,role:ctx.role});
       var body={prompt:sys};
       if(ctx.history&&ctx.history.length){ var msgs=ctx.history.slice(); msgs.push({role:'user',content:String(ctx.message||'')}); body.messages=msgs; }
       else body.message=String(ctx.message||'');

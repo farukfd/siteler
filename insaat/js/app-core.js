@@ -1709,6 +1709,7 @@ function applySaaSSettings(){try{
   if(ga&&!document.getElementById('saas-gtag')){const s=document.createElement('script');s.id='saas-gtag';s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+ga;document.head.appendChild(s);const s2=document.createElement('script');s2.id='saas-gtag-init';s2.text='window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","'+ga+'");';document.head.appendChild(s2);window.__PROX_DEBUG&&console.log('[SaaS] Google Analytics enjekte: '+ga);}
   const phone=saasResolve('contactPhone');if(phone)document.querySelectorAll('a[href^="tel:"]').forEach(a=>a.href='tel:'+(''+phone).replace(/[^0-9+]/g,''));
   if(typeof mountInsaatMenu==='function')mountInsaatMenu();
+  if(window.EMLAK_DEMO===false){try{document.querySelectorAll('.js-giris,a[href$="#giris"]').forEach(function(el){el.style.display='none';});}catch(e){}}/* FAZ3D: üretimde giriş UI gizli */
 }catch(e){console.warn('applySaaSSettings',e);}}
 window.applySaaSSettings=applySaaSSettings;
 /* ProX (inşaat) */
@@ -2124,7 +2125,8 @@ function insBlogDetail(id){var b=insBlogById(id);if(!b)return;
 function insBlogClose(){var ov=document.getElementById('insBlogOverlay');if(ov)ov.remove();document.body.style.overflow='';try{if(/^#blog\//.test(location.hash||''))history.replaceState(null,'','#blog');}catch(e){}}
 window.insBlogDetail=insBlogDetail;window.insBlogClose=insBlogClose;window.insArts=insArts;window.insRunSchedule=insRunSchedule;
 /* studio bağlantılarını sitede zaten girilmiş Motor-1/ProX bağlantısından tohumla */
-function _insAgentFill(E,pre){try{var k=E.getKeys();var set=function(id,v){var e=document.getElementById(id);if(e)e.value=v||'';};set(pre+'provider',k.provider||'auto');set(pre+'prox',k.proxKey);set(pre+'ds',k.m1Key);set(pre+'oa',k.m2Key);set(pre+'cl',k.m3Key);set(pre+'sys',k.sysPrompt);var pex=document.getElementById(pre+'pex');if(pex)pex.value=k.mediaKey||'';}catch(e){}}
+/*__ADMIN_BLOK__*/ /* stüdyo ajan panel köprüleri — üretimde admin-assets */
+function _insAgentFill(E,pre){try{var k=E.getKeys();var set=function(id,v){var e=document.getElementById(id);if(e)e.value=v||'';};set(pre+'provider',k.provider||'auto');set(pre+'prox',k.proxKey);set(pre+'ds',k.m1Key);set(pre+'oa',k.m2Key);set(pre+'cl',k.m3Key);set(pre+'sys',k.yonerge);var pex=document.getElementById(pre+'pex');if(pex)pex.value=k.mediaKey||'';}catch(e){}}
 function _csModulYukle(cb){var L=["../shared/cs-engine.js?v=2", "js/content-studio.js?v=3"];var i=0;(function next(){if(i>=L.length){cb();return;}if(document.querySelector('script[data-csmod="'+L[i]+'"]')){i++;next();return;}var sc=document.createElement('script');sc.src=L[i];sc.dataset.csmod=L[i];sc.onload=function(){i++;next();};sc.onerror=function(){i++;next();};document.head.appendChild(sc);})();}
 function csMountINS(){if(!window.ContentStudio){_csModulYukle(function(){csMountINS();});return;}
    if(!window.ContentStudio||!INS_CONTENT)return; var host=document.getElementById('csHost'); if(!host)return;
@@ -2139,7 +2141,7 @@ function csMountINS(){if(!window.ContentStudio){_csModulYukle(function(){csMount
     getSchedule:function(){return INS_CONTENT.getSchedule();}, setSchedule:function(s){INS_CONTENT.setSchedule(s);},
     topicPool:function(){return ['Kentsel dönüşümde hak sahibinin bilmesi gerekenler','Kat karşılığı sözleşmesinde kritik maddeler','Deprem güvenli bina nasıl anlaşılır (TBDY 2018)','Anahtar teslim inşaat süreç rehberi','Tadilatta bütçe yönetimi','İmar durumu ve ruhsat süreçleri','Betonarme yapı kalitesi ve denetim','Enerji kimlik belgesi ve A+ binalar','Arsa değerleme ve fizibilite','Yapı denetimi ve iş güvenliği','Konut projesinde teslim takvimi','Karma kullanımlı projelerin avantajları'];},
     toast:function(m){try{if(typeof toast==='function')toast(m);else if(typeof flashSaved==='function')flashSaved();}catch(e){}},
-    guard:function(p){var sp='';try{sp=INS_CONTENT.sysPrompt();}catch(e){}return (sp?sp+'\n\n':'')+p;}
+    guard:function(p){var sp='';try{sp=INS_CONTENT.yonerge();}catch(e){}return (sp?sp+'\n\n':'')+p;}
   });
 }
 window.csMountINS=csMountINS;
@@ -2147,8 +2149,9 @@ window.csMountINS=csMountINS;
 function insContentFill(){if(INS_CONTENT)_insAgentFill(INS_CONTENT,'cxci_');}
 function insSiteFill(){if(!INS_SITE)return;_insAgentFill(INS_SITE,'cxsi_');try{var c=INS_SITE.getCaps();[['cxsi_cap_phone','phone'],['cxsi_cap_lead','lead'],['cxsi_cap_advice','advice'],['cxsi_cap_match','match'],['cxsi_cap_multilang','multilang']].forEach(function(d){var e=document.getElementById(d[0]);if(e)e.checked=(c&&c[d[1]]!==undefined)?!!c[d[1]]:true;});}catch(e){}}
 function insStudioFill(){insContentFill();insSiteFill();}
-function insContentSave(){if(!INS_CONTENT)return;try{var v=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};INS_CONTENT.setKeys({provider:v('cxci_provider')||'auto',proxKey:v('cxci_prox'),dsKey:v('cxci_ds'),oaKey:v('cxci_oa'),clKey:v('cxci_cl'),pexelsKey:v('cxci_pex'),sysPrompt:v('cxci_sys')});var el=document.getElementById('cxci_status');if(el)el.textContent='✓ İçerik Ajanı kaydedildi · '+(v('cxci_provider')||'auto');try{if(typeof toast==='function')toast('✓ İçerik Ajanı anahtarları kaydedildi.');}catch(e){}}catch(e){}}
-function insSiteSave(){if(!INS_SITE)return;try{var v=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};var ck=function(id){var e=document.getElementById(id);return e?!!e.checked:true;};INS_SITE.setKeys({provider:v('cxsi_provider')||'auto',proxKey:v('cxsi_prox'),dsKey:v('cxsi_ds'),oaKey:v('cxsi_oa'),clKey:v('cxsi_cl'),sysPrompt:v('cxsi_sys'),capabilities:{phone:ck('cxsi_cap_phone'),lead:ck('cxsi_cap_lead'),advice:ck('cxsi_cap_advice'),match:ck('cxsi_cap_match'),multilang:ck('cxsi_cap_multilang')}});var el=document.getElementById('cxsi_status');if(el)el.textContent='✓ Site Asistanı kaydedildi · '+(v('cxsi_provider')||'auto');try{if(typeof toast==='function')toast('✓ Site Asistanı ayarları kaydedildi.');}catch(e){}}catch(e){}}
+function insContentSave(){if(!INS_CONTENT)return;try{var v=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};INS_CONTENT.setKeys({provider:v('cxci_provider')||'auto',proxKey:v('cxci_prox'),dsKey:v('cxci_ds'),oaKey:v('cxci_oa'),clKey:v('cxci_cl'),pexelsKey:v('cxci_pex'),yonerge:v('cxci_sys')});var el=document.getElementById('cxci_status');if(el)el.textContent='✓ İçerik Ajanı kaydedildi · '+(v('cxci_provider')||'auto');try{if(typeof toast==='function')toast('✓ İçerik Ajanı anahtarları kaydedildi.');}catch(e){}}catch(e){}}
+function insSiteSave(){if(!INS_SITE)return;try{var v=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};var ck=function(id){var e=document.getElementById(id);return e?!!e.checked:true;};INS_SITE.setKeys({provider:v('cxsi_provider')||'auto',proxKey:v('cxsi_prox'),dsKey:v('cxsi_ds'),oaKey:v('cxsi_oa'),clKey:v('cxsi_cl'),yonerge:v('cxsi_sys'),capabilities:{phone:ck('cxsi_cap_phone'),lead:ck('cxsi_cap_lead'),advice:ck('cxsi_cap_advice'),match:ck('cxsi_cap_match'),multilang:ck('cxsi_cap_multilang')}});var el=document.getElementById('cxsi_status');if(el)el.textContent='✓ Site Asistanı kaydedildi · '+(v('cxsi_provider')||'auto');try{if(typeof toast==='function')toast('✓ Site Asistanı ayarları kaydedildi.');}catch(e){}}catch(e){}}
+/*__ADMIN_BLOK_SON__*/
 async function _insAgentTest(E,statusId){var el=document.getElementById(statusId);if(el)el.textContent='Test ediliyor…';try{var r=await E.ai({message:'Bağlantı testi. Yalnızca "tamam" yaz.'});var t=r&&(r.answer||r.text);if(r&&r.fallback)t=null;if(el)el.textContent=t?'✓ Bağlantı başarılı.':'Bağlantı kurulamadı. Anahtarı kontrol edin (ProX yerelde CORS kısıtlı olabilir).';}catch(e){if(el)el.textContent='Test hatası.';}}
 function insContentTest(){if(INS_CONTENT)_insAgentTest(INS_CONTENT,'cxci_status');}
 function insSiteTest(){if(INS_SITE)_insAgentTest(INS_SITE,'cxsi_status');}
@@ -3653,9 +3656,10 @@ function obFinish(){obCollect();if(!OB.name){OB.step=1;obRender();toast('Marka a
 window.openOnboarding=openOnboarding;window.obGo=obGo;window.obFinish=obFinish;window.obClose=obClose;
 /* boot: kayıtlı tenant temasını geri uygula + #kur / ilk-çalıştırma otomatik aç */
 try{if(typeof SETTINGS!=='undefined'&&(SETTINGS.tenantAccent||SETTINGS.tenantFont))applyTenantTheme(SETTINGS.tenantAccent,SETTINGS.tenantFont);}catch(e){}
-addEventListener('hashchange',function(){if(location.hash==='#kur')openOnboarding();});
+addEventListener('hashchange',function(){if(location.hash==='#kur'&&window.EMLAK_DEMO!==false)openOnboarding();});
 window.addEventListener('load',function(){try{
   if(typeof SETTINGS!=='undefined'&&(SETTINGS.tenantAccent||SETTINGS.tenantFont))applyTenantTheme(SETTINGS.tenantAccent,SETTINGS.tenantFont);
+  if(window.EMLAK_DEMO===false)return;/* FAZ3D: üretimde anonim ziyaretçiye kurulum sihirbazı AÇILMAZ */
   if(location.hash==='#kur'){setTimeout(openOnboarding,400);return;}
   var fresh=!localStorage.getItem('meridyen_site_v1')&&!localStorage.getItem('ins_onboarded');
   if(fresh)setTimeout(openOnboarding,1400);

@@ -543,9 +543,15 @@ function obFinish(){obCollect();if(!(OB.brand||OB.advisor)){OB.step=1;obRender()
     obClose();toast('✓ Kurulum tamam! '+_bn+' yayında.'+(OB.key?'':' (ProX anahtarını admin→ProX/EİDS\'ten ekleyebilirsiniz.)'));
   }catch(e){toast('Kurulumda hata: '+(e&&e.message||e));}}
 window.openOnboarding=openOnboarding;window.obGo=obGo;window.obClose=obClose;window.obFinish=obFinish;
+
+/* FAZ3D: auth backend'i yapılandırılana dek üretimde üyelik/portal/yönetim giriş UI'ları gizlenir (çalışmayan buton bırakılmaz) */
+function _dnAuthUiGizle(){if(window.EMLAK_DEMO!==false)return;try{
+  document.querySelectorAll('a[href$="#giris"],a[href$="#admin"],#saasPortalTrigger,#saasPortalTriggerM,.js-giris').forEach(function(el){var li=el.closest('li');(li||el).style.display='none';});
+}catch(e){}}
+try{window._dnAuthUiGizle=_dnAuthUiGizle;}catch(e){}
 /* Footer/başka sayfa → index.html#hash ile overlay aç (birebir footer için) */
 function _dnHashOpen(){var h=location.hash;try{
-  if(h==='#kur')openOnboarding();
+  if(h==='#kur'){if(window.EMLAK_DEMO!==false)openOnboarding();}
   else if((h==='#blog'||h.indexOf('#blog/')===0)&&typeof navGo==='function'){
     var _bid=h.indexOf('#blog/')===0?h.slice(6):'';
     navGo('blog');
@@ -1011,7 +1017,7 @@ function csMountDN(){if(!window.ContentStudio){_csModulYukle(function(){csMountD
     setSchedule:function(s){DN_CONTENT.setSchedule(s);},
     topicPool:function(){var il=_dnCity();var T=[il+' lüks konut piyasası','Kentsel dönüşümde değer artışı','Kira getirisi mi değer artışı mı','Özel portföy ve mahremiyet','Gayrimenkul değerleme süreci','Tapu ve ekspertiz rehberi','Yatırım için doğru bölge analizi','Konut kredisi ve faizin etkisi',il+' prestij semtlerinde arz-talep dengesi','Emlak vergisi ve alım-satım masrafları','Yabancıya konut satışı rehberi'];if(il==='İstanbul')T.splice(1,0,'Boğaz hattı yalı yatırımı');return T;},
     toast:function(m){try{toast(m);}catch(e){}},
-    guard:function(p){var sp='';try{sp=DN_CONTENT.sysPrompt();}catch(e){}return (sp?sp+'\n\n':'')+p;}
+    guard:function(p){var sp='';try{sp=DN_CONTENT.yonerge();}catch(e){}return (sp?sp+'\n\n':'')+p;}
   });
 }
 window.csMountDN=csMountDN;
@@ -1090,7 +1096,11 @@ function apptSubmit(){const ad=(document.getElementById('ap_ad')||{}).value?docu
   if(!_apptState.day||!_apptState.slot){toast('⚠ Lütfen bir gün ve saat seçin.');return;}
   if(!ad||!tel){toast('⚠ Lütfen ad ve telefon bilgisi girin.');return;}
   const not=(document.getElementById('ap_not')||{}).value||'';
-  if(typeof submitLead==='function')submitLead({sourcePage:'danisman',formType:'randevu',name:ad,phone:tel,email:'',location:'',message:'Randevu: '+_apptState.day+' '+_apptState.slot+(not?(' · '+not):''),requestedService:'Ücretsiz Analiz'});
+  (async function(){var _r=null;try{if(typeof submitLead==='function')_r=await submitLead({sourcePage:'danisman',formType:'randevu',name:ad,phone:tel,email:'',location:'',message:'Randevu: '+_apptState.day+' '+_apptState.slot+(not?(' · '+not):''),requestedService:'Ücretsiz Analiz'});}catch(e){_r=null;}
+  if(window.EMLAK_DEMO===false&&!(_r&&_r.ok)){var _s=document.getElementById('apptSummary');if(_s)_s.innerHTML='⚠ Talebiniz gönderilemedi — lütfen tekrar deneyin ya da WhatsApp hattımızdan yazın.';toast('⚠ Talebiniz gönderilemedi, tekrar deneyin.');return;}
+  _apptBasari(ad,not);})();return;
+}
+function _apptBasari(ad,not){/* FAZ3D: başarı yalnız sunucu onayında (üretim) ya da demo modunda gösterilir */
   dnPushLead({name:ad,phone:tel,konu:'Ücretsiz Analiz Randevusu',msg:_apptState.day+' '+_apptState.slot+(not?(' · '+not):''),src:'Randevu Formu'});/* admin görüşme panosu kaydı */
   toast('✦ Teşekkürler <b>'+ad+'</b> — ücretsiz analiz randevunuz <b>'+_apptState.day+' / '+_apptState.slot+'</b> için alındı.');
   const s=document.getElementById('apptSummary');if(s)s.innerHTML='✓ Talebiniz iletildi: <b>'+_apptState.day+' · '+_apptState.slot+'</b>. Onay için sizi arayacağız.';}
@@ -2266,12 +2276,12 @@ function staUpsell(t){var f=STA_TAB_FEAT[t];if(!f)return;var need=featMinPkgD(f)
 window.staGate=staGate;window.staUpsell=staUpsell;window.staTabGated=staTabGated;
 function staTab(b){var t=b.dataset.t;if(staTabGated(t)){staUpsell(t);return;}const m=b.closest('.adm-app')||b.closest('.sta-modal')||document;m.querySelectorAll('.adm-nav,.sta-tabs button').forEach(x=>x.classList.toggle('act',x===b));m.querySelectorAll('.sta-pane').forEach(p=>p.hidden=(p.dataset.p!==t));var mn=m.querySelector('.adm-main');if(mn)mn.scrollTop=0;if(t==='icstudio'){try{csMountDN();}catch(e){}}}
 /* İçerik Stüdyosu sağlayıcı & anahtar ayarları (ProX sekmesi kartı) */
-function _dnAgentFill(E,pre){try{var k=E.getKeys();var set=function(id,v){var e=document.getElementById(id);if(e)e.value=v||'';};set(pre+'provider',k.provider||'auto');set(pre+'prox',k.proxKey);set(pre+'ds',k.m1Key);set(pre+'oa',k.m2Key);set(pre+'cl',k.m3Key);set(pre+'sys',k.sysPrompt);var pex=document.getElementById(pre+'pex');if(pex)pex.value=k.mediaKey||'';}catch(e){}}
+function _dnAgentFill(E,pre){try{var k=E.getKeys();var set=function(id,v){var e=document.getElementById(id);if(e)e.value=v||'';};set(pre+'provider',k.provider||'auto');set(pre+'prox',k.proxKey);set(pre+'ds',k.m1Key);set(pre+'oa',k.m2Key);set(pre+'cl',k.m3Key);set(pre+'sys',k.yonerge);var pex=document.getElementById(pre+'pex');if(pex)pex.value=k.mediaKey||'';}catch(e){}}
 function dnContentFill(){if(DN_CONTENT)_dnAgentFill(DN_CONTENT,'cxc_');}
 function dnSiteFill(){if(!DN_SITE)return;_dnAgentFill(DN_SITE,'cxs_');try{var c=DN_SITE.getCaps();[['cxs_cap_phone','phone'],['cxs_cap_lead','lead'],['cxs_cap_advice','advice'],['cxs_cap_match','match'],['cxs_cap_multilang','multilang']].forEach(function(d){var e=document.getElementById(d[0]);if(e)e.checked=(c&&c[d[1]]!==undefined)?!!c[d[1]]:true;});}catch(e){}}
 function dnStudioFill(){dnContentFill();dnSiteFill();}
-function dnContentSave(){if(!DN_CONTENT)return;try{var v=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};DN_CONTENT.setKeys({provider:v('cxc_provider')||'auto',proxKey:v('cxc_prox'),m1Key:v('cxc_ds'),m2Key:v('cxc_oa'),m3Key:v('cxc_cl'),mediaKey:v('cxc_pex'),sysPrompt:v('cxc_sys')});var el=document.getElementById('cxc_status');if(el)el.textContent='✓ İçerik Ajanı kaydedildi · '+(v('cxc_provider')||'auto');try{toast('✓ İçerik Ajanı anahtarları kaydedildi.');}catch(e){}}catch(e){}}
-function dnSiteSave(){if(!DN_SITE)return;try{var v=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};var ck=function(id){var e=document.getElementById(id);return e?!!e.checked:true;};DN_SITE.setKeys({provider:v('cxs_provider')||'auto',proxKey:v('cxs_prox'),m1Key:v('cxs_ds'),m2Key:v('cxs_oa'),m3Key:v('cxs_cl'),sysPrompt:v('cxs_sys'),capabilities:{phone:ck('cxs_cap_phone'),lead:ck('cxs_cap_lead'),advice:ck('cxs_cap_advice'),match:ck('cxs_cap_match'),multilang:ck('cxs_cap_multilang')}});var el=document.getElementById('cxs_status');if(el)el.textContent='✓ Site Asistanı kaydedildi · '+(v('cxs_provider')||'auto');try{toast('✓ Site Asistanı ayarları kaydedildi.');}catch(e){}}catch(e){}}
+function dnContentSave(){if(!DN_CONTENT)return;try{var v=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};DN_CONTENT.setKeys({provider:v('cxc_provider')||'auto',proxKey:v('cxc_prox'),m1Key:v('cxc_ds'),m2Key:v('cxc_oa'),m3Key:v('cxc_cl'),mediaKey:v('cxc_pex'),yonerge:v('cxc_sys')});var el=document.getElementById('cxc_status');if(el)el.textContent='✓ İçerik Ajanı kaydedildi · '+(v('cxc_provider')||'auto');try{toast('✓ İçerik Ajanı anahtarları kaydedildi.');}catch(e){}}catch(e){}}
+function dnSiteSave(){if(!DN_SITE)return;try{var v=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};var ck=function(id){var e=document.getElementById(id);return e?!!e.checked:true;};DN_SITE.setKeys({provider:v('cxs_provider')||'auto',proxKey:v('cxs_prox'),m1Key:v('cxs_ds'),m2Key:v('cxs_oa'),m3Key:v('cxs_cl'),yonerge:v('cxs_sys'),capabilities:{phone:ck('cxs_cap_phone'),lead:ck('cxs_cap_lead'),advice:ck('cxs_cap_advice'),match:ck('cxs_cap_match'),multilang:ck('cxs_cap_multilang')}});var el=document.getElementById('cxs_status');if(el)el.textContent='✓ Site Asistanı kaydedildi · '+(v('cxs_provider')||'auto');try{toast('✓ Site Asistanı ayarları kaydedildi.');}catch(e){}}catch(e){}}
 async function _dnAgentTest(E,statusId){var el=document.getElementById(statusId);if(el)el.textContent='Test ediliyor…';try{var r=await E.ai({message:'Bağlantı testi. Yalnızca "tamam" yaz.'});var t=r&&(r.answer||r.text);if(r&&r.fallback)t=null;if(el)el.textContent=t?'✓ Bağlantı başarılı.':'Bağlantı kurulamadı. Anahtarı kontrol edin (ProX yerelde CORS kısıtlı olabilir).';}catch(e){if(el)el.textContent='Test hatası.';}}
 function dnContentTest(){if(DN_CONTENT)_dnAgentTest(DN_CONTENT,'cxc_status');}
 function dnSiteTest(){if(DN_SITE)_dnAgentTest(DN_SITE,'cxs_status');}
@@ -2367,6 +2377,7 @@ window.addEventListener('load',function(){try{
   try{applyPortrait();}catch(e){}/* Ana sayfa Kişisel Temsil portresi (admin yüklediyse gerçek foto, yoksa temsili) */
   try{saLoad();if(SERVICE_AREA&&SERVICE_AREA.primary&&SERVICE_AREA.primary!==PROVINCE.name)applyProvince(SERVICE_AREA.primary);}catch(e){}/* FAZ3: kalıcı il boot'ta geri yüklenir — yenilemede İstanbul'a düşme kapandı */
   try{applyIletisim();}catch(e){}/* WhatsApp/telefon bağlantılarını admin değerine güncelle (dn_iletisim) */
+  try{_dnAuthUiGizle();setTimeout(_dnAuthUiGizle,900);}catch(e){}
   document.getElementById('homeListings').innerHTML=listingCardsHTML();
   try{vaultIndexLoad();}catch(e){document.getElementById('vaultGrid').innerHTML=vipCardsHTML();}
   document.getElementById('homeContact').innerHTML=contactHTML();

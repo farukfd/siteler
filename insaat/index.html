@@ -912,6 +912,10 @@ function cookieChoice(v){
 // ========== ADVANCED CONSTRUCTION SCENE — apartment/villa/factory/tower morphing ==========
 let _heroBooted=false;
 async function bootBuildScene(){
+  /* FAZ3D: WebGL capability-once — desteklenmiyorsa tekrar denenmez, statik fallback'e düşülür */
+  if(window.__webglDown)return;
+  try{var _t=document.createElement('canvas');var _gl=_t.getContext('webgl2')||_t.getContext('webgl');if(!_gl){window.__webglDown=1;var _c=document.getElementById('buildScene');if(_c){_c.style.display='none';var _fb=document.getElementById('stageFb');if(_fb)_fb.style.display='block';}console.warn('[NADAS] WebGL desteklenmiyor — statik görsel fallback aktif (tek sefer).');return;}}catch(e){window.__webglDown=1;return;}
+
 if(_heroBooted) return; _heroBooted=true;
 const T=await import('three');
 const {EffectComposer}=await import('three/addons/postprocessing/EffectComposer.js');
@@ -922,7 +926,7 @@ const {RoomEnvironment}=await import('three/addons/environments/RoomEnvironment.
 const canvas=document.getElementById('buildScene');
 if(!canvas) return;
 try{
-const renderer=new T.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+let renderer;try{renderer=new T.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});}catch(e){window.__webglDown=1;canvas.style.display='none';return;}
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
 renderer.setSize(canvas.clientWidth,canvas.clientHeight,false);
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
@@ -1455,7 +1459,7 @@ window.initProje3D=async function(){
   const {OrbitControls}=await import('three/addons/controls/OrbitControls.js');
   const {RoomEnvironment}=await import('three/addons/environments/RoomEnvironment.js');
   const {GLTFLoader}=await import('three/addons/loaders/GLTFLoader.js');
-  const renderer=new T.WebGLRenderer({canvas,antialias:true,alpha:false});
+  let renderer;try{if(window.__webglDown)return;renderer=new T.WebGLRenderer({canvas,antialias:true,alpha:false});}catch(e){window.__webglDown=1;canvas.style.display='none';return;}
   renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
   renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
   renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.0;

@@ -1,11 +1,11 @@
 # Meridyen Yapı — Kurumsal İnşaat
 
-> 1986'dan bu yana kurumsal yapı, tadilat ve gayrimenkul geliştirme. Anahtar teslim konut, kentsel dönüşüm, kat karşılığı, ticari yapılar ve EİDS onaylı gayrimenkul ilanları.
+> 1986'dan bu yana kurumsal yapı, tadilat ve gayrimenkul geliştirme. Anahtar teslim konut, kentsel dönüşüm, kat karşılığı, ticari yapılar ve gayrimenkul ilanları (EİDS doğrulaması sunucu tarafında tamamlananlar yayınlanır).
 
 Not: Kurgusal tanıtım demosudur — proje, ilan ve istatistikler temsilîdir.
 
 ## Ana Sayfalar
-- [İlanlar](ilanlar.html): EİDS onaylı satılık & kiralık konut, iş yeri, dükkan ve arsa ilanları; gerçek konum haritası, kapsamlı özellik tablosu, 360° sanal tur, video, kat planı, konut kredisi hesaplama.
+- [İlanlar](ilanlar.html): Satılık & kiralık konut (yalnız EİDS doğrulaması tamamlanan kayıtlar resmî ilan olarak yayınlanır), iş yeri, dükkan ve arsa ilanları; gerçek konum haritası, kapsamlı özellik tablosu, 360° sanal tur, video, kat planı, konut kredisi hesaplama.
 - [Projeler](projelerimiz.html): Tamamlanan ve devam eden yapı projeleri.
 - [Hizmetlerimiz](hizmetlerimiz.html): Konut inşaatı, tadilat, kentsel dönüşüm, kat karşılığı, anahtar teslim.
 - [Bölge Zekası](bolge.html) · [Neden Biz](neden-biz.html) · [S.S.S](soru-cevap.html)
