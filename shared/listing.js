@@ -359,7 +359,9 @@
               +'<button type="button" title="Bağlantıyı kopyala" class="cp" onclick="Listings.share(\'copy\',this)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></button>'
             +'</div></div>'
           +'</div>'
-          +'<div class="lstd-note">'+(window.EIDS&&EIDS.shield?EIDS.shield(13):'')+' Yalnızca <b>EİDS</b> doğrulanmış ilanlar yayınlanır.</div>'
+          +((L._isDemoRec&&L._isDemoRec(l))||!(l&&l.real_record&&l.eids_status==='verified')
+            ?'<div class="lstd-note">'+(window.EIDS&&EIDS.shield?EIDS.shield(13):'')+' ÖRNEK İLAN · DEMO — Gerçek ilan veya EİDS doğrulaması değildir.</div>'
+            :'<div class="lstd-note">'+(window.EIDS&&EIDS.shield?EIDS.shield(13):'')+' EİDS doğrulaması yayın kapısından geçmiştir.</div>')
         +'</aside>'
       +'</div></div>';
     return h;
@@ -665,7 +667,7 @@
     +'.lstd-share-b .x:hover{background:#111;color:#fff;border-color:transparent}'
     +'.lstd-share-b .fb:hover{background:#1877f2;color:#fff;border-color:transparent}'
     +'.lstd-share-b .cp.done{background:#0f7a3d;color:#fff;border-color:transparent}'
-    +'body.lst-detay-acik > :not(#lstDetailOverlay) h1{visibility:hidden}.lstd-ov{position:fixed;inset:0;z-index:9000;background:'+BG+';color:'+INK+';overflow-y:auto;overflow-x:hidden;display:none}'
+    +'body.lst-detay-acik > :not(#lstDetailOverlay) h1,body.lst-detay-acik > h1{visibility:hidden}.lstd-ov{position:fixed;inset:0;z-index:9000;background:'+BG+';color:'+INK+';overflow-y:auto;overflow-x:hidden;display:none}'
     +'.lstd-ov.on{display:block}'
     +'.lstd-ovwrap{max-width:1120px;margin:0 auto;padding:20px 18px 30px}'
     +'.lstd-back{background:'+SURF+';color:'+INK+';border:1px solid '+LINE+';border-radius:10px;padding:9px 16px;font-size:.84375rem;font-weight:700;cursor:pointer;margin-bottom:6px}'
