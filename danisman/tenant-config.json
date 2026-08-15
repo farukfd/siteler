@@ -1,0 +1,113 @@
+{
+  "success": true,
+  "tenant_id": "consultant",
+  "site_mode": "demo",
+  "config_version": "cv-2026-08-15-01",
+  "updated_at": "2026-08-15T00:00:00+03:00",
+  "content_version": 1,
+  "branding": {
+    "display_name": "Selin Meridyen",
+    "legal_name": "Selin Meridyen Gayrimenkul Danışmanlığı (DEMO)",
+    "slogan": "Kişiye Özel Danışman",
+    "logo": { "initial": "M" },
+    "colors": { "accent": "#b4975a", "deep": "#0e5e3e" }
+  },
+  "consultant": {
+    "name": "Selin Meridyen",
+    "title": "Lüks Konut & Özel Portföy Danışmanı",
+    "experience_years_note": "18+ (ÖRNEK)"
+  },
+  "company": {},
+  "contact": {
+    "phone": "+90 532 000 00 00 (temsilî)",
+    "whatsapp": "905320000000",
+    "email": "ozel@selinmeridyen.com (temsilî)"
+  },
+  "address": {
+    "city": "İstanbul",
+    "district": "Beşiktaş",
+    "neighborhood": "Bebek",
+    "note": "temsilî demo adres"
+  },
+  "legal_status": {
+    "mode": "demo",
+    "note": "Demo künye — canlı tenantta doğrulanmış işletme bilgileri kullanılır",
+    "mersis": null,
+    "tax_no": null,
+    "trade_registry": null,
+    "authorization_certificate": null
+  },
+  "service_areas": {
+    "city": "İstanbul",
+    "districts": ["Beşiktaş", "Sarıyer", "Şişli", "Kadıköy", "Beyoğlu", "Üsküdar", "Adalar", "Başakşehir", "Beykoz", "Ataşehir"]
+  },
+  "listing_categories": ["daire", "villa", "ofis", "dukkan", "arsa"],
+  "menus": {
+    "main": [
+      { "label": "Hizmetlerimiz", "href": "hizmetlerimiz.html" },
+      { "label": "İlanlar", "href": "ilanlar.html" },
+      { "label": "Özel Portföy", "href": "ozel-portfoy.html" },
+      { "label": "Blog", "href": "blog.html" },
+      { "label": "Ücretsiz Ekspertiz", "href": "iletisim.html" }
+    ],
+    "footer": {
+      "kesfet": [
+        { "label": "İlanlar", "href": "ilanlar.html" },
+        { "label": "Harita", "href": "harita.html" },
+        { "label": "Emlak Ekspertizi", "href": "emlak-ekspertizi.html" },
+        { "label": "Özel Portföy", "href": "ozel-portfoy.html" },
+        { "label": "Bölge Analizi", "href": "bolge-analizi.html" },
+        { "label": "Blog", "href": "blog.html" },
+        { "label": "Semt Rehberi", "href": "semtler.html" },
+        { "label": "Yatırım Rehberi", "href": "yatirim-rehberi.html" },
+        { "label": "Süreç", "href": "surec.html" },
+        { "label": "Randevu", "href": "randevu.html" }
+      ],
+      "kurumsal": [
+        { "label": "Ana Sayfa", "href": "index.html" },
+        { "label": "Hizmetlerimiz", "href": "hizmetlerimiz.html" },
+        { "label": "Hakkımda", "href": "hakkimizda.html" },
+        { "label": "Referanslar", "href": "referanslar.html" },
+        { "label": "S.S.S", "href": "sss.html" },
+        { "label": "İletişim", "href": "iletisim.html" }
+      ],
+      "yasal": [
+        { "label": "KVKK Aydınlatma", "href": "kvkk.html" },
+        { "label": "Gizlilik Politikası", "href": "gizlilik.html" },
+        { "label": "Çerez Politikası", "href": "cerez.html" },
+        { "label": "Mesafeli Hizmet & Kullanım", "href": "kullanim.html" }
+      ]
+    }
+  },
+  "social_accounts": {},
+  "supported_languages": ["tr", "en", "ru", "zh", "ar"],
+  "default_language": "tr",
+  "seo_settings": {
+    "title": "Selin Meridyen — Lüks Konut & Özel Portföy Danışmanı (DEMO)",
+    "description": "ÖRNEK İLAN · DEMO — Kişiye özel emlak danışmanlığı platform demosu. Gerçek ilan veya resmî EİDS doğrulaması değildir; EİDS alanı platform özelliğinin temsilî gösterimidir.",
+    "indexing": "index,follow"
+  },
+  "private_portfolio_settings": {
+    "enabled": true,
+    "per_combo": 3,
+    "masking": "approximate_location"
+  },
+  "currency_settings": {
+    "display": "TRY",
+    "ticker": true,
+    "source": "/api/v1/tenant/rates"
+  },
+  "map_settings": {
+    "provider": "openstreetmap",
+    "consent_gate": true,
+    "masking": "approximate"
+  },
+  "feature_flags": {
+    "locations": true,
+    "endeks": true,
+    "prox_analyze": true,
+    "prox_ai": true,
+    "pdf": true,
+    "lead": true
+  }
+}

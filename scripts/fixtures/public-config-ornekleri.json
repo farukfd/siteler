@@ -1,0 +1,441 @@
+{
+  "_comment": "FAZ4C PUBLIC tenant sözleşmesi fikstürleri — SENTETİK örnek veriler. Bu dosya dist'e girmez; secret/key/provider/model/prompt alanları sözleşme gereği YOKTUR.",
+  "consultant": {
+    "success": true,
+    "tenant_id": "consultant",
+    "site_mode": "demo",
+    "config_version": "cv-2026-08-15-01",
+    "updated_at": "2026-08-15T00:00:00+03:00",
+    "content_version": 1,
+    "branding": {
+      "display_name": "Selin Meridyen",
+      "legal_name": "Selin Meridyen Gayrimenkul Danışmanlığı (DEMO)",
+      "slogan": "Kişiye Özel Danışman",
+      "logo": { "initial": "M" },
+      "colors": { "accent": "#b4975a", "deep": "#0e5e3e" }
+    },
+    "consultant": {
+      "name": "Selin Meridyen",
+      "title": "Lüks Konut & Özel Portföy Danışmanı",
+      "experience_years_note": "18+ (ÖRNEK)"
+    },
+    "company": {},
+    "contact": {
+      "phone": "+90 532 000 00 00 (temsilî)",
+      "whatsapp": "905320000000",
+      "email": "ozel@selinmeridyen.com (temsilî)"
+    },
+    "address": {
+      "city": "İstanbul",
+      "district": "Beşiktaş",
+      "neighborhood": "Bebek",
+      "note": "temsilî demo adres"
+    },
+    "legal_status": {
+      "mode": "demo",
+      "note": "Demo künye — canlı tenantta doğrulanmış işletme bilgileri kullanılır",
+      "mersis": null,
+      "tax_no": null,
+      "trade_registry": null,
+      "authorization_certificate": null
+    },
+    "service_areas": {
+      "city": "İstanbul",
+      "districts": ["Beşiktaş", "Sarıyer", "Şişli", "Kadıköy", "Beyoğlu", "Üsküdar", "Adalar", "Başakşehir", "Beykoz", "Ataşehir"]
+    },
+    "listing_categories": ["daire", "villa", "ofis", "dukkan", "arsa"],
+    "menus": {
+      "main": [
+        { "label": "Hizmetlerimiz", "href": "hizmetlerimiz.html" },
+        { "label": "İlanlar", "href": "ilanlar.html" },
+        { "label": "Özel Portföy", "href": "ozel-portfoy.html" },
+        { "label": "Blog", "href": "blog.html" },
+        { "label": "Ücretsiz Ekspertiz", "href": "iletisim.html" }
+      ],
+      "footer": {
+        "kesfet": [
+          { "label": "İlanlar", "href": "ilanlar.html" },
+          { "label": "Harita", "href": "harita.html" },
+          { "label": "Emlak Ekspertizi", "href": "emlak-ekspertizi.html" },
+          { "label": "Özel Portföy", "href": "ozel-portfoy.html" },
+          { "label": "Bölge Analizi", "href": "bolge-analizi.html" },
+          { "label": "Blog", "href": "blog.html" },
+          { "label": "Semt Rehberi", "href": "semtler.html" },
+          { "label": "Yatırım Rehberi", "href": "yatirim-rehberi.html" },
+          { "label": "Süreç", "href": "surec.html" },
+          { "label": "Randevu", "href": "randevu.html" }
+        ],
+        "kurumsal": [
+          { "label": "Ana Sayfa", "href": "index.html" },
+          { "label": "Hizmetlerimiz", "href": "hizmetlerimiz.html" },
+          { "label": "Hakkımda", "href": "hakkimizda.html" },
+          { "label": "Referanslar", "href": "referanslar.html" },
+          { "label": "S.S.S", "href": "sss.html" },
+          { "label": "İletişim", "href": "iletisim.html" }
+        ],
+        "yasal": [
+          { "label": "KVKK Aydınlatma", "href": "kvkk.html" },
+          { "label": "Gizlilik Politikası", "href": "gizlilik.html" },
+          { "label": "Çerez Politikası", "href": "cerez.html" },
+          { "label": "Mesafeli Hizmet & Kullanım", "href": "kullanim.html" }
+        ]
+      }
+    },
+    "social_accounts": {},
+    "supported_languages": ["tr", "en", "ru", "zh", "ar"],
+    "default_language": "tr",
+    "seo_settings": {
+      "title": "Selin Meridyen — Lüks Konut & Özel Portföy Danışmanı (DEMO)",
+      "description": "ÖRNEK İLAN · DEMO — Kişiye özel emlak danışmanlığı platform demosu. Gerçek ilan veya resmî EİDS doğrulaması değildir; EİDS alanı platform özelliğinin temsilî gösterimidir.",
+      "indexing": "index,follow"
+    },
+    "private_portfolio_settings": {
+      "enabled": true,
+      "per_combo": 3,
+      "masking": "approximate_location"
+    },
+    "currency_settings": {
+      "display": "TRY",
+      "ticker": true,
+      "source": "/api/v1/tenant/rates"
+    },
+    "map_settings": {
+      "provider": "openstreetmap",
+      "consent_gate": true,
+      "masking": "approximate"
+    },
+    "feature_flags": {
+      "locations": true,
+      "endeks": true,
+      "prox_analyze": true,
+      "prox_ai": true,
+      "pdf": true,
+      "lead": true
+    }
+  },
+  "office": {
+    "success": true,
+    "tenant_id": "office",
+    "site_mode": "demo",
+    "config_version": "cv-2026-08-15-01",
+    "updated_at": "2026-08-15T00:00:00+03:00",
+    "content_version": 1,
+    "branding": {
+      "display_name": "Ege Vadi Gayrimenkul",
+      "legal_name": "Ege Vadi Gayrimenkul Hizmetleri Ltd. Şti. (DEMO)",
+      "slogan": "İzmir'in Güvenilir Emlak Ofisi",
+      "logo": { "initial": "E" },
+      "colors": { "accent": "#0f766e", "deep": "#134e4a" }
+    },
+    "consultant": {},
+    "company": {
+      "name": "Ege Vadi Gayrimenkul",
+      "type": "emlak_ofisi",
+      "founded_note": "2012 (ÖRNEK)",
+      "team_size_note": "12 danışman (ÖRNEK)"
+    },
+    "contact": {
+      "phone": "+90 232 000 00 00 (temsilî)",
+      "whatsapp": "902320000000",
+      "email": "info@egevadi.com (temsilî)"
+    },
+    "address": {
+      "city": "İzmir",
+      "district": "Karşıyaka",
+      "neighborhood": "Bostanlı",
+      "note": "temsilî demo adres"
+    },
+    "legal_status": {
+      "mode": "demo",
+      "note": "Demo künye — canlı tenantta doğrulanmış işletme bilgileri kullanılır",
+      "mersis": null,
+      "tax_no": null,
+      "trade_registry": null,
+      "authorization_certificate": null
+    },
+    "service_areas": {
+      "city": "İzmir",
+      "districts": ["Karşıyaka", "Bornova", "Konak", "Bayraklı", "Çiğli", "Urla", "Çeşme", "Narlıdere", "Balçova", "Güzelbahçe"]
+    },
+    "listing_categories": ["daire", "villa", "ofis", "dukkan", "arsa", "bina"],
+    "menus": {
+      "main": [
+        { "label": "İlanlar", "href": "ilanlar.html" },
+        { "label": "Özel Portföy", "href": "ozel-portfoy.html" },
+        { "label": "Ekspertiz", "href": "emlak-ekspertizi.html" },
+        { "label": "Blog", "href": "blog.html" },
+        { "label": "İletişim", "href": "iletisim.html" }
+      ],
+      "footer": {
+        "kesfet": [
+          { "label": "İlanlar", "href": "ilanlar.html" },
+          { "label": "Harita", "href": "harita.html" },
+          { "label": "Emlak Ekspertizi", "href": "emlak-ekspertizi.html" },
+          { "label": "Özel Portföy", "href": "ozel-portfoy.html" },
+          { "label": "Bölge Analizi", "href": "bolge-analizi.html" },
+          { "label": "Blog", "href": "blog.html" }
+        ],
+        "kurumsal": [
+          { "label": "Ana Sayfa", "href": "index.html" },
+          { "label": "Hakkımızda", "href": "hakkimizda.html" },
+          { "label": "Hizmetlerimiz", "href": "hizmetlerimiz.html" },
+          { "label": "Referanslar", "href": "referanslar.html" },
+          { "label": "S.S.S", "href": "sss.html" },
+          { "label": "İletişim", "href": "iletisim.html" }
+        ],
+        "yasal": [
+          { "label": "KVKK Aydınlatma", "href": "kvkk.html" },
+          { "label": "Gizlilik Politikası", "href": "gizlilik.html" },
+          { "label": "Çerez Politikası", "href": "cerez.html" },
+          { "label": "Kullanım Koşulları", "href": "kullanim.html" }
+        ]
+      }
+    },
+    "social_accounts": {},
+    "supported_languages": ["tr", "en"],
+    "default_language": "tr",
+    "seo_settings": {
+      "title": "Ege Vadi Gayrimenkul — İzmir Emlak Ofisi (DEMO)",
+      "description": "ÖRNEK İLAN · DEMO — İzmir emlak ofisi platform demosu. Gerçek ilan veya resmî EİDS doğrulaması değildir; EİDS alanı platform özelliğinin temsilî gösterimidir.",
+      "indexing": "index,follow"
+    },
+    "private_portfolio_settings": {
+      "enabled": true,
+      "per_combo": 3,
+      "masking": "approximate_location"
+    },
+    "currency_settings": {
+      "display": "TRY",
+      "ticker": true,
+      "source": "/api/v1/tenant/rates"
+    },
+    "map_settings": {
+      "provider": "openstreetmap",
+      "consent_gate": true,
+      "masking": "approximate"
+    },
+    "feature_flags": {
+      "locations": true,
+      "endeks": true,
+      "prox_analyze": true,
+      "prox_ai": true,
+      "pdf": true,
+      "lead": true
+    }
+  },
+  "construction": {
+    "success": true,
+    "tenant_id": "construction",
+    "site_mode": "demo",
+    "config_version": "cv-2026-08-15-01",
+    "updated_at": "2026-08-15T00:00:00+03:00",
+    "content_version": 1,
+    "branding": {
+      "display_name": "Ankara Kule Yapı",
+      "legal_name": "Ankara Kule Yapı İnşaat Sanayi ve Ticaret A.Ş. (DEMO)",
+      "slogan": "Anahtar Teslim Güven",
+      "logo": { "initial": "K" },
+      "colors": { "accent": "#c2410c", "deep": "#1c1917" }
+    },
+    "consultant": {},
+    "company": {
+      "name": "Ankara Kule Yapı",
+      "type": "insaat_firmasi",
+      "founded_note": "1998 (ÖRNEK)",
+      "completed_projects_note": "40+ proje (ÖRNEK)"
+    },
+    "contact": {
+      "phone": "+90 312 000 00 00 (temsilî)",
+      "whatsapp": "903120000000",
+      "email": "kurumsal@ankarakule.com (temsilî)"
+    },
+    "address": {
+      "city": "Ankara",
+      "district": "Çankaya",
+      "neighborhood": "Kızılay",
+      "note": "temsilî demo adres"
+    },
+    "legal_status": {
+      "mode": "demo",
+      "note": "Demo künye — canlı tenantta doğrulanmış işletme bilgileri kullanılır",
+      "mersis": null,
+      "tax_no": null,
+      "trade_registry": null,
+      "authorization_certificate": null
+    },
+    "service_areas": {
+      "city": "Ankara",
+      "districts": ["Çankaya", "Yenimahalle", "Keçiören", "Etimesgut", "Gölbaşı", "Mamak", "Sincan", "Pursaklar"]
+    },
+    "listing_categories": ["daire", "villa", "ofis", "arsa", "proje"],
+    "menus": {
+      "main": [
+        { "label": "Projeler", "href": "ilanlar.html" },
+        { "label": "Özel Portföy", "href": "ozel-portfoy.html" },
+        { "label": "Hizmetlerimiz", "href": "hizmetlerimiz.html" },
+        { "label": "Hakkımızda", "href": "hakkimizda.html" },
+        { "label": "İletişim", "href": "iletisim.html" }
+      ],
+      "footer": {
+        "kesfet": [
+          { "label": "Projeler", "href": "ilanlar.html" },
+          { "label": "Özel Portföy", "href": "ozel-portfoy.html" },
+          { "label": "Bölge Analizi", "href": "bolge-analizi.html" },
+          { "label": "Blog", "href": "blog.html" }
+        ],
+        "kurumsal": [
+          { "label": "Ana Sayfa", "href": "index.html" },
+          { "label": "Hakkımızda", "href": "hakkimizda.html" },
+          { "label": "Hizmetlerimiz", "href": "hizmetlerimiz.html" },
+          { "label": "Referanslar", "href": "referanslar.html" },
+          { "label": "İletişim", "href": "iletisim.html" }
+        ],
+        "yasal": [
+          { "label": "KVKK Aydınlatma", "href": "kvkk.html" },
+          { "label": "Gizlilik Politikası", "href": "gizlilik.html" },
+          { "label": "Çerez Politikası", "href": "cerez.html" },
+          { "label": "Kullanım Koşulları", "href": "kullanim.html" }
+        ]
+      }
+    },
+    "social_accounts": {},
+    "supported_languages": ["tr", "en", "ar"],
+    "default_language": "tr",
+    "seo_settings": {
+      "title": "Ankara Kule Yapı — Anahtar Teslim İnşaat (DEMO)",
+      "description": "ÖRNEK İLAN · DEMO — Kurumsal inşaat firması platform demosu. Gerçek ilan veya resmî EİDS doğrulaması değildir; EİDS alanı platform özelliğinin temsilî gösterimidir.",
+      "indexing": "index,follow"
+    },
+    "private_portfolio_settings": {
+      "enabled": true,
+      "per_combo": 2,
+      "masking": "approximate_location"
+    },
+    "currency_settings": {
+      "display": "TRY",
+      "ticker": false,
+      "source": "/api/v1/tenant/rates"
+    },
+    "map_settings": {
+      "provider": "openstreetmap",
+      "consent_gate": true,
+      "masking": "approximate"
+    },
+    "feature_flags": {
+      "locations": true,
+      "endeks": true,
+      "prox_analyze": true,
+      "prox_ai": false,
+      "pdf": true,
+      "lead": true
+    }
+  },
+  "valuation": {
+    "success": true,
+    "tenant_id": "valuation",
+    "site_mode": "demo",
+    "config_version": "cv-2026-08-15-01",
+    "updated_at": "2026-08-15T00:00:00+03:00",
+    "content_version": 1,
+    "branding": {
+      "display_name": "Marmara Değerleme",
+      "legal_name": "Marmara Gayrimenkul Değerleme ve Danışmanlık A.Ş. (DEMO)",
+      "slogan": "Veriye Dayalı Değerleme",
+      "logo": { "initial": "D" },
+      "colors": { "accent": "#1d4ed8", "deep": "#0f172a" }
+    },
+    "consultant": {},
+    "company": {
+      "name": "Marmara Değerleme",
+      "type": "degerleme_firmasi",
+      "founded_note": "2008 (ÖRNEK)",
+      "licensed_appraisers_note": "8 lisanslı değerleme uzmanı (ÖRNEK)"
+    },
+    "contact": {
+      "phone": "+90 224 000 00 00 (temsilî)",
+      "whatsapp": "902240000000",
+      "email": "rapor@marmaradegerleme.com (temsilî)"
+    },
+    "address": {
+      "city": "Bursa",
+      "district": "Nilüfer",
+      "neighborhood": "Özlüce",
+      "note": "temsilî demo adres"
+    },
+    "legal_status": {
+      "mode": "demo",
+      "note": "Demo künye — canlı tenantta doğrulanmış işletme bilgileri kullanılır",
+      "mersis": null,
+      "tax_no": null,
+      "trade_registry": null,
+      "authorization_certificate": null
+    },
+    "service_areas": {
+      "city": "Bursa",
+      "districts": ["Nilüfer", "Osmangazi", "Yıldırım", "Mudanya", "Gemlik", "İnegöl", "Gürsu", "Kestel"]
+    },
+    "listing_categories": ["daire", "ofis", "dukkan", "arsa", "fabrika"],
+    "menus": {
+      "main": [
+        { "label": "Ekspertiz", "href": "emlak-ekspertizi.html" },
+        { "label": "Bölge Analizi", "href": "bolge-analizi.html" },
+        { "label": "İlanlar", "href": "ilanlar.html" },
+        { "label": "Blog", "href": "blog.html" },
+        { "label": "İletişim", "href": "iletisim.html" }
+      ],
+      "footer": {
+        "kesfet": [
+          { "label": "Emlak Ekspertizi", "href": "emlak-ekspertizi.html" },
+          { "label": "Bölge Analizi", "href": "bolge-analizi.html" },
+          { "label": "İlanlar", "href": "ilanlar.html" },
+          { "label": "Harita", "href": "harita.html" },
+          { "label": "Blog", "href": "blog.html" }
+        ],
+        "kurumsal": [
+          { "label": "Ana Sayfa", "href": "index.html" },
+          { "label": "Hakkımızda", "href": "hakkimizda.html" },
+          { "label": "Hizmetlerimiz", "href": "hizmetlerimiz.html" },
+          { "label": "S.S.S", "href": "sss.html" },
+          { "label": "İletişim", "href": "iletisim.html" }
+        ],
+        "yasal": [
+          { "label": "KVKK Aydınlatma", "href": "kvkk.html" },
+          { "label": "Gizlilik Politikası", "href": "gizlilik.html" },
+          { "label": "Çerez Politikası", "href": "cerez.html" },
+          { "label": "Kullanım Koşulları", "href": "kullanim.html" }
+        ]
+      }
+    },
+    "social_accounts": {},
+    "supported_languages": ["tr", "en", "ru"],
+    "default_language": "tr",
+    "seo_settings": {
+      "title": "Marmara Değerleme — Gayrimenkul Değerleme (DEMO)",
+      "description": "ÖRNEK İLAN · DEMO — Gayrimenkul değerleme firması platform demosu. Gerçek ilan veya resmî EİDS doğrulaması değildir; EİDS alanı platform özelliğinin temsilî gösterimidir.",
+      "indexing": "index,follow"
+    },
+    "private_portfolio_settings": {
+      "enabled": false,
+      "per_combo": 0,
+      "masking": "approximate_location"
+    },
+    "currency_settings": {
+      "display": "TRY",
+      "ticker": true,
+      "source": "/api/v1/tenant/rates"
+    },
+    "map_settings": {
+      "provider": "openstreetmap",
+      "consent_gate": true,
+      "masking": "approximate"
+    },
+    "feature_flags": {
+      "locations": true,
+      "endeks": true,
+      "prox_analyze": true,
+      "prox_ai": true,
+      "pdf": true,
+      "lead": true
+    }
+  }
+}

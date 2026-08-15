@@ -87,6 +87,33 @@
 })();
 
 /* ===================================================================
+   FAZ 4C — TENANT-CONFIG İSTEMCİ TÜKETİMİ
+   Sayfa açılışında /tenant-config.json çekilir (multi-tenant BFF üretir).
+   Başarılıysa: window.TENANT_CONFIG + window.TENANT_CONFIG_VERSION set edilir
+   ve document üzerinde 'tenant-config-ready' CustomEvent yayınlanır.
+   BİLİNÇLİ KISIT: config.branding.colors.accent gelse bile mevcut accent
+   CSS değişkenine DOKUNULMAZ — yalnız window.TENANT_CONFIG maruziyeti.
+   Hata/404/parse hatasında sessiz güvenli düşüş: window.TENANT_CONFIG=null,
+   sayfa yerleşik değerleriyle AYNEN çalışır (görsel kırılma yok).
+   file:// altında fetch hiç denenmez (protokol kontrolü).
+   =================================================================== */
+(function () {
+  window.TENANT_CONFIG = null;
+  if (location.protocol === "file:") return;
+  try {
+    fetch("/tenant-config.json", { cache: "no-cache" })
+      .then(function (r) { return (r && r.ok) ? r.json() : null; })
+      .then(function (cfg) {
+        if (!cfg || typeof cfg !== "object") return;      // 404/boş → yerleşik değerlerle devam
+        window.TENANT_CONFIG = cfg;
+        if (cfg.config_version != null) window.TENANT_CONFIG_VERSION = cfg.config_version;
+        try { document.dispatchEvent(new CustomEvent("tenant-config-ready", { detail: cfg })); } catch (e) {}
+      })
+      .catch(function () { window.TENANT_CONFIG = null; }); // ağ/parse hatası → sessiz düşüş
+  } catch (e) { window.TENANT_CONFIG = null; }
+})();
+
+/* ===================================================================
    KANONİK FOOTER — TÜM sayfalarda BİREBİR AYNI (altın kural).
    Tek kaynak: window.DN_FOOTER_HTML. content.js her sayfanın <footer>/#siteFooter'ına
    basar; app.js (index) da footerHTML() ile AYNI kaynağı kullanır → drift YOK.
@@ -117,7 +144,7 @@
     + '</div>'
     + '<div><h4>Keşfet</h4><ul><li><a href="ilanlar.html">İlanlar</a></li><li><a href="harita.html">Harita</a></li><li><a href="emlak-ekspertizi.html">Emlak Ekspertizi</a></li><li><a href="ozel-portfoy.html">Özel Portföy</a></li><li><a href="bolge-analizi.html">Bölge Analizi</a></li><li><a href="index.html#blog">Blog · Haberler</a></li><li><a href="semtler.html">Semt Rehberi</a></li><li><a href="surec.html">Süreç</a></li><li><a href="yatirim-rehberi.html">Yatırım Rehberi</a></li><li><a href="randevu.html">Randevu &amp; Ücretsiz Analiz</a></li></ul></div>'
     + '<div><h4>Kurumsal</h4><ul><li><a href="index.html">Ana Sayfa</a></li><li><a href="hizmetlerimiz.html">Hizmetlerimiz</a></li><li><a href="hakkimizda.html">Hakkımda</a></li><li><a href="referanslar.html">Referanslar</a></li><li><a href="sss.html">S.S.S</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="index.html#giris">Üye Girişi / Hesabım</a></li><li><a href="https://wa.me/905320000000" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>'
-    + '<div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="#" onclick="if(window.dnConsent){dnConsent.open();}return false;">Çerez Tercihleri</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li><li><a href="index.html#admin">Yönetim Paneli</a></li></ul></div>'
+    + '<div><h4>Yasal</h4><ul><li><a href="kvkk.html">KVKK Aydınlatma</a></li><li><a href="cerez.html">Çerez Politikası</a></li><li><a href="#" onclick="if(window.dnConsent){dnConsent.open();}return false;">Çerez Tercihleri</a></li><li><a href="kullanim.html">Mesafeli Hizmet &amp; Kullanım</a></li><li><a href="/demo-yonetim" rel="nofollow">Demo Yönetim (sandbox)</a></li><li><a href="index.html#admin">Yönetim Paneli</a></li></ul></div>'
     + '</div>'
     + '<div class="fbot">'
     + LANGSW

@@ -117,7 +117,9 @@ def admin_split(s, admin_dosya, giris):
         "(function(){var YOL='admin-assets/" + admin_dosya + "?v=1';var GIRIS=" + json.dumps(giris) + ";\n"
         "var _p=null,_ok=false;function yukle(){if(_ok)return Promise.resolve();if(!_p){_p=new Promise(function(res){var sc=document.createElement('script');sc.src=YOL;sc.onload=function(){_ok=true;res();};sc.onerror=function(){res();};document.head.appendChild(sc);});}return _p;}\n"
         "window.__adminYukle=yukle;\n"
-        "var F=" + json.dumps(fns) + ";\n"
+        # FAZ4E: hassas isimler stub listesine bile GİRMEZ (public bundle'da kelime izi sıfır);
+        # public kod bu fonksiyonlara typeof korumasıyla eriştiği için stub'a gerek yok.
+        "var F=" + json.dumps([f for f in fns if not any(h in f.lower() for h in ('motor1','_ds','yonerge','m1key'))]) + ";\n"
         "F.forEach(function(ad){if(window[ad]!==undefined)return;var st=function(){var a=arguments,self=this;\n"
         "  if(!_p&&GIRIS.indexOf(ad)<0)return;/* boot no-op: yükleme başlamadıysa sessiz */\n"
         "  return yukle().then(function(){var f=window[ad];if(f&&!f.__stub)return f.apply(self,a);});};\n"
@@ -145,7 +147,8 @@ def paketle(site, cfg):
     for yol in glob.glob(os.path.join(kaynak, '**', '*'), recursive=True):
         if os.path.isdir(yol): continue
         rel = os.path.relpath(yol, kaynak)
-        if rel.endswith(KOPYALAMA_DISI): continue
+        # FAZ4C: public tenant sözleşmesi dist'e girer (tek json istisnası)
+        if rel.endswith(KOPYALAMA_DISI) and os.path.basename(rel) != 'tenant-config.json': continue
         if any(rel.startswith(px) for px in PAKET_DISI.get(site, ())): continue
         ad = os.path.basename(rel)
         # admin varlıkları ayrı dizine
