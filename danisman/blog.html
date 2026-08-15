@@ -64,10 +64,10 @@
 <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg?v=2">
 <script defer src="js/brand.js?v=3"></script>
-<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=14"></script>
+<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=15"></script>
 <script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
 (function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
-if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=8"><\/script><script src="js/i18n/blog.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=10"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script><!-- FAZ4B: sayfa-özel sözlük dosyası YOK — görünür metinler sayfa sonundaki dil-farkında üreticiden gelir -->
 <script defer src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
 <script defer src="js/a11y.js?v=1"></script>
 
@@ -398,6 +398,8 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=8"><\/script><
 /* İçerik Stüdyosu makaleleri — admin'de yayınlanan yazılar (dn_articles) ızgaranın başına eklenir.
    Metinler textContent ile basılır (XSS güvenli). */
 (function(){
+  var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
+  if(L!=='tr')return;/* FAZ4B: TR makaleler yabancı dil ızgarasına eklenmez */
   var arts=[];
   try{arts=(JSON.parse(localStorage.getItem('dn_articles')||'[]')||[]).filter(function(a){return a&&(a.status==='published'||!a.status);});}catch(e){}
   if(!arts.length)return;
@@ -414,6 +416,80 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=8"><\/script><
     var s2=document.createElement('span'); s2.className='bcard-go'; s2.textContent='Oku →'; meta.appendChild(s2);
     body.appendChild(meta); card.appendChild(body);
     grid.insertBefore(card,grid.firstChild);
+  });
+})();
+</script>
+<script>
+/* ============ FAZ4B — dil-farkında blog listesi (EN·RU·ZH·AR) ============
+   app.js bu statik sayfada YÜKLENMEZ; dn_lang!=='tr' iken TR kart ızgarası ve
+   manşet metinleri, app.js'teki DN_BLOGS_I18N ile AYNI id/başlık/özet setinden
+   burada yeniden üretilir (kartlar index.html#blog/<id> derin linkine gider).
+   Yeni sözlük dosyası YOK — üretim doğrudan dil-farkında. textContent = XSS güvenli. */
+(function(){
+  var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
+  var UI={
+    en:{title:'Blog & Market Notes · Selin Meridyen — Luxury Property Advisor',eyebrow:'Editorial Notes',h1:'Blog & Market Notes',
+        lede:'Short, data-driven notes on Istanbul’s upper-segment property market — from the Bosphorus to Nişantaşı and Bağdat Avenue. Every article can be read in full in the Blog section of the home page.',
+        note:'📰 The full text of every article is available in the <a href="index.html#blog" style="color:var(--gold-ink,#795901)">Blog</a> section of the home page · content is a fictional demo set.',read:'Read →'},
+    ru:{title:'Блог и заметки о рынке · Селин Меридьен — консультант по элитной недвижимости',eyebrow:'Редакционные заметки',h1:'Блог и заметки о рынке',
+        lede:'Короткие заметки на основе данных о рынке элитной недвижимости Стамбула — от Босфора до Нишанташи и проспекта Багдат. Полные тексты статей — в разделе «Блог» на главной странице.',
+        note:'📰 Полные тексты всех статей доступны в разделе <a href="index.html#blog" style="color:var(--gold-ink,#795901)">Блог</a> на главной странице · контент — вымышленный демонстрационный набор.',read:'Читать →'},
+    zh:{title:'博客与市场笔记 · Selin Meridyen — 豪宅置业顾问',eyebrow:'编辑笔记',h1:'博客与市场笔记',
+        lede:'从博斯普鲁斯到尼相塔什与巴格达大道,关于伊斯坦布尔高端房产市场的简明数据笔记。所有文章可在首页博客栏目阅读全文。',
+        note:'📰 所有文章的全文请见首页<a href="index.html#blog" style="color:var(--gold-ink,#795901)">博客</a>栏目 · 内容为虚构演示数据。',read:'阅读 →'},
+    ar:{title:'المدونة وملاحظات السوق · سيلين مريديين — مستشارة العقارات الفاخرة',eyebrow:'ملاحظات تحريرية',h1:'المدونة وملاحظات السوق',
+        lede:'ملاحظات قصيرة قائمة على البيانات حول سوق العقارات الراقية في إسطنبول — من البوسفور إلى نيشان تاشي وجادة بغداد. يمكن قراءة النص الكامل لكل مقال في قسم المدونة بالصفحة الرئيسية.',
+        note:'📰 النص الكامل لجميع المقالات متاح في قسم <a href="index.html#blog" style="color:var(--gold-ink,#795901)">المدونة</a> بالصفحة الرئيسية · المحتوى مجموعة عرض تجريبية خيالية.',read:'اقرأ ←'}};
+  var POSTS={
+    en:[
+      {id:'i18n-en-1',img:'img/blog/d01.jpg',cat:'Market',title:'Istanbul luxury housing in 2026: where the market is heading',sum:'Supply along the Bosphorus and in prestige districts remains tight; timing and micro-location are still what protects value.',meta:'6 min read · Aug 2026'},
+      {id:'i18n-en-2',img:'img/blog/d02.jpg',cat:'Investment',title:'Waterfront mansions on the Bosphorus: five principles that protect value',sum:'Yalı properties trade rarely and privately. Five principles for a sound acquisition in Istanbul’s most exclusive asset class.',meta:'5 min read · Jul 2026'},
+      {id:'i18n-en-3',img:'img/blog/d03.jpg',cat:'Guide',title:'Why a private portfolio works by invitation only',sum:'Some properties never appear on listing portals. Discretion protects the seller — and the value of the asset itself.',meta:'4 min read · Jul 2026'},
+      {id:'i18n-en-4',img:'img/blog/d04.jpg',cat:'Appraisal',title:'How an independent appraisal shortens the path to a sale',sum:'When the price is credible, negotiations move faster. An up-to-date appraisal report builds that credibility from day one.',meta:'4 min read · Jun 2026'},
+      {id:'i18n-en-5',img:'img/blog/d05.jpg',cat:'Analysis',title:'Rental yield or capital appreciation: which strategy fits you?',sum:'Two strategies, two very different district profiles. Reading both metrics together is what builds a balanced portfolio.',meta:'5 min read · May 2026'},
+      {id:'i18n-en-6',img:'img/blog/d08.jpg',cat:'Investment',title:'Buying property in Istanbul as an international client',sum:'With the right document sequence, a cross-border purchase takes no longer than a domestic one. What the process really involves.',meta:'5 min read · Apr 2026'}],
+    ru:[
+      {id:'i18n-ru-1',img:'img/blog/d01.jpg',cat:'Рынок',title:'Элитное жильё Стамбула в 2026 году: куда движется рынок',sum:'Предложение на Босфоре и в престижных районах сокращается; время сделки и точная локация по-прежнему защищают стоимость.',meta:'6 мин чтения · авг 2026'},
+      {id:'i18n-ru-2',img:'img/blog/d02.jpg',cat:'Инвестиции',title:'Инвестиции в особняки на Босфоре: пять принципов сохранения стоимости',sum:'Ялы продаются редко и непублично. Пять принципов грамотной покупки в самом закрытом сегменте рынка.',meta:'5 мин чтения · июл 2026'},
+      {id:'i18n-ru-3',img:'img/blog/d03.jpg',cat:'Гид',title:'Почему закрытый портфель работает только по приглашению',sum:'Часть объектов никогда не появляется на порталах объявлений. Конфиденциальность защищает и продавца, и стоимость актива.',meta:'4 мин чтения · июл 2026'},
+      {id:'i18n-ru-4',img:'img/blog/d04.jpg',cat:'Оценка',title:'Как независимая оценка ускоряет продажу',sum:'Когда цена вызывает доверие, переговоры идут быстрее. Актуальный отчёт об оценке создаёт это доверие с первого дня.',meta:'4 мин чтения · июн 2026'},
+      {id:'i18n-ru-5',img:'img/blog/d05.jpg',cat:'Аналитика',title:'Арендная доходность или рост стоимости: что выбрать инвестору',sum:'Две стратегии — два разных профиля района. Сбалансированный портфель строится на чтении обеих метрик одновременно.',meta:'5 мин чтения · май 2026'},
+      {id:'i18n-ru-6',img:'img/blog/d08.jpg',cat:'Инвестиции',title:'Покупка недвижимости в Стамбуле для иностранного клиента',sum:'При правильной последовательности документов международная сделка длится не дольше локальной. Как устроен процесс на практике.',meta:'5 мин чтения · апр 2026'}],
+    zh:[
+      {id:'i18n-zh-1',img:'img/blog/d01.jpg',cat:'市场',title:'2026年伊斯坦布尔豪宅市场走向',sum:'博斯普鲁斯沿线与核心高端区域供应持续收紧,把握时机与精准选址依然是保值的关键。',meta:'约6分钟阅读 · 2026年8月'},
+      {id:'i18n-zh-2',img:'img/blog/d02.jpg',cat:'投资',title:'博斯普鲁斯海峡别墅投资:守护价值的五项原则',sum:'海峡别墅交易稀少而低调。在最顶级的资产类别中稳健购入,需要遵循五项基本原则。',meta:'约5分钟阅读 · 2026年7月'},
+      {id:'i18n-zh-3',img:'img/blog/d03.jpg',cat:'指南',title:'为什么私享房源只以邀请制开放',sum:'有些房产从不出现在公开平台上。审慎与保密,既保护业主,也保护资产本身的价值。',meta:'约4分钟阅读 · 2026年7月'},
+      {id:'i18n-zh-4',img:'img/blog/d04.jpg',cat:'估价',title:'独立估价报告如何缩短成交周期',sum:'当价格令人信服时,谈判自然加快。一份最新的估价报告,从第一天起就建立这种信任。',meta:'约4分钟阅读 · 2026年6月'},
+      {id:'i18n-zh-5',img:'img/blog/d05.jpg',cat:'分析',title:'租金回报还是增值潜力:哪种策略适合你',sum:'两种策略对应两种截然不同的区域画像;把两项指标放在一起阅读,才能搭建均衡的投资组合。',meta:'约5分钟阅读 · 2026年5月'},
+      {id:'i18n-zh-6',img:'img/blog/d08.jpg',cat:'投资',title:'国际买家在伊斯坦布尔置业指南',sum:'只要文件顺序正确,跨境购房并不比本地交易耗时。了解流程的真实构成。',meta:'约5分钟阅读 · 2026年4月'}],
+    ar:[
+      {id:'i18n-ar-1',img:'img/blog/d01.jpg',cat:'السوق',title:'سوق المساكن الفاخرة في إسطنبول 2026: إلى أين يتجه؟',sum:'المعروض على خط البوسفور وفي الأحياء الراقية يواصل الانكماش؛ ويبقى التوقيت الصحيح والموقع الدقيق هما ما يحفظ القيمة.',meta:'6 دقائق قراءة · أغسطس 2026'},
+      {id:'i18n-ar-2',img:'img/blog/d02.jpg',cat:'الاستثمار',title:'الاستثمار في قصور البوسفور المائية: خمسة مبادئ تحفظ القيمة',sum:'قصور اليالي تُتداول نادرًا وبسرّية تامة. خمسة مبادئ لعملية شراء رشيدة في أكثر فئات السوق خصوصية.',meta:'5 دقائق قراءة · يوليو 2026'},
+      {id:'i18n-ar-3',img:'img/blog/d03.jpg',cat:'دليل',title:'لماذا تعمل المحفظة الخاصة بنظام الدعوة فقط؟',sum:'بعض العقارات لا تظهر أبدًا في منصات الإعلانات. الخصوصية تحمي البائع وقيمة الأصل معًا.',meta:'4 دقائق قراءة · يوليو 2026'},
+      {id:'i18n-ar-4',img:'img/blog/d04.jpg',cat:'التقييم',title:'كيف يختصر تقرير التقييم المستقل طريق البيع؟',sum:'حين يكون السعر جديرًا بالثقة تتسارع المفاوضات. تقرير تقييم حديث يبني هذه الثقة من اليوم الأول.',meta:'4 دقائق قراءة · يونيو 2026'},
+      {id:'i18n-ar-5',img:'img/blog/d05.jpg',cat:'تحليل',title:'عائد الإيجار أم نموّ القيمة: أي استراتيجية تناسبك؟',sum:'استراتيجيتان وملفان مختلفان تمامًا للأحياء؛ وقراءة المؤشرين معًا هي ما يبني محفظة متوازنة.',meta:'5 دقائق قراءة · مايو 2026'},
+      {id:'i18n-ar-6',img:'img/blog/d08.jpg',cat:'الاستثمار',title:'تملّك العقار في إسطنبول للمشتري الدولي',sum:'بالترتيب الصحيح للمستندات لا تستغرق الصفقة الدولية أكثر من المحلية. هكذا تسير العملية فعليًا.',meta:'5 دقائق قراءة · أبريل 2026'}]};
+  if(L==='tr'||!UI[L]||!POSTS[L])return;/* TR: statik SEO içerik birebir korunur */
+  var ui=UI[L],posts=POSTS[L];
+  try{document.title=ui.title;}catch(e){}
+  var eb=document.querySelector('.hk-hero .eyebrow');if(eb)eb.textContent=ui.eyebrow;
+  var h1=document.querySelector('.hk-hero h1');if(h1)h1.textContent=ui.h1;
+  var le=document.querySelector('.hk-hero .hk-lede');if(le)le.textContent=ui.lede;
+  var nt=document.querySelector('.bl-note');if(nt)nt.innerHTML=ui.note;/* sabit yerel sözlük — kullanıcı girdisi değil */
+  var grid=document.getElementById('dnBlogGridStatic');if(!grid)return;
+  grid.innerHTML='';
+  posts.forEach(function(p){
+    var card=document.createElement('a');card.className='bcard';card.href='index.html#blog/'+encodeURIComponent(p.id);
+    var med=document.createElement('div');med.className='bcard-media';med.style.backgroundImage="url('"+p.img+"')";med.setAttribute('role','img');med.setAttribute('aria-label',p.title);card.appendChild(med);
+    var body=document.createElement('div');body.className='bcard-body';
+    var cat=document.createElement('div');cat.className='bcard-cat';cat.textContent=p.cat;body.appendChild(cat);
+    var h3=document.createElement('h3');h3.textContent=p.title;body.appendChild(h3);
+    var pe=document.createElement('p');pe.textContent=p.sum;body.appendChild(pe);
+    var meta=document.createElement('div');meta.className='bcard-meta';
+    var s1=document.createElement('span');s1.textContent=p.meta;meta.appendChild(s1);
+    var s2=document.createElement('span');s2.className='bcard-go';s2.textContent=ui.read;meta.appendChild(s2);
+    body.appendChild(meta);card.appendChild(body);
+    grid.appendChild(card);
   });
 })();
 </script>

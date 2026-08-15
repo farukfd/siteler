@@ -27,10 +27,10 @@
 <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg?v=2">
 <script defer src="js/brand.js?v=3"></script>
-<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=14"></script>
+<script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=15"></script>
 <script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
 (function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
-if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=8"><\/script><script src="js/i18n/prox-asistan.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=10"><\/script><script src="js/i18n/prox-asistan.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
 <script defer src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
 <script defer src="js/a11y.js?v=1"></script>
 <script src="js/lead.js?v=2"></script>
@@ -202,31 +202,26 @@ window.EMLAK_PROXY_MODE=window.EMLAK_PROXY_MODE!==false;/* güvenlik: proxy modu
 
 (function(){
 "use strict";
-/* ---- ProX (izole) + Motor-1 yönlendirme (admin bağlantısını okur) ---- */
+/* ---- ProX (izole) — tek yanıt yolu: same-origin /tenant/prox/ai ---- */
 var EMLAK_API_BASE="https://www.emlakekspertizi.com";
 var TENANT={id:"consultant",key:""};
 /* P0: tenant anahtarı tarayıcıya girmez — sunucu Host'tan çözer */
-function _dsKey(){try{return (localStorage.getItem('dn_m1_key')||'').trim();}catch(e){return '';}}
 async function proxApi(path,body){
   try{var res=await fetch(((window.EMLAK_DEMO===true)?EMLAK_API_BASE:'')+path,{method:'POST',mode:'cors',headers:(function(){return {'Content-Type':'application/json'};})()/* P0: tenant kimliği/anahtarı istemciden gitmez */,body:JSON.stringify(body||{})});
     if(!res.ok)throw new Error('ProX '+res.status);return await res.json();}catch(e){return {fallback:true};}
 }
-async function _motor1(msgs){if(!_dsKey())return null;
-  /* Nötr üretim ucu: persona/sistem yönergesi SUNUCUDA eklenir — istemciden prompt gitmez. */
-  try{var res=await fetch('/api/ai/generate',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({profile:'m1',persona:'consultant-asistan',messages:msgs,temperature:0.7,max_tokens:900})});
-    if(!res.ok)return null;var j=await res.json();var t=j&&(j.answer||(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content));return (t&&t.trim())?t.trim():null;}catch(e){return null;}
-}
-/* ---- persona (SADECE ProX markası; "yapay zeka" ifadesi kullanılmaz) ---- */
+/* ---- asistan kimliği (SADECE ProX markası) ---- */
 var PA_GREET='Merhaba, ben Selin Meridyen ProX Asistanı 👋 Lüks konut, yatırım, değerleme ya da davet usulü gizli satış — hangi konuda yardımcı olayım? İhtiyacınızı birkaç kısa soruyla netleştirip size en uygun gayrimenkulü bulalım. Yanıtlarım ProX\'un 480 milyon+ doğrulanmış emlak verisine dayanır.';
-/* Persona yönergesi SUNUCUDADIR (persona:'consultant-asistan') — istemcide persona yönergesi tutulmaz. */
+/* Asistan yönergesi SUNUCUDADIR — istemcide yönerge tutulmaz. */
 var PA_SUGGESTS=['Yatırımlık, prim potansiyeli yüksek ne önerirsiniz?','Boğaz\'da yalı / özel portföyünüz var mı?','Gayrimenkulümü gizlilikle nasıl satabilirsiniz?','Ücretsiz değer analizi almak istiyorum'];
 var PA_FALLBACK='Şu an ProX veri servisine ulaşılamıyor gibi görünüyor. Sorunuzu aldım — dilerseniz telefon numaranızı bırakın, danışmanımız kısa sürede sizi arasın; WhatsApp hattımızdan da yazabilirsiniz.';
 
 /* ---- konuşma deposu (dn_asistan_convos — admin Görüşmeler panosu da okur) ---- */
 var STORE='dn_asistan_convos';
 var _convos=[],_curId=null,_msgs=[],_busy=false;
-function _load(){try{_convos=JSON.parse(localStorage.getItem(STORE)||'[]');if(!Array.isArray(_convos))_convos=[];}catch(e){_convos=[];}}
-function _save(){try{localStorage.setItem(STORE,JSON.stringify(_convos.slice(0,60)));}catch(e){}}
+/* oturuma özel — kalıcı saklama yok */
+function _load(){try{_convos=JSON.parse(sessionStorage.getItem(STORE)||'[]');if(!Array.isArray(_convos))_convos=[];}catch(e){_convos=[];}}
+function _save(){try{sessionStorage.setItem(STORE,JSON.stringify(_convos.slice(0,60)));}catch(e){}}
 function _cur(){for(var i=0;i<_convos.length;i++)if(_convos[i].id===_curId)return _convos[i];return null;}
 function _syncCur(){var c=_cur();if(c){c.msgs=_msgs.filter(function(m){return !m.typing;}).map(function(m){return {role:m.role==='me'?'me':'bot',text:m.text};});c.ts=Date.now();_save();}}
 function esc(s){return (''+s).replace(/[&<>"]/g,function(x){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[x];});}
@@ -283,13 +278,10 @@ async function paSend(ev){
   _busy=true;var btn=document.querySelector('.pa-send');if(btn)btn.disabled=true;
   _msgs.push({role:'bot',typing:true});paRenderLog();
   var hist=_histCtx();var ans='';
-  /* 1) Motor-1 bağlantısı varsa Motor-1; 2) yoksa/başarısızsa ProX çekirdeği (/prox/ai) */
+  /* Tek yanıt yolu: ProX çekirdeği (/tenant/prox/ai, same-origin) + kural-tabanlı fallback */
   try{
-    var dmsgs=_msgs.filter(function(m){return !m.typing&&m.text;}).map(function(m){return {role:m.role==='me'?'user':'assistant',content:m.text};});
-    var ds=await _motor1(dmsgs);
-    if(ds){ans=ds;}
-    else{var r=await proxApi('/api/v1/tenant/prox/ai',{persona:'consultant',context:hist||'default',request_id:'rq'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),prompt:(hist?('Önceki konuşma:\n'+hist+'\n\nMüşterinin yeni mesajı: '):'')+q});
-      ans=(r&&(r.answer||(r.data&&r.data.answer)))||'';if(!ans||(r&&r.fallback))ans=PA_FALLBACK;}
+    var r=await proxApi('/api/v1/tenant/prox/ai',{context:hist||'default',request_id:'rq'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),prompt:(hist?('Önceki konuşma:\n'+hist+'\n\nMüşterinin yeni mesajı: '):'')+q});
+    ans=(r&&(r.answer||(r.data&&r.data.answer)))||'';if(!ans||(r&&r.fallback))ans=PA_FALLBACK;
   }catch(e){ans=PA_FALLBACK;}
   ans=scrubProx(ans);
   _msgs=_msgs.filter(function(m){return !m.typing;});

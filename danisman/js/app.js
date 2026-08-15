@@ -15,13 +15,13 @@ const SAAS_CONFIG={
     accent:'#c39b45', accent2:'#111111', accentSoft:'#dcc389',
     logoUrl:'', faviconUrl:'',
     metaTitle:'Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı',
-    metaDescription:'Yetki belgeli kişiye özel emlak danışmanlığı; güncel lüks ilanlar, davet usulü VIP portföy ve ücretsiz gayrimenkul değer analizi.',
+    metaDescription:'Kişiye özel emlak danışmanlığı platform demosu; güncel lüks ilanlar, davet usulü VIP portföy ve ücretsiz gayrimenkul değer analizi.',
     metaKeywords:'lüks konut danışmanı, özel portföy, yalı, penthouse, kişiye özel emlak, ücretsiz gayrimenkul analizi',
     googleAnalytics:'', googleSiteVerification:'', googleMapsKey:''
   },
-  tenantSettings:{ customPrompt:'', m1Key:'' },/* m1Key: ProX Motor-1 bağlantısı — etkinse üretim same-origin /api/ai/generate (m1 profili) ile; boşsa ProX çekirdeği. ProX veri anahtarı (endeks/analiz) ayrıdır. */
+  tenantSettings:{ customPrompt:'', m1Key:'' },/* m1Key: ProX Motor-1 bağlantısı — ayrıntı ve uçlar admin modülündedir; boşsa ProX çekirdeği. ProX veri anahtarı (endeks/analiz) ayrıdır. */
   proxAiPrompts:{
-    persona:'Sen, üst segment gayrimenkulde 18 yıllık tecrübeli, son derece elit, vizyoner ve güven veren bir lüks konut broker’ısın (Selin Meridyen). Üslubun zarif, sakin ve danışan odaklıdır; agresif satış yapmaz, değeri görünür kılarsın. Kullanıcı bir bölge/gayrimenkul/yatırım sorduğunda hafızandaki portföyü tarar, uygun gayrimenkulleri ve prim (değer artışı) potansiyelini anlatır, kesin fiyat vaadi vermez ve her görüşmeyi nazikçe ücretsiz analiz randevusuna yönlendirirsin.'
+    temelMetin:''/* FAZ4E: yönerge SUNUCUDA — istemcide tutulmaz */
   },
   firma:{
     unvan:'Selin Meridyen Gayrimenkul Danışmanlık', vergi:'', adres:'Nişantaşı, Şişli / İstanbul',
@@ -59,6 +59,9 @@ function eidsCanPublish(){return eidsVerify();}
 function eidsShieldSvg(sz){return (window.EIDS?EIDS.shield(sz||16):'');}
 function eidsBadgeHTML(){var e=eidsFirma().eids;
   if(eidsVerify())return '<span class="eids-b ok">'+eidsShieldSvg(14)+' Taşınmaz Ticareti Yetki Belgesi · No '+_leD(e.belgeNo)+(window.EMLAK_DEMO!==false?' <em style="font-style:normal;opacity:.75">(ÖRNEK)</em>':'')+'</span>';
+  /* FAZ3G demo dili: EİDS alanı gerçek doğrulama DEĞİLDİR — platform özelliğinin temsilî gösterimi.
+     Üretimde (EMLAK_DEMO===false) onay bekleyen firma için gerçek durum metni korunur. */
+  if(window.EMLAK_DEMO!==false)return '<span class="eids-b wait">'+eidsShieldSvg(14)+' EİDS alanı temsilî gösterim (DEMO)</span>';
   return '<span class="eids-b wait">'+eidsShieldSvg(14)+' Yetki belgesi bekleniyor</span>';}
 function eidsRenderPublic(){var el=document.getElementById('eidsPublicBadge');if(el)el.innerHTML=eidsBadgeHTML();
   var ql=document.getElementById('eidsListingNote');if(ql)ql.innerHTML=eidsVerify()?(eidsShieldSvg(13)+' İlanlar T.C. Ticaret Bakanlığı EİDS ile doğrulanır'):'';}
@@ -105,7 +108,18 @@ window.openLegal=openLegal;window.closeLegal=closeLegal;window.openKvkk=openKvkk
 /* ===================== ÇIKTI GÜVENLİK KORKULUĞU — ProX üretimi ===================== */
 var AI_GUARD_RULE='\n\n[KESİN KURALLAR — UYDURMA YASAK] Gerçek olmayan proje/marka adı, kesin fiyat/rakam, "%X garanti/net getiri", sahte istatistik, ödül veya referans ÜRETME. Emin olmadığın sayısal veriyi "ProX endeksiyle teyit edilmeli" diye işaretle. Yalnızca genel, doğrulanabilir bilgi ver; abartıdan kaçın.';
 function aiGuard(p){p=(p==null?'':''+p);return p.indexOf('[KESİN KURALLAR')>=0?p:(p+AI_GUARD_RULE);}
-/* ===== ProX MOTOR-1 ÖNCELİKLİ ÜRETİM YÖNLENDİRMESİ (danışman) =====
+/* FAZ3G PUBLIC TEMİZLİK: aiChat'in public yüzeyi YALNIZ ProX çekirdeği (/prox/ai) kullanır.
+   Motor-1 dalı (aynı-origin profil ucu) aşağıdaki admin bloğuna taşındı; admin paketi
+   yüklendiğinde aiChat Motor-1 öncelikli sarmalayıcı ile genişletilir (çağrı zinciri değişmez). */
+async function aiChat(body,opts){
+  /* FAZ3E: backend {prompt} bekler — message→prompt eşle + request_id (422 fix) */
+  var _pb={prompt:(body&&(body.prompt||body.message))||'',request_id:'rq'+Date.now().toString(36)+Math.random().toString(36).slice(2,8)};
+  if(body&&body.messages&&body.messages.length){_pb.prompt=body.messages.map(function(m){return (m.role==='user'?'Müşteri: ':'')+m.content;}).join('\n').slice(-4000);}
+  return await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:_pb});
+}
+try{window.aiChat=aiChat;}catch(e){}
+/*__ADMIN_BLOK__*/ /* Bu bölge üretim paketinde admin-assets/ altına ayrılır (public bundle inmez) */
+/* ===== ProX MOTOR-1 ÖNCELİKLİ ÜRETİM YÖNLENDİRMESİ (danışman · yalnız admin) =====
    Admin bir Motor-1 bağlantısı (SAAS_CONFIG.tenantSettings.m1Key) etkinleştirdiyse üretim
    same-origin /api/ai/generate profil ucuyla çalışır; yoksa/başarısızsa ProX çekirdeğine
    (/prox/ai) düşülür. Motor→sağlayıcı eşlemesi ve anahtarlar YALNIZ backend'dedir. */
@@ -139,14 +153,18 @@ async function _motor1Chat(body,opts){
     return {_dsErr:true,status:0};
   }catch(e){if(to)clearTimeout(to);return {_dsErr:true,status:-1};}
 }
-async function aiChat(body,opts){
-  if(_dsKey()){var d=await _motor1Chat(body,opts);if(d&&d.answer)return d;}
-  /* FAZ3E: backend {prompt} bekler — message→prompt eşle + request_id (422 fix) */
-  var _pb={prompt:(body&&(body.prompt||body.message))||'',request_id:'rq'+Date.now().toString(36)+Math.random().toString(36).slice(2,8)};
-  if(body&&body.messages&&body.messages.length){_pb.prompt=body.messages.map(function(m){return (m.role==='user'?'Müşteri: ':'')+m.content;}).join('\n').slice(-4000);}
-  return await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:_pb});
+/* Motor-1 öncelik sarmalayıcısı: public aiChat'i bozmadan üstüne giyer (tek sefer).
+   Monolitte parse anında, üretimde admin paketi lazy yüklendiğinde devreye girer. */
+if(!window._dnM1Sarildi){window._dnM1Sarildi=true;
+  var _aiChatProx=aiChat;
+  aiChat=async function(body,opts){
+    try{if(_dsKey()){var d=await _motor1Chat(body,opts);if(d&&d.answer)return d;}}catch(e){}
+    return _aiChatProx(body,opts);
+  };
+  try{window.aiChat=aiChat;}catch(e){}
 }
-try{window.aiChat=aiChat;window._motor1Chat=_motor1Chat;}catch(e){}
+try{window._motor1Chat=_motor1Chat;}catch(e){}
+try{_dsLoad();}catch(e){}/* admin paketi geç yüklendiğinde kalıcı Motor-1 anahtarını geri yükle (yalnız demo) */
 /* Admin: ProX Motor-1 bağlantı testi + durum rozeti */
 async function aiDsTest(){
   var el=document.getElementById('dn_dsstatus');var inp=document.getElementById('dn_ai_ds');
@@ -162,6 +180,7 @@ async function aiDsTest(){
 function aiDsStatus(){var el=document.getElementById('dn_dsstatus');if(!el)return;var k=_dsKey();
   el.innerHTML=k?'<div class="ds-on">◉ Motor-1 bağlantısı kayıtlı · üretim ProX Motor-1 ile çalışıyor.</div>':'<div class="ds-off">○ Motor-1 bağlantısı yok · üretim ProX çekirdeği ile çalışıyor.</div>';}
 try{window.aiDsTest=aiDsTest;window.aiDsStatus=aiDsStatus;}catch(e){}
+/*__ADMIN_BLOK_SON__*/
 var AI_RISK_PATTERNS=[
   {re:/(garanti|kesin|net)\s*(getiri|kazanç|kâr|kar)|(getiri|kazanç)\s*(garanti|kesin)/i,t:'garanti getiri iddiası'},
   {re:/\d[\d.\s]{5,}\s*(tl|₺|lira)/i,t:'kesin fiyat rakamı'},
@@ -676,10 +695,35 @@ function dnListNormalize(r){ if(!r)return null;
 
 /* FAZ3F: kalıcı ilan URL'leri — /ilan/<slug>; tüm giriş noktaları TEK merkezi detaya (disclaimer'lı) gider */
 function dnIlanSlug(l){var t=(l.baslik||l.title||('ilan-'+l.id));return String(t).toLocaleLowerCase('tr').replace(/[çÇ]/g,'c').replace(/[ğĞ]/g,'g').replace(/[ıİI]/g,'i').replace(/[öÖ]/g,'o').replace(/[şŞ]/g,'s').replace(/[üÜ]/g,'u').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')+'-'+l.id;}
+/* FAZ3G KALICI URL SEO: detay açılırken title + rel=canonical (/ilan/<slug> MUTLAK, ?lang'sız)
+   + overlay dışındaki H1'lere aria-hidden; kapanışta (popstate/closeDetail) tümü geri alınır. */
+var _dnSeoOnceki=null;/* {title, href, yok} — açılış öncesi durumun anlık görüntüsü */
+function _dnDetaySeo(l){try{
+  if(!_dnSeoOnceki){var c0=document.querySelector('link[rel="canonical"]');_dnSeoOnceki={title:document.title,href:c0?c0.getAttribute('href'):null,yok:!c0};}
+  document.title=(l.baslik||l.title||'İlan')+' | '+_dnBrand();
+  /* kanonik: location.search'ten BAĞIMSIZ mutlak URL — ?lang vb. sorgu parametresi bilinçli olarak EKLENMEZ */
+  var c=document.querySelector('link[rel="canonical"]');
+  if(!c){c=document.createElement('link');c.setAttribute('rel','canonical');document.head.appendChild(c);}
+  c.setAttribute('href',location.origin+'/ilan/'+dnIlanSlug(l));
+  /* erişilebilirlik: overlay açıkken arka plan H1'leri ekran okuyucudan gizlenir */
+  [].forEach.call(document.querySelectorAll('h1'),function(h){if(!(h.closest&&h.closest('#lstDetailOverlay'))){h.setAttribute('aria-hidden','true');h.setAttribute('data-dn-h1gizli','1');}});
+}catch(e){}}
+function _dnDetaySeoGeri(){try{
+  if(_dnSeoOnceki){document.title=_dnSeoOnceki.title;
+    var c=document.querySelector('link[rel="canonical"]');
+    if(c){if(_dnSeoOnceki.yok&&c.parentNode)c.parentNode.removeChild(c);else if(_dnSeoOnceki.href!=null)c.setAttribute('href',_dnSeoOnceki.href);}
+    _dnSeoOnceki=null;}
+  [].forEach.call(document.querySelectorAll('h1[data-dn-h1gizli]'),function(h){h.removeAttribute('aria-hidden');h.removeAttribute('data-dn-h1gizli');});
+}catch(e){}}
 function dnIlanRoute(id){try{var l=((window.DN_ILAN&&DN_ILAN.get())||[]).filter(function(x){return String(x.id)===String(id);})[0];
   if(l&&window.history&&history.pushState){history.pushState({ilan:id},'','/ilan/'+dnIlanSlug(l));}
-}catch(e){} try{Listings.openDetail('dn',id);}catch(e){}}
+}catch(e){} try{Listings.openDetail('dn',id);}catch(e){}
+  try{if(typeof l!=='undefined'&&l)_dnDetaySeo(l);}catch(e){}}/* openDetail SONRASI: overlay H1'i muaf kalsın + shared title'ı ezsin */
 try{window.dnIlanRoute=dnIlanRoute;window.dnIlanSlug=dnIlanSlug;
+  /* closeDetail tek sefer sarılır: her kapanış yolunda (✕, nav, popstate) title+canonical+aria geri gelir */
+  if(window.Listings&&Listings.closeDetail&&!Listings._dnSeoSarildi){Listings._dnSeoSarildi=true;
+    var _dnKapatOrj=Listings.closeDetail;
+    Listings.closeDetail=function(){try{_dnDetaySeoGeri();}catch(e){}return _dnKapatOrj.apply(Listings,arguments);};}
   window.addEventListener('popstate',function(){try{if(location.pathname.indexOf('/ilan/')!==0){Listings.closeDetail();}}catch(e){}});
 }catch(e){}
 var DN_LIST_CFG={ns:'dn',
@@ -722,6 +766,18 @@ function vipCardsHTML(){return VIP_PORTFOLIO.map(p=>{
 /* ============ ANA SAYFA ÖZEL PORTFÖY · MAHALLE SATILIK/KİRALIK ENDEKSİ (canlı ProX) ============
    ozel-portfoy.html ile AYNI ProX mahalle endeksini teaser olarak gösterir. VIP_PORTFOLIO
    admin/arama tarafında kullanılmaya devam eder; yalnız #vaultGrid gösterimi değişir. */
+/* ===== KPI İSKELETİ — veri gelmeden sayı (özellikle 0) BASILMAZ; nabız animasyonlu yer tutucu.
+   Stil app.js'ten enjekte edilir; reduced-motion'da animasyon kapalı. ===== */
+var KPI_SKEL='<span class="kpi-skel">···</span>';
+(function(){try{if(document.getElementById('kpiSkelCss'))return;
+  var s=document.createElement('style');s.id='kpiSkelCss';
+  s.textContent='.kpi-skel{display:inline-block;min-width:1.4em;text-align:center;opacity:.5;animation:kpiSkelPulse 1.1s ease-in-out infinite}@keyframes kpiSkelPulse{0%,100%{opacity:.22}50%{opacity:.75}}@media (prefers-reduced-motion:reduce){.kpi-skel{animation:none}}';
+  (document.head||document.documentElement).appendChild(s);}catch(e){}})();
+/* Endeks kartı veri alamadıysa dürüst mesaj — skeleton sonsuza dek dönmez, 0 da basılmaz */
+function _vaultKartHata(card){try{
+  [].forEach.call(card.querySelectorAll('b.sh'),function(b){b.classList.remove('sh');b.textContent='—';});
+  var f=card.querySelector('.oz-idx-y');if(f){f.classList.remove('sh');f.textContent='veri alınamadı';}
+}catch(e){}}
 var VAULT_MAH=[
   {ilce:'Beşiktaş',mah:'Bebek'},{ilce:'Beşiktaş',mah:'Etiler'},
   {ilce:'Şişli',mah:'Nişantaşı'},{ilce:'Kadıköy',mah:'Caddebostan'},
@@ -747,17 +803,18 @@ function ozIdxCard(o){
 }
 function vaultIndexLoad(){
   var g=document.getElementById('vaultGrid'); if(!g) return;
-  g.innerHTML=VAULT_MAH.map(function(m,i){return '<article class="oz-idx" data-slot="'+i+'"><div class="oz-idx-h"><b>'+_leD(m.mah)+'</b><span>'+_leD(m.ilce)+'</span></div><div class="oz-idx-rows"><div class="oz-idx-r"><span>Satılık</span><b class="sh">•••</b></div><div class="oz-idx-r"><span>Kiralık</span><b class="sh">•••</b></div></div><div class="oz-idx-f"><span class="oz-idx-y sh">ProX endeksi hesaplanıyor…</span></div></article>';}).join('');
-  if(typeof proxApi!=='function') return;
+  g.innerHTML=VAULT_MAH.map(function(m,i){return '<article class="oz-idx" data-slot="'+i+'"><div class="oz-idx-h"><b>'+_leD(m.mah)+'</b><span>'+_leD(m.ilce)+'</span></div><div class="oz-idx-rows"><div class="oz-idx-r"><span>Satılık</span><b class="sh">'+KPI_SKEL+'</b></div><div class="oz-idx-r"><span>Kiralık</span><b class="sh">'+KPI_SKEL+'</b></div></div><div class="oz-idx-f"><span class="oz-idx-y sh">ProX endeksi hesaplanıyor…</span></div></article>';}).join('');
+  if(typeof proxApi!=='function'){[].forEach.call(g.querySelectorAll('.oz-idx'),_vaultKartHata);return;}
   var il='İstanbul'; try{if(typeof saLoad==='function'){var p=saLoad();if(p&&p.primary)il=p.primary;}}catch(e){}
   var mine=++_vaultSeq;
   VAULT_MAH.forEach(function(def,idx){
     Promise.all([ozHomeEndeks(il,def.ilce,def.mah,'satilik'),ozHomeEndeks(il,def.ilce,def.mah,'kiralik')]).then(function(r){
       if(mine!==_vaultSeq) return;
-      var sat=r[0],kir=r[1]; if(!sat&&!kir) return;
       var card=g.querySelector('.oz-idx[data-slot="'+idx+'"]'); if(!card) return;
+      var sat=r[0],kir=r[1];
+      if(!sat&&!kir){_vaultKartHata(card);return;}/* veri yok → 'veri alınamadı'; skeleton asılı kalmaz */
       card.outerHTML=ozIdxCard({slot:idx,mah:def.mah,ilce:def.ilce,sat:sat?sat.m2:0,kir:kir?kir.m2:0,delta:sat?sat.delta:0,score:sat?sat.score:0});
-    }).catch(function(){});
+    }).catch(function(){try{if(mine!==_vaultSeq)return;var card=g.querySelector('.oz-idx[data-slot="'+idx+'"]');if(card)_vaultKartHata(card);}catch(e){}});
   });
 }
 
@@ -783,7 +840,7 @@ function apptModuleHTML(){return '<div class="appt-card">'
 /* ---------- footer (tek kaynak, her sayfada birebir aynı) ---------- */
 function footerHTML(){if(window.DN_FOOTER_HTML)return window.DN_FOOTER_HTML;/* KANONİK footer tek kaynak (content.js) — tüm sayfalarda birebir aynı */
   return '<footer><div class="wrap"><div class="fcols">'
-  +'<div><div class="brand" onclick="goHome()"><span class="mark">'+_leD(_brandInitial())+'</span><span><b>'+_leD(saasResolve('brandName')||'Selin Meridyen')+'</b><small>Kişiye Özel Danışman</small></span></div><p>Yetki belgeli kişiye özel emlak danışmanlığı. Güncel lüks ilanlar, davet usulü VIP özel portföy ve ücretsiz gayrimenkul değer analizi.</p>'
+  +'<div><div class="brand" onclick="goHome()"><span class="mark">'+_leD(_brandInitial())+'</span><span><b>'+_leD(saasResolve('brandName')||'Selin Meridyen')+'</b><small>Kişiye Özel Danışman</small></span></div><p>Kişiye özel emlak danışmanlığı platform demosu. Güncel lüks ilanlar, davet usulü VIP özel portföy ve ücretsiz gayrimenkul değer analizi.</p>'
   +'<div class="fsocial">'
     +'<a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a>'
     +'<a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2Zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58Zm6.86-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0Z"/></svg></a>'
@@ -843,6 +900,104 @@ const DN_BLOGS=[
   {"id": "a10", "cat": "Hukuk", "icon": "📜", "title": "Lüks Konut Kiralamada Sözleşme, Depozito ve Tahliye Rehberi", "date": "2026-05-26", "meta": "2 dk okuma · May 2026", "src": "firma", "sum": "İstanbul'da üst segment konut kiralamada sözleşme şartları, depozito güvencesi ve yasal tahliye süreçlerini tüm detaylarıyla ele alan kapsamlı rehber.", "body": "## Lüks Konut Kiralamada Doğru Sözleşme Stratejisi\n\nİstanbul'un üst segment gayrimenkul piyasasında konut kiralamak; yalnızca beğenilen bir daireye taşınmak değil, aynı zamanda hukuki güvence, mali disiplin ve uzun vadeli bir ilişkinin temelini atmak demektir. Boğaz manzaralı bir rezidansta, Etiler'deki bir penthouse'da veya Nişantaşı'ndaki butik bir apartmanda yaşayacak olsanız da, sözleşme sürecini doğru yönetmek kritik öneme sahiptir. Bu rehberde; kira sözleşmesinin olmazsa olmazları, depozito sisteminin incelikleri ve tahliye sürecinin yasal boyutlarını, lüks segmentin ihtiyaçlarına özel bir perspektifle ele alıyoruz.\n\n## Kira Sözleşmesinde Olmazsa Olmaz Maddeler\n\nÜst segment kiralamalarda sözleşme, standart bir evrak olmanın ötesinde; tarafların haklarını, sorumluluklarını ve beklentilerini netleştiren bir güvence belgesidir. Türk Borçlar Kanunu'nun 299. ve devamı maddeleri kira sözleşmelerini düzenlerken, lüks segmentte bazı ek maddeler öne çıkar:\n\n- **Kira bedeli ve ödeme planı:** Döviz cinsinden kira belirlenmesi durumunda, ödeme günündeki kur ve olası artış oranları açıkça yazılmalıdır. Türk Lirası sözleşmelerde ise yıllık artış oranının TÜFE'ye endeksli mi yoksa sabit bir oran mı olacağı netleştirilmelidir.\n- **Aidat ve ortak giderler:** Rezidanslarda aidat, otopark, depozito ve ortak alan kullanım bedelleri kira bedelinden ayrı kalemlerdir. Bu giderlerin kiracıya mı yoksa mülk sahibine mi ait olduğu sözleşmede belirtilmelidir.\n- **Eşya envanteri:** Mobilyalı kiralanan lüks konutlarda, mevcut eşyaların marka, model ve durum bilgilerini içeren detaylı bir envanter listesi sözleşmeye eklenmelidir. Bu liste, çıkışta oluşabilecek anlaşmazlıkların önüne geçer.\n- **Kullanım amacı ve alt kiralama:** Konutun yalnızca mesken olarak kullanılacağı ve kiracının mülk sahibinin yazılı izni olmadan alt kiralama yapamayacağı hükmü, özellikle rezidanslarda sıklıkla karşılaşılan bir durumdur.\n- **Cayma ve erken fesih koşulları:** Tarafların sözleşmeyi hangi şartlarda ve ne kadar önceden bildirimle feshedebileceği, lüks segmentte esneklik açısından önemli bir maddedir.\n\n## Depozito: Güvence mi, Yatırım mı?\n\nDepozito, kiracının kira sözleşmesinden doğan yükümlülüklerini yerine getireceğinin teminatıdır. Türk Borçlar Kanunu'na göre depozito, en fazla üç aylık", "img": {"url": "img/blog/d19.jpg", "alt": "Witt Istanbul Suites", "credit": "Witt Istanbul Suites · Openverse · Openverse", "creditUrl": "https://www.flickr.com/photos/37386859@N07"}},
   {"id": "a11", "cat": "Piyasa", "icon": "📊", "title": "Bağdat Caddesi Lüks Konut Rehberi", "date": "2026-05-17", "meta": "2 dk okuma · May 2026", "src": "firma", "sum": "Bağdat Caddesi hattında lüks konut piyasasını inceliyoruz: fiyat trendleri, semt bazlı değerlendirme ve yatırım fırsatları.", "body": "## Bağdat Caddesi Hattı: Anadolu Yakası'nın Yıldızı\n\nİstanbul'un Anadolu Yakası denildiğinde akla ilk gelen lokasyonlardan biri, şüphesiz Bağdat Caddesi ve çevresidir. Kadıköy'den Maltepe'ye uzanan bu yaklaşık 14 kilometrelik hat, yalnızca bir alışveriş aksı değil; aynı zamanda üst segment konut piyasasının en dinamik bölgelerinden biridir. Son beş yılda artan arsa değerleri, yenilenen projeler ve değişen yaşam talepleri, bu hattı lüks konut yatırımcılarının odağına yerleştirmiştir.\n\nBu makalede, Bağdat Caddesi hattındaki lüks konut piyasasını; fiyat dinamikleri, popüler alt bölgeler, yatırım getirileri ve gelecek projeksiyonları açısından detaylı biçimde ele alıyoruz. Amacımız, hem satın almayı düşünen son kullanıcılar hem de portföyünü büyütmek isteyen yatırımcılar için güncel ve güvenilir bir perspektif sunmaktır.\n\n## Hattın Kırılım Noktaları: Semt Bazlı Fiyat Analizi\n\nBağdat Caddesi hattı, her biri farklı karaktere sahip mahallelerden oluşur. Göztepe, Caddebostan ve Suadiye; hattın en bilinen ve en yüksek birim fiyatlarına sahip bölgeleri olarak öne çıkar. Bu bölgelerde deniz manzaralı, yeni yapılmış rezidansların metrekare satış fiyatları, bölgeden bölgeye geniş bir aralıkta değişmektedir. Özellikle Caddebostan'da, caddeye sıfır konumda bulunan, 3+1 ve 4+1 düzenindeki lüks daireler, hem yabancı yatırımcıların hem de yerli alıcıların ilk tercihleri arasındadır.\n\nBiraz daha iç kesimlerde, Erenköy ve Sahrayıcedid'de ise fiyatlar daha dengeli bir seyir izler. Bu bölgelerde, çevredeki premium hatta kıyasla daha uygun fiyat seviyelerinde, geniş bahçeli müstakil evler ve az katlı butik apartman daireleri bulmak mümkündür. Erenköy'ün imar durumu, yeni projelere açık olması nedeniyle yakın gelecekte değer artışı potansiyeli en yüksek alt bölgelerden biri olarak değerlendirilmektedir.\n\n## Yeni Projeler ve Dönüşen Mahalleler\n\nSon üç yılda Öğüt Sokak, Şaşkınbakkal ve Bostancı'nın sahil bandında ciddi bir yenilenme yaşandı. Eski yapılar yerini, spa alanları, kapalı otopark ve akıllı ev sistemleriyle donatılmış modern rezidanslara bırakıyor. Bu dönüşüm, bölgedeki arsa değerlerini de tetiklemiş durumda. Özellikle Bostancı'da, denize sıfır konumdaki imar parsellerinde, lüks konut segmentinin gelecek iki yıl içinde en çok büyüyeceği projelerin hayata geçmesi bekleniyor.\n\nDikkat çeken bir diğer nokta ise butik projelerin yükselişi. Bağdat Caddesi hattında, büyük ölçekli rezidanslardan çok,", "img": {"url": "img/blog/d20.jpg", "alt": "Facade apartment building city brown", "credit": "Openverse · Openverse", "creditUrl": "https://www.rawpixel.com/image/3290406/free-photo-image-cc0-pattern-brick-apartment"}}
 ];
+/* =====================================================================
+   FAZ4B — YABANCI DİL DEMO HABER SETİ (EN·RU·ZH·AR)
+   dn_lang!=='tr' iken ana sayfa haber vitrini + blog listesi + detay overlay
+   YALNIZ bu setten beslenir; TR DN_BLOGS ve /api/blog/feed TR akışı karışmaz.
+   Meta metinleri ('min read' vb.) i18n motoruna bırakılmaz, veri içinde o dildedir.
+   Görseller/credit'ler mevcut img/blog/d01..d08 varlıklarından yeniden kullanılır.
+   ===================================================================== */
+const DN_BLOGS_I18N={
+en:[
+  {id:'i18n-en-1',img:{url:"img/blog/d01.jpg",alt:"Maiden's Tower (Kiz Kulesi)",credit:"Harold Litwiler, Poppy · Openverse",creditUrl:"https://www.flickr.com/photos/116337886@N07"},cat:'Market',icon:'📊',title:'Istanbul luxury housing in 2026: where the market is heading',date:'2026-08-05',meta:'6 min read · Aug 2026',src:'firma',
+   sum:'Supply along the Bosphorus and in prestige districts remains tight; timing and micro-location are still what protects value.',
+   body:'Luxury housing moves to a different rhythm than the broader market. Scarce supply, irreplaceable locations and architectural quality carry pricing beyond a simple price-per-square-metre logic.\n\nIn 2026, qualified stock along the Bosphorus and in districts such as Nişantaşı and Zekeriyaköy continues to narrow. Properties that come to market with clean paperwork and a realistic pricing strategy keep their value; those priced on sentiment alone wait far longer for a buyer.\n\nFor buyers and investors, the real question is rarely today’s asking price. It is the district’s long-term trajectory and how quickly an asset can be resold. Cross-checking every shortlist against ProX-verified regional data turns an emotional decision into an informed one — which is exactly how a sound advisory process works.'},
+  {id:'i18n-en-2',img:{url:"img/blog/d02.jpg",alt:"Ships on the Bosphorus and the Bridge, Istanbul",credit:"fotopamas · Openverse",creditUrl:"https://www.flickr.com/photos/126011817@N06"},cat:'Investment',icon:'🏛️',title:'Waterfront mansions on the Bosphorus: five principles that protect value',date:'2026-07-21',meta:'5 min read · Jul 2026',src:'firma',
+   sum:'Yalı properties trade rarely and privately. Five principles for a sound acquisition in Istanbul’s most exclusive asset class.',
+   body:'The yalı — the waterfront mansion — is the most exclusive asset class in Turkish real estate. Supply is measured in single units, and the buyer pool is small and discreet.\n\nFive principles guide a sound acquisition. Clarify title deeds and the shoreline boundary before any negotiation. In restored mansions, review the approval history of every architectural intervention. Treat pier and mooring rights as a separate valuation item. Verify recent comparable sales with ProX data rather than hearsay. And run the entire process through a single point of contact, with confidentiality on both sides.\n\nAt this level of the market, disciplined process matters as much as price. A well-structured acquisition protects value long after the keys change hands.'},
+  {id:'i18n-en-3',img:{url:"img/blog/d03.jpg",alt:"Kolkata Properties - Real Estate India -Shanti Shrishti Bird Eye View",credit:"nancyarora2020 · Openverse",creditUrl:"https://www.flickr.com/photos/30641685@N04"},cat:'Guide',icon:'🔑',title:'Why a private portfolio works by invitation only',date:'2026-07-02',meta:'4 min read · Jul 2026',src:'firma',
+   sum:'Some properties never appear on listing portals. Discretion protects the seller — and the value of the asset itself.',
+   body:'A private portfolio consists of properties whose owners choose not to advertise openly — for privacy, security or strategic reasons.\n\nOnly the street name and an indicative starting value are shared at first. The full address, interior details and net price are disclosed after a preliminary consultation, and only to qualified buyers who have confirmed their intent and budget. This staged approach prevents unnecessary exposure and protects the asset’s negotiating position.\n\nFor buyers, invitation-only access means seeing options that never reach the open market. For sellers, it means their home does not circulate as a photo set on public portals. Access begins with a free, no-obligation analysis meeting — a simple first step that keeps both sides in control.'},
+  {id:'i18n-en-4',img:{url:"img/blog/d04.jpg",alt:"Week #35/52",credit:"Connor Tarter · Openverse",creditUrl:"https://www.flickr.com/photos/27446438@N07"},cat:'Appraisal',icon:'📋',title:'How an independent appraisal shortens the path to a sale',date:'2026-06-10',meta:'4 min read · Jun 2026',src:'firma',
+   sum:'When the price is credible, negotiations move faster. An up-to-date appraisal report builds that credibility from day one.',
+   body:'Transactions accelerate when the buyer believes the price is realistic. An independent, current appraisal report delivers exactly that confidence.\n\nA good report sets out the square-metre value, the district trend, comparable sales and the property’s quality score in an objective format. That transparency strengthens the seller’s hand at the negotiating table and shortens the bargaining phase considerably.\n\nA preliminary value analysis built on ProX-verified data is the first step of a sound pricing strategy. It does not replace the report of a licensed valuation firm required for credit and official procedures — it complements it, and gives both sides a common, factual starting point before emotions enter the discussion.'},
+  {id:'i18n-en-5',img:{url:"img/blog/d05.jpg",alt:"Blue Monopoly Houses and Apartments",credit:"Philip Taylor PT · Openverse",creditUrl:"https://www.flickr.com/photos/9731367@N02"},cat:'Analysis',icon:'📈',title:'Rental yield or capital appreciation: which strategy fits you?',date:'2026-05-19',meta:'5 min read · May 2026',src:'firma',
+   sum:'Two strategies, two very different district profiles. Reading both metrics together is what builds a balanced portfolio.',
+   body:'Every property investor faces the same fork in the road: steady rental income, or medium-term capital appreciation?\n\nDistricts with a high rent multiplier offer dependable cash flow; neighbourhoods along development corridors carry stronger appreciation potential. The two rarely peak in the same asset, which is why the choice should follow the investor’s goal, not the other way round.\n\nThe practical method is to read gross rental yield and the district’s price trend side by side. ProX indices allow both metrics to be compared on a single screen, per neighbourhood. In an advisory session these figures are mapped against your horizon and liquidity needs — and the portfolio structure usually becomes obvious.'},
+  {id:'i18n-en-6',img:{url:"img/blog/d08.jpg",alt:"It's a deal - here's the money",credit:"sandklef · Openverse",creditUrl:"https://www.flickr.com/photos/63114905@N06"},cat:'Investment',icon:'🌍',title:'Buying property in Istanbul as an international client',date:'2026-04-22',meta:'5 min read · Apr 2026',src:'firma',
+   sum:'With the right document sequence, a cross-border purchase takes no longer than a domestic one. What the process really involves.',
+   body:'For international buyers, purchasing a home in Istanbul follows a clear sequence: obtaining a tax number, certified passport translation, and the official valuation report required by the land registry.\n\nThe critical link is the foreign-currency exchange certificate: documenting the purchase price properly is a precondition of the title transfer, and planning this step with the bank in advance keeps transfer day calm. Where a citizenship application is intended, threshold amounts and annotation requirements come into play — coordination with legal counsel is essential there.\n\nThe advisor’s role is to close the distance of language and regulation through process management, so that a cross-border acquisition feels as orderly as a local one. Every step is documented, every figure verified.'}
+],
+ru:[
+  {id:'i18n-ru-1',img:{url:"img/blog/d01.jpg",alt:"Maiden's Tower (Kiz Kulesi)",credit:"Harold Litwiler, Poppy · Openverse",creditUrl:"https://www.flickr.com/photos/116337886@N07"},cat:'Рынок',icon:'📊',title:'Элитное жильё Стамбула в 2026 году: куда движется рынок',date:'2026-08-05',meta:'6 мин чтения · авг 2026',src:'firma',
+   sum:'Предложение на Босфоре и в престижных районах сокращается; время сделки и точная локация по-прежнему защищают стоимость.',
+   body:'Рынок элитного жилья живёт по своим законам. Ограниченное предложение, уникальное расположение и архитектурное качество выводят цену за рамки простой логики стоимости квадратного метра.\n\nВ 2026 году качественное предложение на Босфоре, в Нишанташи и Зекериякёй продолжает сокращаться. Объекты, выходящие на рынок с безупречными документами и реалистичной ценовой стратегией, сохраняют стоимость, тогда как эмоционально оценённые лоты месяцами ждут покупателя.\n\nДля инвестора главный вопрос — не сегодняшняя цена, а долгосрочная динамика района и ликвидность актива. Проверка каждого варианта по данным ProX превращает эмоциональное решение в обоснованное: именно так строится грамотный консультационный процесс.'},
+  {id:'i18n-ru-2',img:{url:"img/blog/d02.jpg",alt:"Ships on the Bosphorus and the Bridge, Istanbul",credit:"fotopamas · Openverse",creditUrl:"https://www.flickr.com/photos/126011817@N06"},cat:'Инвестиции',icon:'🏛️',title:'Инвестиции в особняки на Босфоре: пять принципов сохранения стоимости',date:'2026-07-21',meta:'5 мин чтения · июл 2026',src:'firma',
+   sum:'Ялы продаются редко и непублично. Пять принципов грамотной покупки в самом закрытом сегменте рынка.',
+   body:'Ялы — прибрежный особняк — самый редкий и закрытый класс недвижимости в Турции. Предложение исчисляется единицами, круг покупателей узок.\n\nПять принципов определяют грамотную сделку. До переговоров проясните статус права собственности и береговой линии. В отреставрированных особняках изучите историю согласований каждой перестройки. Права на причал оценивайте отдельным пунктом. Последние сопоставимые продажи проверяйте по данным ProX, а не по слухам. Весь процесс ведите через одного доверенного представителя с обоюдной конфиденциальностью.\n\nВ этом сегменте дисциплина процесса значит не меньше, чем цена: правильно структурированная покупка защищает стоимость на годы вперёд.'},
+  {id:'i18n-ru-3',img:{url:"img/blog/d03.jpg",alt:"Kolkata Properties - Real Estate India -Shanti Shrishti Bird Eye View",credit:"nancyarora2020 · Openverse",creditUrl:"https://www.flickr.com/photos/30641685@N04"},cat:'Гид',icon:'🔑',title:'Почему закрытый портфель работает только по приглашению',date:'2026-07-02',meta:'4 мин чтения · июл 2026',src:'firma',
+   sum:'Часть объектов никогда не появляется на порталах объявлений. Конфиденциальность защищает и продавца, и стоимость актива.',
+   body:'Закрытый портфель состоит из объектов, владельцы которых сознательно не размещают открытые объявления — по соображениям приватности, безопасности или стратегии.\n\nСначала раскрываются только улица и ориентировочная стартовая стоимость. Полный адрес, интерьеры и итоговая цена сообщаются после предварительной консультации и только квалифицированным покупателям с подтверждёнными намерениями и бюджетом. Поэтапная подача информации исключает лишнюю огласку и сохраняет переговорную позицию.\n\nДля покупателя доступ по приглашению — это варианты, которых нет на открытом рынке. Для продавца — уверенность, что его дом не разойдётся фотосетом по порталам. Всё начинается с бесплатной и ни к чему не обязывающей аналитической встречи.'},
+  {id:'i18n-ru-4',img:{url:"img/blog/d04.jpg",alt:"Week #35/52",credit:"Connor Tarter · Openverse",creditUrl:"https://www.flickr.com/photos/27446438@N07"},cat:'Оценка',icon:'📋',title:'Как независимая оценка ускоряет продажу',date:'2026-06-10',meta:'4 мин чтения · июн 2026',src:'firma',
+   sum:'Когда цена вызывает доверие, переговоры идут быстрее. Актуальный отчёт об оценке создаёт это доверие с первого дня.',
+   body:'Сделка ускоряется, когда покупатель убеждён в реалистичности цены. Независимый и актуальный отчёт об оценке даёт именно эту уверенность.\n\nКачественный отчёт объективно фиксирует стоимость квадратного метра, тренд района, сопоставимые продажи и балл качества объекта. Такая прозрачность усиливает позицию продавца за столом переговоров и заметно сокращает торг.\n\nПредварительный анализ стоимости на основе данных ProX — первый шаг верной ценовой стратегии. Он не заменяет отчёт лицензированной оценочной компании, необходимый для кредита и официальных процедур, а дополняет его, давая сторонам общую фактическую точку отсчёта.'},
+  {id:'i18n-ru-5',img:{url:"img/blog/d05.jpg",alt:"Blue Monopoly Houses and Apartments",credit:"Philip Taylor PT · Openverse",creditUrl:"https://www.flickr.com/photos/9731367@N02"},cat:'Аналитика',icon:'📈',title:'Арендная доходность или рост стоимости: что выбрать инвестору',date:'2026-05-19',meta:'5 мин чтения · май 2026',src:'firma',
+   sum:'Две стратегии — два разных профиля района. Сбалансированный портфель строится на чтении обеих метрик одновременно.',
+   body:'Перед каждым инвестором в недвижимость стоит один и тот же выбор: стабильный арендный поток или среднесрочный рост стоимости?\n\nРайоны с высоким арендным мультипликатором дают предсказуемый денежный поток; кварталы вдоль коридоров развития несут больший потенциал удорожания. Эти качества редко совпадают в одном активе, поэтому выбор должен исходить из цели инвестора.\n\nПрактичный метод — читать валовую арендную доходность и ценовой тренд района вместе. Индексы ProX позволяют сравнить обе метрики на одном экране по каждому кварталу. На консультации мы накладываем эти цифры на ваш горизонт и потребность в ликвидности — и структура портфеля становится очевидной.'},
+  {id:'i18n-ru-6',img:{url:"img/blog/d08.jpg",alt:"It's a deal - here's the money",credit:"sandklef · Openverse",creditUrl:"https://www.flickr.com/photos/63114905@N06"},cat:'Инвестиции',icon:'🌍',title:'Покупка недвижимости в Стамбуле для иностранного клиента',date:'2026-04-22',meta:'5 мин чтения · апр 2026',src:'firma',
+   sum:'При правильной последовательности документов международная сделка длится не дольше локальной. Как устроен процесс на практике.',
+   body:'Для иностранного покупателя приобретение жилья в Стамбуле идёт по чёткой последовательности: налоговый номер, заверенный перевод паспорта и официальный отчёт об оценке, который требует кадастровое управление.\n\nКлючевое звено — справка об обмене валюты: корректное документирование суммы сделки является условием передачи права собственности, и заранее спланированный с банком шаг делает день сделки спокойным. Если планируется заявление на гражданство, вступают в силу пороговые суммы и обязательные отметки в реестре — здесь необходима координация с юристом.\n\nРоль консультанта — закрыть дистанцию языка и законодательства управлением процессом: каждый шаг задокументирован, каждая цифра проверена.'}
+],
+zh:[
+  {id:'i18n-zh-1',img:{url:"img/blog/d01.jpg",alt:"Maiden's Tower (Kiz Kulesi)",credit:"Harold Litwiler, Poppy · Openverse",creditUrl:"https://www.flickr.com/photos/116337886@N07"},cat:'市场',icon:'📊',title:'2026年伊斯坦布尔豪宅市场走向',date:'2026-08-05',meta:'约6分钟阅读 · 2026年8月',src:'firma',
+   sum:'博斯普鲁斯沿线与核心高端区域供应持续收紧,把握时机与精准选址依然是保值的关键。',
+   body:'豪宅市场的运行节奏与普通住宅截然不同。稀缺的供应、不可复制的地段与建筑品质,使价格逻辑早已超越简单的每平方米计算。\n\n2026年,博斯普鲁斯沿线以及尼相塔什、泽凯里亚科伊等高端区域的优质房源持续减少。产权清晰、定价务实的房产能够稳稳保值;而仅凭情绪定价的房源,往往要等待更长时间才能成交。\n\n对买家和投资者而言,真正重要的不是今天的挂牌价,而是区域的长期走势与资产的变现速度。把每一个备选项都放到 ProX 核验数据中交叉比对,情绪化的决定就会变成有依据的判断——这正是专业顾问服务的工作方式。'},
+  {id:'i18n-zh-2',img:{url:"img/blog/d02.jpg",alt:"Ships on the Bosphorus and the Bridge, Istanbul",credit:"fotopamas · Openverse",creditUrl:"https://www.flickr.com/photos/126011817@N06"},cat:'投资',icon:'🏛️',title:'博斯普鲁斯海峡别墅投资:守护价值的五项原则',date:'2026-07-21',meta:'约5分钟阅读 · 2026年7月',src:'firma',
+   sum:'海峡别墅交易稀少而低调。在最顶级的资产类别中稳健购入,需要遵循五项基本原则。',
+   body:'海峡别墅(Yalı)是土耳其房地产中最稀缺、最私密的资产类别。供应以个位数计,买家圈层小而谨慎。\n\n稳健的购入遵循五项原则:谈判前先厘清产权与海岸线边界;翻新别墅须核查每一次改建的审批记录;码头与泊位权利应单独估值;近期成交案例以 ProX 数据核实,而非道听途说;整个过程通过单一对接人推进,双方均承诺保密。\n\n在这一层级的市场,流程的严谨与价格同样重要。一次结构完善的购入,会在交钥匙之后的许多年里继续守护资产价值。'},
+  {id:'i18n-zh-3',img:{url:"img/blog/d03.jpg",alt:"Kolkata Properties - Real Estate India -Shanti Shrishti Bird Eye View",credit:"nancyarora2020 · Openverse",creditUrl:"https://www.flickr.com/photos/30641685@N04"},cat:'指南',icon:'🔑',title:'为什么私享房源只以邀请制开放',date:'2026-07-02',meta:'约4分钟阅读 · 2026年7月',src:'firma',
+   sum:'有些房产从不出现在公开平台上。审慎与保密,既保护业主,也保护资产本身的价值。',
+   body:'私享房源由业主出于隐私、安全或策略考虑而不公开挂牌的房产组成。\n\n初期仅公开街道名称与参考起始价;完整地址、室内细节与净价,只在初步咨询之后,向意向与预算均已确认的合格买家披露。这种分层披露避免了不必要的曝光,守住了资产的议价空间。\n\n对买家而言,邀请制意味着接触从未进入公开市场的选择;对业主而言,自己的家不会成为门户网站上的照片集。一切从一次免费且无约束的分析会谈开始——简单的第一步,让双方都掌握主动。'},
+  {id:'i18n-zh-4',img:{url:"img/blog/d04.jpg",alt:"Week #35/52",credit:"Connor Tarter · Openverse",creditUrl:"https://www.flickr.com/photos/27446438@N07"},cat:'估价',icon:'📋',title:'独立估价报告如何缩短成交周期',date:'2026-06-10',meta:'约4分钟阅读 · 2026年6月',src:'firma',
+   sum:'当价格令人信服时,谈判自然加快。一份最新的估价报告,从第一天起就建立这种信任。',
+   body:'当买家确信价格务实时,交易进程会明显加快。一份独立、及时的估价报告恰恰能建立这种信任。\n\n一份高质量的报告会客观呈现每平方米价值、区域走势、可比成交与房产品质评分。这种透明度让卖方在谈判桌上更有底气,也大幅缩短了议价阶段。\n\n基于 ProX 核验数据的初步价值分析,是正确定价策略的第一步。它并不取代信贷与官方流程所需的持牌评估机构报告,而是与之互补——在情绪进入讨论之前,先给双方一个共同的事实起点。'},
+  {id:'i18n-zh-5',img:{url:"img/blog/d05.jpg",alt:"Blue Monopoly Houses and Apartments",credit:"Philip Taylor PT · Openverse",creditUrl:"https://www.flickr.com/photos/9731367@N02"},cat:'分析',icon:'📈',title:'租金回报还是增值潜力:哪种策略适合你',date:'2026-05-19',meta:'约5分钟阅读 · 2026年5月',src:'firma',
+   sum:'两种策略对应两种截然不同的区域画像;把两项指标放在一起阅读,才能搭建均衡的投资组合。',
+   body:'每一位房产投资者都会面对同一个岔路口:要稳定的租金现金流,还是中期的资本增值?\n\n租金乘数高的区域提供可预期的现金流;处于发展走廊上的街区则蕴含更强的增值潜力。两者很少在同一资产上同时达到峰值,因此选择应当服从投资目标,而不是相反。\n\n务实的方法是把毛租金回报率与区域价格走势并排阅读。ProX 指数支持在同一屏幕上按街区比较这两项指标。在咨询中,我们会把这些数字与您的投资期限和流动性需求对照——组合的结构往往就此清晰。'},
+  {id:'i18n-zh-6',img:{url:"img/blog/d08.jpg",alt:"It's a deal - here's the money",credit:"sandklef · Openverse",creditUrl:"https://www.flickr.com/photos/63114905@N06"},cat:'投资',icon:'🌍',title:'国际买家在伊斯坦布尔置业指南',date:'2026-04-22',meta:'约5分钟阅读 · 2026年4月',src:'firma',
+   sum:'只要文件顺序正确,跨境购房并不比本地交易耗时。了解流程的真实构成。',
+   body:'对国际买家而言,在伊斯坦布尔购房遵循清晰的顺序:办理税号、护照公证翻译,以及土地登记处要求的官方估价报告。\n\n关键环节是外汇兑换证明:按规定记录购房款项是产权过户的前提,提前与银行安排好这一步,过户当天便从容有序。若计划申请公民身份,还会涉及金额门槛与登记附注等要求——此时与法律顾问的协同必不可少。\n\n顾问的职责,是通过流程管理弥合语言与法规的距离,让跨境购房像本地交易一样井然有序:每一步都有文件记录,每一个数字都经过核验。'}
+],
+ar:[
+  {id:'i18n-ar-1',img:{url:"img/blog/d01.jpg",alt:"Maiden's Tower (Kiz Kulesi)",credit:"Harold Litwiler, Poppy · Openverse",creditUrl:"https://www.flickr.com/photos/116337886@N07"},cat:'السوق',icon:'📊',title:'سوق المساكن الفاخرة في إسطنبول 2026: إلى أين يتجه؟',date:'2026-08-05',meta:'6 دقائق قراءة · أغسطس 2026',src:'firma',
+   sum:'المعروض على خط البوسفور وفي الأحياء الراقية يواصل الانكماش؛ ويبقى التوقيت الصحيح والموقع الدقيق هما ما يحفظ القيمة.',
+   body:'يتحرك سوق المساكن الفاخرة بإيقاع مختلف عن السوق العام؛ فندرة المعروض وتفرّد الموقع وجودة العمارة ترفع السعر فوق منطق المتر المربع البسيط.\n\nفي عام 2026 يواصل المعروض النوعي على خط البوسفور وفي أحياء مثل نيشان تاشي وزكريا كوي انكماشه. العقارات التي تدخل السوق بمستندات سليمة واستراتيجية تسعير واقعية تحافظ على قيمتها، بينما تنتظر العقارات المسعّرة عاطفيًا مشتريها طويلًا.\n\nبالنسبة للمستثمر، السؤال الحقيقي ليس سعر اليوم، بل مسار الحي على المدى الطويل وسرعة تسييل الأصل. ومقارنة كل خيار ببيانات ProX الموثّقة تحوّل القرار العاطفي إلى قرار مدروس — وهكذا تُدار العملية الاستشارية السليمة.'},
+  {id:'i18n-ar-2',img:{url:"img/blog/d02.jpg",alt:"Ships on the Bosphorus and the Bridge, Istanbul",credit:"fotopamas · Openverse",creditUrl:"https://www.flickr.com/photos/126011817@N06"},cat:'الاستثمار',icon:'🏛️',title:'الاستثمار في قصور البوسفور المائية: خمسة مبادئ تحفظ القيمة',date:'2026-07-21',meta:'5 دقائق قراءة · يوليو 2026',src:'firma',
+   sum:'قصور اليالي تُتداول نادرًا وبسرّية تامة. خمسة مبادئ لعملية شراء رشيدة في أكثر فئات السوق خصوصية.',
+   body:'اليالي — القصر المطل على الماء — هو الفئة الأندر والأكثر خصوصية في العقار التركي؛ يُحصى المعروض بالوحدات، ودائرة المشترين ضيقة وكتومة.\n\nخمسة مبادئ تضبط الشراء الرشيد: وضوح سند الملكية وخط الشاطئ قبل أي تفاوض؛ ومراجعة سجل الموافقات لكل تدخل معماري في القصور المرمّمة؛ وتقييم حقوق الرصيف والمرسى بندًا مستقلًا؛ والتحقق من آخر الصفقات المماثلة عبر بيانات ProX لا عبر الشائعات؛ وإدارة العملية كلها عبر جهة اتصال واحدة وبسرّية متبادلة.\n\nفي هذا المستوى من السوق، انضباط العملية لا يقل أهمية عن السعر؛ فالشراء المنظّم جيدًا يحفظ القيمة لسنوات بعد تسليم المفاتيح.'},
+  {id:'i18n-ar-3',img:{url:"img/blog/d03.jpg",alt:"Kolkata Properties - Real Estate India -Shanti Shrishti Bird Eye View",credit:"nancyarora2020 · Openverse",creditUrl:"https://www.flickr.com/photos/30641685@N04"},cat:'دليل',icon:'🔑',title:'لماذا تعمل المحفظة الخاصة بنظام الدعوة فقط؟',date:'2026-07-02',meta:'4 دقائق قراءة · يوليو 2026',src:'firma',
+   sum:'بعض العقارات لا تظهر أبدًا في منصات الإعلانات. الخصوصية تحمي البائع وقيمة الأصل معًا.',
+   body:'تتكوّن المحفظة الخاصة من عقارات اختار أصحابها عدم الإعلان عنها علنًا، لأسباب تتعلق بالخصوصية أو الأمن أو الاستراتيجية.\n\nفي البداية يُكشف فقط عن اسم الشارع وقيمة استرشادية للبدء؛ أما العنوان الكامل وتفاصيل الداخل والسعر الصافي فتُفصح بعد جلسة استشارية أولية، وللمشترين المؤهلين الذين تأكدت جديتهم وميزانيتهم. هذا التدرّج يمنع الانكشاف غير الضروري ويحفظ الموقف التفاوضي للأصل.\n\nبالنسبة للمشتري، يعني الوصول بالدعوة رؤية خيارات لا تصل إلى السوق المفتوح أبدًا؛ وبالنسبة للبائع، ألا يتحوّل بيته إلى ألبوم صور على المنصات. كل شيء يبدأ بلقاء تحليلي مجاني وغير ملزم.'},
+  {id:'i18n-ar-4',img:{url:"img/blog/d04.jpg",alt:"Week #35/52",credit:"Connor Tarter · Openverse",creditUrl:"https://www.flickr.com/photos/27446438@N07"},cat:'التقييم',icon:'📋',title:'كيف يختصر تقرير التقييم المستقل طريق البيع؟',date:'2026-06-10',meta:'4 دقائق قراءة · يونيو 2026',src:'firma',
+   sum:'حين يكون السعر جديرًا بالثقة تتسارع المفاوضات. تقرير تقييم حديث يبني هذه الثقة من اليوم الأول.',
+   body:'تتسارع الصفقة حين يقتنع المشتري بواقعية السعر، وهذا بالضبط ما يمنحه تقرير تقييم مستقل وحديث.\n\nالتقرير الجيد يعرض بموضوعية قيمة المتر المربع واتجاه الحي والصفقات المماثلة ودرجة جودة العقار. هذه الشفافية تقوّي موقف البائع على طاولة التفاوض وتختصر مرحلة المساومة اختصارًا ملموسًا.\n\nالتحليل الأولي للقيمة المبني على بيانات ProX الموثّقة هو الخطوة الأولى في استراتيجية تسعير سليمة؛ وهو لا يحل محل تقرير شركة التقييم المرخّصة المطلوب للائتمان والإجراءات الرسمية، بل يكمله، ويمنح الطرفين نقطة انطلاق واقعية مشتركة قبل أن تدخل العواطف على الخط.'},
+  {id:'i18n-ar-5',img:{url:"img/blog/d05.jpg",alt:"Blue Monopoly Houses and Apartments",credit:"Philip Taylor PT · Openverse",creditUrl:"https://www.flickr.com/photos/9731367@N02"},cat:'تحليل',icon:'📈',title:'عائد الإيجار أم نموّ القيمة: أي استراتيجية تناسبك؟',date:'2026-05-19',meta:'5 دقائق قراءة · مايو 2026',src:'firma',
+   sum:'استراتيجيتان وملفان مختلفان تمامًا للأحياء؛ وقراءة المؤشرين معًا هي ما يبني محفظة متوازنة.',
+   body:'يقف كل مستثمر عقاري أمام المفترق نفسه: دخل إيجاري منتظم أم نموّ في القيمة على المدى المتوسط؟\n\nالأحياء ذات مضاعف الإيجار المرتفع تمنح تدفقًا نقديًا يمكن التعويل عليه، بينما تحمل الأحياء الواقعة على ممرات التطوير إمكانات ارتفاع أقوى. ونادرًا ما يبلغ العاملان ذروتهما في الأصل نفسه، لذلك ينبغي أن يتبع الاختيار هدف المستثمر لا العكس.\n\nالطريقة العملية هي قراءة عائد الإيجار الإجمالي واتجاه أسعار الحي جنبًا إلى جنب؛ ومؤشرات ProX تتيح مقارنة المؤشرين على شاشة واحدة ولكل حي. وفي الجلسة الاستشارية نطابق هذه الأرقام مع أفقك الزمني وحاجتك للسيولة، فتتضح بنية المحفظة غالبًا من تلقاء نفسها.'},
+  {id:'i18n-ar-6',img:{url:"img/blog/d08.jpg",alt:"It's a deal - here's the money",credit:"sandklef · Openverse",creditUrl:"https://www.flickr.com/photos/63114905@N06"},cat:'الاستثمار',icon:'🌍',title:'تملّك العقار في إسطنبول للمشتري الدولي',date:'2026-04-22',meta:'5 دقائق قراءة · أبريل 2026',src:'firma',
+   sum:'بالترتيب الصحيح للمستندات لا تستغرق الصفقة الدولية أكثر من المحلية. هكذا تسير العملية فعليًا.',
+   body:'بالنسبة للمشتري الدولي، يسير تملّك مسكن في إسطنبول وفق تسلسل واضح: استخراج الرقم الضريبي، والترجمة المحلّفة لجواز السفر، وتقرير التقييم الرسمي الذي يطلبه السجل العقاري.\n\nالحلقة الحاسمة هي وثيقة صرف العملة الأجنبية: فتوثيق ثمن الشراء أصولًا شرط مسبق لنقل الملكية، والتخطيط المسبق لهذه الخطوة مع البنك يجعل يوم النقل هادئًا. وإذا كان التقدم بطلب الجنسية واردًا، تدخل حدود المبالغ وشروح السجل حيز الاعتبار — وهنا يلزم التنسيق مع مستشار قانوني.\n\nدور المستشار أن يغلق مسافة اللغة والتشريع بإدارة محكمة للعملية: كل خطوة موثقة، وكل رقم متحقق منه.'}
+]};
+/* Aktif dil (dn_lang) — i18n.js ile aynı kaynak; okunamazsa 'tr' */
+function _dnLang(){try{var v=localStorage.getItem('dn_lang');return (v==='en'||v==='ru'||v==='zh'||v==='ar')?v:'tr';}catch(e){return 'tr';}}
+/* Blog kabuk metinleri — dil-farkında ÜRETİM (i18n motoruna bırakılmaz; TR değerler mevcut literallerle birebir aynı) */
+var _DN_BLOG_UI={
+ tr:{manset:'<span class="hl">Günün</span> Manşeti',count:' başlık · ProX seçimi',oku:'Oku →',prev:'Önceki manşet',next:'Sonraki manşet',tum:'← Tüm yazılar',not:'📰 Güncel haber ve analizler <b>ProX doğrulanmış emlak verisiyle</b> beslenir · üye iseniz beğendiğiniz yazıyı <b>favorilerinize</b> ekleyebilirsiniz.',ctaB:'Bu konuda kişiye özel danışmanlık mı istiyorsunuz?',ctaA:'Ücretsiz Analiz Randevusu',anaKick:'Güncel · ProX Haber',anaH:'Piyasadan Haberler',anaSub:'Lüks konut ve yatırım gündemi — ProX doğrulanmış emlak verisiyle beslenen güncel akış.'},
+ en:{manset:'<span class="hl">Daily</span> Headlines',count:' stories · ProX picks',oku:'Read →',prev:'Previous headline',next:'Next headline',tum:'← All articles',not:'📰 News and analysis are powered by <b>ProX-verified real estate data</b> · members can add articles to their <b>favorites</b>.',ctaB:'Would you like personal advisory on this topic?',ctaA:'Book a Free Analysis',anaKick:'Latest · ProX News',anaH:'News from the Market',anaSub:'The luxury housing and investment agenda — a live feed powered by ProX-verified real estate data.'},
+ ru:{manset:'<span class="hl">Главное</span> за день',count:' материалов · выбор ProX',oku:'Читать →',prev:'Предыдущий материал',next:'Следующий материал',tum:'← Все статьи',not:'📰 Новости и аналитика опираются на <b>проверенные данные ProX</b> · участники могут добавлять статьи в <b>избранное</b>.',ctaB:'Нужна персональная консультация по этой теме?',ctaA:'Записаться на бесплатный анализ',anaKick:'Актуально · Новости ProX',anaH:'Новости рынка',anaSub:'Повестка элитного жилья и инвестиций — лента на основе проверенных данных ProX.'},
+ zh:{manset:'<span class="hl">每日</span>头条',count:' 篇 · ProX 精选',oku:'阅读 →',prev:'上一条头条',next:'下一条头条',tum:'← 全部文章',not:'📰 新闻与分析基于 <b>ProX 核验的房产数据</b> · 会员可将喜欢的文章加入<b>收藏</b>。',ctaB:'想就此话题获得一对一咨询吗?',ctaA:'预约免费分析',anaKick:'最新 · ProX 新闻',anaH:'市场动态',anaSub:'豪宅与投资动态——由 ProX 核验房产数据驱动的实时资讯。'},
+ ar:{manset:'<span class="hl">عناوين</span> اليوم',count:' عنوانًا · اختيار ProX',oku:'اقرأ ←',prev:'العنوان السابق',next:'العنوان التالي',tum:'كل المقالات ←',not:'📰 تستند الأخبار والتحليلات إلى <b>بيانات عقارية موثّقة من ProX</b> · يمكن للأعضاء إضافة المقالات إلى <b>المفضلة</b>.',ctaB:'هل ترغب في استشارة شخصية حول هذا الموضوع؟',ctaA:'احجز تحليلًا مجانيًا',anaKick:'الأحدث · أخبار ProX',anaH:'أخبار السوق',anaSub:'أجندة السكن الفاخر والاستثمار — تدفق حيّ مدعوم ببيانات ProX الموثّقة.'}};
+function _dnBlogT(k){var d=_DN_BLOG_UI[_dnLang()]||_DN_BLOG_UI.tr;return (d[k]!=null)?d[k]:_DN_BLOG_UI.tr[k];}
 var _dnBlogCache=null;
 /* GERÇEK ProX Haber Merkezi akışı — EmlakEkspertizi.com /api/blog/posts (20.000+ gerçek haber).
    Yayında (demo emlakekspertizi.com/demo/ altında) AYNI ORIGIN → CORS engeli yok; lokalde CORS
@@ -901,7 +1056,13 @@ async function _dnHaberDetay(b){
   }catch(e){b._pxErr=1;}
   try{var ov=document.getElementById('pageOverlay');if(ov&&ov.classList.contains('on'))dnBlogDetail(b.id);}catch(e){}
 }
-function dnBlogAll(){try{dnRunSchedule();}catch(e){}var px=_dnBlogCache||[];var seen={},all=[];
+function dnBlogAll(){try{dnRunSchedule();}catch(e){}
+  /* FAZ4B — yabancı dilde YALNIZ o dilin demo seti listelenir; TR DN_BLOGS,
+     yerel TR makaleler ve /api/blog/feed TR akışı listeye KARIŞMAZ. */
+  var _L=_dnLang();
+  if(_L!=='tr'&&DN_BLOGS_I18N[_L]){var _n2=new Date();
+    return DN_BLOGS_I18N[_L].filter(function(b){try{if(!b.date)return true;var d2=new Date(b.date);return isNaN(d2)||d2<=_n2;}catch(e){return true;}});}
+  var px=_dnBlogCache||[];var seen={},all=[];
   var arts=[];try{arts=dnArts().filter(function(a){return a.status==='published'||!a.status;}).map(function(a){return {id:a.id,cat:a.cat||'Haber',icon:a.icon||'📝',title:a.title,date:a.date,meta:a.meta||(((a.words||'')&&(a.words+' kelime · '))+(a.date||'')),src:'firma',sum:a.sum||'',body:a.body||'',blocks:a.blocks,video:a.video,img:a.img,tags:a.tags,seo:a.seo};});}catch(e){}
   arts.concat(px).concat(DN_BLOGS).forEach(function(b){var k=(b.title||'').toLocaleLowerCase('tr');if(k&&!seen[k]){seen[k]=1;all.push(b);}});
   /* FAZ3C YAYIN KAPISI: published_at <= now (Europe/Istanbul) — gelecek tarihli içerik public'te GÖRÜNMEZ */
@@ -914,7 +1075,7 @@ function _dnBlogCard(b){var mImg=(b.img&&b.img.url)||b.cover||'';return '<articl
         :('<div class="bcard-ic">'+(b.icon||'📄')+_favBtn('bl-'+b.id,'blog',{t:b.title,s:(b.cat||'')+' · '+(b.meta||''),p:'',u:'index.html#blog'})+'</div>'))
   +'<div class="bcard-body"><div class="bcard-cat">'+_leD(b.cat||'Genel')+(b.src==='prox'?' · <b class="bcard-prox">Pro<span>X</span></b>':'')+'</div>'
   +'<h3>'+_leD(b.title||'')+'</h3><p>'+_leD(b.sum||'')+'</p>'
-  +'<div class="bcard-meta"><span>'+_leD(b.meta||'')+'</span><span class="bcard-go">Oku →</span></div></div></article>';}
+  +'<div class="bcard-meta"><span>'+_leD(b.meta||'')+'</span><span class="bcard-go">'+_dnBlogT('oku')+'</span></div></div></article>';}
 /* GÜNÜN MANŞETİ — carousel + yan manşetler (gm portu). Havuz: görseli olan ilk 20 yazı. */
 var _dnManIdx=0;
 function _dnManPool(){var p=dnBlogAll().filter(function(b){return !!((b.img&&b.img.url)||b.cover);});return p.slice(0,Math.min(p.length,20));}
@@ -931,8 +1092,8 @@ function _dnMansetHTML(){
     +'<div class="man-big-cov'+(cov?'':' bi n1')+'"'+(cov?' style="background-image:url(\''+_leD(cov)+'\')"':'')+'>'
       +(cov?'':'<span class="bemoji">'+_leD(b.icon||'📄')+'</span>')
       +'<span class="man-counter">'+(_dnManIdx+1)+' / '+man.length+'</span>'
-      +'<button type="button" class="man-arrow prev" onclick="dnManGo('+(_dnManIdx-1)+')" aria-label="Önceki manşet">‹</button>'
-      +'<button type="button" class="man-arrow next" onclick="dnManGo('+(_dnManIdx+1)+')" aria-label="Sonraki manşet">›</button>'
+      +'<button type="button" class="man-arrow prev" onclick="dnManGo('+(_dnManIdx-1)+')" aria-label="'+_dnBlogT('prev')+'">‹</button>'
+      +'<button type="button" class="man-arrow next" onclick="dnManGo('+(_dnManIdx+1)+')" aria-label="'+_dnBlogT('next')+'">›</button>'
       +'<span class="man-cat">'+_leD(b.cat||'Haber')+'</span>'
     +'</div>'
     +'<div class="man-big-body" role="link" tabindex="0" onclick="dnBlogDetail(\''+_leD(b.id)+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();dnBlogDetail(\''+_leD(b.id)+'\')}">'
@@ -940,7 +1101,7 @@ function _dnMansetHTML(){
     +'<div class="man-pag">'+man.map(function(x,i){return '<button type="button" class="man-dot'+(i===_dnManIdx?' on':'')+'" onclick="dnManGo('+i+')">'+(i+1)+'</button>';}).join('')+'</div>'
     +'</article>';
   var side='<aside class="man-side">'+[1,2,3].map(function(k){return _dnManSideCard(man[(_dnManIdx+k)%man.length]);}).join('')+'</aside>';
-  return '<section class="man-sec"><div class="man-head"><h2><span class="hl">Günün</span> Manşeti</h2><span class="man-count">'+man.length+' başlık · ProX seçimi</span></div><div class="man-wrap">'+big+side+'</div></section>';
+  return '<section class="man-sec"><div class="man-head"><h2>'+_dnBlogT('manset')+'</h2><span class="man-count">'+man.length+_dnBlogT('count')+'</span></div><div class="man-wrap">'+big+side+'</div></section>';
 }
 /* manşet geçişi teleport yerine kısa crossfade (reduced-motion'da anında) */
 function dnManGo(i){var man=_dnManPool();if(!man.length)return;_dnManIdx=((i%man.length)+man.length)%man.length;var host=document.querySelector('.man-sec');if(!host)return;
@@ -950,7 +1111,7 @@ function dnManGo(i){var man=_dnManPool();if(!man.length)return;_dnManIdx=((i%man
     if(y){y.style.opacity='0';y.style.transition='opacity .2s ease';requestAnimationFrame(function(){requestAnimationFrame(function(){y.style.opacity='1';});});}},170);}
 window.dnManGo=dnManGo;
 function dnBlogListHTML(){var posts=dnBlogAll();return '<section class="sec-pad blog-ust"><div class="wrap">'+_dnMansetHTML()+'<div class="bgrid" id="dnBlogGrid">'+posts.map(_dnBlogCard).join('')+'</div>'
-  +'<div class="vault-note" style="margin-top:36px">📰 Güncel haber ve analizler <b>ProX doğrulanmış emlak verisiyle</b> beslenir · üye iseniz beğendiğiniz yazıyı <b>favorilerinize</b> ekleyebilirsiniz.</div></div></section>';}
+  +'<div class="vault-note" style="margin-top:36px">'+_dnBlogT('not')+'</div></div></section>';}
 function dnBlogDetail(id){var b=dnBlogById(id);if(!b){navGo('blog');return;}
   var body;
   if(b.src==='prox'&&b.slug&&!b.body){/* canlı haber — tam gövde henüz yok: çek, gelince yeniden render */
@@ -972,10 +1133,10 @@ function dnBlogDetail(id){var b=dnBlogById(id);if(!b){navGo('blog');return;}
   var ov=document.getElementById('pageOverlay');
   /* Haber detayı da bandsız — kompakt başlık bloğu içerikte, üst menünün hemen altında */
   ov.innerHTML='<section class="sec-pad blog-ust blog-detay"><div class="wrap" style="max-width:780px">'
-    +'<div class="bd-crumbrow"><button class="btn btn-line bd-back" onclick="navGo(\'blog\')">← Tüm yazılar</button><span class="bd-kat">Blog · '+_leD(b.cat||'Haber')+(b.src==='prox'?' · ProX Haber':'')+'</span></div>'
+    +'<div class="bd-crumbrow"><button class="btn btn-line bd-back" onclick="navGo(\'blog\')">'+_dnBlogT('tum')+'</button><span class="bd-kat">Blog · '+_leD(b.cat||'Haber')+(b.src==='prox'?' · ProX Haber':'')+'</span></div>'
     +'<div class="bd-head"><h1>'+_leD(b.title||'')+'</h1><div class="bd-meta">'+_leD(b.author||'Selin Meridyen')+(b.meta?' · '+_leD(b.meta):'')+'</div></div>'
     +'<div class="blog-article">'+cover+vid+body+'</div>'+srcNote
-    +'<div class="blog-cta"><b>Bu konuda kişiye özel danışmanlık mı istiyorsunuz?</b><a class="btn btn-gold" onclick="navGo(\'randevu\')">Ücretsiz Analiz Randevusu</a></div>'
+    +'<div class="blog-cta"><b>'+_dnBlogT('ctaB')+'</b><a class="btn btn-gold" onclick="navGo(\'randevu\')">'+_dnBlogT('ctaA')+'</a></div>'
     +'</div></section>'+footerHTML();
   ov.classList.add('on');ov.scrollTop=0;document.body.classList.add('lock');
   var hv=document.getElementById('homeView');if(hv)hv.style.display='none';
@@ -996,12 +1157,15 @@ try{window.proxBlogFeed=proxBlogFeed;window.dnBlogAll=dnBlogAll;window.dnBlogByI
 var DN_TID=(window.EMLAK_TENANT&&EMLAK_TENANT.tenant_id)||'consultant', DN_PBASE=(window.EMLAK_API_BASE||'');
 var DN_CONTENT=null, DN_SITE=null;
 try{ if(window.CSEngine){ DN_CONTENT=CSEngine.create({store:'dn_cs_content',tenantId:DN_TID,proxBase:DN_PBASE}); DN_SITE=CSEngine.create({store:'dn_cs_site',tenantId:DN_TID,proxBase:DN_PBASE}); _dnMigrateAgents(); } }catch(e){}
+/*__ADMIN_BLOK__*/
 function _dnMigrateAgents(){try{
   var old=JSON.parse(localStorage.getItem('dn_aicfg')||'null');            /* eski tek-depo → İçerik Ajanı (bir defalık) */
   if(old&&!localStorage.getItem('dn_cs_content'))localStorage.setItem('dn_cs_content',JSON.stringify(old));
-  var dsk=_dsKey(),dp=null; try{dp=JSON.parse(localStorage.getItem('dn_pfx_key')||'null');}catch(e){}
+  var dsk='';try{if(typeof _dsKey==='function')dsk=_dsKey();}catch(e){}/* Motor-1 admin bloğunda — public pakette yoksa sessiz geç */
+  var dp=null; try{dp=JSON.parse(localStorage.getItem('dn_pfx_key')||'null');}catch(e){}
   [DN_CONTENT,DN_SITE].forEach(function(E){ if(!E)return; var k=E.getKeys(),patch={}; if(!k.m1Key&&dsk){patch.m1Key=dsk;} if(!k.proxKey&&dp&&dp.key)patch.proxKey=dp.key; if(Object.keys(patch).length)E.setKeys(patch); });
 }catch(e){}}
+/*__ADMIN_BLOK_SON__*/
 function dnArts(){try{return JSON.parse(localStorage.getItem('dn_articles')||'[]')||[];}catch(e){return [];}}
 function dnArtsSave(a){try{localStorage.setItem('dn_articles',JSON.stringify(a||[]));}catch(e){}}
 /* lazy-cron: zamanı gelen scheduled → published (public + admin her yüklemede) */
@@ -1012,6 +1176,8 @@ function dnRunSchedule(){try{var a=dnArts(),now=Date.now(),ch=false;var en=true;
 window.dnRunSchedule=dnRunSchedule;window.dnArts=dnArts;
 function _dnCity(){try{return PROVINCE.name||(SERVICE_AREA&&SERVICE_AREA.primary)||(SAAS_CONFIG.firma&&SAAS_CONFIG.firma.il)||'İstanbul';}catch(e){return 'İstanbul';}}
 function _dnBrand(){try{return saasResolve('brandName')||(typeof brandName==='function'&&brandName())||'Selin Meridyen';}catch(e){return 'Selin Meridyen';}}
+/*__ADMIN_BLOK__*/ /* Bu bölge üretim paketinde admin-assets/ altına ayrılır (public bundle inmez) */
+/* İçerik Stüdyosu montajı — yalnız admin panelinden (staTab→icstudio) çağrılır; yonerge burada kalır */
 function _csModulYukle(cb){var L=["../shared/cs-engine.js?v=2", "js/content-studio.js?v=3"];var i=0;(function next(){if(i>=L.length){cb();return;}if(document.querySelector('script[data-csmod="'+L[i]+'"]')){i++;next();return;}var sc=document.createElement('script');sc.src=L[i];sc.dataset.csmod=L[i];sc.onload=function(){i++;next();};sc.onerror=function(){i++;next();};document.head.appendChild(sc);})();}
 function csMountDN(){if(!window.ContentStudio){_csModulYukle(function(){csMountDN();});return;}
    if(!window.ContentStudio||!DN_CONTENT)return; var host=document.getElementById('csHost'); if(!host)return;
@@ -1033,12 +1199,19 @@ function csMountDN(){if(!window.ContentStudio){_csModulYukle(function(){csMountD
   });
 }
 window.csMountDN=csMountDN;
-/* Ana sayfa haber vitrini — 9 görselli kart; canlı ProX akışı gelince tazelenir */
+/*__ADMIN_BLOK_SON__*/
+/* Ana sayfa haber vitrini — 9 görselli kart; canlı ProX akışı gelince tazelenir.
+   FAZ4B: yabancı dilde bölüm başlığı da dil-farkında yazılır; TR feed çekilmez. */
 function dnAnaHaber(){try{var g=document.getElementById('anaHaberGrid');if(!g)return;
+  if(_dnLang()!=='tr'){try{var hh=g.previousElementSibling;
+    if(hh&&hh.classList&&hh.classList.contains('hk-h')){
+      var kk=hh.querySelector('.hk-kick');if(kk)kk.textContent=_dnBlogT('anaKick');
+      var h2=hh.querySelector('h2');if(h2)h2.textContent=_dnBlogT('anaH');
+      var pp=hh.querySelector('p');if(pp)pp.textContent=_dnBlogT('anaSub');}}catch(e){}}
   var posts=dnBlogAll().filter(function(b){return (b.img&&b.img.url)||b.cover;}).slice(0,9);
   g.innerHTML=posts.map(_dnBlogCard).join('');
 }catch(e){}}
-try{dnAnaHaber();proxBlogFeed().then(function(px){if(px&&px.length)dnAnaHaber();}).catch(function(){});}catch(e){}
+try{dnAnaHaber();if(_dnLang()==='tr')proxBlogFeed().then(function(px){if(px&&px.length)dnAnaHaber();}).catch(function(){});}catch(e){}
 /* Site Asistanı portföy bağlamı (eşleştirme için özet) */
 function _dnPortfolioText(){try{var all=LISTINGS.concat(VIP_PORTFOLIO).slice(0,14);return all.map(function(x){return '• '+(x.baslik||x.tip||'İlan')+' — '+(x.bolge||'')+(x.oda?(' · '+x.oda):'')+(x.m2?(' · '+x.m2+'m²'):'')+(x.fiyat?(' · '+x.fiyat):'');}).join('\n');}catch(e){return '';}}
 
@@ -1077,7 +1250,7 @@ function openPage(key,opts){
   document.getElementById('nav').classList.add('scrolled');
   setActiveNav(key);
   if(key==='randevu'){buildDays();buildSlots();if(opts&&opts.note){const n=document.getElementById('ap_not');if(n)n.value=opts.note;}}
-  if(key==='blog'){/* ProX haber akışını çek → listeyi tazele (uç yoksa yalnız yerel kalır) */
+  if(key==='blog'&&_dnLang()==='tr'){/* ProX haber akışını çek → listeyi tazele (uç yoksa yalnız yerel kalır) · FAZ4B: TR akışı yalnız TR'de */
     try{proxBlogFeed().then(function(px){if(px&&px.length){var g=document.getElementById('dnBlogGrid');if(g)g.innerHTML=dnBlogAll().map(_dnBlogCard).join('');}try{window.dnFavReflect&&dnFavReflect();}catch(e){}}).catch(function(){});}catch(e){}}
   try{window.dnFavReflect&&dnFavReflect();}catch(e){}
 }
@@ -2261,7 +2434,7 @@ function openSaasAdmin(){const el=_saasAdminHost();el.classList.add('on');try{do
   set('sl_brand',saasResolve('brandName'));set('sl_accent',saasResolve('accent'));set('sl_soft',saasResolve('accentSoft'));
   set('sg_ga',saasResolve('googleAnalytics'));set('sg_gsc',saasResolve('googleSiteVerification'));set('sg_maps',saasResolve('googleMapsKey'));
   set('sm_title',saasResolve('metaTitle'));set('sm_desc',saasResolve('metaDescription'));set('sm_kw',saasResolve('metaKeywords'));
-  set('sp_base',SAAS_CONFIG.proxAiPrompts.persona);set('sp_custom',SAAS_CONFIG.tenantSettings.customPrompt);
+  set('sp_base',SAAS_CONFIG.proxAiPrompts.temelMetin||'');set('sp_custom',SAAS_CONFIG.tenantSettings.customPrompt);
   set('dn_m1_key',_dsKey());try{aiDsStatus();}catch(e){}try{dnStudioFill();}catch(e){}
   set('ed_belge',eidsFirma().eids.belgeNo);try{eidsRenderAdmin();}catch(e){}
   try{renderSA();renderVipStatus();renderOzp();renderGorusmelerD();}catch(e){}
@@ -2365,7 +2538,7 @@ function _saasPortalPanelHTML(){ var u=window.SAAS_USER.clientProfile||{}; var r
   +'<div class="sp-actions">'
     +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'surec\')"><b>ProX Pazar Analizi</b><span>Sözleşmeli gayrimenkul değer & prim analizi</span></div>'
     +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'iletisim\')"><b>Performans Grafikleri</b><span>Portföy değer seyri & likidite</span></div>'
-    +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'vip\')"><b>Sözleşmeli Gayrimenkuller</b><span>Yetki belgeli portföy kayıtları</span></div>'
+    +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'vip\')"><b>Sözleşmeli Gayrimenkuller</b><span>Örnek portföy kayıtları · DEMO</span></div>'
     +'<div class="sp-act" onclick="closeSaasPortal();navGo(\'randevu\')"><b>Ücretsiz Analiz</b><span>Danışman görüşmesi planlayın</span></div>'
   +'</div>'
   +'<button class="btn btn-line sp-go" onclick="saasPortalDisconnect()">Oturumu Kapat</button>'; }
@@ -2373,7 +2546,7 @@ window.openSaasPortal=openSaasPortal;window.closeSaasPortal=closeSaasPortal;wind
 
 /* ---------- INIT ---------- */
 window.addEventListener('load',function(){try{
-  _dsLoad();/* kalıcı Motor-1 bağlantısını yükle (localStorage dn_m1_key, yalnız demo) */
+  try{if(typeof _dsLoad==='function')_dsLoad();}catch(e){}/* kalıcı Motor-1 bağlantısı — admin bloğunda; public pakette yoksa init zinciri KIRILMAZ */
   /* WHITE-LABEL TEK KAYNAK: reseller adı yalnız dn_brand'de kalıcı (SAAS_CONFIG persist edilmez).
      brand.js ile app.js'in AYNI adı kullanması için SAAS_CONFIG.brandName'i dn_brand'den senkronla;
      yoksa app.js "Selin Meridyen" render eder, brand.js "Didem Keskin" → çakışma + geç-render sızıntısı. */
@@ -2438,7 +2611,10 @@ window.addEventListener('load',function(){try{
     var t0=null,dur=1500,done=false;function fin(){if(done)return;done=true;el.textContent=end.toLocaleString('tr-TR')+suf;}
     requestAnimationFrame(function s(ts){if(done)return;if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/dur),e=1-Math.pow(1-p,3);el.textContent=Math.round(end*e).toLocaleString('tr-TR')+suf;if(p<1)requestAnimationFrame(s);else fin();});
     setTimeout(fin,dur+250);/* RAF duraklarsa (arka plan sekme) son değeri garanti et */}
+  /* KPI FLASH FIX: sayaç animasyonu başlayana dek statik '0' yerine skeleton göster */
+  function heroSkel(){try{[].forEach.call(document.querySelectorAll('.hero [data-count]'),function(el){if(!el._kpiSkel){el._kpiSkel=1;el.innerHTML=KPI_SKEL;}});}catch(e){}}
   function heroBoot(){
+    heroSkel();
     var cards=[].slice.call(document.querySelectorAll('.hero-viz .hcard'));
     cards.forEach(function(c,i){setTimeout(function(){c.classList.add('show');},RM?0:(700+i*180));});
     setTimeout(function(){[].forEach.call(document.querySelectorAll('.hero [data-count]'),fmtCount);},RM?0:1100);
@@ -2512,7 +2688,8 @@ window.addEventListener('load',function(){try{
     var ticks=[[0,'12 ay önce'],[5,'6 ay'],[11,'Bugün']];
     mainEl.innerHTML=''
      +'<div class="bz-mhead"><div><div class="lbl">'+d.n+' · ortalama m²</div>'
-       +'<div class="bz-big"><span data-c="'+d.avg+'">0</span> <small>₺/m²</small></div></div>'
+       /* KPI FLASH FIX: animasyon tetiklenene dek 0 yerine skeleton — animNum textContent yazınca yerini gerçek değer alır */
+       +'<div class="bz-big"><span data-c="'+d.avg+'">'+KPI_SKEL+'</span> <small>₺/m²</small></div></div>'
        +'<div class="bz-delta'+(Math.abs(d.yoy)<0.1?'':(d.yoy<0?' dn':''))+'">'+(Math.abs(d.yoy)<0.1?('● '+(d.skor>=90?'Çok güçlü':d.skor>=85?'Güçlü':d.skor>=75?'İstikrarlı':'Gelişen')+' bölge'):((d.yoy>=0?'▲ +':'▼ ')+d.yoy+'% <span style="color:var(--muted);font-weight:500">· 12 ay</span>'))+'</div></div>'
      +'<div class="bz-chart"><svg viewBox="0 0 '+W+' '+(H+18)+'" role="img" aria-label="'+d.n+' 12 aylık m² fiyat seyri">'
        +'<defs><linearGradient id="bzGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--gold)" stop-opacity=".30"/><stop offset="1" stop-color="var(--gold)" stop-opacity="0"/></linearGradient></defs>'
@@ -2524,9 +2701,10 @@ window.addEventListener('load',function(){try{
   }
   function renderSide(d){
     sideEl.innerHTML=''
-     +'<div class="bz-kpi"><div class="k">Ortalama m²</div><div class="v"><span data-c="'+d.avg+'">0</span> <small>₺</small></div></div>'
-     +'<div class="bz-kpi"><div class="k">Yıllık Değişim</div><div class="v"><span class="pos">+<span data-c="'+d.yoy+'" data-dec="1">0</span></span><small>%</small></div></div>'
-     +'<div class="bz-kpi"><div class="k">Yatırım Skoru</div><div class="bz-ringwrap"><div class="bz-ring" style="--p:0"><span class="rn" data-c="'+d.skor+'">0</span></div><div style="font-size:.71875rem;color:var(--muted);line-height:1.45">100 üzerinden<br><b style="color:var(--em)">'+(d.skor>=90?'Çok Güçlü':d.skor>=85?'Güçlü':'İyi')+'</b></div></div></div>'
+     /* KPI FLASH FIX: ilk frame'de 0 basılmaz — skeleton, animNum ile gerçek değere döner */
+     +'<div class="bz-kpi"><div class="k">Ortalama m²</div><div class="v"><span data-c="'+d.avg+'">'+KPI_SKEL+'</span> <small>₺</small></div></div>'
+     +'<div class="bz-kpi"><div class="k">Yıllık Değişim</div><div class="v"><span class="pos">+<span data-c="'+d.yoy+'" data-dec="1">'+KPI_SKEL+'</span></span><small>%</small></div></div>'
+     +'<div class="bz-kpi"><div class="k">Yatırım Skoru</div><div class="bz-ringwrap"><div class="bz-ring" style="--p:0"><span class="rn" data-c="'+d.skor+'">'+KPI_SKEL+'</span></div><div style="font-size:.71875rem;color:var(--muted);line-height:1.45">100 üzerinden<br><b style="color:var(--em)">'+(d.skor>=90?'Çok Güçlü':d.skor>=85?'Güçlü':'İyi')+'</b></div></div></div>'
      +'<div class="bz-kpi"><div class="k">Likidite</div><div class="v" style="font-size:1.25rem">'+d.likT+'</div><div class="bz-lik"><i data-w="'+d.lik+'"></i></div></div>';
   }
   function renderCmp(){
