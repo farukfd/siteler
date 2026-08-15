@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<title>Demo Yönetim Sandbox · Selin Meridyen</title>
+<meta name="description" content="Demo yönetim sandbox: değişiklikler yalnız bu oturumda kalır, gerçek veri değişmez.">
+<style>
+/* ============================================================
+   DEMO YÖNETİM SANDBOX — tamamen kendi içinde (self-contained)
+   Hiçbir dış dosya, hiçbir admin varlığı yüklenmez.
+   Renk dili: yeşil #0e5e3e / altın #b4975a
+   ============================================================ */
+:root{
+  --yesil:#0e5e3e;
+  --yesil-koyu:#0a4a30;
+  --yesil-acik:#eef6f1;
+  --altin:#b4975a;
+  --altin-acik:#f7f1e4;
+  --murekkep:#1c2420;
+  --gri:#5c6660;
+  --cizgi:#e2e8e4;
+  --zemin:#f7f9f8;
+  --kart:#ffffff;
+  --serif:Georgia,'Times New Roman',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);background:var(--zemin);color:var(--murekkep);line-height:1.55;font-size:15px}
+a{color:var(--yesil)}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:14px;padding:9px 11px;border:1px solid var(--cizgi);border-radius:8px;background:#fff;color:var(--murekkep);width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid rgba(14,94,62,.35);border-color:var(--yesil)}
+label{display:block;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--gri);margin:0 0 5px}
+
+/* --- Kalıcı sandbox bandı --- */
+.bant{position:sticky;top:0;z-index:50;background:var(--yesil-koyu);color:#fff;padding:9px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;text-align:center;font-size:13px}
+.bant strong{color:#e8d7ae;letter-spacing:.06em}
+.bant a{color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);padding:4px 12px;border-radius:999px;text-decoration:none;font-weight:600;white-space:nowrap;transition:background .2s}
+.bant a:hover{background:rgba(255,255,255,.26)}
+
+/* --- Başlık --- */
+.tepe{background:linear-gradient(135deg,var(--yesil) 0%,var(--yesil-koyu) 100%);color:#fff;padding:34px 20px 26px}
+.tepe-ic{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.tepe h1{font-family:var(--serif);font-size:clamp(24px,4vw,34px);font-weight:600;letter-spacing:.01em}
+.tepe h1 span{color:#e8d7ae}
+.tepe p{opacity:.85;margin-top:6px;max-width:560px;font-size:14px}
+.rozet-demo{display:inline-block;background:var(--altin);color:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;padding:4px 12px;border-radius:999px;text-transform:uppercase}
+
+/* --- Sekmeler --- */
+.sekmeler{position:sticky;top:44px;z-index:40;background:var(--kart);border-bottom:1px solid var(--cizgi);overflow-x:auto}
+.sekmeler-ic{max-width:1080px;margin:0 auto;display:flex;gap:2px;padding:0 12px}
+.sekme{flex:0 0 auto;background:none;border:none;border-bottom:3px solid transparent;padding:13px 15px;font-size:13.5px;font-weight:600;color:var(--gri);white-space:nowrap;transition:color .2s,border-color .2s}
+.sekme:hover{color:var(--yesil)}
+.sekme.aktif{color:var(--yesil);border-bottom-color:var(--altin)}
+
+/* --- Bölümler --- */
+main{max-width:1080px;margin:0 auto;padding:26px 16px 60px}
+.bolum{display:none}
+.bolum.aktif{display:block}
+.kart{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;padding:22px;margin-bottom:18px;box-shadow:0 1px 3px rgba(14,94,62,.05)}
+.kart h2{font-family:var(--serif);font-size:21px;font-weight:600;color:var(--yesil-koyu);margin-bottom:4px}
+.kart .alt-not{font-size:12.5px;color:var(--gri);margin-bottom:16px}
+.izgara{display:grid;gap:14px}
+.izgara.iki{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.izgara.uc{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+
+.btn{display:inline-block;border:none;border-radius:9px;padding:10px 18px;font-size:13.5px;font-weight:600;transition:opacity .2s,transform .1s}
+.btn:active{transform:translateY(1px)}
+.btn-yesil{background:var(--yesil);color:#fff}
+.btn-yesil:hover{opacity:.9}
+.btn-altin{background:var(--altin);color:#fff}
+.btn-altin:hover{opacity:.9}
+.btn-cerceve{background:#fff;color:var(--yesil);border:1px solid var(--yesil)}
+.btn-cerceve:hover{background:var(--yesil-acik)}
+.btn-kucuk{padding:6px 12px;font-size:12.5px;border-radius:7px}
+.btn-tehlike{background:#fff;color:#a33c2e;border:1px solid #d9a79e}
+.btn-tehlike:hover{background:#fbf0ee}
+
+/* --- Tablo / satırlar --- */
+.tablo-sar{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--gri);text-align:left;padding:9px 10px;border-bottom:2px solid var(--cizgi)}
+td{padding:11px 10px;border-bottom:1px solid var(--cizgi);font-size:13.5px;vertical-align:middle}
+tr:hover td{background:var(--yesil-acik)}
+.rozet{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.08em;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.rozet-ornek{background:var(--altin-acik);color:#8a6f38;border:1px solid #e4d3ac}
+.rozet-tip{background:var(--yesil-acik);color:var(--yesil);border:1px solid #cfe3d7}
+.rozet-eids{background:#f1f3f2;color:var(--gri);border:1px dashed #c7cec9}
+.fiyat{font-weight:700;color:var(--yesil-koyu);white-space:nowrap}
+td input{padding:6px 8px;font-size:13px;min-width:90px}
+
+/* --- Marka önizleme kartı --- */
+.onizle{border-radius:14px;overflow:hidden;border:1px solid var(--cizgi);box-shadow:0 8px 26px rgba(14,94,62,.12)}
+.onizle-tepe{padding:26px 22px;color:#fff;transition:background .3s}
+.onizle-tepe h3{font-family:var(--serif);font-size:24px;font-weight:600}
+.onizle-tepe p{font-size:13.5px;opacity:.88;margin-top:5px}
+.onizle-nav{display:flex;gap:14px;padding:11px 22px;background:#fff;border-bottom:1px solid var(--cizgi);font-size:12.5px;font-weight:600;color:var(--gri);flex-wrap:wrap}
+.onizle-nav span{transition:color .3s}
+.onizle-gov{padding:18px 22px;background:#fff;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.onizle-mini{border:1px solid var(--cizgi);border-radius:10px;padding:12px;font-size:12px}
+.onizle-mini b{display:block;font-size:12.5px;margin-bottom:3px}
+.onizle-cta{display:inline-block;margin:0 22px 20px;padding:9px 18px;border-radius:8px;color:#fff;font-size:13px;font-weight:600;transition:background .3s}
+
+/* --- Google snippet önizleme --- */
+.snippet{border:1px solid var(--cizgi);border-radius:12px;padding:18px 20px;background:#fff;max-width:640px}
+.snippet .s-url{font-size:12.5px;color:#1f6b46}
+.snippet .s-baslik{font-size:19px;color:#1a0dab;font-family:Arial,Helvetica,sans-serif;margin:3px 0 4px;line-height:1.3;overflow-wrap:anywhere}
+.snippet .s-aciklama{font-size:13.5px;color:#4d5156;font-family:Arial,Helvetica,sans-serif;overflow-wrap:anywhere}
+.sayac{font-size:11.5px;color:var(--gri);margin-top:4px}
+.sayac.tasti{color:#a33c2e;font-weight:600}
+
+/* --- Paket rozetleri --- */
+.paket-izgara{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.paket-kutu{border:1px solid var(--cizgi);border-radius:12px;padding:16px;background:#fff;display:flex;gap:12px;align-items:flex-start}
+.paket-kutu.acik{border-color:#cfe3d7;background:var(--yesil-acik)}
+.paket-nokta{width:34px;height:34px;flex:0 0 34px;border-radius:9px;background:var(--yesil);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+.paket-kutu h4{font-size:13.5px;margin-bottom:2px}
+.paket-kutu p{font-size:12px;color:var(--gri)}
+.paket-durum{margin-left:auto;font-size:10.5px;font-weight:700;letter-spacing:.08em;color:var(--yesil);align-self:center}
+
+/* --- Lead kartları --- */
+.lead-liste{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.lead-kart{border:1px solid var(--cizgi);border-left:4px solid var(--altin);border-radius:10px;padding:14px 16px;background:#fff}
+.lead-kart b{font-size:14.5px}
+.lead-kart .l-tel{font-size:13px;color:var(--yesil-koyu);font-weight:600;margin-top:2px}
+.lead-kart .l-not{font-size:12.5px;color:var(--gri);margin-top:6px}
+.lead-kart .l-etiket{margin-top:8px}
+
+/* --- Bildirim --- */
+#bildirim{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:var(--yesil-koyu);color:#fff;padding:11px 22px;border-radius:999px;font-size:13.5px;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:transform .3s;z-index:99;pointer-events:none;max-width:90vw;text-align:center}
+#bildirim.goster{transform:translateX(-50%) translateY(0)}
+
+/* --- Footer --- */
+footer{border-top:1px solid var(--cizgi);background:var(--kart);padding:24px 16px;text-align:center;font-size:12.5px;color:var(--gri)}
+footer .nadas{margin-top:6px;font-size:12px}
+
+@media (max-width:640px){
+  .tepe{padding:24px 16px 20px}
+  .kart{padding:16px}
+  .sekmeler{top:64px}
+}
+</style>
+</head>
+<body>
+
+<!-- Kalıcı sandbox bandı -->
+<div class="bant" role="status">
+  <span><strong>DEMO YÖNETİM SANDBOX</strong> — değişiklikler yalnız bu oturumda kalır; gerçek veri değişmez.</span>
+  <a href="/">Siteyi Önizle</a>
+</div>
+
+<header class="tepe">
+  <div class="tepe-ic">
+    <div>
+      <span class="rozet-demo">Örnek Ortam · Demo</span>
+      <h1>Demo <span>Yönetim</span> Paneli</h1>
+      <p>Platformun yönetim deneyimini güvenle keşfedin. Buradaki tüm kayıtlar örnektir; hiçbir işlem gerçek siteyi, gerçek ilanları veya sunucudaki veriyi etkilemez.</p>
+    </div>
+    <div>
+      <button class="btn btn-tehlike" id="btnSifirla" type="button">Demo verilerini sıfırla</button>
+    </div>
+  </div>
+</header>
+
+<!-- Sekme çubuğu -->
+<nav class="sekmeler" aria-label="Yönetim sekmeleri">
+  <div class="sekmeler-ic" id="sekmeCubugu">
+    <button class="sekme" data-sekme="marka" type="button">Marka</button>
+    <button class="sekme" data-sekme="iletisim" type="button">İletişim &amp; Hizmet Alanı</button>
+    <button class="sekme" data-sekme="ilanlar" type="button">İlanlar</button>
+    <button class="sekme" data-sekme="portfoy" type="button">Özel Portföy</button>
+    <button class="sekme" data-sekme="lead" type="button">Lead / CRM</button>
+    <button class="sekme" data-sekme="seo" type="button">Dil / SEO</button>
+    <button class="sekme" data-sekme="paket" type="button">Paket &amp; Özellikler</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ============ 1) MARKA ============ -->
+  <section class="bolum" id="bolum-marka">
+    <div class="kart">
+      <h2>Marka Önizleme</h2>
+      <div class="alt-not">Ad, slogan ve renkleri değiştirin; sağdaki mini site önizlemesine canlı yansır. Yalnız bu sandbox içinde geçerlidir.</div>
+      <div class="izgara iki">
+        <div>
+          <div class="izgara">
+            <div>
+              <label for="mAd">Marka adı</label>
+              <input id="mAd" maxlength="60" autocomplete="off">
+            </div>
+            <div>
+              <label for="mSlogan">Slogan</label>
+              <input id="mSlogan" maxlength="90" autocomplete="off">
+            </div>
+            <div class="izgara iki">
+              <div>
+                <label for="mRenk1">Ana renk</label>
+                <input id="mRenk1" type="color" style="height:44px;padding:4px">
+              </div>
+              <div>
+                <label for="mRenk2">Vurgu rengi</label>
+                <input id="mRenk2" type="color" style="height:44px;padding:4px">
+              </div>
+            </div>
+            <div><button class="btn btn-yesil" id="btnMarkaKaydet" type="button">Sandbox'a kaydet</button></div>
+          </div>
+        </div>
+        <div>
+          <div class="onizle" id="onizleKart" aria-label="Mini site önizlemesi">
+            <div class="onizle-tepe" id="onzTepe">
+              <h3 id="onzAd">—</h3>
+              <p id="onzSlogan">—</p>
+            </div>
+            <div class="onizle-nav">
+              <span class="onz-vurgu">Ana Sayfa</span><span>İlanlar</span><span>Özel Portföy</span><span>İletişim</span>
+            </div>
+            <div class="onizle-gov">
+              <div class="onizle-mini"><b>Örnek İlan</b>Levent 3+1 · temsilî kart</div>
+              <div class="onizle-mini"><b>Bölge Analizi</b>Endeks görünümü · temsilî</div>
+              <div class="onizle-mini"><b>Randevu</b>Demo form · temsilî</div>
+            </div>
+            <span class="onizle-cta" id="onzCta">Ücretsiz Değerleme</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2) İLETİŞİM & HİZMET ALANI ============ -->
+  <section class="bolum" id="bolum-iletisim">
+    <div class="kart">
+      <h2>İletişim &amp; Hizmet Alanı</h2>
+      <div class="alt-not">Örnek iletişim bilgileri ve hizmet verilen bölge. Kayıt yalnız bu oturumdaki sandbox'a yazılır.</div>
+      <form id="formIletisim" class="izgara">
+        <div class="izgara iki">
+          <div>
+            <label for="iTel">Telefon (örnek)</label>
+            <input id="iTel" autocomplete="off" placeholder="0555 000 00 00">
+          </div>
+          <div>
+            <label for="iEposta">E-posta (örnek)</label>
+            <input id="iEposta" autocomplete="off" placeholder="ornek@ornek-site.demo">
+          </div>
+        </div>
+        <div>
+          <label for="iAdres">Ofis adresi (örnek)</label>
+          <input id="iAdres" autocomplete="off">
+        </div>
+        <div class="izgara uc">
+          <div>
+            <label for="iIl">İl</label>
+            <select id="iIl"><option value="İstanbul">İstanbul</option></select>
+          </div>
+          <div>
+            <label for="iIlce">İlçe</label>
+            <select id="iIlce"></select>
+          </div>
+          <div>
+            <label for="iMahalle">Mahalle / semt</label>
+            <input id="iMahalle" autocomplete="off" placeholder="Örn. Levent">
+          </div>
+        </div>
+        <div><button class="btn btn-yesil" type="submit">Sandbox'a kaydet</button></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ 3) İLANLAR ============ -->
+  <section class="bolum" id="bolum-ilanlar">
+    <div class="kart">
+      <h2>Demo İlanlar</h2>
+      <div class="alt-not">ÖRNEK İLAN · DEMO — Gerçek ilan veya resmî EİDS doğrulaması değildir. EİDS alanı platform özelliğinin temsilî gösterimidir.</div>
+      <div class="tablo-sar">
+        <table>
+          <thead><tr><th>Durum</th><th>Başlık</th><th>Tip</th><th>Fiyat</th><th>EİDS</th><th></th></tr></thead>
+          <tbody id="ilanGovde"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="kart">
+      <h2>Yeni Demo İlan Ekle</h2>
+      <div class="alt-not">Eklenen kayıt yalnız bu sandbox listesinde görünür.</div>
+      <form id="formIlanEkle" class="izgara uc">
+        <div>
+          <label for="yiBaslik">Başlık</label>
+          <input id="yiBaslik" required maxlength="80" placeholder="Örn. Bebek deniz manzaralı 2+1">
+        </div>
+        <div>
+          <label for="yiTip">Tip</label>
+          <select id="yiTip">
+            <option value="Satılık">Satılık</option>
+            <option value="Kiralık">Kiralık</option>
+          </select>
+        </div>
+        <div>
+          <label for="yiFiyat">Fiyat etiketi</label>
+          <input id="yiFiyat" required maxlength="30" placeholder="Örn. 18.500.000 TL">
+        </div>
+        <div><button class="btn btn-altin" type="submit">Demo ilan ekle</button></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ 4) ÖZEL PORTFÖY ============ -->
+  <section class="bolum" id="bolum-portfoy">
+    <div class="kart">
+      <h2>Özel Portföy (Demo)</h2>
+      <div class="alt-not">ÖRNEK İLAN · DEMO — Gizlilik esaslı kayıtlar temsilîdir; gerçek portföy verisi değildir.</div>
+      <div class="tablo-sar">
+        <table>
+          <thead><tr><th>Durum</th><th>Başlık</th><th>Kategori</th><th>Fiyat</th><th></th></tr></thead>
+          <tbody id="portfoyGovde"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="kart">
+      <h2>Yeni Demo Portföy Kaydı</h2>
+      <form id="formPortfoyEkle" class="izgara uc">
+        <div>
+          <label for="ypBaslik">Başlık</label>
+          <input id="ypBaslik" required maxlength="80" placeholder="Örn. Yeniköy sırt hattı yalı dairesi">
+        </div>
+        <div>
+          <label for="ypKategori">Kategori</label>
+          <select id="ypKategori">
+            <option>Satılık Daire</option><option>Kiralık Daire</option><option>Villa</option>
+            <option>Ofis</option><option>Arsa</option><option>Gizli Kayıt</option>
+          </select>
+        </div>
+        <div>
+          <label for="ypFiyat">Fiyat etiketi</label>
+          <input id="ypFiyat" required maxlength="30" placeholder="Örn. Talep Üzerine">
+        </div>
+        <div><button class="btn btn-altin" type="submit">Demo kayıt ekle</button></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ 5) LEAD / CRM ============ -->
+  <section class="bolum" id="bolum-lead">
+    <div class="kart">
+      <h2>Lead / CRM Demo Kutusu</h2>
+      <div class="alt-not">Sentetik (uydurma) talepler — gerçek kişi verisi içermez, hiçbir sunucuya gönderilmez.</div>
+      <div class="lead-liste" id="leadListe"></div>
+    </div>
+    <div class="kart">
+      <h2>Yeni Demo Lead Ekle</h2>
+      <form id="formLeadEkle" class="izgara uc">
+        <div>
+          <label for="ylAd">Ad (örnek)</label>
+          <input id="ylAd" required maxlength="60" placeholder="Örn. Örnek Alıcı D">
+        </div>
+        <div>
+          <label for="ylTel">Telefon (örnek)</label>
+          <input id="ylTel" required maxlength="20" placeholder="555 000 00 04">
+        </div>
+        <div>
+          <label for="ylNot">Not</label>
+          <input id="ylNot" maxlength="120" placeholder="Örn. Boğaz hattında kiralık arıyor">
+        </div>
+        <div><button class="btn btn-altin" type="submit">Demo lead ekle</button></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ 6) DİL / SEO ============ -->
+  <section class="bolum" id="bolum-seo">
+    <div class="kart">
+      <h2>Dil / SEO Önizleme</h2>
+      <div class="alt-not">Başlık ve açıklama alanlarını düzenleyin; arama sonucu görünümü aşağıda canlı güncellenir. Yalnız önizlemedir, sayfa etiketleri değişmez.</div>
+      <div class="izgara">
+        <div>
+          <label for="sTitle">Sayfa başlığı (title)</label>
+          <input id="sTitle" maxlength="120" autocomplete="off">
+          <div class="sayac" id="sTitleSayac"></div>
+        </div>
+        <div>
+          <label for="sDesc">Açıklama (description)</label>
+          <textarea id="sDesc" rows="3" maxlength="300"></textarea>
+          <div class="sayac" id="sDescSayac"></div>
+        </div>
+        <div>
+          <label>Arama sonucu önizlemesi</label>
+          <div class="snippet">
+            <div class="s-url">www.ornek-site.demo › danisman</div>
+            <div class="s-baslik" id="snBaslik">—</div>
+            <div class="s-aciklama" id="snAciklama">—</div>
+          </div>
+        </div>
+        <div><button class="btn btn-yesil" id="btnSeoKaydet" type="button">Sandbox'a kaydet</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7) PAKET & ÖZELLİKLER ============ -->
+  <section class="bolum" id="bolum-paket">
+    <div class="kart">
+      <h2>Paket &amp; Özellik Görünümü</h2>
+      <div class="alt-not">Bu sitede etkin platform özelliklerinin temsilî listesi. Salt okunur gösterimdir.</div>
+      <div class="paket-izgara" id="paketIzgara"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div>Bu sayfa bir <strong>demo yönetim sandbox</strong>'ıdır; tüm kayıtlar örnektir ve oturum kapanınca silinir.</div>
+  <div class="nadas">Yazılım ve altyapı © 2005–2026 NADAS Gayrimenkul Bilgi İletişim Sistemleri Ltd. Şti.</div>
+</footer>
+
+<div id="bildirim" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   DEMO YÖNETİM SANDBOX MOTORU
+   - Tüm durum sessionStorage 'demoYonetim' alanında tutulur.
+   - Hiçbir API'ye yazma isteği atılmaz; hiçbir ağ çağrısı yoktur.
+   - "Demo verilerini sıfırla" bu alanı silip tohum veriyi kurar.
+   ============================================================ */
+(function(){
+  "use strict";
+  var SAKLAMA_ADI = "demoYonetim";
+
+  /* --- Yardımcılar --- */
+  function el(id){ return document.getElementById(id); }
+  /* XSS koruması: kullanıcı girdisi her zaman kaçırılarak basılır */
+  function kacir(s){
+    return String(s == null ? "" : s)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+  function bildir(mesaj){
+    var b = el("bildirim");
+    b.textContent = mesaj;
+    b.classList.add("goster");
+    clearTimeout(bildir._z);
+    bildir._z = setTimeout(function(){ b.classList.remove("goster"); }, 2400);
+  }
+
+  /* --- Tohum (seed) veri: her sıfırlamada bu hale dönülür --- */
+  function tohumVeri(){
+    return {
+      marka: { ad:"Selin Meridyen", slogan:"Lüks konut ve özel portföyde kişiye özel danışmanlık", renk1:"#0e5e3e", renk2:"#b4975a" },
+      iletisim: { tel:"0555 000 00 00", eposta:"ornek@ornek-site.demo", adres:"Örnek Plaza No:1 (temsilî adres)", il:"İstanbul", ilce:"Beşiktaş", mahalle:"Levent" },
+      ilanlar: [
+        { id:"i1", baslik:"Levent 3+1 rezidans dairesi",        tip:"Satılık", fiyat:"24.500.000 TL" },
+        { id:"i2", baslik:"Zekeriyaköy müstakil villa",         tip:"Satılık", fiyat:"58.000.000 TL" },
+        { id:"i3", baslik:"Cihangir manzaralı kiralık daire",   tip:"Kiralık", fiyat:"65.000 TL/ay" },
+        { id:"i4", baslik:"Maslak plaza katı ofis",             tip:"Satılık", fiyat:"39.000.000 TL" },
+        { id:"i5", baslik:"Nişantaşı cadde üstü kiralık dükkan",tip:"Kiralık", fiyat:"145.000 TL/ay" },
+        { id:"i6", baslik:"Riva imarlı arsa",                   tip:"Satılık", fiyat:"31.000.000 TL" },
+        { id:"i7", baslik:"Caddebostan sahil hattı 4+1",        tip:"Satılık", fiyat:"32.000.000 TL" },
+        { id:"i8", baslik:"Ataşehir site içi kiralık daire",    tip:"Kiralık", fiyat:"52.000 TL/ay" },
+        { id:"i9", baslik:"Emirgan koruya nazır kiralık villa", tip:"Kiralık", fiyat:"280.000 TL/ay" }
+      ],
+      portfoy: [
+        { id:"p1", baslik:"Ulus sırtları satılık daire",            kategori:"Satılık Daire", fiyat:"46.000.000 TL" },
+        { id:"p2", baslik:"Bebek koru manzaralı kiralık daire",     kategori:"Kiralık Daire", fiyat:"190.000 TL/ay" },
+        { id:"p3", baslik:"Kandilli bahçeli villa",                 kategori:"Villa",         fiyat:"95.000.000 TL" },
+        { id:"p4", baslik:"Levent kule katı ofis",                  kategori:"Ofis",          fiyat:"72.000.000 TL" },
+        { id:"p5", baslik:"Çekmeköy yatırımlık arsa",               kategori:"Arsa",          fiyat:"27.500.000 TL" },
+        { id:"p6", baslik:"Boğaz hattı gizlilik esaslı konut",      kategori:"Gizli Kayıt",   fiyat:"Talep Üzerine" }
+      ],
+      leadler: [
+        { id:"l1", ad:"Örnek Alıcı A", tel:"555 000 00 01", not:"Levent çevresinde 3+1 arıyor (sentetik kayıt)" },
+        { id:"l2", ad:"Örnek Alıcı B", tel:"555 000 00 02", not:"Kiralık ofis talebi, Maslak (sentetik kayıt)" },
+        { id:"l3", ad:"Örnek Alıcı C", tel:"555 000 00 03", not:"Villa portföyü hakkında bilgi istedi (sentetik kayıt)" }
+      ],
+      seo: {
+        title:"Selin Meridyen · Lüks Konut & Özel Portföy Danışmanı",
+        desc:"Kişiye özel emlak danışmanlığı platform demosu. Örnek lüks ilan vitrini, davet usulü VIP özel portföy ve ücretsiz değer analizi."
+      }
+    };
+  }
+
+  /* --- Saklama katmanı: yalnız sessionStorage, ağ yok --- */
+  function durumOku(){
+    try{
+      var ham = sessionStorage.getItem(SAKLAMA_ADI);
+      if(ham){
+        var d = JSON.parse(ham);
+        if(d && d.marka && d.ilanlar) return d;
+      }
+    }catch(e){ /* bozuk kayıt → tohuma dön */ }
+    var taze = tohumVeri();
+    durumYaz(taze);
+    return taze;
+  }
+  function durumYaz(d){
+    try{ sessionStorage.setItem(SAKLAMA_ADI, JSON.stringify(d)); }
+    catch(e){ /* saklama kapalıysa sayfa yine bellek-içi çalışır */ }
+  }
+
+  var durum = durumOku();
+
+  /* --- İstanbul ilçeleri (sabit küçük liste — sandbox için yeterli) --- */
+  var ILCELER = ["Adalar","Ataşehir","Bakırköy","Beşiktaş","Beykoz","Beyoğlu","Fatih","Kadıköy","Kartal","Sarıyer","Şişli","Üsküdar","Zeytinburnu"];
+
+  /* ============ SEKME YÖNETİMİ (hash ile derin bağlantı) ============ */
+  var SEKMELER = ["marka","iletisim","ilanlar","portfoy","lead","seo","paket"];
+  function sekmeAc(ad, hashYaz){
+    if(SEKMELER.indexOf(ad) < 0) ad = "marka";
+    var dugmeler = document.querySelectorAll(".sekme");
+    for(var i=0;i<dugmeler.length;i++){
+      dugmeler[i].classList.toggle("aktif", dugmeler[i].getAttribute("data-sekme") === ad);
+    }
+    for(var j=0;j<SEKMELER.length;j++){
+      el("bolum-"+SEKMELER[j]).classList.toggle("aktif", SEKMELER[j] === ad);
+    }
+    if(hashYaz !== false){
+      try{ history.replaceState(null,"","#"+ad); }catch(e){ location.hash = ad; }
+    }
+  }
+  el("sekmeCubugu").addEventListener("click", function(ev){
+    var hedef = ev.target.closest ? ev.target.closest(".sekme") : null;
+    if(hedef) sekmeAc(hedef.getAttribute("data-sekme"));
+  });
+  window.addEventListener("hashchange", function(){
+    sekmeAc((location.hash||"#marka").slice(1), false);
+  });
+
+  /* ============ 1) MARKA ============ */
+  function markaFormDoldur(){
+    el("mAd").value = durum.marka.ad;
+    el("mSlogan").value = durum.marka.slogan;
+    el("mRenk1").value = durum.marka.renk1;
+    el("mRenk2").value = durum.marka.renk2;
+  }
+  function markaOnizleYansit(){
+    /* Formdaki anlık değerler mini önizlemeye CANLI yansır (yalnız sandbox) */
+    var ad = el("mAd").value || "Marka Adı";
+    var slogan = el("mSlogan").value || "Slogan";
+    var r1 = el("mRenk1").value, r2 = el("mRenk2").value;
+    el("onzAd").textContent = ad;
+    el("onzSlogan").textContent = slogan;
+    el("onzTepe").style.background = "linear-gradient(135deg," + r1 + " 0%," + r1 + "dd 100%)";
+    el("onzCta").style.background = r2;
+    var vurgular = document.querySelectorAll(".onz-vurgu");
+    for(var i=0;i<vurgular.length;i++) vurgular[i].style.color = r1;
+  }
+  ["mAd","mSlogan","mRenk1","mRenk2"].forEach(function(id){
+    el(id).addEventListener("input", markaOnizleYansit);
+  });
+  el("btnMarkaKaydet").addEventListener("click", function(){
+    durum.marka = { ad:el("mAd").value, slogan:el("mSlogan").value, renk1:el("mRenk1").value, renk2:el("mRenk2").value };
+    durumYaz(durum);
+    bildir("Marka ayarları sandbox'a kaydedildi (yalnız bu oturum).");
+  });
+
+  /* ============ 2) İLETİŞİM ============ */
+  function iletisimFormDoldur(){
+    var sec = el("iIlce");
+    sec.innerHTML = "";
+    for(var i=0;i<ILCELER.length;i++){
+      var o = document.createElement("option");
+      o.value = ILCELER[i]; o.textContent = ILCELER[i];
+      sec.appendChild(o);
+    }
+    el("iTel").value = durum.iletisim.tel;
+    el("iEposta").value = durum.iletisim.eposta;
+    el("iAdres").value = durum.iletisim.adres;
+    el("iIl").value = durum.iletisim.il || "İstanbul";
+    sec.value = ILCELER.indexOf(durum.iletisim.ilce) >= 0 ? durum.iletisim.ilce : "Beşiktaş";
+    el("iMahalle").value = durum.iletisim.mahalle;
+  }
+  el("formIletisim").addEventListener("submit", function(ev){
+    ev.preventDefault(); /* hiçbir yere gönderilmez, yalnız sandbox */
+    durum.iletisim = {
+      tel:el("iTel").value, eposta:el("iEposta").value, adres:el("iAdres").value,
+      il:el("iIl").value, ilce:el("iIlce").value, mahalle:el("iMahalle").value
+    };
+    durumYaz(durum);
+    bildir("İletişim ve hizmet alanı sandbox'a kaydedildi.");
+  });
+
+  /* ============ 3-4) LİSTE TABLOLARI (ilan + portföy ortak kalıp) ============ */
+  function satirlarBas(dizi, govdeId, alan2Adi, alan2Oku, eidsGoster){
+    var parcalar = [];
+    for(var i=0;i<dizi.length;i++){
+      var k = dizi[i];
+      parcalar.push(
+        '<tr data-id="'+kacir(k.id)+'">' +
+          '<td><span class="rozet rozet-ornek">ÖRNEK · DEMO</span></td>' +
+          '<td class="h-baslik">'+kacir(k.baslik)+'</td>' +
+          '<td><span class="rozet rozet-tip">'+kacir(alan2Oku(k))+'</span></td>' +
+          '<td class="fiyat h-fiyat">'+kacir(k.fiyat)+'</td>' +
+          (eidsGoster ? '<td><span class="rozet rozet-eids" title="EİDS alanı platform özelliğinin temsilî gösterimidir — gerçek doğrulama değildir">EİDS · temsilî</span></td>' : '') +
+          '<td style="white-space:nowrap"><button class="btn btn-cerceve btn-kucuk" data-islem="duzenle" type="button">Düzenle</button></td>' +
+        '</tr>'
+      );
+    }
+    el(govdeId).innerHTML = parcalar.join("");
+  }
+  function ilanlariBas(){
+    satirlarBas(durum.ilanlar, "ilanGovde", "tip", function(k){ return k.tip; }, true);
+  }
+  function portfoyuBas(){
+    satirlarBas(durum.portfoy, "portfoyGovde", "kategori", function(k){ return k.kategori; }, false);
+  }
+
+  /* Satır içi düzenleme: başlık + fiyat alanları giriş kutusuna dönüşür */
+  function duzenlemeKur(govdeId, dizi, tekrarBas){
+    el(govdeId).addEventListener("click", function(ev){
+      var dugme = ev.target.closest ? ev.target.closest("button[data-islem]") : null;
+      if(!dugme) return;
+      var satir = dugme.closest("tr");
+      var id = satir.getAttribute("data-id");
+      var kayit = null;
+      for(var i=0;i<dizi.length;i++){ if(dizi[i].id === id){ kayit = dizi[i]; break; } }
+      if(!kayit) return;
+
+      if(dugme.getAttribute("data-islem") === "duzenle"){
+        var hBaslik = satir.querySelector(".h-baslik");
+        var hFiyat  = satir.querySelector(".h-fiyat");
+        hBaslik.innerHTML = '<input class="e-baslik" maxlength="80" value="'+kacir(kayit.baslik)+'">';
+        hFiyat.innerHTML  = '<input class="e-fiyat" maxlength="30" value="'+kacir(kayit.fiyat)+'">';
+        dugme.textContent = "Kaydet";
+        dugme.setAttribute("data-islem","kaydet");
+        dugme.classList.remove("btn-cerceve");
+        dugme.classList.add("btn-yesil");
+      } else {
+        var yBaslik = satir.querySelector(".e-baslik");
+        var yFiyat  = satir.querySelector(".e-fiyat");
+        if(yBaslik && yBaslik.value.trim()) kayit.baslik = yBaslik.value.trim();
+        if(yFiyat && yFiyat.value.trim())   kayit.fiyat  = yFiyat.value.trim();
+        durumYaz(durum);
+        tekrarBas();
+        bildir("Demo kayıt güncellendi (yalnız bu oturum).");
+      }
+    });
+  }
+  duzenlemeKur("ilanGovde",   durum.ilanlar, ilanlariBas);
+  duzenlemeKur("portfoyGovde",durum.portfoy, portfoyuBas);
+
+  /* Yeni demo ilan */
+  el("formIlanEkle").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    durum.ilanlar.push({
+      id:"i"+Date.now().toString(36),
+      baslik:el("yiBaslik").value.trim(),
+      tip:el("yiTip").value,
+      fiyat:el("yiFiyat").value.trim()
+    });
+    durumYaz(durum);
+    ilanlariBas();
+    ev.target.reset();
+    bildir("Yeni demo ilan eklendi — yalnız sandbox listesinde görünür.");
+  });
+
+  /* Yeni demo portföy kaydı */
+  el("formPortfoyEkle").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    durum.portfoy.push({
+      id:"p"+Date.now().toString(36),
+      baslik:el("ypBaslik").value.trim(),
+      kategori:el("ypKategori").value,
+      fiyat:el("ypFiyat").value.trim()
+    });
+    durumYaz(durum);
+    portfoyuBas();
+    ev.target.reset();
+    bildir("Yeni demo portföy kaydı eklendi (yalnız bu oturum).");
+  });
+
+  /* ============ 5) LEAD / CRM ============ */
+  function leadleriBas(){
+    var parcalar = [];
+    for(var i=0;i<durum.leadler.length;i++){
+      var L = durum.leadler[i];
+      parcalar.push(
+        '<div class="lead-kart">' +
+          '<b>'+kacir(L.ad)+'</b>' +
+          '<div class="l-tel">'+kacir(L.tel)+'</div>' +
+          '<div class="l-not">'+kacir(L.not)+'</div>' +
+          '<div class="l-etiket"><span class="rozet rozet-ornek">SENTETİK · DEMO</span></div>' +
+        '</div>'
+      );
+    }
+    el("leadListe").innerHTML = parcalar.join("");
+  }
+  el("formLeadEkle").addEventListener("submit", function(ev){
+    ev.preventDefault(); /* gerçek CRM'e gitmez; yalnız sandbox */
+    durum.leadler.push({
+      id:"l"+Date.now().toString(36),
+      ad:el("ylAd").value.trim(),
+      tel:el("ylTel").value.trim(),
+      not:(el("ylNot").value.trim() || "Sentetik demo kaydı")
+    });
+    durumYaz(durum);
+    leadleriBas();
+    ev.target.reset();
+    bildir("Demo lead eklendi — hiçbir sunucuya gönderilmedi.");
+  });
+
+  /* ============ 6) DİL / SEO ============ */
+  function seoBas(){
+    el("sTitle").value = durum.seo.title;
+    el("sDesc").value = durum.seo.desc;
+    seoOnizleYansit();
+  }
+  function seoOnizleYansit(){
+    var t = el("sTitle").value || "Sayfa başlığı";
+    var a = el("sDesc").value || "Açıklama metni burada görünür.";
+    el("snBaslik").textContent = t.length > 65 ? t.slice(0,62) + "…" : t;
+    el("snAciklama").textContent = a.length > 160 ? a.slice(0,157) + "…" : a;
+    var ts = el("sTitleSayac"), ds = el("sDescSayac");
+    ts.textContent = t.length + " karakter (önerilen ≤ 60)";
+    ds.textContent = a.length + " karakter (önerilen ≤ 155)";
+    ts.classList.toggle("tasti", t.length > 60);
+    ds.classList.toggle("tasti", a.length > 155);
+  }
+  el("sTitle").addEventListener("input", seoOnizleYansit);
+  el("sDesc").addEventListener("input", seoOnizleYansit);
+  el("btnSeoKaydet").addEventListener("click", function(){
+    durum.seo = { title:el("sTitle").value, desc:el("sDesc").value };
+    durumYaz(durum);
+    bildir("SEO önizleme metinleri sandbox'a kaydedildi.");
+  });
+
+  /* ============ 7) PAKET & ÖZELLİKLER (salt okunur temsilî görünüm) ============ */
+  var OZELLIKLER = [
+    { kod:"locations",    ad:"Konum Verisi",       aciklama:"İl / ilçe / mahalle seçim akışları" },
+    { kod:"endeks",       ad:"Bölge Endeksi",      aciklama:"Mahalle bazlı fiyat endeks görünümü" },
+    { kod:"prox_analyze", ad:"ProX Analiz",        aciklama:"Bölge ve değer analiz ekranları" },
+    { kod:"prox_ai",      ad:"ProX Asistan",       aciklama:"Akıllı danışman sohbet deneyimi" },
+    { kod:"pdf",          ad:"PDF Raporlar",       aciklama:"Analiz çıktılarının rapor dökümü" },
+    { kod:"lead",         ad:"Lead / CRM",         aciklama:"Talep toplama ve takip kutusu" }
+  ];
+  function paketleriBas(){
+    var parcalar = [];
+    for(var i=0;i<OZELLIKLER.length;i++){
+      var oz = OZELLIKLER[i];
+      parcalar.push(
+        '<div class="paket-kutu acik">' +
+          '<div class="paket-nokta">✓</div>' +
+          '<div><h4>'+kacir(oz.ad)+'</h4><p>'+kacir(oz.aciklama)+' · <code>'+kacir(oz.kod)+'</code></p></div>' +
+          '<div class="paket-durum">ETKİN</div>' +
+        '</div>'
+      );
+    }
+    el("paketIzgara").innerHTML = parcalar.join("");
+  }
+
+  /* ============ SIFIRLAMA ============ */
+  el("btnSifirla").addEventListener("click", function(){
+    /* sessionStorage alanı silinir ve tohum veri yeniden kurulur */
+    try{ sessionStorage.removeItem(SAKLAMA_ADI); }catch(e){}
+    durum = tohumVeri();
+    durumYaz(durum);
+    hepsiniBas();
+    bildir("Demo verileri sıfırlandı — başlangıç haline dönüldü.");
+  });
+
+  /* ============ İLK ÇİZİM ============ */
+  function hepsiniBas(){
+    markaFormDoldur();
+    markaOnizleYansit();
+    iletisimFormDoldur();
+    ilanlariBas();
+    portfoyuBas();
+    leadleriBas();
+    seoBas();
+    paketleriBas();
+  }
+  hepsiniBas();
+  sekmeAc((location.hash||"#marka").slice(1), false);
+})();
+</script>
+</body>
+</html>
