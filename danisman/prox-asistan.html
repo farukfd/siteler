@@ -30,7 +30,7 @@
 <script defer src="js/tr-grammar.js?v=3"></script><script defer src="js/content.js?v=14"></script>
 <script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
 (function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
-if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=5"><\/script><script src="js/i18n/prox-asistan.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=6"><\/script><script src="js/i18n/prox-asistan.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
 <script defer src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
 <script defer src="js/a11y.js?v=1"></script>
 <script src="js/lead.js?v=2"></script>
@@ -288,7 +288,7 @@ async function paSend(ev){
     var dmsgs=_msgs.filter(function(m){return !m.typing&&m.text;}).map(function(m){return {role:m.role==='me'?'user':'assistant',content:m.text};});
     var ds=await _motor1(dmsgs);
     if(ds){ans=ds;}
-    else{var r=await proxApi('/api/v1/tenant/prox/ai',{persona:'consultant',context:hist||'default',message:(hist?('Önceki konuşma:\n'+hist+'\n\nMüşterinin yeni mesajı: '):'')+q});
+    else{var r=await proxApi('/api/v1/tenant/prox/ai',{persona:'consultant',context:hist||'default',request_id:'rq'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),prompt:(hist?('Önceki konuşma:\n'+hist+'\n\nMüşterinin yeni mesajı: '):'')+q});
       ans=(r&&(r.answer||(r.data&&r.data.answer)))||'';if(!ans||(r&&r.fallback))ans=PA_FALLBACK;}
   }catch(e){ans=PA_FALLBACK;}
   ans=scrubProx(ans);

@@ -141,7 +141,10 @@ async function _motor1Chat(body,opts){
 }
 async function aiChat(body,opts){
   if(_dsKey()){var d=await _motor1Chat(body,opts);if(d&&d.answer)return d;}
-  return await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:body});
+  /* FAZ3E: backend {prompt} bekler — message→prompt eşle + request_id (422 fix) */
+  var _pb={prompt:(body&&(body.prompt||body.message))||'',request_id:'rq'+Date.now().toString(36)+Math.random().toString(36).slice(2,8)};
+  if(body&&body.messages&&body.messages.length){_pb.prompt=body.messages.map(function(m){return (m.role==='user'?'Müşteri: ':'')+m.content;}).join('\n').slice(-4000);}
+  return await proxApi('/api/v1/tenant/prox/ai',{method:'POST',body:_pb});
 }
 try{window.aiChat=aiChat;window._motor1Chat=_motor1Chat;}catch(e){}
 /* Admin: ProX Motor-1 bağlantı testi + durum rozeti */
@@ -703,7 +706,7 @@ function vipCardsHTML(){return VIP_PORTFOLIO.map(p=>{
    +'<div class="vcard-body"><h3>'+p.baslik+'</h3>'
    +'<div class="vcard-loc">'+_PIN+p.cadde+' · '+p.bolge+'</div>'
    +'<div class="vcard-spec"><div><b>'+p.m2+'</b>Alan</div><div><b>'+p.oda+'</b>Tip</div><div><b>'+p.ozet+'</b>Ayrıcalık</div></div>'
-   +'<div class="vcard-ft"><div class="vcard-price">'+fmt(p.baslangic)+'<span>Başlangıç · Yetki Belgeli</span></div><div class="vcard-go">Ücretsiz Analiz'+_ARR+'</div></div>'
+   +'<div class="vcard-ft"><div class="vcard-price">'+fmt(p.baslangic)+'<span>Başlangıç · ÖRNEK · DEMO</span></div><div class="vcard-go">Ücretsiz Analiz'+_ARR+'</div></div>'
    +'</div></article>';
 }).join('');}
 
@@ -1098,12 +1101,12 @@ function apptSubmit(){const ad=(document.getElementById('ap_ad')||{}).value?docu
   const not=(document.getElementById('ap_not')||{}).value||'';
   (async function(){var _r=null;try{if(typeof submitLead==='function')_r=await submitLead({sourcePage:'danisman',formType:'randevu',name:ad,phone:tel,email:'',location:'',message:'Randevu: '+_apptState.day+' '+_apptState.slot+(not?(' · '+not):''),requestedService:'Ücretsiz Analiz'});}catch(e){_r=null;}
   if(window.EMLAK_DEMO===false&&!(_r&&_r.ok)){var _s=document.getElementById('apptSummary');if(_s)_s.innerHTML='⚠ Talebiniz gönderilemedi — lütfen tekrar deneyin ya da WhatsApp hattımızdan yazın.';toast('⚠ Talebiniz gönderilemedi, tekrar deneyin.');return;}
-  _apptBasari(ad,not);})();return;
+  window.__sonLeadId=(_r&&_r.data&&(_r.data.lead_id||_r.data.id))||'';_apptBasari(ad,not);})();return;
 }
 function _apptBasari(ad,not){/* FAZ3D: başarı yalnız sunucu onayında (üretim) ya da demo modunda gösterilir */
   dnPushLead({name:ad,phone:tel,konu:'Ücretsiz Analiz Randevusu',msg:_apptState.day+' '+_apptState.slot+(not?(' · '+not):''),src:'Randevu Formu'});/* admin görüşme panosu kaydı */
   toast('✦ Teşekkürler <b>'+ad+'</b> — ücretsiz analiz randevunuz <b>'+_apptState.day+' / '+_apptState.slot+'</b> için alındı.');
-  const s=document.getElementById('apptSummary');if(s)s.innerHTML='✓ Talebiniz iletildi: <b>'+_apptState.day+' · '+_apptState.slot+'</b>. Onay için sizi arayacağız.';}
+  const s=document.getElementById('apptSummary');if(s)s.innerHTML='✓ Talebiniz iletildi'+(window.__sonLeadId?(' · Kayıt No: <b>'+_leD(window.__sonLeadId)+'</b>'):'')+': <b>'+_apptState.day+' · '+_apptState.slot+'</b>. Onay için sizi arayacağız.';}
 
 /* =====================================================================
    İçerik Asistanı — Conversion Engine (portföy tarar + prim + randevuya yönlendirir)
@@ -1762,8 +1765,8 @@ function cmsMerge(part){var c=cmsGet();Object.keys(part||{}).forEach(function(k)
   try{localStorage.setItem(CMS_KEY,JSON.stringify(c));}catch(e){}try{applyContent();}catch(e){}return c;}
 /* CMS alan tanımı: [id, dn_content anahtarı, etiket, textarea?, placeholder] — sayfaya göre gruplu */
 var CMS_FIELDS={
-  home:[['cms_eb','heroEb','Hero Üst Etiket',0,'Kişiye Özel Emlak Danışmanlığı · Yetki Belgeli'],['cms_t1','heroT1','Hero Başlık 1. satır',0,'Gayrimenkulünüz,'],['cms_t2','heroT2','Hero Başlık 2. satır (italik)',0,'gerçek değerine ulaşsın.'],['cms_lede','heroLede','Hero Açıklama',1,'18 yılı aşkın deneyim ve canlı ProX bölge verisiyle…'],['cms_intel','intelText','"Rakamlar konuşur" bölüm metni',1,'Her mahalle için güncel m² değeri, yıllık değişim ve yatırım skoru…'],['cms_habout_eb','homeAboutEyebrow','Kişisel Temsil — Üst Etiket',0,'Kişisel Temsil'],['cms_habout_ttl','homeAboutTitle','Kişisel Temsil — Başlık',1,'Gayrimenkulünüzü bir portföy numarasına değil, bir imzaya emanet edin.'],['cms_habout_role','homeAboutRole','Kişisel Temsil — Unvan',0,'Kıdemli Lüks Konut & Portföy Danışmanı'],['cms_habout','homeAboutBody','Kişisel Temsil — Paragraf',1,'Her gayrimenkul, doğru alıcısıyla buluşmayı hak eder…'],['cms_habout_q','homeAboutQuote','Kişisel Temsil — Alıntı',1,'“Doğru danışman, fiyatı savunmaz; değeri görünür kılar.”'],['cms_habout_sig','homeAboutSig','Kişisel Temsil — İmza (görsel altı)',0,'Selin Meridyen'],['cms_refeb','ref_eyebrow','Referanslar Üst Etiket',0,'Referanslar · Müşteri Deneyimi'],['cms_reft','ref_title','Referanslar Başlık',0,'Güven, sonuçla kazanılır.']],
-  hakkimizda:[['cms_hkeb','hk_eyebrow','Üst Etiket',0,'Kişisel Temsil · Yetki Belgeli'],['cms_hkrole','hk_role','Rol / Unvan satırı',0,'Kıdemli Lüks Konut & Özel Portföy Danışmanı · İstanbul'],['cms_hklede','hk_lede','Giriş Paragrafı',1,'Bir gayrimenkul, doğru isimle taçlandırıldığında…'],['cms_hkbody','hk_body','Hakkımda Sayfası Ana Paragraf',1,'Kariyerime İstanbul\'un en rekabetçi pazarında başladım…']],
+  home:[['cms_eb','heroEb','Hero Üst Etiket',0,'Kişiye Özel Emlak Danışmanlığı · Platform Demosu'],['cms_t1','heroT1','Hero Başlık 1. satır',0,'Gayrimenkulünüz,'],['cms_t2','heroT2','Hero Başlık 2. satır (italik)',0,'gerçek değerine ulaşsın.'],['cms_lede','heroLede','Hero Açıklama',1,'18 yılı aşkın deneyim ve canlı ProX bölge verisiyle…'],['cms_intel','intelText','"Rakamlar konuşur" bölüm metni',1,'Her mahalle için güncel m² değeri, yıllık değişim ve yatırım skoru…'],['cms_habout_eb','homeAboutEyebrow','Kişisel Temsil — Üst Etiket',0,'Kişisel Temsil'],['cms_habout_ttl','homeAboutTitle','Kişisel Temsil — Başlık',1,'Gayrimenkulünüzü bir portföy numarasına değil, bir imzaya emanet edin.'],['cms_habout_role','homeAboutRole','Kişisel Temsil — Unvan',0,'Kıdemli Lüks Konut & Portföy Danışmanı'],['cms_habout','homeAboutBody','Kişisel Temsil — Paragraf',1,'Her gayrimenkul, doğru alıcısıyla buluşmayı hak eder…'],['cms_habout_q','homeAboutQuote','Kişisel Temsil — Alıntı',1,'“Doğru danışman, fiyatı savunmaz; değeri görünür kılar.”'],['cms_habout_sig','homeAboutSig','Kişisel Temsil — İmza (görsel altı)',0,'Selin Meridyen'],['cms_refeb','ref_eyebrow','Referanslar Üst Etiket',0,'Referanslar · Müşteri Deneyimi'],['cms_reft','ref_title','Referanslar Başlık',0,'Güven, sonuçla kazanılır.']],
+  hakkimizda:[['cms_hkeb','hk_eyebrow','Üst Etiket',0,'Kişisel Temsil · Demo Vitrin'],['cms_hkrole','hk_role','Rol / Unvan satırı',0,'Kıdemli Lüks Konut & Özel Portföy Danışmanı · İstanbul'],['cms_hklede','hk_lede','Giriş Paragrafı',1,'Bir gayrimenkul, doğru isimle taçlandırıldığında…'],['cms_hkbody','hk_body','Hakkımda Sayfası Ana Paragraf',1,'Kariyerime İstanbul\'un en rekabetçi pazarında başladım…']],
   hizmetlerimiz:[['cms_hzeb','hz_eyebrow','Üst Etiket',0,'Kişiye Özel · Uçtan Uca Danışmanlık'],['cms_hzlede','hz_lede','Hero Açıklama',1,'Alım-satımdan kiralamaya, değerlemeden yatırım analizine…']]
 };
 function _cmsFieldHTML(c,f){var val=c[f[1]]!=null?c[f[1]]:'';return '<div class="crm-f"><label>'+f[2]+'</label>'+(f[3]?('<textarea id="'+f[0]+'" rows="3" placeholder="'+_leD(f[4])+'">'+_leD(val)+'</textarea>'):('<input id="'+f[0]+'" value="'+_leD(val)+'" placeholder="'+_leD(f[4])+'">'))+'</div>';}
@@ -2341,7 +2344,7 @@ function _saasPortalLoginHTML(){ return ''
   +'<div class="sp-f"><input id="spPass" type="password" placeholder="Güvenli Şifre" autocomplete="off" onkeydown="if(event.key===\'Enter\')saasPortalSubmit()"></div>'
   +'<button id="spGo" class="btn btn-gold sp-go" onclick="saasPortalSubmit()">Güvenli Giriş →</button>'
   +'<div class="sp-err" id="spErr"></div>'
-  +'<div class="sp-badges"><span>ProX</span><span>Yetki Belgeli</span><span>256-bit Şifreli</span></div>'
+  +'<div class="sp-badges"><span>ProX</span><span>Demo Vitrin</span><span>256-bit Şifreli</span></div>'
   +'<div class="sp-foot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/></svg> KVKK uyumlu · oturum şifrelenir · erişim kayıt altına alınır</div>'; }
 function _saasPortalPanelHTML(){ var u=window.SAAS_USER.clientProfile||{}; var regions=Array.isArray(u.regionAuth)?u.regionAuth:[];
   return ''

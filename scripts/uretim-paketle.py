@@ -22,8 +22,8 @@ KOK = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIST = os.path.join(KOK, 'dist')
 
 SITELER = {
-    'danisman': {'host': 'danisman.emlakekspertizi.com', 'marka': 'Selin Meridyen'},
-    'insaat':   {'host': 'insaat.emlakekspertizi.com',   'marka': 'Meridyen Yapı'},
+    'danisman': {'host': 'danisman.emlakekspertizi.com', 'marka': 'Selin Meridyen', 'site_mode': 'demo'},
+    'insaat':   {'host': 'insaat.emlakekspertizi.com',   'marka': 'Meridyen Yapı',  'site_mode': 'production'},
 }
 ADMIN_VARLIK = ['admin-markup.js', 'content-studio.js']          # site js/ içinden
 # Üretim paketine GİRMEYECEK eski/alias yollar: dn p/ (GitHub-Pages stub'ları, yabancı canonical),
@@ -75,6 +75,8 @@ def donustur_metin(s, site, host, html=False):
     # 1) hostname
     s = s.replace(f'https://www.emlakekspertizi.com/demo/{site}/', f'https://{host}/')
     s = s.replace(f'https://www.emlakekspertizi.com/demo/{site}',  f'https://{host}')
+    s = s.replace(f'https://www.emlakekspertizi.com/{site}/', f'https://{host}/')
+    s = s.replace(f'https://www.emlakekspertizi.com/{site}',  f'https://{host}')
     # 2) çift robots → tek üretim
     s = re.sub(r'<meta name="robots" content="noindex[^"]*">\s*(<!--[^>]*-->)?\s*', '', s)
     s = re.sub(r'<meta name="robots" content="index,follow[^"]*">\s*<!--[^>]*-->', '<meta name="robots" content="index,follow,max-image-preview:large">', s)
@@ -86,7 +88,7 @@ def donustur_metin(s, site, host, html=False):
     s = s.replace('../shared/', 'shared/')
     # 4b) FAZ3: üretim depolama bekçisi her SAYFAYA (yalnız HTML — JS içindeki şablon string'lerine dokunma!)
     if html and '</head>' in s and 'storage-guard' not in s:
-        s = s.replace('</head>', '<script>window.EMLAK_DEMO=false;</script><script src="shared/storage-guard.js?v=1"></script>\n</head>', 1)
+        s = s.replace('</head>', '<script>window.EMLAK_DEMO=false;window.SITE_MODE="__SITEMODE__";</script><script src="shared/storage-guard.js?v=1"></script>\n</head>', 1)
     # 7) index.html → kök
     s = re.sub(r'href="(?:\./)?index\.html', 'href="/', s)
     s = s.replace("location.href='index.html", "location.href='/")
@@ -153,6 +155,7 @@ def paketle(site, cfg):
             s = oku(yol)
             once = s
             s = donustur_metin(s, site, host, html=True)
+            s = s.replace('__SITEMODE__', cfg.get('site_mode','production'))
             s2 = demo_band_sok(s)
             if s2 != s: sayac['demo_band'] += 1
             s = admin_yollari(s2)
@@ -202,6 +205,33 @@ def paketle(site, cfg):
         yaz(smp, s)
     return sayac
 
+# FAZ3E: içerik-hash'li asset kopyaları — CF query-ignore cache'ini aşar; hash'li ad = immutable.
+# Orijinal dosyalar da kalır (lazy/dinamik yükleyiciler kırılmaz). HTML src/href referansları hash'li ada çevrilir.
+import hashlib
+def asset_hashle(site):
+    hedef = os.path.join(DIST, site)
+    hmap = {}
+    for yol in glob.glob(os.path.join(hedef, '**', '*'), recursive=True):
+        if os.path.isdir(yol) or not yol.endswith(('.js', '.css')): continue
+        rel = os.path.relpath(yol, hedef).replace(os.sep, '/')
+        if rel.startswith('shared/vendor'): continue
+        h = hashlib.md5(open(yol, 'rb').read()).hexdigest()[:8]
+        kok, ext = os.path.splitext(rel)
+        yeni = f"{kok}.h{h}{ext}"
+        shutil.copy2(yol, os.path.join(hedef, yeni.replace('/', os.sep)))
+        hmap[rel] = yeni
+    def cevir(m):
+        att, url, q = m.group(1), m.group(2), m.group(3) or ''
+        u = url.lstrip('/')
+        if u in hmap: return f'{att}="{hmap[u]}"'
+        return m.group(0)
+    n = 0
+    for hp in glob.glob(os.path.join(hedef, '*.html')):
+        hs = oku(hp)
+        yeni_hs = re.sub(r'(src|href)="(?!https?:|//|data:)([^"?#]+\.(?:js|css))(\?[^"]*)?"', cevir, hs)
+        if yeni_hs != hs: yaz(hp, yeni_hs); n += 1
+    return len(hmap), n
+
 def leakage_tara(site):
     hedef = os.path.join(DIST, site)
     bulgular = []
@@ -228,6 +258,8 @@ if __name__ == '__main__':
         print(f'══════ {site} → https://{cfg["host"]}/ ══════')
         sayac = paketle(site, cfg)
         print('  paket:', sayac)
+        ha, hh = asset_hashle(site)
+        print(f'  asset-hash: {ha} dosya → {hh} HTML güncellendi')
         bulgular = leakage_tara(site)
         if bulgular:
             genel_hata = True

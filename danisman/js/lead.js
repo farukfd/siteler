@@ -79,20 +79,24 @@ if(typeof window!=='undefined'&&window.EMLAK_PROXY_MODE===undefined)window.EMLAK
 
   /* Sunucuya best-effort gönderim. İki şema üst kümesi (ozel-portfoy'un düz
      alanları + index SPA'nın yapılandırılmış alanları) tek gövdede. */
+  /* FAZ3E: gerçek teslim — 2xx + lead_id gelmeden başarı sayılmaz. */
   function postProx(rec) {
     try {
-      var t = tenant();
-      return fetch(API_BASE + '/api/v1/tenant/lead', {
+      return fetch((window.EMLAK_API_BASE||'') + '/api/v1/tenant/lead', {
         method: 'POST',
-        mode: 'cors',
-        headers: (function(){return {'Content-Type':'application/json'};})()/* P0: tenant kimliği/anahtarı istemciden gitmez */,
+        credentials: 'same-origin',
+        headers: {'Content-Type':'application/json'}/* P0: tenant kimliği/anahtarı istemciden gitmez (Host'tan çözülür) */,
         body: JSON.stringify({
+          request_id: 'rq'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
+          is_demo: (window.SITE_MODE==='demo'),
           name: rec.name, phone: rec.phone, email: rec.email,
           konu: rec.konu, mesaj: rec.msg, message: rec.msg,
           kaynak: rec.src, sourcePage: 'danisman', formType: rec.src
         })
-      }).catch(function () {});
-    } catch (e) { return null; }
+      }).then(function(r){ if(!r.ok) return {ok:false,status:r.status};
+        return r.json().then(function(j){ return {ok:!!(j&&j.success!==false&&(j.lead_id||j.id)), lead_id:(j&&(j.lead_id||j.id))||'', data:j}; });
+      }).catch(function(){ return {ok:false,offline:true}; });
+    } catch (e) { return Promise.resolve({ok:false}); }
   }
 
   /* Ön-dolu WhatsApp mesajı. */
@@ -111,11 +115,11 @@ if(typeof window!=='undefined'&&window.EMLAK_PROXY_MODE===undefined)window.EMLAK
   function submit(payload, opts) {
     opts = opts || {};
     var rec = normalize(payload);
-    store(rec);
-    postProx(rec);
+    if (window.EMLAK_DEMO !== false) store(rec); /* yerel demo panosu; üretimde localStorage kurumsal depo DEĞİLDİR */
+    var teslim = postProx(rec); /* Promise<{ok,lead_id}> — çağıran başarıyı bununla göstermeli */
     var url = waUrl(rec);
     if (opts.openWhatsApp) { try { window.open(url, '_blank', 'noopener'); } catch (e) {} }
-    return { rec: rec, whatsappUrl: url };
+    return { rec: rec, whatsappUrl: url, teslim: teslim };
   }
 
   window.dnLead = { submit: submit, waUrl: waUrl, waNum: waNum, normalize: normalize };

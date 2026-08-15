@@ -19,7 +19,7 @@
 (function(){
   'use strict';
   var STATES={ BEKLEMEDE:'beklemede', DOGRULANDI:'dogrulandi', REDDEDILDI:'reddedildi', DEMO:'demo' };
-  var LABEL={ beklemede:'EİDS Doğrulama Bekliyor', dogrulandi:'EİDS Doğrulandı', reddedildi:'EİDS Doğrulanamadı', demo:'DEMO İLAN' };
+  var LABEL={ beklemede:'EİDS Doğrulama Bekliyor', dogrulandi:'EİDS Doğrulandı', reddedildi:'EİDS Doğrulanamadı', demo:'ÖRNEK İLAN · DEMO' };
   /* Kim ilan verebilir (gerçek EİDS malik tipleri) */
   var MALIK_TIPLERI=[
     {k:'malik',   ad:'Malik (tapu sahibi)'},
@@ -75,7 +75,7 @@
     var rec=newRecord(fields);
     /* SANDBOX ADAPTÖRÜ: demo ortamından gerçek Bakanlık/EİDS servisine istek GÖNDERİLMEZ.
        Akış temsilî gösterilir; sonuç asla 'dogrulandi' olmaz, gerçek ilan tablosuna yazılamaz. */
-    if(window.EMLAK_DEMO!==false){
+    if((window.SITE_MODE?window.SITE_MODE==='demo':window.EMLAK_DEMO!==false)){
       rec.status=STATES.BEKLEMEDE;
       rec.sandbox=true;
       rec.mesaj='Sandbox: demo ortamında gerçek EİDS doğrulaması yapılmaz — akış temsilîdir, kod üretilmez.';
@@ -136,7 +136,7 @@
   function badgeHTML(eids,sz){
     var st=(eids&&eids.status)||STATES.BEKLEMEDE;
     if(st===STATES.DEMO){
-      return '<span class="eids-b demo" title="Temsilî tanıtım kaydı — EİDS doğrulaması yapılmamıştır. Gerçek ilan değildir.">DEMO İLAN</span>';
+      return '<span class="eids-b demo" title="Demo senaryosu — gerçek EİDS doğrulaması değildir. Temsilî tanıtım kaydıdır.">ÖRNEK İLAN · DEMO</span>';
     }
     var cls=st===STATES.DOGRULANDI?'ok':st===STATES.REDDEDILDI?'no':'wait';
     var ttl=st===STATES.DOGRULANDI&&eids&&eids.tasinmazNo?(' · Taşınmaz No: '+esc(eids.tasinmazNo)):'';

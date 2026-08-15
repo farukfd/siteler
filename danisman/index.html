@@ -35,7 +35,7 @@ window.hasFeature = function(f){ return window.EMLAK_TENANT.enabledFeatures.inde
 window.requireFeature = function(f){ if(window.hasFeature(f)) return true; var m="Bu özellik mevcut paketinizde aktif değildir. Kurumsal paketinizi yükseltin."; if(typeof toast==="function")toast(m); else alert(m); return false; };
 async function proxApi(path,{method="GET",body=null,headers={}}={}){ try{ var _base='';/* P0: same-origin BFF — tenant, sunucuda Host üzerinden çözülür */ var _h={"Content-Type":"application/json"};/* P0: tenant kimliği/anahtarı istemciden GÖNDERİLMEZ */ Object.assign(_h,headers); const res=await fetch(_base+path,{method,mode:"cors",headers:_h,body:body?JSON.stringify(body):null}); if(!res.ok)throw new Error("ProX API hata: "+res.status); try{var _qm=new Date().toISOString().slice(0,7),_q=JSON.parse(localStorage.getItem("dn_quota")||"null");if(!_q||_q.month!==_qm)_q={month:_qm,count:0};_q.count++;localStorage.setItem("dn_quota",JSON.stringify(_q));}catch(_e){} const ct=res.headers.get("content-type")||""; return ct.includes("application/json")?res.json():res.blob(); }catch(error){ console.warn("API baglantisi kurulamadi, fallback kullanilacak:",error.message); if(window.EMLAK_DEMO===true)return proxFallback(path,{method,body});try{window.EMLAK_TELEMETRY&&window.EMLAK_TELEMETRY("api_fail",{path:path,err:String(error&&error.message||error)});}catch(_t){}return {fallback:true,error:true,offline:true,data:null,message:"API erişilemedi (üretim: fallback kapalı)"}; } }
 function proxFallback(path,options={}){ return { fallback:true, message:"API baglantisi yok. Demo/fallback veri kullaniliyor.", path, data:(window.EMLAK_FALLBACK?window.EMLAK_FALLBACK(path,options):null) }; }
-async function submitLead(lead){ lead=lead||{}; var payload={ sourcePage:lead.sourcePage||"danisman", formType:lead.formType||"contact", name:lead.name||"", phone:lead.phone||"", email:lead.email||"", message:lead.message||"", extra:lead.extra||{ location:lead.location||"", requestedService:lead.requestedService||"", sector:window.EMLAK_TENANT.sector } }; try{if(typeof trackEvent==='function')trackEvent('generate_lead',{source:payload.formType||'lead'});}catch(_t){} try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:payload}); if(r&&r.fallback)throw new Error("fallback"); if(r&&r.success===false)throw new Error("lead reddedildi"); return {ok:true,online:(r&&r.online!==false),data:r}; }catch(e){ if(window.EMLAK_DEMO===true){try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(Object.assign({id:"lead_"+Date.now(),createdAt:new Date().toISOString()},payload));localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,demo:true,data:payload}; } try{window.EMLAK_TELEMETRY&&window.EMLAK_TELEMETRY("lead_fail",{form:payload.formType});}catch(_t){} return {ok:false,offline:true,message:"Talebiniz iletilemedi — lütfen tekrar deneyin ya da bizi arayın."}; } }
+async function submitLead(lead){ lead=lead||{}; var payload={ request_id:"rq"+Date.now().toString(36)+Math.random().toString(36).slice(2,8), is_demo:(window.SITE_MODE==="demo"), sourcePage:lead.sourcePage||"danisman", formType:lead.formType||"contact", name:lead.name||"", phone:lead.phone||"", email:lead.email||"", message:lead.message||"", extra:lead.extra||{ location:lead.location||"", requestedService:lead.requestedService||"", sector:window.EMLAK_TENANT.sector } }; try{if(typeof trackEvent==='function')trackEvent('generate_lead',{source:payload.formType||'lead'});}catch(_t){} try{ var r=await proxApi("/api/v1/tenant/lead",{method:"POST",body:payload}); if(r&&r.fallback)throw new Error("fallback"); if(r&&r.success===false)throw new Error("lead reddedildi"); return {ok:true,online:(r&&r.online!==false),data:r}; }catch(e){ if(window.EMLAK_DEMO===true){try{var k="emlak_leads_fallback";var a=JSON.parse(localStorage.getItem(k)||"[]");a.push(Object.assign({id:"lead_"+Date.now(),createdAt:new Date().toISOString()},payload));localStorage.setItem(k,JSON.stringify(a));}catch(_){} return {ok:true,online:false,demo:true,data:payload}; } try{window.EMLAK_TELEMETRY&&window.EMLAK_TELEMETRY("lead_fail",{form:payload.formType});}catch(_t){} return {ok:false,offline:true,message:"Talebiniz iletilemedi — lütfen tekrar deneyin ya da bizi arayın."}; } }
 window.injectSchema=function(o){try{var s=document.createElement("script");s.type="application/ld+json";s.text=JSON.stringify(o);document.head.appendChild(s);}catch(e){}};
 /* Canlı paket/özellik senkronu — theme.accent ile CSS REPAINT EDILMEZ (siyah/altın korunur). */
 function _pkgRank(p){var O=["BASIC","PRO","BUSINESS","ENTERPRISE"];var i=O.indexOf(String(p||"").toUpperCase());return i<0?1:i;}
@@ -95,7 +95,7 @@ window.proxBootstrap=proxBootstrap;
 <script defer src="js/content.js?v=14"></script>
 <script>/* i18n sözlükleri yalnız TR-dışı dilde yüklenir */
 (function(){var L='tr';try{L=new URL(location.href).searchParams.get('lang')||localStorage.getItem('dn_lang')||'tr';}catch(e){}
-if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=5"><\/script><script src="js/i18n/index.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
+if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=6"><\/script><script src="js/i18n/index.js?v=1"><\/script>');}})();</script><script src="js/i18n.js?v=1"></script>
 <script defer src="js/cerez.js?v=2"></script><!-- KVKK çerez onay bandı · tek kaynak -->
 <script defer src="js/a11y.js?v=1"></script>
   <style>/* ana sayfa tam yeşil — overscroll/alt beyaz ekranı önle */html,body{background:#0a3527;overscroll-behavior:none}</style>
@@ -241,7 +241,7 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=5"><\/script><
     <div class="hero-grain"></div>
   </div>
   <div class="wrap hero-content">
-    <div class="eyebrow"><span class="eb-dot"></span>Kişiye Özel Emlak Danışmanlığı · Yetki Belgeli</div>
+    <div class="eyebrow"><span class="eb-dot"></span>Kişiye Özel Emlak Danışmanlığı · Platform Demosu</div>
     <h1 class="hero-title"><span class="hl">Gayrimenkulünüz,</span><em>gerçek değerine ulaşsın.</em></h1>
     <p class="lede">18 yılı aşkın deneyim ve canlı ProX bölge verisiyle; doğru fiyat, davet usulü gizli portföy ve kusursuz müzakereyle, İstanbul’un en özel adreslerinde yanınızdayım.</p>
     <div class="hero-cta">
@@ -267,7 +267,7 @@ if(L&&L!=='tr'){document.write('<script src="js/i18n/_common.js?v=5"><\/script><
   <div class="wrap" style="padding:0"><div class="trust-in">
     <div class="t"><b>18+</b><span>Yıl Tecrübe</span></div>
     <div class="t"><b>₺7,4 Mr</b><span>Aracılık Edilen Değer</span></div>
-    <div class="t"><b>%100</b><span>Yetki Belgeli Portföy</span></div>
+    <div class="t"><b>%100</b><span>Örnek Portföy · DEMO</span></div>
     <div class="t"><b>Gizli</b><span>Adres & Kimlik Mahremiyeti</span></div>
   </div></div>
 </section>

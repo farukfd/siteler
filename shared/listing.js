@@ -214,10 +214,15 @@
 
   /* ---- EİDS YAYIN KAPISI ---- */
   L.canPublish=function(l){return _canPub(l);};
+  /* SITE_MODE sunucu tenant konfigürasyonundan gelir (paketleyici gömer + /api/v1/tenant/site-mode ucu teyit eder).
+     demo  → demo_record kayıtları 'ÖRNEK İLAN · DEMO' etiketiyle YAYINLANIR (vitrin sitesi boş kalamaz).
+     production → yalnız gerçek EİDS-doğrulamalı kayıtlar. */
+  function _vitrinDemo(){ if(window.SITE_MODE)return window.SITE_MODE==='demo'; return window.EMLAK_DEMO!==false; }
+  L.vitrinDemo=_vitrinDemo;
   L.publicList=function(arr){ return (arr||[]).filter(function(l){
     if(!l)return false;
     if(_canPub(l))return true;                                   /* OFFICIAL_LISTING: gerçek EİDS doğrulaması */
-    return window.EMLAK_DEMO!==false&&_isDemoRec(l);             /* DEMO sınıfı yalnız demo ortamında görünür (üretim paketi her sayfada false tanımlar) */
+    return _vitrinDemo()&&_isDemoRec(l);                         /* DEMO sınıfı yalnız site_mode=demo'da görünür */
   }); };
   L.pendingList=function(arr){ return (arr||[]).filter(function(l){return l&&!_canPub(l);}); };
 
@@ -262,7 +267,7 @@
         +'<span class="lst-op '+_opClass(l.op)+'">'+esc(l.op||'Satılık')+'</span>'
         +_favBtn(l,cfg)+_cmpCardBtn(l,cfg)
         +(_canPub(l)?'<span class="lst-eids-mini" title="EİDS Doğrulandı">'+(window.EIDS&&EIDS.shield?EIDS.shield(12):'')+' EİDS</span>'
-          :_isDemoRec(l)?'<span class="lst-eids-mini lst-demo-mini" title="DEMO ÖZEL PORTFÖY — ProX piyasa verileriyle oluşturulmuş tanıtım senaryosudur. Gerçek ilan veya EİDS doğrulanmış taşınmaz kaydı değildir.">DEMO</span>':'')
+          :_isDemoRec(l)?'<span class="lst-eids-mini lst-demo-mini" title="ÖRNEK İLAN · DEMO — Demo senaryosudur; gerçek ilan veya EİDS doğrulaması değildir.">ÖRNEK · DEMO</span>':'')
         +(_arr(l.images).length>1?'<span class="lst-count">📷 '+_arr(l.images).length+'</span>':'')
       +'</div>'
       +'<div class="lst-body">'
@@ -491,7 +496,7 @@
     var navHtml=(cfg.navHTML&&cfg.navHTML())||''; var foot=(cfg.footerHTML&&cfg.footerHTML())||'';
     var ov=document.getElementById('lstDetailOverlay');
     if(!ov){ ov=document.createElement('div'); ov.id='lstDetailOverlay'; ov.className='lstd-ov'; document.body.appendChild(ov); }
-    var demoNote=_isDemoRec(l)?('<div class="lstd-demo-note" role="note"><b>DEMO ÖZEL PORTFÖY</b> — ProX piyasa verileriyle oluşturulmuş tanıtım senaryosudur. Gerçek ilan veya EİDS doğrulanmış taşınmaz kaydı değildir.</div>'):'';
+    var demoNote=_isDemoRec(l)?('<div class="lstd-demo-note" role="note"><b>ÖRNEK İLAN · DEMO</b> — Demo senaryosudur; ProX piyasa verileriyle hazırlanmış tanıtım kaydıdır. Gerçek ilan değildir; EİDS alanı temsilîdir (gerçek doğrulama değildir).</div>'):'';
     ov.innerHTML=(navHtml||_ovNav(cfg,l))
       +'<div class="lstd-ovwrap"><button type="button" class="lstd-back" onclick="Listings.closeDetail()">← Tüm ilanlar</button>'
       +demoNote+L.detailInnerHTML(l,cfg)+'</div>'+foot;

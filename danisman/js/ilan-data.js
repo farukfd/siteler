@@ -11,7 +11,7 @@
   {id:3,durum:'Kiralık',tip:'Daire',baslik:'Cihangir Boğaz Manzaralı Eşyalı 2+1',il:'İstanbul',ilce:'Beyoğlu',mahalle:'Cihangir',m2:120,oda:'2+1',kat:'5',fiyat:65000,kira:true,img:'img5',isitma:'Klima',cephe:'Boğaz',yas:'—',ek:['Eşyalı','Yüksek Tavan','Teras'],feat:1,desc:'Karakteristik binada, Boğaz manzaralı, yüksek tavanlı eşyalı daire. Kültür-sanat aksının merkezinde, yürüyüş mesafesinde her şey.'},
   {id:4,durum:'Satılık',tip:'Ofis / İş Yeri',baslik:'Maslak A+ Plaza Ofis Katı',il:'İstanbul',ilce:'Sarıyer',mahalle:'Maslak',m2:280,oda:'Açık Ofis',kat:'18',fiyat:39000000,img:'img4',isitma:'VRV Klima',cephe:'Cam Cephe',yas:'4',ek:['Otopark','Jeneratör','Resepsiyon','Toplantı Odası'],feat:0,desc:'Prestijli plazada, cam cepheli, bölünebilir açık ofis katı. Kurumsal kimliğinize yakışan konum, otopark ve teknik altyapı.'},
   {id:5,durum:'Kiralık',tip:'Ofis / İş Yeri',baslik:'Nişantaşı Cadde Üstü Dükkan',il:'İstanbul',ilce:'Şişli',mahalle:'Nişantaşı',m2:110,oda:'Vitrinli',kat:'Zemin',fiyat:145000,kira:true,img:'img6',isitma:'Klima',cephe:'Ana Cadde',yas:'—',ek:['Yüksek Yaya Trafiği','Geniş Vitrin','Depo Alanı'],feat:0,desc:'Nişantaşı’nın en işlek caddesinde, geniş vitrinli, yüksek yaya trafiğine sahip perakende dükkanı. Marka mağazacılığa uygun.'},
-  {id:6,durum:'Satılık',tip:'Arsa',baslik:'Çeşme Alaçatı Deniz Manzaralı İmarlı Arsa',il:'İzmir',ilce:'Çeşme',mahalle:'Alaçatı',m2:850,oda:'Villa İmarı',kat:'—',fiyat:34000000,img:'img8',isitma:'—',cephe:'Deniz',yas:'—',ek:['Villa İmarı','Deniz Manzarası','Altyapı Hazır','Yola Cepheli'],feat:0,desc:'Alaçatı’da deniz manzaralı, villa imarlı yatırımlık arsa. Altyapı hazır, yola cepheli; bölgenin değer artış potansiyeli yüksek.'},
+  {id:6,durum:'Satılık',tip:'Arsa',baslik:'Beykoz Riva Orman Manzaralı İmarlı Arsa',il:'İstanbul',ilce:'Beykoz',mahalle:'Riva',m2:850,oda:'Villa İmarı',kat:'—',fiyat:31000000,img:'img8',isitma:'—',cephe:'Orman',yas:'—',ek:['Villa İmarı','Doğa Manzarası','Altyapı Hazır','Yola Cepheli'],fiyatGuncellendi:true,feat:0,desc:'Riva’da orman manzaralı, villa imarlı yatırımlık arsa. Altyapı hazır, yola cepheli; bölgenin değer artış potansiyeli yüksek. (Fiyatı güncellenmiş örnek kayıt.)'},
   {id:7,durum:'Satılık',tip:'Daire',baslik:'Caddebostan Bahçe Katı 4+1',il:'İstanbul',ilce:'Kadıköy',mahalle:'Caddebostan',m2:220,oda:'4+1',kat:'Bahçe Katı',fiyat:32000000,img:'img2',isitma:'Yerden Isıtma',cephe:'Güney',yas:'5',ek:['Özel Bahçe','Otopark','Asansör'],feat:0,desc:'Bağdat Caddesi’ne yakın, özel bahçeli, geniş metrekareli aile dairesi. Sahil ve sosyal yaşam bir arada.'},
   {id:8,durum:'Kiralık',tip:'Daire',baslik:'Ataşehir Site İçi Ferah 3+1',il:'İstanbul',ilce:'Ataşehir',mahalle:'Barbaros',m2:150,oda:'3+1',kat:'8',fiyat:52000,kira:true,img:'img9',isitma:'Merkezi',cephe:'Doğu',yas:'6',ek:['Site İçi','Yüzme Havuzu','Spor Salonu','Otopark'],feat:0,desc:'Sosyal olanakları geniş, güvenlikli sitede ferah ve aydınlık 3+1 kiralık daire. Finans merkezine yakın konum.'}
 ];
@@ -22,10 +22,13 @@
   function _beklemeKayit(){return {status:'beklemede',mesaj:'EİDS doğrulama bekliyor — bu ilan sitede yayınlanmaz.'};}
   function _galOf(l){var base=parseInt((''+(l.img||'img1')).replace(/\D/g,''),10)||1;var g=[];for(var k=0;k<4;k++){g.push('img'+(((base-1+k*3)%16)+1));}return g;}
   /* Demo sınıfı yalnız demo ortamında üretilir (üretim paketi her sayfada EMLAK_DEMO=false tanımlar). */
-  var DEMO=(typeof window==='undefined')||(window.EMLAK_DEMO!==false);
+  var DEMO=(typeof window==='undefined')||(window.SITE_MODE?window.SITE_MODE==='demo':window.EMLAK_DEMO!==false);
   function get(){
     var list=SEED.slice();
-    try{var a=JSON.parse(localStorage.getItem('dn_listings_v1')||'null');if(Array.isArray(a)&&a.length)list=a;}catch(e){}
+    /* FAZ3E: üretim paketinde ilan kaynağı MERKEZİ SEED'dir — localStorage kurumsal depo değildir */
+    if(typeof window==='undefined'||window.EMLAK_DEMO!==false){
+      try{var a=JSON.parse(localStorage.getItem('dn_listings_v1')||'null');if(Array.isArray(a)&&a.length)list=a;}catch(e){}
+    }
     var mapped=list.filter(function(l){return l&&l.status!=='pasif';}).map(function(l){
       var bolge=l.bolge||[l.mahalle,l.ilce].filter(Boolean).join(' · ')||l.ilce||l.il||'';
       var eids=l.eids;
@@ -41,7 +44,7 @@
       else {mapped=mapped.filter(function(l){return !l.il||l.il==='İstanbul';});}/* varsayılan tenant ili */
     }catch(e){}
     /* DEMO: EİDS kapısını göstermek için SON doğrulanmış ilanı 'beklemede' bırak — YALNIZ 6'dan fazla ilan varsa (ana sayfada hep ≥6 kalsın) */
-    if(DEMO&&mapped.length>6){for(var i=mapped.length-1;i>=0;i--){var _st=mapped[i].eids&&mapped[i].eids.status;if(_st==='dogrulandi'||_st==='demo'){mapped[i]=Object.assign({},mapped[i],{eids:_beklemeKayit()});break;}}}
+    if(DEMO&&window.SITE_MODE!=='demo'&&mapped.length>6){for(var i=mapped.length-1;i>=0;i--){var _st=mapped[i].eids&&mapped[i].eids.status;if(_st==='dogrulandi'||_st==='demo'){mapped[i]=Object.assign({},mapped[i],{eids:_beklemeKayit()});break;}}}
     return mapped;
   }
   window.DN_ILAN={SEED:SEED,imgURL:imgURL,catOf:catOf,get:get};

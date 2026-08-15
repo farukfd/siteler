@@ -25,6 +25,8 @@
   function rngOf(s){var x=seed(s)||1;return function(){x^=x<<13;x^=x>>>17;x^=x<<5;x>>>=0;return x/4294967296;};}
   function growth(end,chg5,n,r){var start=end/Math.pow(1+(chg5||0)/100,1);var a=[];for(var i=0;i<n;i++){var t=i/(n-1);a.push(Math.round((start+(end-start)*t)*(0.97+r()*0.06)));}a[n-1]=Math.round(end);return a;}
 
+  var _MAHNORM={'Akat':'Akatlar','Nisbetiye':'Nispetiye','Nisbetiye Mah.':'Nispetiye'};
+  function mahNorm(x){x=String(x||'').trim();return _MAHNORM[x]||x;}
   var _gid=0;
   /* ---- mini trend ---- */
   function spark(series,color){
@@ -141,18 +143,20 @@
     return {exact:exact,inIlce:inIlce,rest:rest};
   }
   var _CAD=['Atatürk Cd.','Cumhuriyet Cd.','İstiklal Cd.','Gazi Blv.','Sahil Yolu','Fevzi Çakmak Cd.','İnönü Cd.','19 Mayıs Cd.','Kışla Cd.'];
+  /* FAZ3E: runtime rastgele üretim KALDIRILDI — kayıtlar merkezi build-time seed'den gelir.
+     Seed yoksa dolgu YAPILMAZ (filtreyle uyuşmayan kart üretmemek için). */
   function ozelGen(m,n,extra){
-    var r=rngOf(m.ilce+'|'+m.mah+'|ozgen|'+(extra||'')),base=m.cats.daireSat.m2,kmo=m.cats.daireKira.m2,tic=m.cats.ticariSat.m2,out=[],cad=function(){return _CAD[Math.floor(r()*_CAD.length)];};
-    var a=95+Math.round(r()*40);out.push({gen:true,op:'Satılık',tip:'Daire',ilce:m.ilce,mah:m.mah,cadde:cad(),m2:a,oda:a>120?'3+1':'2+1',fiyat:Math.round(base*a*0.88/50000)*50000});
-    var k=80+Math.round(r()*30);out.push({gen:true,op:'Kiralık',tip:'Daire',ilce:m.ilce,mah:m.mah,cadde:cad(),m2:k,oda:'2+1',fiyat:Math.round(kmo*k*0.9/500)*500});
-    var t=70+Math.round(r()*60);out.push({gen:true,op:'Satılık',tip:'İşyeri',ilce:m.ilce,mah:m.mah,cadde:cad(),m2:t,oda:'-',fiyat:Math.round(tic*t*0.85/50000)*50000});
-    return out.slice(0,n||3);
+    var S=(window.DN_OZEL_SEED||window.INS_OZEL_SEED||{});
+    var a=S[m.ilce+'|'+m.mah]||[];
+    return a.slice(0,n||3).map(function(x){return Object.assign({gen:true},x);});
   }
+  /* FAZ3E: seçilen mahalleyle UYUŞMAYAN kayıt ana listeye KARIŞMAZ.
+     Dönen: {list: seçili-mahalle kayıtları, oneri: yakın bölge önerileri (ayrı başlıkla)} */
   function ozelList(cfg,m){
     var R=ozelReal(cfg,m.ilce,m.mah),out=R.exact.slice();
     var need=Math.max(0,3-out.length); if(need)out=out.concat(ozelGen(m,need,(cfg&&cfg.seedExtra)||''));
-    R.inIlce.concat(R.rest).forEach(function(o){if(out.length<6)out.push(o);});
-    return out.slice(0,6);
+    var oneri=R.inIlce.concat(R.rest).slice(0,3);
+    return {list:out.slice(0,6),oneri:oneri};
   }
   var _STR=['Atatürk Cd.','Cumhuriyet Cd.','Kıbrıs Şehitleri Cd.','1418. Sk.','Gül Sk.','Zafer Sk.','Sahil Blv.','İstasyon Cd.','Menekşe Sk.','Papatya Sk.','Lale Cd.','Çınar Sk.','2. Sk.','Şair Eşref Blv.'];
   var _KAT=['Giriş Kat','Ara Kat','Orta Kat','Orta Kat','Yüksek Kat','Çatı Dubleks'],_ODA=['1+1','2+1','2+1','3+1','3+1','4+1'];
@@ -274,7 +278,7 @@
           +'<div class="me-stat"><span>Yaşam kalitesi</span><b>'+dm.yasamK+'/100</b></div></div>';
       }
       var o=$('me_ozel');
-      if(o){ var list=ozelList(cfg,m);
+      if(o){ var _oz=ozelList(cfg,m); var list=_oz.list; var oneriler=_oz.oneri||[];
         var minOf=function(pred){var val=0;list.forEach(function(x){if(pred(x)&&(!val||x.fiyat<val))val=x.fiyat;});return val;};
         var sD=minOf(function(x){return x.op==='Satılık'&&TIP_CAT[x.tip]==='Konut';})||Math.round(per90*0.72/50000)*50000;
         var sK=minOf(function(x){return x.op==='Kiralık'&&TIP_CAT[x.tip]==='Konut';})||Math.round(kira90*0.6/500)*500;
@@ -290,7 +294,7 @@
           var wtxt='Özel Portföy — '+x.op+' '+x.tip+' ('+m.mah+', '+(x.cadde||m.ilce)+') '+x.m2+' m² hakkında bilgi almak istiyorum.';
           return '<div class="me-oz-card">'
             +'<div class="me-oz-op '+(x.op==='Kiralık'?'k':'s')+'">'+esc(x.op)+'</div>'
-            +'<div class="me-oz-tip">'+esc(x.tip)+(x.gen?' <span class="me-oz-gen" title="ProX piyasa verileriyle oluşturulmuş temsilî tanıtım kaydı — gerçek ilan veya EİDS doğrulanmış taşınmaz değildir.">Temsilî · DEMO</span>':'')+'</div>'
+            +'<div class="me-oz-tip">'+esc(x.tip)+(x.gen?' <span class="me-oz-gen" title="Merkezi demo seed kaydı — gerçek ilan veya EİDS doğrulaması değildir.">ÖZEL PORTFÖY · DEMO</span>':'')+'</div>'
             +'<div class="me-oz-loc">📍 '+esc(m.mah)+' · '+esc(x.cadde||x.ilce)+'</div>'
             +'<div class="me-oz-tech"><span>'+x.m2+' m²</span>'+(x.oda&&x.oda!=='-'?'<span>'+esc(x.oda)+'</span>':'')+'</div>'
             +'<div class="me-oz-price">'+money+'<small>’den başlayan</small></div>'
@@ -300,6 +304,7 @@
         o.innerHTML='<div class="me-oz-band"><div class="me-oz-h"><span class="me-oz-lock">🔒 Demo Özel Portföy · '+esc(m.mah)+'</span>'
           +'<p><b>Demo portföy gösterimi.</b> Bu mahalle için ProX piyasa verileriyle oluşturulan tanıtım senaryoları — <b>gerçek taşınmaz veya resmî ilan değildir</b>. Fiyat bantları şu değerlerden başlar:</p></div>'
           +chips+'<div class="me-oz-grid">'+cards+'</div>'
+          +(oneriler.length?('<div class="me-oz-oneri-h" style="margin-top:14px;font-size:.75rem;font-weight:800;opacity:.75">📍 Yakın bölge önerileri <span style="font-weight:600;opacity:.8">(seçtiğiniz mahalle dışından — ayrı listelenir)</span></div><div class="me-oz-grid">'+oneriler.map(function(x){return '<div class="me-oz-card" style="opacity:.85"><div class="me-oz-op '+(x.op==='Kiralık'?'k':'s')+'">'+esc(x.op||'')+'</div><div class="me-oz-tip">'+esc(x.tip||'')+' <span class="me-oz-gen">ÖZEL PORTFÖY · DEMO</span></div><div class="me-oz-loc">📍 '+esc((x.mah||'')+' · '+(x.ilce||''))+'</div><div class="me-oz-tech"><span>'+(x.m2||'—')+' m²</span></div></div>';}).join('')+'</div>'):'')
           +'<div class="me-oz-actions"><button class="me-oz-all" data-me-act="all">Tüm Özel Portföyü Gör →</button>'
           +'<a class="me-oz-owner" href="'+esc(waHref('Merhaba, mülkümü ifşa etmeden Özel Portföy\'e eklemek / değer analizi almak istiyorum.'))+'" target="_blank" rel="noopener noreferrer">🏠 Mülkümü gizli portföye ekle</a></div></div>';
       }
