@@ -93,7 +93,11 @@ Tek dosya mimarisi her müşteri için ayrı domaine kopyalanır; farklılıklar
 `gayrimenkul/` şablonundan açılan ilk müşteri sitesi; canonical/OG hostu elle düzeltilmiş ama
 SEO üretimleştirme yapılmamış → canlıda tüm sayfalar `noindex`, `robots.txt` `Disallow: /`,
 sitemap `gayrimenkul.emlakekspertizi.com` URL'leriyle. Düzeltme (sunucuda):
-1. `python3 scripts/tenant-uretimlestir.py --docroot <10line docroot> --host 10lineemlak.com --dry-run` → sonra `--dry-run`'sız.
+1. Yerel makineden tek komut (SSH alias `nadas-prod`; yedek + kuru koşu + uygulama + canlı teyit):
+   `scripts/tenant-uretimlestir-uzak.sh nadas-prod <10line docroot> 10lineemlak.com` → çıktı temizse `--apply` ekle.
+   Docroot bilinmiyorsa: `ssh nadas-prod -- 'grep -rl 10lineemlak /etc/nginx/sites-enabled/ | xargs grep -h "root "'`.
+   (Elle: `python3 scripts/tenant-uretimlestir.py --docroot <10line docroot> --host 10lineemlak.com --dry-run` → sonra `--dry-run`'sız.)
+   Not: Claude Code bulut oturumu sunucuya ulaşamaz (sandbox yalnız HTTPS proxy; SSH port 2222 kapalı) — bu adım yerelden koşar.
 2. Cloudflare/edge HTML önbelleğini temizle (bkz. §4).
 3. Cache-bust'lı doğrulama: `curl -s "https://10lineemlak.com/?ts=$(date +%s)" | grep -o '<meta name="robots"[^>]*>'`
    → yalnız `index,follow,max-image-preview:large`; `curl https://10lineemlak.com/robots.txt` → `Allow: /` + Sitemap satırı;
