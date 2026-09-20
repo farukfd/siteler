@@ -16,3 +16,4 @@ qa/test-results/
 scripts/prox-keys.local.json
 .env
 dist/
+__pycache__/
