@@ -84,9 +84,13 @@ Tek dosya mimarisi her müşteri için ayrı domaine kopyalanır; farklılıklar
    python3 scripts/tenant-uretimlestir.py --docroot /var/www/<tenant> --host <tenant-alanadi>            # uygula (çıkış 0 = son-tarama TEMİZ)
    ```
    Yaptıkları: DEMO robots satırını söker (sayfa-bazlı bilinçli `noindex,follow` stub'ları korur),
-   robots meta'sız sayfaya `index,follow,max-image-preview:large` ekler, `robots.txt`'yi Allow +
-   Sitemap ile yazar, sitemap hostunu düzeltir ve noindex sayfaları sitemap'ten düşürür, demo host
-   kalıntılarını (`www.emlakekspertizi.com/demo/…`, `gayrimenkul.emlakekspertizi.com`) çevirir.
+   robots meta'sız sayfaya `index,follow,max-image-preview:large` ekler (hata sayfaları 404/410/50x
+   her koşulda `noindex`), `robots.txt`'yi Allow + Sitemap ile yazar, sitemap hostunu düzeltir,
+   noindex sayfaları ve docroot'ta dosyası olmayan girişleri (soft-404 kalıntıları) sitemap'ten düşürür,
+   kök dizindeki indekslenebilir ama listelenmemiş sayfaları ekler, docroot'ta olmayan bir dosyaya
+   işaret eden canonical/og:url'yi sayfanın kendisine çevirir, demo host kalıntılarını
+   (`www.emlakekspertizi.com/demo/…`, `gayrimenkul.emlakekspertizi.com`) çevirir. nginx ile dinamik
+   rotalar varsa `--sitemap-dosyasiz-koru`.
    Çıkış kodu 1 = docroot'ta DEMO kalıntısı var, canlıya "bitti" denmez.
 
 ### Vaka: 10lineemlak.com (Eylül 2026)
