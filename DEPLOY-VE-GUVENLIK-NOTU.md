@@ -149,5 +149,23 @@ no-cache olduğundan yeni sürüm referansları anında yayılır.
 - [ ] EİDS gerçek kimlik bilgileri girildi (Özel Portföy serbest; ilan yayını için zorunlu).
 - [ ] Mahalle ucu (bkz. `PROX-API-GEREKSINIM-NOTU.md`) canlıya alındıysa gerçek mahalle otomatik gelir.
 
+## 6) Sunucu operasyon günlüğü — 20 Eylül 2026 (nadas-prod, root; salt-okunur teşhis + yedekli değişiklikler, silme yok)
+
+| Değişiklik | Kanıt (canlı) | Yedek / geri alma |
+|---|---|---|
+| 10lineemlak.com DEMO→ÜRETİM SEO (`scripts/tenant-uretimlestir.py`, 2 tur) | robots meta `index,follow,max-image-preview:large`; robots.txt Allow+Sitemap; sitemap 16 URL (İzmir kalıntısı 0, bolge.html eklendi); bolge canonical self; 404.html noindex | `/var/www/siteler_repo/10lineemlak_yedek_20260920_183144` (salt-okunur) |
+| nginx artefakt engeli (`scripts/nginx-artefakt-engel.py --apply`) — 8 conf, 22 server bloğu, snippet `/etc/nginx/snippets/nadas-artefakt-engel.conf` | `.bak_sosyal_*`/`.locked.*` → 404; normal sayfalar 200 (6 URL PASS). Önce 941 yedek dosya açıktı (nadas 752) | `*.bak_artefakt_20260920_185307` → `cp -a` + `nginx -t && nginx -s reload` |
+| core-api bind `0.0.0.0:8001` → `127.0.0.1:8001` (`backend/start_uvicorn.sh`, `pm2 restart core-api`) | Mac'ten `http://IP:8001` → 000 (önce 401 = nginx'siz açık); nginx üzerinden 401/200/health OK | `start_uvicorn.sh.bak_bind_*` + `pm2 restart core-api` |
+| GitHub senkronu: `prox-emlakekspertizi` main `7986e9b→10b186b` + `server-wip-20260920` (230 dosya, commit'lenmemiş sunucu işi; dist/yedek hariç; secret taraması temiz) | push çıktısı | — |
+
+**Açık bulgular (öncelik sırası):**
+1. **VMware balloon 83.458 MB · memlimit 10.293 MB · host swap 21.222 MB** — VM fiilen ~10 GB fiziksel RAM'le çalışıyor, belleğin 21 GB'ı hypervisor swap'ında (mongod 12 GB RSS). Sağlayıcı (dehost) ticket'ı: 128 GB'ın host tarafında rezerve edilmesi. Haziran OOM'unun (`dist_broken_oom_20260628`) muhtemel nedeni.
+2. `siteler_repo` GitHub `siteler` ile **ortak geçmişsiz** ayrı depo; kök dizinde 6 dosyada gömülü tenant anahtarı (`_tenant_*.html`, `danisman/degerleme/gayrimenkul/insaat.html` — vhost'suz, servis edilmiyor). → private repoya it (anahtarlı dosyalar hariç) + anahtar rotasyonu (Temmuz P0 hâlâ açık).
+3. firewalld inactive — kalıcı ikinci katman (2222/80/443 allowlist) ayrı, dikkatli adım.
+4. 10line nginx soft-404: olmayan URL ana sayfayı 200 döndürüyor (`try_files … /index.html`) → `=404` + `error_page 404 /404.html`.
+5. `custom-nadas_com_tr.conf:18` duplicate MIME uyarısı (zararsız).
+6. `10lineemlak.com/tenant-config.json` bootstrap'a proxy'lenmiyor (FAZ4 sözleşmesi); istemci `/api/v1/tenant/bootstrap` kullandığı için etkisiz.
+7. Sunucudaki 56k satırlık commit'lenmemiş iş (`server-wip-20260920`) gözden geçirilip main'e düzgün commit'lenmeli.
+
 ## Öncelik
 **Yüksek (üretim öncesi).** Demo/pilot doğrudan modda çalışır; gerçek müşteri yayınından önce proxy modu zorunludur.
