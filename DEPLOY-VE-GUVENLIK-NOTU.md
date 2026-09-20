@@ -74,6 +74,31 @@ Tek dosya mimarisi her müşteri için ayrı domaine kopyalanır; farklılıklar
 2. Her kiracı için CI: `gayrimenkul.html` + `hizmetlerimiz.html` + `nedenbiz.html` + `wl.js` → kiracı domainine deploy.
 3. Kiracıya özel `tenant.json` (firma, il, proxyUrl, tenantId, EİDS) → deploy sonrası admin’den bir kez yüklenir **veya** build-time enjekte edilir.
 4. Proxy secret’ları (KEY_*) merkezi secret store’da; repoya asla girmez.
+5. **SEO üretimleştirme (ZORUNLU, deploy'un son adımı):** `scripts/uretim-paketle.py` yalnız
+   `danisman` + `insaat` paketler; `gayrimenkul/` şablonundan açılan müşteri siteleri bu
+   adımdan geçmezse **DEMO durumunda** canlıya çıkar (her sayfada `noindex,nofollow,noarchive`,
+   `robots.txt` = `Disallow: /`, sitemap demo hostuna işaret eder → Google siteyi hiç indekslemez).
+   Docroot üzerinde yerinde, idempotent, markalama/içeriğe dokunmaz:
+   ```sh
+   python3 scripts/tenant-uretimlestir.py --docroot /var/www/<tenant> --host <tenant-alanadi> --dry-run  # önce ne değişeceğini gör
+   python3 scripts/tenant-uretimlestir.py --docroot /var/www/<tenant> --host <tenant-alanadi>            # uygula (çıkış 0 = son-tarama TEMİZ)
+   ```
+   Yaptıkları: DEMO robots satırını söker (sayfa-bazlı bilinçli `noindex,follow` stub'ları korur),
+   robots meta'sız sayfaya `index,follow,max-image-preview:large` ekler, `robots.txt`'yi Allow +
+   Sitemap ile yazar, sitemap hostunu düzeltir ve noindex sayfaları sitemap'ten düşürür, demo host
+   kalıntılarını (`www.emlakekspertizi.com/demo/…`, `gayrimenkul.emlakekspertizi.com`) çevirir.
+   Çıkış kodu 1 = docroot'ta DEMO kalıntısı var, canlıya "bitti" denmez.
+
+### Vaka: 10lineemlak.com (Eylül 2026)
+`gayrimenkul/` şablonundan açılan ilk müşteri sitesi; canonical/OG hostu elle düzeltilmiş ama
+SEO üretimleştirme yapılmamış → canlıda tüm sayfalar `noindex`, `robots.txt` `Disallow: /`,
+sitemap `gayrimenkul.emlakekspertizi.com` URL'leriyle. Düzeltme (sunucuda):
+1. `python3 scripts/tenant-uretimlestir.py --docroot <10line docroot> --host 10lineemlak.com --dry-run` → sonra `--dry-run`'sız.
+2. Cloudflare/edge HTML önbelleğini temizle (bkz. §4).
+3. Cache-bust'lı doğrulama: `curl -s "https://10lineemlak.com/?ts=$(date +%s)" | grep -o '<meta name="robots"[^>]*>'`
+   → yalnız `index,follow,max-image-preview:large`; `curl https://10lineemlak.com/robots.txt` → `Allow: /` + Sitemap satırı;
+   `curl https://10lineemlak.com/sitemap.xml` → yalnız `https://10lineemlak.com/…` ve stub (`/ozel/` vb.) yok.
+4. Search Console: property doğrula → sitemap gönder → ana sayfa için "URL denetimi → dizine eklenmesini iste".
 
 ## 4) Önbellek başlıkları (Cache-Control) — HTML bayat kalmasın
 Sitede tüm JS/CSS `?v=N` sürüm parametresiyle yüklenir; ancak **HTML dosyasının kendisi**
@@ -112,6 +137,7 @@ no-cache olduğundan yeni sürüm referansları anında yayılır.
 - [ ] Proxy yalnızca `/api/v1/tenant/*` allow-list + per-tenant CORS.
 - [ ] Kiracı kotası (rate-limit) proxy’de uygulanıyor.
 - [ ] `robots.txt` + `sitemap.xml` her domainde doğru (admin üretici).
+- [ ] `scripts/tenant-uretimlestir.py --host <alanadi>` çıkış kodu 0 (DEMO `noindex` / `Disallow: /` / demo-host sitemap kalıntısı yok) — cache-bust'lı `curl` ile canlıda teyit (§3 adım 5).
 - [ ] EİDS gerçek kimlik bilgileri girildi (Özel Portföy serbest; ilan yayını için zorunlu).
 - [ ] Mahalle ucu (bkz. `PROX-API-GEREKSINIM-NOTU.md`) canlıya alındıysa gerçek mahalle otomatik gelir.
 
