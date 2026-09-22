@@ -166,6 +166,7 @@ no-cache olduğundan yeni sürüm referansları anında yayılır.
 5. `custom-nadas_com_tr.conf:18` duplicate MIME uyarısı (zararsız).
 6. `10lineemlak.com/tenant-config.json` bootstrap'a proxy'lenmiyor (FAZ4 sözleşmesi); istemci `/api/v1/tenant/bootstrap` kullandığı için etkisiz.
 7. Sunucudaki 56k satırlık commit'lenmemiş iş (`server-wip-20260920`) gözden geçirilip main'e düzgün commit'lenmeli.
+8. ProX blog yan hat cron'ları `.env` yüklemeden koşuyor (`DEEPSEEK_API_KEY` boş → içerik üretmiyor) — runbook: `SUNUCU-CRON-YAN-HAT-RUNBOOK.md` (A–D, yerel SSH oturumu yürütür).
 
 ## Öncelik
 **Yüksek (üretim öncesi).** Demo/pilot doğrudan modda çalışır; gerçek müşteri yayınından önce proxy modu zorunludur.
